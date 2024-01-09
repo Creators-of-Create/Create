@@ -12,23 +12,23 @@ import net.minecraft.core.BlockPos;
 
 public class FlapData extends AbstractInstance implements FlatLit {
 
-	float x;
-	float y;
-	float z;
-	byte blockLight;
-	byte skyLight;
-	float segmentOffsetX;
-	float segmentOffsetY;
-	float segmentOffsetZ;
-	float pivotX;
-	float pivotY;
-	float pivotZ;
-	float horizontalAngle;
-	float intensity;
-	float flapScale;
-	float flapness;
+	public float x;
+	public float y;
+	public float z;
+	public byte blockLight;
+	public byte skyLight;
+	public float segmentOffsetX;
+	public float segmentOffsetY;
+	public float segmentOffsetZ;
+	public float pivotX;
+	public float pivotY;
+	public float pivotZ;
+	public float horizontalAngle;
+	public float intensity;
+	public float flapScale;
+	public float flapness;
 
-	protected FlapData(InstanceType<?> type, InstanceHandle handle) {
+	public FlapData(InstanceType<?> type, InstanceHandle handle) {
 		super(type, handle);
 	}
 

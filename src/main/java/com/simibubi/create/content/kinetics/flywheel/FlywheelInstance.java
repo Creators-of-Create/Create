@@ -13,7 +13,7 @@ import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
+import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;

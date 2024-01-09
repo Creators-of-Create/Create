@@ -1,7 +1,7 @@
 #define PI 3.1415926538
 
-#use "flywheel:core/quaternion.glsl"
-#use "flywheel:core/matutils.glsl"
+#include "flywheel:core/quaternion.glsl"
+#include "flywheel:core/matutils.glsl"
 
 struct Belt {
     vec2 light;

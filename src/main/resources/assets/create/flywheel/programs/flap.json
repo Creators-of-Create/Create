@@ -1,4 +1,0 @@
-{
-  "vertex": "create:flap.vert",
-  "fragment": "flywheel:block.frag"
-}

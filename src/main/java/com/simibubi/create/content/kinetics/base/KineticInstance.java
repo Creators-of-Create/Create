@@ -1,21 +1,20 @@
-package com.simibubi.create.content.kinetics.base.flwdata;
+package com.simibubi.create.content.kinetics.base;
 
 import org.joml.Vector3f;
 
 import com.jozufozu.flywheel.api.instance.InstanceHandle;
 import com.jozufozu.flywheel.api.instance.InstanceType;
 import com.jozufozu.flywheel.lib.instance.ColoredLitInstance;
-import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.core.BlockPos;
 
 public class KineticInstance extends ColoredLitInstance {
-    float x;
-    float y;
-    float z;
-    float rotationalSpeed;
-    float rotationOffset;
+    public float x;
+    public float y;
+    public float z;
+    public float rotationalSpeed;
+    public float rotationOffset;
 
 	protected KineticInstance(InstanceType<? extends KineticInstance> type, InstanceHandle handle) {
 		super(type, handle);

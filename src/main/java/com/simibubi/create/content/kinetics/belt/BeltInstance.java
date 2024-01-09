@@ -1,27 +1,28 @@
-package com.simibubi.create.content.kinetics.base.flwdata;
+package com.simibubi.create.content.kinetics.belt;
 
 import org.joml.Quaternionf;
 
 import com.jozufozu.flywheel.api.instance.InstanceHandle;
 import com.jozufozu.flywheel.api.instance.InstanceType;
+import com.simibubi.create.content.kinetics.base.KineticInstance;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 public class BeltInstance extends KineticInstance {
-    float qX;
-    float qY;
-    float qZ;
-    float qW;
-    float sourceU;
-    float sourceV;
-    float minU;
-    float minV;
-    float maxU;
-    float maxV;
-    byte scrollMult;
+    public float qX;
+    public float qY;
+    public float qZ;
+    public float qW;
+    public float sourceU;
+    public float sourceV;
+    public float minU;
+    public float minV;
+    public float maxU;
+    public float maxV;
+    public byte scrollMult;
 
-	protected BeltInstance(InstanceType<? extends KineticInstance> type, InstanceHandle handle) {
+	public BeltInstance(InstanceType<? extends KineticInstance> type, InstanceHandle handle) {
 		super(type, handle);
 	}
 

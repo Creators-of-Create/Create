@@ -10,25 +10,25 @@ import com.jozufozu.flywheel.lib.instance.AbstractInstance;
 import net.minecraft.core.BlockPos;
 
 public class ActorInstance extends AbstractInstance {
-    float x;
-    float y;
-    float z;
-    byte blockLight;
-    byte skyLight;
-    float rotationOffset;
-    byte rotationAxisX;
-    byte rotationAxisY;
-    byte rotationAxisZ;
-    float qX;
-    float qY;
-    float qZ;
-    float qW;
-    byte rotationCenterX = 64;
-    byte rotationCenterY = 64;
-    byte rotationCenterZ = 64;
-    float speed;
+    public float x;
+    public float y;
+    public float z;
+    public byte blockLight;
+    public byte skyLight;
+    public float rotationOffset;
+    public byte rotationAxisX;
+    public byte rotationAxisY;
+    public byte rotationAxisZ;
+    public float qX;
+    public float qY;
+    public float qZ;
+    public float qW;
+    public byte rotationCenterX = 64;
+    public byte rotationCenterY = 64;
+    public byte rotationCenterZ = 64;
+    public float speed;
 
-	protected ActorInstance(InstanceType<?> type, InstanceHandle handle) {
+	public ActorInstance(InstanceType<?> type, InstanceHandle handle) {
 		super(type, handle);
 	}
 

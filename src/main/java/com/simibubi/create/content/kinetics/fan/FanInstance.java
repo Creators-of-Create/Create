@@ -10,7 +10,7 @@ import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
+import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 
 import net.minecraft.core.BlockPos;

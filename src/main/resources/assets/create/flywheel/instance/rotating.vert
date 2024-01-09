@@ -1,6 +1,6 @@
 #define PI 3.1415926538
 
-#use "flywheel:core/matutils.glsl"
+#include "flywheel:core/matutils.glsl"
 
 struct Rotating {
     vec2 light;

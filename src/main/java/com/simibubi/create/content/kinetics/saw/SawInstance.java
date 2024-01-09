@@ -5,7 +5,6 @@ import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Rotation;

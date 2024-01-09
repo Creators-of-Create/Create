@@ -37,6 +37,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -613,12 +614,12 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		}
 
 		@Override
-		public boolean isListenerInvalid() {
+		public boolean isInvalid() {
 			return remove;
 		}
 
 		@Override
-		public void onLightUpdate(LightLayer type, Box changed) {
+		public void onLightUpdate(LightLayer type, SectionPos pos) {
 			if (remove)
 				return;
 			if (level == null)
@@ -626,7 +627,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 
 			Box beltVolume = getVolume();
 
-			if (beltVolume.intersects(changed)) {
+			if (beltVolume.intersects(MutableBox.from(pos))) {
 				if (type == LightLayer.BLOCK)
 					updateBlockLight();
 

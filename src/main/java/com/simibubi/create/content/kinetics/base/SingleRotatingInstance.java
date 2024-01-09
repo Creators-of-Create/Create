@@ -8,7 +8,6 @@ import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.model.Models;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 
 import net.minecraft.world.level.block.state.BlockState;

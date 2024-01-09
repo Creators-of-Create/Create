@@ -1,7 +1,7 @@
 #define PI 3.1415926538
 
-#use "flywheel:core/matutils.glsl"
-#use "flywheel:core/quaternion.glsl"
+#include "flywheel:core/matutils.glsl"
+#include "flywheel:core/quaternion.glsl"
 
 struct Flap {
     vec3 instancePos;

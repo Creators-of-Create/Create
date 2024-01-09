@@ -12,7 +12,7 @@ import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.OrientedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
+import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.content.kinetics.simpleRelays.encased.EncasedCogInstance;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;

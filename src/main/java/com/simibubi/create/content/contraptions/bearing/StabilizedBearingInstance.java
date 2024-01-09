@@ -11,7 +11,7 @@ import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
+import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;

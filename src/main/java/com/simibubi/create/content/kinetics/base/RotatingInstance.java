@@ -1,4 +1,4 @@
-package com.simibubi.create.content.kinetics.base.flwdata;
+package com.simibubi.create.content.kinetics.base;
 
 import org.joml.Vector3f;
 
@@ -8,11 +8,11 @@ import com.jozufozu.flywheel.api.instance.InstanceType;
 import net.minecraft.core.Direction;
 
 public class RotatingInstance extends KineticInstance {
-    byte rotationAxisX;
-    byte rotationAxisY;
-    byte rotationAxisZ;
+    public byte rotationAxisX;
+    public byte rotationAxisY;
+    public byte rotationAxisZ;
 
-	protected RotatingInstance(InstanceType<? extends KineticInstance> type, InstanceHandle handle) {
+	public RotatingInstance(InstanceType<? extends KineticInstance> type, InstanceHandle handle) {
 		super(type, handle);
 	}
 

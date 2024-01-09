@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.AbstractInstance;
@@ -18,7 +17,7 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
+import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.utility.Iterate;
