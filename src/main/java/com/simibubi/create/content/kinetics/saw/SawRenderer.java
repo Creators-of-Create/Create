@@ -16,9 +16,9 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringR
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -81,7 +81,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 
 		SuperByteBuffer superBuffer = CachedBufferer.partialFacing(partial, blockState);
 		if (rotate) {
-			superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(90));
+			superBuffer.rotateCentered(AngleHelper.rad(90), Direction.UP);
 		}
 		superBuffer.color(0xFFFFFF)
 			.light(light)

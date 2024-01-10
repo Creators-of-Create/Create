@@ -102,7 +102,7 @@ public class KineticBlockEntityRenderer<T extends KineticBlockEntity> extends Sa
 	public static SuperByteBuffer kineticRotationTransform(SuperByteBuffer buffer, KineticBlockEntity be, Axis axis,
 		float angle, int light) {
 		buffer.light(light);
-		buffer.rotateCentered(Direction.get(AxisDirection.POSITIVE, axis), angle);
+		buffer.rotateCentered(angle, Direction.get(AxisDirection.POSITIVE, axis));
 
 		if (KineticDebugger.isActive()) {
 			rainbowMode = true;

@@ -54,8 +54,8 @@ public class AnalogLeverRenderer extends SafeBlockEntityRenderer<AnalogLeverBloc
 		AttachFace face = leverState.getValue(AnalogLeverBlock.FACE);
 		float rX = face == AttachFace.FLOOR ? 0 : face == AttachFace.WALL ? 90 : 180;
 		float rY = AngleHelper.horizontalAngle(leverState.getValue(AnalogLeverBlock.FACING));
-		buffer.rotateCentered(Direction.UP, (float) (rY / 180 * Math.PI));
-		buffer.rotateCentered(Direction.EAST, (float) (rX / 180 * Math.PI));
+		buffer.rotateCentered((float) (rY / 180 * Math.PI), Direction.UP);
+		buffer.rotateCentered((float) (rX / 180 * Math.PI), Direction.EAST);
 		return buffer;
 	}
 

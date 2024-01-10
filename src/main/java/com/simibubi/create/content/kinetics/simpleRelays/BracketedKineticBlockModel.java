@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.content.decoration.bracket.BracketedBlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.foundation.render.ModelUtil;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -30,7 +30,7 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 
 	@Override
 	public ModelData getModelData(BlockAndTintGetter world, BlockPos pos, BlockState state, ModelData blockEntityData) {
-		if (ModelUtil.isVirtual(blockEntityData))
+		if (VirtualRenderHelper.isVirtual(blockEntityData))
 			return blockEntityData;
 		BracketedModelData data = new BracketedModelData();
 		BracketedBlockEntityBehaviour attachmentBehaviour =
@@ -43,7 +43,7 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand, ModelData data, RenderType renderType) {
-		if (!ModelUtil.isVirtual(data)) {
+		if (!VirtualRenderHelper.isVirtual(data)) {
 			if (data.has(BRACKET_PROPERTY)) {
 				BracketedModelData pipeData = data.get(BRACKET_PROPERTY);
 				BakedModel bracket = pipeData.getBracket();

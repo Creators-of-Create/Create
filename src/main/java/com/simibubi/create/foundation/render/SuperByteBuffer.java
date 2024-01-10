@@ -1,25 +1,15 @@
 package com.simibubi.create.foundation.render;
 
-
-import java.nio.ByteBuffer;
-import java.util.function.IntPredicate;
-
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import com.jozufozu.flywheel.api.model.Mesh;
-import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.jozufozu.flywheel.lib.math.DiffuseLightCalculator;
-import com.jozufozu.flywheel.lib.math.RenderMath;
-import com.jozufozu.flywheel.lib.memory.MemoryBlock;
-import com.jozufozu.flywheel.lib.transform.Transform;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.jozufozu.flywheel.lib.util.ShadersModHandler;
-import com.jozufozu.flywheel.lib.vertex.FullVertexView;
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
@@ -32,22 +22,18 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
 public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
+	private final TemplateMesh template;
+	private final int unshadedStartVertex;
 
-	private final MemoryBlock backingStore;
-	private final VertexList template;
-	private final IntPredicate shadedPredicate;
-
-	// Vertex Position
+	// Vertex Position and Normals
 	private final PoseStack transforms = new PoseStack();
 
 	// Vertex Coloring
 	private boolean shouldColor;
-	private int r, g, b, a;
+	private float r, g, b, a;
 	private boolean disableDiffuseMult;
 	private DiffuseLightCalculator diffuseCalculator;
 
@@ -55,7 +41,6 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 	private SpriteShiftFunc spriteShiftFunc;
 
 	// Vertex Overlay Color
-	private boolean hasOverlay;
 	private int overlay = OverlayTexture.NO_OVERLAY;
 
 	// Vertex Lighting
@@ -65,23 +50,12 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 	private int packedLightCoords;
 	private boolean hybridLight;
 
-	// Vertex Normals
-	private boolean fullNormalTransform;
-
 	// Temporary
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
 
-	public SuperByteBuffer(Mesh mesh) {
-		var template = new FullVertexView();
-
-		backingStore = MemoryBlock.malloc(mesh.vertexCount() * FullVertexView.STRIDE);
-		template.ptr(backingStore.ptr());
-		template.vertexCount(mesh.vertexCount());
-
-		mesh.write(template);
-
+	public SuperByteBuffer(TemplateMesh template, int unshadedStartVertex) {
 		this.template = template;
-		shadedPredicate = index -> true;
+		this.unshadedStartVertex = unshadedStartVertex;
 
 		transforms.pushPose();
 	}
@@ -96,24 +70,30 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 			.pose();
 		modelMat.mul(localTransforms);
 
-		Matrix3f normalMat;
-		if (fullNormalTransform) {
-			normalMat = new Matrix3f(input.last()
-				.normal());
-			Matrix3f localNormalTransforms = transforms.last()
-				.normal();
-			normalMat.mul(localNormalTransforms);
-		} else {
-			normalMat = new Matrix3f(transforms.last()
-				.normal());
-		}
+		Matrix3f normalMat = new Matrix3f(input.last()
+			.normal());
+		Matrix3f localNormalTransforms = transforms.last()
+			.normal();
+		normalMat.mul(localNormalTransforms);
 
 		if (useWorldLight) {
 			WORLD_LIGHT_CACHE.clear();
 		}
 
+		class ShiftOutput implements SpriteShiftFunc.Output {
+			public float u;
+			public float v;
+
+			@Override
+			public void accept(float u, float v) {
+				this.u = u;
+				this.v = v;
+			}
+		};
+
 		final Vector4f pos = new Vector4f();
 		final Vector3f normal = new Vector3f();
+		final ShiftOutput shiftOutput = new ShiftOutput();
 		final Vector4f lightPos = new Vector4f();
 
 		DiffuseLightCalculator diffuseCalculator = ForcedDiffuseState.getForcedCalculator();
@@ -130,54 +110,48 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 		for (int i = 0; i < vertexCount; i++) {
 			float x = template.x(i);
 			float y = template.y(i);
-			float z = template.y(i);
-
-			pos.set(x, y, z, 1F);
+			float z = template.z(i);
+			pos.set(x, y, z, 1.0f);
 			pos.mul(modelMat);
-			builder.vertex(pos.x(), pos.y(), pos.z());
 
-			float normalX = template.normalX(i);
-			float normalY = template.normalY(i);
-			float normalZ = template.normalZ(i);
-
+			int packedNormal = template.normal(i);
+			float normalX = ((byte) (packedNormal & 0xFF)) / 127.0f;
+			float normalY = ((byte) ((packedNormal >>> 8) & 0xFF)) / 127.0f;
+			float normalZ = ((byte) ((packedNormal >>> 16) & 0xFF)) / 127.0f;
 			normal.set(normalX, normalY, normalZ);
 			normal.mul(normalMat);
-			float nx = normal.x();
-			float ny = normal.y();
-			float nz = normal.z();
+			normalX = normal.x();
+			normalY = normal.y();
+			normalZ = normal.z();
 
-			byte r, g, b, a;
+			float r, g, b, a;
 			if (shouldColor) {
-				r = (byte) this.r;
-				g = (byte) this.g;
-				b = (byte) this.b;
-				a = (byte) this.a;
+				r = this.r;
+				g = this.g;
+				b = this.b;
+				a = this.a;
 			} else {
-				r = RenderMath.unb(template.r(i));
-				g = RenderMath.unb(template.g(i));
-				b = RenderMath.unb(template.b(i));
-				a = RenderMath.unb(template.a(i));
+				int color = template.color(i);
+				r = (color & 0xFF) / 255.0f;
+				g = ((color >>> 8) & 0xFF) / 255.0f;
+				b = ((color >>> 16) & 0xFF) / 255.0f;
+				a = ((color >>> 24) & 0xFF) / 255.0f;
 			}
-			if (disableDiffuseMult) {
-				builder.color(r, g, b, a);
-			} else {
-				float instanceDiffuse = diffuseCalculator.getDiffuse(nx, ny, nz, shadedPredicate.test(i));
-				int colorR = transformColor(r, instanceDiffuse);
-				int colorG = transformColor(g, instanceDiffuse);
-				int colorB = transformColor(b, instanceDiffuse);
-				builder.color(colorR, colorG, colorB, a);
+			if (!disableDiffuseMult) {
+				// Transformed normal is in camera space, but it is needed in world space to calculate diffuse.
+				normal.mul(RenderSystem.getInverseViewRotationMatrix());
+				float diffuse = diffuseCalculator.getDiffuse(normal.x(), normal.y(), normal.z(), i < unshadedStartVertex);
+				r *= diffuse;
+				g *= diffuse;
+				b *= diffuse;
 			}
 
 			float u = template.u(i);
 			float v = template.v(i);
 			if (spriteShiftFunc != null) {
-				spriteShiftFunc.shift(builder, u, v);
-			} else {
-				builder.uv(u, v);
-			}
-
-			if (hasOverlay) {
-				builder.overlayCoords(overlay);
+				spriteShiftFunc.shift(u, v, shiftOutput);
+				u = shiftOutput.u;
+				v = shiftOutput.v;
 			}
 
 			int light;
@@ -197,16 +171,11 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 			} else {
 				light = template.light(i);
 			}
-
 			if (hybridLight) {
-				builder.uv2(maxLight(light, template.light(i)));
-			} else {
-				builder.uv2(light);
+				light = maxLight(light, template.light(i));
 			}
 
-			builder.normal(nx, ny, nz);
-
-			builder.endVertex();
+			builder.vertex(pos.x(), pos.y(), pos.z(), r, g, b, a, u, v, overlay, light, normalX, normalY, normalZ);
 		}
 
 		reset();
@@ -225,14 +194,12 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 		disableDiffuseMult = false;
 		diffuseCalculator = null;
 		spriteShiftFunc = null;
-		hasOverlay = false;
 		overlay = OverlayTexture.NO_OVERLAY;
 		useWorldLight = false;
 		lightTransform = null;
 		hasCustomLight = false;
 		packedLightCoords = 0;
 		hybridLight = false;
-		fullNormalTransform = false;
 		return this;
 	}
 
@@ -240,17 +207,13 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 		return template.isEmpty();
 	}
 
-	public void delete() {
-		backingStore.free();
-	}
-
 	public PoseStack getTransforms() {
 		return transforms;
 	}
 
 	@Override
-	public SuperByteBuffer translate(double x, double y, double z) {
-		transforms.translate(x, y, z);
+	public SuperByteBuffer scale(float factorX, float factorY, float factorZ) {
+		transforms.scale(factorX, factorY, factorZ);
 		return this;
 	}
 
@@ -261,20 +224,8 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 	}
 
 	@Override
-	public SuperByteBuffer scale(float factorX, float factorY, float factorZ) {
-		transforms.scale(factorX, factorY, factorZ);
-		return this;
-	}
-
-	@Override
-	public SuperByteBuffer pushPose() {
-		transforms.pushPose();
-		return this;
-	}
-
-	@Override
-	public SuperByteBuffer popPose() {
-		transforms.popPose();
+	public SuperByteBuffer translate(double x, double y, double z) {
+		transforms.translate(x, y, z);
 		return this;
 	}
 
@@ -294,31 +245,19 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 		return this;
 	}
 
-	public SuperByteBuffer transform(PoseStack stack) {
-		transforms.last()
-			.pose()
-			.mul(stack.last()
-				.pose());
-		transforms.last()
-			.normal()
-			.mul(stack.last()
-				.normal());
+	@Override
+	public SuperByteBuffer pushPose() {
+		transforms.pushPose();
 		return this;
 	}
 
-	public SuperByteBuffer rotateCentered(Direction axis, float radians) {
-		translate(.5f, .5f, .5f).rotate(radians, axis)
-			.translate(-.5f, -.5f, -.5f);
+	@Override
+	public SuperByteBuffer popPose() {
+		transforms.popPose();
 		return this;
 	}
 
-	public SuperByteBuffer rotateCentered(Quaternionf q) {
-		translate(.5f, .5f, .5f).rotate(q)
-			.translate(-.5f, -.5f, -.5f);
-		return this;
-	}
-
-	public SuperByteBuffer color(int r, int g, int b, int a) {
+	public SuperByteBuffer color(float r, float g, float b, float a) {
 		shouldColor = true;
 		this.r = r;
 		this.g = g;
@@ -327,12 +266,13 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 		return this;
 	}
 
+	public SuperByteBuffer color(int r, int g, int b, int a) {
+		color(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+		return this;
+	}
+
 	public SuperByteBuffer color(int color) {
-		shouldColor = true;
-		r = ((color >> 16) & 0xFF);
-		g = ((color >> 8) & 0xFF);
-		b = (color & 0xFF);
-		a = 255;
+		color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF, 255);
 		return this;
 	}
 
@@ -356,18 +296,18 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 	}
 
 	public SuperByteBuffer shiftUV(SpriteShiftEntry entry) {
-		this.spriteShiftFunc = (builder, u, v) -> {
-			builder.uv(entry.getTargetU(u), entry.getTargetV(v));
+		spriteShiftFunc = (u, v, output) -> {
+			output.accept(entry.getTargetU(u), entry.getTargetV(v));
 		};
 		return this;
 	}
 
 	public SuperByteBuffer shiftUVScrolling(SpriteShiftEntry entry, float scrollV) {
-		return this.shiftUVScrolling(entry, 0, scrollV);
+		return shiftUVScrolling(entry, 0, scrollV);
 	}
 
 	public SuperByteBuffer shiftUVScrolling(SpriteShiftEntry entry, float scrollU, float scrollV) {
-		this.spriteShiftFunc = (builder, u, v) -> {
+		spriteShiftFunc = (u, v, output) -> {
 			float targetU = u - entry.getOriginal()
 				.getU0() + entry.getTarget()
 					.getU0()
@@ -376,29 +316,23 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 				.getV0() + entry.getTarget()
 					.getV0()
 				+ scrollV;
-			builder.uv(targetU, targetV);
+			output.accept(targetU, targetV);
 		};
 		return this;
 	}
 
 	public SuperByteBuffer shiftUVtoSheet(SpriteShiftEntry entry, float uTarget, float vTarget, int sheetSize) {
-		this.spriteShiftFunc = (builder, u, v) -> {
+		spriteShiftFunc = (u, v, output) -> {
 			float targetU = entry.getTarget()
 				.getU((SpriteShiftEntry.getUnInterpolatedU(entry.getOriginal(), u) / sheetSize) + uTarget * 16);
 			float targetV = entry.getTarget()
 				.getV((SpriteShiftEntry.getUnInterpolatedV(entry.getOriginal(), v) / sheetSize) + vTarget * 16);
-			builder.uv(targetU, targetV);
+			output.accept(targetU, targetV);
 		};
 		return this;
 	}
 
-	public SuperByteBuffer overlay() {
-		hasOverlay = true;
-		return this;
-	}
-
 	public SuperByteBuffer overlay(int overlay) {
-		hasOverlay = true;
 		this.overlay = overlay;
 		return this;
 	}
@@ -436,30 +370,6 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 		return this;
 	}
 
-	/**
-	 * Transforms normals not only by the local matrix stack, but also by the passed
-	 * matrix stack.
-	 */
-	public SuperByteBuffer fullNormalTransform() {
-		fullNormalTransform = true;
-		return this;
-	}
-
-	public SuperByteBuffer forEntityRender() {
-		disableDiffuse();
-		overlay();
-		fullNormalTransform();
-		return this;
-	}
-
-	public static int transformColor(byte component, float scale) {
-		return Mth.clamp((int) (Byte.toUnsignedInt(component) * scale), 0, 255);
-	}
-
-	public static int transformColor(int component, float scale) {
-		return Mth.clamp((int) (component * scale), 0, 255);
-	}
-
 	public static int maxLight(int packedLight1, int packedLight2) {
 		int blockLight1 = LightTexture.block(packedLight1);
 		int skyLight1 = LightTexture.sky(packedLight1);
@@ -475,12 +385,15 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 
 	@FunctionalInterface
 	public interface SpriteShiftFunc {
-		void shift(VertexConsumer builder, float u, float v);
+		void shift(float u, float v, Output output);
+
+		interface Output {
+			void accept(float u, float v);
+		}
 	}
 
 	@FunctionalInterface
 	public interface VertexLighter {
 		int getPackedLight(float x, float y, float z);
 	}
-
 }

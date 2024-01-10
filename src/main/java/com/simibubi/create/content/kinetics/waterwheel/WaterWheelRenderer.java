@@ -9,11 +9,11 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.model.BakedModelHelper;
-import com.simibubi.create.foundation.render.BakedModelRenderHelper;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.StitchedSprite;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache.Compartment;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
@@ -70,7 +70,7 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 				dir = state1.getValue(WaterWheelBlock.FACING);
 			}
 			PoseStack transform = CachedBufferer.rotateToFaceVertical(dir).get();
-			return BakedModelRenderHelper.standardModelRender(model, Blocks.AIR.defaultBlockState(), transform);
+			return VirtualRenderHelper.bufferModel(model, Blocks.AIR.defaultBlockState(), transform);
 		});
 	}
 

@@ -14,10 +14,10 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -165,7 +165,7 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 				hatBuffer.translateY(0.75f);
 			}
 			hatBuffer
-				.rotateCentered(Direction.UP, horizontalAngle + Mth.PI)
+				.rotateCentered(horizontalAngle + Mth.PI, Direction.UP)
 				.translate(0.5f, 0, 0.5f)
 				.light(LightTexture.FULL_BRIGHT)
 				.renderInto(ms, solid);
@@ -196,7 +196,7 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 	}
 
 	private static void draw(SuperByteBuffer buffer, float horizontalAngle, PoseStack ms, VertexConsumer vc) {
-		buffer.rotateCentered(Direction.UP, horizontalAngle)
+		buffer.rotateCentered(horizontalAngle, Direction.UP)
 			.light(LightTexture.FULL_BRIGHT)
 			.renderInto(ms, vc);
 	}

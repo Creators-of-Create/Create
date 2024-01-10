@@ -42,9 +42,9 @@ public class BearingRenderer<T extends KineticBlockEntity & IBearingBlockEntity>
 
 		if (facing.getAxis()
 				.isHorizontal())
-			superBuffer.rotateCentered(Direction.UP,
-					AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())));
-		superBuffer.rotateCentered(Direction.EAST, AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)));
+			superBuffer.rotateCentered(
+					AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())), Direction.UP);
+		superBuffer.rotateCentered(AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)), Direction.EAST);
 		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 

@@ -51,7 +51,7 @@ public class MechanicalMixerRenderer extends KineticBlockEntityRenderer<Mechanic
 
 		VertexConsumer vbCutout = buffer.getBuffer(RenderType.cutoutMipped());
 		SuperByteBuffer headRender = CachedBufferer.partial(AllPartialModels.MECHANICAL_MIXER_HEAD, blockState);
-		headRender.rotateCentered(Direction.UP, angle)
+		headRender.rotateCentered(angle, Direction.UP)
 				.translate(0, -renderedHeadOffset, 0)
 				.light(light)
 				.renderInto(ms, vbCutout);

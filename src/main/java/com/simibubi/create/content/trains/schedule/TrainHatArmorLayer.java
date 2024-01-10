@@ -125,7 +125,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			msr.rotateX(-8.5f);
 			BlockState air = Blocks.AIR.defaultBlockState();
 			CachedBufferer.partial(AllPartialModels.TRAIN_HAT, air)
-				.forEntityRender()
+				.disableDiffuse()
 				.light(light)
 				.renderInto(ms, buffer.getBuffer(renderType));
 		}

@@ -9,9 +9,9 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.actors.flwdata.ActorInstance;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
-import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;

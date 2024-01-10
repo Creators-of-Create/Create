@@ -1,19 +1,37 @@
 package com.simibubi.create.content.contraptions.render;
 
 import com.jozufozu.flywheel.api.event.RenderStageEvent;
+import com.jozufozu.flywheel.lib.model.ModelUtil;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.foundation.render.ShadeSeparatingVertexConsumer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
-import com.simibubi.create.foundation.render.VirtualRenderWorld;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class SBBContraptionManager extends ContraptionRenderingWorld<ContraptionRenderInfo> {
 	public static final SuperByteBufferCache.Compartment<Pair<Contraption, RenderType>> CONTRAPTION = new SuperByteBufferCache.Compartment<>();
+	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
 	public SBBContraptionManager(LevelAccessor world) {
 		super(world);
@@ -47,7 +65,7 @@ public class SBBContraptionManager extends ContraptionRenderingWorld<Contraption
 	private void renderContraptionLayerSBB(ContraptionRenderInfo renderInfo, RenderType layer, VertexConsumer consumer) {
 		if (!renderInfo.isVisible()) return;
 
-		SuperByteBuffer contraptionBuffer = CreateClient.BUFFER_CACHE.get(CONTRAPTION, Pair.of(renderInfo.contraption, layer), () -> ContraptionRenderDispatcher.buildStructureBuffer(renderInfo.renderWorld, renderInfo.contraption, layer));
+		SuperByteBuffer contraptionBuffer = CreateClient.BUFFER_CACHE.get(CONTRAPTION, Pair.of(renderInfo.contraption, layer), () -> buildStructureBuffer(renderInfo.renderWorld, renderInfo.contraption, layer));
 
 		if (!contraptionBuffer.isEmpty()) {
 			ContraptionMatrices matrices = renderInfo.getMatrices();
@@ -57,6 +75,53 @@ public class SBBContraptionManager extends ContraptionRenderingWorld<Contraption
 					.hybridLight()
 					.renderInto(matrices.getViewProjection(), consumer);
 		}
+	}
 
+	private static SuperByteBuffer buildStructureBuffer(VirtualRenderWorld renderWorld, Contraption contraption, RenderType layer) {
+		BlockRenderDispatcher dispatcher = ModelUtil.VANILLA_RENDERER;
+		ModelBlockRenderer renderer = dispatcher.getModelRenderer();
+		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
+
+		PoseStack poseStack = objects.poseStack;
+		RandomSource random = objects.random;
+
+		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
+		BufferBuilder shadedBuilder = objects.shadedBuilder;
+		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
+
+		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
+
+		ModelBlockRenderer.enableCaching();
+		for (StructureTemplate.StructureBlockInfo info : contraption.getRenderedBlocks()) {
+			BlockState state = info.state();
+			if (state.getRenderShape() == RenderShape.MODEL) {
+				BlockPos pos = info.pos();
+				BakedModel model = dispatcher.getBlockModel(state);
+				ModelData modelData = contraption.modelData.getOrDefault(pos, ModelData.EMPTY);
+				modelData = model.getModelData(renderWorld, pos, state, modelData);
+				long randomSeed = state.getSeed(pos);
+				random.setSeed(randomSeed);
+				if (model.getRenderTypes(state, random, modelData).contains(layer)) {
+					poseStack.pushPose();
+					poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
+					renderer.tesselateBlock(renderWorld, model, state, pos, poseStack, shadeSeparatingWrapper, true, random, randomSeed, OverlayTexture.NO_OVERLAY, modelData, layer);
+					poseStack.popPose();
+				}
+			}
+		}
+		ModelBlockRenderer.clearCache();
+
+		shadeSeparatingWrapper.clear();
+		return VirtualRenderHelper.endAndCombine(shadedBuilder, unshadedBuilder);
+	}
+
+	private static class ThreadLocalObjects {
+		public final PoseStack poseStack = new PoseStack();
+		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
+		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
+		public final BufferBuilder shadedBuilder = new BufferBuilder(512);
+		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
 	}
 }

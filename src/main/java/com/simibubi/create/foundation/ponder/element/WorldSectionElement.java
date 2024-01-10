@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
+import com.jozufozu.flywheel.lib.model.ModelUtil;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -19,9 +20,11 @@ import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
+import com.simibubi.create.foundation.render.ShadeSeparatingVertexConsumer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -341,8 +344,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
-//			ModelUtil.VANILLA_RENDERER
-//				.renderBreakingTexture(world.getBlockState(pos), pos, world, ms, builder, ModelData.EMPTY);
+			ModelUtil.VANILLA_RENDERER
+				.renderBreakingTexture(world.getBlockState(pos), pos, world, ms, builder, ModelData.EMPTY);
 			ms.popPose();
 		}
 
@@ -405,62 +408,58 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {
-//		BlockRenderDispatcher dispatcher = ModelUtil.VANILLA_RENDERER;
-//		ModelBlockRenderer renderer = dispatcher.getModelRenderer();
-//		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
-//
-//		PoseStack poseStack = objects.poseStack;
-//		RandomSource random = objects.random;
-//		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
-//		BufferBuilder shadedBuilder = objects.shadedBuilder;
-//		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
-//
-//		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-//		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-//		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
-//
-//		world.setMask(this.section);
-//		ModelBlockRenderer.enableCaching();
-//		section.forEach(pos -> {
-//			BlockState state = world.getBlockState(pos);
-//			FluidState fluidState = world.getFluidState(pos);
-//
-//			poseStack.pushPose();
-//			poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
-//
-//			if (state.getRenderShape() == RenderShape.MODEL) {
-//				BakedModel model = dispatcher.getBlockModel(state);
-//				BlockEntity blockEntity = world.getBlockEntity(pos);
-//				ModelData modelData = blockEntity != null ? blockEntity.getModelData() : ModelData.EMPTY;
-//				modelData = model.getModelData(world, pos, state, modelData);
-//				long seed = state.getSeed(pos);
-//				random.setSeed(seed);
-//				if (model.getRenderTypes(state, random, modelData).contains(layer)) {
-//					renderer.tesselateBlock(world, model, state, pos, poseStack, shadeSeparatingWrapper, true,
-//						random, seed, OverlayTexture.NO_OVERLAY, modelData, layer);
-//				}
-//			}
-//
-//			if (!fluidState.isEmpty() && ItemBlockRenderTypes.getRenderLayer(fluidState) == layer)
-//				dispatcher.renderLiquid(pos, world, shadedBuilder, state, fluidState);
-//
-//			poseStack.popPose();
-//		});
-//		ModelBlockRenderer.clearCache();
-//		world.clearMask();
-//
-//		shadeSeparatingWrapper.clear();
-//		ShadeSeparatedBufferedData bufferedData = ModelUtil.endAndCombine(shadedBuilder, unshadedBuilder);
-//
-//		SuperByteBuffer sbb = new SuperByteBuffer(bufferedData);
-//		bufferedData.release();
-		return null;
+		BlockRenderDispatcher dispatcher = ModelUtil.VANILLA_RENDERER;
+		ModelBlockRenderer renderer = dispatcher.getModelRenderer();
+		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
+
+		PoseStack poseStack = objects.poseStack;
+		RandomSource random = objects.random;
+		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
+		BufferBuilder shadedBuilder = objects.shadedBuilder;
+		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
+
+		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
+
+		world.setMask(this.section);
+		ModelBlockRenderer.enableCaching();
+		section.forEach(pos -> {
+			BlockState state = world.getBlockState(pos);
+			FluidState fluidState = world.getFluidState(pos);
+
+			poseStack.pushPose();
+			poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
+
+			if (state.getRenderShape() == RenderShape.MODEL) {
+				BakedModel model = dispatcher.getBlockModel(state);
+				BlockEntity blockEntity = world.getBlockEntity(pos);
+				ModelData modelData = blockEntity != null ? blockEntity.getModelData() : ModelData.EMPTY;
+				modelData = model.getModelData(world, pos, state, modelData);
+				long seed = state.getSeed(pos);
+				random.setSeed(seed);
+				if (model.getRenderTypes(state, random, modelData).contains(layer)) {
+					renderer.tesselateBlock(world, model, state, pos, poseStack, shadeSeparatingWrapper, true,
+						random, seed, OverlayTexture.NO_OVERLAY, modelData, layer);
+				}
+			}
+
+			if (!fluidState.isEmpty() && ItemBlockRenderTypes.getRenderLayer(fluidState) == layer)
+				dispatcher.renderLiquid(pos, world, shadedBuilder, state, fluidState);
+
+			poseStack.popPose();
+		});
+		ModelBlockRenderer.clearCache();
+		world.clearMask();
+
+		shadeSeparatingWrapper.clear();
+		return VirtualRenderHelper.endAndCombine(shadedBuilder, unshadedBuilder);
 	}
 
 	private static class ThreadLocalObjects {
 		public final PoseStack poseStack = new PoseStack();
 		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
-		//public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
+		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
 		public final BufferBuilder shadedBuilder = new BufferBuilder(512);
 		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
 	}

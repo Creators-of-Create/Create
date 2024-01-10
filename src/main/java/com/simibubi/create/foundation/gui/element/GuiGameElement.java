@@ -13,7 +13,7 @@ import com.mojang.math.Axis;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.gui.ILightingSettings;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.render.ModelUtil;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -188,19 +188,19 @@ public class GuiGameElement {
 				RenderType renderType = Sheets.translucentCullBlockSheet();
 				blockRenderer.getModelRenderer()
 					.renderModel(ms.last(), buffer.getBuffer(renderType), blockState, blockModel, 1, 1, 1,
-						LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, ModelUtil.VIRTUAL_DATA, null);
+						LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, VirtualRenderHelper.VIRTUAL_DATA, null);
 			} else {
 				int color = Minecraft.getInstance()
 					.getBlockColors()
 					.getColor(blockState, null, null, 0);
 				Color rgb = new Color(color == -1 ? this.color : color);
 
-				for (RenderType chunkType : blockModel.getRenderTypes(blockState, RandomSource.create(42L), ModelUtil.VIRTUAL_DATA)) {
+				for (RenderType chunkType : blockModel.getRenderTypes(blockState, RandomSource.create(42L), VirtualRenderHelper.VIRTUAL_DATA)) {
 					RenderType renderType = RenderTypeHelper.getEntityRenderType(chunkType, true);
 					blockRenderer.getModelRenderer()
 						.renderModel(ms.last(), buffer.getBuffer(renderType), blockState, blockModel,
 							rgb.getRedAsFloat(), rgb.getGreenAsFloat(), rgb.getBlueAsFloat(),
-							LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, ModelUtil.VIRTUAL_DATA, chunkType);
+							LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, VirtualRenderHelper.VIRTUAL_DATA, chunkType);
 				}
 			}
 

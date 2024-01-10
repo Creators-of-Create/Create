@@ -9,7 +9,7 @@ import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterActorInstance;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.foundation.render.VirtualRenderWorld;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.data.ModelData;

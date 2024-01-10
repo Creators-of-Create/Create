@@ -22,11 +22,11 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringR
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -148,9 +148,9 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 			axisDirectionMatters && (deployerState.getValue(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z) ? 90
 				: 0;
 
-		buffer.rotateCentered(Direction.UP, (float) ((yRot) / 180 * Math.PI));
-		buffer.rotateCentered(Direction.EAST, (float) ((xRot) / 180 * Math.PI));
-		buffer.rotateCentered(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
+		buffer.rotateCentered((float) ((yRot) / 180 * Math.PI), Direction.UP);
+		buffer.rotateCentered((float) ((xRot) / 180 * Math.PI), Direction.EAST);
+		buffer.rotateCentered((float) ((zRot) / 180 * Math.PI), Direction.SOUTH);
 		return buffer;
 	}
 
@@ -202,7 +202,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 			.rotateZ(axis.isHorizontal() ? 90 : 0)
 			.uncenter();
 		shaft.transform(m);
-		shaft.rotateCentered(Direction.get(AxisDirection.POSITIVE, Direction.Axis.Y), angle);
+		shaft.rotateCentered(angle, Direction.get(AxisDirection.POSITIVE, Direction.Axis.Y));
 		m.popPose();
 
 		if (!context.disabled)

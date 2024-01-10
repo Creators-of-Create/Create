@@ -41,7 +41,7 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		if (entity.size == 2)
 			sbb.translate(.5, 0, -.5);
 
-		sbb.forEntityRender()
+		sbb.disableDiffuse()
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(Sheets.solidBlockSheet()));
 		super.render(entity, yaw, pt, ms, buffer, light);

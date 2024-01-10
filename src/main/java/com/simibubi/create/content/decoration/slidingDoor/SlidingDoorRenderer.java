@@ -61,8 +61,8 @@ public class SlidingDoorRenderer extends SafeBlockEntityRenderer<SlidingDoorBloc
 				partial.translate(0, -1 / 512f, 0)
 					.translate(Vec3.atLowerCornerOf(facing.getNormal())
 						.scale(value2 * 1 / 32f));
-				partial.rotateCentered(Direction.UP,
-					Mth.DEG_TO_RAD * AngleHelper.horizontalAngle(facing.getClockWise()));
+				partial.rotateCentered(
+					Mth.DEG_TO_RAD * AngleHelper.horizontalAngle(facing.getClockWise()), Direction.UP);
 
 				if (flip)
 					partial.translate(0, 0, 1);

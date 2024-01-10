@@ -69,7 +69,7 @@ public class GaugeRenderer extends ShaftRenderer<GaugeBlockEntity> {
 	}
 
 	protected SuperByteBuffer rotateBufferTowards(SuperByteBuffer buffer, Direction target) {
-		return buffer.rotateCentered(Direction.UP, (float) ((-target.toYRot() - 90) / 180 * Math.PI));
+		return buffer.rotateCentered((float) ((-target.toYRot() - 90) / 180 * Math.PI), Direction.UP);
 	}
 
 }

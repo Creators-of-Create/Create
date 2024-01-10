@@ -27,18 +27,18 @@ public class CachedBufferer {
 	}
 
 	public static SuperByteBuffer block(Compartment<BlockState> compartment, BlockState toRender) {
-		return CreateClient.BUFFER_CACHE.get(compartment, toRender, () -> BakedModelRenderHelper.standardBlockRender(toRender));
+		return CreateClient.BUFFER_CACHE.get(compartment, toRender, () -> VirtualRenderHelper.bufferBlock(toRender));
 	}
 
 	public static SuperByteBuffer partial(PartialModel partial, BlockState referenceState) {
 		return CreateClient.BUFFER_CACHE.get(PARTIAL, partial,
-				() -> BakedModelRenderHelper.standardModelRender(partial.get(), referenceState));
+				() -> VirtualRenderHelper.bufferModel(partial.get(), referenceState));
 	}
 
 	public static SuperByteBuffer partial(PartialModel partial, BlockState referenceState,
 			Supplier<PoseStack> modelTransform) {
 		return CreateClient.BUFFER_CACHE.get(PARTIAL, partial,
-				() -> BakedModelRenderHelper.standardModelRender(partial.get(), referenceState, modelTransform.get()));
+				() -> VirtualRenderHelper.bufferModel(partial.get(), referenceState, modelTransform.get()));
 	}
 
 	public static SuperByteBuffer partialFacing(PartialModel partial, BlockState referenceState) {
@@ -59,7 +59,7 @@ public class CachedBufferer {
 	public static SuperByteBuffer partialDirectional(PartialModel partial, BlockState referenceState, Direction dir,
 			Supplier<PoseStack> modelTransform) {
 		return CreateClient.BUFFER_CACHE.get(DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
-			() -> BakedModelRenderHelper.standardModelRender(partial.get(), referenceState, modelTransform.get()));
+			() -> VirtualRenderHelper.bufferModel(partial.get(), referenceState, modelTransform.get()));
 	}
 
 	public static Supplier<PoseStack> rotateToFace(Direction facing) {

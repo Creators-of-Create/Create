@@ -79,7 +79,7 @@ public class CuckooClockRenderer extends KineticBlockEntityRenderer<CuckooClockB
 			PartialModel partialModel = (be.animationType == Animation.PIG ? AllPartialModels.CUCKOO_PIG : AllPartialModels.CUCKOO_CREEPER);
 			SuperByteBuffer figure =
 					CachedBufferer.partial(partialModel, blockState);
-			figure.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(direction.getCounterClockWise())));
+			figure.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(direction.getCounterClockWise())), Direction.UP);
 			figure.translate(offset, 0, 0);
 			figure.light(light)
 					.renderInto(ms, vb);
@@ -98,7 +98,7 @@ public class CuckooClockRenderer extends KineticBlockEntityRenderer<CuckooClockB
 		float pivotX = 2 / 16f;
 		float pivotY = 6 / 16f;
 		float pivotZ = 8 / 16f;
-		buffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing.getCounterClockWise())));
+		buffer.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(facing.getCounterClockWise())), Direction.UP);
 		buffer.translate(pivotX, pivotY, pivotZ);
 		buffer.rotate(AngleHelper.rad(angle), Direction.EAST);
 		buffer.translate(-pivotX, -pivotY, -pivotZ);
@@ -109,7 +109,7 @@ public class CuckooClockRenderer extends KineticBlockEntityRenderer<CuckooClockB
 		float pivotX = 2 / 16f;
 		float pivotY = 0;
 		float pivotZ = (left ? 6 : 10) / 16f;
-		buffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing.getCounterClockWise())));
+		buffer.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(facing.getCounterClockWise())), Direction.UP);
 		buffer.translate(pivotX, pivotY, pivotZ);
 		buffer.rotate(AngleHelper.rad(angle) * (left ? -1 : 1), Direction.UP);
 		buffer.translate(-pivotX, -pivotY, -pivotZ);

@@ -172,9 +172,9 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 		if (!VisualizationManager.supportsVisualization(be.getLevel())) {
 			SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.SHAFTLESS_COGWHEEL, blockState);
 			standardKineticRotationTransform(superBuffer, be, light);
-			superBuffer.rotateCentered(Direction.UP, (float) (blockState.getValue(HORIZONTAL_FACING)
-				.getAxis() != Direction.Axis.X ? 0 : Math.PI / 2));
-			superBuffer.rotateCentered(Direction.EAST, (float) (Math.PI / 2));
+			superBuffer.rotateCentered((float) (blockState.getValue(HORIZONTAL_FACING)
+				.getAxis() != Direction.Axis.X ? 0 : Math.PI / 2), Direction.UP);
+			superBuffer.rotateCentered((float) (Math.PI / 2), Direction.EAST);
 			superBuffer.renderInto(ms, vb);
 		}
 
@@ -215,8 +215,8 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 		float xRot = crafterState.getValue(MechanicalCrafterBlock.POINTING)
 			.getXRotation();
 		float yRot = AngleHelper.horizontalAngle(crafterState.getValue(HORIZONTAL_FACING));
-		buffer.rotateCentered(Direction.UP, (float) ((yRot + 90) / 180 * Math.PI));
-		buffer.rotateCentered(Direction.EAST, (float) ((xRot) / 180 * Math.PI));
+		buffer.rotateCentered((float) ((yRot + 90) / 180 * Math.PI), Direction.UP);
+		buffer.rotateCentered((float) ((xRot) / 180 * Math.PI), Direction.EAST);
 		return buffer;
 	}
 

@@ -45,8 +45,8 @@ public class SpeedControllerRenderer extends SmartBlockEntityRenderer<SpeedContr
 
 		SuperByteBuffer bracket = CachedBufferer.partial(AllPartialModels.SPEED_CONTROLLER_BRACKET, blockState);
 		bracket.translate(0, 1, 0);
-		bracket.rotateCentered(Direction.UP,
-				(float) (alongX ? Math.PI : Math.PI / 2));
+		bracket.rotateCentered(
+				(float) (alongX ? Math.PI : Math.PI / 2), Direction.UP);
 		bracket.light(LevelRenderer.getLightColor(world, pos.above()));
 		bracket.renderInto(ms, builder);
 	}

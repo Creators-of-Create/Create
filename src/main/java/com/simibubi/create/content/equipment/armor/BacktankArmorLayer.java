@@ -55,7 +55,7 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		ms.translate(-1 / 2f, 10 / 16f, 1f);
 		ms.scale(1, -1, -1);
 
-		backtank.forEntityRender()
+		backtank.disableDiffuse()
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(renderType));
 
@@ -66,7 +66,7 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			.rotate(AngleHelper.rad(2 * AnimationTickHolder.getRenderTime(entity.level()) % 360), Direction.EAST)
 			.translate(0, -6.5f / 16, -11f / 16);
 
-		cogs.forEntityRender()
+		cogs.disableDiffuse()
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(renderType));
 
