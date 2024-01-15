@@ -6,7 +6,7 @@ public class CSchematics extends ConfigBase {
 
 	public final ConfigBool creativePrintIncludesAir = b(false, "creativePrintIncludesAir", Comments.creativePrintIncludesAir);
 	public final ConfigInt maxSchematics = i(10, 1, "maxSchematics", Comments.maxSchematics);
-	public final ConfigInt maxTotalSchematicSize = i(256, 16, "maxSchematics", Comments.kb, Comments.maxSize);
+	public final ConfigInt maxTotalSchematicSize = i(256, 16, "maxTotalSchematicSize", Comments.kb, Comments.maxSize);
 	public final ConfigInt maxSchematicPacketSize =
 		i(1024, 256, 32767, "maxSchematicPacketSize", Comments.b, Comments.maxPacketSize);
 	public final ConfigInt schematicIdleTimeout = i(600, 100, "schematicIdleTimeout", Comments.idleTimeout);
