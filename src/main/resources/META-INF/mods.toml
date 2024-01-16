@@ -5,7 +5,7 @@ license="MIT"
 
 [[mods]]
 modId="create"
-# The Implementation-Version property in the jar's MANIFEST.MF file will be used as the mod version at runtime 
+# The Implementation-Version property in the jar's MANIFEST.MF file will be used as the mod version at runtime
 version="${file.jarVersion}"
 displayName="Create"
 #updateJSONURL=""
@@ -33,6 +33,6 @@ Technology that empowers the player.'''
 [[dependencies.create]]
     modId="flywheel"
     mandatory=true
-    versionRange="[0.6.10,0.6.11)"
+    versionRange="[1.0.0-alpha,2.0)"
     ordering="AFTER"
     side="CLIENT"

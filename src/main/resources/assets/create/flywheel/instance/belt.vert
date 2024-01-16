@@ -1,33 +1,23 @@
 #define PI 3.1415926538
 
-#include "flywheel:core/quaternion.glsl"
-#include "flywheel:core/matutils.glsl"
+#include "flywheel:util/quaternion.glsl"
+#include "flywheel:util/matrix.glsl"
 
-struct Belt {
-    vec2 light;
-    vec4 color;
-    vec3 pos;
-    float speed;
-    float offset;
-    vec4 rotation;
-    vec2 sourceTexture;
-    vec4 scrollTexture;
-    float scrollMult;
-};
+const float uTime = 0.;
 
 
-void vertex(inout Vertex v, Belt instance) {
-    v.pos = rotateVertexByQuat(v.pos - .5, instance.rotation) + instance.pos + .5;
+void flw_instanceVertex(in FlwInstance instance) {
+    flw_vertexPos = vec4(rotateVertexByQuat(flw_vertexPos.xyz - .5, instance.rotation) + instance.pos + .5, 1.);
 
-    v.normal = rotateVertexByQuat(v.normal, instance.rotation);
+    flw_vertexNormal = rotateVertexByQuat(flw_vertexNormal, instance.rotation);
 
     float scrollSize = instance.scrollTexture.w - instance.scrollTexture.y;
     float scroll = fract(instance.speed * uTime / (31.5 * 16.) + instance.offset) * scrollSize * instance.scrollMult;
 
-    v.texCoords = v.texCoords - instance.sourceTexture + instance.scrollTexture.xy + vec2(0, scroll);
-    v.light = instance.light;
+    flw_vertexTexCoord = flw_vertexTexCoord - instance.sourceTexture + instance.scrollTexture.xy + vec2(0, scroll);
+    flw_vertexLight = instance.light;
 
     #if defined(DEBUG_RAINBOW)
-    v.color = instance.color;
+    flw_vertexColor = instance.color;
     #endif
 }

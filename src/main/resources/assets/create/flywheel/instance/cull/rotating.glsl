@@ -11,16 +11,10 @@ mat4 kineticRotation(float offset, float speed, vec3 axis) {
     return rotate(axis, angle);
 }
 
-void flw_instanceVertex(in FlwInstance instance) {
+void flw_transformBoundingSphere(in FlwInstance instance, inout vec3 center, inout float radius) {
+    // FIXME: this is incorrect, but it compiles
     mat4 spin = kineticRotation(instance.offset, instance.speed, instance.axis);
 
-    vec4 worldPos = spin * vec4(flw_vertexPos.xyz - .5, 1.);
-    flw_vertexPos = vec4(worldPos.xyz + instance.pos + .5, 1.);
-
-    flw_vertexNormal = modelToNormal(spin) * flw_vertexNormal;
-    flw_vertexLight = instance.light;
-
-    #if defined(DEBUG_RAINBOW)
-    flw_vertexColor = instance.color;
-    #endif
+    vec4 worldPos = spin * vec4(center - .5, 1.);
+    center = worldPos.xyz + instance.pos + .5;
 }
