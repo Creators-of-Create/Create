@@ -44,3 +44,5 @@ local.properties
 
 .DS_Store
 /libs/
+
+changelog.html

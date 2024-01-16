@@ -1,7 +1,7 @@
 //file:noinspection GroovyAssignabilityCheck
 plugins {
     id 'dev.architectury.loom' version "${loom_version}"
-    id 'me.shedaniel.unified-publishing' version "${unified_publishing_version}"
+    id 'me.modmuss50.mod-publish-plugin' version "${mod_publish_version}"
     id 'maven-publish'
 }
 
@@ -248,13 +248,16 @@ publishing {
 
     repositories {
         if (project.hasProperty('mavendir')) {
-            maven { url mavendir }
+            maven { url = property('mavendir') }
         }
     }
 }
 
 String getChangelogText() {
     def changelogFile = file('changelog.txt')
+    if(!changelogFile.exists()) {
+        return ''
+    }
     String str = ''
     int lineCount = 0
     boolean done = false
@@ -284,36 +287,47 @@ String getChangelogText() {
 }
 
 // changelog debugging
-//new File("changelog.html").write getChangelogText()
-//tasks.publishUnified.enabled = !dev && (project.hasProperty('simi_curseforge_key') || project.hasProperty('simi_modrinth_key'))
-//unifiedPublishing {
-//    project {
-//        gameVersions = [minecraft_version]
-//        gameLoaders = ['forge']
-//        releaseType = project.release_type
-//
-//        mainPublication tasks.releaseJar
-//
-//        if (project.hasProperty('simi_curseforge_key')) {
-//            curseforge {
-//                token = project.simi_curseforge_key
-//                id = project.curseforge_project_id
-//            }
-//        }
-//
-//        if (project.hasProperty('simi_modrinth_key')) {
-//            modrinth {
-//                token = project.simi_modrinth_key
-//                id = project.modrinth_project_id
-//            }
-//        }
-//
-//        relations {
-//            optional {
-//                curseforge = 'jei'
-//                modrinth = 'jei'
-//            }
-//        }
-//    }
-//}
+new File("changelog.html").write getChangelogText()
+tasks.publishMods.enabled = !dev && (project.hasProperty('simi_curseforge_key') || project.hasProperty('simi_modrinth_key'))
+publishMods {
+    changelog = getChangelogText()
+    type = BETA
 
+    def version = mod_version
+    def index = version.lastIndexOf('.')
+    if (index > 0) {
+        // remove the last dot (0.0.0.a -> 0.0.0a)
+        version = version.substring(0, index) + version.substring(index + 1)
+    }
+
+    displayName = "${project.name} ${minecraft_version} ${version}"
+
+    file = remapJar.archiveFile
+    modLoaders.add('forge')
+
+    if (project.hasProperty('simi_curseforge_key')) {
+        curseforge {
+            accessToken = project.simi_curseforge_key
+            projectId = project.curseforge_project_id
+            minecraftVersions.add(minecraft_version)
+
+            optional {
+                slug = 'jei'
+            }
+        }
+    }
+
+    if (project.hasProperty('simi_modrinth_key')) {
+        modrinth {
+            accessToken = project.simi_modrinth_key
+            projectId = project.modrinth_project_id
+            minecraftVersions.add(minecraft_version)
+
+            optional {
+                slug = 'jei'
+            }
+        }
+    }
+
+    dryRun = true
+}
