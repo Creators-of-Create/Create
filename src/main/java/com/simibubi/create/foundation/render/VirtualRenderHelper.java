@@ -7,9 +7,12 @@ import java.util.List;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.Nullable;
 
+import com.jozufozu.flywheel.api.model.Model;
+import com.jozufozu.flywheel.lib.model.ModelCache;
 import com.jozufozu.flywheel.lib.model.ModelUtil;
 import com.jozufozu.flywheel.lib.model.baked.BakedModelBufferer;
 import com.jozufozu.flywheel.lib.model.baked.BakedModelBufferer.ShadeSeparatedResultConsumer;
+import com.jozufozu.flywheel.lib.model.baked.BlockModelBuilder;
 import com.jozufozu.flywheel.lib.model.baked.VirtualEmptyBlockGetter;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
@@ -24,9 +27,19 @@ import net.minecraftforge.client.model.data.ModelProperty;
 public class VirtualRenderHelper {
 	public static final ModelProperty<Boolean> VIRTUAL_PROPERTY = new ModelProperty<>();
 	public static final ModelData VIRTUAL_DATA = ModelData.builder().with(VIRTUAL_PROPERTY, true).build();
+	public static final ModelCache<BlockState> VIRTUAL_BLOCKS = new ModelCache<>(state -> new BlockModelBuilder(state).modelData(VIRTUAL_DATA).build());
 
 	public static boolean isVirtual(ModelData data) {
 		return data.has(VirtualRenderHelper.VIRTUAL_PROPERTY) && data.get(VirtualRenderHelper.VIRTUAL_PROPERTY);
+	}
+
+	/**
+	 * A copy of {@link com.jozufozu.flywheel.lib.model.Models#block(BlockState)}, but with virtual model data passed in.
+	 * @param state The block state to get the model for.
+	 * @return The model for the given block state.
+	 */
+	public static Model blockModel(BlockState state) {
+		return VIRTUAL_BLOCKS.get(state);
 	}
 
 	public static SuperByteBuffer bufferBlock(BlockState state) {

@@ -9,6 +9,7 @@ import com.jozufozu.flywheel.lib.instance.OrientedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 public class RopePulleyInstance extends AbstractPulleyInstance<PulleyBlockEntity> {
@@ -17,11 +18,11 @@ public class RopePulleyInstance extends AbstractPulleyInstance<PulleyBlockEntity
 	}
 
 	protected Instancer<OrientedInstance> getRopeModel() {
-		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.block(AllBlocks.ROPE.getDefaultState()), RenderStage.AFTER_BLOCK_ENTITIES);
+		return instancerProvider.instancer(InstanceTypes.ORIENTED, VirtualRenderHelper.blockModel(AllBlocks.ROPE.getDefaultState()), RenderStage.AFTER_BLOCK_ENTITIES);
 	}
 
 	protected Instancer<OrientedInstance> getMagnetModel() {
-		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.block(AllBlocks.PULLEY_MAGNET.getDefaultState()), RenderStage.AFTER_BLOCK_ENTITIES);
+		return instancerProvider.instancer(InstanceTypes.ORIENTED, VirtualRenderHelper.blockModel(AllBlocks.PULLEY_MAGNET.getDefaultState()), RenderStage.AFTER_BLOCK_ENTITIES);
 	}
 
 	protected Instancer<OrientedInstance> getHalfMagnetModel() {

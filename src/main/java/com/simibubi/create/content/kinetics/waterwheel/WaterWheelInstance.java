@@ -3,7 +3,6 @@ package com.simibubi.create.content.kinetics.waterwheel;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.model.ModelCache;
-import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.model.baked.BakedModelBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.base.CutoutRotatingInstance;
@@ -12,7 +11,6 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class WaterWheelInstance<T extends WaterWheelBlockEntity> extends CutoutRotatingInstance<T> {
@@ -24,7 +22,7 @@ public class WaterWheelInstance<T extends WaterWheelBlockEntity> extends CutoutR
 	public WaterWheelInstance(VisualizationContext materialManager, T blockEntity, boolean large) {
 		super(materialManager, blockEntity);
 		this.large = large;
-		key = new WaterWheelModelKey(large, getRenderedBlockState(), blockEntity.material);
+        key = new WaterWheelModelKey(large, blockState, blockEntity.material);
 	}
 
 	public static <T extends WaterWheelBlockEntity> WaterWheelInstance<T> standard(VisualizationContext materialManager, T blockEntity) {

@@ -12,7 +12,6 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import com.jozufozu.flywheel.api.event.RenderStage;
-import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
@@ -24,13 +23,13 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.ModelData;
 
 /**
  * This is a port of the bogey api from Extended Bogeys, If you are looking to implement your own bogeys you can find some helpful resources below:
@@ -214,7 +213,7 @@ public abstract class BogeyRenderer {
 	 */
 	public void createModelInstance(VisualizationContext materialManager, BlockState state, int count) {
 		var instancer = materialManager.instancerProvider()
-				.instancer(InstanceTypes.TRANSFORMED, Models.block(state), RenderStage.AFTER_BLOCK_ENTITIES);
+				.instancer(InstanceTypes.TRANSFORMED, VirtualRenderHelper.blockModel(state), RenderStage.AFTER_BLOCK_ENTITIES);
 		BogeyModelData[] modelData = IntStream.range(0, count)
 				.mapToObj(i -> instancer.createInstance())
 				.map(BogeyModelData::new)

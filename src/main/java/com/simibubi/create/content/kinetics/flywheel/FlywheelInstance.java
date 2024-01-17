@@ -9,12 +9,12 @@ import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
-import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -29,9 +29,9 @@ public class FlywheelInstance extends KineticBlockEntityInstance<FlywheelBlockEn
 	public FlywheelInstance(VisualizationContext materialManager, FlywheelBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 
-		shaft = setup(instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.block(shaft()), RenderStage.AFTER_BLOCK_ENTITIES)
+		shaft = setup(instancerProvider.instancer(AllInstanceTypes.ROTATING, VirtualRenderHelper.blockModel(shaft()), RenderStage.AFTER_BLOCK_ENTITIES)
 			.createInstance());
-		wheel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.block(blockState), RenderStage.AFTER_BLOCK_ENTITIES)
+		wheel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, VirtualRenderHelper.blockModel(blockState), RenderStage.AFTER_BLOCK_ENTITIES)
 			.createInstance();
 
 		animate(blockEntity.angle);

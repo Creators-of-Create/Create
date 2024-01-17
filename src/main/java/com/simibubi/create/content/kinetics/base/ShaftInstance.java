@@ -1,8 +1,8 @@
 package com.simibubi.create.content.kinetics.base;
 
+import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
-
-import net.minecraft.world.level.block.state.BlockState;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
 public class ShaftInstance<T extends KineticBlockEntity> extends SingleRotatingInstance<T> {
 
@@ -11,8 +11,7 @@ public class ShaftInstance<T extends KineticBlockEntity> extends SingleRotatingI
 	}
 
 	@Override
-	protected BlockState getRenderedBlockState() {
-		return shaft();
+	protected Model model() {
+		return VirtualRenderHelper.blockModel(shaft());
 	}
-
 }

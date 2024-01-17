@@ -39,15 +39,16 @@ public class ActorInstance extends AbstractInstance {
         return this;
     }
 
-    public ActorInstance setBlockLight(int blockLight) {
-        this.blockLight = (byte) ((blockLight & 0xF) << 4);
-        return this;
-    }
 
-    public ActorInstance setSkyLight(int skyLight) {
-        this.skyLight = (byte) ((skyLight & 0xF) << 4);
-        return this;
-    }
+	public ActorInstance setBlockLight(int blockLight) {
+		this.blockLight = (byte) blockLight;
+		return this;
+	}
+
+	public ActorInstance setSkyLight(int skyLight) {
+		this.skyLight = (byte) skyLight;
+		return this;
+	}
 
     public ActorInstance setRotationOffset(float rotationOffset) {
         this.rotationOffset = rotationOffset;

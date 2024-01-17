@@ -5,6 +5,7 @@ import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Rotation;
@@ -26,7 +27,7 @@ public class SawInstance extends SingleRotatingInstance<SawBlockEntity> {
 			Direction facing = referenceState.getValue(BlockStateProperties.FACING);
 			return Models.partial(AllPartialModels.SHAFT_HALF, facing);
 		} else {
-			return Models.block(shaft());
+			return VirtualRenderHelper.blockModel(shaft());
 		}
 	}
 }

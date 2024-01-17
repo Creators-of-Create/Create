@@ -10,8 +10,8 @@ import com.jozufozu.flywheel.api.layout.IntegerRepr;
 import com.jozufozu.flywheel.api.layout.LayoutBuilder;
 import com.jozufozu.flywheel.lib.instance.SimpleInstanceType;
 import com.simibubi.create.content.contraptions.actors.flwdata.ActorInstance;
-import com.simibubi.create.content.kinetics.belt.BeltInstance;
 import com.simibubi.create.content.kinetics.base.RotatingInstance;
+import com.simibubi.create.content.kinetics.belt.BeltInstance;
 import com.simibubi.create.content.logistics.flwdata.FlapData;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,7 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class AllInstanceTypes {
-	// FIXME: memory alignment issues and light being represented by bytes
+	// FIXME: optimize layouts/pack fields together if possible
 
 	public static final InstanceType<RotatingInstance> ROTATING = SimpleInstanceType.builder(RotatingInstance::new)
 			.cullShader(asResource("instance/cull/rotating.glsl"))
@@ -39,14 +39,14 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutByte(ptr + 5, instance.g);
 				MemoryUtil.memPutByte(ptr + 6, instance.b);
 				MemoryUtil.memPutByte(ptr + 7, instance.a);
-				MemoryUtil.memPutFloat(ptr + 6, instance.x);
-				MemoryUtil.memPutFloat(ptr + 10, instance.y);
-				MemoryUtil.memPutFloat(ptr + 14, instance.z);
-				MemoryUtil.memPutFloat(ptr + 18, instance.rotationalSpeed);
-				MemoryUtil.memPutFloat(ptr + 22, instance.rotationOffset);
-				MemoryUtil.memPutByte(ptr + 26, instance.rotationAxisX);
-				MemoryUtil.memPutByte(ptr + 27, instance.rotationAxisY);
-				MemoryUtil.memPutByte(ptr + 28, instance.rotationAxisZ);
+				MemoryUtil.memPutFloat(ptr + 8, instance.x);
+				MemoryUtil.memPutFloat(ptr + 12, instance.y);
+				MemoryUtil.memPutFloat(ptr + 16, instance.z);
+				MemoryUtil.memPutFloat(ptr + 20, instance.rotationalSpeed);
+				MemoryUtil.memPutFloat(ptr + 24, instance.rotationOffset);
+				MemoryUtil.memPutByte(ptr + 28, instance.rotationAxisX);
+				MemoryUtil.memPutByte(ptr + 29, instance.rotationAxisY);
+				MemoryUtil.memPutByte(ptr + 30, instance.rotationAxisZ);
 			})
 			.register();
 	public static final InstanceType<BeltInstance> BELTS = SimpleInstanceType.builder(BeltInstance::new)
@@ -70,22 +70,22 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutByte(ptr + 5, instance.g);
 				MemoryUtil.memPutByte(ptr + 6, instance.b);
 				MemoryUtil.memPutByte(ptr + 7, instance.a);
-				MemoryUtil.memPutFloat(ptr + 6, instance.x);
-				MemoryUtil.memPutFloat(ptr + 10, instance.y);
-				MemoryUtil.memPutFloat(ptr + 14, instance.z);
-				MemoryUtil.memPutFloat(ptr + 18, instance.rotationalSpeed);
-				MemoryUtil.memPutFloat(ptr + 22, instance.rotationOffset);
-				MemoryUtil.memPutFloat(ptr + 26, instance.qX);
-				MemoryUtil.memPutFloat(ptr + 30, instance.qY);
-				MemoryUtil.memPutFloat(ptr + 34, instance.qZ);
-				MemoryUtil.memPutFloat(ptr + 38, instance.qW);
-				MemoryUtil.memPutFloat(ptr + 42, instance.sourceU);
-				MemoryUtil.memPutFloat(ptr + 46, instance.sourceV);
-				MemoryUtil.memPutFloat(ptr + 50, instance.minU);
-				MemoryUtil.memPutFloat(ptr + 54, instance.minV);
-				MemoryUtil.memPutFloat(ptr + 58, instance.maxU);
-				MemoryUtil.memPutFloat(ptr + 62, instance.maxV);
-				MemoryUtil.memPutByte(ptr + 66, instance.scrollMult);
+				MemoryUtil.memPutFloat(ptr + 8, instance.x);
+				MemoryUtil.memPutFloat(ptr + 12, instance.y);
+				MemoryUtil.memPutFloat(ptr + 16, instance.z);
+				MemoryUtil.memPutFloat(ptr + 20, instance.rotationalSpeed);
+				MemoryUtil.memPutFloat(ptr + 24, instance.rotationOffset);
+				MemoryUtil.memPutFloat(ptr + 28, instance.qX);
+				MemoryUtil.memPutFloat(ptr + 32, instance.qY);
+				MemoryUtil.memPutFloat(ptr + 36, instance.qZ);
+				MemoryUtil.memPutFloat(ptr + 40, instance.qW);
+				MemoryUtil.memPutFloat(ptr + 44, instance.sourceU);
+				MemoryUtil.memPutFloat(ptr + 48, instance.sourceV);
+				MemoryUtil.memPutFloat(ptr + 52, instance.minU);
+				MemoryUtil.memPutFloat(ptr + 56, instance.minV);
+				MemoryUtil.memPutFloat(ptr + 60, instance.maxU);
+				MemoryUtil.memPutFloat(ptr + 64, instance.maxV);
+				MemoryUtil.memPutByte(ptr + 68, instance.scrollMult);
 			})
 			.register();
 	public static final InstanceType<ActorInstance> ACTORS = SimpleInstanceType.builder(ActorInstance::new)
@@ -104,20 +104,20 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutFloat(ptr, instance.x);
 				MemoryUtil.memPutFloat(ptr + 4, instance.y);
 				MemoryUtil.memPutFloat(ptr + 8, instance.z);
-				MemoryUtil.memPutByte(ptr + 12, instance.blockLight);
-				MemoryUtil.memPutByte(ptr + 13, instance.skyLight);
-				MemoryUtil.memPutFloat(ptr + 14, instance.rotationOffset);
-				MemoryUtil.memPutByte(ptr + 18, instance.rotationAxisX);
-				MemoryUtil.memPutByte(ptr + 19, instance.rotationAxisY);
-				MemoryUtil.memPutByte(ptr + 20, instance.rotationAxisZ);
-				MemoryUtil.memPutFloat(ptr + 21, instance.qX);
-				MemoryUtil.memPutFloat(ptr + 25, instance.qY);
-				MemoryUtil.memPutFloat(ptr + 29, instance.qZ);
-				MemoryUtil.memPutFloat(ptr + 33, instance.qW);
-				MemoryUtil.memPutByte(ptr + 37, instance.rotationCenterX);
-				MemoryUtil.memPutByte(ptr + 38, instance.rotationCenterY);
-				MemoryUtil.memPutByte(ptr + 39, instance.rotationCenterZ);
-				MemoryUtil.memPutFloat(ptr + 40, instance.speed);
+				MemoryUtil.memPutShort(ptr + 12, instance.blockLight);
+				MemoryUtil.memPutShort(ptr + 14, instance.skyLight);
+				MemoryUtil.memPutFloat(ptr + 16, instance.rotationOffset);
+				MemoryUtil.memPutByte(ptr + 20, instance.rotationAxisX);
+				MemoryUtil.memPutByte(ptr + 21, instance.rotationAxisY);
+				MemoryUtil.memPutByte(ptr + 22, instance.rotationAxisZ);
+				MemoryUtil.memPutFloat(ptr + 24, instance.qX);
+				MemoryUtil.memPutFloat(ptr + 28, instance.qY);
+				MemoryUtil.memPutFloat(ptr + 32, instance.qZ);
+				MemoryUtil.memPutFloat(ptr + 34, instance.qW);
+				MemoryUtil.memPutByte(ptr + 38, instance.rotationCenterX);
+				MemoryUtil.memPutByte(ptr + 39, instance.rotationCenterY);
+				MemoryUtil.memPutByte(ptr + 40, instance.rotationCenterZ);
+				MemoryUtil.memPutFloat(ptr + 42, instance.speed);
 			})
 			.register();
 	public static final InstanceType<FlapData> FLAPS = SimpleInstanceType.builder(FlapData::new)
@@ -137,18 +137,18 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutFloat(ptr, instance.x);
 				MemoryUtil.memPutFloat(ptr + 4, instance.y);
 				MemoryUtil.memPutFloat(ptr + 8, instance.z);
-				MemoryUtil.memPutByte(ptr + 12, (byte) (instance.blockLight << 4));
-				MemoryUtil.memPutByte(ptr + 13, (byte) (instance.skyLight << 4));
-				MemoryUtil.memPutFloat(ptr + 14, instance.segmentOffsetX);
-				MemoryUtil.memPutFloat(ptr + 18, instance.segmentOffsetY);
-				MemoryUtil.memPutFloat(ptr + 22, instance.segmentOffsetZ);
-				MemoryUtil.memPutFloat(ptr + 26, instance.pivotX);
-				MemoryUtil.memPutFloat(ptr + 30, instance.pivotY);
-				MemoryUtil.memPutFloat(ptr + 34, instance.pivotZ);
-				MemoryUtil.memPutFloat(ptr + 38, instance.horizontalAngle);
-				MemoryUtil.memPutFloat(ptr + 42, instance.intensity);
-				MemoryUtil.memPutFloat(ptr + 46, instance.flapScale);
-				MemoryUtil.memPutFloat(ptr + 50, instance.flapness);
+				MemoryUtil.memPutShort(ptr + 12, instance.blockLight);
+				MemoryUtil.memPutShort(ptr + 14, instance.skyLight);
+				MemoryUtil.memPutFloat(ptr + 16, instance.segmentOffsetX);
+				MemoryUtil.memPutFloat(ptr + 20, instance.segmentOffsetY);
+				MemoryUtil.memPutFloat(ptr + 24, instance.segmentOffsetZ);
+				MemoryUtil.memPutFloat(ptr + 28, instance.pivotX);
+				MemoryUtil.memPutFloat(ptr + 32, instance.pivotY);
+				MemoryUtil.memPutFloat(ptr + 36, instance.pivotZ);
+				MemoryUtil.memPutFloat(ptr + 40, instance.horizontalAngle);
+				MemoryUtil.memPutFloat(ptr + 44, instance.intensity);
+				MemoryUtil.memPutFloat(ptr + 48, instance.flapScale);
+				MemoryUtil.memPutFloat(ptr + 52, instance.flapness);
 			})
 			.register();
 

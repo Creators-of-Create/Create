@@ -18,6 +18,7 @@ import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -64,7 +65,7 @@ public class DeployerActorInstance extends ActorInstance {
         hand = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(handPose), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
 
         Direction.Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
-        shaft = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.block(KineticBlockEntityInstance.shaft(axis)), RenderStage.AFTER_BLOCK_ENTITIES)
+        shaft = instancerProvider.instancer(AllInstanceTypes.ROTATING, VirtualRenderHelper.blockModel(KineticBlockEntityInstance.shaft(axis)), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstance();
 
         int blockLight = localBlockLight();

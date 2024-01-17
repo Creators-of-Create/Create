@@ -35,6 +35,7 @@ public class BeltInstance extends KineticInstance {
     }
 
     public BeltInstance setScrollTexture(SpriteShiftEntry spriteShift) {
+		// FIXME: these are null for some reason
         TextureAtlasSprite source = spriteShift.getOriginal();
         TextureAtlasSprite target = spriteShift.getTarget();
 
