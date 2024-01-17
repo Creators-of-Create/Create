@@ -14,7 +14,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.actors.roller.RollerBlockEntity.RollingMode;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.pulley.PulleyContraption;
-import com.simibubi.create.content.contraptions.render.ActorInstance;
+import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
@@ -76,9 +76,9 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld,
-		MovementContext context) {
-		return new RollerActorInstance(materialManager, simulationWorld, context);
+	public ActorVisual createInstance(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
+		MovementContext movementContext) {
+		return new RollerActorVisual(visualizationContext, simulationWorld, movementContext);
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntityVisual;
 import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
@@ -26,7 +26,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.LightLayer;
 
-public class BeltVisual extends KineticBlockEntityInstance<BeltBlockEntity> {
+public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
 
     boolean upward;
     boolean diagonal;
@@ -39,8 +39,8 @@ public class BeltVisual extends KineticBlockEntityInstance<BeltBlockEntity> {
     protected ArrayList<BeltInstance> keys;
     protected RotatingInstance pulleyKey;
 
-    public BeltVisual(VisualizationContext materialManager, BeltBlockEntity blockEntity) {
-        super(materialManager, blockEntity);
+    public BeltVisual(VisualizationContext context, BeltBlockEntity blockEntity) {
+        super(context, blockEntity);
 
         if (!AllBlocks.BELT.has(blockState))
             return;

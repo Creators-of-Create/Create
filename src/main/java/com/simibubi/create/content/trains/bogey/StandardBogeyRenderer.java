@@ -22,8 +22,8 @@ import net.minecraft.nbt.CompoundTag;
 public class StandardBogeyRenderer {
 	public static class CommonStandardBogeyRenderer extends BogeyRenderer.CommonRenderer {
 		@Override
-		public void initialiseContraptionModelData(VisualizationContext materialManager, CarriageBogey carriageBogey) {
-			createModelInstance(materialManager, AllBlocks.SHAFT.getDefaultState()
+		public void initialiseContraptionModelData(VisualizationContext context, CarriageBogey carriageBogey) {
+			createModelInstance(context, AllBlocks.SHAFT.getDefaultState()
 					.setValue(ShaftBlock.AXIS, Direction.Axis.Z), 2);
 		}
 
@@ -45,9 +45,9 @@ public class StandardBogeyRenderer {
 
 	public static class SmallStandardBogeyRenderer extends BogeyRenderer {
 		@Override
-		public void initialiseContraptionModelData(VisualizationContext materialManager, CarriageBogey carriageBogey) {
-			createModelInstance(materialManager, SMALL_BOGEY_WHEELS, 2);
-			createModelInstance(materialManager, BOGEY_FRAME);
+		public void initialiseContraptionModelData(VisualizationContext context, CarriageBogey carriageBogey) {
+			createModelInstance(context, SMALL_BOGEY_WHEELS, 2);
+			createModelInstance(context, BOGEY_FRAME);
 		}
 
 
@@ -78,9 +78,9 @@ public class StandardBogeyRenderer {
 
 	public static class LargeStandardBogeyRenderer extends BogeyRenderer {
 		@Override
-		public void initialiseContraptionModelData(VisualizationContext materialManager, CarriageBogey carriageBogey) {
-			createModelInstance(materialManager, LARGE_BOGEY_WHEELS, BOGEY_DRIVE, BOGEY_PISTON, BOGEY_PIN);
-			createModelInstance(materialManager, AllBlocks.SHAFT.getDefaultState()
+		public void initialiseContraptionModelData(VisualizationContext context, CarriageBogey carriageBogey) {
+			createModelInstance(context, LARGE_BOGEY_WHEELS, BOGEY_DRIVE, BOGEY_PISTON, BOGEY_PIN);
+			createModelInstance(context, AllBlocks.SHAFT.getDefaultState()
 					.setValue(ShaftBlock.AXIS, Direction.Axis.X), 2);
 		}
 

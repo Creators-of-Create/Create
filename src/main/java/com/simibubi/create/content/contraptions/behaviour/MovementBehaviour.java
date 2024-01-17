@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.behaviour;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
-import com.simibubi.create.content.contraptions.render.ActorInstance;
+import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -94,8 +94,8 @@ public interface MovementBehaviour {
 
 	@OnlyIn(Dist.CLIENT)
 	@Nullable
-	default ActorInstance createInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld,
-		MovementContext context) {
+	default ActorVisual createInstance(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
+		MovementContext movementContext) {
 		return null;
 	}
 }

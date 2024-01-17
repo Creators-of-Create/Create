@@ -116,8 +116,8 @@ public class BogeyStyle {
 		return this.commonRendererFactory.map(Supplier::get);
 	}
 
-	public BogeyInstance createInstance(CarriageBogey bogey, BogeySizes.BogeySize size, VisualizationContext materialManager) {
-		return new BogeyInstance(bogey, this, size, materialManager);
+	public BogeyVisual createVisual(CarriageBogey bogey, BogeySizes.BogeySize size, VisualizationContext context) {
+		return new BogeyVisual(bogey, this, size, context);
 	}
 
 	@OnlyIn(Dist.CLIENT)

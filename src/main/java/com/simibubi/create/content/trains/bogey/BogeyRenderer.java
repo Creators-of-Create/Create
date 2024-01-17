@@ -181,21 +181,21 @@ public abstract class BogeyRenderer {
 	/**
 	 * Provides render implementations a point in setup to instantiate all model data to be needed
 	 *
-	 * @param materialManager The material manager
+	 * @param context The visualization context
 	 * @param carriageBogey The bogey to create data for
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public abstract void initialiseContraptionModelData(VisualizationContext materialManager, CarriageBogey carriageBogey);
+	public abstract void initialiseContraptionModelData(VisualizationContext context, CarriageBogey carriageBogey);
 
 	/**
 	 * Creates instances of models for in-world rendering to a set length from a provided partial model
 	 *
-	 * @param materialManager The material manager
+	 * @param context The visualization context
 	 * @param model Partial model to be instanced
 	 * @param count Amount of models neeeded
 	 */
-	public void createModelInstance(VisualizationContext materialManager, PartialModel model, int count) {
-		var instancer = materialManager.instancerProvider()
+	public void createModelInstance(VisualizationContext context, PartialModel model, int count) {
+		var instancer = context.instancerProvider()
 				.instancer(InstanceTypes.TRANSFORMED, Models.partial(model), RenderStage.AFTER_BLOCK_ENTITIES);
 		BogeyModelData[] modelData = IntStream.range(0, count)
 				.mapToObj(i -> instancer.createInstance())
@@ -207,12 +207,12 @@ public abstract class BogeyRenderer {
 	/**
 	 * Creates instances of models for in-contraption rendering to a set length from a provided blockstate
 	 *
-	 * @param materialManager The material manager
+	 * @param context The visualization context
 	 * @param state Blockstate of the model to be created
 	 * @param count Amount of models needed
 	 */
-	public void createModelInstance(VisualizationContext materialManager, BlockState state, int count) {
-		var instancer = materialManager.instancerProvider()
+	public void createModelInstance(VisualizationContext context, BlockState state, int count) {
+		var instancer = context.instancerProvider()
 				.instancer(InstanceTypes.TRANSFORMED, VirtualRenderHelper.blockModel(state), RenderStage.AFTER_BLOCK_ENTITIES);
 		BogeyModelData[] modelData = IntStream.range(0, count)
 				.mapToObj(i -> instancer.createInstance())
@@ -224,23 +224,23 @@ public abstract class BogeyRenderer {
 	/**
 	 * Creates a single instance of models for in-contraption rendering from a provided blockstate
 	 *
-	 * @param materialManager The material manager
+	 * @param context The visualization context
 	 * @param states Blockstates of the models to be created
 	 */
-	public void createModelInstance(VisualizationContext materialManager, BlockState... states) {
+	public void createModelInstance(VisualizationContext context, BlockState... states) {
 		for (BlockState state : states)
-			this.createModelInstance(materialManager, state, 1);
+			this.createModelInstance(context, state, 1);
 	}
 
 	/**
 	 * Helper function to create a single model instance for in-contraption rendering
 	 *
-	 * @param materialManager The material manager
+	 * @param context The visualization context
 	 * @param models The type of model to create instances of
 	 */
-	public void createModelInstance(VisualizationContext materialManager, PartialModel... models) {
+	public void createModelInstance(VisualizationContext context, PartialModel... models) {
 		for (PartialModel model : models)
-			createModelInstance(materialManager, model, 1);
+			createModelInstance(context, model, 1);
 	}
 
 	/**

@@ -13,7 +13,7 @@ import com.simibubi.create.content.contraptions.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.content.contraptions.render.ActorInstance;
+import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -49,7 +49,7 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 
 		// rotate to match blockstate
-		Quaternionf orientation = BearingInstance.getBlockStateOrientation(facing);
+		Quaternionf orientation = BearingVisual.getBlockStateOrientation(facing);
 
 		// rotate against parent
 		float angle = getCounterRotationAngle(context, facing, renderPartialTicks) * facing.getAxisDirection()
@@ -78,9 +78,9 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld,
-		MovementContext context) {
-		return new StabilizedBearingInstance(materialManager, simulationWorld, context);
+	public ActorVisual createInstance(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
+		MovementContext movementContext) {
+		return new StabilizedBearingVisual(visualizationContext, simulationWorld, movementContext);
 	}
 
 	static float getCounterRotationAngle(MovementContext context, Direction facing, float renderPartialTicks) {

@@ -16,7 +16,7 @@ import com.simibubi.create.content.contraptions.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.mounted.MountedContraption;
-import com.simibubi.create.content.contraptions.render.ActorInstance;
+import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.kinetics.deployer.DeployerBlockEntity.Mode;
@@ -295,8 +295,8 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld,
-		MovementContext context) {
-		return new DeployerActorInstance(materialManager, simulationWorld, context);
+	public ActorVisual createInstance(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
+		MovementContext movementContext) {
+		return new DeployerActorVisual(visualizationContext, simulationWorld, movementContext);
 	}
 }

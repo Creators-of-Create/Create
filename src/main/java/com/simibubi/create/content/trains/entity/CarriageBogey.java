@@ -10,8 +10,8 @@ import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity;
-import com.simibubi.create.content.trains.bogey.BogeyInstance;
 import com.simibubi.create.content.trains.bogey.BogeyStyle;
+import com.simibubi.create.content.trains.bogey.BogeyVisual;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -199,8 +199,8 @@ public class CarriageBogey {
 		return new CarriageBogey(type, upsideDown, data, points.getFirst(), points.getSecond());
 	}
 
-	public BogeyInstance createInstance(VisualizationContext materialManager) {
-		return this.getStyle().createInstance(this, type.getSize(), materialManager);
+	public BogeyVisual createVisual(VisualizationContext context) {
+		return this.getStyle().createVisual(this, type.getSize(), context);
 	}
 
 	public BogeyStyle getStyle() {

@@ -9,10 +9,10 @@ import com.jozufozu.flywheel.api.layout.FloatRepr;
 import com.jozufozu.flywheel.api.layout.IntegerRepr;
 import com.jozufozu.flywheel.api.layout.LayoutBuilder;
 import com.jozufozu.flywheel.lib.instance.SimpleInstanceType;
-import com.simibubi.create.content.contraptions.actors.flwdata.ActorInstance;
+import com.simibubi.create.content.contraptions.actors.ActorInstance;
 import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.content.kinetics.belt.BeltInstance;
-import com.simibubi.create.content.logistics.flwdata.FlapData;
+import com.simibubi.create.content.logistics.flwdata.FlapInstance;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -120,7 +120,7 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutFloat(ptr + 42, instance.speed);
 			})
 			.register();
-	public static final InstanceType<FlapData> FLAPS = SimpleInstanceType.builder(FlapData::new)
+	public static final InstanceType<FlapInstance> FLAPS = SimpleInstanceType.builder(FlapInstance::new)
 			.cullShader(asResource("instance/cull/flap.glsl"))
 			.vertexShader(asResource("instance/flap.vert"))
 			.layout(LayoutBuilder.create()

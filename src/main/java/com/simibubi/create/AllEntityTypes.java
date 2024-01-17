@@ -15,7 +15,7 @@ import com.simibubi.create.content.equipment.potatoCannon.PotatoProjectileEntity
 import com.simibubi.create.content.equipment.potatoCannon.PotatoProjectileRenderer;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntityRenderer;
-import com.simibubi.create.content.trains.entity.CarriageContraptionInstance;
+import com.simibubi.create.content.trains.entity.CarriageContraptionVisual;
 import com.simibubi.create.foundation.data.CreateEntityBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.EntityEntry;
@@ -41,7 +41,7 @@ public class AllEntityTypes {
 		GantryContraptionEntity::new, () -> ContraptionEntityRenderer::new, 10, 40, false).register();
 	public static final EntityEntry<CarriageContraptionEntity> CARRIAGE_CONTRAPTION =
 		contraption("carriage_contraption", CarriageContraptionEntity::new,
-			() -> CarriageContraptionEntityRenderer::new, 15, 3, true).instance(() -> CarriageContraptionInstance::new)
+			() -> CarriageContraptionEntityRenderer::new, 15, 3, true).instance(() -> CarriageContraptionVisual::new)
 				.register();
 
 	public static final EntityEntry<SuperGlueEntity> SUPER_GLUE =

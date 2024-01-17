@@ -16,7 +16,7 @@ public class BackupBogeyRenderer extends BogeyRenderer.CommonRenderer {
 	}
 
 	@Override
-	public void initialiseContraptionModelData(VisualizationContext materialManager, CarriageBogey carriageBogey) {
+	public void initialiseContraptionModelData(VisualizationContext context, CarriageBogey carriageBogey) {
 
 	}
 }

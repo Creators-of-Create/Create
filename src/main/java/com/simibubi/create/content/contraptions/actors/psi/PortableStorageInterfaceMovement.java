@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.content.contraptions.render.ActorInstance;
+import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
@@ -46,9 +46,9 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld,
-		MovementContext context) {
-		return new PSIActorInstance(materialManager, simulationWorld, context);
+	public ActorVisual createInstance(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
+		MovementContext movementContext) {
+		return new PSIActorVisual(visualizationContext, simulationWorld, movementContext);
 	}
 
 	@Override
