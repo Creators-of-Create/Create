@@ -71,8 +71,7 @@ public class CreateRegistrateTags {
 			.addTag(BlockTags.FIRE);
 
 		prov.tag(AllBlockTags.SAFE_NBT.tag)
-			.addTag(BlockTags.BANNERS)
-			.addTag(BlockTags.SIGNS);
+			.addTag(BlockTags.BANNERS);
 
 		prov.tag(AllBlockTags.TREE_ATTACHMENTS.tag)
 			.add(Blocks.BEE_NEST, Blocks.COCOA, Blocks.MOSS_CARPET, Blocks.SHROOMLIGHT, Blocks.VINE);
@@ -115,7 +114,7 @@ public class CreateRegistrateTags {
 		prov.tag(AllItemTags.STRIPPED_WOOD.tag)
 			.addTag(AllItemTags.VANILLA_STRIPPED_WOOD.tag)
 			.addTag(AllItemTags.MODDED_STRIPPED_WOOD.tag);
-		
+
 		prov.tag(AllItemTags.DEPLOYABLE_DRINK.tag)
 			.add(Items.MILK_BUCKET, Items.POTION);
 
