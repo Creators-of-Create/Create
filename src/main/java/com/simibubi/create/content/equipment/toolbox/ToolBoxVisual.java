@@ -38,6 +38,7 @@ public class ToolBoxVisual extends AbstractBlockEntityVisual<ToolboxBlockEntity>
 		lid = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TOOLBOX_LIDS.get(blockEntity.getColor())), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstance();
 
+		super.init(pt);
 	}
 
 	@Override

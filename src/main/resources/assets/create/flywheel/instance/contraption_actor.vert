@@ -1,15 +1,13 @@
 #include "flywheel:util/matrix.glsl"
 #include "flywheel:util/quaternion.glsl"
 
-const float uTime = 0.;
-
 void flw_instanceVertex(in FlwInstance instance) {
-    float degrees = instance.offset + uTime * instance.speed / 20.;
+    float degrees = instance.offset + flw_renderSeconds * instance.speed;
 
-    vec4 kineticRot = quat(instance.axis, degrees);
-    vec3 rotated = rotateVertexByQuat(flw_vertexPos.xyz - instance.rotationCenter, kineticRot) + instance.rotationCenter;
+    vec4 kineticRot = quaternionDegrees(instance.axis, degrees);
+    vec3 rotated = rotateByQuaternion(flw_vertexPos.xyz - instance.rotationCenter, kineticRot) + instance.rotationCenter;
 
-    flw_vertexPos = vec4(rotateVertexByQuat(rotated - .5, instance.rotation) + instance.pos + .5, 1.);
-    flw_vertexNormal = rotateVertexByQuat(rotateVertexByQuat(flw_vertexNormal, kineticRot), instance.rotation);
-    flw_vertexLight = instance.light;
+    flw_vertexPos.xyz = rotateByQuaternion(rotated - .5, instance.rotation) + instance.pos + .5;
+    flw_vertexNormal = rotateByQuaternion(rotateByQuaternion(flw_vertexNormal, kineticRot), instance.rotation);
+    flw_vertexLight = instance.light / 15.;
 }

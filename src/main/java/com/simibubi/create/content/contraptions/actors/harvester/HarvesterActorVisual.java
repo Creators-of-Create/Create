@@ -44,6 +44,7 @@ public class HarvesterActorVisual extends ActorVisual {
         horizontalAngle = facing.toYRot() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
 
 		harvester.setBlockLight(localBlockLight());
+		harvester.setChanged();
 	}
 
 	protected PartialModel getRollingPartial() {
@@ -90,7 +91,8 @@ public class HarvesterActorVisual extends ActorVisual {
 				.uncenter()
 				.translate(getRotationOffset())
 				.rotateXDegrees((float) getRotation())
-				.translateBack(getRotationOffset());
+				.translateBack(getRotationOffset())
+				.setChanged();
 	}
 
     protected double getRotation() {

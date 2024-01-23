@@ -43,7 +43,9 @@ public class BearingVisual<B extends KineticBlockEntity & IBearingBlockEntity> e
 		topInstance = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(top), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstance();
 
-		topInstance.setPosition(getVisualPosition()).setRotation(blockOrientation);
+		topInstance.setPosition(getVisualPosition())
+				.setRotation(blockOrientation)
+				.setChanged();
 	}
 
 	@Override
@@ -53,7 +55,8 @@ public class BearingVisual<B extends KineticBlockEntity & IBearingBlockEntity> e
 
 		rot.mul(blockOrientation);
 
-		topInstance.setRotation(rot);
+		topInstance.setRotation(rot)
+				.setChanged();
 	}
 
 	@Override

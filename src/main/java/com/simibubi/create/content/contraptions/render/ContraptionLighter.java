@@ -3,17 +3,14 @@ package com.simibubi.create.content.contraptions.render;
 import com.jozufozu.flywheel.lib.box.Box;
 import com.jozufozu.flywheel.lib.box.MutableBox;
 import com.jozufozu.flywheel.lib.light.GPULightVolume;
-import com.jozufozu.flywheel.lib.light.LightListener;
-import com.jozufozu.flywheel.lib.light.LightUpdater;
 import com.simibubi.create.content.contraptions.Contraption;
 
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.LightLayer;
 
-public abstract class ContraptionLighter<C extends Contraption> implements LightListener {
+public abstract class ContraptionLighter<C extends Contraption> {
     protected final C contraption;
     public final GPULightVolume lightVolume;
-	protected final LightUpdater lightUpdater;
 
 	protected final MutableBox bounds;
 
@@ -21,7 +18,6 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
 
     protected ContraptionLighter(C contraption) {
         this.contraption = contraption;
-		lightUpdater = LightUpdater.get(contraption.entity.level());
 
 		bounds = getContraptionBounds();
 		growBoundsForEdgeData(bounds);
@@ -30,18 +26,14 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
 
 		lightVolume.initialize();
 		scheduleRebuild = true;
-
-		lightUpdater.addListener(this);
 	}
 
 	public abstract MutableBox getContraptionBounds();
 
-	@Override
 	public boolean isInvalid() {
 		return lightVolume.isInvalid();
 	}
 
-	@Override
 	public void onLightUpdate(LightLayer type, SectionPos pos) {
 		lightVolume.onLightUpdate(type, pos);
 	}
@@ -51,13 +43,11 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
         bounds.grow(2);
 	}
 
-	@Override
 	public Box getVolume() {
 		return bounds;
 	}
 
 	public void delete() {
-		lightUpdater.removeListener(this);
 		lightVolume.delete();
 	}
 }

@@ -22,6 +22,7 @@ public class SingleRotatingVisual<T extends KineticBlockEntity> extends KineticB
 		rotatingModel = instancerProvider.instancer(AllInstanceTypes.ROTATING, model(), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstance();
 		setup(rotatingModel);
+		super.init(pt);
 	}
 
 	@Override

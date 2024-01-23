@@ -62,12 +62,14 @@ public class MixerVisual extends EncasedCogVisual implements DynamicVisual {
 
 		mixerHead.setPosition(getVisualPosition())
 				.nudge(0, -renderedHeadOffset, 0)
-				.setRotationalSpeed(speed * 2);
+				.setRotationalSpeed(speed * 2)
+				.setChanged();
 	}
 
 	private void transformPole(float renderedHeadOffset) {
 		mixerPole.setPosition(getVisualPosition())
-				.nudgePosition(0, -renderedHeadOffset, 0);
+				.nudgePosition(0, -renderedHeadOffset, 0)
+				.setChanged();
 	}
 
 	private float getRenderedHeadOffset() {

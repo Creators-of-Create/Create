@@ -88,8 +88,9 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
 
             SpriteShiftEntry spriteShiftEntry = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
             key.setScrollTexture(spriteShiftEntry)
-               .setColor(blockEntity)
-               .setRotationalSpeed(getScrollSpeed());
+					.setColor(blockEntity)
+					.setRotationalSpeed(getScrollSpeed())
+					.setChanged();
             bottom = false;
         }
 
@@ -165,14 +166,17 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
                 .setColor(blockEntity)
                 .setPosition(getVisualPosition())
                 .setBlockLight(level.getBrightness(LightLayer.BLOCK, pos))
-                .setSkyLight(level.getBrightness(LightLayer.SKY, pos));
+                .setSkyLight(level.getBrightness(LightLayer.SKY, pos))
+				.setChanged();
 
         return key;
     }
 
 	@Override
 	public void collectCrumblingInstances(Consumer<Instance> consumer) {
-		consumer.accept(pulleyKey);
+		if (pulleyKey != null) {
+			consumer.accept(pulleyKey);
+		}
 		keys.forEach(consumer);
 	}
 }

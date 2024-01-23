@@ -32,13 +32,14 @@ public class CarriageContraptionVisual extends AbstractEntityVisual<CarriageCont
 	public void init(float pt) {
 		carriage = entity.getCarriage();
 
-		if (carriage == null)
-			return;
+        if (carriage != null) {
+            bogeys = carriage.bogeys.mapNotNullWithParam((bogey, manager) -> bogey.getStyle()
+                .createVisual(bogey, bogey.type.getSize(), manager), visualizationContext);
+            updateLight();
+        }
 
-		bogeys = carriage.bogeys.mapNotNullWithParam((bogey, manager) ->
-				bogey.getStyle().createVisual(bogey, bogey.type.getSize(), manager), visualizationContext);
-		updateLight();
-	}
+		super.init(pt);
+    }
 
 	public void setBogeyVisibility(boolean first, boolean visible) {
 		bogeyHidden.set(first, !visible);
@@ -86,7 +87,6 @@ public class CarriageContraptionVisual extends AbstractEntityVisual<CarriageCont
 		ms.popPose();
 	}
 
-	@Override
 	public void updateLight() {
 		if (bogeys == null)
 			return;

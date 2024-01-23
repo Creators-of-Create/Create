@@ -46,11 +46,13 @@ public class HandCrankVisual extends SingleRotatingVisual<HandCrankBlockEntity> 
 			.translate(getVisualPosition())
 			.center()
 			.rotate(angle, Direction.get(Direction.AxisDirection.POSITIVE, axis))
-			.uncenter();
+			.uncenter()
+			.setChanged();
 	}
 
 	@Override
 	public void init(float pt) {
+		// FIXME: need to call super.super.init here
 		if (blockEntity.shouldRenderShaft())
 			super.init(pt);
 	}

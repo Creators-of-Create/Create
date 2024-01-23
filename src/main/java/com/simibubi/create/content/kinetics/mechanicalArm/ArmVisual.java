@@ -133,22 +133,26 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements D
 			msr.rotateX(180);
 
 		ArmRenderer.transformBase(msr, baseAngle);
-		base.setTransform(msLocal);
+		base.setTransform(msLocal)
+			.setChanged();
 
 		ArmRenderer.transformLowerArm(msr, lowerArmAngle);
 		lowerBody.setTransform(msLocal)
-			.setColor(color);
+			.setColor(color)
+			.setChanged();
 
 		ArmRenderer.transformUpperArm(msr, upperArmAngle);
 		upperBody.setTransform(msLocal)
-			.setColor(color);
+			.setColor(color)
+			.setChanged();
 
 		ArmRenderer.transformHead(msr, headAngle);
 
 		if (ceiling && blockEntity.goggles)
 			msr.rotateZ(180);
 
-		claw.setTransform(msLocal);
+		claw.setTransform(msLocal)
+			.setChanged();
 
 		if (ceiling && blockEntity.goggles)
 			msr.rotateZ(180);
@@ -166,7 +170,8 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements D
 			int flip = index * 2 - 1;
 			ArmRenderer.transformClawHalf(msr, hasItem, isBlockItem, flip);
 			clawGrips.get(index)
-				.setTransform(msLocal);
+				.setTransform(msLocal)
+				.setChanged();
 			msLocal.popPose();
 		}
 	}

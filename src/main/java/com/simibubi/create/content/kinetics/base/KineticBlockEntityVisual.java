@@ -35,7 +35,8 @@ public abstract class KineticBlockEntityVisual<T extends KineticBlockEntity> ext
 		instance.setRotationAxis(axis)
 			.setRotationOffset(getRotationOffset(axis))
 			.setRotationalSpeed(speed)
-			.setColor(blockEntity);
+			.setColor(blockEntity)
+			.setChanged();
 	}
 
 	protected final RotatingInstance setup(RotatingInstance key) {
@@ -55,7 +56,8 @@ public abstract class KineticBlockEntityVisual<T extends KineticBlockEntity> ext
 			.setRotationalSpeed(speed)
 			.setRotationOffset(getRotationOffset(axis))
 			.setColor(blockEntity)
-			.setPosition(getVisualPosition());
+			.setPosition(getVisualPosition())
+			.setChanged();
 
 		return key;
 	}

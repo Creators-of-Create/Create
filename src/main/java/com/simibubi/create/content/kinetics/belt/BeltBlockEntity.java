@@ -14,8 +14,6 @@ import java.util.function.Function;
 
 import com.jozufozu.flywheel.lib.box.Box;
 import com.jozufozu.flywheel.lib.box.MutableBox;
-import com.jozufozu.flywheel.lib.light.LightListener;
-import com.jozufozu.flywheel.lib.light.LightUpdater;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -579,13 +577,11 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	 * Hide this behavior in an inner class to avoid loading LightListener on servers.
 	 */
 	@OnlyIn(Dist.CLIENT)
-	class BeltLighter implements LightListener {
+	class BeltLighter {
 		private byte[] light;
 
 		public BeltLighter() {
 			initializeLight();
-			LightUpdater.get(level)
-					.addListener(this);
 		}
 
 		/**
@@ -605,7 +601,6 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			return light == null ? 0 : LightTexture.pack(light[segment * 2], light[segment * 2 + 1]);
 		}
 
-		@Override
 		public Box getVolume() {
 			BlockPos endPos = BeltHelper.getPositionForOffset(BeltBlockEntity.this, beltLength - 1);
 			var bb = MutableBox.from(worldPosition, endPos);
@@ -613,27 +608,13 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			return bb;
 		}
 
-		@Override
-		public boolean isInvalid() {
-			return remove;
-		}
-
-		@Override
 		public void onLightUpdate(LightLayer type, SectionPos pos) {
 			if (remove)
 				return;
 			if (level == null)
 				return;
 
-			Box beltVolume = getVolume();
-
-			if (beltVolume.intersects(MutableBox.from(pos))) {
-				if (type == LightLayer.BLOCK)
-					updateBlockLight();
-
-				if (type == LightLayer.SKY)
-					updateSkyLight();
-			}
+			initializeLight();
 		}
 
 		private void initializeLight() {

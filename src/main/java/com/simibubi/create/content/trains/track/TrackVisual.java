@@ -14,7 +14,6 @@ import com.jozufozu.flywheel.lib.box.Box;
 import com.jozufozu.flywheel.lib.box.MutableBox;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
-import com.jozufozu.flywheel.lib.light.LightUpdater;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
@@ -47,11 +46,8 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 			.map(this::createInstance)
 			.filter(Objects::nonNull)
 			.toList();
-		LightUpdater.get(level)
-			.addListener(this);
 	}
 
-	@Override
 	public Box getVolume() {
 		List<BlockPos> out = new ArrayList<>();
 		out.addAll(blockEntity.connections.keySet());

@@ -64,6 +64,7 @@ public class EjectorVisual extends ShaftVisual<EjectorBlockEntity> implements Dy
 		float angle = lidProgress * 70;
 
 		EjectorRenderer.applyLidAngle(blockEntity, angle, plate.loadIdentity().translate(getVisualPosition()));
+		plate.setChanged();
 	}
 
 	@Override

@@ -36,13 +36,15 @@ public class RollerActorVisual extends HarvesterActorVisual {
 			.translate(0, -.25, 17 / 16f)
 			.rotateXDegrees((float) getRotation())
 			.translate(0, -.5, .5)
-			.rotateYDegrees(90);
+			.rotateYDegrees(90)
+			.setChanged();
 
 		frame.loadIdentity()
 			.translate(context.localPos)
 			.center()
 			.rotateYDegrees(horizontalAngle + 180)
-			.uncenter();
+			.uncenter()
+			.setChanged();
 	}
 
 	@Override

@@ -7,12 +7,10 @@ import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
-import com.jozufozu.flywheel.lib.box.Box;
 import com.jozufozu.flywheel.lib.box.MutableBox;
 import com.jozufozu.flywheel.lib.instance.OrientedInstance;
 import com.jozufozu.flywheel.lib.light.LightPacking;
 import com.jozufozu.flywheel.lib.light.LightVolume;
-import com.jozufozu.flywheel.lib.light.TickingLightListener;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;
@@ -21,11 +19,9 @@ import com.simibubi.create.foundation.render.GroupInstance;
 import com.simibubi.create.foundation.render.SelectInstance;
 
 import net.minecraft.core.Direction;
-import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.LightLayer;
 
-public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends ShaftVisual<T> implements DynamicVisual, TickingLightListener {
+public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends ShaftVisual<T> implements DynamicVisual {
 
 	final OrientedInstance coil;
 	final SelectInstance<OrientedInstance> magnet;
@@ -47,6 +43,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 
 		coil = getCoilModel().createInstance()
 				.setPosition(getVisualPosition());
+		coil.setChanged();
 
 		magnet = new SelectInstance<>(this::getMagnetModelIndex);
 		magnet.addModel(getMagnetModel())
@@ -78,7 +75,8 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 					data.setPosition(getVisualPosition())
 							.nudgePosition(0, -offset, 0)
 							.setBlockLight(LightPacking.getBlock(packed))
-							.setSkyLight(LightPacking.getSky(packed));
+							.setSkyLight(LightPacking.getSky(packed))
+							.setChanged();
 				});
 
 		halfRope.update()
@@ -91,7 +89,8 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 					rope1.setPosition(getVisualPosition())
 							.nudgePosition(0, -halfRopeNudge, 0)
 							.setBlockLight(LightPacking.getBlock(packed))
-							.setSkyLight(LightPacking.getSky(packed));
+							.setSkyLight(LightPacking.getSky(packed))
+							.setChanged();
 				});
 
 		if (isRunning()) {
@@ -104,7 +103,8 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 						.setPosition(getVisualPosition())
 						.nudgePosition(0, -offset + i + 1, 0)
 						.setBlockLight(LightPacking.getBlock(packed))
-						.setSkyLight(LightPacking.getSky(packed));
+						.setSkyLight(LightPacking.getSky(packed))
+						.setChanged();
 			}
 		} else {
 			rope.clear();
@@ -114,6 +114,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 	@Override
 	public void updateLight() {
 		super.updateLight();
+		light.copyLight(volume);
 		relight(pos, coil);
 	}
 
@@ -141,7 +142,6 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 
 	protected abstract boolean isRunning();
 
-	@Override
 	public boolean tickLightListener() {
 		if (updateVolume()) {
 			light.move(volume);
@@ -180,17 +180,6 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 		} else {
 			return -1;
 		}
-	}
-
-	@Override
-	public Box getVolume() {
-		return volume;
-	}
-
-	@Override
-	public void onLightUpdate(LightLayer type, SectionPos pos) {
-		super.onLightUpdate(type, pos);
-		light.onLightUpdate(type, pos);
 	}
 
 	@Override

@@ -115,13 +115,13 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
             msr.pushPose();
             rotateToFace(msr);
 
-            getSecond().setTransform(ms);
+            getSecond().setTransform(ms).setChanged();
 
             msr.translate(0, dialPivot, dialPivot)
                .rotate((float) (Math.PI / 2 * -progress), Direction.EAST)
                .translate(0, -dialPivot, -dialPivot);
 
-            getFirst().setTransform(ms);
+            getFirst().setTransform(ms).setChanged();
 
             msr.popPose();
         }

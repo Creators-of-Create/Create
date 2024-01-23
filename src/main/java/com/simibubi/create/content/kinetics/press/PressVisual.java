@@ -45,7 +45,8 @@ public class PressVisual extends ShaftVisual<MechanicalPressBlockEntity> impleme
 		float renderedHeadOffset = getRenderedHeadOffset(blockEntity);
 
 		pressHead.setPosition(getVisualPosition())
-			.nudgePosition(0, -renderedHeadOffset, 0);
+			.nudgePosition(0, -renderedHeadOffset, 0)
+			.setChanged();
 	}
 
 	private float getRenderedHeadOffset(MechanicalPressBlockEntity press) {

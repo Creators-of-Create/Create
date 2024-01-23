@@ -67,7 +67,8 @@ public class FluidValveVisual extends ShaftVisual<FluidValveBlockEntity> impleme
 				 .rotateY((float) yRot)
 				 .rotateX((float) xRot)
 				 .rotateY(pointerRotationOffset + pointerRotation)
-				 .uncenter();
+				 .uncenter()
+				.setChanged();
 	}
 
     @Override

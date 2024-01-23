@@ -31,22 +31,22 @@ public class BracketedKineticBlockEntityVisual extends SingleRotatingVisual<Brac
 
 	@Override
 	public void init(float pt) {
+        if (ICogWheel.isLargeCog(blockEntity.getBlockState())) {
+			// Large cogs sometimes have to offset their teeth by 11.25 degrees in order to
+            // mesh properly
+
+            float speed = blockEntity.getSpeed();
+            Direction.Axis axis = KineticBlockEntityRenderer.getRotationAxisOf(blockEntity);
+            BlockPos pos = blockEntity.getBlockPos();
+            float offset = BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos);
+            var model = Models.partial(AllPartialModels.COGWHEEL_SHAFT, axis, BracketedKineticBlockEntityVisual::rotateToAxis);
+            Instancer<RotatingInstance> half = instancerProvider.instancer(AllInstanceTypes.ROTATING, model, RenderStage.AFTER_BLOCK_ENTITIES);
+
+            additionalShaft = setup(half.createInstance(), speed);
+            additionalShaft.setRotationOffset(offset)
+                .setChanged();
+        }
 		super.init(pt);
-		if (!ICogWheel.isLargeCog(blockEntity.getBlockState()))
-			return;
-
-		// Large cogs sometimes have to offset their teeth by 11.25 degrees in order to
-		// mesh properly
-
-		float speed = blockEntity.getSpeed();
-		Direction.Axis axis = KineticBlockEntityRenderer.getRotationAxisOf(blockEntity);
-		BlockPos pos = blockEntity.getBlockPos();
-		float offset = BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos);
-		var model = Models.partial(AllPartialModels.COGWHEEL_SHAFT, axis, BracketedKineticBlockEntityVisual::rotateToAxis);
-		Instancer<RotatingInstance> half = instancerProvider.instancer(AllInstanceTypes.ROTATING, model, RenderStage.AFTER_BLOCK_ENTITIES);
-
-		additionalShaft = setup(half.createInstance(), speed);
-		additionalShaft.setRotationOffset(offset);
 	}
 
 	@Override
@@ -72,7 +72,8 @@ public class BracketedKineticBlockEntityVisual extends SingleRotatingVisual<Brac
 		super.update(pt);
 		if (additionalShaft != null) {
 			updateRotation(additionalShaft);
-			additionalShaft.setRotationOffset(BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos));
+			additionalShaft.setRotationOffset(BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos))
+					.setChanged();
 		}
 	}
 

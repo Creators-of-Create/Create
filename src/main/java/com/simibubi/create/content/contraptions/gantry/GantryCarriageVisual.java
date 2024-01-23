@@ -74,7 +74,8 @@ public class GantryCarriageVisual extends ShaftVisual<GantryCarriageBlockEntity>
 				.translate(0, -9 / 16f, 0)
 				.rotateX(-cogAngle)
 				.translate(0, 9 / 16f, 0)
-				.uncenter();
+				.uncenter()
+				.setChanged();
 	}
 
 	static float getRotationMultiplier(Direction.Axis gantryAxis, Direction facing) {

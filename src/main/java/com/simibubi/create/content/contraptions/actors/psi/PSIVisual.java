@@ -24,6 +24,7 @@ public class PSIVisual extends AbstractBlockEntityVisual<PortableStorageInterfac
 	@Override
 	public void init(float pt) {
 		instance.init(isLit());
+		super.init(pt);
 	}
 
 	@Override

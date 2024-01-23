@@ -73,6 +73,8 @@ public class EncasedCogVisual extends KineticBlockEntityVisual<KineticBlockEntit
 			else
 				rotatingBottomShaft = Optional.of(data);
 		}
+
+		super.init(pt);
 	}
 
 	@Override

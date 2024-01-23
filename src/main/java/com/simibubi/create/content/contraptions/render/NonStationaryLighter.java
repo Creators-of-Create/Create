@@ -2,16 +2,14 @@ package com.simibubi.create.content.contraptions.render;
 
 import com.jozufozu.flywheel.lib.box.Box;
 import com.jozufozu.flywheel.lib.box.MutableBox;
-import com.jozufozu.flywheel.lib.light.TickingLightListener;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-public class NonStationaryLighter<C extends Contraption> extends ContraptionLighter<C> implements TickingLightListener {
+public class NonStationaryLighter<C extends Contraption> extends ContraptionLighter<C> {
     public NonStationaryLighter(C contraption) {
         super(contraption);
     }
 
-	@Override
 	public boolean tickLightListener() {
 		if (getVolume().volume() > AllConfigs.client().maxContraptionLightVolume.get())
 			return false;
