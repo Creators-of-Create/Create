@@ -85,10 +85,10 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 			msr.nudge(i);
 
 			boolean renderUpright = BeltHelper.isItemUpright(stack);
-			msr.rotateY(360 / 8f * i);
+			msr.rotateYDegrees(360 / 8f * i);
 			ms.translate(.35f, 0, 0);
 			if (renderUpright)
-				msr.rotateY(-(360 / 8f * i));
+				msr.rotateYDegrees(-(360 / 8f * i));
 			Random r = new Random(i + 1);
 			int angle = (int) (360 * r.nextFloat());
 			renderItem(be.getLevel(), ms, buffer, light, overlay, stack, renderUpright ? angle + 90 : angle, r, itemPosition);
@@ -109,7 +109,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 			.isGui3d();
 
 		ms.pushPose();
-		msr.rotateY(angle);
+		msr.rotateYDegrees(angle);
 
 		if (renderUpright) {
 			Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
@@ -130,14 +130,14 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 			ms.scale(.5f, .5f, .5f);
 			if (!blockItem && !renderUpright) {
 				ms.translate(0, -3 / 16f, 0);
-				msr.rotateX(90);
+				msr.rotateXDegrees(90);
 			}
 			itemRenderer.renderStatic(itemStack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, level, 0);
 			ms.popPose();
 
 			if (!renderUpright) {
 				if (!blockItem)
-					msr.rotateY(10);
+					msr.rotateYDegrees(10);
 				ms.translate(0, blockItem ? 1 / 64d : 1 / 16d, 0);
 			} else
 				ms.translate(0, 0, -1 / 16f);

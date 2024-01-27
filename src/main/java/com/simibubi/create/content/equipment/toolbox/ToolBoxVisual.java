@@ -60,17 +60,17 @@ public class ToolBoxVisual extends AbstractBlockEntityVisual<ToolboxBlockEntity>
 		lid.loadIdentity()
 				.translate(getVisualPosition())
 				.center()
-				.rotateY(-facing.toYRot())
+				.rotateYDegrees(-facing.toYRot())
 				.uncenter()
 				.translate(0, 6 / 16f, 12 / 16f)
-				.rotateX(135 * lidAngle)
+				.rotateXDegrees(135 * lidAngle)
 				.translateBack(0, 6 / 16f, 12 / 16f);
 
 		for (int offset : Iterate.zeroAndOne) {
 			drawers[offset].loadIdentity()
 					.translate(getVisualPosition())
 					.center()
-					.rotateY(-facing.toYRot())
+					.rotateYDegrees(-facing.toYRot())
 					.uncenter()
 					.translate(0, offset * 1 / 8f, -drawerOffset * .175f * (2 - offset));
 		}

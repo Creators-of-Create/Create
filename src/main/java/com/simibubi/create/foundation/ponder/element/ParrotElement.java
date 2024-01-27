@@ -148,7 +148,7 @@ public class ParrotElement extends AnimatedSceneElement {
 			Mth.lerp(pt, entity.zo, entity.getZ()));
 
 		TransformStack.of(ms)
-			.rotateY(AngleHelper.angleLerp(pt, entity.yRotO, entity.getYRot()));
+			.rotateYDegrees(AngleHelper.angleLerp(pt, entity.yRotO, entity.getYRot()));
 
 		entityrenderermanager.render(entity, 0, 0, 0, 0, pt, ms, buffer, lightCoordsFromFade(fade));
 		ms.popPose();

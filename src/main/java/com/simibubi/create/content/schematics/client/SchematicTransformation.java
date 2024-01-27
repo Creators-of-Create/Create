@@ -73,7 +73,7 @@ public class SchematicTransformation {
 		ms.translate(xOrigin, 0, zOrigin);
 		TransformStack.of(ms)
 			.translate(rotationOffset)
-			.rotateY(rot)
+			.rotateYDegrees(rot)
 			.translateBack(rotationOffset);
 		ms.scale(abs(fb), 1, abs(lr));
 		ms.translate(-xOrigin, 0, -zOrigin);

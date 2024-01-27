@@ -18,8 +18,8 @@ public class AnimatedCrafter extends AnimatedKinetics {
 
 		matrixStack.translate(3, 16, 0);
 		TransformStack.of(matrixStack)
-			.rotateX(-12.5f)
-			.rotateY(-22.5f);
+			.rotateXDegrees(-12.5f)
+			.rotateYDegrees(-22.5f);
 		int scale = 22;
 
 		blockElement(cogwheel())

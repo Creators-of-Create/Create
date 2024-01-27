@@ -44,9 +44,9 @@ public class DrillRenderer extends KineticBlockEntityRenderer<DrillBlockEntity> 
 		superBuffer
 			.transform(matrices.getModel())
 			.center()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(AngleHelper.verticalAngle(facing))
-			.rotateZ(angle)
+			.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+			.rotateXDegrees(AngleHelper.verticalAngle(facing))
+			.rotateZDegrees(angle)
 			.uncenter()
 			.light(matrices.getWorld(),
 					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))

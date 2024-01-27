@@ -46,7 +46,7 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 		BlockPos pos = basin.getBlockPos();
 		ms.translate(.5, .2f, .5);
 		TransformStack.of(ms)
-			.rotateY(basin.ingredientRotation.getValue(partialTicks));
+			.rotateYDegrees(basin.ingredientRotation.getValue(partialTicks));
 
 		RandomSource r = RandomSource.create(pos.hashCode());
 		Vec3 baseVector = new Vec3(.125, level, 0);
@@ -80,8 +80,8 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 			Vec3 itemPosition = VecHelper.rotate(baseVector, anglePartition * itemCount, Axis.Y);
 			ms.translate(itemPosition.x, itemPosition.y, itemPosition.z);
             TransformStack.of(ms)
-				.rotateY(anglePartition * itemCount + 35)
-				.rotateX(65);
+				.rotateYDegrees(anglePartition * itemCount + 35)
+				.rotateXDegrees(65);
 
 			for (int i = 0; i <= stack.getCount() / 8; i++) {
 				ms.pushPose();
@@ -125,8 +125,8 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 				.translate(outVec)
 				.translate(new Vec3(0, Math.max(-.55f, -(progress * progress * 2)), 0))
 				.translate(directionVec.scale(progress * .5f))
-				.rotateY(AngleHelper.horizontalAngle(direction))
-				.rotateX(progress * 180);
+				.rotateYDegrees(AngleHelper.horizontalAngle(direction))
+				.rotateXDegrees(progress * 180);
 			renderItem(ms, buffer, light, overlay, intAttached.getValue());
 			ms.popPose();
 		}

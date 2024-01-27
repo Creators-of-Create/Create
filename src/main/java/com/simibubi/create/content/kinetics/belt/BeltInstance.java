@@ -1,6 +1,7 @@
 package com.simibubi.create.content.kinetics.belt;
 
 import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
 
 import com.jozufozu.flywheel.api.instance.InstanceHandle;
 import com.jozufozu.flywheel.api.instance.InstanceType;
@@ -10,32 +11,25 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 public class BeltInstance extends KineticInstance {
-    public float qX;
-    public float qY;
-    public float qZ;
-    public float qW;
+    public final Quaternionf rotation = new Quaternionf();
     public float sourceU;
     public float sourceV;
     public float minU;
     public float minV;
     public float maxU;
     public float maxV;
-    public byte scrollMult;
+    public float scrollMult;
 
 	public BeltInstance(InstanceType<? extends KineticInstance> type, InstanceHandle handle) {
 		super(type, handle);
 	}
 
-	public BeltInstance setRotation(Quaternionf q) {
-        this.qX = q.x();
-        this.qY = q.y();
-        this.qZ = q.z();
-        this.qW = q.w();
+	public BeltInstance setRotation(Quaternionfc q) {
+        this.rotation.set(q);
         return this;
     }
 
     public BeltInstance setScrollTexture(SpriteShiftEntry spriteShift) {
-		// FIXME: these are null for some reason
         TextureAtlasSprite source = spriteShift.getOriginal();
         TextureAtlasSprite target = spriteShift.getTarget();
 
@@ -50,7 +44,7 @@ public class BeltInstance extends KineticInstance {
 	}
 
 	public BeltInstance setScrollMult(float scrollMult) {
-		this.scrollMult = (byte) (scrollMult * 127);
+		this.scrollMult = scrollMult;
 		return this;
 	}
 }

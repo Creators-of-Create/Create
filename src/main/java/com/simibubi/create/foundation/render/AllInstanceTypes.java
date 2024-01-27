@@ -25,67 +25,71 @@ public class AllInstanceTypes {
 			.cullShader(asResource("instance/cull/rotating.glsl"))
 			.vertexShader(asResource("instance/rotating.vert"))
 			.layout(LayoutBuilder.create()
-					.vector("light", IntegerRepr.SHORT, 2)
 					.vector("color", FloatRepr.NORMALIZED_UNSIGNED_BYTE, 4)
+					.vector("light", IntegerRepr.SHORT, 2)
+					.vector("overlay", IntegerRepr.SHORT, 2)
 					.vector("pos", FloatRepr.FLOAT, 3)
 					.scalar("speed", FloatRepr.FLOAT)
 					.scalar("offset", FloatRepr.FLOAT)
 					.vector("axis", FloatRepr.NORMALIZED_BYTE, 3)
 					.build())
 			.writer((ptr, instance) -> {
-				MemoryUtil.memPutShort(ptr, instance.blockLight);
-				MemoryUtil.memPutShort(ptr + 2, instance.skyLight);
-				MemoryUtil.memPutByte(ptr + 4, instance.r);
-				MemoryUtil.memPutByte(ptr + 5, instance.g);
-				MemoryUtil.memPutByte(ptr + 6, instance.b);
-				MemoryUtil.memPutByte(ptr + 7, instance.a);
-				MemoryUtil.memPutFloat(ptr + 8, instance.x);
-				MemoryUtil.memPutFloat(ptr + 12, instance.y);
-				MemoryUtil.memPutFloat(ptr + 16, instance.z);
-				MemoryUtil.memPutFloat(ptr + 20, instance.rotationalSpeed);
-				MemoryUtil.memPutFloat(ptr + 24, instance.rotationOffset);
-				MemoryUtil.memPutByte(ptr + 28, instance.rotationAxisX);
-				MemoryUtil.memPutByte(ptr + 29, instance.rotationAxisY);
-				MemoryUtil.memPutByte(ptr + 30, instance.rotationAxisZ);
+				MemoryUtil.memPutByte(ptr, instance.r);
+				MemoryUtil.memPutByte(ptr + 1, instance.g);
+				MemoryUtil.memPutByte(ptr + 2, instance.b);
+				MemoryUtil.memPutByte(ptr + 3, instance.a);
+				MemoryUtil.memPutShort(ptr + 4, instance.blockLight);
+				MemoryUtil.memPutShort(ptr + 6, instance.skyLight);
+				MemoryUtil.memPutInt(ptr + 8, instance.overlay);
+				MemoryUtil.memPutFloat(ptr + 12, instance.x);
+				MemoryUtil.memPutFloat(ptr + 16, instance.y);
+				MemoryUtil.memPutFloat(ptr + 20, instance.z);
+				MemoryUtil.memPutFloat(ptr + 24, instance.rotationalSpeed);
+				MemoryUtil.memPutFloat(ptr + 28, instance.rotationOffset);
+				MemoryUtil.memPutByte(ptr + 32, instance.rotationAxisX);
+				MemoryUtil.memPutByte(ptr + 33, instance.rotationAxisY);
+				MemoryUtil.memPutByte(ptr + 34, instance.rotationAxisZ);
 			})
 			.register();
 	public static final InstanceType<BeltInstance> BELTS = SimpleInstanceType.builder(BeltInstance::new)
 			.cullShader(asResource("instance/cull/belt.glsl"))
 			.vertexShader(asResource("instance/belt.vert"))
 			.layout(LayoutBuilder.create()
-					.vector("light", IntegerRepr.SHORT, 2)
 					.vector("color", FloatRepr.NORMALIZED_UNSIGNED_BYTE, 4)
+					.vector("light", IntegerRepr.SHORT, 2)
+					.vector("overlay", IntegerRepr.SHORT, 2)
 					.vector("pos", FloatRepr.FLOAT, 3)
 					.scalar("speed", FloatRepr.FLOAT)
 					.scalar("offset", FloatRepr.FLOAT)
 					.vector("rotation", FloatRepr.FLOAT, 4)
 					.vector("sourceTexture", FloatRepr.FLOAT, 2)
 					.vector("scrollTexture", FloatRepr.FLOAT, 4)
-					.scalar("scrollMult", FloatRepr.NORMALIZED_BYTE)
+					.scalar("scrollMult", FloatRepr.FLOAT)
 					.build())
 			.writer((ptr, instance) -> {
-				MemoryUtil.memPutShort(ptr, instance.blockLight);
-				MemoryUtil.memPutShort(ptr + 2, instance.skyLight);
-				MemoryUtil.memPutByte(ptr + 4, instance.r);
-				MemoryUtil.memPutByte(ptr + 5, instance.g);
-				MemoryUtil.memPutByte(ptr + 6, instance.b);
-				MemoryUtil.memPutByte(ptr + 7, instance.a);
-				MemoryUtil.memPutFloat(ptr + 8, instance.x);
-				MemoryUtil.memPutFloat(ptr + 12, instance.y);
-				MemoryUtil.memPutFloat(ptr + 16, instance.z);
-				MemoryUtil.memPutFloat(ptr + 20, instance.rotationalSpeed);
-				MemoryUtil.memPutFloat(ptr + 24, instance.rotationOffset);
-				MemoryUtil.memPutFloat(ptr + 28, instance.qX);
-				MemoryUtil.memPutFloat(ptr + 32, instance.qY);
-				MemoryUtil.memPutFloat(ptr + 36, instance.qZ);
-				MemoryUtil.memPutFloat(ptr + 40, instance.qW);
-				MemoryUtil.memPutFloat(ptr + 44, instance.sourceU);
-				MemoryUtil.memPutFloat(ptr + 48, instance.sourceV);
-				MemoryUtil.memPutFloat(ptr + 52, instance.minU);
-				MemoryUtil.memPutFloat(ptr + 56, instance.minV);
-				MemoryUtil.memPutFloat(ptr + 60, instance.maxU);
-				MemoryUtil.memPutFloat(ptr + 64, instance.maxV);
-				MemoryUtil.memPutByte(ptr + 68, instance.scrollMult);
+				MemoryUtil.memPutByte(ptr, instance.r);
+				MemoryUtil.memPutByte(ptr + 1, instance.g);
+				MemoryUtil.memPutByte(ptr + 2, instance.b);
+				MemoryUtil.memPutByte(ptr + 3, instance.a);
+				MemoryUtil.memPutShort(ptr + 4, instance.blockLight);
+				MemoryUtil.memPutShort(ptr + 6, instance.skyLight);
+				MemoryUtil.memPutInt(ptr + 8, instance.overlay);
+				MemoryUtil.memPutFloat(ptr + 12, instance.x);
+				MemoryUtil.memPutFloat(ptr + 16, instance.y);
+				MemoryUtil.memPutFloat(ptr + 20, instance.z);
+				MemoryUtil.memPutFloat(ptr + 24, instance.rotationalSpeed);
+				MemoryUtil.memPutFloat(ptr + 28, instance.rotationOffset);
+				MemoryUtil.memPutFloat(ptr + 32, instance.rotation.x);
+				MemoryUtil.memPutFloat(ptr + 36, instance.rotation.y);
+				MemoryUtil.memPutFloat(ptr + 40, instance.rotation.z);
+				MemoryUtil.memPutFloat(ptr + 44, instance.rotation.w);
+				MemoryUtil.memPutFloat(ptr + 48, instance.sourceU);
+				MemoryUtil.memPutFloat(ptr + 52, instance.sourceV);
+				MemoryUtil.memPutFloat(ptr + 56, instance.minU);
+				MemoryUtil.memPutFloat(ptr + 60, instance.minV);
+				MemoryUtil.memPutFloat(ptr + 64, instance.maxU);
+				MemoryUtil.memPutFloat(ptr + 68, instance.maxV);
+				MemoryUtil.memPutFloat(ptr + 72, instance.scrollMult);
 			})
 			.register();
 	public static final InstanceType<ActorInstance> ACTORS = SimpleInstanceType.builder(ActorInstance::new)
@@ -110,10 +114,10 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutByte(ptr + 20, instance.rotationAxisX);
 				MemoryUtil.memPutByte(ptr + 21, instance.rotationAxisY);
 				MemoryUtil.memPutByte(ptr + 22, instance.rotationAxisZ);
-				MemoryUtil.memPutFloat(ptr + 24, instance.qX);
-				MemoryUtil.memPutFloat(ptr + 28, instance.qY);
-				MemoryUtil.memPutFloat(ptr + 32, instance.qZ);
-				MemoryUtil.memPutFloat(ptr + 34, instance.qW);
+				MemoryUtil.memPutFloat(ptr + 24, instance.rotation.x);
+				MemoryUtil.memPutFloat(ptr + 28, instance.rotation.y);
+				MemoryUtil.memPutFloat(ptr + 32, instance.rotation.z);
+				MemoryUtil.memPutFloat(ptr + 34, instance.rotation.w);
 				MemoryUtil.memPutByte(ptr + 38, instance.rotationCenterX);
 				MemoryUtil.memPutByte(ptr + 39, instance.rotationCenterY);
 				MemoryUtil.memPutByte(ptr + 40, instance.rotationCenterZ);

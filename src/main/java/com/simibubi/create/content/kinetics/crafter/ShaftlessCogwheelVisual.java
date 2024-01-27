@@ -28,8 +28,8 @@ public class ShaftlessCogwheelVisual extends SingleRotatingVisual<KineticBlockEn
 		var stacker = TransformStack.of(stack)
 				.center();
 
-		if (facing.getAxis() == Direction.Axis.X) stacker.rotateZ(90);
-		else if (facing.getAxis() == Direction.Axis.Z) stacker.rotateX(90);
+		if (facing.getAxis() == Direction.Axis.X) stacker.rotateZDegrees(90);
+		else if (facing.getAxis() == Direction.Axis.Z) stacker.rotateXDegrees(90);
 
 		stacker.uncenter();
 	}

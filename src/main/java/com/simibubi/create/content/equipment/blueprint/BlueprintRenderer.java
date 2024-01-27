@@ -35,8 +35,8 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		PartialModel partialModel = entity.size == 3 ? AllPartialModels.CRAFTING_BLUEPRINT_3x3
 			: entity.size == 2 ? AllPartialModels.CRAFTING_BLUEPRINT_2x2 : AllPartialModels.CRAFTING_BLUEPRINT_1x1;
 		SuperByteBuffer sbb = CachedBufferer.partial(partialModel, Blocks.AIR.defaultBlockState());
-		sbb.rotateY(-yaw)
-			.rotateX(90.0F + entity.getXRot())
+		sbb.rotateYDegrees(-yaw)
+			.rotateXDegrees(90.0F + entity.getXRot())
 			.translate(-.5, -1 / 32f, -.5);
 		if (entity.size == 2)
 			sbb.translate(.5, 0, -.5);
@@ -61,8 +61,8 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		int itemLight = Mth.floor(sl + .5) << 20 | (Mth.floor(bl + .5) & 0xf) << 4;
 
 		TransformStack.of(ms)
-			.rotateY(vertical ? 0 : -yaw)
-			.rotateX(fakeNormalXRotation);
+			.rotateYDegrees(vertical ? 0 : -yaw)
+			.rotateXDegrees(fakeNormalXRotation);
 		Matrix3f copy = new Matrix3f(ms.last()
 			.normal());
 
@@ -70,8 +70,8 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		ms.pushPose();
 
 		TransformStack.of(ms)
-			.rotateY(-yaw)
-			.rotateX(entity.getXRot())
+			.rotateYDegrees(-yaw)
+			.rotateXDegrees(entity.getXRot())
 			.translate(0, 0, 1 / 32f + .001);
 
 		if (entity.size == 3)

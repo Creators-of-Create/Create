@@ -95,7 +95,7 @@ public class PlaneMirror extends SymmetryMirror {
 		super.applyModelTransform(ms);
 		TransformStack.of(ms)
 			.center()
-			.rotateY(((Align) orientation) == Align.XY ? 0 : 90)
+			.rotateYDegrees(((Align) orientation) == Align.XY ? 0 : 90)
 			.uncenter();
 	}
 

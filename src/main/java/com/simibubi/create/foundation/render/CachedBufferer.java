@@ -67,8 +67,8 @@ public class CachedBufferer {
 			PoseStack stack = new PoseStack();
 			TransformStack.of(stack)
 				.center()
-				.rotateY(AngleHelper.horizontalAngle(facing))
-				.rotateX(AngleHelper.verticalAngle(facing))
+				.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+				.rotateXDegrees(AngleHelper.verticalAngle(facing))
 				.uncenter();
 			return stack;
 		};
@@ -79,8 +79,8 @@ public class CachedBufferer {
 			PoseStack stack = new PoseStack();
 			TransformStack.of(stack)
 				.center()
-				.rotateY(AngleHelper.horizontalAngle(facing))
-				.rotateX(AngleHelper.verticalAngle(facing) + 90)
+				.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+				.rotateXDegrees(AngleHelper.verticalAngle(facing) + 90)
 				.uncenter();
 			return stack;
 		};

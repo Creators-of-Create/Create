@@ -56,11 +56,11 @@ public class GantryCarriageRenderer extends KineticBlockEntityRenderer<GantryCar
 
 		SuperByteBuffer cogs = CachedBufferer.partial(AllPartialModels.GANTRY_COGS, state);
 		cogs.center()
-				.rotateY(AngleHelper.horizontalAngle(facing))
-				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-				.rotateY(alongFirst ^ facing.getAxis() == Axis.X ? 0 : 90)
+				.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+				.rotateXDegrees(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
+				.rotateYDegrees(alongFirst ^ facing.getAxis() == Axis.X ? 0 : 90)
 				.translate(0, -9 / 16f, 0)
-				.rotateX(-angleForBE)
+				.rotateXDegrees(-angleForBE)
 				.translate(0, 9 / 16f, 0)
 				.uncenter();
 

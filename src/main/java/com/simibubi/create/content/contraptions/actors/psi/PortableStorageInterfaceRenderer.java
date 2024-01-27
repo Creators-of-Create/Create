@@ -81,8 +81,8 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 
 	private static void rotateToFacing(SuperByteBuffer buffer, Direction facing) {
 		buffer.center()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
+			.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+			.rotateXDegrees(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 			.uncenter();
 	}
 

@@ -62,8 +62,8 @@ public class FluidRenderer {
 		var msr = TransformStack.of(ms);
 		ms.pushPose();
 		msr.center()
-			.rotateY(AngleHelper.horizontalAngle(direction))
-			.rotateX(direction == Direction.UP ? 180 : direction == Direction.DOWN ? 0 : 270)
+			.rotateYDegrees(AngleHelper.horizontalAngle(direction))
+			.rotateXDegrees(direction == Direction.UP ? 180 : direction == Direction.DOWN ? 0 : 270)
 			.uncenter();
 		ms.translate(.5, 0, .5);
 
@@ -78,7 +78,7 @@ public class FluidRenderer {
 			ms.pushPose();
 			renderFlowingTiledFace(Direction.SOUTH, hMin, yMin, hMax, yMax, h, builder, ms, light, color, flowTexture);
 			ms.popPose();
-			msr.rotateY(90);
+			msr.rotateYDegrees(90);
 		}
 
 		if (progress != 1)
@@ -112,7 +112,7 @@ public class FluidRenderer {
 		if (fluidAttributes.isLighterThanAir())
 			TransformStack.of(ms)
 				.translate(center)
-				.rotateX(180)
+				.rotateXDegrees(180)
 				.translateBack(center);
 
 		for (Direction side : Iterate.directions) {

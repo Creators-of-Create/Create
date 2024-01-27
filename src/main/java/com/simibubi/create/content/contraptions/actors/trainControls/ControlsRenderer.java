@@ -30,7 +30,7 @@ public class ControlsRenderer {
 		PoseStack ms = matrices.getModel();
 		cover.transform(ms)
 			.center()
-			.rotateY(hAngle)
+			.rotateYDegrees(hAngle)
 			.uncenter()
 			.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.cutoutMipped()));
@@ -38,16 +38,16 @@ public class ControlsRenderer {
 		double yOffset = Mth.lerp(equipAnimation * equipAnimation, -0.15f, 0.05f);
 
 		for (boolean first : Iterate.trueAndFalse) {
-			float vAngle = (float) Mth.clamp(first ? firstLever * 70 - 25 : secondLever * 15, -45, 45);
+			float vAngle = Mth.clamp(first ? firstLever * 70 - 25 : secondLever * 15, -45, 45);
 			SuperByteBuffer lever = CachedBufferer.partial(AllPartialModels.TRAIN_CONTROLS_LEVER, state);
 			ms.pushPose();
 			TransformStack.of(ms)
 				.center()
-				.rotateY(hAngle)
+				.rotateYDegrees(hAngle)
 				.translate(0, 0, 4 / 16f)
-				.rotateX(vAngle - 45)
+				.rotateXDegrees(vAngle - 45)
 				.translate(0, yOffset, 0)
-				.rotateX(45)
+				.rotateXDegrees(45)
 				.uncenter()
 				.translate(0, -2 / 16f, -3 / 16f)
 				.translate(first ? 0 : 6 / 16f, 0, 0);

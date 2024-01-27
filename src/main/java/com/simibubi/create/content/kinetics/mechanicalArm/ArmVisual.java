@@ -130,7 +130,7 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements D
 		msr.center();
 
 		if (ceiling)
-			msr.rotateX(180);
+			msr.rotateXDegrees(180);
 
 		ArmRenderer.transformBase(msr, baseAngle);
 		base.setTransform(msLocal)
@@ -149,13 +149,13 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements D
 		ArmRenderer.transformHead(msr, headAngle);
 
 		if (ceiling && blockEntity.goggles)
-			msr.rotateZ(180);
+			msr.rotateZDegrees(180);
 
 		claw.setTransform(msLocal)
 			.setChanged();
 
 		if (ceiling && blockEntity.goggles)
-			msr.rotateZ(180);
+			msr.rotateZDegrees(180);
 
 		ItemStack item = blockEntity.heldItem;
 		ItemRenderer itemRenderer = Minecraft.getInstance()

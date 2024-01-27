@@ -104,7 +104,7 @@ public class MinecartElement extends AnimatedSceneElement {
 			Mth.lerp(pt, entity.yo, entity.getY()), Mth.lerp(pt, entity.zo, entity.getZ()));
 
 		TransformStack.of(ms)
-			.rotateY(rotation.getValue(pt));
+			.rotateYDegrees(rotation.getValue(pt));
 
 		entityrenderermanager.render(entity, 0, 0, 0, 0, pt, ms, buffer, lightCoordsFromFade(fade));
 		ms.popPose();

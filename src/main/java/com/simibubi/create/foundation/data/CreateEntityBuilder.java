@@ -58,9 +58,9 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 			var instanceFactory = this.instanceFactory;
 			if (instanceFactory != null) {
 				NonNullPredicate<T> renderNormally = this.renderNormally;
-				SimpleEntityVisualizer.configure(getEntry())
+				SimpleEntityVisualizer.builder(getEntry())
 					.factory(instanceFactory.get())
-					.skipRender(be -> !renderNormally.test(be))
+					.skipVanillaRender(be -> !renderNormally.test(be))
 					.apply();
 			}
 

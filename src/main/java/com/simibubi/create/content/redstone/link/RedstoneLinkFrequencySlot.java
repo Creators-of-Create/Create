@@ -46,8 +46,8 @@ public class RedstoneLinkFrequencySlot extends ValueBoxTransform.Dual {
 			.isVertical() ? 0 : AngleHelper.horizontalAngle(facing) + 180;
 		float xRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
 		TransformStack.of(ms)
-			.rotateY(yRot)
-			.rotateX(xRot);
+			.rotateYDegrees(yRot)
+			.rotateXDegrees(xRot);
 	}
 
 	@Override

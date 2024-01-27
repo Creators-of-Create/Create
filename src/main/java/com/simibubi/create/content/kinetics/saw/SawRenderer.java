@@ -190,11 +190,11 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 
 		superBuffer.transform(matrices.getModel())
 			.center()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(AngleHelper.verticalAngle(facing));
+			.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+			.rotateXDegrees(AngleHelper.verticalAngle(facing));
 
 		if (!SawBlock.isHorizontal(state)) {
-			superBuffer.rotateZ(state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0);
+			superBuffer.rotateZDegrees(state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0);
 		}
 
 		superBuffer.uncenter()

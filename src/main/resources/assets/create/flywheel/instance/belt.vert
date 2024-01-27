@@ -11,6 +11,7 @@ void flw_instanceVertex(in FlwInstance instance) {
 
     flw_vertexTexCoord = flw_vertexTexCoord - instance.sourceTexture + instance.scrollTexture.xy + vec2(0, scroll);
     flw_vertexLight = instance.light / 15.;
+    flw_vertexOverlay = instance.overlay;
 
     #if defined(DEBUG_RAINBOW)
     flw_vertexColor = instance.color;

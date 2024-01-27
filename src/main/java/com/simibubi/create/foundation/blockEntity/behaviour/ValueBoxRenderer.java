@@ -48,7 +48,7 @@ public class ValueBoxRenderer {
 
 		ms.pushPose();
 		TransformStack.of(ms)
-			.rotateX(230);
+			.rotateXDegrees(230);
 		Matrix3f copy = new Matrix3f(ms.last()
 			.normal());
 		ms.popPose();
@@ -57,7 +57,7 @@ public class ValueBoxRenderer {
 		TransformStack.of(ms)
 			.translate(0, 0, -1 / 4f)
 			.translate(0, 0, 1 / 32f + .001)
-			.rotateY(180);
+			.rotateYDegrees(180);
 
 		PoseStack squashedMS = new PoseStack();
 		squashedMS.last()

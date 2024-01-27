@@ -20,7 +20,6 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
-import com.jozufozu.flywheel.lib.math.DiffuseLightCalculator;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
@@ -32,6 +31,7 @@ import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instruction.HideAllInstruction;
 import com.simibubi.create.foundation.ponder.instruction.PonderInstruction;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
+import com.simibubi.create.foundation.render.DiffuseLightCalculator;
 import com.simibubi.create.foundation.render.ForcedDiffuseState;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -525,13 +525,13 @@ public class PonderScene {
 			ms.translate(width / 2, height / 2, 200 + offset);
 
 			TransformStack.of(ms)
-				.rotateX(-35)
-				.rotateY(55)
+				.rotateXDegrees(-35)
+				.rotateYDegrees(55)
 				.translate(offset, 0, 0)
-				.rotateY(-55)
-				.rotateX(35)
-				.rotateX(xRotation.getValue(pt))
-				.rotateY(yRotation.getValue(pt));
+				.rotateYDegrees(-55)
+				.rotateXDegrees(35)
+				.rotateXDegrees(xRotation.getValue(pt))
+				.rotateYDegrees(yRotation.getValue(pt));
 
 			UIRenderHelper.flipForGuiRender(ms);
 			float f = 30 * scaleFactor;

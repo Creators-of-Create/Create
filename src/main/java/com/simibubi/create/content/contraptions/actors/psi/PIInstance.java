@@ -46,15 +46,15 @@ public class PIInstance {
 		middle.loadIdentity()
 				.translate(instancePos)
 				.center()
-				.rotateY(angleY)
-				.rotateX(angleX)
+				.rotateYDegrees(angleY)
+				.rotateXDegrees(angleX)
 				.uncenter();
 
 		top.loadIdentity()
 				.translate(instancePos)
 				.center()
-				.rotateY(angleY)
-				.rotateX(angleX)
+				.rotateYDegrees(angleY)
+				.rotateXDegrees(angleX)
 				.uncenter();
 
 		middle.translate(0, progress * 0.5f + 0.375f, 0);

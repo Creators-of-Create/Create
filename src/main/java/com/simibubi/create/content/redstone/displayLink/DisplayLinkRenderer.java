@@ -45,8 +45,8 @@ public class DisplayLinkRenderer extends SafeBlockEntityRenderer<DisplayLinkBloc
 		ms.pushPose();
 
 		msr.center()
-			.rotateY(AngleHelper.horizontalAngle(face))
-			.rotateX(-AngleHelper.verticalAngle(face) - 90)
+			.rotateYDegrees(AngleHelper.horizontalAngle(face))
+			.rotateXDegrees(-AngleHelper.verticalAngle(face) - 90)
 			.uncenter();
 
 		CachedBufferer.partial(AllPartialModels.DISPLAY_LINK_TUBE, blockState)

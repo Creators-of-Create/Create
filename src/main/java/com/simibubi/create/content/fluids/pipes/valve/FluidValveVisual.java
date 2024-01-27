@@ -64,9 +64,9 @@ public class FluidValveVisual extends ShaftVisual<FluidValveBlockEntity> impleme
         pointer.loadIdentity()
 				 .translate(getVisualPosition())
 				 .center()
-				 .rotateY((float) yRot)
-				 .rotateX((float) xRot)
-				 .rotateY(pointerRotationOffset + pointerRotation)
+				 .rotateYDegrees((float) yRot)
+				 .rotateXDegrees((float) xRot)
+				 .rotateYDegrees(pointerRotationOffset + pointerRotation)
 				 .uncenter()
 				.setChanged();
 	}

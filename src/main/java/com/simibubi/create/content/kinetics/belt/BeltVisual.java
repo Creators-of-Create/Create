@@ -132,9 +132,9 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
         var model = Models.partial(AllPartialModels.BELT_PULLEY, dir.getAxis(), (axis11, modelTransform1) -> {
             var msr = TransformStack.of(modelTransform1);
             msr.center();
-            if (axis11 == Direction.Axis.X) msr.rotateY(90);
-            if (axis11 == Direction.Axis.Y) msr.rotateX(90);
-            msr.rotateX(90);
+            if (axis11 == Direction.Axis.X) msr.rotateYDegrees(90);
+            if (axis11 == Direction.Axis.Y) msr.rotateXDegrees(90);
+            msr.rotateXDegrees(90);
             msr.uncenter();
         });
 

@@ -44,11 +44,11 @@ public class DeployerFilterSlot extends ValueBoxTransform.Sided {
 
 		if (facing.getAxis() == Axis.Y)
 			TransformStack.of(ms)
-				.rotateY(180 + AngleHelper.horizontalAngle(state.getValue(DeployerBlock.FACING)));
+				.rotateYDegrees(180 + AngleHelper.horizontalAngle(state.getValue(DeployerBlock.FACING)));
 
 		TransformStack.of(ms)
-			.rotateY(yRot)
-			.rotateX(xRot);
+			.rotateYDegrees(yRot)
+			.rotateXDegrees(xRot);
 	}
 
 	@Override

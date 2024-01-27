@@ -133,8 +133,8 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 			.pushPose()
 			.translate(x, y, 100)
 			.scale(50)
-			.rotateX(-22)
-			.rotateY(-202);
+			.rotateXDegrees(-22)
+			.rotateYDegrees(-202);
 
 		GuiGameElement.of(AllBlocks.TOOLBOXES.get(color)
 			.getDefaultState())
@@ -143,7 +143,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
         TransformStack.of(ms)
 			.pushPose()
 			.translate(0, -6 / 16f, 12 / 16f)
-			.rotateX(-105 * menu.contentHolder.lid.getValue(partialTicks))
+			.rotateXDegrees(-105 * menu.contentHolder.lid.getValue(partialTicks))
 			.translate(0, 6 / 16f, -12 / 16f);
 		GuiGameElement.of(AllPartialModels.TOOLBOX_LIDS.get(color))
 			.render(graphics);

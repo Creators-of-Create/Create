@@ -160,6 +160,23 @@ repositories {
     }
 }
 
+
+// Fix for loading non-mod libraries in dev-env, used for Miniball.
+// https://gist.github.com/SizableShrimp/66b22f1b24c255e1491c8d98d3f11f83
+// v--------------------------------------------------------------------v
+configurations {
+    library
+    implementation.extendsFrom library
+}
+
+minecraft.runs.configureEach {
+    lazyToken('minecraft_classpath') {
+        configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
+    }
+}
+// ^--------------------------------------------------------------------^
+
+
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
@@ -167,8 +184,10 @@ dependencies {
         jarJar.ranged(it, '[MC1.19.3-1.1.10,)')
     }
     jarJar("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}") {
-        jarJar.ranged(it, '[0.6.10,0.6.11)')
+        jarJar.ranged(it, '[1.0,2.0)')
     }
+
+    library 'com.dreizak:miniball:1.0.3'
 
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 

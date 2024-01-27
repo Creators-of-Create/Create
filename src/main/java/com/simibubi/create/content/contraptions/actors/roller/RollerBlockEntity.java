@@ -183,8 +183,8 @@ public class RollerBlockEntity extends SmartBlockEntity {
 			Direction facing = state.getValue(RollerBlock.FACING);
 			float yRot = AngleHelper.horizontalAngle(facing) + 180;
 			TransformStack.of(ms)
-				.rotateY(yRot)
-				.rotateX(90);
+				.rotateYDegrees(yRot)
+				.rotateXDegrees(90);
 		}
 
 		@Override

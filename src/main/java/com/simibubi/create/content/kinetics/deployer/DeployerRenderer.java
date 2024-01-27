@@ -198,8 +198,8 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 
 		TransformStack.of(m)
 			.center()
-			.rotateY(axis == Direction.Axis.Z ? 90 : 0)
-			.rotateZ(axis.isHorizontal() ? 90 : 0)
+			.rotateYDegrees(axis == Direction.Axis.Z ? 90 : 0)
+			.rotateZDegrees(axis.isHorizontal() ? 90 : 0)
 			.uncenter();
 		shaft.transform(m);
 		shaft.rotateCentered(angle, Direction.get(AxisDirection.POSITIVE, Direction.Axis.Y));

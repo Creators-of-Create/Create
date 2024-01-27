@@ -41,7 +41,7 @@ public class WhistleRenderer extends SafeBlockEntityRenderer<WhistleBlockEntity>
 
 		CachedBufferer.partial(mouth, blockState)
 			.center()
-			.rotateY(AngleHelper.horizontalAngle(direction))
+			.rotateYDegrees(AngleHelper.horizontalAngle(direction))
 			.uncenter()
 			.translate(0, offset * 4 / 16f, 0)
 			.light(light)

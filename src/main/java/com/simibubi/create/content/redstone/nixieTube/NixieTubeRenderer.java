@@ -48,8 +48,8 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 
 		var msr = TransformStack.of(ms);
 		msr.center()
-			.rotateY(yRot)
-			.rotateZ(xRot)
+			.rotateYDegrees(yRot)
+			.rotateZDegrees(xRot)
 			.uncenter();
 
 		if (be.signalState != null) {
@@ -131,7 +131,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 
 		if (facing == Direction.DOWN)
 			msr.center()
-				.rotateZ(180)
+				.rotateZDegrees(180)
 				.uncenter();
 
 		boolean invertTubes =

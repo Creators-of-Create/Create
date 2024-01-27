@@ -35,7 +35,7 @@ public class StandardBogeyRenderer {
 			for (int i : Iterate.zeroAndOne) {
 				shafts[i].translate(-.5f, .25f, i * -1)
 						.center()
-						.rotateZ(wheelAngle)
+						.rotateZDegrees(wheelAngle)
 						.uncenter()
 						.render(ms, light, vb);
 			}
@@ -68,7 +68,7 @@ public class StandardBogeyRenderer {
 					ms.pushPose();
 				wheels[(side + 1)/2]
 					.translate(0, 12 / 16f, side)
-					.rotateX(wheelAngle)
+					.rotateXDegrees(wheelAngle)
 					.render(ms, light, vb);
 				if (!inInstancedContraption)
 					ms.popPose();
@@ -100,7 +100,7 @@ public class StandardBogeyRenderer {
 				secondaryShafts[i]
 						.translate(-.5f, .25f, .5f + i * -2)
 						.center()
-						.rotateX(wheelAngle)
+						.rotateXDegrees(wheelAngle)
 						.uncenter()
 						.render(ms, light, vb);
 			}
@@ -117,14 +117,14 @@ public class StandardBogeyRenderer {
 
 			getTransform(LARGE_BOGEY_WHEELS, ms, inInstancedContraption)
 					.translate(0, 1, 0)
-					.rotateX(wheelAngle)
+					.rotateXDegrees(wheelAngle)
 					.render(ms, light, vb);
 
 			getTransform(BOGEY_PIN, ms, inInstancedContraption)
 					.translate(0, 1, 0)
-					.rotateX(wheelAngle)
+					.rotateXDegrees(wheelAngle)
 					.translate(0, 1 / 4f, 0)
-					.rotateX(-wheelAngle)
+					.rotateXDegrees(-wheelAngle)
 					.render(ms, light, vb);
 
 			if (!inInstancedContraption)

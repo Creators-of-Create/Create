@@ -91,17 +91,17 @@ public class FluidTankRenderer extends SafeBlockEntityRenderer<FluidTankBlockEnt
 		for (Direction d : Iterate.horizontalDirections) {
 			ms.pushPose();
 			CachedBufferer.partial(AllPartialModels.BOILER_GAUGE, blockState)
-				.rotateY(d.toYRot())
+				.rotateYDegrees(d.toYRot())
 				.uncenter()
 				.translate(be.width / 2f - 6 / 16f, 0, 0)
 				.light(light)
 				.renderInto(ms, vb);
 			CachedBufferer.partial(AllPartialModels.BOILER_GAUGE_DIAL, blockState)
-				.rotateY(d.toYRot())
+				.rotateYDegrees(d.toYRot())
 				.uncenter()
 				.translate(be.width / 2f - 6 / 16f, 0, 0)
 				.translate(0, dialPivot, dialPivot)
-				.rotateX(-90 * progress)
+				.rotateXDegrees(-90 * progress)
 				.translate(0, -dialPivot, -dialPivot)
 				.light(light)
 				.renderInto(ms, vb);

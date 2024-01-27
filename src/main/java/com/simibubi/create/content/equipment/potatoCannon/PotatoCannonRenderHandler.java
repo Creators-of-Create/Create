@@ -50,14 +50,14 @@ public class PotatoCannonRenderHandler extends ShootableGadgetRenderHandler {
 		ms.translate(flip * -.1f, 0, .14f);
 		ms.scale(.75f, .75f, .75f);
 		TransformStack.of(ms)
-			.rotateX(recoil * 80);
+			.rotateXDegrees(recoil * 80);
 	}
 
 	@Override
 	protected void transformHand(PoseStack ms, float flip, float equipProgress, float recoil, float pt) {
 		ms.translate(flip * -.09, -.275, -.25);
 		TransformStack.of(ms)
-			.rotateZ(flip * -10);
+			.rotateZDegrees(flip * -10);
 	}
 
 }

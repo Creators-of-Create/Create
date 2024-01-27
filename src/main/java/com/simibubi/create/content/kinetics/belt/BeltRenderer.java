@@ -77,9 +77,9 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 			float renderTick = AnimationTickHolder.getRenderTime(be.getLevel());
 
 			msr.center()
-					.rotateY(AngleHelper.horizontalAngle(facing) + (upward ? 180 : 0) + (sideways ? 270 : 0))
-					.rotateZ(sideways ? 90 : 0)
-					.rotateX(!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0)
+					.rotateYDegrees(AngleHelper.horizontalAngle(facing) + (upward ? 180 : 0) + (sideways ? 270 : 0))
+					.rotateZDegrees(sideways ? 90 : 0)
+					.rotateXDegrees(!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0)
 					.uncenter();
 
 			if (downward || beltSlope == BeltSlope.VERTICAL && axisDirection == AxisDirection.POSITIVE) {
@@ -132,9 +132,9 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 					PoseStack stack = new PoseStack();
                     var stacker = TransformStack.of(stack);
 					stacker.center();
-					if (dir.getAxis() == Direction.Axis.X) stacker.rotateY(90);
-					if (dir.getAxis() == Direction.Axis.Y) stacker.rotateX(90);
-					stacker.rotateX(90);
+					if (dir.getAxis() == Direction.Axis.X) stacker.rotateYDegrees(90);
+					if (dir.getAxis() == Direction.Axis.Y) stacker.rotateXDegrees(90);
+					stacker.rotateXDegrees(90);
 					stacker.uncenter();
 					return stack;
 				};

@@ -42,9 +42,9 @@ public class FluidValveRenderer extends KineticBlockEntityRenderer<FluidValveBlo
 			pointerRotationOffset = 90;
 
 		pointer.center()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-			.rotateY(pointerRotationOffset + pointerRotation)
+			.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+			.rotateXDegrees(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
+			.rotateYDegrees(pointerRotationOffset + pointerRotation)
 			.uncenter()
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));

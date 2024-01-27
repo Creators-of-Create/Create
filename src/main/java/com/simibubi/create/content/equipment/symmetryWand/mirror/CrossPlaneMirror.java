@@ -99,7 +99,7 @@ public class CrossPlaneMirror extends SymmetryMirror {
 		super.applyModelTransform(ms);
 		TransformStack.of(ms)
 			.center()
-			.rotateY(((Align) orientation) == Align.Y ? 0 : 45)
+			.rotateYDegrees(((Align) orientation) == Align.Y ? 0 : 45)
 			.uncenter();
 	}
 

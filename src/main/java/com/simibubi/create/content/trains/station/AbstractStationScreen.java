@@ -103,8 +103,8 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 		msr.pushPose()
 			.translate(guiLeft + background.width + 4, guiTop + background.height + 4, 100)
 			.scale(40)
-			.rotateX(-22)
-			.rotateY(63);
+			.rotateXDegrees(-22)
+			.rotateYDegrees(63);
 		GuiGameElement.of(blockEntity.getBlockState()
 			.setValue(BlockStateProperties.WATERLOGGED, false))
 			.render(graphics);

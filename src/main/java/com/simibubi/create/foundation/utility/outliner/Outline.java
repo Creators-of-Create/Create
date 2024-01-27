@@ -49,7 +49,8 @@ public abstract class Outline {
 		ms.pushPose();
 		TransformStack.of(ms)
 			.translate(start)
-			.rotateY(hAngle).rotateX(vAngle);
+			.rotateYDegrees(hAngle)
+			.rotateXDegrees(vAngle);
 		renderAACuboidLine(ms, buffer, Vec3.ZERO, new Vec3(0, 0, diff.length()));
 		ms.popPose();
 	}

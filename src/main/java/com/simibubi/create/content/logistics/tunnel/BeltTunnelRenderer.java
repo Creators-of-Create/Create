@@ -49,7 +49,7 @@ public class BeltTunnelRenderer extends SmartBlockEntityRenderer<BeltTunnelBlock
 
 			ms.pushPose();
 			msr.center()
-				.rotateY(horizontalAngle)
+				.rotateYDegrees(horizontalAngle)
 				.uncenter();
 
 			ms.translate(0.075f / 16f, 0, 0);
@@ -64,7 +64,7 @@ public class BeltTunnelRenderer extends SmartBlockEntityRenderer<BeltTunnelBlock
 					flapAngle *= .5f;
 
 				msr.translate(pivot)
-					.rotateX(flapAngle)
+					.rotateXDegrees(flapAngle)
 					.translateBack(pivot);
 				flapBuffer.light(light)
 					.renderInto(ms, vb);

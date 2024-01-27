@@ -28,7 +28,7 @@ public class DirectionalExtenderScrollOptionSlot extends CenteredSideValueBoxTra
 	public void rotate(BlockState state, PoseStack ms) {
 		if (!getSide().getAxis().isHorizontal())
 			TransformStack.of(ms)
-					.rotateY(AngleHelper.horizontalAngle(state.getValue(BlockStateProperties.FACING)) + 180);
+					.rotateYDegrees(AngleHelper.horizontalAngle(state.getValue(BlockStateProperties.FACING)) + 180);
 		super.rotate(state, ms);
 	}
 }

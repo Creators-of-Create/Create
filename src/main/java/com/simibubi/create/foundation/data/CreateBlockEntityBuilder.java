@@ -85,9 +85,9 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 			var instanceFactory = this.instanceFactory;
 			if (instanceFactory != null) {
 				NonNullPredicate<T> renderNormally = this.renderNormally;
-				SimpleBlockEntityVisualizer.configure(getEntry())
+				SimpleBlockEntityVisualizer.builder(getEntry())
 					.factory(instanceFactory.get())
-					.skipRender(be -> !renderNormally.test(be))
+					.skipVanillaRender(be -> !renderNormally.test(be))
 					.apply();
 			}
 		});

@@ -37,8 +37,8 @@ public class StickerRenderer extends SafeBlockEntityRenderer<StickerBlockEntity>
 		Direction facing = state.getValue(StickerBlock.FACING);
 		head.nudge(be.hashCode())
 			.center()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(AngleHelper.verticalAngle(facing) + 90)
+			.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+			.rotateXDegrees(AngleHelper.verticalAngle(facing) + 90)
 			.uncenter()
 			.translate(0, (offset * offset) * 4 / 16f, 0);
 

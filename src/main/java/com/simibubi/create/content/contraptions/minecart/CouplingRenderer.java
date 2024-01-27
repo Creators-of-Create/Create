@@ -204,11 +204,11 @@ public class CouplingRenderer {
 			TransformStack.of(ms)
 				.translate(camera.scale(-1)
 					.add(x, y, z))
-				.rotateY(yaw)
-				.rotateZ(pitch)
-				.rotateX(roll)
+				.rotateYDegrees(yaw)
+				.rotateZDegrees(pitch)
+				.rotateXDegrees(roll)
 				.translate(offset, 0, 0)
-				.rotateY(flip ? 180 : 0);
+				.rotateYDegrees(flip ? 180 : 0);
 		}
 
 	}

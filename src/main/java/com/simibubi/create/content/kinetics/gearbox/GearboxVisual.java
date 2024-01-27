@@ -44,7 +44,7 @@ public class GearboxVisual extends KineticBlockEntityVisual<GearboxBlockEntity> 
 			RotatingInstance key = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF), RenderStage.AFTER_BLOCK_ENTITIES)
 					.createInstance();
 
-			key.setRotationAxis(Direction.get(Direction.AxisDirection.POSITIVE, axis).step())
+			key.setRotationAxis(axis)
 					.setRotationalSpeed(getSpeed(direction))
 					.setRotationOffset(getRotationOffset(axis)).setColor(blockEntity)
 					.setPosition(getVisualPosition())

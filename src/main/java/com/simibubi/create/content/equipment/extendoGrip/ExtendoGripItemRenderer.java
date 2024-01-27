@@ -52,19 +52,19 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer {
 		ms.translate(0, 1 / 16f, -7 / 16f);
 		ms.scale(1, 1, 1 + animation);
 		ms.pushPose();
-		stacker.rotateX(-halfAngle)
+		stacker.rotateXDegrees(-halfAngle)
 			.translate(ROTATION_OFFSET);
 		renderer.renderSolid(THIN_SHORT.get(), light);
 		stacker.translateBack(ROTATION_OFFSET);
 
 		ms.translate(0, 5.5f / 16f, 0);
-		stacker.rotateX(-oppositeAngle)
+		stacker.rotateXDegrees(-oppositeAngle)
 			.translate(ROTATION_OFFSET);
 		renderer.renderSolid(WIDE_LONG.get(), light);
 		stacker.translateBack(ROTATION_OFFSET);
 
 		ms.translate(0, 11 / 16f, 0);
-		stacker.rotateX(oppositeAngle)
+		stacker.rotateXDegrees(oppositeAngle)
 			.translate(ROTATION_OFFSET);
 		ms.translate(0, 0.5f / 16f, 0);
 		renderer.renderSolid(THIN_SHORT.get(), light);
@@ -73,19 +73,19 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer {
 		ms.popPose();
 		ms.pushPose();
 
-		stacker.rotateX(-180 + halfAngle)
+		stacker.rotateXDegrees(-180 + halfAngle)
 			.translate(ROTATION_OFFSET);
 		renderer.renderSolid(WIDE_SHORT.get(), light);
 		stacker.translateBack(ROTATION_OFFSET);
 
 		ms.translate(0, 5.5f / 16f, 0);
-		stacker.rotateX(oppositeAngle)
+		stacker.rotateXDegrees(oppositeAngle)
 			.translate(ROTATION_OFFSET);
 		renderer.renderSolid(THIN_LONG.get(), light);
 		stacker.translateBack(ROTATION_OFFSET);
 
 		ms.translate(0, 11 / 16f, 0);
-		stacker.rotateX(-oppositeAngle)
+		stacker.rotateXDegrees(-oppositeAngle)
 			.translate(ROTATION_OFFSET);
 		ms.translate(0, 0.5f / 16f, 0);
 		renderer.renderSolid(WIDE_SHORT.get(), light);
@@ -93,8 +93,8 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer {
 
 		// hand
 		ms.translate(0, 5.5f / 16f, 0);
-		stacker.rotateX(180 - halfAngle)
-			.rotateY(180);
+		stacker.rotateXDegrees(180 - halfAngle)
+			.rotateYDegrees(180);
 		ms.translate(0, 0, -4 / 16f);
 		ms.scale(1, 1, 1 / (1 + animation));
 		renderer.renderSolid((leftHand || rightHand) ? ExtendoGripRenderHandler.pose.get()
@@ -110,7 +110,7 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer {
 			angle += 360 * animation;
 		angle %= 360;
 		stacker.translate(COG_ROTATION_OFFSET)
-			.rotateZ(angle)
+			.rotateZDegrees(angle)
 			.translateBack(COG_ROTATION_OFFSET);
 		renderer.renderSolid(COG.get(), light);
 		ms.popPose();

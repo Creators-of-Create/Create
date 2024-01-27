@@ -87,9 +87,9 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 			.getStep();
 		float verticalAngle = positive * offset * 360;
 		if (insertedFrom.getAxis() != Direction.Axis.X)
-			msr.rotateX(verticalAngle);
+			msr.rotateXDegrees(verticalAngle);
 		if (insertedFrom.getAxis() != Direction.Axis.Z)
-			msr.rotateZ(-verticalAngle);
+			msr.rotateZDegrees(-verticalAngle);
 
 		if (renderUpright) {
 			Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
@@ -115,13 +115,13 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 				ms.translate(r.nextFloat() * .0625f * i, 0, r.nextFloat() * .0625f * i);
 			ms.scale(.5f, .5f, .5f);
 			if (!blockItem && !renderUpright)
-				msr.rotateX(90);
+				msr.rotateXDegrees(90);
 			itemRenderer.renderStatic(itemStack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 			ms.popPose();
 
 			if (!renderUpright) {
 				if (!blockItem)
-					msr.rotateY(10);
+					msr.rotateYDegrees(10);
 				ms.translate(0, blockItem ? 1 / 64d : 1 / 16d, 0);
 			} else
 				ms.translate(0, 0, -1 / 16f);

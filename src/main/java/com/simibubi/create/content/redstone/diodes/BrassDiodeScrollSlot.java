@@ -21,8 +21,8 @@ public class BrassDiodeScrollSlot extends ValueBoxTransform {
 	public void rotate(BlockState state, PoseStack ms) {
 		float yRot = AngleHelper.horizontalAngle(state.getValue(BlockStateProperties.HORIZONTAL_FACING)) + 180;
 		TransformStack.of(ms)
-			.rotateY(yRot)
-			.rotateX(90);
+			.rotateYDegrees(yRot)
+			.rotateXDegrees(90);
 	}
 
 	@Override

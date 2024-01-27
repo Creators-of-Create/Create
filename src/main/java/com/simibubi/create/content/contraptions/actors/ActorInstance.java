@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.actors;
 
 import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
 import org.joml.Vector3f;
 
 import com.jozufozu.flywheel.api.instance.InstanceHandle;
@@ -19,10 +20,7 @@ public class ActorInstance extends AbstractInstance {
     public byte rotationAxisX;
     public byte rotationAxisY;
     public byte rotationAxisZ;
-    public float qX;
-    public float qY;
-    public float qZ;
-    public float qW;
+    public Quaternionf rotation = new Quaternionf();
     public byte rotationCenterX = 64;
     public byte rotationCenterY = 64;
     public byte rotationCenterZ = 64;
@@ -84,11 +82,8 @@ public class ActorInstance extends AbstractInstance {
         return this;
     }
 
-	public ActorInstance setLocalRotation(Quaternionf q) {
-		this.qX = q.x();
-		this.qY = q.y();
-		this.qZ = q.z();
-		this.qW = q.w();
+	public ActorInstance setLocalRotation(Quaternionfc q) {
+		this.rotation.set(q);
 		return this;
 	}
 

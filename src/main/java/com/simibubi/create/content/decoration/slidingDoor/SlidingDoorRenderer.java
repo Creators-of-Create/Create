@@ -66,11 +66,11 @@ public class SlidingDoorRenderer extends SafeBlockEntityRenderer<SlidingDoorBloc
 
 				if (flip)
 					partial.translate(0, 0, 1);
-				partial.rotateY(91 * f * value * value);
+				partial.rotateYDegrees(91 * f * value * value);
 
 				if (!left)
 					partial.translate(0, 0, f / 2f)
-						.rotateY(-181 * f * value * value);
+						.rotateYDegrees(-181 * f * value * value);
 
 				if (flip)
 					partial.translate(0, 0, -1 / 2f);

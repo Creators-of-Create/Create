@@ -123,7 +123,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 				}
 
 				TransformStack.of(ms)
-					.rotateY(180)
+					.rotateYDegrees(180)
 					.translate(0, 0, (x + y * 3 + offset * 9) / 1024f );
 				Minecraft.getInstance()
 					.getItemRenderer()

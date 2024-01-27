@@ -631,8 +631,8 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 				return;
 			}
 			TransformStack.of(ms)
-				.rotateY(angle(state))
-				.rotateX(90);
+				.rotateYDegrees(angle(state))
+				.rotateXDegrees(90);
 		}
 
 		protected float angle(BlockState state) {

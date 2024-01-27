@@ -57,7 +57,7 @@ public class CreativeCrateBlockEntity extends CrateBlockEntity {
 			@Override
 			public void rotate(BlockState state, PoseStack ms) {
 				TransformStack.of(ms)
-					.rotateX(90);
+					.rotateXDegrees(90);
 			}
 
 			@Override

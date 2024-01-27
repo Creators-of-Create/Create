@@ -6,7 +6,6 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import com.jozufozu.flywheel.lib.math.DiffuseLightCalculator;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.jozufozu.flywheel.lib.util.ShadersModHandler;
 import com.mojang.blaze3d.systems.RenderSystem;

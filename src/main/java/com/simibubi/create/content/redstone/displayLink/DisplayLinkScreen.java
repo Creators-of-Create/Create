@@ -278,8 +278,8 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 				.pushPose()
 				.translate(x + background.width + 4, y + background.height + 4, 100)
 				.scale(40)
-				.rotateX(-22)
-				.rotateY(63);
+				.rotateXDegrees(-22)
+				.rotateYDegrees(63);
 		GuiGameElement.of(blockEntity.getBlockState()
 						.setValue(DisplayLinkBlock.FACING, Direction.UP))
 				.render(graphics);

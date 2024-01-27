@@ -26,8 +26,8 @@ public class SawFilterSlot extends ValueBoxTransform {
 		int yRot = (state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0)
 			+ (state.getValue(SawBlock.FLIPPED) ? 0 : 180);
 		TransformStack.of(ms)
-			.rotateY(yRot)
-			.rotateX(90);
+			.rotateYDegrees(yRot)
+			.rotateXDegrees(90);
 	}
 
 }

@@ -74,9 +74,9 @@ public class SteamEngineValueBox extends ValueBoxTransform.Sided {
 
 		float yRot = AngleHelper.horizontalAngle(facing) + (facing == Direction.DOWN ? 180 : 0);
 		TransformStack.of(ms)
-			.rotateY(yRot)
-			.rotateX(facing == Direction.DOWN ? -90 : 90)
-			.rotateY(roll);
+			.rotateYDegrees(yRot)
+			.rotateXDegrees(facing == Direction.DOWN ? -90 : 90)
+			.rotateYDegrees(roll);
 	}
 
 	@Override

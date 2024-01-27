@@ -60,7 +60,7 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
 					localMs.translate(-1 / 4f, -1 / 4f, 1);
 					localMs.scale(.5f, .5f, .5f);
 					TransformStack.of(localMs)
-						.rotateY(-34);
+						.rotateYDegrees(-34);
 					itemRenderer.renderStatic(ammo, ItemDisplayContext.GUI, light, OverlayTexture.NO_OVERLAY, localMs,
 						buffer, mc.level, 0);
 				});

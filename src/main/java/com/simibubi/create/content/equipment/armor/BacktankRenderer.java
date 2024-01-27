@@ -29,7 +29,7 @@ public class BacktankRenderer extends KineticBlockEntityRenderer<BacktankBlockEn
 		BlockState blockState = be.getBlockState();
 		SuperByteBuffer cogs = CachedBufferer.partial(getCogsModel(blockState), blockState);
 		cogs.center()
-			.rotateY(180 + AngleHelper.horizontalAngle(blockState.getValue(BacktankBlock.HORIZONTAL_FACING)))
+			.rotateYDegrees(180 + AngleHelper.horizontalAngle(blockState.getValue(BacktankBlock.HORIZONTAL_FACING)))
 			.uncenter()
 			.translate(0, 6.5f / 16, 11f / 16)
 			.rotate(AngleHelper.rad(be.getSpeed() / 4f * AnimationTickHolder.getRenderTime(be.getLevel()) % 360),

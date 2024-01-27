@@ -84,8 +84,8 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity {
 		public void rotate(BlockState state, PoseStack ms) {
 			AttachFace face = state.getValue(SmartFluidPipeBlock.FACE);
 			TransformStack.of(ms)
-				.rotateY(angleY(state))
-				.rotateX(face == AttachFace.CEILING ? -45 : 45);
+				.rotateYDegrees(angleY(state))
+				.rotateXDegrees(face == AttachFace.CEILING ? -45 : 45);
 		}
 
 		protected float angleY(BlockState state) {

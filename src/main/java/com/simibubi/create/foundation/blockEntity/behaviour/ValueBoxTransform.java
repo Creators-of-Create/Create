@@ -113,8 +113,8 @@ public abstract class ValueBoxTransform {
 			float yRot = AngleHelper.horizontalAngle(getSide()) + 180;
 			float xRot = getSide() == Direction.UP ? 90 : getSide() == Direction.DOWN ? 270 : 0;
 			TransformStack.of(ms)
-				.rotateY(yRot)
-				.rotateX(xRot);
+				.rotateYDegrees(yRot)
+				.rotateXDegrees(xRot);
 		}
 
 		@Override

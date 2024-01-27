@@ -43,7 +43,7 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 			.scale(17 / 16f));
 		HarvesterRenderer.transform(be.getLevel(), facing, superBuffer, be.getAnimatedSpeed(), Vec3.ZERO);
 		superBuffer.translate(0, -.5, .5)
-			.rotateY(90)
+			.rotateYDegrees(90)
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 		ms.popPose();
@@ -75,7 +75,7 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 		viewProjection.translate(0, -.25, 0);
 		int contraptionWorldLight = ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld);
 		superBuffer.translate(0, -.5, .5)
-			.rotateY(90)
+			.rotateYDegrees(90)
 			.light(matrices.getWorld(), contraptionWorldLight)
 			.renderInto(viewProjection, buffers.getBuffer(RenderType.cutoutMipped()));
 		viewProjection.popPose();

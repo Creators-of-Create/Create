@@ -136,8 +136,8 @@ public class ContraptionControlsBlockEntity extends SmartBlockEntity {
 			Direction facing = state.getValue(ControlsBlock.FACING);
 			float yRot = AngleHelper.horizontalAngle(facing);
 			TransformStack.of(ms)
-				.rotateY(yRot + 180)
-				.rotateX(67.5f);
+				.rotateYDegrees(yRot + 180)
+				.rotateXDegrees(67.5f);
 		}
 
 		@Override

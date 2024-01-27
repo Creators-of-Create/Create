@@ -66,8 +66,8 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 			msr.translate(launchedItemLocation.subtract(Vec3.atLowerCornerOf(be.getBlockPos())));
 			Vec3 itemRotOffset = VecHelper.voxelSpace(0, 3, 0);
 			msr.translate(itemRotOffset);
-			msr.rotateY(AngleHelper.horizontalAngle(be.getFacing()));
-			msr.rotateX(time * 40);
+			msr.rotateYDegrees(AngleHelper.horizontalAngle(be.getFacing()));
+			msr.rotateXDegrees(time * 40);
 			msr.translateBack(itemRotOffset);
 			Minecraft.getInstance()
 				.getItemRenderer()
@@ -95,11 +95,11 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 
 	static <T extends Translate<T> & Rotate<T>> void applyLidAngle(KineticBlockEntity be, Vec3 rotationOffset, float angle, T tr) {
 		tr.center()
-			.rotateY(180 + AngleHelper.horizontalAngle(be.getBlockState()
+			.rotateYDegrees(180 + AngleHelper.horizontalAngle(be.getBlockState()
 				.getValue(EjectorBlock.HORIZONTAL_FACING)))
 			.uncenter()
 			.translate(rotationOffset)
-			.rotateX(-angle)
+			.rotateXDegrees(-angle)
 			.translateBack(rotationOffset);
 	}
 

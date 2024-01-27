@@ -59,8 +59,8 @@ public class StickerVisual extends AbstractBlockEntityVisual<StickerBlockEntity>
 				.translate(getVisualPosition())
 				.nudge(blockEntity.hashCode())
 				.center()
-				.rotateY(AngleHelper.horizontalAngle(facing))
-				.rotateX(AngleHelper.verticalAngle(facing) + 90)
+				.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+				.rotateXDegrees(AngleHelper.verticalAngle(facing) + 90)
 				.uncenter()
 				.translate(0, (offset * offset) * 4 / 16f, 0);
 	}

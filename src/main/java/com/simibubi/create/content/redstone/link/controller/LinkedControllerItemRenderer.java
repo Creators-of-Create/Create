@@ -107,8 +107,8 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 				float equip = equipProgress.getValue(pt);
 				int handModifier = transformType == ItemDisplayContext.FIRST_PERSON_LEFT_HAND ? -1 : 1;
 				msr.translate(0, equip / 4, equip / 4 * handModifier);
-				msr.rotateY(equip * -30 * handModifier);
-				msr.rotateZ(equip * -30);
+				msr.rotateYDegrees(equip * -30 * handModifier);
+				msr.rotateZDegrees(equip * -30);
 				active = true;
 			}
 

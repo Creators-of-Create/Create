@@ -82,7 +82,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 		msr.center();
 
 		if (inverted)
-			msr.rotateX(180);
+			msr.rotateXDegrees(180);
 
 		if (usingFlywheel)
 			doItemTransforms(msr, baseAngle, lowerArmAngle, upperArmAngle, headAngle);
@@ -93,7 +93,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 		if (hasItem) {
 			ms.pushPose();
 			float itemScale = isBlockItem ? .5f : .625f;
-			msr.rotateX(90);
+			msr.rotateXDegrees(90);
 			msLocal.translate(0, isBlockItem ? -9 / 16f : -10 / 16f, 0);
 			msLocal.scale(itemScale, itemScale, itemScale);
 
@@ -143,13 +143,13 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 		transformHead(msr, headAngle);
 
 		if (inverted)
-			msr.rotateZ(180);
+			msr.rotateZDegrees(180);
 
 		claw.transform(msLocal)
 			.renderInto(ms, builder);
 
 		if (inverted)
-			msr.rotateZ(180);
+			msr.rotateZDegrees(180);
 
 		for (int flip : Iterate.positiveAndNegative) {
 			msLocal.pushPose();
@@ -175,22 +175,22 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 
 	public static void transformHead(TransformStack msr, float headAngle) {
 		msr.translate(0, 0, -15 / 16d);
-		msr.rotateX(headAngle - 45f);
+		msr.rotateXDegrees(headAngle - 45f);
 	}
 
 	public static void transformUpperArm(TransformStack msr, float upperArmAngle) {
 		msr.translate(0, 0, -14 / 16d);
-		msr.rotateX(upperArmAngle - 90);
+		msr.rotateXDegrees(upperArmAngle - 90);
 	}
 
 	public static void transformLowerArm(TransformStack msr, float lowerArmAngle) {
 		msr.translate(0, 2 / 16d, 0);
-		msr.rotateX(lowerArmAngle + 135);
+		msr.rotateXDegrees(lowerArmAngle + 135);
 	}
 
 	public static void transformBase(TransformStack msr, float baseAngle) {
 		msr.translate(0, 4 / 16d, 0);
-		msr.rotateY(baseAngle);
+		msr.rotateYDegrees(baseAngle);
 	}
 
 	@Override
