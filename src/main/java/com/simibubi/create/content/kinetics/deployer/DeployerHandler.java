@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.level.block.AirBlock;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Multimap;
@@ -107,10 +109,8 @@ public class DeployerHandler {
 	}
 
 	static boolean shouldActivate(ItemStack held, Level world, BlockPos targetPos, @Nullable Direction facing) {
-		if (held.getItem() instanceof BlockItem)
-			if (world.getBlockState(targetPos)
-				.getBlock() == ((BlockItem) held.getItem()).getBlock())
-				return false;
+		if (held.getItem() instanceof BlockItem && !(world.getBlockState(targetPos).getBlock() instanceof AirBlock))
+			return false;
 
 		if (held.getItem() instanceof BucketItem) {
 			BucketItem bucketItem = (BucketItem) held.getItem();
