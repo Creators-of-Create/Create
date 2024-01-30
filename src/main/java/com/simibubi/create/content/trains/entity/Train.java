@@ -777,9 +777,9 @@ public class Train {
 			CarriageContraptionEntity entity = carriage.anyAvailableEntity();
 			if (entity == null)
 				return false;
-			if (!Mth.equal(entity.pitch, 0))
+			if (!Mth.equal(entity.getXRot(), 0))
 				return false;
-			if (!Mth.equal(((entity.yaw % 90) + 360) % 90, 0))
+			if (!Mth.equal(((entity.getYRot() % 90) + 360) % 90, 0))
 				return false;
 		}
 		return true;

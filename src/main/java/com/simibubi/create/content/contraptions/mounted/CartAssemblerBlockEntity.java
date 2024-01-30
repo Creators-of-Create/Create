@@ -190,8 +190,8 @@ public class CartAssemblerBlockEntity extends SmartBlockEntity implements IDispl
 		UUID couplingId = contraption.getCouplingId();
 
 		if (couplingId == null) {
-			contraption.yaw = CartAssemblerBlock.getHorizontalDirection(getBlockState())
-				.toYRot();
+			contraption.setYRot(CartAssemblerBlock.getHorizontalDirection(getBlockState())
+				.toYRot());
 			disassembleCart(cart);
 			return;
 		}
