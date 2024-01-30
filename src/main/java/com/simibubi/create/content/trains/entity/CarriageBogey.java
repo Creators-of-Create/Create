@@ -92,10 +92,10 @@ public class CarriageBogey {
 		float yRot = 0;
 
 		if (leading().edge == null || carriage.train.derailed) {
-			yRot = -90 + entity.yaw - derailAngle;
+			yRot = -90 + entity.getYRot() - derailAngle;
 		} else if (!entity.level.dimension()
 			.equals(getDimension())) {
-			yRot = -90 + entity.yaw;
+			yRot = -90 + entity.getYRot();
 			xRot = 0;
 		} else {
 			Vec3 positionVec = leading().getPosition(carriage.train.graph);

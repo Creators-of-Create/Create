@@ -850,8 +850,8 @@ public class Carriage {
 			double diffY = positionVec.y - coupledVec.y;
 			double diffZ = positionVec.z - coupledVec.z;
 
-			entity.prevYaw = entity.yaw;
-			entity.prevPitch = entity.pitch;
+			entity.yRotO = entity.getYRot();
+			entity.xRotO = entity.getXRot();
 
 			if (!entity.level.isClientSide()) {
 				Vec3 lookahead = positionAnchor.add(positionAnchor.subtract(entity.position())
@@ -882,8 +882,8 @@ public class Carriage {
 			}
 
 			entity.setPos(positionAnchor);
-			entity.yaw = (float) (Mth.atan2(diffZ, diffX) * 180 / Math.PI) + 180;
-			entity.pitch = (float) (Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)) * 180 / Math.PI) * -1;
+			entity.setYRot((float) (Mth.atan2(diffZ, diffX) * 180 / Math.PI) + 180);
+			entity.setXRot((float) (Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)) * 180 / Math.PI) * -1);
 
 			if (!entity.firstPositionUpdate)
 				return;
@@ -891,8 +891,8 @@ public class Carriage {
 			entity.xo = entity.getX();
 			entity.yo = entity.getY();
 			entity.zo = entity.getZ();
-			entity.prevYaw = entity.yaw;
-			entity.prevPitch = entity.pitch;
+			entity.yRotO = entity.getYRot();
+			entity.xRotO = entity.getXRot();
 		}
 	}
 

@@ -69,12 +69,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	private boolean attachedExtraInventories;
 	private boolean manuallyPlaced;
 
-	public float prevYaw;
-	public float yaw;
 	public float targetYaw;
-
-	public float prevPitch;
-	public float pitch;
 
 	public int nonDamageTicks;
 
@@ -132,11 +127,11 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		ContraptionRotationState crs = new ContraptionRotationState();
 
 		float yawOffset = getYawOffset();
-		crs.zRotation = pitch;
-		crs.yRotation = -yaw + yawOffset;
+		crs.zRotation = getXRot();
+		crs.yRotation = -getYRot() + yawOffset;
 
-		if (pitch != 0 && yaw != 0) {
-			crs.secondYRotation = -yaw;
+		if (getXRot() != 0 && getYRot() != 0) {
+			crs.secondYRotation = -getYRot();
 			crs.yRotation = yawOffset;
 		}
 
@@ -157,8 +152,8 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		if (compound.contains("InitialOrientation"))
 			setInitialOrientation(NBTHelper.readEnum(compound, "InitialOrientation", Direction.class));
 
-		yaw = compound.getFloat("Yaw");
-		pitch = compound.getFloat("Pitch");
+		setYRot(compound.getFloat("Yaw"));
+		setXRot(compound.getFloat("Pitch"));
 		manuallyPlaced = compound.getBoolean("Placed");
 
 		if (compound.contains("ForceYaw"))
@@ -167,8 +162,10 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		ListTag vecNBT = compound.getList("CachedMotion", 6);
 		if (!vecNBT.isEmpty()) {
 			motionBeforeStall = new Vec3(vecNBT.getDouble(0), vecNBT.getDouble(1), vecNBT.getDouble(2));
-			if (!motionBeforeStall.equals(Vec3.ZERO))
-				targetYaw = prevYaw = yaw += yawFromVector(motionBeforeStall);
+			if (!motionBeforeStall.equals(Vec3.ZERO)) {
+				setYRot(getYRot() + yawFromVector(motionBeforeStall));
+				targetYaw = yRotO = getYRot();
+			}
 			setDeltaMovement(Vec3.ZERO);
 		}
 
@@ -187,13 +184,13 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			.isHorizontal())
 			NBTHelper.writeEnum(compound, "InitialOrientation", optional);
 		if (forceAngle) {
-			compound.putFloat("ForceYaw", yaw);
+			compound.putFloat("ForceYaw", getYRot());
 			forceAngle = false;
 		}
 
 		compound.putBoolean("Placed", manuallyPlaced);
-		compound.putFloat("Yaw", yaw);
-		compound.putFloat("Pitch", pitch);
+		compound.putFloat("Yaw", getYRot());
+		compound.putFloat("Pitch", getXRot());
 
 		if (getCouplingId() != null)
 			compound.putUUID("OnCoupling", getCouplingId());
@@ -217,7 +214,8 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	public void startAtYaw(float yaw) {
-		targetYaw = this.yaw = prevYaw = yaw;
+		setYRot(yaw);
+		targetYaw = yRotO = yaw;
 		forceAngle = true;
 	}
 
@@ -238,11 +236,11 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	public float getViewYRot(float partialTicks) {
-		return -(partialTicks == 1.0F ? yaw : angleLerp(partialTicks, prevYaw, yaw));
+		return -(partialTicks == 1.0F ? getYRot() : angleLerp(partialTicks, yRotO, getYRot()));
 	}
 
 	public float getViewXRot(float partialTicks) {
-		return partialTicks == 1.0F ? pitch : angleLerp(partialTicks, prevPitch, pitch);
+		return partialTicks == 1.0F ? getXRot() : angleLerp(partialTicks, xRotO, getXRot());
 	}
 
 	@Override
@@ -314,6 +312,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		}
 	}
 
+	// TODO: find why the previous tick values are staying in sync with the current ones
 	protected boolean updateOrientation(boolean rotationLock, boolean wasStalled, Entity riding, boolean isOnCoupling) {
 		if (isOnCoupling) {
 			Couple<MinecartController> coupledCarts = getCoupledCartsIfPresent();
@@ -331,14 +330,14 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			double diffY = positionVec.y - coupledVec.y;
 			double diffZ = positionVec.z - coupledVec.z;
 
-			prevYaw = yaw;
-			prevPitch = pitch;
-			yaw = (float) (Mth.atan2(diffZ, diffX) * 180 / Math.PI);
-			pitch = (float) (Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)) * 180 / Math.PI);
+			yRotO = getYRot();
+			xRotO = getXRot();
+			setYRot((float) (Mth.atan2(diffZ, diffX) * 180 / Math.PI));
+			setXRot((float) (Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)) * 180 / Math.PI));
 
 			if (getCouplingId().equals(riding.getUUID())) {
-				pitch *= -1;
-				yaw += 180;
+				setXRot(getXRot() * -1);
+				setYRot(getYRot() + 180);
 			}
 			return false;
 		}
@@ -352,12 +351,12 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 				.isVertical())
 				return false;
 			OrientedContraptionEntity parent = (OrientedContraptionEntity) riding;
-			prevYaw = yaw;
-			yaw = -parent.getViewYRot(1);
+			yRotO = getYRot();
+			setYRot(-parent.getViewYRot(1));
 			return false;
 		}
 
-		prevYaw = yaw;
+		yRotO = getYRot();
 		if (wasStalled)
 			return false;
 
@@ -386,18 +385,18 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 				targetYaw = yawFromVector(motion);
 				if (targetYaw < 0)
 					targetYaw += 360;
-				if (yaw < 0)
-					yaw += 360;
+				if (getYRot() < 0)
+					setYRot(getYRot() + 360);
 			}
 
-			prevYaw = yaw;
+			yRotO = getYRot();
 			float maxApproachSpeed = (float) (motion.length() * 12f / (Math.max(1, getBoundingBox().getXsize() / 6f)));
-			float yawHint = AngleHelper.getShortestAngleDiff(yaw, yawFromVector(locationDiff));
-			float approach = AngleHelper.getShortestAngleDiff(yaw, targetYaw, yawHint);
+			float yawHint = AngleHelper.getShortestAngleDiff(getYRot(), yawFromVector(locationDiff));
+			float approach = AngleHelper.getShortestAngleDiff(getYRot(), targetYaw, yawHint);
 			approach = Mth.clamp(approach, -maxApproachSpeed, maxApproachSpeed);
-			yaw += approach;
-			if (Math.abs(AngleHelper.getShortestAngleDiff(yaw, targetYaw)) < 1f)
-				yaw = targetYaw;
+			setYRot(getYRot() + approach);
+			if (Math.abs(AngleHelper.getShortestAngleDiff(getYRot(), targetYaw)) < 1f)
+				setYRot(targetYaw);
 			else
 				rotating = true;
 		}
@@ -496,7 +495,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		Vec3 anchorVec = super.getAnchorVec();
 		return anchorVec.subtract(.5, 0, .5);
 	}
-	
+
 	@Override
 	public Vec3 getPrevAnchorVec() {
 		Vec3 prevAnchorVec = super.getPrevAnchorVec();
@@ -506,17 +505,17 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	@Override
 	protected StructureTransform makeStructureTransform() {
 		BlockPos offset = new BlockPos(getAnchorVec().add(.5, .5, .5));
-		return new StructureTransform(offset, 0, -yaw + getInitialYaw(), 0);
+		return new StructureTransform(offset, 0, -getYRot() + getInitialYaw(), 0);
 	}
 
 	@Override
 	protected float getStalledAngle() {
-		return yaw;
+		return getYRot();
 	}
 
 	@Override
 	protected void handleStallInformation(double x, double y, double z, float angle) {
-		yaw = angle;
+		setYRot(angle);
 	}
 
 	@Override
@@ -571,7 +570,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		Vec3 passengerPosition = parent.getPassengerPosition(this, partialTicks);
 		if (passengerPosition == null)
 			return Vec3.ZERO;
-		
+
 		double x = passengerPosition.x - Mth.lerp(partialTicks, this.xOld, this.getX());
 		double y = passengerPosition.y - Mth.lerp(partialTicks, this.yOld, this.getY());
 		double z = passengerPosition.z - Mth.lerp(partialTicks, this.zOld, this.getZ());

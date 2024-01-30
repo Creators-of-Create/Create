@@ -196,7 +196,7 @@ public class TrainHUD {
 			angleOffset *= -1;
 
 		float snapSize = 22.5f;
-		float diff = AngleHelper.getShortestAngleDiff(cameraEntity.getYRot(), cce.yaw) + (inverted ? -90 : 90);
+		float diff = AngleHelper.getShortestAngleDiff(cameraEntity.getYRot(), cce.getYRot()) + (inverted ? -90 : 90);
 		if (Math.abs(diff) < 60)
 			diff = 0;
 

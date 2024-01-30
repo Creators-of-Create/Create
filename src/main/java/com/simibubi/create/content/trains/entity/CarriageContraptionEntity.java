@@ -289,7 +289,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		double distanceTo = 0;
 		if (!firstPositionUpdate) {
 			Vec3 diff = position().subtract(xo, yo, zo);
-			Vec3 relativeDiff = VecHelper.rotate(diff, yaw, Axis.Y);
+			Vec3 relativeDiff = VecHelper.rotate(diff, getYRot(), Axis.Y);
 			double signum = Math.signum(-relativeDiff.x);
 			distanceTo = diff.length() * signum;
 			movingBackwards = signum < 0;
@@ -418,7 +418,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			return;
 
 		boolean alongX = Mth.equal(pivot.x, Math.round(pivot.x));
-		int extraFlip = Direction.fromYRot(yaw)
+		int extraFlip = Direction.fromYRot(getYRot())
 			.getAxisDirection()
 			.getStep();
 
