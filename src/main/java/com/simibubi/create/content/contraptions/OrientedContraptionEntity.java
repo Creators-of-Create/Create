@@ -312,7 +312,6 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		}
 	}
 
-	// TODO: find why the previous tick values are staying in sync with the current ones
 	protected boolean updateOrientation(boolean rotationLock, boolean wasStalled, Entity riding, boolean isOnCoupling) {
 		if (isOnCoupling) {
 			Couple<MinecartController> coupledCarts = getCoupledCartsIfPresent();

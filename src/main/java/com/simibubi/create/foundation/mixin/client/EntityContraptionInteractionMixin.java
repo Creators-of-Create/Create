@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.simibubi.create.content.contraptions.OrientedContraptionEntity;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.objectweb.asm.Opcodes;
@@ -15,6 +17,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -168,5 +171,19 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 				);
 			}
 		});
+	}
+
+	@Redirect(method = "baseTick", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/Entity;xRotO:F"))
+	private void create$contraptionSetsOwnXRotO(Entity instance, float xRotO) {
+        if (!(instance instanceof OrientedContraptionEntity)) {
+			instance.xRotO = xRotO;
+		}
+	}
+
+	@Redirect(method = "baseTick", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/Entity;yRotO:F"))
+	private void create$contraptionSetsOwnYRotO(Entity instance, float yRotO) {
+        if (!(instance instanceof OrientedContraptionEntity)) {
+			instance.yRotO = yRotO;
+		}
 	}
 }
