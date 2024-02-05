@@ -2567,7 +2567,7 @@
   "create.tooltip.speedRequirement.medium": "Средняя",
   "create.tooltip.speedRequirement.none": "Нет",
   "create.tooltip.speedRequirement.slow": "Медленная",
-  "create.tooltip.stressImpact": "Создаваемая нагрузка: ",
+  "create.tooltip.stressImpact": "Создаваемая нагрузка: %1$s",
   "create.tooltip.stressImpact.high": "Высокая",
   "create.tooltip.stressImpact.low": "Низкая",
   "create.tooltip.stressImpact.medium": "Умеренная",
