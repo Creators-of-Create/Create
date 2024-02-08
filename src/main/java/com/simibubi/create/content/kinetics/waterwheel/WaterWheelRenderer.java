@@ -2,11 +2,13 @@ package com.simibubi.create.content.kinetics.waterwheel;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.jozufozu.flywheel.core.StitchedSprite;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.model.BakedModelHelper;
@@ -96,11 +98,13 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 		ResourceLocation id = RegisteredObjects.getKeyOrThrow(planksBlock);
 		String path = id.getPath();
 
-		if (path.endsWith("_planks")) {
+		if (path.endsWith("_planks") || path.contains("wood/planks/")) {
 			String namespace = id.getNamespace();
-			String wood = path.substring(0, path.length() - 7);
+			String wood = (Objects.equals(namespace, "tfc"))
+					? path.substring(12)
+					: path.substring(0, path.length() - 7);
 			BlockState logBlockState = getLogBlockState(namespace, wood);
-			
+
 			Map<TextureAtlasSprite, TextureAtlasSprite> map = new Reference2ReferenceOpenHashMap<>();
 			map.put(OAK_PLANKS_TEMPLATE.get(), getSpriteOnSide(planksBlockState, Direction.UP));
 			map.put(OAK_LOG_TEMPLATE.get(), getSpriteOnSide(logBlockState, Direction.SOUTH));
@@ -114,10 +118,13 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 
 	private static BlockState getLogBlockState(String namespace, String wood) {
 		for (String suffix : LOG_SUFFIXES) {
-			Optional<BlockState> state =
-				ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(namespace, wood + suffix))
-					.map(Holder::value)
-					.map(Block::defaultBlockState);
+			Optional<BlockState> state = (Objects.equals(namespace, "tfc"))
+					? ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(namespace, "wood/log/" + wood))
+						.map(Holder::value)
+						.map(Block::defaultBlockState)
+					: ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(namespace, wood + suffix))
+						.map(Holder::value)
+						.map(Block::defaultBlockState);
 			if (state.isPresent())
 				return state.get();
 		}
