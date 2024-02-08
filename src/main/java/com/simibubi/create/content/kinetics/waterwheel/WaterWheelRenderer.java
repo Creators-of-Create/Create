@@ -96,9 +96,11 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 		ResourceLocation id = RegisteredObjects.getKeyOrThrow(planksBlock);
 		String path = id.getPath();
 
-		if (path.endsWith("_planks")) {
+		if (path.endsWith("_planks") || path.contains("wood/planks/") {
 			String namespace = id.getNamespace();
-			String wood = path.substring(0, path.length() - 7);
+			String wood = (Objects.equals(namespace, "tfc"))       
+				? path.substring(12)       
+				: path.substring(0, path.length() - 7);
 			BlockState logBlockState = getLogBlockState(namespace, wood);
 			
 			Map<TextureAtlasSprite, TextureAtlasSprite> map = new Reference2ReferenceOpenHashMap<>();
@@ -114,9 +116,12 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 
 	private static BlockState getLogBlockState(String namespace, String wood) {
 		for (String suffix : LOG_SUFFIXES) {
-			Optional<BlockState> state =
-				ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(namespace, wood + suffix))
-					.map(Holder::value)
+			Optional<BlockState> state = (Objects.equals(namespace, "tfc"))       
+				? ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(namespace, "wood/log/" + wood))          
+					.map(Holder::value)          
+					.map(Block::defaultBlockState)       
+				: ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(namespace, wood + suffix))          
+					.map(Holder::value)          
 					.map(Block::defaultBlockState);
 			if (state.isPresent())
 				return state.get();
