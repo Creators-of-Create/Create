@@ -16,6 +16,22 @@
       }
     ]
   },
+  "clipboard_check": {
+    "sounds": [
+      {
+        "name": "create:clipboard_check",
+        "type": "file"
+      }
+    ]
+  },
+  "clipboard_erase": {
+    "sounds": [
+      {
+        "name": "create:clipboard_erase",
+        "type": "file"
+      }
+    ]
+  },
   "cogs": {
     "sounds": [
       {

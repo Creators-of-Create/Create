@@ -305,6 +305,14 @@ public class AllSoundEvents {
 
 		HAUNTED_BELL_USE = create("haunted_bell_use").subtitle("Haunted Bell tolls")
 			.category(SoundSource.BLOCKS)
+				.build(),
+
+	CLIPBOARD_CHECKMARK = create("clipboard_check").noSubtitle()
+			.category(SoundSource.BLOCKS)
+			.build(),
+
+	CLIPBOARD_ERASE = create("clipboard_erase").noSubtitle()
+			.category(SoundSource.BLOCKS)
 			.build();
 
 	private static SoundEntryBuilder create(String name) {
