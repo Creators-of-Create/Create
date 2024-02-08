@@ -307,11 +307,11 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 				.build(),
 
-	CLIPBOARD_CHECKMARK = create("clipboard_check").noSubtitle()
+		CLIPBOARD_CHECKMARK = create("clipboard_check").noSubtitle()
 			.category(SoundSource.BLOCKS)
 			.build(),
 
-	CLIPBOARD_ERASE = create("clipboard_erase").noSubtitle()
+		CLIPBOARD_ERASE = create("clipboard_erase").noSubtitle()
 			.category(SoundSource.BLOCKS)
 			.build();
 
