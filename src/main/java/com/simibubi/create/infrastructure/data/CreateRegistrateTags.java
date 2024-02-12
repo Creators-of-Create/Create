@@ -92,12 +92,18 @@ public class CreateRegistrateTags {
 			.addTag(BlockTags.PRESSURE_PLATES)
 			.addTag(BlockTags.RAILS);
 
+		prov.tag(AllBlockTags.ROOTS.tag)
+				.add(Blocks.MANGROVE_ROOTS);
+
 		// COMPAT
 
 		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE,
 				"connector_lv", "connector_lv_relay", "connector_mv", "connector_mv_relay",
 				"connector_hv", "connector_hv_relay", "connector_bundled", "connector_structural",
 				"connector_redstone", "connector_probe", "breaker_switch");
+
+		TagGen.addOptional(prov.tag(AllBlockTags.ROOTS.tag), Mods.TF,
+				"root", "liveroot_block");
 
 		// VALIDATE
 
