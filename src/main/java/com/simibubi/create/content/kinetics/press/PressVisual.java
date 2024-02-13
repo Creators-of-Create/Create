@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -25,7 +24,7 @@ public class PressVisual extends ShaftVisual<MechanicalPressBlockEntity> impleme
 	public PressVisual(VisualizationContext context, MechanicalPressBlockEntity blockEntity) {
 		super(context, blockEntity);
 
-		pressHead = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.MECHANICAL_PRESS_HEAD), RenderStage.AFTER_BLOCK_ENTITIES)
+		pressHead = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.MECHANICAL_PRESS_HEAD))
 				.createInstance();
 
 		Quaternionf q = Axis.YP

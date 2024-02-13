@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -40,7 +39,7 @@ public class BearingVisual<B extends KineticBlockEntity & IBearingBlockEntity> e
 		PartialModel top =
 				blockEntity.isWoodenTop() ? AllPartialModels.BEARING_TOP_WOODEN : AllPartialModels.BEARING_TOP;
 
-		topInstance = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(top), RenderStage.AFTER_BLOCK_ENTITIES)
+		topInstance = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(top))
 				.createInstance();
 
 		topInstance.setPosition(getVisualPosition())

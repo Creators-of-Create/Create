@@ -3,7 +3,6 @@ package com.simibubi.create.content.kinetics.transmission;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.AbstractInstance;
@@ -33,7 +32,7 @@ public class SplitShaftVisual extends KineticBlockEntityVisual<SplitShaftBlockEn
 
             float splitSpeed = speed * blockEntity.getRotationSpeedModifier(dir);
 
-			var instance = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, dir), RenderStage.AFTER_BLOCK_ENTITIES)
+			var instance = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, dir))
                 .createInstance();
 
 			keys.add(setup(instance, splitSpeed));

@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.gantry;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -35,7 +34,7 @@ public class GantryCarriageVisual extends ShaftVisual<GantryCarriageBlockEntity>
 	public GantryCarriageVisual(VisualizationContext context, GantryCarriageBlockEntity blockEntity) {
 		super(context, blockEntity);
 
-		gantryCogs = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GANTRY_COGS), RenderStage.AFTER_BLOCK_ENTITIES)
+		gantryCogs = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GANTRY_COGS))
 								 .createInstance();
 
 		facing = blockState.getValue(GantryCarriageBlock.FACING);

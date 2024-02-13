@@ -4,7 +4,6 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.AbstractInstance;
@@ -41,7 +40,7 @@ public class GearboxVisual extends KineticBlockEntityVisual<GearboxBlockEntity> 
 			if (boxAxis == axis)
 				continue;
 
-			RotatingInstance key = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF), RenderStage.AFTER_BLOCK_ENTITIES)
+			RotatingInstance key = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF))
 					.createInstance();
 
 			key.setRotationAxis(axis)

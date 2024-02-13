@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.funnel;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
@@ -34,7 +33,7 @@ public class FunnelVisual extends AbstractBlockEntityVisual<FunnelBlockEntity> i
 
 		PartialModel flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllPartialModels.FUNNEL_FLAP
 				: AllPartialModels.BELT_FUNNEL_FLAP);
-        Instancer<FlapInstance> model = instancerProvider.instancer(AllInstanceTypes.FLAPS, Models.partial(flapPartial), RenderStage.AFTER_BLOCK_ENTITIES);
+        Instancer<FlapInstance> model = instancerProvider.instancer(AllInstanceTypes.FLAPS, Models.partial(flapPartial));
 
         int blockLight = level.getBrightness(LightLayer.BLOCK, pos);
         int skyLight = level.getBrightness(LightLayer.SKY, pos);

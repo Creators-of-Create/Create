@@ -2,7 +2,6 @@ package com.simibubi.create.content.fluids.pipes.valve;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -43,7 +42,7 @@ public class FluidValveVisual extends ShaftVisual<FluidValveBlockEntity> impleme
         pointerRotationOffset = twist ? 90 : 0;
         settled = false;
 
-        pointer = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLUID_VALVE_POINTER), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
+        pointer = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLUID_VALVE_POINTER)).createInstance();
 
 		transformPointer();
     }

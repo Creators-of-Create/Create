@@ -6,7 +6,6 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
@@ -33,7 +32,7 @@ public class BeltTunnelVisual extends AbstractBlockEntityVisual<BeltTunnelBlockE
 
         tunnelFlaps = new EnumMap<>(Direction.class);
 
-        Instancer<FlapInstance> model = instancerProvider.instancer(AllInstanceTypes.FLAPS, Models.partial(AllPartialModels.BELT_TUNNEL_FLAP), RenderStage.AFTER_BLOCK_ENTITIES);
+        Instancer<FlapInstance> model = instancerProvider.instancer(AllInstanceTypes.FLAPS, Models.partial(AllPartialModels.BELT_TUNNEL_FLAP));
 
         int blockLight = level.getBrightness(LightLayer.BLOCK, pos);
         int skyLight = level.getBrightness(LightLayer.SKY, pos);

@@ -11,7 +11,6 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
@@ -196,7 +195,7 @@ public abstract class BogeyRenderer {
 	 */
 	public void createModelInstance(VisualizationContext context, PartialModel model, int count) {
 		var instancer = context.instancerProvider()
-				.instancer(InstanceTypes.TRANSFORMED, Models.partial(model), RenderStage.AFTER_BLOCK_ENTITIES);
+				.instancer(InstanceTypes.TRANSFORMED, Models.partial(model));
 		BogeyModelData[] modelData = IntStream.range(0, count)
 				.mapToObj(i -> instancer.createInstance())
 				.map(BogeyModelData::new)
@@ -213,7 +212,7 @@ public abstract class BogeyRenderer {
 	 */
 	public void createModelInstance(VisualizationContext context, BlockState state, int count) {
 		var instancer = context.instancerProvider()
-				.instancer(InstanceTypes.TRANSFORMED, VirtualRenderHelper.blockModel(state), RenderStage.AFTER_BLOCK_ENTITIES);
+				.instancer(InstanceTypes.TRANSFORMED, VirtualRenderHelper.blockModel(state));
 		BogeyModelData[] modelData = IntStream.range(0, count)
 				.mapToObj(i -> instancer.createInstance())
 				.map(BogeyModelData::new)

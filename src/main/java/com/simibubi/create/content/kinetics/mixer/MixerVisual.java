@@ -2,7 +2,6 @@ package com.simibubi.create.content.kinetics.mixer;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
@@ -29,12 +28,12 @@ public class MixerVisual extends EncasedCogVisual implements DynamicVisual {
 		super(context, blockEntity, false);
 		this.mixer = blockEntity;
 
-		mixerHead = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.MECHANICAL_MIXER_HEAD), RenderStage.AFTER_BLOCK_ENTITIES)
+		mixerHead = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.MECHANICAL_MIXER_HEAD))
 			.createInstance();
 
 		mixerHead.setRotationAxis(Direction.Axis.Y);
 
-		mixerPole = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.MECHANICAL_MIXER_POLE), RenderStage.AFTER_BLOCK_ENTITIES)
+		mixerPole = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.MECHANICAL_MIXER_POLE))
 				.createInstance();
 
 

@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.pulley;
 
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
@@ -18,23 +17,23 @@ public class RopePulleyVisual extends AbstractPulleyVisual<PulleyBlockEntity> {
 	}
 
 	protected Instancer<OrientedInstance> getRopeModel() {
-		return instancerProvider.instancer(InstanceTypes.ORIENTED, VirtualRenderHelper.blockModel(AllBlocks.ROPE.getDefaultState()), RenderStage.AFTER_BLOCK_ENTITIES);
+		return instancerProvider.instancer(InstanceTypes.ORIENTED, VirtualRenderHelper.blockModel(AllBlocks.ROPE.getDefaultState()));
 	}
 
 	protected Instancer<OrientedInstance> getMagnetModel() {
-		return instancerProvider.instancer(InstanceTypes.ORIENTED, VirtualRenderHelper.blockModel(AllBlocks.PULLEY_MAGNET.getDefaultState()), RenderStage.AFTER_BLOCK_ENTITIES);
+		return instancerProvider.instancer(InstanceTypes.ORIENTED, VirtualRenderHelper.blockModel(AllBlocks.PULLEY_MAGNET.getDefaultState()));
 	}
 
 	protected Instancer<OrientedInstance> getHalfMagnetModel() {
-		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_HALF_MAGNET), RenderStage.AFTER_BLOCK_ENTITIES);
+		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_HALF_MAGNET));
 	}
 
 	protected Instancer<OrientedInstance> getCoilModel() {
-		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_COIL, rotatingAbout), RenderStage.AFTER_BLOCK_ENTITIES);
+		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_COIL, rotatingAbout));
 	}
 
 	protected Instancer<OrientedInstance> getHalfRopeModel() {
-		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_HALF), RenderStage.AFTER_BLOCK_ENTITIES);
+		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_HALF));
 	}
 
 	protected float getOffset() {

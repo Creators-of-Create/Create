@@ -2,7 +2,6 @@ package com.simibubi.create.content.equipment.toolbox;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
@@ -32,10 +31,10 @@ public class ToolBoxVisual extends AbstractBlockEntityVisual<ToolboxBlockEntity>
 
 	@Override
 	public void init(float pt) {
-		Instancer<TransformedInstance> drawerModel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TOOLBOX_DRAWER), RenderStage.AFTER_BLOCK_ENTITIES);
+		Instancer<TransformedInstance> drawerModel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TOOLBOX_DRAWER));
 
 		drawers = new TransformedInstance[]{drawerModel.createInstance(), drawerModel.createInstance()};
-		lid = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TOOLBOX_LIDS.get(blockEntity.getColor())), RenderStage.AFTER_BLOCK_ENTITIES)
+		lid = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TOOLBOX_LIDS.get(blockEntity.getColor())))
 				.createInstance();
 
 		super.init(pt);

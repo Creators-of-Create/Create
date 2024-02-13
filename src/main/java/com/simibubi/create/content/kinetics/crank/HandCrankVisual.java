@@ -2,7 +2,6 @@ package com.simibubi.create.content.kinetics.crank;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
@@ -25,7 +24,7 @@ public class HandCrankVisual extends SingleRotatingVisual<HandCrankBlockEntity> 
 		super(modelManager, blockEntity);
 		facing = blockState.getValue(BlockStateProperties.FACING);
 		Model model = blockEntity.getRenderedHandleInstance();
-		crank = instancerProvider.instancer(InstanceTypes.TRANSFORMED, model, RenderStage.AFTER_BLOCK_ENTITIES)
+		crank = instancerProvider.instancer(InstanceTypes.TRANSFORMED, model)
 				.createInstance();
 		rotateCrank();
 	}

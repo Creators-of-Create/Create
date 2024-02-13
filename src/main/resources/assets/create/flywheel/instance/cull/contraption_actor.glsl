@@ -1,11 +1,8 @@
-#include "flywheel:util/quaternion.glsl"
-
 void flw_transformBoundingSphere(in FlwInstance instance, inout vec3 center, inout float radius) {
-    // FIXME: this is incorrect, but it compiles
-    float degrees = instance.offset + flw_renderSeconds * instance.speed;
+    // The instance will spin about the rotation center, so we need to expand the radius to account for that
+    float extraForKinetic = length(center - instance.rotationCenter);
+    float extraForModel = length(center - 0.5);
 
-    vec4 kineticRot = quaternion(instance.axis, degrees);
-    vec3 rotated = rotateByQuaternion(center - instance.rotationCenter, kineticRot) + instance.rotationCenter;
-
-    center = rotateByQuaternion(rotated - .5, instance.rotation) + instance.pos + .5;
+    radius += extraForKinetic + extraForModel;
+    center += instance.pos;
 }

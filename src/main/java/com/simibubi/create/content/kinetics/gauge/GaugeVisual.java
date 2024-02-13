@@ -3,7 +3,6 @@ package com.simibubi.create.content.kinetics.gauge;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
@@ -36,7 +35,7 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
 
         GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
 
-        Instancer<TransformedInstance> dialModel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_DIAL), RenderStage.AFTER_BLOCK_ENTITIES);
+        Instancer<TransformedInstance> dialModel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_DIAL));
         Instancer<TransformedInstance> headModel = getHeadModel();
 
         ms = new PoseStack();
@@ -160,7 +159,7 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
 
         @Override
         protected Instancer<TransformedInstance> getHeadModel() {
-            return instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_HEAD_SPEED), RenderStage.AFTER_BLOCK_ENTITIES);
+            return instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_HEAD_SPEED));
         }
     }
 
@@ -171,7 +170,7 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
 
         @Override
         protected Instancer<TransformedInstance> getHeadModel() {
-            return instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_HEAD_STRESS), RenderStage.AFTER_BLOCK_ENTITIES);
+            return instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_HEAD_STRESS));
         }
     }
 }

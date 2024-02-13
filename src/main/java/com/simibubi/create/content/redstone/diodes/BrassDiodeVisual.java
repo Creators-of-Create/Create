@@ -2,7 +2,6 @@ package com.simibubi.create.content.redstone.diodes;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.TickableVisual;
 import com.jozufozu.flywheel.api.visual.VisualTickContext;
@@ -23,7 +22,7 @@ public class BrassDiodeVisual extends AbstractBlockEntityVisual<BrassDiodeBlockE
     public BrassDiodeVisual(VisualizationContext context, BrassDiodeBlockEntity blockEntity) {
         super(context, blockEntity);
 
-        indicator = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLEXPEATER_INDICATOR), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
+        indicator = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLEXPEATER_INDICATOR)).createInstance();
 
         indicator.loadIdentity()
 				.translate(getVisualPosition())

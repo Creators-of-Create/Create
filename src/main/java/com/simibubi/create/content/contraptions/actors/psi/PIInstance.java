@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.actors.psi;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.InstancerProvider;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
@@ -36,9 +35,9 @@ public class PIInstance {
 
 	public void init(boolean lit) {
 		this.lit = lit;
-		middle = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(PortableStorageInterfaceRenderer.getMiddleForState(blockState, lit)), RenderStage.AFTER_BLOCK_ENTITIES)
+		middle = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(PortableStorageInterfaceRenderer.getMiddleForState(blockState, lit)))
 				.createInstance();
-		top = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(PortableStorageInterfaceRenderer.getTopForState(blockState)), RenderStage.AFTER_BLOCK_ENTITIES)
+		top = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(PortableStorageInterfaceRenderer.getTopForState(blockState)))
 				.createInstance();
 	}
 
@@ -65,7 +64,7 @@ public class PIInstance {
 	public void tick(boolean lit) {
 		if (this.lit != lit) {
 			this.lit = lit;
-			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(PortableStorageInterfaceRenderer.getMiddleForState(blockState, lit)), RenderStage.AFTER_BLOCK_ENTITIES)
+			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(PortableStorageInterfaceRenderer.getMiddleForState(blockState, lit)))
 					.stealInstance(middle);
 		}
 	}

@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.TickableVisual;
@@ -54,11 +53,11 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
         xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRot = rotatePole ? 90 : 0;
 
-        pole = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.DEPLOYER_POLE), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
+        pole = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.DEPLOYER_POLE)).createInstance();
 
 		currentHand = this.blockEntity.getHandPose();
 
-		hand = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(currentHand), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
+		hand = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(currentHand)).createInstance();
 
 		progress = getProgress(AnimationTickHolder.getPartialTicks());
         updateRotation(pole, hand, yRot, xRot, zRot);
@@ -71,7 +70,7 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
 
 		if (currentHand != handPose) {
 			currentHand = handPose;
-			instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(currentHand), RenderStage.AFTER_BLOCK_ENTITIES)
+			instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(currentHand))
 					.stealInstance(hand);
 		}
 	}

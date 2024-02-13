@@ -124,6 +124,8 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutFloat(ptr + 42, instance.speed);
 			})
 			.register();
+
+	// TODO: remove
 	public static final InstanceType<FlapInstance> FLAPS = SimpleInstanceType.builder(FlapInstance::new)
 			.cullShader(asResource("instance/cull/flap.glsl"))
 			.vertexShader(asResource("instance/flap.vert"))

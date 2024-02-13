@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.bearing;
 
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.OrientedInstance;
@@ -39,7 +38,7 @@ public class StabilizedBearingVisual extends ActorVisual {
 
 		blockOrientation = BearingVisual.getBlockStateOrientation(facing);
 
-        topInstance = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.BEARING_TOP), RenderStage.AFTER_BLOCK_ENTITIES)
+        topInstance = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.BEARING_TOP))
 				.createInstance();
 
 		int blockLight = localBlockLight();
@@ -47,7 +46,7 @@ public class StabilizedBearingVisual extends ActorVisual {
 				.setRotation(blockOrientation)
 				.setBlockLight(blockLight);
 
-		shaft = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, blockState.getValue(BlockStateProperties.FACING).getOpposite()), RenderStage.AFTER_BLOCK_ENTITIES)
+		shaft = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, blockState.getValue(BlockStateProperties.FACING).getOpposite()))
 				.createInstance();
 
 		// not rotating so no need to set speed, axis, etc.

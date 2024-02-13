@@ -2,7 +2,6 @@ package com.simibubi.create.content.kinetics.drill;
 
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
@@ -39,7 +38,7 @@ public class DrillActorVisual extends ActorVisual {
         else
             eulerY = facing.toYRot() + ((axis == Direction.Axis.X) ? 180 : 0);
 
-		drillHead = instancerProvider.instancer(AllInstanceTypes.ACTORS, Models.partial(AllPartialModels.DRILL_HEAD), RenderStage.AFTER_BLOCK_ENTITIES)
+		drillHead = instancerProvider.instancer(AllInstanceTypes.ACTORS, Models.partial(AllPartialModels.DRILL_HEAD))
 				.createInstance();
 
         drillHead.setPosition(context.localPos)

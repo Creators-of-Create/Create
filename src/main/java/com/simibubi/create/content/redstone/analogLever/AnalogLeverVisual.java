@@ -2,7 +2,6 @@ package com.simibubi.create.content.redstone.analogLever;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -32,9 +31,9 @@ public class AnalogLeverVisual extends AbstractBlockEntityVisual<AnalogLeverBloc
 	public AnalogLeverVisual(VisualizationContext context, AnalogLeverBlockEntity blockEntity) {
 		super(context, blockEntity);
 
-		handle = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ANALOG_LEVER_HANDLE), RenderStage.AFTER_BLOCK_ENTITIES)
+		handle = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ANALOG_LEVER_HANDLE))
 			.createInstance();
-		indicator = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ANALOG_LEVER_INDICATOR), RenderStage.AFTER_BLOCK_ENTITIES)
+		indicator = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ANALOG_LEVER_INDICATOR))
 			.createInstance();
 
 		AttachFace face = blockState.getValue(AnalogLeverBlock.FACE);

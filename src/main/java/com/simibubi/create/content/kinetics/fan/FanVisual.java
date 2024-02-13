@@ -4,7 +4,6 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.model.Models;
@@ -30,8 +29,8 @@ public class FanVisual extends KineticBlockEntityVisual<EncasedFanBlockEntity> {
 		direction = blockState.getValue(FACING);
 
 		opposite = direction.getOpposite();
-		shaft = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, opposite), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
-		fan = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.ENCASED_FAN_INNER, opposite), RenderStage.AFTER_BLOCK_ENTITIES)
+		shaft = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, opposite)).createInstance();
+		fan = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.ENCASED_FAN_INNER, opposite))
 				.createInstance();
 
 		setup(shaft);

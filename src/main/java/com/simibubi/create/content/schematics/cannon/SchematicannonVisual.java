@@ -2,7 +2,6 @@ package com.simibubi.create.content.schematics.cannon;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -25,8 +24,8 @@ public class SchematicannonVisual extends AbstractBlockEntityVisual<Schematicann
     public SchematicannonVisual(VisualizationContext context, SchematicannonBlockEntity blockEntity) {
         super(context, blockEntity);
 
-        connector = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.SCHEMATICANNON_CONNECTOR), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
-        pipe = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.SCHEMATICANNON_PIPE), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
+        connector = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.SCHEMATICANNON_CONNECTOR)).createInstance();
+        pipe = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.SCHEMATICANNON_PIPE)).createInstance();
 	}
 
     @Override

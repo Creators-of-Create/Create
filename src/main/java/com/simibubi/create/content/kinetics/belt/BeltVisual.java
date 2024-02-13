@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
@@ -65,7 +64,7 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
             PartialModel beltPartial = BeltRenderer.getBeltPartial(diagonal, start, end, bottom);
             SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
 
-            Instancer<BeltInstance> beltModel = instancerProvider.instancer(AllInstanceTypes.BELTS, Models.partial(beltPartial), RenderStage.AFTER_BLOCK_ENTITIES);
+            Instancer<BeltInstance> beltModel = instancerProvider.instancer(AllInstanceTypes.BELTS, Models.partial(beltPartial));
 
             keys.add(setup(beltModel.createInstance(), bottom, spriteShift));
 
@@ -138,7 +137,7 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
             msr.uncenter();
         });
 
-		return instancerProvider.instancer(AllInstanceTypes.ROTATING, model, RenderStage.AFTER_BLOCK_ENTITIES);
+		return instancerProvider.instancer(AllInstanceTypes.ROTATING, model);
     }
 
     private Direction getOrientation() {

@@ -2,7 +2,6 @@ package com.simibubi.create.content.kinetics.flywheel;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -29,9 +28,9 @@ public class FlywheelVisual extends KineticBlockEntityVisual<FlywheelBlockEntity
 	public FlywheelVisual(VisualizationContext context, FlywheelBlockEntity blockEntity) {
 		super(context, blockEntity);
 
-		shaft = setup(instancerProvider.instancer(AllInstanceTypes.ROTATING, VirtualRenderHelper.blockModel(shaft()), RenderStage.AFTER_BLOCK_ENTITIES)
+		shaft = setup(instancerProvider.instancer(AllInstanceTypes.ROTATING, VirtualRenderHelper.blockModel(shaft()))
 			.createInstance());
-		wheel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, VirtualRenderHelper.blockModel(blockState), RenderStage.AFTER_BLOCK_ENTITIES)
+		wheel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, VirtualRenderHelper.blockModel(blockState))
 			.createInstance();
 
 		animate(blockEntity.angle);

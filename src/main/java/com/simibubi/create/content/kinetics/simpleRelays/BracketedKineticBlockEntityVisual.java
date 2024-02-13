@@ -2,7 +2,6 @@ package com.simibubi.create.content.kinetics.simpleRelays;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.model.Model;
@@ -40,7 +39,7 @@ public class BracketedKineticBlockEntityVisual extends SingleRotatingVisual<Brac
             BlockPos pos = blockEntity.getBlockPos();
             float offset = BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos);
             var model = Models.partial(AllPartialModels.COGWHEEL_SHAFT, axis, BracketedKineticBlockEntityVisual::rotateToAxis);
-            Instancer<RotatingInstance> half = instancerProvider.instancer(AllInstanceTypes.ROTATING, model, RenderStage.AFTER_BLOCK_ENTITIES);
+            Instancer<RotatingInstance> half = instancerProvider.instancer(AllInstanceTypes.ROTATING, model);
 
             additionalShaft = setup(half.createInstance(), speed);
             additionalShaft.setRotationOffset(offset)

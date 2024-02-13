@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.chassis;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -30,7 +29,7 @@ public class StickerVisual extends AbstractBlockEntityVisual<StickerBlockEntity>
 	public StickerVisual(VisualizationContext context, StickerBlockEntity blockEntity) {
 		super(context, blockEntity);
 
-		head = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.STICKER_HEAD), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
+		head = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.STICKER_HEAD)).createInstance();
 
 		fakeWorld = blockEntity.getLevel() != Minecraft.getInstance().level;
 		facing = blockState.getValue(StickerBlock.FACING);

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import com.google.common.collect.Lists;
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
@@ -49,18 +48,18 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements D
 	public ArmVisual(VisualizationContext context, ArmBlockEntity blockEntity) {
 		super(context, blockEntity);
 
-		base = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_BASE), RenderStage.AFTER_BLOCK_ENTITIES)
+		base = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_BASE))
 			.createInstance();
-		lowerBody = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_LOWER_BODY), RenderStage.AFTER_BLOCK_ENTITIES)
+		lowerBody = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_LOWER_BODY))
 			.createInstance();
-		upperBody = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_UPPER_BODY), RenderStage.AFTER_BLOCK_ENTITIES)
+		upperBody = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_UPPER_BODY))
 			.createInstance();
-		claw = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE), RenderStage.AFTER_BLOCK_ENTITIES)
+		claw = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE))
 			.createInstance();
 
-		TransformedInstance clawGrip1 = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_CLAW_GRIP_UPPER), RenderStage.AFTER_BLOCK_ENTITIES)
+		TransformedInstance clawGrip1 = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_CLAW_GRIP_UPPER))
 			.createInstance();
-		TransformedInstance clawGrip2 = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_CLAW_GRIP_LOWER), RenderStage.AFTER_BLOCK_ENTITIES)
+		TransformedInstance clawGrip2 = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_CLAW_GRIP_LOWER))
 			.createInstance();
 
 		clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
@@ -181,7 +180,7 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements D
 		super.update(pt);
 		models.remove(claw);
 		claw.delete();
-		claw = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE), RenderStage.AFTER_BLOCK_ENTITIES)
+		claw = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE))
 				.createInstance();
 		models.add(claw);
 		updateLight();

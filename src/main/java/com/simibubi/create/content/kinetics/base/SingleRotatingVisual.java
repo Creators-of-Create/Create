@@ -2,7 +2,6 @@ package com.simibubi.create.content.kinetics.base;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
@@ -19,7 +18,7 @@ public class SingleRotatingVisual<T extends KineticBlockEntity> extends KineticB
 
 	@Override
 	public void init(float pt) {
-		rotatingModel = instancerProvider.instancer(AllInstanceTypes.ROTATING, model(), RenderStage.AFTER_BLOCK_ENTITIES)
+		rotatingModel = instancerProvider.instancer(AllInstanceTypes.ROTATING, model())
 				.createInstance();
 		setup(rotatingModel);
 		super.init(pt);

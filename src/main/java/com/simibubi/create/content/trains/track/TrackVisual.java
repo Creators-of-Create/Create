@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.box.Box;
@@ -114,11 +113,11 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 
 			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
 
-			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.tie()), RenderStage.AFTER_BLOCK_ENTITIES)
+			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.tie()))
 				.createInstances(ties);
-			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.segment_left()), RenderStage.AFTER_BLOCK_ENTITIES)
+			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.segment_left()))
 				.createInstances(left);
-			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.segment_right()), RenderStage.AFTER_BLOCK_ENTITIES)
+			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.segment_right()))
 				.createInstances(right);
 
 			SegmentAngles[] segments = bc.getBakedSegments();
@@ -194,10 +193,10 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 				beams = Couple.create(() -> new TransformedInstance[segCount]);
 				beamCaps = Couple.create(() -> Couple.create(() -> new TransformedInstance[segCount]));
 				lightPos = new BlockPos[segCount];
-				beams.forEach(instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GIRDER_SEGMENT_MIDDLE), RenderStage.AFTER_BLOCK_ENTITIES)::createInstances);
+				beams.forEach(instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GIRDER_SEGMENT_MIDDLE))::createInstances);
 				beamCaps.forEachWithContext((c, top) -> {
 					var partialModel = Models.partial(top ? AllPartialModels.GIRDER_SEGMENT_TOP : AllPartialModels.GIRDER_SEGMENT_BOTTOM);
-					c.forEach(instancerProvider.instancer(InstanceTypes.TRANSFORMED, partialModel, RenderStage.AFTER_BLOCK_ENTITIES)::createInstances);
+					c.forEach(instancerProvider.instancer(InstanceTypes.TRANSFORMED, partialModel)::createInstances);
 				});
 
 				GirderAngles[] bakedGirders = bc.getBakedGirders();

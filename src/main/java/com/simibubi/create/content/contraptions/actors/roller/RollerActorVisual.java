@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.actors.roller;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
@@ -21,7 +20,7 @@ public class RollerActorVisual extends HarvesterActorVisual {
 		MovementContext movementContext) {
 		super(visualizationContext, simulationWorld, movementContext);
 
-		frame = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ROLLER_FRAME), RenderStage.AFTER_BLOCK_ENTITIES)
+		frame = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ROLLER_FRAME))
 			.createInstance();
 		frame.setBlockLight(localBlockLight());
 	}

@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.depot;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -23,7 +22,7 @@ public class EjectorVisual extends ShaftVisual<EjectorBlockEntity> implements Dy
 	public EjectorVisual(VisualizationContext dispatcher, EjectorBlockEntity blockEntity) {
 		super(dispatcher, blockEntity);
 
-		plate = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.EJECTOR_TOP), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
+		plate = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.EJECTOR_TOP)).createInstance();
 
 		pivotPlate();
 	}

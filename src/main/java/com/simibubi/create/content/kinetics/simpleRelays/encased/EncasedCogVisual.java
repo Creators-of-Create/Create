@@ -3,7 +3,6 @@ package com.simibubi.create.content.kinetics.simpleRelays.encased;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
@@ -51,7 +50,7 @@ public class EncasedCogVisual extends KineticBlockEntityVisual<KineticBlockEntit
 
 	@Override
 	public void init(float pt) {
-        var instancer = instancerProvider.instancer(AllInstanceTypes.ROTATING, getCogModel(), RenderStage.AFTER_BLOCK_ENTITIES);
+        var instancer = instancerProvider.instancer(AllInstanceTypes.ROTATING, getCogModel());
 		rotatingModel = setup(instancer.createInstance());
 
 		Block block = blockState.getBlock();
@@ -64,7 +63,7 @@ public class EncasedCogVisual extends KineticBlockEntityVisual<KineticBlockEntit
 		for (Direction d : Iterate.directionsInAxis(axis)) {
 			if (!def.hasShaftTowards(blockEntity.getLevel(), blockEntity.getBlockPos(), blockState, d))
 				continue;
-			RotatingInstance data = setup(instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, d), RenderStage.AFTER_BLOCK_ENTITIES)
+			RotatingInstance data = setup(instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, d))
 				.createInstance());
 			if (large)
 				data.setRotationOffset(BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos));

@@ -2,7 +2,6 @@ package com.simibubi.create.content.kinetics.steamEngine;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -28,11 +27,11 @@ public class SteamEngineVisual extends AbstractBlockEntityVisual<SteamEngineBloc
 	public SteamEngineVisual(VisualizationContext context, SteamEngineBlockEntity blockEntity) {
 		super(context, blockEntity);
 
-		piston = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_PISTON), RenderStage.AFTER_BLOCK_ENTITIES)
+		piston = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_PISTON))
 				.createInstance();
-		linkage = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_LINKAGE), RenderStage.AFTER_BLOCK_ENTITIES)
+		linkage = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_LINKAGE))
 				.createInstance();
-		connector = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_CONNECTOR), RenderStage.AFTER_BLOCK_ENTITIES)
+		connector = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_CONNECTOR))
 				.createInstance();
 	}
 
