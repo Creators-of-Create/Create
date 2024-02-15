@@ -51,7 +51,7 @@ public abstract class TranslatingContraption extends Contraption {
 
 	@Override
 	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
-		return false;
+		return true;
 	}
 	
 }
