@@ -33,12 +33,11 @@ public class AnalogLeverInstance extends BlockEntityInstance<AnalogLeverBlockEnt
 		indicator = mat.getModel(AllPartialModels.ANALOG_LEVER_INDICATOR, blockState)
 			.createInstance();
 
-		transform(indicator);
-
 		AttachFace face = blockState.getValue(AnalogLeverBlock.FACE);
 		rX = face == AttachFace.FLOOR ? 0 : face == AttachFace.WALL ? 90 : 180;
 		rY = AngleHelper.horizontalAngle(blockState.getValue(AnalogLeverBlock.FACING));
 
+		transform(indicator.loadIdentity());
 		animateLever();
 	}
 

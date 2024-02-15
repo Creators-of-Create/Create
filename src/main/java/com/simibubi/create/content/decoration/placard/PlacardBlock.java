@@ -8,6 +8,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.filter.FilterItem;
+import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.schematics.requirement.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
@@ -132,9 +133,9 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 					return InteractionResult.FAIL;
 				if (pState.getValue(POWERED))
 					return InteractionResult.FAIL;
-				
-				boolean test = inBlock.getItem() instanceof FilterItem ? FilterItem.test(pLevel, inHand, inBlock)
-					: ItemHandlerHelper.canItemStacksStack(inHand, inBlock);
+
+				boolean test = inBlock.getItem() instanceof FilterItem ? FilterItemStack.of(inBlock)
+					.test(pLevel, inHand) : ItemHandlerHelper.canItemStacksStack(inHand, inBlock);
 				if (!test) {
 					AllSoundEvents.DENY.play(pLevel, null, pPos, 1, 1);
 					return InteractionResult.SUCCESS;

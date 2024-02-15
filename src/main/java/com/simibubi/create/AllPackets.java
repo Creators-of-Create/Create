@@ -92,7 +92,6 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.infrastructure.command.HighlightPacket;
 import com.simibubi.create.infrastructure.command.SConfigureConfigPacket;
-
 import com.simibubi.create.infrastructure.debugInfo.ServerDebugInfoPacket;
 
 import net.minecraft.core.BlockPos;

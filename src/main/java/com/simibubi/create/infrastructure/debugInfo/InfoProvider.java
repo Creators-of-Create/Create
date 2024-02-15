@@ -2,9 +2,9 @@ package com.simibubi.create.infrastructure.debugInfo;
 
 import java.util.Objects;
 
-import net.minecraft.world.entity.player.Player;
-
 import javax.annotation.Nullable;
+
+import net.minecraft.world.entity.player.Player;
 
 /**
  * A supplier of debug information. May be queried on the client or server.

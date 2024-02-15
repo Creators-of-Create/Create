@@ -103,7 +103,7 @@ public class SmartObserverBlock extends DirectedDirectionalBlock implements IBE<
 
 	@Override
 	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-		return isSignalSource(blockState) && (side == null || side != blockState.getValue(FACING)
+		return isSignalSource(blockState) && (side == null || side != getTargetDirection(blockState)
 			.getOpposite()) ? 15 : 0;
 	}
 
