@@ -207,6 +207,9 @@ public class TreeCutter {
 	 * @return
 	 */
 	private static boolean validateCut(BlockGetter reader, BlockPos pos) {
+		BlockState initialState = reader.getBlockState(pos);
+		if (!isLog(initialState) && !isRoot(initialState))
+			return false;
 		Set<BlockPos> visited = new HashSet<>();
 		List<BlockPos> frontier = new LinkedList<>();
 		frontier.add(pos);
