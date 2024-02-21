@@ -103,7 +103,7 @@ public class CreateRegistrateTags {
 				"connector_redstone", "connector_probe", "breaker_switch");
 
 		TagGen.addOptional(prov.tag(AllBlockTags.ROOTS.tag), Mods.TF,
-				"root", "liveroot_block");
+				"root", "liveroot_block", "mangrove_root");
 
 		// VALIDATE
 
