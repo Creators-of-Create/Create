@@ -1,11 +1,11 @@
 {
   "parent": "create:block/funnel/block_vertical_filterless",
   "textures": {
-    "particle": "create:block/andesite_block",
     "base": "create:block/funnel/andesite_funnel",
-    "redstone": "create:block/funnel/andesite_funnel_powered",
     "direction": "create:block/funnel/andesite_funnel_push",
     "frame": "create:block/funnel/andesite_funnel_frame",
-    "open": "create:block/funnel/funnel_closed"
+    "open": "create:block/funnel/funnel_closed",
+    "particle": "create:block/andesite_block",
+    "redstone": "create:block/funnel/andesite_funnel_powered"
   }
 }

@@ -2,15 +2,19 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "conditions": [
             {
-              "condition": "minecraft:block_state_property",
               "block": "create:framed_glass_door",
+              "condition": "minecraft:block_state_property",
               "properties": {
                 "half": "lower"
               }
@@ -19,11 +23,7 @@
           "name": "create:framed_glass_door"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "rolls": 1.0
     }
   ]
 }

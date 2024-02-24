@@ -57,6 +57,7 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.recipe.CompatMetals;
 
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -64,11 +65,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.RegistryEvent.MissingMappings.Mapping;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.MissingMappingsEvent;
+import net.minecraftforge.registries.MissingMappingsEvent.Mapping;
 
 @Mod.EventBusSubscriber
 public class RemapHelper {
@@ -237,9 +238,9 @@ public class RemapHelper {
 	}
 
 	@SubscribeEvent
-	public static void remapBlocks(RegistryEvent.MissingMappings<Block> event) {
-		for (Mapping<Block> mapping : event.getMappings(Create.ID)) {
-			ResourceLocation key = mapping.key;
+	public static void remapBlocks(MissingMappingsEvent event) {
+		for (Mapping<Block> mapping : event.getMappings(Registry.BLOCK_REGISTRY, Create.ID)) {
+			ResourceLocation key = mapping.getKey();
 			String path = key.getPath();
 			ResourceLocation remappedId = reMap.get(path);
 			if (remappedId != null) {
@@ -257,9 +258,9 @@ public class RemapHelper {
 	}
 
 	@SubscribeEvent
-	public static void remapItems(RegistryEvent.MissingMappings<Item> event) {
-		for (Mapping<Item> mapping : event.getMappings(Create.ID)) {
-			ResourceLocation key = mapping.key;
+	public static void remapItems(MissingMappingsEvent event) {
+		for (Mapping<Item> mapping : event.getMappings(Registry.ITEM_REGISTRY, Create.ID)) {
+			ResourceLocation key = mapping.getKey();
 			String path = key.getPath();
 			ResourceLocation remappedId = reMap.get(path);
 			if (remappedId != null) {
@@ -277,9 +278,9 @@ public class RemapHelper {
 	}
 
 	@SubscribeEvent
-	public static void remapFluids(RegistryEvent.MissingMappings<Fluid> event) {
-		for (Mapping<Fluid> mapping : event.getMappings(Create.ID)) {
-			ResourceLocation key = mapping.key;
+	public static void remapFluids(MissingMappingsEvent event) {
+		for (Mapping<Fluid> mapping : event.getMappings(Registry.FLUID_REGISTRY, Create.ID)) {
+			ResourceLocation key = mapping.getKey();
 			String path = key.getPath();
 			if (path.equals("milk"))
 				mapping.remap(ForgeMod.MILK.get());
@@ -289,9 +290,9 @@ public class RemapHelper {
 	}
 
 	@SubscribeEvent
-	public static void remapBlockEntities(RegistryEvent.MissingMappings<BlockEntityType<?>> event) {
-		for (Mapping<BlockEntityType<?>> mapping : event.getMappings(Create.ID)) {
-			ResourceLocation key = mapping.key;
+	public static void remapBlockEntities(MissingMappingsEvent event) {
+		for (Mapping<BlockEntityType<?>> mapping : event.getMappings(Registry.BLOCK_ENTITY_TYPE_REGISTRY, Create.ID)) {
+			ResourceLocation key = mapping.getKey();
 			String path = key.getPath();
 
 			if (path.equals("copper_backtank")) {

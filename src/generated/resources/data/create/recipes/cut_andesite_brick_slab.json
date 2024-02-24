@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "cut_andesite_brick_slab",
-  "pattern": [
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "create:cut_andesite_bricks"
     }
   },
+  "pattern": [
+    "XXX"
+  ],
   "result": {
-    "item": "create:cut_andesite_brick_slab",
-    "count": 6
+    "count": 6,
+    "item": "create:cut_andesite_brick_slab"
   }
 }

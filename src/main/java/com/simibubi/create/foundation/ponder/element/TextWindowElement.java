@@ -20,7 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraftforge.client.gui.ScreenUtils;
 
 public class TextWindowElement extends AnimatedOverlayElement {
 
@@ -145,8 +145,8 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			ms.scale((float) lineTarget, 1, 1);
 			Matrix4f model = ms.last()
 				.pose();
-			GuiUtils.drawGradientRect(model, -100, 0, 0, 1, 1, brighterColor, brighterColor);
-			GuiUtils.drawGradientRect(model, -100, 0, 1, 1, 2, 0xFF494949, 0xFF393939);
+			ScreenUtils.drawGradientRect(model, -100, 0, 0, 1, 1, brighterColor, brighterColor);
+			ScreenUtils.drawGradientRect(model, -100, 0, 1, 1, 2, 0xFF494949, 0xFF393939);
 			ms.popPose();
 		}
 

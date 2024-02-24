@@ -5,20 +5,20 @@
       "item": "minecraft:allium"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:magenta_dye",
-      "count": 2
-    },
-    {
-      "item": "minecraft:purple_dye",
       "count": 2,
-      "chance": 0.1
+      "item": "minecraft:magenta_dye"
     },
     {
-      "item": "minecraft:pink_dye",
-      "chance": 0.1
+      "chance": 0.1,
+      "count": 2,
+      "item": "minecraft:purple_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:pink_dye"
     }
-  ],
-  "processingTime": 50
+  ]
 }

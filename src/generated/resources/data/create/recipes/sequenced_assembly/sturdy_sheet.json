@@ -3,9 +3,12 @@
   "ingredient": {
     "item": "create:powdered_obsidian"
   },
-  "transitionalItem": {
-    "item": "create:unprocessed_obsidian_sheet"
-  },
+  "loops": 1,
+  "results": [
+    {
+      "item": "create:sturdy_sheet"
+    }
+  ],
   "sequence": [
     {
       "type": "create:filling",
@@ -14,9 +17,9 @@
           "item": "create:unprocessed_obsidian_sheet"
         },
         {
+          "amount": 500,
           "fluid": "minecraft:lava",
-          "nbt": {},
-          "amount": 500
+          "nbt": {}
         }
       ],
       "results": [
@@ -52,10 +55,7 @@
       ]
     }
   ],
-  "results": [
-    {
-      "item": "create:sturdy_sheet"
-    }
-  ],
-  "loops": 1
+  "transitionalItem": {
+    "item": "create:unprocessed_obsidian_sheet"
+  }
 }

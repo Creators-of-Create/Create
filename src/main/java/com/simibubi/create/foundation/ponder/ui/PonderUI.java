@@ -5,7 +5,6 @@ import static com.simibubi.create.foundation.ponder.PonderLocalization.LANG_PREF
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.IntStream;
 
 import com.mojang.blaze3d.platform.ClipboardManager;
@@ -57,13 +56,14 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraftforge.client.gui.ScreenUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderUI extends NavigatableSimiScreen {
@@ -382,7 +382,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			PonderStoryBoardEntry sb = list.get(index);
 			StructureTemplate activeTemplate = PonderRegistry.loadSchematic(sb.getSchematicLocation());
 			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().level);
-			activeTemplate.placeInWorld(world, BlockPos.ZERO, BlockPos.ZERO, new StructurePlaceSettings(), new Random(),
+			activeTemplate.placeInWorld(world, BlockPos.ZERO, BlockPos.ZERO, new StructurePlaceSettings(), RandomSource.create(),
 				Block.UPDATE_CLIENTS);
 			world.createBackup();
 			scene = PonderRegistry.compileScene(index, sb, world);
@@ -488,14 +488,14 @@ public class PonderUI extends NavigatableSimiScreen {
 				if (flash > 0) {
 					ms.pushPose();
 					ms.scale(1, .5f + flash * .75f, 1);
-					GuiUtils.drawGradientRect(ms.last()
+					ScreenUtils.drawGradientRect(ms.last()
 						.pose(), 0, 0, -1, -scene.getBasePlateSize(), 0, 0x00_c6ffc9,
 						new Color(0xaa_c6ffc9).scaleAlpha(alpha)
 							.getRGB());
 					ms.popPose();
 				}
 				ms.translate(0, 0, 2 / 1024f);
-				GuiUtils.drawGradientRect(ms.last()
+				ScreenUtils.drawGradientRect(ms.last()
 					.pose(), 0, 0, 0, -scene.getBasePlateSize(), 4, 0x66_000000, 0x00_000000);
 				ms.popPose();
 				ms.mulPose(Vector3f.YP.rotationDegrees(-90));

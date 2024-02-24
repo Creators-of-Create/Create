@@ -5,20 +5,20 @@
       "item": "minecraft:prismarine_crystals"
     }
   ],
+  "processingTime": 150,
   "results": [
     {
       "item": "minecraft:quartz"
     },
     {
-      "item": "minecraft:quartz",
+      "chance": 0.5,
       "count": 2,
-      "chance": 0.5
+      "item": "minecraft:quartz"
     },
     {
-      "item": "minecraft:glowstone_dust",
+      "chance": 0.1,
       "count": 2,
-      "chance": 0.1
+      "item": "minecraft:glowstone_dust"
     }
-  ],
-  "processingTime": 150
+  ]
 }

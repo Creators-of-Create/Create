@@ -1,25 +1,25 @@
 {
   "parent": "create:conductor",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:track_signal_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:track_signal"
-    },
-    "title": {
-      "translate": "advancement.create.track_signal"
-    },
+    "announce_to_chat": false,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.track_signal.desc"
     },
     "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:track_signal"
+    },
     "show_toast": true,
-    "announce_to_chat": false,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:track_signal_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.track_signal"
     }
   },
   "requirements": [

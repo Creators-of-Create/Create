@@ -44,8 +44,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fml.DistExecutor;
 
 public class TrackBlockEntity extends SmartBlockEntity implements ITransformableBlockEntity, IMergeableBE {
@@ -342,11 +341,11 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 	}
 
 	@Override
-	public IModelData getModelData() {
+	public ModelData getModelData() {
 		if (!isTilted())
 			return super.getModelData();
-		return new ModelDataMap.Builder()
-			.withInitial(TrackBlockEntityTilt.ASCENDING_PROPERTY, tilt.smoothingAngle.get())
+		return ModelData.builder()
+			.with(TrackBlockEntityTilt.ASCENDING_PROPERTY, tilt.smoothingAngle.get())
 			.build();
 	}
 

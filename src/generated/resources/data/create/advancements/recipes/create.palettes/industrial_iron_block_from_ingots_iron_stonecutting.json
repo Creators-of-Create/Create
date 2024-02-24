@@ -1,26 +1,21 @@
 {
   "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "create:industrial_iron_block_from_ingots_iron_stonecutting"
-    ]
-  },
   "criteria": {
     "has_ingots_iron": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "tag": "forge:ingots/iron"
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
     },
     "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipe": "create:industrial_iron_block_from_ingots_iron_stonecutting"
-      }
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
@@ -28,5 +23,10 @@
       "has_ingots_iron",
       "has_the_recipe"
     ]
-  ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:industrial_iron_block_from_ingots_iron_stonecutting"
+    ]
+  }
 }

@@ -12,20 +12,15 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.GameType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
-public class TrackPlacementOverlay {
-
-	@OnlyIn(Dist.CLIENT)
-	public static final IIngameOverlay OVERLAY = TrackPlacementOverlay::renderOverlay;
-
-	@OnlyIn(Dist.CLIENT)
-	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width,
-		int height) {
+public class TrackPlacementOverlay implements IGuiOverlay {
+	public static final TrackPlacementOverlay INSTANCE = new TrackPlacementOverlay();
+	
+	@Override
+	public void render(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;

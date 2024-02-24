@@ -35,7 +35,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.DrawSelectionEvent;
+import net.minecraftforge.client.event.RenderHighlightEvent;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -167,7 +167,7 @@ public class TrackBlockOutline {
 	}
 
 	@SubscribeEvent
-	public static void drawCustomBlockSelection(DrawSelectionEvent.HighlightBlock event) {
+	public static void drawCustomBlockSelection(RenderHighlightEvent.Block event) {
 		Minecraft mc = Minecraft.getInstance();
 		BlockHitResult target = event.getTarget();
 		BlockPos pos = target.getBlockPos();

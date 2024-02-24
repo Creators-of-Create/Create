@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column",
   "textures": {
-    "side": "create:block/palettes/ornate_iron_window",
-    "end": "create:block/palettes/ornate_iron_window_end"
+    "end": "create:block/palettes/ornate_iron_window_end",
+    "side": "create:block/palettes/ornate_iron_window"
   }
 }

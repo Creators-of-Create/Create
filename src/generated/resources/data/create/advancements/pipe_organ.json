@@ -1,25 +1,25 @@
 {
   "parent": "create:backtank",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:pipe_organ_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:steam_whistle"
-    },
-    "title": {
-      "translate": "advancement.create.pipe_organ"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.pipe_organ.desc"
     },
     "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "item": "create:steam_whistle"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:pipe_organ_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.pipe_organ"
     }
   },
   "requirements": [

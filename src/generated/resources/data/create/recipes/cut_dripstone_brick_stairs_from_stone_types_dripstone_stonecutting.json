@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
+  "count": 1,
   "ingredient": {
     "tag": "create:stone_types/dripstone"
   },
-  "result": "create:cut_dripstone_brick_stairs",
-  "count": 1
+  "result": "create:cut_dripstone_brick_stairs"
 }

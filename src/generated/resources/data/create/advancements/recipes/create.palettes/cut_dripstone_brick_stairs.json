@@ -1,13 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "create:cut_dripstone_brick_stairs"
-    ]
-  },
   "criteria": {
     "has_cut_dripstone_bricks": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -16,13 +10,14 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
     },
     "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipe": "create:cut_dripstone_brick_stairs"
-      }
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
@@ -30,5 +25,10 @@
       "has_cut_dripstone_bricks",
       "has_the_recipe"
     ]
-  ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:cut_dripstone_brick_stairs"
+    ]
+  }
 }

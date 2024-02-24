@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XXX",
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "create:small_tuff_bricks"
     }
   },
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
   "result": {
-    "item": "create:small_tuff_brick_wall",
-    "count": 6
+    "count": 6,
+    "item": "create:small_tuff_brick_wall"
   }
 }

@@ -43,6 +43,8 @@ public class CKinetics extends ConfigBase {
 		e(ContraptionMovementSetting.NO_PICKUP, "amethystMovement", Comments.amethystMovement);
 	public final ConfigEnum<ContraptionMovementSetting> obsidianMovement =
 		e(ContraptionMovementSetting.UNMOVABLE, "movableObsidian", Comments.obsidianMovement);
+	public final ConfigEnum<ContraptionMovementSetting> reinforcedDeepslateMovement =
+		e(ContraptionMovementSetting.UNMOVABLE, "movableReinforcedDeepslate", Comments.reinforcedDeepslateMovement);
 	public final ConfigBool moveItemsToStorage = b(true, "moveItemsToStorage", Comments.moveItemsToStorage);
 	public final ConfigBool harvestPartiallyGrown = b(false, "harvestPartiallyGrown", Comments.harvestPartiallyGrown);
 	public final ConfigBool harvesterReplants = b(true, "harvesterReplants", Comments.harvesterReplants);
@@ -115,6 +117,7 @@ public class CKinetics extends ConfigBase {
 		static String spawnerMovement = "Configure how Spawner blocks can be moved by contraptions.";
 		static String amethystMovement = "Configure how Budding Amethyst can be moved by contraptions.";
 		static String obsidianMovement = "Configure how Obsidian blocks can be moved by contraptions.";
+		static String reinforcedDeepslateMovement = "Configure how Reinforced Deepslate blocks can be moved by contraptions.";
 		static String minecartContraptionInContainers = "Whether minecart contraptions can be placed into container items.";
 	}
 

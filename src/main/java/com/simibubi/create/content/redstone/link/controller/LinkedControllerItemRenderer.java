@@ -95,7 +95,7 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 
 		if (renderType == RenderType.NORMAL) {
 			Minecraft mc = Minecraft.getInstance();
-			boolean rightHanded = mc.options.mainHand == HumanoidArm.RIGHT;
+			boolean rightHanded = mc.options.mainHand().get() == HumanoidArm.RIGHT;
 			TransformType mainHand =
 					rightHanded ? TransformType.FIRST_PERSON_RIGHT_HAND : TransformType.FIRST_PERSON_LEFT_HAND;
 			TransformType offHand =

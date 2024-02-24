@@ -27,8 +27,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.IItemHandler;
@@ -83,7 +83,7 @@ public class TestFluids {
 		BlockPos lever = new BlockPos(4, 3, 3);
 		BlockPos basin = new BlockPos(5, 2, 2);
 		BlockPos water = new BlockPos(2, 2, 2);
-		FluidStack expectedResult = new FluidStack(Fluids.WATER, FluidAttributes.BUCKET_VOLUME);
+		FluidStack expectedResult = new FluidStack(Fluids.WATER, FluidType.BUCKET_VOLUME);
 		helper.pullLever(lever);
 		helper.succeedWhen(() -> {
 			helper.assertBlockPresent(Blocks.AIR, water);
@@ -252,7 +252,7 @@ public class TestFluids {
 		BlockPos lever = new BlockPos(3, 3, 1);
 		BlockPos output = new BlockPos(3, 4, 4);
 		BlockPos tankOutput = new BlockPos(1, 2, 4);
-		FluidStack expected = new FluidStack(Fluids.WATER, 2 * FluidAttributes.BUCKET_VOLUME);
+		FluidStack expected = new FluidStack(Fluids.WATER, 2 * FluidType.BUCKET_VOLUME);
 		helper.pullLever(lever);
 		helper.succeedWhen(() -> {
 			helper.assertFluidPresent(expected, tankOutput);

@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column",
   "textures": {
-    "side": "create:block/industrial_iron_block",
-    "end": "create:block/industrial_iron_block_top"
+    "end": "create:block/industrial_iron_block_top",
+    "side": "create:block/industrial_iron_block"
   }
 }

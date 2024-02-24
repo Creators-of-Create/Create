@@ -1,7 +1,5 @@
 package com.simibubi.create.content.decoration.palettes;
 
-import java.util.Random;
-
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -10,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -90,7 +89,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 	}
 
 	@Override
-	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
+	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
 		if (pState.getBlock() != this)
 			return;
 		BlockPos belowPos =

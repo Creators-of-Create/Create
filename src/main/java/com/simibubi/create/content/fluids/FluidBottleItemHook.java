@@ -34,8 +34,8 @@ public class FluidBottleItemHook extends Item {
 		if (!(itemStack.getItem() instanceof BottleItem))
 			return;
 
-		Level world = event.getWorld();
-		Player player = event.getPlayer();
+		Level world = event.getLevel();
+		Player player = event.getEntity();
 		HitResult raytraceresult = getPlayerPOVHitResult(world, player, ClipContext.Fluid.SOURCE_ONLY);
 		if (raytraceresult.getType() != HitResult.Type.BLOCK)
 			return;

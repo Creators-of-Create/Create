@@ -58,8 +58,8 @@ public class ValveHandleBlock extends HandCrankBlock {
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public static void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
 		BlockPos pos = event.getPos();
-		Level level = event.getWorld();
-		Player player = event.getPlayer();
+		Level level = event.getLevel();
+		Player player = event.getEntity();
 		BlockState blockState = level.getBlockState(pos);
 
 		if (!(blockState.getBlock() instanceof ValveHandleBlock vhb))

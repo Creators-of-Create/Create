@@ -115,7 +115,7 @@ public class CreateTestFunction extends TestFunction {
 	public void run(@NotNull GameTestHelper helper) {
 		// give structure block test info
 		StructureBlockEntity be = (StructureBlockEntity) helper.getBlockEntity(BlockPos.ZERO);
-		be.getTileData().putString("CreateTestFunction", fullName);
+		be.getPersistentData().putString("CreateTestFunction", fullName);
 		super.run(CreateGameTestHelper.of(helper));
 	}
 }

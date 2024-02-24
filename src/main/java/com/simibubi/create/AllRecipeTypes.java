@@ -88,22 +88,12 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 		String name = Lang.asId(name());
 		id = Create.asResource(name);
 		serializerObject = Registers.SERIALIZER_REGISTER.register(name, serializerSupplier);
-		typeObject = Registers.TYPE_REGISTER.register(name, () -> simpleType(id));
+		typeObject = Registers.TYPE_REGISTER.register(name, () -> RecipeType.simple(id));
 		type = typeObject;
 	}
 
 	AllRecipeTypes(ProcessingRecipeFactory<?> processingFactory) {
 		this(() -> new ProcessingRecipeSerializer<>(processingFactory));
-	}
-
-	public static <T extends Recipe<?>> RecipeType<T> simpleType(ResourceLocation id) {
-		String stringId = id.toString();
-		return new RecipeType<T>() {
-			@Override
-			public String toString() {
-				return stringId;
-			}
-		};
 	}
 
 	public static void register(IEventBus modEventBus) {

@@ -7,6 +7,7 @@ import static com.simibubi.create.AllSoundEvents.WHISTLE_MEDIUM;
 import com.simibubi.create.content.decoration.steamWhistle.WhistleBlock.WhistleSize;
 
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
@@ -19,7 +20,7 @@ public class WhistleSoundInstance extends AbstractTickableSoundInstance {
 
 	public WhistleSoundInstance(WhistleSize size, BlockPos worldPosition) {
 		super((size == WhistleSize.SMALL ? WHISTLE_HIGH : size == WhistleSize.MEDIUM ? WHISTLE_MEDIUM : WHISTLE_LOW)
-			.getMainEvent(), SoundSource.RECORDS);
+			.getMainEvent(), SoundSource.RECORDS, SoundInstance.createUnseededRandom());
 		this.size = size;
 		looping = true;
 		active = true;

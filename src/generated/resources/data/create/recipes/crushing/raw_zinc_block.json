@@ -5,16 +5,16 @@
       "item": "create:raw_zinc_block"
     }
   ],
+  "processingTime": 400,
   "results": [
     {
-      "item": "create:crushed_raw_zinc",
-      "count": 9
+      "count": 9,
+      "item": "create:crushed_raw_zinc"
     },
     {
-      "item": "create:experience_nugget",
+      "chance": 0.75,
       "count": 9,
-      "chance": 0.75
+      "item": "create:experience_nugget"
     }
-  ],
-  "processingTime": 400
+  ]
 }

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.processing.basin;
 
-import java.util.Random;
-
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
@@ -21,6 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -49,7 +48,7 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 		TransformStack.cast(ms)
 			.rotateY(basin.ingredientRotation.getValue(partialTicks));
 
-		Random r = new Random(pos.hashCode());
+		RandomSource r = RandomSource.create(pos.hashCode());
 		Vec3 baseVector = new Vec3(.125, level, 0);
 
 		IItemHandlerModifiable inv = basin.itemCapability.orElse(new ItemStackHandler());

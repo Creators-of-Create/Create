@@ -1,6 +1,5 @@
 package com.simibubi.create.content.logistics.chute;
 
-import java.util.Random;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
@@ -16,6 +15,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -33,7 +33,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IBlockRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 import net.minecraftforge.common.util.LazyOptional;
 
 public abstract class AbstractChuteBlock extends Block implements IWrenchable, IBE<ChuteBlockEntity> {
@@ -43,7 +43,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+	public void initializeClient(Consumer<IClientBlockExtensions> consumer) {
 		consumer.accept(new ReducedDestroyEffects());
 	}
 
@@ -150,7 +150,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	}
 
 	@Override
-	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
+	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
 		BlockState updated = updateChuteState(pState, pLevel.getBlockState(pPos.above()), pLevel, pPos);
 		if (pState != updated)
 			pLevel.setBlockAndUpdate(pPos, updated);

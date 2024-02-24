@@ -1,23 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:ingots/brass"
+    },
+    "E": {
+      "item": "create:electron_tube"
+    },
+    "K": {
+      "item": "minecraft:dried_kelp"
+    }
+  },
   "pattern": [
     "E",
     "A",
     "K"
   ],
-  "key": {
-    "A": {
-      "tag": "forge:ingots/brass"
-    },
-    "K": {
-      "item": "minecraft:dried_kelp"
-    },
-    "E": {
-      "item": "create:electron_tube"
-    }
-  },
   "result": {
-    "item": "create:brass_funnel",
-    "count": 2
+    "count": 2,
+    "item": "create:brass_funnel"
   }
 }

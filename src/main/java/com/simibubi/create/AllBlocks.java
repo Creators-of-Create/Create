@@ -657,7 +657,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties.CRUSHING_WHEEL_CONTROLLER_MATERIAL)
 			.properties(p -> p.color(MaterialColor.STONE)
 				.noOcclusion()
-				.noDrops()
+				.noLootTable()
 				.air())
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStatesExcept(BlockStateGen.mapToAir(p), CrushingWheelControllerBlock.FACING))

@@ -30,11 +30,11 @@ public class ZapperInteractionHandler {
 
 	@SubscribeEvent
 	public static void leftClickingBlocksWithTheZapperSelectsTheBlock(PlayerInteractEvent.LeftClickBlock event) {
-		if (event.getWorld().isClientSide)
+		if (event.getLevel().isClientSide)
 			return;
-		ItemStack heldItem = event.getPlayer()
+		ItemStack heldItem = event.getEntity()
 			.getMainHandItem();
-		if (heldItem.getItem() instanceof ZapperItem && trySelect(heldItem, event.getPlayer())) {
+		if (heldItem.getItem() instanceof ZapperItem && trySelect(heldItem, event.getEntity())) {
 			event.setCancellationResult(InteractionResult.FAIL);
 			event.setCanceled(true);
 		}

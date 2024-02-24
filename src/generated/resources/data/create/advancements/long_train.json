@@ -1,25 +1,25 @@
 {
   "parent": "create:track_crafting_factory",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:long_train_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:minecart"
-    },
-    "title": {
-      "translate": "advancement.create.long_train"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.long_train.desc"
     },
     "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:minecart"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:long_train_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.long_train"
     }
   },
   "requirements": [

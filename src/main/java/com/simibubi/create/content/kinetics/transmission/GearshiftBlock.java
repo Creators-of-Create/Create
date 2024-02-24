@@ -1,7 +1,5 @@
 package com.simibubi.create.content.kinetics.transmission;
 
-import java.util.Random;
-
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.kinetics.RotationPropagator;
 import com.simibubi.create.content.kinetics.base.AbstractEncasedShaftBlock;
@@ -10,6 +8,7 @@ import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -77,7 +76,7 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements IBE<Spl
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
 		BlockEntity be = worldIn.getBlockEntity(pos);
 		if (be == null || !(be instanceof KineticBlockEntity))
 			return;

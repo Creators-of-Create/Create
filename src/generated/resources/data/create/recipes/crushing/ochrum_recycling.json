@@ -5,15 +5,15 @@
       "tag": "create:stone_types/ochrum"
     }
   ],
+  "processingTime": 250,
   "results": [
     {
-      "item": "create:crushed_raw_gold",
-      "chance": 0.2
+      "chance": 0.2,
+      "item": "create:crushed_raw_gold"
     },
     {
-      "item": "minecraft:gold_nugget",
-      "chance": 0.2
+      "chance": 0.2,
+      "item": "minecraft:gold_nugget"
     }
-  ],
-  "processingTime": 250
+  ]
 }

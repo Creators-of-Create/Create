@@ -19,7 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FenceBlock;
-import net.minecraftforge.client.model.ItemMultiLayerBakedModel;
 
 public class ValueBoxRenderer {
 
@@ -28,7 +27,7 @@ public class ValueBoxRenderer {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
 		BakedModel modelWithOverrides = itemRenderer.getModel(filter, null, null, 0);
-		boolean blockItem = modelWithOverrides.isGui3d() && !(modelWithOverrides instanceof ItemMultiLayerBakedModel);
+		boolean blockItem = modelWithOverrides.isGui3d() && modelWithOverrides.getRenderPasses(filter, false).size() <= 1;
 		float scale = (!blockItem ? .5f : 1f) + 1 / 64f;
 		float zOffset = (!blockItem ? -.15f : 0) + customZOffset(filter.getItem());
 		ms.scale(scale, scale, scale);

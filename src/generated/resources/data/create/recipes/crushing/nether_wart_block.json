@@ -5,11 +5,11 @@
       "item": "minecraft:nether_wart_block"
     }
   ],
+  "processingTime": 150,
   "results": [
     {
-      "item": "minecraft:nether_wart",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:nether_wart"
     }
-  ],
-  "processingTime": 150
+  ]
 }

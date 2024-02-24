@@ -5,23 +5,23 @@
       "item": "create:deepslate_zinc_ore"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "create:crushed_raw_zinc",
-      "count": 2
+      "count": 2,
+      "item": "create:crushed_raw_zinc"
     },
     {
-      "item": "create:crushed_raw_zinc",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "create:crushed_raw_zinc"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "minecraft:cobbled_deepslate",
-      "chance": 0.125
+      "chance": 0.125,
+      "item": "minecraft:cobbled_deepslate"
     }
-  ],
-  "processingTime": 350
+  ]
 }

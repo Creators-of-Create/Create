@@ -1,6 +1,5 @@
 package com.simibubi.create.content.logistics.funnel;
 
-import java.util.Random;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
@@ -17,6 +16,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipul
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -34,7 +34,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IBlockRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 
 public abstract class AbstractFunnelBlock extends Block
 	implements IBE<FunnelBlockEntity>, IWrenchable, ProperWaterloggedBlock {
@@ -48,7 +48,7 @@ public abstract class AbstractFunnelBlock extends Block
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+	public void initializeClient(Consumer<IClientBlockExtensions> consumer) {
 		consumer.accept(new ReducedDestroyEffects());
 	}
 
@@ -94,7 +94,7 @@ public abstract class AbstractFunnelBlock extends Block
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource r) {
 		boolean previouslyPowered = state.getValue(POWERED);
 		if (previouslyPowered != worldIn.hasNeighborSignal(pos))
 			worldIn.setBlock(pos, state.cycle(POWERED), 2);

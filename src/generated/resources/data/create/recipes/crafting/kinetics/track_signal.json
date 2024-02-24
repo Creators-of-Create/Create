@@ -9,7 +9,7 @@
     }
   ],
   "result": {
-    "item": "create:track_signal",
-    "count": 4
+    "count": 4,
+    "item": "create:track_signal"
   }
 }

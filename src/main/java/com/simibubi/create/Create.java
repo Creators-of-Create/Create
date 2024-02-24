@@ -13,7 +13,6 @@ import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.compat.curios.Curios;
 import com.simibubi.create.content.contraptions.ContraptionMovementSetting;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
-import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.equipment.potatoCannon.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.fluids.tank.BoilerHeaters;
 import com.simibubi.create.content.kinetics.TorquePropagator;
@@ -24,6 +23,7 @@ import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.trains.GlobalRailwayManager;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
+import com.simibubi.create.content.trains.track.AllPortalTracks;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
@@ -42,7 +42,6 @@ import com.simibubi.create.infrastructure.worldgen.AllPlacementModifiers;
 import com.simibubi.create.infrastructure.worldgen.BuiltinRegistration;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -131,6 +130,7 @@ public class Create {
 		// FIXME: some of these registrations are not thread-safe
 		AllMovementBehaviours.registerDefaults();
 		AllInteractionBehaviours.registerDefaults();
+		AllPortalTracks.registerDefaults();
 		AllDisplayBehaviours.registerDefaults();
 		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
@@ -147,9 +147,7 @@ public class Create {
 
 		modEventBus.addListener(Create::init);
 		modEventBus.addListener(EventPriority.LOWEST, CreateDatagen::gatherData);
-		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
-
-		forgeEventBus.addListener(EventPriority.HIGH, SlidingDoorBlock::stopItQuark);
+		modEventBus.addListener(AllSoundEvents::register);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 
@@ -158,6 +156,8 @@ public class Create {
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
+		AllFluids.registerFluidInteractions();
+
 		event.enqueueWork(() -> {
 			// TODO: custom registration should all happen in one place
 			// Most registration happens in the constructor.

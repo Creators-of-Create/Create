@@ -1,7 +1,5 @@
 package com.simibubi.create.content.trains.entity;
 
-import java.util.Random;
-
 import com.simibubi.create.content.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -10,6 +8,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -40,7 +39,7 @@ public class CarriageParticles {
 		if (leadingAnchor == null || !leadingAnchor.closerThan(camEntity.position(), 64))
 			return;
 
-		Random r = entity.level.random;
+		RandomSource r = entity.level.random;
 		Vec3 contraptionMotion = entity.position()
 			.subtract(entity.getPrevPositionVec());
 		double length = contraptionMotion.length();

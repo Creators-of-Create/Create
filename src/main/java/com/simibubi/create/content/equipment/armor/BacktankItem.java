@@ -64,7 +64,7 @@ public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable 
 
 	@Override
 	public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> items) {
-		if (!allowdedIn(tab))
+		if (!allowedIn(tab))
 			return;
 
 		ItemStack stack = new ItemStack(this);

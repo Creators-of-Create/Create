@@ -9,15 +9,14 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -26,9 +25,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 //@EventBusSubscriber(bus = Bus.FORGE)
@@ -313,10 +311,11 @@ public class AllSoundEvents {
 			entry.prepare();
 	}
 
-	public static void register(RegistryEvent.Register<SoundEvent> event) {
-		IForgeRegistry<SoundEvent> registry = event.getRegistry();
-		for (SoundEntry entry : ALL.values())
-			entry.register(registry);
+	public static void register(RegisterEvent event) {
+		event.register(Registry.SOUND_EVENT_REGISTRY, helper -> {
+			for (SoundEntry entry : ALL.values())
+				entry.register(helper);
+		});
 	}
 
 	public static void provideLang(BiConsumer<String, String> consumer) {
@@ -353,7 +352,7 @@ public class AllSoundEvents {
 		}
 
 		@Override
-		public void run(HashCache cache) throws IOException {
+		public void run(CachedOutput cache) throws IOException {
 			generate(generator.getOutputFolder(), cache);
 		}
 
@@ -362,10 +361,7 @@ public class AllSoundEvents {
 			return "Create's Custom Sounds";
 		}
 
-		public void generate(Path path, HashCache cache) {
-			Gson GSON = (new GsonBuilder()).setPrettyPrinting()
-				.disableHtmlEscaping()
-				.create();
+		public void generate(Path path, CachedOutput cache) {
 			path = path.resolve("assets/create");
 
 			try {
@@ -377,7 +373,7 @@ public class AllSoundEvents {
 						entry.getValue()
 							.write(json);
 					});
-				DataProvider.save(GSON, cache, json, path.resolve("sounds.json"));
+				DataProvider.saveStable(cache, json, path.resolve("sounds.json"));
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -472,7 +468,7 @@ public class AllSoundEvents {
 
 		public abstract void prepare();
 
-		public abstract void register(IForgeRegistry<SoundEvent> registry);
+		public abstract void register(RegisterEvent.RegisterHelper<SoundEvent> registry);
 
 		public abstract void write(JsonObject json);
 
@@ -560,10 +556,10 @@ public class AllSoundEvents {
 		}
 
 		@Override
-		public void register(IForgeRegistry<SoundEvent> registry) {
+		public void register(RegisterEvent.RegisterHelper<SoundEvent> helper) {
 			for (CompiledSoundEvent compiledEvent : compiledEvents) {
 				ResourceLocation location = compiledEvent.event().getId();
-				registry.register(new SoundEvent(location).setRegistryName(location));
+				helper.register(location, new SoundEvent(location));
 			}
 		}
 
@@ -637,9 +633,9 @@ public class AllSoundEvents {
 		}
 
 		@Override
-		public void register(IForgeRegistry<SoundEvent> registry) {
+		public void register(RegisterEvent.RegisterHelper<SoundEvent> helper) {
 			ResourceLocation location = event.getId();
-			registry.register(new SoundEvent(location).setRegistryName(location));
+			helper.register(location, new SoundEvent(location));
 		}
 
 		@Override

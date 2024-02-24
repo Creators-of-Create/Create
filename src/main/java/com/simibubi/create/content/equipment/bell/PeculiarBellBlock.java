@@ -1,7 +1,5 @@
 package com.simibubi.create.content.equipment.bell;
 
-import java.util.Random;
-
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
@@ -9,6 +7,7 @@ import com.simibubi.create.AllSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -81,7 +80,7 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellBlockEntity
 	}
 
 	public void spawnConversionParticles(LevelAccessor world, BlockPos blockPos) {
-		Random random = world.getRandom();
+		RandomSource random = world.getRandom();
 		int num = random.nextInt(10) + 15;
 		for (int i = 0; i < num; i++) {
 			float pitch = random.nextFloat() * 120 - 90;

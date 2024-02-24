@@ -87,40 +87,41 @@ public class SchematicAndQuillHandler {
 		return true;
 	}
 
-	public void onMouseInput(int button, boolean pressed) {
+	public boolean onMouseInput(int button, boolean pressed) {
 		if (!pressed || button != 1)
-			return;
+			return false;
 		if (!isActive())
-			return;
+			return false;
 
 		LocalPlayer player = Minecraft.getInstance().player;
 
 		if (player.isShiftKeyDown()) {
 			discard();
-			return;
+			return true;
 		}
 
 		if (secondPos != null) {
 			ScreenOpener.open(new SchematicPromptScreen());
-			return;
+			return true;
 		}
 
 		if (selectedPos == null) {
 			Lang.translate("schematicAndQuill.noTarget")
 				.sendStatus(player);
-			return;
+			return true;
 		}
 
 		if (firstPos != null) {
 			secondPos = selectedPos;
 			Lang.translate("schematicAndQuill.secondPos")
 				.sendStatus(player);
-			return;
+			return true;
 		}
 
 		firstPos = selectedPos;
 		Lang.translate("schematicAndQuill.firstPos")
 			.sendStatus(player);
+		return true;
 	}
 
 	public void discard() {

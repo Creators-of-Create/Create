@@ -39,7 +39,7 @@ public abstract class DisplayTarget extends DisplayBehaviour {
 		if (line == 0)
 			return;
 
-		CompoundTag tag = target.getTileData();
+		CompoundTag tag = target.getPersistentData();
 		CompoundTag compound = tag.getCompound("DisplayLink");
 		compound.putLong("Line" + line, context.blockEntity()
 			.getBlockPos()
@@ -48,7 +48,7 @@ public abstract class DisplayTarget extends DisplayBehaviour {
 	}
 
 	public boolean isReserved(int line, BlockEntity target, DisplayLinkContext context) {
-		CompoundTag tag = target.getTileData();
+		CompoundTag tag = target.getPersistentData();
 		CompoundTag compound = tag.getCompound("DisplayLink");
 
 		if (!compound.contains("Line" + line))

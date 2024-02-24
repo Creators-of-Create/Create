@@ -1,13 +1,13 @@
 package com.simibubi.create.content.kinetics.fan.processing;
 
 import java.util.List;
-import java.util.Random;
 
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -25,7 +25,7 @@ public interface FanProcessingType {
 
 	void spawnProcessingParticles(Level level, Vec3 pos);
 
-	void morphAirFlow(AirFlowParticleAccess particleAccess, Random random);
+	void morphAirFlow(AirFlowParticleAccess particleAccess, RandomSource random);
 
 	void affectEntity(Entity entity, Level level);
 

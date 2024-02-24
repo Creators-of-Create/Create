@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.events;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
@@ -19,9 +18,11 @@ import com.simibubi.create.content.equipment.armor.BacktankArmorLayer;
 import com.simibubi.create.content.equipment.armor.DivingHelmetItem;
 import com.simibubi.create.content.equipment.armor.NetheriteBacktankFirstPersonRenderer;
 import com.simibubi.create.content.equipment.armor.NetheriteDivingHandler;
+import com.simibubi.create.content.equipment.armor.RemainingAirOverlay;
 import com.simibubi.create.content.equipment.blueprint.BlueprintOverlayRenderer;
 import com.simibubi.create.content.equipment.clipboard.ClipboardValueSettingsHandler;
 import com.simibubi.create.content.equipment.extendoGrip.ExtendoGripRenderHandler;
+import com.simibubi.create.content.equipment.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.equipment.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.equipment.zapper.ZapperItem;
 import com.simibubi.create.content.equipment.zapper.terrainzapper.WorldshaperRenderHandler;
@@ -44,6 +45,7 @@ import com.simibubi.create.content.trains.schedule.TrainHatArmorLayer;
 import com.simibubi.create.content.trains.track.CurvedTrackInteraction;
 import com.simibubi.create.content.trains.track.TrackBlockOutline;
 import com.simibubi.create.content.trains.track.TrackPlacement;
+import com.simibubi.create.content.trains.track.TrackPlacementOverlay;
 import com.simibubi.create.content.trains.track.TrackTargetingClient;
 import com.simibubi.create.foundation.blockEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringRenderer;
@@ -77,20 +79,22 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ConfigGuiHandler;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
@@ -169,18 +173,18 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onJoin(ClientPlayerNetworkEvent.LoggedInEvent event) {
+	public static void onJoin(ClientPlayerNetworkEvent.LoggingIn event) {
 		CreateClient.checkGraphicsFanciness();
 	}
 
 	@SubscribeEvent
-	public static void onLeave(ClientPlayerNetworkEvent.LoggedOutEvent event) {
+	public static void onLeave(ClientPlayerNetworkEvent.LoggingOut event) {
 		CreateClient.RAILWAYS.cleanUp();
 	}
 
 	@SubscribeEvent
-	public static void onLoadWorld(WorldEvent.Load event) {
-		LevelAccessor world = event.getWorld();
+	public static void onLoadWorld(LevelEvent.Load event) {
+		LevelAccessor world = event.getLevel();
 		if (world.isClientSide() && world instanceof ClientLevel && !(world instanceof WrappedClientWorld)) {
 			CreateClient.invalidateRenderers();
 			AnimationTickHolder.reset();
@@ -188,14 +192,14 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onUnloadWorld(WorldEvent.Unload event) {
-		if (!event.getWorld()
+	public static void onUnloadWorld(LevelEvent.Unload event) {
+		if (!event.getLevel()
 			.isClientSide())
 			return;
 		CreateClient.invalidateRenderers();
 		CreateClient.SOUL_PULSE_EFFECT_HANDLER.refresh();
 		AnimationTickHolder.reset();
-		ControlsHandler.levelUnloaded(event.getWorld());
+		ControlsHandler.levelUnloaded(event.getLevel());
 	}
 
 	@SubscribeEvent
@@ -221,7 +225,7 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
+	public static void onCameraSetup(ViewportEvent.ComputeCameraAngles event) {
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
 		if (CameraAngleAnimationService.isYawAnimating())
@@ -240,7 +244,7 @@ public class ClientEvents {
 	public static void addToItemTooltip(ItemTooltipEvent event) {
 		if (!AllConfigs.client().tooltips.get())
 			return;
-		if (event.getPlayer() == null)
+		if (event.getEntity() == null)
 			return;
 
 		Item item = event.getItemStack().getItem();
@@ -282,7 +286,7 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void getFogDensity(EntityViewRenderEvent.RenderFogEvent event) {
+	public static void getFogDensity(ViewportEvent.RenderFog event) {
 		Camera camera = event.getCamera();
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = camera.getBlockPosition();
@@ -292,20 +296,6 @@ public class ClientEvents {
 
 		Fluid fluid = fluidState.getType();
 		Entity entity = camera.getEntity();
-
-		if (AllFluids.CHOCOLATE.get()
-			.isSame(fluid)) {
-			event.scaleFarPlaneDistance(1f / 32f * AllConfigs.client().chocolateTransparencyMultiplier.getF());
-			event.setCanceled(true);
-			return;
-		}
-
-		if (AllFluids.HONEY.get()
-			.isSame(fluid)) {
-			event.scaleFarPlaneDistance(1f / 8f * AllConfigs.client().honeyTransparencyMultiplier.getF());
-			event.setCanceled(true);
-			return;
-		}
 
 		if (entity.isSpectator())
 			return;
@@ -322,34 +312,6 @@ public class ClientEvents {
 				event.setCanceled(true);
 				return;
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void getFogColor(EntityViewRenderEvent.FogColors event) {
-		Camera info = event.getCamera();
-		Level level = Minecraft.getInstance().level;
-		BlockPos blockPos = info.getBlockPosition();
-		FluidState fluidState = level.getFluidState(blockPos);
-		if (info.getPosition().y > blockPos.getY() + fluidState.getHeight(level, blockPos))
-			return;
-
-		Fluid fluid = fluidState.getType();
-
-		if (AllFluids.CHOCOLATE.get()
-			.isSame(fluid)) {
-			event.setRed(98 / 255f);
-			event.setGreen(32 / 255f);
-			event.setBlue(32 / 255f);
-			return;
-		}
-
-		if (AllFluids.HONEY.get()
-			.isSame(fluid)) {
-			event.setRed(234 / 255f);
-			event.setGreen(174 / 255f);
-			event.setBlue(47 / 255f);
-			return;
 		}
 	}
 
@@ -378,12 +340,26 @@ public class ClientEvents {
 		}
 
 		@SubscribeEvent
+		public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
+			// Register overlays in reverse order
+			event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), "remaining_air", RemainingAirOverlay.INSTANCE);
+			event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "train_hud", TrainHUD.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "value_settings", CreateClient.VALUE_SETTINGS_HANDLER);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "track_placement", TrackPlacementOverlay.INSTANCE);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "goggle_info", GoggleOverlayRenderer.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "blueprint", BlueprintOverlayRenderer.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "linked_controller", LinkedControllerClientHandler.OVERLAY);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "schematic", CreateClient.SCHEMATIC_HANDLER);
+			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "toolbox", ToolboxHandlerClient.OVERLAY);
+		}
+
+		@SubscribeEvent
 		public static void onLoadComplete(FMLLoadCompleteEvent event) {
 			ModContainer createContainer = ModList.get()
 				.getModContainerById(Create.ID)
 				.orElseThrow(() -> new IllegalStateException("Create mod container missing on LoadComplete"));
-			createContainer.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-				() -> new ConfigGuiHandler.ConfigGuiFactory(
+			createContainer.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
+				() -> new ConfigScreenHandler.ConfigScreenFactory(
 					(mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
 		}
 

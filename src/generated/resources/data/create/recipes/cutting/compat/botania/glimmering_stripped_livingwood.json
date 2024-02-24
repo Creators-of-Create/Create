@@ -1,21 +1,21 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "botania"
+    }
+  ],
   "ingredients": [
     {
       "item": "botania:glimmering_stripped_livingwood"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "botania:livingwood_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "botania",
-      "type": "forge:mod_loaded"
+      "count": 6,
+      "item": "botania:livingwood_planks"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "parent": "create:block/connected_glass_pane/post",
   "textures": {
-    "pane": "create:block/palettes/warped_window",
-    "edge": "minecraft:block/warped_planks"
+    "edge": "minecraft:block/warped_planks",
+    "pane": "create:block/palettes/warped_window"
   }
 }

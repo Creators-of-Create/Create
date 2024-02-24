@@ -5,16 +5,16 @@
       "item": "minecraft:raw_gold_block"
     }
   ],
+  "processingTime": 400,
   "results": [
     {
-      "item": "create:crushed_raw_gold",
-      "count": 9
+      "count": 9,
+      "item": "create:crushed_raw_gold"
     },
     {
-      "item": "create:experience_nugget",
+      "chance": 0.75,
       "count": 18,
-      "chance": 0.75
+      "item": "create:experience_nugget"
     }
-  ],
-  "processingTime": 400
+  ]
 }

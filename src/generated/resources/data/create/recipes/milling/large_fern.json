@@ -5,19 +5,19 @@
       "item": "minecraft:large_fern"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:green_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:green_dye"
     },
     {
-      "item": "minecraft:green_dye",
-      "chance": 0.5
+      "chance": 0.5,
+      "item": "minecraft:green_dye"
     },
     {
-      "item": "minecraft:wheat_seeds",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:wheat_seeds"
     }
-  ],
-  "processingTime": 50
+  ]
 }

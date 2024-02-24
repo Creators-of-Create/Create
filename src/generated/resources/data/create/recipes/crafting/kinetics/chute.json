@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "A",
-    "I",
-    "A"
-  ],
   "key": {
     "A": {
       "tag": "forge:plates/iron"
@@ -13,8 +8,13 @@
       "tag": "forge:ingots/iron"
     }
   },
+  "pattern": [
+    "A",
+    "I",
+    "A"
+  ],
   "result": {
-    "item": "create:chute",
-    "count": 4
+    "count": 4,
+    "item": "create:chute"
   }
 }

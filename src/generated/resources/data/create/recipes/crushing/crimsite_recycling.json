@@ -5,15 +5,15 @@
       "tag": "create:stone_types/crimsite"
     }
   ],
+  "processingTime": 250,
   "results": [
     {
-      "item": "create:crushed_raw_iron",
-      "chance": 0.4
+      "chance": 0.4,
+      "item": "create:crushed_raw_iron"
     },
     {
-      "item": "minecraft:iron_nugget",
-      "chance": 0.4
+      "chance": 0.4,
+      "item": "minecraft:iron_nugget"
     }
-  ],
-  "processingTime": 250
+  ]
 }

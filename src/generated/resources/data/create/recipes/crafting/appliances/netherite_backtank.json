@@ -1,10 +1,10 @@
 {
   "type": "minecraft:smithing",
-  "base": {
-    "item": "create:copper_backtank"
-  },
   "addition": {
     "tag": "forge:ingots/netherite"
+  },
+  "base": {
+    "item": "create:copper_backtank"
   },
   "result": {
     "item": "create:netherite_backtank"

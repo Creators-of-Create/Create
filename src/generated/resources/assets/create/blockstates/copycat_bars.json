@@ -4,8 +4,9 @@
       "model": "create:block/copycat_panel/bars_vertical",
       "x": 180
     },
-    "facing=up": {
-      "model": "create:block/copycat_panel/bars_vertical"
+    "facing=east": {
+      "model": "create:block/copycat_panel/bars",
+      "y": 270
     },
     "facing=north": {
       "model": "create:block/copycat_panel/bars",
@@ -14,13 +15,12 @@
     "facing=south": {
       "model": "create:block/copycat_panel/bars"
     },
+    "facing=up": {
+      "model": "create:block/copycat_panel/bars_vertical"
+    },
     "facing=west": {
       "model": "create:block/copycat_panel/bars",
       "y": 90
-    },
-    "facing=east": {
-      "model": "create:block/copycat_panel/bars",
-      "y": 270
     }
   }
 }

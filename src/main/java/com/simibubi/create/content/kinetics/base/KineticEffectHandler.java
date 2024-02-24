@@ -1,7 +1,5 @@
 package com.simibubi.create.content.kinetics.base;
 
-import java.util.Random;
-
 import com.simibubi.create.content.kinetics.base.IRotate.SpeedLevel;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -10,6 +8,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -62,7 +61,7 @@ public class KineticEffectHandler {
 			return;
 		if (!world.isClientSide)
 			return;
-		Random r = world.random;
+		RandomSource r = world.random;
 		for (int i = 0; i < amount; i++) {
 			Vec3 motion = VecHelper.offsetRandomly(Vec3.ZERO, r, maxMotion);
 			Vec3 position = VecHelper.getCenterOf(kte.getBlockPos());

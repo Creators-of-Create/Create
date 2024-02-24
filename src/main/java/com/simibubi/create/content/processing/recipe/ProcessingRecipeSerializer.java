@@ -17,12 +17,10 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends ForgeRegistryEntry<RecipeSerializer<?>>
-	implements RecipeSerializer<T> {
+public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implements RecipeSerializer<T> {
 
 	private final ProcessingRecipeFactory<T> factory;
 

@@ -5,15 +5,15 @@
       "item": "minecraft:red_tulip"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:red_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:red_dye"
     },
     {
-      "item": "minecraft:lime_dye",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:lime_dye"
     }
-  ],
-  "processingTime": 50
+  ]
 }

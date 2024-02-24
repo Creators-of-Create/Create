@@ -5,18 +5,18 @@
       "item": "minecraft:gravel"
     }
   ],
+  "processingTime": 250,
   "results": [
     {
       "item": "minecraft:sand"
     },
     {
-      "item": "minecraft:flint",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:flint"
     },
     {
-      "item": "minecraft:clay_ball",
-      "chance": 0.05
+      "chance": 0.05,
+      "item": "minecraft:clay_ball"
     }
-  ],
-  "processingTime": 250
+  ]
 }

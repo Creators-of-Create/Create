@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.data;
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -22,7 +22,6 @@ import com.tterrag.registrate.builders.BlockEntityBuilder.BlockEntityFactory;
 import com.tterrag.registrate.builders.Builder;
 import com.tterrag.registrate.builders.FluidBuilder;
 import com.tterrag.registrate.util.entry.RegistryEntry;
-import com.tterrag.registrate.util.nullness.NonNullBiFunction;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
@@ -39,14 +38,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
@@ -77,7 +75,9 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	@Override
-	protected <R extends IForgeRegistryEntry<R>, T extends R> RegistryEntry<T> accept(String name, ResourceKey<? extends Registry<R>> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator, NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<T>> entryFactory) {
+	protected <R, T extends R> RegistryEntry<T> accept(String name, ResourceKey<? extends Registry<R>> type,
+		Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator,
+		NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<T>> entryFactory) {
 		RegistryEntry<T> entry = super.accept(name, type, builder, creator, entryFactory);
 		if (type.equals(Registry.ITEM_REGISTRY)) {
 			if (currentTooltipModifierFactory != null) {
@@ -146,31 +146,29 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	/* Fluids */
 
 	public <T extends ForgeFlowingFluid> FluidBuilder<T, CreateRegistrate> virtualFluid(String name,
-		BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
-		NonNullFunction<ForgeFlowingFluid.Properties, T> factory) {
+		FluidBuilder.FluidTypeFactory typeFactory, NonNullFunction<ForgeFlowingFluid.Properties, T> factory) {
 		return entry(name,
 			c -> new VirtualFluidBuilder<>(self(), self(), name, c, new ResourceLocation(getModid(), "fluid/" + name + "_still"),
-				new ResourceLocation(getModid(), "fluid/" + name + "_flow"), attributesFactory, factory));
+				new ResourceLocation(getModid(), "fluid/" + name + "_flow"), typeFactory, factory));
 	}
 
-	public <T extends ForgeFlowingFluid> FluidBuilder<T, CreateRegistrate> virtualFluid(String name, ResourceLocation still, ResourceLocation flow,
-																						BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
-																						NonNullFunction<ForgeFlowingFluid.Properties, T> factory) {
-		return entry(name,
-				c -> new VirtualFluidBuilder<>(self(), self(), name, c, still,
-						flow, attributesFactory, factory));
+	public <T extends ForgeFlowingFluid> FluidBuilder<T, CreateRegistrate> virtualFluid(String name,
+		ResourceLocation still, ResourceLocation flow, FluidBuilder.FluidTypeFactory typeFactory,
+		NonNullFunction<ForgeFlowingFluid.Properties, T> factory) {
+		return entry(name, c -> new VirtualFluidBuilder<>(self(), self(), name, c, still, flow, typeFactory, factory));
 	}
 
 	public FluidBuilder<VirtualFluid, CreateRegistrate> virtualFluid(String name) {
 		return entry(name,
-			c -> new VirtualFluidBuilder<>(self(), self(), name, c, new ResourceLocation(getModid(), "fluid/" + name + "_still"),
-				new ResourceLocation(getModid(), "fluid/" + name + "_flow"), null, VirtualFluid::new));
+			c -> new VirtualFluidBuilder<VirtualFluid, CreateRegistrate>(self(), self(), name, c,
+				new ResourceLocation(getModid(), "fluid/" + name + "_still"), new ResourceLocation(getModid(), "fluid/" + name + "_flow"),
+				CreateRegistrate::defaultFluidType, VirtualFluid::new));
 	}
 
-	public FluidBuilder<VirtualFluid, CreateRegistrate> virtualFluid(String name, ResourceLocation still, ResourceLocation flow) {
-		return entry(name,
-				c -> new VirtualFluidBuilder<>(self(), self(), name, c, still,
-						flow, null, VirtualFluid::new));
+	public FluidBuilder<VirtualFluid, CreateRegistrate> virtualFluid(String name, ResourceLocation still,
+		ResourceLocation flow) {
+		return entry(name, c -> new VirtualFluidBuilder<>(self(), self(), name, c, still, flow,
+			CreateRegistrate::defaultFluidType, VirtualFluid::new));
 	}
 
 	public FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> standardFluid(String name) {
@@ -178,9 +176,29 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> standardFluid(String name,
-		NonNullBiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory) {
+		FluidBuilder.FluidTypeFactory typeFactory) {
 		return fluid(name, new ResourceLocation(getModid(), "fluid/" + name + "_still"), new ResourceLocation(getModid(), "fluid/" + name + "_flow"),
-			attributesFactory);
+			typeFactory);
+	}
+
+	public static FluidType defaultFluidType(FluidType.Properties properties, ResourceLocation stillTexture,
+		ResourceLocation flowingTexture) {
+		return new FluidType(properties) {
+			@Override
+			public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
+				consumer.accept(new IClientFluidTypeExtensions() {
+					@Override
+					public ResourceLocation getStillTexture() {
+						return stillTexture;
+					}
+
+					@Override
+					public ResourceLocation getFlowingTexture() {
+						return flowingTexture;
+					}
+				});
+			}
+		};
 	}
 
 	/* Util */

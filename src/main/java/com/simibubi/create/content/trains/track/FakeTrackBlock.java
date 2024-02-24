@@ -1,6 +1,6 @@
 package com.simibubi.create.content.trains.track;
 
-import java.util.Random;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -45,9 +46,10 @@ public class FakeTrackBlock extends Block implements EntityBlock, ProperWaterlog
 	public RenderShape getRenderShape(BlockState pState) {
 		return RenderShape.ENTITYBLOCK_ANIMATED;
 	}
-	
+
 	@Override
-	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+	public @Nullable BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos,
+		@Nullable Mob mob) {
 		return BlockPathTypes.DAMAGE_OTHER;
 	}
 
@@ -74,7 +76,7 @@ public class FakeTrackBlock extends Block implements EntityBlock, ProperWaterlog
 	}
 	
 	@Override
-	public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
+	public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
 		if (pLevel.getBlockEntity(pPos) instanceof FakeTrackBlockEntity be)
 			be.randomTick();
 	}

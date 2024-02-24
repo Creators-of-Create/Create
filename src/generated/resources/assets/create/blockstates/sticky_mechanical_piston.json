@@ -1,101 +1,97 @@
 {
   "variants": {
+    "axis_along_first=false,facing=down,state=extended": {
+      "model": "create:block/mechanical_piston/extended/block",
+      "x": 180
+    },
+    "axis_along_first=false,facing=down,state=moving": {
+      "model": "create:block/mechanical_piston/moving/block",
+      "x": 180
+    },
     "axis_along_first=false,facing=down,state=retracted": {
       "model": "create:block/mechanical_piston/sticky/block",
       "x": 180
     },
-    "axis_along_first=true,facing=down,state=retracted": {
-      "model": "create:block/mechanical_piston/sticky/block_rotated",
-      "x": 180
-    },
-    "axis_along_first=false,facing=up,state=retracted": {
-      "model": "create:block/mechanical_piston/sticky/block"
-    },
-    "axis_along_first=true,facing=up,state=retracted": {
-      "model": "create:block/mechanical_piston/sticky/block_rotated"
-    },
-    "axis_along_first=false,facing=north,state=retracted": {
-      "model": "create:block/mechanical_piston/sticky/block",
-      "x": 90
-    },
-    "axis_along_first=true,facing=north,state=retracted": {
-      "model": "create:block/mechanical_piston/sticky/block_rotated",
-      "x": 90
-    },
-    "axis_along_first=false,facing=south,state=retracted": {
-      "model": "create:block/mechanical_piston/sticky/block",
+    "axis_along_first=false,facing=east,state=extended": {
+      "model": "create:block/mechanical_piston/extended/block_rotated",
       "x": 90,
-      "y": 180
+      "y": 90
     },
-    "axis_along_first=true,facing=south,state=retracted": {
-      "model": "create:block/mechanical_piston/sticky/block_rotated",
+    "axis_along_first=false,facing=east,state=moving": {
+      "model": "create:block/mechanical_piston/moving/block_rotated",
       "x": 90,
-      "y": 180
-    },
-    "axis_along_first=false,facing=west,state=retracted": {
-      "model": "create:block/mechanical_piston/sticky/block_rotated",
-      "x": 90,
-      "y": 270
-    },
-    "axis_along_first=true,facing=west,state=retracted": {
-      "model": "create:block/mechanical_piston/sticky/block",
-      "x": 90,
-      "y": 270
+      "y": 90
     },
     "axis_along_first=false,facing=east,state=retracted": {
       "model": "create:block/mechanical_piston/sticky/block_rotated",
       "x": 90,
       "y": 90
     },
-    "axis_along_first=true,facing=east,state=retracted": {
-      "model": "create:block/mechanical_piston/sticky/block",
-      "x": 90,
-      "y": 90
-    },
-    "axis_along_first=false,facing=down,state=moving": {
-      "model": "create:block/mechanical_piston/moving/block",
-      "x": 180
-    },
-    "axis_along_first=true,facing=down,state=moving": {
-      "model": "create:block/mechanical_piston/moving/block_rotated",
-      "x": 180
-    },
-    "axis_along_first=false,facing=up,state=moving": {
-      "model": "create:block/mechanical_piston/moving/block"
-    },
-    "axis_along_first=true,facing=up,state=moving": {
-      "model": "create:block/mechanical_piston/moving/block_rotated"
+    "axis_along_first=false,facing=north,state=extended": {
+      "model": "create:block/mechanical_piston/extended/block",
+      "x": 90
     },
     "axis_along_first=false,facing=north,state=moving": {
       "model": "create:block/mechanical_piston/moving/block",
       "x": 90
     },
-    "axis_along_first=true,facing=north,state=moving": {
-      "model": "create:block/mechanical_piston/moving/block_rotated",
+    "axis_along_first=false,facing=north,state=retracted": {
+      "model": "create:block/mechanical_piston/sticky/block",
       "x": 90
+    },
+    "axis_along_first=false,facing=south,state=extended": {
+      "model": "create:block/mechanical_piston/extended/block",
+      "x": 90,
+      "y": 180
     },
     "axis_along_first=false,facing=south,state=moving": {
       "model": "create:block/mechanical_piston/moving/block",
       "x": 90,
       "y": 180
     },
-    "axis_along_first=true,facing=south,state=moving": {
-      "model": "create:block/mechanical_piston/moving/block_rotated",
+    "axis_along_first=false,facing=south,state=retracted": {
+      "model": "create:block/mechanical_piston/sticky/block",
       "x": 90,
       "y": 180
+    },
+    "axis_along_first=false,facing=up,state=extended": {
+      "model": "create:block/mechanical_piston/extended/block"
+    },
+    "axis_along_first=false,facing=up,state=moving": {
+      "model": "create:block/mechanical_piston/moving/block"
+    },
+    "axis_along_first=false,facing=up,state=retracted": {
+      "model": "create:block/mechanical_piston/sticky/block"
+    },
+    "axis_along_first=false,facing=west,state=extended": {
+      "model": "create:block/mechanical_piston/extended/block_rotated",
+      "x": 90,
+      "y": 270
     },
     "axis_along_first=false,facing=west,state=moving": {
       "model": "create:block/mechanical_piston/moving/block_rotated",
       "x": 90,
       "y": 270
     },
-    "axis_along_first=true,facing=west,state=moving": {
-      "model": "create:block/mechanical_piston/moving/block",
+    "axis_along_first=false,facing=west,state=retracted": {
+      "model": "create:block/mechanical_piston/sticky/block_rotated",
       "x": 90,
       "y": 270
     },
-    "axis_along_first=false,facing=east,state=moving": {
+    "axis_along_first=true,facing=down,state=extended": {
+      "model": "create:block/mechanical_piston/extended/block_rotated",
+      "x": 180
+    },
+    "axis_along_first=true,facing=down,state=moving": {
       "model": "create:block/mechanical_piston/moving/block_rotated",
+      "x": 180
+    },
+    "axis_along_first=true,facing=down,state=retracted": {
+      "model": "create:block/mechanical_piston/sticky/block_rotated",
+      "x": 180
+    },
+    "axis_along_first=true,facing=east,state=extended": {
+      "model": "create:block/mechanical_piston/extended/block",
       "x": 90,
       "y": 90
     },
@@ -104,57 +100,61 @@
       "x": 90,
       "y": 90
     },
-    "axis_along_first=false,facing=down,state=extended": {
-      "model": "create:block/mechanical_piston/extended/block",
-      "x": 180
-    },
-    "axis_along_first=true,facing=down,state=extended": {
-      "model": "create:block/mechanical_piston/extended/block_rotated",
-      "x": 180
-    },
-    "axis_along_first=false,facing=up,state=extended": {
-      "model": "create:block/mechanical_piston/extended/block"
-    },
-    "axis_along_first=true,facing=up,state=extended": {
-      "model": "create:block/mechanical_piston/extended/block_rotated"
-    },
-    "axis_along_first=false,facing=north,state=extended": {
-      "model": "create:block/mechanical_piston/extended/block",
-      "x": 90
+    "axis_along_first=true,facing=east,state=retracted": {
+      "model": "create:block/mechanical_piston/sticky/block",
+      "x": 90,
+      "y": 90
     },
     "axis_along_first=true,facing=north,state=extended": {
       "model": "create:block/mechanical_piston/extended/block_rotated",
       "x": 90
     },
-    "axis_along_first=false,facing=south,state=extended": {
-      "model": "create:block/mechanical_piston/extended/block",
-      "x": 90,
-      "y": 180
+    "axis_along_first=true,facing=north,state=moving": {
+      "model": "create:block/mechanical_piston/moving/block_rotated",
+      "x": 90
+    },
+    "axis_along_first=true,facing=north,state=retracted": {
+      "model": "create:block/mechanical_piston/sticky/block_rotated",
+      "x": 90
     },
     "axis_along_first=true,facing=south,state=extended": {
       "model": "create:block/mechanical_piston/extended/block_rotated",
       "x": 90,
       "y": 180
     },
-    "axis_along_first=false,facing=west,state=extended": {
-      "model": "create:block/mechanical_piston/extended/block_rotated",
+    "axis_along_first=true,facing=south,state=moving": {
+      "model": "create:block/mechanical_piston/moving/block_rotated",
       "x": 90,
-      "y": 270
+      "y": 180
+    },
+    "axis_along_first=true,facing=south,state=retracted": {
+      "model": "create:block/mechanical_piston/sticky/block_rotated",
+      "x": 90,
+      "y": 180
+    },
+    "axis_along_first=true,facing=up,state=extended": {
+      "model": "create:block/mechanical_piston/extended/block_rotated"
+    },
+    "axis_along_first=true,facing=up,state=moving": {
+      "model": "create:block/mechanical_piston/moving/block_rotated"
+    },
+    "axis_along_first=true,facing=up,state=retracted": {
+      "model": "create:block/mechanical_piston/sticky/block_rotated"
     },
     "axis_along_first=true,facing=west,state=extended": {
       "model": "create:block/mechanical_piston/extended/block",
       "x": 90,
       "y": 270
     },
-    "axis_along_first=false,facing=east,state=extended": {
-      "model": "create:block/mechanical_piston/extended/block_rotated",
+    "axis_along_first=true,facing=west,state=moving": {
+      "model": "create:block/mechanical_piston/moving/block",
       "x": 90,
-      "y": 90
+      "y": 270
     },
-    "axis_along_first=true,facing=east,state=extended": {
-      "model": "create:block/mechanical_piston/extended/block",
+    "axis_along_first=true,facing=west,state=retracted": {
+      "model": "create:block/mechanical_piston/sticky/block",
       "x": 90,
-      "y": 90
+      "y": 270
     }
   }
 }

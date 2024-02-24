@@ -1,7 +1,5 @@
 package com.simibubi.create.content.redstone.analogLever;
 
-import java.util.Random;
-
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.foundation.block.IBE;
@@ -11,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -71,7 +70,7 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
 		withBlockEntityDo(worldIn, pos, be -> {
 			if (be.state != 0 && rand.nextFloat() < 0.25F)
 				addParticles(stateIn, worldIn, pos, 0.5F);

@@ -4,8 +4,10 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
+import com.simibubi.create.foundation.recipe.BlockTagIngredient;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -56,6 +58,10 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 		ANDESITE_ALLOY_FROM_ZINC = create("andesite_alloy_from_zinc", b -> b.require(Blocks.ANDESITE)
 			.require(I.zincNugget())
 			.output(I.andesite(), 1)),
+
+		MUD = create("mud_by_mixing", b -> b.require(BlockTagIngredient.create(BlockTags.CONVERTABLE_TO_MUD))
+			.require(Fluids.WATER, 250)
+			.output(Blocks.MUD, 1)),
 
 		// AE2
 

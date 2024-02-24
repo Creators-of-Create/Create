@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "hexcasting"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "hexcasting:stripped_edified_log"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 6,
+      "item": "hexcasting:edified_planks"
+    }
+  ]
+}

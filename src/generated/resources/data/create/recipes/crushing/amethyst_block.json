@@ -5,15 +5,15 @@
       "item": "minecraft:amethyst_block"
     }
   ],
+  "processingTime": 150,
   "results": [
     {
-      "item": "minecraft:amethyst_shard",
-      "count": 3
+      "count": 3,
+      "item": "minecraft:amethyst_shard"
     },
     {
-      "item": "minecraft:amethyst_shard",
-      "chance": 0.5
+      "chance": 0.5,
+      "item": "minecraft:amethyst_shard"
     }
-  ],
-  "processingTime": 150
+  ]
 }

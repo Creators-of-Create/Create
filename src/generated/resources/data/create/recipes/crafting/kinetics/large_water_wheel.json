@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "item": "create:water_wheel"
+    },
+    "S": {
+      "tag": "minecraft:planks"
+    }
+  },
   "pattern": [
     "SSS",
     "SCS",
     "SSS"
   ],
-  "key": {
-    "S": {
-      "tag": "minecraft:planks"
-    },
-    "C": {
-      "item": "create:water_wheel"
-    }
-  },
   "result": {
     "item": "create:large_water_wheel"
   }

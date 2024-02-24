@@ -1,31 +1,31 @@
 package com.simibubi.create.foundation.utility.ghost;
 
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.core.virtual.VirtualEmptyModelData;
+import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 public abstract class GhostBlockRenderer {
 
@@ -48,21 +48,23 @@ public abstract class GhostBlockRenderer {
 		@Override
 		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, GhostBlockParams params) {
 			ms.pushPose();
-
 			BlockRenderDispatcher dispatcher = Minecraft.getInstance()
 				.getBlockRenderer();
+			ModelBlockRenderer renderer = dispatcher.getModelRenderer();
 
-			BakedModel model = dispatcher.getBlockModel(params.state);
-
-			RenderType layer = ItemBlockRenderTypes.getRenderType(params.state, false);
-			VertexConsumer vb = buffer.getEarlyBuffer(layer);
-
+			BlockState state = params.state;
 			BlockPos pos = params.pos;
+
+			BakedModel model = dispatcher.getBlockModel(state);
+
+			ms.pushPose();
 			ms.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
 
-			dispatcher.getModelRenderer()
-				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
-					VirtualEmptyModelData.INSTANCE);
+			for (RenderType layer : model.getRenderTypes(state, RandomSource.create(42L), ModelUtil.VIRTUAL_DATA)) {
+				VertexConsumer vb = buffer.getEarlyBuffer(layer);
+				renderer.renderModel(ms.last(), vb, state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
+					ModelUtil.VIRTUAL_DATA, layer);
+			}
 
 			ms.popPose();
 		}
@@ -78,22 +80,22 @@ public abstract class GhostBlockRenderer {
 			Minecraft mc = Minecraft.getInstance();
 			BlockRenderDispatcher dispatcher = mc.getBlockRenderer();
 
-			BakedModel model = dispatcher.getBlockModel(params.state);
+			BlockState state = params.state;
+			BlockPos pos = params.pos;
+			float alpha = params.alphaSupplier.get() * .75f * PlacementHelpers.getCurrentAlpha();
 
+			BakedModel model = dispatcher.getBlockModel(state);
 			RenderType layer = RenderType.translucent();
 			VertexConsumer vb = buffer.getEarlyBuffer(layer);
 
-			BlockPos pos = params.pos;
 			ms.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
-
 			ms.translate(.5, .5, .5);
 			ms.scale(.85f, .85f, .85f);
 			ms.translate(-.5, -.5, -.5);
 
-			float alpha = params.alphaSupplier.get() * .75f * PlacementHelpers.getCurrentAlpha();
-			renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, alpha,
+			renderModel(ms.last(), vb, state, model, 1f, 1f, 1f, alpha,
 				LevelRenderer.getLightColor(mc.level, pos), OverlayTexture.NO_OVERLAY,
-				VirtualEmptyModelData.INSTANCE);
+				ModelUtil.VIRTUAL_DATA, layer);
 
 			ms.popPose();
 		}
@@ -101,18 +103,18 @@ public abstract class GhostBlockRenderer {
 		// ModelBlockRenderer
 		public void renderModel(PoseStack.Pose pose, VertexConsumer consumer,
 			@Nullable BlockState state, BakedModel model, float red, float green, float blue,
-			float alpha, int packedLight, int packedOverlay, IModelData modelData) {
-			Random random = new Random();
+			float alpha, int packedLight, int packedOverlay, ModelData modelData, RenderType renderType) {
+			RandomSource random = RandomSource.create();
 
 			for (Direction direction : Direction.values()) {
 				random.setSeed(42L);
 				renderQuadList(pose, consumer, red, green, blue, alpha,
-					model.getQuads(state, direction, random, modelData), packedLight, packedOverlay);
+					model.getQuads(state, direction, random, modelData, renderType), packedLight, packedOverlay);
 			}
 
 			random.setSeed(42L);
 			renderQuadList(pose, consumer, red, green, blue, alpha,
-				model.getQuads(state, null, random, modelData), packedLight, packedOverlay);
+				model.getQuads(state, null, random, modelData, renderType), packedLight, packedOverlay);
 		}
 
 		// ModelBlockRenderer
@@ -133,7 +135,7 @@ public abstract class GhostBlockRenderer {
 					f2 = 1.0F;
 				}
 
-				consumer.putBulkData(pose, quad, f, f1, f2, alpha, packedLight, packedOverlay);
+				consumer.putBulkData(pose, quad, f, f1, f2, alpha, packedLight, packedOverlay, true);
 			}
 
 		}

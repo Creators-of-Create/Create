@@ -11,15 +11,17 @@ import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidStackParticle extends TextureSheetParticle {
 	private final float uo;
 	private final float vo;
 	private FluidStack fluid;
+	private IClientFluidTypeExtensions clientFluid;
 
-	public static FluidStackParticle create(ParticleType<FluidParticleData> type, ClientLevel world, FluidStack fluid, double x,
-		double y, double z, double vx, double vy, double vz) {
+	public static FluidStackParticle create(ParticleType<FluidParticleData> type, ClientLevel world, FluidStack fluid,
+		double x, double y, double z, double vx, double vy, double vz) {
 		if (type == AllParticleTypes.BASIN_FLUID.get())
 			return new BasinFluidParticle(world, fluid, x, y, z, vx, vy, vz);
 		return new FluidStackParticle(world, fluid, x, y, z, vx, vy, vz);
@@ -28,20 +30,19 @@ public class FluidStackParticle extends TextureSheetParticle {
 	public FluidStackParticle(ClientLevel world, FluidStack fluid, double x, double y, double z, double vx, double vy,
 		double vz) {
 		super(world, x, y, z, vx, vy, vz);
+
+		clientFluid = IClientFluidTypeExtensions.of(fluid.getFluid());
+
 		this.fluid = fluid;
 		this.setSprite(Minecraft.getInstance()
 			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-			.apply(fluid.getFluid()
-				.getAttributes()
-				.getStillTexture()));
+			.apply(clientFluid.getStillTexture(fluid)));
 
 		this.gravity = 1.0F;
 		this.rCol = 0.8F;
 		this.gCol = 0.8F;
 		this.bCol = 0.8F;
-		this.multiplyColor(fluid.getFluid()
-			.getAttributes()
-			.getColor(fluid));
+		this.multiplyColor(clientFluid.getTintColor(fluid));
 
 		this.xd = vx;
 		this.yd = vy;
@@ -58,8 +59,8 @@ public class FluidStackParticle extends TextureSheetParticle {
 		int skyLight = brightnessForRender >> 20;
 		int blockLight = (brightnessForRender >> 4) & 0xf;
 		blockLight = Math.max(blockLight, fluid.getFluid()
-			.getAttributes()
-			.getLuminosity(fluid));
+			.getFluidType()
+			.getLightLevel(fluid));
 		return (skyLight << 20) | (blockLight << 4);
 	}
 
@@ -97,10 +98,9 @@ public class FluidStackParticle extends TextureSheetParticle {
 		if (!onGround && level.random.nextFloat() < 1 / 8f)
 			return;
 
-		Color color = new Color(fluid.getFluid()
-			.getAttributes()
-			.getColor(fluid));
-		level.addParticle(ParticleTypes.ENTITY_EFFECT, x, y, z, color.getRedAsFloat(), color.getGreenAsFloat(), color.getBlueAsFloat());
+		Color color = new Color(clientFluid.getTintColor(fluid));
+		level.addParticle(ParticleTypes.ENTITY_EFFECT, x, y, z, color.getRedAsFloat(), color.getGreenAsFloat(),
+			color.getBlueAsFloat());
 	}
 
 	protected boolean canEvaporate() {

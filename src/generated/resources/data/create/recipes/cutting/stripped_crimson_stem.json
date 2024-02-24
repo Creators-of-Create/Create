@@ -5,11 +5,11 @@
       "item": "minecraft:stripped_crimson_stem"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:crimson_planks",
-      "count": 6
+      "count": 6,
+      "item": "minecraft:crimson_planks"
     }
-  ],
-  "processingTime": 50
+  ]
 }

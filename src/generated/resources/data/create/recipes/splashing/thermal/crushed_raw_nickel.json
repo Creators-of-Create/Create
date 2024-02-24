@@ -1,5 +1,11 @@
 {
   "type": "create:splashing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "thermal"
+    }
+  ],
   "ingredients": [
     {
       "item": "create:crushed_raw_nickel"
@@ -7,14 +13,8 @@
   ],
   "results": [
     {
-      "item": "thermal:nickel_nugget",
-      "count": 9
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "thermal",
-      "type": "forge:mod_loaded"
+      "count": 9,
+      "item": "thermal:nickel_nugget"
     }
   ]
 }

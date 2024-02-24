@@ -33,8 +33,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -153,8 +153,8 @@ public class PlacementHelpers {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public static void afterRenderOverlayLayer(RenderGameOverlayEvent.PostLayer event) {
-		if (event.getOverlay() != ForgeIngameGui.CROSSHAIR_ELEMENT)
+	public static void afterRenderOverlayLayer(RenderGuiOverlayEvent.Post event) {
+		if (event.getOverlay() != VanillaGuiOverlay.CROSSHAIR.type())
 			return;
 
 		Minecraft mc = Minecraft.getInstance();
@@ -167,7 +167,7 @@ public class PlacementHelpers {
 			float screenX = res.getGuiScaledWidth() / 2f;
 			float progress = getCurrentAlpha();
 
-			drawDirectionIndicator(event.getMatrixStack(), event.getPartialTicks(), screenX, screenY, progress);
+			drawDirectionIndicator(event.getPoseStack(), event.getPartialTick(), screenX, screenY, progress);
 		}
 	}
 

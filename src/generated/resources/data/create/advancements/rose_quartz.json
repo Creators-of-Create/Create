@@ -1,24 +1,7 @@
 {
   "parent": "create:brass_casing",
-  "display": {
-    "icon": {
-      "item": "create:polished_rose_quartz"
-    },
-    "title": {
-      "translate": "advancement.create.rose_quartz"
-    },
-    "description": {
-      "color": "#DBA213",
-      "translate": "advancement.create.rose_quartz.desc"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": false,
-    "hidden": false
-  },
   "criteria": {
     "0": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -27,7 +10,24 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.rose_quartz.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:polished_rose_quartz"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.rose_quartz"
     }
   },
   "requirements": [

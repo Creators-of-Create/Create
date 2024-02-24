@@ -2,7 +2,7 @@
   "parent": "create:block/bars/side_alt",
   "textures": {
     "bars": "create:block/bars/copper_bars",
-    "particle": "create:block/bars/copper_bars",
-    "edge": "create:block/bars/copper_bars_edge"
+    "edge": "create:block/bars/copper_bars_edge",
+    "particle": "create:block/bars/copper_bars"
   }
 }

@@ -27,7 +27,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
@@ -50,7 +49,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 
 public class BlockHelper {
 
@@ -190,8 +189,7 @@ public class BlockHelper {
 
 			// Simulating IceBlock#playerDestroy. Not calling method directly as it would drop item
 			// entities as a side-effect
-			if (state.getBlock() instanceof IceBlock
-				&& EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, usedTool) == 0) {
+			if (state.getBlock() instanceof IceBlock && usedTool.getEnchantmentLevel(Enchantments.SILK_TOUCH) == 0) {
 				if (world.dimensionType()
 					.ultraWarm())
 					return;
@@ -203,7 +201,7 @@ public class BlockHelper {
 				return;
 			}
 
-			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
+			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY, true);
 		}
 		
 		world.setBlockAndUpdate(pos, fluidState.createLegacyBlock());

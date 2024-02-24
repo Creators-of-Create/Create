@@ -5,14 +5,14 @@
       "item": "minecraft:raw_copper"
     }
   ],
+  "processingTime": 400,
   "results": [
     {
       "item": "create:crushed_raw_copper"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     }
-  ],
-  "processingTime": 400
+  ]
 }

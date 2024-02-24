@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column",
   "textures": {
-    "side": "create:block/palettes/jungle_window",
-    "end": "minecraft:block/jungle_planks"
+    "end": "minecraft:block/jungle_planks",
+    "side": "create:block/palettes/jungle_window"
   }
 }

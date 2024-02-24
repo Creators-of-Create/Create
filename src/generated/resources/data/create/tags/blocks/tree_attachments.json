@@ -1,8 +1,8 @@
 {
-  "replace": false,
   "values": [
     "minecraft:bee_nest",
     "minecraft:cocoa",
+    "minecraft:mangrove_propagule",
     "minecraft:moss_carpet",
     "minecraft:shroomlight",
     "minecraft:vine"

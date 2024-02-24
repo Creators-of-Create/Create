@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -265,7 +266,7 @@ public class CarriageSounds {
 	class LoopingSound extends AbstractTickableSoundInstance {
 
 		protected LoopingSound(SoundEvent p_119606_, SoundSource p_119607_) {
-			super(p_119606_, p_119607_);
+			super(p_119606_, p_119607_, SoundInstance.createUnseededRandom());
 			attenuation = Attenuation.LINEAR;
 			looping = true;
 			delay = 0;

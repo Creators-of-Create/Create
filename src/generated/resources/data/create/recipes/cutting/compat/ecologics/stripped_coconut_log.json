@@ -1,21 +1,21 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ecologics"
+    }
+  ],
   "ingredients": [
     {
       "item": "ecologics:stripped_coconut_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "ecologics:coconut_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "ecologics",
-      "type": "forge:mod_loaded"
+      "count": 6,
+      "item": "ecologics:coconut_planks"
     }
   ]
 }

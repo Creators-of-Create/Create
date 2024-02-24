@@ -3,7 +3,6 @@ package com.simibubi.create.content.redstone;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
@@ -15,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -149,7 +149,7 @@ public class RoseQuartzLampBlock extends Block implements IWrenchable {
 	}
 
 	@Override
-	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRand) {
+	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRand) {
 		boolean wasPowering = pState.getValue(POWERING);
 		boolean shouldBePowering = pState.getValue(ACTIVATE);
 

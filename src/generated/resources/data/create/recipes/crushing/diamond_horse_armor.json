@@ -5,25 +5,25 @@
       "item": "minecraft:diamond_horse_armor"
     }
   ],
+  "processingTime": 200,
   "results": [
     {
       "item": "minecraft:diamond"
     },
     {
-      "item": "minecraft:leather",
+      "chance": 0.5,
       "count": 2,
-      "chance": 0.5
+      "item": "minecraft:leather"
     },
     {
-      "item": "minecraft:diamond",
+      "chance": 0.1,
       "count": 3,
-      "chance": 0.1
+      "item": "minecraft:diamond"
     },
     {
-      "item": "minecraft:string",
+      "chance": 0.25,
       "count": 2,
-      "chance": 0.25
+      "item": "minecraft:string"
     }
-  ],
-  "processingTime": 200
+  ]
 }

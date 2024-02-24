@@ -5,11 +5,11 @@
       "item": "create:andesite_alloy"
     }
   ],
+  "processingTime": 200,
   "results": [
     {
-      "item": "create:shaft",
-      "count": 6
+      "count": 6,
+      "item": "create:shaft"
     }
-  ],
-  "processingTime": 200
+  ]
 }

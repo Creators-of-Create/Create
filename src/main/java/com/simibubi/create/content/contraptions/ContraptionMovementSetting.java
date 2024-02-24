@@ -52,6 +52,7 @@ public enum ContraptionMovementSetting {
 		register(Blocks.OBSIDIAN, () -> AllConfigs.server().kinetics.obsidianMovement.get());
 		register(Blocks.CRYING_OBSIDIAN, () -> AllConfigs.server().kinetics.obsidianMovement.get());
 		register(Blocks.RESPAWN_ANCHOR, () -> AllConfigs.server().kinetics.obsidianMovement.get());
+		register(Blocks.REINFORCED_DEEPSLATE, () -> AllConfigs.server().kinetics.reinforcedDeepslateMovement.get());
 	}
 
 	public interface IMovementSettingProvider extends IForgeBlock {

@@ -5,10 +5,10 @@
       "item": "minecraft:oak_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "minecraft:stripped_oak_log"
     }
-  ],
-  "processingTime": 50
+  ]
 }

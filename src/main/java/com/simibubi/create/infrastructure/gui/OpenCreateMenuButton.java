@@ -82,7 +82,7 @@ public class OpenCreateMenuButton extends Button {
 	public static class OpenConfigButtonHandler {
 
 		@SubscribeEvent
-		public static void onGuiInit(ScreenEvent.InitScreenEvent event) {
+		public static void onGuiInit(ScreenEvent.Init event) {
 			Screen gui = event.getScreen();
 
 			MenuRows menu = null;

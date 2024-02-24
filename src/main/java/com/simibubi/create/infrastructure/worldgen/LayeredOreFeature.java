@@ -2,7 +2,6 @@ package com.simibubi.create.infrastructure.worldgen;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.simibubi.create.infrastructure.worldgen.LayerPattern.Layer;
 
@@ -10,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.BulkSectionAccess;
@@ -26,7 +26,7 @@ public class LayeredOreFeature extends BaseConfigDrivenOreFeature<ConfigDrivenLa
 
 	@Override
 	public boolean place(FeaturePlaceContext<ConfigDrivenLayeredOreFeatureConfiguration> pContext) {
-		Random random = pContext.random();
+		RandomSource random = pContext.random();
 		BlockPos blockpos = pContext.origin();
 		WorldGenLevel worldgenlevel = pContext.level();
 		ConfigDrivenLayeredOreFeatureConfiguration config = pContext.config();

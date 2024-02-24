@@ -4,22 +4,26 @@
       "model": "create:block/sticker/block",
       "x": 180
     },
-    "extended=true,facing=down,powered=false": {
-      "model": "create:block/sticker/block",
+    "extended=false,facing=down,powered=true": {
+      "model": "create:block/sticker/block_powered",
       "x": 180
     },
-    "extended=false,facing=up,powered=false": {
-      "model": "create:block/sticker/block"
+    "extended=false,facing=east,powered=false": {
+      "model": "create:block/sticker/block",
+      "x": 90,
+      "y": 90
     },
-    "extended=true,facing=up,powered=false": {
-      "model": "create:block/sticker/block"
+    "extended=false,facing=east,powered=true": {
+      "model": "create:block/sticker/block_powered",
+      "x": 90,
+      "y": 90
     },
     "extended=false,facing=north,powered=false": {
       "model": "create:block/sticker/block",
       "x": 90
     },
-    "extended=true,facing=north,powered=false": {
-      "model": "create:block/sticker/block",
+    "extended=false,facing=north,powered=true": {
+      "model": "create:block/sticker/block_powered",
       "x": 90
     },
     "extended=false,facing=south,powered=false": {
@@ -27,55 +31,55 @@
       "x": 90,
       "y": 180
     },
-    "extended=true,facing=south,powered=false": {
-      "model": "create:block/sticker/block",
+    "extended=false,facing=south,powered=true": {
+      "model": "create:block/sticker/block_powered",
       "x": 90,
       "y": 180
+    },
+    "extended=false,facing=up,powered=false": {
+      "model": "create:block/sticker/block"
+    },
+    "extended=false,facing=up,powered=true": {
+      "model": "create:block/sticker/block_powered"
     },
     "extended=false,facing=west,powered=false": {
       "model": "create:block/sticker/block",
       "x": 90,
       "y": 270
     },
-    "extended=true,facing=west,powered=false": {
-      "model": "create:block/sticker/block",
+    "extended=false,facing=west,powered=true": {
+      "model": "create:block/sticker/block_powered",
       "x": 90,
       "y": 270
     },
-    "extended=false,facing=east,powered=false": {
+    "extended=true,facing=down,powered=false": {
       "model": "create:block/sticker/block",
-      "x": 90,
-      "y": 90
-    },
-    "extended=true,facing=east,powered=false": {
-      "model": "create:block/sticker/block",
-      "x": 90,
-      "y": 90
-    },
-    "extended=false,facing=down,powered=true": {
-      "model": "create:block/sticker/block_powered",
       "x": 180
     },
     "extended=true,facing=down,powered=true": {
       "model": "create:block/sticker/block_powered",
       "x": 180
     },
-    "extended=false,facing=up,powered=true": {
-      "model": "create:block/sticker/block_powered"
+    "extended=true,facing=east,powered=false": {
+      "model": "create:block/sticker/block",
+      "x": 90,
+      "y": 90
     },
-    "extended=true,facing=up,powered=true": {
-      "model": "create:block/sticker/block_powered"
-    },
-    "extended=false,facing=north,powered=true": {
+    "extended=true,facing=east,powered=true": {
       "model": "create:block/sticker/block_powered",
+      "x": 90,
+      "y": 90
+    },
+    "extended=true,facing=north,powered=false": {
+      "model": "create:block/sticker/block",
       "x": 90
     },
     "extended=true,facing=north,powered=true": {
       "model": "create:block/sticker/block_powered",
       "x": 90
     },
-    "extended=false,facing=south,powered=true": {
-      "model": "create:block/sticker/block_powered",
+    "extended=true,facing=south,powered=false": {
+      "model": "create:block/sticker/block",
       "x": 90,
       "y": 180
     },
@@ -84,8 +88,14 @@
       "x": 90,
       "y": 180
     },
-    "extended=false,facing=west,powered=true": {
-      "model": "create:block/sticker/block_powered",
+    "extended=true,facing=up,powered=false": {
+      "model": "create:block/sticker/block"
+    },
+    "extended=true,facing=up,powered=true": {
+      "model": "create:block/sticker/block_powered"
+    },
+    "extended=true,facing=west,powered=false": {
+      "model": "create:block/sticker/block",
       "x": 90,
       "y": 270
     },
@@ -93,16 +103,6 @@
       "model": "create:block/sticker/block_powered",
       "x": 90,
       "y": 270
-    },
-    "extended=false,facing=east,powered=true": {
-      "model": "create:block/sticker/block_powered",
-      "x": 90,
-      "y": 90
-    },
-    "extended=true,facing=east,powered=true": {
-      "model": "create:block/sticker/block_powered",
-      "x": 90,
-      "y": 90
     }
   }
 }

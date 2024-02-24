@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "###",
-    "###"
-  ],
   "key": {
     "#": {
       "item": "create:birch_window"
     }
   },
+  "pattern": [
+    "###",
+    "###"
+  ],
   "result": {
-    "item": "create:birch_window_pane",
-    "count": 16
+    "count": 16,
+    "item": "create:birch_window_pane"
   }
 }

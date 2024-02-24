@@ -46,7 +46,7 @@ public class FluidMovementActorScenes {
 		Capability<IFluidHandler> fhc = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 		Class<FluidTankBlockEntity> type = FluidTankBlockEntity.class;
 		ItemStack bucket = AllFluids.CHOCOLATE.get()
-			.getAttributes()
+			.getFluidType()
 			.getBucket(chocolate);
 		
 		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.NORTH), false);

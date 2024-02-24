@@ -7,12 +7,12 @@
   ],
   "results": [
     {
-      "item": "minecraft:prismarine_shard",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "minecraft:prismarine_shard"
     },
     {
-      "item": "minecraft:prismarine_crystals",
-      "chance": 0.125
+      "chance": 0.125,
+      "item": "minecraft:prismarine_crystals"
     }
   ]
 }

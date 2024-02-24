@@ -1,45 +1,45 @@
 {
   "variants": {
+    "axis=x,shape=closed": {
+      "model": "create:block/tunnel/andesite_tunnel/straight"
+    },
+    "axis=x,shape=cross": {
+      "model": "create:block/tunnel/andesite_tunnel/cross"
+    },
     "axis=x,shape=straight": {
       "model": "create:block/tunnel/andesite_tunnel/straight"
     },
-    "axis=z,shape=straight": {
-      "model": "create:block/tunnel/andesite_tunnel/straight",
-      "y": 90
+    "axis=x,shape=t_left": {
+      "model": "create:block/tunnel/andesite_tunnel/t_left"
+    },
+    "axis=x,shape=t_right": {
+      "model": "create:block/tunnel/andesite_tunnel/t_right"
     },
     "axis=x,shape=window": {
       "model": "create:block/tunnel/andesite_tunnel/window"
-    },
-    "axis=z,shape=window": {
-      "model": "create:block/tunnel/andesite_tunnel/window",
-      "y": 90
-    },
-    "axis=x,shape=closed": {
-      "model": "create:block/tunnel/andesite_tunnel/straight"
     },
     "axis=z,shape=closed": {
       "model": "create:block/tunnel/andesite_tunnel/straight",
       "y": 90
     },
-    "axis=x,shape=t_left": {
-      "model": "create:block/tunnel/andesite_tunnel/t_left"
+    "axis=z,shape=cross": {
+      "model": "create:block/tunnel/andesite_tunnel/cross",
+      "y": 90
+    },
+    "axis=z,shape=straight": {
+      "model": "create:block/tunnel/andesite_tunnel/straight",
+      "y": 90
     },
     "axis=z,shape=t_left": {
       "model": "create:block/tunnel/andesite_tunnel/t_left",
       "y": 90
     },
-    "axis=x,shape=t_right": {
-      "model": "create:block/tunnel/andesite_tunnel/t_right"
-    },
     "axis=z,shape=t_right": {
       "model": "create:block/tunnel/andesite_tunnel/t_right",
       "y": 90
     },
-    "axis=x,shape=cross": {
-      "model": "create:block/tunnel/andesite_tunnel/cross"
-    },
-    "axis=z,shape=cross": {
-      "model": "create:block/tunnel/andesite_tunnel/cross",
+    "axis=z,shape=window": {
+      "model": "create:block/tunnel/andesite_tunnel/window",
       "y": 90
     }
   }

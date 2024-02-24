@@ -5,21 +5,21 @@
       "x": 90,
       "y": 90
     },
-    "axis=y,extension=false": {
-      "model": "create:block/large_water_wheel/block"
-    },
-    "axis=z,extension=false": {
-      "model": "create:block/large_water_wheel/block",
-      "x": 90,
-      "y": 180
-    },
     "axis=x,extension=true": {
       "model": "create:block/large_water_wheel/block_extension",
       "x": 90,
       "y": 90
     },
+    "axis=y,extension=false": {
+      "model": "create:block/large_water_wheel/block"
+    },
     "axis=y,extension=true": {
       "model": "create:block/large_water_wheel/block_extension"
+    },
+    "axis=z,extension=false": {
+      "model": "create:block/large_water_wheel/block",
+      "x": 90,
+      "y": 180
     },
     "axis=z,extension=true": {
       "model": "create:block/large_water_wheel/block_extension",

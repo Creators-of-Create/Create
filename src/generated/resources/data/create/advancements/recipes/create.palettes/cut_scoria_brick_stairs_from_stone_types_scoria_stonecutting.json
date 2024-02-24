@@ -1,26 +1,21 @@
 {
   "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "create:cut_scoria_brick_stairs_from_stone_types_scoria_stonecutting"
-    ]
-  },
   "criteria": {
     "has_stone_types_scoria": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "tag": "create:stone_types/scoria"
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
     },
     "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipe": "create:cut_scoria_brick_stairs_from_stone_types_scoria_stonecutting"
-      }
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
@@ -28,5 +23,10 @@
       "has_stone_types_scoria",
       "has_the_recipe"
     ]
-  ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:cut_scoria_brick_stairs_from_stone_types_scoria_stonecutting"
+    ]
+  }
 }

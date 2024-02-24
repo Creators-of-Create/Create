@@ -1,54 +1,39 @@
 {
   "variants": {
-    "double_face=floor,facing=north,waterlogged=false": {
+    "double_face=ceiling,facing=east,waterlogged=false": {
       "model": "create:block/light_gray_nixie_tube",
-      "y": 180
+      "x": 180,
+      "y": 270
     },
-    "double_face=wall,facing=north,waterlogged=false": {
+    "double_face=ceiling,facing=east,waterlogged=true": {
       "model": "create:block/light_gray_nixie_tube",
-      "x": 90
-    },
-    "double_face=wall_reversed,facing=north,waterlogged=false": {
-      "model": "create:block/light_gray_nixie_tube",
-      "x": 90
+      "x": 180,
+      "y": 270
     },
     "double_face=ceiling,facing=north,waterlogged=false": {
       "model": "create:block/light_gray_nixie_tube",
       "x": 180,
       "y": 180
     },
-    "double_face=floor,facing=south,waterlogged=false": {
-      "model": "create:block/light_gray_nixie_tube"
-    },
-    "double_face=wall,facing=south,waterlogged=false": {
+    "double_face=ceiling,facing=north,waterlogged=true": {
       "model": "create:block/light_gray_nixie_tube",
-      "x": 90,
-      "y": 180
-    },
-    "double_face=wall_reversed,facing=south,waterlogged=false": {
-      "model": "create:block/light_gray_nixie_tube",
-      "x": 90,
+      "x": 180,
       "y": 180
     },
     "double_face=ceiling,facing=south,waterlogged=false": {
       "model": "create:block/light_gray_nixie_tube",
       "x": 180
     },
-    "double_face=floor,facing=west,waterlogged=false": {
+    "double_face=ceiling,facing=south,waterlogged=true": {
       "model": "create:block/light_gray_nixie_tube",
-      "y": 90
-    },
-    "double_face=wall,facing=west,waterlogged=false": {
-      "model": "create:block/light_gray_nixie_tube",
-      "x": 90,
-      "y": 270
-    },
-    "double_face=wall_reversed,facing=west,waterlogged=false": {
-      "model": "create:block/light_gray_nixie_tube",
-      "x": 90,
-      "y": 270
+      "x": 180
     },
     "double_face=ceiling,facing=west,waterlogged=false": {
+      "model": "create:block/light_gray_nixie_tube",
+      "x": 180,
+      "y": 90
+    },
+    "double_face=ceiling,facing=west,waterlogged=true": {
       "model": "create:block/light_gray_nixie_tube",
       "x": 180,
       "y": 90
@@ -57,79 +42,71 @@
       "model": "create:block/light_gray_nixie_tube",
       "y": 270
     },
-    "double_face=wall,facing=east,waterlogged=false": {
+    "double_face=floor,facing=east,waterlogged=true": {
       "model": "create:block/light_gray_nixie_tube",
-      "x": 90,
-      "y": 90
-    },
-    "double_face=wall_reversed,facing=east,waterlogged=false": {
-      "model": "create:block/light_gray_nixie_tube",
-      "x": 90,
-      "y": 90
-    },
-    "double_face=ceiling,facing=east,waterlogged=false": {
-      "model": "create:block/light_gray_nixie_tube",
-      "x": 180,
       "y": 270
+    },
+    "double_face=floor,facing=north,waterlogged=false": {
+      "model": "create:block/light_gray_nixie_tube",
+      "y": 180
     },
     "double_face=floor,facing=north,waterlogged=true": {
       "model": "create:block/light_gray_nixie_tube",
       "y": 180
     },
+    "double_face=floor,facing=south,waterlogged=false": {
+      "model": "create:block/light_gray_nixie_tube"
+    },
+    "double_face=floor,facing=south,waterlogged=true": {
+      "model": "create:block/light_gray_nixie_tube"
+    },
+    "double_face=floor,facing=west,waterlogged=false": {
+      "model": "create:block/light_gray_nixie_tube",
+      "y": 90
+    },
+    "double_face=floor,facing=west,waterlogged=true": {
+      "model": "create:block/light_gray_nixie_tube",
+      "y": 90
+    },
+    "double_face=wall,facing=east,waterlogged=false": {
+      "model": "create:block/light_gray_nixie_tube",
+      "x": 90,
+      "y": 90
+    },
+    "double_face=wall,facing=east,waterlogged=true": {
+      "model": "create:block/light_gray_nixie_tube",
+      "x": 90,
+      "y": 90
+    },
+    "double_face=wall,facing=north,waterlogged=false": {
+      "model": "create:block/light_gray_nixie_tube",
+      "x": 90
+    },
     "double_face=wall,facing=north,waterlogged=true": {
       "model": "create:block/light_gray_nixie_tube",
       "x": 90
     },
-    "double_face=wall_reversed,facing=north,waterlogged=true": {
+    "double_face=wall,facing=south,waterlogged=false": {
       "model": "create:block/light_gray_nixie_tube",
-      "x": 90
-    },
-    "double_face=ceiling,facing=north,waterlogged=true": {
-      "model": "create:block/light_gray_nixie_tube",
-      "x": 180,
+      "x": 90,
       "y": 180
-    },
-    "double_face=floor,facing=south,waterlogged=true": {
-      "model": "create:block/light_gray_nixie_tube"
     },
     "double_face=wall,facing=south,waterlogged=true": {
       "model": "create:block/light_gray_nixie_tube",
       "x": 90,
       "y": 180
     },
-    "double_face=wall_reversed,facing=south,waterlogged=true": {
+    "double_face=wall,facing=west,waterlogged=false": {
       "model": "create:block/light_gray_nixie_tube",
       "x": 90,
-      "y": 180
-    },
-    "double_face=ceiling,facing=south,waterlogged=true": {
-      "model": "create:block/light_gray_nixie_tube",
-      "x": 180
-    },
-    "double_face=floor,facing=west,waterlogged=true": {
-      "model": "create:block/light_gray_nixie_tube",
-      "y": 90
+      "y": 270
     },
     "double_face=wall,facing=west,waterlogged=true": {
       "model": "create:block/light_gray_nixie_tube",
       "x": 90,
       "y": 270
     },
-    "double_face=wall_reversed,facing=west,waterlogged=true": {
-      "model": "create:block/light_gray_nixie_tube",
-      "x": 90,
-      "y": 270
-    },
-    "double_face=ceiling,facing=west,waterlogged=true": {
-      "model": "create:block/light_gray_nixie_tube",
-      "x": 180,
-      "y": 90
-    },
-    "double_face=floor,facing=east,waterlogged=true": {
-      "model": "create:block/light_gray_nixie_tube",
-      "y": 270
-    },
-    "double_face=wall,facing=east,waterlogged=true": {
+    "double_face=wall_reversed,facing=east,waterlogged=false": {
       "model": "create:block/light_gray_nixie_tube",
       "x": 90,
       "y": 90
@@ -139,9 +116,32 @@
       "x": 90,
       "y": 90
     },
-    "double_face=ceiling,facing=east,waterlogged=true": {
+    "double_face=wall_reversed,facing=north,waterlogged=false": {
       "model": "create:block/light_gray_nixie_tube",
-      "x": 180,
+      "x": 90
+    },
+    "double_face=wall_reversed,facing=north,waterlogged=true": {
+      "model": "create:block/light_gray_nixie_tube",
+      "x": 90
+    },
+    "double_face=wall_reversed,facing=south,waterlogged=false": {
+      "model": "create:block/light_gray_nixie_tube",
+      "x": 90,
+      "y": 180
+    },
+    "double_face=wall_reversed,facing=south,waterlogged=true": {
+      "model": "create:block/light_gray_nixie_tube",
+      "x": 90,
+      "y": 180
+    },
+    "double_face=wall_reversed,facing=west,waterlogged=false": {
+      "model": "create:block/light_gray_nixie_tube",
+      "x": 90,
+      "y": 270
+    },
+    "double_face=wall_reversed,facing=west,waterlogged=true": {
+      "model": "create:block/light_gray_nixie_tube",
+      "x": 90,
       "y": 270
     }
   }

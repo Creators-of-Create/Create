@@ -19,7 +19,7 @@ public class NoShadowFontWrapper extends Font {
 	private Font wrapped;
 
 	public NoShadowFontWrapper(Font wrapped) {
-		super(null);
+		super(null, false);
 		this.wrapped = wrapped;
 	}
 

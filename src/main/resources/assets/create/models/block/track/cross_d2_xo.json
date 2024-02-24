@@ -1,6 +1,6 @@
 {
 	"parent": "create:block/track/obj_track",
 	"loader": "forge:obj",
-	"flip-v": true,
+	"flip_v": true,
 	"model": "create:models/block/track/cross_d2_xo.obj"
 }

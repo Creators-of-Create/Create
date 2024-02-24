@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "A",
-    "D",
-    "I"
-  ],
   "key": {
     "A": {
       "tag": "forge:plates/gold"
@@ -16,6 +11,11 @@
       "item": "create:cogwheel"
     }
   },
+  "pattern": [
+    "A",
+    "D",
+    "I"
+  ],
   "result": {
     "item": "create:weighted_ejector"
   }
