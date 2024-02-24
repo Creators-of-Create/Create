@@ -1,8 +1,8 @@
 package com.simibubi.create.content.kinetics.press;
 
 import com.simibubi.create.AllBlockEntityTypes;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 
@@ -37,7 +37,7 @@ public class MechanicalPressBlock extends HorizontalKineticBlock implements IBE<
 
 	@Override
 	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
-		return !AllBlocks.BASIN.has(worldIn.getBlockState(pos.below()));
+		return !AllTags.AllBlockTags.BASIN.matches(worldIn.getBlockState(pos.below()));
 	}
 
 	@Override
