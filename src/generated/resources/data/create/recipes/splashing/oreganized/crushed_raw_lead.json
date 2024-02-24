@@ -1,5 +1,11 @@
 {
   "type": "create:splashing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "oreganized"
+    }
+  ],
   "ingredients": [
     {
       "item": "create:crushed_raw_lead"
@@ -7,14 +13,8 @@
   ],
   "results": [
     {
-      "item": "oreganized:lead_nugget",
-      "count": 9
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "oreganized",
-      "type": "forge:mod_loaded"
+      "count": 9,
+      "item": "oreganized:lead_nugget"
     }
   ]
 }

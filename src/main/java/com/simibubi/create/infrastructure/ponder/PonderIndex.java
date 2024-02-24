@@ -355,8 +355,8 @@ public class PonderIndex {
 			.map((trackSupplier) -> new BlockEntry<TrackBlock>(
 				// note: these blocks probably WON'T be in the Create Registrate, but a simple
 				// code trace reveals the Entry's registrate isn't used
-				Create.REGISTRATE, RegistryObject.create(trackSupplier.get()
-					.getRegistryName(), ForgeRegistries.BLOCKS)))
+				Create.REGISTRATE,
+				RegistryObject.create(ForgeRegistries.BLOCKS.getKey(trackSupplier.get()), ForgeRegistries.BLOCKS)))
 			.toList())
 			.addStoryBoard("train_track/placement", TrackScenes::placement)
 			.addStoryBoard("train_track/portal", TrackScenes::portal)

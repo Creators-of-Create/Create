@@ -1,26 +1,26 @@
 {
   "parent": "create:mechanical_crafter",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:extendo_grip_dual_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:extendo_grip",
-      "nbt": "{Damage:0}"
-    },
-    "title": {
-      "translate": "advancement.create.extendo_grip_dual"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.extendo_grip_dual.desc"
     },
     "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "item": "create:extendo_grip",
+      "nbt": "{Damage:0}"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:extendo_grip_dual_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.extendo_grip_dual"
     }
   },
   "requirements": [

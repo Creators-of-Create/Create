@@ -7,7 +7,6 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.placement.IPlacementHelper;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.placement.PoleHelper;
-import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
 import net.minecraft.core.BlockPos;
@@ -65,53 +64,12 @@ public class CopycatStepBlock extends WaterloggedCopycatBlock {
 	}
 
 	@Override
-	public BlockState getConnectiveMaterial(BlockAndTintGetter reader, BlockState otherState, Direction face,
-		BlockPos fromPos, BlockPos toPos) {
-		if (!otherState.is(this))
-			return null;
-
-		BlockState stepState = reader.getBlockState(toPos);
-		Direction facing = stepState.getValue(FACING);
-		BlockPos diff = fromPos.subtract(toPos);
-
-		if (diff.getY() != 0) {
-			if (isOccluded(stepState, otherState, diff.getY() > 0 ? Direction.UP : Direction.DOWN))
-				return getMaterial(reader, toPos);
-			return null;
-		}
-
-		if (isOccluded(stepState, otherState, facing))
-			return getMaterial(reader, toPos);
-
-		int coord = facing.getAxis()
-			.choose(diff.getX(), diff.getY(), diff.getZ());
-
-		if (otherState.setValue(WATERLOGGED, false) == stepState.setValue(WATERLOGGED, false) && coord == 0)
-			return getMaterial(reader, toPos);
-
-		return null;
-	}
-
-	@Override
-	public boolean isUnblockableConnectivitySide(BlockAndTintGetter reader, BlockState state, Direction face,
-		BlockPos fromPos, BlockPos toPos) {
-		return true;
-	}
-
-	@Override
 	public boolean isIgnoredConnectivitySide(BlockAndTintGetter reader, BlockState state, Direction face,
 		BlockPos fromPos, BlockPos toPos) {
 		BlockState toState = reader.getBlockState(toPos);
 
-		if (!toState.is(this)) {
-			if (!canFaceBeOccluded(state, face.getOpposite()))
-				return true;
-			for (Direction d : Iterate.directions)
-				if (fromPos.relative(d)
-					.equals(toPos) && !canFaceBeOccluded(state, d))
-					return true;
-			return false;
-		}
+		if (!toState.is(this))
+			return true;
 
 		Direction facing = state.getValue(FACING);
 		BlockPos diff = fromPos.subtract(toPos);
@@ -129,12 +87,41 @@ public class CopycatStepBlock extends WaterloggedCopycatBlock {
 	}
 
 	@Override
+	public boolean canConnectTexturesToward(BlockAndTintGetter reader, BlockPos fromPos, BlockPos toPos,
+		BlockState state) {
+		Direction facing = state.getValue(FACING);
+		BlockState toState = reader.getBlockState(toPos);
+		BlockPos diff = fromPos.subtract(toPos);
+
+		if (fromPos.equals(toPos.relative(facing)))
+			return false;
+		if (!toState.is(this))
+			return false;
+
+		if (diff.getY() != 0) {
+			if (isOccluded(toState, state, diff.getY() > 0 ? Direction.UP : Direction.DOWN))
+				return true;
+			return false;
+		}
+
+		if (isOccluded(state, toState, facing))
+			return true;
+
+		int coord = facing.getAxis()
+			.choose(diff.getX(), diff.getY(), diff.getZ());
+		if (state.setValue(WATERLOGGED, false) == toState.setValue(WATERLOGGED, false) && coord == 0)
+			return true;
+
+		return false;
+	}
+
+	@Override
 	public boolean canFaceBeOccluded(BlockState state, Direction face) {
 		if (face.getAxis() == Axis.Y)
 			return (state.getValue(HALF) == Half.TOP) == (face == Direction.UP);
 		return state.getValue(FACING) == face;
 	}
-	
+
 	@Override
 	public boolean shouldFaceAlwaysRender(BlockState state, Direction face) {
 		return canFaceBeOccluded(state, face.getOpposite());

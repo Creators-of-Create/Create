@@ -71,7 +71,7 @@ public class BoxElement extends RenderElement {
 
 	//total box width = 1 * 2 (outer border) + 1 * 2 (inner color border) + 2 * borderOffset + width
 	//defaults to 2 + 2 + 4 + 16 = 24px
-	//batch everything together to save a bunch of gl calls over GuiUtils
+	//batch everything together to save a bunch of gl calls over ScreenUtils
 	protected void renderBox(PoseStack ms) {
 		/*
 		*          _____________

@@ -1,5 +1,4 @@
 {
-  "replace": false,
   "values": [
     "create:blaze_burner",
     "create:lit_blaze_burner",
@@ -9,6 +8,7 @@
     "create:copper_bars",
     "create:copycat_base",
     "minecraft:iron_bars",
+    "minecraft:mangrove_roots",
     "#minecraft:campfires",
     "#minecraft:fences",
     "#minecraft:leaves"

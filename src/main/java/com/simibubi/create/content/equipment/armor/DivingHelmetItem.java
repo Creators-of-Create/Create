@@ -1,12 +1,12 @@
 package com.simibubi.create.content.equipment.armor;
 
 import java.util.List;
+import java.util.Map;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -38,6 +38,21 @@ public class DivingHelmetItem extends BaseArmorItem {
 		return super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 
+	@Override
+	public int getEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
+		if (enchantment == Enchantments.AQUA_AFFINITY) {
+			return 1;
+		}
+		return super.getEnchantmentLevel(stack, enchantment);
+	}
+
+	@Override
+	public Map<Enchantment, Integer> getAllEnchantments(ItemStack stack) {
+		Map<Enchantment, Integer> map = super.getAllEnchantments(stack);
+		map.put(Enchantments.AQUA_AFFINITY, 1);
+		return map;
+	}
+
 	public static boolean isWornBy(Entity entity) {
 		return !getWornItem(entity).isEmpty();
 	}
@@ -54,8 +69,8 @@ public class DivingHelmetItem extends BaseArmorItem {
 	}
 
 	@SubscribeEvent
-	public static void breatheUnderwater(LivingUpdateEvent event) {
-		LivingEntity entity = event.getEntityLiving();
+	public static void breatheUnderwater(LivingTickEvent event) {
+		LivingEntity entity = event.getEntity();
 		Level world = entity.level;
 		boolean second = world.getGameTime() % 20 == 0;
 		boolean drowning = entity.getAirSupply() == 0;
@@ -72,7 +87,8 @@ public class DivingHelmetItem extends BaseArmorItem {
 		if (!helmet.getItem()
 			.isFireResistant() && lavaDiving)
 			return;
-		if (!entity.isEyeInFluid(FluidTags.WATER) && !lavaDiving)
+
+		if (!entity.canDrownInFluidType(entity.getEyeInFluidType()) && !lavaDiving)
 			return;
 		if (entity instanceof Player && ((Player) entity).isCreative())
 			return;

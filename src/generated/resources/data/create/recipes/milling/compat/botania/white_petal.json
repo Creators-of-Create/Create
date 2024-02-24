@@ -5,10 +5,10 @@
       "tag": "botania:petals/white"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "minecraft:white_dye"
     }
-  ],
-  "processingTime": 50
+  ]
 }

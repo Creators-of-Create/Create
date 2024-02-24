@@ -5,11 +5,11 @@
       "item": "minecraft:stripped_dark_oak_wood"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:dark_oak_planks",
-      "count": 6
+      "count": 6,
+      "item": "minecraft:dark_oak_planks"
     }
-  ],
-  "processingTime": 50
+  ]
 }

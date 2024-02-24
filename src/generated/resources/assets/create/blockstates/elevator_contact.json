@@ -4,22 +4,52 @@
       "model": "create:block/elevator_contact/block",
       "x": 180
     },
-    "calling=true,facing=down,powered=false,powering=false": {
-      "model": "create:block/elevator_contact/block_dim",
+    "calling=false,facing=down,powered=false,powering=true": {
+      "model": "create:block/elevator_contact/block_powered",
       "x": 180
     },
-    "calling=false,facing=up,powered=false,powering=false": {
-      "model": "create:block/elevator_contact/block"
+    "calling=false,facing=down,powered=true,powering=false": {
+      "model": "create:block/elevator_contact/block",
+      "x": 180
     },
-    "calling=true,facing=up,powered=false,powering=false": {
-      "model": "create:block/elevator_contact/block_dim"
+    "calling=false,facing=down,powered=true,powering=true": {
+      "model": "create:block/elevator_contact/block_powered",
+      "x": 180
+    },
+    "calling=false,facing=east,powered=false,powering=false": {
+      "model": "create:block/elevator_contact/block",
+      "x": 90,
+      "y": 90
+    },
+    "calling=false,facing=east,powered=false,powering=true": {
+      "model": "create:block/elevator_contact/block_powered",
+      "x": 90,
+      "y": 90
+    },
+    "calling=false,facing=east,powered=true,powering=false": {
+      "model": "create:block/elevator_contact/block",
+      "x": 90,
+      "y": 90
+    },
+    "calling=false,facing=east,powered=true,powering=true": {
+      "model": "create:block/elevator_contact/block_powered",
+      "x": 90,
+      "y": 90
     },
     "calling=false,facing=north,powered=false,powering=false": {
       "model": "create:block/elevator_contact/block",
       "x": 90
     },
-    "calling=true,facing=north,powered=false,powering=false": {
-      "model": "create:block/elevator_contact/block_dim",
+    "calling=false,facing=north,powered=false,powering=true": {
+      "model": "create:block/elevator_contact/block_powered",
+      "x": 90
+    },
+    "calling=false,facing=north,powered=true,powering=false": {
+      "model": "create:block/elevator_contact/block",
+      "x": 90
+    },
+    "calling=false,facing=north,powered=true,powering=true": {
+      "model": "create:block/elevator_contact/block_powered",
       "x": 90
     },
     "calling=false,facing=south,powered=false,powering=false": {
@@ -27,127 +57,71 @@
       "x": 90,
       "y": 180
     },
-    "calling=true,facing=south,powered=false,powering=false": {
-      "model": "create:block/elevator_contact/block_dim",
+    "calling=false,facing=south,powered=false,powering=true": {
+      "model": "create:block/elevator_contact/block_powered",
       "x": 90,
       "y": 180
-    },
-    "calling=false,facing=west,powered=false,powering=false": {
-      "model": "create:block/elevator_contact/block",
-      "x": 90,
-      "y": 270
-    },
-    "calling=true,facing=west,powered=false,powering=false": {
-      "model": "create:block/elevator_contact/block_dim",
-      "x": 90,
-      "y": 270
-    },
-    "calling=false,facing=east,powered=false,powering=false": {
-      "model": "create:block/elevator_contact/block",
-      "x": 90,
-      "y": 90
-    },
-    "calling=true,facing=east,powered=false,powering=false": {
-      "model": "create:block/elevator_contact/block_dim",
-      "x": 90,
-      "y": 90
-    },
-    "calling=false,facing=down,powered=true,powering=false": {
-      "model": "create:block/elevator_contact/block",
-      "x": 180
-    },
-    "calling=true,facing=down,powered=true,powering=false": {
-      "model": "create:block/elevator_contact/block_dim",
-      "x": 180
-    },
-    "calling=false,facing=up,powered=true,powering=false": {
-      "model": "create:block/elevator_contact/block"
-    },
-    "calling=true,facing=up,powered=true,powering=false": {
-      "model": "create:block/elevator_contact/block_dim"
-    },
-    "calling=false,facing=north,powered=true,powering=false": {
-      "model": "create:block/elevator_contact/block",
-      "x": 90
-    },
-    "calling=true,facing=north,powered=true,powering=false": {
-      "model": "create:block/elevator_contact/block_dim",
-      "x": 90
     },
     "calling=false,facing=south,powered=true,powering=false": {
       "model": "create:block/elevator_contact/block",
       "x": 90,
       "y": 180
     },
-    "calling=true,facing=south,powered=true,powering=false": {
-      "model": "create:block/elevator_contact/block_dim",
+    "calling=false,facing=south,powered=true,powering=true": {
+      "model": "create:block/elevator_contact/block_powered",
       "x": 90,
       "y": 180
     },
-    "calling=false,facing=west,powered=true,powering=false": {
-      "model": "create:block/elevator_contact/block",
-      "x": 90,
-      "y": 270
-    },
-    "calling=true,facing=west,powered=true,powering=false": {
-      "model": "create:block/elevator_contact/block_dim",
-      "x": 90,
-      "y": 270
-    },
-    "calling=false,facing=east,powered=true,powering=false": {
-      "model": "create:block/elevator_contact/block",
-      "x": 90,
-      "y": 90
-    },
-    "calling=true,facing=east,powered=true,powering=false": {
-      "model": "create:block/elevator_contact/block_dim",
-      "x": 90,
-      "y": 90
-    },
-    "calling=false,facing=down,powered=false,powering=true": {
-      "model": "create:block/elevator_contact/block_powered",
-      "x": 180
-    },
-    "calling=true,facing=down,powered=false,powering=true": {
-      "model": "create:block/elevator_contact/block_powered",
-      "x": 180
+    "calling=false,facing=up,powered=false,powering=false": {
+      "model": "create:block/elevator_contact/block"
     },
     "calling=false,facing=up,powered=false,powering=true": {
       "model": "create:block/elevator_contact/block_powered"
     },
-    "calling=true,facing=up,powered=false,powering=true": {
+    "calling=false,facing=up,powered=true,powering=false": {
+      "model": "create:block/elevator_contact/block"
+    },
+    "calling=false,facing=up,powered=true,powering=true": {
       "model": "create:block/elevator_contact/block_powered"
     },
-    "calling=false,facing=north,powered=false,powering=true": {
-      "model": "create:block/elevator_contact/block_powered",
-      "x": 90
-    },
-    "calling=true,facing=north,powered=false,powering=true": {
-      "model": "create:block/elevator_contact/block_powered",
-      "x": 90
-    },
-    "calling=false,facing=south,powered=false,powering=true": {
-      "model": "create:block/elevator_contact/block_powered",
+    "calling=false,facing=west,powered=false,powering=false": {
+      "model": "create:block/elevator_contact/block",
       "x": 90,
-      "y": 180
-    },
-    "calling=true,facing=south,powered=false,powering=true": {
-      "model": "create:block/elevator_contact/block_powered",
-      "x": 90,
-      "y": 180
+      "y": 270
     },
     "calling=false,facing=west,powered=false,powering=true": {
       "model": "create:block/elevator_contact/block_powered",
       "x": 90,
       "y": 270
     },
-    "calling=true,facing=west,powered=false,powering=true": {
+    "calling=false,facing=west,powered=true,powering=false": {
+      "model": "create:block/elevator_contact/block",
+      "x": 90,
+      "y": 270
+    },
+    "calling=false,facing=west,powered=true,powering=true": {
       "model": "create:block/elevator_contact/block_powered",
       "x": 90,
       "y": 270
     },
-    "calling=false,facing=east,powered=false,powering=true": {
+    "calling=true,facing=down,powered=false,powering=false": {
+      "model": "create:block/elevator_contact/block_dim",
+      "x": 180
+    },
+    "calling=true,facing=down,powered=false,powering=true": {
       "model": "create:block/elevator_contact/block_powered",
+      "x": 180
+    },
+    "calling=true,facing=down,powered=true,powering=false": {
+      "model": "create:block/elevator_contact/block_dim",
+      "x": 180
+    },
+    "calling=true,facing=down,powered=true,powering=true": {
+      "model": "create:block/elevator_contact/block_powered",
+      "x": 180
+    },
+    "calling=true,facing=east,powered=false,powering=false": {
+      "model": "create:block/elevator_contact/block_dim",
       "x": 90,
       "y": 90
     },
@@ -156,30 +130,44 @@
       "x": 90,
       "y": 90
     },
-    "calling=false,facing=down,powered=true,powering=true": {
+    "calling=true,facing=east,powered=true,powering=false": {
+      "model": "create:block/elevator_contact/block_dim",
+      "x": 90,
+      "y": 90
+    },
+    "calling=true,facing=east,powered=true,powering=true": {
       "model": "create:block/elevator_contact/block_powered",
-      "x": 180
+      "x": 90,
+      "y": 90
     },
-    "calling=true,facing=down,powered=true,powering=true": {
+    "calling=true,facing=north,powered=false,powering=false": {
+      "model": "create:block/elevator_contact/block_dim",
+      "x": 90
+    },
+    "calling=true,facing=north,powered=false,powering=true": {
       "model": "create:block/elevator_contact/block_powered",
-      "x": 180
+      "x": 90
     },
-    "calling=false,facing=up,powered=true,powering=true": {
-      "model": "create:block/elevator_contact/block_powered"
-    },
-    "calling=true,facing=up,powered=true,powering=true": {
-      "model": "create:block/elevator_contact/block_powered"
-    },
-    "calling=false,facing=north,powered=true,powering=true": {
-      "model": "create:block/elevator_contact/block_powered",
+    "calling=true,facing=north,powered=true,powering=false": {
+      "model": "create:block/elevator_contact/block_dim",
       "x": 90
     },
     "calling=true,facing=north,powered=true,powering=true": {
       "model": "create:block/elevator_contact/block_powered",
       "x": 90
     },
-    "calling=false,facing=south,powered=true,powering=true": {
+    "calling=true,facing=south,powered=false,powering=false": {
+      "model": "create:block/elevator_contact/block_dim",
+      "x": 90,
+      "y": 180
+    },
+    "calling=true,facing=south,powered=false,powering=true": {
       "model": "create:block/elevator_contact/block_powered",
+      "x": 90,
+      "y": 180
+    },
+    "calling=true,facing=south,powered=true,powering=false": {
+      "model": "create:block/elevator_contact/block_dim",
       "x": 90,
       "y": 180
     },
@@ -188,8 +176,30 @@
       "x": 90,
       "y": 180
     },
-    "calling=false,facing=west,powered=true,powering=true": {
+    "calling=true,facing=up,powered=false,powering=false": {
+      "model": "create:block/elevator_contact/block_dim"
+    },
+    "calling=true,facing=up,powered=false,powering=true": {
+      "model": "create:block/elevator_contact/block_powered"
+    },
+    "calling=true,facing=up,powered=true,powering=false": {
+      "model": "create:block/elevator_contact/block_dim"
+    },
+    "calling=true,facing=up,powered=true,powering=true": {
+      "model": "create:block/elevator_contact/block_powered"
+    },
+    "calling=true,facing=west,powered=false,powering=false": {
+      "model": "create:block/elevator_contact/block_dim",
+      "x": 90,
+      "y": 270
+    },
+    "calling=true,facing=west,powered=false,powering=true": {
       "model": "create:block/elevator_contact/block_powered",
+      "x": 90,
+      "y": 270
+    },
+    "calling=true,facing=west,powered=true,powering=false": {
+      "model": "create:block/elevator_contact/block_dim",
       "x": 90,
       "y": 270
     },
@@ -197,16 +207,6 @@
       "model": "create:block/elevator_contact/block_powered",
       "x": 90,
       "y": 270
-    },
-    "calling=false,facing=east,powered=true,powering=true": {
-      "model": "create:block/elevator_contact/block_powered",
-      "x": 90,
-      "y": 90
-    },
-    "calling=true,facing=east,powered=true,powering=true": {
-      "model": "create:block/elevator_contact/block_powered",
-      "x": 90,
-      "y": 90
     }
   }
 }

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.legacy;
 
-import java.util.Random;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllItems;
@@ -20,6 +18,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -67,7 +66,7 @@ public class ChromaticCompoundItem extends Item {
 	}
 
 	@Override
-	public int getItemStackLimit(ItemStack stack) {
+	public int getMaxStackSize(ItemStack stack) {
 		return isBarVisible(stack) ? 1 : 16;
 	}
 
@@ -162,7 +161,7 @@ public class ChromaticCompoundItem extends Item {
 		}
 
 		// Find a light source and eat it.
-		Random r = world.random;
+		RandomSource r = world.random;
 		int range = 3;
 		float rate = 1 / 2f;
 		if (r.nextFloat() > rate)

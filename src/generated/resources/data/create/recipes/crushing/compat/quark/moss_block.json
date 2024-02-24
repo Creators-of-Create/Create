@@ -1,25 +1,25 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "quark"
+    }
+  ],
   "ingredients": [
     {
       "item": "minecraft:moss_block"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "quark:moss_paste",
-      "count": 2
+      "count": 2,
+      "item": "quark:moss_paste"
     },
     {
-      "item": "quark:moss_paste",
-      "chance": 0.1
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "quark",
-      "type": "forge:mod_loaded"
+      "chance": 0.1,
+      "item": "quark:moss_paste"
     }
   ]
 }

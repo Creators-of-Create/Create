@@ -1,21 +1,21 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "blue_skies"
+    }
+  ],
   "ingredients": [
     {
       "item": "blue_skies:stripped_bluebright_wood"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "blue_skies:bluebright_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "blue_skies",
-      "type": "forge:mod_loaded"
+      "count": 6,
+      "item": "blue_skies:bluebright_planks"
     }
   ]
 }

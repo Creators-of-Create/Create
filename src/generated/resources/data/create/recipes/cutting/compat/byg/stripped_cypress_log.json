@@ -1,21 +1,21 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
   "ingredients": [
     {
       "item": "byg:stripped_cypress_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "byg:cypress_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "byg",
-      "type": "forge:mod_loaded"
+      "count": 6,
+      "item": "byg:cypress_planks"
     }
   ]
 }

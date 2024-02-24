@@ -5,23 +5,23 @@
       "item": "minecraft:deepslate_lapis_ore"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "minecraft:lapis_lazuli",
-      "count": 12
+      "count": 12,
+      "item": "minecraft:lapis_lazuli"
     },
     {
-      "item": "minecraft:lapis_lazuli",
-      "chance": 0.5
+      "chance": 0.5,
+      "item": "minecraft:lapis_lazuli"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "minecraft:cobbled_deepslate",
-      "chance": 0.125
+      "chance": 0.125,
+      "item": "minecraft:cobbled_deepslate"
     }
-  ],
-  "processingTime": 350
+  ]
 }

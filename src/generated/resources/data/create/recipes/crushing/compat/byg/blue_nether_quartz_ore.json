@@ -1,33 +1,33 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
   "ingredients": [
     {
       "item": "byg:blue_nether_quartz_ore"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "minecraft:quartz",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:quartz"
     },
     {
-      "item": "minecraft:quartz",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:quartz"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "byg:blue_netherrack",
-      "chance": 0.125
-    }
-  ],
-  "processingTime": 350,
-  "conditions": [
-    {
-      "modid": "byg",
-      "type": "forge:mod_loaded"
+      "chance": 0.125,
+      "item": "byg:blue_netherrack"
     }
   ]
 }

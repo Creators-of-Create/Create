@@ -1,21 +1,21 @@
 {
   "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "environmental"
+    }
+  ],
   "ingredients": [
     {
       "item": "environmental:bluebell"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:blue_dye",
-      "count": 2
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "environmental",
-      "type": "forge:mod_loaded"
+      "count": 2,
+      "item": "minecraft:blue_dye"
     }
   ]
 }

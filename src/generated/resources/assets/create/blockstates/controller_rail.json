@@ -1,93 +1,93 @@
 {
   "variants": {
-    "backwards=false,shape=north_south,waterlogged=false": {
-      "model": "create:block/controller_rail/block_north_south"
-    },
-    "backwards=true,shape=north_south,waterlogged=false": {
-      "model": "create:block/controller_rail/block_north_south",
-      "y": 180
-    },
-    "backwards=false,shape=east_west,waterlogged=false": {
-      "model": "create:block/controller_rail/block_north_south",
-      "y": 270
-    },
-    "backwards=true,shape=east_west,waterlogged=false": {
-      "model": "create:block/controller_rail/block_north_south",
-      "y": 90
-    },
     "backwards=false,shape=ascending_east,waterlogged=false": {
       "model": "create:block/controller_rail/block_ascending_south",
       "y": 270
-    },
-    "backwards=true,shape=ascending_east,waterlogged=false": {
-      "model": "create:block/controller_rail/block_ascending_north",
-      "y": 90
-    },
-    "backwards=false,shape=ascending_west,waterlogged=false": {
-      "model": "create:block/controller_rail/block_ascending_north",
-      "y": 270
-    },
-    "backwards=true,shape=ascending_west,waterlogged=false": {
-      "model": "create:block/controller_rail/block_ascending_south",
-      "y": 90
-    },
-    "backwards=false,shape=ascending_north,waterlogged=false": {
-      "model": "create:block/controller_rail/block_ascending_north"
-    },
-    "backwards=true,shape=ascending_north,waterlogged=false": {
-      "model": "create:block/controller_rail/block_ascending_south",
-      "y": 180
-    },
-    "backwards=false,shape=ascending_south,waterlogged=false": {
-      "model": "create:block/controller_rail/block_ascending_south"
-    },
-    "backwards=true,shape=ascending_south,waterlogged=false": {
-      "model": "create:block/controller_rail/block_ascending_north",
-      "y": 180
-    },
-    "backwards=false,shape=north_south,waterlogged=true": {
-      "model": "create:block/controller_rail/block_north_south"
-    },
-    "backwards=true,shape=north_south,waterlogged=true": {
-      "model": "create:block/controller_rail/block_north_south",
-      "y": 180
-    },
-    "backwards=false,shape=east_west,waterlogged=true": {
-      "model": "create:block/controller_rail/block_north_south",
-      "y": 270
-    },
-    "backwards=true,shape=east_west,waterlogged=true": {
-      "model": "create:block/controller_rail/block_north_south",
-      "y": 90
     },
     "backwards=false,shape=ascending_east,waterlogged=true": {
       "model": "create:block/controller_rail/block_ascending_south",
       "y": 270
     },
-    "backwards=true,shape=ascending_east,waterlogged=true": {
+    "backwards=false,shape=ascending_north,waterlogged=false": {
+      "model": "create:block/controller_rail/block_ascending_north"
+    },
+    "backwards=false,shape=ascending_north,waterlogged=true": {
+      "model": "create:block/controller_rail/block_ascending_north"
+    },
+    "backwards=false,shape=ascending_south,waterlogged=false": {
+      "model": "create:block/controller_rail/block_ascending_south"
+    },
+    "backwards=false,shape=ascending_south,waterlogged=true": {
+      "model": "create:block/controller_rail/block_ascending_south"
+    },
+    "backwards=false,shape=ascending_west,waterlogged=false": {
       "model": "create:block/controller_rail/block_ascending_north",
-      "y": 90
+      "y": 270
     },
     "backwards=false,shape=ascending_west,waterlogged=true": {
       "model": "create:block/controller_rail/block_ascending_north",
       "y": 270
     },
-    "backwards=true,shape=ascending_west,waterlogged=true": {
-      "model": "create:block/controller_rail/block_ascending_south",
+    "backwards=false,shape=east_west,waterlogged=false": {
+      "model": "create:block/controller_rail/block_north_south",
+      "y": 270
+    },
+    "backwards=false,shape=east_west,waterlogged=true": {
+      "model": "create:block/controller_rail/block_north_south",
+      "y": 270
+    },
+    "backwards=false,shape=north_south,waterlogged=false": {
+      "model": "create:block/controller_rail/block_north_south"
+    },
+    "backwards=false,shape=north_south,waterlogged=true": {
+      "model": "create:block/controller_rail/block_north_south"
+    },
+    "backwards=true,shape=ascending_east,waterlogged=false": {
+      "model": "create:block/controller_rail/block_ascending_north",
       "y": 90
     },
-    "backwards=false,shape=ascending_north,waterlogged=true": {
-      "model": "create:block/controller_rail/block_ascending_north"
+    "backwards=true,shape=ascending_east,waterlogged=true": {
+      "model": "create:block/controller_rail/block_ascending_north",
+      "y": 90
+    },
+    "backwards=true,shape=ascending_north,waterlogged=false": {
+      "model": "create:block/controller_rail/block_ascending_south",
+      "y": 180
     },
     "backwards=true,shape=ascending_north,waterlogged=true": {
       "model": "create:block/controller_rail/block_ascending_south",
       "y": 180
     },
-    "backwards=false,shape=ascending_south,waterlogged=true": {
-      "model": "create:block/controller_rail/block_ascending_south"
+    "backwards=true,shape=ascending_south,waterlogged=false": {
+      "model": "create:block/controller_rail/block_ascending_north",
+      "y": 180
     },
     "backwards=true,shape=ascending_south,waterlogged=true": {
       "model": "create:block/controller_rail/block_ascending_north",
+      "y": 180
+    },
+    "backwards=true,shape=ascending_west,waterlogged=false": {
+      "model": "create:block/controller_rail/block_ascending_south",
+      "y": 90
+    },
+    "backwards=true,shape=ascending_west,waterlogged=true": {
+      "model": "create:block/controller_rail/block_ascending_south",
+      "y": 90
+    },
+    "backwards=true,shape=east_west,waterlogged=false": {
+      "model": "create:block/controller_rail/block_north_south",
+      "y": 90
+    },
+    "backwards=true,shape=east_west,waterlogged=true": {
+      "model": "create:block/controller_rail/block_north_south",
+      "y": 90
+    },
+    "backwards=true,shape=north_south,waterlogged=false": {
+      "model": "create:block/controller_rail/block_north_south",
+      "y": 180
+    },
+    "backwards=true,shape=north_south,waterlogged=true": {
+      "model": "create:block/controller_rail/block_north_south",
       "y": 180
     }
   }

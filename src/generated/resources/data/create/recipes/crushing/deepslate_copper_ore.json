@@ -5,23 +5,23 @@
       "item": "minecraft:deepslate_copper_ore"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "create:crushed_raw_copper",
-      "count": 7
+      "count": 7,
+      "item": "create:crushed_raw_copper"
     },
     {
-      "item": "create:crushed_raw_copper",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "create:crushed_raw_copper"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "minecraft:cobbled_deepslate",
-      "chance": 0.125
+      "chance": 0.125,
+      "item": "minecraft:cobbled_deepslate"
     }
-  ],
-  "processingTime": 350
+  ]
 }

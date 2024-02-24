@@ -60,7 +60,7 @@ public interface IWrenchable {
 					.forEach(itemStack -> {
 						player.getInventory().placeItemBackInInventory(itemStack);
 					});
-			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
+			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY, true);
 			world.destroyBlock(pos, false);
 			playRemoveSound(world, pos);
 		}

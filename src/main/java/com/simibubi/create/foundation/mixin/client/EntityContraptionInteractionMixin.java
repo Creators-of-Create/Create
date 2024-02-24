@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.mixin.client;
 
 import java.lang.ref.Reference;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,6 +24,7 @@ import com.simibubi.create.content.contraptions.ContraptionHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.MoverType;
@@ -52,7 +52,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 	@Shadow
 	@Final
-	protected Random random;
+	protected RandomSource random;
 
 	@Shadow
 	private EntityDimensions dimensions;

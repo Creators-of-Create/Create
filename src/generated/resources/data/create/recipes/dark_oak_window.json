@@ -1,9 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " # ",
-    "#X#"
-  ],
   "key": {
     "#": {
       "item": "minecraft:dark_oak_planks"
@@ -12,8 +8,12 @@
       "tag": "forge:glass/colorless"
     }
   },
+  "pattern": [
+    " # ",
+    "#X#"
+  ],
   "result": {
-    "item": "create:dark_oak_window",
-    "count": 2
+    "count": 2,
+    "item": "create:dark_oak_window"
   }
 }

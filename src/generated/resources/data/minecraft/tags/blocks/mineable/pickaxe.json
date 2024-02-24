@@ -1,5 +1,4 @@
 {
-  "replace": false,
   "values": [
     "create:schematicannon",
     "create:schematic_table",

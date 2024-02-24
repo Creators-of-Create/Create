@@ -1,25 +1,25 @@
 {
   "parent": "create:mechanical_crafter",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:musical_arm_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:jukebox"
-    },
-    "title": {
-      "translate": "advancement.create.musical_arm"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.musical_arm.desc"
     },
     "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "item": "minecraft:jukebox"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:musical_arm_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.musical_arm"
     }
   },
   "requirements": [

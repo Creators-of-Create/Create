@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "cut_dripstone_brick_stairs",
-  "pattern": [
-    "X  ",
-    "XX ",
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "create:cut_dripstone_bricks"
     }
   },
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
   "result": {
-    "item": "create:cut_dripstone_brick_stairs",
-    "count": 4
+    "count": 4,
+    "item": "create:cut_dripstone_brick_stairs"
   }
 }

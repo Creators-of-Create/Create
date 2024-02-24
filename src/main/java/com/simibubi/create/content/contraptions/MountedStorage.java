@@ -22,6 +22,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class MountedStorage {
 
@@ -69,8 +70,7 @@ public class MountedStorage {
 			return false;
 
 		// There doesn't appear to be much of a standard for tagging chests/barrels
-		String blockId = blockState.getBlock()
-			.getRegistryName()
+		String blockId = ForgeRegistries.BLOCKS.getKey(blockState.getBlock())
 			.getPath();
 		if (blockId.contains("ender"))
 			return false;

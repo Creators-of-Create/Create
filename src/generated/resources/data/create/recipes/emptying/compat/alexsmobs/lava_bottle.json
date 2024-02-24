@@ -1,5 +1,11 @@
 {
   "type": "create:emptying",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
   "ingredients": [
     {
       "item": "alexsmobs:lava_bottle"
@@ -10,14 +16,8 @@
       "item": "minecraft:glass_bottle"
     },
     {
-      "fluid": "minecraft:lava",
-      "amount": 250
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "atmospheric",
-      "type": "forge:mod_loaded"
+      "amount": 250,
+      "fluid": "minecraft:lava"
     }
   ]
 }

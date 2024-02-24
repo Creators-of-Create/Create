@@ -1,7 +1,5 @@
 package com.simibubi.create.content.decoration.palettes;
 
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
@@ -9,17 +7,28 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class WindowBlock extends ConnectedGlassBlock {
 
-	public WindowBlock(Properties p_i48392_1_) {
+	protected final boolean translucent;
+
+	public WindowBlock(Properties p_i48392_1_, boolean translucent) {
 		super(p_i48392_1_);
+		this.translucent = translucent;
+	}
+
+	public boolean isTranslucent() {
+		return translucent;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
-		return adjacentBlockState.getBlock() instanceof ConnectedGlassBlock
-			? (!ItemBlockRenderTypes.canRenderInLayer(state, RenderType.translucent()) && side.getAxis()
-				.isHorizontal() || state.getBlock() == adjacentBlockState.getBlock())
-			: super.skipRendering(state, adjacentBlockState, side);
+		if (state.getBlock() == adjacentBlockState.getBlock()) {
+			return true;
+		}
+		if (state.getBlock() instanceof WindowBlock windowBlock
+				&& adjacentBlockState.getBlock() instanceof ConnectedGlassBlock) {
+			return !windowBlock.isTranslucent() && side.getAxis().isHorizontal();
+		}
+		return super.skipRendering(state, adjacentBlockState, side);
 	}
 
 }

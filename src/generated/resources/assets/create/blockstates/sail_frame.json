@@ -4,8 +4,10 @@
       "model": "create:block/sail_frame",
       "x": 180
     },
-    "facing=up": {
-      "model": "create:block/sail_frame"
+    "facing=east": {
+      "model": "create:block/sail_frame",
+      "x": 90,
+      "y": 90
     },
     "facing=north": {
       "model": "create:block/sail_frame",
@@ -16,15 +18,13 @@
       "x": 90,
       "y": 180
     },
+    "facing=up": {
+      "model": "create:block/sail_frame"
+    },
     "facing=west": {
       "model": "create:block/sail_frame",
       "x": 90,
       "y": 270
-    },
-    "facing=east": {
-      "model": "create:block/sail_frame",
-      "x": 90,
-      "y": 90
     }
   }
 }

@@ -3,9 +3,12 @@
   "ingredient": {
     "tag": "create:sleepers"
   },
-  "transitionalItem": {
-    "item": "create:incomplete_track"
-  },
+  "loops": 1,
+  "results": [
+    {
+      "item": "create:track"
+    }
+  ],
   "sequence": [
     {
       "type": "create:deploying",
@@ -63,10 +66,7 @@
       ]
     }
   ],
-  "results": [
-    {
-      "item": "create:track"
-    }
-  ],
-  "loops": 1
+  "transitionalItem": {
+    "item": "create:incomplete_track"
+  }
 }

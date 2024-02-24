@@ -1,10 +1,10 @@
 {
   "type": "create:mechanical_crafting",
-  "pattern": [
-    "LRSSS",
-    "CC   "
-  ],
+  "acceptMirrored": true,
   "key": {
+    "C": {
+      "item": "minecraft:copper_ingot"
+    },
     "L": {
       "item": "create:andesite_alloy"
     },
@@ -13,13 +13,13 @@
     },
     "S": {
       "item": "create:fluid_pipe"
-    },
-    "C": {
-      "item": "minecraft:copper_ingot"
     }
   },
+  "pattern": [
+    "LRSSS",
+    "CC   "
+  ],
   "result": {
     "item": "create:potato_cannon"
-  },
-  "acceptMirrored": true
+  }
 }

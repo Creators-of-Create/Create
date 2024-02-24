@@ -5,11 +5,11 @@
       "item": "minecraft:cornflower"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:blue_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:blue_dye"
     }
-  ],
-  "processingTime": 50
+  ]
 }

@@ -1,20 +1,20 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
   "ingredients": [
     {
       "item": "atmospheric:yucca_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "atmospheric:stripped_yucca_log"
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "atmospheric",
-      "type": "forge:mod_loaded"
     }
   ]
 }

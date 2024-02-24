@@ -5,10 +5,10 @@
       "item": "minecraft:cobblestone"
     }
   ],
+  "processingTime": 250,
   "results": [
     {
       "item": "minecraft:gravel"
     }
-  ],
-  "processingTime": 250
+  ]
 }

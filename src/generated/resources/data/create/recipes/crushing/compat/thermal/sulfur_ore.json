@@ -1,29 +1,29 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "thermal"
+    }
+  ],
   "ingredients": [
     {
       "item": "thermal:sulfur_ore"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "thermal:sulfur",
-      "count": 2
+      "count": 2,
+      "item": "thermal:sulfur"
     },
     {
-      "item": "thermal:sulfur",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "thermal:sulfur"
     },
     {
-      "item": "minecraft:cobblestone",
-      "chance": 0.12
-    }
-  ],
-  "processingTime": 350,
-  "conditions": [
-    {
-      "modid": "thermal",
-      "type": "forge:mod_loaded"
+      "chance": 0.12,
+      "item": "minecraft:cobblestone"
     }
   ]
 }

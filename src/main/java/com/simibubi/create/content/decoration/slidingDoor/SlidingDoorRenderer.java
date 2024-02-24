@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class SlidingDoorRenderer extends SafeBlockEntityRenderer<SlidingDoorBlockEntity> {
 
@@ -49,8 +50,8 @@ public class SlidingDoorRenderer extends SafeBlockEntityRenderer<SlidingDoorBloc
 				.scale(value2 * 1 / 32f));
 
 		if (((SlidingDoorBlock) blockState.getBlock()).isFoldingDoor()) {
-			Couple<PartialModel> partials = AllPartialModels.FOLDING_DOORS.get(blockState.getBlock()
-				.getRegistryName());
+			Couple<PartialModel> partials =
+				AllPartialModels.FOLDING_DOORS.get(ForgeRegistries.BLOCKS.getKey(blockState.getBlock()));
 
 			boolean flip = blockState.getValue(DoorBlock.HINGE) == DoorHingeSide.RIGHT;
 			for (boolean left : Iterate.trueAndFalse) {

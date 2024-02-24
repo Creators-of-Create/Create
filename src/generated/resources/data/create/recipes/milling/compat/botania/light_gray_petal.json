@@ -5,10 +5,10 @@
       "tag": "botania:petals/light_gray"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "minecraft:light_gray_dye"
     }
-  ],
-  "processingTime": 50
+  ]
 }

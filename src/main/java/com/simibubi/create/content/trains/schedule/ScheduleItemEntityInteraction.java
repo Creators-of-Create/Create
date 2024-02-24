@@ -26,7 +26,7 @@ public class ScheduleItemEntityInteraction {
 	@SubscribeEvent
 	public static void interactWithConductor(EntityInteractSpecific event) {
 		Entity entity = event.getTarget();
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		if (player == null || entity == null)
 			return;
 		if (player.isSpectator())
@@ -77,7 +77,7 @@ public class ScheduleItemEntityInteraction {
 		if (directions == null)
 			return;
 
-		boolean onServer = !event.getWorld().isClientSide;
+		boolean onServer = !event.getLevel().isClientSide;
 
 		if (train.runtime.paused && !train.runtime.completed) {
 			if (onServer) {

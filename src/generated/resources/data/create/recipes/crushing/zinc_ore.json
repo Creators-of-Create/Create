@@ -5,22 +5,22 @@
       "item": "create:zinc_ore"
     }
   ],
+  "processingTime": 250,
   "results": [
     {
       "item": "create:crushed_raw_zinc"
     },
     {
-      "item": "create:crushed_raw_zinc",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:crushed_raw_zinc"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "minecraft:cobblestone",
-      "chance": 0.125
+      "chance": 0.125,
+      "item": "minecraft:cobblestone"
     }
-  ],
-  "processingTime": 250
+  ]
 }

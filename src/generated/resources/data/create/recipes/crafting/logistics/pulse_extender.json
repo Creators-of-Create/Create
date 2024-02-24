@@ -1,14 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "  T",
-    "RCT",
-    "SSS"
-  ],
   "key": {
-    "T": {
-      "item": "minecraft:redstone_torch"
-    },
     "C": {
       "tag": "forge:plates/brass"
     },
@@ -17,8 +9,16 @@
     },
     "S": {
       "tag": "forge:stone"
+    },
+    "T": {
+      "item": "minecraft:redstone_torch"
     }
   },
+  "pattern": [
+    "  T",
+    "RCT",
+    "SSS"
+  ],
   "result": {
     "item": "create:pulse_extender"
   }

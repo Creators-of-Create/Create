@@ -21,6 +21,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -29,11 +30,11 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.world.BlockEvent.BreakEvent;
-import net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent;
+import net.minecraftforge.event.level.BlockEvent.BreakEvent;
+import net.minecraftforge.event.level.BlockEvent.EntityPlaceEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -46,7 +47,7 @@ public class SymmetryHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void onBlockPlaced(EntityPlaceEvent event) {
-		if (event.getWorld()
+		if (event.getLevel()
 			.isClientSide())
 			return;
 		if (!(event.getEntity() instanceof Player))
@@ -66,7 +67,7 @@ public class SymmetryHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void onBlockDestroyed(BreakEvent event) {
-		if (event.getWorld()
+		if (event.getLevel()
 			.isClientSide())
 			return;
 
@@ -85,7 +86,7 @@ public class SymmetryHandler {
 	public static void render(RenderLevelLastEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
-		Random random = new Random();
+		RandomSource random = RandomSource.create();
 
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
 			ItemStack stackInSlot = player.getInventory()
@@ -121,7 +122,7 @@ public class SymmetryHandler {
 			mc.getBlockRenderer()
 				.getModelRenderer()
 				.tesselateBlock(player.level, model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,
-					random, Mth.getSeed(pos), OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+					random, Mth.getSeed(pos), OverlayTexture.NO_OVERLAY, ModelData.EMPTY, RenderType.solid());
 
 			ms.popPose();
 			buffer.endBatch();

@@ -83,7 +83,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IBlockRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -104,7 +104,7 @@ public class BeltBlock extends HorizontalKineticBlock
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+	public void initializeClient(Consumer<IClientBlockExtensions> consumer) {
 		consumer.accept(new RenderProperties());
 	}
 
@@ -150,7 +150,7 @@ public class BeltBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public void spawnAfterBreak(BlockState state, ServerLevel worldIn, BlockPos pos, ItemStack p_220062_4_) {
+	public void spawnAfterBreak(BlockState state, ServerLevel worldIn, BlockPos pos, ItemStack p_220062_4_, boolean b) {
 		BeltBlockEntity controllerBE = BeltHelper.getControllerBE(worldIn, pos);
 		if (controllerBE != null)
 			controllerBE.getInventory()
@@ -349,7 +349,7 @@ public class BeltBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+	public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
 		return BlockPathTypes.RAIL;
 	}
 

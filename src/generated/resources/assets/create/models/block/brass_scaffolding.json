@@ -1,10 +1,10 @@
 {
   "parent": "create:block/scaffold/block",
   "textures": {
-    "top": "create:block/funnel/brass_funnel_frame",
-    "inside": "create:block/scaffold/brass_scaffold_inside",
-    "side": "create:block/scaffold/brass_scaffold",
     "casing": "create:block/brass_casing",
-    "particle": "create:block/scaffold/brass_scaffold"
+    "inside": "create:block/scaffold/brass_scaffold_inside",
+    "particle": "create:block/scaffold/brass_scaffold",
+    "side": "create:block/scaffold/brass_scaffold",
+    "top": "create:block/funnel/brass_funnel_frame"
   }
 }

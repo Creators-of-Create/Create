@@ -3,23 +3,23 @@
     "activate=false,powered=false,powering=false": {
       "model": "create:block/rose_quartz_lamp"
     },
-    "activate=true,powered=false,powering=false": {
-      "model": "create:block/rose_quartz_lamp"
+    "activate=false,powered=false,powering=true": {
+      "model": "create:block/rose_quartz_lamp_powered"
     },
     "activate=false,powered=true,powering=false": {
       "model": "create:block/rose_quartz_lamp"
     },
-    "activate=true,powered=true,powering=false": {
-      "model": "create:block/rose_quartz_lamp"
-    },
-    "activate=false,powered=false,powering=true": {
+    "activate=false,powered=true,powering=true": {
       "model": "create:block/rose_quartz_lamp_powered"
+    },
+    "activate=true,powered=false,powering=false": {
+      "model": "create:block/rose_quartz_lamp"
     },
     "activate=true,powered=false,powering=true": {
       "model": "create:block/rose_quartz_lamp_powered"
     },
-    "activate=false,powered=true,powering=true": {
-      "model": "create:block/rose_quartz_lamp_powered"
+    "activate=true,powered=true,powering=false": {
+      "model": "create:block/rose_quartz_lamp"
     },
     "activate=true,powered=true,powering=true": {
       "model": "create:block/rose_quartz_lamp_powered"

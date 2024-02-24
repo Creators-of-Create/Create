@@ -17,12 +17,12 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
-public class ValueSettingsClient implements IIngameOverlay {
-
+public class ValueSettingsClient implements IGuiOverlay {
+	
 	private Minecraft mc;
 
 	public int interactHeldTicks = -1;
@@ -116,7 +116,7 @@ public class ValueSettingsClient implements IIngameOverlay {
 	}
 
 	@Override
-	public void render(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	public void render(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || !ValueSettingsInputHandler.canInteract(mc.player))
 			return;

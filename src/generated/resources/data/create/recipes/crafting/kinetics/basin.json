@@ -1,14 +1,14 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "A A",
-    "AAA"
-  ],
   "key": {
     "A": {
       "item": "create:andesite_alloy"
     }
   },
+  "pattern": [
+    "A A",
+    "AAA"
+  ],
   "result": {
     "item": "create:basin"
   }

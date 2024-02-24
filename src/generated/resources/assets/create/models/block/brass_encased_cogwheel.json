@@ -1,10 +1,10 @@
 {
   "parent": "create:block/encased_cogwheel/block",
   "textures": {
+    "1": "minecraft:block/stripped_dark_oak_log_top",
+    "4": "create:block/brass_gearbox",
     "casing": "create:block/brass_casing",
     "particle": "create:block/brass_casing",
-    "4": "create:block/brass_gearbox",
-    "1": "minecraft:block/stripped_dark_oak_log_top",
     "side": "create:block/brass_encased_cogwheel_side"
   }
 }

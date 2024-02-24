@@ -1,20 +1,20 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ars_nouveau"
+    }
+  ],
   "ingredients": [
     {
       "item": "ars_nouveau:blue_archwood_wood"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "ars_nouveau:stripped_blue_archwood_wood"
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "ars_nouveau",
-      "type": "forge:mod_loaded"
     }
   ]
 }

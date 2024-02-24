@@ -1,24 +1,7 @@
 {
   "parent": "create:sturdy_sheet",
-  "display": {
-    "icon": {
-      "item": "create:track"
-    },
-    "title": {
-      "translate": "advancement.create.track_0"
-    },
-    "description": {
-      "color": "#DBA213",
-      "translate": "advancement.create.track_0.desc"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": false,
-    "hidden": false
-  },
   "criteria": {
     "0": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -27,7 +10,24 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.track_0.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:track"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.track_0"
     }
   },
   "requirements": [

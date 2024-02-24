@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import javax.annotation.Nonnull;
 
@@ -53,6 +52,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -625,7 +625,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	}
 
 	private void createFluidParticles() {
-		Random r = level.random;
+		RandomSource r = level.random;
 
 		if (!visualizedOutputFluids.isEmpty())
 			createOutputFluidParticles(r);
@@ -672,7 +672,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		}
 	}
 
-	private void createOutputFluidParticles(Random r) {
+	private void createOutputFluidParticles(RandomSource r) {
 		BlockState blockState = getBlockState();
 		if (!(blockState.getBlock() instanceof BasinBlock))
 			return;

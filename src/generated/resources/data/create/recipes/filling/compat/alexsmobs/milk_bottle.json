@@ -1,24 +1,24 @@
 {
   "type": "create:filling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "alexsmobs"
+    }
+  ],
   "ingredients": [
     {
       "item": "minecraft:glass_bottle"
     },
     {
+      "amount": 250,
       "fluid": "minecraft:lava",
-      "nbt": {},
-      "amount": 250
+      "nbt": {}
     }
   ],
   "results": [
     {
       "item": "alexsmobs:lava_bottle"
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "alexsmobs",
-      "type": "forge:mod_loaded"
     }
   ]
 }

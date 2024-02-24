@@ -1,29 +1,29 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "silentgems"
+    }
+  ],
   "ingredients": [
     {
       "item": "silentgems:ruby_ore"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "silentgems:ruby",
-      "count": 2
+      "count": 2,
+      "item": "silentgems:ruby"
     },
     {
-      "item": "silentgems:ruby",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "silentgems:ruby"
     },
     {
-      "item": "minecraft:cobblestone",
-      "chance": 0.12
-    }
-  ],
-  "processingTime": 350,
-  "conditions": [
-    {
-      "modid": "silentgems",
-      "type": "forge:mod_loaded"
+      "chance": 0.12,
+      "item": "minecraft:cobblestone"
     }
   ]
 }

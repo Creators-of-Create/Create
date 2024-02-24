@@ -1,66 +1,66 @@
 {
   "variants": {
-    "facing=north,half=top,open=false": {
-      "model": "create:block/framed_glass_trapdoor/block_top",
+    "facing=east,half=bottom,open=false": {
+      "model": "create:block/framed_glass_trapdoor/block_bottom",
       "uvlock": true
     },
-    "facing=south,half=top,open=false": {
-      "model": "create:block/framed_glass_trapdoor/block_top",
-      "uvlock": true
-    },
-    "facing=west,half=top,open=false": {
-      "model": "create:block/framed_glass_trapdoor/block_top",
-      "uvlock": true
+    "facing=east,half=bottom,open=true": {
+      "model": "create:block/framed_glass_trapdoor/block_open",
+      "y": 90
     },
     "facing=east,half=top,open=false": {
       "model": "create:block/framed_glass_trapdoor/block_top",
       "uvlock": true
     },
+    "facing=east,half=top,open=true": {
+      "model": "create:block/framed_glass_trapdoor/block_open",
+      "y": 90
+    },
     "facing=north,half=bottom,open=false": {
       "model": "create:block/framed_glass_trapdoor/block_bottom",
       "uvlock": true
     },
-    "facing=south,half=bottom,open=false": {
-      "model": "create:block/framed_glass_trapdoor/block_bottom",
-      "uvlock": true
+    "facing=north,half=bottom,open=true": {
+      "model": "create:block/framed_glass_trapdoor/block_open"
     },
-    "facing=west,half=bottom,open=false": {
-      "model": "create:block/framed_glass_trapdoor/block_bottom",
-      "uvlock": true
-    },
-    "facing=east,half=bottom,open=false": {
-      "model": "create:block/framed_glass_trapdoor/block_bottom",
+    "facing=north,half=top,open=false": {
+      "model": "create:block/framed_glass_trapdoor/block_top",
       "uvlock": true
     },
     "facing=north,half=top,open=true": {
       "model": "create:block/framed_glass_trapdoor/block_open"
     },
-    "facing=south,half=top,open=true": {
-      "model": "create:block/framed_glass_trapdoor/block_open",
-      "y": 180
-    },
-    "facing=west,half=top,open=true": {
-      "model": "create:block/framed_glass_trapdoor/block_open",
-      "y": 270
-    },
-    "facing=east,half=top,open=true": {
-      "model": "create:block/framed_glass_trapdoor/block_open",
-      "y": 90
-    },
-    "facing=north,half=bottom,open=true": {
-      "model": "create:block/framed_glass_trapdoor/block_open"
+    "facing=south,half=bottom,open=false": {
+      "model": "create:block/framed_glass_trapdoor/block_bottom",
+      "uvlock": true
     },
     "facing=south,half=bottom,open=true": {
       "model": "create:block/framed_glass_trapdoor/block_open",
       "y": 180
     },
+    "facing=south,half=top,open=false": {
+      "model": "create:block/framed_glass_trapdoor/block_top",
+      "uvlock": true
+    },
+    "facing=south,half=top,open=true": {
+      "model": "create:block/framed_glass_trapdoor/block_open",
+      "y": 180
+    },
+    "facing=west,half=bottom,open=false": {
+      "model": "create:block/framed_glass_trapdoor/block_bottom",
+      "uvlock": true
+    },
     "facing=west,half=bottom,open=true": {
       "model": "create:block/framed_glass_trapdoor/block_open",
       "y": 270
     },
-    "facing=east,half=bottom,open=true": {
+    "facing=west,half=top,open=false": {
+      "model": "create:block/framed_glass_trapdoor/block_top",
+      "uvlock": true
+    },
+    "facing=west,half=top,open=true": {
       "model": "create:block/framed_glass_trapdoor/block_open",
-      "y": 90
+      "y": 270
     }
   }
 }

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.redstone.contact;
 
-import java.util.Random;
-
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -16,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
@@ -107,7 +106,7 @@ public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
 		boolean hasValidContact = hasValidContact(worldIn, pos, state.getValue(FACING));
 		if (state.getValue(POWERED) != hasValidContact)
 			worldIn.setBlockAndUpdate(pos, state.setValue(POWERED, hasValidContact));

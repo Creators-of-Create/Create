@@ -5,19 +5,19 @@
       "item": "minecraft:wheat"
     }
   ],
+  "processingTime": 150,
   "results": [
     {
       "item": "create:wheat_flour"
     },
     {
-      "item": "create:wheat_flour",
+      "chance": 0.25,
       "count": 2,
-      "chance": 0.25
+      "item": "create:wheat_flour"
     },
     {
-      "item": "minecraft:wheat_seeds",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:wheat_seeds"
     }
-  ],
-  "processingTime": 150
+  ]
 }

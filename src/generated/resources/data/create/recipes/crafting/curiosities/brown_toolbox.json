@@ -1,24 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "item": "create:cogwheel"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "S": {
+      "tag": "forge:plates/gold"
+    },
+    "W": {
+      "tag": "forge:chests/wooden"
+    }
+  },
   "pattern": [
     " C ",
     "SWS",
     " L "
   ],
-  "key": {
-    "S": {
-      "tag": "forge:plates/gold"
-    },
-    "C": {
-      "item": "create:cogwheel"
-    },
-    "W": {
-      "tag": "forge:chests/wooden"
-    },
-    "L": {
-      "tag": "forge:leather"
-    }
-  },
   "result": {
     "item": "create:brown_toolbox"
   }

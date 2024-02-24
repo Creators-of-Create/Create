@@ -1,31 +1,31 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:ores/aluminum"
+      }
+    }
+  ],
   "ingredients": [
     {
       "tag": "forge:ores/aluminum"
     }
   ],
+  "processingTime": 400,
   "results": [
     {
       "item": "create:crushed_raw_aluminum"
     },
     {
-      "item": "create:crushed_raw_aluminum",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:crushed_raw_aluminum"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
-    }
-  ],
-  "processingTime": 400,
-  "conditions": [
-    {
-      "value": {
-        "tag": "forge:ores/aluminum",
-        "type": "forge:tag_empty"
-      },
-      "type": "forge:not"
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     }
   ]
 }

@@ -22,7 +22,7 @@ import com.tterrag.registrate.providers.ProviderType;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.data.event.GatherDataEvent;
 
 public class CreateDatagen {
 	public static void gatherData(GatherDataEvent event) {
@@ -32,17 +32,17 @@ public class CreateDatagen {
 		ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
 		if (event.includeClient()) {
-			generator.addProvider(AllSoundEvents.provider(generator));
+			generator.addProvider(true, AllSoundEvents.provider(generator));
 		}
 
 		if (event.includeServer()) {
-			generator.addProvider(new CreateRecipeSerializerTagsProvider(generator, existingFileHelper));
+			generator.addProvider(true, new CreateRecipeSerializerTagsProvider(generator, existingFileHelper));
 
-			generator.addProvider(new AllAdvancements(generator));
+			generator.addProvider(true, new AllAdvancements(generator));
 
-			generator.addProvider(new StandardRecipeGen(generator));
-			generator.addProvider(new MechanicalCraftingRecipeGen(generator));
-			generator.addProvider(new SequencedAssemblyRecipeGen(generator));
+			generator.addProvider(true, new StandardRecipeGen(generator));
+			generator.addProvider(true, new MechanicalCraftingRecipeGen(generator));
+			generator.addProvider(true, new SequencedAssemblyRecipeGen(generator));
 			ProcessingRecipeGen.registerAll(generator);
 
 //			AllOreFeatureConfigEntries.gatherData(event);

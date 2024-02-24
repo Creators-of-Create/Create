@@ -2,8 +2,8 @@
   "type": "create:compacting",
   "ingredients": [
     {
-      "fluidTag": "forge:honey",
-      "amount": 1000
+      "amount": 1000,
+      "fluidTag": "forge:honey"
     }
   ],
   "results": [

@@ -21,6 +21,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ComputerBehaviour extends AbstractComputerBehaviour {
 
@@ -49,8 +50,8 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
 		if (be instanceof StationBlockEntity sbe)
 			return () -> new StationPeripheral(sbe);
 
-		throw new IllegalArgumentException("No peripheral available for " + be.getType()
-			.getRegistryName());
+		throw new IllegalArgumentException(
+			"No peripheral available for " + ForgeRegistries.BLOCK_ENTITY_TYPES.getKey(be.getType()));
 	}
 
 	@Override

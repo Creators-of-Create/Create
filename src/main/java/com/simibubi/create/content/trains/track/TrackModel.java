@@ -2,22 +2,25 @@ package com.simibubi.create.content.trains.track;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.function.UnaryOperator;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.model.BakedQuadHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.BakedModelWrapper;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class TrackModel extends BakedModelWrapper<BakedModel> {
 
@@ -26,14 +29,15 @@ public class TrackModel extends BakedModelWrapper<BakedModel> {
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData extraData) {
-		List<BakedQuad> templateQuads = super.getQuads(state, side, rand, extraData);
+	public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side,
+		@NotNull RandomSource rand, @NotNull ModelData extraData, @Nullable RenderType renderType) {
+		List<BakedQuad> templateQuads = super.getQuads(state, side, rand, extraData, renderType);
 		if (templateQuads.isEmpty())
 			return templateQuads;
-		if (!(extraData instanceof ModelDataMap mdm) || !mdm.hasProperty(TrackBlockEntityTilt.ASCENDING_PROPERTY))
+		if (!extraData.has(TrackBlockEntityTilt.ASCENDING_PROPERTY))
 			return templateQuads;
 
-		double angleIn = mdm.getData(TrackBlockEntityTilt.ASCENDING_PROPERTY);
+		double angleIn = extraData.get(TrackBlockEntityTilt.ASCENDING_PROPERTY);
 		double angle = Math.abs(angleIn);
 		boolean flip = angleIn < 0;
 

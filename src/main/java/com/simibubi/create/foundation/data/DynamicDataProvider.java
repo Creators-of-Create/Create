@@ -8,8 +8,6 @@ import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Encoder;
@@ -19,16 +17,15 @@ import com.simibubi.create.Create;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistryAccess.RegistryData;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.common.ForgeHooks;
 
 public class DynamicDataProvider<T> implements DataProvider {
-	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
 	private final DataGenerator generator;
 	private final String name;
 	private final RegistryAccess registryAccess;
@@ -54,36 +51,33 @@ public class DynamicDataProvider<T> implements DataProvider {
 	}
 
 	@Override
-	public void run(HashCache cache) throws IOException {
+	public void run(CachedOutput cache) throws IOException {
 		Path path = generator.getOutputFolder();
 		DynamicOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
 
 		dumpValues(path, cache, ops, registryData.key(), values, registryData.codec());
 	}
 
-	private void dumpValues(Path rootPath, HashCache cache, DynamicOps<JsonElement> ops, ResourceKey<? extends Registry<T>> registryKey, Map<ResourceLocation, T> values, Encoder<T> encoder) {
+	private void dumpValues(Path rootPath, CachedOutput cache, DynamicOps<JsonElement> ops, ResourceKey<? extends Registry<T>> registryKey, Map<ResourceLocation, T> values, Encoder<T> encoder) {
+		DataGenerator.PathProvider pathProvider = generator.createPathProvider(DataGenerator.Target.DATA_PACK, ForgeHooks.prefixNamespace(registryKey.location()));
+
 		for (Entry<ResourceLocation, T> entry : values.entrySet()) {
-			Path path = createPath(rootPath, registryKey.location(), entry.getKey());
-			dumpValue(path, cache, ops, encoder, entry.getValue());
+			dumpValue(pathProvider.json(entry.getKey()), cache, ops, encoder, entry.getValue());
 		}
 	}
 
 	// From WorldgenRegistryDumpReport
-	private void dumpValue(Path path, HashCache cache, DynamicOps<JsonElement> ops, Encoder<T> encoder, T value) {
+	private void dumpValue(Path path, CachedOutput cache, DynamicOps<JsonElement> ops, Encoder<T> encoder, T value) {
 		try {
 			Optional<JsonElement> optional = encoder.encodeStart(ops, value).resultOrPartial((message) -> {
 				Create.LOGGER.error("Couldn't serialize element {}: {}", path, message);
 			});
 			if (optional.isPresent()) {
-				DataProvider.save(GSON, cache, optional.get(), path);
+				DataProvider.saveStable(cache, optional.get(), path);
 			}
 		} catch (IOException e) {
 			Create.LOGGER.error("Couldn't save element {}", path, e);
 		}
-	}
-
-	private Path createPath(Path path, ResourceLocation registry, ResourceLocation value) {
-		return path.resolve("data").resolve(value.getNamespace()).resolve(registry.getPath()).resolve(value.getPath() + ".json");
 	}
 
 	@Override

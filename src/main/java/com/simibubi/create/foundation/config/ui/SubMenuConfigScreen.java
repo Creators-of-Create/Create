@@ -137,7 +137,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 			String command = change.annotations.get("Execute");
 			if (minecraft.player != null && command != null && command.startsWith("/")) {
-				minecraft.player.chat(command);
+				minecraft.player.commandSigned(command.substring(1), null);
 				//AllPackets.channel.sendToServer(new CChatMessagePacket(command));
 			}
 		});

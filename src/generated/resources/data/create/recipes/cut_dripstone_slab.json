@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "cut_dripstone_slab",
-  "pattern": [
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "create:cut_dripstone"
     }
   },
+  "pattern": [
+    "XXX"
+  ],
   "result": {
-    "item": "create:cut_dripstone_slab",
-    "count": 6
+    "count": 6,
+    "item": "create:cut_dripstone_slab"
   }
 }

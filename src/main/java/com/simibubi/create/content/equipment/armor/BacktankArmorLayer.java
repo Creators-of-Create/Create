@@ -23,6 +23,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+
 	public BacktankArmorLayer(RenderLayerParent<T, M> renderer) {
 		super(renderer);
 	}
@@ -89,4 +90,5 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		BacktankArmorLayer<?, ?> layer = new BacktankArmorLayer<>(livingRenderer);
 		livingRenderer.addLayer((BacktankArmorLayer) layer);
 	}
+	
 }

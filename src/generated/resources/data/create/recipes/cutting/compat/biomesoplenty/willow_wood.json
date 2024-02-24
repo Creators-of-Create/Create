@@ -1,20 +1,20 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "biomesoplenty"
+    }
+  ],
   "ingredients": [
     {
       "item": "biomesoplenty:willow_wood"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "biomesoplenty:stripped_willow_wood"
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "biomesoplenty",
-      "type": "forge:mod_loaded"
     }
   ]
 }

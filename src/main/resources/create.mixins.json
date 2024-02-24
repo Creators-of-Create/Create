@@ -9,7 +9,6 @@
     "ClientboundMapItemDataPacketMixin",
     "ContraptionDriverInteractMixin",
     "CustomItemUseEffectsMixin",
-    "EnchantmentHelperMixin",
     "EntityMixin",
     "LavaSwimmingMixin",
     "MainMixin",
@@ -38,7 +37,6 @@
     "client.HumanoidArmorLayerMixin",
     "client.LevelRendererMixin",
     "client.MapRendererMapInstanceMixin",
-    "client.ModelDataRefreshMixin",
     "client.PlayerRendererMixin",
     "client.WindowResizeMixin"
   ],

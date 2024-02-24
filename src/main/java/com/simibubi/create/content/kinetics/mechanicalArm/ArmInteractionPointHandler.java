@@ -43,10 +43,10 @@ public class ArmInteractionPointHandler {
 		if (currentItem == null)
 			return;
 		BlockPos pos = event.getPos();
-		Level world = event.getWorld();
+		Level world = event.getLevel();
 		if (!world.isClientSide)
 			return;
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		if (player != null && player.isSpectator())
 			return;
 
@@ -79,7 +79,7 @@ public class ArmInteractionPointHandler {
 	public static void leftClickingBlocksDeselectsThem(PlayerInteractEvent.LeftClickBlock event) {
 		if (currentItem == null)
 			return;
-		if (!event.getWorld().isClientSide)
+		if (!event.getLevel().isClientSide)
 			return;
 		BlockPos pos = event.getPos();
 		if (remove(pos) != null) {
@@ -89,7 +89,7 @@ public class ArmInteractionPointHandler {
 	}
 
 	public static void flushSettings(BlockPos pos) {
-		if (currentItem == null)
+		if (currentSelection == null)
 			return;
 
 		int removed = 0;

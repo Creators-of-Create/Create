@@ -1,6 +1,9 @@
 package com.simibubi.create.content.kinetics.mechanicalArm;
 
+import com.simibubi.create.AllPackets;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -9,9 +12,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.network.PacketDistributor;
 
 @EventBusSubscriber
 public class ArmItem extends BlockItem {
@@ -30,16 +32,16 @@ public class ArmItem extends BlockItem {
 	}
 
 	@Override
-	protected boolean updateCustomBlockEntityTag(BlockPos pos, Level world, Player p_195943_3_, ItemStack p_195943_4_,
+	protected boolean updateCustomBlockEntityTag(BlockPos pos, Level world, Player player, ItemStack p_195943_4_,
 		BlockState p_195943_5_) {
-		if (world.isClientSide)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ArmInteractionPointHandler.flushSettings(pos));
-		return super.updateCustomBlockEntityTag(pos, world, p_195943_3_, p_195943_4_, p_195943_5_);
+		if (!world.isClientSide && player instanceof ServerPlayer sp)
+			AllPackets.getChannel()
+				.send(PacketDistributor.PLAYER.with(() -> sp), new ArmPlacementPacket.ClientBoundRequest(pos));
+		return super.updateCustomBlockEntityTag(pos, world, player, p_195943_4_, p_195943_5_);
 	}
 
 	@Override
-	public boolean canAttackBlock(BlockState state, Level world, BlockPos pos,
-		Player p_195938_4_) {
+	public boolean canAttackBlock(BlockState state, Level world, BlockPos pos, Player p_195938_4_) {
 		return !ArmInteractionPoint.isInteractable(world, pos, state);
 	}
 

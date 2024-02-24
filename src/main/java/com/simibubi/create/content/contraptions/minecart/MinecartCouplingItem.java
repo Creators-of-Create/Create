@@ -35,7 +35,7 @@ public class MinecartCouplingItem extends Item {
 		if (!(interacted instanceof AbstractMinecart))
 			return;
 		AbstractMinecart minecart = (AbstractMinecart) interacted;
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		if (player == null)
 			return;
 		LazyOptional<MinecartController> capability =
@@ -60,7 +60,7 @@ public class MinecartCouplingItem extends Item {
 
 	protected static boolean onCouplingInteractOnMinecart(PlayerInteractEvent.EntityInteract event,
 		AbstractMinecart minecart, Player player, MinecartController controller) {
-		Level world = event.getWorld();
+		Level world = event.getLevel();
 		if (controller.isFullyCoupled()) {
 			if (!world.isClientSide)
 				CouplingHandler.status(player, "two_couplings_max");
@@ -76,7 +76,7 @@ public class MinecartCouplingItem extends Item {
 		int couplings = (controller.isConnectedToCoupling() ? 1 : 0) + (controller.isLeadingCoupling() ? 1 : 0);
 		if (couplings == 0)
 			return false;
-		if (event.getWorld().isClientSide)
+		if (event.getLevel().isClientSide)
 			return true;
 
 		for (boolean forward : Iterate.trueAndFalse) {

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.core.model.ModelUtil;
@@ -36,10 +35,13 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -53,8 +55,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class WorldSectionElement extends AnimatedSceneElement {
 
@@ -347,7 +348,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 			ModelUtil.VANILLA_RENDERER
-				.renderBreakingTexture(world.getBlockState(pos), pos, world, ms, builder, EmptyModelData.INSTANCE);
+				.renderBreakingTexture(world.getBlockState(pos), pos, world, ms, builder, ModelData.EMPTY);
 			ms.popPose();
 		}
 
@@ -411,10 +412,11 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {
 		BlockRenderDispatcher dispatcher = ModelUtil.VANILLA_RENDERER;
+		ModelBlockRenderer renderer = dispatcher.getModelRenderer();
 		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
 
 		PoseStack poseStack = objects.poseStack;
-		Random random = objects.random;
+		RandomSource random = objects.random;
 		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
 		BufferBuilder shadedBuilder = objects.shadedBuilder;
 		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
@@ -424,7 +426,6 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
 
 		world.setMask(this.section);
-		ForgeHooksClient.setRenderType(layer);
 		ModelBlockRenderer.enableCaching();
 		section.forEach(pos -> {
 			BlockState state = world.getBlockState(pos);
@@ -433,19 +434,24 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			poseStack.pushPose();
 			poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
 
-			if (state.getRenderShape() == RenderShape.MODEL && ItemBlockRenderTypes.canRenderInLayer(state, layer)) {
+			if (state.getRenderShape() == RenderShape.MODEL) {
+				BakedModel model = dispatcher.getBlockModel(state);
 				BlockEntity blockEntity = world.getBlockEntity(pos);
-				dispatcher.renderBatched(state, pos, world, poseStack, shadeSeparatingWrapper, true, random,
-					blockEntity != null ? blockEntity.getModelData() : EmptyModelData.INSTANCE);
+				ModelData modelData = blockEntity != null ? blockEntity.getModelData() : ModelData.EMPTY;
+				long seed = state.getSeed(pos);
+				random.setSeed(seed);
+				if (model.getRenderTypes(state, random, modelData).contains(layer)) {
+					renderer.tesselateBlock(world, model, state, pos, poseStack, shadeSeparatingWrapper, true,
+						random, seed, OverlayTexture.NO_OVERLAY, modelData, layer);
+				}
 			}
 
-			if (!fluidState.isEmpty() && ItemBlockRenderTypes.canRenderInLayer(fluidState, layer))
+			if (!fluidState.isEmpty() && ItemBlockRenderTypes.getRenderLayer(fluidState) == layer)
 				dispatcher.renderLiquid(pos, world, shadedBuilder, state, fluidState);
 
 			poseStack.popPose();
 		});
 		ModelBlockRenderer.clearCache();
-		ForgeHooksClient.setRenderType(null);
 		world.clearMask();
 
 		shadeSeparatingWrapper.clear();
@@ -458,7 +464,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	private static class ThreadLocalObjects {
 		public final PoseStack poseStack = new PoseStack();
-		public final Random random = new Random();
+		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
 		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
 		public final BufferBuilder shadedBuilder = new BufferBuilder(512);
 		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);

@@ -7,12 +7,12 @@
   ],
   "results": [
     {
-      "item": "create:copper_nugget",
-      "count": 9
+      "count": 9,
+      "item": "create:copper_nugget"
     },
     {
-      "item": "minecraft:clay_ball",
-      "chance": 0.5
+      "chance": 0.5,
+      "item": "minecraft:clay_ball"
     }
   ]
 }

@@ -1,5 +1,11 @@
 {
   "type": "create:pressing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
   "ingredients": [
     {
       "item": "atmospheric:crustose"
@@ -8,12 +14,6 @@
   "results": [
     {
       "item": "atmospheric:crustose_path"
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "atmospheric",
-      "type": "forge:mod_loaded"
     }
   ]
 }

@@ -5,15 +5,15 @@
       "tag": "minecraft:wool"
     }
   ],
+  "processingTime": 100,
   "results": [
     {
-      "item": "minecraft:string",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:string"
     },
     {
-      "item": "minecraft:string",
-      "chance": 0.5
+      "chance": 0.5,
+      "item": "minecraft:string"
     }
-  ],
-  "processingTime": 100
+  ]
 }

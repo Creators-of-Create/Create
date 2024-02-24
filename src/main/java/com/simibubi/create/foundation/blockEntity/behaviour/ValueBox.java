@@ -21,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.ItemMultiLayerBakedModel;
 
 public class ValueBox extends ChasingAABBOutline {
 
@@ -141,8 +140,8 @@ public class ValueBox extends ChasingAABBOutline {
 			ItemRenderer itemRenderer = Minecraft.getInstance()
 				.getItemRenderer();
 			BakedModel modelWithOverrides = itemRenderer.getModel(stack, null, null, 0);
-			boolean blockItem =
-				modelWithOverrides.isGui3d() && !(modelWithOverrides instanceof ItemMultiLayerBakedModel);
+			boolean blockItem = modelWithOverrides.isGui3d() && modelWithOverrides.getRenderPasses(stack, false)
+				.size() <= 1;
 
 			float scale = 1.5f;
 			ms.translate(-font.width(countString), 0, 0);

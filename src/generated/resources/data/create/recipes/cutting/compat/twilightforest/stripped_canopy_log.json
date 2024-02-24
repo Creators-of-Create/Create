@@ -1,21 +1,21 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "twilightforest"
+    }
+  ],
   "ingredients": [
     {
       "item": "twilightforest:stripped_canopy_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "twilightforest:canopy_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "twilightforest",
-      "type": "forge:mod_loaded"
+      "count": 6,
+      "item": "twilightforest:canopy_planks"
     }
   ]
 }

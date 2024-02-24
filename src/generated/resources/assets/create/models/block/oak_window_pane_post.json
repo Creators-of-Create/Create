@@ -1,7 +1,7 @@
 {
   "parent": "create:block/connected_glass_pane/post",
   "textures": {
-    "pane": "create:block/palettes/oak_window",
-    "edge": "minecraft:block/oak_planks"
+    "edge": "minecraft:block/oak_planks",
+    "pane": "create:block/palettes/oak_window"
   }
 }

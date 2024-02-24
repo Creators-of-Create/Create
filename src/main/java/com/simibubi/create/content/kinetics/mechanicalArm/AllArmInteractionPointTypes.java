@@ -578,7 +578,7 @@ public class AllArmInteractionPointTypes {
 				return remainder;
 			}
 			ItemStack remainder = stack.copy();
-			campfireBE.placeFood(remainder, recipe.get()
+			campfireBE.placeFood(null, remainder, recipe.get()
 				.getCookingTime());
 			return remainder;
 		}

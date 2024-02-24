@@ -30,7 +30,7 @@ public class ItemUseOverrides {
 		if (AllItems.WRENCH.isIn(event.getItemStack()))
 			return;
 
-		BlockState state = event.getWorld()
+		BlockState state = event.getLevel()
 				.getBlockState(event.getPos());
 		ResourceLocation id = RegisteredObjects.getKeyOrThrow(state.getBlock());
 
@@ -39,7 +39,7 @@ public class ItemUseOverrides {
 
 		BlockHitResult blockTrace =
 				new BlockHitResult(VecHelper.getCenterOf(event.getPos()), event.getFace(), event.getPos(), true);
-		InteractionResult result = state.use(event.getWorld(), event.getPlayer(), event.getHand(), blockTrace);
+		InteractionResult result = state.use(event.getLevel(), event.getEntity(), event.getHand(), blockTrace);
 
 		if (!result.consumesAction())
 			return;

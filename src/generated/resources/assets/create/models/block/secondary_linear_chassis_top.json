@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "side": "create:block/secondary_linear_chassis_side",
     "bottom": "create:block/linear_chassis_end",
+    "side": "create:block/secondary_linear_chassis_side",
     "top": "create:block/linear_chassis_end_sticky"
   }
 }

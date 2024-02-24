@@ -7,13 +7,13 @@
   ],
   "results": [
     {
-      "item": "minecraft:gold_nugget",
+      "chance": 0.125,
       "count": 3,
-      "chance": 0.125
+      "item": "minecraft:gold_nugget"
     },
     {
-      "item": "minecraft:dead_bush",
-      "chance": 0.05
+      "chance": 0.05,
+      "item": "minecraft:dead_bush"
     }
   ]
 }

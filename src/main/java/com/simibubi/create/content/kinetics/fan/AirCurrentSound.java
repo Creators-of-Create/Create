@@ -1,6 +1,7 @@
 package com.simibubi.create.content.kinetics.fan;
 
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
@@ -9,7 +10,7 @@ public class AirCurrentSound extends AbstractTickableSoundInstance {
 	private float pitch;
 
 	protected AirCurrentSound(SoundEvent p_i46532_1_, float pitch) {
-		super(p_i46532_1_, SoundSource.BLOCKS);
+		super(p_i46532_1_, SoundSource.BLOCKS, SoundInstance.createUnseededRandom());
 		this.pitch = pitch;
 		volume = 0.01f;
 		looping = true;

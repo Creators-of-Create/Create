@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.minecart;
 
-import java.util.Random;
-
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
@@ -13,6 +11,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 public class CouplingHandlerClient {
 
 	static AbstractMinecart selectedCart;
-	static Random r = new Random();
+	static RandomSource r = RandomSource.create();
 
 	public static void tick() {
 		if (selectedCart == null)

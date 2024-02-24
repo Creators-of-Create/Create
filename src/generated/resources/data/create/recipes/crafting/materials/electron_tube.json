@@ -1,9 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "L",
-    "N"
-  ],
   "key": {
     "L": {
       "item": "create:polished_rose_quartz"
@@ -12,6 +8,10 @@
       "tag": "forge:plates/iron"
     }
   },
+  "pattern": [
+    "L",
+    "N"
+  ],
   "result": {
     "item": "create:electron_tube"
   }

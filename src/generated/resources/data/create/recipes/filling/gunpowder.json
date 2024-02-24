@@ -5,12 +5,12 @@
       "item": "create:cinder_flour"
     },
     {
+      "amount": 25,
       "fluid": "create:potion",
       "nbt": {
         "Bottle": "REGULAR",
         "Potion": "minecraft:harming"
-      },
-      "amount": 25
+      }
     }
   ],
   "results": [

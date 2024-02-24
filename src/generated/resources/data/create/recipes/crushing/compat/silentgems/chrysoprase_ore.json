@@ -1,29 +1,29 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "silentgems"
+    }
+  ],
   "ingredients": [
     {
       "item": "silentgems:chrysoprase_ore"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "silentgems:chrysoprase",
-      "count": 2
+      "count": 2,
+      "item": "silentgems:chrysoprase"
     },
     {
-      "item": "silentgems:chrysoprase",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "silentgems:chrysoprase"
     },
     {
-      "item": "minecraft:end_stone",
-      "chance": 0.12
-    }
-  ],
-  "processingTime": 350,
-  "conditions": [
-    {
-      "modid": "silentgems",
-      "type": "forge:mod_loaded"
+      "chance": 0.12,
+      "item": "minecraft:end_stone"
     }
   ]
 }

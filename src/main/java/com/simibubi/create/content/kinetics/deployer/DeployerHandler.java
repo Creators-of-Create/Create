@@ -401,7 +401,7 @@ public class DeployerHandler {
 
 		Block.getDrops(blockstate, world, pos, blockEntity, player, prevHeldItem)
 			.forEach(item -> player.getInventory().placeItemBackInInventory(item));
-		blockstate.spawnAfterBreak(world, pos, prevHeldItem);
+		blockstate.spawnAfterBreak(world, pos, prevHeldItem, true);
 		return true;
 	}
 

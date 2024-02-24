@@ -24,10 +24,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkSource;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.gameevent.GameEvent.Context;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.WritableLevelData;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.LevelTickAccess;
 
@@ -40,7 +42,7 @@ public class WrappedWorld extends Level {
 
 	public WrappedWorld(Level world) {
 		super((WritableLevelData) world.getLevelData(), world.dimension(), world.dimensionTypeRegistration(),
-			world::getProfiler, world.isClientSide, world.isDebug(), 0);
+			world::getProfiler, world.isClientSide, world.isDebug(), 0, 0);
 		this.world = world;
 	}
 
@@ -112,6 +114,14 @@ public class WrappedWorld extends Level {
 	}
 
 	@Override
+	public void playSeededSound(Player p_220363_, double p_220364_, double p_220365_, double p_220366_,
+			SoundEvent p_220367_, SoundSource p_220368_, float p_220369_, float p_220370_, long p_220371_) {}
+
+	@Override
+	public void playSeededSound(Player p_220372_, Entity p_220373_, SoundEvent p_220374_, SoundSource p_220375_,
+			float p_220376_, float p_220377_, long p_220378_) {}
+
+	@Override
 	public void playSound(@Nullable Player player, double x, double y, double z, SoundEvent soundIn,
 		SoundSource category, float volume, float pitch) {}
 
@@ -176,6 +186,9 @@ public class WrappedWorld extends Level {
 
 	@Override
 	public void gameEvent(Entity pEntity, GameEvent pEvent, BlockPos pPos) {}
+
+	@Override
+	public void gameEvent(GameEvent p_220404_, Vec3 p_220405_, Context p_220406_) {}
 
 	@Override
 	public String gatherChunkSourceStats() {

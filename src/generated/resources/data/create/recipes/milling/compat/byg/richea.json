@@ -1,29 +1,29 @@
 {
   "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
   "ingredients": [
     {
       "item": "byg:richea"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:magenta_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:magenta_dye"
     },
     {
-      "item": "minecraft:pink_dye",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:pink_dye"
     },
     {
-      "item": "minecraft:yellow_dye",
-      "chance": 0.05
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "byg",
-      "type": "forge:mod_loaded"
+      "chance": 0.05,
+      "item": "minecraft:yellow_dye"
     }
   ]
 }

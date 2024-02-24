@@ -1,25 +1,25 @@
 {
   "parent": "create:water_supply",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:hose_pulley_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:hose_pulley"
-    },
-    "title": {
-      "translate": "advancement.create.hose_pulley"
-    },
+    "announce_to_chat": false,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.hose_pulley.desc"
     },
     "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:hose_pulley"
+    },
     "show_toast": true,
-    "announce_to_chat": false,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:hose_pulley_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.hose_pulley"
     }
   },
   "requirements": [

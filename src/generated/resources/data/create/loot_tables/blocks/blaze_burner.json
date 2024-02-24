@@ -2,7 +2,6 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
@@ -12,8 +11,8 @@
               "condition": "minecraft:survives_explosion"
             },
             {
-              "condition": "minecraft:block_state_property",
               "block": "create:blaze_burner",
+              "condition": "minecraft:block_state_property",
               "properties": {
                 "blaze": "none"
               }
@@ -28,8 +27,8 @@
               "condition": "minecraft:survives_explosion"
             },
             {
-              "condition": "minecraft:block_state_property",
               "block": "create:blaze_burner",
+              "condition": "minecraft:block_state_property",
               "properties": {
                 "blaze": "smouldering"
               }
@@ -44,8 +43,8 @@
               "condition": "minecraft:survives_explosion"
             },
             {
-              "condition": "minecraft:block_state_property",
               "block": "create:blaze_burner",
+              "condition": "minecraft:block_state_property",
               "properties": {
                 "blaze": "fading"
               }
@@ -60,8 +59,8 @@
               "condition": "minecraft:survives_explosion"
             },
             {
-              "condition": "minecraft:block_state_property",
               "block": "create:blaze_burner",
+              "condition": "minecraft:block_state_property",
               "properties": {
                 "blaze": "kindled"
               }
@@ -76,8 +75,8 @@
               "condition": "minecraft:survives_explosion"
             },
             {
-              "condition": "minecraft:block_state_property",
               "block": "create:blaze_burner",
+              "condition": "minecraft:block_state_property",
               "properties": {
                 "blaze": "seething"
               }
@@ -85,7 +84,8 @@
           ],
           "name": "create:blaze_burner"
         }
-      ]
+      ],
+      "rolls": 1.0
     }
   ]
 }

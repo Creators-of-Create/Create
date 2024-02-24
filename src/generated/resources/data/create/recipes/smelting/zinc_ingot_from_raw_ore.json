@@ -1,9 +1,9 @@
 {
   "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.7,
   "ingredient": {
     "item": "create:raw_zinc"
   },
-  "result": "create:zinc_ingot",
-  "experience": 0.7,
-  "cookingtime": 200
+  "result": "create:zinc_ingot"
 }

@@ -1,33 +1,33 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
   "ingredients": [
     {
       "tag": "forge:ores/ametrine"
     }
   ],
+  "processingTime": 500,
   "results": [
     {
-      "item": "byg:ametrine_gems",
-      "count": 2
+      "count": 2,
+      "item": "byg:ametrine_gems"
     },
     {
-      "item": "byg:ametrine_gems",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "byg:ametrine_gems"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "byg:cobbled_ether_stone",
-      "chance": 0.125
-    }
-  ],
-  "processingTime": 500,
-  "conditions": [
-    {
-      "modid": "byg",
-      "type": "forge:mod_loaded"
+      "chance": 0.125,
+      "item": "byg:cobbled_ether_stone"
     }
   ]
 }

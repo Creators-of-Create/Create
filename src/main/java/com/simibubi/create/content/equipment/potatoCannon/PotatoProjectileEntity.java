@@ -71,10 +71,10 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	}
 
 	public void setEnchantmentEffectsFromCannon(ItemStack cannon) {
-		int power = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, cannon);
-		int punch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, cannon);
-		int flame = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, cannon);
-		int recovery = EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.POTATO_RECOVERY.get(), cannon);
+		int power = cannon.getEnchantmentLevel(Enchantments.POWER_ARROWS);
+		int punch = cannon.getEnchantmentLevel(Enchantments.PUNCH_ARROWS);
+		int flame = cannon.getEnchantmentLevel(Enchantments.FLAMING_ARROWS);
+		int recovery = cannon.getEnchantmentLevel(AllEnchantments.POTATO_RECOVERY.get());
 
 		if (power > 0)
 			additionalDamageMult = 1 + power * .2f;

@@ -61,32 +61,33 @@ public class WindowGen {
 	}
 
 	public static BlockEntry<WindowBlock> woodenWindowBlock(WoodType woodType, Block planksBlock) {
-		return woodenWindowBlock(woodType, planksBlock, () -> RenderType::cutoutMipped);
+		return woodenWindowBlock(woodType, planksBlock, () -> RenderType::cutoutMipped, false);
 	}
 
 	public static BlockEntry<WindowBlock> customWindowBlock(String name, Supplier<? extends ItemLike> ingredient,
-		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType, Supplier<MaterialColor> color) {
+		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType, boolean translucent,
+		Supplier<MaterialColor> color) {
 		NonNullFunction<String, ResourceLocation> end_texture = n -> Create.asResource(palettesDir() + name + "_end");
 		NonNullFunction<String, ResourceLocation> side_texture = n -> Create.asResource(palettesDir() + n);
-		return windowBlock(name, ingredient, ct, renderType, end_texture, side_texture, color);
+		return windowBlock(name, ingredient, ct, renderType, translucent, end_texture, side_texture, color);
 	}
 
 	public static BlockEntry<WindowBlock> woodenWindowBlock(WoodType woodType, Block planksBlock,
-		Supplier<Supplier<RenderType>> renderType) {
+		Supplier<Supplier<RenderType>> renderType, boolean translucent) {
 		String woodName = woodType.name();
 		String name = woodName + "_window";
 		NonNullFunction<String, ResourceLocation> end_texture =
 			$ -> new ResourceLocation("block/" + woodName + "_planks");
 		NonNullFunction<String, ResourceLocation> side_texture = n -> Create.asResource(palettesDir() + n);
 		return windowBlock(name, () -> planksBlock, () -> AllSpriteShifts.getWoodenWindow(woodType), renderType,
-			end_texture, side_texture, planksBlock::defaultMaterialColor);
+			translucent, end_texture, side_texture, planksBlock::defaultMaterialColor);
 	}
 
 	public static BlockEntry<WindowBlock> windowBlock(String name, Supplier<? extends ItemLike> ingredient,
-		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType,
+		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType, boolean translucent,
 		NonNullFunction<String, ResourceLocation> endTexture, NonNullFunction<String, ResourceLocation> sideTexture,
 		Supplier<MaterialColor> color) {
-		return REGISTRATE.block(name, WindowBlock::new)
+		return REGISTRATE.block(name, p -> new WindowBlock(p, translucent))
 			.onRegister(connectedTextures(() -> new HorizontalCTBehaviour(ct.get())))
 			.addLayer(renderType)
 			.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get(), 2)

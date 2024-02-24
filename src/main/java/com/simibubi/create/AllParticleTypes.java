@@ -13,13 +13,11 @@ import com.simibubi.create.foundation.particle.AirParticleData;
 import com.simibubi.create.foundation.particle.ICustomParticleData;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -52,10 +50,9 @@ public enum AllParticleTypes {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void registerFactories(ParticleFactoryRegisterEvent event) {
-		ParticleEngine particles = Minecraft.getInstance().particleEngine;
+	public static void registerFactories(RegisterParticleProvidersEvent event) {
 		for (AllParticleTypes particle : values())
-			particle.entry.registerFactory(particles);
+			particle.entry.registerFactory(event);
 	}
 
 	public ParticleType<?> get() {
@@ -81,9 +78,9 @@ public enum AllParticleTypes {
 		}
 
 		@OnlyIn(Dist.CLIENT)
-		public void registerFactory(ParticleEngine particles) {
+		public void registerFactory(RegisterParticleProvidersEvent event) {
 			typeFactory.get()
-				.register(object.get(), particles);
+				.register(object.get(), event);
 		}
 
 	}

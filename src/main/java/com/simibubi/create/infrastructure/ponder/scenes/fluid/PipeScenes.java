@@ -531,7 +531,7 @@ public class PipeScenes {
 
 		FluidStack chocolate = new FluidStack(FluidHelper.convertToStill(AllFluids.CHOCOLATE.get()), 1000);
 		ItemStack bucket = AllFluids.CHOCOLATE.get()
-			.getAttributes()
+			.getFluidType()
 			.getBucket(chocolate);
 		ItemStack milkBucket = new ItemStack(Items.MILK_BUCKET);
 		scene.overlay.showControls(new InputWindowElement(filterVec, Pointing.DOWN).rightClick()

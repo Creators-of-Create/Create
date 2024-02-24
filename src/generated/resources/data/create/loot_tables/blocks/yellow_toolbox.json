@@ -2,8 +2,12 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
@@ -14,35 +18,31 @@
             },
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "UniqueId",
-                  "target": "UniqueId",
-                  "op": "replace"
+                  "target": "UniqueId"
                 }
-              ]
+              ],
+              "source": "block_entity"
             },
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "Inventory",
-                  "target": "Inventory",
-                  "op": "replace"
+                  "target": "Inventory"
                 }
-              ]
+              ],
+              "source": "block_entity"
             }
           ],
           "name": "create:yellow_toolbox"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "rolls": 1.0
     }
   ]
 }

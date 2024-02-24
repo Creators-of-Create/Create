@@ -13,13 +13,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public final class RegisteredObjects {
 	// registry argument for easier porting to 1.19
 	@NotNull
-	public static <V extends IForgeRegistryEntry<V>> ResourceLocation getKeyOrThrow(IForgeRegistry<V> registry, V value) {
-		ResourceLocation key = value.getRegistryName();
+	public static <V> ResourceLocation getKeyOrThrow(IForgeRegistry<V> registry, V value) {
+		ResourceLocation key = registry.getKey(value);
 		if (key == null) {
 			throw new IllegalArgumentException("Could not get key for value " + value + "!");
 		}
@@ -43,12 +42,12 @@ public final class RegisteredObjects {
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(EntityType<?> value) {
-		return getKeyOrThrow(ForgeRegistries.ENTITIES, value);
+		return getKeyOrThrow(ForgeRegistries.ENTITY_TYPES, value);
 	}
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(BlockEntityType<?> value) {
-		return getKeyOrThrow(ForgeRegistries.BLOCK_ENTITIES, value);
+		return getKeyOrThrow(ForgeRegistries.BLOCK_ENTITY_TYPES, value);
 	}
 
 	@NotNull

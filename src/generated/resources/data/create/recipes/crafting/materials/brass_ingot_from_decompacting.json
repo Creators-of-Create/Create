@@ -6,7 +6,7 @@
     }
   ],
   "result": {
-    "item": "create:brass_ingot",
-    "count": 9
+    "count": 9,
+    "item": "create:brass_ingot"
   }
 }

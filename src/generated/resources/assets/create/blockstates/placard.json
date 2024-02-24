@@ -1,40 +1,77 @@
 {
   "variants": {
-    "face=floor,facing=north,powered=false,waterlogged=false": {
-      "model": "create:block/placard"
-    },
-    "face=wall,facing=north,powered=false,waterlogged=false": {
+    "face=ceiling,facing=east,powered=false,waterlogged=false": {
       "model": "create:block/placard",
-      "x": 90
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=east,powered=false,waterlogged=true": {
+      "model": "create:block/placard",
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=east,powered=true,waterlogged=false": {
+      "model": "create:block/placard",
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=east,powered=true,waterlogged=true": {
+      "model": "create:block/placard",
+      "x": 180,
+      "y": 270
     },
     "face=ceiling,facing=north,powered=false,waterlogged=false": {
       "model": "create:block/placard",
       "x": 180,
       "y": 180
     },
-    "face=floor,facing=south,powered=false,waterlogged=false": {
+    "face=ceiling,facing=north,powered=false,waterlogged=true": {
       "model": "create:block/placard",
+      "x": 180,
       "y": 180
     },
-    "face=wall,facing=south,powered=false,waterlogged=false": {
+    "face=ceiling,facing=north,powered=true,waterlogged=false": {
       "model": "create:block/placard",
-      "x": 90,
+      "x": 180,
+      "y": 180
+    },
+    "face=ceiling,facing=north,powered=true,waterlogged=true": {
+      "model": "create:block/placard",
+      "x": 180,
       "y": 180
     },
     "face=ceiling,facing=south,powered=false,waterlogged=false": {
       "model": "create:block/placard",
       "x": 180
     },
-    "face=floor,facing=west,powered=false,waterlogged=false": {
+    "face=ceiling,facing=south,powered=false,waterlogged=true": {
       "model": "create:block/placard",
-      "y": 270
+      "x": 180
     },
-    "face=wall,facing=west,powered=false,waterlogged=false": {
+    "face=ceiling,facing=south,powered=true,waterlogged=false": {
       "model": "create:block/placard",
-      "x": 90,
-      "y": 270
+      "x": 180
+    },
+    "face=ceiling,facing=south,powered=true,waterlogged=true": {
+      "model": "create:block/placard",
+      "x": 180
     },
     "face=ceiling,facing=west,powered=false,waterlogged=false": {
+      "model": "create:block/placard",
+      "x": 180,
+      "y": 90
+    },
+    "face=ceiling,facing=west,powered=false,waterlogged=true": {
+      "model": "create:block/placard",
+      "x": 180,
+      "y": 90
+    },
+    "face=ceiling,facing=west,powered=true,waterlogged=false": {
+      "model": "create:block/placard",
+      "x": 180,
+      "y": 90
+    },
+    "face=ceiling,facing=west,powered=true,waterlogged=true": {
       "model": "create:block/placard",
       "x": 180,
       "y": 90
@@ -43,110 +80,65 @@
       "model": "create:block/placard",
       "y": 90
     },
-    "face=wall,facing=east,powered=false,waterlogged=false": {
+    "face=floor,facing=east,powered=false,waterlogged=true": {
       "model": "create:block/placard",
-      "x": 90,
-      "y": 90
-    },
-    "face=ceiling,facing=east,powered=false,waterlogged=false": {
-      "model": "create:block/placard",
-      "x": 180,
-      "y": 270
-    },
-    "face=floor,facing=north,powered=true,waterlogged=false": {
-      "model": "create:block/placard"
-    },
-    "face=wall,facing=north,powered=true,waterlogged=false": {
-      "model": "create:block/placard",
-      "x": 90
-    },
-    "face=ceiling,facing=north,powered=true,waterlogged=false": {
-      "model": "create:block/placard",
-      "x": 180,
-      "y": 180
-    },
-    "face=floor,facing=south,powered=true,waterlogged=false": {
-      "model": "create:block/placard",
-      "y": 180
-    },
-    "face=wall,facing=south,powered=true,waterlogged=false": {
-      "model": "create:block/placard",
-      "x": 90,
-      "y": 180
-    },
-    "face=ceiling,facing=south,powered=true,waterlogged=false": {
-      "model": "create:block/placard",
-      "x": 180
-    },
-    "face=floor,facing=west,powered=true,waterlogged=false": {
-      "model": "create:block/placard",
-      "y": 270
-    },
-    "face=wall,facing=west,powered=true,waterlogged=false": {
-      "model": "create:block/placard",
-      "x": 90,
-      "y": 270
-    },
-    "face=ceiling,facing=west,powered=true,waterlogged=false": {
-      "model": "create:block/placard",
-      "x": 180,
       "y": 90
     },
     "face=floor,facing=east,powered=true,waterlogged=false": {
       "model": "create:block/placard",
       "y": 90
     },
-    "face=wall,facing=east,powered=true,waterlogged=false": {
+    "face=floor,facing=east,powered=true,waterlogged=true": {
       "model": "create:block/placard",
-      "x": 90,
       "y": 90
     },
-    "face=ceiling,facing=east,powered=true,waterlogged=false": {
-      "model": "create:block/placard",
-      "x": 180,
-      "y": 270
+    "face=floor,facing=north,powered=false,waterlogged=false": {
+      "model": "create:block/placard"
     },
     "face=floor,facing=north,powered=false,waterlogged=true": {
       "model": "create:block/placard"
     },
-    "face=wall,facing=north,powered=false,waterlogged=true": {
-      "model": "create:block/placard",
-      "x": 90
+    "face=floor,facing=north,powered=true,waterlogged=false": {
+      "model": "create:block/placard"
     },
-    "face=ceiling,facing=north,powered=false,waterlogged=true": {
+    "face=floor,facing=north,powered=true,waterlogged=true": {
+      "model": "create:block/placard"
+    },
+    "face=floor,facing=south,powered=false,waterlogged=false": {
       "model": "create:block/placard",
-      "x": 180,
       "y": 180
     },
     "face=floor,facing=south,powered=false,waterlogged=true": {
       "model": "create:block/placard",
       "y": 180
     },
-    "face=wall,facing=south,powered=false,waterlogged=true": {
+    "face=floor,facing=south,powered=true,waterlogged=false": {
       "model": "create:block/placard",
-      "x": 90,
       "y": 180
     },
-    "face=ceiling,facing=south,powered=false,waterlogged=true": {
+    "face=floor,facing=south,powered=true,waterlogged=true": {
       "model": "create:block/placard",
-      "x": 180
+      "y": 180
+    },
+    "face=floor,facing=west,powered=false,waterlogged=false": {
+      "model": "create:block/placard",
+      "y": 270
     },
     "face=floor,facing=west,powered=false,waterlogged=true": {
       "model": "create:block/placard",
       "y": 270
     },
-    "face=wall,facing=west,powered=false,waterlogged=true": {
+    "face=floor,facing=west,powered=true,waterlogged=false": {
       "model": "create:block/placard",
-      "x": 90,
       "y": 270
     },
-    "face=ceiling,facing=west,powered=false,waterlogged=true": {
+    "face=floor,facing=west,powered=true,waterlogged=true": {
       "model": "create:block/placard",
-      "x": 180,
-      "y": 90
+      "y": 270
     },
-    "face=floor,facing=east,powered=false,waterlogged=true": {
+    "face=wall,facing=east,powered=false,waterlogged=false": {
       "model": "create:block/placard",
+      "x": 90,
       "y": 90
     },
     "face=wall,facing=east,powered=false,waterlogged=true": {
@@ -154,52 +146,9 @@
       "x": 90,
       "y": 90
     },
-    "face=ceiling,facing=east,powered=false,waterlogged=true": {
-      "model": "create:block/placard",
-      "x": 180,
-      "y": 270
-    },
-    "face=floor,facing=north,powered=true,waterlogged=true": {
-      "model": "create:block/placard"
-    },
-    "face=wall,facing=north,powered=true,waterlogged=true": {
-      "model": "create:block/placard",
-      "x": 90
-    },
-    "face=ceiling,facing=north,powered=true,waterlogged=true": {
-      "model": "create:block/placard",
-      "x": 180,
-      "y": 180
-    },
-    "face=floor,facing=south,powered=true,waterlogged=true": {
-      "model": "create:block/placard",
-      "y": 180
-    },
-    "face=wall,facing=south,powered=true,waterlogged=true": {
+    "face=wall,facing=east,powered=true,waterlogged=false": {
       "model": "create:block/placard",
       "x": 90,
-      "y": 180
-    },
-    "face=ceiling,facing=south,powered=true,waterlogged=true": {
-      "model": "create:block/placard",
-      "x": 180
-    },
-    "face=floor,facing=west,powered=true,waterlogged=true": {
-      "model": "create:block/placard",
-      "y": 270
-    },
-    "face=wall,facing=west,powered=true,waterlogged=true": {
-      "model": "create:block/placard",
-      "x": 90,
-      "y": 270
-    },
-    "face=ceiling,facing=west,powered=true,waterlogged=true": {
-      "model": "create:block/placard",
-      "x": 180,
-      "y": 90
-    },
-    "face=floor,facing=east,powered=true,waterlogged=true": {
-      "model": "create:block/placard",
       "y": 90
     },
     "face=wall,facing=east,powered=true,waterlogged=true": {
@@ -207,9 +156,60 @@
       "x": 90,
       "y": 90
     },
-    "face=ceiling,facing=east,powered=true,waterlogged=true": {
+    "face=wall,facing=north,powered=false,waterlogged=false": {
       "model": "create:block/placard",
-      "x": 180,
+      "x": 90
+    },
+    "face=wall,facing=north,powered=false,waterlogged=true": {
+      "model": "create:block/placard",
+      "x": 90
+    },
+    "face=wall,facing=north,powered=true,waterlogged=false": {
+      "model": "create:block/placard",
+      "x": 90
+    },
+    "face=wall,facing=north,powered=true,waterlogged=true": {
+      "model": "create:block/placard",
+      "x": 90
+    },
+    "face=wall,facing=south,powered=false,waterlogged=false": {
+      "model": "create:block/placard",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=south,powered=false,waterlogged=true": {
+      "model": "create:block/placard",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=south,powered=true,waterlogged=false": {
+      "model": "create:block/placard",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=south,powered=true,waterlogged=true": {
+      "model": "create:block/placard",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=west,powered=false,waterlogged=false": {
+      "model": "create:block/placard",
+      "x": 90,
+      "y": 270
+    },
+    "face=wall,facing=west,powered=false,waterlogged=true": {
+      "model": "create:block/placard",
+      "x": 90,
+      "y": 270
+    },
+    "face=wall,facing=west,powered=true,waterlogged=false": {
+      "model": "create:block/placard",
+      "x": 90,
+      "y": 270
+    },
+    "face=wall,facing=west,powered=true,waterlogged=true": {
+      "model": "create:block/placard",
+      "x": 90,
       "y": 270
     }
   }

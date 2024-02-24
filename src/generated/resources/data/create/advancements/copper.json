@@ -1,24 +1,7 @@
 {
   "parent": "create:burner",
-  "display": {
-    "icon": {
-      "item": "minecraft:copper_ingot"
-    },
-    "title": {
-      "translate": "advancement.create.copper"
-    },
-    "description": {
-      "color": "#DBA213",
-      "translate": "advancement.create.copper.desc"
-    },
-    "frame": "task",
-    "show_toast": false,
-    "announce_to_chat": false,
-    "hidden": false
-  },
   "criteria": {
     "0": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -27,7 +10,24 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.copper.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:copper_ingot"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancement.create.copper"
     }
   },
   "requirements": [

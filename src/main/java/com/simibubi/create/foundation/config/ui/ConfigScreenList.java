@@ -55,11 +55,11 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 	}
 
 	@Override
-	protected void renderList(PoseStack p_238478_1_, int p_238478_2_, int p_238478_3_, int p_238478_4_, int p_238478_5_, float p_238478_6_) {
+	protected void renderList(PoseStack p_239228_, int p_239229_, int p_239230_, float p_239231_) {
 		Window window = minecraft.getWindow();
 		double d0 = window.getGuiScale();
 		RenderSystem.enableScissor((int) (this.x0 * d0), (int) (window.getHeight() - (this.y1 * d0)), (int) (this.width * d0), (int) (this.height * d0));
-		super.renderList(p_238478_1_, p_238478_2_, p_238478_3_, p_238478_4_, p_238478_5_, p_238478_6_);
+		super.renderList(p_239228_, p_239229_, p_239230_, p_239231_);
 		RenderSystem.disableScissor();
 	}
 

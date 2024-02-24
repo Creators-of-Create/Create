@@ -1,29 +1,29 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "silentgems"
+    }
+  ],
   "ingredients": [
     {
       "item": "silentgems:apatite_ore"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "silentgems:apatite",
-      "count": 2
+      "count": 2,
+      "item": "silentgems:apatite"
     },
     {
-      "item": "silentgems:apatite",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "silentgems:apatite"
     },
     {
-      "item": "minecraft:end_stone",
-      "chance": 0.12
-    }
-  ],
-  "processingTime": 350,
-  "conditions": [
-    {
-      "modid": "silentgems",
-      "type": "forge:mod_loaded"
+      "chance": 0.12,
+      "item": "minecraft:end_stone"
     }
   ]
 }

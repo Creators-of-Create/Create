@@ -5,21 +5,21 @@
       "x": 90,
       "y": 90
     },
-    "axis=y,powered=false": {
-      "model": "create:block/gearshift/block"
-    },
-    "axis=z,powered=false": {
-      "model": "create:block/gearshift/block",
-      "x": 90,
-      "y": 180
-    },
     "axis=x,powered=true": {
       "model": "create:block/gearshift/block_powered",
       "x": 90,
       "y": 90
     },
+    "axis=y,powered=false": {
+      "model": "create:block/gearshift/block"
+    },
     "axis=y,powered=true": {
       "model": "create:block/gearshift/block_powered"
+    },
+    "axis=z,powered=false": {
+      "model": "create:block/gearshift/block",
+      "x": 90,
+      "y": 180
     },
     "axis=z,powered=true": {
       "model": "create:block/gearshift/block_powered",

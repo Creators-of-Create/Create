@@ -1,5 +1,11 @@
 {
   "type": "create:splashing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "galosphere"
+    }
+  ],
   "ingredients": [
     {
       "item": "create:crushed_raw_silver"
@@ -7,14 +13,8 @@
   ],
   "results": [
     {
-      "item": "galosphere:silver_nugget",
-      "count": 9
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "galosphere",
-      "type": "forge:mod_loaded"
+      "count": 9,
+      "item": "galosphere:silver_nugget"
     }
   ]
 }

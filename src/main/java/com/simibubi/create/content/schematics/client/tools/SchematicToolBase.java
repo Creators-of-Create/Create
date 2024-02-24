@@ -24,7 +24,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 
 public abstract class SchematicToolBase implements ISchematicTool {
 
@@ -124,7 +124,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {}
 
 	@Override
-	public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {}
+	public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {}
 
 	@Override
 	public void renderOnSchematic(PoseStack ms, SuperRenderTypeBuffer buffer) {
