@@ -8,14 +8,14 @@
   ],
   "ingredients": [
     {
-      "item": "forbidden_arcanus:stripped_cherrywood_log"
+      "item": "forbidden_arcanus:stripped_aurum_log"
     }
   ],
   "processingTime": 50,
   "results": [
     {
       "count": 6,
-      "item": "forbidden_arcanus:cherrywood_planks"
+      "item": "forbidden_arcanus:aurum_planks"
     }
   ]
 }

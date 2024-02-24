@@ -206,6 +206,8 @@ dependencies {
     // implementation fg.deobf("com.railwayteam.railways:railways-1.18.2-1.1.1:all") { transitive = false }
 	// runtimeOnly fg.deobf("maven.modrinth:aether:1.19.2-1.0.0-beta.1.1-forge")
     // runtimeOnly fg.deobf("maven.modrinth:spark:1.10.38-forge")
+    // implementation fg.deobf("curse.maven:forbidden-arcanus-309858:4852521")
+    // implementation fg.deobf("curse.maven:valhelsia-core-416935:4181245")
 
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings

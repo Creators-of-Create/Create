@@ -8,13 +8,13 @@
   ],
   "ingredients": [
     {
-      "item": "forbidden_arcanus:mysterywood_log"
+      "item": "forbidden_arcanus:aurum_wood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "forbidden_arcanus:stripped_mysterywood_log"
+      "item": "forbidden_arcanus:stripped_aurum_wood"
     }
   ]
 }

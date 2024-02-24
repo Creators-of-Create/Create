@@ -8,14 +8,13 @@
   ],
   "ingredients": [
     {
-      "item": "forbidden_arcanus:stripped_mysterywood_log"
+      "item": "forbidden_arcanus:cherry_log"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "count": 6,
-      "item": "forbidden_arcanus:mysterywood_planks"
+      "item": "forbidden_arcanus:stripped_cherry_log"
     }
   ]
 }

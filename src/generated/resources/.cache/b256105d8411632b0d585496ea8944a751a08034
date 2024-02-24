@@ -1,4 +1,4 @@
-// 1.19.2	2024-02-24T08:41:35.9318914	Create's Processing Recipes
+// 1.19.2	2024-02-24T08:55:26.8759245	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -427,14 +427,14 @@ e4c5b799335a71a4259de6519ff9fe86fc014c85 data/create/recipes/cutting/compat/ecol
 45734ddd48ac17b25b88cf1f5b0d227431946cf7 data/create/recipes/cutting/compat/ecologics/walnut_wood.json
 b0be23a2a268557b1ab26518a9d6ff1e492068fa data/create/recipes/cutting/compat/endergetic/poise_stem.json
 1581ae3f152ba5784d6b737ed37e0fe8e6317a76 data/create/recipes/cutting/compat/endergetic/stripped_poise_stem.json
-cbd3c2674078ba4966965990aaa51ee5afc2cf8f data/create/recipes/cutting/compat/forbidden_arcanus/cherrywood.json
-17c1e13d1261454992c6063dcecf7e54d4a645a5 data/create/recipes/cutting/compat/forbidden_arcanus/cherrywood_log.json
-e5c3b98a78aa3995654583f3ce1c70e7cf8c2130 data/create/recipes/cutting/compat/forbidden_arcanus/mysterywood.json
-58166d1cdb0e04952667484b6568de9d081aeba3 data/create/recipes/cutting/compat/forbidden_arcanus/mysterywood_log.json
-9cc60d3115f09eee286781905a1d0ca11976dbb5 data/create/recipes/cutting/compat/forbidden_arcanus/stripped_cherrywood.json
-4b2e710b98a3fd0a883cf5be9ec75835f8e4631b data/create/recipes/cutting/compat/forbidden_arcanus/stripped_cherrywood_log.json
-a3035cdad141574294844b8aaa41b92ac76dac2e data/create/recipes/cutting/compat/forbidden_arcanus/stripped_mysterywood.json
-20e75208dcb1720de5bbf629911f52b95612227f data/create/recipes/cutting/compat/forbidden_arcanus/stripped_mysterywood_log.json
+97d07cbd21b147d93cbfea6534258f0b5faabbbb data/create/recipes/cutting/compat/forbidden_arcanus/aurum_log.json
+b08980c7deb9a4de4983fdae188f0c5ac627c1e5 data/create/recipes/cutting/compat/forbidden_arcanus/aurum_wood.json
+6d4536b52410f319b7848c0a21d18f1e16e6ad4b data/create/recipes/cutting/compat/forbidden_arcanus/cherry_log.json
+e440058dbfa78f8535439c738798072cfe20aad2 data/create/recipes/cutting/compat/forbidden_arcanus/cherry_wood.json
+47902025354c45f34fa62402fc5f32db6648a7c3 data/create/recipes/cutting/compat/forbidden_arcanus/stripped_aurum_log.json
+f8f97315cfcd7e76229b9856ca6b2942bd7754f5 data/create/recipes/cutting/compat/forbidden_arcanus/stripped_aurum_wood.json
+e16fd6870670e212ea7e9e84a2e3e65f34e2c6a8 data/create/recipes/cutting/compat/forbidden_arcanus/stripped_cherry_log.json
+0b3598e3d00b76abc78de03671824862d9bbc262 data/create/recipes/cutting/compat/forbidden_arcanus/stripped_cherry_wood.json
 3a9be23a966c2737c5059474c17a86566bc5505f data/create/recipes/cutting/compat/hexcasting/edified_log.json
 3f3879c426acb1753f2985ed19f0a905bdbd3797 data/create/recipes/cutting/compat/hexcasting/edified_wood.json
 68d80d00d15d6ad14100025eecbd76c1fa8e3a52 data/create/recipes/cutting/compat/hexcasting/stripped_edified_log.json

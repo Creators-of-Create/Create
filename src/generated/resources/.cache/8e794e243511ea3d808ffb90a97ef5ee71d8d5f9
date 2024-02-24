@@ -1,4 +1,4 @@
-// 1.19.2	2024-02-24T08:41:35.8968907	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.2	2024-02-24T08:55:26.8459248	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -4205,7 +4205,7 @@ d371dfd35e49a7bef19f59c03e7f4ae20992f03d data/create/tags/items/create_ingots.js
 910d0f5ccbc4c84b224eca1f1588b1695f41447b data/create/tags/items/crushed_raw_materials.json
 0fa526e7e742573b603ad26b09526cf724efa1dc data/create/tags/items/deployable_drink.json
 57b2fd98d01a2e972a9f0d9a79b64343ee75d6de data/create/tags/items/modded_stripped_logs.json
-864fb582620b267894ad4016af8f0fd793bac5e8 data/create/tags/items/modded_stripped_wood.json
+8850ead5051d44eafc799902319217562bb89202 data/create/tags/items/modded_stripped_wood.json
 695d75b352fd190b303c724d1aaee9bb786a903b data/create/tags/items/pressurized_air_sources.json
 2cd3adffd8b151354df137a990dcb97996a665bb data/create/tags/items/sandpaper.json
 79418bd729cef417b322cef9b491e7ae83317d61 data/create/tags/items/seats.json
