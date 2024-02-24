@@ -1,0 +1,19 @@
+{
+  "type": "create:splashing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "endergetic"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "endergetic:overworld_corrock_block"
+    }
+  ],
+  "results": [
+    {
+      "item": "endergetic:petrified_overworld_corrock_block"
+    }
+  ]
+}

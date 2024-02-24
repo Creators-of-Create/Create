@@ -1,0 +1,19 @@
+{
+  "type": "create:pressing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "betterendforge"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "betterendforge:amber_moss"
+    }
+  ],
+  "results": [
+    {
+      "item": "betterendforge:amber_moss_path"
+    }
+  ]
+}

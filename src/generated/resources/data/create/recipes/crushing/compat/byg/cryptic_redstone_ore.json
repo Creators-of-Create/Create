@@ -1,0 +1,33 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "byg:cryptic_redstone_ore"
+    }
+  ],
+  "processingTime": 250,
+  "results": [
+    {
+      "count": 6,
+      "item": "minecraft:redstone"
+    },
+    {
+      "chance": 0.5,
+      "item": "minecraft:redstone"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "item": "byg:cryptic_stone"
+    }
+  ]
+}

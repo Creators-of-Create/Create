@@ -1,0 +1,33 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "forge:ores/emeraldite"
+    }
+  ],
+  "processingTime": 500,
+  "results": [
+    {
+      "count": 2,
+      "item": "byg:emeraldite_shards"
+    },
+    {
+      "chance": 0.25,
+      "item": "byg:emeraldite_shards"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "item": "byg:scoria_cobblestone"
+    }
+  ]
+}

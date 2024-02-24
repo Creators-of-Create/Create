@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "autumnity"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "autumnity:maple_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "autumnity:stripped_maple_wood"
+    }
+  ]
+}

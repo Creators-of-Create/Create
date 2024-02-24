@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "the_vault"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "the_vault:chromatic_log"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "the_vault:stripped_chromatic_log"
+    }
+  ]
+}

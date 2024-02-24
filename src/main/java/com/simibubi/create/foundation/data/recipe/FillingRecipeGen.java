@@ -59,7 +59,24 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 
 		GLOWSTONE = create("glowstone", b -> b.require(PotionFluidHandler.potionIngredient(Potions.NIGHT_VISION, 25))
 			.require(AllItems.CINDER_FLOUR.get())
-			.output(Items.GLOWSTONE_DUST))
+			.output(Items.GLOWSTONE_DUST)),
+
+
+		AM_LAVA = create(Mods.AM.recipeId("milk_bottle"), b -> b.require(Fluids.LAVA, 250)
+			.require(Items.GLASS_BOTTLE)
+			.output(1, Mods.AM, "lava_bottle", 1)
+			.whenModLoaded(Mods.AM.getId())),
+
+		BYG_LUSH_GRASS = create(Mods.BYG.recipeId("lush_grass_block"), b -> b.require(Mods.BYG, "lush_dirt")
+			.require(Fluids.WATER, 500)
+			.output(Mods.BYG, "lush_grass_block")
+			.whenModLoaded(Mods.BYG.getId())),
+
+		NEA_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Tags.Fluids.MILK, 250)
+			.require(Items.GLASS_BOTTLE)
+			.output(1, Mods.NEA, "milk_bottle", 1)
+			.whenModLoaded(Mods.NEA.getId()))
+
 
 	;
 

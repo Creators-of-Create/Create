@@ -1,0 +1,30 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "atmospheric:scalding_monkey_brush"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:red_dye"
+    },
+    {
+      "chance": 0.1,
+      "count": 2,
+      "item": "minecraft:red_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:orange_dye"
+    }
+  ]
+}

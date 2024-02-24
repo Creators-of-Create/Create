@@ -118,12 +118,12 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		params.ingredients.add(ingredient);
 		return this;
 	}
-	
+
 	public ProcessingRecipeBuilder<T> require(Mods mod, String id) {
 		params.ingredients.add(new SimpleDatagenIngredient(mod, id));
 		return this;
 	}
-	
+
 	public ProcessingRecipeBuilder<T> require(ResourceLocation ingredient) {
 		params.ingredients.add(DataIngredient.ingredient(null, ingredient));
 		return this;
@@ -169,11 +169,15 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 	public ProcessingRecipeBuilder<T> output(float chance, Mods mod, String id, int amount) {
 		return output(new ProcessingOutput(Pair.of(mod.asResource(id), amount), chance));
 	}
-	
+
+	public ProcessingRecipeBuilder<T> output(Mods mod, String id) {
+		return output(1, mod.asResource(id), 1);
+	}
+
 	public ProcessingRecipeBuilder<T> output(float chance, ResourceLocation registryName, int amount) {
 		return output(new ProcessingOutput(Pair.of(registryName, amount), chance));
 	}
-	
+
 	public ProcessingRecipeBuilder<T> output(ProcessingOutput output) {
 		params.results.add(output);
 		return this;
@@ -188,7 +192,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		params.fluidResults.add(fluidStack);
 		return this;
 	}
-	
+
 	public ProcessingRecipeBuilder<T> toolNotConsumed() {
 		params.keepHeldItem = true;
 		return this;
@@ -223,7 +227,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		protected NonNullList<FluidStack> fluidResults;
 		protected int processingDuration;
 		protected HeatCondition requiredHeat;
-		
+
 		public boolean keepHeldItem;
 
 		protected ProcessingRecipeParams(ResourceLocation id) {

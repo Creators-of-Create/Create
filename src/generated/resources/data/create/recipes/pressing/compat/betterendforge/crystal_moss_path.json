@@ -1,0 +1,19 @@
+{
+  "type": "create:pressing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "betterendforge"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "betterendforge:crystal_moss"
+    }
+  ],
+  "results": [
+    {
+      "item": "betterendforge:crystal_moss_path"
+    }
+  ]
+}
