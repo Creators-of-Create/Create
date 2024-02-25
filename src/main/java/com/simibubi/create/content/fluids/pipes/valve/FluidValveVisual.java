@@ -3,7 +3,7 @@ package com.simibubi.create.content.fluids.pipes.valve;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
@@ -18,7 +18,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-public class FluidValveVisual extends ShaftVisual<FluidValveBlockEntity> implements DynamicVisual {
+public class FluidValveVisual extends ShaftVisual<FluidValveBlockEntity> implements SimpleDynamicVisual {
 
 	protected TransformedInstance pointer;
 	protected boolean settled;

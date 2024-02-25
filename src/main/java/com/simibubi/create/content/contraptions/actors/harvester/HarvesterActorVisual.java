@@ -94,7 +94,17 @@ public class HarvesterActorVisual extends ActorVisual {
 				.setChanged();
 	}
 
-    protected double getRotation() {
+	@Override
+	protected void _delete() {
+		harvester.delete();
+	}
+
+	protected double getRotation() {
         return AngleHelper.angleLerp(AnimationTickHolder.getPartialTicks(), previousRotation, rotation);
     }
+
+	@Override
+	public void init(float partialTick) {
+
+	}
 }

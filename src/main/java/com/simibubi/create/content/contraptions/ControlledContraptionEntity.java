@@ -246,10 +246,12 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		float angle = getAngle(partialTicks);
 		Axis axis = getRotationAxis();
 
-		TransformStack.of(matrixStack)
-			.nudge(getId())
-			.center()
-			.rotate(angle, axis)
-			.uncenter();
+		if (axis != null) {
+			TransformStack.of(matrixStack)
+					.nudge(getId())
+					.center()
+					.rotate(angle, axis)
+					.uncenter();
+		}
 	}
 }

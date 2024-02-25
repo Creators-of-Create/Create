@@ -3,7 +3,8 @@ package com.simibubi.create.content.kinetics.flywheel;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.lib.model.Models;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
@@ -19,7 +20,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 
-public class FlywheelVisual extends KineticBlockEntityVisual<FlywheelBlockEntity> implements DynamicVisual {
+public class FlywheelVisual extends KineticBlockEntityVisual<FlywheelBlockEntity> implements SimpleDynamicVisual {
 
 	protected final RotatingInstance shaft;
 	protected final TransformedInstance wheel;
@@ -30,7 +31,7 @@ public class FlywheelVisual extends KineticBlockEntityVisual<FlywheelBlockEntity
 
 		shaft = setup(instancerProvider.instancer(AllInstanceTypes.ROTATING, VirtualRenderHelper.blockModel(shaft()))
 			.createInstance());
-		wheel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, VirtualRenderHelper.blockModel(blockState))
+		wheel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.block(blockState))
 			.createInstance();
 
 		animate(blockEntity.angle);

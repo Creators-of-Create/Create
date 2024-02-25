@@ -12,7 +12,6 @@ import com.simibubi.create.content.contraptions.minecart.CouplingHandlerClient;
 import com.simibubi.create.content.contraptions.minecart.CouplingPhysics;
 import com.simibubi.create.content.contraptions.minecart.CouplingRenderer;
 import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.decoration.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.equipment.armor.BacktankArmorLayer;
 import com.simibubi.create.content.equipment.armor.DivingHelmetItem;
@@ -156,7 +155,6 @@ public class ClientEvents {
 		PlacementHelpers.tick();
 		CreateClient.OUTLINER.tickOutlines();
 		CreateClient.GHOST_BLOCKS.tickGhosts();
-		ContraptionRenderDispatcher.tick(world);
 		BlueprintOverlayRenderer.tick();
 		ToolboxHandlerClient.clientTick();
 		TrackTargetingClient.clientTick();
@@ -207,7 +205,7 @@ public class ClientEvents {
 	public static void onRenderWorld(RenderLevelStageEvent event) {
 		if (event.getStage() != Stage.AFTER_PARTICLES)
 			return;
-		
+
 		PoseStack ms = event.getPoseStack();
 		ms.pushPose();
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();

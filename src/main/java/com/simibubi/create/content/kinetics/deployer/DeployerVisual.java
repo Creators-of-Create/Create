@@ -8,8 +8,8 @@ import java.util.function.Consumer;
 import org.joml.Quaternionf;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.DynamicVisual;
-import com.jozufozu.flywheel.api.visual.TickableVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleTickableVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visual.VisualTickContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
@@ -28,7 +28,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 
-public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements DynamicVisual, TickableVisual {
+public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements SimpleDynamicVisual, SimpleTickableVisual {
 
     final Direction facing;
     final float yRot;

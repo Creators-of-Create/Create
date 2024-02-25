@@ -28,7 +28,6 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @OnlyIn(Dist.CLIENT)
@@ -59,14 +58,12 @@ public class ContraptionRenderDispatcher {
 			.tick();
 	}
 
-	@SubscribeEvent
 	public static void beginFrame(BeginFrameEvent event) {
 		WORLDS.get(event.getContext()
 						.level())
 			.beginFrame(event);
 	}
 
-	@SubscribeEvent
 	public static void renderLayer(RenderStageEvent event) {
 		WORLDS.get(event.getLevel())
 			.renderLayer(event);
@@ -74,7 +71,6 @@ public class ContraptionRenderDispatcher {
 		GlError.pollAndThrow(() -> "contraption layer: " + event.getStage());
 	}
 
-	@SubscribeEvent
 	public static void onRendererReload(ReloadLevelRendererEvent event) {
 		reset();
 	}
@@ -177,13 +173,7 @@ public class ContraptionRenderDispatcher {
 	}
 
 	public static void reset() {
-		WORLDS.empty(ContraptionRenderingWorld::delete);
 
-//		if (Backend.isOn()) {
-//			WORLDS = new WorldAttached<>(FlwContraptionManager::new);
-//		} else {
-			WORLDS = new WorldAttached<>(SBBContraptionManager::new);
-//		}
 	}
 
 	public static boolean canInstance() {

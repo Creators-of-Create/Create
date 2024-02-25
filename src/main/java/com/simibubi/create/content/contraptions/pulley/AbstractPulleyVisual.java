@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
-import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.box.MutableBox;
@@ -21,7 +21,7 @@ import com.simibubi.create.foundation.render.SelectInstance;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends ShaftVisual<T> implements DynamicVisual {
+public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends ShaftVisual<T> implements SimpleDynamicVisual {
 
 	final OrientedInstance coil;
 	final SelectInstance<OrientedInstance> magnet;

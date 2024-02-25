@@ -3,7 +3,7 @@ package com.simibubi.create.content.redstone.diodes;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.TickableVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleTickableVisual;
 import com.jozufozu.flywheel.api.visual.VisualTickContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
@@ -13,7 +13,7 @@ import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.Color;
 
-public class BrassDiodeVisual extends AbstractBlockEntityVisual<BrassDiodeBlockEntity> implements TickableVisual {
+public class BrassDiodeVisual extends AbstractBlockEntityVisual<BrassDiodeBlockEntity> implements SimpleTickableVisual {
 
     protected final TransformedInstance indicator;
 

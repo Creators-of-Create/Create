@@ -3,7 +3,7 @@ package com.simibubi.create.content.schematics.cannon;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
@@ -16,7 +16,7 @@ import com.simibubi.create.AllPartialModels;
 
 import net.minecraft.core.Direction;
 
-public class SchematicannonVisual extends AbstractBlockEntityVisual<SchematicannonBlockEntity> implements DynamicVisual {
+public class SchematicannonVisual extends AbstractBlockEntityVisual<SchematicannonBlockEntity> implements SimpleDynamicVisual {
 
     private final TransformedInstance connector;
     private final TransformedInstance pipe;

@@ -28,4 +28,13 @@ public class PSIActorVisual extends ActorVisual {
 		instance.beginFrame(lf.getValue(AnimationTickHolder.getPartialTicks()));
 	}
 
+	@Override
+	protected void _delete() {
+		instance.remove();
+	}
+
+	@Override
+	public void init(float partialTick) {
+
+	}
 }

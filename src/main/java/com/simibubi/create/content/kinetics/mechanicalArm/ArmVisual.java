@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import com.google.common.collect.Lists;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.model.Model;
-import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.AbstractInstance;
@@ -27,7 +27,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 
-public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements DynamicVisual {
+public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements SimpleDynamicVisual {
 
 	final TransformedInstance base;
 	final TransformedInstance lowerBody;

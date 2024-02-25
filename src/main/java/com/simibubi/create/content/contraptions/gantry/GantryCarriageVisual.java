@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.gantry;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
@@ -19,7 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-public class GantryCarriageVisual extends ShaftVisual<GantryCarriageBlockEntity> implements DynamicVisual {
+public class GantryCarriageVisual extends ShaftVisual<GantryCarriageBlockEntity> implements SimpleDynamicVisual {
 
 	private final TransformedInstance gantryCogs;
 

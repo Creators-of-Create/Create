@@ -11,7 +11,6 @@ import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 
@@ -36,7 +35,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 		var restoreState = GlStateTracker.getRestoreState();
 		buildLayers();
 		if (ContraptionRenderDispatcher.canInstance()) {
-			buildInstancedBlockEntities();
+			// buildInstancedBlockEntities();
 			buildActors();
 		}
 		restoreState.restore();
@@ -133,7 +132,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 //		}
 	}
 
-	private void buildInstancedBlockEntities() {
+//	private void buildInstancedBlockEntities() {
 //		for (BlockEntity be : contraption.maybeInstancedBlockEntities) {
 //			if (!InstancedRenderRegistry.canInstance(be.getType())) {
 //				continue;
@@ -144,7 +143,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 //			instanceWorld.blockEntityInstanceManager.add(be);
 //			be.setLevel(world);
 //		}
-	}
+//	}
 
 	private void buildActors() {
 //		contraption.getActors().forEach(instanceWorld.blockEntityInstanceManager::createActor);

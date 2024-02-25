@@ -64,4 +64,15 @@ public class StabilizedBearingVisual extends ActorVisual {
 
 		topInstance.setRotation(rotation);
 	}
+
+	@Override
+	protected void _delete() {
+		topInstance.delete();
+		shaft.delete();
+	}
+
+	@Override
+	public void init(float partialTick) {
+
+	}
 }

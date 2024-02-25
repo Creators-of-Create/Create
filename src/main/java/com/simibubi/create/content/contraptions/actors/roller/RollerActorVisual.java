@@ -61,4 +61,10 @@ public class RollerActorVisual extends HarvesterActorVisual {
 		return 16.5;
 	}
 
+	@Override
+	protected void _delete() {
+		super._delete();
+
+		frame.delete();
+	}
 }

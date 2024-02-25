@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.Contraption;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -39,10 +38,10 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 		int overlay) {
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 
-		Contraption contraption = entity.getContraption();
-		if (contraption != null) {
-			ContraptionRenderDispatcher.renderFromEntity(entity, contraption, buffers);
-		}
+//		Contraption contraption = entity.getContraption();
+//		if (contraption != null) {
+//			ContraptionRenderDispatcher.renderFromEntity(entity, contraption, buffers);
+//		}
 	}
 
 }

@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.depot;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
@@ -13,7 +13,7 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-public class EjectorVisual extends ShaftVisual<EjectorBlockEntity> implements DynamicVisual {
+public class EjectorVisual extends ShaftVisual<EjectorBlockEntity> implements SimpleDynamicVisual {
 
 	protected final TransformedInstance plate;
 

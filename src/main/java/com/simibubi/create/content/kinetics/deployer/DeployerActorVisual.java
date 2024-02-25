@@ -117,4 +117,16 @@ public class DeployerActorVisual extends ActorVisual {
 
         hand.setTransform(stack);
     }
+
+	@Override
+	protected void _delete() {
+		pole.delete();
+		hand.delete();
+		shaft.delete();
+	}
+
+	@Override
+	public void init(float partialTick) {
+
+	}
 }

@@ -59,4 +59,14 @@ public class DrillActorVisual extends ActorVisual {
             return context.getAnimationSpeed();
         return 0;
     }
+
+	@Override
+	protected void _delete() {
+		drillHead.delete();
+	}
+
+	@Override
+	public void init(float partialTick) {
+
+	}
 }
