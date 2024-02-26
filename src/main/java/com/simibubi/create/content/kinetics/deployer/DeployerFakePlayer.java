@@ -158,7 +158,7 @@ public class DeployerFakePlayer extends FakePlayer {
 		if (!(entityLiving instanceof Mob mob))
 			return;
 
-        CKinetics.DeployerAggroSetting setting = AllConfigs.server().kinetics.ignoreDeployerAttacks.get();
+		CKinetics.DeployerAggroSetting setting = AllConfigs.server().kinetics.ignoreDeployerAttacks.get();
 
 		switch (setting) {
 		case ALL:
