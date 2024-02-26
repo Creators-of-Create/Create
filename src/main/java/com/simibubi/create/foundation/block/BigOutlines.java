@@ -15,6 +15,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 
+
+/**
+ * For mods wanting to use this take a look at {@link IHasBigOutline}
+ */
 public class BigOutlines {
 
 	static BlockHitResult result = null;
