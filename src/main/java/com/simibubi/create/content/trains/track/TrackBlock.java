@@ -19,6 +19,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import com.simibubi.create.foundation.block.IHasBigOutline;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Predicates;
@@ -108,7 +110,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IBlockRenderProperties;
 
 public class TrackBlock extends Block
-	implements IBE<TrackBlockEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock {
+	implements IBE<TrackBlockEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock, IHasBigOutline {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_BE = BooleanProperty.create("turn");
