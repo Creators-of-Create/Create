@@ -4,11 +4,11 @@ import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.model.Model;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.simibubi.create.content.kinetics.base.SingleRotatingVisual;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -54,6 +54,8 @@ public class HandCrankVisual extends SingleRotatingVisual<HandCrankBlockEntity> 
 		// FIXME: need to call super.super.init here
 		if (blockEntity.shouldRenderShaft())
 			super.init(pt);
+
+		updateLight();
 	}
 
 	@Override

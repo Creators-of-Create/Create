@@ -250,7 +250,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 			TransformStack.of(matrixStack)
 					.nudge(getId())
 					.center()
-					.rotate(angle, axis)
+					.rotateDegrees(angle, axis)
 					.uncenter();
 		}
 	}

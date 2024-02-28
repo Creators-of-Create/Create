@@ -6,11 +6,6 @@ import java.util.function.LongConsumer;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import com.jozufozu.flywheel.api.context.Context;
-import com.jozufozu.flywheel.api.context.ContextShader;
-import com.jozufozu.flywheel.api.context.Shader;
-import com.jozufozu.flywheel.api.context.TextureSource;
-import com.jozufozu.flywheel.api.material.Material;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.task.Plan;
 import com.jozufozu.flywheel.api.visual.BlockEntityVisual;
@@ -20,6 +15,7 @@ import com.jozufozu.flywheel.api.visual.TickableVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visual.VisualTickContext;
 import com.jozufozu.flywheel.api.visualization.BlockEntityVisualizer;
+import com.jozufozu.flywheel.api.visualization.VisualEmbedding;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.api.visualization.VisualizerRegistry;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
@@ -30,32 +26,25 @@ import com.jozufozu.flywheel.lib.task.NestedPlan;
 import com.jozufozu.flywheel.lib.task.PlanMap;
 import com.jozufozu.flywheel.lib.task.RunnablePlan;
 import com.jozufozu.flywheel.lib.visual.AbstractEntityVisual;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
-import com.jozufozu.flywheel.lib.visual.SimpleTickableVisual;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.foundation.render.AllContextShaders;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
-import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public class ContraptionVisual<E extends AbstractContraptionEntity> extends AbstractEntityVisual<E> implements DynamicVisual, TickableVisual, LitVisual {
-	protected final ContraptionContext context;
-	protected final VisualizationContext visualizationContext;
+	protected final VisualEmbedding embedding;
 	private final List<BlockEntityVisual<?>> children = new ArrayList<>();
 	private final List<ActorVisual> actors = new ArrayList<>();
 	private final PlanMap<DynamicVisual, VisualFrameContext> dynamicVisuals = new PlanMap<>();
-	private final List<SimpleDynamicVisual> simpleDynamicVisuals = new ArrayList<>();
 	private final PlanMap<TickableVisual, VisualTickContext> tickableVisuals = new PlanMap<>();
-	private final List<SimpleTickableVisual> simpleTickableVisuals = new ArrayList<>();
 	private VirtualRenderWorld virtualRenderWorld;
 	private Notifier notifier;
 	private Model model;
@@ -65,8 +54,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 
 	public ContraptionVisual(VisualizationContext ctx, E entity) {
 		super(ctx, entity);
-        context = new ContraptionContext();
-		visualizationContext = ctx.withContext(context, Vec3i.ZERO);
+		embedding = ctx.createEmbedding();
     }
 
 	@Override
@@ -79,7 +67,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 				.renderWorld(virtualRenderWorld)
 				.build();
 
-		structure = visualizationContext.instancerProvider()
+		structure = embedding.instancerProvider()
 				.instancer(InstanceTypes.TRANSFORMED, model)
 				.createInstance();
 
@@ -107,7 +95,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		if (movementBehaviour == null) {
 			return;
 		}
-		var instance = movementBehaviour.createInstance(this.visualizationContext, virtualRenderWorld, context);
+		var instance = movementBehaviour.createInstance(this.embedding, virtualRenderWorld, context);
 
 		if (instance == null) {
 			return;
@@ -127,18 +115,18 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 
 		Level world = be.getLevel();
 		be.setLevel(virtualRenderWorld);
-		BlockEntityVisual<? super T> visual = visualizer.createVisual(this.visualizationContext, be);
+		BlockEntityVisual<? super T> visual = visualizer.createVisual(this.embedding, be);
 
 		visual.init(partialTicks);
 
 		children.add(visual);
 
 		if (visual instanceof DynamicVisual dynamic) {
-			if (dynamic instanceof SimpleDynamicVisual simple) {
-				simpleDynamicVisuals.add(simple);
-			} else {
-				dynamicVisuals.add(dynamic, dynamic.planFrame());
-			}
+			dynamicVisuals.add(dynamic, dynamic.planFrame());
+		}
+
+		if (visual instanceof TickableVisual tickable) {
+			tickableVisuals.add(tickable, tickable.planTick());
 		}
 
 		be.setLevel(world);
@@ -148,7 +136,6 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 	public Plan<VisualTickContext> planTick() {
 		return NestedPlan.of(
 				ForEachPlan.of(() -> actors, ActorVisual::tick),
-				ForEachPlan.of(() -> simpleTickableVisuals, SimpleTickableVisual::tick),
 				tickableVisuals
 		);
 	}
@@ -158,9 +145,35 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		return NestedPlan.of(
 				RunnablePlan.of(this::beginFrame),
 				ForEachPlan.of(() -> actors, ActorVisual::beginFrame),
-				ForEachPlan.of(() -> simpleDynamicVisuals, SimpleDynamicVisual::beginFrame),
 				dynamicVisuals
 		);
+	}
+
+	protected void beginFrame(VisualFrameContext context) {
+		double x = Mth.lerp(context.partialTick(), entity.xOld, entity.getX());
+		double y = Mth.lerp(context.partialTick(), entity.yOld, entity.getY());
+		double z = Mth.lerp(context.partialTick(), entity.zOld, entity.getZ());
+
+		contraptionMatrix.setIdentity();
+		contraptionMatrix.translate(x, y, z);
+		entity.applyLocalTransforms(contraptionMatrix, context.partialTick());
+
+		embedding.transforms(contraptionMatrix.last().pose(), contraptionMatrix.last().normal());
+	}
+
+	@Override
+	public void updateLight() {
+
+	}
+
+	@Override
+	public void collectLightSections(LongConsumer consumer) {
+		var boundingBox = entity.getBoundingBox();
+	}
+
+	@Override
+	public void initLightSectionNotifier(Notifier notifier) {
+		this.notifier = notifier;
 	}
 
 	@Override
@@ -175,46 +188,6 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 
 		if (structure != null) {
 			structure.delete();
-		}
-	}
-
-	@Override
-	public void updateLight() {
-
-	}
-
-	protected void beginFrame(VisualFrameContext context) {
-		double x = Mth.lerp(context.partialTick(), entity.xOld, entity.getX());
-		double y = Mth.lerp(context.partialTick(), entity.yOld, entity.getY());
-		double z = Mth.lerp(context.partialTick(), entity.zOld, entity.getZ());
-
-		contraptionMatrix.setIdentity();
-		contraptionMatrix.translate(x, y, z);
-		entity.applyLocalTransforms(contraptionMatrix, context.partialTick());
-	}
-
-	@Override
-	public void collectLightSections(LongConsumer consumer) {
-		var boundingBox = entity.getBoundingBox();
-	}
-
-	@Override
-	public void initLightSectionNotifier(Notifier notifier) {
-		this.notifier = notifier;
-	}
-
-	public class ContraptionContext implements Context {
-
-		@Override
-		public ContextShader contextShader() {
-			return AllContextShaders.CONTRAPTION;
-		}
-
-		@Override
-		public void prepare(Material material, Shader shader, TextureSource textureSource) {
-//			shader.setVec3("create_oneOverLightBoxSize");
-//			shader.setVec3("create_lightVolumeMin");
-			shader.setMat4("create_model", contraptionMatrix.last().pose());
 		}
 	}
 }

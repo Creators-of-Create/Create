@@ -5,7 +5,6 @@ import org.joml.Vector3f;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.render.ContraptionVisual;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer;
@@ -14,7 +13,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
-public class CarriageContraptionVisual extends ContraptionVisual<CarriageContraptionEntity> implements SimpleDynamicVisual {
+public class CarriageContraptionVisual extends ContraptionVisual<CarriageContraptionEntity> {
 
 	private final PoseStack ms = new PoseStack();
 
@@ -100,6 +99,8 @@ public class CarriageContraptionVisual extends ContraptionVisual<CarriageContrap
 
 	@Override
 	public void _delete() {
+		super._delete();
+
 		if (bogeys == null)
 			return;
 

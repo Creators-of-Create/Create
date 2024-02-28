@@ -18,7 +18,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsClient;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.outliner.Outliner;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.render.AllContextShaders;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.StitchedSprite;
@@ -68,7 +67,6 @@ public class CreateClient {
 		modEventBus.addListener(StitchedSprite::onTextureStitchPost);
 
 		AllInstanceTypes.init();
-		AllContextShaders.init();
 
 		MODEL_SWAPPER.registerListeners(modEventBus);
 

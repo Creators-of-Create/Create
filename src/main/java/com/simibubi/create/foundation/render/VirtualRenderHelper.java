@@ -12,7 +12,7 @@ import com.jozufozu.flywheel.lib.model.ModelCache;
 import com.jozufozu.flywheel.lib.model.ModelUtil;
 import com.jozufozu.flywheel.lib.model.baked.BakedModelBufferer;
 import com.jozufozu.flywheel.lib.model.baked.BakedModelBufferer.ShadeSeparatedResultConsumer;
-import com.jozufozu.flywheel.lib.model.baked.BlockModelBuilder;
+import com.jozufozu.flywheel.lib.model.baked.BakedModelBuilder;
 import com.jozufozu.flywheel.lib.model.baked.VirtualEmptyBlockGetter;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
@@ -27,7 +27,7 @@ import net.minecraftforge.client.model.data.ModelProperty;
 public class VirtualRenderHelper {
 	public static final ModelProperty<Boolean> VIRTUAL_PROPERTY = new ModelProperty<>();
 	public static final ModelData VIRTUAL_DATA = ModelData.builder().with(VIRTUAL_PROPERTY, true).build();
-	public static final ModelCache<BlockState> VIRTUAL_BLOCKS = new ModelCache<>(state -> new BlockModelBuilder(state).modelData(VIRTUAL_DATA).build());
+	public static final ModelCache<BlockState> VIRTUAL_BLOCKS = new ModelCache<>(state -> new BakedModelBuilder(ModelUtil.VANILLA_RENDERER.getBlockModel(state)).modelData(VIRTUAL_DATA).build());
 
 	public static boolean isVirtual(ModelData data) {
 		return data.has(VirtualRenderHelper.VIRTUAL_PROPERTY) && data.get(VirtualRenderHelper.VIRTUAL_PROPERTY);
