@@ -1,4 +1,4 @@
-// 1.20.1	2024-02-28T16:56:53.0452139	Create Train Hat Information
+// 1.20.1	2024-02-28T17:24:28.0405516	Create Train Hat Information
 be16d47aa64e673b1107a36ce06475016e316fca assets/minecraft/train_hat_info/axolotl.json
 b8ae6d9c8014439f4049622e0d6e79b9d6716260 assets/minecraft/train_hat_info/bat.json
 5053a6c9fb412dfac1bf17eb0f57f9fd314198e4 assets/minecraft/train_hat_info/bee.json
@@ -43,10 +43,10 @@ e524c61954660d3cb605f01395edb25572b59a1c assets/minecraft/train_hat_info/skeleto
 6c1ba6bc216700dc38e9079c9b321cc6f7bd0859 assets/minecraft/train_hat_info/squid.json
 527ea95992502de466eb64d81b7c3a365e3a2c59 assets/minecraft/train_hat_info/strider.json
 282f1517834c77175e874148c92c40efb19a8f5b assets/minecraft/train_hat_info/tadpole.json
-509913e06b456fe6fbefd0c4516713e423bce285 assets/minecraft/train_hat_info/tropical_fish.json
-fd85007f98c57b2f57b16cd8dff43d0cf029cd36 assets/minecraft/train_hat_info/turtle.json
+2e8458128098543e432398993dcc7bc9e4657c06 assets/minecraft/train_hat_info/tropical_fish.json
+b8ae6d9c8014439f4049622e0d6e79b9d6716260 assets/minecraft/train_hat_info/turtle.json
 78950a0bb66d28d1939049400a8cfd194f92f906 assets/minecraft/train_hat_info/warden.json
-12eba791d433f9bd8cc9781cb2b2a9c587ae6b70 assets/minecraft/train_hat_info/wither.json
-bd87188334d5f189f7c05a02813307a3e3dc601c assets/minecraft/train_hat_info/wolf.json
+5ed6eccda89a6721f1b70eca7e7869cfc30aa612 assets/minecraft/train_hat_info/wither.json
+0ac114bc3a5d0a0ab3153cae258a30fe970d4264 assets/minecraft/train_hat_info/wolf.json
 daac75dcadb6e00db5cf1a5b30a450f137da54ae assets/minecraft/train_hat_info/zoglin.json
 e524c61954660d3cb605f01395edb25572b59a1c assets/minecraft/train_hat_info/zombie_horse.json
