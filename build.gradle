@@ -187,8 +187,6 @@ dependencies {
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${curios_minecraft_version}:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${curios_minecraft_version}")
 
-    runtimeOnly fg.deobf("curse.maven:commandstructures-565119:4711641")
-
 	if (cc_tweaked_enable.toBoolean()) {
 	    compileOnly("cc.tweaked:cc-tweaked-${cc_tweaked_minecraft_version}-core-api:${cc_tweaked_version}")
         compileOnly fg.deobf("cc.tweaked:cc-tweaked-${cc_tweaked_minecraft_version}-forge-api:${cc_tweaked_version}")
