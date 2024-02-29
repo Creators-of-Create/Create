@@ -1,0 +1,9 @@
+{
+  "model_part": "nose",
+  "offset": [
+    -0.5,
+    2.0,
+    0.0
+  ],
+  "scale": 0.5
+}

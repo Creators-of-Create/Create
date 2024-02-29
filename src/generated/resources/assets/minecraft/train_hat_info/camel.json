@@ -1,0 +1,9 @@
+{
+  "cube_index": 1,
+  "model_part": "body/head",
+  "offset": [
+    0.0,
+    -8.0,
+    -11.5
+  ]
+}
