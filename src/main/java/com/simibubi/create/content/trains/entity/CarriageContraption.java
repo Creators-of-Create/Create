@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -268,7 +267,7 @@ public class CarriageContraption extends Contraption {
 	private Collection<BlockEntity> specialRenderedBEsOutsidePortal = new ArrayList<>();
 
 	@Override
-	public Collection<StructureBlockInfo> getRenderedBlocks() {
+	public RenderedBlocks getRenderedBlocks() {
 		if (notInPortal())
 			return super.getRenderedBlocks();
 
@@ -277,15 +276,15 @@ public class CarriageContraption extends Contraption {
 			.filter(be -> !isHiddenInPortal(be.getBlockPos()))
 			.forEach(specialRenderedBEsOutsidePortal::add);
 
-		Collection<StructureBlockInfo> values = new ArrayList<>();
-		for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
-			BlockPos pos = entry.getKey();
-			if (withinVisible(pos))
-				values.add(entry.getValue());
-			else if (atSeam(pos))
-				values.add(new StructureBlockInfo(pos, Blocks.PURPLE_STAINED_GLASS.defaultBlockState(), null));
-		}
-		return values;
+		Map<BlockPos, BlockState> values = new HashMap<>();
+		blocks.forEach((pos, info) -> {
+			if (withinVisible(pos)) {
+				values.put(pos, info.state());
+			} else if (atSeam(pos)) {
+				values.put(pos, Blocks.PURPLE_STAINED_GLASS.defaultBlockState());
+			}
+		});
+		return new RenderedBlocks(pos -> values.getOrDefault(pos, Blocks.AIR.defaultBlockState()), values.keySet());
 	}
 
 	@Override

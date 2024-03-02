@@ -30,14 +30,20 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.content.contraptions.Contraption.RenderedBlocks;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.foundation.utility.worldWrappers.WrappedBlockAndTintGetter;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class ContraptionVisual<E extends AbstractContraptionEntity> extends AbstractEntityVisual<E> implements DynamicVisual, TickableVisual, LitVisual {
 	protected final VisualEmbedding embedding;
@@ -62,9 +68,16 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
         Contraption contraption = entity.getContraption();
 		virtualRenderWorld = ContraptionRenderDispatcher.setupRenderWorld(level, contraption);
 
-		model = new MultiBlockModelBuilder(contraption.getRenderedBlocks())
-				.modelDataMap(contraption.modelData)
-				.renderWorld(virtualRenderWorld)
+		RenderedBlocks blocks = contraption.getRenderedBlocks();
+		BlockAndTintGetter modelWorld = new WrappedBlockAndTintGetter(virtualRenderWorld) {
+			@Override
+			public BlockState getBlockState(BlockPos pos) {
+				return blocks.lookup().apply(pos);
+			}
+		};
+
+		model = new MultiBlockModelBuilder(modelWorld, blocks.positions())
+				.modelDataLookup(pos -> contraption.modelData.getOrDefault(pos, ModelData.EMPTY))
 				.build();
 
 		structure = embedding.instancerProvider()

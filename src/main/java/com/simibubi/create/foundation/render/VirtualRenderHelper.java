@@ -1,25 +1,26 @@
 package com.simibubi.create.foundation.render;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.Nullable;
 
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.lib.model.ModelCache;
 import com.jozufozu.flywheel.lib.model.ModelUtil;
-import com.jozufozu.flywheel.lib.model.baked.BakedModelBufferer;
-import com.jozufozu.flywheel.lib.model.baked.BakedModelBufferer.ShadeSeparatedResultConsumer;
 import com.jozufozu.flywheel.lib.model.baked.BakedModelBuilder;
 import com.jozufozu.flywheel.lib.model.baked.VirtualEmptyBlockGetter;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexFormat;
 
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -27,7 +28,9 @@ import net.minecraftforge.client.model.data.ModelProperty;
 public class VirtualRenderHelper {
 	public static final ModelProperty<Boolean> VIRTUAL_PROPERTY = new ModelProperty<>();
 	public static final ModelData VIRTUAL_DATA = ModelData.builder().with(VIRTUAL_PROPERTY, true).build();
-	public static final ModelCache<BlockState> VIRTUAL_BLOCKS = new ModelCache<>(state -> new BakedModelBuilder(ModelUtil.VANILLA_RENDERER.getBlockModel(state)).modelData(VIRTUAL_DATA).build());
+
+	private static final ModelCache<BlockState> VIRTUAL_BLOCKS = new ModelCache<>(state -> new BakedModelBuilder(ModelUtil.VANILLA_RENDERER.getBlockModel(state)).modelData(VIRTUAL_DATA).build());
+	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
 	public static boolean isVirtual(ModelData data) {
 		return data.has(VirtualRenderHelper.VIRTUAL_PROPERTY) && data.get(VirtualRenderHelper.VIRTUAL_PROPERTY);
@@ -51,41 +54,30 @@ public class VirtualRenderHelper {
 	}
 
 	public static SuperByteBuffer bufferModel(BakedModel model, BlockState state, @Nullable PoseStack poseStack) {
-		List<MutableTemplateMesh> shadedMeshes = new ArrayList<>();
-		List<MutableTemplateMesh> unshadedMeshes = new ArrayList<>();
-		MutableInt totalVertexCount = new MutableInt(0);
+		BlockRenderDispatcher dispatcher = ModelUtil.VANILLA_RENDERER;
+		ModelBlockRenderer renderer = dispatcher.getModelRenderer();
+		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
 
-		ShadeSeparatedResultConsumer resultConsumer = (renderType, shaded, data) -> {
-			ByteBuffer vertexBuffer = data.vertexBuffer();
-			int vertexCount = data.drawState().vertexCount();
-			int stride = data.drawState().format().getVertexSize();
-			MutableTemplateMesh mutableMesh = new MutableTemplateMesh(vertexCount);
-
-			transferBlockVertexData(vertexBuffer, vertexCount, stride, mutableMesh, 0);
-
-			if (shaded) {
-				shadedMeshes.add(mutableMesh);
-			} else {
-				unshadedMeshes.add(mutableMesh);
-			}
-			totalVertexCount.add(vertexCount);
-		};
-		BakedModelBufferer.bufferSingleShadeSeparated(ModelUtil.VANILLA_RENDERER.getModelRenderer(), VirtualEmptyBlockGetter.INSTANCE, model, state, poseStack, ModelData.EMPTY, resultConsumer);
-
-		MutableTemplateMesh mutableMesh = new MutableTemplateMesh(totalVertexCount.getValue());
-
-		int copyIndex = 0;
-		for (MutableTemplateMesh template : shadedMeshes) {
-			mutableMesh.copyFrom(copyIndex, template);
-			copyIndex += template.vertexCount();
+		if (poseStack == null) {
+			poseStack = objects.identityPoseStack;
 		}
-		int unshadedStartVertex = copyIndex;
-		for (MutableTemplateMesh template : unshadedMeshes) {
-			mutableMesh.copyFrom(copyIndex, template);
-			copyIndex += template.vertexCount();
-		}
+		RandomSource random = objects.random;
 
-		return new SuperByteBuffer(mutableMesh.toImmutable(), unshadedStartVertex);
+		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
+		BufferBuilder shadedBuilder = objects.shadedBuilder;
+		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
+
+		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
+
+		ModelData modelData = model.getModelData(VirtualEmptyBlockGetter.INSTANCE, BlockPos.ZERO, state, VIRTUAL_DATA);
+		poseStack.pushPose();
+		renderer.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, state, BlockPos.ZERO, poseStack, shadeSeparatingWrapper, false, random, 42L, OverlayTexture.NO_OVERLAY, modelData, null);
+		poseStack.popPose();
+
+		shadeSeparatingWrapper.clear();
+		return endAndCombine(shadedBuilder, unshadedBuilder);
 	}
 
 	public static void transferBlockVertexData(ByteBuffer vertexBuffer, int vertexCount, int stride, MutableTemplateMesh mutableMesh, int dstIndex) {
@@ -116,7 +108,17 @@ public class VirtualRenderHelper {
 
 		MutableTemplateMesh mutableMesh = new MutableTemplateMesh(totalVertexCount);
 		transferBlockVertexData(shadedData.vertexBuffer(), shadedData.drawState().vertexCount(), shadedData.drawState().format().getVertexSize(), mutableMesh, 0);
-		transferBlockVertexData(unshadedData.vertexBuffer(), unshadedData.drawState().vertexCount(), unshadedData.drawState().format().getVertexSize(), mutableMesh, unshadedStartVertex);
+		if (unshadedData != null) {
+			transferBlockVertexData(unshadedData.vertexBuffer(), unshadedData.drawState().vertexCount(), unshadedData.drawState().format().getVertexSize(), mutableMesh, unshadedStartVertex);
+		}
 		return new SuperByteBuffer(mutableMesh.toImmutable(), unshadedStartVertex);
+	}
+
+	private static class ThreadLocalObjects {
+		public final PoseStack identityPoseStack = new PoseStack();
+		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
+		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
+		public final BufferBuilder shadedBuilder = new BufferBuilder(512);
+		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
 	}
 }

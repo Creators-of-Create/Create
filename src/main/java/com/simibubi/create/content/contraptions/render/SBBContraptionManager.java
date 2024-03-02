@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.content.contraptions.Contraption.RenderedBlocks;
 import com.simibubi.create.foundation.render.ShadeSeparatingVertexConsumer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
@@ -26,7 +27,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.client.model.data.ModelData;
 
 public class SBBContraptionManager extends ContraptionRenderingWorld<ContraptionRenderInfo> {
@@ -84,6 +84,7 @@ public class SBBContraptionManager extends ContraptionRenderingWorld<Contraption
 
 		PoseStack poseStack = objects.poseStack;
 		RandomSource random = objects.random;
+		RenderedBlocks blocks = contraption.getRenderedBlocks();
 
 		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
 		BufferBuilder shadedBuilder = objects.shadedBuilder;
@@ -94,10 +95,9 @@ public class SBBContraptionManager extends ContraptionRenderingWorld<Contraption
 		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
 
 		ModelBlockRenderer.enableCaching();
-		for (StructureTemplate.StructureBlockInfo info : contraption.getRenderedBlocks()) {
-			BlockState state = info.state();
+		for (BlockPos pos : blocks.positions()) {
+			BlockState state = blocks.lookup().apply(pos);
 			if (state.getRenderShape() == RenderShape.MODEL) {
-				BlockPos pos = info.pos();
 				BakedModel model = dispatcher.getBlockModel(state);
 				ModelData modelData = contraption.modelData.getOrDefault(pos, ModelData.EMPTY);
 				modelData = model.getModelData(renderWorld, pos, state, modelData);

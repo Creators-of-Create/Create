@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
@@ -1375,8 +1376,14 @@ public abstract class Contraption {
 		return storage.getFluids();
 	}
 
-	public Collection<StructureBlockInfo> getRenderedBlocks() {
-		return blocks.values();
+	public RenderedBlocks getRenderedBlocks() {
+		return new RenderedBlocks(pos -> {
+			StructureBlockInfo info = blocks.get(pos);
+			if (info == null) {
+				return Blocks.AIR.defaultBlockState();
+			}
+			return info.state();
+		}, blocks.keySet());
 	}
 
 	public Collection<BlockEntity> getSpecialRenderedBEs() {
@@ -1426,6 +1433,9 @@ public abstract class Contraption {
 				return true;
 		}
 		return false;
+	}
+
+	public record RenderedBlocks(Function<BlockPos, BlockState> lookup, Iterable<BlockPos> positions) {
 	}
 
 }

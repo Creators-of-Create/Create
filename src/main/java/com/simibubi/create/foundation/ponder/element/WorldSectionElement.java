@@ -414,6 +414,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 		PoseStack poseStack = objects.poseStack;
 		RandomSource random = objects.random;
+
 		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
 		BufferBuilder shadedBuilder = objects.shadedBuilder;
 		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
