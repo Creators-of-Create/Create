@@ -17,8 +17,6 @@ import com.simibubi.create.content.contraptions.ContraptionType;
 import com.simibubi.create.content.contraptions.MountedStorageManager;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsBlock;
 import com.simibubi.create.content.contraptions.minecart.TrainCargoManager;
-import com.simibubi.create.content.contraptions.render.ContraptionLighter;
-import com.simibubi.create.content.contraptions.render.NonStationaryLighter;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
@@ -41,8 +39,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -242,13 +238,7 @@ public class CarriageContraption extends Contraption {
 		return ContraptionType.CARRIAGE;
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public ContraptionLighter<?> makeLighter() {
-		return new NonStationaryLighter<>(this);
-	}
-
-	public Direction getAssemblyDirection() {
+    public Direction getAssemblyDirection() {
 		return assemblyDirection;
 	}
 

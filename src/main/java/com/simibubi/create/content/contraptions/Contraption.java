@@ -54,8 +54,6 @@ import com.simibubi.create.content.contraptions.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlockEntity;
-import com.simibubi.create.content.contraptions.render.ContraptionLighter;
-import com.simibubi.create.content.contraptions.render.EmptyLighter;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
@@ -122,8 +120,6 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -1157,14 +1153,14 @@ public abstract class Contraption {
 			if (behaviour != null)
 				behaviour.startMoving(context);
 			pair.setRight(context);
-			if (behaviour instanceof ContraptionControlsMovement) 
+			if (behaviour instanceof ContraptionControlsMovement)
 				disableActorOnStart(context);
 		}
 
 		for (ItemStack stack : disabledActors)
 			setActorsActive(stack, false);
 	}
-	
+
 	protected void disableActorOnStart(MovementContext context) {
 		if (!ContraptionControlsMovement.isDisabledInitially(context))
 			return;
@@ -1301,12 +1297,6 @@ public abstract class Contraption {
 
 	public Map<BlockPos, MovingInteractionBehaviour> getInteractors() {
 		return interactors;
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public ContraptionLighter<?> makeLighter() {
-		// TODO: move lighters to registry
-		return new EmptyLighter(this);
 	}
 
 	public void invalidateColliders() {
