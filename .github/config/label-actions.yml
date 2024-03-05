@@ -1,0 +1,65 @@
+# Configuration for Label Actions - https://github.com/dessant/label-actions
+
+# Used when a triager feels like they need more information to properly respond to or triage an issue
+'status: needs info':
+    issues:
+        comment: >
+            @{issue-author}, It appears you haven't attached a log describing your issue or forgot to fill in some fields.
+            Please go back and verify you have attached the crash-log/latest.log in the form of a file upload or link to a https://mclo.gs log.
+            Alongside that please make sure you have clearly described your issue and left exact reproduction steps to the best of your ability.
+            Once you've confirmed that please leave a message here saying "I updated my issue with the needed info." and a triager will take a look.
+
+# Used when additional info is added
+'-status: needs info':
+    issues:
+        comment: >
+            Thank you for providing more information, this issue will be triaged by a member of our staff soon.
+            Please be patient during this process.
+
+# Used when a tester/triager is unable to reproduce what was reported
+'status: unable to reproduce':
+    issues:
+        comment: >
+            @{issue-author}, One of our testers/triagers were unable to reproduce this issues as you've described.
+            The issue may possibly be fixed already or caused by another mod you have installed.
+            If the issue occurs again please open a new issue.
+        close: true
+
+# Used when someone is able to reproduce it later down the line
+'-status: unable to reproduce':
+    issues:
+        comment: >
+            @{issue-author}, Good news! Someone was able to reproduce this issue and has edited it with better reproduction steps.
+        reopen: true
+
+# Used when a user makes an issue regarding the fabric port on the forge page
+'loader: fabric':
+    issues:
+        comment: >
+            @{issue-author}, It appears you've made a issue regarding the Fabric version of Create on the Create-Forge issue tracker.
+            Please head to https://github.com/Fabricators-of-Create/Create/issues and open a issue there for Create-Fabric related problems.
+        close: true
+
+# Used when PR's fall behind and need conflicts to be fixed
+# TODO - restrict to just actual PRs
+'pr status: conflicts':
+    comment: >
+        @{issue-author}, Seems like your PR has some conflicts, please pull in the latest changes and leave a message so we can mark this PR as ready for reviewing
+
+# Used when PR's conflicts are fixed
+# TODO - restrict to just actual PRs
+'-pr status: conflicts':
+    comment: >
+        Thank you for fixing this PR's conflicts, this has been added to our merge queue and will be looked at before the next release by the team.
+
+# Used when a maintainer or triager leave's a review or comments on a PR that need to be addressed by the PR author
+# TODO - restrict to just actual PRs
+'pr status: waiting for author':
+    comment: >
+        @{issue-author}, A staff has left a review or some comments regarding your PR, please make these changes whenever possible and leave a message so we can mark this PR as ready for futher review
+
+# Used when they fix the comments/reviews
+# TODO - restrict to just actual PRs
+'-pr status: waiting for author':
+    comment: >
+        Thank you for making the required changes, this has been added to our merge queue and will be looked at before the next release by the team.
