@@ -1,13 +1,13 @@
 package com.simibubi.create.content.contraptions.glue;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.simibubi.create.content.contraptions.BlockMovementChecks;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import it.unimi.dsi.fastutil.PriorityQueue;
+import it.unimi.dsi.fastutil.objects.ObjectArrayFIFOQueue;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -25,16 +25,16 @@ public class SuperGlueSelectionHelper {
 
 		AABB bb = SuperGlueEntity.span(startPos, endPos);
 
-		List<BlockPos> frontier = new ArrayList<>();
-		Set<BlockPos> visited = new HashSet<>();
-		Set<BlockPos> attached = new HashSet<>();
-		Set<SuperGlueEntity> cachedOther = new HashSet<>();
+		PriorityQueue<BlockPos> frontier = new ObjectArrayFIFOQueue<>();
+		Set<BlockPos> visited = new ObjectOpenHashSet<>();
+		Set<BlockPos> attached = new ObjectOpenHashSet<>();
+		Set<SuperGlueEntity> cachedOther = new ObjectOpenHashSet<>();
 
 		visited.add(startPos);
-		frontier.add(startPos);
+		frontier.enqueue(startPos);
 
 		while (!frontier.isEmpty()) {
-			BlockPos currentPos = frontier.remove(0);
+			BlockPos currentPos = frontier.dequeue();
 			attached.add(currentPos);
 
 			for (Direction d : Iterate.directions) {
@@ -52,7 +52,7 @@ public class SuperGlueSelectionHelper {
 					continue;
 
 				if (visited.add(offset))
-					frontier.add(offset);
+					frontier.enqueue(offset);
 			}
 		}
 
