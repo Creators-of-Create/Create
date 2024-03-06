@@ -171,9 +171,9 @@ public class BlockClusterOutline extends Outline {
 		Vector3f normal = normalTemp;
 
 		loadFaceData(face, pos0, pos1, pos2, pos3, normal);
-		addPos(pos.getX() + face.getStepX() * 1 / 128f,
-				pos.getY() + face.getStepY() * 1 / 128f,
-				pos.getZ() + face.getStepZ() * 1 / 128f,
+		addPos(pos.getX() + face.getStepX() * (1 / 128f),
+			   pos.getY() + face.getStepY() * (1 / 128f),
+			   pos.getZ() + face.getStepZ() * (1 / 128f),
 				pos0, pos1, pos2, pos3);
 
 		bufferQuad(pose, consumer, pos0, pos1, pos2, pos3, color, lightmap, normal);
@@ -182,8 +182,8 @@ public class BlockClusterOutline extends Outline {
 	private static class Cluster {
 
 		private BlockPos anchor;
-		private Map<MergeEntry, AxisDirection> visibleFaces;
-		private Set<MergeEntry> visibleEdges;
+		private final Map<MergeEntry, AxisDirection> visibleFaces;
+		private final Set<MergeEntry> visibleEdges;
 
 		public Cluster() {
 			visibleEdges = new ObjectOpenHashSet<>();
@@ -197,15 +197,20 @@ public class BlockClusterOutline extends Outline {
 		public void include(BlockPos pos) {
 			if (anchor == null)
 				anchor = pos;
-
-			pos = pos.subtract(anchor);
+			int dx = pos.getX() - anchor.getX();
+			int dy = pos.getY() - anchor.getY();
+			int dz = pos.getZ() - anchor.getZ();
 
 			// 6 FACES
 			for (Axis axis : Iterate.axes) {
 				Direction direction = Direction.get(AxisDirection.POSITIVE, axis);
 				for (int offset : Iterate.zeroAndOne) {
 					MergeEntry entry = new MergeEntry(axis, pos.relative(direction, offset));
-					visibleFaces.put(entry, offset == 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE);
+					if(!visibleFaces.containsKey(entry)) {
+						visibleFaces.put(entry, offset == 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE);
+					} else {
+						visibleFaces.remove(entry);
+					}
 				}
 			}
 
@@ -215,28 +220,34 @@ public class BlockClusterOutline extends Outline {
 					if (axis == axis2)
 						continue;
 					for (Axis axis3 : Iterate.axes) {
-						if (axis == axis3)
+						if (axis == axis3 || axis2 == axis3)
 							continue;
-						if (axis2 == axis3)
-							continue;
-
-						Direction direction = Direction.get(AxisDirection.POSITIVE, axis2);
-						Direction direction2 = Direction.get(AxisDirection.POSITIVE, axis3);
 
 						for (int offset : Iterate.zeroAndOne) {
-							BlockPos entryPos = pos.relative(direction, offset);
+							BlockPos entryPos = new BlockPos(
+									dx + (axis2 == Axis.X ? offset : 0),
+									dy + (axis2 == Axis.Y ? offset : 0),
+									dz + (axis2 == Axis.Z ? offset : 0)
+							);
+
 							for (int offset2 : Iterate.zeroAndOne) {
-								entryPos = entryPos.relative(direction2, offset2);
-								MergeEntry entry = new MergeEntry(axis, entryPos);
-								visibleEdges.add(entry);
+								BlockPos finalEntryPos = new BlockPos(
+										entryPos.getX() + (axis3 == Axis.X ? offset2 : 0),
+										entryPos.getY() + (axis3 == Axis.Y ? offset2 : 0),
+										entryPos.getZ() + (axis3 == Axis.Z ? offset2 : 0)
+								);
+								MergeEntry entry = new MergeEntry(axis, finalEntryPos);
+								if(!visibleEdges.contains(entry)) {
+									visibleEdges.add(entry);
+								} else {
+									visibleEdges.remove(entry);
+								}
 							}
 						}
 					}
-
 					break;
 				}
 			}
-
 		}
 
 	}
@@ -255,10 +266,9 @@ public class BlockClusterOutline extends Outline {
 		public boolean equals(Object o) {
 			if (this == o)
 				return true;
-			if (!(o instanceof MergeEntry))
+			if (!(o instanceof MergeEntry other))
 				return false;
 
-			MergeEntry other = (MergeEntry) o;
 			return this.axis == other.axis && this.pos.equals(other.pos);
 		}
 
@@ -267,5 +277,4 @@ public class BlockClusterOutline extends Outline {
 			return this.pos.hashCode() * 31 + axis.ordinal();
 		}
 	}
-
 }
