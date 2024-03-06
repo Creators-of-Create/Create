@@ -161,7 +161,12 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public void tick() {
-		super.tick();
+		this.xRotO = this.getXRot();
+		this.yRotO = this.getYRot();
+		this.walkDistO = this.walkDist;
+		this.xo = this.getX();
+		this.yo = this.getY();
+		this.zo = this.getZ();
 		if (getBoundingBox().getXsize() == 0)
 			discard();
 	}
@@ -294,7 +299,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	public PushReaction getPistonPushReaction() {
 		return PushReaction.IGNORE;
 	}
-	
+
 	@Override
 	public PortalInfo findDimensionEntryPoint(ServerLevel pDestination) {
 		portalEntrancePos = blockPosition();

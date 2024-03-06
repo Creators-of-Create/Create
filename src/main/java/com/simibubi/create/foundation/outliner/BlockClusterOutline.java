@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.outliner;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -10,6 +8,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
+
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
@@ -59,7 +61,7 @@ public class BlockClusterOutline extends Outline {
 		ms.pushPose();
 		ms.translate(cluster.anchor.getX() - camera.x, cluster.anchor.getY() - camera.y,
 			cluster.anchor.getZ() - camera.z);
-		
+
 		AllSpecialTextures faceTexture = optionalFaceTexture.get();
 		PoseStack.Pose pose = ms.last();
 		RenderType renderType = RenderTypes.getOutlineTranslucent(faceTexture.getLocation(), true);
@@ -72,7 +74,7 @@ public class BlockClusterOutline extends Outline {
 				pos = pos.relative(direction.getOpposite());
 			bufferBlockFace(pose, consumer, pos, direction, color, lightmap);
 		});
-		
+
 		ms.popPose();
 	}
 
@@ -82,7 +84,7 @@ public class BlockClusterOutline extends Outline {
 			return;
 		if (cluster.isEmpty())
 			return;
-		
+
 		ms.pushPose();
 		ms.translate(cluster.anchor.getX() - camera.x, cluster.anchor.getY() - camera.y,
 			cluster.anchor.getZ() - camera.z);
@@ -97,7 +99,7 @@ public class BlockClusterOutline extends Outline {
 			Direction direction = Direction.get(AxisDirection.POSITIVE, edge.axis);
 			bufferCuboidLine(pose, consumer, origin, direction, 1, lineWidth, color, lightmap, disableNormals);
 		});
-		
+
 		ms.popPose();
 	}
 
@@ -184,10 +186,10 @@ public class BlockClusterOutline extends Outline {
 		private Set<MergeEntry> visibleEdges;
 
 		public Cluster() {
-			visibleEdges = new HashSet<>();
-			visibleFaces = new HashMap<>();
+			visibleEdges = new ObjectOpenHashSet<>();
+			visibleFaces = new Object2ObjectOpenHashMap<>();
 		}
-		
+
 		public boolean isEmpty() {
 			return anchor == null;
 		}
@@ -195,7 +197,7 @@ public class BlockClusterOutline extends Outline {
 		public void include(BlockPos pos) {
 			if (anchor == null)
 				anchor = pos;
-			
+
 			pos = pos.subtract(anchor);
 
 			// 6 FACES
@@ -203,8 +205,7 @@ public class BlockClusterOutline extends Outline {
 				Direction direction = Direction.get(AxisDirection.POSITIVE, axis);
 				for (int offset : Iterate.zeroAndOne) {
 					MergeEntry entry = new MergeEntry(axis, pos.relative(direction, offset));
-					if (visibleFaces.remove(entry) == null)
-						visibleFaces.put(entry, offset == 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE);
+					visibleFaces.put(entry, offset == 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE);
 				}
 			}
 
@@ -227,8 +228,7 @@ public class BlockClusterOutline extends Outline {
 							for (int offset2 : Iterate.zeroAndOne) {
 								entryPos = entryPos.relative(direction2, offset2);
 								MergeEntry entry = new MergeEntry(axis, entryPos);
-								if (!visibleEdges.remove(entry))
-									visibleEdges.add(entry);
+								visibleEdges.add(entry);
 							}
 						}
 					}

@@ -114,12 +114,12 @@ public class SuperGlueSelectionHandler {
 			return;
 		}
 
-		if (firstPos != null && !firstPos.closerThan(hovered, 24)) {
-			Lang.translate("super_glue.too_far")
-				.color(FAIL)
-				.sendStatus(player);
-			return;
-		}
+//		if (firstPos != null && !firstPos.closerThan(hovered, 24)) {
+//			Lang.translate("super_glue.too_far")
+//				.color(FAIL)
+//				.sendStatus(player);
+//			return;
+//		}
 
 		boolean cancel = player.isShiftKeyDown();
 		if (cancel && firstPos == null)
