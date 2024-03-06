@@ -1,5 +1,5 @@
 name: I found a bug!
-description: Report some other kind of issue.
+description: "Report some other kind of issue. You should ask in the Discord first, to make sure it's actually a bug."
 labels: [ "type: bug" ]
 body:
     -   type: textarea
