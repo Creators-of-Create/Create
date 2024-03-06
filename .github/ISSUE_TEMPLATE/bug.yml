@@ -28,13 +28,12 @@ body:
             label: Debug Information
             description: "
             Please run the \"/create debuginfo\" command in-game.
-            This will copy a bunch of useful information that will greatly help with debugging.
+            This will copy a bunch of useful information that will greatly help with debugging to your clipboard.
             Please paste this information here.
-            If this command does not exist, your version of Create is outdated.
-            Please update to the latest version first.
+            If this command does not exist, your can skip this part.
             "
         validations:
-            required: true
+            required: false
 
     -   type: markdown
         attributes:
