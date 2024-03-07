@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.outliner;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -12,7 +13,10 @@ import com.mojang.math.Vector4f;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
+import org.lwjgl.system.CallbackI.B;
+
 import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -36,8 +40,7 @@ public class BlockClusterOutline extends Outline {
 	protected final Vector3f originTemp = new Vector3f();
 
 	public BlockClusterOutline(Iterable<BlockPos> positions) {
-		cluster = new Cluster();
-		positions.forEach(cluster::include);
+		cluster = Cluster.of(positions);
 	}
 
 	@Override
@@ -181,6 +184,8 @@ public class BlockClusterOutline extends Outline {
 
 	private static class Cluster {
 
+		private static final Map<Iterable<BlockPos>, Cluster> cache = new Object2ObjectOpenHashMap<>();
+
 		private BlockPos anchor;
 		private final Map<MergeEntry, AxisDirection> visibleFaces;
 		private final Set<MergeEntry> visibleEdges;
@@ -194,23 +199,27 @@ public class BlockClusterOutline extends Outline {
 			return anchor == null;
 		}
 
+		public static Cluster of(Iterable<BlockPos> positions) {
+			return cache.computeIfAbsent(positions, p -> {
+				Cluster cluster = new Cluster();
+				p.forEach(cluster::include);
+				return cluster;
+			});
+		}
+
 		public void include(BlockPos pos) {
 			if (anchor == null)
 				anchor = pos;
-			int dx = pos.getX() - anchor.getX();
-			int dy = pos.getY() - anchor.getY();
-			int dz = pos.getZ() - anchor.getZ();
+
+			pos = pos.subtract(anchor);
 
 			// 6 FACES
 			for (Axis axis : Iterate.axes) {
 				Direction direction = Direction.get(AxisDirection.POSITIVE, axis);
 				for (int offset : Iterate.zeroAndOne) {
 					MergeEntry entry = new MergeEntry(axis, pos.relative(direction, offset));
-					if(!visibleFaces.containsKey(entry)) {
+					if (visibleFaces.remove(entry) == null)
 						visibleFaces.put(entry, offset == 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE);
-					} else {
-						visibleFaces.remove(entry);
-					}
 				}
 			}
 
@@ -220,36 +229,28 @@ public class BlockClusterOutline extends Outline {
 					if (axis == axis2)
 						continue;
 					for (Axis axis3 : Iterate.axes) {
-						if (axis == axis3 || axis2 == axis3)
+						if(axis == axis3 || axis2 == axis3)
 							continue;
 
-						for (int offset : Iterate.zeroAndOne) {
-							BlockPos entryPos = new BlockPos(
-									dx + (axis2 == Axis.X ? offset : 0),
-									dy + (axis2 == Axis.Y ? offset : 0),
-									dz + (axis2 == Axis.Z ? offset : 0)
-							);
+						Direction direction = Direction.get(AxisDirection.POSITIVE, axis2);
+						Direction direction2 = Direction.get(AxisDirection.POSITIVE, axis3);
 
+						for (int offset : Iterate.zeroAndOne) {
+							BlockPos entryPos = pos.relative(direction, offset);
 							for (int offset2 : Iterate.zeroAndOne) {
-								BlockPos finalEntryPos = new BlockPos(
-										entryPos.getX() + (axis3 == Axis.X ? offset2 : 0),
-										entryPos.getY() + (axis3 == Axis.Y ? offset2 : 0),
-										entryPos.getZ() + (axis3 == Axis.Z ? offset2 : 0)
-								);
-								MergeEntry entry = new MergeEntry(axis, finalEntryPos);
-								if(!visibleEdges.contains(entry)) {
+								entryPos = entryPos.relative(direction2, offset2);
+								MergeEntry entry = new MergeEntry(axis, entryPos);
+								if (!visibleEdges.remove(entry))
 									visibleEdges.add(entry);
-								} else {
-									visibleEdges.remove(entry);
-								}
 							}
 						}
 					}
+
 					break;
 				}
 			}
-		}
 
+		}
 	}
 
 	private static class MergeEntry {
