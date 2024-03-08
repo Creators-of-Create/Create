@@ -216,17 +216,14 @@ public class BlockClusterOutline extends Outline {
 		}
 
 		public void include(Set<BlockPos> nonRelativePositions) {
-			if(nonRelativePositions.size() < 2) {
-				if(!nonRelativePositions.isEmpty()) {
-					singleBlock();
-				}
+			if(nonRelativePositions.isEmpty()) {
 				return;
-
 			}
 			Set<BlockPos> positions = new ObjectLinkedOpenHashSet<>();
 			nonRelativePositions.forEach(p -> positions.add(p.subtract(anchor)));
 
-			boolean[][][] table = makeTable(positions);
+			Table table = new Table(positions);
+			System.out.println("table: " + (table.xLength() - 2) + "x" + (table.yLength() - 2) + "x" + (table.zLength() - 2));
 
 			for(BlockPos pos : positions) {
 				addFaces(pos, table);
@@ -234,50 +231,70 @@ public class BlockClusterOutline extends Outline {
 			}
 		}
 
-		private void singleBlock() {
-			for(Direction d : Iterate.directions) {
-				visibleFaces.put(new MergeEntry(d.getAxis(), anchor), d.getAxisDirection());
-				visibleEdges.add(new MergeEntry(d.getAxis(), anchor));
-			}
-		}
-
-		private void addFaces(BlockPos pos, boolean[][][] table) {
+		private void addFaces(BlockPos pos, Table table) {
 			for(Direction d : Iterate.directions) {
 				BlockPos offset = pos.relative(d);
-				if(!table[offset.getX() + 1][Math.abs(offset.getY()) + 1][offset.getZ() + 1]) {
+				if(!table.get(offset)) {
 					visibleFaces.put(new MergeEntry(d.getAxis(), pos), d.getAxisDirection());
 				}
 			}
 		}
 
-		private void addEdges(BlockPos pos, boolean[][][] table) {
+		private void addEdges(BlockPos pos, Table table) {
 			for(Direction d : Iterate.directions) {
-				BlockPos offset = pos.relative(d);
-				if(!table[offset.getX() + 1][Math.abs(offset.getY()) + 1][offset.getZ() + 1]) {
-					visibleEdges.add(new MergeEntry(d.getAxis(), pos));
+				for(Direction d2 : Iterate.directions) {
+					if(d == d2 || d == d2.getOpposite()) continue;
+
+					BlockPos offset = pos.relative(d).relative(d2);
+					if(!table.get(offset)) {
+						visibleEdges.add(new MergeEntry(d.getAxis(), pos));
+					}
 				}
 			}
 		}
+	}
 
-		private boolean[][][] makeTable(Set<BlockPos> positions) {
+	private static class Table {
+		private final boolean[][][] table;
+
+		public Table(Set<BlockPos> positions){
 			BlockPos extreme = extreme(positions);
-			boolean[][][] table = new boolean[extreme.getX() + 2][Math.abs(extreme.getY()) + 2][extreme.getZ() + 2];
+			System.out.println("extreme: " + extreme);
+
+			// add 3: +2 for each side, +1 for the block itself
+			table = new boolean[extreme.getX() + 3][extreme.getY() + 3][extreme.getZ() + 3];
 
 			for(BlockPos pos : positions) {
-				table[pos.getX() + 1][Math.abs(pos.getY()) + 1][pos.getZ() + 1] = true;
+				table[Math.abs(pos.getX()) + 1][Math.abs(pos.getY()) + 1][Math.abs(pos.getZ()) + 1] = true;
 			}
-			return table;
+		}
+
+		public int xLength() {
+			return table.length;
+		}
+
+		public int yLength() {
+			return table[0].length;
+		}
+
+		public int zLength() {
+			return table[0][0].length;
+		}
+
+		public boolean get(BlockPos pos) {
+			return table[Math.abs(pos.getX()) + 1][Math.abs(pos.getY()) + 1][Math.abs(pos.getZ()) + 1];
 		}
 
 		private static BlockPos extreme(Set<BlockPos> positions) {
-			BlockPos extreme = BlockPos.ZERO;
+			int x = 0, y = 0, z = 0;
 			for(BlockPos pos : positions) {
-				if(pos.distSqr(BlockPos.ZERO) > extreme.distSqr(BlockPos.ZERO)) {
-					extreme = pos;
-				}
+				int curX = Math.abs(pos.getX()), curY = Math.abs(pos.getY()), curZ = Math.abs(pos.getZ());
+				if(curX > x) x = curX;
+				if(curY > y) y = curY;
+				if(curZ > z) z = curZ;
 			}
 
-			return extreme;
+			return new BlockPos(x, y, z);
 		}
 	}
 

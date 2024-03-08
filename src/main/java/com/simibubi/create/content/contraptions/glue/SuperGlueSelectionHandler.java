@@ -10,6 +10,7 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.chassis.AbstractChassisBlock;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
@@ -159,9 +160,12 @@ public class SuperGlueSelectionHandler {
 						.lineWidth(1 / 16f);
 
 				CreateClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
-					.colored(0x4D9162)
+//					.colored(0x4D9162)
+					.colored(Color.RED)
 					.disableLineNormals()
-					.lineWidth(1 / 64f);
+//					.lineWidth(1 / 64f)
+					.lineWidth(1 / 16f)
+				;
 			}
 
 			return;
