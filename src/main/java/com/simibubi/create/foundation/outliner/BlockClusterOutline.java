@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.outliner;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -199,31 +200,22 @@ public class BlockClusterOutline extends Outline {
 		}
 
 		public static Cluster of(Iterable<BlockPos> positions) {
-			return cache.computeIfAbsent(positions, p -> {
-				Cluster cluster = new Cluster(positions.iterator().next());
-				cluster.include(convertToSet(positions));
-				return cluster;
-			});
+//			return cache.computeIfAbsent(positions, p -> {
+//				Cluster cluster = new Cluster(p.iterator().next());
+//				cluster.include(p);
+//				return cluster;
+//			});
+			Cluster cluster = new Cluster(positions.iterator().next());
+			cluster.include(positions);
+			return cluster;
 		}
 
-		private static Set<BlockPos> convertToSet(Iterable<BlockPos> positions) {
-			if(positions instanceof ObjectOpenHashSet<BlockPos> set) { // usually will happen with glue
-				return set;
-			}
-			Set<BlockPos> set = new ObjectOpenHashSet<>();
-			positions.forEach(set::add);
-			return set;
-		}
-
-		public void include(Set<BlockPos> nonRelativePositions) {
-			if(nonRelativePositions.isEmpty()) {
-				return;
-			}
+		public void include(Iterable<BlockPos> nonRelativePositions) {
 			Set<BlockPos> positions = new ObjectLinkedOpenHashSet<>();
 			nonRelativePositions.forEach(p -> positions.add(p.subtract(anchor)));
 
 			Table table = new Table(positions);
-			System.out.println("table: " + (table.xLength() - 2) + "x" + (table.yLength() - 2) + "x" + (table.zLength() - 2));
+//			System.out.println("table: " + (table.xLength() - 2) + "x" + (table.yLength() - 2) + "x" + (table.zLength() - 2));
 
 			for(BlockPos pos : positions) {
 				addFaces(pos, table);
@@ -241,17 +233,33 @@ public class BlockClusterOutline extends Outline {
 		}
 
 		private void addEdges(BlockPos pos, Table table) {
-			for(Direction d : Iterate.directions) {
-				for(Direction d2 : Iterate.directions) {
-					if(d == d2 || d == d2.getOpposite()) continue;
+			for (Direction d1 : Iterate.directions) {
+				for (Direction d2 : Iterate.directions) {
+					if (d1.getAxis() == d2.getAxis()) continue;
 
-					BlockPos offset = pos.relative(d).relative(d2);
-					if(!table.get(offset)) {
-						visibleEdges.add(new MergeEntry(d.getAxis(), pos));
+					BlockPos offset = pos.relative(d1).relative(d2);
+
+					// Check if there is a block at the offset position
+					if (!table.get(offset)) {
+						// Create a new MergeEntry and add it to visibleEdges
+						Axis axis = null;
+						for(Axis a : Iterate.axes) {
+							if(a != d1.getAxis() && a != d2.getAxis()) {
+								axis = a;
+								break;
+							}
+						}
+						BlockPos posToAdd = offset;
+						if(d1.getAxisDirection() == AxisDirection.NEGATIVE || d2.getAxisDirection() == AxisDirection.NEGATIVE) {
+							posToAdd = pos;
+						}
+						visibleEdges.add(new MergeEntry(axis, posToAdd));
 					}
 				}
 			}
 		}
+
+		private void addEdgesCorrectly(BlockPos pos, Table table) {}
 	}
 
 	private static class Table {
@@ -259,7 +267,7 @@ public class BlockClusterOutline extends Outline {
 
 		public Table(Set<BlockPos> positions){
 			BlockPos extreme = extreme(positions);
-			System.out.println("extreme: " + extreme);
+//			System.out.println("extreme: " + extreme);
 
 			// add 3: +2 for each side, +1 for the block itself
 			table = new boolean[extreme.getX() + 3][extreme.getY() + 3][extreme.getZ() + 3];

@@ -152,12 +152,12 @@ public class SuperGlueSelectionHandler {
 					.color(color)
 					.sendStatus(player);
 
-				if (currentSelectionBox != null)
-					CreateClient.OUTLINER.showAABB(bbOutlineSlot, currentSelectionBox)
-						.colored(canReach && canAfford && !cancel ? HIGHLIGHT : FAIL)
-						.withFaceTextures(AllSpecialTextures.GLUE, AllSpecialTextures.GLUE)
-						.disableLineNormals()
-						.lineWidth(1 / 16f);
+//				if (currentSelectionBox != null)
+//					CreateClient.OUTLINER.showAABB(bbOutlineSlot, currentSelectionBox)
+//						.colored(canReach && canAfford && !cancel ? HIGHLIGHT : FAIL)
+//						.withFaceTextures(AllSpecialTextures.GLUE, AllSpecialTextures.GLUE)
+//						.disableLineNormals()
+//						.lineWidth(1 / 16f);
 
 				CreateClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
 //					.colored(0x4D9162)
