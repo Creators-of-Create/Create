@@ -24,10 +24,11 @@ public class SuperGlueSelectionHelper {
 			return null;
 
 		AABB bb = SuperGlueEntity.span(startPos, endPos);
+		int numBlocks = (int) (bb.getXsize() * bb.getYsize() * bb.getZsize());
 
-		PriorityQueue<BlockPos> frontier = new ObjectArrayFIFOQueue<>();
-		Set<BlockPos> visited = new ObjectOpenHashSet<>();
-		Set<BlockPos> attached = new ObjectOpenHashSet<>();
+		PriorityQueue<BlockPos> frontier = new ObjectArrayFIFOQueue<>(numBlocks);
+		Set<BlockPos> visited = new ObjectOpenHashSet<>(numBlocks);
+		Set<BlockPos> attached = new ObjectOpenHashSet<>(numBlocks);
 		Set<SuperGlueEntity> cachedOther = new ObjectOpenHashSet<>();
 
 		visited.add(startPos);
