@@ -3,20 +3,18 @@ package com.simibubi.create.foundation.outliner;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
-import org.lwjgl.system.CallbackI.B;
-
 import com.simibubi.create.AllSpecialTextures;
-import com.simibubi.create.Create;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -66,7 +64,7 @@ public class BlockClusterOutline extends Outline {
 			cluster.anchor.getZ() - camera.z);
 
 		AllSpecialTextures faceTexture = optionalFaceTexture.get();
-		PoseStack.Pose pose = ms.last();
+		Pose pose = ms.last();
 		RenderType renderType = RenderTypes.getOutlineTranslucent(faceTexture.getLocation(), true);
 		VertexConsumer consumer = buffer.getLateBuffer(renderType);
 
@@ -92,7 +90,7 @@ public class BlockClusterOutline extends Outline {
 		ms.translate(cluster.anchor.getX() - camera.x, cluster.anchor.getY() - camera.y,
 			cluster.anchor.getZ() - camera.z);
 
-		PoseStack.Pose pose = ms.last();
+		Pose pose = ms.last();
 		VertexConsumer consumer = buffer.getBuffer(RenderTypes.getOutlineSolid());
 
 		cluster.visibleEdges.forEach(edge -> {
@@ -166,7 +164,7 @@ public class BlockClusterOutline extends Outline {
 		pos3.add(x, y, z);
 	}
 
-	protected void bufferBlockFace(PoseStack.Pose pose, VertexConsumer consumer, BlockPos pos, Direction face, Vector4f color, int lightmap) {
+	protected void bufferBlockFace(Pose pose, VertexConsumer consumer, BlockPos pos, Direction face, Vector4f color, int lightmap) {
 		Vector3f pos0 = pos0Temp;
 		Vector3f pos1 = pos1Temp;
 		Vector3f pos2 = pos2Temp;
@@ -190,9 +188,10 @@ public class BlockClusterOutline extends Outline {
 		private final Map<MergeEntry, AxisDirection> visibleFaces;
 		private final Set<MergeEntry> visibleEdges;
 
-		public Cluster() {
+		private Cluster(BlockPos anchor) {
 			visibleEdges = new ObjectOpenHashSet<>();
 			visibleFaces = new Object2ObjectOpenHashMap<>();
+			this.anchor = anchor;
 		}
 
 		public boolean isEmpty() {
@@ -201,55 +200,84 @@ public class BlockClusterOutline extends Outline {
 
 		public static Cluster of(Iterable<BlockPos> positions) {
 			return cache.computeIfAbsent(positions, p -> {
-				Cluster cluster = new Cluster();
-				p.forEach(cluster::include);
+				Cluster cluster = new Cluster(positions.iterator().next());
+				cluster.include(convertToSet(positions));
 				return cluster;
 			});
 		}
 
-		public void include(BlockPos pos) {
-			if (anchor == null)
-				anchor = pos;
+		private static Set<BlockPos> convertToSet(Iterable<BlockPos> positions) {
+			if(positions instanceof ObjectOpenHashSet<BlockPos> set) { // usually will happen with glue
+				return set;
+			}
+			Set<BlockPos> set = new ObjectOpenHashSet<>();
+			positions.forEach(set::add);
+			return set;
+		}
 
-			pos = pos.subtract(anchor);
+		public void include(Set<BlockPos> nonRelativePositions) {
+			if(nonRelativePositions.size() < 2) {
+				if(!nonRelativePositions.isEmpty()) {
+					singleBlock();
+				}
+				return;
 
-			// 6 FACES
-			for (Axis axis : Iterate.axes) {
-				Direction direction = Direction.get(AxisDirection.POSITIVE, axis);
-				for (int offset : Iterate.zeroAndOne) {
-					MergeEntry entry = new MergeEntry(axis, pos.relative(direction, offset));
-					if (visibleFaces.remove(entry) == null)
-						visibleFaces.put(entry, offset == 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE);
+			}
+			Set<BlockPos> positions = new ObjectLinkedOpenHashSet<>();
+			nonRelativePositions.forEach(p -> positions.add(p.subtract(anchor)));
+
+			boolean[][][] table = makeTable(positions);
+
+			for(BlockPos pos : positions) {
+				addFaces(pos, table);
+				addEdges(pos, table);
+			}
+		}
+
+		private void singleBlock() {
+			for(Direction d : Iterate.directions) {
+				visibleFaces.put(new MergeEntry(d.getAxis(), anchor), d.getAxisDirection());
+				visibleEdges.add(new MergeEntry(d.getAxis(), anchor));
+			}
+		}
+
+		private void addFaces(BlockPos pos, boolean[][][] table) {
+			for(Direction d : Iterate.directions) {
+				BlockPos offset = pos.relative(d);
+				if(!table[offset.getX() + 1][Math.abs(offset.getY()) + 1][offset.getZ() + 1]) {
+					visibleFaces.put(new MergeEntry(d.getAxis(), pos), d.getAxisDirection());
+				}
+			}
+		}
+
+		private void addEdges(BlockPos pos, boolean[][][] table) {
+			for(Direction d : Iterate.directions) {
+				BlockPos offset = pos.relative(d);
+				if(!table[offset.getX() + 1][Math.abs(offset.getY()) + 1][offset.getZ() + 1]) {
+					visibleEdges.add(new MergeEntry(d.getAxis(), pos));
+				}
+			}
+		}
+
+		private boolean[][][] makeTable(Set<BlockPos> positions) {
+			BlockPos extreme = extreme(positions);
+			boolean[][][] table = new boolean[extreme.getX() + 2][Math.abs(extreme.getY()) + 2][extreme.getZ() + 2];
+
+			for(BlockPos pos : positions) {
+				table[pos.getX() + 1][Math.abs(pos.getY()) + 1][pos.getZ() + 1] = true;
+			}
+			return table;
+		}
+
+		private static BlockPos extreme(Set<BlockPos> positions) {
+			BlockPos extreme = BlockPos.ZERO;
+			for(BlockPos pos : positions) {
+				if(pos.distSqr(BlockPos.ZERO) > extreme.distSqr(BlockPos.ZERO)) {
+					extreme = pos;
 				}
 			}
 
-			// 12 EDGES
-			for (Axis axis : Iterate.axes) {
-				for (Axis axis2 : Iterate.axes) {
-					if (axis == axis2)
-						continue;
-					for (Axis axis3 : Iterate.axes) {
-						if(axis == axis3 || axis2 == axis3)
-							continue;
-
-						Direction direction = Direction.get(AxisDirection.POSITIVE, axis2);
-						Direction direction2 = Direction.get(AxisDirection.POSITIVE, axis3);
-
-						for (int offset : Iterate.zeroAndOne) {
-							BlockPos entryPos = pos.relative(direction, offset);
-							for (int offset2 : Iterate.zeroAndOne) {
-								entryPos = entryPos.relative(direction2, offset2);
-								MergeEntry entry = new MergeEntry(axis, entryPos);
-								if (!visibleEdges.remove(entry))
-									visibleEdges.add(entry);
-							}
-						}
-					}
-
-					break;
-				}
-			}
-
+			return extreme;
 		}
 	}
 
