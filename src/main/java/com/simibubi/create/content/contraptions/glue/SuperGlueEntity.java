@@ -110,8 +110,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	@Override
 	protected void defineSynchedData() {}
 
-	public static boolean isValidFace(Level world, BlockPos pos, Direction direction) {
-		BlockState state = world.getBlockState(pos);
+	public static boolean isValidFace(BlockState state, Level world, BlockPos pos, Direction direction) {
 		if (BlockMovementChecks.isBlockAttachedTowards(state, world, pos, direction))
 			return true;
 		if (!BlockMovementChecks.isMovementNecessary(state, world, pos))
@@ -121,8 +120,11 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		return true;
 	}
 
-	public static boolean isSideSticky(Level world, BlockPos pos, Direction direction) {
-		BlockState state = world.getBlockState(pos);
+	public static boolean isValidFace(Level world, BlockPos pos, Direction direction) {
+		return isValidFace(world.getBlockState(pos), world, pos, direction);
+	}
+
+	public static boolean isSideSticky(BlockState state, Direction direction) {
 		if (AllBlocks.STICKY_MECHANICAL_PISTON.has(state))
 			return state.getValue(DirectionalKineticBlock.FACING) == direction;
 

@@ -1,16 +1,15 @@
 package com.simibubi.create.content.contraptions.glue;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import com.google.common.base.Objects;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.chassis.AbstractChassisBlock;
-import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
@@ -115,12 +114,12 @@ public class SuperGlueSelectionHandler {
 			return;
 		}
 
-//		if (firstPos != null && !firstPos.closerThan(hovered, 24)) {
-//			Lang.translate("super_glue.too_far")
-//				.color(FAIL)
-//				.sendStatus(player);
-//			return;
-//		}
+		if (firstPos != null && !firstPos.closerThan(hovered, 48)) {
+			Lang.translate("super_glue.too_far")
+				.color(FAIL)
+				.sendStatus(player);
+			return;
+		}
 
 		boolean cancel = player.isShiftKeyDown();
 		if (cancel && firstPos == null)
@@ -128,7 +127,7 @@ public class SuperGlueSelectionHandler {
 
 		AABB currentSelectionBox = getCurrentSelectionBox();
 
-		boolean unchanged = Objects.equal(hovered, hoveredPos);
+		boolean unchanged = Objects.equals(hovered, hoveredPos);
 
 		if (unchanged) {
 			if (currentCluster != null) {
@@ -152,20 +151,17 @@ public class SuperGlueSelectionHandler {
 					.color(color)
 					.sendStatus(player);
 
-//				if (currentSelectionBox != null)
-//					CreateClient.OUTLINER.showAABB(bbOutlineSlot, currentSelectionBox)
-//						.colored(canReach && canAfford && !cancel ? HIGHLIGHT : FAIL)
-//						.withFaceTextures(AllSpecialTextures.GLUE, AllSpecialTextures.GLUE)
-//						.disableLineNormals()
-//						.lineWidth(1 / 16f);
+				if (currentSelectionBox != null)
+					CreateClient.OUTLINER.showAABB(bbOutlineSlot, currentSelectionBox)
+						.colored(canReach && canAfford && !cancel ? HIGHLIGHT : FAIL)
+						.withFaceTextures(AllSpecialTextures.GLUE, AllSpecialTextures.GLUE)
+						.disableLineNormals()
+						.lineWidth(1 / 16f);
 
 				CreateClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
-//					.colored(0x4D9162)
-					.colored(Color.RED)
+					.colored(PASSIVE)
 					.disableLineNormals()
-//					.lineWidth(1 / 64f)
-					.lineWidth(1 / 16f)
-				;
+					.lineWidth(1 / 64f);
 			}
 
 			return;
@@ -173,8 +169,7 @@ public class SuperGlueSelectionHandler {
 
 		hoveredPos = hovered;
 
-		Set<BlockPos> cluster = SuperGlueSelectionHelper.searchGlueGroup(mc.level, firstPos, hoveredPos, true);
-		currentCluster = cluster;
+		currentCluster = SuperGlueSelectionHelper.searchGlueGroup(mc.level, firstPos, hoveredPos, true);
 		glueRequired = 1;
 	}
 

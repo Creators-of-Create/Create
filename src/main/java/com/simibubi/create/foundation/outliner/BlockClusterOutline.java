@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.outliner;
 
-import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -14,6 +15,8 @@ import com.mojang.math.Vector4f;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+
+import org.apache.commons.lang3.tuple.Triple;
 
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.render.RenderTypes;
@@ -55,7 +58,7 @@ public class BlockClusterOutline extends Outline {
 
 	protected void renderFaces(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, float pt, Vector4f color, int lightmap) {
 		Optional<AllSpecialTextures> optionalFaceTexture = params.faceTexture;
-		if (!optionalFaceTexture.isPresent())
+		if (optionalFaceTexture.isEmpty())
 			return;
 		if (cluster.isEmpty())
 			return;
@@ -189,10 +192,9 @@ public class BlockClusterOutline extends Outline {
 		private final Map<MergeEntry, AxisDirection> visibleFaces;
 		private final Set<MergeEntry> visibleEdges;
 
-		private Cluster(BlockPos anchor) {
+		private Cluster() {
 			visibleEdges = new ObjectOpenHashSet<>();
 			visibleFaces = new Object2ObjectOpenHashMap<>();
-			this.anchor = anchor;
 		}
 
 		public boolean isEmpty() {
@@ -200,120 +202,76 @@ public class BlockClusterOutline extends Outline {
 		}
 
 		public static Cluster of(Iterable<BlockPos> positions) {
-//			return cache.computeIfAbsent(positions, p -> {
-//				Cluster cluster = new Cluster(p.iterator().next());
-//				cluster.include(p);
-//				return cluster;
-//			});
-			Cluster cluster = new Cluster(positions.iterator().next());
-			cluster.include(positions);
-			return cluster;
+			return cache.computeIfAbsent(positions, p -> {
+				Cluster cluster = new Cluster();
+				cluster.include(p);
+				return cluster;
+			});
 		}
 
 		public void include(Iterable<BlockPos> nonRelativePositions) {
+			if(isEmpty()) {
+				Iterator<BlockPos> iterator = nonRelativePositions.iterator();
+				if (!iterator.hasNext())
+					return;
+				anchor = iterator.next();
+			}
+
 			Set<BlockPos> positions = new ObjectLinkedOpenHashSet<>();
 			nonRelativePositions.forEach(p -> positions.add(p.subtract(anchor)));
 
-			Table table = new Table(positions);
-//			System.out.println("table: " + (table.xLength() - 2) + "x" + (table.yLength() - 2) + "x" + (table.zLength() - 2));
-
 			for(BlockPos pos : positions) {
-				addFaces(pos, table);
-				addEdges(pos, table);
+				addFaces(pos);
+				addEdges(pos);
 			}
 		}
 
-		private void addFaces(BlockPos pos, Table table) {
-			for(Direction d : Iterate.directions) {
-				BlockPos offset = pos.relative(d);
-				if(!table.get(offset)) {
-					visibleFaces.put(new MergeEntry(d.getAxis(), pos), d.getAxisDirection());
+		private void addFaces(BlockPos pos) {
+			for (Axis axis : Iterate.axes) {
+				Direction direction = Direction.get(AxisDirection.POSITIVE, axis);
+				for (int offset : Iterate.zeroAndOne) {
+					BlockPos entryPos = pos.relative(direction, offset);
+					MergeEntry entry = new MergeEntry(axis, entryPos);
+					if(visibleFaces.remove(entry) == null)
+						visibleFaces.put(entry, offset == 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE);
 				}
 			}
 		}
 
-		private void addEdges(BlockPos pos, Table table) {
-			for (Direction d1 : Iterate.directions) {
-				for (Direction d2 : Iterate.directions) {
-					if (d1.getAxis() == d2.getAxis()) continue;
+		@SuppressWarnings("SuspiciousNameCombination")
+		private static final List<Triple<Axis, Axis, Axis>> AXES = List.of(
+				Triple.of(Axis.X, Axis.Y, Axis.Z),
+				Triple.of(Axis.Y, Axis.X, Axis.Z),
+				Triple.of(Axis.Z, Axis.X, Axis.Y)
+		);
 
-					BlockPos offset = pos.relative(d1).relative(d2);
+		private void addEdges(BlockPos pos) {
+			for(Triple<Axis, Axis, Axis> t : AXES) {
+				Direction direction = Direction.get(AxisDirection.POSITIVE, t.getMiddle());
+				Direction direction2 = Direction.get(AxisDirection.POSITIVE, t.getRight());
 
-					// Check if there is a block at the offset position
-					if (!table.get(offset)) {
-						// Create a new MergeEntry and add it to visibleEdges
-						Axis axis = null;
-						for(Axis a : Iterate.axes) {
-							if(a != d1.getAxis() && a != d2.getAxis()) {
-								axis = a;
-								break;
-							}
-						}
-						BlockPos posToAdd = offset;
-						if(d1.getAxisDirection() == AxisDirection.NEGATIVE || d2.getAxisDirection() == AxisDirection.NEGATIVE) {
-							posToAdd = pos;
-						}
-						visibleEdges.add(new MergeEntry(axis, posToAdd));
+				BlockPos plusD1 = pos.relative(direction), plusD2 = pos.relative(direction2), plusBoth = plusD1.relative(direction2);
+				BlockPos[] positions = new BlockPos[] {pos, plusD1, plusD2, plusBoth};
+				for(BlockPos p : positions) {
+					MergeEntry entry = new MergeEntry(t.getLeft(), p);
+					if(!visibleEdges.remove(entry)) {
+						visibleEdges.add(entry);
 					}
 				}
 			}
-		}
-
-		private void addEdgesCorrectly(BlockPos pos, Table table) {}
-	}
-
-	private static class Table {
-		private final boolean[][][] table;
-
-		public Table(Set<BlockPos> positions){
-			BlockPos extreme = extreme(positions);
-//			System.out.println("extreme: " + extreme);
-
-			// add 3: +2 for each side, +1 for the block itself
-			table = new boolean[extreme.getX() + 3][extreme.getY() + 3][extreme.getZ() + 3];
-
-			for(BlockPos pos : positions) {
-				table[Math.abs(pos.getX()) + 1][Math.abs(pos.getY()) + 1][Math.abs(pos.getZ()) + 1] = true;
-			}
-		}
-
-		public int xLength() {
-			return table.length;
-		}
-
-		public int yLength() {
-			return table[0].length;
-		}
-
-		public int zLength() {
-			return table[0][0].length;
-		}
-
-		public boolean get(BlockPos pos) {
-			return table[Math.abs(pos.getX()) + 1][Math.abs(pos.getY()) + 1][Math.abs(pos.getZ()) + 1];
-		}
-
-		private static BlockPos extreme(Set<BlockPos> positions) {
-			int x = 0, y = 0, z = 0;
-			for(BlockPos pos : positions) {
-				int curX = Math.abs(pos.getX()), curY = Math.abs(pos.getY()), curZ = Math.abs(pos.getZ());
-				if(curX > x) x = curX;
-				if(curY > y) y = curY;
-				if(curZ > z) z = curZ;
-			}
-
-			return new BlockPos(x, y, z);
 		}
 	}
 
 	private static class MergeEntry {
 
-		private Axis axis;
-		private BlockPos pos;
+		private final Axis axis;
+		private final BlockPos pos;
+		private final int hash;
 
 		public MergeEntry(Axis axis, BlockPos pos) {
 			this.axis = axis;
 			this.pos = pos;
+			this.hash = pos.hashCode() * 31 + axis.ordinal();
 		}
 
 		@Override
@@ -323,12 +281,12 @@ public class BlockClusterOutline extends Outline {
 			if (!(o instanceof MergeEntry other))
 				return false;
 
-			return this.axis == other.axis && this.pos.equals(other.pos);
+			return this.axis == other.axis && (this.pos == other.pos || this.pos.equals(other.pos));
 		}
 
 		@Override
 		public int hashCode() {
-			return this.pos.hashCode() * 31 + axis.ordinal();
+			return hash;
 		}
 	}
 }

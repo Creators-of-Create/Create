@@ -14,6 +14,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -29,7 +32,7 @@ public class SuperGlueSelectionHelper {
 		PriorityQueue<BlockPos> frontier = new ObjectArrayFIFOQueue<>(numBlocks);
 		Set<BlockPos> visited = new ObjectOpenHashSet<>(numBlocks);
 		Set<BlockPos> attached = new ObjectOpenHashSet<>(numBlocks);
-		Set<SuperGlueEntity> cachedOther = new ObjectOpenHashSet<>();
+		Set<SuperGlueEntity> cachedEntities = new ObjectOpenHashSet<>();
 
 		visited.add(startPos);
 		frontier.enqueue(startPos);
@@ -40,16 +43,23 @@ public class SuperGlueSelectionHelper {
 
 			for (Direction d : Iterate.directions) {
 				BlockPos offset = currentPos.relative(d);
-				boolean gluePresent = includeOther && SuperGlueEntity.isGlued(level, currentPos, d, cachedOther);
-				boolean alreadySticky = includeOther && SuperGlueEntity.isSideSticky(level, currentPos, d)
-					|| SuperGlueEntity.isSideSticky(level, offset, d.getOpposite());
+				BlockState state = level.getChunkAt(offset).getBlockState(offset);
+				Block block = state.getBlock();
+
+				// fast-paths for common non-sticky blocks
+				if(block == Blocks.AIR) continue;
+				if(block == Blocks.WATER) continue;
+
+				boolean gluePresent = includeOther && SuperGlueEntity.isGlued(level, currentPos, d, cachedEntities);
+				boolean alreadySticky = includeOther && SuperGlueEntity.isSideSticky(state, d)
+					|| SuperGlueEntity.isSideSticky(state, d.getOpposite());
 
 				if (!alreadySticky && !gluePresent && !bb.contains(Vec3.atCenterOf(offset)))
 					continue;
-				if (!BlockMovementChecks.isMovementNecessary(level.getBlockState(offset), level, offset))
+				if (!BlockMovementChecks.isMovementNecessary(state, level, offset))
 					continue;
-				if (!SuperGlueEntity.isValidFace(level, currentPos, d)
-					|| !SuperGlueEntity.isValidFace(level, offset, d.getOpposite()))
+				if (!SuperGlueEntity.isValidFace(state, level, currentPos, d)
+					|| !SuperGlueEntity.isValidFace(state, level, offset, d.getOpposite()))
 					continue;
 
 				if (visited.add(offset))
