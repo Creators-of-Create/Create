@@ -42,29 +42,9 @@ public class SuperGlueSelectionHelper {
 			attached.add(currentPos);
 
 			for(Direction d : Iterate.directions) {
-				if(!SuperGlueEntity.isValidFace(level.getBlockState(currentPos), level, currentPos, d))
-					continue;
-
 				BlockPos offset = currentPos.relative(d);
-				BlockState state = level.getChunkAt(offset).getBlockState(offset);
-				Block block = state.getBlock();
 
-				// fast-paths for common non-sticky blocks
-				if(block == Blocks.AIR) continue;
-				if(block == Blocks.WATER) continue;
-
-				boolean gluePresent = includeOther && SuperGlueEntity.isGlued(level, currentPos, d, cachedEntities);
-				boolean alreadySticky = includeOther && SuperGlueEntity.isSideSticky(state, d)
-						|| SuperGlueEntity.isSideSticky(state, d.getOpposite());
-
-				if(!alreadySticky && !gluePresent && !bb.contains(Vec3.atCenterOf(offset)))
-					continue;
-				if(!BlockMovementChecks.isMovementNecessary(state, level, offset))
-					continue;
-				if(!SuperGlueEntity.isValidFace(state, level, offset, d.getOpposite()))
-					continue;
-
-				if(visited.add(offset))
+				if(visited.add(offset) && shouldAttach(level, offset, d, cachedEntities, includeOther, bb, currentPos))
 					frontier.enqueue(offset);
 			}
 		}
@@ -73,6 +53,34 @@ public class SuperGlueSelectionHelper {
 			return null;
 
 		return attached;
+	}
+
+	private static boolean shouldAttach(Level level, BlockPos offset, Direction d, Set<SuperGlueEntity> cachedEntities, boolean includeOther, AABB bb, BlockPos currentPos) {
+		BlockState state = level.getChunkAt(offset).getBlockState(offset);
+		Block block = state.getBlock();
+
+		// fast-paths for common non-sticky blocks
+		if(block == Blocks.AIR || block == Blocks.WATER) return false;
+
+		if(!BlockMovementChecks.isMovementNecessary(state, level, offset)) {
+			return false;
+		}
+
+		if(includeOther) {
+			boolean canAttach = SuperGlueEntity.isGlued(level, currentPos, d, cachedEntities)
+					|| SuperGlueEntity.isSideSticky(state, d) || SuperGlueEntity.isSideSticky(state, d.getOpposite())
+					|| bb.contains(Vec3.atCenterOf(offset));
+			if(!canAttach) {
+				return false;
+			}
+		}
+
+		if(!SuperGlueEntity.isValidFace(state, level, offset, d.getOpposite()) ||
+				!SuperGlueEntity.isValidFace(level.getBlockState(currentPos), level, currentPos, d)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public static boolean collectGlueFromInventory(Player player, int requiredAmount, boolean simulate) {
