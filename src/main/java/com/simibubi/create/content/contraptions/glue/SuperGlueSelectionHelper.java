@@ -37,11 +37,14 @@ public class SuperGlueSelectionHelper {
 		visited.add(startPos);
 		frontier.enqueue(startPos);
 
-		while (!frontier.isEmpty()) {
+		while(!frontier.isEmpty()) {
 			BlockPos currentPos = frontier.dequeue();
 			attached.add(currentPos);
 
-			for (Direction d : Iterate.directions) {
+			for(Direction d : Iterate.directions) {
+				if(!SuperGlueEntity.isValidFace(level.getBlockState(currentPos), level, currentPos, d))
+					continue;
+
 				BlockPos offset = currentPos.relative(d);
 				BlockState state = level.getChunkAt(offset).getBlockState(offset);
 				Block block = state.getBlock();
@@ -52,17 +55,16 @@ public class SuperGlueSelectionHelper {
 
 				boolean gluePresent = includeOther && SuperGlueEntity.isGlued(level, currentPos, d, cachedEntities);
 				boolean alreadySticky = includeOther && SuperGlueEntity.isSideSticky(state, d)
-					|| SuperGlueEntity.isSideSticky(state, d.getOpposite());
+						|| SuperGlueEntity.isSideSticky(state, d.getOpposite());
 
-				if (!alreadySticky && !gluePresent && !bb.contains(Vec3.atCenterOf(offset)))
+				if(!alreadySticky && !gluePresent && !bb.contains(Vec3.atCenterOf(offset)))
 					continue;
-				if (!BlockMovementChecks.isMovementNecessary(state, level, offset))
+				if(!BlockMovementChecks.isMovementNecessary(state, level, offset))
 					continue;
-				if (!SuperGlueEntity.isValidFace(state, level, currentPos, d)
-					|| !SuperGlueEntity.isValidFace(state, level, offset, d.getOpposite()))
+				if(!SuperGlueEntity.isValidFace(state, level, offset, d.getOpposite()))
 					continue;
 
-				if (visited.add(offset))
+				if(visited.add(offset))
 					frontier.enqueue(offset);
 			}
 		}

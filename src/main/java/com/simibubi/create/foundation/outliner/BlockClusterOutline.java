@@ -16,12 +16,14 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -72,7 +74,10 @@ public class BlockClusterOutline extends Outline {
 		RenderType renderType = RenderTypes.getOutlineTranslucent(faceTexture.getLocation(), true);
 		VertexConsumer consumer = buffer.getLateBuffer(renderType);
 
-		cluster.visibleFaces.forEach((face, axisDirection) -> {
+		cluster.visibleFaces.forEach((face, pair) -> {
+			if(pair.getSecond().booleanValue())
+				return;
+			AxisDirection axisDirection = pair.getFirst();
 			Direction direction = Direction.get(axisDirection, face.axis);
 			BlockPos pos = face.pos;
 			if (axisDirection == AxisDirection.POSITIVE)
@@ -97,7 +102,9 @@ public class BlockClusterOutline extends Outline {
 		Pose pose = ms.last();
 		VertexConsumer consumer = buffer.getBuffer(RenderTypes.getOutlineSolid());
 
-		cluster.visibleEdges.forEach(edge -> {
+		cluster.visibleEdges.forEach((edge, hide) -> {
+			if (hide.booleanValue())
+				return;
 			BlockPos pos = edge.pos;
 			Vector3f origin = originTemp;
 			origin.set(pos.getX(), pos.getY(), pos.getZ());
@@ -110,54 +117,54 @@ public class BlockClusterOutline extends Outline {
 
 	public static void loadFaceData(Direction face, Vector3f pos0, Vector3f pos1, Vector3f pos2, Vector3f pos3, Vector3f normal) {
 		switch (face) {
-		case DOWN -> {
-			// 0 1 2 3
-			pos0.set(0, 0, 1);
-			pos1.set(0, 0, 0);
-			pos2.set(1, 0, 0);
-			pos3.set(1, 0, 1);
-			normal.set(0, -1, 0);
-		}
-		case UP -> {
-			// 4 5 6 7
-			pos0.set(0, 1, 0);
-			pos1.set(0, 1, 1);
-			pos2.set(1, 1, 1);
-			pos3.set(1, 1, 0);
-			normal.set(0, 1, 0);
-		}
-		case NORTH -> {
-			// 7 2 1 4
-			pos0.set(1, 1, 0);
-			pos1.set(1, 0, 0);
-			pos2.set(0, 0, 0);
-			pos3.set(0, 1, 0);
-			normal.set(0, 0, -1);
-		}
-		case SOUTH -> {
-			// 5 0 3 6
-			pos0.set(0, 1, 1);
-			pos1.set(0, 0, 1);
-			pos2.set(1, 0, 1);
-			pos3.set(1, 1, 1);
-			normal.set(0, 0, 1);
-		}
-		case WEST -> {
-			// 4 1 0 5
-			pos0.set(0, 1, 0);
-			pos1.set(0, 0, 0);
-			pos2.set(0, 0, 1);
-			pos3.set(0, 1, 1);
-			normal.set(-1, 0, 0);
-		}
-		case EAST -> {
-			// 6 3 2 7
-			pos0.set(1, 1, 1);
-			pos1.set(1, 0, 1);
-			pos2.set(1, 0, 0);
-			pos3.set(1, 1, 0);
-			normal.set(1, 0, 0);
-		}
+			case DOWN -> {
+				// 0 1 2 3
+				pos0.set(0, 0, 1);
+				pos1.set(0, 0, 0);
+				pos2.set(1, 0, 0);
+				pos3.set(1, 0, 1);
+				normal.set(0, -1, 0);
+			}
+			case UP -> {
+				// 4 5 6 7
+				pos0.set(0, 1, 0);
+				pos1.set(0, 1, 1);
+				pos2.set(1, 1, 1);
+				pos3.set(1, 1, 0);
+				normal.set(0, 1, 0);
+			}
+			case NORTH -> {
+				// 7 2 1 4
+				pos0.set(1, 1, 0);
+				pos1.set(1, 0, 0);
+				pos2.set(0, 0, 0);
+				pos3.set(0, 1, 0);
+				normal.set(0, 0, -1);
+			}
+			case SOUTH -> {
+				// 5 0 3 6
+				pos0.set(0, 1, 1);
+				pos1.set(0, 0, 1);
+				pos2.set(1, 0, 1);
+				pos3.set(1, 1, 1);
+				normal.set(0, 0, 1);
+			}
+			case WEST -> {
+				// 4 1 0 5
+				pos0.set(0, 1, 0);
+				pos1.set(0, 0, 0);
+				pos2.set(0, 0, 1);
+				pos3.set(0, 1, 1);
+				normal.set(-1, 0, 0);
+			}
+			case EAST -> {
+				// 6 3 2 7
+				pos0.set(1, 1, 1);
+				pos1.set(1, 0, 1);
+				pos2.set(1, 0, 0);
+				pos3.set(1, 1, 0);
+				normal.set(1, 0, 0);
+			}
 		}
 	}
 
@@ -189,12 +196,12 @@ public class BlockClusterOutline extends Outline {
 		private static final Map<Iterable<BlockPos>, Cluster> cache = new Object2ObjectOpenHashMap<>();
 
 		private BlockPos anchor;
-		private final Map<MergeEntry, AxisDirection> visibleFaces;
-		private final Set<MergeEntry> visibleEdges;
+		private final Map<MergeEntry, Pair<AxisDirection, MutableBoolean>> visibleFaces;
+		private final Map<MergeEntry, MutableBoolean> visibleEdges;
 
 		private Cluster() {
-			visibleEdges = new ObjectOpenHashSet<>();
 			visibleFaces = new Object2ObjectOpenHashMap<>();
+			visibleEdges = new Object2ObjectOpenHashMap<>();
 		}
 
 		public boolean isEmpty() {
@@ -204,23 +211,20 @@ public class BlockClusterOutline extends Outline {
 		public static Cluster of(Iterable<BlockPos> positions) {
 			return cache.computeIfAbsent(positions, p -> {
 				Cluster cluster = new Cluster();
-				cluster.include(p);
+				cluster.include(positions);
 				return cluster;
 			});
 		}
 
-		public void include(Iterable<BlockPos> nonRelativePositions) {
-			if(isEmpty()) {
-				Iterator<BlockPos> iterator = nonRelativePositions.iterator();
+		public void include(Iterable<BlockPos> positions) {
+			if (anchor == null) {
+				Iterator<BlockPos> iterator = positions.iterator();
 				if (!iterator.hasNext())
 					return;
 				anchor = iterator.next();
 			}
-
-			Set<BlockPos> positions = new ObjectLinkedOpenHashSet<>();
-			nonRelativePositions.forEach(p -> positions.add(p.subtract(anchor)));
-
 			for(BlockPos pos : positions) {
+				pos = pos.subtract(anchor);
 				addFaces(pos);
 				addEdges(pos);
 			}
@@ -232,8 +236,9 @@ public class BlockClusterOutline extends Outline {
 				for (int offset : Iterate.zeroAndOne) {
 					BlockPos entryPos = pos.relative(direction, offset);
 					MergeEntry entry = new MergeEntry(axis, entryPos);
-					if(visibleFaces.remove(entry) == null)
-						visibleFaces.put(entry, offset == 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE);
+					AxisDirection axisDirection = offset == 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE;
+					Pair<AxisDirection, MutableBoolean> pair = visibleFaces.computeIfAbsent(entry, k -> Pair.of(axisDirection, new MutableBoolean(true)));
+					pair.getSecond().setValue(!pair.getSecond().booleanValue());
 				}
 			}
 		}
@@ -254,9 +259,8 @@ public class BlockClusterOutline extends Outline {
 				BlockPos[] positions = new BlockPos[] {pos, plusD1, plusD2, plusBoth};
 				for(BlockPos p : positions) {
 					MergeEntry entry = new MergeEntry(t.getLeft(), p);
-					if(!visibleEdges.remove(entry)) {
-						visibleEdges.add(entry);
-					}
+					MutableBoolean mutableBoolean = visibleEdges.computeIfAbsent(entry, k -> new MutableBoolean(true));
+					mutableBoolean.setValue(!mutableBoolean.booleanValue());
 				}
 			}
 		}
@@ -278,10 +282,7 @@ public class BlockClusterOutline extends Outline {
 		public boolean equals(Object o) {
 			if (this == o)
 				return true;
-			if (!(o instanceof MergeEntry other))
-				return false;
-
-			return this.axis == other.axis && (this.pos == other.pos || this.pos.equals(other.pos));
+			return o instanceof MergeEntry other && this.hash == other.hash;
 		}
 
 		@Override
