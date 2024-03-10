@@ -119,7 +119,7 @@ public class TrackTargetingBlockItem extends BlockItem {
 
 		boolean bezier = tag.contains("Bezier");
 
-		if (!selectedPos.closerThan(placedPos, bezier ? 64 + 16 : 16)) {
+		if (!selectedPos.closerThan(placedPos, 16)) {
 			player.displayClientMessage(Lang.translateDirect("track_target.too_far")
 				.withStyle(ChatFormatting.RED), true);
 			return InteractionResult.FAIL;
@@ -140,10 +140,10 @@ public class TrackTargetingBlockItem extends BlockItem {
 			itemInHand.setTag(null);
 		player.displayClientMessage(Lang.translateDirect("track_target.success")
 			.withStyle(ChatFormatting.GREEN), true);
-		
+
 		if (type == EdgePointType.SIGNAL)
 			AllAdvancements.SIGNAL.awardTo(player);
-		
+
 		return useOn;
 	}
 
