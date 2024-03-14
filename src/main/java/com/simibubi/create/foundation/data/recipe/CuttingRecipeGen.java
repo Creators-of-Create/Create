@@ -103,7 +103,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		ECO_3 = stripAndMakePlanks(Mods.ECO, "flowering_azalea_wood", "stripped_azalea_wood", null),
 
 		// Biomes O' Plenty
-		BOP = cuttingCompat(Mods.BOP, "fir", "redwood", "cherry", "mahogany", "jacaranda", "palm", "willow", "dead",
+		BOP = cuttingCompat(Mods.BOP, "fir", "redwood", "mahogany", "jacaranda", "palm", "willow", "dead",
 			"magic", "umbran", "hellbark"),
 
 		// Blue Skies (crystallized does not have stripped variants)
