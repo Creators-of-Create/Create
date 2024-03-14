@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import com.simibubi.create.foundation.utility.AngleHelper;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -136,6 +138,8 @@ public class ContraptionCollider {
 
 			// Transform entity position and motion to local space
 			Vec3 entityPosition = entity.position();
+			float entityXRot = entity.getXRot();
+			float entityYRot = entity.getYRot();
 			AABB entityBounds = entity.getBoundingBox();
 			Vec3 motion = entity.getDeltaMovement();
 			float yawOffset = rotation.getYawOffset();
@@ -360,6 +364,11 @@ public class ContraptionCollider {
 
 			entityMotion =
 				handleDamageFromTrain(world, contraptionEntity, contraptionMotion, entity, entityMotion, playerType);
+			float dXRot = AngleHelper.deg(-Mth.atan2(contraptionMotion.x, contraptionMotion.z));
+			float dYRot = AngleHelper.deg(-Mth.atan2(contraptionMotion.y,
+					Math.sqrt(Math.pow(contraptionMotion.x, 2) + Math.pow(contraptionMotion.z, 2))));
+			entity.setXRot(entityXRot + dXRot);
+			entity.setYRot(entityYRot + dYRot);
 
 			entity.hurtMarked = true;
 			Vec3 contactPointMotion = Vec3.ZERO;
