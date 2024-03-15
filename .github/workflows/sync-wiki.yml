@@ -1,0 +1,61 @@
+name: Publish docs to Wiki
+
+on:
+    workflow_dispatch:
+    schedule:
+        - cron: '0 0 * * *'
+    push:
+        paths:
+            - .docs/**
+        branches:
+            - 1.19/dev
+
+env:
+    USER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    USER_NAME: github-actions-bot
+    USER_EMAIL: github-actions[bot]@users.noreply.github.com
+    OWNER: Creators-of-Create
+    REPOSITORY_NAME: Create
+
+jobs:
+    publish_docs_to_wiki:
+        name: Publish docs to Wiki
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Pull content from wiki
+              run: |
+                  mkdir tmp_wiki
+                  cd tmp_wiki
+                  git init
+                  git config --global user.name $USER_NAME
+                  git config --global user.email $USER_EMAIL
+                  git pull https://$REPOSITORY_NAME:$USER_TOKEN@github.com/$OWNER/$REPOSITORY_NAME.wiki.git
+
+            - name: Update .docs folder
+              run: |
+                  rsync -av --delete tmp_wiki/ .docs/ --exclude .git
+
+            - name: Check for changes in .docs
+              run: |
+                  cd .docs
+                  git status
+
+            - name: Commit and push changes
+              run: |
+                  git add .
+                  git diff-index --quiet HEAD || git commit -m "Update docs from Wiki" && git push https://$REPOSITORY_NAME:$USER_TOKEN@github.com/$OWNER/$REPOSITORY_NAME.git 1.19/dev
+
+            - name: Check for changes in tmp_wiki
+              run: |
+                  cd tmp_wiki
+                  git status
+
+            - name: Push content to wiki
+              run: |
+                  cd tmp_wiki
+                  git add .
+                  git diff-index --quiet HEAD || git commit -m "Update Wiki content" && git push -f --set-upstream https://$REPOSITORY_NAME:$USER_TOKEN@github.com/$OWNER/$REPOSITORY_NAME.wiki.git master
