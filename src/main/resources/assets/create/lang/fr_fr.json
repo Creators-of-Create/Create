@@ -900,7 +900,7 @@
   "create.contraptions.clockwork.hour_first": "Aiguille des heures en premier",
   "create.contraptions.clockwork.hour_first_24": "Aiguille des 24 heures en premier",
   "create.contraptions.clockwork.minute_first": "Aiguille des minutes en premier",
-  "create.contraptions.contoller.target": "Composant ciblé",
+  "create.contraptions.controller.target": "Composant ciblé",
   "create.contraptions.mechanical_roller.pave_material": "Matériau de pavage",
   "create.contraptions.movement_mode": "Mode de mouvement",
   "create.contraptions.movement_mode.move_never_place": "Ne placer que quand l'ancre est détruite",

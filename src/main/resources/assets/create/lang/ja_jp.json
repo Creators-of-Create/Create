@@ -900,7 +900,7 @@
   "create.contraptions.clockwork.hour_first": "時針を最初に",
   "create.contraptions.clockwork.hour_first_24": "24時針を最初に",
   "create.contraptions.clockwork.minute_first": "分針を最初に",
-  "create.contraptions.contoller.target": "対象の機械",
+  "create.contraptions.controller.target": "対象の機械",
   "create.contraptions.mechanical_roller.pave_material": "敷き詰める素材",
   "create.contraptions.movement_mode": "移動モード",
   "create.contraptions.movement_mode.move_never_place": "アンカーが破壊されたときにのみ設置",

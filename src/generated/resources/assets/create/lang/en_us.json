@@ -902,7 +902,7 @@
   "create.contraptions.clockwork.hour_first": "Hour hand first",
   "create.contraptions.clockwork.hour_first_24": "24-Hour hand first",
   "create.contraptions.clockwork.minute_first": "Minute hand first",
-  "create.contraptions.contoller.target": "Targeted Component",
+  "create.contraptions.controller.target": "Targeted Component",
   "create.contraptions.mechanical_roller.pave_material": "Paving Material",
   "create.contraptions.movement_mode": "Movement Mode",
   "create.contraptions.movement_mode.move_never_place": "Place only when Anchor Destroyed",

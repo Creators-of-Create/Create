@@ -900,7 +900,7 @@
   "create.contraptions.clockwork.hour_first": "Сначала часовая стрелка",
   "create.contraptions.clockwork.hour_first_24": "Сначала 24-часовая стрелка",
   "create.contraptions.clockwork.minute_first": "Сначала минутная стрелка",
-  "create.contraptions.contoller.target": "Целевой компонент",
+  "create.contraptions.controller.target": "Целевой компонент",
   "create.contraptions.mechanical_roller.pave_material": "Материал укладки",
   "create.contraptions.movement_mode": "Режим движения",
   "create.contraptions.movement_mode.move_never_place": "Разобрать, если опора уничтожена",

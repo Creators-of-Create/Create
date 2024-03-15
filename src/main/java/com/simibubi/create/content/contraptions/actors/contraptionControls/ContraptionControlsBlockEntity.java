@@ -50,7 +50,7 @@ public class ContraptionControlsBlockEntity extends SmartBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(filtering = new FilteringBehaviour(this, new ControlsSlot()));
-		filtering.setLabel(Lang.translateDirect("contraptions.contoller.target"));
+		filtering.setLabel(Lang.translateDirect("contraptions.controller.target"));
 		filtering.withPredicate(AllItemTags.CONTRAPTION_CONTROLLED::matches);
 	}
 

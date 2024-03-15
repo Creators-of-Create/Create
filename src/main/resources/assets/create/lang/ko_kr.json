@@ -900,7 +900,7 @@
   "create.contraptions.clockwork.hour_first": "시침 먼저",
   "create.contraptions.clockwork.hour_first_24": "시침 먼저 (24시간 단위)",
   "create.contraptions.clockwork.minute_first": "분침 먼저",
-  "create.contraptions.contoller.target": "대상 장치",
+  "create.contraptions.controller.target": "대상 장치",
   "create.contraptions.mechanical_roller.pave_material": "포장 재료",
   "create.contraptions.movement_mode": "이동 설정",
   "create.contraptions.movement_mode.move_never_place": "멈춰도 구조물을 설치하지 않음",

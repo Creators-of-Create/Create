@@ -900,7 +900,7 @@
   "create.contraptions.clockwork.hour_first": "时针优先",
   "create.contraptions.clockwork.hour_first_24": "24 小时制优先",
   "create.contraptions.clockwork.minute_first": "分针优先",
-  "create.contraptions.contoller.target": "目标元件",
+  "create.contraptions.controller.target": "目标元件",
   "create.contraptions.mechanical_roller.pave_material": "铺路材料",
   "create.contraptions.movement_mode": "运动模式",
   "create.contraptions.movement_mode.move_never_place": "只有在动力方块摧毁后才将装置方块化",

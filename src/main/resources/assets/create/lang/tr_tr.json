@@ -866,7 +866,7 @@
   "create.contraptions.clockwork.hour_first": "Önce Saat Akrebi",
   "create.contraptions.clockwork.hour_first_24": "Önce 24 Saatlik Saat Akrebi",
   "create.contraptions.clockwork.minute_first": "Önce Saat Yelkovanı",
-  "create.contraptions.contoller.target": "Hedeflenen Bileşen",
+  "create.contraptions.controller.target": "Hedeflenen Bileşen",
   "create.contraptions.mechanical_roller.pave_material": "Döşeme Malzemesi",
   "create.contraptions.movement_mode": "Hareket Modu",
   "create.contraptions.movement_mode.move_never_place": "Sadece Çapa Yok edildiğinde Yerleştir",

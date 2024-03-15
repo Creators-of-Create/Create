@@ -900,7 +900,7 @@
   "create.contraptions.clockwork.hour_first": "Спочатку годинна стрілка",
   "create.contraptions.clockwork.hour_first_24": "Спочатку 24-годинна стрілка",
   "create.contraptions.clockwork.minute_first": "Спочатку хвилинна стрілка",
-  "create.contraptions.contoller.target": "Назначений прилад",
+  "create.contraptions.controller.target": "Назначений прилад",
   "create.contraptions.mechanical_roller.pave_material": "Матеріал для брукування",
   "create.contraptions.movement_mode": "Режим руху",
   "create.contraptions.movement_mode.move_never_place": "Розміщувати лише після знищення якоря",
