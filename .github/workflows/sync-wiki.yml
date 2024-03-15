@@ -8,7 +8,7 @@ on:
         paths:
             - .docs/**
         branches:
-            - 1.19/dev
+            - 1.18/dev # Bump whenever the main branch is changed
 
 env:
     USER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
