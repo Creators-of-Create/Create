@@ -499,49 +499,47 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		ItemUseType usage = required.usage;
 
 		// Find and apply damage or grab gunpowder
-    for (LazyOptional<IItemHandler> cap : attachedInventories) {
-        IItemHandler itemHandler = cap.orElse(EmptyHandler.INSTANCE);
-        for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
-            ItemStack extractItem = itemHandler.extractItem(slot, 1, true);
-            
-            // Check for gunpowder and add it to slot 4 if available
-            if (required.stack.getItem() == Items.GUNPOWDER && extractItem.getItem() == Items.GUNPOWDER) {
-                ItemStack slot4Stack = inventory.getStackInSlot(4);
-                if (slot4Stack.getCount() < 64) {
-                    ItemStack remaining = itemHandler.extractItem(slot, 1, !simulate);
-                    if (slot4Stack.isEmpty()) {
-                        inventory.setStackInSlot(4, remaining);
-                    } else {
-                        slot4Stack.grow(remaining.getCount());
-                    }
-                    return true; // Gunpowder added, exit the method
-                }
-            }
-
-            if (usage == ItemUseType.DAMAGE) {
-                if (!required.matches(extractItem))
-                    continue;
-                if (!extractItem.isDamageableItem())
-                    continue;
-
-                if (!simulate) {
-                    ItemStack stack = itemHandler.extractItem(slot, 1, false);
-                    stack.setDamageValue(stack.getDamageValue() + 1);
-                    if (stack.getDamageValue() <= stack.getMaxDamage()) {
-                        if (itemHandler.getStackInSlot(slot).isEmpty())
-                            itemHandler.insertItem(slot, stack, false);
-                        else
-                            ItemHandlerHelper.insertItem(itemHandler, stack, false);
-                    }
-                }
-
-                return true;
-            }
-        }
-    }
-
-			return false;
-		}
+	    for (LazyOptional<IItemHandler> cap : attachedInventories) {
+	        IItemHandler itemHandler = cap.orElse(EmptyHandler.INSTANCE);
+	        for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
+	            ItemStack extractItem = itemHandler.extractItem(slot, 1, true);
+	            
+	            // Check for gunpowder and add it to slot 4 if available
+	            if (required.stack.getItem() == Items.GUNPOWDER && extractItem.getItem() == Items.GUNPOWDER) {
+	                ItemStack slot4Stack = inventory.getStackInSlot(4);
+	                if (slot4Stack.getCount() < 64) {
+	                    ItemStack remaining = itemHandler.extractItem(slot, 1, !simulate);
+	                    if (slot4Stack.isEmpty()) {
+	                        inventory.setStackInSlot(4, remaining);
+	                    } else {
+	                        slot4Stack.grow(remaining.getCount());
+	                    }
+	                    return true; // Gunpowder added, exit the method
+	                }
+	            }
+	
+	            if (usage == ItemUseType.DAMAGE) {
+	                if (!required.matches(extractItem))
+	                    continue;
+	                if (!extractItem.isDamageableItem())
+	                    continue;
+	
+	                if (!simulate) {
+	                    ItemStack stack = itemHandler.extractItem(slot, 1, false);
+	                    stack.setDamageValue(stack.getDamageValue() + 1);
+	                    if (stack.getDamageValue() <= stack.getMaxDamage()) {
+	                        if (itemHandler.getStackInSlot(slot).isEmpty())
+	                            itemHandler.insertItem(slot, stack, false);
+	                        else
+	                            ItemHandlerHelper.insertItem(itemHandler, stack, false);
+	                    }
+	                }
+	                return true;
+	            }
+	        }
+	    }
+			return false;	
+	}
 
 		// Find and remove
 		boolean success = false;
