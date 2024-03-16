@@ -230,20 +230,18 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 				if (state.getBlock() != style.getBlockOfSize(size)) {
 					CompoundTag oldData = sbbe.getBogeyData();
 					level.setBlock(pos, copyProperties(state, getStateOfSize(sbbe, size)), 3);
-					BlockEntity newBlockEntity = level.getBlockEntity(pos);
-					if (!(newBlockEntity instanceof AbstractBogeyBlockEntity newBlockEntity1))
+					if (!(level.getBlockEntity(pos) instanceof AbstractBogeyBlockEntity bogeyBlockEntity))
 						return InteractionResult.FAIL;
-					newBlockEntity1.setBogeyData(oldData);
+					bogeyBlockEntity.setBogeyData(oldData);
 				}
 				player.displayClientMessage(Lang.translateDirect("bogey.style.updated_style")
 						.append(": ").append(style.displayName), true);
 			} else {
 				CompoundTag oldData = sbbe.getBogeyData();
 				level.setBlock(pos, this.getStateOfSize(sbbe, size), 3);
-				BlockEntity newBlockEntity = level.getBlockEntity(pos);
-				if (!(newBlockEntity instanceof AbstractBogeyBlockEntity newBlockEntity1))
+				if (!(level.getBlockEntity(pos) instanceof AbstractBogeyBlockEntity bogeyBlockEntity))
 					return InteractionResult.FAIL;
-				newBlockEntity1.setBogeyData(oldData);
+				bogeyBlockEntity.setBogeyData(oldData);
 				player.displayClientMessage(Lang.translateDirect("bogey.style.updated_style_and_size")
 						.append(": ").append(style.displayName), true);
 			}
