@@ -1,0 +1,29 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "silentgems:zircon_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "silentgems:zircon",
+      "count": 2
+    },
+    {
+      "item": "silentgems:zircon",
+      "chance": 0.25
+    },
+    {
+      "item": "minecraft:netherrack",
+      "chance": 0.12
+    }
+  ],
+  "processingTime": 350,
+  "conditions": [
+    {
+      "modid": "silentgems",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "endergetic:end_corrock_block"
+    }
+  ],
+  "results": [
+    {
+      "item": "endergetic:petrified_end_corrock_block"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "endergetic",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

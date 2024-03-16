@@ -1,0 +1,19 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "the_vault:ornate_chain"
+    }
+  ],
+  "results": [
+    {
+      "item": "the_vault:ornate_chain_rusty"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "the_vault",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

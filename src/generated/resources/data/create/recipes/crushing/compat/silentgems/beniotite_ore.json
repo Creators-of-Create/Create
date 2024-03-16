@@ -1,0 +1,29 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "silentgems:beniotite_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "silentgems:beniotite",
+      "count": 2
+    },
+    {
+      "item": "silentgems:beniotite",
+      "chance": 0.25
+    },
+    {
+      "item": "minecraft:netherrack",
+      "chance": 0.12
+    }
+  ],
+  "processingTime": 350,
+  "conditions": [
+    {
+      "modid": "silentgems",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
