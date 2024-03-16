@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/yellow"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:yellow_dye"
+    }
+  ],
+  "processingTime": 50
+}

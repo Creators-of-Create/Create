@@ -1,0 +1,29 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "silentgems:rose_quartz_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "silentgems:rose_quartz",
+      "count": 2
+    },
+    {
+      "item": "silentgems:rose_quartz",
+      "chance": 0.25
+    },
+    {
+      "item": "minecraft:end_stone",
+      "chance": 0.12
+    }
+  ],
+  "processingTime": 350,
+  "conditions": [
+    {
+      "modid": "silentgems",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

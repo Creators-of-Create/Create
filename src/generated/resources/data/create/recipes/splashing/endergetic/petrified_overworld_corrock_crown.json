@@ -1,0 +1,19 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "endergetic:overworld_corrock_crown"
+    }
+  ],
+  "results": [
+    {
+      "item": "endergetic:petrified_overworld_corrock_crown"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "endergetic",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
