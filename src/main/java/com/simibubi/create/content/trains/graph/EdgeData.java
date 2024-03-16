@@ -107,6 +107,8 @@ public class EdgeData {
 		if (!hasSignalBoundaries())
 			return getEffectiveEdgeGroupId(graph);
 		SignalBoundary firstSignal = next(EdgePointType.SIGNAL, 0);
+		if (firstSignal == null)
+			return null;
 		UUID currentGroup = firstSignal.getGroup(edge.node1);
 
 		for (TrackEdgePoint trackEdgePoint : getPoints()) {
