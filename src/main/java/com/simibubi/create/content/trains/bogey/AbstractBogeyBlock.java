@@ -227,6 +227,14 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 			sbbe.setBogeyData(sbbe.getBogeyData().merge(defaultData));
 
 			if (size == getSize()) {
+				if (state.getBlock() != style.getBlockOfSize(size)) {
+					CompoundTag oldData = sbbe.getBogeyData();
+					level.setBlock(pos, copyProperties(state, getStateOfSize(sbbe, size)), 3);
+					BlockEntity newBlockEntity = level.getBlockEntity(pos);
+					if (!(newBlockEntity instanceof AbstractBogeyBlockEntity newBlockEntity1))
+						return InteractionResult.FAIL;
+					newBlockEntity1.setBogeyData(oldData);
+				}
 				player.displayClientMessage(Lang.translateDirect("bogey.style.updated_style")
 						.append(": ").append(style.displayName), true);
 			} else {
@@ -312,18 +320,18 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 		return target;
 	}
 
-	public BlockState getNextSize(AbstractBogeyBlockEntity sbte) {
+	public BlockState getNextSize(AbstractBogeyBlockEntity sbbe) {
 		BogeySizes.BogeySize size = this.getSize();
-		BogeyStyle style = sbte.getStyle();
+		BogeyStyle style = sbbe.getStyle();
 		BlockState nextBlock = style.getNextBlock(size).defaultBlockState();
-		nextBlock = copyProperties(sbte.getBlockState(), nextBlock);
+		nextBlock = copyProperties(sbbe.getBlockState(), nextBlock);
 		return nextBlock;
 	}
 
-	public BlockState getStateOfSize(AbstractBogeyBlockEntity sbte, BogeySizes.BogeySize size) {
-		BogeyStyle style = sbte.getStyle();
+	public BlockState getStateOfSize(AbstractBogeyBlockEntity sbbe, BogeySizes.BogeySize size) {
+		BogeyStyle style = sbbe.getStyle();
 		BlockState state = style.getBlockOfSize(size).defaultBlockState();
-		return copyProperties(sbte.getBlockState(), state);
+		return copyProperties(sbbe.getBlockState(), state);
 	}
 
 	public BogeyStyle getNextStyle(Level level, BlockPos pos) {
