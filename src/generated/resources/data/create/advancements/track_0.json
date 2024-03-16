@@ -22,9 +22,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "create:track"
-            ]
+            "tag": "create:tracks"
           }
         ]
       }

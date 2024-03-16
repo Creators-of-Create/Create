@@ -505,7 +505,7 @@ public class TrackGraph {
 
 				SignalEdgeGroup group = Create.RAILWAYS.signalEdgeGroups.get(groupId);
 				SignalEdgeGroup otherGroup = Create.RAILWAYS.signalEdgeGroups.get(otherGroupId);
-				if (group == null || otherGroup == null)
+				if (group == null || otherGroup == null || groupId == null || otherGroupId == null)
 					continue;
 
 				intersection.groupId = groupId;
