@@ -2526,6 +2526,7 @@ e7df922cf9c6b39ee866d224d1812288073c7907 data/create/advancements/recipes/create
 23c1ecff946d41c74d4fb78e2bbc5e348c4487f5 data/create/advancements/recipes/create.base/crafting/kinetics/track_signal.json
 da30636ca7e77f2947d0d28542c0b99747c9939e data/create/advancements/recipes/create.base/crafting/kinetics/track_station.json
 9d7bbda05cebecc0922f4d344e9a51d4c2774a18 data/create/advancements/recipes/create.base/crafting/kinetics/turntable.json
+29e9918939140d753d09098e2de553c811928e6e data/create/advancements/recipes/create.base/crafting/kinetics/vertical_gearbox.json
 c1bb8d9022dff3dcf6c42f651b421281924c7dd2 data/create/advancements/recipes/create.base/crafting/kinetics/vertical_gearboxfrom_conversion.json
 a67713418e505fa68ecde6b8bc83c09ccced7a65 data/create/advancements/recipes/create.base/crafting/kinetics/water_wheel.json
 1a90a33a8334a778972a16ca92a2303cb083830a data/create/advancements/recipes/create.base/crafting/kinetics/weighted_ejector.json
@@ -4083,6 +4084,7 @@ a6d074a4a400e82223211badfd923bb28c3c0bd0 data/create/recipes/crafting/kinetics/t
 60650b8a20f0b69b5626d979f509e7b6d2a2cae9 data/create/recipes/crafting/kinetics/train_door.json
 6ab92d6453b0ea10aa83a239b73443a6d5a4412e data/create/recipes/crafting/kinetics/train_trapdoor.json
 8494f5fcd85a740fa0f0384e3522d8cdd905ce49 data/create/recipes/crafting/kinetics/turntable.json
+c485817b96330571d48696f9d59cb695666a9ab5 data/create/recipes/crafting/kinetics/vertical_gearbox.json
 057c889b0a306f44b8835c896663154ccd9ff12f data/create/recipes/crafting/kinetics/vertical_gearboxfrom_conversion.json
 152e63ade2759d01a07b9e71a3c60dfe5ea15ba8 data/create/recipes/crafting/kinetics/water_wheel.json
 06b5b371ae9dd81df8fd3dee6d3559b1ed0db35c data/create/recipes/crafting/kinetics/weighted_ejector.json
