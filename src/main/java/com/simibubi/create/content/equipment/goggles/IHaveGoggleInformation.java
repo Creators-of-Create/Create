@@ -49,7 +49,7 @@ public interface IHaveGoggleInformation {
 	 * return the item of your choosing after checking for any logic you wish, and the goggle on the goggle
 	 * tooltip will be replaced with the item you have returned
 	 */
-	default ItemStack setGoggleIcon(boolean isPlayerSneaking) {
+	default ItemStack getIcon(boolean isPlayerSneaking) {
 		return AllItems.GOGGLES.asStack();
 	}
 

@@ -100,7 +100,7 @@ public class GoggleOverlayRenderer {
 
 			IHaveGoggleInformation gte = (IHaveGoggleInformation) be;
 			goggleAddedInformation = gte.addToGoggleTooltip(tooltip, isShifting);
-			item = gte.setGoggleIcon(isShifting);
+			item = gte.getIcon(isShifting);
 		}
 
 		if (hasHoveringInformation) {
