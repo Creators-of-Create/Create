@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.authlib.GameProfile;
@@ -110,7 +112,7 @@ public class DeployerFakePlayer extends FakePlayer {
 	public UUID getUUID() {
 		return owner == null ? super.getUUID() : owner;
 	}
-	
+
 	@SubscribeEvent
 	public static void deployerHasEyesOnHisFeet(EntityEvent.Size event) {
 		if (event.getEntity() instanceof DeployerFakePlayer)
@@ -149,23 +151,22 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@SubscribeEvent
-	public static void entitiesDontRetaliate(LivingSetAttackTargetEvent event) {
-		if (!(event.getTarget() instanceof DeployerFakePlayer))
+	public static void entitiesDontRetaliate(LivingChangeTargetEvent event) {
+		if (!(event.getOriginalTarget() instanceof DeployerFakePlayer))
 			return;
 		LivingEntity entityLiving = event.getEntityLiving();
-		if (!(entityLiving instanceof Mob))
+		if (!(entityLiving instanceof Mob mob))
 			return;
-		Mob mob = (Mob) entityLiving;
 
 		CKinetics.DeployerAggroSetting setting = AllConfigs.server().kinetics.ignoreDeployerAttacks.get();
 
 		switch (setting) {
 		case ALL:
-			mob.setTarget(null);
+			event.setCanceled(true);
 			break;
 		case CREEPERS:
 			if (mob instanceof Creeper)
-				mob.setTarget(null);
+				event.setCanceled(true);
 			break;
 		case NONE:
 		default:
