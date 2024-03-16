@@ -107,10 +107,10 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 		// Atmospheric
 
-		ATMO = cuttingCompat(Mods.ATMO, "aspen", "kousa", "yucca", "morado"),
-		ATMO_2 = stripAndMakePlanks(Mods.ATMO, "grimwood", "stripped_grimwood", "grimwood_planks"),
-		ATMO_3 = stripAndMakePlanks(Mods.ATMO, "rosewood", "stripped_rosewood", "rosewood_planks"),
-		ATMO_4 = cuttingCompatLogOnly(Mods.ATMO, "grimwood", "rosewood"),
+		ATM = cuttingCompat(Mods.ATM, "aspen", "kousa", "yucca", "morado"),
+		ATM_2 = stripAndMakePlanks(Mods.ATM, "grimwood", "stripped_grimwood", "grimwood_planks"),
+		ATM_3 = stripAndMakePlanks(Mods.ATM, "rosewood", "stripped_rosewood", "rosewood_planks"),
+		ATM_4 = cuttingCompatLogOnly(Mods.ATM, "grimwood", "rosewood"),
 
 		// Autumnity
 		AUTUM = cuttingCompat(Mods.AUTUM, "maple"),
