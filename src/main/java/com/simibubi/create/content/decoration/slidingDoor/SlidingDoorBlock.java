@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.ContraptionWorld;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 
-import com.simibubi.create.foundation.block.IHasBigOutline;
+import com.simibubi.create.foundation.block.IHaveBigOutline;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +38,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 
-public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<SlidingDoorBlockEntity>, IHasBigOutline {
+public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<SlidingDoorBlockEntity>, IHaveBigOutline {
 
 	public static final BooleanProperty VISIBLE = BooleanProperty.create("visible");
 	private boolean folds;

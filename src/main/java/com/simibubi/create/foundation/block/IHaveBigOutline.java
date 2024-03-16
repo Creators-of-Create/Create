@@ -12,4 +12,4 @@ import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
  * <p>
  * For examples look at {@link TrackBlock} and {@link SlidingDoorBlock}
  */
-public interface IHasBigOutline { }
+public interface IHaveBigOutline { }

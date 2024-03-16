@@ -17,7 +17,7 @@ import net.minecraftforge.common.ForgeMod;
 
 
 /**
- * For mods wanting to use this take a look at {@link IHasBigOutline}
+ * For mods wanting to use this take a look at {@link IHaveBigOutline}
  */
 public class BigOutlines {
 
@@ -49,7 +49,7 @@ public class BigOutlines {
 					p.set(pos.getX() + x, pos.getY(), pos.getZ() + z);
 					BlockState blockState = mc.level.getBlockState(p);
 
-					if (!(blockState.getBlock() instanceof IHasBigOutline))
+					if (!(blockState.getBlock() instanceof IHaveBigOutline))
 						continue;
 
 					BlockHitResult hit = blockState.getInteractionShape(mc.level, p)
