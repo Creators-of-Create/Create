@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.fluids.FluidFX;
@@ -105,6 +106,7 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		if (processingTicks == -1) {
 			processingTicks = FILLING_TIME;
 			notifyUpdate();
+			AllSoundEvents.SPOUTING.playOnServer(level, worldPosition, 0.75f, 0.9f + 0.2f * (float)Math.random());
 			return HOLD;
 		}
 
@@ -221,9 +223,10 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			}
 		}
 
-		if (processingTicks >= 8 && level.isClientSide)
+		if (processingTicks >= 8 && level.isClientSide) {
 			spawnProcessingParticles(tank.getPrimaryTank()
-				.getRenderedFluid());
+					.getRenderedFluid());
+		}
 	}
 
 	protected void spawnProcessingParticles(FluidStack fluid) {
