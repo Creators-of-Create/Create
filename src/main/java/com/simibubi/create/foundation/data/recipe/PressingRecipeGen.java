@@ -27,7 +27,7 @@ public class PressingRecipeGen extends ProcessingRecipeGen {
 			.output(AllItems.BRASS_SHEET.get())),
 
 		// Atmospheric
-		ATMO = moddedPaths(Mods.ATMO, "crustose"),
+		ATM = moddedPaths(Mods.ATM, "crustose"),
 
 		// Better End Forge
 
