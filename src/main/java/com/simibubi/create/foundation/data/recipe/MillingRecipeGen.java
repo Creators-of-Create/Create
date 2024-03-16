@@ -220,39 +220,39 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 
 		// Atmospheric
 
-		ATMO_GILIA = create(Mods.ATMO.recipeId("gilia"), b -> b.duration(50)
-				.require(Mods.ATMO, "gilia")
+		ATMO_GILIA = create(Mods.ATM.recipeId("gilia"), b -> b.duration(50)
+				.require(Mods.ATM, "gilia")
 				.output(Items.PURPLE_DYE, 2)
 				.output(.1f, Items.MAGENTA_DYE, 2)
 				.output(.1f, Items.PINK_DYE)
-				.whenModLoaded(Mods.ATMO.getId())),
+				.whenModLoaded(Mods.ATM.getId())),
 
-		ATMO_HOT_BRUSH = create(Mods.ATMO.recipeId("hot_monkey_brush"), b -> b.duration(50)
-				.require(Mods.ATMO, "hot_monkey_brush")
+		ATMO_HOT_BRUSH = create(Mods.ATM.recipeId("hot_monkey_brush"), b -> b.duration(50)
+				.require(Mods.ATM, "hot_monkey_brush")
 				.output(Items.ORANGE_DYE, 2)
 				.output(.05f, Items.RED_DYE)
 				.output(.05f, Items.YELLOW_DYE)
-				.whenModLoaded(Mods.ATMO.getId())),
+				.whenModLoaded(Mods.ATM.getId())),
 
-		ATMO_SCALDING_BRUSH = create(Mods.ATMO.recipeId("scalding_monkey_brush"), b -> b.duration(50)
-				.require(Mods.ATMO, "scalding_monkey_brush")
+		ATMO_SCALDING_BRUSH = create(Mods.ATM.recipeId("scalding_monkey_brush"), b -> b.duration(50)
+				.require(Mods.ATM, "scalding_monkey_brush")
 				.output(Items.RED_DYE, 2)
 				.output(.1f, Items.RED_DYE, 2)
 				.output(.1f, Items.ORANGE_DYE)
-				.whenModLoaded(Mods.ATMO.getId())),
+				.whenModLoaded(Mods.ATM.getId())),
 
-		ATMO_WARM_BRUSH = create(Mods.ATMO.recipeId("warm_monkey_brush"), b -> b.duration(50)
-				.require(Mods.ATMO, "scalding_monkey_brush")
+		ATMO_WARM_BRUSH = create(Mods.ATM.recipeId("warm_monkey_brush"), b -> b.duration(50)
+				.require(Mods.ATM, "scalding_monkey_brush")
 				.output(Items.YELLOW_DYE, 2)
 				.output(.1f, Items.YELLOW_DYE, 2)
 				.output(.1f, Items.ORANGE_DYE)
-				.whenModLoaded(Mods.ATMO.getId())),
+				.whenModLoaded(Mods.ATM.getId())),
 
-		ATMO_YUCCA_FLOWER = create(Mods.ATMO.recipeId("yucca_flower"), b -> b.duration(50)
-				.require(Mods.ATMO, "yucca_flower")
+		ATMO_YUCCA_FLOWER = create(Mods.ATM.recipeId("yucca_flower"), b -> b.duration(50)
+				.require(Mods.ATM, "yucca_flower")
 				.output(Items.LIGHT_GRAY_DYE, 2)
 				.output(.05f, Items.WHITE_DYE)
-				.whenModLoaded(Mods.ATMO.getId())),
+				.whenModLoaded(Mods.ATM.getId())),
 
 		// Autumnity
 
