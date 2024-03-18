@@ -37,6 +37,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedBlockAndTintG
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
@@ -65,7 +66,9 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 
 	@Override
 	public void init(float partialTick) {
-        Contraption contraption = entity.getContraption();
+		setEmbeddingMatrices(partialTick);
+
+		Contraption contraption = entity.getContraption();
 		virtualRenderWorld = ContraptionRenderDispatcher.setupRenderWorld(level, contraption);
 
 		RenderedBlocks blocks = contraption.getRenderedBlocks();
@@ -91,6 +94,8 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		for (var actor : contraption.getActors()) {
 			setupActor(actor, partialTick);
 		}
+
+		updateLight();
 	}
 
 	private void setupActor(MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> actor, float partialTick) {
@@ -163,25 +168,60 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 	}
 
 	protected void beginFrame(VisualFrameContext context) {
-		double x = Mth.lerp(context.partialTick(), entity.xOld, entity.getX());
-		double y = Mth.lerp(context.partialTick(), entity.yOld, entity.getY());
-		double z = Mth.lerp(context.partialTick(), entity.zOld, entity.getZ());
+		var partialTick = context.partialTick();
+		setEmbeddingMatrices(partialTick);
+
+		// TODO: re-collect light if needed
+	}
+
+	private void setEmbeddingMatrices(float partialTick) {
+		double x = Mth.lerp(partialTick, entity.xOld, entity.getX());
+		double y = Mth.lerp(partialTick, entity.yOld, entity.getY());
+		double z = Mth.lerp(partialTick, entity.zOld, entity.getZ());
 
 		contraptionMatrix.setIdentity();
 		contraptionMatrix.translate(x, y, z);
-		entity.applyLocalTransforms(contraptionMatrix, context.partialTick());
+		entity.applyLocalTransforms(contraptionMatrix, partialTick);
 
 		embedding.transforms(contraptionMatrix.last().pose(), contraptionMatrix.last().normal());
 	}
 
 	@Override
 	public void updateLight() {
+		// FIXME: Some blocks (e.g. large waterwheels) extend well beyond their actual block
+		//  and might have lighting issues here
+		var boundingBox = entity.getBoundingBox();
 
+		int minX = Mth.floor(boundingBox.minX) - 1;
+		int minY = Mth.floor(boundingBox.minY) - 1;
+		int minZ = Mth.floor(boundingBox.minZ) - 1;
+		int sizeX = Mth.ceil(boundingBox.maxX) - minX + 2;
+		int sizeY = Mth.ceil(boundingBox.maxY) - minY + 2;
+		int sizeZ = Mth.ceil(boundingBox.maxZ) - minZ + 2;
+
+		embedding.collectLight(level, minX, minY, minZ, sizeX, sizeY, sizeZ);
 	}
 
 	@Override
 	public void collectLightSections(LongConsumer consumer) {
 		var boundingBox = entity.getBoundingBox();
+
+		int minX = Mth.floor(boundingBox.minX) - 1;
+		int minY = Mth.floor(boundingBox.minY) - 1;
+		int minZ = Mth.floor(boundingBox.minZ) - 1;
+		int sizeXChunks = SectionPos.blockToSectionCoord(Mth.ceil(boundingBox.maxX) - minX + 2) + 1;
+		int sizeYChunks = SectionPos.blockToSectionCoord(Mth.ceil(boundingBox.maxY) - minY + 2) + 1;
+		int sizeZChunks = SectionPos.blockToSectionCoord(Mth.ceil(boundingBox.maxZ) - minZ + 2) + 1;
+
+		var base = SectionPos.asLong(SectionPos.blockToSectionCoord(minX), SectionPos.blockToSectionCoord(minY), SectionPos.blockToSectionCoord(minZ));
+
+		for (int x = 0; x < sizeXChunks; x++) {
+			for (int y = 0; y < sizeYChunks; y++) {
+				for (int z = 0; z < sizeZChunks; z++) {
+					consumer.accept(SectionPos.offset(base, x, y, z));
+				}
+			}
+		}
 	}
 
 	@Override

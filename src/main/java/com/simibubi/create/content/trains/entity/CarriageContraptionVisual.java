@@ -88,6 +88,8 @@ public class CarriageContraptionVisual extends ContraptionVisual<CarriageContrap
 	}
 
 	public void updateLight() {
+		super.updateLight();
+
 		if (bogeys == null)
 			return;
 
