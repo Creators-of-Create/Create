@@ -3,7 +3,6 @@ package com.simibubi.create.content.redstone.analogLever;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
@@ -12,9 +11,9 @@ import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.transform.Rotate;
 import com.jozufozu.flywheel.lib.transform.Translate;
 import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.core.Direction;
@@ -39,27 +38,35 @@ public class AnalogLeverVisual extends AbstractBlockEntityVisual<AnalogLeverBloc
 		AttachFace face = blockState.getValue(AnalogLeverBlock.FACE);
 		rX = face == AttachFace.FLOOR ? 0 : face == AttachFace.WALL ? 90 : 180;
 		rY = AngleHelper.horizontalAngle(blockState.getValue(AnalogLeverBlock.FACING));
+	}
+
+	@Override
+	public void init(float partialTick) {
+		super.init(partialTick);
 
 		transform(indicator.loadIdentity());
-		animateLever();
+
+		animateLever(partialTick);
 	}
 
 	@Override
 	public void beginFrame(VisualFrameContext ctx) {
 		if (!blockEntity.clientState.settled())
-			animateLever();
+			animateLever(ctx.partialTick());
 	}
 
-	protected void animateLever() {
-		float state = blockEntity.clientState.getValue(AnimationTickHolder.getPartialTicks());
+	protected void animateLever(float pt) {
+		float state = blockEntity.clientState.getValue(pt);
 
 		indicator.setColor(Color.mixColors(0x2C0300, 0xCD0000, state / 15f));
+		indicator.setChanged();
 
 		float angle = (float) ((state / 15) * 90 / 180 * Math.PI);
 
 		transform(handle.loadIdentity()).translate(1 / 2f, 1 / 16f, 1 / 2f)
 			.rotate(angle, Direction.EAST)
-			.translate(-1 / 2f, -1 / 16f, -1 / 2f);
+			.translate(-1 / 2f, -1 / 16f, -1 / 2f)
+			.setChanged();
 	}
 
 	@Override

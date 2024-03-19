@@ -3,13 +3,12 @@ package com.simibubi.create.content.contraptions.actors.psi;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
-import com.jozufozu.flywheel.lib.visual.SimpleTickableVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visual.VisualTickContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleTickableVisual;
 
 public class PSIVisual extends AbstractBlockEntityVisual<PortableStorageInterfaceBlockEntity> implements SimpleDynamicVisual, SimpleTickableVisual {
 
@@ -34,7 +33,7 @@ public class PSIVisual extends AbstractBlockEntityVisual<PortableStorageInterfac
 
 	@Override
 	public void beginFrame(VisualFrameContext ctx) {
-		instance.beginFrame(blockEntity.getExtensionDistance(AnimationTickHolder.getPartialTicks()));
+		instance.beginFrame(blockEntity.getExtensionDistance(ctx.partialTick()));
 	}
 
 	@Override

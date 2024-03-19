@@ -8,12 +8,12 @@ import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.AbstractInstance;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.flwdata.FlapInstance;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
@@ -54,14 +54,15 @@ public class BeltTunnelVisual extends AbstractBlockEntityVisual<BeltTunnelBlockE
                 FlapInstance key = model.createInstance();
 
                 key.setPosition(getVisualPosition())
-                   .setSegmentOffset(segmentOffset, 0, 0)
-                   .setBlockLight(blockLight)
-                   .setSkyLight(skyLight)
-                   .setHorizontalAngle(horizontalAngle)
-                   .setFlapness(flapness)
-                   .setFlapScale(flapScale)
-                   .setPivotVoxelSpace(0, 10, 1)
-                   .setIntensity(intensity);
+						.setSegmentOffset(segmentOffset, 0, 0)
+						.setBlockLight(blockLight)
+						.setSkyLight(skyLight)
+						.setHorizontalAngle(horizontalAngle)
+						.setFlapness(flapness)
+						.setFlapScale(flapScale)
+						.setPivotVoxelSpace(0, 10, 1)
+						.setIntensity(intensity)
+						.setChanged();
 
                 flaps.add(key);
             }
@@ -82,9 +83,10 @@ public class BeltTunnelVisual extends AbstractBlockEntityVisual<BeltTunnelBlockE
             if (lerpedFloat == null)
                 return;
 
-            float flapness = lerpedFloat.getValue(AnimationTickHolder.getPartialTicks());
+            float flapness = lerpedFloat.getValue(ctx.partialTick());
             for (FlapInstance flap : keys) {
-                flap.setFlapness(flapness);
+                flap.setFlapness(flapness)
+						.setChanged();
             }
         });
     }

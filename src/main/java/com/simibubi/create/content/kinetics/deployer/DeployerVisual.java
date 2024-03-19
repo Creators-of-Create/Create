@@ -8,8 +8,6 @@ import java.util.function.Consumer;
 import org.joml.Quaternionf;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
-import com.jozufozu.flywheel.lib.visual.SimpleTickableVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visual.VisualTickContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
@@ -17,11 +15,12 @@ import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.OrientedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleTickableVisual;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -58,13 +57,18 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
 		currentHand = this.blockEntity.getHandPose();
 
 		hand = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(currentHand)).createInstance();
-
-		progress = getProgress(AnimationTickHolder.getPartialTicks());
-        updateRotation(pole, hand, yRot, xRot, zRot);
-        updatePosition();
     }
 
-    @Override
+	@Override
+	public void init(float pt) {
+		progress = getProgress(pt);
+		updateRotation(pole, hand, yRot, xRot, zRot);
+		updatePosition();
+
+		super.init(pt);
+	}
+
+	@Override
     public void tick(VisualTickContext ctx) {
 		PartialModel handPose = blockEntity.getHandPose();
 
@@ -77,8 +81,7 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
 
     @Override
     public void beginFrame(VisualFrameContext ctx) {
-
-        float newProgress = getProgress(AnimationTickHolder.getPartialTicks());
+        float newProgress = getProgress(ctx.partialTick());
 
         if (Mth.equal(newProgress, progress)) return;
 

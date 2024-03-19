@@ -40,7 +40,7 @@ public class GearboxVisual extends KineticBlockEntityVisual<GearboxBlockEntity> 
 			if (boxAxis == axis)
 				continue;
 
-			RotatingInstance key = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF))
+			RotatingInstance key = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, direction))
 					.createInstance();
 
 			key.setRotationAxis(axis)

@@ -5,13 +5,13 @@ import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;
@@ -24,39 +24,41 @@ import net.minecraft.util.Mth;
 
 public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implements SimpleDynamicVisual {
 
-    protected final ArrayList<DialFace> faces;
+    protected final ArrayList<DialFace> faces = new ArrayList<>(2);
 
-    protected PoseStack ms;
+    protected final PoseStack ms = new PoseStack();
 
     protected GaugeVisual(VisualizationContext context, GaugeBlockEntity blockEntity) {
         super(context, blockEntity);
-
-        faces = new ArrayList<>(2);
-
-        GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
-
-        Instancer<TransformedInstance> dialModel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_DIAL));
-        Instancer<TransformedInstance> headModel = getHeadModel();
-
-        ms = new PoseStack();
-        var msr = TransformStack.of(ms);
-        msr.translate(getVisualPosition());
-
-        float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), blockEntity.prevDialState, blockEntity.dialState);
-
-        for (Direction facing : Iterate.directions) {
-            if (!gaugeBlock.shouldRenderHeadOnFace(level, pos, blockState, facing))
-                continue;
-
-            DialFace face = makeFace(facing, dialModel, headModel);
-
-            faces.add(face);
-
-            face.setupTransform(msr, progress);
-        }
     }
 
-    private DialFace makeFace(Direction face, Instancer<TransformedInstance> dialModel, Instancer<TransformedInstance> headModel) {
+	@Override
+	public void init(float pt) {
+		GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
+
+		Instancer<TransformedInstance> dialModel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_DIAL));
+		Instancer<TransformedInstance> headModel = getHeadModel();
+
+		var msr = TransformStack.of(ms);
+		msr.translate(getVisualPosition());
+
+		float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), blockEntity.prevDialState, blockEntity.dialState);
+
+		for (Direction facing : Iterate.directions) {
+			if (!gaugeBlock.shouldRenderHeadOnFace(level, pos, blockState, facing))
+				continue;
+
+			DialFace face = makeFace(facing, dialModel, headModel);
+
+			faces.add(face);
+
+			face.setupTransform(msr, progress);
+		}
+
+		super.init(pt);
+	}
+
+	private DialFace makeFace(Direction face, Instancer<TransformedInstance> dialModel, Instancer<TransformedInstance> headModel) {
         return new DialFace(face, dialModel.createInstance(), headModel.createInstance());
     }
 
@@ -135,7 +137,7 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
                     .rotate((float) (Math.PI / 2 * -progress), Direction.EAST)
                     .translate(0, -dialPivot, -dialPivot);
 
-            getFirst().setTransform(ms);
+            getFirst().setTransform(ms).setChanged();
 
             msr.popPose();
         }

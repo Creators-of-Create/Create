@@ -59,6 +59,8 @@ public class PIInstance {
 		middle.translate(0, progress * 0.5f + 0.375f, 0);
 		top.translate(0, progress, 0);
 
+		middle.setChanged();
+		top.setChanged();
 	}
 
 	public void tick(boolean lit) {

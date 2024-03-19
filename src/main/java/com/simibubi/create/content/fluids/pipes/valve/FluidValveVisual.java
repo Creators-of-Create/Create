@@ -3,17 +3,16 @@ package com.simibubi.create.content.fluids.pipes.valve;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -43,30 +42,35 @@ public class FluidValveVisual extends ShaftVisual<FluidValveBlockEntity> impleme
         settled = false;
 
         pointer = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLUID_VALVE_POINTER)).createInstance();
+	}
 
-		transformPointer();
-    }
+	@Override
+	public void init(float pt) {
+		super.init(pt);
+
+		transformPointer(pt);
+	}
 
 	@Override
 	public void beginFrame(VisualFrameContext ctx) {
 		if (blockEntity.pointer.settled() && settled)
 			return;
 
-		transformPointer();
+		transformPointer(ctx.partialTick());
 	}
 
-	private void transformPointer() {
-		float value = blockEntity.pointer.getValue(AnimationTickHolder.getPartialTicks());
+	private void transformPointer(float partialTick) {
+		float value = blockEntity.pointer.getValue(partialTick);
 		float pointerRotation = Mth.lerp(value, 0, -90);
 		settled = (value == 0 || value == 1) && blockEntity.pointer.settled();
 
         pointer.loadIdentity()
-				 .translate(getVisualPosition())
-				 .center()
-				 .rotateYDegrees((float) yRot)
-				 .rotateXDegrees((float) xRot)
-				 .rotateYDegrees(pointerRotationOffset + pointerRotation)
-				 .uncenter()
+				.translate(getVisualPosition())
+				.center()
+				.rotateYDegrees((float) yRot)
+				.rotateXDegrees((float) xRot)
+				.rotateYDegrees(pointerRotationOffset + pointerRotation)
+				.uncenter()
 				.setChanged();
 	}
 

@@ -10,7 +10,6 @@ import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
 import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.simibubi.create.content.kinetics.base.SingleRotatingVisual;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -26,7 +25,6 @@ public class HandCrankVisual extends SingleRotatingVisual<HandCrankBlockEntity> 
 		Model model = blockEntity.getRenderedHandleInstance();
 		crank = instancerProvider.instancer(InstanceTypes.TRANSFORMED, model)
 				.createInstance();
-		rotateCrank();
 	}
 
 	@Override
@@ -34,12 +32,12 @@ public class HandCrankVisual extends SingleRotatingVisual<HandCrankBlockEntity> 
 		if (crank == null)
 			return;
 
-		rotateCrank();
+		rotateCrank(ctx.partialTick());
 	}
 
-	private void rotateCrank() {
+	private void rotateCrank(float pt) {
 		Direction.Axis axis = facing.getAxis();
-		float angle = blockEntity.getIndependentAngle(AnimationTickHolder.getPartialTicks());
+		float angle = blockEntity.getIndependentAngle(pt);
 
 		crank.loadIdentity()
 			.translate(getVisualPosition())
@@ -51,6 +49,8 @@ public class HandCrankVisual extends SingleRotatingVisual<HandCrankBlockEntity> 
 
 	@Override
 	public void init(float pt) {
+		rotateCrank(pt);
+
 		// FIXME: need to call super.super.init here
 		if (blockEntity.shouldRenderShaft())
 			super.init(pt);

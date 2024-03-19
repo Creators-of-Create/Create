@@ -3,13 +3,13 @@ package com.simibubi.create.content.kinetics.steamEngine;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -39,9 +39,9 @@ public class SteamEngineVisual extends AbstractBlockEntityVisual<SteamEngineBloc
 	public void beginFrame(VisualFrameContext ctx) {
 		Float angle = blockEntity.getTargetAngle();
 		if (angle == null) {
-			piston.setEmptyTransform();
-			linkage.setEmptyTransform();
-			connector.setEmptyTransform();
+			piston.setEmptyTransform().setChanged();
+			linkage.setEmptyTransform().setChanged();
+			connector.setEmptyTransform().setChanged();
 			return;
 		}
 
@@ -59,7 +59,8 @@ public class SteamEngineVisual extends AbstractBlockEntityVisual<SteamEngineBloc
 		float piston = ((1 - sine) / 4) * 24 / 16f;
 
 		transformed(this.piston, facing, roll90)
-			.translate(0, piston, 0);
+			.translate(0, piston, 0)
+			.setChanged();
 
 		transformed(linkage, facing, roll90)
 			.center()
@@ -68,13 +69,15 @@ public class SteamEngineVisual extends AbstractBlockEntityVisual<SteamEngineBloc
 			.translate(0, piston, 0)
 			.translate(0, 4 / 16f, 8 / 16f)
 			.rotateXDegrees(sine2 * 23f)
-			.translate(0, -4 / 16f, -8 / 16f);
+			.translate(0, -4 / 16f, -8 / 16f)
+			.setChanged();
 
 		transformed(connector, facing, roll90)
 			.translate(0, 2, 0)
 			.center()
 			.rotateX(-angle + Mth.HALF_PI)
-			.uncenter();
+			.uncenter()
+			.setChanged();
 	}
 
 	protected TransformedInstance transformed(TransformedInstance modelData, Direction facing, boolean roll90) {

@@ -4,13 +4,13 @@ import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -63,7 +63,8 @@ public class ToolBoxVisual extends AbstractBlockEntityVisual<ToolboxBlockEntity>
 				.uncenter()
 				.translate(0, 6 / 16f, 12 / 16f)
 				.rotateXDegrees(135 * lidAngle)
-				.translateBack(0, 6 / 16f, 12 / 16f);
+				.translateBack(0, 6 / 16f, 12 / 16f)
+				.setChanged();
 
 		for (int offset : Iterate.zeroAndOne) {
 			drawers[offset].loadIdentity()
@@ -71,7 +72,8 @@ public class ToolBoxVisual extends AbstractBlockEntityVisual<ToolboxBlockEntity>
 					.center()
 					.rotateYDegrees(-facing.toYRot())
 					.uncenter()
-					.translate(0, offset * 1 / 8f, -drawerOffset * .175f * (2 - offset));
+					.translate(0, offset * 1 / 8f, -drawerOffset * .175f * (2 - offset))
+					.setChanged();
 		}
 	}
 

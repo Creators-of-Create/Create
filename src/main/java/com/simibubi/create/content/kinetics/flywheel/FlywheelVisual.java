@@ -15,7 +15,6 @@ import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.render.VirtualRenderHelper;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 
@@ -39,7 +38,7 @@ public class FlywheelVisual extends KineticBlockEntityVisual<FlywheelBlockEntity
 	@Override
 	public void beginFrame(VisualFrameContext ctx) {
 
-		float partialTicks = AnimationTickHolder.getPartialTicks();
+		float partialTicks = ctx.partialTick();
 
 		float speed = blockEntity.visualSpeed.getValue(partialTicks) * 3 / 10f;
 		float angle = blockEntity.angle + speed * partialTicks;

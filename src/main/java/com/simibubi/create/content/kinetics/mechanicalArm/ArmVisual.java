@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 import com.google.common.collect.Lists;
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.model.Model;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.AbstractInstance;
@@ -14,6 +13,7 @@ import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.SingleRotatingVisual;
@@ -66,18 +66,18 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements S
 		models = Lists.newArrayList(base, lowerBody, upperBody, claw, clawGrip1, clawGrip2);
 		ceiling = blockState.getValue(ArmBlock.CEILING);
 
-		animateArm(false);
+		animateArm();
 	}
 
 	@Override
 	public void beginFrame(VisualFrameContext ctx) {
 		if (blockEntity.phase == ArmBlockEntity.Phase.DANCING && blockEntity.getSpeed() != 0) {
-			animateArm(true);
+			animateRave(ctx.partialTick());
 			firstRender = true;
 			return;
 		}
 
-		float pt = AnimationTickHolder.getPartialTicks();
+		float pt = ctx.partialTick();
 
 		float baseAngleNow = blockEntity.baseAngle.getValue(pt);
 		float lowerArmAngleNow = blockEntity.lowerArmAngle.getValue(pt);
@@ -93,36 +93,30 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements S
 		this.headAngle = headAngleNow;
 
 		if (!settled || firstRender)
-			animateArm(false);
+			animateArm();
 
 		if (firstRender)
 			firstRender = false;
 	}
 
-	private void animateArm(boolean rave) {
-		float baseAngle;
-		float lowerArmAngle;
-		float upperArmAngle;
-		float headAngle;
-		int color;
+	private void animateRave(float partialTick) {
+		var ticks = AnimationTickHolder.getTicks(blockEntity.getLevel());
+		float renderTick = ticks + partialTick + (blockEntity.hashCode() % 64);
 
-		if (rave) {
-			float renderTick =
-				AnimationTickHolder.getRenderTime(blockEntity.getLevel()) + (blockEntity.hashCode() % 64);
-			baseAngle = (renderTick * 10) % 360;
-			lowerArmAngle = Mth.lerp((Mth.sin(renderTick / 4) + 1) / 2, -45, 15);
-			upperArmAngle = Mth.lerp((Mth.sin(renderTick / 8) + 1) / 4, -45, 95);
-			headAngle = -lowerArmAngle;
-			color = Color.rainbowColor(AnimationTickHolder.getTicks() * 100)
-				.getRGB();
-		} else {
-			baseAngle = this.baseAngle;
-			lowerArmAngle = this.lowerArmAngle - 135;
-			upperArmAngle = this.upperArmAngle - 90;
-			headAngle = this.headAngle;
-			color = 0xFFFFFF;
-		}
+		float baseAngle = (renderTick * 10) % 360;
+		float lowerArmAngle = Mth.lerp((Mth.sin(renderTick / 4) + 1) / 2, -45, 15);
+		float upperArmAngle = Mth.lerp((Mth.sin(renderTick / 8) + 1) / 4, -45, 95);
+		float headAngle = -lowerArmAngle;
+		int color = Color.rainbowColor(ticks * 100)
+			.getRGB();
+		updateAngles(baseAngle, lowerArmAngle, upperArmAngle, headAngle, color);
+    }
 
+	private void animateArm() {
+        updateAngles(this.baseAngle, this.lowerArmAngle - 135, this.upperArmAngle - 90, this.headAngle, 0xFFFFFF);
+	}
+
+	private void updateAngles(float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle, int color) {
 		PoseStack msLocal = new PoseStack();
 		var msr = TransformStack.of(msLocal);
 		msr.translate(getVisualPosition());
@@ -184,7 +178,7 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements S
 				.createInstance();
 		models.add(claw);
 		updateLight();
-		animateArm(false);
+		animateArm();
 	}
 
 	@Override

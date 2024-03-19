@@ -3,13 +3,13 @@ package com.simibubi.create.content.contraptions.chassis;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
@@ -61,7 +61,8 @@ public class StickerVisual extends AbstractBlockEntityVisual<StickerBlockEntity>
 				.rotateYDegrees(AngleHelper.horizontalAngle(facing))
 				.rotateXDegrees(AngleHelper.verticalAngle(facing) + 90)
 				.uncenter()
-				.translate(0, (offset * offset) * 4 / 16f, 0);
+				.translate(0, (offset * offset) * 4 / 16f, 0)
+				.setChanged();
 	}
 
 	@Override

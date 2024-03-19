@@ -4,17 +4,16 @@ import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.model.Model;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.OrientedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.content.kinetics.simpleRelays.encased.EncasedCogVisual;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 
@@ -35,12 +34,13 @@ public class MixerVisual extends EncasedCogVisual implements SimpleDynamicVisual
 
 		mixerPole = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.MECHANICAL_MIXER_POLE))
 				.createInstance();
+	}
 
+	@Override
+	public void init(float pt) {
+		super.init(pt);
 
-		float renderedHeadOffset = getRenderedHeadOffset();
-
-		transformPole(renderedHeadOffset);
-		transformHead(renderedHeadOffset);
+		animate(pt);
 	}
 
 	@Override
@@ -50,14 +50,18 @@ public class MixerVisual extends EncasedCogVisual implements SimpleDynamicVisual
 
 	@Override
 	public void beginFrame(VisualFrameContext ctx) {
-		float renderedHeadOffset = getRenderedHeadOffset();
-
-		transformPole(renderedHeadOffset);
-		transformHead(renderedHeadOffset);
+		animate(ctx.partialTick());
 	}
 
-	private void transformHead(float renderedHeadOffset) {
-		float speed = mixer.getRenderedHeadRotationSpeed(AnimationTickHolder.getPartialTicks());
+	private void animate(float pt) {
+		float renderedHeadOffset = mixer.getRenderedHeadOffset(pt);
+
+		transformPole(renderedHeadOffset);
+		transformHead(renderedHeadOffset, pt);
+	}
+
+	private void transformHead(float renderedHeadOffset, float pt) {
+		float speed = mixer.getRenderedHeadRotationSpeed(pt);
 
 		mixerHead.setPosition(getVisualPosition())
 				.nudge(0, -renderedHeadOffset, 0)
@@ -69,10 +73,6 @@ public class MixerVisual extends EncasedCogVisual implements SimpleDynamicVisual
 		mixerPole.setPosition(getVisualPosition())
 				.nudgePosition(0, -renderedHeadOffset, 0)
 				.setChanged();
-	}
-
-	private float getRenderedHeadOffset() {
-		return mixer.getRenderedHeadOffset(AnimationTickHolder.getPartialTicks());
 	}
 
 	@Override

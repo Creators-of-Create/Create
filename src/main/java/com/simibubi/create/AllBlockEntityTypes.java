@@ -71,7 +71,6 @@ import com.simibubi.create.content.fluids.spout.SpoutRenderer;
 import com.simibubi.create.content.fluids.tank.CreativeFluidTankBlockEntity;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.content.fluids.tank.FluidTankRenderer;
-import com.simibubi.create.content.kinetics.base.CutoutRotatingVisual;
 import com.simibubi.create.content.kinetics.base.HalfShaftVisual;
 import com.simibubi.create.content.kinetics.base.HorizontalHalfShaftVisual;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -608,7 +607,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<CrushingWheelBlockEntity> CRUSHING_WHEEL = REGISTRATE
 		.blockEntity("crushing_wheel", CrushingWheelBlockEntity::new)
-		.instance(() -> CutoutRotatingVisual::new, false)
+		.instance(() -> SingleRotatingVisual::new, false)
 		.validBlocks(AllBlocks.CRUSHING_WHEEL)
 		.renderer(() -> KineticBlockEntityRenderer::new)
 		.register();

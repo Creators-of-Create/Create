@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
+import com.jozufozu.flywheel.api.backend.BackendManager;
+import com.jozufozu.flywheel.impl.visualization.VisualizationHelper;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
@@ -48,9 +50,8 @@ public class BlockEntityRenderHelper {
 		Iterator<BlockEntity> iterator = customRenderBEs.iterator();
 		while (iterator.hasNext()) {
 			BlockEntity blockEntity = iterator.next();
-			// TODO: fix contraption rendering
-//			if (Backend.getBackendType() == BackendType.INSTANCING && Backend.isFlywheelWorld(renderWorld) && InstancedRenderRegistry.shouldSkipRender(blockEntity))
-//				continue;
+			if (BackendManager.isBackendOn() && VisualizationHelper.shouldSkipRender(blockEntity))
+				continue;
 
 			BlockEntityRenderer<BlockEntity> renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(blockEntity);
 			if (renderer == null) {

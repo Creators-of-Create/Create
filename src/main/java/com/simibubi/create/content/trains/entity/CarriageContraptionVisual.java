@@ -9,7 +9,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.render.ContraptionVisual;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer;
 import com.simibubi.create.content.trains.bogey.BogeyVisual;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -53,7 +52,7 @@ public class CarriageContraptionVisual extends ContraptionVisual<CarriageContrap
 			return;
 		}
 
-		float partialTicks = AnimationTickHolder.getPartialTicks();
+		float partialTicks = ctx.partialTick();
 
 		float viewYRot = entity.getViewYRot(partialTicks);
 		float viewXRot = entity.getViewXRot(partialTicks);

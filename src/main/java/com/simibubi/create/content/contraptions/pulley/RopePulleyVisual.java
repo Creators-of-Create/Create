@@ -9,7 +9,6 @@ import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.render.VirtualRenderHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 public class RopePulleyVisual extends AbstractPulleyVisual<PulleyBlockEntity> {
 	public RopePulleyVisual(VisualizationContext context, PulleyBlockEntity blockEntity) {
@@ -36,9 +35,8 @@ public class RopePulleyVisual extends AbstractPulleyVisual<PulleyBlockEntity> {
 		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_HALF));
 	}
 
-	protected float getOffset() {
-		float partialTicks = AnimationTickHolder.getPartialTicks();
-		return PulleyRenderer.getBlockEntityOffset(partialTicks, blockEntity);
+	protected float getOffset(float pt) {
+		return PulleyRenderer.getBlockEntityOffset(pt, blockEntity);
 	}
 
 	protected boolean isRunning() {

@@ -3,7 +3,6 @@ package com.simibubi.create.content.schematics.cannon;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
@@ -11,6 +10,7 @@ import com.jozufozu.flywheel.lib.instance.TransformedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 
@@ -58,6 +58,9 @@ public class SchematicannonVisual extends AbstractBlockEntityVisual<Schematicann
         msr.translate(0, -recoil / 100, 0);
 
         pipe.setTransform(ms);
+
+		connector.setChanged();
+		pipe.setChanged();
     }
 
     @Override

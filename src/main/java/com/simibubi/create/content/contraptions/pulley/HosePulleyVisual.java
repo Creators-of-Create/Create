@@ -7,7 +7,6 @@ import com.jozufozu.flywheel.lib.instance.OrientedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.fluids.hosePulley.HosePulleyBlockEntity;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 public class HosePulleyVisual extends AbstractPulleyVisual<HosePulleyBlockEntity> {
 
@@ -35,8 +34,8 @@ public class HosePulleyVisual extends AbstractPulleyVisual<HosePulleyBlockEntity
 		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.HOSE_HALF));
 	}
 
-	protected float getOffset() {
-		return blockEntity.getInterpolatedOffset(AnimationTickHolder.getPartialTicks());
+	protected float getOffset(float pt) {
+		return blockEntity.getInterpolatedOffset(pt);
 	}
 
 	protected boolean isRunning() {

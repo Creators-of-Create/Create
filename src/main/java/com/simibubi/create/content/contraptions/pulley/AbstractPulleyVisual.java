@@ -4,13 +4,13 @@ import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.box.MutableBox;
 import com.jozufozu.flywheel.lib.instance.OrientedInstance;
 import com.jozufozu.flywheel.lib.light.LightPacking;
 import com.jozufozu.flywheel.lib.light.LightVolume;
+import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;
@@ -52,7 +52,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 		rope = new GroupInstance<>(getRopeModel());
 		halfRope = new ConditionalInstance<>(getHalfRopeModel()).withCondition(this::shouldRenderHalfRope);
 
-		updateOffset();
+		updateOffset(0);
 		updateVolume();
 
 		light = new LightVolume(level, volume);
@@ -61,8 +61,9 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 
 	@Override
 	public void beginFrame(VisualFrameContext ctx) {
-		updateOffset();
-		coil.setRotation(rotationAxis.rotationDegrees(offset * 180));
+		updateOffset(ctx.partialTick());
+		coil.setRotation(rotationAxis.rotationDegrees(offset * 180))
+				.setChanged();
 
 		int neededRopeCount = getNeededRopeCount();
 		rope.resize(neededRopeCount);
@@ -138,7 +139,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 
 	protected abstract Instancer<OrientedInstance> getHalfRopeModel();
 
-	protected abstract float getOffset();
+	protected abstract float getOffset(float pt);
 
 	protected abstract boolean isRunning();
 
@@ -161,8 +162,8 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 		return false;
 	}
 
-	private void updateOffset() {
-		offset = getOffset();
+	private void updateOffset(float pt) {
+		offset = getOffset(pt);
 	}
 
 	private int getNeededRopeCount() {
