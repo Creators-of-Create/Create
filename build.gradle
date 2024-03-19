@@ -49,16 +49,21 @@ minecraft {
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
+        configureEach {
+            property "mixin.debug.export", "true"
+            mods {
+                create {
+                    source sourceSets.main
+                }
+            }
+        }
+
         client {
             workingDirectory project.file('run')
             arg '-mixin.config=create.mixins.json'
             //jvmArgs '-XX:+UnlockCommercialFeatures' // uncomment for profiling
             property 'forge.logging.console.level', 'info'
             mods {
-                create {
-                    source sourceSets.main
-                }
-
                 if (inWorkspace) {
                     flywheel {
                         source project(":Flywheel").sourceSets.main
@@ -71,11 +76,6 @@ minecraft {
             workingDirectory project.file('run/server')
             arg '-mixin.config=create.mixins.json'
             property 'forge.logging.console.level', 'info'
-            mods {
-                create {
-                    source sourceSets.main
-                }
-            }
         }
 
         data {
@@ -85,10 +85,6 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             args '--mod', 'create', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources')
             mods {
-                create {
-                    source sourceSets.main
-                }
-
                 if (inWorkspace) {
                     flywheel {
                         source project(":Flywheel").sourceSets.main
@@ -101,11 +97,6 @@ minecraft {
             workingDirectory project.file('run/gametest')
             arg '-mixin.config=create.mixins.json'
             property 'forge.logging.console.level', 'info'
-            mods {
-                create {
-                    source sourceSets.main
-                }
-            }
             setForceExit false
         }
     }
@@ -210,6 +201,13 @@ dependencies {
     // This allows 'Settings > Build, Execution, and Deployment > Build Tools > Gradle > Build and run using' set to IntelliJ to work correctly
     if (!Boolean.getBoolean('idea.sync.active')) {
         annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
+    }
+
+    // Mixin Extra's, Adds more compatible injectors.
+    // Need to JiJ on 1.18, 1.19 and 1.20 however future neoforge versions (1.20.2+) include it by default.
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.5"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.3.5")) {
+        jarJar.ranged(it, "[0.3.5,)")
     }
 }
 

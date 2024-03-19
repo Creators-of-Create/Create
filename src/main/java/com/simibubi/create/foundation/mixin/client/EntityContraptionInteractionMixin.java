@@ -82,7 +82,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 	}
 
 	@Unique
-	private void forCollision(Vec3 worldPos, TriConsumer<Contraption, BlockState, BlockPos> action) {
+	private void create$forCollision(Vec3 worldPos, TriConsumer<Contraption, BlockState, BlockPos> action) {
 		create$getIntersectingContraptions().forEach(cEntity -> {
 			Vec3 localPos = ContraptionCollider.worldToLocalPos(worldPos, cEntity);
 
@@ -105,7 +105,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 		Vec3 worldPos = position.add(0, -0.2, 0);
 		MutableBoolean stepped = new MutableBoolean(false);
 
-		forCollision(worldPos, (contraption, state, pos) -> {
+		create$forCollision(worldPos, (contraption, state, pos) -> {
 			playStepSound(pos, state);
 			stepped.setTrue();
 		});
@@ -136,7 +136,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 			if (info == null)
 				return false;
-			
+
 			cEntity.registerColliding(self);
 			return true;
 		});
@@ -155,7 +155,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 		Vec3 worldPos = position.add(0, -0.2, 0);
 		BlockPos particlePos = new BlockPos(worldPos); // pos where particles are spawned
 
-		forCollision(worldPos, (contraption, state, pos) -> {
+		create$forCollision(worldPos, (contraption, state, pos) -> {
 			if (!state.addRunningEffects(level, pos, self)
 				&& state.getRenderShape() != RenderShape.INVISIBLE) {
 				Vec3 speed = self.getDeltaMovement();
