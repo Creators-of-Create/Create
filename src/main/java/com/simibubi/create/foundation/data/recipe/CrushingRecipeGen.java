@@ -351,7 +351,42 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 
 		// Thermal Expansion
 
-		TH = thOres("apatite", "cinnabar", "niter", "sulfur")
+		TH = thOres("apatite", "cinnabar", "niter", "sulfur"),
+
+		//Galosphere
+
+		GS_ALLURITE = create(Mods.GS.recipeId("allurite"), b -> b.duration(300)
+				.require(AllTags.AllItemTags.ALLURITE.tag)
+				.output(.8f, Mods.GS, "allurite_shard", 4)
+				.whenModLoaded(Mods.GS.getId())),
+
+		GS_LUMIERE = create(Mods.GS.recipeId("lumiere"), b -> b.duration(300)
+				.require(AllTags.AllItemTags.LUMIERE.tag)
+				.output(.8f, Mods.GS, "lumiere_shard", 4)
+				.whenModLoaded(Mods.GS.getId())),
+
+		GS_AMETHYST = create(Mods.GS.recipeId("amethyst"), b -> b.duration(300)
+				.require(AllTags.AllItemTags.AMETHYST.tag)
+				.output(.8f, Items.AMETHYST_SHARD, 4)
+				.whenModLoaded(Mods.GS.getId())),
+
+		//Elementary Ores
+		EO_COAL_NETHER = eoNetherOre("coal", Items.COAL, 1),
+		EO_COPPER_NETHER = eoNetherOre("copper", AllItems.CRUSHED_COPPER.get(), 5),
+		EO_IRON_NETHER = eoNetherOre("iron", AllItems.CRUSHED_IRON.get(), 1),
+		EO_EMERALD_NETHER = eoNetherOre("emerald", Items.EMERALD, 1),
+		EO_LAPIS_NETHER = eoNetherOre("lapis", Items.LAPIS_LAZULI, 10),
+		EO_DIAMOND_NETHER = eoNetherOre("diamond", Items.DIAMOND, 1),
+		EO_REDSTONE_NETHER = eoNetherOre("redstone", Items.REDSTONE, 6),
+		EO_GHAST_NETHER = eoNetherOre("ghast", Items.GHAST_TEAR, 1),
+		EO_COAL_END = eoEndOre("coal", Items.COAL, 1),
+		EO_COPPER_END = eoEndOre("copper", AllItems.CRUSHED_COPPER.get(), 5),
+		EO_IRON_END = eoEndOre("iron", AllItems.CRUSHED_IRON.get(), 1),
+		EO_EMERALD_END = eoEndOre("emerald", Items.EMERALD, 1),
+		EO_LAPIS_END = eoEndOre("lapis", Items.LAPIS_LAZULI, 10),
+		EO_DIAMOND_END = eoEndOre("diamond", Items.DIAMOND, 1),
+		EO_REDSTONE_END = eoEndOre("redstone", Items.REDSTONE, 6),
+		EO_ENDER_END = eoEndOre("ender", Items.ENDER_PEARL, 1)
 
 	;
 
@@ -423,7 +458,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 				.require(AllTags.forgeItemTag(prefix + name))
 				.output(result.get(), 1)
 				.output(.75f, result.get(), 1)
-				.output(.75f, AllItems.EXP_NUGGET.get(), 1);
+				.output(.75f, AllItems.EXP_NUGGET.get());
 		});
 	}
 
@@ -433,6 +468,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 					.require(Mods.SILENT_GEMS, type + "_ore")
 					.output(1f, Mods.SILENT_GEMS, type, 2)
 					.output(.25f, Mods.SILENT_GEMS, type, 1)
+					.output(.75f, AllItems.EXP_NUGGET.get())
 					.output(.12f, Items.COBBLESTONE)
 					.whenModLoaded(Mods.SILENT_GEMS.getId()));
 		}
@@ -445,6 +481,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 					.require(Mods.SILENT_GEMS, type + "_ore")
 					.output(1f, Mods.SILENT_GEMS, type, 2)
 					.output(.25f, Mods.SILENT_GEMS, type, 1)
+					.output(.75f, AllItems.EXP_NUGGET.get())
 					.output(.12f, Items.NETHERRACK)
 					.whenModLoaded(Mods.SILENT_GEMS.getId()));
 		}
@@ -457,6 +494,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 					.require(Mods.SILENT_GEMS, type + "_ore")
 					.output(1f, Mods.SILENT_GEMS, type, 2)
 					.output(.25f, Mods.SILENT_GEMS, type, 1)
+					.output(.75f, AllItems.EXP_NUGGET.get())
 					.output(.12f, Items.END_STONE)
 					.whenModLoaded(Mods.SILENT_GEMS.getId()));
 		}
@@ -482,9 +520,32 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 					.output(1f, Mods.TH, type, 2)
 					.output(.25f, Mods.TH, type, 1)
 					.output(.12f, Items.COBBLESTONE)
+					.output(.75f, AllItems.EXP_NUGGET.get())
 					.whenModLoaded(Mods.TH.getId()));
 		}
 		return null;
+	}
+
+	protected GeneratedRecipe eoNetherOre(String material, ItemLike result, int count){
+		String oreName = "ore_" + material + "_nether";
+		return create(Mods.EO.recipeId(oreName), b -> b.duration(350)
+				.require(Mods.EO, oreName)
+				.output(1f, result, count)
+				.output(.25f, result)
+				.output(.75f, AllItems.EXP_NUGGET.get())
+				.output(.12f, Items.NETHERRACK)
+				.whenModLoaded(Mods.EO.getId()));
+	}
+
+	protected GeneratedRecipe eoEndOre(String material, ItemLike result, int count){
+		String oreName = "ore_" + material + "_end";
+		return create(Mods.EO.recipeId(oreName), b -> b.duration(350)
+				.require(Mods.EO, oreName)
+				.output(1f, result, count)
+				.output(.25f, result)
+				.output(.75f, AllItems.EXP_NUGGET.get())
+				.output(.12f, Items.END_STONE)
+				.whenModLoaded(Mods.EO.getId()));
 	}
 
 	public CrushingRecipeGen(DataGenerator dataGenerator) {

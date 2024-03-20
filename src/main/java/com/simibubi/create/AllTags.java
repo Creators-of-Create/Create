@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
 import static com.simibubi.create.AllTags.NameSpace.FORGE;
+import static com.simibubi.create.AllTags.NameSpace.GS;
 import static com.simibubi.create.AllTags.NameSpace.MOD;
 import static com.simibubi.create.AllTags.NameSpace.QUARK;
 import static com.simibubi.create.AllTags.NameSpace.TIC;
@@ -57,7 +58,8 @@ public class AllTags {
 		MOD(Create.ID, false, true),
 		FORGE("forge"),
 		TIC("tconstruct"),
-		QUARK("quark")
+		QUARK("quark"),
+		GS("galosphere")
 
 		;
 
@@ -182,7 +184,11 @@ public class AllTags {
 		STRIPPED_LOGS(FORGE),
 		STRIPPED_WOOD(FORGE),
 		PLATES(FORGE),
-		WRENCH(FORGE, "tools/wrench")
+		WRENCH(FORGE, "tools/wrench"),
+
+		ALLURITE(MOD,"stone_types/galosphere/allurite"),
+		AMETHYST(MOD,"stone_types/galosphere/amethyst"),
+		LUMIERE(MOD, "stone_types/galosphere/lumiere"),
 
 		;
 

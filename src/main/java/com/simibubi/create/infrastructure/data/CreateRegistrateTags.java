@@ -22,6 +22,9 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CreateRegistrateTags {
 	public static void addGenerators() {
 		Create.REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, CreateRegistrateTags::genBlockTags);
@@ -90,10 +93,10 @@ public class CreateRegistrateTags {
 
 		// COMPAT
 
-		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE,
+		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE, List.of(
 				"connector_lv", "connector_lv_relay", "connector_mv", "connector_mv_relay",
 				"connector_hv", "connector_hv_relay", "connector_bundled", "connector_structural",
-				"connector_redstone", "connector_probe", "breaker_switch");
+				"connector_redstone", "connector_probe", "breaker_switch"));
 
 		// VALIDATE
 
@@ -146,6 +149,12 @@ public class CreateRegistrateTags {
 
 		genStrippedWoodItemTags(prov);
 
+		TagGen.addOptional(prov.tag(AllItemTags.ALLURITE.tag), Mods.GS, gsPalette("allurite"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.LUMIERE.tag), Mods.GS, gsPalette("lumiere"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.AMETHYST.tag), Mods.GS, gsPalette("amethyst"));
+
 		// VALIDATE
 
 		for (AllItemTags tag : AllItemTags.values()) {
@@ -153,6 +162,21 @@ public class CreateRegistrateTags {
 				prov.getOrCreateRawBuilder(tag.tag);
 			}
 		}
+	}
+
+	private static ArrayList<String> gsPalette(String material) {
+		ArrayList<String> toReturn = new ArrayList<>();
+		toReturn.add(material + "_block");
+		toReturn.add(material + "_stairs");
+		toReturn.add(material + "_slab");
+		toReturn.add("smooth_" + material);
+		toReturn.add("smooth_" + material + "_stairs");
+		toReturn.add("smooth_" + material + "_slab");
+		toReturn.add(material + "_bricks");
+		toReturn.add(material + "_brick_stairs");
+		toReturn.add(material + "_brick_slab");
+		toReturn.add("chiseled_" + material);
+		return toReturn;
 	}
 
 	private static void genStrippedWoodItemTags(RegistrateTagsProvider<Item> prov) {
