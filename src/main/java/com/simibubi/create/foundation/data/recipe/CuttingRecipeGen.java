@@ -59,7 +59,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 			stripAndMakePlanks(Mods.BTN, "glimmering_dreamwood", "glimmering_stripped_dreamwood", "dreamwood_planks"),
 
 		// Forbidden Arcanus (no _wood suffix)
-		FA = cuttingCompat(Mods.FA, "cherrywood", "mysterywood"),
+		FA = cuttingCompat(Mods.FA, "mysterywood"),
 
 		// Hexcasting (stripped is a suffix here)
 		HEX = cuttingCompat(Mods.HEX, "edified"),
@@ -69,7 +69,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 		// Oh The Biomes You'll Go
 		BYG =
-			cuttingCompat(Mods.BYG, "aspen", "baobab", "blue_enchanted", "cherry", "cika", "cypress", "ebony", "ether",
+			cuttingCompat(Mods.BYG, "aspen", "baobab", "blue_enchanted", "cika", "cypress", "ebony", "ether",
 				"fir", "green_enchanted", "holly", "jacaranda", "lament", "mahogany", "maple", "nightshade",
 				"palm", "pine", "rainbow_eucalyptus", "redwood", "skyris", "willow", "witch_hazel", "zelkova"),
 		BYG_2 = stripAndMakePlanks(Mods.BYG, "bulbis_stem", "stripped_bulbis_stem", "bulbis_planks"),
@@ -103,11 +103,11 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		ECO_3 = stripAndMakePlanks(Mods.ECO, "flowering_azalea_wood", "stripped_azalea_wood", null),
 
 		// Biomes O' Plenty
-		BOP = cuttingCompat(Mods.BOP, "fir", "redwood", "cherry", "mahogany", "jacaranda", "palm", "willow", "dead",
+		BOP = cuttingCompat(Mods.BOP, "fir", "redwood", "mahogany", "jacaranda", "palm", "willow", "dead",
 			"magic", "umbran", "hellbark"),
 
 		// Blue Skies (crystallized does not have stripped variants)
-		BSK = cuttingCompat(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple", "cherry"),
+		BSK = cuttingCompat(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple"),
 		BSK_2 = stripAndMakePlanks(Mods.BSK, null, "crystallized_log", "crystallized_planks"),
 		BSK_3 = stripAndMakePlanks(Mods.BSK, null, "crystallized_wood", "crystallized_planks")
 
