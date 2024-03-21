@@ -1,0 +1,32 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "aether"
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "aether:zanite_ore"
+    }
+  ],
+  "processingTime": 350,
+  "results": [
+    {
+      "item": "aether:zanite_gemstone"
+    },
+    {
+      "chance": 0.75,
+      "item": "aether:zanite_gemstone"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "item": "aether:holystone"
+    }
+  ]
+}

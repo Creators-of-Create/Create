@@ -1,0 +1,24 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "regions_unexplored:silt_dirt"
+    },
+    {
+      "amount": 250,
+      "fluid": "minecraft:water",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "regions_unexplored:silt_mud"
+    }
+  ]
+}

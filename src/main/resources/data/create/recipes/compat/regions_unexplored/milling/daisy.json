@@ -1,0 +1,29 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "regions_unexplored:daisy"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:light_gray_dye"
+    },
+    {
+      "chance": 0.2,
+      "item": "minecraft:white_dye"
+    },
+    {
+      "chance": 0.05,
+      "item": "minecraft:yellow_dye"
+    }
+  ]
+}

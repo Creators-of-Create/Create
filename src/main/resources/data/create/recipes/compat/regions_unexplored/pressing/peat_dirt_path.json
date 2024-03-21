@@ -1,0 +1,24 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    [
+      {
+        "item": "regions_unexplored:peat_dirt"
+      },
+      {
+        "item": "regions_unexplored:peat_grass_block"
+      }
+    ]
+  ],
+  "results": [
+    {
+      "item": "regions_unexplored:peat_dirt_path"
+    }
+  ]
+}
