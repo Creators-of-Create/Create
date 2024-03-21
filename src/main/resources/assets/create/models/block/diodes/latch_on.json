@@ -82,6 +82,7 @@
 		{
 			"from": [7, 3, 7],
 			"to": [9, 13, 9],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [8, 3, 8]},
 			"faces": {
 				"north": {"uv": [7, 6, 9, 16], "texture": "#lever"},

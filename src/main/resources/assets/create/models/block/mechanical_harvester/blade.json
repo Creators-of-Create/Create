@@ -8,8 +8,9 @@
     "elements": [
         {
             "name": "Wheel",
-            "from": [ 1, 0, 3 ], 
-            "to": [ 1.0625, 12, 15 ], 
+            "from": [ 1, 0, 3 ],
+            "to": [ 1.0625, 12, 15 ],
+            "forge_data": {"calculate_normals": true},
             "rotation": { "origin": [ 8, 6, 9 ], "axis": "x", "angle": -22.5 },
             "faces": {
                 "east": { "texture": "#harvester", "uv": [ 0, 0, 12, 12 ] },
@@ -18,8 +19,8 @@
         },
         {
             "name": "Trim",
-            "from": [ 0, 0, 11 ], 
-            "to": [ 16, 2, 12 ], 
+            "from": [ 0, 0, 11 ],
+            "to": [ 16, 2, 12 ],
             "faces": {
                 "north": { "texture": "#anvil", "uv": [ 0, 0, 16, 2 ] },
                 "east": { "texture": "#anvil", "uv": [ 0, 0, 1, 2 ] },
@@ -31,8 +32,8 @@
         },
         {
             "name": "Trim",
-            "from": [ 0, 10, 6 ], 
-            "to": [ 16, 12, 7 ], 
+            "from": [ 0, 10, 6 ],
+            "to": [ 16, 12, 7 ],
             "faces": {
                 "north": { "texture": "#anvil", "uv": [ 0, 0, 16, 2 ] },
                 "east": { "texture": "#anvil", "uv": [ 0, 0, 1, 2 ] },
@@ -44,8 +45,8 @@
         },
         {
             "name": "Trim",
-            "from": [ 0, 8, 13 ], 
-            "to": [ 16, 9, 15 ], 
+            "from": [ 0, 8, 13 ],
+            "to": [ 16, 9, 15 ],
             "faces": {
                 "north": { "texture": "#anvil", "uv": [ 0, 9, 16, 10 ] },
                 "east": { "texture": "#anvil", "uv": [ 0, 0, 2, 1 ] },
@@ -57,8 +58,8 @@
         },
         {
             "name": "Trim",
-            "from": [ 0, 3, 3 ], 
-            "to": [ 16, 4, 5 ], 
+            "from": [ 0, 3, 3 ],
+            "to": [ 16, 4, 5 ],
             "faces": {
                 "north": { "texture": "#anvil", "uv": [ 0, 0, 16, 1 ] },
                 "east": { "texture": "#anvil", "uv": [ 0, 0, 2, 1 ] },
@@ -70,8 +71,8 @@
         },
         {
             "name": "Blade",
-            "from": [ 0, 6, 15 ], 
-            "to": [ 16, 8, 15.0625 ], 
+            "from": [ 0, 6, 15 ],
+            "to": [ 16, 8, 15.0625 ],
             "faces": {
                 "north": { "texture": "#harvester", "uv": [ 0, 12, 16, 14 ], "rotation": 180 },
                 "south": { "texture": "#harvester", "uv": [ 16, 12, 0, 14 ], "rotation": 180 }
@@ -79,8 +80,9 @@
         },
         {
             "name": "Wheel",
-            "from": [ 15, 0, 3 ], 
-            "to": [ 15.0625, 12, 15 ], 
+            "from": [ 15, 0, 3 ],
+            "to": [ 15.0625, 12, 15 ],
+            "forge_data": {"calculate_normals": true},
             "rotation": { "origin": [ 8, 6, 9 ], "axis": "x", "angle": -22.5 },
             "faces": {
                 "east": { "texture": "#harvester", "uv": [ 0, 0, 12, 12 ] },
@@ -89,8 +91,8 @@
         },
         {
             "name": "Blade",
-            "from": [ 0, 4, 3 ], 
-            "to": [ 16, 6, 3.0625 ], 
+            "from": [ 0, 4, 3 ],
+            "to": [ 16, 6, 3.0625 ],
             "faces": {
                 "north": { "texture": "#harvester", "uv": [ 0, 12, 16, 14 ] },
                 "south": { "texture": "#harvester", "uv": [ 16, 12, 0, 14 ] }
@@ -98,8 +100,8 @@
         },
         {
             "name": "Blade",
-            "from": [ 0, 12, 7 ], 
-            "to": [ 16, 12.0625, 9 ], 
+            "from": [ 0, 12, 7 ],
+            "to": [ 16, 12.0625, 9 ],
             "faces": {
                 "up": { "texture": "#harvester", "uv": [ 0, 12, 16, 14 ], "rotation": 180 },
                 "down": { "texture": "#harvester", "uv": [ 16, 12, 0, 14 ] }
@@ -107,8 +109,8 @@
         },
         {
             "name": "Blade",
-            "from": [ 0, 0.0625, 9 ], 
-            "to": [ 16, 0.125, 11 ], 
+            "from": [ 0, 0.0625, 9 ],
+            "to": [ 16, 0.125, 11 ],
             "faces": {
                 "up": { "texture": "#harvester", "uv": [ 0, 12, 16, 14 ] },
                 "down": { "texture": "#harvester", "uv": [ 16, 12, 0, 14 ], "rotation": 180 }
