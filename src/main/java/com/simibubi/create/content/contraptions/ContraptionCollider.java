@@ -371,7 +371,7 @@ public class ContraptionCollider {
 			entityMotion =
 				handleDamageFromTrain(world, contraptionEntity, contraptionMotion, entity, entityMotion, playerType);
 
-			if (entity instanceof LocalPlayer) {
+			if (entity instanceof LocalPlayer && AllConfigs.client().rotateStandingOnTrainPlayer.get()) {
 				RotateLocalPlayer.deltaXROT += (float) contraptionRotation.x;
 				RotateLocalPlayer.deltaYROT += (float) contraptionRotation.y;
 			}
@@ -418,7 +418,7 @@ public class ContraptionCollider {
 			}
 		}
 
-		if (contraptionEntity.getPassengers().stream().anyMatch(passenger -> passenger instanceof LocalPlayer)) {
+		if (AllConfigs.client().rotateSittingOnTrainPlayer.get() && contraptionEntity.getPassengers().stream().anyMatch(passenger -> passenger instanceof LocalPlayer)) {
 			RotateLocalPlayer.deltaXROT += (float) contraptionRotation.x;
 			RotateLocalPlayer.deltaYROT += (float) contraptionRotation.y;
 		}

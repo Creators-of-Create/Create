@@ -2,6 +2,9 @@ package com.simibubi.create.content.contraptions.render;
 
 import com.simibubi.create.Create;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.infrastructure.config.CClient;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;

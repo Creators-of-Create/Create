@@ -86,6 +86,9 @@ public class CClient extends ConfigBase {
 	public final ConfigFloat mountedZoomMultiplier = f(3, 0, "mountedZoomMultiplier", Comments.mountedZoomMultiplier);
 	public final ConfigBool showTrackGraphOnF3 = b(false, "showTrackGraphOnF3", Comments.showTrackGraphOnF3);
 	public final ConfigBool showExtendedTrackGraphOnF3 = b(false, "showExtendedTrackGraphOnF3", Comments.showExtendedTrackGraphOnF3);
+	public final ConfigBool rotateStandingOnTrainPlayer = b(true, "rotateStandingOnTrainPlayer", Comments.rotateStandingOnTrainPlayer);
+	public final ConfigBool rotateSittingOnTrainPlayer = b(true, "rotateSittingOnTrainPlayer", Comments.rotateSittingOnTrainPlayer);
+
 
 	@Override
 	public String getName() {
@@ -157,6 +160,8 @@ public class CClient extends ConfigBase {
 		static String mountedZoomMultiplier = "How far away the Camera should zoom when seated on a train";
 		static String showTrackGraphOnF3 = "Display nodes and edges of a Railway Network while f3 debug mode is active";
 		static String showExtendedTrackGraphOnF3 = "Additionally display materials of a Rail Network while f3 debug mode is active";
+		static String rotateStandingOnTrainPlayer = "Rotate the player together with the train while standing on it";
+		static String rotateSittingOnTrainPlayer = "Rotate the player together with the train while sitting on it";
 		static String fluidFogSettings = "Configure your vision range when submerged in Create's custom fluids";
 		static String honeyTransparencyMultiplier = "The vision range through honey will be multiplied by this factor";
 		static String chocolateTransparencyMultiplier = "The vision range though chocolate will be multiplied by this factor";
