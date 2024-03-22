@@ -1,0 +1,29 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "silentgems:green_sapphire_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "silentgems:green_sapphire",
+      "count": 2
+    },
+    {
+      "item": "silentgems:green_sapphire",
+      "chance": 0.25
+    },
+    {
+      "item": "minecraft:cobblestone",
+      "chance": 0.12
+    }
+  ],
+  "processingTime": 350,
+  "conditions": [
+    {
+      "modid": "silentgems",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

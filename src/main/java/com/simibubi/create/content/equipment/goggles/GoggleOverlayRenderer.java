@@ -81,7 +81,7 @@ public class GoggleOverlayRenderer {
 		lastHovered = pos;
 
 		pos = proxiedOverlayPosition(world, pos);
-		
+
 		BlockEntity be = world.getBlockEntity(pos);
 		boolean wearingGoggles = GogglesItem.isWearingGoggles(mc.player);
 
@@ -91,11 +91,16 @@ public class GoggleOverlayRenderer {
 		boolean goggleAddedInformation = false;
 		boolean hoverAddedInformation = false;
 
+		ItemStack item = AllItems.GOGGLES.asStack();
+
 		List<Component> tooltip = new ArrayList<>();
 
 		if (hasGoggleInformation && wearingGoggles) {
+			boolean isShifting = mc.player.isShiftKeyDown();
+
 			IHaveGoggleInformation gte = (IHaveGoggleInformation) be;
-			goggleAddedInformation = gte.addToGoggleTooltip(tooltip, mc.player.isShiftKeyDown());
+			goggleAddedInformation = gte.addToGoggleTooltip(tooltip, isShifting);
+			item = gte.getIcon(isShifting);
 		}
 
 		if (hasHoveringInformation) {
@@ -143,7 +148,7 @@ public class GoggleOverlayRenderer {
 			}
 
 			if (!pistonFound) {
-				hoverTicks = 0;				
+				hoverTicks = 0;
 				return;
 			}
 			if (!tooltip.isEmpty())
@@ -155,7 +160,7 @@ public class GoggleOverlayRenderer {
 		}
 
 		if (tooltip.isEmpty()) {
-			hoverTicks = 0;			
+			hoverTicks = 0;
 			return;
 		}
 
@@ -203,13 +208,13 @@ public class GoggleOverlayRenderer {
 		RemovedGuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
 			colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
-		ItemStack item = AllItems.GOGGLES.asStack();
+
 		GuiGameElement.of(item)
 			.at(posX + 10, posY - 16, 450)
 			.render(poseStack);
 		poseStack.popPose();
 	}
-	
+
 	public static BlockPos proxiedOverlayPosition(Level level, BlockPos pos) {
 		BlockState targetedState = level.getBlockState(pos);
 		if (targetedState.getBlock() instanceof IProxyHoveringInformation proxy)

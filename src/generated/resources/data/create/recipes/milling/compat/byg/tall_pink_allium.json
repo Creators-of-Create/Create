@@ -1,0 +1,31 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "byg:tall_pink_allium"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:pink_dye",
+      "count": 3
+    },
+    {
+      "item": "minecraft:pink_dye",
+      "count": 2,
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:magenta_dye",
+      "count": 2,
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "byg",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

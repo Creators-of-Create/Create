@@ -1,0 +1,29 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "silentgems:jasper_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "silentgems:jasper",
+      "count": 2
+    },
+    {
+      "item": "silentgems:jasper",
+      "chance": 0.25
+    },
+    {
+      "item": "minecraft:netherrack",
+      "chance": 0.12
+    }
+  ],
+  "processingTime": 350,
+  "conditions": [
+    {
+      "modid": "silentgems",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

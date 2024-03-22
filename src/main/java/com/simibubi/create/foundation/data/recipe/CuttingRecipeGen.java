@@ -7,6 +7,8 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
+import java.util.Objects;
+
 public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
@@ -54,7 +56,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		FA = cuttingCompat(Mods.FA, "cherrywood", "mysterywood"),
 
 		// Hexcasting (stripped is a suffix here)
-		HEX = cuttingCompat(Mods.HEX, "akashic"),
+		HEX = cuttingCompat(Mods.HEX, "edified"),
 
 		// Integrated Dynamics (stripped is a suffix here also)
 		ID = cuttingCompat(Mods.ID, "menril"),
@@ -101,9 +103,38 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		// Blue Skies (crystallized does not have stripped variants)
 		BSK = cuttingCompat(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple", "cherry"),
 		BSK_2 = stripAndMakePlanks(Mods.BSK, null, "crystallized_log", "crystallized_planks"),
-		BSK_3 = stripAndMakePlanks(Mods.BSK, null, "crystallized_wood", "crystallized_planks")
+		BSK_3 = stripAndMakePlanks(Mods.BSK, null, "crystallized_wood", "crystallized_planks"),
 
-	;
+		// Atmospheric
+
+		ATM = cuttingCompat(Mods.ATM, "aspen", "kousa", "yucca", "morado"),
+		ATM_2 = stripAndMakePlanks(Mods.ATM, "grimwood", "stripped_grimwood", "grimwood_planks"),
+		ATM_3 = stripAndMakePlanks(Mods.ATM, "rosewood", "stripped_rosewood", "rosewood_planks"),
+		ATM_4 = cuttingCompatLogOnly(Mods.ATM, "grimwood", "rosewood"),
+
+		// Autumnity
+		AUTUM = cuttingCompat(Mods.AUTUM, "maple"),
+		AUTUM_2 = stripAndMakePlanks(Mods.AUTUM, "sappy_maple_wood", "sappy_maple_log", "maple_planks"),
+
+		// Endergetic
+
+		ENDERGETIC = stripAndMakePlanks(Mods.ENDER, "poise_stem", "stripped_poise_stem", "poise_planks"),
+
+		// Project Vibrant Journeys
+		PVJ = cuttingCompatLogOnly(Mods.PVJ,"aspen", "baobab", "cottonwood", "fir", "juniper", "mangrove", "maple", "palm", "pine", "redwood", "willow"),
+
+		// Upgrade Aquatic
+		UA = cuttingCompat(Mods.UA, "river"),
+		UA_2 = stripAndMakePlanks(Mods.UA, "driftwood", "strippped_driftwood", "driftwood_planks"),
+		UA_3 = cuttingCompatLogOnly(Mods.UA, "driftwood"),
+
+		//Vault Hunters
+		VH = cuttingCompatLogOnly(Mods.VH, "wooden", "overgrown_wooden", "driftwood", "chromatic"),
+
+		// Nether's Exoticism
+		NE = cuttingCompat(Mods.NE, "ramboutan"),
+		NE_2 = cuttingCompatLogOnly(Mods.NE, "jabuticaba")
+		;
 
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {
 		create(() -> wood, b -> b.duration(50)
@@ -129,6 +160,16 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		return null;
 	}
 
+	GeneratedRecipe cuttingCompatLogOnly(Mods mod, String... woodtypes) {
+		for (String type : woodtypes) {
+			String planks = type + "_planks";
+			String strippedPre = mod.strippedIsSuffix ? "" : "stripped_";
+			String strippedPost = mod.strippedIsSuffix ? "_stripped" : "";
+			stripAndMakePlanks(mod, type + "_log", strippedPre + type + "_log" + strippedPost, planks);
+		}
+		return null;
+	}
+
 	GeneratedRecipe stripAndMakePlanks(Mods mod, String wood, String stripped, String planks) {
 		if (wood != null)
 			create("compat/" + mod.getId() + "/" + wood, b -> b.duration(50)
@@ -136,10 +177,17 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 				.output(1, mod, stripped, 1)
 				.whenModLoaded(mod.getId()));
 		if (planks != null)
-			create("compat/" + mod.getId() + "/" + stripped, b -> b.duration(50)
-				.require(mod, stripped)
-				.output(1, mod, planks, 6)
-				.whenModLoaded(mod.getId()));
+			if (!Objects.equals(mod.getId(), Mods.VH.getId())) {
+				create("compat/" + mod.getId() + "/" + stripped, b -> b.duration(50)
+						.require(mod, stripped)
+						.output(1, mod, planks, 6)
+						.whenModLoaded(mod.getId()));
+			} else {
+				create("compat/" + mod.getId() + "/" + stripped, b -> b.duration(50)
+						.require(mod, stripped)
+						.output(1, mod, planks, 4)
+						.whenModLoaded(mod.getId()));
+			}
 		return null;
 	}
 
@@ -151,5 +199,4 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 	protected AllRecipeTypes getRecipeType() {
 		return AllRecipeTypes.CUTTING;
 	}
-
 }
