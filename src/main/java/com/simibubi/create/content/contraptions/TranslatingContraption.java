@@ -19,7 +19,7 @@ public abstract class TranslatingContraption extends Contraption {
 			return Collections.emptySet();
 		if (cachedColliders == null || cachedColliderDirection != movementDirection) {
 			cachedColliderDirection = movementDirection;
-			cachedColliders= createColliders(world, movementDirection);
+			cachedColliders = createColliders(world, movementDirection);
 		}
 		return cachedColliders;
 	}
