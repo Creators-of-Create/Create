@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
+import com.simibubi.create.api.heat.HeatProviders;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.compat.curios.Curios;
@@ -158,18 +159,18 @@ public class Create {
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
-		event.enqueueWork(() -> {
-			// TODO: custom registration should all happen in one place
-			// Most registration happens in the constructor.
-			// These registrations use Create's registered objects directly so they must run after registration has finished.
-			BuiltinPotatoProjectileTypes.register();
-			BoilerHeaters.registerDefaults();
-			// --
+        event.enqueueWork(() -> {
+            // TODO: custom registration should all happen in one place
+            // Most registration happens in the constructor.
+            // These registrations use Create's registered objects directly so they must run after registration has finished.
+            BuiltinPotatoProjectileTypes.register();
+            BoilerHeaters.registerDefaults();
+            HeatProviders.registerDefaults();
 
-			AttachedRegistry.unwrapAll();
-			AllAdvancements.register();
-			AllTriggers.register();
-		});
+            AttachedRegistry.unwrapAll();
+            AllAdvancements.register();
+            AllTriggers.register();
+        });
 	}
 
 	public static ResourceLocation asResource(String path) {

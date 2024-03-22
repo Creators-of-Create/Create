@@ -10,7 +10,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
-import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -70,17 +69,6 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(HEAT_LEVEL, FACING);
-	}
-
-	@Override
-	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
-		if (world.isClientSide)
-			return;
-		BlockEntity blockEntity = world.getBlockEntity(pos.above());
-		if (!(blockEntity instanceof BasinBlockEntity))
-			return;
-		BasinBlockEntity basin = (BasinBlockEntity) blockEntity;
-		basin.notifyChangeOfContents();
 	}
 
 	@Override
