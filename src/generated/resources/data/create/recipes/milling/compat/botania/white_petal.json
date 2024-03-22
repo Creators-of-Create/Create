@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/white"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:white_dye"
+    }
+  ],
+  "processingTime": 50
+}

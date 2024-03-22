@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "autumnity:stripped_maple_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "autumnity:maple_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "autumnity",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

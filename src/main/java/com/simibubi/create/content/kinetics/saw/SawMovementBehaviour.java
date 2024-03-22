@@ -72,7 +72,7 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 			return;
 		}
 
-		TreeCutter.findTree(context.world, pos)
+		TreeCutter.findTree(context.world, pos, brokenState)
 			.destroyBlocks(context.world, null, (stack, dropPos) -> dropItemFromCutTree(context, stack, dropPos));
 	}
 

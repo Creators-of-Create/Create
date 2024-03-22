@@ -1,0 +1,25 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "byg:compat/byg/winter_cyclamen"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:cyan_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:green_dye",
+      "chance": 0.1
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "byg",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
