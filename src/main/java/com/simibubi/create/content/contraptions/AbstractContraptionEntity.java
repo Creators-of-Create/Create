@@ -10,6 +10,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.phys.Vec2;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -90,6 +92,10 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	protected Contraption contraption;
 	protected boolean initialized;
 	protected boolean prevPosInvalid;
+	protected boolean prevRotInvalid;
+
+	ContraptionRotationState oldRotationState;
+
 	private boolean skipActorStop;
 
 	/*
@@ -104,6 +110,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public AbstractContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
 		super(entityTypeIn, worldIn);
 		prevPosInvalid = true;
+		prevRotInvalid = true;
 		collidingEntities = new IdentityHashMap<>();
 	}
 
@@ -219,7 +226,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public Vec3 getPassengerPosition(Entity passenger, float partialTicks) {
 		if (contraption == null)
 			return null;
-		
+
 		UUID id = passenger.getUUID();
 		if (passenger instanceof OrientedContraptionEntity) {
 			BlockPos localPos = contraption.getBearingPosOf(id);
@@ -234,7 +241,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		BlockPos seat = contraption.getSeatOf(id);
 		if (seat == null)
 			return null;
-		
+
 		Vec3 transformedVector = toGlobalVector(Vec3.atLowerCornerOf(seat)
 			.add(.5, passenger.getMyRidingOffset() + ySize - .15f, .5), partialTicks)
 				.add(VecHelper.getCenterOf(BlockPos.ZERO))
@@ -365,6 +372,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		yo = getY();
 		zo = getZ();
 		prevPosInvalid = false;
+		prevRotInvalid = false;
 
 		if (!initialized)
 			contraptionInitialize();
@@ -815,7 +823,21 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		return prevPosInvalid ? position() : new Vec3(xo, yo, zo);
 	}
 
+	public ContraptionRotationState getPrevRotationState() {
+		var state = oldRotationState;
+		oldRotationState = getRotationState();
+		return prevRotInvalid ?
+				oldRotationState
+				: state;
+	}
+
 	public abstract ContraptionRotationState getRotationState();
+
+	public Vec3 getRotationVec(ContraptionRotationState state) {
+		if (state == null)
+			return Vec3.ZERO;
+		return new Vec3(state.xRotation, state.yRotation + state.secondYRotation, state.zRotation);
+	}
 
 	public Vec3 getContactPointMotion(Vec3 globalContactPoint) {
 		if (prevPosInvalid)

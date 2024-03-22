@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions;
 
+import static java.lang.Math.abs;
 import static net.minecraft.world.entity.Entity.collideBoundingBox;
 
 import java.lang.ref.WeakReference;
@@ -9,7 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import com.simibubi.create.content.contraptions.render.RotateLocalPlayer;
 import com.simibubi.create.foundation.utility.AngleHelper;
+
+import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
+
+import net.minecraft.world.phys.Vec2;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
@@ -90,6 +96,13 @@ public class ContraptionCollider {
 
 		Vec3 contraptionPosition = contraptionEntity.position();
 		Vec3 contraptionMotion = contraptionPosition.subtract(contraptionEntity.getPrevPositionVec());
+		var old = contraption.entity.getRotationVec(contraption.entity.getPrevRotationState());
+		var current = contraption.entity.getRotationVec(contraption.entity.getRotationState());
+		Vec3 contraptionRotation = old.subtract(current);
+//		if (abs(old.x - current.x) >= 180)
+//			contraptionRotation.add(new Vec3(360, 0, 0));
+//		if (abs(old.y - current.y) >= 180)
+//			contraptionRotation.add(new Vec3(0, 360, 0));
 		Vec3 anchorVec = contraptionEntity.getAnchorVec();
 		ContraptionRotationState rotation = null;
 
@@ -138,8 +151,6 @@ public class ContraptionCollider {
 
 			// Transform entity position and motion to local space
 			Vec3 entityPosition = entity.position();
-			float entityXRot = entity.getXRot();
-			float entityYRot = entity.getYRot();
 			AABB entityBounds = entity.getBoundingBox();
 			Vec3 motion = entity.getDeltaMovement();
 			float yawOffset = rotation.getYawOffset();
@@ -186,12 +197,12 @@ public class ContraptionCollider {
 					Vec3 currentResponse = collisionResponse.getValue();
 					Vec3 currentCenter = obbCenter.add(currentResponse);
 
-					if (Math.abs(currentCenter.x - bb.getCenter().x) - entityBounds.getXsize() - 1 > bb.getXsize() / 2)
+					if (abs(currentCenter.x - bb.getCenter().x) - entityBounds.getXsize() - 1 > bb.getXsize() / 2)
 						continue;
-					if (Math.abs((currentCenter.y + motion.y) - bb.getCenter().y) - entityBounds.getYsize()
+					if (abs((currentCenter.y + motion.y) - bb.getCenter().y) - entityBounds.getYsize()
 						- 1 > bb.getYsize() / 2)
 						continue;
-					if (Math.abs(currentCenter.z - bb.getCenter().z) - entityBounds.getZsize() - 1 > bb.getZsize() / 2)
+					if (abs(currentCenter.z - bb.getCenter().z) - entityBounds.getZsize() - 1 > bb.getZsize() / 2)
 						continue;
 
 					obb.setCenter(currentCenter);
@@ -330,12 +341,12 @@ public class ContraptionCollider {
 				double intersectZ = totalResponse.z();
 
 				double horizonalEpsilon = 1 / 128f;
-				if (motionX != 0 && Math.abs(intersectX) > horizonalEpsilon && motionX > 0 == intersectX < 0)
+				if (motionX != 0 && abs(intersectX) > horizonalEpsilon && motionX > 0 == intersectX < 0)
 					entityMotion = entityMotion.multiply(0, 1, 1);
 				if (motionY != 0 && intersectY != 0 && motionY > 0 == intersectY < 0)
 					entityMotion = entityMotion.multiply(1, 0, 1)
 						.add(0, contraptionMotion.y, 0);
-				if (motionZ != 0 && Math.abs(intersectZ) > horizonalEpsilon && motionZ > 0 == intersectZ < 0)
+				if (motionZ != 0 && abs(intersectZ) > horizonalEpsilon && motionZ > 0 == intersectZ < 0)
 					entityMotion = entityMotion.multiply(1, 1, 0);
 
 			}
@@ -358,17 +369,15 @@ public class ContraptionCollider {
 				continue;
 
 			Vec3 allowedMovement = collide(totalResponse, entity);
+//			if (!world.isClientSide())
 			entity.setPos(entityPosition.x + allowedMovement.x, entityPosition.y + allowedMovement.y,
-				entityPosition.z + allowedMovement.z);
+					entityPosition.z + allowedMovement.z);
 			entityPosition = entity.position();
-
 			entityMotion =
 				handleDamageFromTrain(world, contraptionEntity, contraptionMotion, entity, entityMotion, playerType);
-			float dXRot = AngleHelper.deg(-Mth.atan2(contraptionMotion.x, contraptionMotion.z));
-			float dYRot = AngleHelper.deg(-Mth.atan2(contraptionMotion.y,
-					Math.sqrt(Math.pow(contraptionMotion.x, 2) + Math.pow(contraptionMotion.z, 2))));
-			entity.setXRot(entityXRot + dXRot);
-			entity.setYRot(entityYRot + dYRot);
+
+			RotateLocalPlayer.deltaXROT += (float) contraptionRotation.x;
+			RotateLocalPlayer.deltaYROT += (float) contraptionRotation.y;
 
 			entity.hurtMarked = true;
 			Vec3 contactPointMotion = Vec3.ZERO;
@@ -403,8 +412,8 @@ public class ContraptionCollider {
 			float limbSwing = Mth.sqrt((float) (d0 * d0 + d1 * d1)) * 4.0F;
 			if (limbSwing > 1.0F)
 				limbSwing = 1.0F;
-			AllPackets.getChannel()
-				.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
+//			AllPackets.getChannel()
+//				.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
 
 			if (entity.isOnGround() && contraption instanceof TranslatingContraption) {
 				safetyLock.setLeft(new WeakReference<>(contraptionEntity));
@@ -488,7 +497,7 @@ public class ContraptionCollider {
 			.deflate(1 / 4f, 0, 1 / 4f);
 		double shortestDistance = Double.MAX_VALUE;
 		double yStart = entity.getStepHeight() + contraptionEntity.getY() + yStartOffset;
-		double rayLength = Math.max(5, Math.abs(entity.getY() - yStart));
+		double rayLength = Math.max(5, abs(entity.getY() - yStart));
 
 		for (int rayIndex = 0; rayIndex < 4; rayIndex++) {
 			Vec3 start = new Vec3(rayIndex / 2 == 0 ? bb.minX : bb.maxX, yStart, rayIndex % 2 == 0 ? bb.minZ : bb.maxZ);
