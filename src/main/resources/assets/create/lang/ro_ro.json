@@ -860,7 +860,7 @@
   "create.contraptions.clockwork.hour_first": "Acul orei primul",
   "create.contraptions.clockwork.hour_first_24": "Acul de 24 de ore primul",
   "create.contraptions.clockwork.minute_first": "Acul minutului primul",
-  "create.contraptions.contoller.target": "Componentă vizată",
+  "create.contraptions.controller.target": "Componentă vizată",
   "create.contraptions.mechanical_roller.pave_material": "Material de pavaj",
   "create.contraptions.movement_mode": "Mod de Mișcare",
   "create.contraptions.movement_mode.move_never_place": "Plasează doar când Ancora e Distrusă",

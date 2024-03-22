@@ -179,7 +179,7 @@
 	"create.terrainzapper.leftClickToSet": "Left-Click a Block to set Material",
 
 	"create.large_water_wheel.not_enough_space": "Clear Blocks for Placement",
-	
+
 	"create.minecart_coupling.two_couplings_max": "Minecarts cannot have more than two couplings each",
 	"create.minecart_coupling.unloaded": "Parts of your train seem to be in unloaded chunks",
 	"create.minecart_coupling.no_loops": "Couplings cannot form a loop",
@@ -219,7 +219,7 @@
 	"create.logistics.fluid_filter": "Fluid Filter",
 	"create.logistics.firstFrequency": "Frequency #1",
 	"create.logistics.secondFrequency": "Frequency #2",
-	
+
 	"create.logistics.filter.click_to_set": "Click with item to set",
 	"create.logistics.filter.click_to_replace": "Click with item to replace",
 	"create.logistics.filter.hold_to_set_amount": "Click and hold for amount",
@@ -230,26 +230,26 @@
 	"create.logistics.filter.up_to": "Up to",
 	"create.logistics.filter.exactly": "Exactly",
 	"create.logistics.filter.requires_item_in_inventory": "Requires %1$s item in Inventory",
-	
+
 	"create.logistics.creative_crate.supply": "Infinite Supply",
 	"create.logistics.train_observer.cargo_filter": "Cargo Filter",
-	
+
 	"create.kinetics.creative_motor.rotation_speed": "Generated Speed in RPM",
 	"create.kinetics.speed_controller.rotation_speed": "Targeted Speed in RPM",
 	"create.kinetics.valve_handle.rotated_angle": "Rotation when used",
-	
+
 	"create.logistics.redstone_interval": "Redstone Interval",
-	
-	"create.contraptions.contoller.target": "Targeted Component",
+
+	"create.contraptions.controller.target": "Targeted Component",
 	"create.contraptions.mechanical_roller.pave_material": "Paving Material",
-	
+
 	"create.contraptions.chassis.radius": "Radius when Sticky",
 	"create.contraptions.chassis.range": "Range of Sticky Sides",
 	"create.contraptions.chassis.distance": "Distance",
-	
+
 	"create.gui.value_settings.hold_to_edit": "Click and hold to edit",
 	"create.gui.value_settings.release_to_confirm": "Release %1$s to Confirm",
-	
+
 	"create.gui.goggles.generator_stats": "Generator Stats:",
 	"create.gui.goggles.kinetic_stats": "Kinetic Stats:",
 	"create.gui.goggles.at_current_speed": "at current speed",
@@ -309,7 +309,7 @@
 	"create.gui.sequenced_gearshift.speed.back_fast": "Double speed, Reversed",
 
 	"create.gui.clipboard.erase_checked": "Erase checked items",
-	
+
 	"create.clipboard.actions": "Clipboard Actions",
 	"create.clipboard.to_copy": "%1$s to Copy settings",
 	"create.clipboard.to_paste": "%1$s to Paste settings",
@@ -872,7 +872,7 @@
 	"create.contraption.controls.actor_toggle.on": "On",
 	"create.contraption.controls.actor_toggle.off": "Off",
 	"create.contraption.controls.floor_unreachable": "Unreachable",
-	
+
 	"create.contraption.door_control": "Onboard Door Control",
 	"create.contraption.door_control.all": "Open All Doors",
 	"create.contraption.door_control.all.short": "Open All",

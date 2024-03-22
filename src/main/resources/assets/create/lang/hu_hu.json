@@ -868,7 +868,7 @@
   "create.contraptions.clockwork.hour_first": "Óramutató először",
   "create.contraptions.clockwork.hour_first_24": "Napszakmutató először",
   "create.contraptions.clockwork.minute_first": "Percmutató először",
-  "create.contraptions.contoller.target": "Vezérelt alkatrész",
+  "create.contraptions.controller.target": "Vezérelt alkatrész",
   "create.contraptions.mechanical_roller.pave_material": "Burkolóanyag",
   "create.contraptions.movement_mode": "Lehelyezés",
   "create.contraptions.movement_mode.move_never_place": "Csak a rögzítés lebontásakor",

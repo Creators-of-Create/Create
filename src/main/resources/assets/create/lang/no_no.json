@@ -900,7 +900,7 @@
   "create.contraptions.clockwork.hour_first": "Timeviseren først",
   "create.contraptions.clockwork.hour_first_24": "24-timeviser først",
   "create.contraptions.clockwork.minute_first": "Minuttviseren først",
-  "create.contraptions.contoller.target": "Valgt komponent",
+  "create.contraptions.controller.target": "Valgt komponent",
   "create.contraptions.mechanical_roller.pave_material": "Underlags-material",
   "create.contraptions.movement_mode": "Bevegelses modus",
   "create.contraptions.movement_mode.move_never_place": "Plasser bare hvis ankeret ødelegges",

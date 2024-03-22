@@ -900,7 +900,7 @@
   "create.contraptions.clockwork.hour_first": "Stundenzeiger zuerst",
   "create.contraptions.clockwork.hour_first_24": "24-Stunden-Zeiger zuerst",
   "create.contraptions.clockwork.minute_first": "Minutenzeiger zuerst",
-  "create.contraptions.contoller.target": "Zielkomponente",
+  "create.contraptions.controller.target": "Zielkomponente",
   "create.contraptions.mechanical_roller.pave_material": "Fundamentmaterial",
   "create.contraptions.movement_mode": "Bewegungsmodus",
   "create.contraptions.movement_mode.move_never_place": "Platziere nur wenn Anker zerstört",

@@ -900,7 +900,7 @@
   "create.contraptions.clockwork.hour_first": "První hodinová ručička",
   "create.contraptions.clockwork.hour_first_24": "První 24-hodinová ručička",
   "create.contraptions.clockwork.minute_first": "První minutová ručička",
-  "create.contraptions.contoller.target": "Cílová složka",
+  "create.contraptions.controller.target": "Cílová složka",
   "create.contraptions.mechanical_roller.pave_material": "Dlažební materiál",
   "create.contraptions.movement_mode": "Režim pohybu",
   "create.contraptions.movement_mode.move_never_place": "Umístit pouze při zničení kotvy",

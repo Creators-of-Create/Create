@@ -897,7 +897,7 @@
   "create.contraptions.clockwork.hour_first": "Timvisaren först",
   "create.contraptions.clockwork.hour_first_24": "24-timmarsvisaren först",
   "create.contraptions.clockwork.minute_first": "Minutvisaren först",
-  "create.contraptions.contoller.target": "Målinriktat redskap",
+  "create.contraptions.controller.target": "Målinriktat redskap",
   "create.contraptions.mechanical_roller.pave_material": "Beläggningsmaterial",
   "create.contraptions.movement_mode": "Rörelseläge",
   "create.contraptions.movement_mode.move_never_place": "Placera endast när ankaren har förstörts",

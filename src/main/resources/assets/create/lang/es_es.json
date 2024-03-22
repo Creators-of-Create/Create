@@ -895,7 +895,7 @@
   "create.contraptions.clockwork.hour_first": "La manecilla de las horas primero",
   "create.contraptions.clockwork.hour_first_24": "La manecilla del día primero",
   "create.contraptions.clockwork.minute_first": "La manecilla de los minutos primero",
-  "create.contraptions.contoller.target": "Componente Seleccionado",
+  "create.contraptions.controller.target": "Componente Seleccionado",
   "create.contraptions.mechanical_roller.pave_material": "Material para Rellenar",
   "create.contraptions.movement_mode": "Modo de movimiento",
   "create.contraptions.movement_mode.move_never_place": "Colocar sólo cuando se destruye el ancla",

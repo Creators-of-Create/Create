@@ -898,7 +898,7 @@
   "create.contraptions.clockwork.hour_first": "Najpierw wskazówka godzinowa",
   "create.contraptions.clockwork.hour_first_24": "Najpierw wskazówka 24-godzinna",
   "create.contraptions.clockwork.minute_first": "Najpierw wskazówka minutowa",
-  "create.contraptions.contoller.target": "Wybrany komponent",
+  "create.contraptions.controller.target": "Wybrany komponent",
   "create.contraptions.mechanical_roller.pave_material": "Materiał nawierzchniowy",
   "create.contraptions.movement_mode": "Tryb poruszania",
   "create.contraptions.movement_mode.move_never_place": "Stawiaj jedynie, gdy kotwica jest zniszczona",

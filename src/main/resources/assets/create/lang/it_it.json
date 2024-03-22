@@ -900,7 +900,7 @@
   "create.contraptions.clockwork.hour_first": "Prima lancetta delle ore",
   "create.contraptions.clockwork.hour_first_24": "Prima lancetta delle 24 ore",
   "create.contraptions.clockwork.minute_first": "Prima lancetta dei minuti",
-  "create.contraptions.contoller.target": "Componente selezionato",
+  "create.contraptions.controller.target": "Componente selezionato",
   "create.contraptions.mechanical_roller.pave_material": "Materiale con cui pavimentare",
   "create.contraptions.movement_mode": "Modalità di movimento",
   "create.contraptions.movement_mode.move_never_place": "Posiziona solo quando distrutto",

@@ -900,7 +900,7 @@
   "create.contraptions.clockwork.hour_first": "Ponteiro da hora primeiro",
   "create.contraptions.clockwork.hour_first_24": "Ponteiro das 24 horas primeiro",
   "create.contraptions.clockwork.minute_first": "Ponteiro do minuto primeiro",
-  "create.contraptions.contoller.target": "Componente Selecionado",
+  "create.contraptions.controller.target": "Componente Selecionado",
   "create.contraptions.mechanical_roller.pave_material": "Material de Pavimentação",
   "create.contraptions.movement_mode": "Modo de movimento",
   "create.contraptions.movement_mode.move_never_place": "Colocar apenas caso a âncora seja destruída",
