@@ -38,11 +38,11 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 
 	public static record BlockPosEntry(BlockPos pos, int distance) {
 	};
-	
+
 	public static class ChunkNotLoadedException extends Exception {
 		private static final long serialVersionUID = 1L;
 	}
-	
+
 	BoundingBox affectedArea;
 	BlockPos rootPos;
 	boolean infinite;
@@ -158,11 +158,12 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 			BlockPos currentPos = entry.pos;
 			if (visited.contains(currentPos))
 				continue;
-			visited.add(currentPos);
+			if (world.getFluidState(currentPos).isSource())
+				visited.add(currentPos);
 
 			if (!world.isLoaded(currentPos))
 				throw new ChunkNotLoadedException();
-			
+
 			FluidState fluidState = world.getFluidState(currentPos);
 			if (fluidState.isEmpty())
 				continue;
@@ -205,7 +206,7 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 	protected void playEffect(Level world, BlockPos pos, Fluid fluid, boolean fillSound) {
 		if (fluid == null)
 			return;
-		
+
 		BlockPos splooshPos = pos == null ? blockEntity.getBlockPos() : pos;
 
 		SoundEvent soundevent = fillSound ? fluid.getAttributes()
