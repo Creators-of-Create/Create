@@ -35,7 +35,7 @@ public class FilterItemStack {
 	public static FilterItemStack of(CompoundTag tag) {
 		return of(ItemStack.of(tag));
 	}
-	
+
 	public static FilterItemStack empty() {
 		return of(ItemStack.EMPTY);
 	}
@@ -47,16 +47,16 @@ public class FilterItemStack {
 	public CompoundTag serializeNBT() {
 		return filterItemStack.serializeNBT();
 	}
-	
+
 	public ItemStack item() {
 		return filterItemStack;
 	}
-	
+
 	public FluidStack fluid(Level level) {
 		resolveFluid(level);
 		return filterFluidStack;
 	}
-	
+
 	public boolean isFilterItem() {
 		return filterItemStack.getItem() instanceof FilterItem;
 	}
@@ -94,7 +94,7 @@ public class FilterItemStack {
 	}
 
 	//
-	
+
 	private void resolveFluid(Level world) {
 		if (!fluidExtracted) {
 			fluidExtracted = true;
@@ -128,7 +128,7 @@ public class FilterItemStack {
 					containedItems.add(FilterItemStack.of(stackInSlot));
 			}
 
-			shouldRespectNBT = !defaults ? false
+			shouldRespectNBT = defaults ? false
 				: filter.getTag()
 					.getBoolean("RespectNBT");
 			isBlacklist = defaults ? false
