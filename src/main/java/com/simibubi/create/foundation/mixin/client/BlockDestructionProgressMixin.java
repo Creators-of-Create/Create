@@ -16,12 +16,12 @@ public class BlockDestructionProgressMixin implements BlockDestructionProgressEx
 	private Set<BlockPos> create$extraPositions;
 
 	@Override
-	public Set<BlockPos> getExtraPositions() {
+	public Set<BlockPos> create$getExtraPositions() {
 		return create$extraPositions;
 	}
 
 	@Override
-	public void setExtraPositions(Set<BlockPos> positions) {
+	public void create$setExtraPositions(Set<BlockPos> positions) {
 		create$extraPositions = positions;
 	}
 }

@@ -69,7 +69,7 @@ public class StationBlock extends Block implements IBE<StationBlockEntity>, IWre
 		updateWater(pLevel, pState, pCurrentPos);
 		return pState;
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
@@ -131,7 +131,7 @@ public class StationBlock extends Block implements IBE<StationBlockEntity>, IWre
 				if (!(savedData instanceof StationMapData stationMapData))
 					return InteractionResult.FAIL;
 
-				if (!stationMapData.toggleStation(pLevel, pPos, station))
+				if (!stationMapData.create$toggleStation(pLevel, pPos, station))
 					return InteractionResult.FAIL;
 
 				return InteractionResult.SUCCESS;
