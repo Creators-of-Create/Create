@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 
+import static java.lang.Math.abs;
 import static net.minecraftforge.forgespi.Environment.Keys.DIST;
 
 

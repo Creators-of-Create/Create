@@ -80,6 +80,9 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.signum;
+
 public abstract class AbstractContraptionEntity extends Entity implements IEntityAdditionalSpawnData {
 
 	private static final EntityDataAccessor<Boolean> STALLED =
@@ -829,6 +832,17 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		return prevRotInvalid ?
 				oldRotationState
 				: state;
+	}
+
+	public Vec3 getDeltaRotation() {
+		var old = this.getRotationVec(contraption.entity.getPrevRotationState());
+		var current = this.getRotationVec(contraption.entity.getRotationState());
+		Vec3 contraptionRotation = old.subtract(current);
+		if (abs(old.x - current.x) >= 180)
+			contraptionRotation = contraptionRotation.add(new Vec3(signum(current.x - old.x) * 360, 0, 0));
+		if (abs(old.y - current.y) >= 180)
+			contraptionRotation = contraptionRotation.add(new Vec3(0, signum(current.y - old.y) * 360, 0));
+		return contraptionRotation;
 	}
 
 	public abstract ContraptionRotationState getRotationState();

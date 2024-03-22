@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.signum;
 import static net.minecraft.world.entity.Entity.collideBoundingBox;
 
 import java.lang.ref.WeakReference;
@@ -96,13 +97,7 @@ public class ContraptionCollider {
 
 		Vec3 contraptionPosition = contraptionEntity.position();
 		Vec3 contraptionMotion = contraptionPosition.subtract(contraptionEntity.getPrevPositionVec());
-		var old = contraption.entity.getRotationVec(contraption.entity.getPrevRotationState());
-		var current = contraption.entity.getRotationVec(contraption.entity.getRotationState());
-		Vec3 contraptionRotation = old.subtract(current);
-//		if (abs(old.x - current.x) >= 180)
-//			contraptionRotation.add(new Vec3(360, 0, 0));
-//		if (abs(old.y - current.y) >= 180)
-//			contraptionRotation.add(new Vec3(0, 360, 0));
+		Vec3 contraptionRotation = contraption.entity.getDeltaRotation();
 		Vec3 anchorVec = contraptionEntity.getAnchorVec();
 		ContraptionRotationState rotation = null;
 
@@ -376,8 +371,10 @@ public class ContraptionCollider {
 			entityMotion =
 				handleDamageFromTrain(world, contraptionEntity, contraptionMotion, entity, entityMotion, playerType);
 
-			RotateLocalPlayer.deltaXROT += (float) contraptionRotation.x;
-			RotateLocalPlayer.deltaYROT += (float) contraptionRotation.y;
+			if (entity instanceof LocalPlayer) {
+				RotateLocalPlayer.deltaXROT += (float) contraptionRotation.x;
+				RotateLocalPlayer.deltaYROT += (float) contraptionRotation.y;
+			}
 
 			entity.hurtMarked = true;
 			Vec3 contactPointMotion = Vec3.ZERO;
@@ -421,6 +418,10 @@ public class ContraptionCollider {
 			}
 		}
 
+		if (contraptionEntity.getPassengers().stream().anyMatch(passenger -> passenger instanceof LocalPlayer)) {
+			RotateLocalPlayer.deltaXROT += (float) contraptionRotation.x;
+			RotateLocalPlayer.deltaYROT += (float) contraptionRotation.y;
+		}
 	}
 
 	private static int packetCooldown = 0;
