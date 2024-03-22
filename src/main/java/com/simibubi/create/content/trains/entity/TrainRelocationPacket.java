@@ -9,7 +9,6 @@ import com.simibubi.create.content.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -82,7 +81,7 @@ public class TrainRelocationPacket extends SimplePacketBase {
 			if (!train.id.equals(cce.trainId))
 				return;
 
-			int verifyDistance = AllConfigs.server().trains.maxTrackPlacementLength.get() * 2;
+			int verifyDistance = 24;
 			if (!sender.position()
 				.closerThan(Vec3.atCenterOf(pos), verifyDistance)) {
 				Create.LOGGER.warn(messagePrefix + train.name.getString() + ": player too far from clicked pos");
