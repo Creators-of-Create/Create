@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.utility.BlockFace;
+import com.simibubi.create.foundation.utility.HashableNonNullConsumer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -102,7 +103,7 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 			amount = filter.getAmount();
 		return amount;
 	}
-	
+
 	public ExtractionCountMode getModeFromFilter() {
 		ExtractionCountMode mode = ExtractionCountMode.UPTO;
 		FilteringBehaviour filter = blockEntity.getBehaviour(FilteringBehaviour.TYPE);
@@ -128,7 +129,7 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		targetCapability =
 			bypassSided ? invBE.getCapability(capability) : invBE.getCapability(capability, targetBlockFace.getFace());
 		if (targetCapability.isPresent())
-			targetCapability.addListener(this::onHandlerInvalidated);
+			targetCapability.addListener(new HashableNonNullConsumer<>(this::onHandlerInvalidated, this));
 	}
 
 	@FunctionalInterface

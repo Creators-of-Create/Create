@@ -1,15 +1,16 @@
 package com.simibubi.create.foundation.data.recipe;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
 
 public enum Mods {
 
 	MEK("mekanism", b -> b.reverseMetalPrefix()),
 	TH("thermal"),
 	IE("immersiveengineering", b -> b.reverseMetalPrefix()),
-
 	FD("farmersdelight"),
 	ARS_N("ars_nouveau"),
 	BSK("blue_skies"),
@@ -25,13 +26,32 @@ public enum Mods {
 	BOP("biomesoplenty"),
 	TF("twilightforest"),
 	ECO("ecologics"),
-
-	ENV("environmental"),
+	IC2("ic2", b -> b.reverseMetalPrefix()),
 	ATM("atmospheric"),
 	ATM_2("atmospheric", b -> b.omitWoodSuffix()),
+	AUTUM("autumnity"),
+	DRUIDCRAFT("druidcraft"),
+	ENDER("endergetic"),
+	PVJ("projectvibrantjourneys"),
+	UA("upgrade_aquatic"),
+	BEF("betterendforge"),
+	ENV("environmental"),
+	SUP("supplementaries"),
+  	AM("alexsmobs"),
+	NEA("neapolitan"),
+	AE2("ae2"),
+	MC("minecraft"),
+	BB("buzzier_bees"),
+	SILENT_GEMS("silentgems"),
+	SF("simplefarming"),
+	OREGANIZED("oreganized"),
+	GS("galosphere"),
+	VH("the_vault"),
 	IX("infernalexp"),
 	GOOD("goodending"),
-	BMK("biomemakeover")
+	BMK("biomemakeover"),
+	NE("nethers_exoticism"),
+
 	;
 
 	private final String id;
@@ -69,7 +89,7 @@ public enum Mods {
 	public ResourceLocation asResource(String id) {
 		return new ResourceLocation(this.id, id);
 	}
-	
+
 	public String recipeId(String id) {
 		return "compat/" + this.id + "/" + id;
 	}

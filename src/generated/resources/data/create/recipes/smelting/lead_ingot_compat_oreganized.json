@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "create:crushed_raw_lead"
+  },
+  "result": "oreganized:lead_ingot",
+  "experience": 0.1,
+  "cookingtime": 200,
+  "conditions": [
+    {
+      "modid": "oreganized",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
