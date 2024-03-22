@@ -97,10 +97,16 @@ public class PotionMixingRecipes {
 				FluidStack outputFluid = null;
 				for (ItemStack stack : supportedContainerStacks) {
 					if (input.test(stack)) {
-						FluidStack inputFluid = PotionFluidHandler.getFluidFromPotionItem(stack);
+						ItemStack[] stacks = input.getItems();
+						if (stacks.length == 0){
+							continue;
+						}
+						FluidStack inputFluid = PotionFluidHandler.getFluidFromPotionItem(stacks[0]);
+						inputFluid.setAmount(1000);
 						if (outputFluid == null) {
 							outputFluid = PotionFluidHandler.getFluidFromPotionItem(output);
 						}
+						outputFluid.setAmount(1000);
 						mixingRecipes.add(createRecipe("potion_mixing_modded_" + recipeIndex++, ingredient, inputFluid, outputFluid));
 					}
 				}
