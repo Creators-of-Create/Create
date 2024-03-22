@@ -17,6 +17,10 @@
     {
       "item": "minecraft:cobblestone",
       "chance": 0.12
+    },
+    {
+      "item": "create:experience_nugget",
+      "chance": 0.75
     }
   ],
   "processingTime": 350,

@@ -1,0 +1,45 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "galosphere:allurite_block",
+      "required": false
+    },
+    {
+      "id": "galosphere:allurite_stairs",
+      "required": false
+    },
+    {
+      "id": "galosphere:allurite_slab",
+      "required": false
+    },
+    {
+      "id": "galosphere:smooth_allurite",
+      "required": false
+    },
+    {
+      "id": "galosphere:smooth_allurite_stairs",
+      "required": false
+    },
+    {
+      "id": "galosphere:smooth_allurite_slab",
+      "required": false
+    },
+    {
+      "id": "galosphere:allurite_bricks",
+      "required": false
+    },
+    {
+      "id": "galosphere:allurite_brick_stairs",
+      "required": false
+    },
+    {
+      "id": "galosphere:allurite_brick_slab",
+      "required": false
+    },
+    {
+      "id": "galosphere:chiseled_allurite",
+      "required": false
+    }
+  ]
+}

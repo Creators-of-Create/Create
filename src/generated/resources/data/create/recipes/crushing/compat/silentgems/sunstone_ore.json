@@ -15,6 +15,10 @@
       "chance": 0.25
     },
     {
+      "item": "create:experience_nugget",
+      "chance": 0.75
+    },
+    {
       "item": "minecraft:end_stone",
       "chance": 0.12
     }

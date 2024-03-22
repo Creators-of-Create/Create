@@ -1,0 +1,32 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "elementaryores:ore_ender_end"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "item": "minecraft:ender_pearl",
+      "chance": 0.25
+    },
+    {
+      "item": "create:experience_nugget",
+      "chance": 0.75
+    },
+    {
+      "item": "minecraft:end_stone",
+      "chance": 0.12
+    }
+  ],
+  "processingTime": 350,
+  "conditions": [
+    {
+      "modid": "elementaryores",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

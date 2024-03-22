@@ -51,6 +51,7 @@ public enum Mods {
 	GOOD("goodending"),
 	BMK("biomemakeover"),
 	NE("nethers_exoticism"),
+	EO("elementaryores")
 
 	;
 
