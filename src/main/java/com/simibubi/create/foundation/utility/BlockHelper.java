@@ -298,10 +298,12 @@ public class BlockHelper {
 		if (data != null) {
 			if (existingBlockEntity instanceof IMergeableBE mergeable) {
 				BlockEntity loaded = BlockEntity.loadStatic(target, state, data);
-				if (existingBlockEntity.getType()
-					.equals(loaded.getType())) {
-					mergeable.accept(loaded);
-					return;
+				if (loaded != null) {
+					if (existingBlockEntity.getType()
+							.equals(loaded.getType())) {
+						mergeable.accept(loaded);
+						return;
+					}
 				}
 			}
 			BlockEntity blockEntity = world.getBlockEntity(target);
