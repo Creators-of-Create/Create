@@ -229,7 +229,7 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 			if (size == getSize()) {
 				if (state.getBlock() != style.getBlockOfSize(size)) {
 					CompoundTag oldData = sbbe.getBogeyData();
-					level.setBlock(pos, copyProperties(state, getStateOfSize(sbbe, size)), 3);
+					level.setBlock(pos, copyProperties(state, getStateOfSize(sbbe, size)), Block.UPDATE_ALL);
 					if (!(level.getBlockEntity(pos) instanceof AbstractBogeyBlockEntity bogeyBlockEntity))
 						return InteractionResult.FAIL;
 					bogeyBlockEntity.setBogeyData(oldData);
@@ -238,7 +238,7 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 						.append(": ").append(style.displayName), true);
 			} else {
 				CompoundTag oldData = sbbe.getBogeyData();
-				level.setBlock(pos, this.getStateOfSize(sbbe, size), 3);
+				level.setBlock(pos, this.getStateOfSize(sbbe, size), Block.UPDATE_ALL);
 				if (!(level.getBlockEntity(pos) instanceof AbstractBogeyBlockEntity bogeyBlockEntity))
 					return InteractionResult.FAIL;
 				bogeyBlockEntity.setBogeyData(oldData);
