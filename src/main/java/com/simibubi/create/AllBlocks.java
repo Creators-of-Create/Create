@@ -692,6 +692,7 @@ public class AllBlocks {
 		.transform(pickaxeOnly())
 		.blockstate(new BasinGenerator()::generate)
 		.addLayer(() -> RenderType::cutoutMipped)
+		.tag(AllBlockTags.BASIN.tag)
 		.onRegister(movementBehaviour(new BasinMovementBehaviour()))
 		.item()
 		.transform(customItemModel("_", "block"))

@@ -1,6 +1,7 @@
 package com.simibubi.create.content.processing;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltSlope;
 
@@ -48,7 +49,7 @@ public class AssemblyOperatorBlockItem extends BlockItem {
 	protected boolean operatesOn(BlockState placedOnState) {
 		if (AllBlocks.BELT.has(placedOnState))
 			return placedOnState.getValue(BeltBlock.SLOPE) == BeltSlope.HORIZONTAL;
-		return AllBlocks.BASIN.has(placedOnState) || AllBlocks.DEPOT.has(placedOnState) || AllBlocks.WEIGHTED_EJECTOR.has(placedOnState);
+		return AllTags.AllBlockTags.BASIN.matches(placedOnState) || AllBlocks.DEPOT.has(placedOnState) || AllBlocks.WEIGHTED_EJECTOR.has(placedOnState);
 	}
 
 }

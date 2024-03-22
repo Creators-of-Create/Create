@@ -2,7 +2,7 @@ package com.simibubi.create.content.fluids.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -56,7 +56,7 @@ public class BasinFluidParticle extends FluidStackParticle {
 			: 1 / 8f * (1 - ((Math.abs(age - (lifetime / 2)) / (1f * lifetime))));
 
 		if (age % 2 == 0) {
-			if (!AllBlocks.BASIN.has(level.getBlockState(basinPos))) {
+			if (!AllTags.AllBlockTags.BASIN.matches(level.getBlockState(basinPos))) {
 				remove();
 				return;
 			}
