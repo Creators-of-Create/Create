@@ -44,6 +44,8 @@ public class SchematicTransformation {
 			.startWithValue(frontBack);
 		getScaleLR().chase(0, 0.45f, Chaser.EXP)
 			.startWithValue(leftRight);
+		if (bounds == null)
+			bounds = new AABB(BlockPos.ZERO, BlockPos.ZERO);
 		xOrigin = bounds.getXsize() / 2f;
 		zOrigin = bounds.getZsize() / 2f;
 
