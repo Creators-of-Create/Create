@@ -827,7 +827,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	public ContraptionRotationState getPrevRotationState() {
-		var state = oldRotationState;
+		ContraptionRotationState state = oldRotationState;
 		oldRotationState = getRotationState();
 		return prevRotInvalid ?
 				oldRotationState
@@ -835,8 +835,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	public Vec3 getDeltaRotation() {
-		var old = this.getRotationVec(contraption.entity.getPrevRotationState());
-		var current = this.getRotationVec(contraption.entity.getRotationState());
+		Vec3 old = this.getRotationVec(contraption.entity.getPrevRotationState());
+		Vec3 current = this.getRotationVec(contraption.entity.getRotationState());
 		Vec3 contraptionRotation = old.subtract(current);
 		if (abs(old.x - current.x) >= 180)
 			contraptionRotation = contraptionRotation.add(new Vec3(signum(current.x - old.x) * 360, 0, 0));

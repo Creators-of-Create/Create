@@ -31,8 +31,8 @@ public abstract class RotateLocalPlayer {
 		if (player == null)
 			return;
 
-		var x = Mth.lerp(event.renderTickTime, player.getXRot(), player.getXRot() + deltaXROT);
-		var y = Mth.lerp(event.renderTickTime, player.getYRot(), player.getYRot() + deltaYROT);
+		float x = Mth.lerp(event.renderTickTime, player.getXRot(), player.getXRot() + deltaXROT);
+		float y = Mth.lerp(event.renderTickTime, player.getYRot(), player.getYRot() + deltaYROT);
 		player.setXRot(x);
 		player.setYRot(y);
 		deltaXROT *= (1 - event.renderTickTime);
