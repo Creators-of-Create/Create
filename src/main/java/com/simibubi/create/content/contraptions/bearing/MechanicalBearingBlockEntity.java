@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.bearing;
 
 import java.util.List;
 
+import com.google.gson.annotations.Expose;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.AssemblyException;
@@ -326,6 +327,7 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 	public boolean isRunning() {
 		return running;
 	}
+	public float getAngle() { return angle; }
 
 	@Override
 	public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
