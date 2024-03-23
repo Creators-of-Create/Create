@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/light_gray"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:light_gray_dye"
+    }
+  ],
+  "processingTime": 50
+}

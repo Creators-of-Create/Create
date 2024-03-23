@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/light_blue"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:light_blue_dye"
+    }
+  ],
+  "processingTime": 50
+}

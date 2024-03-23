@@ -1,0 +1,32 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "ae2:quartz_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "ae2:certus_quartz_crystal"
+    },
+    {
+      "item": "ae2:certus_quartz_dust",
+      "count": 4
+    },
+    {
+      "item": "ae2:certus_quartz_dust",
+      "chance": 0.5
+    },
+    {
+      "item": "minecraft:cobblestone",
+      "chance": 0.125
+    }
+  ],
+  "processingTime": 300,
+  "conditions": [
+    {
+      "modid": "ae2",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

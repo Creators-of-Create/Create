@@ -1,0 +1,31 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "byg:purple_amaranth"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:purple_dye",
+      "count": 3
+    },
+    {
+      "item": "minecraft:green_dye",
+      "count": 2,
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:purple_dye",
+      "count": 2,
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "byg",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

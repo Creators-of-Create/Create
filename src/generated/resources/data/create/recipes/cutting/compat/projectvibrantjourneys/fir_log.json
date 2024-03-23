@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "projectvibrantjourneys:fir_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "projectvibrantjourneys:stripped_fir_log"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "projectvibrantjourneys",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

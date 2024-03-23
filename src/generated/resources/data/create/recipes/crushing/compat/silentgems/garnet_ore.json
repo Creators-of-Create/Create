@@ -1,0 +1,29 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "silentgems:garnet_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "silentgems:garnet",
+      "count": 2
+    },
+    {
+      "item": "silentgems:garnet",
+      "chance": 0.25
+    },
+    {
+      "item": "minecraft:cobblestone",
+      "chance": 0.12
+    }
+  ],
+  "processingTime": 350,
+  "conditions": [
+    {
+      "modid": "silentgems",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "byg:bistort"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:pink_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:red_dye",
+      "count": 2,
+      "chance": 0.1
+    },
+    {
+      "item": "minecraft:green_dye",
+      "chance": 0.1
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "byg",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

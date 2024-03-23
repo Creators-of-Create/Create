@@ -1,0 +1,21 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "byg:white_puffball_cap"
+    }
+  ],
+  "results": [
+    {
+      "item": "byg:white_puffball_spores",
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 150,
+  "conditions": [
+    {
+      "modid": "byg",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "silentgems:amethyst_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "silentgems:amethyst",
+      "count": 2
+    },
+    {
+      "item": "silentgems:amethyst",
+      "chance": 0.25
+    },
+    {
+      "item": "minecraft:cobblestone",
+      "chance": 0.12
+    }
+  ],
+  "processingTime": 350,
+  "conditions": [
+    {
+      "modid": "silentgems",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
