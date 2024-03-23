@@ -1,5 +1,40 @@
 # Configuration for Label Actions - https://github.com/dessant/label-actions
 
+'env: hybrid core':
+    issues:
+        close: true
+        comment: >
+            Create does not provide support for hybrid cores of any kind due to the fact that they are pretty invasive
+            and make debugging issues really hard. You are on you're own with any issues that occur while using a
+            hybrid core or any other unsupported server jar.
+
+'env: outdated create version':
+    issues:
+        close: true
+        comment: >
+            This issue seems to occur due to a outdated create version, The issue will be closed due to this. If you are
+            able to reproduce this on the latest create version feel free to open a new issue!
+
+'env: outdated minecraft version':
+    issues:
+        close: true
+        comment: >
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ------------------------------------ OLD ------------------------------------
+
+
 # Used when a triager feels like they need more information to properly respond to or triage an issue
 'status: needs info':
     issues:
