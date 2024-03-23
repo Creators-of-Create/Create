@@ -5,6 +5,7 @@
 		"fan_blades": "create:block/fan_blades",
 		"axis": "create:block/axis"
 	},
+  "render_type": "minecraft:cutout",
 	"elements": [
 		{
 			"name": "Shaft",

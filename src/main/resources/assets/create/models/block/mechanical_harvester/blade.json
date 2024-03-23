@@ -5,6 +5,7 @@
         "anvil": "minecraft:block/anvil",
         "andesite_casing_short": "create:block/andesite_casing_short"
     },
+    "render_type": "minecraft:cutout",
     "elements": [
         {
             "name": "Wheel",

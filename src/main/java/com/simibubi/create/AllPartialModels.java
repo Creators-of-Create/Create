@@ -8,7 +8,6 @@ import java.util.Map;
 
 import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.content.fluids.FluidTransportBehaviour;
-import com.simibubi.create.foundation.render.CutoutPartial;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -36,7 +35,7 @@ public class AllPartialModels {
 		ANDESITE_BELT_COVER_Z = block("belt_cover/andesite_belt_cover_z"),
 		BRASS_BELT_COVER_Z = block("belt_cover/brass_belt_cover_z"),
 
-		ENCASED_FAN_INNER = cutoutBlock("encased_fan/propeller"), HAND_CRANK_HANDLE = block("hand_crank/handle"),
+		ENCASED_FAN_INNER = block("encased_fan/propeller"), HAND_CRANK_HANDLE = block("hand_crank/handle"),
 		MECHANICAL_PRESS_HEAD = block("mechanical_press/head"), MECHANICAL_MIXER_POLE = block("mechanical_mixer/pole"),
 		MECHANICAL_MIXER_HEAD = block("mechanical_mixer/head"),
 		MECHANICAL_CRAFTER_LID = block("mechanical_crafter/lid"),
@@ -52,7 +51,7 @@ public class AllPartialModels {
 		GAUGE_INDICATOR = block("gauge/indicator"), GAUGE_HEAD_SPEED = block("gauge/speedometer/head"),
 		GAUGE_HEAD_STRESS = block("gauge/stressometer/head"), BEARING_TOP = block("bearing/top"),
 		BEARING_TOP_WOODEN = block("bearing/top_wooden"), DRILL_HEAD = block("mechanical_drill/head"),
-		HARVESTER_BLADE = cutoutBlock("mechanical_harvester/blade"), DEPLOYER_POLE = block("deployer/pole"),
+		HARVESTER_BLADE = block("mechanical_harvester/blade"), DEPLOYER_POLE = block("deployer/pole"),
 		DEPLOYER_HAND_POINTING = block("deployer/hand_pointing"),
 		DEPLOYER_HAND_PUNCHING = block("deployer/hand_punching"),
 		DEPLOYER_HAND_HOLDING = block("deployer/hand_holding"), ANALOG_LEVER_HANDLE = block("analog_lever/handle"),
@@ -204,7 +203,7 @@ public class AllPartialModels {
 			PIPE_ATTACHMENTS.put(type, map);
 		}
 		for (DyeColor color : DyeColor.values())
-			TOOLBOX_LIDS.put(color, cutoutBlock("toolbox/lid/" + Lang.asId(color.name())));
+			TOOLBOX_LIDS.put(color, block("toolbox/lid/" + Lang.asId(color.name())));
 		for (Direction d : Iterate.horizontalDirections)
 			METAL_GIRDER_BRACKETS.put(d, block("metal_girder/bracket_" + Lang.asId(d.name())));
 		for (int i = 0; i < 8; i++)
@@ -221,10 +220,6 @@ public class AllPartialModels {
 
 	private static PartialModel block(String path) {
 		return new PartialModel(Create.asResource("block/" + path));
-	}
-
-	private static PartialModel cutoutBlock(String path) {
-		return new CutoutPartial(Create.asResource("block/" + path));
 	}
 
 	private static PartialModel entity(String path) {

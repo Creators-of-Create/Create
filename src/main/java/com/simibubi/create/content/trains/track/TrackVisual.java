@@ -1,16 +1,14 @@
 package com.simibubi.create.content.trains.track;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.LongConsumer;
 
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
-import com.jozufozu.flywheel.lib.box.Box;
-import com.jozufozu.flywheel.lib.box.MutableBox;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
@@ -25,6 +23,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 
 public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 
@@ -35,23 +34,24 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 	}
 
 	@Override
+	public void init(float partialTick) {
+		visuals = blockEntity.connections.values()
+				.stream()
+				.map(this::createInstance)
+				.filter(Objects::nonNull)
+				.toList();
+
+		super.init(partialTick);
+	}
+
+	@Override
 	public void update(float pt) {
 		if (blockEntity.connections.isEmpty())
 			return;
 
 		_delete();
-		visuals = blockEntity.connections.values()
-			.stream()
-			.map(this::createInstance)
-			.filter(Objects::nonNull)
-			.toList();
-	}
-
-	public Box getVolume() {
-		List<BlockPos> out = new ArrayList<>();
-		out.addAll(blockEntity.connections.keySet());
-		out.addAll(blockEntity.connections.keySet());
-		return MutableBox.containingAll(out);
+		init(pt);
+		notifier.notifySectionsChanged();
 	}
 
 	@Override
@@ -73,6 +73,30 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 		if (visuals == null)
 			return;
 		visuals.forEach(BezierTrackVisual::delete);
+	}
+
+	@Override
+	public void collectLightSections(LongConsumer consumer) {
+		if (blockEntity.connections.isEmpty()) {
+			return;
+		}
+		int minX = Integer.MAX_VALUE;
+		int minY = Integer.MAX_VALUE;
+		int minZ = Integer.MAX_VALUE;
+		int maxX = Integer.MIN_VALUE;
+		int maxY = Integer.MIN_VALUE;
+		int maxZ = Integer.MIN_VALUE;
+		for (BlockPos pos : blockEntity.connections.keySet()) {
+			minX = Math.min(minX, pos.getX());
+			minY = Math.min(minY, pos.getY());
+			minZ = Math.min(minZ, pos.getZ());
+			maxX = Math.max(maxX, pos.getX());
+			maxY = Math.max(maxY, pos.getY());
+			maxZ = Math.max(maxZ, pos.getZ());
+		}
+		SectionPos.betweenClosedStream(SectionPos.blockToSectionCoord(minX), SectionPos.blockToSectionCoord(minY), SectionPos.blockToSectionCoord(minZ), SectionPos.blockToSectionCoord(maxX), SectionPos.blockToSectionCoord(maxY), SectionPos.blockToSectionCoord(maxZ))
+			.mapToLong(SectionPos::asLong)
+			.forEach(consumer);
 	}
 
 	@Override
@@ -126,15 +150,15 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 				var modelIndex = i - 1;
 
 				ties[modelIndex].setTransform(pose)
-					.mulPose(segment.tieTransform.pose())
-					.mulNormal(segment.tieTransform.normal());
+					.transform(segment.tieTransform)
+					.setChanged();
 				tiesLightPos[modelIndex] = segment.lightPosition.offset(tePosition);
 
 				for (boolean first : Iterate.trueAndFalse) {
 					Pose transform = segment.railTransforms.get(first);
 					(first ? this.left : this.right)[modelIndex].setTransform(pose)
-						.mulPose(transform.pose())
-						.mulNormal(transform.normal());
+						.transform(transform)
+						.setChanged();
 					(first ? leftLightPos : rightLightPos)[modelIndex] = segment.lightPosition.offset(tePosition);
 				}
 			}
@@ -155,11 +179,14 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 
 		void updateLight() {
 			for (int i = 0; i < ties.length; i++)
-				ties[i].updateLight(level, tiesLightPos[i]);
+				ties[i].updateLight(level, tiesLightPos[i])
+					.setChanged();
 			for (int i = 0; i < left.length; i++)
-				left[i].updateLight(level, leftLightPos[i]);
+				left[i].updateLight(level, leftLightPos[i])
+					.setChanged();
 			for (int i = 0; i < right.length; i++)
-				right[i].updateLight(level, rightLightPos[i]);
+				right[i].updateLight(level, rightLightPos[i])
+					.setChanged();
 			if (girder != null)
 				girder.updateLight();
 		}
@@ -208,15 +235,15 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 					for (boolean first : Iterate.trueAndFalse) {
 						Pose beamTransform = segment.beams.get(first);
 						beams.get(first)[modelIndex].setTransform(pose)
-							.mulPose(beamTransform.pose())
-							.mulNormal(beamTransform.normal());
+							.transform(beamTransform)
+							.setChanged();
 						for (boolean top : Iterate.trueAndFalse) {
 							Pose beamCapTransform = segment.beamCaps.get(top)
 								.get(first);
 							beamCaps.get(top)
 								.get(first)[modelIndex].setTransform(pose)
-									.mulPose(beamCapTransform.pose())
-									.mulNormal(beamCapTransform.normal());
+								.transform(beamCapTransform)
+								.setChanged();
 						}
 					}
 				}
@@ -238,11 +265,13 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 			void updateLight() {
 				beams.forEach(arr -> {
 					for (int i = 0; i < arr.length; i++)
-						arr[i].updateLight(level, lightPos[i]);
+						arr[i].updateLight(level, lightPos[i])
+							.setChanged();
 				});
 				beamCaps.forEach(c -> c.forEach(arr -> {
 					for (int i = 0; i < arr.length; i++)
-						arr[i].updateLight(level, lightPos[i]);
+						arr[i].updateLight(level, lightPos[i])
+							.setChanged();
 				}));
 			}
 
