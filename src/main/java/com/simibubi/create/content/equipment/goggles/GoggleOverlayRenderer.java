@@ -82,9 +82,9 @@ public class GoggleOverlayRenderer {
 		lastHovered = pos;
 
 		pos = proxiedOverlayPosition(world, pos);
-		
+
 		BlockEntity be = world.getBlockEntity(pos);
-		boolean wearingGoggles = GogglesItem.isWearingGoggles(mc.player);
+		boolean shouldSeeOverlay = shouldSeeOverlay(mc);
 
 		boolean hasGoggleInformation = be instanceof IHaveGoggleInformation;
 		boolean hasHoveringInformation = be instanceof IHaveHoveringInformation;
@@ -94,7 +94,7 @@ public class GoggleOverlayRenderer {
 
 		List<Component> tooltip = new ArrayList<>();
 
-		if (hasGoggleInformation && wearingGoggles) {
+		if (hasGoggleInformation && shouldSeeOverlay) {
 			IHaveGoggleInformation gte = (IHaveGoggleInformation) be;
 			goggleAddedInformation = gte.addToGoggleTooltip(tooltip, mc.player.isShiftKeyDown());
 		}
@@ -130,7 +130,7 @@ public class GoggleOverlayRenderer {
 
 		// check for piston poles if goggles are worn
 		BlockState state = world.getBlockState(pos);
-		if (wearingGoggles && AllBlocks.PISTON_EXTENSION_POLE.has(state)) {
+		if (shouldSeeOverlay && AllBlocks.PISTON_EXTENSION_POLE.has(state)) {
 			Direction[] directions = Iterate.directionsInAxis(state.getValue(PistonExtensionPoleBlock.FACING)
 				.getAxis());
 			int poles = 1;
@@ -144,7 +144,7 @@ public class GoggleOverlayRenderer {
 			}
 
 			if (!pistonFound) {
-				hoverTicks = 0;				
+				hoverTicks = 0;
 				return;
 			}
 			if (!tooltip.isEmpty())
@@ -156,7 +156,7 @@ public class GoggleOverlayRenderer {
 		}
 
 		if (tooltip.isEmpty()) {
-			hoverTicks = 0;			
+			hoverTicks = 0;
 			return;
 		}
 
@@ -211,12 +211,17 @@ public class GoggleOverlayRenderer {
 			.render(graphics);
 		poseStack.popPose();
 	}
-	
+
 	public static BlockPos proxiedOverlayPosition(Level level, BlockPos pos) {
 		BlockState targetedState = level.getBlockState(pos);
 		if (targetedState.getBlock() instanceof IProxyHoveringInformation proxy)
 			return proxy.getInformationSource(level, pos, targetedState);
 		return pos;
+	}
+
+	private static boolean shouldSeeOverlay(Minecraft mc) {
+		return GogglesItem.isWearingGoggles(mc.player)
+				|| mc.gameMode.getPlayerMode() == GameType.CREATIVE && AllConfigs.client().creativeOverlay.get();
 	}
 
 }
