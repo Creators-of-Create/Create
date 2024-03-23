@@ -45,13 +45,14 @@ public class CreateDatagen {
 			GeneratedEntriesProvider generatedEntriesProvider = new GeneratedEntriesProvider(output, lookupProvider);
 			lookupProvider = generatedEntriesProvider.getRegistryProvider();
 			generator.addProvider(true, generatedEntriesProvider);
-			
+
 			generator.addProvider(true, new CreateRecipeSerializerTagsProvider(output, lookupProvider, existingFileHelper));
 			generator.addProvider(true, new DamageTypeTagGen(output, lookupProvider, existingFileHelper));
 			generator.addProvider(true, new AllAdvancements(output));
 			generator.addProvider(true, new StandardRecipeGen(output));
 			generator.addProvider(true, new MechanicalCraftingRecipeGen(output));
 			generator.addProvider(true, new SequencedAssemblyRecipeGen(output));
+			generator.addProvider(true, new VanillaHatOffsetGenerator(output));
 			ProcessingRecipeGen.registerAll(generator, output);
 		}
 	}

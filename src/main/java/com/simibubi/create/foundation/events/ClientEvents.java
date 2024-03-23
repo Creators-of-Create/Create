@@ -41,7 +41,8 @@ import com.simibubi.create.content.trains.TrainHUD;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.entity.CarriageCouplingRenderer;
 import com.simibubi.create.content.trains.entity.TrainRelocator;
-import com.simibubi.create.content.trains.schedule.TrainHatArmorLayer;
+import com.simibubi.create.content.trains.schedule.hat.TrainHatArmorLayer;
+import com.simibubi.create.content.trains.schedule.hat.TrainHatInfoReloadListener;
 import com.simibubi.create.content.trains.track.CurvedTrackInteraction;
 import com.simibubi.create.content.trains.track.TrackBlockOutline;
 import com.simibubi.create.content.trains.track.TrackPlacement;
@@ -207,7 +208,7 @@ public class ClientEvents {
 	public static void onRenderWorld(RenderLevelStageEvent event) {
 		if (event.getStage() != Stage.AFTER_PARTICLES)
 			return;
-		
+
 		PoseStack ms = event.getPoseStack();
 		ms.pushPose();
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
@@ -333,6 +334,7 @@ public class ClientEvents {
 		@SubscribeEvent
 		public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
 			event.registerReloadListener(CreateClient.RESOURCE_RELOAD_LISTENER);
+			event.registerReloadListener(TrainHatInfoReloadListener.LISTENER);
 		}
 
 		@SubscribeEvent

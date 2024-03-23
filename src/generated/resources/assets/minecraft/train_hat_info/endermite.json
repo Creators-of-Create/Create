@@ -1,0 +1,9 @@
+{
+  "model_part": "segment0",
+  "offset": [
+    0.0,
+    2.5,
+    0.5
+  ],
+  "scale": 0.75
+}
