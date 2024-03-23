@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.glue;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import com.google.common.base.Objects;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSpecialTextures;
@@ -114,7 +114,7 @@ public class SuperGlueSelectionHandler {
 			return;
 		}
 
-		if (firstPos != null && !firstPos.closerThan(hovered, 24)) {
+		if (firstPos != null && !firstPos.closerThan(hovered, 48)) {
 			Lang.translate("super_glue.too_far")
 				.color(FAIL)
 				.sendStatus(player);
@@ -127,7 +127,7 @@ public class SuperGlueSelectionHandler {
 
 		AABB currentSelectionBox = getCurrentSelectionBox();
 
-		boolean unchanged = Objects.equal(hovered, hoveredPos);
+		boolean unchanged = Objects.equals(hovered, hoveredPos);
 
 		if (unchanged) {
 			if (currentCluster != null) {
@@ -159,7 +159,7 @@ public class SuperGlueSelectionHandler {
 						.lineWidth(1 / 16f);
 
 				CreateClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
-					.colored(0x4D9162)
+					.colored(PASSIVE)
 					.disableLineNormals()
 					.lineWidth(1 / 64f);
 			}
@@ -169,8 +169,7 @@ public class SuperGlueSelectionHandler {
 
 		hoveredPos = hovered;
 
-		Set<BlockPos> cluster = SuperGlueSelectionHelper.searchGlueGroup(mc.level, firstPos, hoveredPos, true);
-		currentCluster = cluster;
+		currentCluster = SuperGlueSelectionHelper.searchGlueGroup(mc.level, firstPos, hoveredPos, true);
 		glueRequired = 1;
 	}
 

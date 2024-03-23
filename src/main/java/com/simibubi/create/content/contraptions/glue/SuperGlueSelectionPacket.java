@@ -43,7 +43,7 @@ public class SuperGlueSelectionPacket extends SimplePacketBase {
 				.getValue() + 2;
 			if (player.distanceToSqr(Vec3.atCenterOf(to)) > range * range)
 				return;
-			if (!to.closerThan(from, 25))
+			if (!to.closerThan(from, 48))
 				return;
 
 			Set<BlockPos> group = SuperGlueSelectionHelper.searchGlueGroup(player.level, from, to, false);
@@ -59,7 +59,7 @@ public class SuperGlueSelectionPacket extends SimplePacketBase {
 			SuperGlueEntity entity = new SuperGlueEntity(player.level, bb);
 			player.level.addFreshEntity(entity);
 			entity.spawnParticles();
-			
+
 			AllAdvancements.SUPER_GLUE.awardTo(player);
 		});
 		return true;
