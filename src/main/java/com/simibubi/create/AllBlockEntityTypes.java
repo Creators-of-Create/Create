@@ -185,6 +185,10 @@ import com.simibubi.create.content.redstone.diodes.PulseExtenderBlockEntity;
 import com.simibubi.create.content.redstone.diodes.PulseRepeaterBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkRenderer;
+import com.simibubi.create.content.redstone.displayLink.source.ElevatorPulleyDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.source.MechanicalBearingDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.source.MechanicalPistonDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.source.PulleyDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.source.NixieTubeDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.target.NixieTubeDisplayTarget;
 import com.simibubi.create.content.redstone.link.RedstoneLinkBlockEntity;
@@ -322,7 +326,7 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.HAND_CRANK)
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<ValveHandleBlockEntity> VALVE_HANDLE = REGISTRATE
 		.blockEntity("valve_handle", ValveHandleBlockEntity::new)
 		.instance(() -> HandCrankInstance::new)
@@ -469,6 +473,7 @@ public class AllBlockEntityTypes {
 		.instance(() -> ShaftInstance::new, false)
 		.validBlocks(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
 		.renderer(() -> MechanicalPistonRenderer::new)
+		.onRegister(assignDataBehaviourBE(new MechanicalPistonDisplaySource()))
 		.register();
 
 	public static final BlockEntityEntry<WindmillBearingBlockEntity> WINDMILL_BEARING = REGISTRATE
@@ -483,6 +488,7 @@ public class AllBlockEntityTypes {
 		.instance(() -> BearingInstance::new)
 		.validBlocks(AllBlocks.MECHANICAL_BEARING)
 		.renderer(() -> BearingRenderer::new)
+		.onRegister(assignDataBehaviourBE(new MechanicalBearingDisplaySource()))
 		.register();
 
 	public static final BlockEntityEntry<ClockworkBearingBlockEntity> CLOCKWORK_BEARING = REGISTRATE
@@ -497,6 +503,7 @@ public class AllBlockEntityTypes {
 		.instance(() -> RopePulleyInstance::new, false)
 		.validBlocks(AllBlocks.ROPE_PULLEY)
 		.renderer(() -> PulleyRenderer::new)
+		.onRegister(assignDataBehaviourBE(new PulleyDisplaySource()))
 		.register();
 
 	public static final BlockEntityEntry<ElevatorPulleyBlockEntity> ELEVATOR_PULLEY =
@@ -504,6 +511,7 @@ public class AllBlockEntityTypes {
 //		.instance(() -> ElevatorPulleyInstance::new, false)
 			.validBlocks(AllBlocks.ELEVATOR_PULLEY)
 			.renderer(() -> ElevatorPulleyRenderer::new)
+			.onRegister(assignDataBehaviourBE(new ElevatorPulleyDisplaySource()))
 			.register();
 
 	public static final BlockEntityEntry<ElevatorContactBlockEntity> ELEVATOR_CONTACT =
@@ -708,7 +716,7 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.ANALOG_LEVER)
 		.renderer(() -> AnalogLeverRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<PlacardBlockEntity> PLACARD = REGISTRATE
 		.blockEntity("placard", PlacardBlockEntity::new)
 		.validBlocks(AllBlocks.PLACARD)
@@ -835,7 +843,7 @@ public class AllBlockEntityTypes {
 		.validBlocksDeferred(TrackMaterial::allBlocks)
 		.renderer(() -> TrackRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<FakeTrackBlockEntity> FAKE_TRACK = REGISTRATE
 		.blockEntity("fake_track", FakeTrackBlockEntity::new)
 		.validBlocks(AllBlocks.FAKE_TRACK)
@@ -883,7 +891,7 @@ public class AllBlockEntityTypes {
 		.renderer(() -> TrackObserverRenderer::new)
 		.validBlocks(AllBlocks.TRACK_OBSERVER)
 		.register();
-	
+
 	public static final BlockEntityEntry<ClipboardBlockEntity> CLIPBOARD = REGISTRATE
 		.blockEntity("clipboard", ClipboardBlockEntity::new)
 		.validBlocks(AllBlocks.CLIPBOARD)
