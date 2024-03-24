@@ -1,22 +1,12 @@
 package com.simibubi.create.content.contraptions.render;
 
-import com.simibubi.create.Create;
-
-import com.simibubi.create.infrastructure.config.AllConfigs;
-import com.simibubi.create.infrastructure.config.CClient;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
-
-import static java.lang.Math.abs;
-import static net.minecraftforge.forgespi.Environment.Keys.DIST;
 
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)

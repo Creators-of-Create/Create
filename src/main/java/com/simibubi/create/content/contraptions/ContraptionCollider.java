@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.signum;
 import static net.minecraft.world.entity.Entity.collideBoundingBox;
 
 import java.lang.ref.WeakReference;
@@ -192,12 +190,12 @@ public class ContraptionCollider {
 					Vec3 currentResponse = collisionResponse.getValue();
 					Vec3 currentCenter = obbCenter.add(currentResponse);
 
-					if (abs(currentCenter.x - bb.getCenter().x) - entityBounds.getXsize() - 1 > bb.getXsize() / 2)
+					if (Math.abs(currentCenter.x - bb.getCenter().x) - entityBounds.getXsize() - 1 > bb.getXsize() / 2)
 						continue;
-					if (abs((currentCenter.y + motion.y) - bb.getCenter().y) - entityBounds.getYsize()
+					if (Math.abs((currentCenter.y + motion.y) - bb.getCenter().y) - entityBounds.getYsize()
 						- 1 > bb.getYsize() / 2)
 						continue;
-					if (abs(currentCenter.z - bb.getCenter().z) - entityBounds.getZsize() - 1 > bb.getZsize() / 2)
+					if (Math.abs(currentCenter.z - bb.getCenter().z) - entityBounds.getZsize() - 1 > bb.getZsize() / 2)
 						continue;
 
 					obb.setCenter(currentCenter);
@@ -336,12 +334,12 @@ public class ContraptionCollider {
 				double intersectZ = totalResponse.z();
 
 				double horizonalEpsilon = 1 / 128f;
-				if (motionX != 0 && abs(intersectX) > horizonalEpsilon && motionX > 0 == intersectX < 0)
+				if (motionX != 0 && Math.abs(intersectX) > horizonalEpsilon && motionX > 0 == intersectX < 0)
 					entityMotion = entityMotion.multiply(0, 1, 1);
 				if (motionY != 0 && intersectY != 0 && motionY > 0 == intersectY < 0)
 					entityMotion = entityMotion.multiply(1, 0, 1)
 						.add(0, contraptionMotion.y, 0);
-				if (motionZ != 0 && abs(intersectZ) > horizonalEpsilon && motionZ > 0 == intersectZ < 0)
+				if (motionZ != 0 && Math.abs(intersectZ) > horizonalEpsilon && motionZ > 0 == intersectZ < 0)
 					entityMotion = entityMotion.multiply(1, 1, 0);
 
 			}
@@ -498,7 +496,7 @@ public class ContraptionCollider {
 			.deflate(1 / 4f, 0, 1 / 4f);
 		double shortestDistance = Double.MAX_VALUE;
 		double yStart = entity.getStepHeight() + contraptionEntity.getY() + yStartOffset;
-		double rayLength = Math.max(5, abs(entity.getY() - yStart));
+		double rayLength = Math.max(5, Math.abs(entity.getY() - yStart));
 
 		for (int rayIndex = 0; rayIndex < 4; rayIndex++) {
 			Vec3 start = new Vec3(rayIndex / 2 == 0 ? bb.minX : bb.maxX, yStart, rayIndex % 2 == 0 ? bb.minZ : bb.maxZ);
