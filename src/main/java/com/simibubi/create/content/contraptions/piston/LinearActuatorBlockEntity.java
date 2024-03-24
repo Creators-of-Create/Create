@@ -37,6 +37,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 	protected boolean waitingForSpeedChange;
 	protected AssemblyException lastException;
 	protected double sequencedOffsetLimit;
+	protected int extensionLength;
 
 	// Custom position sync
 	protected float clientOffsetDiff;
@@ -58,7 +59,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 		behaviours.add(movementMode);
 		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);
 	}
-	
+
 	@Override
 	protected boolean syncSequenceContext() {
 		return true;
@@ -74,7 +75,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 
 		if (isPassive())
 			return;
-		
+
 		if (level.isClientSide)
 			clientOffsetDiff *= .75f;
 
@@ -134,7 +135,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 			resetContraptionToOffset();
 			sendData();
 		}
-		
+
 		if (contraptionPresent) {
 			if (moveAndCollideContraption()) {
 				movedContraption.setContraptionMotion(Vec3.ZERO);
@@ -167,7 +168,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 	protected boolean isPassive() {
 		return false;
 	}
-	
+
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
@@ -189,10 +190,10 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
 		sequencedOffsetLimit = -1;
-		
+
 		if (isPassive())
 			return;
-		
+
 		assembleNextTick = true;
 		waitingForSpeedChange = false;
 
@@ -267,7 +268,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 
 	protected abstract void assemble() throws AssemblyException;
 
-	protected abstract int getExtensionRange();
+	public abstract int getExtensionRange();
 
 	protected abstract int getInitialOffset();
 

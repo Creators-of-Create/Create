@@ -87,7 +87,7 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 		level.addFreshEntity(movedContraption);
 
 		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(level, worldPosition);
-		
+
 		if (contraption.containsBlockBreakers())
 			award(AllAdvancements.CONTRAPTION_ACTORS);
 	}
@@ -138,7 +138,7 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 	}
 
 	@Override
-	protected int getExtensionRange() {
+	public int getExtensionRange() {
 		return extensionLength;
 	}
 

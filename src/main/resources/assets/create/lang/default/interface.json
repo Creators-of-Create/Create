@@ -179,7 +179,7 @@
 	"create.terrainzapper.leftClickToSet": "Left-Click a Block to set Material",
 
 	"create.large_water_wheel.not_enough_space": "Clear Blocks for Placement",
-	
+
 	"create.minecart_coupling.two_couplings_max": "Minecarts cannot have more than two couplings each",
 	"create.minecart_coupling.unloaded": "Parts of your train seem to be in unloaded chunks",
 	"create.minecart_coupling.no_loops": "Couplings cannot form a loop",
@@ -219,7 +219,7 @@
 	"create.logistics.fluid_filter": "Fluid Filter",
 	"create.logistics.firstFrequency": "Frequency #1",
 	"create.logistics.secondFrequency": "Frequency #2",
-	
+
 	"create.logistics.filter.click_to_set": "Click with item to set",
 	"create.logistics.filter.click_to_replace": "Click with item to replace",
 	"create.logistics.filter.hold_to_set_amount": "Click and hold for amount",
@@ -230,26 +230,26 @@
 	"create.logistics.filter.up_to": "Up to",
 	"create.logistics.filter.exactly": "Exactly",
 	"create.logistics.filter.requires_item_in_inventory": "Requires %1$s item in Inventory",
-	
+
 	"create.logistics.creative_crate.supply": "Infinite Supply",
 	"create.logistics.train_observer.cargo_filter": "Cargo Filter",
-	
+
 	"create.kinetics.creative_motor.rotation_speed": "Generated Speed in RPM",
 	"create.kinetics.speed_controller.rotation_speed": "Targeted Speed in RPM",
 	"create.kinetics.valve_handle.rotated_angle": "Rotation when used",
-	
+
 	"create.logistics.redstone_interval": "Redstone Interval",
-	
+
 	"create.contraptions.contoller.target": "Targeted Component",
 	"create.contraptions.mechanical_roller.pave_material": "Paving Material",
-	
+
 	"create.contraptions.chassis.radius": "Radius when Sticky",
 	"create.contraptions.chassis.range": "Range of Sticky Sides",
 	"create.contraptions.chassis.distance": "Distance",
-	
+
 	"create.gui.value_settings.hold_to_edit": "Click and hold to edit",
 	"create.gui.value_settings.release_to_confirm": "Release %1$s to Confirm",
-	
+
 	"create.gui.goggles.generator_stats": "Generator Stats:",
 	"create.gui.goggles.kinetic_stats": "Kinetic Stats:",
 	"create.gui.goggles.at_current_speed": "at current speed",
@@ -309,7 +309,7 @@
 	"create.gui.sequenced_gearshift.speed.back_fast": "Double speed, Reversed",
 
 	"create.gui.clipboard.erase_checked": "Erase checked items",
-	
+
 	"create.clipboard.actions": "Clipboard Actions",
 	"create.clipboard.to_copy": "%1$s to Copy settings",
 	"create.clipboard.to_paste": "%1$s to Paste settings",
@@ -872,7 +872,7 @@
 	"create.contraption.controls.actor_toggle.on": "On",
 	"create.contraption.controls.actor_toggle.off": "Off",
 	"create.contraption.controls.floor_unreachable": "Unreachable",
-	
+
 	"create.contraption.door_control": "Onboard Door Control",
 	"create.contraption.door_control.all": "Open All Doors",
 	"create.contraption.door_control.all.short": "Open All",
@@ -967,6 +967,30 @@
 	"create.display_source.boiler.not_enough_space": "Not enough space ",
 	"create.display_source.boiler.for_boiler_status": "for Boiler Status",
 	"create.display_source.computer_display_source": "From Computer",
+  "create.display_source.elevator_pulley_source": "Elevator Pulley",
+  "create.display_source.elevator_pulley.display": "Displayed Info",
+  "create.display_source.elevator_pulley.floor_count": "Floor Count",
+  "create.display_source.elevator_pulley.current_floor": "Current Floor",
+  "create.display_source.elevator_pulley.current_floor_description": "Current Floor Description",
+  "create.display_source.elevator_pulley.top_distance_int": "Top Blocks",
+  "create.display_source.elevator_pulley.top_distance_percent": "Top Percent",
+  "create.display_source.elevator_pulley.top_distance_progress_bar": "Top Progress Bar",
+  "create.display_source.elevator_pulley.bottom_distance_int": "Bottom Blocks",
+  "create.display_source.elevator_pulley.bottom_distance_percent": "Bottom Percent",
+  "create.display_source.elevator_pulley.bottom_distance_progress_bar": "Bottom Progress Bar",
+  "create.display_source.mechanical_bearing_source": "Mechanical Bearing",
+  "create.display_source.mechanical_piston_source": "Mechanical Piston",
+  "create.display_source.mechanical_piston.display": "Displayed Info",
+  "create.display_source.mechanical_piston.percent": "Percent",
+  "create.display_source.mechanical_piston.progress_bar": "Progress Bar",
+  "create.display_source.mechanical_piston.blocks": "Blocks",
+  "create.display_source.mechanical_piston.blocks_max": "Max Blocks",
+  "create.display_source.rope_pulley_source": "Rope Pulley",
+  "create.display_source.rope_pulley.display": "Displayed Info",
+  "create.display_source.rope_pulley.percent": "Percent",
+  "create.display_source.rope_pulley.progress_bar": "Progress Bar",
+  "create.display_source.rope_pulley.blocks": "Blocks",
+  "create.display_source.rope_pulley.blocks_max": "Max Blocks",
 
 	"create.display_target.line": "Line %1$s",
 	"create.display_target.page": "Page %1$s",

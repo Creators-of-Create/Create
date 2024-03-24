@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.BlockMovementChecks;
@@ -23,17 +24,24 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.Tags;
+
+import static com.simibubi.create.Create.LOGGER;
 
 public class PulleyBlockEntity extends LinearActuatorBlockEntity implements ThresholdSwitchObservable {
 
@@ -339,8 +347,26 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 		notifyUpdate();
 	}
 
+	private final List<Block> airblocks = List.of(Blocks.AIR, Blocks.WATER, Blocks.LAVA, AllBlocks.ROPE.get(), AllBlocks.PULLEY_MAGNET.get());
+
+	public int blocksToGround() {
+		int y = getBlockPos().getY();
+		y --;
+		int blocksBelow = 0;
+		while (true) {
+			Block blockatY = level.getBlockState(getBlockPos().atY(y)).getBlock();
+			if (airblocks.contains(blockatY)) {
+				y--;
+				blocksBelow ++;
+			} else {
+				break;
+			}
+		}
+		return blocksBelow;
+	}
+
 	@Override
-	protected int getExtensionRange() {
+	public int getExtensionRange() {
 		return Math.max(0, Math.min(AllConfigs.server().kinetics.maxRopeLength.get(),
 			(worldPosition.getY() - 1) - level.getMinBuildHeight()));
 	}
