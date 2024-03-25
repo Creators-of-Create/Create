@@ -33,6 +33,8 @@ public class CClient extends ConfigBase {
 			Comments.ingameMenuConfigButtonOffsetX);
 	public final ConfigBool ignoreFabulousWarning = b(false, "ignoreFabulousWarning",
 		Comments.ignoreFabulousWarning);
+	public final ConfigBool rotateStandingOnContraptionPlayer = b(false, "rotateStandingOnContraptionPlayer", Comments.rotateStandingOnContraptionPlayer);
+	public final ConfigBool rotateSittingOnContraptionPlayer = b(true, "rotateSittingOnContraptionPlayer", Comments.rotateSittingOnContraptionPlayer);
 
 	// custom fluid fog
 	public final ConfigGroup fluidFogSettings = group(1, "fluidFogSettings", Comments.fluidFogSettings);
@@ -87,6 +89,7 @@ public class CClient extends ConfigBase {
 	public final ConfigBool showTrackGraphOnF3 = b(false, "showTrackGraphOnF3", Comments.showTrackGraphOnF3);
 	public final ConfigBool showExtendedTrackGraphOnF3 = b(false, "showExtendedTrackGraphOnF3", Comments.showExtendedTrackGraphOnF3);
 
+
 	@Override
 	public String getName() {
 		return "client";
@@ -125,6 +128,8 @@ public class CClient extends ConfigBase {
 				"The sign (-/+) of this value determines what side of the row the button appears on (left/right)"
 		};
 		static String ignoreFabulousWarning = "Setting this to true will prevent Create from sending you a warning when playing with Fabulous graphics enabled";
+		static String rotateStandingOnContraptionPlayer = "Rotate the player together with the contraption while standing on it";
+		static String rotateSittingOnContraptionPlayer = "Rotate the player together with the contraption while sitting on it";
 		static String overlay = "Settings for the Goggle Overlay";
 		static String overlayOffset = "Offset the overlay from goggle- and hover- information by this many pixels on the respective axis; Use /create overlay";
 		static String overlayCustomColor = "Enable this to use your custom colors for the Goggle- and Hover- Overlay";

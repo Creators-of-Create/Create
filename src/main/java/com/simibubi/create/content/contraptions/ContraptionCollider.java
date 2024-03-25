@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import com.simibubi.create.content.contraptions.render.RotateLocalPlayer;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -88,6 +90,7 @@ public class ContraptionCollider {
 
 		Vec3 contraptionPosition = contraptionEntity.position();
 		Vec3 contraptionMotion = contraptionPosition.subtract(contraptionEntity.getPrevPositionVec());
+		Vec3 contraptionRotation = contraption.entity.getDeltaRotation();
 		Vec3 anchorVec = contraptionEntity.getAnchorVec();
 		ContraptionRotationState rotation = null;
 
@@ -354,12 +357,17 @@ public class ContraptionCollider {
 				continue;
 
 			Vec3 allowedMovement = collide(totalResponse, entity);
+//			if (!world.isClientSide())
 			entity.setPos(entityPosition.x + allowedMovement.x, entityPosition.y + allowedMovement.y,
-				entityPosition.z + allowedMovement.z);
+					entityPosition.z + allowedMovement.z);
 			entityPosition = entity.position();
-
 			entityMotion =
 				handleDamageFromTrain(world, contraptionEntity, contraptionMotion, entity, entityMotion, playerType);
+
+			if (entity instanceof LocalPlayer && AllConfigs.client().rotateStandingOnContraptionPlayer.get()) {
+				RotateLocalPlayer.deltaXROT += (float) contraptionRotation.x;
+				RotateLocalPlayer.deltaYROT += (float) contraptionRotation.y;
+			}
 
 			entity.hurtMarked = true;
 			Vec3 contactPointMotion = Vec3.ZERO;
@@ -394,8 +402,8 @@ public class ContraptionCollider {
 			float limbSwing = Mth.sqrt((float) (d0 * d0 + d1 * d1)) * 4.0F;
 			if (limbSwing > 1.0F)
 				limbSwing = 1.0F;
-			AllPackets.getChannel()
-				.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
+//			AllPackets.getChannel()
+//				.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
 
 			if (entity.isOnGround() && contraption instanceof TranslatingContraption) {
 				safetyLock.setLeft(new WeakReference<>(contraptionEntity));
@@ -403,6 +411,10 @@ public class ContraptionCollider {
 			}
 		}
 
+		if (AllConfigs.client().rotateSittingOnContraptionPlayer.get() && contraptionEntity.getPassengers().stream().anyMatch(passenger -> passenger instanceof LocalPlayer)) {
+			RotateLocalPlayer.deltaXROT += (float) contraptionRotation.x;
+			RotateLocalPlayer.deltaYROT += (float) contraptionRotation.y;
+		}
 	}
 
 	private static int packetCooldown = 0;
