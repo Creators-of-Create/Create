@@ -10,11 +10,6 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import com.simibubi.create.content.contraptions.render.RotateLocalPlayer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-
-import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
-
-import net.minecraft.world.phys.Vec2;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
@@ -369,7 +364,7 @@ public class ContraptionCollider {
 			entityMotion =
 				handleDamageFromTrain(world, contraptionEntity, contraptionMotion, entity, entityMotion, playerType);
 
-			if (entity instanceof LocalPlayer && AllConfigs.client().rotateStandingOnTrainPlayer.get()) {
+			if (entity instanceof LocalPlayer && AllConfigs.client().rotateStandingOnContraptionPlayer.get()) {
 				RotateLocalPlayer.deltaXROT += (float) contraptionRotation.x;
 				RotateLocalPlayer.deltaYROT += (float) contraptionRotation.y;
 			}
@@ -416,7 +411,7 @@ public class ContraptionCollider {
 			}
 		}
 
-		if (AllConfigs.client().rotateSittingOnTrainPlayer.get() && contraptionEntity.getPassengers().stream().anyMatch(passenger -> passenger instanceof LocalPlayer)) {
+		if (AllConfigs.client().rotateSittingOnContraptionPlayer.get() && contraptionEntity.getPassengers().stream().anyMatch(passenger -> passenger instanceof LocalPlayer)) {
 			RotateLocalPlayer.deltaXROT += (float) contraptionRotation.x;
 			RotateLocalPlayer.deltaYROT += (float) contraptionRotation.y;
 		}

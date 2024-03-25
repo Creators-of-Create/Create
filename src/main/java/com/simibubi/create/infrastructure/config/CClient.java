@@ -33,6 +33,8 @@ public class CClient extends ConfigBase {
 			Comments.ingameMenuConfigButtonOffsetX);
 	public final ConfigBool ignoreFabulousWarning = b(false, "ignoreFabulousWarning",
 		Comments.ignoreFabulousWarning);
+	public final ConfigBool rotateStandingOnContraptionPlayer = b(false, "rotateStandingOnContraptionPlayer", Comments.rotateStandingOnContraptionPlayer);
+	public final ConfigBool rotateSittingOnContraptionPlayer = b(true, "rotateSittingOnContraptionPlayer", Comments.rotateSittingOnContraptionPlayer);
 
 	// custom fluid fog
 	public final ConfigGroup fluidFogSettings = group(1, "fluidFogSettings", Comments.fluidFogSettings);
@@ -86,8 +88,6 @@ public class CClient extends ConfigBase {
 	public final ConfigFloat mountedZoomMultiplier = f(3, 0, "mountedZoomMultiplier", Comments.mountedZoomMultiplier);
 	public final ConfigBool showTrackGraphOnF3 = b(false, "showTrackGraphOnF3", Comments.showTrackGraphOnF3);
 	public final ConfigBool showExtendedTrackGraphOnF3 = b(false, "showExtendedTrackGraphOnF3", Comments.showExtendedTrackGraphOnF3);
-	public final ConfigBool rotateStandingOnTrainPlayer = b(true, "rotateStandingOnTrainPlayer", Comments.rotateStandingOnTrainPlayer);
-	public final ConfigBool rotateSittingOnTrainPlayer = b(true, "rotateSittingOnTrainPlayer", Comments.rotateSittingOnTrainPlayer);
 
 
 	@Override
@@ -128,6 +128,8 @@ public class CClient extends ConfigBase {
 				"The sign (-/+) of this value determines what side of the row the button appears on (left/right)"
 		};
 		static String ignoreFabulousWarning = "Setting this to true will prevent Create from sending you a warning when playing with Fabulous graphics enabled";
+		static String rotateStandingOnContraptionPlayer = "Rotate the player together with the contraption while standing on it";
+		static String rotateSittingOnContraptionPlayer = "Rotate the player together with the contraption while sitting on it";
 		static String overlay = "Settings for the Goggle Overlay";
 		static String overlayOffset = "Offset the overlay from goggle- and hover- information by this many pixels on the respective axis; Use /create overlay";
 		static String overlayCustomColor = "Enable this to use your custom colors for the Goggle- and Hover- Overlay";
@@ -160,8 +162,6 @@ public class CClient extends ConfigBase {
 		static String mountedZoomMultiplier = "How far away the Camera should zoom when seated on a train";
 		static String showTrackGraphOnF3 = "Display nodes and edges of a Railway Network while f3 debug mode is active";
 		static String showExtendedTrackGraphOnF3 = "Additionally display materials of a Rail Network while f3 debug mode is active";
-		static String rotateStandingOnTrainPlayer = "Rotate the player together with the train while standing on it";
-		static String rotateSittingOnTrainPlayer = "Rotate the player together with the train while sitting on it";
 		static String fluidFogSettings = "Configure your vision range when submerged in Create's custom fluids";
 		static String honeyTransparencyMultiplier = "The vision range through honey will be multiplied by this factor";
 		static String chocolateTransparencyMultiplier = "The vision range though chocolate will be multiplied by this factor";
