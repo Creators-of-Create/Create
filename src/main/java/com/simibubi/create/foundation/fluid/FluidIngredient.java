@@ -206,8 +206,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		protected boolean testInternal(FluidStack t) {
 			if (tag == null) {
 				for (FluidStack accepted : getMatchingFluidStacks())
-					if (accepted.getFluid()
-						.isSame(t.getFluid()))
+					if (accepted.isFluidEqual(t))
 						return true;
 				return false;
 			}
