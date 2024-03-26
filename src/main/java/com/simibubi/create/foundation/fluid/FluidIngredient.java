@@ -152,8 +152,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected boolean testInternal(FluidStack t) {
-			if (!t.getFluid()
-				.isSame(fluid))
+			if (t.getFluid() != fluid)
 				return false;
 			if (tagToMatch.isEmpty())
 				return true;
@@ -206,7 +205,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		protected boolean testInternal(FluidStack t) {
 			if (tag == null) {
 				for (FluidStack accepted : getMatchingFluidStacks())
-					if (accepted.isFluidEqual(t))
+					if (accepted.getFluid() != t.getFluid())
 						return true;
 				return false;
 			}
