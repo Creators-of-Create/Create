@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "the_vault:overgrown_wooden_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "the_vault:stripped_overgrown_wooden_log"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "the_vault",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

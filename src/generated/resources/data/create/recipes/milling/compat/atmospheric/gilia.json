@@ -1,0 +1,30 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "atmospheric:gilia"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:purple_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:magenta_dye",
+      "count": 2,
+      "chance": 0.1
+    },
+    {
+      "item": "minecraft:pink_dye",
+      "chance": 0.1
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "atmospheric",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

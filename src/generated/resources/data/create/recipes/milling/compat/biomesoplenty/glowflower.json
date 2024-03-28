@@ -1,0 +1,25 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "biomesoplenty:glowflower"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:cyan_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:white_dye",
+      "chance": 0.1
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "biomesoplenty",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

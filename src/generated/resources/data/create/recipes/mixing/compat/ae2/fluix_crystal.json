@@ -1,0 +1,31 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "tag": "forge:dusts/redstone"
+    },
+    {
+      "item": "ae2:charged_certus_quartz_crystal"
+    },
+    {
+      "tag": "forge:gems/quartz"
+    },
+    {
+      "fluid": "minecraft:water",
+      "nbt": {},
+      "amount": 250
+    }
+  ],
+  "results": [
+    {
+      "item": "ae2:fluix_crystal",
+      "count": 2
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "ae2",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

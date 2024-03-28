@@ -350,6 +350,10 @@
       "required": false
     },
     {
+      "id": "autumnity:maple",
+      "required": false
+    },
+    {
       "id": "infernalexp:stripped_luminous_stem",
       "required": false
     },

@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/orange"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:orange_dye"
+    }
+  ],
+  "processingTime": 50
+}

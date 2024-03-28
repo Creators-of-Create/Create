@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "atmospheric:stripped_aspen_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "atmospheric:aspen_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "atmospheric",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

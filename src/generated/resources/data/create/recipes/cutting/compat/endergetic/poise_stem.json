@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "endergetic:poise_stem"
+    }
+  ],
+  "results": [
+    {
+      "item": "endergetic:stripped_poise_stem"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "endergetic",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

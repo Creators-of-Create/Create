@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/red"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:red_dye"
+    }
+  ],
+  "processingTime": 50
+}

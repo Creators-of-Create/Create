@@ -1,0 +1,19 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "minecraft:mycelium"
+    }
+  ],
+  "results": [
+    {
+      "item": "environmental:mycelium_path"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "environmental",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "byg:foxglove"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:magenta_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:pink_dye",
+      "chance": 0.25
+    },
+    {
+      "item": "minecraft:yellow_dye",
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "byg",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

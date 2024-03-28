@@ -1,0 +1,31 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "biomesoplenty:blue_hydrangea"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:light_blue_dye",
+      "count": 3
+    },
+    {
+      "item": "minecraft:green_dye",
+      "count": 2,
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:light_blue_dye",
+      "count": 2,
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "biomesoplenty",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
