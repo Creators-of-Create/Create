@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
 import java.util.function.BiConsumer;
@@ -40,28 +41,24 @@ public class TravellingPoint {
 	public boolean blocked;
 	public boolean upsideDown;
 
-	public static enum SteerDirection {
+	public enum SteerDirection {
 		NONE(0), LEFT(-1), RIGHT(1);
 
-		float targetDot;
+		final float targetDot;
 
-		private SteerDirection(float targetDot) {
+		SteerDirection(float targetDot) {
 			this.targetDot = targetDot;
 		}
 	}
 
-	public static interface ITrackSelector
-		extends BiFunction<TrackGraph, Pair<Boolean, List<Entry<TrackNode, TrackEdge>>>, Entry<TrackNode, TrackEdge>> {
-	};
+	public interface ITrackSelector
+		extends BiFunction<TrackGraph, Pair<Boolean, List<Entry<TrackNode, TrackEdge>>>, Entry<TrackNode, TrackEdge>> { };
 
-	public static interface IEdgePointListener extends BiPredicate<Double, Pair<TrackEdgePoint, Couple<TrackNode>>> {
-	};
+	public interface IEdgePointListener extends BiPredicate<Double, Pair<TrackEdgePoint, Couple<TrackNode>>> { };
 
-	public static interface ITurnListener extends BiConsumer<Double, TrackEdge> {
-	};
+	public interface ITurnListener extends BiConsumer<Double, TrackEdge> { };
 
-	public static interface IPortalListener extends Predicate<Couple<TrackNodeLocation>> {
-	};
+	public interface IPortalListener extends Predicate<Couple<TrackNodeLocation>> { };
 
 	public TravellingPoint() {}
 
@@ -78,8 +75,7 @@ public class TravellingPoint {
 	}
 
 	public ITurnListener ignoreTurns() {
-		return (d, c) -> {
-		};
+		return (d, c) -> { };
 	}
 
 	public IPortalListener ignorePortals() {
@@ -88,7 +84,7 @@ public class TravellingPoint {
 
 	public ITrackSelector random() {
 		return (graph, pair) -> pair.getSecond()
-			.get(Create.RANDOM.nextInt(pair.getSecond()
+			.get(new Random().nextInt(pair.getSecond()
 				.size()));
 	}
 
@@ -113,15 +109,14 @@ public class TravellingPoint {
 			Vector<List<Entry<TrackNode, TrackEdge>>> frontiers = new Vector<>(validTargets.size());
 			Vector<Set<TrackEdge>> visiteds = new Vector<>(validTargets.size());
 
-			for (int j = 0; j < validTargets.size(); j++) {
-				ArrayList<Entry<TrackNode, TrackEdge>> e = new ArrayList<>();
-				Entry<TrackNode, TrackEdge> entry = validTargets.get(j);
-				e.add(entry);
-				frontiers.add(e);
-				HashSet<TrackEdge> e2 = new HashSet<>();
-				e2.add(entry.getValue());
-				visiteds.add(e2);
-			}
+            for (Entry<TrackNode, TrackEdge> validTarget : validTargets) {
+                ArrayList<Entry<TrackNode, TrackEdge>> e = new ArrayList<>();
+                e.add(validTarget);
+                frontiers.add(e);
+                HashSet<TrackEdge> e2 = new HashSet<>();
+                e2.add(validTarget.getValue());
+                visiteds.add(e2);
+            }
 
 			for (int i = 0; i < 20; i++) {
 				for (int j = 0; j < validTargets.size(); j++) {
@@ -233,7 +228,7 @@ public class TravellingPoint {
 		Double blockedLocation =
 			edgeTraversedFrom(graph, forward, signalListener, turnListener, prevPos, collectedDistance);
 		if (blockedLocation != null) {
-			position = blockedLocation.doubleValue();
+			position = blockedLocation;
 			traveled = position - prevPos;
 			return traveled;
 		}
@@ -289,7 +284,7 @@ public class TravellingPoint {
 
 				if (blockedLocation != null) {
 					traveled -= position;
-					position = blockedLocation.doubleValue();
+					position = blockedLocation;
 					traveled += position;
 					break;
 				}
@@ -349,7 +344,7 @@ public class TravellingPoint {
 
 				if (blockedLocation != null) {
 					traveled -= position;
-					position = blockedLocation.doubleValue();
+					position = blockedLocation;
 					traveled += position;
 					break;
 				}
