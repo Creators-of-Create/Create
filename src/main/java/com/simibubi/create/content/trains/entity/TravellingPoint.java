@@ -84,7 +84,7 @@ public class TravellingPoint {
 
 	public ITrackSelector random() {
 		return (graph, pair) -> pair.getSecond()
-			.get(new Random().nextInt(pair.getSecond()
+			.get(Create.RANDOM.nextInt(pair.getSecond()
 				.size()));
 	}
 
