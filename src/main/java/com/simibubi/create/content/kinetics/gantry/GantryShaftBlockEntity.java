@@ -13,6 +13,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import static com.simibubi.create.content.kinetics.base.DirectionalKineticBlock.FACING;
+import static com.simibubi.create.content.kinetics.gantry.GantryShaftBlock.PART;
+
 public class GantryShaftBlockEntity extends KineticBlockEntity {
 
 	public GantryShaftBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
@@ -23,7 +26,7 @@ public class GantryShaftBlockEntity extends KineticBlockEntity {
 	protected boolean syncSequenceContext() {
 		return true;
 	}
-	
+
 	public void checkAttachedCarriageBlocks() {
 		if (!canAssembleOn())
 			return;
@@ -112,4 +115,121 @@ public class GantryShaftBlockEntity extends KineticBlockEntity {
 		return false;
 	}
 
+	public int attachedShafts() {
+		if (level.getBlockState(worldPosition).getBlock() instanceof GantryShaftBlock) {
+			BlockState state = level.getBlockState(worldPosition);
+			Direction facing = state.getValue(GantryShaftBlock.FACING);
+			GantryShaftBlock.Part part = state.getValue(PART);
+			int toReturn = 1;
+			int yOffset = 1;
+			if (part.equals(GantryShaftBlock.Part.START)) {
+				while (true) {
+					BlockState targetBlockState = level.getBlockState(worldPosition.relative(facing, yOffset));
+					if (targetBlockState.getBlock() instanceof GantryShaftBlock) {
+						if (targetBlockState.getValue(FACING).equals(facing)) {
+							toReturn++;
+							yOffset++;
+						} else {
+							break;
+						}
+					} else {
+						break;
+					}
+				}
+			} else if (part.equals(GantryShaftBlock.Part.END)) {
+				yOffset = -1;
+				while (true) {
+					BlockState targetBlockState = level.getBlockState(worldPosition.relative(facing, yOffset));
+					if (targetBlockState.getBlock() instanceof GantryShaftBlock) {
+						if (targetBlockState.getValue(FACING).equals(facing)) {
+							toReturn++;
+							yOffset--;
+						} else {
+							break;
+						}
+					} else {
+						break;
+					}
+				}
+			} else if (part.equals(GantryShaftBlock.Part.MIDDLE)) {
+				while (true) {
+					BlockState targetBlockState = level.getBlockState(worldPosition.relative(facing, yOffset));
+					if (targetBlockState.getBlock() instanceof GantryShaftBlock) {
+						if (targetBlockState.getValue(FACING).equals(facing)) {
+							toReturn++;
+							yOffset++;
+						} else {
+							break;
+						}
+					} else {
+						break;
+					}
+				}
+				yOffset = -1;
+				while (true) {
+					BlockState targetBlockState = level.getBlockState(worldPosition.relative(facing, yOffset));
+					if (targetBlockState.getBlock() instanceof GantryShaftBlock) {
+						if (targetBlockState.getValue(FACING).equals(facing)) {
+							toReturn++;
+							yOffset--;
+						} else {
+							break;
+						}
+					} else {
+						break;
+					}
+				}
+			}
+			return toReturn;
+		}
+		return -1;
+	}
+
+	public int findGantryOffset() {
+		if (getBlockState().getBlock() instanceof GantryShaftBlock) {
+			if (level.getBlockEntity(getBlockPos()) instanceof GantryShaftBlockEntity gsbe) {
+				int start = gsbe.startPos();
+				BlockPos startPos = switch (getBlockState().getValue(FACING).getAxis()) {
+					case X -> new BlockPos(start, getBlockPos().getY(), getBlockPos().getZ());
+					case Y -> new BlockPos(getBlockPos().getX(), start, getBlockPos().getZ());
+					case Z -> new BlockPos(getBlockPos().getX(), getBlockPos().getY(), start);
+				};
+				int offset = 0;
+				while (true) {
+					BlockPos targetBlockPos = startPos.relative(getBlockState().getValue(FACING), offset);
+					if (!(level.getBlockEntity(targetBlockPos) instanceof GantryShaftBlockEntity))
+						break;
+					offset ++;
+					for (Direction d: Direction.values()) {
+						if (level.getBlockEntity(targetBlockPos.relative(d)) instanceof GantryCarriageBlockEntity) {
+							return offset;
+						}
+					}
+				}
+			}
+		}
+		return -1;
+	}
+
+	public int startPos() {
+		if (getBlockState().getBlock() instanceof GantryShaftBlock) {
+			BlockState state = getBlockState();
+			Direction facing = state.getValue(GantryShaftBlock.FACING);
+			GantryShaftBlock.Part part = state.getValue(PART);
+			if (part.equals(GantryShaftBlock.Part.START) || part.equals(GantryShaftBlock.Part.SINGLE)) {
+				return getBlockPos().get(facing.getAxis());
+			} else if (part.equals(GantryShaftBlock.Part.END) || part.equals(GantryShaftBlock.Part.MIDDLE)) {
+				int offset = -1;
+				while (true) {
+					BlockState targetBlockState = level.getBlockState(worldPosition.relative(facing, offset));
+					if (targetBlockState.getValue(PART).equals(GantryShaftBlock.Part.START)) {
+						return worldPosition.relative(facing, offset).get(facing.getAxis());
+					} else {
+						offset--;
+					}
+				}
+			}
+		}
+		return -1;
+	}
 }

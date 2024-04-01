@@ -186,6 +186,7 @@ import com.simibubi.create.content.redstone.diodes.PulseRepeaterBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkRenderer;
 import com.simibubi.create.content.redstone.displayLink.source.ElevatorPulleyDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.source.GantryShaftDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.source.HosePulleyDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.source.MechanicalBearingDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.source.MechanicalPistonDisplaySource;
@@ -348,6 +349,7 @@ public class AllBlockEntityTypes {
 		.instance(() -> SingleRotatingInstance::new, false)
 		.validBlocks(AllBlocks.GANTRY_SHAFT)
 		.renderer(() -> KineticBlockEntityRenderer::new)
+		.onRegister(assignDataBehaviourBE(new GantryShaftDisplaySource()))
 		.register();
 
 	public static final BlockEntityEntry<GantryCarriageBlockEntity> GANTRY_PINION = REGISTRATE
