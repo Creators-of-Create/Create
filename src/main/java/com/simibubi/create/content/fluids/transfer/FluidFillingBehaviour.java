@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
@@ -48,6 +49,9 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
 	List<BlockPosEntry> infinityCheckFrontier;
 	Set<BlockPos> infinityCheckVisited;
+
+	int blocksFilled = -1;
+	public boolean inUse = true;
 
 	public FluidFillingBehaviour(SmartBlockEntity be) {
 		super(be);
@@ -96,6 +100,8 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
 		if (!infinityCheckFrontier.isEmpty())
 			return;
+		if (inUse)
+			blocksFilled = infinityCheckVisited.size();
 		if (infinite) {
 			reset();
 			return;
@@ -316,4 +322,11 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		return TYPE;
 	}
 
+	public int getBlocksFilled() {
+		return blocksFilled;
+	}
+
+	public void resetBlocksFilled() {
+		blocksFilled = -1;
+	}
 }

@@ -36,7 +36,7 @@ public class PulleyDisplaySource extends PercentOrProgressBarDisplaySource {
 		BlockEntity be = context.getSourceBlockEntity();
 		if (!(be instanceof PulleyBlockEntity labe))
 			return null;
-		return labe.offset/(float)labe.blocksToGround();
+		return labe.getOffset()/labe.blocksToGround();
 	}
 
 	@Override

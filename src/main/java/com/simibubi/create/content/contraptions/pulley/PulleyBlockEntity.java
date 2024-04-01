@@ -51,6 +51,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 	protected BlockPos mirrorParent;
 	protected List<BlockPos> mirrorChildren;
 	public WeakReference<AbstractContraptionEntity> sharedMirrorContraption;
+	public int lastContraptionPos = -1;
 
 	public PulleyBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -177,6 +178,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 
 		clientOffsetDiff = 0;
 		running = true;
+		lastContraptionPos = -1;
 		sendData();
 	}
 
@@ -196,6 +198,8 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 		offset = getGridOffset(offset);
 		if (movedContraption != null)
 			resetContraptionToOffset();
+
+		lastContraptionPos = (int)movedContraption.getY();
 
 		if (!level.isClientSide) {
 			if (shouldCreateRopes()) {
@@ -349,13 +353,14 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 
 	private final List<Block> airblocks = List.of(Blocks.AIR, Blocks.WATER, Blocks.LAVA, AllBlocks.ROPE.get(), AllBlocks.PULLEY_MAGNET.get());
 
-	public int blocksToGround() {
+	public float blocksToGround() {
 		int y = getBlockPos().getY();
 		y --;
 		int blocksBelow = 0;
+
 		while (true) {
 			Block blockatY = level.getBlockState(getBlockPos().atY(y)).getBlock();
-			if (airblocks.contains(blockatY)) {
+			if (airblocks.contains(blockatY) || y == lastContraptionPos) {
 				y--;
 				blocksBelow ++;
 			} else {
@@ -363,6 +368,16 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 			}
 		}
 		return blocksBelow;
+	}
+
+	public float getOffset() {
+		if (lastContraptionPos != -1 ) {
+			return worldPosition.getY() - lastContraptionPos;
+		} else if (getAttachedContraption() != null) {
+			return (float)worldPosition.getY() - (float)getAttachedContraption().getY();
+		} else {
+			return offset;
+		}
 	}
 
 	@Override

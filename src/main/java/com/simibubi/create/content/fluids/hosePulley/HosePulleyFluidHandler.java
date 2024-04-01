@@ -38,6 +38,9 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 			}
 		}
 
+		drainer.resetBlocksFilled();
+		drainer.inUse = false;
+		filler.inUse = true;
 		if (action.simulate())
 			return diff <= 0 ? resource.getAmount() : internalTank.fill(remaining, action);
 		if (diff <= 0) {
@@ -76,6 +79,9 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 			return internalTank.drain(maxDrain, action);
 
 		filler.counterpartActed();
+		filler.resetBlocksFilled();
+		filler.inUse = false;
+		drainer.inUse = true;
 		FluidStack leftover = returned.copy();
 		int available = 1000 + internalTank.getFluidAmount();
 		int drained;

@@ -31,10 +31,10 @@ public class HosePulleyBlockEntity extends KineticBlockEntity {
 
 	private SmartFluidTank internalTank;
 	private LazyOptional<IFluidHandler> capability;
-	private FluidDrainingBehaviour drainer;
-	private FluidFillingBehaviour filler;
-	private HosePulleyFluidHandler handler;
-	private boolean infinite;
+	public FluidDrainingBehaviour drainer;
+	public FluidFillingBehaviour filler;
+	public HosePulleyFluidHandler handler;
+	public boolean infinite;
 
 	public HosePulleyBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 		super(typeIn, pos, state);
@@ -190,5 +190,9 @@ public class HosePulleyBlockEntity extends KineticBlockEntity {
 			&& (side == null || HosePulleyBlock.hasPipeTowards(level, worldPosition, getBlockState(), side)))
 			return this.capability.cast();
 		return super.getCapability(cap, side);
+	}
+
+	public SmartFluidTank getInternalTank() {
+		return internalTank;
 	}
 }

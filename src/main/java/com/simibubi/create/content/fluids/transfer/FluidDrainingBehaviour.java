@@ -47,6 +47,9 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	Set<BlockPos> validationVisited;
 	Set<BlockPos> newValidationSet;
 
+	int blocksFilled = -1;
+	public boolean inUse = true;
+
 	public FluidDrainingBehaviour(SmartBlockEntity be) {
 		super(be);
 		validationVisited = new HashSet<>();
@@ -278,6 +281,9 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			visited.clear();
 		}
 
+		if (inUse)
+			blocksFilled = visited.size();
+
 		int maxBlocks = maxBlocks();
 		if (visited.size() > maxBlocks && canDrainInfinitely(fluid) && !queue.isEmpty()) {
 			infinite = true;
@@ -324,6 +330,9 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			return;
 		}
 
+		if (inUse)
+			blocksFilled = validationVisited.size();
+
 		validationSet = newValidationSet;
 		newValidationSet = new HashSet<>();
 		validationVisited.clear();
@@ -357,4 +366,11 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			: new FluidStack(fluid, 1000);
 	}
 
+	public int getBlocksFilled() {
+		return blocksFilled;
+	}
+
+	public void resetBlocksFilled() {
+		blocksFilled = -1;
+	}
 }

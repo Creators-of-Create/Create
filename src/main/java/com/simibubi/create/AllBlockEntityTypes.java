@@ -186,6 +186,7 @@ import com.simibubi.create.content.redstone.diodes.PulseRepeaterBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkRenderer;
 import com.simibubi.create.content.redstone.displayLink.source.ElevatorPulleyDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.source.HosePulleyDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.source.MechanicalBearingDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.source.MechanicalPistonDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.source.PulleyDisplaySource;
@@ -409,6 +410,7 @@ public class AllBlockEntityTypes {
 		.instance(() -> HosePulleyInstance::new)
 		.validBlocks(AllBlocks.HOSE_PULLEY)
 		.renderer(() -> HosePulleyRenderer::new)
+		.onRegister(assignDataBehaviourBE(new HosePulleyDisplaySource()))
 		.register();
 
 	public static final BlockEntityEntry<SpoutBlockEntity> SPOUT = REGISTRATE
