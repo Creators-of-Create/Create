@@ -18,8 +18,8 @@ float getFlapAngle(float flapness, float intensity, float scale) {
 void flw_instanceVertex(in FlwInstance flap) {
     float flapAngle = getFlapAngle(flap.flapness, flap.intensity, flap.flapScale);
 
-    vec4 orientation = quaternion(vec3(0., 1., 0.), -flap.horizontalAngle);
-    vec4 flapRotation = quaternion(vec3(1., 0., 0.), flapAngle);
+    vec4 orientation = quaternionDegrees(vec3(0., 1., 0.), -flap.horizontalAngle);
+    vec4 flapRotation = quaternionDegrees(vec3(1., 0., 0.), flapAngle);
 
     vec3 rotated = rotateByQuaternion(flw_vertexPos.xyz - flap.pivot, flapRotation) + flap.pivot + flap.segmentOffset;
 

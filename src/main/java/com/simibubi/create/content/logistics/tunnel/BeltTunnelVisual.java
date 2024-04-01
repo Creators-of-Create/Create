@@ -17,7 +17,6 @@ import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.flwdata.FlapInstance;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.core.Direction;
@@ -25,35 +24,35 @@ import net.minecraft.world.level.LightLayer;
 
 public class BeltTunnelVisual extends AbstractBlockEntityVisual<BeltTunnelBlockEntity> implements SimpleDynamicVisual {
 
-    private final Map<Direction, ArrayList<FlapInstance>> tunnelFlaps;
+    private final Map<Direction, ArrayList<FlapInstance>> tunnelFlaps = new EnumMap<>(Direction.class);
 
     public BeltTunnelVisual(VisualizationContext context, BeltTunnelBlockEntity blockEntity) {
         super(context, blockEntity);
+	}
 
-        tunnelFlaps = new EnumMap<>(Direction.class);
+	private void setupFlaps(float partialTick) {
+		Instancer<FlapInstance> model = instancerProvider.instancer(AllInstanceTypes.FLAPS, Models.partial(AllPartialModels.BELT_TUNNEL_FLAP));
 
-        Instancer<FlapInstance> model = instancerProvider.instancer(AllInstanceTypes.FLAPS, Models.partial(AllPartialModels.BELT_TUNNEL_FLAP));
+		int blockLight = level.getBrightness(LightLayer.BLOCK, pos);
+		int skyLight = level.getBrightness(LightLayer.SKY, pos);
 
-        int blockLight = level.getBrightness(LightLayer.BLOCK, pos);
-        int skyLight = level.getBrightness(LightLayer.SKY, pos);
+		blockEntity.flaps.forEach((direction, flapValue) -> {
 
-        blockEntity.flaps.forEach((direction, flapValue) -> {
+			float flapness = flapValue.getValue(partialTick);
 
-            float flapness = flapValue.getValue(AnimationTickHolder.getPartialTicks());
+			float horizontalAngle = direction.getOpposite().toYRot();
 
-            float horizontalAngle = direction.getOpposite().toYRot();
+			float flapScale = direction.getAxis() == Direction.Axis.X ? 1 : -1;
 
-            float flapScale = direction.getAxis() == Direction.Axis.X ? 1 : -1;
+			ArrayList<FlapInstance> flaps = new ArrayList<>(4);
 
-            ArrayList<FlapInstance> flaps = new ArrayList<>(4);
+			for (int segment = 0; segment <= 3; segment++) {
+				float intensity = segment == 3 ? 1.5f : segment + 1;
+				float segmentOffset = -3.05f / 16f * segment + 0.075f / 16f;
 
-            for (int segment = 0; segment <= 3; segment++) {
-                float intensity = segment == 3 ? 1.5f : segment + 1;
-                float segmentOffset = -3.05f / 16f * segment + 0.075f / 16f;
+				FlapInstance key = model.createInstance();
 
-                FlapInstance key = model.createInstance();
-
-                key.setPosition(getVisualPosition())
+				key.setPosition(getVisualPosition())
 						.setSegmentOffset(segmentOffset, 0, 0)
 						.setBlockLight(blockLight)
 						.setSkyLight(skyLight)
@@ -64,19 +63,29 @@ public class BeltTunnelVisual extends AbstractBlockEntityVisual<BeltTunnelBlockE
 						.setIntensity(intensity)
 						.setChanged();
 
-                flaps.add(key);
-            }
+				flaps.add(key);
+			}
 
-            tunnelFlaps.put(direction, flaps);
-        });
-    }
-
-	@Override
-	public boolean shouldReset() {
-		return super.shouldReset() || tunnelFlaps.size() != blockEntity.flaps.size();
+			tunnelFlaps.put(direction, flaps);
+		});
 	}
 
-    @Override
+	@Override
+	public void init(float partialTick) {
+		setupFlaps(partialTick);
+
+		super.init(partialTick);
+	}
+
+	@Override
+	public void update(float partialTick) {
+		super.update(partialTick);
+
+		_delete();
+		setupFlaps(partialTick);
+	}
+
+	@Override
     public void beginFrame(VisualFrameContext ctx) {
         tunnelFlaps.forEach((direction, keys) -> {
             LerpedFloat lerpedFloat = blockEntity.flaps.get(direction);

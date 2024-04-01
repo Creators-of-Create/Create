@@ -35,11 +35,6 @@ public abstract class ActorVisual implements Visual {
 	public void update(float partialTick) {
 	}
 
-	@Override
-	public boolean shouldReset() {
-		return false;
-	}
-
 	protected abstract void _delete();
 
 	@Override
