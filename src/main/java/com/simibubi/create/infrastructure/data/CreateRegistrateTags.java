@@ -32,7 +32,7 @@ public class CreateRegistrateTags {
 
 	private static void genBlockTags(RegistrateTagsProvider<Block> prov) {
 		prov.tag(AllBlockTags.BRITTLE.tag)
-			.add(Blocks.BELL, Blocks.COCOA, Blocks.FLOWER_POT)
+			.add(Blocks.BELL, Blocks.COCOA, Blocks.FLOWER_POT, Blocks.MOSS_CARPET)
 			.addTag(BlockTags.BEDS)
 			.addTag(BlockTags.DOORS);
 
