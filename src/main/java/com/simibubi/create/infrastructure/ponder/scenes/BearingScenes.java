@@ -238,7 +238,7 @@ public class BearingScenes {
 	}
 
 	public static void mechanicalBearing(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("mechanical_bearing", "Movings Structures using the Mechanical Bearing");
+		scene.title("mechanical_bearing", "Moving Structures using the Mechanical Bearing");
 		scene.configureBasePlate(1, 1, 5);
 		scene.setSceneOffsetY(-1);
 		scene.world.showSection(util.select.layer(0), Direction.UP);

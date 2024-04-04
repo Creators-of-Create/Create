@@ -1776,7 +1776,7 @@
   "create.ponder.mechanical_arm_redstone.text_1": "When powered by Redstone, Mechanical Arms will not activate",
   "create.ponder.mechanical_arm_redstone.text_2": "Before stopping, it will finish any started cycles",
   "create.ponder.mechanical_arm_redstone.text_3": "Thus, a negative pulse can be used to trigger exactly one activation cycle",
-  "create.ponder.mechanical_bearing.header": "Movings Structures using the Mechanical Bearing",
+  "create.ponder.mechanical_bearing.header": "Moving Structures using the Mechanical Bearing",
   "create.ponder.mechanical_bearing.text_1": "Mechanical Bearings attach to the block in front of them",
   "create.ponder.mechanical_bearing.text_2": "Upon receiving Rotational Force, it will assemble it into a Rotating Contraption",
   "create.ponder.mechanical_crafter.header": "Setting up Mechanical Crafters",
