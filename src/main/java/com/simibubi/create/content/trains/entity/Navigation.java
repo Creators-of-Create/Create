@@ -266,7 +266,7 @@ public class Navigation {
 		if (targetDistance < 10) {
 			double target = topSpeed * ((targetDistance) / 10);
 			if (target < Math.abs(train.speed)) {
-				train.speed += (target - Math.abs(train.speed)) * .5f * speedMod;
+				train.speed += (target - Math.abs(train.speed)) * .5f * Math.signum(train.speed);
 				return;
 			}
 		}
