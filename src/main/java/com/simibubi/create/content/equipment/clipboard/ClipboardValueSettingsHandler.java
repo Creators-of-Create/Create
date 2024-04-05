@@ -58,7 +58,8 @@ public class ClipboardValueSettingsHandler {
 		if (!smartBE.getAllBehaviours()
 			.stream()
 			.anyMatch(b -> b instanceof ClipboardCloneable cc
-				&& cc.writeToClipboard(new CompoundTag(), target.getDirection())))
+				&& cc.writeToClipboard(new CompoundTag(), target.getDirection()))
+				&& !(smartBE instanceof ClipboardCloneable))
 			return;
 
 		VoxelShape shape = blockstate.getShape(mc.level, pos);
