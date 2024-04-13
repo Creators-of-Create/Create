@@ -109,8 +109,11 @@ public class DeployerHandler {
 	}
 
 	static boolean shouldActivate(ItemStack held, Level world, BlockPos targetPos, @Nullable Direction facing) {
-		if (held.getItem() instanceof BlockItem && !(world.getBlockState(targetPos).getBlock() instanceof AirBlock))
-			return false;
+		if (held.getItem() instanceof BlockItem) {
+			if (!(world.getBlockState(targetPos).getBlock() instanceof AirBlock) && !(world.getBlockState(targetPos).getMaterial().isLiquid())) {
+				return false;
+			}
+		}
 
 		if (held.getItem() instanceof BucketItem) {
 			BucketItem bucketItem = (BucketItem) held.getItem();
