@@ -116,7 +116,7 @@ public class AllFanProcessingTypes {
 		public List<ItemStack> process(ItemStack stack, Level level) {
 			return null;
 		}
-	
+
 		@Override
 		public void spawnProcessingParticles(Level level, Vec3 pos) {
 		}
@@ -162,15 +162,17 @@ public class AllFanProcessingTypes {
 			Optional<SmeltingRecipe> smeltingRecipe = level.getRecipeManager()
 				.getRecipeFor(RecipeType.SMELTING, RECIPE_WRAPPER, level);
 
-			if (smeltingRecipe.isPresent())
-				return true;
+			if (smeltingRecipe.isPresent()) {
+				return !smeltingRecipe.get().getId().getPath().endsWith("_manual_only");
+			}
 
 			RECIPE_WRAPPER.setItem(0, stack);
 			Optional<BlastingRecipe> blastingRecipe = level.getRecipeManager()
 				.getRecipeFor(RecipeType.BLASTING, RECIPE_WRAPPER, level);
 
-			if (blastingRecipe.isPresent())
-				return true;
+			if (blastingRecipe.isPresent()) {
+				return !blastingRecipe.get().getId().getPath().endsWith("_manual_only");
+			}
 
 			return !stack.getItem()
 				.isFireResistant();
@@ -390,7 +392,7 @@ public class AllFanProcessingTypes {
 			RECIPE_WRAPPER.setItem(0, stack);
 			Optional<SmokingRecipe> recipe = level.getRecipeManager()
 				.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, level);
-			return recipe.isPresent();
+			return recipe.isPresent() && !recipe.get().getId().getPath().endsWith("_manual_only");
 		}
 
 		@Override
