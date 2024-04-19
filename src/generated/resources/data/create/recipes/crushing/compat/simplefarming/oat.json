@@ -1,0 +1,29 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "simplefarming:oat"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:wheat_flour"
+    },
+    {
+      "item": "create:wheat_flour",
+      "count": 2,
+      "chance": 0.25
+    },
+    {
+      "item": "simplefarming:oat_seeds",
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 150,
+  "conditions": [
+    {
+      "modid": "simplefarming",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

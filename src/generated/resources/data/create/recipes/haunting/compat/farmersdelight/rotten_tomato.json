@@ -1,0 +1,19 @@
+{
+  "type": "create:haunting",
+  "ingredients": [
+    {
+      "item": "farmersdelight:tomato"
+    }
+  ],
+  "results": [
+    {
+      "item": "farmersdelight:rotten_tomato"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "farmersdelight",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
