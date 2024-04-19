@@ -2,6 +2,7 @@ package com.simibubi.create.content.redstone.thresholdSwitch;
 
 import java.util.List;
 
+import com.simibubi.create.compat.functionalStorage.FunctionalStorage;
 import com.simibubi.create.compat.storageDrawers.StorageDrawers;
 import com.simibubi.create.content.redstone.DirectedDirectionalBlock;
 import com.simibubi.create.content.redstone.FilteredDetectorFilterSlot;
@@ -106,6 +107,9 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 
 		} else if (StorageDrawers.isDrawer(targetBlockEntity) && observedInventory.hasInventory()) {
 			currentLevel = StorageDrawers.getTrueFillLevel(observedInventory.getInventory(), filtering);
+
+		} else if (FunctionalStorage.isDrawer(targetBlockEntity) && observedInventory.hasInventory()) {
+			currentLevel = FunctionalStorage.getTrueFillLevel(observedInventory.getInventory(), filtering);
 
 		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
 			if (observedInventory.hasInventory()) {
