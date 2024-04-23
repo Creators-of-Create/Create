@@ -194,9 +194,14 @@ dependencies {
         runtimeOnly fg.deobf("org.squiddev:cc-tweaked-${cc_tweaked_minecraft_version}:${cc_tweaked_version}")
 	}
 
+    compileOnly fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-${dynamic_trees_minecraft_version}:${dynamic_trees_version}")
+
+    if (dynamic_trees_enable.toBoolean()) {
+        compileOnly fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-${dynamic_trees_minecraft_version}:${dynamic_trees_version}")
+    }
+
     // implementation fg.deobf("curse.maven:ic2-classic-242942:4563059")
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
-    // implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta25")
     // runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
     // runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
     // runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.5-1.6.115")
