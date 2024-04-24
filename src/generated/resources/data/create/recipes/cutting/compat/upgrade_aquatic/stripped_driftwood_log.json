@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "upgrade_aquatic:stripped_driftwood_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "upgrade_aquatic:driftwood_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "upgrade_aquatic",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

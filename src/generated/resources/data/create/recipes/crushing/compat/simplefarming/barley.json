@@ -1,0 +1,29 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "simplefarming:barley"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:wheat_flour"
+    },
+    {
+      "item": "create:wheat_flour",
+      "count": 2,
+      "chance": 0.25
+    },
+    {
+      "item": "simplefarming:barley_seeds",
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 150,
+  "conditions": [
+    {
+      "modid": "simplefarming",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/cyan"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:cyan_dye"
+    }
+  ],
+  "processingTime": 50
+}

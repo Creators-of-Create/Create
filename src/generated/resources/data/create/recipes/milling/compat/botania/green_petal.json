@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/green"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:green_dye"
+    }
+  ],
+  "processingTime": 50
+}

@@ -1,0 +1,25 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "byg:torch_ginger"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:red_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:green_dye",
+      "chance": 0.1
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "byg",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

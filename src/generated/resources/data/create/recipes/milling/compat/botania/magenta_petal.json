@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/magenta"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:magenta_dye"
+    }
+  ],
+  "processingTime": 50
+}

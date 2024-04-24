@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/purple"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:purple_dye"
+    }
+  ],
+  "processingTime": 50
+}

@@ -1,0 +1,34 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "tag": "forge:ores/lignite"
+    }
+  ],
+  "results": [
+    {
+      "item": "byg:lignite",
+      "count": 2
+    },
+    {
+      "item": "byg:lignite",
+      "count": 2,
+      "chance": 0.5
+    },
+    {
+      "item": "create:experience_nugget",
+      "chance": 0.75
+    },
+    {
+      "item": "byg:cobbled_ether_stone",
+      "chance": 0.125
+    }
+  ],
+  "processingTime": 300,
+  "conditions": [
+    {
+      "modid": "byg",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
