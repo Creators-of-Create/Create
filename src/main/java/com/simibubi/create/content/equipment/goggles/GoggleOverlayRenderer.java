@@ -57,8 +57,7 @@ public class GoggleOverlayRenderer {
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
 
-		HitResult objectMouseOver = mc.hitResult;
-		if (!(objectMouseOver instanceof BlockHitResult)) {
+		if (!(mc.hitResult instanceof BlockHitResult result)) {
 			lastHovered = null;
 			hoverTicks = 0;
 			return;
@@ -72,7 +71,6 @@ public class GoggleOverlayRenderer {
 				return;
 		}
 
-		BlockHitResult result = (BlockHitResult) objectMouseOver;
 		ClientLevel world = mc.level;
 		BlockPos pos = result.getBlockPos();
 
@@ -95,12 +93,15 @@ public class GoggleOverlayRenderer {
 
 		List<Component> tooltip = new ArrayList<>();
 
-		if (hasGoggleInformation && wearingGoggles) {
-			boolean isShifting = mc.player.isShiftKeyDown();
-
+		if (hasGoggleInformation) {
 			IHaveGoggleInformation gte = (IHaveGoggleInformation) be;
-			goggleAddedInformation = gte.addToGoggleTooltip(tooltip, isShifting);
-			item = gte.getIcon(isShifting);
+
+			if (wearingGoggles || gte.forcedGoggleOverlay()) {
+				boolean isShifting = mc.player.isShiftKeyDown();
+
+				goggleAddedInformation = gte.addToGoggleTooltip(tooltip, isShifting);
+				item = gte.getIcon(isShifting);
+			}
 		}
 
 		if (hasHoveringInformation) {

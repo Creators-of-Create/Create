@@ -53,6 +53,16 @@ public interface IHaveGoggleInformation {
 		return AllItems.GOGGLES.asStack();
 	}
 
+	/**
+	 * this method will be called when looking at a BlockEntity that implemented this
+	 * interface
+	 * <p>
+	 * return true if the goggle overlay should show up no matter what, even when goggle wearing predicates aren't true.
+	 */
+	default boolean forcedGoggleOverlay() {
+		return false;
+	}
+
 	default boolean containedFluidTooltip(List<Component> tooltip, boolean isPlayerSneaking,
 		LazyOptional<IFluidHandler> handler) {
 		Optional<IFluidHandler> resolve = handler.resolve();
