@@ -2,14 +2,19 @@ package com.simibubi.create.content.fluids.transfer;
 
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.content.fluids.potion.PotionFluid;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MilkBucketItem;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
@@ -21,6 +26,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class GenericItemFilling {
 
@@ -31,10 +37,10 @@ public class GenericItemFilling {
 	 * Forge without looking into what it actually does. In all cases this is
 	 * incorrect because having a non-bucket item turn into a bucket item does not
 	 * make sense.
-	 * 
+	 *
 	 * <p>This check is only necessary for filling since a FluidBucketWrapper will be
 	 * empty if it is initialized with a non-bucket item.
-	 * 
+	 *
 	 * @param stack The ItemStack.
 	 * @param fluidHandler The IFluidHandlerItem instance retrieved from the ItemStack.
 	 * @return If the IFluidHandlerItem is valid for the passed ItemStack.
@@ -110,7 +116,7 @@ public class GenericItemFilling {
 	}
 
 	private static boolean canFillBucketInternally(FluidStack availableFluid) {
-		return false;
+		return availableFluid.getFluid().isSame(AllFluids.POTION.get());
 	}
 
 	public static ItemStack fillItem(Level world, int requiredAmount, ItemStack stack, FluidStack availableFluid) {
@@ -129,6 +135,11 @@ public class GenericItemFilling {
 				fillBottle = PotionFluidHandler.fillBottle(stack, toFill);
 			stack.shrink(1);
 			return fillBottle;
+		} else if (stack.getItem() == Items.BUCKET && Mods.TCONSTRUCT.isLoaded() && toFill.getFluid() instanceof PotionFluid p) {
+			ItemStack toFillBucket = new ItemStack(Registry.ITEM.get(Mods.TCONSTRUCT.rl("potion_bucket")));
+			PotionUtils.setPotion(toFillBucket, PotionUtils.getPotion(toFill.getOrCreateTag()));
+			stack.shrink(1);
+			return toFillBucket;
 		}
 
 		ItemStack split = stack.copy();

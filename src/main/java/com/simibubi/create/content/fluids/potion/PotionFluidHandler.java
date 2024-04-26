@@ -16,15 +16,18 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
@@ -38,9 +41,11 @@ public class PotionFluidHandler {
 
 	public static Pair<FluidStack, ItemStack> emptyPotion(ItemStack stack, boolean simulate) {
 		FluidStack fluid = getFluidFromPotionItem(stack);
+		BottleType type = bottleTypeFromItem(stack.getItem());
+		Item bottle = type == BottleType.BUCKET ? Items.BUCKET : Items.GLASS_BOTTLE;
 		if (!simulate)
 			stack.shrink(1);
-		return Pair.of(fluid, new ItemStack(Items.GLASS_BOTTLE));
+		return Pair.of(fluid, new ItemStack(bottle));
 	}
 
 	public static FluidIngredient potionIngredient(Potion potion, int amount) {
@@ -52,9 +57,10 @@ public class PotionFluidHandler {
 		Potion potion = PotionUtils.getPotion(stack);
 		List<MobEffectInstance> list = PotionUtils.getCustomEffects(stack);
 		BottleType bottleTypeFromItem = bottleTypeFromItem(stack.getItem());
+		int amount = bottleTypeFromItem == BottleType.BUCKET ? 1000 : 250;
 		if (potion == Potions.WATER && list.isEmpty() && bottleTypeFromItem == BottleType.REGULAR)
-			return new FluidStack(Fluids.WATER, 250);
-		FluidStack fluid = PotionFluid.withEffects(250, potion, list);
+			return new FluidStack(Fluids.WATER, amount);
+		FluidStack fluid = PotionFluid.withEffects(amount, potion, list);
 		NBTHelper.writeEnum(fluid.getOrCreateTag(), "Bottle", bottleTypeFromItem);
 		return fluid;
 	}
@@ -72,6 +78,8 @@ public class PotionFluidHandler {
 			return BottleType.LINGERING;
 		if (item == Items.SPLASH_POTION)
 			return BottleType.SPLASH;
+		if (item.getContainerItem(new ItemStack(item)).getItem() instanceof BucketItem)
+			return BottleType.BUCKET;
 		return BottleType.REGULAR;
 	}
 

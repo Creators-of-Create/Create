@@ -64,7 +64,7 @@ public class PotionFluid extends VirtualFluid {
 	}
 
 	public enum BottleType {
-		REGULAR, SPLASH, LINGERING;
+		REGULAR, SPLASH, LINGERING, BUCKET;
 	}
 
 	public static class PotionFluidAttributes extends FluidAttributes {

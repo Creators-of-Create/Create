@@ -24,6 +24,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
@@ -46,9 +47,12 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 	public static void consumeRecipes(Consumer<FillingRecipe> consumer, IIngredientManager ingredientManager) {
 		Collection<FluidStack> fluidStacks = ingredientManager.getAllIngredients(ForgeTypes.FLUID_STACK);
 		for (ItemStack stack : ingredientManager.getAllIngredients(VanillaTypes.ITEM_STACK)) {
-			if (stack.getItem() instanceof PotionItem) {
-				FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
+			if (stack.getItem() instanceof PotionItem pi) {
 				Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
+				if (pi.getContainerItem(stack).getItem() instanceof BucketItem) {
+					bottle = Ingredient.of(Items.BUCKET);
+				}
+				FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
 				consumer.accept(new ProcessingRecipeBuilder<>(FillingRecipe::new, Create.asResource("potions"))
 					.withItemIngredients(bottle)
 					.withFluidIngredients(FluidIngredient.fromFluidStack(fluidFromPotionItem))

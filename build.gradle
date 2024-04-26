@@ -199,13 +199,13 @@ dependencies {
     // implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta25")
     // runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
     // runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
-    // runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.5-1.6.115")
-    // runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.5-3.1.1.252")
+    implementation fg.deobf("curse.maven:mantle-74924:4509007")
+    implementation fg.deobf("curse.maven:tinkers-construct-74072:4509008")
     // runtimeOnly fg.deobf("maven.modrinth:rubidium:0.5.3")
     // implementation fg.deobf("com.railwayteam.railways:railways-1.18.2-1.1.1:all") { transitive = false }
     // runtimeOnly fg.deobf("maven.modrinth:spark:1.10.38-forge")
-    //runtimeOnly fg.deobf("curse.maven:forbidden-arcanus-309858:4729924")
-    //runtimeOnly fg.deobf("curse.maven:valhelsia-core-416935:3886212")
+    // runtimeOnly fg.deobf("curse.maven:forbidden-arcanus-309858:4729924")
+    // runtimeOnly fg.deobf("curse.maven:valhelsia-core-416935:3886212")
 
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings
