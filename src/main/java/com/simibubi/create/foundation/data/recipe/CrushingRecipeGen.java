@@ -55,7 +55,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 			.output(Items.STRING, 2)
 			.output(.5f, Items.STRING)),
 
-		DIORITE = mineralRecycling(AllPaletteStoneTypes.DIORITE, b -> b.duration(350)
+		DIORITE = ensMineralRecycling(AllPaletteStoneTypes.DIORITE, b -> b.duration(350)
 			.output(.25f, Items.QUARTZ, 1)),
 
 		CRIMSITE =
@@ -187,7 +187,8 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 
 		NETHERRACK = create(() -> Blocks.NETHERRACK, b -> b.duration(250)
 			.output(AllItems.CINDER_FLOUR.get())
-			.output(.5f, AllItems.CINDER_FLOUR.get())),
+			.output(.5f, AllItems.CINDER_FLOUR.get())
+			.whenModMissing(Mods.ENS.getId())),
 
 		// AE2
 		AE2_DEEPSLATE_ORE = create(Mods.AE2.recipeId("deepslate_quartz_ore"), b -> b.duration(300)
@@ -386,7 +387,26 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		EO_LAPIS_END = eoEndOre("lapis", Items.LAPIS_LAZULI, 10),
 		EO_DIAMOND_END = eoEndOre("diamond", Items.DIAMOND, 1),
 		EO_REDSTONE_END = eoEndOre("redstone", Items.REDSTONE, 6),
-		EO_ENDER_END = eoEndOre("ender", Items.ENDER_PEARL, 1)
+		EO_ENDER_END = eoEndOre("ender", Items.ENDER_PEARL, 1),
+
+		// Ex Nihilo: Sequentia
+
+		ENS_STONES = ensStones("andesite", "diorite", "end_stone", "granite", "netherrack"),
+
+		ENS_DUST = create(Mods.ENS.recipeId("dust"), b -> b.duration(200)
+				.require(Blocks.SAND).output(Mods.ENS, "dust")
+				.whenModLoaded(Mods.ENS.getId())),
+
+		ENS_NETHERRACK = create(Mods.ENS.recipeId("crushed_netherrack"), b -> b.duration(100)
+				.require(Mods.ENS, "crushed_netherrack")
+				.output(AllItems.CINDER_FLOUR.get())
+				.output(.5f, AllItems.CINDER_FLOUR.get())
+				.whenModLoaded(Mods.ENS.getId())),
+
+		ENS_DIORITE = create(Mods.ENS.recipeId("crushed_diorite"), b -> b.duration(100)
+				.require(Mods.ENS, "crushed_diorite")
+				.output(.25f, Items.QUARTZ, 1)
+				.whenModLoaded(Mods.ENS.getId()))
 
 	;
 
@@ -416,6 +436,12 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		UnaryOperator<ProcessingRecipeBuilder<ProcessingRecipe<?>>> transform) {
 		create(Lang.asId(type.name()) + "_recycling", b -> transform.apply(b.require(type.materialTag)));
 		return create(type.getBaseBlock()::get, transform);
+	}
+
+	protected GeneratedRecipe ensMineralRecycling(AllPaletteStoneTypes type,
+											   UnaryOperator<ProcessingRecipeBuilder<ProcessingRecipe<?>>> transform) {
+		create(Lang.asId(type.name()) + "_recycling", b -> transform.apply(b.require(type.materialTag)));
+		return create(type.getBaseBlock()::get, b -> transform.apply(b.whenModMissing(Mods.ENS.getId())));
 	}
 
 	protected GeneratedRecipe ore(ItemLike stoneType, Supplier<ItemLike> ore, Supplier<ItemLike> raw,
@@ -546,6 +572,17 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 				.output(.75f, AllItems.EXP_NUGGET.get())
 				.output(.12f, Items.END_STONE)
 				.whenModLoaded(Mods.EO.getId()));
+	}
+
+	protected GeneratedRecipe ensStones(String... stones) {
+		for (String stone : stones) {
+			String crushed = "crushed_" + stone;
+			create(Mods.ENS.recipeId(stone), b -> b.duration(350)
+					.require(Mods.MC, stone)
+					.output(Mods.ENS, crushed)
+					.whenModLoaded(Mods.ENS.getId()));
+		}
+		return null;
 	}
 
 	public CrushingRecipeGen(DataGenerator dataGenerator) {

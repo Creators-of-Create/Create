@@ -52,7 +52,8 @@ public enum Mods {
 	BMK("biomemakeover"),
 	NE("nethers_exoticism"),
 	EO("elementaryores"),
-	IF("iceandfire")
+	IF("iceandfire"),
+	ENS("exnihilosequentia")
 
 	;
 

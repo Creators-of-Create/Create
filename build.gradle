@@ -210,8 +210,9 @@ dependencies {
     // runtimeOnly fg.deobf("maven.modrinth:spark:1.10.38-forge")
     //runtimeOnly fg.deobf("curse.maven:forbidden-arcanus-309858:4729924")
     //runtimeOnly fg.deobf("curse.maven:valhelsia-core-416935:3886212")
-    //implementation fg.deobf("curse.maven:citadel-331936:3783096")
-    //implementation fg.deobf("curse.maven:ice-and-fire-dragons-264231:4614465")
+    // runtimeOnly fg.deobf("curse.maven:citadel-331936:3783096")
+    // runtimeOnly fg.deobf("curse.maven:ice-and-fire-dragons-264231:4614465")
+    // runtimeOnly fg.deobf("curse.maven:exnihilosequentia-400012:4083676")
 
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings

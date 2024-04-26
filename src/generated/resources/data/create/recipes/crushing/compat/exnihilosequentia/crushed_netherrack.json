@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "item": "minecraft:netherrack"
+      "item": "exnihilosequentia:crushed_netherrack"
     }
   ],
   "results": [
@@ -14,14 +14,11 @@
       "chance": 0.5
     }
   ],
-  "processingTime": 250,
+  "processingTime": 100,
   "conditions": [
     {
-      "value": {
-        "modid": "exnihilosequentia",
-        "type": "forge:mod_loaded"
-      },
-      "type": "forge:not"
+      "modid": "exnihilosequentia",
+      "type": "forge:mod_loaded"
     }
   ]
 }
