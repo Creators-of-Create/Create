@@ -3,6 +3,7 @@ package com.simibubi.create.content.processing.basin;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
@@ -127,7 +128,7 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 	@Override
 	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
 		super.updateEntityAfterFallOn(worldIn, entityIn);
-		if (!AllBlocks.BASIN.has(worldIn.getBlockState(entityIn.blockPosition())))
+		if (!AllTags.AllBlockTags.BASIN.matches(worldIn.getBlockState(entityIn.blockPosition())))
 			return;
 		if (!(entityIn instanceof ItemEntity))
 			return;

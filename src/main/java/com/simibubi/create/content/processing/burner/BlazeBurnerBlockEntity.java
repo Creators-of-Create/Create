@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
@@ -269,7 +270,7 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 		if (isVirtual())
 			return false;
 		BlockState blockState = level.getBlockState(worldPosition.above());
-		return AllBlocks.BASIN.has(blockState) || blockState.getBlock() instanceof FluidTankBlock;
+		return AllTags.AllBlockTags.BASIN.matches(blockState) || blockState.getBlock() instanceof FluidTankBlock;
 	}
 
 	protected void playSound() {
@@ -305,14 +306,14 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 		Vec3 c = VecHelper.getCenterOf(worldPosition);
 		Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f)
 			.multiply(1, 0, 1));
-		
+
 		if (r.nextInt(4) != 0)
 			return;
 
 		boolean empty = level.getBlockState(worldPosition.above())
 			.getCollisionShape(level, worldPosition.above())
 			.isEmpty();
-		
+
 		if (empty || r.nextInt(8) == 0)
 			level.addParticle(ParticleTypes.LARGE_SMOKE, v.x, v.y, v.z, 0, 0, 0);
 

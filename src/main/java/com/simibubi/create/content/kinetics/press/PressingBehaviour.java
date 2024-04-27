@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
@@ -144,7 +145,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 					if (BlockEntityBehaviour.get(level, worldPosition.below(2),
 						TransportedItemStackHandlerBehaviour.TYPE) != null)
 						return;
-					if (AllBlocks.BASIN.has(level.getBlockState(worldPosition.below(2))))
+					if (AllTags.AllBlockTags.BASIN.matches(level.getBlockState(worldPosition.below(2))))
 						return;
 
 					for (ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class,
