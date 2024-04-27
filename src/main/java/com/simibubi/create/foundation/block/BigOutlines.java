@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.block;
 
-import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
-import com.simibubi.create.content.trains.track.TrackBlock;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -17,6 +15,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 
+
+/**
+ * For mods wanting to use this take a look at {@link IHaveBigOutline}
+ */
 public class BigOutlines {
 
 	static BlockHitResult result = null;
@@ -47,9 +49,7 @@ public class BigOutlines {
 					p.set(pos.getX() + x, pos.getY(), pos.getZ() + z);
 					BlockState blockState = mc.level.getBlockState(p);
 
-					// Could be a dedicated interface for big blocks
-					if (!(blockState.getBlock() instanceof TrackBlock)
-						&& !(blockState.getBlock() instanceof SlidingDoorBlock))
+					if (!(blockState.getBlock() instanceof IHaveBigOutline))
 						continue;
 
 					BlockHitResult hit = blockState.getInteractionShape(mc.level, p)

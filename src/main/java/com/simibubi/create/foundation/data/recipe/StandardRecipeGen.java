@@ -801,6 +801,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("CBC")
 				.pattern(" C ")),
 
+		VERTICAL_GEARBOX = create(AllItems.VERTICAL_GEARBOX).unlockedBy(I::cog)
+			.viaShaped(b -> b.define('C', I.cog())
+					.define('B', I.andesiteCasing())
+					.pattern("C C")
+					.pattern(" B ")
+					.pattern("C C")),
+
 		GEARBOX_CYCLE = conversionCycle(ImmutableList.of(AllBlocks.GEARBOX, AllItems.VERTICAL_GEARBOX)),
 
 		MYSTERIOUS_CUCKOO_CLOCK = create(AllBlocks.MYSTERIOUS_CUCKOO_CLOCK).unlockedBy(AllBlocks.CUCKOO_CLOCK::get)

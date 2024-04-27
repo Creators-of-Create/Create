@@ -1,0 +1,29 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "druidcraft:amber_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "druidcraft:amber",
+      "count": 2
+    },
+    {
+      "item": "druidcraft:amber",
+      "chance": 0.5
+    },
+    {
+      "item": "minecraft:cobblestone",
+      "chance": 0.125
+    }
+  ],
+  "processingTime": 300,
+  "conditions": [
+    {
+      "modid": "druidcraft",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
