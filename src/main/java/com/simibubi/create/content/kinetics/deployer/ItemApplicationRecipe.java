@@ -43,13 +43,13 @@ public class ItemApplicationRecipe extends ProcessingRecipe<RecipeWrapper> {
 	}
 
 	public Ingredient getRequiredHeldItem() {
-		if (ingredients.isEmpty())
+		if (ingredients.size() < 2)
 			throw new IllegalStateException("Item Application Recipe: " + id.toString() + " has no tool!");
 		return ingredients.get(1);
 	}
 
 	public Ingredient getProcessedItem() {
-		if (ingredients.size() < 2)
+		if (ingredients.isEmpty())
 			throw new IllegalStateException("Item Application Recipe: " + id.toString() + " has no ingredient!");
 		return ingredients.get(0);
 	}
