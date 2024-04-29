@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.data;
 
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
+import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -52,7 +53,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.RegistryObject;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
-	private static final Map<RegistryEntry<?>, RegistryObject<CreativeModeTab>> TAB_LOOKUP = new IdentityHashMap<>();
+	private static final Map<RegistryEntry<?>, RegistryObject<CreativeModeTab>> TAB_LOOKUP = Collections.synchronizedMap(new IdentityHashMap<>());
 
 	@Nullable
 	protected Function<Item, TooltipModifier> currentTooltipModifierFactory;
