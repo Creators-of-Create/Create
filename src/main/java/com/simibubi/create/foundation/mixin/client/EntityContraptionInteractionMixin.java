@@ -99,7 +99,16 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 	}
 
 	// involves block step sounds on contraptions
-	// IFNE line 661 injecting before `!blockstate.isAir(this.world, blockpos)`
+	// IFNE line 736 injecting before `!blockstate1.isAir()`
+	// The surrounding code looks like the following:
+	// this.walkDist += (float)vec3.horizontalDistance() * 0.6F;
+	// this.moveDist += (float)Math.sqrt(d1 * d1 + d2 * d2 + d3 * d3) * 0.6F;
+	// if (this.moveDist > this.nextStep && !blockstate1.isAir()) {
+	//     boolean flag2 = blockpos1.equals(blockpos);
+	//     boolean flag3 = this.vibrationAndSoundEffectsFromBlock(blockpos, blockstate, entity$movementemission.emitsSounds(), flag2, pPos);
+	//     if (!flag2) {
+	//         flag3 |= this.vibrationAndSoundEffectsFromBlock(blockpos1, blockstate1, false, entity$movementemission.emitsEvents(), pPos);
+	//     }
 	@Inject(method = "move", at = @At(value = "JUMP", opcode = Opcodes.IFNE, ordinal = 7))
 	private void create$contraptionStepSounds(MoverType mover, Vec3 movement, CallbackInfo ci) {
 		Vec3 worldPos = position.add(0, -0.2, 0);
@@ -136,7 +145,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 			if (info == null)
 				return false;
-			
+
 			cEntity.registerColliding(self);
 			return true;
 		});
