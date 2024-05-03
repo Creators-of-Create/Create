@@ -100,7 +100,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 	// involves block step sounds on contraptions
 	// IFNE line 661 injecting before `!blockstate.isAir(this.world, blockpos)`
-	@Inject(method = "move", at = @At(value = "JUMP", opcode = Opcodes.IFNE, ordinal = 7))
+	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z", ordinal = 0))
 	private void create$contraptionStepSounds(MoverType mover, Vec3 movement, CallbackInfo ci) {
 		Vec3 worldPos = position.add(0, -0.2, 0);
 		MutableBoolean stepped = new MutableBoolean(false);
@@ -136,7 +136,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 			if (info == null)
 				return false;
-			
+
 			cEntity.registerColliding(self);
 			return true;
 		});
