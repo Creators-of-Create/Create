@@ -58,7 +58,7 @@ public final class NetheriteDivingHandler {
 	}
 
 	public static boolean isNetheriteArmor(ItemStack stack) {
-		return stack.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial().getRepairIngredient().getItems()[0].is(Tags.Items.INGOTS_NETHERITE);
+		return stack.getItem() instanceof ArmorItem armorItem && armorItem.isFireResistant();
 	}
 
 	public static void setBit(LivingEntity entity, EquipmentSlot slot) {
