@@ -133,7 +133,23 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 		// Nether's Exoticism
 		NE = cuttingCompat(Mods.NE, "ramboutan"),
-		NE_2 = cuttingCompatLogOnly(Mods.NE, "jabuticaba")
+		NE_2 = cuttingCompatLogOnly(Mods.NE, "jabuticaba"),
+
+		// Regions Unexplored
+		RU = cuttingCompat(Mods.RU, "baobab", "blackwood", "brimwood", "cobalt", "cypress", "dead", "eucalyptus", "joshua",
+				"kapok", "larch", "magnolia", "maple","mauve", "palm", "pine", "redwood", "socotra", "willow"),
+		RU_2 = stripAndMakePlanks(Mods.RU, "blue_bioshroom_stem", "stripped_blue_bioshroom_stem", "blue_bioshroom_planks"),
+		RU_3 = stripAndMakePlanks(Mods.RU, "blue_bioshroom_hyphae", "stripped_blue_bioshroom_hyphae", "blue_bioshroom_planks"),
+		RU_4 = stripAndMakePlanks(Mods.RU, "green_bioshroom_stem", "stripped_green_bioshroom_stem", "green_bioshroom_planks"),
+		RU_5 = stripAndMakePlanks(Mods.RU, "green_bioshroom_hyphae", "stripped_green_bioshroom_hyphae", "green_bioshroom_planks"),
+		RU_6 = stripAndMakePlanks(Mods.RU, "pink_bioshroom_stem", "stripped_pink_bioshroom_stem", "pink_bioshroom_planks"),
+		RU_7 = stripAndMakePlanks(Mods.RU, "pink_bioshroom_hyphae", "stripped_pink_bioshroom_hyphae", "pink_bioshroom_planks"),
+		RU_8 = stripAndMakePlanks(Mods.RU, "yellow_bioshroom_stem", "stripped_yellow_bioshroom_stem", "yellow_bioshroom_planks"),
+		RU_9 = stripAndMakePlanks(Mods.RU, "yellow_bioshroom_hyphae", "stripped_yellow_bioshroom_hyphae", "yellow_bioshroom_planks"),
+		RU_10 = stripAndMakePlanks(Mods.RU, null, "alpha_wood", "alpha_planks"),
+		RU_11 = stripAndMakePlanks(Mods.RU, "brimwood_log_magma", "stripped_brimwood", null),
+		RU_12 = stripAndMakePlanks(Mods.RU, "ashen_log", "stripped_dead_log", null),
+		RU_13 = stripAndMakePlanks(Mods.RU, "ashen_wood", "stripped_dead_wood", null)
 		;
 
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {
