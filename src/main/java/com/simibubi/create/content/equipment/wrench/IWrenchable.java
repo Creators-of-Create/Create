@@ -55,13 +55,14 @@ public interface IWrenchable {
 		BlockPos pos = context.getClickedPos();
 		Player player = context.getPlayer();
 		if (world instanceof ServerLevel) {
+			if (!world.destroyBlock(pos, false))
+				return InteractionResult.PASS;
 			if (player != null && !player.isCreative())
 				Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos), player, context.getItemInHand())
 					.forEach(itemStack -> {
 						player.getInventory().placeItemBackInInventory(itemStack);
 					});
 			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
-			world.destroyBlock(pos, false);
 			playRemoveSound(world, pos);
 		}
 		return InteractionResult.SUCCESS;
