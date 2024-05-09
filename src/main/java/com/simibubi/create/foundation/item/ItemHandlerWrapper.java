@@ -13,7 +13,7 @@ public class ItemHandlerWrapper implements IItemHandlerModifiable {
 
 	@Override
 	public int getSlots() {
-		return wrapped.getSlots();
+		return wrapped != null ? wrapped.getSlots() : 0;
 	}
 
 	@Override
