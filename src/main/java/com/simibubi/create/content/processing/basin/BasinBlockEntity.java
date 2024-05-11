@@ -390,6 +390,20 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 		boolean update = false;
 
+		ArrayList<ItemStack> copy = new ArrayList<>(spoutputBuffer);
+		for (Iterator<ItemStack> copyIterator = copy.iterator(); copyIterator.hasNext();) {
+			ItemStack stack = copyIterator.next();
+
+			if (targetInv == null)
+				break;
+
+			while (stack.getCount() > targetInv.getSlotLimit(0)) {
+				spoutputBuffer.add(stack.split(targetInv.getSlotLimit(0)));
+			}
+
+			copyIterator.remove();
+		}
+
 		for (Iterator<ItemStack> iterator = spoutputBuffer.iterator(); iterator.hasNext();) {
 			ItemStack itemStack = iterator.next();
 
