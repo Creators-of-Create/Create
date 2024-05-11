@@ -22,7 +22,8 @@ public enum Mods {
 	PACKETFIXER,
 	STORAGEDRAWERS,
 	TCONSTRUCT,
-	XLPACKETS;
+	XLPACKETS,
+	MODERNUI;
 
 	private final String id;
 

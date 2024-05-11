@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.List;
 
+import com.simibubi.create.compat.Mods;
+
 import joptsimple.internal.Strings;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -29,7 +31,7 @@ public class LangBuilder {
 	 * Appends a localised component<br>
 	 * To add an independently formatted localised component, use add() and a nested
 	 * builder
-	 * 
+	 *
 	 * @param langKey
 	 * @param args
 	 * @return
@@ -40,7 +42,7 @@ public class LangBuilder {
 
 	/**
 	 * Appends a text component
-	 * 
+	 *
 	 * @param literalText
 	 * @return
 	 */
@@ -50,7 +52,7 @@ public class LangBuilder {
 
 	/**
 	 * Appends a colored text component
-	 * 
+	 *
 	 * @param format
 	 * @param literalText
 	 * @return
@@ -61,7 +63,7 @@ public class LangBuilder {
 
 	/**
 	 * Appends a colored text component
-	 * 
+	 *
 	 * @param color
 	 * @param literalText
 	 * @return
@@ -72,7 +74,7 @@ public class LangBuilder {
 
 	/**
 	 * Appends the contents of another builder
-	 * 
+	 *
 	 * @param otherBuilder
 	 * @return
 	 */
@@ -82,7 +84,7 @@ public class LangBuilder {
 
 	/**
 	 * Appends a component
-	 * 
+	 *
 	 * @param customComponent
 	 * @return
 	 */
@@ -95,7 +97,7 @@ public class LangBuilder {
 
 	/**
 	 * Applies the format to all added components
-	 * 
+	 *
 	 * @param format
 	 * @return
 	 */
@@ -107,7 +109,7 @@ public class LangBuilder {
 
 	/**
 	 * Applies the color to all added components
-	 * 
+	 *
 	 * @param color
 	 * @return
 	 */
@@ -149,10 +151,15 @@ public class LangBuilder {
 	}
 
 	public void forGoggles(List<? super MutableComponent> tooltip, int indents) {
+		indents += getIndents();
 		tooltip.add(Lang.builder()
 			.text(Strings.repeat(' ', 4 + indents))
 			.add(this)
 			.component());
+	}
+
+	static int getIndents() {
+		return Mods.MODERNUI.isLoaded() ? 5 : 0;
 	}
 
 	//

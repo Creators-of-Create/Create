@@ -154,9 +154,8 @@ public class GoggleOverlayRenderer {
 			if (!tooltip.isEmpty())
 				tooltip.add(Components.immutableEmpty());
 
-			tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
-				.append(Lang.translateDirect("gui.goggles.pole_length"))
-				.append(Components.literal(" " + poles)));
+			Lang.translate("gui.goggles.pole_length").text(" " + poles)
+				.forGoggles(tooltip);
 		}
 
 		if (tooltip.isEmpty()) {
