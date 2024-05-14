@@ -109,22 +109,23 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 
 		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
 			if (observedInventory.hasInventory()) {
-				
+
 				// Item inventory
 				IItemHandler inv = observedInventory.getInventory();
 				if (invVersionTracker.stillWaiting(inv)) {
 					occupied = prevLevel;
 					totalSpace = 1f;
-					
+
 				} else {
 					invVersionTracker.awaitNewVersion(inv);
+					final int VANILLA_SLOT_LIMIT = 64;
 					for (int slot = 0; slot < inv.getSlots(); slot++) {
 						ItemStack stackInSlot = inv.getStackInSlot(slot);
-						int space = Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(slot));
+						int space = inv.getSlotLimit(slot) / (VANILLA_SLOT_LIMIT / stackInSlot.getMaxStackSize());
 						int count = stackInSlot.getCount();
 						if (space == 0)
 							continue;
-						
+
 						totalSpace += 1;
 						if (filtering.test(stackInSlot))
 							occupied += count * (1f / space);
@@ -209,7 +210,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 				this.updateCurrentLevel();
 				invVersionTracker.reset();
 			}));
-		
+
 		behaviours.add(invVersionTracker = new VersionedInventoryTrackerBehaviour(this));
 
 		InterfaceProvider towardBlockFacing =
