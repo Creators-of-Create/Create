@@ -138,9 +138,7 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 		RecipeSerializer<?> serializer = recipe.getSerializer();
 		if (serializer != null && AllTags.AllRecipeSerializerTags.AUTOMATION_IGNORE.matches(serializer))
 			return true;
-		return recipe.getId()
-			.getPath()
-			.endsWith("_manual_only");
+		return recipe.getId().getPath().endsWith("_manual_only") || recipe.getIngredients().size() == 1;
 	}
 
 	private static class Registers {
