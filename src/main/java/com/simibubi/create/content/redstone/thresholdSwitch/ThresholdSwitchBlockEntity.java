@@ -118,9 +118,10 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 					
 				} else {
 					invVersionTracker.awaitNewVersion(inv);
+					final int VANILLA_SLOT_LIMIT = 64;
 					for (int slot = 0; slot < inv.getSlots(); slot++) {
 						ItemStack stackInSlot = inv.getStackInSlot(slot);
-						int space = Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(slot));
+						int space = inv.getSlotLimit(slot) / (VANILLA_SLOT_LIMIT / stackInSlot.getMaxStackSize());
 						int count = stackInSlot.getCount();
 						if (space == 0)
 							continue;
