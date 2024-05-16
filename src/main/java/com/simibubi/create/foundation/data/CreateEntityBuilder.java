@@ -23,7 +23,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P> {
 
 	@Nullable
-	private NonNullSupplier<SimpleEntityVisualizer.Factory<T>> instanceFactory;
+	private NonNullSupplier<SimpleEntityVisualizer.Factory<T>> visualFactory;
 	private NonNullPredicate<T> renderNormally;
 
 	public static <T extends Entity, P> EntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, EntityType.EntityFactory<T> factory, MobCategory classification) {
@@ -34,37 +34,35 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 		super(owner, parent, name, callback, factory, classification);
 	}
 
-	public CreateEntityBuilder<T, P> instance(NonNullSupplier<SimpleEntityVisualizer.Factory<T>> instanceFactory) {
-		return instance(instanceFactory, true);
+	public CreateEntityBuilder<T, P> visual(NonNullSupplier<SimpleEntityVisualizer.Factory<T>> visualFactory) {
+		return visual(visualFactory, true);
 	}
 
-	public CreateEntityBuilder<T, P> instance(NonNullSupplier<SimpleEntityVisualizer.Factory<T>> instanceFactory, boolean renderNormally) {
-		return instance(instanceFactory, be -> renderNormally);
+	public CreateEntityBuilder<T, P> visual(NonNullSupplier<SimpleEntityVisualizer.Factory<T>> visualFactory, boolean renderNormally) {
+		return visual(visualFactory, entity -> renderNormally);
 	}
 
-	public CreateEntityBuilder<T, P> instance(NonNullSupplier<SimpleEntityVisualizer.Factory<T>> instanceFactory, NonNullPredicate<T> renderNormally) {
-		if (this.instanceFactory == null) {
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::registerInstance);
+	public CreateEntityBuilder<T, P> visual(NonNullSupplier<SimpleEntityVisualizer.Factory<T>> visualFactory, NonNullPredicate<T> renderNormally) {
+		if (this.visualFactory == null) {
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::registerVisualizer);
 		}
 
-		this.instanceFactory = instanceFactory;
+		this.visualFactory = visualFactory;
 		this.renderNormally = renderNormally;
 
 		return this;
 	}
 
-	protected void registerInstance() {
+	protected void registerVisualizer() {
 		OneTimeEventReceiver.addModListener(Create.REGISTRATE, FMLClientSetupEvent.class, $ -> {
-			var instanceFactory = this.instanceFactory;
-			if (instanceFactory != null) {
+			var visualFactory = this.visualFactory;
+			if (visualFactory != null) {
 				NonNullPredicate<T> renderNormally = this.renderNormally;
 				SimpleEntityVisualizer.builder(getEntry())
-					.factory(instanceFactory.get())
-					.skipVanillaRender(be -> !renderNormally.test(be))
+					.factory(visualFactory.get())
+					.skipVanillaRender(entity -> !renderNormally.test(entity))
 					.apply();
 			}
-
 		});
 	}
-
 }

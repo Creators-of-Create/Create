@@ -35,21 +35,21 @@ public class AllEntityTypes {
 
 	public static final EntityEntry<OrientedContraptionEntity> ORIENTED_CONTRAPTION = contraption("contraption",
 		OrientedContraptionEntity::new, () -> OrientedContraptionEntityRenderer::new, 5, 3, true)
-			.instance(() -> ContraptionVisual::new)
+			.visual(() -> ContraptionVisual::new)
 			.register();
 	public static final EntityEntry<ControlledContraptionEntity> CONTROLLED_CONTRAPTION =
 		contraption("stationary_contraption", ControlledContraptionEntity::new, () -> ContraptionEntityRenderer::new,
 			20, 40, false)
-				.instance(() -> ContraptionVisual::new)
+				.visual(() -> ContraptionVisual::new)
 				.register();
 	public static final EntityEntry<GantryContraptionEntity> GANTRY_CONTRAPTION = contraption("gantry_contraption",
 		GantryContraptionEntity::new, () -> ContraptionEntityRenderer::new, 10, 40, false)
-			.instance(() -> ContraptionVisual::new)
+			.visual(() -> ContraptionVisual::new)
 			.register();
 	public static final EntityEntry<CarriageContraptionEntity> CARRIAGE_CONTRAPTION =
 		contraption("carriage_contraption", CarriageContraptionEntity::new,
 			() -> CarriageContraptionEntityRenderer::new, 15, 3, true)
-				.instance(() -> CarriageContraptionVisual::new)
+				.visual(() -> CarriageContraptionVisual::new)
 				.register();
 
 	public static final EntityEntry<SuperGlueEntity> SUPER_GLUE =

@@ -25,7 +25,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEntityBuilder<T, P> {
 
 	@Nullable
-	private NonNullSupplier<SimpleBlockEntityVisualizer.Factory<T>> instanceFactory;
+	private NonNullSupplier<SimpleBlockEntityVisualizer.Factory<T>> visualFactory;
 	private NonNullPredicate<T> renderNormally;
 
 	private Collection<NonNullSupplier<? extends Collection<NonNullSupplier<? extends Block>>>> deferredValidBlocks =
@@ -56,37 +56,37 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 		return super.createEntry();
 	}
 
-	public CreateBlockEntityBuilder<T, P> instance(
-		NonNullSupplier<SimpleBlockEntityVisualizer.Factory<T>> instanceFactory) {
-		return instance(instanceFactory, true);
+	public CreateBlockEntityBuilder<T, P> visual(
+		NonNullSupplier<SimpleBlockEntityVisualizer.Factory<T>> visualFactory) {
+		return visual(visualFactory, true);
 	}
 
-	public CreateBlockEntityBuilder<T, P> instance(
-		NonNullSupplier<SimpleBlockEntityVisualizer.Factory<T>> instanceFactory,
+	public CreateBlockEntityBuilder<T, P> visual(
+		NonNullSupplier<SimpleBlockEntityVisualizer.Factory<T>> visualFactory,
 		boolean renderNormally) {
-		return instance(instanceFactory, be -> renderNormally);
+		return visual(visualFactory, be -> renderNormally);
 	}
 
-	public CreateBlockEntityBuilder<T, P> instance(
-		NonNullSupplier<SimpleBlockEntityVisualizer.Factory<T>> instanceFactory,
+	public CreateBlockEntityBuilder<T, P> visual(
+		NonNullSupplier<SimpleBlockEntityVisualizer.Factory<T>> visualFactory,
 		NonNullPredicate<T> renderNormally) {
-		if (this.instanceFactory == null) {
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::registerInstance);
+		if (this.visualFactory == null) {
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::registerVisualizer);
 		}
 
-		this.instanceFactory = instanceFactory;
+		this.visualFactory = visualFactory;
 		this.renderNormally = renderNormally;
 
 		return this;
 	}
 
-	protected void registerInstance() {
+	protected void registerVisualizer() {
 		OneTimeEventReceiver.addModListener(Create.REGISTRATE, FMLClientSetupEvent.class, $ -> {
-			var instanceFactory = this.instanceFactory;
-			if (instanceFactory != null) {
+			var visualFactory = this.visualFactory;
+			if (visualFactory != null) {
 				NonNullPredicate<T> renderNormally = this.renderNormally;
 				SimpleBlockEntityVisualizer.builder(getEntry())
-					.factory(instanceFactory.get())
+					.factory(visualFactory.get())
 					.skipVanillaRender(be -> !renderNormally.test(be))
 					.apply();
 			}

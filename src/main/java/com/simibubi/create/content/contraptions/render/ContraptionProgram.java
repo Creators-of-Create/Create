@@ -1,11 +1,5 @@
 package com.simibubi.create.content.contraptions.render;
 
-import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL20;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.AABB;
-
 public class ContraptionProgram {
 //	protected final int uLightBoxSize;
 //	protected final int uLightBoxMin;

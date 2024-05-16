@@ -18,7 +18,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.accesstransformer.Target;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
