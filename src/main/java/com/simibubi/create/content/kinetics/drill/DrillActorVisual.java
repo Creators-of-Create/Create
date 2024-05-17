@@ -38,7 +38,7 @@ public class DrillActorVisual extends ActorVisual {
         else
             eulerY = facing.toYRot() + ((axis == Direction.Axis.X) ? 180 : 0);
 
-		drillHead = instancerProvider.instancer(AllInstanceTypes.ACTORS, Models.partial(AllPartialModels.DRILL_HEAD))
+		drillHead = instancerProvider.instancer(AllInstanceTypes.ACTOR, Models.partial(AllPartialModels.DRILL_HEAD))
 				.createInstance();
 
         drillHead.setPosition(context.localPos)
@@ -46,12 +46,14 @@ public class DrillActorVisual extends ActorVisual {
                  .setRotationOffset(0)
                  .setRotationAxis(0, 0, 1)
                  .setLocalRotation(new Quaternionf().rotationXYZ(eulerX * Mth.DEG_TO_RAD, eulerY * Mth.DEG_TO_RAD, 0))
-                 .setSpeed(getSpeed(facing));
+                 .setSpeed(getSpeed(facing))
+                 .setChanged();
     }
 
     @Override
     public void beginFrame() {
-        drillHead.setSpeed(getSpeed(facing));
+        drillHead.setSpeed(getSpeed(facing))
+        		.setChanged();
     }
 
     protected float getSpeed(Direction facing) {

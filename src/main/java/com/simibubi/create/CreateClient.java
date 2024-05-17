@@ -1,8 +1,8 @@
 package com.simibubi.create;
 
 import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
-import com.simibubi.create.content.contraptions.render.SBBContraptionManager;
+import com.simibubi.create.content.contraptions.render.ContraptionRenderInfo;
+import com.simibubi.create.content.contraptions.render.ContraptionRenderInfoManager;
 import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
 import com.simibubi.create.content.equipment.bell.SoulPulseEffectHandler;
 import com.simibubi.create.content.equipment.potatoCannon.PotatoCannonRenderHandler;
@@ -80,7 +80,7 @@ public class CreateClient {
 		BUFFER_CACHE.registerCompartment(CachedBufferer.DIRECTIONAL_PARTIAL);
 		BUFFER_CACHE.registerCompartment(KineticBlockEntityRenderer.KINETIC_BLOCK);
 		BUFFER_CACHE.registerCompartment(WaterWheelRenderer.WATER_WHEEL);
-		BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
+		BUFFER_CACHE.registerCompartment(ContraptionRenderInfo.CONTRAPTION, 20);
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		AllPartialModels.init();
@@ -95,7 +95,7 @@ public class CreateClient {
 		BUFFER_CACHE.invalidate();
 
 		SCHEMATIC_HANDLER.updateRenderers();
-		ContraptionRenderDispatcher.reset();
+		ContraptionRenderInfoManager.resetAll();
 	}
 
 	public static void checkGraphicsFanciness() {

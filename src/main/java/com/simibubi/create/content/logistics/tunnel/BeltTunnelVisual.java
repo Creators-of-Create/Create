@@ -31,7 +31,7 @@ public class BeltTunnelVisual extends AbstractBlockEntityVisual<BeltTunnelBlockE
 	}
 
 	private void setupFlaps(float partialTick) {
-		Instancer<FlapInstance> model = instancerProvider.instancer(AllInstanceTypes.FLAPS, Models.partial(AllPartialModels.BELT_TUNNEL_FLAP));
+		Instancer<FlapInstance> model = instancerProvider.instancer(AllInstanceTypes.FLAP, Models.partial(AllPartialModels.BELT_TUNNEL_FLAP));
 
 		int blockLight = level.getBrightness(LightLayer.BLOCK, pos);
 		int skyLight = level.getBrightness(LightLayer.SKY, pos);

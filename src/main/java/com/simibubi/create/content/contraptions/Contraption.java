@@ -158,8 +158,7 @@ public abstract class Contraption {
 	// Client
 	public Map<BlockPos, ModelData> modelData;
 	public Map<BlockPos, BlockEntity> presentBlockEntities;
-	public List<BlockEntity> maybeInstancedBlockEntities;
-	public List<BlockEntity> specialRenderedBlockEntities;
+	public List<BlockEntity> renderedBlockEntities;
 
 	protected ContraptionWorld world;
 	public boolean deferInvalidate;
@@ -176,8 +175,7 @@ public abstract class Contraption {
 		glueToRemove = new HashSet<>();
 		initialPassengers = new HashMap<>();
 		presentBlockEntities = new HashMap<>();
-		maybeInstancedBlockEntities = new ArrayList<>();
-		specialRenderedBlockEntities = new ArrayList<>();
+		renderedBlockEntities = new ArrayList<>();
 		pendingSubContraptions = new ArrayList<>();
 		stabilizedSubContraptions = new HashMap<>();
 		simplifiedEntityColliders = Optional.empty();
@@ -688,7 +686,7 @@ public abstract class Contraption {
 	public void readNBT(Level world, CompoundTag nbt, boolean spawnData) {
 		blocks.clear();
 		presentBlockEntities.clear();
-		specialRenderedBlockEntities.clear();
+		renderedBlockEntities.clear();
 
 		Tag blocks = nbt.get("Blocks");
 		// used to differentiate between the 'old' and the paletted serialization
@@ -893,20 +891,17 @@ public abstract class Contraption {
 			if (be == null)
 				return;
 			be.setLevel(world);
-			modelData.put(info.pos(), be.getModelData());
 			if (be instanceof KineticBlockEntity kbe)
 				kbe.setSpeed(0);
 			be.getBlockState();
 
-			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(info.state());
-			if (movementBehaviour == null || !movementBehaviour.hasSpecialInstancedRendering())
-				maybeInstancedBlockEntities.add(be);
-
-			if (movementBehaviour != null && !movementBehaviour.renderAsNormalBlockEntity())
-				return;
-
 			presentBlockEntities.put(info.pos(), be);
-			specialRenderedBlockEntities.add(be);
+			modelData.put(info.pos(), be.getModelData());
+
+			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(info.state());
+			if (movementBehaviour == null || !movementBehaviour.disableBlockEntityRendering()) {
+				renderedBlockEntities.add(be);
+			}
 		});
 	}
 
@@ -1376,8 +1371,8 @@ public abstract class Contraption {
 		}, blocks.keySet());
 	}
 
-	public Collection<BlockEntity> getSpecialRenderedBEs() {
-		return specialRenderedBlockEntities;
+	public Collection<BlockEntity> getRenderedBEs() {
+		return renderedBlockEntities;
 	}
 
 	public boolean isHiddenInPortal(BlockPos localPos) {

@@ -33,7 +33,7 @@ public class FunnelVisual extends AbstractBlockEntityVisual<FunnelBlockEntity> i
 
 		PartialModel flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllPartialModels.FUNNEL_FLAP
 				: AllPartialModels.BELT_FUNNEL_FLAP);
-        Instancer<FlapInstance> model = instancerProvider.instancer(AllInstanceTypes.FLAPS, Models.partial(flapPartial));
+        Instancer<FlapInstance> model = instancerProvider.instancer(AllInstanceTypes.FLAP, Models.partial(flapPartial));
 
         int blockLight = level.getBrightness(LightLayer.BLOCK, pos);
         int skyLight = level.getBrightness(LightLayer.SKY, pos);

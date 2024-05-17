@@ -80,11 +80,7 @@ public interface MovementBehaviour {
 
 	default void writeExtraData(MovementContext context) {}
 
-	default boolean renderAsNormalBlockEntity() {
-		return false;
-	}
-
-	default boolean hasSpecialInstancedRendering() {
+	default boolean disableBlockEntityRendering() {
 		return false;
 	}
 
@@ -94,7 +90,7 @@ public interface MovementBehaviour {
 
 	@OnlyIn(Dist.CLIENT)
 	@Nullable
-	default ActorVisual createInstance(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
+	default ActorVisual createVisual(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
 		MovementContext movementContext) {
 		return null;
 	}

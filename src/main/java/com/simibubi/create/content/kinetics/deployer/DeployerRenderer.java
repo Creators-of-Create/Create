@@ -13,7 +13,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
@@ -29,6 +28,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -213,11 +213,11 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		transform(pole, blockState, true);
 		transform(hand, blockState, false);
 
-		shaft.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+		shaft.light(matrices.getWorld(), LevelRenderer.getLightColor(renderWorld, context.localPos))
 			.renderInto(matrices.getViewProjection(), builder);
-		pole.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+		pole.light(matrices.getWorld(), LevelRenderer.getLightColor(renderWorld, context.localPos))
 			.renderInto(matrices.getViewProjection(), builder);
-		hand.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+		hand.light(matrices.getWorld(), LevelRenderer.getLightColor(renderWorld, context.localPos))
 			.renderInto(matrices.getViewProjection(), builder);
 
 		m.popPose();

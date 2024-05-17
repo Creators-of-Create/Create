@@ -1,78 +1,156 @@
 package com.simibubi.create.content.contraptions.render;
 
-import com.jozufozu.flywheel.api.event.BeginFrameEvent;
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
+import com.jozufozu.flywheel.lib.model.ModelUtil;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.Contraption;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.content.contraptions.Contraption.RenderedBlocks;
+import com.simibubi.create.content.contraptions.ContraptionWorld;
+import com.simibubi.create.foundation.render.ShadeSeparatingVertexConsumer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.SuperByteBufferCache;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
-import net.minecraft.util.Mth;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class ContraptionRenderInfo {
-	public final Contraption contraption;
-	public final VirtualRenderWorld renderWorld;
+	public static final SuperByteBufferCache.Compartment<Pair<Contraption, RenderType>> CONTRAPTION = new SuperByteBufferCache.Compartment<>();
+	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
+	private final Contraption contraption;
+	private final VirtualRenderWorld renderWorld;
 	private final ContraptionMatrices matrices = new ContraptionMatrices();
-	private boolean visible;
 
-	public ContraptionRenderInfo(Contraption contraption, VirtualRenderWorld renderWorld) {
+	ContraptionRenderInfo(Level level, Contraption contraption) {
 		this.contraption = contraption;
-		this.renderWorld = renderWorld;
+		this.renderWorld = setupRenderWorld(level, contraption);
 	}
 
-	public int getEntityId() {
-		return contraption.entity.getId();
+	public static ContraptionRenderInfo get(Contraption contraption) {
+		return ContraptionRenderInfoManager.MANAGERS.get(contraption.entity.level()).getRenderInfo(contraption);
+	}
+
+	/**
+	 * Reset a contraption's renderer.
+	 *
+	 * @param contraption The contraption to invalidate.
+	 * @return true if there was a renderer associated with the given contraption.
+	 */
+	public static boolean invalidate(Contraption contraption) {
+		return ContraptionRenderInfoManager.MANAGERS.get(contraption.entity.level()).invalidate(contraption);
 	}
 
 	public boolean isDead() {
 		return !contraption.entity.isAliveOrStale();
 	}
 
-	public void beginFrame(BeginFrameEvent event) {
-		matrices.clear();
-
-		AbstractContraptionEntity entity = contraption.entity;
-
-		visible = false;
-//		visible = event.getFrustum()
-//			.isVisible(entity.getBoundingBoxForCulling()
-//				.inflate(2));
+	public Contraption getContraption() {
+		return contraption;
 	}
 
-	public boolean isVisible() {
-		return visible && contraption.entity.isAliveOrStale() && contraption.entity.isReadyForRender();
+	public VirtualRenderWorld getRenderWorld() {
+		return renderWorld;
 	}
 
-	/**
-	 * Need to call this during RenderLayerEvent.
-	 */
-	public void setupMatrices(PoseStack viewProjection, double camX, double camY, double camZ) {
-		if (!matrices.isReady()) {
-			AbstractContraptionEntity entity = contraption.entity;
-
-			viewProjection.pushPose();
-
-			double x = Mth.lerp(AnimationTickHolder.getPartialTicks(), entity.xOld, entity.getX()) - camX;
-			double y = Mth.lerp(AnimationTickHolder.getPartialTicks(), entity.yOld, entity.getY()) - camY;
-			double z = Mth.lerp(AnimationTickHolder.getPartialTicks(), entity.zOld, entity.getZ()) - camZ;
-
-			viewProjection.translate(x, y, z);
-
-			matrices.setup(viewProjection, entity);
-
-			viewProjection.popPose();
-		}
-	}
-
-	/**
-	 * If #setupMatrices is called correctly, the returned matrices will be ready
-	 */
 	public ContraptionMatrices getMatrices() {
 		return matrices;
 	}
 
-	public void invalidate() {
+	public SuperByteBuffer getBuffer(RenderType renderType) {
+		return CreateClient.BUFFER_CACHE.get(CONTRAPTION, Pair.of(contraption, renderType), () -> buildStructureBuffer(renderType));
+	}
 
+	public void invalidate() {
+		for (RenderType renderType : RenderType.chunkBufferLayers()) {
+			CreateClient.BUFFER_CACHE.invalidate(CONTRAPTION, Pair.of(contraption, renderType));
+		}
+	}
+
+	public static VirtualRenderWorld setupRenderWorld(Level level, Contraption c) {
+		ContraptionWorld contraptionWorld = c.getContraptionWorld();
+
+		BlockPos origin = c.anchor;
+		int minBuildHeight = contraptionWorld.getMinBuildHeight();
+		int height = contraptionWorld.getHeight();
+		VirtualRenderWorld renderWorld = new VirtualRenderWorld(level, minBuildHeight, height, origin) {
+			@Override
+			public boolean supportsVisualization() {
+				return VisualizationManager.supportsVisualization(level);
+			}
+		};
+
+		renderWorld.setBlockEntities(c.presentBlockEntities.values());
+		for (StructureTemplate.StructureBlockInfo info : c.getBlocks()
+			.values())
+			renderWorld.setBlock(info.pos(), info.state(), 0);
+
+		renderWorld.runLightEngine();
+		return renderWorld;
+	}
+
+	private SuperByteBuffer buildStructureBuffer(RenderType layer) {
+		BlockRenderDispatcher dispatcher = ModelUtil.VANILLA_RENDERER;
+		ModelBlockRenderer renderer = dispatcher.getModelRenderer();
+		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
+
+		PoseStack poseStack = objects.poseStack;
+		RandomSource random = objects.random;
+		RenderedBlocks blocks = contraption.getRenderedBlocks();
+
+		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
+		BufferBuilder shadedBuilder = objects.shadedBuilder;
+		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
+
+		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
+
+		ModelBlockRenderer.enableCaching();
+		for (BlockPos pos : blocks.positions()) {
+			BlockState state = blocks.lookup().apply(pos);
+			if (state.getRenderShape() == RenderShape.MODEL) {
+				BakedModel model = dispatcher.getBlockModel(state);
+				ModelData modelData = contraption.modelData.getOrDefault(pos, ModelData.EMPTY);
+				modelData = model.getModelData(renderWorld, pos, state, modelData);
+				long randomSeed = state.getSeed(pos);
+				random.setSeed(randomSeed);
+				if (model.getRenderTypes(state, random, modelData).contains(layer)) {
+					poseStack.pushPose();
+					poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
+					renderer.tesselateBlock(renderWorld, model, state, pos, poseStack, shadeSeparatingWrapper, true, random, randomSeed, OverlayTexture.NO_OVERLAY, modelData, layer);
+					poseStack.popPose();
+				}
+			}
+		}
+		ModelBlockRenderer.clearCache();
+
+		shadeSeparatingWrapper.clear();
+		return VirtualRenderHelper.endAndCombine(shadedBuilder, unshadedBuilder);
+	}
+
+	private static class ThreadLocalObjects {
+		public final PoseStack poseStack = new PoseStack();
+		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
+		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
+		public final BufferBuilder shadedBuilder = new BufferBuilder(512);
+		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
 	}
 }

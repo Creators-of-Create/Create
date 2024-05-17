@@ -73,7 +73,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		setEmbeddingMatrices(partialTick);
 
 		Contraption contraption = entity.getContraption();
-		virtualRenderWorld = ContraptionRenderDispatcher.setupRenderWorld(level, contraption);
+		virtualRenderWorld = ContraptionRenderInfo.setupRenderWorld(level, contraption);
 
 		RenderedBlocks blocks = contraption.getRenderedBlocks();
 		BlockAndTintGetter modelWorld = new WrappedBlockAndTintGetter(virtualRenderWorld) {
@@ -91,7 +91,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 				.instancer(InstanceTypes.TRANSFORMED, model)
 				.createInstance();
 
-		for (BlockEntity be : contraption.maybeInstancedBlockEntities) {
+		for (BlockEntity be : contraption.getRenderedBEs()) {
 			setupVisualizer(be, partialTick);
 		}
 
@@ -100,32 +100,6 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		}
 
 		updateLight();
-	}
-
-	private void setupActor(MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> actor, float partialTick) {
-		MovementContext context = actor.getRight();
-		if (context == null) {
-			return;
-		}
-		if (context.world == null) {
-			context.world = level;
-		}
-
-		StructureTemplate.StructureBlockInfo blockInfo = actor.getLeft();
-
-		MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(blockInfo.state());
-		if (movementBehaviour == null) {
-			return;
-		}
-		var instance = movementBehaviour.createInstance(this.embedding, virtualRenderWorld, context);
-
-		if (instance == null) {
-			return;
-		}
-
-		instance.init(partialTick);
-
-		actors.add(instance);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -152,6 +126,32 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		}
 
 		be.setLevel(world);
+	}
+
+	private void setupActor(MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> actor, float partialTick) {
+		MovementContext context = actor.getRight();
+		if (context == null) {
+			return;
+		}
+		if (context.world == null) {
+			context.world = level;
+		}
+
+		StructureTemplate.StructureBlockInfo blockInfo = actor.getLeft();
+
+		MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(blockInfo.state());
+		if (movementBehaviour == null) {
+			return;
+		}
+		var visual = movementBehaviour.createVisual(this.embedding, virtualRenderWorld, context);
+
+		if (visual == null) {
+			return;
+		}
+
+		visual.init(partialTick);
+
+		actors.add(visual);
 	}
 
 	@Override

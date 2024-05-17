@@ -19,8 +19,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class AllInstanceTypes {
-	// FIXME: optimize layouts/pack fields together if possible
-
 	public static final InstanceType<RotatingInstance> ROTATING = SimpleInstanceType.builder(RotatingInstance::new)
 			.cullShader(asResource("instance/cull/rotating.glsl"))
 			.vertexShader(asResource("instance/rotating.vert"))
@@ -51,7 +49,8 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutByte(ptr + 34, instance.rotationAxisZ);
 			})
 			.register();
-	public static final InstanceType<BeltInstance> BELTS = SimpleInstanceType.builder(BeltInstance::new)
+
+	public static final InstanceType<BeltInstance> BELT = SimpleInstanceType.builder(BeltInstance::new)
 			.cullShader(asResource("instance/cull/belt.glsl"))
 			.vertexShader(asResource("instance/belt.vert"))
 			.layout(LayoutBuilder.create()
@@ -92,9 +91,10 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutFloat(ptr + 72, instance.scrollMult);
 			})
 			.register();
-	public static final InstanceType<ActorInstance> ACTORS = SimpleInstanceType.builder(ActorInstance::new)
-			.cullShader(asResource("instance/cull/contraption_actor.glsl"))
-			.vertexShader(asResource("instance/contraption_actor.vert"))
+
+	public static final InstanceType<ActorInstance> ACTOR = SimpleInstanceType.builder(ActorInstance::new)
+			.cullShader(asResource("instance/cull/actor.glsl"))
+			.vertexShader(asResource("instance/actor.vert"))
 			.layout(LayoutBuilder.create()
 					.vector("pos", FloatRepr.FLOAT, 3)
 					.vector("light", IntegerRepr.SHORT, 2)
@@ -126,7 +126,7 @@ public class AllInstanceTypes {
 			.register();
 
 	// TODO: remove
-	public static final InstanceType<FlapInstance> FLAPS = SimpleInstanceType.builder(FlapInstance::new)
+	public static final InstanceType<FlapInstance> FLAP = SimpleInstanceType.builder(FlapInstance::new)
 			.cullShader(asResource("instance/cull/flap.glsl"))
 			.vertexShader(asResource("instance/flap.vert"))
 			.layout(LayoutBuilder.create()

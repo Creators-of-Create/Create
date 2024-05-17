@@ -31,11 +31,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class BlazeBurnerMovementBehaviour implements MovementBehaviour {
 
 	@Override
-	public boolean renderAsNormalBlockEntity() {
-		return false;
-	}
-
-	@Override
 	public ItemStack canBeDisabledVia(MovementContext context) {
 		return null;
 	}
@@ -115,6 +110,11 @@ public class BlazeBurnerMovementBehaviour implements MovementBehaviour {
 			if (carriageContraption.inControl(context.localPos, direction))
 				return true;
 		return false;
+	}
+
+	@Override
+	public boolean disableBlockEntityRendering() {
+		return true;
 	}
 
 	@Override

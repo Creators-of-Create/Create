@@ -5,13 +5,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
@@ -32,7 +32,7 @@ public class ControlsRenderer {
 			.center()
 			.rotateYDegrees(hAngle)
 			.uncenter()
-			.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.light(matrices.getWorld(), LevelRenderer.getLightColor(renderWorld, context.localPos))
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.cutoutMipped()));
 
 		double yOffset = Mth.lerp(equipAnimation * equipAnimation, -0.15f, 0.05f);
@@ -52,7 +52,7 @@ public class ControlsRenderer {
 				.translate(0, -2 / 16f, -3 / 16f)
 				.translate(first ? 0 : 6 / 16f, 0, 0);
 			lever.transform(ms)
-				.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+				.light(matrices.getWorld(), LevelRenderer.getLightColor(renderWorld, context.localPos))
 				.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));
 			ms.popPose();
 		}

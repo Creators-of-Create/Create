@@ -254,17 +254,17 @@ public class CarriageContraption extends Contraption {
 		return secondBogeyPos;
 	}
 
-	private Collection<BlockEntity> specialRenderedBEsOutsidePortal = new ArrayList<>();
+	private Collection<BlockEntity> renderedBEsOutsidePortal = new ArrayList<>();
 
 	@Override
 	public RenderedBlocks getRenderedBlocks() {
 		if (notInPortal())
 			return super.getRenderedBlocks();
 
-		specialRenderedBEsOutsidePortal = new ArrayList<>();
-		specialRenderedBlockEntities.stream()
+		renderedBEsOutsidePortal = new ArrayList<>();
+		renderedBlockEntities.stream()
 			.filter(be -> !isHiddenInPortal(be.getBlockPos()))
-			.forEach(specialRenderedBEsOutsidePortal::add);
+			.forEach(renderedBEsOutsidePortal::add);
 
 		Map<BlockPos, BlockState> values = new HashMap<>();
 		blocks.forEach((pos, info) -> {
@@ -278,10 +278,10 @@ public class CarriageContraption extends Contraption {
 	}
 
 	@Override
-	public Collection<BlockEntity> getSpecialRenderedBEs() {
+	public Collection<BlockEntity> getRenderedBEs() {
 		if (notInPortal())
-			return super.getSpecialRenderedBEs();
-		return specialRenderedBEsOutsidePortal;
+			return super.getRenderedBEs();
+		return renderedBEsOutsidePortal;
 	}
 
 	@Override

@@ -91,6 +91,11 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 	}
 
 	@Override
+	public boolean disableBlockEntityRendering() {
+		return true;
+	}
+
+	@Override
 	@OnlyIn(value = Dist.CLIENT)
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {

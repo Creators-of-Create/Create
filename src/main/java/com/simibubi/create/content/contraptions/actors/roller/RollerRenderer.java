@@ -7,7 +7,6 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterRenderer;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -15,6 +14,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
@@ -73,7 +73,7 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 		PoseStack viewProjection = matrices.getViewProjection();
 		viewProjection.pushPose();
 		viewProjection.translate(0, -.25, 0);
-		int contraptionWorldLight = ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld);
+		int contraptionWorldLight = LevelRenderer.getLightColor(renderWorld, context.localPos);
 		superBuffer.translate(0, -.5, .5)
 			.rotateYDegrees(90)
 			.light(matrices.getWorld(), contraptionWorldLight)

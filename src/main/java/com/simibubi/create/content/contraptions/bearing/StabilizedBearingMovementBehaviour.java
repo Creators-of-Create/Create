@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import org.joml.Quaternionf;
 
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
 import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
@@ -15,12 +16,12 @@ import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
@@ -37,10 +38,15 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 	}
 
 	@Override
+	public boolean disableBlockEntityRendering() {
+		return true;
+	}
+
+	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
-		if (ContraptionRenderDispatcher.canInstance())
+		if (!VisualizationManager.supportsVisualization(context.world))
 			return;
 
 		Direction facing = context.state.getValue(BlockStateProperties.FACING);
@@ -67,18 +73,13 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 
 		// render
 		superBuffer
-			.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.light(matrices.getWorld(), LevelRenderer.getLightColor(renderWorld, context.localPos))
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));
-	}
-
-	@Override
-	public boolean hasSpecialInstancedRendering() {
-		return true;
 	}
 
 	@Nullable
 	@Override
-	public ActorVisual createInstance(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
+	public ActorVisual createVisual(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
 		MovementContext movementContext) {
 		return new StabilizedBearingVisual(visualizationContext, simulationWorld, movementContext);
 	}

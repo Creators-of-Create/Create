@@ -139,11 +139,6 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 	}
 
 	@Override
-	public boolean renderAsNormalBlockEntity() {
-		return true;
-	}
-
-	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext ctx, VirtualRenderWorld renderWorld, ContraptionMatrices matrices,
 		MultiBufferSource buffer) {

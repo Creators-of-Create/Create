@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -18,7 +19,6 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.kinetics.deployer.DeployerBlockEntity.Mode;
 import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.schematics.SchematicInstances;
@@ -282,20 +282,20 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	}
 
 	@Override
-	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
-		ContraptionMatrices matrices, MultiBufferSource buffers) {
-		if (!ContraptionRenderDispatcher.canInstance())
-			DeployerRenderer.renderInContraption(context, renderWorld, matrices, buffers);
+	public boolean disableBlockEntityRendering() {
+		return true;
 	}
 
 	@Override
-	public boolean hasSpecialInstancedRendering() {
-		return true;
+	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
+		ContraptionMatrices matrices, MultiBufferSource buffers) {
+		if (!VisualizationManager.supportsVisualization(context.world))
+			DeployerRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 
 	@Nullable
 	@Override
-	public ActorVisual createInstance(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
+	public ActorVisual createVisual(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
 		MovementContext movementContext) {
 		return new DeployerActorVisual(visualizationContext, simulationWorld, movementContext);
 	}
