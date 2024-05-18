@@ -6,8 +6,11 @@ import com.simibubi.create.compat.Mods;
 
 import joptsimple.internal.Strings;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
 public class LangBuilder {
@@ -151,15 +154,19 @@ public class LangBuilder {
 	}
 
 	public void forGoggles(List<? super MutableComponent> tooltip, int indents) {
-		indents += getIndents();
 		tooltip.add(Lang.builder()
-			.text(Strings.repeat(' ', 4 + indents))
+			.text(Strings.repeat(' ', getIndents(Minecraft.getInstance().font, 4 + indents)))
 			.add(this)
 			.component());
 	}
 
-	static int getIndents() {
-		return Mods.MODERNUI.isLoaded() ? 5 : 0;
+	public static final float DEFAULT_SPACE_WIDTH = 4.0F; // space width in vanilla's default font
+	static int getIndents(Font font, int defaultIndents) {
+		int spaceWidth = font.width(" ");
+		if (DEFAULT_SPACE_WIDTH == spaceWidth) {
+			return defaultIndents;
+		}
+		return Mth.ceil(DEFAULT_SPACE_WIDTH * defaultIndents / spaceWidth);
 	}
 
 	//
