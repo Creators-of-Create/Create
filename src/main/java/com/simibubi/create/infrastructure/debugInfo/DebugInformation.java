@@ -1,6 +1,5 @@
 package com.simibubi.create.infrastructure.debugInfo;
 
-import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +27,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
 import oshi.SystemInfo;
-import oshi.hardware.HardwareAbstractionLayer;
 
 /**
  * Allows for providing easily accessible debugging information.
