@@ -8,6 +8,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LavaCauldronBlock;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
@@ -30,19 +32,26 @@ public class VanillaFluidTargets {
 			return new FluidStack(AllFluids.HONEY.get()
 				.getSource(), 250);
 		}
-		
-		if (state.getBlock() == Blocks.LAVA_CAULDRON) {
+
+		if (state.getBlock() instanceof LavaCauldronBlock) {
 			if (!simulate)
 				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
 			return new FluidStack(Fluids.LAVA, 1000);
 		}
-		
-		if (state.getBlock() == Blocks.WATER_CAULDRON) {
+
+		if (state.getBlock() instanceof LayeredCauldronBlock) {
+			int fill = state.getValue(LayeredCauldronBlock.LEVEL);
+			int extractable = switch (fill) {
+				case 1 -> 333;
+				case 2 -> 666;
+				case 3 -> 1000;
+				default -> 0;
+			};
 			if (!simulate)
 				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
-			return new FluidStack(Fluids.WATER, 1000);
+			return new FluidStack(Fluids.WATER, extractable);
 		}
-		
+
 		return FluidStack.EMPTY;
 	}
 
