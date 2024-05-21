@@ -11,14 +11,6 @@ plugins {
 jarJar.enable()
 
 boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false');
-// jozu: I use a gradle workspace with both projects.
-// The project is named Flywheel-Forge, but sub-projects are named by folder.
-Project flywheelProject = findProject(':Flywheel')
-boolean flywheelInWorkspace = flywheelProject != null
-
-if (flywheelInWorkspace) {
-    println('Workspace detected, using Flywheel sibling project')
-}
 
 ext.buildNumber = System.getenv('BUILD_NUMBER')
 
@@ -75,13 +67,6 @@ minecraft {
 
         client {
             workingDirectory project.file('run')
-            mods {
-                if (flywheelInWorkspace) {
-                    flywheel {
-                        source flywheelProject.sourceSets.main
-                    }
-                }
-            }
         }
 
         server {
@@ -93,13 +78,6 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             args '--mod', 'create', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources')
-            mods {
-                if (flywheelInWorkspace) {
-                    flywheel {
-                        source flywheelProject.sourceSets.main
-                    }
-                }
-            }
         }
 
         gameTestServer {
@@ -173,11 +151,8 @@ dependencies {
 
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
-    if (flywheelInWorkspace) {
-        implementation flywheelProject
-    } else {
-        implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
-    }
+    compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-api-${flywheel_minecraft_version}:${flywheel_version}")
+    runtimeOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
 
     compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge-api:${jei_version}")

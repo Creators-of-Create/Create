@@ -10,7 +10,7 @@ void flw_instanceVertex(in FlwInstance instance) {
     float scroll = fract(instance.speed * flw_renderTicks / (31.5 * 16.) + instance.offset) * scrollSize * instance.scrollMult;
 
     flw_vertexTexCoord = flw_vertexTexCoord - instance.sourceTexture + instance.scrollTexture.xy + vec2(0, scroll);
-    flw_vertexLight = instance.light / 15.;
+    flw_vertexLight = vec2(instance.light) / 256.;
     flw_vertexOverlay = instance.overlay;
 
     #if defined(DEBUG_RAINBOW)

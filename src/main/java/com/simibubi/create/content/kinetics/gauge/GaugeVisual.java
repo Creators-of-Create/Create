@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
-import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
@@ -63,7 +63,7 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
     }
 
     @Override
-    public void beginFrame(VisualFrameContext ctx) {
+    public void beginFrame(DynamicVisual.Context ctx) {
         if (Mth.equal(blockEntity.prevDialState, blockEntity.dialState))
             return;
 

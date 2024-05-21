@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import org.joml.Quaternionf;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.OrientedInstance;
@@ -40,7 +40,7 @@ public class PressVisual extends ShaftVisual<MechanicalPressBlockEntity> impleme
 	}
 
 	@Override
-	public void beginFrame(VisualFrameContext ctx) {
+	public void beginFrame(DynamicVisual.Context ctx) {
 		transformModels(ctx.partialTick());
 	}
 

@@ -17,6 +17,7 @@ public class FlapInstance extends AbstractInstance implements FlatLit {
 	public float z;
 	public byte blockLight;
 	public byte skyLight;
+	public int packedLight;
 	public float segmentOffsetX;
 	public float segmentOffsetY;
 	public float segmentOffsetZ;
@@ -49,20 +50,14 @@ public class FlapInstance extends AbstractInstance implements FlatLit {
 	}
 
 	@Override
-	public FlapInstance setBlockLight(int blockLight) {
-		this.blockLight = (byte) (blockLight & 0xF);
-		return this;
+	public FlapInstance light(int blockLight, int skyLight) {
+		return this.light(LightTexture.pack(blockLight, skyLight));
 	}
 
 	@Override
-	public FlapInstance setSkyLight(int skyLight) {
-		this.skyLight = (byte) (skyLight & 0xF);
+	public FlapInstance light(int packedLight) {
+		this.packedLight = packedLight;
 		return this;
-	}
-
-	@Override
-	public int getPackedLight() {
-		return LightTexture.pack(this.blockLight, this.skyLight);
 	}
 
 	public FlapInstance setSegmentOffset(float x, float y, float z) {

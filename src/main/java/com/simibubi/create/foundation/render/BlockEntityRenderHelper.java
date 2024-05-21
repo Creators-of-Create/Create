@@ -8,8 +8,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import com.jozufozu.flywheel.api.visualization.VisualizationManager;
-import com.jozufozu.flywheel.impl.visualization.VisualizationHelper;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
+import com.jozufozu.flywheel.lib.visual.VisualizationHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;

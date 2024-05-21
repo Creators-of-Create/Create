@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.chassis;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
@@ -39,7 +39,7 @@ public class StickerVisual extends AbstractBlockEntityVisual<StickerBlockEntity>
 	}
 
 	@Override
-	public void beginFrame(VisualFrameContext ctx) {
+	public void beginFrame(DynamicVisual.Context ctx) {
 		float offset = blockEntity.piston.getValue(ctx.partialTick());
 
 		if (fakeWorld)

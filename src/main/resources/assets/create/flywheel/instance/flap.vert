@@ -25,5 +25,5 @@ void flw_instanceVertex(in FlwInstance flap) {
 
     flw_vertexPos.xyz = rotateByQuaternion(rotated - .5, orientation) + flap.instancePos + .5;
     flw_vertexNormal = rotateByQuaternion(rotateByQuaternion(flw_vertexNormal, flapRotation), orientation);
-    flw_vertexLight = flap.light / 15.;
+    flw_vertexLight = vec2(flap.light) / 256.;
 }

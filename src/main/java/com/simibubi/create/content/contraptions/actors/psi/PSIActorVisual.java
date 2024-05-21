@@ -17,8 +17,8 @@ public class PSIActorVisual extends ActorVisual {
 		instance = new PIInstance(context.instancerProvider(), movementContext.state, movementContext.localPos);
 
 		instance.init(false);
-		instance.middle.setBlockLight(localBlockLight());
-		instance.top.setBlockLight(localBlockLight());
+		instance.middle.light(localBlockLight(), 0);
+		instance.top.light(localBlockLight(), 0);
 	}
 
 	@Override

@@ -164,8 +164,7 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
 				.setRotationOffset(bottom ? 0.5f : 0f)
                 .setColor(blockEntity)
                 .setPosition(getVisualPosition())
-                .setBlockLight(level.getBrightness(LightLayer.BLOCK, pos))
-                .setSkyLight(level.getBrightness(LightLayer.SKY, pos))
+                .light(level.getBrightness(LightLayer.BLOCK, pos), level.getBrightness(LightLayer.SKY, pos))
 				.setChanged();
 
         return key;

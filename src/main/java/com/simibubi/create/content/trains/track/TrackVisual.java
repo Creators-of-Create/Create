@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.FlatLit;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
 import com.jozufozu.flywheel.lib.model.Models;
@@ -24,6 +25,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 
 public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 
@@ -179,14 +182,11 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 
 		void updateLight() {
 			for (int i = 0; i < ties.length; i++)
-				ties[i].updateLight(level, tiesLightPos[i])
-					.setChanged();
+				TrackVisual.updateLight(ties[i], level, tiesLightPos[i]);
 			for (int i = 0; i < left.length; i++)
-				left[i].updateLight(level, leftLightPos[i])
-					.setChanged();
+				TrackVisual.updateLight(left[i], level, leftLightPos[i]);
 			for (int i = 0; i < right.length; i++)
-				right[i].updateLight(level, rightLightPos[i])
-					.setChanged();
+				TrackVisual.updateLight(right[i], level, rightLightPos[i]);
 			if (girder != null)
 				girder.updateLight();
 		}
@@ -265,13 +265,11 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 			void updateLight() {
 				beams.forEach(arr -> {
 					for (int i = 0; i < arr.length; i++)
-						arr[i].updateLight(level, lightPos[i])
-							.setChanged();
+						TrackVisual.updateLight(arr[i], level, lightPos[i]);
 				});
 				beamCaps.forEach(c -> c.forEach(arr -> {
 					for (int i = 0; i < arr.length; i++)
-						arr[i].updateLight(level, lightPos[i])
-							.setChanged();
+						TrackVisual.updateLight(arr[i], level, lightPos[i]);
 				}));
 			}
 
@@ -287,5 +285,10 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 			}
 		}
 
+	}
+
+	private static void updateLight(FlatLit instance, Level level, BlockPos pos) {
+		instance.light(level.getBrightness(LightLayer.BLOCK, pos), level.getBrightness(LightLayer.SKY, pos))
+				.setChanged();
 	}
 }

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.elevator;
 
-import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;
@@ -13,7 +13,7 @@ public class ElevatorPulleyVisual extends ShaftVisual<ElevatorPulleyBlockEntity>
 	}
 
 	@Override
-	public void beginFrame(VisualFrameContext ctx) {
+	public void beginFrame(DynamicVisual.Context ctx) {
 	}
 
 }

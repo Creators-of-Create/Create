@@ -22,7 +22,7 @@ public class RollerActorVisual extends HarvesterActorVisual {
 
 		frame = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ROLLER_FRAME))
 			.createInstance();
-		frame.setBlockLight(localBlockLight());
+		frame.light(localBlockLight(), 0);
 	}
 
 	@Override

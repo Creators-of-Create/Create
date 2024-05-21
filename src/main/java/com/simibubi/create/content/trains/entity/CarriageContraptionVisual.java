@@ -2,7 +2,7 @@ package com.simibubi.create.content.trains.entity;
 
 import org.joml.Vector3f;
 
-import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -44,7 +44,7 @@ public class CarriageContraptionVisual extends ContraptionVisual<CarriageContrap
 	}
 
 	@Override
-	public void beginFrame(VisualFrameContext ctx) {
+	public void beginFrame(DynamicVisual.Context ctx) {
 		super.beginFrame(ctx);
 		if (bogeys == null) {
 			if (entity.isReadyForRender())

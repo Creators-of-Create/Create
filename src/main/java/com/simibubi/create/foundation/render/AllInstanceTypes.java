@@ -36,8 +36,8 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutByte(ptr + 1, instance.g);
 				MemoryUtil.memPutByte(ptr + 2, instance.b);
 				MemoryUtil.memPutByte(ptr + 3, instance.a);
-				MemoryUtil.memPutShort(ptr + 4, instance.blockLight);
-				MemoryUtil.memPutShort(ptr + 6, instance.skyLight);
+				MemoryUtil.memPutShort(ptr + 4, (short) (instance.packedLight & 0xFFFF));
+				MemoryUtil.memPutShort(ptr + 6, (short) (instance.packedLight >> 16 & 0xFFFF));
 				MemoryUtil.memPutInt(ptr + 8, instance.overlay);
 				MemoryUtil.memPutFloat(ptr + 12, instance.x);
 				MemoryUtil.memPutFloat(ptr + 16, instance.y);
@@ -70,8 +70,8 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutByte(ptr + 1, instance.g);
 				MemoryUtil.memPutByte(ptr + 2, instance.b);
 				MemoryUtil.memPutByte(ptr + 3, instance.a);
-				MemoryUtil.memPutShort(ptr + 4, instance.blockLight);
-				MemoryUtil.memPutShort(ptr + 6, instance.skyLight);
+				MemoryUtil.memPutShort(ptr + 4, (short) (instance.packedLight & 0xFFFF));
+				MemoryUtil.memPutShort(ptr + 6, (short) (instance.packedLight >> 16 & 0xFFFF));
 				MemoryUtil.memPutInt(ptr + 8, instance.overlay);
 				MemoryUtil.memPutFloat(ptr + 12, instance.x);
 				MemoryUtil.memPutFloat(ptr + 16, instance.y);
@@ -143,8 +143,8 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutFloat(ptr, instance.x);
 				MemoryUtil.memPutFloat(ptr + 4, instance.y);
 				MemoryUtil.memPutFloat(ptr + 8, instance.z);
-				MemoryUtil.memPutShort(ptr + 12, instance.blockLight);
-				MemoryUtil.memPutShort(ptr + 14, instance.skyLight);
+				MemoryUtil.memPutShort(ptr + 12, (short) (instance.packedLight & 0xFFFF));
+				MemoryUtil.memPutShort(ptr + 14, (short) (instance.packedLight >> 16 & 0xFFFF));
 				MemoryUtil.memPutFloat(ptr + 16, instance.segmentOffsetX);
 				MemoryUtil.memPutFloat(ptr + 20, instance.segmentOffsetY);
 				MemoryUtil.memPutFloat(ptr + 24, instance.segmentOffsetZ);

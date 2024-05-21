@@ -4,11 +4,10 @@ import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
-import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.box.MutableBox;
 import com.jozufozu.flywheel.lib.instance.OrientedInstance;
-import com.jozufozu.flywheel.lib.light.LightPacking;
 import com.jozufozu.flywheel.lib.light.LightVolume;
 import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
 import com.mojang.math.Axis;
@@ -60,7 +59,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 	}
 
 	@Override
-	public void beginFrame(VisualFrameContext ctx) {
+	public void beginFrame(DynamicVisual.Context ctx) {
 		updateOffset(ctx.partialTick());
 		coil.setRotation(rotationAxis.rotationDegrees(offset * 180))
 				.setChanged();
@@ -75,8 +74,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 					short packed = light.getPackedLight(pos.getX(), pos.getY() - i, pos.getZ());
 					data.setPosition(getVisualPosition())
 							.nudgePosition(0, -offset, 0)
-							.setBlockLight(LightPacking.getBlock(packed))
-							.setSkyLight(LightPacking.getSky(packed))
+							.light(packed)
 							.setChanged();
 				});
 
@@ -89,8 +87,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 					short packed = light.getPackedLight(pos.getX(), pos.getY(), pos.getZ());
 					rope1.setPosition(getVisualPosition())
 							.nudgePosition(0, -halfRopeNudge, 0)
-							.setBlockLight(LightPacking.getBlock(packed))
-							.setSkyLight(LightPacking.getSky(packed))
+							.light(packed)
 							.setChanged();
 				});
 
@@ -103,8 +100,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 				rope.get(i)
 						.setPosition(getVisualPosition())
 						.nudgePosition(0, -offset + i + 1, 0)
-						.setBlockLight(LightPacking.getBlock(packed))
-						.setSkyLight(LightPacking.getSky(packed))
+						.light(packed)
 						.setChanged();
 			}
 		} else {

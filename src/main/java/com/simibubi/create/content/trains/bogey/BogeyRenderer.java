@@ -341,13 +341,15 @@ public abstract class BogeyRenderer {
 
 		public BogeyModelData setTransform(PoseStack ms) {
 			if (this.transform instanceof TransformedInstance model)
-				model.setTransform(ms);
+				model.setTransform(ms)
+						.setChanged();
 			return this;
 		}
 
 		public BogeyModelData setEmptyTransform() {
 			if (this.transform instanceof TransformedInstance model)
-				model.setEmptyTransform();
+				model.setEmptyTransform()
+						.setChanged();
 			return this;
 		}
 
@@ -359,7 +361,8 @@ public abstract class BogeyRenderer {
 
 		public BogeyModelData updateLight(int blockLight, int skyLight) {
 			if (this.transform instanceof TransformedInstance model)
-				model.setBlockLight(blockLight).setSkyLight(skyLight);
+				model.light(blockLight, skyLight)
+						.setChanged();
 			return this;
 		}
 

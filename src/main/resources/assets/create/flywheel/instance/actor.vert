@@ -9,5 +9,5 @@ void flw_instanceVertex(in FlwInstance instance) {
 
     flw_vertexPos.xyz = rotateByQuaternion(rotated - .5, instance.rotation) + instance.pos + .5;
     flw_vertexNormal = rotateByQuaternion(rotateByQuaternion(flw_vertexNormal, kineticRot), instance.rotation);
-    flw_vertexLight = instance.light / 15.;
+    flw_vertexLight = vec2(instance.light) / 256.;
 }

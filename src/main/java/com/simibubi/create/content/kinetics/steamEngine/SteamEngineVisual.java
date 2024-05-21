@@ -3,7 +3,7 @@ package com.simibubi.create.content.kinetics.steamEngine;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
@@ -36,7 +36,7 @@ public class SteamEngineVisual extends AbstractBlockEntityVisual<SteamEngineBloc
 	}
 
 	@Override
-	public void beginFrame(VisualFrameContext ctx) {
+	public void beginFrame(DynamicVisual.Context ctx) {
 		Float angle = blockEntity.getTargetAngle();
 		if (angle == null) {
 			piston.setEmptyTransform().setChanged();

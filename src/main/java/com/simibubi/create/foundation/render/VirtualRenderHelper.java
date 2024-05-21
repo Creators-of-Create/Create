@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.lib.model.ModelCache;
 import com.jozufozu.flywheel.lib.model.ModelUtil;
-import com.jozufozu.flywheel.lib.model.baked.BakedModelBuilder;
+import com.jozufozu.flywheel.lib.model.baked.ForgeBakedModelBuilder;
 import com.jozufozu.flywheel.lib.model.baked.VirtualEmptyBlockGetter;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
@@ -29,7 +29,7 @@ public class VirtualRenderHelper {
 	public static final ModelProperty<Boolean> VIRTUAL_PROPERTY = new ModelProperty<>();
 	public static final ModelData VIRTUAL_DATA = ModelData.builder().with(VIRTUAL_PROPERTY, true).build();
 
-	private static final ModelCache<BlockState> VIRTUAL_BLOCKS = new ModelCache<>(state -> new BakedModelBuilder(ModelUtil.VANILLA_RENDERER.getBlockModel(state)).modelData(VIRTUAL_DATA).build());
+	private static final ModelCache<BlockState> VIRTUAL_BLOCKS = new ModelCache<>(state -> new ForgeBakedModelBuilder(ModelUtil.VANILLA_RENDERER.getBlockModel(state)).modelData(VIRTUAL_DATA).build());
 	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
 	public static boolean isVirtual(ModelData data) {

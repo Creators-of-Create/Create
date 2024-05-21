@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
-import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.AbstractInstance;
 import com.jozufozu.flywheel.lib.model.Models;
@@ -51,8 +51,7 @@ public class FunnelVisual extends AbstractBlockEntityVisual<FunnelBlockEntity> i
 
             key.setPosition(getVisualPosition())
 					.setSegmentOffset(segmentOffset, 0, -blockEntity.getFlapOffset())
-					.setBlockLight(blockLight)
-					.setSkyLight(skyLight)
+					.light(blockLight, skyLight)
 					.setHorizontalAngle(horizontalAngle)
 					.setFlapness(flapness)
 					.setFlapScale(-1)
@@ -65,7 +64,7 @@ public class FunnelVisual extends AbstractBlockEntityVisual<FunnelBlockEntity> i
     }
 
     @Override
-    public void beginFrame(VisualFrameContext ctx) {
+    public void beginFrame(DynamicVisual.Context ctx) {
         if (flaps == null) return;
 
         float flapness = blockEntity.flap.getValue(ctx.partialTick());

@@ -8,8 +8,8 @@ import java.util.function.Consumer;
 import org.joml.Quaternionf;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.VisualFrameContext;
-import com.jozufozu.flywheel.api.visual.VisualTickContext;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.TickableVisual;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.OrientedInstance;
@@ -69,7 +69,7 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
 	}
 
 	@Override
-    public void tick(VisualTickContext ctx) {
+    public void tick(TickableVisual.Context context) {
 		PartialModel handPose = blockEntity.getHandPose();
 
 		if (currentHand != handPose) {
@@ -80,7 +80,7 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
 	}
 
     @Override
-    public void beginFrame(VisualFrameContext ctx) {
+    public void beginFrame(DynamicVisual.Context ctx) {
         float newProgress = getProgress(ctx.partialTick());
 
         if (Mth.equal(newProgress, progress)) return;

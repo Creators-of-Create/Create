@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
-import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.AbstractInstance;
 import com.jozufozu.flywheel.lib.model.Models;
@@ -54,8 +54,7 @@ public class BeltTunnelVisual extends AbstractBlockEntityVisual<BeltTunnelBlockE
 
 				key.setPosition(getVisualPosition())
 						.setSegmentOffset(segmentOffset, 0, 0)
-						.setBlockLight(blockLight)
-						.setSkyLight(skyLight)
+						.light(blockLight, skyLight)
 						.setHorizontalAngle(horizontalAngle)
 						.setFlapness(flapness)
 						.setFlapScale(flapScale)
@@ -86,7 +85,7 @@ public class BeltTunnelVisual extends AbstractBlockEntityVisual<BeltTunnelBlockE
 	}
 
 	@Override
-    public void beginFrame(VisualFrameContext ctx) {
+    public void beginFrame(DynamicVisual.Context ctx) {
         tunnelFlaps.forEach((direction, keys) -> {
             LerpedFloat lerpedFloat = blockEntity.flaps.get(direction);
             if (lerpedFloat == null)

@@ -42,7 +42,7 @@ public class HarvesterActorVisual extends ActorVisual {
 
         horizontalAngle = facing.toYRot() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
 
-		harvester.setBlockLight(localBlockLight());
+		harvester.light(localBlockLight(), 0);
 		harvester.setChanged();
 	}
 

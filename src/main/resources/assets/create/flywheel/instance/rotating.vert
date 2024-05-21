@@ -14,7 +14,7 @@ void flw_instanceVertex(in FlwInstance instance) {
     flw_vertexPos.xyz = worldPos.xyz + instance.pos + .5;
 
     flw_vertexNormal = spin * flw_vertexNormal;
-    flw_vertexLight = instance.light / 15.;
+    flw_vertexLight = vec2(instance.light) / 256.;
     flw_vertexOverlay = instance.overlay;
 
     #if defined(DEBUG_RAINBOW)

@@ -69,10 +69,10 @@ public class DeployerActorVisual extends ActorVisual {
 
         shaft.setRotationAxis(axis)
                 .setPosition(context.localPos)
-                .setBlockLight(blockLight);
+                .light(blockLight, 0);
 
-        pole.setBlockLight(blockLight);
-        hand.setBlockLight(blockLight);
+        pole.light(blockLight, 0);
+        hand.light(blockLight, 0);
     }
 
     @Override

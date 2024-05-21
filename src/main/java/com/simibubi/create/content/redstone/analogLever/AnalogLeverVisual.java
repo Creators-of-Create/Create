@@ -3,7 +3,7 @@ package com.simibubi.create.content.redstone.analogLever;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
@@ -50,7 +50,7 @@ public class AnalogLeverVisual extends AbstractBlockEntityVisual<AnalogLeverBloc
 	}
 
 	@Override
-	public void beginFrame(VisualFrameContext ctx) {
+	public void beginFrame(DynamicVisual.Context ctx) {
 		if (!blockEntity.clientState.settled())
 			animateLever(ctx.partialTick());
 	}

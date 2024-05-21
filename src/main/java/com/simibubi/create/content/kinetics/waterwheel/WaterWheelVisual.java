@@ -86,7 +86,7 @@ public class WaterWheelVisual<T extends WaterWheelBlockEntity> extends KineticBl
 			dir = state.getValue(WaterWheelBlock.FACING);
 		}
 		PoseStack transform = CachedBufferer.rotateToFaceVertical(dir).get();
-		return new BakedModelBuilder(model)
+		return BakedModelBuilder.create(model)
 				.poseStack(transform)
 				.build();
 	}

@@ -12,15 +12,13 @@ import com.jozufozu.flywheel.api.visual.BlockEntityVisual;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.LitVisual;
 import com.jozufozu.flywheel.api.visual.TickableVisual;
-import com.jozufozu.flywheel.api.visual.VisualFrameContext;
-import com.jozufozu.flywheel.api.visual.VisualTickContext;
 import com.jozufozu.flywheel.api.visualization.BlockEntityVisualizer;
 import com.jozufozu.flywheel.api.visualization.VisualEmbedding;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.api.visualization.VisualizerRegistry;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
-import com.jozufozu.flywheel.lib.model.baked.MultiBlockModelBuilder;
+import com.jozufozu.flywheel.lib.model.baked.ForgeMultiBlockModelBuilder;
 import com.jozufozu.flywheel.lib.task.ForEachPlan;
 import com.jozufozu.flywheel.lib.task.NestedPlan;
 import com.jozufozu.flywheel.lib.task.PlanMap;
@@ -52,8 +50,8 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 	protected final VisualEmbedding embedding;
 	protected final List<BlockEntityVisual<?>> children = new ArrayList<>();
 	protected final List<ActorVisual> actors = new ArrayList<>();
-	protected final PlanMap<DynamicVisual, VisualFrameContext> dynamicVisuals = new PlanMap<>();
-	protected final PlanMap<TickableVisual, VisualTickContext> tickableVisuals = new PlanMap<>();
+	protected final PlanMap<DynamicVisual, DynamicVisual.Context> dynamicVisuals = new PlanMap<>();
+	protected final PlanMap<TickableVisual, TickableVisual.Context> tickableVisuals = new PlanMap<>();
 	protected VirtualRenderWorld virtualRenderWorld;
 	protected Model model;
 	protected TransformedInstance structure;
@@ -83,7 +81,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 			}
 		};
 
-		model = new MultiBlockModelBuilder(modelWorld, blocks.positions())
+		model = new ForgeMultiBlockModelBuilder(modelWorld, blocks.positions())
 				.modelDataLookup(pos -> contraption.modelData.getOrDefault(pos, ModelData.EMPTY))
 				.build();
 
@@ -155,7 +153,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 	}
 
 	@Override
-	public Plan<VisualTickContext> planTick() {
+	public Plan<TickableVisual.Context> planTick() {
 		return NestedPlan.of(
 				ForEachPlan.of(() -> actors, ActorVisual::tick),
 				tickableVisuals
@@ -163,7 +161,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 	}
 
 	@Override
-	public Plan<VisualFrameContext> planFrame() {
+	public Plan<DynamicVisual.Context> planFrame() {
 		return NestedPlan.of(
 				RunnablePlan.of(this::beginFrame),
 				ForEachPlan.of(() -> actors, ActorVisual::beginFrame),
@@ -171,7 +169,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		);
 	}
 
-	protected void beginFrame(VisualFrameContext context) {
+	protected void beginFrame(DynamicVisual.Context context) {
 		var partialTick = context.partialTick();
 		setEmbeddingMatrices(partialTick);
 

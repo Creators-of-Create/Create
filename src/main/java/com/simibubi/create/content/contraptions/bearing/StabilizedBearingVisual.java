@@ -44,14 +44,14 @@ public class StabilizedBearingVisual extends ActorVisual {
 		int blockLight = localBlockLight();
 		topInstance.setPosition(movementContext.localPos)
 				.setRotation(blockOrientation)
-				.setBlockLight(blockLight);
+				.light(blockLight, 0);
 
 		shaft = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, blockState.getValue(BlockStateProperties.FACING).getOpposite()))
 				.createInstance();
 
 		// not rotating so no need to set speed, axis, etc.
 		shaft.setPosition(movementContext.localPos)
-				.setBlockLight(blockLight);
+				.light(blockLight, 0);
 	}
 
 	@Override
