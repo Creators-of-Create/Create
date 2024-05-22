@@ -9,11 +9,7 @@ import com.jozufozu.flywheel.lib.model.ModelCache;
 import com.jozufozu.flywheel.lib.model.ModelUtil;
 import com.jozufozu.flywheel.lib.model.baked.ForgeBakedModelBuilder;
 import com.jozufozu.flywheel.lib.model.baked.VirtualEmptyBlockGetter;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexFormat;
 
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
@@ -63,62 +59,34 @@ public class VirtualRenderHelper {
 		}
 		RandomSource random = objects.random;
 
-		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
-		BufferBuilder shadedBuilder = objects.shadedBuilder;
-		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
-
-		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
+		ShadedBlockSbbBuilder sbbBuilder = objects.sbbBuilder;
+		sbbBuilder.begin();
 
 		ModelData modelData = model.getModelData(VirtualEmptyBlockGetter.INSTANCE, BlockPos.ZERO, state, VIRTUAL_DATA);
 		poseStack.pushPose();
-		renderer.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, state, BlockPos.ZERO, poseStack, shadeSeparatingWrapper, false, random, 42L, OverlayTexture.NO_OVERLAY, modelData, null);
+		renderer.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, state, BlockPos.ZERO, poseStack, sbbBuilder, false, random, 42L, OverlayTexture.NO_OVERLAY, modelData, null);
 		poseStack.popPose();
 
-		shadeSeparatingWrapper.clear();
-		return endAndCombine(shadedBuilder, unshadedBuilder);
+		return sbbBuilder.end();
 	}
 
-	public static void transferBlockVertexData(ByteBuffer vertexBuffer, int vertexCount, int stride, MutableTemplateMesh mutableMesh, int dstIndex) {
+	public static void transferBlockVertexData(ByteBuffer vertexBuffer, int stride, int srcIndex, MutableTemplateMesh mutableMesh, int dstIndex, int vertexCount) {
 		for (int i = 0; i < vertexCount; i++) {
-			mutableMesh.x(i, vertexBuffer.getFloat(i * stride));
-			mutableMesh.y(i, vertexBuffer.getFloat(i * stride + 4));
-			mutableMesh.z(i, vertexBuffer.getFloat(i * stride + 8));
-			mutableMesh.color(i, vertexBuffer.getInt(i * stride + 12));
-			mutableMesh.u(i, vertexBuffer.getFloat(i * stride + 16));
-			mutableMesh.v(i, vertexBuffer.getFloat(i * stride + 20));
-			mutableMesh.overlay(i, OverlayTexture.NO_OVERLAY);
-			mutableMesh.light(i, vertexBuffer.getInt(i * stride + 24));
-			mutableMesh.normal(i, vertexBuffer.getInt(i * stride + 28));
+			mutableMesh.x(dstIndex + i, vertexBuffer.getFloat(srcIndex + i * stride));
+			mutableMesh.y(dstIndex + i, vertexBuffer.getFloat(srcIndex + i * stride + 4));
+			mutableMesh.z(dstIndex + i, vertexBuffer.getFloat(srcIndex + i * stride + 8));
+			mutableMesh.color(dstIndex + i, vertexBuffer.getInt(srcIndex + i * stride + 12));
+			mutableMesh.u(dstIndex + i, vertexBuffer.getFloat(srcIndex + i * stride + 16));
+			mutableMesh.v(dstIndex + i, vertexBuffer.getFloat(srcIndex + i * stride + 20));
+			mutableMesh.overlay(dstIndex + i, OverlayTexture.NO_OVERLAY);
+			mutableMesh.light(dstIndex + i, vertexBuffer.getInt(srcIndex + i * stride + 24));
+			mutableMesh.normal(dstIndex + i, vertexBuffer.getInt(srcIndex + i * stride + 28));
 		}
-	}
-
-	public static SuperByteBuffer endAndCombine(BufferBuilder shadedBuilder, BufferBuilder unshadedBuilder) {
-		RenderedBuffer shadedData = shadedBuilder.end();
-		int totalVertexCount = shadedData.drawState().vertexCount();
-		int unshadedStartVertex = totalVertexCount;
-		RenderedBuffer unshadedData = unshadedBuilder.endOrDiscardIfEmpty();
-		if (unshadedData != null) {
-			if (shadedData.drawState().format() != unshadedData.drawState().format()) {
-				throw new IllegalStateException("Buffer formats are not equal!");
-			}
-			totalVertexCount += unshadedData.drawState().vertexCount();
-		}
-
-		MutableTemplateMesh mutableMesh = new MutableTemplateMesh(totalVertexCount);
-		transferBlockVertexData(shadedData.vertexBuffer(), shadedData.drawState().vertexCount(), shadedData.drawState().format().getVertexSize(), mutableMesh, 0);
-		if (unshadedData != null) {
-			transferBlockVertexData(unshadedData.vertexBuffer(), unshadedData.drawState().vertexCount(), unshadedData.drawState().format().getVertexSize(), mutableMesh, unshadedStartVertex);
-		}
-		return new SuperByteBuffer(mutableMesh.toImmutable(), unshadedStartVertex);
 	}
 
 	private static class ThreadLocalObjects {
 		public final PoseStack identityPoseStack = new PoseStack();
 		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
-		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
-		public final BufferBuilder shadedBuilder = new BufferBuilder(512);
-		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
+		public final ShadedBlockSbbBuilder sbbBuilder = new ShadedBlockSbbBuilder();
 	}
 }

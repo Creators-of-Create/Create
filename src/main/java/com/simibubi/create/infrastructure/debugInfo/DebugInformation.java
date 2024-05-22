@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
 import com.jozufozu.flywheel.api.Flywheel;
+import com.jozufozu.flywheel.api.backend.Backend;
 import com.jozufozu.flywheel.api.backend.BackendManager;
 import com.mojang.blaze3d.platform.GlUtil;
 import com.simibubi.create.Create;
@@ -79,7 +80,7 @@ public class DebugInformation {
 									.getVersion()
 									.toString())
 							.orElse("None"))
-					.put("Flywheel Backend", () -> BackendManager.getBackend().toString())
+					.put("Flywheel Backend", () -> Backend.REGISTRY.getIdOrThrow(BackendManager.getBackend()).toString())
 					.put("OpenGL Renderer", GlUtil::getRenderer)
 					.put("OpenGL Version", GlUtil::getOpenGLVersion)
 					.put("Graphics Mode", () -> Minecraft.getInstance().options.graphicsMode().toString())

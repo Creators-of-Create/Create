@@ -4,16 +4,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.jozufozu.flywheel.lib.model.ModelUtil;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.content.schematics.SchematicWorld;
+import com.simibubi.create.foundation.render.ShadedBlockSbbBuilder;
 import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
-import com.simibubi.create.foundation.render.ShadeSeparatingVertexConsumer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -99,13 +95,8 @@ public class SchematicRenderer {
 		SchematicWorld renderWorld = schematic;
 		BoundingBox bounds = renderWorld.getBounds();
 
-		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
-		BufferBuilder shadedBuilder = objects.shadedBuilder;
-		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
-
-		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
+		ShadedBlockSbbBuilder sbbBuilder = objects.sbbBuilder;
+		sbbBuilder.begin();
 
 		renderWorld.renderMode = true;
 		ModelBlockRenderer.enableCaching();
@@ -124,7 +115,7 @@ public class SchematicRenderer {
 					poseStack.pushPose();
 					poseStack.translate(localPos.getX(), localPos.getY(), localPos.getZ());
 
-					renderer.tesselateBlock(renderWorld, model, state, pos, poseStack, shadeSeparatingWrapper, true,
+					renderer.tesselateBlock(renderWorld, model, state, pos, poseStack, sbbBuilder, true,
 						random, seed, OverlayTexture.NO_OVERLAY, modelData, layer);
 
 					poseStack.popPose();
@@ -134,8 +125,7 @@ public class SchematicRenderer {
 		ModelBlockRenderer.clearCache();
 		renderWorld.renderMode = false;
 
-		shadeSeparatingWrapper.clear();
-		return VirtualRenderHelper.endAndCombine(shadedBuilder, unshadedBuilder);
+		return sbbBuilder.end();
 	}
 
 	private static int getLayerCount() {
@@ -147,9 +137,7 @@ public class SchematicRenderer {
 		public final PoseStack poseStack = new PoseStack();
 		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
 		public final BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
-		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
-		public final BufferBuilder shadedBuilder = new BufferBuilder(512);
-		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
+		public final ShadedBlockSbbBuilder sbbBuilder = new ShadedBlockSbbBuilder();
 	}
 
 }

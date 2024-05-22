@@ -25,7 +25,7 @@ import net.minecraft.world.level.Level;
 
 public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 	private final TemplateMesh template;
-	private final int unshadedStartVertex;
+	private final int[] shadeSwapVertices;
 
 	// Vertex Position and Normals
 	private final PoseStack transforms = new PoseStack();
@@ -52,11 +52,15 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 	// Temporary
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
 
-	public SuperByteBuffer(TemplateMesh template, int unshadedStartVertex) {
+	public SuperByteBuffer(TemplateMesh template, int[] shadeSwapVertices) {
 		this.template = template;
-		this.unshadedStartVertex = unshadedStartVertex;
+		this.shadeSwapVertices = shadeSwapVertices;
 
 		transforms.pushPose();
+	}
+
+	public SuperByteBuffer(TemplateMesh template) {
+		this(template, new int[0]);
 	}
 
 	public void renderInto(PoseStack input, VertexConsumer builder) {
@@ -105,8 +109,18 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 			}
 		}
 
+		boolean shaded = true;
+		int shadeSwapIndex = 0;
+		int nextShadeSwapVertex = shadeSwapIndex < shadeSwapVertices.length ? shadeSwapVertices[shadeSwapIndex] : -1;
+
 		final int vertexCount = template.vertexCount();
 		for (int i = 0; i < vertexCount; i++) {
+			if (i == nextShadeSwapVertex) {
+				shaded = !shaded;
+				shadeSwapIndex++;
+				nextShadeSwapVertex = shadeSwapIndex < shadeSwapVertices.length ? shadeSwapVertices[shadeSwapIndex] : -1;
+			}
+
 			float x = template.x(i);
 			float y = template.y(i);
 			float z = template.z(i);
@@ -139,7 +153,7 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 			if (!disableDiffuseMult) {
 				// Transformed normal is in camera space, but it is needed in world space to calculate diffuse.
 				normal.mul(RenderSystem.getInverseViewRotationMatrix());
-				float diffuse = diffuseCalculator.getDiffuse(normal.x(), normal.y(), normal.z(), i < unshadedStartVertex);
+				float diffuse = diffuseCalculator.getDiffuse(normal.x(), normal.y(), normal.z(), shaded);
 				r *= diffuse;
 				g *= diffuse;
 				b *= diffuse;

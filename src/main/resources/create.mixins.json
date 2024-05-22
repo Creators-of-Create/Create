@@ -27,6 +27,7 @@
   ],
   "client": [
     "accessor.AgeableListModelAccessor",
+    "accessor.BufferBuilderAccessor",
     "accessor.GameRendererAccessor",
     "accessor.HumanoidArmorLayerAccessor",
     "accessor.ParticleEngineAccessor",
