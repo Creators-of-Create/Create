@@ -5,9 +5,9 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.instance.Instancer;
-import com.jozufozu.flywheel.lib.instance.AbstractInstance;
+import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.instance.Instancer;
+import dev.engine_room.flywheel.lib.instance.AbstractInstance;
 
 public class ConditionalInstance<D extends AbstractInstance> {
 

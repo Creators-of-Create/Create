@@ -7,7 +7,7 @@ import static com.simibubi.create.AllPartialModels.BOGEY_PISTON;
 import static com.simibubi.create.AllPartialModels.LARGE_BOGEY_WHEELS;
 import static com.simibubi.create.AllPartialModels.SMALL_BOGEY_WHEELS;
 
-import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;

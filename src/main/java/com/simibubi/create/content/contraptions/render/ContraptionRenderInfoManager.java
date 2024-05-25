@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.render;
 
-import com.jozufozu.flywheel.api.event.ReloadLevelRendererEvent;
+import dev.engine_room.flywheel.api.event.ReloadLevelRendererEvent;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.utility.WorldAttached;
 

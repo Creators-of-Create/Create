@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.pulley;
 
-import com.jozufozu.flywheel.api.visualization.VisualizationManager;
-import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.kinetics.base.IRotate;

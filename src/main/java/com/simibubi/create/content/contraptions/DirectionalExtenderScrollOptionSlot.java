@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions;
 
 import java.util.function.BiPredicate;
 
-import com.jozufozu.flywheel.lib.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;

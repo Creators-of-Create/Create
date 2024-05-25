@@ -2,16 +2,16 @@ package com.simibubi.create.content.redstone.analogLever;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.DynamicVisual;
-import com.jozufozu.flywheel.api.visualization.VisualizationContext;
-import com.jozufozu.flywheel.lib.instance.InstanceTypes;
-import com.jozufozu.flywheel.lib.instance.TransformedInstance;
-import com.jozufozu.flywheel.lib.model.Models;
-import com.jozufozu.flywheel.lib.transform.Rotate;
-import com.jozufozu.flywheel.lib.transform.Translate;
-import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
+import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.visual.DynamicVisual;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.instance.InstanceTypes;
+import dev.engine_room.flywheel.lib.instance.TransformedInstance;
+import dev.engine_room.flywheel.lib.model.Models;
+import dev.engine_room.flywheel.lib.transform.Rotate;
+import dev.engine_room.flywheel.lib.transform.Translate;
+import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
+import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Color;

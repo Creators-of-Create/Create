@@ -4,11 +4,11 @@ import java.nio.ByteBuffer;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.api.model.Model;
-import com.jozufozu.flywheel.lib.model.ModelCache;
-import com.jozufozu.flywheel.lib.model.ModelUtil;
-import com.jozufozu.flywheel.lib.model.baked.ForgeBakedModelBuilder;
-import com.jozufozu.flywheel.lib.model.baked.VirtualEmptyBlockGetter;
+import dev.engine_room.flywheel.api.model.Model;
+import dev.engine_room.flywheel.lib.model.ModelCache;
+import dev.engine_room.flywheel.lib.model.ModelUtil;
+import dev.engine_room.flywheel.lib.model.baked.ForgeBakedModelBuilder;
+import dev.engine_room.flywheel.lib.model.baked.VirtualEmptyBlockGetter;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -33,7 +33,7 @@ public class VirtualRenderHelper {
 	}
 
 	/**
-	 * A copy of {@link com.jozufozu.flywheel.lib.model.Models#block(BlockState)}, but with virtual model data passed in.
+	 * A copy of {@link dev.engine_room.flywheel.lib.model.Models#block(BlockState)}, but with virtual model data passed in.
 	 * @param state The block state to get the model for.
 	 * @return The model for the given block state.
 	 */

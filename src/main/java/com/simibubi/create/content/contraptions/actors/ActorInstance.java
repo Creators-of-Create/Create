@@ -4,9 +4,9 @@ import org.joml.Quaternionf;
 import org.joml.Quaternionfc;
 import org.joml.Vector3f;
 
-import com.jozufozu.flywheel.api.instance.InstanceHandle;
-import com.jozufozu.flywheel.api.instance.InstanceType;
-import com.jozufozu.flywheel.lib.instance.AbstractInstance;
+import dev.engine_room.flywheel.api.instance.InstanceHandle;
+import dev.engine_room.flywheel.api.instance.InstanceType;
+import dev.engine_room.flywheel.lib.instance.AbstractInstance;
 
 import net.minecraft.core.BlockPos;
 

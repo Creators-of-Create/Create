@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.jozufozu.flywheel.lib.box.Box;
-import com.jozufozu.flywheel.lib.box.MutableBox;
+import dev.engine_room.flywheel.lib.box.Box;
+import dev.engine_room.flywheel.lib.box.MutableBox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;

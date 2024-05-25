@@ -2,14 +2,14 @@ package com.simibubi.create.content.contraptions.pulley;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.instance.Instancer;
-import com.jozufozu.flywheel.api.visual.DynamicVisual;
-import com.jozufozu.flywheel.api.visualization.VisualizationContext;
-import com.jozufozu.flywheel.lib.box.MutableBox;
-import com.jozufozu.flywheel.lib.instance.OrientedInstance;
-import com.jozufozu.flywheel.lib.light.LightVolume;
-import com.jozufozu.flywheel.lib.visual.SimpleDynamicVisual;
+import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.instance.Instancer;
+import dev.engine_room.flywheel.api.visual.DynamicVisual;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.box.MutableBox;
+import dev.engine_room.flywheel.lib.instance.OrientedInstance;
+import dev.engine_room.flywheel.lib.light.LightVolume;
+import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;

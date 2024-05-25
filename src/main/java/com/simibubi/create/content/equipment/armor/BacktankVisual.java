@@ -1,8 +1,8 @@
 package com.simibubi.create.content.equipment.armor;
 
-import com.jozufozu.flywheel.api.model.Model;
-import com.jozufozu.flywheel.api.visualization.VisualizationContext;
-import com.jozufozu.flywheel.lib.model.Models;
+import dev.engine_room.flywheel.api.model.Model;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.model.Models;
 import com.simibubi.create.content.kinetics.base.SingleRotatingVisual;
 
 public class BacktankVisual extends SingleRotatingVisual<BacktankBlockEntity> {

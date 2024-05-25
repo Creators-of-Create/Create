@@ -2,14 +2,14 @@ package com.simibubi.create.content.redstone.diodes;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.visual.TickableVisual;
-import com.jozufozu.flywheel.api.visualization.VisualizationContext;
-import com.jozufozu.flywheel.lib.instance.InstanceTypes;
-import com.jozufozu.flywheel.lib.instance.TransformedInstance;
-import com.jozufozu.flywheel.lib.model.Models;
-import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
-import com.jozufozu.flywheel.lib.visual.SimpleTickableVisual;
+import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.visual.TickableVisual;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.instance.InstanceTypes;
+import dev.engine_room.flywheel.lib.instance.TransformedInstance;
+import dev.engine_room.flywheel.lib.model.Models;
+import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
+import dev.engine_room.flywheel.lib.visual.SimpleTickableVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.Color;
 

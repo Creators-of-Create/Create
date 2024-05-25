@@ -2,8 +2,8 @@ package com.simibubi.create.content.kinetics.drill;
 
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.visualization.VisualizationContext;
-import com.jozufozu.flywheel.lib.model.Models;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.actors.ActorInstance;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;

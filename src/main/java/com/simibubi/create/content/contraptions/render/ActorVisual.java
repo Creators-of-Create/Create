@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.render;
 
-import com.jozufozu.flywheel.api.instance.InstancerProvider;
-import com.jozufozu.flywheel.api.visual.Visual;
-import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 
+import dev.engine_room.flywheel.api.instance.InstancerProvider;
+import dev.engine_room.flywheel.api.visual.Visual;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.LightLayer;
 

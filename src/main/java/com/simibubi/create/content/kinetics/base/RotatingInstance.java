@@ -2,8 +2,8 @@ package com.simibubi.create.content.kinetics.base;
 
 import org.joml.Vector3f;
 
-import com.jozufozu.flywheel.api.instance.InstanceHandle;
-import com.jozufozu.flywheel.api.instance.InstanceType;
+import dev.engine_room.flywheel.api.instance.InstanceHandle;
+import dev.engine_room.flywheel.api.instance.InstanceType;
 
 import net.minecraft.core.Direction;
 

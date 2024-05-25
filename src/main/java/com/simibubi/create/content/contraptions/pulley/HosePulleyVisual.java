@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.pulley;
 
-import com.jozufozu.flywheel.api.instance.Instancer;
-import com.jozufozu.flywheel.api.visualization.VisualizationContext;
-import com.jozufozu.flywheel.lib.instance.InstanceTypes;
-import com.jozufozu.flywheel.lib.instance.OrientedInstance;
-import com.jozufozu.flywheel.lib.model.Models;
+import dev.engine_room.flywheel.api.instance.Instancer;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.instance.InstanceTypes;
+import dev.engine_room.flywheel.lib.instance.OrientedInstance;
+import dev.engine_room.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.fluids.hosePulley.HosePulleyBlockEntity;
 

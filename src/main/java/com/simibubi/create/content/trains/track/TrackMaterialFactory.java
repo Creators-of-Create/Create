@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.AllTags;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 

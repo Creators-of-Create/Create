@@ -3,7 +3,7 @@ package com.simibubi.create.content.equipment.bell;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import com.jozufozu.flywheel.lib.util.ShadersModHandler;
+import dev.engine_room.flywheel.lib.util.ShadersModHandler;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 

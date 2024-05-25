@@ -4,7 +4,7 @@ import static com.simibubi.create.AllPartialModels.GIRDER_SEGMENT_BOTTOM;
 import static com.simibubi.create.AllPartialModels.GIRDER_SEGMENT_MIDDLE;
 import static com.simibubi.create.AllPartialModels.GIRDER_SEGMENT_TOP;
 
-import com.jozufozu.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;

@@ -3,7 +3,7 @@ package com.simibubi.create.content.kinetics.crank;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.jozufozu.flywheel.api.model.Model;
+import dev.engine_room.flywheel.api.model.Model;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;

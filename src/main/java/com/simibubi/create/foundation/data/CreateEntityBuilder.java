@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.data;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.jozufozu.flywheel.lib.visual.SimpleEntityVisualizer;
+import dev.engine_room.flywheel.lib.visual.SimpleEntityVisualizer;
 import com.simibubi.create.Create;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BuilderCallback;

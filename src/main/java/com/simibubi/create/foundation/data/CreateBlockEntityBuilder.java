@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.lib.visual.SimpleBlockEntityVisualizer;
+import dev.engine_room.flywheel.lib.visual.SimpleBlockEntityVisualizer;
 import com.simibubi.create.Create;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockEntityBuilder;

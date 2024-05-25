@@ -2,11 +2,12 @@ package com.simibubi.create.content.kinetics.base;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.model.Model;
-import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.render.VirtualRenderHelper;
+
+import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.model.Model;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 
 public class SingleRotatingVisual<T extends KineticBlockEntity> extends KineticBlockEntityVisual<T> {
 

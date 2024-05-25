@@ -2,8 +2,8 @@ package com.simibubi.create.content.redstone.link.controller;
 
 import java.util.Vector;
 
-import com.jozufozu.flywheel.lib.model.baked.PartialModel;
-import com.jozufozu.flywheel.lib.transform.TransformStack;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;

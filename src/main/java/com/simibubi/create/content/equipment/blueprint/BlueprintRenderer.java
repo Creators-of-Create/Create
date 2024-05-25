@@ -2,8 +2,8 @@ package com.simibubi.create.content.equipment.blueprint;
 
 import org.joml.Matrix3f;
 
-import com.jozufozu.flywheel.lib.model.baked.PartialModel;
-import com.jozufozu.flywheel.lib.transform.TransformStack;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.BlueprintSection;

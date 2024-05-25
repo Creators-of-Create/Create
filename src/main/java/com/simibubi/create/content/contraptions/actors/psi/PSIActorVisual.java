@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.actors.psi;
 
-import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;

@@ -3,7 +3,7 @@ package com.simibubi.create.content.schematics.client;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.jozufozu.flywheel.lib.model.ModelUtil;
+import dev.engine_room.flywheel.lib.model.ModelUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.render.ShadedBlockSbbBuilder;

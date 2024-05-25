@@ -7,8 +7,8 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.instance.Instance;
-import com.jozufozu.flywheel.api.instance.Instancer;
+import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.instance.Instancer;
 
 public class SelectInstance<D extends Instance> {
 

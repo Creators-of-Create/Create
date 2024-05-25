@@ -9,9 +9,9 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
-import com.jozufozu.flywheel.api.Flywheel;
-import com.jozufozu.flywheel.api.backend.Backend;
-import com.jozufozu.flywheel.api.backend.BackendManager;
+import dev.engine_room.flywheel.api.Flywheel;
+import dev.engine_room.flywheel.api.backend.Backend;
+import dev.engine_room.flywheel.api.backend.BackendManager;
 import com.mojang.blaze3d.platform.GlUtil;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.mixin.accessor.SystemReportAccessor;

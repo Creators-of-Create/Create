@@ -3,8 +3,8 @@ package com.simibubi.create.content.kinetics.belt;
 import org.joml.Quaternionf;
 import org.joml.Quaternionfc;
 
-import com.jozufozu.flywheel.api.instance.InstanceHandle;
-import com.jozufozu.flywheel.api.instance.InstanceType;
+import dev.engine_room.flywheel.api.instance.InstanceHandle;
+import dev.engine_room.flywheel.api.instance.InstanceType;
 import com.simibubi.create.content.kinetics.base.KineticInstance;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 

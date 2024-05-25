@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.render;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.api.visualization.VisualizationManager;
-import com.jozufozu.flywheel.lib.model.ModelUtil;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.model.ModelUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.Contraption;
