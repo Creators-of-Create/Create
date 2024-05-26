@@ -171,8 +171,7 @@ public class GuiGameElement {
 
 			Minecraft mc = Minecraft.getInstance();
 			BlockRenderDispatcher blockRenderer = mc.getBlockRenderer();
-			MultiBufferSource.BufferSource buffer = mc.renderBuffers()
-				.bufferSource();
+			MultiBufferSource.BufferSource buffer = graphics.bufferSource();
 
 			transformMatrix(matrixStack);
 
@@ -264,11 +263,11 @@ public class GuiGameElement {
 			PoseStack matrixStack = graphics.pose();
 			prepareMatrix(matrixStack);
 			transformMatrix(matrixStack);
-			renderItemIntoGUI(matrixStack, stack, customLighting == null);
+			renderItemIntoGUI(graphics, matrixStack, stack, customLighting == null);
 			cleanUpMatrix(matrixStack);
 		}
 
-		public static void renderItemIntoGUI(PoseStack matrixStack, ItemStack stack, boolean useDefaultLighting) {
+		public static void renderItemIntoGUI(GuiGraphics graphics, PoseStack matrixStack, ItemStack stack, boolean useDefaultLighting) {
 			ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 			BakedModel bakedModel = renderer.getModel(stack, null, null, 0);
 
@@ -282,7 +281,7 @@ public class GuiGameElement {
 			matrixStack.translate(0, 0, 100.0F);
 			matrixStack.translate(8.0F, -8.0F, 0.0F);
 			matrixStack.scale(16.0F, 16.0F, 16.0F);
-			MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+			MultiBufferSource.BufferSource buffer = graphics.bufferSource();
 			boolean flatLighting = !bakedModel.usesBlockLight();
 			if (useDefaultLighting && flatLighting) {
 				Lighting.setupForFlatItems();

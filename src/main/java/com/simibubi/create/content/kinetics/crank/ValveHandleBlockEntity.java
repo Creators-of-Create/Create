@@ -91,7 +91,7 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 	@Override
 	public float getIndependentAngle(float partialTicks) {
 		if (inUse == 0 && source != null && getSpeed() != 0)
-			return KineticBlockEntityRenderer.getAngleForTe(this, worldPosition,
+			return KineticBlockEntityRenderer.getAngleForBe(this, worldPosition,
 				KineticBlockEntityRenderer.getRotationAxisOf(this));
 
 		int step = getBlockState().getOptionalValue(ValveHandleBlock.FACING)

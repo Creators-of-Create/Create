@@ -2,8 +2,6 @@ package com.simibubi.create.content.contraptions.actors.psi;
 
 import java.util.function.Consumer;
 
-import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
@@ -18,6 +16,8 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -55,8 +55,8 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 		float progress = animation.getValue(renderPartialTicks);
 		boolean lit = animation.settled();
 		render(blockState, lit, progress, matrices.getModel(),
-			sbb -> sbb
-				.light(matrices.getWorld(), LevelRenderer.getLightColor(renderWorld, context.localPos))
+			sbb -> sbb.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+				.useLevelLight(context.world, matrices.getWorld())
 				.renderInto(matrices.getViewProjection(), vb));
 	}
 

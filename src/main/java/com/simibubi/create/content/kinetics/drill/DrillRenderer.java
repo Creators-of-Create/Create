@@ -48,8 +48,8 @@ public class DrillRenderer extends KineticBlockEntityRenderer<DrillBlockEntity> 
 			.rotateXDegrees(AngleHelper.verticalAngle(facing))
 			.rotateZDegrees(angle)
 			.uncenter()
-			.light(matrices.getWorld(),
-					LevelRenderer.getLightColor(renderWorld, context.localPos))
+			.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+			.useLevelLight(context.world, matrices.getWorld())
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));
 	}
 

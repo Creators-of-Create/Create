@@ -369,7 +369,7 @@ public class TrackBlock extends Block
 
 		Map<BlockPos, BezierConnection> connections = trackBE.getConnections();
 		connections.forEach((connectedPos, bc) -> ITrackBlock.addToListIfConnected(connectedTo, list,
-			(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.tePositions.get(b)) : bc.starts.get(b), bc.normals::get,
+			(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.bePositions.get(b)) : bc.starts.get(b), bc.normals::get,
 			b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, bc::yOffsetAt, null, bc,
 			(b, v) -> ITrackBlock.getMaterialSimple(world, v, bc.getMaterial())));
 

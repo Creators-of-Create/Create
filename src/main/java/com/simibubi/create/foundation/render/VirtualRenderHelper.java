@@ -62,9 +62,9 @@ public class VirtualRenderHelper {
 		ShadedBlockSbbBuilder sbbBuilder = objects.sbbBuilder;
 		sbbBuilder.begin();
 
-		ModelData modelData = model.getModelData(VirtualEmptyBlockGetter.INSTANCE, BlockPos.ZERO, state, VIRTUAL_DATA);
+		ModelData modelData = model.getModelData(VirtualEmptyBlockGetter.FULL_DARK, BlockPos.ZERO, state, VIRTUAL_DATA);
 		poseStack.pushPose();
-		renderer.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, state, BlockPos.ZERO, poseStack, sbbBuilder, false, random, 42L, OverlayTexture.NO_OVERLAY, modelData, null);
+		renderer.tesselateBlock(VirtualEmptyBlockGetter.FULL_DARK, model, state, BlockPos.ZERO, poseStack, sbbBuilder, false, random, 42L, OverlayTexture.NO_OVERLAY, modelData, null);
 		poseStack.popPose();
 
 		return sbbBuilder.end();

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.pulley;
 
-import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.kinetics.base.IRotate;
@@ -11,6 +9,8 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -53,8 +53,9 @@ public abstract class AbstractPulleyRenderer<T extends KineticBlockEntity> exten
 
 		Axis rotationAxis = ((IRotate) be.getBlockState()
 			.getBlock()).getRotationAxis(be.getBlockState());
+		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		kineticRotationTransform(getRotatedCoil(be), be, rotationAxis, AngleHelper.rad(offset * 180), light)
-			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+			.renderInto(ms, vb);
 
 		Level world = be.getLevel();
 		BlockState blockState = be.getBlockState();
@@ -65,7 +66,6 @@ public abstract class AbstractPulleyRenderer<T extends KineticBlockEntity> exten
 		SuperByteBuffer magnet = renderMagnet(be);
 		SuperByteBuffer rope = renderRope(be);
 
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		if (running || offset == 0)
 			renderAt(world, offset > .25f ? magnet : halfMagnet, offset, pos, ms, vb);
 
@@ -85,7 +85,7 @@ public abstract class AbstractPulleyRenderer<T extends KineticBlockEntity> exten
 		BlockPos actualPos = pulleyPos.below((int) offset);
 		int light = LevelRenderer.getLightColor(world, world.getBlockState(actualPos), actualPos);
 		partial.translate(0, -offset, 0)
-			.light(light)
+		.light(light)
 			.renderInto(ms, buffer);
 	}
 

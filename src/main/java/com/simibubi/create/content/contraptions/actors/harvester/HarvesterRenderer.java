@@ -53,8 +53,8 @@ public class HarvesterRenderer extends SafeBlockEntityRenderer<HarvesterBlockEnt
 		superBuffer.transform(matrices.getModel());
 		transform(context.world, facing, superBuffer, speed, PIVOT);
 
-		superBuffer
-			.light(matrices.getWorld(), LevelRenderer.getLightColor(renderWorld, context.localPos))
+		superBuffer.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+			.useLevelLight(context.world, matrices.getWorld())
 			.renderInto(matrices.getViewProjection(), buffers.getBuffer(RenderType.cutoutMipped()));
 	}
 

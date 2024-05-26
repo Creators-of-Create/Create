@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.actors.roller;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterRenderer;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -34,6 +35,7 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
 		BlockState blockState = be.getBlockState();
+		VertexConsumer vc = buffer.getBuffer(RenderType.cutoutMipped());
 
 		ms.pushPose();
 		ms.translate(0, -0.25, 0);
@@ -45,19 +47,20 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 		superBuffer.translate(0, -.5, .5)
 			.rotateYDegrees(90)
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+			.renderInto(ms, vc);
 		ms.popPose();
 
 		CachedBufferer.partial(AllPartialModels.ROLLER_FRAME, blockState)
 			.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(facing) + 180), Direction.UP)
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+			.renderInto(ms, vc);
 	}
 
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffers) {
 		BlockState blockState = context.state;
 		Direction facing = blockState.getValue(HORIZONTAL_FACING);
+		VertexConsumer vc = buffers.getBuffer(RenderType.cutoutMipped());
 		SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.ROLLER_WHEEL, blockState);
 		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite())
 			? context.getAnimationSpeed()
@@ -76,15 +79,17 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 		int contraptionWorldLight = LevelRenderer.getLightColor(renderWorld, context.localPos);
 		superBuffer.translate(0, -.5, .5)
 			.rotateYDegrees(90)
-			.light(matrices.getWorld(), contraptionWorldLight)
-			.renderInto(viewProjection, buffers.getBuffer(RenderType.cutoutMipped()));
+			.light(contraptionWorldLight)
+			.useLevelLight(context.world, matrices.getWorld())
+			.renderInto(viewProjection, vc);
 		viewProjection.popPose();
 
 		CachedBufferer.partial(AllPartialModels.ROLLER_FRAME, blockState)
 			.transform(matrices.getModel())
 			.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(facing) + 180), Direction.UP)
-			.light(matrices.getWorld(), contraptionWorldLight)
-			.renderInto(viewProjection, buffers.getBuffer(RenderType.cutoutMipped()));
+			.light(contraptionWorldLight)
+			.useLevelLight(context.world, matrices.getWorld())
+			.renderInto(viewProjection, vc);
 	}
 
 }

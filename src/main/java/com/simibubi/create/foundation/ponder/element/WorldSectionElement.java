@@ -305,7 +305,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	public void renderFirst(PonderWorld world, MultiBufferSource buffer, PoseStack ms, float fade, float pt) {
 		int light = -1;
 		if (fade != 1)
-			light = (int) (Mth.lerp(fade, 5, 14));
+			light = (int) (Mth.lerp(fade, 5, 15));
 		if (redraw) {
 			renderedBlockEntities = null;
 			tickableBlockEntities = null;
@@ -359,14 +359,14 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 		if (redraw)
 			bufferCache.invalidate(DOC_WORLD_SECTION, key);
-		SuperByteBuffer contraptionBuffer =
+		SuperByteBuffer structureBuffer =
 			bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, type));
-		if (contraptionBuffer.isEmpty())
+		if (structureBuffer.isEmpty())
 			return;
 
-		transformMS(contraptionBuffer.getTransforms(), pt);
+		transformMS(structureBuffer.getTransforms(), pt);
 		int light = lightCoordsFromFade(fade);
-		contraptionBuffer
+		structureBuffer
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(type));
 	}
@@ -415,6 +415,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		sbbBuilder.begin();
 
 		world.setMask(this.section);
+		world.pushFakeLight(0);
 		ModelBlockRenderer.enableCaching();
 		section.forEach(pos -> {
 			BlockState state = world.getBlockState(pos);
@@ -444,6 +445,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			}
 		});
 		ModelBlockRenderer.clearCache();
+		world.popLight();
 		world.clearMask();
 
 		return sbbBuilder.end();

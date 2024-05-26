@@ -60,7 +60,7 @@ public abstract class Outline {
 		if (lineWidth == 0)
 			return;
 
-		VertexConsumer builder = buffer.getBuffer(RenderTypes.getOutlineSolid());
+		VertexConsumer builder = buffer.getBuffer(RenderTypes.outlineSolid());
 
 		Vec3 diff = end.subtract(start);
 		if (diff.x + diff.y + diff.z < 0) {

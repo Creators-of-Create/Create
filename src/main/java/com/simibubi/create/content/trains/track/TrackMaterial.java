@@ -163,7 +163,7 @@ public class TrackMaterial {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public record TrackModelHolder(PartialModel tie, PartialModel segment_left, PartialModel segment_right) {
+	public record TrackModelHolder(PartialModel tie, PartialModel leftSegment, PartialModel rightSegment) {
 		static final TrackModelHolder DEFAULT = new TrackModelHolder(AllPartialModels.TRACK_TIE,
 			AllPartialModels.TRACK_SEGMENT_LEFT, AllPartialModels.TRACK_SEGMENT_RIGHT);
 	}

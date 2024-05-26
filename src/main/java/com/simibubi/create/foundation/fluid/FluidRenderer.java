@@ -33,7 +33,7 @@ import net.minecraftforge.fluids.FluidType;
 public class FluidRenderer {
 
 	public static VertexConsumer getFluidBuilder(MultiBufferSource buffer) {
-		return buffer.getBuffer(RenderTypes.getFluid());
+		return buffer.getBuffer(RenderTypes.fluid());
 	}
 
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,

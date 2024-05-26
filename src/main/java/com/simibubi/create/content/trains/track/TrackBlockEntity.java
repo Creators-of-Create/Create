@@ -93,7 +93,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 			BlockPos key = entry.getKey();
 			BezierConnection bc = entry.getValue();
 
-			if (!key.equals(bc.getKey()) || !worldPosition.equals(bc.tePositions.getFirst())) {
+			if (!key.equals(bc.getKey()) || !worldPosition.equals(bc.bePositions.getFirst())) {
 				invalid.add(key);
 				continue;
 			}
@@ -159,7 +159,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 		for (BezierConnection bezierConnection : connections.values()) {
 			if (!(level.getBlockEntity(bezierConnection.getKey())instanceof TrackBlockEntity tbe))
 				return;
-			tbe.removeConnection(bezierConnection.tePositions.getFirst());
+			tbe.removeConnection(bezierConnection.bePositions.getFirst());
 			if (!dropAndDiscard)
 				continue;
 			if (!cancelDrops)
@@ -282,10 +282,10 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 			newConnection.normals.replace(transform::applyWithoutOffsetUncentered);
 			newConnection.axes.replace(transform::applyWithoutOffsetUncentered);
 
-			BlockPos diff = newConnection.tePositions.getSecond()
-				.subtract(newConnection.tePositions.getFirst());
-			newConnection.tePositions
-				.setSecond(BlockPos.containing(Vec3.atCenterOf(newConnection.tePositions.getFirst())
+			BlockPos diff = newConnection.bePositions.getSecond()
+				.subtract(newConnection.bePositions.getFirst());
+			newConnection.bePositions
+				.setSecond(BlockPos.containing(Vec3.atCenterOf(newConnection.bePositions.getFirst())
 					.add(transform.applyWithoutOffsetUncentered(Vec3.atLowerCornerOf(diff)))));
 
 			Vec3 beVec = Vec3.atLowerCornerOf(worldPosition);
@@ -364,7 +364,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 
 	public void manageFakeTracksAlong(BezierConnection bc, boolean remove) {
 		Map<Pair<Integer, Integer>, Double> yLevels = new HashMap<>();
-		BlockPos tePosition = bc.tePositions.getFirst();
+		BlockPos tePosition = bc.bePositions.getFirst();
 		Vec3 end1 = bc.starts.getFirst()
 			.subtract(Vec3.atLowerCornerOf(tePosition))
 			.add(0, 3 / 16f, 0);

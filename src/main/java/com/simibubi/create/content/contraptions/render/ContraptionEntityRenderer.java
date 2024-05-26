@@ -69,8 +69,7 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 				if (!sbb.isEmpty()) {
 					VertexConsumer vc = buffers.getBuffer(renderType);
 					sbb.transform(matrices.getModel())
-						.light(matrices.getWorld())
-						.hybridLight()
+						.useLevelLight(level, matrices.getWorld())
 						.renderInto(poseStack, vc);
 				}
 			}

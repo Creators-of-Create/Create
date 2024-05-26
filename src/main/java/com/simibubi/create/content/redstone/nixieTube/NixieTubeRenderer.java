@@ -2,7 +2,6 @@ package com.simibubi.create.content.redstone.nixieTube;
 
 import java.util.Random;
 
-import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.redstone.nixieTube.DoubleFaceAttachedBlock.DoubleAttachFace;
@@ -16,6 +15,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.glyphs.BakedGlyph;
@@ -180,7 +180,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 					.light(0xf000f0)
 					.disableDiffuse()
 					.scale(vert ? longSideGlow : 2, vert ? 2 : longSideGlow, 2)
-					.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+					.renderInto(ms, buffer.getBuffer(RenderTypes.additive()));
 			}
 
 			CachedBufferer
@@ -189,7 +189,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 				.light(0xF000F0)
 				.disableDiffuse()
 				.scale(1 + 1 / 16f)
-				.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+				.renderInto(ms, buffer.getBuffer(RenderTypes.additive()));
 
 			ms.popPose();
 		}

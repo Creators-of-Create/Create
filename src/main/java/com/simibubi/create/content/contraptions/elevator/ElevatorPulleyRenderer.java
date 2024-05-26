@@ -33,11 +33,10 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer<ElevatorP
 //		if (VisualizationManager.supportsVisualization(be.getLevel()))
 //			return;
 
-		// from KBE. replace with super call when flw instance is implemented
+		// from KBE. replace with super call when flw visual is implemented
 		BlockState state = getRenderedBlockState(be);
 		RenderType type = getRenderType(be, state);
-		if (type != null)
-			renderRotatingBuffer(be, getRotatedModel(be, state), ms, buffer.getBuffer(type), light);
+		renderRotatingBuffer(be, getRotatedModel(be, state), ms, buffer.getBuffer(type), light);
 		//
 
 		float offset = PulleyRenderer.getBlockEntityOffset(partialTicks, be);

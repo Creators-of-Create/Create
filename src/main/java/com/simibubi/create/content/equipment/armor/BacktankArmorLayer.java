@@ -1,6 +1,7 @@
 package com.simibubi.create.content.equipment.armor;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -9,7 +10,6 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -43,7 +43,7 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			return;
 
 		HumanoidModel<?> model = (HumanoidModel<?>) entityModel;
-		RenderType renderType = Sheets.cutoutBlockSheet();
+		VertexConsumer vc = buffer.getBuffer(Sheets.cutoutBlockSheet());
 		BlockState renderedState = item.getBlock().defaultBlockState()
 				.setValue(BacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
 		SuperByteBuffer backtank = CachedBufferer.block(renderedState);
@@ -57,7 +57,7 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 
 		backtank.disableDiffuse()
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(renderType));
+			.renderInto(ms, vc);
 
 		cogs.center()
 			.rotateYDegrees(180)
@@ -68,7 +68,7 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 
 		cogs.disableDiffuse()
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(renderType));
+			.renderInto(ms, vc);
 
 		ms.popPose();
 	}

@@ -1,6 +1,5 @@
 package com.simibubi.create.content.kinetics.simpleRelays.encased;
 
-import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.IRotate;
@@ -11,6 +10,7 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -54,7 +54,7 @@ public class EncasedCogRenderer extends KineticBlockEntityRenderer<SimpleKinetic
 		Axis axis = getRotationAxisOf(be);
 		BlockPos pos = be.getBlockPos();
 		float angle = large ? BracketedKineticBlockEntityRenderer.getAngleForLargeCogShaft(be, axis)
-			: getAngleForTe(be, pos, axis);
+			: getAngleForBe(be, pos, axis);
 
 		for (Direction d : Iterate.directionsInAxis(getRotationAxisOf(be))) {
 			if (!def.hasShaftTowards(be.getLevel(), be.getBlockPos(), blockState, d))

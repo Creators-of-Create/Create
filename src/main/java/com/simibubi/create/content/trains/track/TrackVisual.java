@@ -123,7 +123,7 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 		private @Nullable GirderVisual girder;
 
 		private BezierTrackVisual(BezierConnection bc) {
-			BlockPos tePosition = bc.tePositions.getFirst();
+			BlockPos tePosition = bc.bePositions.getFirst();
 			girder = bc.hasGirder ? new GirderVisual(bc) : null;
 
 			PoseStack pose = new PoseStack();
@@ -142,9 +142,9 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 
 			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.tie()))
 				.createInstances(ties);
-			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.segment_left()))
+			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.leftSegment()))
 				.createInstances(left);
-			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.segment_right()))
+			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.rightSegment()))
 				.createInstances(right);
 
 			SegmentAngles[] segments = bc.getBakedSegments();
@@ -209,11 +209,11 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 			private final BlockPos[] lightPos;
 
 			private GirderVisual(BezierConnection bc) {
-				BlockPos tePosition = bc.tePositions.getFirst();
+				BlockPos tePosition = bc.bePositions.getFirst();
 				PoseStack pose = new PoseStack();
 				TransformStack.of(pose)
 					.translate(getVisualPosition())
-					.nudge((int) bc.tePositions.getFirst()
+					.nudge((int) bc.bePositions.getFirst()
 						.asLong());
 
 				int segCount = bc.getSegmentCount();

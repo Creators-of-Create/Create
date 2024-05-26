@@ -118,7 +118,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 				}
 
 				beltBuffer
-						.transform(localTransforms)
+				.transform(localTransforms)
 						.renderInto(ms, vb);
 
 				// Diagonal belt do not have a separate bottom model

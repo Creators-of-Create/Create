@@ -31,6 +31,7 @@
     "accessor.GameRendererAccessor",
     "accessor.HumanoidArmorLayerAccessor",
     "accessor.ParticleEngineAccessor",
+    "accessor.RenderSystemAccessor",
     "client.BlockDestructionProgressMixin",
     "client.CameraMixin",
     "client.EntityContraptionInteractionMixin",

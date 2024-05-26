@@ -1,11 +1,6 @@
 package com.simibubi.create.content.logistics.depot;
 
-import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import dev.engine_room.flywheel.lib.transform.Rotate;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
-import dev.engine_room.flywheel.lib.transform.Translate;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.ShaftRenderer;
@@ -15,6 +10,10 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.transform.Rotate;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.Translate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -41,7 +40,6 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		VertexConsumer vertexBuilder = buffer.getBuffer(RenderType.solid());
 		float lidProgress = be.getLidProgress(partialTicks);
 		float angle = lidProgress * 70;
 
@@ -49,7 +47,7 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 			SuperByteBuffer model = CachedBufferer.partial(AllPartialModels.EJECTOR_TOP, be.getBlockState());
 			applyLidAngle(be, angle, model);
 			model.light(light)
-					.renderInto(ms, vertexBuilder);
+					.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		}
 
 		var msr = TransformStack.of(ms);

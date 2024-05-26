@@ -48,15 +48,15 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 			return;
 
 		ms.pushPose();
-		BlockPos tePosition = bc.tePositions.getFirst();
+		BlockPos bePosition = bc.bePositions.getFirst();
 		BlockState air = Blocks.AIR.defaultBlockState();
 		SegmentAngles[] segments = bc.getBakedSegments();
 
-		renderGirder(level, bc, ms, vb, tePosition);
+		renderGirder(level, bc, ms, vb, bePosition);
 
 		for (int i = 1; i < segments.length; i++) {
 			SegmentAngles segment = segments[i];
-			int light = LevelRenderer.getLightColor(level, segment.lightPosition.offset(tePosition));
+			int light = LevelRenderer.getLightColor(level, segment.lightPosition.offset(bePosition));
 
 			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
 
@@ -68,7 +68,7 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 
 			for (boolean first : Iterate.trueAndFalse) {
 				Pose transform = segment.railTransforms.get(first);
-				CachedBufferer.partial(first ? modelHolder.segment_left() : modelHolder.segment_right(), air)
+				CachedBufferer.partial(first ? modelHolder.leftSegment() : modelHolder.rightSegment(), air)
 					.mulPose(transform.pose())
 					.mulNormal(transform.normal())
 					.light(light)
