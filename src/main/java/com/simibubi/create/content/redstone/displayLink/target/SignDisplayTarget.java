@@ -26,7 +26,7 @@ public class SignDisplayTarget extends DisplayTarget {
 			if (i > 0 && isReserved(i + line, sign, context))
 				break;
 
-			signText.setMessage(i + line, text.get(i));
+			signText = signText.setMessage(i + line, text.get(i));
 			changed = true;
 		}
 
