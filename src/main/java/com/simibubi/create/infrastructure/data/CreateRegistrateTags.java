@@ -1,5 +1,6 @@
 package com.simibubi.create.infrastructure.data;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllEntityTags;
 import com.simibubi.create.AllTags.AllFluidTags;
@@ -149,11 +150,17 @@ public class CreateRegistrateTags {
 
 		genStrippedWoodItemTags(prov);
 
+		prov.tag(AllItemTags.CURIOS_HEAD.tag).add(AllItems.GOGGLES.get());
+
 		TagGen.addOptional(prov.tag(AllItemTags.ALLURITE.tag), Mods.GS, gsPalette("allurite"));
 
 		TagGen.addOptional(prov.tag(AllItemTags.LUMIERE.tag), Mods.GS, gsPalette("lumiere"));
 
 		TagGen.addOptional(prov.tag(AllItemTags.AMETHYST.tag), Mods.GS, gsPalette("amethyst"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.UA_CORAL.tag), Mods.UA, List.of("acan_coral",
+				"finger_coral", "star_coral", "moss_coral", "petal_coral", "branch_coral",
+				"rock_coral", "pillow_coral", "chrome_coral", "silk_coral"));
 
 		// VALIDATE
 

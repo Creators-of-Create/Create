@@ -1,0 +1,45 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "upgrade_aquatic:acan_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:finger_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:star_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:moss_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:petal_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:branch_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:rock_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:pillow_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:chrome_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:silk_coral",
+      "required": false
+    }
+  ]
+}

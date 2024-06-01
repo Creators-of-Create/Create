@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.AllTags.NameSpace.CURIOS;
 import static com.simibubi.create.AllTags.NameSpace.FORGE;
 import static com.simibubi.create.AllTags.NameSpace.GS;
 import static com.simibubi.create.AllTags.NameSpace.MOD;
@@ -59,7 +60,8 @@ public class AllTags {
 		FORGE("forge"),
 		TIC("tconstruct"),
 		QUARK("quark"),
-		GS("galosphere")
+		GS("galosphere"),
+		CURIOS("curios")
 
 		;
 
@@ -189,6 +191,9 @@ public class AllTags {
 		ALLURITE(MOD,"stone_types/galosphere/allurite"),
 		AMETHYST(MOD,"stone_types/galosphere/amethyst"),
 		LUMIERE(MOD, "stone_types/galosphere/lumiere"),
+
+		UA_CORAL(MOD, "upgrade_aquatic/coral"),
+		CURIOS_HEAD(CURIOS, "head")
 
 		;
 
