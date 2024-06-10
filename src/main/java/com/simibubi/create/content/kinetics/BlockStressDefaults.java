@@ -3,6 +3,7 @@ package com.simibubi.create.content.kinetics;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.simibubi.create.foundation.utility.Couple;
 import com.tterrag.registrate.builders.BlockBuilder;
@@ -20,9 +21,9 @@ public class BlockStressDefaults {
 	 */
 	public static final int FORCED_UPDATE_VERSION = 2;
 
-	public static final Map<ResourceLocation, Double> DEFAULT_IMPACTS = new HashMap<>();
-	public static final Map<ResourceLocation, Double> DEFAULT_CAPACITIES = new HashMap<>();
-	public static final Map<ResourceLocation, Supplier<Couple<Integer>>> GENERATOR_SPEEDS = new HashMap<>();
+	public static final Map<ResourceLocation, Double> DEFAULT_IMPACTS = new ConcurrentHashMap<>();
+	public static final Map<ResourceLocation, Double> DEFAULT_CAPACITIES = new ConcurrentHashMap<>();
+	public static final Map<ResourceLocation, Supplier<Couple<Integer>>> GENERATOR_SPEEDS = new ConcurrentHashMap<>();
 
 	public static void setDefaultImpact(ResourceLocation blockId, double impact) {
 		DEFAULT_IMPACTS.put(blockId, impact);
