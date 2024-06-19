@@ -1,0 +1,7 @@
+{
+  "parent": "create:item/pane",
+  "textures": {
+    "edge": "minecraft:block/cherry_planks",
+    "pane": "create:block/palettes/cherry_window"
+  }
+}

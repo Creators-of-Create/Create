@@ -1,0 +1,7 @@
+{
+  "parent": "create:item/pane",
+  "textures": {
+    "edge": "minecraft:block/bamboo_planks",
+    "pane": "create:block/palettes/bamboo_window"
+  }
+}
