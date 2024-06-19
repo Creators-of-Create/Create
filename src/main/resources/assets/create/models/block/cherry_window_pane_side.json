@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/connected_glass_pane/side",
+  "textures": {
+    "edge": "minecraft:block/cherry_planks",
+    "pane": "create:block/palettes/cherry_window"
+  }
+}
