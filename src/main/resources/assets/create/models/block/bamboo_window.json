@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "minecraft:block/bamboo_planks",
+    "side": "create:block/palettes/bamboo_window"
+  }
+}
