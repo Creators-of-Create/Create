@@ -186,6 +186,7 @@ public class AllTags {
 		STRIPPED_LOGS(FORGE),
 		STRIPPED_WOOD(FORGE),
 		PLATES(FORGE),
+		OBSIDIAN_DUST(FORGE,"dusts/obsidian"),
 		WRENCH(FORGE, "tools/wrench"),
 
 		ALLURITE(MOD,"stone_types/galosphere/allurite"),

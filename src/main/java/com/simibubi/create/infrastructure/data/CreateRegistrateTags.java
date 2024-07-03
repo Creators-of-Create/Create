@@ -146,6 +146,8 @@ public class CreateRegistrateTags {
 		prov.tag(Tags.Items.INGOTS)
 			.addTag(AllItemTags.CREATE_INGOTS.tag);
 
+		prov.tag(AllItemTags.OBSIDIAN_DUST.tag).add(AllItems.POWDERED_OBSIDIAN.get());
+
 		// COMPAT
 
 		genStrippedWoodItemTags(prov);
