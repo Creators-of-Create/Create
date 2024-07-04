@@ -37,10 +37,13 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 	private int capacityEnchantLevel;
 	private ListTag enchantmentTag;
 
+	private CompoundTag fullNbt;
+
 	public BacktankBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		defaultName = getDefaultName(state);
 		enchantmentTag = new ListTag();
+		fullNbt = new CompoundTag();
 	}
 
 	public static Component getDefaultName(BlockState state) {
@@ -118,6 +121,7 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 		if (this.customName != null)
 			compound.putString("CustomName", Component.Serializer.toJson(this.customName));
 		compound.put("Enchantments", enchantmentTag);
+		compound.put("FullNBT", fullNbt);
 	}
 
 	@Override
@@ -128,6 +132,7 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 		airLevel = compound.getInt("Air");
 		airLevelTimer = compound.getInt("Timer");
 		enchantmentTag = compound.getList("Enchantments", Tag.TAG_COMPOUND);
+		this.fullNbt = compound.getCompound("FullNBT");
 		if (compound.contains("CustomName", 8))
 			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
 		if (prev != 0 && prev != airLevel && airLevel == BacktankUtil.maxAir(capacityEnchantLevel) && clientPacket)
@@ -180,6 +185,16 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 
 	public void setCapacityEnchantLevel(int capacityEnchantLevel) {
 		this.capacityEnchantLevel = capacityEnchantLevel;
+	}
+
+	public CompoundTag getFullNbt()
+	{
+		return fullNbt;
+	}
+
+	public void setFullNbt(CompoundTag fullNbt)
+	{
+		this.fullNbt = fullNbt;
 	}
 
 }
