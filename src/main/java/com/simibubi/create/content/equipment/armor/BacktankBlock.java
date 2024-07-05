@@ -158,7 +158,7 @@ public class BacktankBlock extends HorizontalKineticBlock
 		ItemStack stack = new ItemStack(item);
 		Optional<BacktankBlockEntity> blockEntityOptional = getBlockEntityOptional(blockGetter, pos);
 
-		CompoundTag tag = stack.getOrCreateTag().merge(blockEntityOptional.map(BacktankBlockEntity::getFullNbt).orElse(new CompoundTag()));
+		CompoundTag tag = blockEntityOptional.map(BacktankBlockEntity::getFullNbt).orElse(stack.getOrCreateTag());
 
 		int air = blockEntityOptional.map(BacktankBlockEntity::getAirLevel)
 			.orElse(0);
