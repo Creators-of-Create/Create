@@ -30,6 +30,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
@@ -194,6 +195,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 		boolean slopeAlongX = beltFacing
 								.getAxis() == Axis.X;
 
+		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		boolean onContraption = be.getLevel() instanceof WrappedWorld;
 
 		for (TransportedItemStack transported : be.getInventory()
@@ -238,11 +240,10 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 			ms.translate(alongX ? sideOffset : 0, 0, alongX ? 0 : sideOffset);
 
 			int stackLight = onContraption ? light : getPackedLight(be, offset);
-			ItemRenderer itemRenderer = Minecraft.getInstance()
-				.getItemRenderer();
+
 			boolean renderUpright = BeltHelper.isItemUpright(transported.stack);
-			boolean blockItem = itemRenderer.getModel(transported.stack, be.getLevel(), null, 0)
-				.isGui3d();
+			BakedModel bakedModel = itemRenderer.getModel(transported.stack, be.getLevel(), null, 0);
+			boolean blockItem = bakedModel.isGui3d();
 			int count = (int) (Mth.log2((int) (transported.stack.getCount()))) / 2;
 			Random r = new Random(transported.angle);
 
@@ -289,7 +290,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 				}
 
 				ms.scale(.5f, .5f, .5f);
-				itemRenderer.renderStatic(null, transported.stack, TransformType.FIXED, false, ms, buffer, be.getLevel(), stackLight, overlay, 0);
+				itemRenderer.render(transported.stack, TransformType.FIXED, false, ms, buffer, stackLight, overlay, bakedModel);
 				ms.popPose();
 
 				if (!renderUpright) {
