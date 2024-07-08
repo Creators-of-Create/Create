@@ -161,7 +161,7 @@ public class SchematicHandler implements IGuiOverlay {
 		BlockPos pos;
 
 		pos = BlockPos.ZERO;
-		
+
 		try {
 			schematic.placeInWorld(w, pos, pos, placementSettings, w.getRandom(), Block.UPDATE_CLIENTS);
 		} catch (Exception e) {
@@ -314,8 +314,12 @@ public class SchematicHandler implements IGuiOverlay {
 
 	private boolean itemLost(Player player) {
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
+			if (player.getInventory()
+					.getItem(i)
+					.is(activeSchematicItem.getItem()))
+				continue;
 			if (!ItemStack.matches(player.getInventory()
-				.getItem(i), activeSchematicItem))
+					.getItem(i), activeSchematicItem))
 				continue;
 			return false;
 		}
