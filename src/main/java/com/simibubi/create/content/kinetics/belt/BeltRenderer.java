@@ -198,10 +198,6 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 
 		for (TransportedItemStack transported : be.getInventory()
 			.getTransportedItems()) {
-			ms.pushPose();
-            TransformStack.cast(ms)
-				.nudge(transported.angle);
-
 			float offset;
 			float sideOffset;
 			float verticalMovement;
@@ -228,6 +224,18 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 																														.getAxis() == Axis.Z);
 			float slopeAngle = onSlope ? tiltForward ? -45 : 45 : 0;
 
+			Vec3 itemPos = beltStartOffset.add(
+					be.getBlockPos().getX(),
+					be.getBlockPos().getY(),
+					be.getBlockPos().getZ())
+				.add(offsetVec);
+
+			if (this.shouldCullItem(itemPos)) {
+				continue;
+			}
+
+			ms.pushPose();
+			TransformStack.cast(ms).nudge(transported.angle);
 			ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 
 			boolean alongX = beltFacing
@@ -243,7 +251,13 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 			boolean renderUpright = BeltHelper.isItemUpright(transported.stack);
 			boolean blockItem = itemRenderer.getModel(transported.stack, be.getLevel(), null, 0)
 				.isGui3d();
-			int count = (int) (Mth.log2((int) (transported.stack.getCount()))) / 2;
+
+
+			int count = 0;
+			if (Minecraft.getInstance().player.getEyePosition(1.0F).distanceTo(itemPos) < 16) {
+				count = (int) (Mth.log2((int) (transported.stack.getCount()))) / 2;
+			}
+
 			Random r = new Random(transported.angle);
 
 			boolean slopeShadowOnly = renderUpright && onSlope;
