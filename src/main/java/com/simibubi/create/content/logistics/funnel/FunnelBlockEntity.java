@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.funnel;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import com.simibubi.create.foundation.utility.LogisticsExtractionManager;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
@@ -122,6 +124,11 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		Direction facing = AbstractFunnelBlock.getFunnelFacing(blockState);
 
 		if (facing == null)
+			return;
+
+		// Determine the position to lock based on the facing direction
+		BlockPos extractPos = worldPosition.relative(facing.getOpposite());
+		if (!LogisticsExtractionManager.tryLock(extractPos))
 			return;
 
 		boolean trackingEntityPresent = true;

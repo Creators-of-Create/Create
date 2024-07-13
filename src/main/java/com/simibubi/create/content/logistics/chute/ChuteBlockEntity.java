@@ -28,6 +28,7 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LogisticsExtractionManager;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -244,6 +245,11 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	private void extractFromBelt(float itemSpeed) {
 		if (itemSpeed <= 0 || level == null || level.isClientSide)
 			return;
+
+		BlockPos beltPos = worldPosition.below();
+		if (!LogisticsExtractionManager.tryLock(beltPos))
+			return;
+
 		if (getItem().isEmpty() && beltBelow != null) {
 			beltBelow.handleCenteredProcessingOnAllItems(.5f, ts -> {
 				if (canAcceptItem(ts.stack)) {
