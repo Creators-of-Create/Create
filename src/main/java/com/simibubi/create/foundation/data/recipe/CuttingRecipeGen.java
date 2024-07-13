@@ -149,7 +149,9 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		RU_10 = stripAndMakePlanks(Mods.RU, null, "alpha_wood", "alpha_planks"),
 		RU_11 = stripAndMakePlanks(Mods.RU, "brimwood_log_magma", "stripped_brimwood", null),
 		RU_12 = stripAndMakePlanks(Mods.RU, "ashen_log", "stripped_dead_log", null),
-		RU_13 = stripAndMakePlanks(Mods.RU, "ashen_wood", "stripped_dead_wood", null)
+		RU_13 = stripAndMakePlanks(Mods.RU, "ashen_wood", "stripped_dead_wood", null),
+		RU_14 = stripOnlyDiffModId(Mods.RU, "silver_birch_log", Mods.MC, "stripped_birch_log"),
+		RU_15 = stripOnlyDiffModId(Mods.RU, "silver_birch_wood", Mods.MC, "stripped_birch_wood")
 		;
 
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {
@@ -183,6 +185,14 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 			String strippedPost = mod.strippedIsSuffix ? "_stripped" : "";
 			stripAndMakePlanks(mod, type + "_log", strippedPre + type + "_log" + strippedPost, planks);
 		}
+		return null;
+	}
+
+	GeneratedRecipe stripOnlyDiffModId(Mods mod1, String wood, Mods mod2, String stripped) {
+		create("compat/" + mod1.getId() + "/" + wood, b -> b.duration(50)
+				.require(mod1, wood)
+				.output(1, mod2, stripped, 1)
+				.whenModLoaded(mod1.getId()));
 		return null;
 	}
 
