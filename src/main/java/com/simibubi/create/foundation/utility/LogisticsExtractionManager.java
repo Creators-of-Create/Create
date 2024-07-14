@@ -10,23 +10,9 @@ import net.minecraftforge.fml.common.Mod;
 
 /**
  * A manager to handle extraction reservations for specific block positions.
- * This ensures that only one entity can extract items from a specific block position at a time per tick.
+ * This ensures that only one blockEntity can extract items from a specific block position at a time per tick.
  *
- * <p>The `LogisticsExtractionManager` class is responsible for managing and coordinating
- * extraction operations in the game, preventing multiple entities from extracting
- * items from the same block position simultaneously within a single tick. It achieves
- * this by maintaining a set of reserved block positions and providing methods to
- * reserve and release these positions.</p>
- *
- * <p>Key responsibilities of this class include:</p>
- * <ul>
- *   <li>Reserving block positions for extraction to ensure that only one entity can perform an extraction operation on a specific position per tick.</li>
- *   <li>Releasing reservations for block positions once the extraction operation is complete.</li>
- *   <li>Clearing all reserved positions at the start of each tick to reset the state and prepare for the next round of extraction operations.</li>
- * </ul>
- *
- * <p>This class is essential for preventing issues such as duplicated item extraction,
- * ensuring the game's logistics and extraction mechanisms function smoothly and correctly.</p>
+ * This is done via a simple locking system, calling tryLock will return false if the block is already locked or true if it manages to successfully lock the block, at the start of every server tick the current locks are cleared
  */
 @Mod.EventBusSubscriber
 public class LogisticsExtractionManager {
