@@ -251,7 +251,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 				if (!canAcceptItem(ts.stack)) return TransportedResult.doNothing();
 				// only try lock when this chute is empty (can accept item)
 				// to prevent items be extracted by chute at the same tick be transported to the nextFunnel or beltFunnel
-				// try lock the blockPos before try insert it into the nextBeltFunnel
+				// try lock the blockPos below the chute
 				BlockPos beltPos = worldPosition.below();
 				if (LogisticsExtractionManager.tryLock(beltPos)) {
 					setItem(ts.stack.copy(), -beltBelowOffset);
