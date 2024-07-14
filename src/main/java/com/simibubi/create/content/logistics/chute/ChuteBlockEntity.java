@@ -246,17 +246,19 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		if (itemSpeed <= 0 || level == null || level.isClientSide)
 			return;
 
-		BlockPos beltPos = worldPosition.below();
-		if (!LogisticsExtractionManager.tryLock(beltPos))
-			return;
-
 		if (getItem().isEmpty() && beltBelow != null) {
 			beltBelow.handleCenteredProcessingOnAllItems(.5f, ts -> {
-				if (canAcceptItem(ts.stack)) {
+				if (!canAcceptItem(ts.stack)) return TransportedResult.doNothing();
+				// only try lock when this chute is empty (can accept item)
+				// to prevent items be extracted by chute at the same tick be transported to the nextFunnel or beltFunnel
+				// try lock the blockPos before try insert it into the nextBeltFunnel
+				BlockPos beltPos = worldPosition.below();
+				if (LogisticsExtractionManager.tryLock(beltPos)) {
 					setItem(ts.stack.copy(), -beltBelowOffset);
 					return TransportedResult.removeItem();
+				} else {
+					return TransportedResult.doNothing();
 				}
-				return TransportedResult.doNothing();
 			});
 		}
 	}

@@ -30,6 +30,7 @@ import com.simibubi.create.content.kinetics.belt.transport.ItemHandlerBeltSegmen
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.LogisticsExtractionManager;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.client.renderer.LightTexture;
@@ -512,6 +513,12 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		if (isOccupied(side))
 			return inserted;
 		if (simulate)
+			return empty;
+
+		// to prevent items be extracted by chute at the same tick be transported to the nextBeltFunnel
+		// try lock the blockPos before try insert it into the nextBeltFunnel
+		BlockPos inputPos = worldPosition.relative(getBeltFacing().getOpposite()).above();
+		if (!LogisticsExtractionManager.tryLock(inputPos))
 			return empty;
 
 		transportedStack = transportedStack.copy();
