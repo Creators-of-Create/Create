@@ -25,7 +25,8 @@ public enum Mods {
 	SOPHISTICATEDSTORAGE,
 	STORAGEDRAWERS,
 	TCONSTRUCT,
-	XLPACKETS;
+	XLPACKETS,
+	MODERNUI;
 
 	private final String id;
 

@@ -207,6 +207,7 @@ dependencies {
     // runtimeOnly fg.deobf("maven.modrinth:spark:1.10.38-forge")
     //runtimeOnly fg.deobf("curse.maven:forbidden-arcanus-309858:4729924")
     //runtimeOnly fg.deobf("curse.maven:valhelsia-core-416935:3886212")
+    // implementation fg.deobf("curse.maven:modern-ui-352491:5229350")
 //    runtimeOnly fg.deobf("curse.maven:sophisticated-storage-619320:5194748")
 //    runtimeOnly fg.deobf("curse.maven:sophisticated-core-618298:5296312")
 //    runtimeOnly fg.deobf("curse.maven:functional-storage-556861:5271589")
