@@ -9,6 +9,17 @@
           "type": "minecraft:item",
           "functions": [
             {
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "FullNBT",
+                  "target": "{}",
+                  "op": "merge"
+                }
+              ]
+            },
+            {
               "function": "minecraft:copy_name",
               "source": "block_entity"
             },

@@ -83,7 +83,7 @@ public class BacktankBlock extends HorizontalKineticBlock
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
 		LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
-		if (state.getValue(BlockStateProperties.WATERLOGGED)) 
+		if (state.getValue(BlockStateProperties.WATERLOGGED))
 			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return state;
 	}
@@ -121,6 +121,7 @@ public class BacktankBlock extends HorizontalKineticBlock
 				be.setEnchantmentTag(stack.getEnchantmentTags());
 			if (stack.hasCustomHoverName())
 				be.setCustomName(stack.getHoverName());
+			be.setFullNbt(stack.getOrCreateTag());
 		});
 	}
 
@@ -157,9 +158,10 @@ public class BacktankBlock extends HorizontalKineticBlock
 		ItemStack stack = new ItemStack(item);
 		Optional<BacktankBlockEntity> blockEntityOptional = getBlockEntityOptional(blockGetter, pos);
 
+		CompoundTag tag = blockEntityOptional.map(BacktankBlockEntity::getFullNbt).orElse(stack.getOrCreateTag());
+
 		int air = blockEntityOptional.map(BacktankBlockEntity::getAirLevel)
 			.orElse(0);
-		CompoundTag tag = stack.getOrCreateTag();
 		tag.putInt("Air", air);
 
 		ListTag enchants = blockEntityOptional.map(BacktankBlockEntity::getEnchantmentTag)
@@ -174,6 +176,7 @@ public class BacktankBlock extends HorizontalKineticBlock
 			.orElse(null);
 		if (customName != null)
 			stack.setHoverName(customName);
+		stack.setTag(tag);
 		return stack;
 	}
 
@@ -187,7 +190,7 @@ public class BacktankBlock extends HorizontalKineticBlock
 	public Class<BacktankBlockEntity> getBlockEntityClass() {
 		return BacktankBlockEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends BacktankBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.BACKTANK.get();

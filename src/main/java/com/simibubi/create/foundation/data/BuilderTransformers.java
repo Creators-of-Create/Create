@@ -435,6 +435,8 @@ public class BuilderTransformers {
 					.when(survivesExplosion)
 					.setRolls(ConstantValue.exactly(1))
 					.add(LootItem.lootTableItem(drop.get())
+							.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+									.copy("FullNBT", "{}", CopyNbtFunction.MergeStrategy.MERGE))
 						.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
 						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
 							.copy("Air", "Air"))
