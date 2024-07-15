@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -33,8 +34,8 @@ public class PlacardRenderer extends SafeBlockEntityRenderer<PlacardBlockEntity>
 
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
-		boolean blockItem = itemRenderer.getModel(heldItem, null, null, 0)
-			.isGui3d();
+		BakedModel bakedModel = itemRenderer.getModel(heldItem, null, null, 0);
+		boolean blockItem = bakedModel.isGui3d();
 
 		ms.pushPose();
 		TransformStack.cast(ms)
@@ -46,7 +47,7 @@ public class PlacardRenderer extends SafeBlockEntityRenderer<PlacardBlockEntity>
 			.translate(0, 0, 4.5 / 16f)
 			.scale(blockItem ? .5f : .375f);
 
-		itemRenderer.renderStatic(heldItem, TransformType.FIXED, light, overlay, ms, buffer, 0);
+		itemRenderer.render(heldItem, TransformType.FIXED, false, ms, buffer, light, overlay, bakedModel);
 		ms.popPose();
 	}
 

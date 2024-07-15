@@ -36,6 +36,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.Marker;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -161,7 +162,13 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public void tick() {
-		super.tick();
+		xRotO = getXRot();
+		yRotO = getYRot();
+		walkDistO = walkDist;
+		xo = getX();
+		yo = getY();
+		zo = getZ();
+
 		if (getBoundingBox().getXsize() == 0)
 			discard();
 	}
@@ -294,7 +301,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	public PushReaction getPistonPushReaction() {
 		return PushReaction.IGNORE;
 	}
-	
+
 	@Override
 	public PortalInfo findDimensionEntryPoint(ServerLevel pDestination) {
 		portalEntrancePos = blockPosition();

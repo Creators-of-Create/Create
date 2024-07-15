@@ -49,6 +49,14 @@ public class FluidHelper {
 	public static boolean isLava(Fluid fluid) {
 		return convertToStill(fluid) == Fluids.LAVA;
 	}
+	
+	public static boolean isSame(FluidStack fluidStack, FluidStack fluidStack2) {
+		return fluidStack.getFluid() == fluidStack2.getFluid();
+	}
+	
+	public static boolean isSame(FluidStack fluidStack, Fluid fluid) {
+		return fluidStack.getFluid() == fluid;
+	}
 
 	@SuppressWarnings("deprecation")
 	public static boolean isTag(Fluid fluid, TagKey<Fluid> tag) {
