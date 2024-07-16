@@ -5,9 +5,9 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import com.simibubi.create.AllFluids;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
@@ -15,10 +15,14 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class VanillaFluidTargets {
 
-	public static boolean shouldPipesConnectTo(BlockState state) {
+	public static boolean canProvideFluidWithoutCapability(BlockState state) {
 		if (state.hasProperty(BlockStateProperties.LEVEL_HONEY))
 			return true;
-		if (state.is(BlockTags.CAULDRONS))
+		if (state.is(Blocks.CAULDRON))
+			return true;
+		if (state.is(Blocks.LAVA_CAULDRON))
+			return true;
+		if (state.is(Blocks.WATER_CAULDRON))
 			return true;
 		return false;
 	}
@@ -31,13 +35,15 @@ public class VanillaFluidTargets {
 				.getSource(), 250);
 		}
 		
-		if (state.getBlock() == Blocks.LAVA_CAULDRON) {
+		if (state.is(Blocks.LAVA_CAULDRON)) {
 			if (!simulate)
 				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
 			return new FluidStack(Fluids.LAVA, 1000);
 		}
 		
-		if (state.getBlock() == Blocks.WATER_CAULDRON) {
+		if (state.is(Blocks.WATER_CAULDRON) && state.getBlock() instanceof LayeredCauldronBlock lcb) {
+			if (!lcb.isFull(state))
+				return FluidStack.EMPTY;
 			if (!simulate)
 				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
 			return new FluidStack(Fluids.WATER, 1000);
