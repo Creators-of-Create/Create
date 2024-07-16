@@ -2,7 +2,10 @@ package com.simibubi.create.content.redstone.thresholdSwitch;
 
 import java.util.List;
 
-import com.simibubi.create.compat.storageDrawers.StorageDrawers;
+import com.simibubi.create.compat.thresholdSwitch.FunctionalStorage;
+import com.simibubi.create.compat.thresholdSwitch.SophisticatedStorage;
+import com.simibubi.create.compat.thresholdSwitch.StorageDrawers;
+import com.simibubi.create.compat.thresholdSwitch.ThresholdSwitchCompat;
 import com.simibubi.create.content.redstone.DirectedDirectionalBlock;
 import com.simibubi.create.content.redstone.FilteredDetectorFilterSlot;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
@@ -41,6 +44,12 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 	private InvManipulationBehaviour observedInventory;
 	private TankManipulationBehaviour observedTank;
 	private VersionedInventoryTrackerBehaviour invVersionTracker;
+
+	private static final List<ThresholdSwitchCompat> COMPAT = List.of(
+		new FunctionalStorage(),
+		new SophisticatedStorage(),
+		new StorageDrawers()
+	);
 
 	public ThresholdSwitchBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -104,27 +113,32 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 		if (targetBlockEntity instanceof ThresholdSwitchObservable observable) {
 			currentLevel = observable.getPercent() / 100f;
 
-		} else if (StorageDrawers.isDrawer(targetBlockEntity) && observedInventory.hasInventory()) {
-			currentLevel = StorageDrawers.getTrueFillLevel(observedInventory.getInventory(), filtering);
-
 		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
 			if (observedInventory.hasInventory()) {
-				
+
 				// Item inventory
 				IItemHandler inv = observedInventory.getInventory();
 				if (invVersionTracker.stillWaiting(inv)) {
 					occupied = prevLevel;
 					totalSpace = 1f;
-					
+
 				} else {
 					invVersionTracker.awaitNewVersion(inv);
 					for (int slot = 0; slot < inv.getSlots(); slot++) {
 						ItemStack stackInSlot = inv.getStackInSlot(slot);
-						int space = Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(slot));
+
+						int finalSlot = slot;
+						long space = COMPAT
+							.stream()
+							.filter(compat -> compat.isFromThisMod(targetBlockEntity))
+							.map(compat -> compat.getSpaceInSlot(inv, finalSlot))
+							.findFirst()
+							.orElseGet(() -> (long) Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(finalSlot)));
+
 						int count = stackInSlot.getCount();
 						if (space == 0)
 							continue;
-						
+
 						totalSpace += 1;
 						if (filtering.test(stackInSlot))
 							occupied += count * (1f / space);
@@ -209,7 +223,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 				this.updateCurrentLevel();
 				invVersionTracker.reset();
 			}));
-		
+
 		behaviours.add(invVersionTracker = new VersionedInventoryTrackerBehaviour(this));
 
 		InterfaceProvider towardBlockFacing =

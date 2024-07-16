@@ -378,6 +378,8 @@ public class BeltInventory {
 		float min = offset;
 		float max = offset + 1;
 		for (TransportedItemStack stack : items) {
+			if (toRemove.contains(stack))
+				continue;
 			if (stack.beltPosition > max)
 				continue;
 			if (stack.beltPosition > min)

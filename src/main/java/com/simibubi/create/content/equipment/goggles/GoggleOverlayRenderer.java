@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.content.contraptions.IDisplayAssemblyExceptions;
 import com.simibubi.create.content.contraptions.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.piston.PistonExtensionPoleBlock;
@@ -16,6 +18,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.gui.RemovedGuiUtils;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.mixin.accessor.MouseHandlerAccessor;
 import com.simibubi.create.foundation.outliner.Outline;
 import com.simibubi.create.foundation.outliner.Outliner.OutlineEntry;
 import com.simibubi.create.foundation.utility.Color;
@@ -26,6 +29,7 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CClient;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.MouseHandler;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -154,9 +158,8 @@ public class GoggleOverlayRenderer {
 			if (!tooltip.isEmpty())
 				tooltip.add(Components.immutableEmpty());
 
-			tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
-				.append(Lang.translateDirect("gui.goggles.pole_length"))
-				.append(Components.literal(" " + poles)));
+			Lang.translate("gui.goggles.pole_length").text(" " + poles)
+				.forGoggles(tooltip);
 		}
 
 		if (tooltip.isEmpty()) {
@@ -205,14 +208,44 @@ public class GoggleOverlayRenderer {
 			colorBorderBot.scaleAlpha(fade);
 		}
 
-		RemovedGuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
-			colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
-
-
 		GuiGameElement.of(item)
 			.at(posX + 10, posY - 16, 450)
 			.render(poseStack);
+
+		if (!Mods.MODERNUI.isLoaded()) {
+			// default tooltip rendering when modernUI is not loaded
+			RemovedGuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
+				colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
+
+			poseStack.popPose();
+
+			return;
+		}
+
+		/*
+		 * special handling for modernUI
+		 *
+		 * their tooltip handler causes the overlay to jiggle each frame,
+		 * if the mouse is moving, guiScale is anything but 1 and exactPositioning is enabled
+		 *
+		 * this is a workaround to fix this behavior
+		 */
+		MouseHandler mouseHandler = Minecraft.getInstance().mouseHandler;
+		Window window = Minecraft.getInstance().getWindow();
+		double guiScale = window.getGuiScale();
+		double cursorX = mouseHandler.xpos();
+		double cursorY = mouseHandler.ypos();
+		((MouseHandlerAccessor) mouseHandler).create$setXPos(Math.round(cursorX / guiScale) * guiScale);
+		((MouseHandlerAccessor) mouseHandler).create$setYPos(Math.round(cursorY / guiScale) * guiScale);
+
+		RemovedGuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
+			colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
+
+		((MouseHandlerAccessor) mouseHandler).create$setXPos(cursorX);
+		((MouseHandlerAccessor) mouseHandler).create$setYPos(cursorY);
+
 		poseStack.popPose();
+
 	}
 
 	public static BlockPos proxiedOverlayPosition(Level level, BlockPos pos) {
