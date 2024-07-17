@@ -184,6 +184,8 @@ public class CreateRegistrateTags {
 		helper.add(Mods.ATM_2, "rosewood", "grimwood");
 		helper.add(Mods.GOOD, "muddy_oak", "cypress");
 		helper.add(Mods.BMK, "blighted_balsa", "willow", "swamp_cypress", "ancient_oak");
+		helper.add(Mods.RU, "alpha", "ashen", "baobab", "blackwood", "brimwood", "cobalt", "cypress", "dead", "eucalyptus", "joshua",
+				"kapok", "larch", "magnolia", "maple","mauve", "palm", "pine", "redwood", "socotra", "willow");
 
 
 		TagGen.addOptional(logAppender, Mods.AUTUM, "maple");
@@ -191,6 +193,16 @@ public class CreateRegistrateTags {
 		TagGen.addOptional(woodAppender, Mods.IX, "stripped_luminous_hyphae");
 		TagGen.addOptional(logAppender, Mods.BYG, "stripped_bulbis_stem");
 		TagGen.addOptional(woodAppender, Mods.BYG, "stripped_bulbis_wood");
+
+		TagGen.addOptional(logAppender, Mods.RU, "stripped_blue_bioshroom_stem");
+		TagGen.addOptional(woodAppender, Mods.RU, "stripped_blue_bioshroom_hyphae");
+		TagGen.addOptional(logAppender, Mods.RU, "stripped_green_bioshroom_stem");
+		TagGen.addOptional(woodAppender, Mods.RU, "stripped_green_bioshroom_hyphae");
+		TagGen.addOptional(logAppender, Mods.RU, "stripped_pink_bioshroom_stem");
+		TagGen.addOptional(woodAppender, Mods.RU, "stripped_pink_bioshroom_hyphae");
+		TagGen.addOptional(logAppender, Mods.RU, "stripped_yellow_bioshroom_stem");
+		TagGen.addOptional(woodAppender, Mods.RU, "stripped_yellow_bioshroom_hyphae");
+		TagGen.addOptional(logAppender, Mods.RU, "brimwood_log_magma");
 	}
 
 	private static void genFluidTags(RegistrateTagsProvider<Fluid> prov) {

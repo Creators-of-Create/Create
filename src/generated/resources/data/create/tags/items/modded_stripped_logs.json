@@ -350,6 +350,86 @@
       "required": false
     },
     {
+      "id": "regions_unexplored:stripped_alpha_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_ashen_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_baobab_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_blackwood_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_brimwood_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_cobalt_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_cypress_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_dead_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_eucalyptus_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_joshua_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_kapok_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_larch_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_magnolia_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_maple_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_mauve_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_palm_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_pine_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_redwood_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_socotra_log",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_willow_log",
+      "required": false
+    },
+    {
       "id": "autumnity:maple",
       "required": false
     },
@@ -359,6 +439,26 @@
     },
     {
       "id": "byg:stripped_bulbis_stem",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_blue_bioshroom_stem",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_green_bioshroom_stem",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_pink_bioshroom_stem",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:stripped_yellow_bioshroom_stem",
+      "required": false
+    },
+    {
+      "id": "regions_unexplored:brimwood_log_magma",
       "required": false
     }
   ]

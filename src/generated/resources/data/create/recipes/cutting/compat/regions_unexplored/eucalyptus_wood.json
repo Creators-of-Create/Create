@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "regions_unexplored:eucalyptus_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "regions_unexplored:stripped_eucalyptus_wood"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "regions_unexplored",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
