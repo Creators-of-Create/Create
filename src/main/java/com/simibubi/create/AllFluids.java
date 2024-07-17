@@ -41,6 +41,9 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
 public class AllFluids {
+	static {
+		REGISTRATE.setCreativeTab(AllCreativeModeTabs.BASE_CREATIVE_TAB);
+	}
 
 	public static final FluidEntry<PotionFluid> POTION =
 		REGISTRATE.virtualFluid("potion", PotionFluidType::new, PotionFluid::new)
@@ -165,7 +168,7 @@ public class AllFluids {
 				public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
 					return TintedFluidType.this.getTintColor(state, getter, pos);
 				}
-				
+
 				@Override
 				public @NotNull Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level,
 					int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
@@ -191,11 +194,11 @@ public class AllFluids {
 		protected abstract int getTintColor(FluidStack stack);
 
 		protected abstract int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos);
-		
+
 		protected Vector3f getCustomFogColor() {
 			return null;
 		}
-		
+
 		protected float getFogDistanceModifier() {
 			return 1f;
 		}
@@ -235,12 +238,12 @@ public class AllFluids {
 		public int getTintColor(FluidState state, BlockAndTintGetter world, BlockPos pos) {
 			return 0x00ffffff;
 		}
-		
+
 		@Override
 		protected Vector3f getCustomFogColor() {
 			return fogColor;
 		}
-		
+
 		@Override
 		protected float getFogDistanceModifier() {
 			return fogDistance.get();
