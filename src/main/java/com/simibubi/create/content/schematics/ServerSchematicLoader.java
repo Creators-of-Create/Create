@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import com.simibubi.create.AllBlocks;
@@ -25,6 +24,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CSchematics;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -64,6 +64,8 @@ public class ServerSchematicLoader {
 		return "schematics/uploaded";
 	}
 
+	private final ObjectArrayList<String> deadEntries = ObjectArrayList.of();
+
 	public void tick() {
 		// Detect Timed out Uploads
 		int timeout = getConfig().schematicIdleTimeout.get();
@@ -72,9 +74,17 @@ public class ServerSchematicLoader {
 
 			if (entry.idleTime++ > timeout) {
 				Create.LOGGER.warn("Schematic Upload timed out: " + upload);
-				this.cancelUpload(upload);
+				deadEntries.add(upload);
 			}
 		}
+
+		// Remove Timed out Uploads
+		var iterator = deadEntries.iterator();
+		while (iterator.hasNext()) {
+			String toRemove = iterator.next();
+			this.cancelUpload(toRemove);
+		}
+		deadEntries.clear();
 	}
 
 	public void shutdown() {
