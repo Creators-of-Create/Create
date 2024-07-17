@@ -8,6 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -51,13 +52,13 @@ public final class NetheriteDivingHandler {
 	public static boolean isNetheriteDivingHelmet(ItemStack stack) {
 		return stack.getItem() instanceof DivingHelmetItem && isNetheriteArmor(stack);
 	}
-	
+
 	public static boolean isNetheriteBacktank(ItemStack stack) {
 		return stack.is(AllItemTags.PRESSURIZED_AIR_SOURCES.tag) && isNetheriteArmor(stack);
 	}
-	
+
 	public static boolean isNetheriteArmor(ItemStack stack) {
-		return stack.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial() == ArmorMaterials.NETHERITE;
+		return stack.getItem() instanceof ArmorItem armorItem && armorItem.isFireResistant();
 	}
 
 	public static void setBit(LivingEntity entity, EquipmentSlot slot) {
