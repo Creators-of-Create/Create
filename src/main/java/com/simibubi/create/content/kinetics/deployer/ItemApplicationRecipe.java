@@ -22,10 +22,7 @@ public class ItemApplicationRecipe extends ProcessingRecipe<RecipeWrapper> {
 
 	@Override
 	public boolean matches(RecipeWrapper inv, Level p_77569_2_) {
-		return ingredients.get(0)
-			.test(inv.getItem(0))
-			&& ingredients.get(1)
-				.test(inv.getItem(1));
+		return getProcessedItem().test(inv.getItem(0)) && getRequiredHeldItem().test(inv.getItem(1));
 	}
 
 	@Override
