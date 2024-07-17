@@ -66,19 +66,15 @@ public class ServerSchematicLoader {
 
 	public void tick() {
 		// Detect Timed out Uploads
-		Set<String> deadEntries = new HashSet<>();
+		int timeout = getConfig().schematicIdleTimeout.get();
 		for (String upload : activeUploads.keySet()) {
 			SchematicUploadEntry entry = activeUploads.get(upload);
 
-			if (entry.idleTime++ > getConfig().schematicIdleTimeout.get()) {
+			if (entry.idleTime++ > timeout) {
 				Create.LOGGER.warn("Schematic Upload timed out: " + upload);
-				deadEntries.add(upload);
+				this.cancelUpload(upload);
 			}
-
 		}
-
-		// Remove Timed out Uploads
-		deadEntries.forEach(this::cancelUpload);
 	}
 
 	public void shutdown() {

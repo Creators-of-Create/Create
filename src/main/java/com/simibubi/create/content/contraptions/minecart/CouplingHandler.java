@@ -45,14 +45,15 @@ public class CouplingHandler {
 			event.setResult(Result.DENY);
 		}
 	}
-	
+
 	public static void forEachLoadedCoupling(Level world, Consumer<Couple<MinecartController>> consumer) {
 		if (world == null)
 			return;
 		Set<UUID> cartsWithCoupling = CapabilityMinecartController.loadedMinecartsWithCoupling.get(world);
 		if (cartsWithCoupling == null)
 			return;
-		cartsWithCoupling.forEach(id -> {
+
+		for (UUID id : cartsWithCoupling) {
 			MinecartController controller = CapabilityMinecartController.getIfPresent(world, id);
 			if (controller == null)
 				return;
@@ -63,7 +64,7 @@ public class CouplingHandler {
 			if (coupledController == null)
 				return;
 			consumer.accept(Couple.create(controller, coupledController));
-		});
+		};
 	}
 
 	public static boolean tryToCoupleCarts(@Nullable Player player, Level world, int cartId1, int cartId2) {
@@ -83,13 +84,13 @@ public class CouplingHandler {
 		int distanceTo = (int) entity1.position()
 			.distanceTo(entity2.position());
 		boolean contraptionCoupling = player == null;
-		
+
 		if (distanceTo < 2) {
 			if (contraptionCoupling)
 				return false; // dont allow train contraptions with <2 distance
 			distanceTo = 2;
 		}
-		
+
 		if (distanceTo > AllConfigs.server().kinetics.maxCartCouplingLength.get()) {
 			status(player, tooFar);
 			return false;

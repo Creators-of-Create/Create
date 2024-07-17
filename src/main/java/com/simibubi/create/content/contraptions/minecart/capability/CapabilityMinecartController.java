@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.minecart.capability;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -86,15 +85,16 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 	}
 
 	public static void tick(Level world) {
-		List<UUID> toRemove = new ArrayList<>();
 		Map<UUID, MinecartController> carts = loadedMinecartsByUUID.get(world);
 		List<AbstractMinecart> queued = queuedAdditions.get(world);
 		List<UUID> queuedRemovals = queuedUnloads.get(world);
 		Set<UUID> cartsWithCoupling = loadedMinecartsWithCoupling.get(world);
 		Set<UUID> keySet = carts.keySet();
 
-		keySet.removeAll(queuedRemovals);
-		cartsWithCoupling.removeAll(queuedRemovals);
+		for (UUID removal : queuedRemovals) {
+			keySet.remove(removal);
+			cartsWithCoupling.remove(removal);
+		}
 
 		for (AbstractMinecart cart : queued) {
 			UUID uniqueID = cart.getUUID();
@@ -115,10 +115,12 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			capability.addListener(new MinecartRemovalListener(world, cart));
 			carts.put(uniqueID, controller);
 
-			capability.ifPresent(mc -> {
-				if (mc.isLeadingCoupling())
+			if (capability.isPresent()) {
+				MinecartController mc = capability.orElse(null);
+				if (mc.isLeadingCoupling()) {
 					cartsWithCoupling.add(uniqueID);
-			});
+				}
+			}
 			if (!world.isClientSide && controller != null)
 				controller.sendData();
 		}
@@ -134,11 +136,9 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 					continue;
 				}
 			}
-			toRemove.add(entry.getKey());
+			cartsWithCoupling.remove(entry.getKey());
+			keySet.remove(entry.getKey());
 		}
-
-		cartsWithCoupling.removeAll(toRemove);
-		keySet.removeAll(toRemove);
 	}
 
 	public static void onChunkUnloaded(ChunkEvent.Unload event) {
