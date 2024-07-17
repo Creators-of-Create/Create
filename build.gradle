@@ -200,8 +200,8 @@ dependencies {
     // implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta25")
     // runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
     // runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
-    // runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.5-1.6.115")
-    // runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.5-3.1.1.252")
+    // runtimeOnly fg.deobf("curse.maven:mantle-74924:4509007")
+    // runtimeOnly fg.deobf("curse.maven:tinkers-construct-74072:4509008")
     // runtimeOnly fg.deobf("maven.modrinth:rubidium:0.5.3")
     // implementation fg.deobf("com.railwayteam.railways:railways-1.18.2-1.1.1:all") { transitive = false }
     // runtimeOnly fg.deobf("maven.modrinth:spark:1.10.38-forge")
