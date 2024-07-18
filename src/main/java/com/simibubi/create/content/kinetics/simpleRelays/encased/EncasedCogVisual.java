@@ -29,27 +29,28 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class EncasedCogVisual extends KineticBlockEntityVisual<KineticBlockEntity> {
 
-	private boolean large;
+	private final boolean large;
 
 	protected RotatingInstance rotatingModel;
 	protected Optional<RotatingInstance> rotatingTopShaft;
 	protected Optional<RotatingInstance> rotatingBottomShaft;
 
-	public static EncasedCogVisual small(VisualizationContext modelManager, KineticBlockEntity blockEntity) {
-		return new EncasedCogVisual(modelManager, blockEntity, false);
+	public static EncasedCogVisual small(VisualizationContext modelManager, KineticBlockEntity blockEntity, float partialTick) {
+		return new EncasedCogVisual(modelManager, blockEntity, false, partialTick);
 	}
 
-	public static EncasedCogVisual large(VisualizationContext modelManager, KineticBlockEntity blockEntity) {
-		return new EncasedCogVisual(modelManager, blockEntity, true);
+	public static EncasedCogVisual large(VisualizationContext modelManager, KineticBlockEntity blockEntity, float partialTick) {
+		return new EncasedCogVisual(modelManager, blockEntity, true, partialTick);
 	}
 
-	public EncasedCogVisual(VisualizationContext modelManager, KineticBlockEntity blockEntity, boolean large) {
-		super(modelManager, blockEntity);
+	public EncasedCogVisual(VisualizationContext modelManager, KineticBlockEntity blockEntity, boolean large, float partialTick) {
+		super(modelManager, blockEntity, partialTick);
 		this.large = large;
+
+		init(partialTick);
 	}
 
-	@Override
-	public void init(float pt) {
+	public void init(float partialTick) {
         var instancer = instancerProvider.instancer(AllInstanceTypes.ROTATING, getCogModel());
 		rotatingModel = setup(instancer.createInstance());
 
@@ -72,8 +73,6 @@ public class EncasedCogVisual extends KineticBlockEntityVisual<KineticBlockEntit
 			else
 				rotatingBottomShaft = Optional.of(data);
 		}
-
-		super.init(pt);
 	}
 
 	@Override
@@ -84,7 +83,7 @@ public class EncasedCogVisual extends KineticBlockEntityVisual<KineticBlockEntit
 	}
 
 	@Override
-	public void updateLight() {
+	public void updateLight(float partialTick) {
 		relight(pos, rotatingModel);
 		rotatingTopShaft.ifPresent(d -> relight(pos, d));
 		rotatingBottomShaft.ifPresent(d -> relight(pos, d));

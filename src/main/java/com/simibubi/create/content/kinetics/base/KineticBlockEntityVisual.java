@@ -14,8 +14,8 @@ public abstract class KineticBlockEntityVisual<T extends KineticBlockEntity> ext
 
 	protected final Direction.Axis axis;
 
-	public KineticBlockEntityVisual(VisualizationContext context, T blockEntity) {
-		super(context, blockEntity);
+	public KineticBlockEntityVisual(VisualizationContext context, T blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 		axis = (blockState.getBlock() instanceof IRotate irotate) ? irotate.getRotationAxis(blockState) : Axis.Y;
 	}
 

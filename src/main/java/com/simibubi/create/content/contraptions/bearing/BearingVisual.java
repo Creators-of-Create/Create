@@ -27,8 +27,8 @@ public class BearingVisual<B extends KineticBlockEntity & IBearingBlockEntity> e
 	final Axis rotationAxis;
 	final Quaternionf blockOrientation;
 
-	public BearingVisual(VisualizationContext context, B blockEntity) {
-		super(context, blockEntity);
+	public BearingVisual(VisualizationContext context, B blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 
 		Direction facing = blockState.getValue(BlockStateProperties.FACING);
 		rotationAxis = Axis.of(Direction.get(Direction.AxisDirection.POSITIVE, axis).step());
@@ -58,8 +58,8 @@ public class BearingVisual<B extends KineticBlockEntity & IBearingBlockEntity> e
 	}
 
 	@Override
-	public void updateLight() {
-		super.updateLight();
+	public void updateLight(float partialTick) {
+		super.updateLight(partialTick);
 		relight(pos, topInstance);
 	}
 

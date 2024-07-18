@@ -41,8 +41,8 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
     PartialModel currentHand;
     float progress;
 
-    public DeployerVisual(VisualizationContext context, DeployerBlockEntity blockEntity) {
-        super(context, blockEntity);
+    public DeployerVisual(VisualizationContext context, DeployerBlockEntity blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
 
         facing = blockState.getValue(FACING);
 
@@ -57,16 +57,11 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
 		currentHand = this.blockEntity.getHandPose();
 
 		hand = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(currentHand)).createInstance();
-    }
 
-	@Override
-	public void init(float pt) {
-		progress = getProgress(pt);
+		progress = getProgress(partialTick);
 		updateRotation(pole, hand, yRot, xRot, zRot);
 		updatePosition();
-
-		super.init(pt);
-	}
+    }
 
 	@Override
     public void tick(TickableVisual.Context context) {
@@ -91,8 +86,8 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
     }
 
     @Override
-    public void updateLight() {
-        super.updateLight();
+    public void updateLight(float partialTick) {
+        super.updateLight(partialTick);
         relight(pos, hand, pole);
     }
 

@@ -7,8 +7,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class HorizontalHalfShaftVisual<T extends KineticBlockEntity> extends HalfShaftVisual<T> {
 
-    public HorizontalHalfShaftVisual(VisualizationContext context, T blockEntity) {
-        super(context, blockEntity);
+    public HorizontalHalfShaftVisual(VisualizationContext context, T blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
     }
 
     @Override

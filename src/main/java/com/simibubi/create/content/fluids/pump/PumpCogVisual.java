@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class PumpCogVisual extends SingleRotatingVisual<PumpBlockEntity> {
 
-	public PumpCogVisual(VisualizationContext context, PumpBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public PumpCogVisual(VisualizationContext context, PumpBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 	}
 
 	@Override

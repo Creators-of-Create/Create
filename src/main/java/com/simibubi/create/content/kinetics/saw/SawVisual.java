@@ -14,8 +14,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class SawVisual extends SingleRotatingVisual<SawBlockEntity> {
 
-	public SawVisual(VisualizationContext context, SawBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public SawVisual(VisualizationContext context, SawBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 	}
 
 	@Override

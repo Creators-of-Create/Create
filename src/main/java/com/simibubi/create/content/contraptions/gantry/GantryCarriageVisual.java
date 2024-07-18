@@ -31,8 +31,8 @@ public class GantryCarriageVisual extends ShaftVisual<GantryCarriageBlockEntity>
 
 	private float lastAngle = Float.NaN;
 
-	public GantryCarriageVisual(VisualizationContext context, GantryCarriageBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public GantryCarriageVisual(VisualizationContext context, GantryCarriageBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 
 		gantryCogs = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GANTRY_COGS))
 								 .createInstance();
@@ -98,7 +98,7 @@ public class GantryCarriageVisual extends ShaftVisual<GantryCarriageBlockEntity>
 	}
 
 	@Override
-	public void updateLight() {
+	public void updateLight(float partialTick) {
 		relight(pos, gantryCogs, rotatingModel);
 	}
 

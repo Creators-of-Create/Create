@@ -9,6 +9,7 @@ import dev.engine_room.flywheel.api.model.Model;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.instance.AbstractInstance;
+import dev.engine_room.flywheel.lib.instance.FlatLit;
 import dev.engine_room.flywheel.lib.instance.InstanceTypes;
 import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
@@ -45,8 +46,8 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements S
 	private float upperArmAngle = Float.NaN;
 	private float headAngle = Float.NaN;
 
-	public ArmVisual(VisualizationContext context, ArmBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public ArmVisual(VisualizationContext context, ArmBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 
 		base = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_BASE))
 			.createInstance();
@@ -131,12 +132,12 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements S
 
 		ArmRenderer.transformLowerArm(msr, lowerArmAngle);
 		lowerBody.setTransform(msLocal)
-			.setColor(color)
+			.color(color)
 			.setChanged();
 
 		ArmRenderer.transformUpperArm(msr, upperArmAngle);
 		upperBody.setTransform(msLocal)
-			.setColor(color)
+			.color(color)
 			.setChanged();
 
 		ArmRenderer.transformHead(msr, headAngle);
@@ -177,15 +178,15 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements S
 		claw = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE))
 				.createInstance();
 		models.add(claw);
-		updateLight();
+		updateLight(pt);
 		animateArm();
 	}
 
 	@Override
-	public void updateLight() {
-		super.updateLight();
+	public void updateLight(float partialTick) {
+		super.updateLight(partialTick);
 
-		relight(pos, models.stream());
+		relight(pos, models.toArray(FlatLit[]::new));
 	}
 
 	@Override

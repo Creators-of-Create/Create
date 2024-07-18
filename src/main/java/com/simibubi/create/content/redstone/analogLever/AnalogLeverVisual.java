@@ -27,8 +27,8 @@ public class AnalogLeverVisual extends AbstractBlockEntityVisual<AnalogLeverBloc
 	final float rX;
 	final float rY;
 
-	public AnalogLeverVisual(VisualizationContext context, AnalogLeverBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public AnalogLeverVisual(VisualizationContext context, AnalogLeverBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 
 		handle = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ANALOG_LEVER_HANDLE))
 			.createInstance();
@@ -38,11 +38,6 @@ public class AnalogLeverVisual extends AbstractBlockEntityVisual<AnalogLeverBloc
 		AttachFace face = blockState.getValue(AnalogLeverBlock.FACE);
 		rX = face == AttachFace.FLOOR ? 0 : face == AttachFace.WALL ? 90 : 180;
 		rY = AngleHelper.horizontalAngle(blockState.getValue(AnalogLeverBlock.FACING));
-	}
-
-	@Override
-	public void init(float partialTick) {
-		super.init(partialTick);
 
 		transform(indicator.loadIdentity());
 
@@ -58,7 +53,7 @@ public class AnalogLeverVisual extends AbstractBlockEntityVisual<AnalogLeverBloc
 	protected void animateLever(float pt) {
 		float state = blockEntity.clientState.getValue(pt);
 
-		indicator.setColor(Color.mixColors(0x2C0300, 0xCD0000, state / 15f));
+		indicator.color(Color.mixColors(0x2C0300, 0xCD0000, state / 15f));
 		indicator.setChanged();
 
 		float angle = (float) ((state / 15) * 90 / 180 * Math.PI);
@@ -76,7 +71,7 @@ public class AnalogLeverVisual extends AbstractBlockEntityVisual<AnalogLeverBloc
 	}
 
 	@Override
-	public void updateLight() {
+	public void updateLight(float partialTick) {
 		relight(pos, handle, indicator);
 	}
 

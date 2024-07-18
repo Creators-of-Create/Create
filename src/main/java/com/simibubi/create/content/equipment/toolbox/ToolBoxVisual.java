@@ -19,25 +19,20 @@ import net.minecraft.core.Direction;
 public class ToolBoxVisual extends AbstractBlockEntityVisual<ToolboxBlockEntity> implements SimpleDynamicVisual {
 
 	private final Direction facing;
-	private TransformedInstance lid;
-	private TransformedInstance[] drawers;
+	private final TransformedInstance lid;
+	private final TransformedInstance[] drawers;
 
-	public ToolBoxVisual(VisualizationContext context, ToolboxBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public ToolBoxVisual(VisualizationContext context, ToolboxBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 
 		facing = blockState.getValue(ToolboxBlock.FACING)
 				.getOpposite();
-	}
 
-	@Override
-	public void init(float pt) {
 		Instancer<TransformedInstance> drawerModel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TOOLBOX_DRAWER));
 
 		drawers = new TransformedInstance[]{drawerModel.createInstance(), drawerModel.createInstance()};
 		lid = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TOOLBOX_LIDS.get(blockEntity.getColor())))
 				.createInstance();
-
-		super.init(pt);
 	}
 
 	@Override
@@ -78,7 +73,7 @@ public class ToolBoxVisual extends AbstractBlockEntityVisual<ToolboxBlockEntity>
 	}
 
 	@Override
-	public void updateLight() {
+	public void updateLight(float partialTick) {
 		relight(pos, drawers);
 		relight(pos, lid);
 	}

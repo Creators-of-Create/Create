@@ -25,23 +25,19 @@ public class WaterWheelVisual<T extends WaterWheelBlockEntity> extends KineticBl
 	protected BlockState lastMaterial;
 	protected RotatingInstance rotatingModel;
 
-	public WaterWheelVisual(VisualizationContext context, T blockEntity, boolean large) {
-		super(context, blockEntity);
+	public WaterWheelVisual(VisualizationContext context, T blockEntity, boolean large, float partialTick) {
+		super(context, blockEntity, partialTick);
 		this.large = large;
-	}
 
-	public static <T extends WaterWheelBlockEntity> WaterWheelVisual<T> standard(VisualizationContext context, T blockEntity) {
-		return new WaterWheelVisual<>(context, blockEntity, false);
-	}
-
-	public static <T extends WaterWheelBlockEntity> WaterWheelVisual<T> large(VisualizationContext context, T blockEntity) {
-		return new WaterWheelVisual<>(context, blockEntity, true);
-	}
-
-	@Override
-	public void init(float pt) {
 		setupInstance();
-		super.init(pt);
+	}
+
+	public static <T extends WaterWheelBlockEntity> WaterWheelVisual<T> standard(VisualizationContext context, T blockEntity, float partialTick) {
+		return new WaterWheelVisual<>(context, blockEntity, false, partialTick);
+	}
+
+	public static <T extends WaterWheelBlockEntity> WaterWheelVisual<T> large(VisualizationContext context, T blockEntity, float partialTick) {
+		return new WaterWheelVisual<>(context, blockEntity, true, partialTick);
 	}
 
 	private void setupInstance() {
@@ -62,7 +58,7 @@ public class WaterWheelVisual<T extends WaterWheelBlockEntity> extends KineticBl
 	}
 
 	@Override
-	public void updateLight() {
+	public void updateLight(float partialTick) {
 		relight(pos, rotatingModel);
 	}
 

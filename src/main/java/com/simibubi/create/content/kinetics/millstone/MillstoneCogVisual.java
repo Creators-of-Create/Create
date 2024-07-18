@@ -8,8 +8,8 @@ import com.simibubi.create.content.kinetics.base.SingleRotatingVisual;
 
 public class MillstoneCogVisual extends SingleRotatingVisual<MillstoneBlockEntity> {
 
-    public MillstoneCogVisual(VisualizationContext context, MillstoneBlockEntity blockEntity) {
-        super(context, blockEntity);
+    public MillstoneCogVisual(VisualizationContext context, MillstoneBlockEntity blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
     }
 
 	@Override

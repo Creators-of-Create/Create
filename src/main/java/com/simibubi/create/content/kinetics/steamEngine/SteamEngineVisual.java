@@ -24,8 +24,8 @@ public class SteamEngineVisual extends AbstractBlockEntityVisual<SteamEngineBloc
 	protected final TransformedInstance linkage;
 	protected final TransformedInstance connector;
 
-	public SteamEngineVisual(VisualizationContext context, SteamEngineBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public SteamEngineVisual(VisualizationContext context, SteamEngineBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 
 		piston = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_PISTON))
 				.createInstance();
@@ -91,7 +91,7 @@ public class SteamEngineVisual extends AbstractBlockEntityVisual<SteamEngineBloc
 	}
 
 	@Override
-	public void updateLight() {
+	public void updateLight(float partialTick) {
 		relight(pos, piston, linkage, connector);
 	}
 

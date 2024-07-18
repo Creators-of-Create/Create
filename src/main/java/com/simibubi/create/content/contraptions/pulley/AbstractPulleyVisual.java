@@ -2,13 +2,14 @@ package com.simibubi.create.content.contraptions.pulley;
 
 import java.util.function.Consumer;
 
+import com.simibubi.create.foundation.utility.flywheel.box.MutableBox;
+import com.simibubi.create.foundation.utility.flywheel.light.LightVolume;
+
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.instance.Instancer;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import dev.engine_room.flywheel.lib.box.MutableBox;
 import dev.engine_room.flywheel.lib.instance.OrientedInstance;
-import dev.engine_room.flywheel.lib.light.LightVolume;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -34,8 +35,8 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 	private final MutableBox volume = new MutableBox();
 	private final LightVolume light;
 
-	public AbstractPulleyVisual(VisualizationContext dispatcher, T blockEntity) {
-		super(dispatcher, blockEntity);
+	public AbstractPulleyVisual(VisualizationContext dispatcher, T blockEntity, float partialTick) {
+		super(dispatcher, blockEntity, partialTick);
 
 		rotatingAbout = Direction.get(Direction.AxisDirection.POSITIVE, axis);
 		rotationAxis = Axis.of(rotatingAbout.step());
@@ -109,8 +110,8 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 	}
 
 	@Override
-	public void updateLight() {
-		super.updateLight();
+	public void updateLight(float partialTick) {
+		super.updateLight(partialTick);
 		light.copyLight(volume);
 		relight(pos, coil);
 	}

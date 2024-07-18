@@ -20,8 +20,8 @@ public class CarriageContraptionVisual extends ContraptionVisual<CarriageContrap
 	private Couple<BogeyVisual> bogeys;
 	private Couple<Boolean> bogeyHidden;
 
-	public CarriageContraptionVisual(VisualizationContext context, CarriageContraptionEntity entity) {
-		super(context, entity);
+	public CarriageContraptionVisual(VisualizationContext context, CarriageContraptionEntity entity, float partialTick) {
+		super(context, entity, partialTick);
 		bogeyHidden = Couple.create(() -> false);
 		entity.bindInstance(this);
 	}
@@ -33,7 +33,7 @@ public class CarriageContraptionVisual extends ContraptionVisual<CarriageContrap
         if (carriage != null) {
             bogeys = carriage.bogeys.mapNotNullWithParam((bogey, manager) -> bogey.getStyle()
                 .createVisual(bogey, bogey.type.getSize(), manager), visualizationContext);
-            updateLight();
+            updateLight(pt);
         }
 
 		super.init(pt);
@@ -86,8 +86,8 @@ public class CarriageContraptionVisual extends ContraptionVisual<CarriageContrap
 		ms.popPose();
 	}
 
-	public void updateLight() {
-		super.updateLight();
+	public void updateLight(float partialTick) {
+		super.updateLight(partialTick);
 
 		if (bogeys == null)
 			return;

@@ -124,9 +124,4 @@ public class DeployerActorVisual extends ActorVisual {
 		hand.delete();
 		shaft.delete();
 	}
-
-	@Override
-	public void init(float partialTick) {
-
-	}
 }

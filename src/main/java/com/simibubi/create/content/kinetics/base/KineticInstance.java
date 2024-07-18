@@ -46,13 +46,13 @@ public class KineticInstance extends ColoredLitInstance {
         if (blockEntity.hasNetwork()) {
             setColor(Color.generateFromLong(blockEntity.network));
         }else {
-            setColor(0xFF, 0xFF, 0xFF);
+            color(0xFF, 0xFF, 0xFF);
         }
         return this;
     }
 
     public KineticInstance setColor(Color c) {
-    	setColor(c.getRed(), c.getGreen(), c.getBlue());
+    	color(c.getRed(), c.getGreen(), c.getBlue());
     	return this;
     }
 

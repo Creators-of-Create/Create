@@ -3,6 +3,8 @@ package com.simibubi.create.content.kinetics.belt;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+import dev.engine_room.flywheel.lib.instance.FlatLit;
+
 import org.joml.Quaternionf;
 
 import dev.engine_room.flywheel.api.instance.Instance;
@@ -38,8 +40,8 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
     protected ArrayList<BeltInstance> keys;
     protected RotatingInstance pulleyKey;
 
-    public BeltVisual(VisualizationContext context, BeltBlockEntity blockEntity) {
-        super(context, blockEntity);
+    public BeltVisual(VisualizationContext context, BeltBlockEntity blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
 
         if (!AllBlocks.BELT.has(blockState))
             return;
@@ -99,8 +101,8 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
     }
 
     @Override
-    public void updateLight() {
-        relight(pos, keys.stream());
+    public void updateLight(float partialTick) {
+        relight(pos, keys.toArray(FlatLit[]::new));
 
         if (pulleyKey != null) relight(pos, pulleyKey);
     }

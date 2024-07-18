@@ -19,14 +19,14 @@ public class BrassDiodeVisual extends AbstractBlockEntityVisual<BrassDiodeBlockE
 
     protected int previousState;
 
-    public BrassDiodeVisual(VisualizationContext context, BrassDiodeBlockEntity blockEntity) {
-        super(context, blockEntity);
+    public BrassDiodeVisual(VisualizationContext context, BrassDiodeBlockEntity blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
 
         indicator = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLEXPEATER_INDICATOR)).createInstance();
 
         indicator.loadIdentity()
 				.translate(getVisualPosition())
-				.setColor(getColor())
+				.color(getColor())
 				.setChanged();
 
         previousState = blockEntity.state;
@@ -36,14 +36,14 @@ public class BrassDiodeVisual extends AbstractBlockEntityVisual<BrassDiodeBlockE
     public void tick(TickableVisual.Context context) {
         if (previousState == blockEntity.state) return;
 
-        indicator.setColor(getColor());
+        indicator.color(getColor());
 		indicator.setChanged();
 
         previousState = blockEntity.state;
     }
 
     @Override
-    public void updateLight() {
+    public void updateLight(float partialTick) {
         relight(pos, indicator);
     }
 

@@ -18,17 +18,12 @@ public class EjectorVisual extends ShaftVisual<EjectorBlockEntity> implements Si
 
 	private float lastProgress = Float.NaN;
 
-	public EjectorVisual(VisualizationContext dispatcher, EjectorBlockEntity blockEntity) {
-		super(dispatcher, blockEntity);
+	public EjectorVisual(VisualizationContext dispatcher, EjectorBlockEntity blockEntity, float partialTick) {
+		super(dispatcher, blockEntity, partialTick);
 
 		plate = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.EJECTOR_TOP)).createInstance();
-	}
 
-	@Override
-	public void init(float pt) {
-		pivotPlate(getLidProgress(pt));
-
-		super.init(pt);
+		pivotPlate(getLidProgress(partialTick));
 	}
 
 	@Override
@@ -44,8 +39,8 @@ public class EjectorVisual extends ShaftVisual<EjectorBlockEntity> implements Si
 	}
 
 	@Override
-	public void updateLight() {
-		super.updateLight();
+	public void updateLight(float partialTick) {
+		super.updateLight(partialTick);
 		relight(pos, plate);
 	}
 

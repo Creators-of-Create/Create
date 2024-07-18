@@ -11,8 +11,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class DrillVisual extends SingleRotatingVisual<DrillBlockEntity> {
 
-    public DrillVisual(VisualizationContext context, DrillBlockEntity blockEntity) {
-        super(context, blockEntity);
+    public DrillVisual(VisualizationContext context, DrillBlockEntity blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
     }
 
 	@Override

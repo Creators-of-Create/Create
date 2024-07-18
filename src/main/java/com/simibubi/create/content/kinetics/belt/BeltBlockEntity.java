@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import dev.engine_room.flywheel.lib.box.Box;
-import dev.engine_room.flywheel.lib.box.MutableBox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -29,6 +27,9 @@ import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
+
+import com.simibubi.create.foundation.utility.flywheel.box.Box;
+import com.simibubi.create.foundation.utility.flywheel.box.MutableBox;
 
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;

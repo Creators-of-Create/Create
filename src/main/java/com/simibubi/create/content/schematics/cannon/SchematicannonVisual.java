@@ -21,8 +21,8 @@ public class SchematicannonVisual extends AbstractBlockEntityVisual<Schematicann
     private final TransformedInstance connector;
     private final TransformedInstance pipe;
 
-    public SchematicannonVisual(VisualizationContext context, SchematicannonBlockEntity blockEntity) {
-        super(context, blockEntity);
+    public SchematicannonVisual(VisualizationContext context, SchematicannonBlockEntity blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
 
         connector = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.SCHEMATICANNON_CONNECTOR)).createInstance();
         pipe = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.SCHEMATICANNON_PIPE)).createInstance();
@@ -70,7 +70,7 @@ public class SchematicannonVisual extends AbstractBlockEntityVisual<Schematicann
     }
 
     @Override
-    public void updateLight() {
+    public void updateLight(float partialTick) {
         relight(pos, connector, pipe);
     }
 

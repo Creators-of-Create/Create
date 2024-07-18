@@ -11,8 +11,8 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
 public class RopePulleyVisual extends AbstractPulleyVisual<PulleyBlockEntity> {
-	public RopePulleyVisual(VisualizationContext context, PulleyBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public RopePulleyVisual(VisualizationContext context, PulleyBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 	}
 
 	protected Instancer<OrientedInstance> getRopeModel() {

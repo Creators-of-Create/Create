@@ -6,8 +6,8 @@ import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
 public class ShaftVisual<T extends KineticBlockEntity> extends SingleRotatingVisual<T> {
 
-	public ShaftVisual(VisualizationContext context, T blockEntity) {
-		super(context, blockEntity);
+	public ShaftVisual(VisualizationContext context, T blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import dev.engine_room.flywheel.api.instance.Instancer;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.instance.AbstractInstance;
+import dev.engine_room.flywheel.lib.instance.FlatLit;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
@@ -26,8 +27,10 @@ public class BeltTunnelVisual extends AbstractBlockEntityVisual<BeltTunnelBlockE
 
     private final Map<Direction, ArrayList<FlapInstance>> tunnelFlaps = new EnumMap<>(Direction.class);
 
-    public BeltTunnelVisual(VisualizationContext context, BeltTunnelBlockEntity blockEntity) {
-        super(context, blockEntity);
+    public BeltTunnelVisual(VisualizationContext context, BeltTunnelBlockEntity blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
+
+		setupFlaps(partialTick);
 	}
 
 	private void setupFlaps(float partialTick) {
@@ -70,13 +73,6 @@ public class BeltTunnelVisual extends AbstractBlockEntityVisual<BeltTunnelBlockE
 	}
 
 	@Override
-	public void init(float partialTick) {
-		setupFlaps(partialTick);
-
-		super.init(partialTick);
-	}
-
-	@Override
 	public void update(float partialTick) {
 		super.update(partialTick);
 
@@ -100,8 +96,8 @@ public class BeltTunnelVisual extends AbstractBlockEntityVisual<BeltTunnelBlockE
     }
 
     @Override
-    public void updateLight() {
-        relight(pos, tunnelFlaps.values().stream().flatMap(Collection::stream));
+    public void updateLight(float partialTick) {
+        relight(pos, tunnelFlaps.values().stream().flatMap(Collection::stream).toArray(FlatLit[]::new));
     }
 
     @Override

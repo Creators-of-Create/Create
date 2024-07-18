@@ -24,8 +24,8 @@ public class FlywheelVisual extends KineticBlockEntityVisual<FlywheelBlockEntity
 	protected final TransformedInstance wheel;
 	protected float lastAngle = Float.NaN;
 
-	public FlywheelVisual(VisualizationContext context, FlywheelBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public FlywheelVisual(VisualizationContext context, FlywheelBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 
 		shaft = setup(instancerProvider.instancer(AllInstanceTypes.ROTATING, VirtualRenderHelper.blockModel(shaft()))
 			.createInstance());
@@ -70,7 +70,7 @@ public class FlywheelVisual extends KineticBlockEntityVisual<FlywheelBlockEntity
 	}
 
 	@Override
-	public void updateLight() {
+	public void updateLight(float partialTick) {
 		relight(pos, shaft, wheel);
 	}
 

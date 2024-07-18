@@ -2,7 +2,12 @@ package com.simibubi.create.content.contraptions.render;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.LongConsumer;
+
+import dev.engine_room.flywheel.api.visual.LightUpdatedVisual;
+
+import dev.engine_room.flywheel.api.visual.ShaderLightVisual;
+import it.unimi.dsi.fastutil.longs.LongArraySet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -10,7 +15,6 @@ import dev.engine_room.flywheel.api.model.Model;
 import dev.engine_room.flywheel.api.task.Plan;
 import dev.engine_room.flywheel.api.visual.BlockEntityVisual;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
-import dev.engine_room.flywheel.api.visual.LitVisual;
 import dev.engine_room.flywheel.api.visual.TickableVisual;
 import dev.engine_room.flywheel.api.visualization.BlockEntityVisualizer;
 import dev.engine_room.flywheel.api.visualization.VisualEmbedding;
@@ -44,7 +48,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.client.model.data.ModelData;
 
-public class ContraptionVisual<E extends AbstractContraptionEntity> extends AbstractEntityVisual<E> implements DynamicVisual, TickableVisual, LitVisual {
+public class ContraptionVisual<E extends AbstractContraptionEntity> extends AbstractEntityVisual<E> implements DynamicVisual, TickableVisual, LightUpdatedVisual, ShaderLightVisual {
 	protected static final int LIGHT_PADDING = 1;
 
 	protected final VisualEmbedding embedding;
@@ -55,18 +59,19 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 	protected VirtualRenderWorld virtualRenderWorld;
 	protected Model model;
 	protected TransformedInstance structure;
-	protected Notifier notifier;
+	protected SectionCollector sectionCollector;
 	protected long minSection, maxSection;
 	protected long minBlock, maxBlock;
 
 	private final PoseStack contraptionMatrix = new PoseStack();
 
-	public ContraptionVisual(VisualizationContext ctx, E entity) {
-		super(ctx, entity);
+	public ContraptionVisual(VisualizationContext ctx, E entity, float partialTick) {
+		super(ctx, entity, partialTick);
 		embedding = ctx.createEmbedding();
+
+		init(partialTick);
     }
 
-	@Override
 	public void init(float partialTick) {
 		setEmbeddingMatrices(partialTick);
 
@@ -97,7 +102,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 			setupActor(actor, partialTick);
 		}
 
-		updateLight();
+		updateLight(partialTick);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -107,11 +112,9 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 			return;
 		}
 
-		Level world = be.getLevel();
+		Level level = be.getLevel();
 		be.setLevel(virtualRenderWorld);
-		BlockEntityVisual<? super T> visual = visualizer.createVisual(this.embedding, be);
-
-		visual.init(partialTicks);
+		BlockEntityVisual<? super T> visual = visualizer.createVisual(this.embedding, be, partialTicks);
 
 		children.add(visual);
 
@@ -123,7 +126,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 			tickableVisuals.add(tickable, tickable.planTick());
 		}
 
-		be.setLevel(world);
+		be.setLevel(level);
 	}
 
 	private void setupActor(MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> actor, float partialTick) {
@@ -146,8 +149,6 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		if (visual == null) {
 			return;
 		}
-
-		visual.init(partialTick);
 
 		actors.add(visual);
 	}
@@ -174,14 +175,14 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		setEmbeddingMatrices(partialTick);
 
 		if (hasMovedSections()) {
-			notifier.notifySectionsChanged();
+ 			sectionCollector.sections(collectLightSections());
 		}
 
 		if (hasMovedBlocks()) {
 			// TODO: incremental light collection
 			// TODO: optimize light collection for very large contraptions
 			//  by only collecting cuboids that contain faces
-			updateLight();
+			updateLight(partialTick);
 		}
 	}
 
@@ -198,27 +199,11 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 	}
 
 	@Override
-	public void updateLight() {
-		embedding.invalidateLight();
-		// FIXME: Some blocks (e.g. large waterwheels) extend well beyond their actual block
-		//  and might have lighting issues here
-		var boundingBox = entity.getBoundingBox();
-
-		int minX = minLight(boundingBox.minX);
-		int minY = minLight(boundingBox.minY);
-		int minZ = minLight(boundingBox.minZ);
-		int maxX = maxLight(boundingBox.maxX);
-		int maxY = maxLight(boundingBox.maxY);
-		int maxZ = maxLight(boundingBox.maxZ);
-
-		minBlock = BlockPos.asLong(minX, minY, minZ);
-		maxBlock = BlockPos.asLong(maxX, maxY, maxZ);
-
-		embedding.collectLight(level, minX, minY, minZ, maxX - minX, maxY - minY, maxZ - minZ);
+	public void updateLight(float partialTick) {
+		super.update(partialTick);
 	}
 
-	@Override
-	public void collectLightSections(LongConsumer consumer) {
+	public LongSet collectLightSections() {
 		var boundingBox = entity.getBoundingBox();
 
 		var minSectionX = minLightSection(boundingBox.minX);
@@ -231,13 +216,17 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		minSection = SectionPos.asLong(minSectionX, minSectionY, minSectionZ);
 		maxSection = SectionPos.asLong(maxSectionX, maxSectionY, maxSectionZ);
 
+		LongSet longSet = new LongArraySet();
+
 		for (int x = 0; x <= maxSectionX - minSectionX; x++) {
 			for (int y = 0; y <= maxSectionY - minSectionY; y++) {
 				for (int z = 0; z <= maxSectionZ - minSectionZ; z++) {
-					consumer.accept(SectionPos.offset(minSection, x, y, z));
+					longSet.add(SectionPos.offset(minSection, x, y, z));
 				}
 			}
 		}
+
+		return longSet;
 	}
 
 	protected boolean hasMovedBlocks() {
@@ -267,8 +256,8 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 	}
 
 	@Override
-	public void initLightSectionNotifier(Notifier notifier) {
-		this.notifier = notifier;
+	public void setSectionCollector(SectionCollector collector) {
+		this.sectionCollector = collector;
 	}
 
 	@Override
