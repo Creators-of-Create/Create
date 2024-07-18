@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +39,7 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -64,6 +66,10 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	SEQUENCED_ASSEMBLY(SequencedAssemblyRecipeSerializer::new),
 
 	TOOLBOX_DYEING(() -> new SimpleRecipeSerializer<>(ToolboxDyeingRecipe::new), () -> RecipeType.CRAFTING, false);
+
+	public static final Predicate<? super Recipe<?>> CAN_BE_AUTOMATED = r -> !r.getId()
+		.getPath()
+		.endsWith("_manual_only");
 
 	private final ResourceLocation id;
 	private final RegistryObject<RecipeSerializer<?>> serializerObject;

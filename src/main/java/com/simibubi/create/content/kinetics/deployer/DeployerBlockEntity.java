@@ -47,7 +47,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
 import net.minecraft.world.level.ClipContext.Fluid;
@@ -550,10 +549,7 @@ public class DeployerBlockEntity extends KineticBlockEntity {
 		ItemStack heldItemMainhand = player.getMainHandItem();
 		if (heldItemMainhand.getItem() instanceof SandPaperItem) {
 			sandpaperInv.setItem(0, stack);
-			Optional<Recipe<SandPaperInv>> sandPaperRecipe = AllRecipeTypes.SANDPAPER_POLISHING.find(sandpaperInv, level);
-			if (sandPaperRecipe.isPresent() && !sandPaperRecipe.get().getId().getPath().endsWith("_manual_only"))
-				return sandPaperRecipe.get();
-			return null;
+			return checkRecipe(AllRecipeTypes.SANDPAPER_POLISHING, sandpaperInv, level).orElse(null);
 		}
 
 		recipeInv.setItem(0, stack);
@@ -571,10 +567,7 @@ public class DeployerBlockEntity extends KineticBlockEntity {
 	}
 
 	private Optional<? extends Recipe<? extends Container>> checkRecipe(AllRecipeTypes type, RecipeWrapper inv, Level level) {
-		Optional<? extends Recipe<? extends Container>> opt = type.find(inv, level);
-		if (opt.isPresent() && !opt.get().getId().getPath().contains("_manual_only"))
-			return opt;
-		return Optional.empty();
+		return type.find(inv, level).filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 	}
 
 	public DeployerFakePlayer getPlayer() {

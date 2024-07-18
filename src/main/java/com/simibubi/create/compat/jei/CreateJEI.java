@@ -468,8 +468,7 @@ public class CreateJEI implements IModPlugin {
 		}
 
 		public CategoryBuilder<T> removeNonAutomation() {
-			return addRecipeListConsumer(recipes -> recipes.removeIf(recipe ->
-				 recipe.getId().getPath().contains("_manual_only")));
+			return addRecipeListConsumer(recipes -> recipes.removeIf(AllRecipeTypes.CAN_BE_AUTOMATED.negate()));
 		}
 
 		public CategoryBuilder<T> catalystStack(Supplier<ItemStack> supplier) {
