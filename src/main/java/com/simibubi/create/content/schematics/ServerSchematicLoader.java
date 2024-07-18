@@ -79,9 +79,7 @@ public class ServerSchematicLoader {
 		}
 
 		// Remove Timed out Uploads
-		var iterator = deadEntries.iterator();
-		while (iterator.hasNext()) {
-			String toRemove = iterator.next();
+		for (String toRemove : deadEntries) {
 			this.cancelUpload(toRemove);
 		}
 		deadEntries.clear();
