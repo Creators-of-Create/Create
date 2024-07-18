@@ -20,8 +20,8 @@ public class PressVisual extends ShaftVisual<MechanicalPressBlockEntity> impleme
 
 	private final OrientedInstance pressHead;
 
-	public PressVisual(VisualizationContext context, MechanicalPressBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public PressVisual(VisualizationContext context, MechanicalPressBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 
 		pressHead = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.MECHANICAL_PRESS_HEAD))
 				.createInstance();
@@ -30,13 +30,8 @@ public class PressVisual extends ShaftVisual<MechanicalPressBlockEntity> impleme
 			.rotationDegrees(AngleHelper.horizontalAngle(blockState.getValue(MechanicalPressBlock.HORIZONTAL_FACING)));
 
 		pressHead.setRotation(q);
-	}
 
-	@Override
-	public void init(float pt) {
-		super.init(pt);
-
-		transformModels(pt);
+		transformModels(partialTick);
 	}
 
 	@Override
@@ -59,8 +54,8 @@ public class PressVisual extends ShaftVisual<MechanicalPressBlockEntity> impleme
 	}
 
 	@Override
-	public void updateLight() {
-		super.updateLight();
+	public void updateLight(float partialTick) {
+		super.updateLight(partialTick);
 
 		relight(pos, pressHead);
 	}

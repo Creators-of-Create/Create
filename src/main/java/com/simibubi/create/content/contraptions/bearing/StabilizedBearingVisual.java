@@ -70,9 +70,4 @@ public class StabilizedBearingVisual extends ActorVisual {
 		topInstance.delete();
 		shaft.delete();
 	}
-
-	@Override
-	public void init(float partialTick) {
-
-	}
 }

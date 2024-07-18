@@ -7,8 +7,8 @@ import com.simibubi.create.content.kinetics.base.SingleRotatingVisual;
 
 public class BacktankVisual extends SingleRotatingVisual<BacktankBlockEntity> {
 
-	public BacktankVisual(VisualizationContext context, BacktankBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public BacktankVisual(VisualizationContext context, BacktankBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 	}
 
 	@Override

@@ -13,8 +13,8 @@ import net.minecraft.core.Direction;
 
 public class ShaftlessCogwheelVisual extends SingleRotatingVisual<KineticBlockEntity> {
 
-    public ShaftlessCogwheelVisual(VisualizationContext context, KineticBlockEntity blockEntity) {
-        super(context, blockEntity);
+    public ShaftlessCogwheelVisual(VisualizationContext context, KineticBlockEntity blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
     }
 
 	@Override

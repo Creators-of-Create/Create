@@ -14,16 +14,12 @@ public class PSIVisual extends AbstractBlockEntityVisual<PortableStorageInterfac
 
 	private final PIInstance instance;
 
-	public PSIVisual(VisualizationContext visualizationContext, PortableStorageInterfaceBlockEntity blockEntity) {
-		super(visualizationContext, blockEntity);
+	public PSIVisual(VisualizationContext visualizationContext, PortableStorageInterfaceBlockEntity blockEntity, float partialTick) {
+		super(visualizationContext, blockEntity, partialTick);
 
 		instance = new PIInstance(visualizationContext.instancerProvider(), blockState, getVisualPosition());
-	}
 
-	@Override
-	public void init(float pt) {
 		instance.init(isLit());
-		super.init(pt);
 	}
 
 	@Override
@@ -37,7 +33,7 @@ public class PSIVisual extends AbstractBlockEntityVisual<PortableStorageInterfac
 	}
 
 	@Override
-	public void updateLight() {
+	public void updateLight(float partialTick) {
 		relight(pos, instance.middle, instance.top);
 	}
 

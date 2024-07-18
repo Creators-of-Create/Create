@@ -23,6 +23,9 @@ import com.simibubi.create.content.trains.track.BezierConnection.SegmentAngles;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import it.unimi.dsi.fastutil.longs.LongArraySet;
+import it.unimi.dsi.fastutil.longs.LongSet;
+import it.unimi.dsi.fastutil.longs.LongSets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;
@@ -30,21 +33,16 @@ import net.minecraft.world.level.LightLayer;
 
 public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 
-	private List<BezierTrackVisual> visuals;
+	private final List<BezierTrackVisual> visuals;
 
-	public TrackVisual(VisualizationContext context, TrackBlockEntity track) {
-		super(context, track);
-	}
+	public TrackVisual(VisualizationContext context, TrackBlockEntity track, float partialTick) {
+		super(context, track, partialTick);
 
-	@Override
-	public void init(float partialTick) {
 		visuals = blockEntity.connections.values()
 				.stream()
 				.map(this::createInstance)
 				.filter(Objects::nonNull)
 				.toList();
-
-		super.init(partialTick);
 	}
 
 	@Override
@@ -53,12 +51,11 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 			return;
 
 		_delete();
-		init(pt);
-		notifier.notifySectionsChanged();
+		lightSections.sections(collectLightSections());
 	}
 
 	@Override
-	public void updateLight() {
+	public void updateLight(float partialTick) {
 		if (visuals == null)
 			return;
 		visuals.forEach(BezierTrackVisual::updateLight);
@@ -78,10 +75,11 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 		visuals.forEach(BezierTrackVisual::delete);
 	}
 
-	@Override
-	public void collectLightSections(LongConsumer consumer) {
+	public LongSet collectLightSections() {
+		LongSet longSet = new LongArraySet();
+
 		if (blockEntity.connections.isEmpty()) {
-			return;
+			return LongSet.of();
 		}
 		int minX = Integer.MAX_VALUE;
 		int minY = Integer.MAX_VALUE;
@@ -99,7 +97,9 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 		}
 		SectionPos.betweenClosedStream(SectionPos.blockToSectionCoord(minX), SectionPos.blockToSectionCoord(minY), SectionPos.blockToSectionCoord(minZ), SectionPos.blockToSectionCoord(maxX), SectionPos.blockToSectionCoord(maxY), SectionPos.blockToSectionCoord(maxZ))
 			.mapToLong(SectionPos::asLong)
-			.forEach(consumer);
+			.forEach(longSet::add);
+
+		return longSet;
 	}
 
 	@Override

@@ -6,8 +6,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class BackHalfShaftVisual<T extends KineticBlockEntity> extends HalfShaftVisual<T> {
-    public BackHalfShaftVisual(VisualizationContext context, T blockEntity) {
-        super(context, blockEntity);
+    public BackHalfShaftVisual(VisualizationContext context, T blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
     }
 
     @Override

@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.instance.AbstractInstance;
+import dev.engine_room.flywheel.lib.instance.FlatLit;
 import dev.engine_room.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityVisual;
@@ -24,8 +25,8 @@ public class GearboxVisual extends KineticBlockEntityVisual<GearboxBlockEntity> 
     protected final EnumMap<Direction, RotatingInstance> keys;
     protected Direction sourceFacing;
 
-    public GearboxVisual(VisualizationContext context, GearboxBlockEntity blockEntity) {
-        super(context, blockEntity);
+    public GearboxVisual(VisualizationContext context, GearboxBlockEntity blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
 
         keys = new EnumMap<>(Direction.class);
 
@@ -87,8 +88,8 @@ public class GearboxVisual extends KineticBlockEntityVisual<GearboxBlockEntity> 
     }
 
     @Override
-    public void updateLight() {
-        relight(pos, keys.values().stream());
+    public void updateLight(float partialTick) {
+        relight(pos, keys.values().toArray(FlatLit[]::new));
     }
 
     @Override

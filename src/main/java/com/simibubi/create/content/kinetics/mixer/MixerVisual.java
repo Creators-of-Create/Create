@@ -23,8 +23,8 @@ public class MixerVisual extends EncasedCogVisual implements SimpleDynamicVisual
 	private final OrientedInstance mixerPole;
 	private final MechanicalMixerBlockEntity mixer;
 
-	public MixerVisual(VisualizationContext context, MechanicalMixerBlockEntity blockEntity) {
-		super(context, blockEntity, false);
+	public MixerVisual(VisualizationContext context, MechanicalMixerBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, false, partialTick);
 		this.mixer = blockEntity;
 
 		mixerHead = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.MECHANICAL_MIXER_HEAD))
@@ -34,13 +34,8 @@ public class MixerVisual extends EncasedCogVisual implements SimpleDynamicVisual
 
 		mixerPole = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.MECHANICAL_MIXER_POLE))
 				.createInstance();
-	}
 
-	@Override
-	public void init(float pt) {
-		super.init(pt);
-
-		animate(pt);
+		animate(partialTick);
 	}
 
 	@Override
@@ -76,8 +71,8 @@ public class MixerVisual extends EncasedCogVisual implements SimpleDynamicVisual
 	}
 
 	@Override
-	public void updateLight() {
-		super.updateLight();
+	public void updateLight(float partialTick) {
+		super.updateLight(partialTick);
 
 		relight(pos.below(), mixerHead);
 		relight(pos, mixerPole);

@@ -16,15 +16,22 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class HandCrankVisual extends SingleRotatingVisual<HandCrankBlockEntity> implements SimpleDynamicVisual {
 
-	private TransformedInstance crank;
-	private Direction facing;
+	private final TransformedInstance crank;
+	private final Direction facing;
 
-	public HandCrankVisual(VisualizationContext modelManager, HandCrankBlockEntity blockEntity) {
-		super(modelManager, blockEntity);
+	public HandCrankVisual(VisualizationContext modelManager, HandCrankBlockEntity blockEntity, float partialTick) {
+		super(modelManager, blockEntity, partialTick);
 		facing = blockState.getValue(BlockStateProperties.FACING);
 		Model model = blockEntity.getRenderedHandleInstance();
 		crank = instancerProvider.instancer(InstanceTypes.TRANSFORMED, model)
 				.createInstance();
+
+		rotateCrank(partialTick);
+
+		if (blockEntity.shouldRenderShaft())
+			setup(rotatingModel);
+
+		updateLight(partialTick);
 	}
 
 	@Override
@@ -48,17 +55,6 @@ public class HandCrankVisual extends SingleRotatingVisual<HandCrankBlockEntity> 
 	}
 
 	@Override
-	public void init(float pt) {
-		rotateCrank(pt);
-
-		// FIXME: need to call super.super.init here
-		if (blockEntity.shouldRenderShaft())
-			super.init(pt);
-
-		updateLight();
-	}
-
-	@Override
 	protected void _delete() {
 		if (blockEntity.shouldRenderShaft())
 			super._delete();
@@ -73,9 +69,9 @@ public class HandCrankVisual extends SingleRotatingVisual<HandCrankBlockEntity> 
 	}
 
 	@Override
-	public void updateLight() {
+	public void updateLight(float partialTick) {
 		if (blockEntity.shouldRenderShaft())
-			super.updateLight();
+			super.updateLight(partialTick);
 		if (crank != null)
 			relight(pos, crank);
 	}

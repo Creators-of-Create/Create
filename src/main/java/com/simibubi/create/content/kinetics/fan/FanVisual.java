@@ -23,8 +23,8 @@ public class FanVisual extends KineticBlockEntityVisual<EncasedFanBlockEntity> {
     final Direction direction;
     private final Direction opposite;
 
-    public FanVisual(VisualizationContext context, EncasedFanBlockEntity blockEntity) {
-		super(context, blockEntity);
+    public FanVisual(VisualizationContext context, EncasedFanBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 
 		direction = blockState.getValue(FACING);
 
@@ -53,7 +53,7 @@ public class FanVisual extends KineticBlockEntityVisual<EncasedFanBlockEntity> {
     }
 
     @Override
-    public void updateLight() {
+    public void updateLight(float partialTick) {
         BlockPos behind = pos.relative(opposite);
         relight(behind, shaft);
 

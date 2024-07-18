@@ -9,8 +9,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class HalfShaftVisual<T extends KineticBlockEntity> extends SingleRotatingVisual<T> {
-    public HalfShaftVisual(VisualizationContext context, T blockEntity) {
-        super(context, blockEntity);
+    public HalfShaftVisual(VisualizationContext context, T blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
     }
 
 	@Override

@@ -10,8 +10,8 @@ import com.simibubi.create.content.fluids.hosePulley.HosePulleyBlockEntity;
 
 public class HosePulleyVisual extends AbstractPulleyVisual<HosePulleyBlockEntity> {
 
-	public HosePulleyVisual(VisualizationContext dispatcher, HosePulleyBlockEntity blockEntity) {
-		super(dispatcher, blockEntity);
+	public HosePulleyVisual(VisualizationContext dispatcher, HosePulleyBlockEntity blockEntity, float partialTick) {
+		super(dispatcher, blockEntity, partialTick);
 	}
 
 	protected Instancer<OrientedInstance> getRopeModel() {

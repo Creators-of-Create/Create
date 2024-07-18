@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.instance.AbstractInstance;
+import dev.engine_room.flywheel.lib.instance.FlatLit;
 import dev.engine_room.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.IRotate;
@@ -21,8 +22,8 @@ public class SplitShaftVisual extends KineticBlockEntityVisual<SplitShaftBlockEn
 
     protected final ArrayList<RotatingInstance> keys;
 
-    public SplitShaftVisual(VisualizationContext modelManager, SplitShaftBlockEntity blockEntity) {
-        super(modelManager, blockEntity);
+    public SplitShaftVisual(VisualizationContext modelManager, SplitShaftBlockEntity blockEntity, float partialTick) {
+        super(modelManager, blockEntity, partialTick);
 
         keys = new ArrayList<>(2);
 
@@ -52,8 +53,8 @@ public class SplitShaftVisual extends KineticBlockEntityVisual<SplitShaftBlockEn
     }
 
     @Override
-    public void updateLight() {
-        relight(pos, keys.stream());
+    public void updateLight(float partialTick) {
+        relight(pos, keys.toArray(FlatLit[]::new));
     }
 
     @Override

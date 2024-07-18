@@ -32,9 +32,4 @@ public class PSIActorVisual extends ActorVisual {
 	protected void _delete() {
 		instance.remove();
 	}
-
-	@Override
-	public void init(float partialTick) {
-
-	}
 }

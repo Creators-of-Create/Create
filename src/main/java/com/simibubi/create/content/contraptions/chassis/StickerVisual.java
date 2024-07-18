@@ -26,8 +26,8 @@ public class StickerVisual extends AbstractBlockEntityVisual<StickerBlockEntity>
 
 	private final TransformedInstance head;
 
-	public StickerVisual(VisualizationContext context, StickerBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public StickerVisual(VisualizationContext context, StickerBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 
 		head = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.STICKER_HEAD)).createInstance();
 
@@ -66,7 +66,7 @@ public class StickerVisual extends AbstractBlockEntityVisual<StickerBlockEntity>
 	}
 
 	@Override
-	public void updateLight() {
+	public void updateLight(float partialTick) {
 		relight(pos, head);
 	}
 

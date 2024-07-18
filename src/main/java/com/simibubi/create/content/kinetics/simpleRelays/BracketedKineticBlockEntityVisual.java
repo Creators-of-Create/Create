@@ -24,12 +24,13 @@ public class BracketedKineticBlockEntityVisual extends SingleRotatingVisual<Brac
 
 	protected RotatingInstance additionalShaft;
 
-	public BracketedKineticBlockEntityVisual(VisualizationContext context, BracketedKineticBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public BracketedKineticBlockEntityVisual(VisualizationContext context, BracketedKineticBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
+
+		init(partialTick);
 	}
 
-	@Override
-	public void init(float pt) {
+	public void init(float partialTick) {
         if (ICogWheel.isLargeCog(blockEntity.getBlockState())) {
 			// Large cogs sometimes have to offset their teeth by 11.25 degrees in order to
             // mesh properly
@@ -45,7 +46,6 @@ public class BracketedKineticBlockEntityVisual extends SingleRotatingVisual<Brac
             additionalShaft.setRotationOffset(offset)
                 .setChanged();
         }
-		super.init(pt);
 	}
 
 	@Override
@@ -77,8 +77,8 @@ public class BracketedKineticBlockEntityVisual extends SingleRotatingVisual<Brac
 	}
 
 	@Override
-	public void updateLight() {
-		super.updateLight();
+	public void updateLight(float partialTick) {
+		super.updateLight(partialTick);
 		if (additionalShaft != null)
 			relight(pos, additionalShaft);
 	}

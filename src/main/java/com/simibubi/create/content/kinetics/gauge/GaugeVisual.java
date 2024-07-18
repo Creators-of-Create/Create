@@ -7,6 +7,7 @@ import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.instance.Instancer;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.instance.FlatLit;
 import dev.engine_room.flywheel.lib.instance.InstanceTypes;
 import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
@@ -28,12 +29,13 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
 
     protected final PoseStack ms = new PoseStack();
 
-    protected GaugeVisual(VisualizationContext context, GaugeBlockEntity blockEntity) {
-        super(context, blockEntity);
+    protected GaugeVisual(VisualizationContext context, GaugeBlockEntity blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
+
+		init(partialTick);
     }
 
-	@Override
-	public void init(float pt) {
+	public void init(float partialTick) {
 		GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
 
 		Instancer<TransformedInstance> dialModel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_DIAL));
@@ -54,8 +56,6 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
 
 			face.setupTransform(msr, progress);
 		}
-
-		super.init(pt);
 	}
 
 	private DialFace makeFace(Direction face, Instancer<TransformedInstance> dialModel, Instancer<TransformedInstance> headModel) {
@@ -77,11 +77,11 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
     }
 
     @Override
-    public void updateLight() {
-        super.updateLight();
+    public void updateLight(float partialTick) {
+        super.updateLight(partialTick);
 
         relight(pos, faces.stream()
-                          .flatMap(Couple::stream));
+				.flatMap(Couple::stream).toArray(FlatLit[]::new));
     }
 
     @Override
@@ -155,8 +155,8 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
     }
 
     public static class Speed extends GaugeVisual {
-        public Speed(VisualizationContext context, GaugeBlockEntity blockEntity) {
-            super(context, blockEntity);
+        public Speed(VisualizationContext context, GaugeBlockEntity blockEntity, float partialTick) {
+            super(context, blockEntity, partialTick);
         }
 
         @Override
@@ -166,8 +166,8 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
     }
 
     public static class Stress extends GaugeVisual {
-        public Stress(VisualizationContext context, GaugeBlockEntity blockEntity) {
-            super(context, blockEntity);
+        public Stress(VisualizationContext context, GaugeBlockEntity blockEntity, float partialTick) {
+            super(context, blockEntity, partialTick);
         }
 
         @Override

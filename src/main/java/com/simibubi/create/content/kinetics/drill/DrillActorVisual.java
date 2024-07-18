@@ -66,9 +66,4 @@ public class DrillActorVisual extends ActorVisual {
 	protected void _delete() {
 		drillHead.delete();
 	}
-
-	@Override
-	public void init(float partialTick) {
-
-	}
 }

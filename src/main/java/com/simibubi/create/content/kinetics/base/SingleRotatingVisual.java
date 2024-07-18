@@ -13,16 +13,14 @@ public class SingleRotatingVisual<T extends KineticBlockEntity> extends KineticB
 
 	protected RotatingInstance rotatingModel;
 
-	public SingleRotatingVisual(VisualizationContext context, T blockEntity) {
-		super(context, blockEntity);
+	public SingleRotatingVisual(VisualizationContext context, T blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 	}
 
-	@Override
 	public void init(float pt) {
 		rotatingModel = instancerProvider.instancer(AllInstanceTypes.ROTATING, model())
 				.createInstance();
 		setup(rotatingModel);
-		super.init(pt);
 	}
 
 	@Override
@@ -31,7 +29,7 @@ public class SingleRotatingVisual<T extends KineticBlockEntity> extends KineticB
 	}
 
 	@Override
-	public void updateLight() {
+	public void updateLight(float partialTick) {
 		relight(pos, rotatingModel);
 	}
 

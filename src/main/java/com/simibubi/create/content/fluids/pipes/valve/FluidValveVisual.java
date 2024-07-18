@@ -26,8 +26,8 @@ public class FluidValveVisual extends ShaftVisual<FluidValveBlockEntity> impleme
     protected final double yRot;
     protected final int pointerRotationOffset;
 
-    public FluidValveVisual(VisualizationContext dispatcher, FluidValveBlockEntity blockEntity) {
-        super(dispatcher, blockEntity);
+    public FluidValveVisual(VisualizationContext dispatcher, FluidValveBlockEntity blockEntity, float partialTick) {
+        super(dispatcher, blockEntity, partialTick);
 
         Direction facing = blockState.getValue(FluidValveBlock.FACING);
 
@@ -75,8 +75,8 @@ public class FluidValveVisual extends ShaftVisual<FluidValveBlockEntity> impleme
 	}
 
     @Override
-    public void updateLight() {
-        super.updateLight();
+    public void updateLight(float partialTick) {
+        super.updateLight(partialTick);
         relight(pos, pointer);
     }
 

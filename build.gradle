@@ -104,10 +104,11 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.dev"
     }*/
-    maven {
-        // location of the maven for Dynamic Trees
-        url = 'https://harleyoconnor.com/maven'
-    }
+    // Expired SSL cert, prevents building
+//    maven {
+//        // location of the maven for Dynamic Trees
+//        url = 'https://harleyoconnor.com/maven'
+//    }
     maven {
         // location of the maven for Curios API
         url = "https://maven.theillusivec4.top/"
@@ -145,7 +146,7 @@ dependencies {
     jarJar("com.tterrag.registrate:Registrate:${registrate_version}") {
         jarJar.ranged(it, '[MC1.19.3-1.1.10,)')
     }
-    jarJar("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}") {
+    jarJar("dev.engine_room.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}") {
         jarJar.ranged(it, '[1.0,2.0)')
     }
 

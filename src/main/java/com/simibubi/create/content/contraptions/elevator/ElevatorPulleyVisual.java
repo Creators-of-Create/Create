@@ -8,8 +8,8 @@ import com.simibubi.create.content.kinetics.base.ShaftVisual;
 // TODO
 public class ElevatorPulleyVisual extends ShaftVisual<ElevatorPulleyBlockEntity> implements SimpleDynamicVisual {
 
-	public ElevatorPulleyVisual(VisualizationContext context, ElevatorPulleyBlockEntity blockEntity) {
-		super(context, blockEntity);
+	public ElevatorPulleyVisual(VisualizationContext context, ElevatorPulleyBlockEntity blockEntity, float partialTick) {
+		super(context, blockEntity, partialTick);
 	}
 
 	@Override

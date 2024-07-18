@@ -8,6 +8,7 @@ import dev.engine_room.flywheel.api.instance.Instancer;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.instance.AbstractInstance;
+import dev.engine_room.flywheel.lib.instance.FlatLit;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
@@ -24,8 +25,8 @@ public class FunnelVisual extends AbstractBlockEntityVisual<FunnelBlockEntity> i
 
 	private final ArrayList<FlapInstance> flaps;
 
-    public FunnelVisual(VisualizationContext context, FunnelBlockEntity blockEntity) {
-        super(context, blockEntity);
+    public FunnelVisual(VisualizationContext context, FunnelBlockEntity blockEntity, float partialTick) {
+        super(context, blockEntity, partialTick);
 
         flaps = new ArrayList<>(4);
 
@@ -76,9 +77,9 @@ public class FunnelVisual extends AbstractBlockEntityVisual<FunnelBlockEntity> i
     }
 
     @Override
-    public void updateLight() {
+    public void updateLight(float partialTick) {
         if (flaps != null)
-            relight(pos, flaps.stream());
+            relight(pos, flaps.toArray(FlatLit[]::new));
     }
 
     @Override
