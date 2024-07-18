@@ -43,13 +43,16 @@ public class Curios {
 		modEventBus.addListener(Curios::onClientSetup);
 
 		GogglesItem.addIsWearingPredicate(player -> resolveCuriosMap(player)
-			.map(curiosMap -> curiosMap.get("head"))
-			.map(stacksHandler -> {
-				// Check all the Head slots for Goggles existing
-				int slots = stacksHandler.getSlots();
-				for (int slot = 0; slot < slots; slot++)
-					if (AllItems.GOGGLES.isIn(stacksHandler.getStacks().getStackInSlot(slot)))
-						return true;
+			.map(curiosMap -> {
+				for (ICurioStacksHandler stacksHandler : curiosMap.values()) {
+					// Search all the curio slots for Goggles existing
+					int slots = stacksHandler.getSlots();
+					for (int slot = 0; slot < slots; slot++) {
+						if (AllItems.GOGGLES.isIn(stacksHandler.getStacks().getStackInSlot(slot))) {
+							return true;
+						}
+					}
+				}
 
 				return false;
 			})

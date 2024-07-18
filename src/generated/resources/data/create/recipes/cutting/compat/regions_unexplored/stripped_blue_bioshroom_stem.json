@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "regions_unexplored:stripped_blue_bioshroom_stem"
+    }
+  ],
+  "results": [
+    {
+      "item": "regions_unexplored:blue_bioshroom_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "regions_unexplored",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

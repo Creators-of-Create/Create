@@ -9,17 +9,13 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "minecraft:copy_name",
-              "source": "block_entity"
-            },
-            {
               "function": "minecraft:copy_nbt",
               "source": "block_entity",
               "ops": [
                 {
-                  "source": "Air",
-                  "target": "Air",
-                  "op": "replace"
+                  "source": "VanillaTag",
+                  "target": "{}",
+                  "op": "merge"
                 }
               ]
             },
@@ -28,8 +24,8 @@
               "source": "block_entity",
               "ops": [
                 {
-                  "source": "Enchantments",
-                  "target": "Enchantments",
+                  "source": "Air",
+                  "target": "Air",
                   "op": "replace"
                 }
               ]

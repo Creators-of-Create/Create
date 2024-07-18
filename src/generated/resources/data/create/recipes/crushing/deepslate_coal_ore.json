@@ -7,11 +7,12 @@
   ],
   "results": [
     {
-      "item": "minecraft:coal"
+      "item": "minecraft:coal",
+      "count": 2
     },
     {
       "item": "minecraft:coal",
-      "chance": 0.75
+      "chance": 0.25
     },
     {
       "item": "create:experience_nugget",
@@ -22,5 +23,5 @@
       "chance": 0.125
     }
   ],
-  "processingTime": 250
+  "processingTime": 300
 }

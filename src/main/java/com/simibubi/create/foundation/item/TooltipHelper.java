@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.google.common.base.Strings;
-import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
@@ -30,15 +29,11 @@ public class TooltipHelper {
 	}
 
 	public static void addHint(List<Component> tooltip, String hintKey, Object... messageParams) {
-		Component spacing = IHaveGoggleInformation.componentSpacing;
-		tooltip.add(spacing.plainCopy()
-			.append(Lang.translateDirect(hintKey + ".title"))
-			.withStyle(ChatFormatting.GOLD));
+		Lang.translate(hintKey + ".title").style(ChatFormatting.GOLD).forGoggles(tooltip);
 		Component hint = Lang.translateDirect(hintKey);
 		List<Component> cutComponent = cutTextComponent(hint, Palette.GRAY_AND_WHITE);
 		for (Component component : cutComponent)
-			tooltip.add(spacing.plainCopy()
-				.append(component));
+			Lang.text(component.getString()).forGoggles(tooltip);
 	}
 
 	public static String makeProgressBar(int length, int filledLength) {
@@ -54,7 +49,7 @@ public class TooltipHelper {
 	public static Style styleFromColor(ChatFormatting color) {
 		return Style.EMPTY.applyFormat(color);
 	}
-	
+
 	public static Style styleFromColor(int hex) {
 		return Style.EMPTY.withColor(hex);
 	}

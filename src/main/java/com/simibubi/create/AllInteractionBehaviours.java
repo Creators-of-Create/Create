@@ -3,6 +3,8 @@ package com.simibubi.create;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.behaviour.FenceGateMovingInteraction;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.behaviour.DoorMovingInteraction;
@@ -75,6 +77,15 @@ public class AllInteractionBehaviours {
 			}
 			return null;
 		});
+
+		FenceGateMovingInteraction fenceGateBehavior = new FenceGateMovingInteraction();
+		registerBehaviourProvider(state -> {
+			if (state.is(BlockTags.FENCE_GATES)) {
+				return fenceGateBehavior;
+			}
+			return null;
+		});
+
 	}
 
 	public interface BehaviourProvider {
