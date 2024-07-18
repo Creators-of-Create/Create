@@ -5,6 +5,7 @@ import static com.simibubi.create.content.kinetics.base.DirectionalKineticBlock.
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -46,9 +47,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
 import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -547,8 +550,10 @@ public class DeployerBlockEntity extends KineticBlockEntity {
 		ItemStack heldItemMainhand = player.getMainHandItem();
 		if (heldItemMainhand.getItem() instanceof SandPaperItem) {
 			sandpaperInv.setItem(0, stack);
-			return AllRecipeTypes.SANDPAPER_POLISHING.find(sandpaperInv, level)
-				.orElse(null);
+			Optional<Recipe<SandPaperInv>> sandPaperRecipe = AllRecipeTypes.SANDPAPER_POLISHING.find(sandpaperInv, level);
+			if (sandPaperRecipe.isPresent() && !sandPaperRecipe.get().getId().getPath().endsWith("_manual_only"))
+				return sandPaperRecipe.get();
+			return null;
 		}
 
 		recipeInv.setItem(0, stack);
@@ -558,11 +563,18 @@ public class DeployerBlockEntity extends KineticBlockEntity {
 
 		event.addRecipe(() -> SequencedAssemblyRecipe.getRecipe(level, event.getInventory(),
 			AllRecipeTypes.DEPLOYING.getType(), DeployerApplicationRecipe.class), 100);
-		event.addRecipe(() -> AllRecipeTypes.DEPLOYING.find(event.getInventory(), level), 50);
-		event.addRecipe(() -> AllRecipeTypes.ITEM_APPLICATION.find(event.getInventory(), level), 50);
+		event.addRecipe(() -> checkRecipe(AllRecipeTypes.DEPLOYING, event.getInventory(), level), 50);
+		event.addRecipe(() -> checkRecipe(AllRecipeTypes.ITEM_APPLICATION, event.getInventory(), level), 50);
 
 		MinecraftForge.EVENT_BUS.post(event);
 		return event.getRecipe();
+	}
+
+	private Optional<? extends Recipe<? extends Container>> checkRecipe(AllRecipeTypes type, RecipeWrapper inv, Level level) {
+		Optional<? extends Recipe<? extends Container>> opt = type.find(inv, level);
+		if (opt.isPresent() && !opt.get().getId().getPath().contains("_manual_only"))
+			return opt;
+		return Optional.empty();
 	}
 
 	public DeployerFakePlayer getPlayer() {
