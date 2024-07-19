@@ -31,11 +31,10 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
 
     protected GaugeVisual(VisualizationContext context, GaugeBlockEntity blockEntity, float partialTick) {
         super(context, blockEntity, partialTick);
-
-		init(partialTick);
+		init();
     }
 
-	public void init(float partialTick) {
+	public void init() {
 		GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
 
 		Instancer<TransformedInstance> dialModel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_DIAL));

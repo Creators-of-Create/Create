@@ -26,11 +26,10 @@ public class BracketedKineticBlockEntityVisual extends SingleRotatingVisual<Brac
 
 	public BracketedKineticBlockEntityVisual(VisualizationContext context, BracketedKineticBlockEntity blockEntity, float partialTick) {
 		super(context, blockEntity, partialTick);
-
-		init(partialTick);
+		init();
 	}
 
-	public void init(float partialTick) {
+	public void init() {
         if (ICogWheel.isLargeCog(blockEntity.getBlockState())) {
 			// Large cogs sometimes have to offset their teeth by 11.25 degrees in order to
             // mesh properly

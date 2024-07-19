@@ -42,13 +42,8 @@ public class FluidValveVisual extends ShaftVisual<FluidValveBlockEntity> impleme
         settled = false;
 
         pointer = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLUID_VALVE_POINTER)).createInstance();
-	}
 
-	@Override
-	public void init(float pt) {
-		super.init(pt);
-
-		transformPointer(pt);
+		transformPointer(partialTick);
 	}
 
 	@Override
