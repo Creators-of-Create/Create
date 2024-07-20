@@ -3,18 +3,24 @@ package com.simibubi.create.content.contraptions.render;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.engine_room.flywheel.api.visual.LightUpdatedVisual;
-
-import dev.engine_room.flywheel.api.visual.ShaderLightVisual;
-import it.unimi.dsi.fastutil.longs.LongArraySet;
-import it.unimi.dsi.fastutil.longs.LongSet;
-
 import org.apache.commons.lang3.tuple.MutablePair;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.content.contraptions.Contraption.RenderedBlocks;
+import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.foundation.utility.worldWrappers.WrappedBlockAndTintGetter;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import dev.engine_room.flywheel.api.model.Model;
 import dev.engine_room.flywheel.api.task.Plan;
 import dev.engine_room.flywheel.api.visual.BlockEntityVisual;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
+import dev.engine_room.flywheel.api.visual.LightUpdatedVisual;
+import dev.engine_room.flywheel.api.visual.ShaderLightVisual;
 import dev.engine_room.flywheel.api.visual.TickableVisual;
 import dev.engine_room.flywheel.api.visualization.BlockEntityVisualizer;
 import dev.engine_room.flywheel.api.visualization.VisualEmbedding;
@@ -28,16 +34,8 @@ import dev.engine_room.flywheel.lib.task.NestedPlan;
 import dev.engine_room.flywheel.lib.task.PlanMap;
 import dev.engine_room.flywheel.lib.task.RunnablePlan;
 import dev.engine_room.flywheel.lib.visual.AbstractEntityVisual;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllMovementBehaviours;
-import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.Contraption;
-import com.simibubi.create.content.contraptions.Contraption.RenderedBlocks;
-import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
-import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedBlockAndTintGetter;
-import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
-
+import it.unimi.dsi.fastutil.longs.LongArraySet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
@@ -179,9 +177,6 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		}
 
 		if (hasMovedBlocks()) {
-			// TODO: incremental light collection
-			// TODO: optimize light collection for very large contraptions
-			//  by only collecting cuboids that contain faces
 			updateLight(partialTick);
 		}
 	}
@@ -200,7 +195,6 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 
 	@Override
 	public void updateLight(float partialTick) {
-		super.update(partialTick);
 	}
 
 	public LongSet collectLightSections() {

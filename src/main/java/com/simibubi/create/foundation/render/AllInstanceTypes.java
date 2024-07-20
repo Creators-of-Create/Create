@@ -4,16 +4,16 @@ import static com.simibubi.create.Create.asResource;
 
 import org.lwjgl.system.MemoryUtil;
 
-import dev.engine_room.flywheel.api.instance.InstanceType;
-import dev.engine_room.flywheel.api.layout.FloatRepr;
-import dev.engine_room.flywheel.api.layout.IntegerRepr;
-import dev.engine_room.flywheel.api.layout.LayoutBuilder;
-import dev.engine_room.flywheel.lib.instance.SimpleInstanceType;
 import com.simibubi.create.content.contraptions.actors.ActorInstance;
 import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.content.kinetics.belt.BeltInstance;
 import com.simibubi.create.content.logistics.flwdata.FlapInstance;
 
+import dev.engine_room.flywheel.api.instance.InstanceType;
+import dev.engine_room.flywheel.api.layout.FloatRepr;
+import dev.engine_room.flywheel.api.layout.IntegerRepr;
+import dev.engine_room.flywheel.api.layout.LayoutBuilder;
+import dev.engine_room.flywheel.lib.instance.SimpleInstanceType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -117,11 +117,11 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutFloat(ptr + 24, instance.rotation.x);
 				MemoryUtil.memPutFloat(ptr + 28, instance.rotation.y);
 				MemoryUtil.memPutFloat(ptr + 32, instance.rotation.z);
-				MemoryUtil.memPutFloat(ptr + 34, instance.rotation.w);
-				MemoryUtil.memPutByte(ptr + 38, instance.rotationCenterX);
-				MemoryUtil.memPutByte(ptr + 39, instance.rotationCenterY);
-				MemoryUtil.memPutByte(ptr + 40, instance.rotationCenterZ);
-				MemoryUtil.memPutFloat(ptr + 42, instance.speed);
+				MemoryUtil.memPutFloat(ptr + 36, instance.rotation.w);
+				MemoryUtil.memPutByte(ptr + 40, instance.rotationCenterX);
+				MemoryUtil.memPutByte(ptr + 41, instance.rotationCenterY);
+				MemoryUtil.memPutByte(ptr + 42, instance.rotationCenterZ);
+				MemoryUtil.memPutFloat(ptr + 44, instance.speed);
 			})
 			.register();
 
