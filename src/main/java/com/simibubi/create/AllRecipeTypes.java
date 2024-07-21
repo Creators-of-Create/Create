@@ -39,7 +39,6 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -139,14 +138,12 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 		return world.getRecipeManager()
 			.getRecipeFor(getType(), inv, world);
 	}
-
+	
 	public static boolean shouldIgnoreInAutomation(Recipe<?> recipe) {
 		RecipeSerializer<?> serializer = recipe.getSerializer();
 		if (serializer != null && AllTags.AllRecipeSerializerTags.AUTOMATION_IGNORE.matches(serializer))
 			return true;
-		return recipe.getId()
-			.getPath()
-			.endsWith("_manual_only");
+		return !CAN_BE_AUTOMATED.test(recipe);
 	}
 
 	private static class Registers {
