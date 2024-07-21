@@ -3,17 +3,8 @@ package com.simibubi.create.content.kinetics.belt;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import dev.engine_room.flywheel.lib.instance.FlatLit;
-
 import org.joml.Quaternionf;
 
-import dev.engine_room.flywheel.api.instance.Instance;
-import dev.engine_room.flywheel.api.instance.Instancer;
-import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import dev.engine_room.flywheel.lib.instance.AbstractInstance;
-import dev.engine_room.flywheel.lib.model.Models;
-import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityVisual;
@@ -22,6 +13,14 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.instance.Instancer;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.instance.AbstractInstance;
+import dev.engine_room.flywheel.lib.instance.FlatLit;
+import dev.engine_room.flywheel.lib.model.Models;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
@@ -102,9 +101,9 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
 
     @Override
     public void updateLight(float partialTick) {
-        relight(pos, keys.toArray(FlatLit[]::new));
+        relight(keys.toArray(FlatLit[]::new));
 
-        if (pulleyKey != null) relight(pos, pulleyKey);
+        if (pulleyKey != null) relight(pulleyKey);
     }
 
     @Override

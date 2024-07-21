@@ -3,9 +3,16 @@ package com.simibubi.create.content.trains.track;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.LongConsumer;
 
 import javax.annotation.Nullable;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack.Pose;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.trains.track.BezierConnection.GirderAngles;
+import com.simibubi.create.content.trains.track.BezierConnection.SegmentAngles;
+import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
@@ -15,17 +22,8 @@ import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.PoseStack.Pose;
-import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.trains.track.BezierConnection.GirderAngles;
-import com.simibubi.create.content.trains.track.BezierConnection.SegmentAngles;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import it.unimi.dsi.fastutil.longs.LongSets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;

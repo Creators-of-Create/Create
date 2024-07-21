@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.data;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import dev.engine_room.flywheel.lib.visual.SimpleEntityVisualizer;
 import com.simibubi.create.Create;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BuilderCallback;
@@ -11,6 +10,7 @@ import com.tterrag.registrate.builders.EntityBuilder;
 import com.tterrag.registrate.util.OneTimeEventReceiver;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import dev.engine_room.flywheel.lib.visual.SimpleEntityVisualizer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;

@@ -3,6 +3,11 @@ package com.simibubi.create.content.logistics.funnel;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.logistics.flwdata.FlapInstance;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.instance.Instancer;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
@@ -13,11 +18,6 @@ import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.logistics.flwdata.FlapInstance;
-import com.simibubi.create.foundation.render.AllInstanceTypes;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LightLayer;
 
@@ -79,7 +79,7 @@ public class FunnelVisual extends AbstractBlockEntityVisual<FunnelBlockEntity> i
     @Override
     public void updateLight(float partialTick) {
         if (flaps != null)
-            relight(pos, flaps.toArray(FlatLit[]::new));
+            relight(flaps.toArray(FlatLit[]::new));
     }
 
     @Override

@@ -1,10 +1,10 @@
 package com.simibubi.create.compat.jei.category.animations;
 
-import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.gui.GuiGraphics;
 
 public class AnimatedCrafter extends AnimatedKinetics {

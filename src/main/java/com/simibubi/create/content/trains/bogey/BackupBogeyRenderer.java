@@ -1,10 +1,10 @@
 package com.simibubi.create.content.trains.bogey;
 
-import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import net.minecraft.nbt.CompoundTag;
 
 public class BackupBogeyRenderer extends BogeyRenderer.CommonRenderer {

@@ -2,11 +2,11 @@ package com.simibubi.create.content.kinetics.base;
 
 import org.joml.Vector3f;
 
+import com.simibubi.create.foundation.utility.Color;
+
 import dev.engine_room.flywheel.api.instance.InstanceHandle;
 import dev.engine_room.flywheel.api.instance.InstanceType;
 import dev.engine_room.flywheel.lib.instance.ColoredLitInstance;
-import com.simibubi.create.foundation.utility.Color;
-
 import net.minecraft.core.BlockPos;
 
 public class KineticInstance extends ColoredLitInstance {

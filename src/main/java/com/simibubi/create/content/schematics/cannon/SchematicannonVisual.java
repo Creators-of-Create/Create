@@ -2,6 +2,9 @@ package com.simibubi.create.content.schematics.cannon;
 
 import java.util.function.Consumer;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllPartialModels;
+
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
@@ -11,9 +14,6 @@ import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllPartialModels;
-
 import net.minecraft.core.Direction;
 
 public class SchematicannonVisual extends AbstractBlockEntityVisual<SchematicannonBlockEntity> implements SimpleDynamicVisual {
@@ -71,7 +71,7 @@ public class SchematicannonVisual extends AbstractBlockEntityVisual<Schematicann
 
     @Override
     public void updateLight(float partialTick) {
-        relight(pos, connector, pipe);
+        relight(connector, pipe);
     }
 
 	@Override

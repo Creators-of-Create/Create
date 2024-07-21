@@ -2,6 +2,9 @@ package com.simibubi.create.content.contraptions.chassis;
 
 import java.util.function.Consumer;
 
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.foundation.utility.AngleHelper;
+
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
@@ -10,9 +13,6 @@ import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.foundation.utility.AngleHelper;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -67,7 +67,7 @@ public class StickerVisual extends AbstractBlockEntityVisual<StickerBlockEntity>
 
 	@Override
 	public void updateLight(float partialTick) {
-		relight(pos, head);
+		relight(head);
 	}
 
 	@Override

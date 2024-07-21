@@ -10,7 +10,6 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationLevel;
-
 import it.unimi.dsi.fastutil.objects.Object2ShortMap;
 import it.unimi.dsi.fastutil.objects.Object2ShortOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;

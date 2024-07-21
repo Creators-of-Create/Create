@@ -3,7 +3,6 @@ package com.simibubi.create.content.kinetics.crank;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import dev.engine_room.flywheel.api.model.Model;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
@@ -22,6 +21,7 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.api.model.Model;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

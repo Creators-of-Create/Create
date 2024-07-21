@@ -59,7 +59,7 @@ public class WaterWheelVisual<T extends WaterWheelBlockEntity> extends KineticBl
 
 	@Override
 	public void updateLight(float partialTick) {
-		relight(pos, rotatingModel);
+		relight(rotatingModel);
 	}
 
 	@Override

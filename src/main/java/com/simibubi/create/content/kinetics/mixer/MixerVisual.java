@@ -2,6 +2,11 @@ package com.simibubi.create.content.kinetics.mixer;
 
 import java.util.function.Consumer;
 
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.kinetics.base.RotatingInstance;
+import com.simibubi.create.content.kinetics.simpleRelays.encased.EncasedCogVisual;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
+
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.model.Model;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
@@ -10,11 +15,6 @@ import dev.engine_room.flywheel.lib.instance.InstanceTypes;
 import dev.engine_room.flywheel.lib.instance.OrientedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.kinetics.base.RotatingInstance;
-import com.simibubi.create.content.kinetics.simpleRelays.encased.EncasedCogVisual;
-import com.simibubi.create.foundation.render.AllInstanceTypes;
-
 import net.minecraft.core.Direction;
 
 public class MixerVisual extends EncasedCogVisual implements SimpleDynamicVisual {
@@ -75,7 +75,7 @@ public class MixerVisual extends EncasedCogVisual implements SimpleDynamicVisual
 		super.updateLight(partialTick);
 
 		relight(pos.below(), mixerHead);
-		relight(pos, mixerPole);
+		relight(mixerPole);
 	}
 
 	@Override

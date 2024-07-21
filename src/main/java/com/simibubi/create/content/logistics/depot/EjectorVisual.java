@@ -2,6 +2,9 @@ package com.simibubi.create.content.logistics.depot;
 
 import java.util.function.Consumer;
 
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.kinetics.base.ShaftVisual;
+
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
@@ -9,8 +12,6 @@ import dev.engine_room.flywheel.lib.instance.InstanceTypes;
 import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.kinetics.base.ShaftVisual;
 
 public class EjectorVisual extends ShaftVisual<EjectorBlockEntity> implements SimpleDynamicVisual {
 
@@ -41,7 +42,7 @@ public class EjectorVisual extends ShaftVisual<EjectorBlockEntity> implements Si
 	@Override
 	public void updateLight(float partialTick) {
 		super.updateLight(partialTick);
-		relight(pos, plate);
+		relight(plate);
 	}
 
 	@Override

@@ -1,15 +1,9 @@
 package com.simibubi.create.content.kinetics.simpleRelays.encased;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 
-import dev.engine_room.flywheel.api.instance.Instance;
-import dev.engine_room.flywheel.api.model.Model;
-import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import dev.engine_room.flywheel.lib.instance.AbstractInstance;
-import dev.engine_room.flywheel.lib.model.Models;
-import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
+import org.jetbrains.annotations.Nullable;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
@@ -21,6 +15,12 @@ import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockEn
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.model.Model;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.model.Models;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.block.Block;
@@ -31,9 +31,11 @@ public class EncasedCogVisual extends KineticBlockEntityVisual<KineticBlockEntit
 
 	private final boolean large;
 
-	protected RotatingInstance rotatingModel;
-	protected Optional<RotatingInstance> rotatingTopShaft;
-	protected Optional<RotatingInstance> rotatingBottomShaft;
+	protected final RotatingInstance rotatingModel;
+	@Nullable
+	protected final RotatingInstance rotatingTopShaft;
+	@Nullable
+	protected final RotatingInstance rotatingBottomShaft;
 
 	public static EncasedCogVisual small(VisualizationContext modelManager, KineticBlockEntity blockEntity, float partialTick) {
 		return new EncasedCogVisual(modelManager, blockEntity, false, partialTick);
@@ -47,53 +49,51 @@ public class EncasedCogVisual extends KineticBlockEntityVisual<KineticBlockEntit
 		super(modelManager, blockEntity, partialTick);
 		this.large = large;
 
-		init(partialTick);
-	}
-
-	public void init(float partialTick) {
         var instancer = instancerProvider.instancer(AllInstanceTypes.ROTATING, getCogModel());
 		rotatingModel = setup(instancer.createInstance());
 
+		RotatingInstance rotatingTopShaft = null;
+		RotatingInstance rotatingBottomShaft = null;
+
 		Block block = blockState.getBlock();
-		if (!(block instanceof IRotate def))
-			return;
-
-        rotatingTopShaft = Optional.empty();
-		rotatingBottomShaft = Optional.empty();
-
-		for (Direction d : Iterate.directionsInAxis(axis)) {
-			if (!def.hasShaftTowards(blockEntity.getLevel(), blockEntity.getBlockPos(), blockState, d))
-				continue;
-			RotatingInstance data = setup(instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, d))
-				.createInstance());
-			if (large)
-				data.setRotationOffset(BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos));
-			if (d.getAxisDirection() == AxisDirection.POSITIVE)
-				rotatingTopShaft = Optional.of(data);
-			else
-				rotatingBottomShaft = Optional.of(data);
+		if (block instanceof IRotate def) {
+			for (Direction d : Iterate.directionsInAxis(axis)) {
+				if (!def.hasShaftTowards(blockEntity.getLevel(), blockEntity.getBlockPos(), blockState, d))
+					continue;
+				RotatingInstance data = setup(instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, d))
+					.createInstance());
+				if (large) {
+					data.setRotationOffset(BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos));
+				}
+				if (d.getAxisDirection() == AxisDirection.POSITIVE) {
+					rotatingTopShaft = data;
+				} else {
+					rotatingBottomShaft = data;
+				}
+			}
 		}
+
+		this.rotatingTopShaft = rotatingTopShaft;
+		this.rotatingBottomShaft = rotatingBottomShaft;
 	}
 
 	@Override
 	public void update(float pt) {
 		updateRotation(rotatingModel);
-		rotatingTopShaft.ifPresent(this::updateRotation);
-		rotatingBottomShaft.ifPresent(this::updateRotation);
+		if (rotatingTopShaft != null) updateRotation(rotatingTopShaft);
+		if (rotatingBottomShaft != null) updateRotation(rotatingBottomShaft);
 	}
 
 	@Override
 	public void updateLight(float partialTick) {
-		relight(pos, rotatingModel);
-		rotatingTopShaft.ifPresent(d -> relight(pos, d));
-		rotatingBottomShaft.ifPresent(d -> relight(pos, d));
+		relight(rotatingModel, rotatingTopShaft, rotatingBottomShaft);
 	}
 
 	@Override
 	protected void _delete() {
 		rotatingModel.delete();
-		rotatingTopShaft.ifPresent(AbstractInstance::delete);
-		rotatingBottomShaft.ifPresent(AbstractInstance::delete);
+		if (rotatingTopShaft != null) rotatingTopShaft.delete();
+		if (rotatingBottomShaft != null) rotatingBottomShaft.delete();
 	}
 
 	protected Model getCogModel() {
@@ -114,9 +114,9 @@ public class EncasedCogVisual extends KineticBlockEntityVisual<KineticBlockEntit
 	}
 
 	@Override
-	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+	public void collectCrumblingInstances(Consumer<@Nullable Instance> consumer) {
 		consumer.accept(rotatingModel);
-		rotatingTopShaft.ifPresent(consumer);
-		rotatingBottomShaft.ifPresent(consumer);
+		consumer.accept(rotatingTopShaft);
+		consumer.accept(rotatingBottomShaft);
 	}
 }

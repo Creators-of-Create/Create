@@ -1,7 +1,6 @@
 package com.simibubi.create.content.kinetics.base;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 

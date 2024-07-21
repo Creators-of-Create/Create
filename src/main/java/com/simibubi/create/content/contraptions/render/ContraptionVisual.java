@@ -70,7 +70,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		init(partialTick);
     }
 
-	public void init(float partialTick) {
+	protected void init(float partialTick) {
 		setEmbeddingMatrices(partialTick);
 
 		Contraption contraption = entity.getContraption();
@@ -99,8 +99,6 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		for (var actor : contraption.getActors()) {
 			setupActor(actor, partialTick);
 		}
-
-		updateLight(partialTick);
 	}
 
 	@SuppressWarnings("unchecked")

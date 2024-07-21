@@ -2,6 +2,9 @@ package com.simibubi.create.content.redstone.diodes;
 
 import java.util.function.Consumer;
 
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.foundation.utility.Color;
+
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visual.TickableVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
@@ -10,8 +13,6 @@ import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleTickableVisual;
-import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.foundation.utility.Color;
 
 public class BrassDiodeVisual extends AbstractBlockEntityVisual<BrassDiodeBlockEntity> implements SimpleTickableVisual {
 
@@ -44,7 +45,7 @@ public class BrassDiodeVisual extends AbstractBlockEntityVisual<BrassDiodeBlockE
 
     @Override
     public void updateLight(float partialTick) {
-        relight(pos, indicator);
+        relight(indicator);
     }
 
     @Override

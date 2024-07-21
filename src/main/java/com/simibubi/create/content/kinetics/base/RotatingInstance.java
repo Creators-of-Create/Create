@@ -4,7 +4,6 @@ import org.joml.Vector3f;
 
 import dev.engine_room.flywheel.api.instance.InstanceHandle;
 import dev.engine_room.flywheel.api.instance.InstanceType;
-
 import net.minecraft.core.Direction;
 
 public class RotatingInstance extends KineticInstance {

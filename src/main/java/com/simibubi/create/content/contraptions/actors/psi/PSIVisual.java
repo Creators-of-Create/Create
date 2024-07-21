@@ -34,7 +34,7 @@ public class PSIVisual extends AbstractBlockEntityVisual<PortableStorageInterfac
 
 	@Override
 	public void updateLight(float partialTick) {
-		relight(pos, instance.middle, instance.top);
+		relight(instance.middle, instance.top);
 	}
 
 	@Override

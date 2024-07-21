@@ -2,6 +2,11 @@ package com.simibubi.create.content.fluids.pipes.valve;
 
 import java.util.function.Consumer;
 
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
+import com.simibubi.create.content.kinetics.base.ShaftVisual;
+import com.simibubi.create.foundation.utility.AngleHelper;
+
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
@@ -9,11 +14,6 @@ import dev.engine_room.flywheel.lib.instance.InstanceTypes;
 import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import com.simibubi.create.content.kinetics.base.ShaftVisual;
-import com.simibubi.create.foundation.utility.AngleHelper;
-
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
@@ -72,7 +72,7 @@ public class FluidValveVisual extends ShaftVisual<FluidValveBlockEntity> impleme
     @Override
     public void updateLight(float partialTick) {
         super.updateLight(partialTick);
-        relight(pos, pointer);
+        relight(pointer);
     }
 
     @Override

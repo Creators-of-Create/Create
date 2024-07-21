@@ -3,11 +3,11 @@ package com.simibubi.create.content.kinetics.belt;
 import org.joml.Quaternionf;
 import org.joml.Quaternionfc;
 
-import dev.engine_room.flywheel.api.instance.InstanceHandle;
-import dev.engine_room.flywheel.api.instance.InstanceType;
 import com.simibubi.create.content.kinetics.base.KineticInstance;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
+import dev.engine_room.flywheel.api.instance.InstanceHandle;
+import dev.engine_room.flywheel.api.instance.InstanceType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 public class BeltInstance extends KineticInstance {

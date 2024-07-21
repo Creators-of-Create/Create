@@ -2,6 +2,10 @@ package com.simibubi.create.content.redstone.analogLever;
 
 import java.util.function.Consumer;
 
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Color;
+
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
@@ -12,10 +16,6 @@ import dev.engine_room.flywheel.lib.transform.Rotate;
 import dev.engine_room.flywheel.lib.transform.Translate;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Color;
-
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 
@@ -72,7 +72,7 @@ public class AnalogLeverVisual extends AbstractBlockEntityVisual<AnalogLeverBloc
 
 	@Override
 	public void updateLight(float partialTick) {
-		relight(pos, handle, indicator);
+		relight(handle, indicator);
 	}
 
 	private <T extends Translate<T> & Rotate<T>> T transform(T msr) {

@@ -7,7 +7,6 @@ import static com.simibubi.create.AllPartialModels.BOGEY_PISTON;
 import static com.simibubi.create.AllPartialModels.LARGE_BOGEY_WHEELS;
 import static com.simibubi.create.AllPartialModels.SMALL_BOGEY_WHEELS;
 
-import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
@@ -16,6 +15,7 @@ import com.simibubi.create.content.trains.entity.CarriageBogey;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 

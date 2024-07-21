@@ -2,15 +2,16 @@ package com.simibubi.create.content.trains.entity;
 
 import org.joml.Vector3f;
 
-import dev.engine_room.flywheel.api.visual.DynamicVisual;
-import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.render.ContraptionVisual;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer;
 import com.simibubi.create.content.trains.bogey.BogeyVisual;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
+
+import dev.engine_room.flywheel.api.visual.DynamicVisual;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 
 public class CarriageContraptionVisual extends ContraptionVisual<CarriageContraptionEntity> {
 
@@ -27,13 +28,12 @@ public class CarriageContraptionVisual extends ContraptionVisual<CarriageContrap
 	}
 
 	@Override
-	public void init(float pt) {
+	protected void init(float pt) {
 		carriage = entity.getCarriage();
 
         if (carriage != null) {
             bogeys = carriage.bogeys.mapNotNullWithParam((bogey, manager) -> bogey.getStyle()
                 .createVisual(bogey, bogey.type.getSize(), manager), visualizationContext);
-            updateLight(pt);
         }
 
 		super.init(pt);
@@ -47,20 +47,22 @@ public class CarriageContraptionVisual extends ContraptionVisual<CarriageContrap
 	public void beginFrame(DynamicVisual.Context ctx) {
 		super.beginFrame(ctx);
 		if (bogeys == null) {
-			if (entity.isReadyForRender())
+			if (entity.isReadyForRender()) {
 				init(ctx.partialTick());
+				updateLight(ctx.partialTick());
+			}
 			return;
 		}
 
-		float partialTicks = ctx.partialTick();
+		float partialTick = ctx.partialTick();
 
-		float viewYRot = entity.getViewYRot(partialTicks);
-		float viewXRot = entity.getViewXRot(partialTicks);
+		float viewYRot = entity.getViewYRot(partialTick);
+		float viewXRot = entity.getViewXRot(partialTick);
 		int bogeySpacing = carriage.bogeySpacing;
 
 		ms.pushPose();
 
-		Vector3f instancePosition = getVisualPosition(partialTicks);
+		Vector3f instancePosition = getVisualPosition(partialTick);
 		TransformStack.of(ms)
 			.translate(instancePosition);
 
@@ -76,16 +78,17 @@ public class CarriageContraptionVisual extends ContraptionVisual<CarriageContrap
 			ms.pushPose();
 			CarriageBogey bogey = instance.bogey;
 
-			CarriageContraptionEntityRenderer.translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot, partialTicks);
+			CarriageContraptionEntityRenderer.translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot, partialTick);
 			ms.translate(0, -1.5 - 1 / 128f, 0);
 
-			instance.beginFrame(bogey.wheelAngle.getValue(partialTicks), ms);
+			instance.beginFrame(bogey.wheelAngle.getValue(partialTick), ms);
 			ms.popPose();
 		}
 
 		ms.popPose();
 	}
 
+	@Override
 	public void updateLight(float partialTick) {
 		super.updateLight(partialTick);
 

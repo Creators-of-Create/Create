@@ -2,12 +2,6 @@ package com.simibubi.create.content.kinetics.simpleRelays;
 
 import java.util.function.Consumer;
 
-import dev.engine_room.flywheel.api.instance.Instance;
-import dev.engine_room.flywheel.api.instance.Instancer;
-import dev.engine_room.flywheel.api.model.Model;
-import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import dev.engine_room.flywheel.lib.model.Models;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
@@ -16,6 +10,12 @@ import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.content.kinetics.base.SingleRotatingVisual;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 
+import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.instance.Instancer;
+import dev.engine_room.flywheel.api.model.Model;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.model.Models;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -79,7 +79,7 @@ public class BracketedKineticBlockEntityVisual extends SingleRotatingVisual<Brac
 	public void updateLight(float partialTick) {
 		super.updateLight(partialTick);
 		if (additionalShaft != null)
-			relight(pos, additionalShaft);
+			relight(additionalShaft);
 	}
 
 	@Override

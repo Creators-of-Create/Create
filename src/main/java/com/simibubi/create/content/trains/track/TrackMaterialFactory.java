@@ -5,10 +5,10 @@ import java.util.stream.Stream;
 
 import org.jetbrains.annotations.Nullable;
 
-import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.AllTags;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;

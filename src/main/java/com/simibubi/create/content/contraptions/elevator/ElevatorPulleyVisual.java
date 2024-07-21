@@ -1,9 +1,10 @@
 package com.simibubi.create.content.contraptions.elevator;
 
+import com.simibubi.create.content.kinetics.base.ShaftVisual;
+
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import com.simibubi.create.content.kinetics.base.ShaftVisual;
 
 // TODO
 public class ElevatorPulleyVisual extends ShaftVisual<ElevatorPulleyBlockEntity> implements SimpleDynamicVisual {

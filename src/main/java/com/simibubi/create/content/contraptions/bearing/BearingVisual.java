@@ -4,6 +4,12 @@ import java.util.function.Consumer;
 
 import org.joml.Quaternionf;
 
+import com.mojang.math.Axis;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.kinetics.base.BackHalfShaftVisual;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.foundation.utility.AngleHelper;
+
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
@@ -12,12 +18,6 @@ import dev.engine_room.flywheel.lib.instance.OrientedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import com.mojang.math.Axis;
-import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.kinetics.base.BackHalfShaftVisual;
-import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
-import com.simibubi.create.foundation.utility.AngleHelper;
-
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -60,7 +60,7 @@ public class BearingVisual<B extends KineticBlockEntity & IBearingBlockEntity> e
 	@Override
 	public void updateLight(float partialTick) {
 		super.updateLight(partialTick);
-		relight(pos, topInstance);
+		relight(topInstance);
 	}
 
 	@Override

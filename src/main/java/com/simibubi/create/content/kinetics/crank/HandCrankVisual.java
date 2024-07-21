@@ -69,7 +69,7 @@ public class HandCrankVisual extends KineticBlockEntityVisual<HandCrankBlockEnti
 
 	@Override
 	public void updateLight(float partialTick) {
-		relight(pos, crank, rotatingModel);
+		relight(crank, rotatingModel);
 	}
 
 	@Override

@@ -3,9 +3,6 @@ package com.simibubi.create.content.kinetics.belt;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -24,11 +21,16 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.Vec3i;
@@ -192,6 +194,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 		boolean slopeAlongX = beltFacing
 								.getAxis() == Direction.Axis.X;
+		MutableBlockPos mutablePos = new MutableBlockPos();
 
 		boolean onContraption = be.getLevel() instanceof WrappedWorld;
 
@@ -236,7 +239,15 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 				sideOffset *= -1;
 			ms.translate(alongX ? sideOffset : 0, 0, alongX ? 0 : sideOffset);
 
-			int stackLight = onContraption ? light : getPackedLight(be, offset);
+			int stackLight;
+			if (onContraption) {
+				stackLight = light;
+			} else {
+				int segment = (int) Math.floor(offset);
+				mutablePos.set(be.getBlockPos()).move(directionVec.getX() * segment, verticality * segment, directionVec.getZ() * segment);
+				stackLight = LevelRenderer.getLightColor(be.getLevel(), mutablePos);
+			}
+
 			ItemRenderer itemRenderer = Minecraft.getInstance()
 				.getItemRenderer();
 			boolean renderUpright = BeltHelper.isItemUpright(transported.stack);
@@ -304,13 +315,4 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 		}
 		ms.popPose();
 	}
-
-	protected int getPackedLight(BeltBlockEntity controller, float beltPos) {
-		int segment = (int) Math.floor(beltPos);
-		if (controller.lighter == null || segment >= controller.lighter.lightSegments() || segment < 0)
-			return 0;
-
-		return controller.lighter.getPackedLight(segment);
-	}
-
 }

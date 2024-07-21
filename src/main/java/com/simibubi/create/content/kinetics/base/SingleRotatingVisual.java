@@ -27,7 +27,7 @@ public class SingleRotatingVisual<T extends KineticBlockEntity> extends KineticB
 
 	@Override
 	public void updateLight(float partialTick) {
-		relight(pos, rotatingModel);
+		relight(rotatingModel);
 	}
 
 	@Override
