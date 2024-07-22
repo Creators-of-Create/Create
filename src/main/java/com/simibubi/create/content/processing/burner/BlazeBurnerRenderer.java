@@ -124,15 +124,7 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 			draw(flameBuffer, horizontalAngle, ms, cutout);
 		}
 
-		PartialModel blazeModel;
-		if (heatLevel.isAtLeast(HeatLevel.SEETHING)) {
-			blazeModel = blockAbove ? AllPartialModels.BLAZE_SUPER_ACTIVE : AllPartialModels.BLAZE_SUPER;
-		} else if (heatLevel.isAtLeast(HeatLevel.FADING)) {
-			blazeModel = blockAbove && heatLevel.isAtLeast(HeatLevel.KINDLED) ? AllPartialModels.BLAZE_ACTIVE
-				: AllPartialModels.BLAZE_IDLE;
-		} else {
-			blazeModel = AllPartialModels.BLAZE_INERT;
-		}
+		var blazeModel = getBlazeModel(heatLevel, blockAbove);
 
 		SuperByteBuffer blazeBuffer = CachedBufferer.partial(blazeModel, blockState);
 		if (modelTransform != null)
@@ -193,6 +185,17 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 		}
 
 		ms.popPose();
+	}
+
+	public static PartialModel getBlazeModel(HeatLevel heatLevel, boolean blockAbove) {
+		if (heatLevel.isAtLeast(HeatLevel.SEETHING)) {
+			return blockAbove ? AllPartialModels.BLAZE_SUPER_ACTIVE : AllPartialModels.BLAZE_SUPER;
+		} else if (heatLevel.isAtLeast(HeatLevel.FADING)) {
+			return blockAbove && heatLevel.isAtLeast(HeatLevel.KINDLED) ? AllPartialModels.BLAZE_ACTIVE
+				: AllPartialModels.BLAZE_IDLE;
+		} else {
+			return AllPartialModels.BLAZE_INERT;
+		}
 	}
 
 	private static void draw(SuperByteBuffer buffer, float horizontalAngle, PoseStack ms, VertexConsumer vc) {

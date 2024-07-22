@@ -175,6 +175,7 @@ import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinRenderer;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerRenderer;
+import com.simibubi.create.content.processing.burner.BlazeBurnerVisual;
 import com.simibubi.create.content.redstone.analogLever.AnalogLeverBlockEntity;
 import com.simibubi.create.content.redstone.analogLever.AnalogLeverRenderer;
 import com.simibubi.create.content.redstone.analogLever.AnalogLeverVisual;
@@ -662,6 +663,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<BlazeBurnerBlockEntity> HEATER = REGISTRATE
 		.blockEntity("blaze_heater", BlazeBurnerBlockEntity::new)
+		.visual(() -> BlazeBurnerVisual::new, false)
 		.validBlocks(AllBlocks.BLAZE_BURNER)
 		.renderer(() -> BlazeBurnerRenderer::new)
 		.register();

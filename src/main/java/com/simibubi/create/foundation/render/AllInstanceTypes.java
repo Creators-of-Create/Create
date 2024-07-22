@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.actors.ActorInstance;
 import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.content.kinetics.belt.BeltInstance;
 import com.simibubi.create.content.logistics.flwdata.FlapInstance;
+import com.simibubi.create.content.processing.burner.ScrollInstance;
 
 import dev.engine_room.flywheel.api.instance.InstanceType;
 import dev.engine_room.flywheel.api.layout.FloatRepr;
@@ -85,6 +86,40 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutFloat(ptr + 64, instance.maxU);
 				MemoryUtil.memPutFloat(ptr + 68, instance.maxV);
 				MemoryUtil.memPutFloat(ptr + 72, instance.scrollMult);
+			})
+			.register();
+
+	// TODO: use this for belts too
+	public static final InstanceType<ScrollInstance> SCROLLING = SimpleInstanceType.builder(ScrollInstance::new)
+			.cullShader(asResource("instance/cull/scrolling.glsl"))
+			.vertexShader(asResource("instance/scrolling.vert"))
+			.layout(LayoutBuilder.create()
+					.vector("color", FloatRepr.NORMALIZED_UNSIGNED_BYTE, 4)
+					.vector("light", IntegerRepr.SHORT, 2)
+					.vector("overlay", IntegerRepr.SHORT, 2)
+					.vector("pos", FloatRepr.FLOAT, 3)
+					.vector("rotation", FloatRepr.FLOAT, 4)
+					.vector("speed", FloatRepr.FLOAT, 2)
+					.vector("diff", FloatRepr.FLOAT, 2)
+					.vector("scale", FloatRepr.FLOAT, 2)
+					.build())
+			.writer((ptr, instance) -> {
+				MemoryUtil.memPutByte(ptr, instance.r);
+				MemoryUtil.memPutByte(ptr + 1, instance.g);
+				MemoryUtil.memPutByte(ptr + 2, instance.b);
+				MemoryUtil.memPutByte(ptr + 3, instance.a);
+				ExtraMemoryOps.put2x16(ptr + 4, instance.light);
+				ExtraMemoryOps.put2x16(ptr + 8, instance.overlay);
+				MemoryUtil.memPutFloat(ptr + 12, instance.x);
+				MemoryUtil.memPutFloat(ptr + 16, instance.y);
+				MemoryUtil.memPutFloat(ptr + 20, instance.z);
+				ExtraMemoryOps.putQuaternionf(ptr + 24, instance.rotation);
+				MemoryUtil.memPutFloat(ptr + 40, instance.speedU);
+				MemoryUtil.memPutFloat(ptr + 44, instance.speedV);
+				MemoryUtil.memPutFloat(ptr + 48, instance.diffU);
+				MemoryUtil.memPutFloat(ptr + 52, instance.diffV);
+				MemoryUtil.memPutFloat(ptr + 56, instance.scaleU);
+				MemoryUtil.memPutFloat(ptr + 60, instance.scaleV);
 			})
 			.register();
 
