@@ -7,6 +7,7 @@ import java.util.Collections;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.content.trains.track.TrackMaterial;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -58,7 +59,7 @@ public class TrackEdge {
 
 	public Vec3 getDirection(boolean fromFirst) {
 		return getPosition(null, fromFirst ? 0.25f : 1).subtract(getPosition(null, fromFirst ? 0 : 0.75f))
-			.normalize();
+				.normalize();
 	}
 
 	public Vec3 getDirectionAt(double t) {
@@ -68,21 +69,24 @@ public class TrackEdge {
 		Vec3 ahead = getPosition(null, Math.min(1, t + step));
 		Vec3 behind = getPosition(null, Math.max(0, t - step));
 		return ahead.subtract(behind)
-			.normalize();
+				.normalize();
 	}
 
 	public boolean canTravelTo(TrackEdge other) {
 		if (isInterDimensional() || other.isInterDimensional())
 			return true;
 		Vec3 newDirection = other.getDirection(true);
-		return getDirection(false).dot(newDirection) > 7 / 8f;
+		boolean result = (getDirection(false).dot(newDirection) > 7 / 8f);
+		if(Mods.JSG.isLoaded())
+			return true;
+		return result;
 	}
 
 	public double getLength() {
 		return isInterDimensional() ? 0
-			: isTurn() ? turn.getLength()
+				: isTurn() ? turn.getLength()
 				: node1.location.getLocation()
-					.distanceTo(node2.location.getLocation());
+				.distanceTo(node2.location.getLocation());
 	}
 
 	public double incrementT(double currentT, double distance) {
@@ -119,11 +123,11 @@ public class TrackEdge {
 		Vec3 node1Location = null;
 		Vec3 node2Location = null;
 		for (TrackEdge trackEdge : trackGraph.getConnectionsFrom(node1)
-			.values())
+				.values())
 			if (trackEdge.isTurn())
 				node1Location = trackEdge.getPosition(trackGraph, 0);
 		for (TrackEdge trackEdge : trackGraph.getConnectionsFrom(node2)
-			.values())
+				.values())
 			if (trackEdge.isTurn())
 				node2Location = trackEdge.getPosition(trackGraph, 0);
 		if (node1Location == null || node2Location == null)
@@ -136,11 +140,11 @@ public class TrackEdge {
 		Vec3 node1Normal = null;
 		Vec3 node2Normal = null;
 		for (TrackEdge trackEdge : trackGraph.getConnectionsFrom(node1)
-			.values())
+				.values())
 			if (trackEdge.isTurn())
 				node1Normal = trackEdge.getNormal(trackGraph, 0);
 		for (TrackEdge trackEdge : trackGraph.getConnectionsFrom(node2)
-			.values())
+				.values())
 			if (trackEdge.isTurn())
 				node2Normal = trackEdge.getNormal(trackGraph, 0);
 		if (node1Normal == null || node2Normal == null)
@@ -149,7 +153,7 @@ public class TrackEdge {
 	}
 
 	public Collection<double[]> getIntersection(TrackNode node1, TrackNode node2, TrackEdge other, TrackNode other1,
-		TrackNode other2) {
+												TrackNode other2) {
 		Vec3 v1 = node1.location.getLocation();
 		Vec3 v2 = node2.location.getLocation();
 		Vec3 w1 = other1.location.getLocation();
@@ -164,9 +168,9 @@ public class TrackEdge {
 			if (!other.isTurn())
 				return ImmutableList.of(VecHelper.intersectRanged(v1, w1, v2, w2, Axis.Y));
 			return other.getIntersection(other1, other2, this, node1, node2)
-				.stream()
-				.map(a -> new double[] { a[1], a[0] })
-				.toList();
+					.stream()
+					.map(a -> new double[]{a[1], a[0]})
+					.toList();
 		}
 
 		AABB bb = turn.getBounds();
@@ -242,10 +246,10 @@ public class TrackEdge {
 	}
 
 	public static TrackEdge read(TrackNode node1, TrackNode node2, CompoundTag tag, TrackGraph graph,
-		DimensionPalette dimensions) {
+								 DimensionPalette dimensions) {
 		TrackEdge trackEdge =
-			new TrackEdge(node1, node2, tag.contains("Positions") ? new BezierConnection(tag, BlockPos.ZERO) : null,
-					TrackMaterial.deserialize(tag.getString("Material")));
+				new TrackEdge(node1, node2, tag.contains("Positions") ? new BezierConnection(tag, BlockPos.ZERO) : null,
+						TrackMaterial.deserialize(tag.getString("Material")));
 		trackEdge.edgeData = EdgeData.read(tag.getCompound("Signals"), trackEdge, graph, dimensions);
 		return trackEdge;
 	}
