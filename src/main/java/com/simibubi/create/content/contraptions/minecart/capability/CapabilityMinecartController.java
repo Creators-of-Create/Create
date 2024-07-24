@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.minecart.capability;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -128,6 +129,8 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 		queuedRemovals.clear();
 		queued.clear();
 
+		List<UUID> toRemove = new ArrayList<>();
+		
 		for (Entry<UUID, MinecartController> entry : carts.entrySet()) {
 			MinecartController controller = entry.getValue();
 			if (controller != null) {
@@ -136,8 +139,12 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 					continue;
 				}
 			}
-			cartsWithCoupling.remove(entry.getKey());
-			keySet.remove(entry.getKey());
+			toRemove.add(entry.getKey());
+		}
+		
+		for (UUID uuid : toRemove) {
+			keySet.remove(uuid);
+			cartsWithCoupling.remove(uuid);
 		}
 	}
 
