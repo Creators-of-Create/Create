@@ -53,7 +53,8 @@ public enum Mods {
 	NE("nethers_exoticism"),
 	EO("elementaryores"),
 	IF("iceandfire"),
-	ENS("exnihilosequentia")
+	ENS("exnihilosequentia"),
+	RU("regions_unexplored"),
 
 	;
 

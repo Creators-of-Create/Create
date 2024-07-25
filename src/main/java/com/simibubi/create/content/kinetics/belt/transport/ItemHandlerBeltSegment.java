@@ -50,13 +50,15 @@ public class ItemHandlerBeltSegment implements IItemHandler {
 			return ItemStack.EMPTY;
 
 		amount = Math.min(amount, transported.stack.getCount());
-		ItemStack extracted = simulate ? transported.stack.copy().split(amount) : transported.stack.split(amount);
+		ItemStack extracted = simulate ? transported.stack.copy()
+			.split(amount) : transported.stack.split(amount);
 		if (!simulate) {
 			if (transported.stack.isEmpty())
-				this.beltInventory.toRemove.add(transported);
-			this.beltInventory.belt.setChanged();
-			this.beltInventory.belt.sendData();
+				beltInventory.toRemove.add(transported);
+			else
+				beltInventory.belt.notifyUpdate();
 		}
+
 		return extracted;
 	}
 

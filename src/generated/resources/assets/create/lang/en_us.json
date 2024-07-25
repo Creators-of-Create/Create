@@ -1284,6 +1284,7 @@
   "create.item_attributes.smokable.inverted": "cannot be Smoked",
   "create.item_attributes.washable": "can be Washed",
   "create.item_attributes.washable.inverted": "cannot be Washed",
+  "create.keyinfo.ponder": "Ponder",
   "create.keyinfo.scrolldown": "Simulate Mousewheel Down (inworld)",
   "create.keyinfo.scrollup": "Simulate Mousewheel Up (inworld)",
   "create.keyinfo.toolbelt": "Access Nearby Toolboxes",

@@ -22,9 +22,11 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
@@ -36,6 +38,11 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class PotionFluidHandler {
 
+	public static boolean isPotionItem(ItemStack stack) {
+		return stack.getItem() instanceof PotionItem && !(stack.getContainerItem()
+			.getItem() instanceof BucketItem);
+	}
+	
 	public static Pair<FluidStack, ItemStack> emptyPotion(ItemStack stack, boolean simulate) {
 		FluidStack fluid = getFluidFromPotionItem(stack);
 		if (!simulate)

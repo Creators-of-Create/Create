@@ -93,12 +93,14 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		DEEP_GOLD_ORE = deepslateOre(() -> Items.DEEPSLATE_GOLD_ORE, AllItems.CRUSHED_GOLD::get, 2.25f, 350),
 		DEEP_DIAMOND_ORE = deepslateOre(() -> Items.DEEPSLATE_DIAMOND_ORE, () -> Items.DIAMOND, 2.25f, 450),
 		DEEP_EMERALD_ORE = deepslateOre(() -> Items.DEEPSLATE_EMERALD_ORE, () -> Items.EMERALD, 2.25f, 450),
-		DEEP_COAL_ORE = deepslateOre(() -> Items.DEEPSLATE_COAL_ORE, () -> Items.COAL, 1.75f, 250),
+		DEEP_COAL_ORE = deepslateOre(() -> Items.DEEPSLATE_COAL_ORE, () -> Items.COAL, 2.25f, 300),
 		DEEP_REDSTONE_ORE = deepslateOre(() -> Items.DEEPSLATE_REDSTONE_ORE, () -> Items.REDSTONE, 7.5f, 350),
 		DEEP_LAPIS_ORE = deepslateOre(() -> Items.DEEPSLATE_LAPIS_ORE, () -> Items.LAPIS_LAZULI, 12.5f, 350),
 
 		NETHER_GOLD_ORE = netherOre(() -> Items.NETHER_GOLD_ORE, () -> Items.GOLD_NUGGET, 18, 350),
 		NETHER_QUARTZ_ORE = netherOre(() -> Items.NETHER_QUARTZ_ORE, () -> Items.QUARTZ, 2.25f, 350),
+
+		GILDED_BLACKSTONE = ore(Items.BLACKSTONE, () -> Items.GILDED_BLACKSTONE, () -> Items.GOLD_NUGGET, 18, 400),
 
 		RAW_COPPER_ORE = rawOre(() -> Items.RAW_COPPER, AllItems.CRUSHED_COPPER::get, 1),
 		RAW_ZINC_ORE = rawOre(AllItems.RAW_ZINC::get, AllItems.CRUSHED_ZINC::get, 1),

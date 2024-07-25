@@ -62,7 +62,7 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 			.output(Items.GLOWSTONE_DUST)),
 
 
-		AM_LAVA = create(Mods.AM.recipeId("milk_bottle"), b -> b.require(Fluids.LAVA, 250)
+		AM_LAVA = create(Mods.AM.recipeId("lava_bottle"), b -> b.require(Fluids.LAVA, 250)
 			.require(Items.GLASS_BOTTLE)
 			.output(1, Mods.AM, "lava_bottle", 1)
 			.whenModLoaded(Mods.AM.getId())),
