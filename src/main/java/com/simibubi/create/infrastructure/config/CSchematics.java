@@ -13,9 +13,7 @@ public class CSchematics extends ConfigBase {
 
 	public final ConfigGroup schematicannon = group(0, "schematicannon", "Schematicannon");
 	public final ConfigInt schematicannonDelay = i(10, 1, "schematicannonDelay", Comments.delay);
-	public final ConfigFloat schematicannonGunpowderWorth =
-		f(20, 0, 100, "schematicannonGunpowderWorth", Comments.gunpowderWorth);
-	public final ConfigFloat schematicannonFuelUsage = f(0.05f, 0, 100, "schematicannonFuelUsage", Comments.fuelUsage);
+	public final ConfigInt schematicannonShotsPerGunpowder = i(400, 1, "schematicannonShotsPerGunpowder", Comments.schematicannonShotsPerGunpowder);
 
 	@Override
 	public String getName() {
@@ -32,8 +30,7 @@ public class CSchematics extends ConfigBase {
 		static String idleTimeout =
 			"Amount of game ticks without new packets arriving until an active schematic upload process is discarded.";
 		static String delay = "Amount of game ticks between shots of the cannon. Higher => Slower";
-		static String gunpowderWorth = "% of Schematicannon's Fuel filled by 1 Gunpowder.";
-		static String fuelUsage = "% of Schematicannon's Fuel used for each fired block.";
+		static String schematicannonShotsPerGunpowder = "Amount of blocks a Schematicannon can print per Gunpowder item provided.";
 		static String creativePrintIncludesAir =
 			"Whether placing a Schematic directly in Creative Mode should replace world blocks with Air";
 	}
