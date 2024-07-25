@@ -264,9 +264,11 @@ public class Navigation {
 		double topSpeed = train.maxSpeed();
 
 		if (targetDistance < 10) {
-			double target = topSpeed * ((targetDistance) / 10);
-			if (target < Math.abs(train.speed)) {
-				train.speed += (target - Math.abs(train.speed)) * .5f * speedMod;
+			double maxApproachSpeed = topSpeed * ((targetDistance) / 10);
+			double speedRelativeToStation = train.speed * speedMod;
+			
+			if (speedRelativeToStation > maxApproachSpeed) {
+				train.speed += (maxApproachSpeed - Math.abs(train.speed)) * .5f * speedMod;
 				return;
 			}
 		}
