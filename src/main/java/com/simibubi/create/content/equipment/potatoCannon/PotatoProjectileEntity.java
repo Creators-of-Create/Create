@@ -317,7 +317,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	}
 
 	private DamageSource causePotatoDamage() {
-		return CreateDamageSources.potatoCannon(level(), getOwner(), this);
+		return CreateDamageSources.potatoCannon(level(), this, getOwner());
 	}
 
 	@SuppressWarnings("unchecked")
