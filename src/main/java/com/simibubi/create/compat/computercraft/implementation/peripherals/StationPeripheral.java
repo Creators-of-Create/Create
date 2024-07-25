@@ -151,6 +151,13 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 
 	@LuaFunction(mainThread = true)
 	public final void setSchedule(IArguments arguments) throws LuaException {
+		if (arguments.getTable(0).size() != 2)
+			throw new LuaException("Not a valid schedule");
+
+		Object entries = arguments.getTable(0).get("entries");
+		if (entries instanceof Map<?, ?> map && map.isEmpty())
+			throw new LuaException("Schedule must have at least one entry");
+
 		Train train = getTrainOrThrow();
 		Schedule schedule = Schedule.fromTag(toCompoundTag(new CreateLuaTable(arguments.getTable(0))));
 		boolean autoSchedule = train.runtime.getSchedule() == null || train.runtime.isAutoSchedule;
@@ -233,8 +240,9 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 			return StringTag.valueOf(v);
 		else if (value instanceof Map<?, ?> v && v.containsKey(1.0)) { // List
 			ListTag list = new ListTag();
-			for (Object o : v.values()) {
-				list.add(toNBTTag(null, o));
+			for (double i = 1; i <= v.size(); i++) {
+				if (v.get(i) != null)
+					list.add(toNBTTag(null, v.get(i)));
 			}
 
 			return list;
