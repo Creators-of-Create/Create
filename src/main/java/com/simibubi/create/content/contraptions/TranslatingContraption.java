@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -51,7 +53,7 @@ public abstract class TranslatingContraption extends Contraption {
 
 	@Override
 	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
-		return false;
+		return AllConfigs.server().kinetics.stabiliseStableContraptions.get();
 	}
 	
 }
