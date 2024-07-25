@@ -1,5 +1,6 @@
 package com.simibubi.create.infrastructure.data;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllEntityTags;
 import com.simibubi.create.AllTags.AllFluidTags;
@@ -21,6 +22,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateRegistrateTags {
 	public static void addGenerators() {
@@ -115,10 +119,10 @@ public class CreateRegistrateTags {
 
 		// COMPAT
 
-		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE,
+		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE, List.of(
 				"connector_lv", "connector_lv_relay", "connector_mv", "connector_mv_relay",
 				"connector_hv", "connector_hv_relay", "connector_bundled", "connector_structural",
-				"connector_redstone", "connector_probe", "breaker_switch");
+				"connector_redstone", "connector_probe", "breaker_switch"));
 
 		// VALIDATE
 
@@ -167,9 +171,23 @@ public class CreateRegistrateTags {
 		prov.tag(Tags.Items.INGOTS)
 			.addTag(AllItemTags.CREATE_INGOTS.tag);
 
+		prov.tag(AllItemTags.OBSIDIAN_DUST.tag).add(AllItems.POWDERED_OBSIDIAN.get());
+
 		// COMPAT
 
 		genStrippedWoodItemTags(prov);
+
+		prov.tag(AllItemTags.CURIOS_HEAD.tag).add(AllItems.GOGGLES.get());
+
+		TagGen.addOptional(prov.tag(AllItemTags.ALLURITE.tag), Mods.GS, gsPalette("allurite"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.LUMIERE.tag), Mods.GS, gsPalette("lumiere"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.AMETHYST.tag), Mods.GS, gsPalette("amethyst"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.UA_CORAL.tag), Mods.UA, List.of("acan_coral",
+				"finger_coral", "star_coral", "moss_coral", "petal_coral", "branch_coral",
+				"rock_coral", "pillow_coral", "chrome_coral", "silk_coral"));
 
 		// VALIDATE
 
@@ -178,6 +196,21 @@ public class CreateRegistrateTags {
 				prov.getOrCreateRawBuilder(tag.tag);
 			}
 		}
+	}
+
+	private static ArrayList<String> gsPalette(String material) {
+		ArrayList<String> toReturn = new ArrayList<>();
+		toReturn.add(material + "_block");
+		toReturn.add(material + "_stairs");
+		toReturn.add(material + "_slab");
+		toReturn.add("smooth_" + material);
+		toReturn.add("smooth_" + material + "_stairs");
+		toReturn.add("smooth_" + material + "_slab");
+		toReturn.add(material + "_bricks");
+		toReturn.add(material + "_brick_stairs");
+		toReturn.add(material + "_brick_slab");
+		toReturn.add("chiseled_" + material);
+		return toReturn;
 	}
 
 	private static void genStrippedWoodItemTags(RegistrateTagsProvider<Item> prov) {

@@ -1,0 +1,33 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "elementaryores:ore_copper_end"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:crushed_raw_copper",
+      "count": 5
+    },
+    {
+      "item": "create:crushed_raw_copper",
+      "chance": 0.25
+    },
+    {
+      "item": "create:experience_nugget",
+      "chance": 0.75
+    },
+    {
+      "item": "minecraft:end_stone",
+      "chance": 0.12
+    }
+  ],
+  "processingTime": 350,
+  "conditions": [
+    {
+      "modid": "elementaryores",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

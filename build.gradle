@@ -201,6 +201,12 @@ dependencies {
 
     // implementation fg.deobf("curse.maven:ic2-classic-242942:4563059")
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
+
+    // implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta25")
+    // runtimeOnly fg.deobf("curse.maven:galosphere-631098:4398234")
+    // runtimeOnly fg.deobf("curse.maven:elementary-ores-332609:3956498")
+    // runtimeOnly fg.deobf("curse.maven:flib-661261:3956196")
+    // runtimeOnly fg.deobf("curse.maven:infernal-expansion-395078:3854062")
     // runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
     // runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
     // runtimeOnly fg.deobf("curse.maven:mantle-74924:4509007")
@@ -220,6 +226,13 @@ dependencies {
     // implementation fg.deobf("curse.maven:architectury-api-419699:4521465")
     // implementation fg.deobf("curse.maven:ftb-library-forge-404465:4396792")
     // implementation fg.deobf("curse.maven:ftb-teams-forge-404468:4579981")
+    // runtimeOnly fg.deobf("curse.maven:forbidden-arcanus-309858:4729924")
+    // runtimeOnly fg.deobf("curse.maven:valhelsia-core-416935:3886212")
+    // runtimeOnly fg.deobf("curse.maven:citadel-331936:3783096")
+    // runtimeOnly fg.deobf("curse.maven:ice-and-fire-dragons-264231:4614465")
+    // runtimeOnly fg.deobf("curse.maven:exnihilosequentia-400012:4083676")
+    // runtimeOnly fg.deobf("curse.maven:upgrade-aquatic-326895:4365140")
+    // runtimeOnly fg.deobf("curse.maven:blueprint-382216:3991478")
 
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings
