@@ -1,0 +1,13 @@
+{
+  "values": [
+    "minecraft:mangrove_roots",
+    {
+      "id": "twilightforest:root",
+      "required": false
+    },
+    {
+      "id": "twilightforest:liveroot_block",
+      "required": false
+    }
+  ]
+}

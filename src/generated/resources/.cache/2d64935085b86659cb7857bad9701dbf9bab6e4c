@@ -4181,6 +4181,7 @@ a1e21c22f32354fd1a82a1b0a59dd786c0deaba0 data/create/tags/blocks/movable_empty_c
 4970078b49ddac1b1d500ed0469cedf42bdc3d35 data/create/tags/blocks/non_movable.json
 06e13efbb7b0d09ff7ecd1a7dc45a0760b91ad67 data/create/tags/blocks/ore_override_stone.json
 a5874f73c7dc0a3ae12999e6ae8abf45bc7fb9be data/create/tags/blocks/passive_boiler_heaters.json
+6943bee6689085c06d27285a815c21a78ebeb37a data/create/tags/blocks/roots.json
 3928cfdba3f941456bb05005fa0c36966a3aa880 data/create/tags/blocks/safe_nbt.json
 79418bd729cef417b322cef9b491e7ae83317d61 data/create/tags/blocks/seats.json
 5def5088f7fd31b80e6f28c1c4ea146aa9d7d15b data/create/tags/blocks/toolboxes.json

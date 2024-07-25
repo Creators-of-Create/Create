@@ -287,7 +287,7 @@ public class TreeCutter {
 	}
 
 	public static boolean isRoot(BlockState state) {
-		return state.is(Blocks.MANGROVE_ROOTS);
+		return state.is(AllBlockTags.ROOTS.tag);
 	}
 
 	public static boolean isLog(BlockState state) {
