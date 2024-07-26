@@ -39,6 +39,7 @@ public class AllPaletteBlocks {
 	public static final BlockEntry<GlassBlock> TILED_GLASS = REGISTRATE.block("tiled_glass", GlassBlock::new)
 		.initialProperties(() -> Blocks.GLASS)
 		.addLayer(() -> RenderType::cutout)
+		.loot((t, g) -> t.dropWhenSilkTouch(g))
 		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), c::get))
 		.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/"))
 		.tag(Tags.Blocks.GLASS_COLORLESS, BlockTags.IMPERMEABLE)
