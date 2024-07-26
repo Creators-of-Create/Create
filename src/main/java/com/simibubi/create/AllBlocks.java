@@ -2152,6 +2152,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.NONE)
 				.sound(SoundType.GLASS)
 				.noOcclusion())
+			.loot((t, g) -> t.dropWhenSilkTouch(g))
 			.register();
 
 	public static final BlockEntry<TrainTrapdoorBlock> FRAMED_GLASS_TRAPDOOR =
@@ -2161,6 +2162,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.NONE)
 				.sound(SoundType.GLASS)
 				.noOcclusion())
+			.loot((t, g) -> t.dropWhenSilkTouch(g))
 			.onRegister(connectedTextures(TrapdoorCTBehaviour::new))
 			.addLayer(() -> RenderType::cutoutMipped)
 			.register();
