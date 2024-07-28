@@ -39,9 +39,9 @@ public class SteamEngineVisual extends AbstractBlockEntityVisual<SteamEngineBloc
 	public void beginFrame(DynamicVisual.Context ctx) {
 		Float angle = blockEntity.getTargetAngle();
 		if (angle == null) {
-			piston.setEmptyTransform().setChanged();
-			linkage.setEmptyTransform().setChanged();
-			connector.setEmptyTransform().setChanged();
+			piston.setZeroTransform().setChanged();
+			linkage.setZeroTransform().setChanged();
+			connector.setZeroTransform().setChanged();
 			return;
 		}
 
@@ -81,7 +81,7 @@ public class SteamEngineVisual extends AbstractBlockEntityVisual<SteamEngineBloc
 	}
 
 	protected TransformedInstance transformed(TransformedInstance modelData, Direction facing, boolean roll90) {
-		return modelData.loadIdentity()
+		return modelData.setIdentityTransform()
 			.translate(getVisualPosition())
 			.center()
 			.rotateYDegrees(AngleHelper.horizontalAngle(facing))

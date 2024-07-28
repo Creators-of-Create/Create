@@ -65,8 +65,8 @@ public class MixerVisual extends EncasedCogVisual implements SimpleDynamicVisual
 	}
 
 	private void transformPole(float renderedHeadOffset) {
-		mixerPole.setPosition(getVisualPosition())
-				.nudgePosition(0, -renderedHeadOffset, 0)
+		mixerPole.position(getVisualPosition())
+				.translatePosition(0, -renderedHeadOffset, 0)
 				.setChanged();
 	}
 

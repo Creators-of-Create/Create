@@ -121,8 +121,8 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
         float y = blockPos.getY() + ((float) facingVec.getY()) * distance;
         float z = blockPos.getZ() + ((float) facingVec.getZ()) * distance;
 
-        pole.setPosition(x, y, z).setChanged();
-        hand.setPosition(x, y, z).setChanged();
+        pole.position(x, y, z).setChanged();
+        hand.position(x, y, z).setChanged();
     }
 
     static void updateRotation(OrientedInstance pole, OrientedInstance hand, float yRot, float xRot, float zRot) {
@@ -130,12 +130,12 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
         Quaternionf q = Axis.YP.rotationDegrees(yRot);
         q.mul(Axis.XP.rotationDegrees(xRot));
 
-        hand.setRotation(q)
+        hand.rotation(q)
 				.setChanged();
 
         q.mul(Axis.ZP.rotationDegrees(zRot));
 
-        pole.setRotation(q)
+        pole.rotation(q)
 				.setChanged();
     }
 

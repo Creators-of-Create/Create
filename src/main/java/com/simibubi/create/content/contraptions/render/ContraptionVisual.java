@@ -38,6 +38,7 @@ import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
@@ -65,7 +66,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 
 	public ContraptionVisual(VisualizationContext ctx, E entity, float partialTick) {
 		super(ctx, entity, partialTick);
-		embedding = ctx.createEmbedding();
+		embedding = ctx.createEmbedding(Vec3i.ZERO);
 
 		init(partialTick);
     }
@@ -257,10 +258,6 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		children.forEach(BlockEntityVisual::delete);
 
 		actors.forEach(ActorVisual::delete);
-
-		if (model != null) {
-			model.delete();
-		}
 
 		if (structure != null) {
 			structure.delete();

@@ -2,8 +2,10 @@ package com.simibubi.create.foundation.render;
 
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3f;
+import org.joml.Matrix3fc;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
+import org.joml.Matrix4fc;
+import org.joml.Quaternionfc;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 import org.joml.Vector4f;
@@ -220,19 +222,21 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 	}
 
 	@Override
-	public SuperByteBuffer rotate(Quaternionf quaternion) {
-		transforms.mulPose(quaternion);
+	public SuperByteBuffer rotate(Quaternionfc quaternion) {
+		var last = transforms.last();
+		last.pose().rotate(quaternion);
+		last.normal().rotate(quaternion);
 		return this;
 	}
 
 	@Override
-	public SuperByteBuffer translate(double x, double y, double z) {
+	public SuperByteBuffer translate(float x, float y, float z) {
 		transforms.translate(x, y, z);
 		return this;
 	}
 
 	@Override
-	public SuperByteBuffer mulPose(Matrix4f pose) {
+	public SuperByteBuffer mulPose(Matrix4fc pose) {
 		transforms.last()
 			.pose()
 			.mul(pose);
@@ -240,7 +244,7 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 	}
 
 	@Override
-	public SuperByteBuffer mulNormal(Matrix3f normal) {
+	public SuperByteBuffer mulNormal(Matrix3fc normal) {
 		transforms.last()
 			.normal()
 			.mul(normal);

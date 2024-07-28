@@ -100,9 +100,9 @@ public class TrackMaterialFactory {
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			String namespace = id.getNamespace();
 			String prefix = "block/track/" + id.getPath() + "/";
-			tieModel = new PartialModel(new ResourceLocation(namespace, prefix + "tie"));
-			leftSegmentModel = new PartialModel(new ResourceLocation(namespace, prefix + "segment_left"));
-			rightSegmentModel = new PartialModel(new ResourceLocation(namespace, prefix + "segment_right"));
+			tieModel = PartialModel.of(new ResourceLocation(namespace, prefix + "tie"));
+			leftSegmentModel = PartialModel.of(new ResourceLocation(namespace, prefix + "segment_left"));
+			rightSegmentModel = PartialModel.of(new ResourceLocation(namespace, prefix + "segment_right"));
 		});
 		return this;
 	}

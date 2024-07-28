@@ -137,7 +137,7 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 
 		float horizontalAngle = AngleHelper.rad(blockEntity.headAngle.getValue(ctx.partialTick()));
 
-		head.loadIdentity()
+		head.setIdentityTransform()
 				.translate(getVisualPosition())
 				.translateY(headY)
 				.translate(Translate.CENTER)
@@ -146,7 +146,7 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 				.setChanged();
 
 		if (goggles != null) {
-			goggles.loadIdentity()
+			goggles.setIdentityTransform()
 					.translate(getVisualPosition())
 					.translateY(headY + 8 / 16f)
 					.translate(Translate.CENTER)
@@ -156,7 +156,7 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 		}
 
 		if (hat != null) {
-			hat.loadIdentity()
+			hat.setIdentityTransform()
 					.translate(getVisualPosition())
 					.translateY(headY);
 			if (isInert) {
@@ -177,7 +177,7 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 		if (smallRods != null) {
 			float offset1 = Mth.sin((float) ((renderTick / 16f + Math.PI) % (2 * Math.PI))) / offsetMult;
 
-			smallRods.loadIdentity()
+			smallRods.setIdentityTransform()
 					.translate(getVisualPosition())
 					.translateY(offset1 + animation + .125f)
 					.setChanged();
@@ -186,7 +186,7 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 		if (largeRods != null) {
 			float offset2 = Mth.sin((float) ((renderTick / 16f + Math.PI / 2) % (2 * Math.PI))) / offsetMult;
 
-			largeRods.loadIdentity()
+			largeRods.setIdentityTransform()
 					.translate(getVisualPosition())
 					.translateY(offset2 + animation - 3 / 16f)
 					.setChanged();

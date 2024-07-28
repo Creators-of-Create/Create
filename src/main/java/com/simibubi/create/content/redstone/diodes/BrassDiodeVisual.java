@@ -25,9 +25,9 @@ public class BrassDiodeVisual extends AbstractBlockEntityVisual<BrassDiodeBlockE
 
         indicator = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLEXPEATER_INDICATOR)).createInstance();
 
-        indicator.loadIdentity()
+        indicator.setIdentityTransform()
 				.translate(getVisualPosition())
-				.color(getColor())
+				.colorRgb(getColor())
 				.setChanged();
 
         previousState = blockEntity.state;
@@ -37,7 +37,7 @@ public class BrassDiodeVisual extends AbstractBlockEntityVisual<BrassDiodeBlockE
     public void tick(TickableVisual.Context context) {
         if (previousState == blockEntity.state) return;
 
-        indicator.color(getColor());
+        indicator.colorRgb(getColor());
 		indicator.setChanged();
 
         previousState = blockEntity.state;

@@ -22,9 +22,9 @@ import net.minecraft.world.item.ItemStack;
 
 public class WorldshaperItemRenderer extends ZapperItemRenderer {
 
-	protected static final PartialModel CORE = new PartialModel(Create.asResource("item/handheld_worldshaper/core"));
-	protected static final PartialModel CORE_GLOW = new PartialModel(Create.asResource("item/handheld_worldshaper/core_glow"));
-	protected static final PartialModel ACCELERATOR = new PartialModel(Create.asResource("item/handheld_worldshaper/accelerator"));
+	protected static final PartialModel CORE = PartialModel.of(Create.asResource("item/handheld_worldshaper/core"));
+	protected static final PartialModel CORE_GLOW = PartialModel.of(Create.asResource("item/handheld_worldshaper/core_glow"));
+	protected static final PartialModel ACCELERATOR = PartialModel.of(Create.asResource("item/handheld_worldshaper/accelerator"));
 
 	@Override
 	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemDisplayContext transformType,

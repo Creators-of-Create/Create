@@ -25,8 +25,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class LinkedControllerItemRenderer extends CustomRenderedItemModelRenderer {
 
-	protected static final PartialModel POWERED = new PartialModel(Create.asResource("item/linked_controller/powered"));
-	protected static final PartialModel BUTTON = new PartialModel(Create.asResource("item/linked_controller/button"));
+	protected static final PartialModel POWERED = PartialModel.of(Create.asResource("item/linked_controller/powered"));
+	protected static final PartialModel BUTTON = PartialModel.of(Create.asResource("item/linked_controller/button"));
 
 	static LerpedFloat equipProgress;
 	static Vector<LerpedFloat> buttons;

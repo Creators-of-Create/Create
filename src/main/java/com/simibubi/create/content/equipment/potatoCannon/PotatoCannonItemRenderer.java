@@ -23,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
 
-	protected static final PartialModel COG = new PartialModel(Create.asResource("item/potato_cannon/cog"));
+	protected static final PartialModel COG = PartialModel.of(Create.asResource("item/potato_cannon/cog"));
 
 	@Override
 	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer,

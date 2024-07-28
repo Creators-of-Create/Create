@@ -13,7 +13,7 @@ import com.tterrag.registrate.builders.BuilderCallback;
 import com.tterrag.registrate.util.OneTimeEventReceiver;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import dev.engine_room.flywheel.lib.visual.SimpleBlockEntityVisualizer;
+import dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;

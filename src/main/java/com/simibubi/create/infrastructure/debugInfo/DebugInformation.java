@@ -80,7 +80,7 @@ public class DebugInformation {
 									.getVersion()
 									.toString())
 							.orElse("None"))
-					.put("Flywheel Backend", () -> Backend.REGISTRY.getIdOrThrow(BackendManager.getBackend()).toString())
+					.put("Flywheel Backend", () -> Backend.REGISTRY.getIdOrThrow(BackendManager.currentBackend()).toString())
 					.put("OpenGL Renderer", GlUtil::getRenderer)
 					.put("OpenGL Version", GlUtil::getOpenGLVersion)
 					.put("Graphics Mode", () -> Minecraft.getInstance().options.graphicsMode().toString())

@@ -47,7 +47,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 		rotationAxis = Axis.of(rotatingAbout.step());
 
 		coil = getCoilModel().createInstance()
-				.setPosition(getVisualPosition());
+				.position(getVisualPosition());
 		coil.setChanged();
 
 		magnet = new SelectInstance<>(this::getMagnetModelIndex);
@@ -77,7 +77,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 	@Override
 	public void beginFrame(DynamicVisual.Context ctx) {
 		updateOffset(ctx.partialTick());
-		coil.setRotation(rotationAxis.rotationDegrees(offset * 180))
+		coil.rotation(rotationAxis.rotationDegrees(offset * 180))
 				.setChanged();
 
 		int neededRopeCount = getNeededRopeCount();
@@ -88,8 +88,8 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 				.ifPresent(data -> {
 					int i = Math.max(0, Mth.floor(offset));
 					int light = lightCache.getPackedLight(i);
-					data.setPosition(getVisualPosition())
-							.nudgePosition(0, -offset, 0)
+					data.position(getVisualPosition())
+							.translatePosition(0, -offset, 0)
 							.light(light)
 							.setChanged();
 				});
@@ -101,8 +101,8 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 					float halfRopeNudge = f > .75f ? f - 1 : f;
 
 					int light = lightCache.getPackedLight(0);
-					rope1.setPosition(getVisualPosition())
-							.nudgePosition(0, -halfRopeNudge, 0)
+					rope1.position(getVisualPosition())
+							.translatePosition(0, -halfRopeNudge, 0)
 							.light(light)
 							.setChanged();
 				});
@@ -113,8 +113,8 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 				int light = lightCache.getPackedLight(size - 1 - i);
 
 				rope.get(i)
-						.setPosition(getVisualPosition())
-						.nudgePosition(0, -offset + i + 1, 0)
+						.position(getVisualPosition())
+						.translatePosition(0, -offset + i + 1, 0)
 						.light(light)
 						.setChanged();
 			}

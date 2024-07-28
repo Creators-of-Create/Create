@@ -54,7 +54,7 @@ public class StickerVisual extends AbstractBlockEntityVisual<StickerBlockEntity>
 	}
 
 	private void animateHead(float offset) {
-		head.loadIdentity()
+		head.setIdentityTransform()
 				.translate(getVisualPosition())
 				.nudge(blockEntity.hashCode())
 				.center()

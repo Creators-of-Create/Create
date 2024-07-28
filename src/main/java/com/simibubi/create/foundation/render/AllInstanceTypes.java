@@ -34,10 +34,10 @@ public class AllInstanceTypes {
 					.vector("axis", FloatRepr.NORMALIZED_BYTE, 3)
 					.build())
 			.writer((ptr, instance) -> {
-				MemoryUtil.memPutByte(ptr, instance.r);
-				MemoryUtil.memPutByte(ptr + 1, instance.g);
-				MemoryUtil.memPutByte(ptr + 2, instance.b);
-				MemoryUtil.memPutByte(ptr + 3, instance.a);
+				MemoryUtil.memPutByte(ptr, instance.red);
+				MemoryUtil.memPutByte(ptr + 1, instance.green);
+				MemoryUtil.memPutByte(ptr + 2, instance.blue);
+				MemoryUtil.memPutByte(ptr + 3, instance.alpha);
 				ExtraMemoryOps.put2x16(ptr + 4, instance.light);
 				ExtraMemoryOps.put2x16(ptr + 8, instance.overlay);
 				MemoryUtil.memPutFloat(ptr + 12, instance.x);
@@ -67,10 +67,10 @@ public class AllInstanceTypes {
 					.scalar("scrollMult", FloatRepr.FLOAT)
 					.build())
 			.writer((ptr, instance) -> {
-				MemoryUtil.memPutByte(ptr, instance.r);
-				MemoryUtil.memPutByte(ptr + 1, instance.g);
-				MemoryUtil.memPutByte(ptr + 2, instance.b);
-				MemoryUtil.memPutByte(ptr + 3, instance.a);
+				MemoryUtil.memPutByte(ptr, instance.red);
+				MemoryUtil.memPutByte(ptr + 1, instance.green);
+				MemoryUtil.memPutByte(ptr + 2, instance.blue);
+				MemoryUtil.memPutByte(ptr + 3, instance.alpha);
 				ExtraMemoryOps.put2x16(ptr + 4, instance.light);
 				ExtraMemoryOps.put2x16(ptr + 8, instance.overlay);
 				MemoryUtil.memPutFloat(ptr + 12, instance.x);
@@ -104,10 +104,10 @@ public class AllInstanceTypes {
 					.vector("scale", FloatRepr.FLOAT, 2)
 					.build())
 			.writer((ptr, instance) -> {
-				MemoryUtil.memPutByte(ptr, instance.r);
-				MemoryUtil.memPutByte(ptr + 1, instance.g);
-				MemoryUtil.memPutByte(ptr + 2, instance.b);
-				MemoryUtil.memPutByte(ptr + 3, instance.a);
+				MemoryUtil.memPutByte(ptr, instance.red);
+				MemoryUtil.memPutByte(ptr + 1, instance.green);
+				MemoryUtil.memPutByte(ptr + 2, instance.blue);
+				MemoryUtil.memPutByte(ptr + 3, instance.alpha);
 				ExtraMemoryOps.put2x16(ptr + 4, instance.light);
 				ExtraMemoryOps.put2x16(ptr + 8, instance.overlay);
 				MemoryUtil.memPutFloat(ptr + 12, instance.x);

@@ -64,7 +64,7 @@ public class GantryCarriageVisual extends ShaftVisual<GantryCarriageBlockEntity>
 	}
 
 	private void animateCogs(float cogAngle) {
-		gantryCogs.loadIdentity()
+		gantryCogs.setIdentityTransform()
 				.translate(getVisualPosition())
 				.center()
 				.rotateYDegrees(AngleHelper.horizontalAngle(facing))

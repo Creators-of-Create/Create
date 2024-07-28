@@ -48,7 +48,7 @@ public class HandCrankVisual extends KineticBlockEntityVisual<HandCrankBlockEnti
 		Direction.Axis axis = facing.getAxis();
 		float angle = blockEntity.getIndependentAngle(pt);
 
-		crank.loadIdentity()
+		crank.setIdentityTransform()
 			.translate(getVisualPosition())
 			.center()
 			.rotate(angle, Direction.get(Direction.AxisDirection.POSITIVE, axis))

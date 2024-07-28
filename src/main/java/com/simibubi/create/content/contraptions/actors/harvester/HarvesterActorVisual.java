@@ -83,7 +83,7 @@ public class HarvesterActorVisual extends ActorVisual {
 
     @Override
     public void beginFrame() {
-        harvester.loadIdentity()
+        harvester.setIdentityTransform()
 				.translate(context.localPos)
 				.center()
 				.rotateYDegrees(horizontalAngle)

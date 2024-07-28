@@ -27,7 +27,7 @@ public class RollerActorVisual extends HarvesterActorVisual {
 
 	@Override
 	public void beginFrame() {
-		harvester.loadIdentity()
+		harvester.setIdentityTransform()
 			.translate(context.localPos)
 			.center()
 			.rotateYDegrees(horizontalAngle)
@@ -38,7 +38,7 @@ public class RollerActorVisual extends HarvesterActorVisual {
 			.rotateYDegrees(90)
 			.setChanged();
 
-		frame.loadIdentity()
+		frame.setIdentityTransform()
 			.translate(context.localPos)
 			.center()
 			.rotateYDegrees(horizontalAngle + 180)

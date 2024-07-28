@@ -59,7 +59,7 @@ public class FluidValveVisual extends ShaftVisual<FluidValveBlockEntity> impleme
 		float pointerRotation = Mth.lerp(value, 0, -90);
 		settled = (value == 0 || value == 1) && blockEntity.pointer.settled();
 
-        pointer.loadIdentity()
+        pointer.setIdentityTransform()
 				.translate(getVisualPosition())
 				.center()
 				.rotateYDegrees((float) yRot)

@@ -58,7 +58,7 @@ public class EjectorVisual extends ShaftVisual<EjectorBlockEntity> implements Si
 	private void pivotPlate(float lidProgress) {
 		float angle = lidProgress * 70;
 
-		EjectorRenderer.applyLidAngle(blockEntity, angle, plate.loadIdentity().translate(getVisualPosition()));
+		EjectorRenderer.applyLidAngle(blockEntity, angle, plate.setIdentityTransform().translate(getVisualPosition()));
 		plate.setChanged();
 	}
 

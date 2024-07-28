@@ -219,11 +219,11 @@ public class AllPartialModels {
 	}
 
 	private static PartialModel block(String path) {
-		return new PartialModel(Create.asResource("block/" + path));
+		return PartialModel.of(Create.asResource("block/" + path));
 	}
 
 	private static PartialModel entity(String path) {
-		return new PartialModel(Create.asResource("entity/" + path));
+		return PartialModel.of(Create.asResource("entity/" + path));
 	}
 
 	public static void init() {

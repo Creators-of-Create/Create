@@ -10,7 +10,7 @@ import com.tterrag.registrate.builders.EntityBuilder;
 import com.tterrag.registrate.util.OneTimeEventReceiver;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import dev.engine_room.flywheel.lib.visual.SimpleEntityVisualizer;
+import dev.engine_room.flywheel.lib.visualization.SimpleEntityVisualizer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;

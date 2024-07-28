@@ -132,12 +132,12 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements S
 
 		ArmRenderer.transformLowerArm(msr, lowerArmAngle);
 		lowerBody.setTransform(msLocal)
-			.color(color)
+			.colorRgb(color)
 			.setChanged();
 
 		ArmRenderer.transformUpperArm(msr, upperArmAngle);
 		upperBody.setTransform(msLocal)
-			.color(color)
+			.colorRgb(color)
 			.setChanged();
 
 		ArmRenderer.transformHead(msr, headAngle);

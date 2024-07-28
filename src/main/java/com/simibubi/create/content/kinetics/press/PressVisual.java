@@ -30,7 +30,7 @@ public class PressVisual extends ShaftVisual<MechanicalPressBlockEntity> impleme
 		Quaternionf q = Axis.YP
 			.rotationDegrees(AngleHelper.horizontalAngle(blockState.getValue(MechanicalPressBlock.HORIZONTAL_FACING)));
 
-		pressHead.setRotation(q);
+		pressHead.rotation(q);
 
 		transformModels(partialTick);
 	}
@@ -43,8 +43,8 @@ public class PressVisual extends ShaftVisual<MechanicalPressBlockEntity> impleme
 	private void transformModels(float pt) {
 		float renderedHeadOffset = getRenderedHeadOffset(pt);
 
-		pressHead.setPosition(getVisualPosition())
-			.nudgePosition(0, -renderedHeadOffset, 0)
+		pressHead.position(getVisualPosition())
+			.translatePosition(0, -renderedHeadOffset, 0)
 			.setChanged();
 	}
 

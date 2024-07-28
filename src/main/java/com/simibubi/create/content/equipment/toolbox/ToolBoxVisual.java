@@ -51,7 +51,7 @@ public class ToolBoxVisual extends AbstractBlockEntityVisual<ToolboxBlockEntity>
 		float lidAngle = blockEntity.lid.getValue(partialTicks);
 		float drawerOffset = blockEntity.drawers.getValue(partialTicks);
 
-		lid.loadIdentity()
+		lid.setIdentityTransform()
 				.translate(getVisualPosition())
 				.center()
 				.rotateYDegrees(-facing.toYRot())
@@ -62,7 +62,7 @@ public class ToolBoxVisual extends AbstractBlockEntityVisual<ToolboxBlockEntity>
 				.setChanged();
 
 		for (int offset : Iterate.zeroAndOne) {
-			drawers[offset].loadIdentity()
+			drawers[offset].setIdentityTransform()
 					.translate(getVisualPosition())
 					.center()
 					.rotateYDegrees(-facing.toYRot())

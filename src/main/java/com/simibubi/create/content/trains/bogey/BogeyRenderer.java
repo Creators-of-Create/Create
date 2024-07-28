@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
+import org.joml.Matrix3fc;
+import org.joml.Matrix4fc;
+import org.joml.Quaternionfc;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -304,7 +304,7 @@ public abstract class BogeyRenderer {
 	 */
 
 	private String keyFromModel(PartialModel partialModel) {
-		return partialModel.getLocation().toString();
+		return partialModel.modelLocation().toString();
 	}
 
 	/**
@@ -348,7 +348,7 @@ public abstract class BogeyRenderer {
 
 		public BogeyModelData setEmptyTransform() {
 			if (this.transform instanceof TransformedInstance model)
-				model.setEmptyTransform()
+				model.setZeroTransform()
 						.setChanged();
 			return this;
 		}
@@ -367,19 +367,19 @@ public abstract class BogeyRenderer {
 		}
 
 		@Override
-		public BogeyModelData mulPose(Matrix4f pose) {
+		public BogeyModelData mulPose(Matrix4fc pose) {
 			this.transform.mulPose(pose);
 			return this;
 		}
 
 		@Override
-		public BogeyModelData mulNormal(Matrix3f normal) {
+		public BogeyModelData mulNormal(Matrix3fc normal) {
 			this.transform.mulNormal(normal);
 			return this;
 		}
 
 		@Override
-		public BogeyModelData rotate(Quaternionf quaternion) {
+		public BogeyModelData rotate(Quaternionfc quaternion) {
 			this.transform.rotate(quaternion);
 			return this;
 		}
@@ -391,7 +391,7 @@ public abstract class BogeyRenderer {
 		}
 
 		@Override
-		public BogeyModelData translate(double x, double y, double z) {
+		public BogeyModelData translate(float x, float y, float z) {
 			this.transform.translate(x, y, z);
 			return this;
 		}
