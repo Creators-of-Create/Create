@@ -36,7 +36,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 	protected final Direction rotatingAbout;
 	protected final Axis rotationAxis;
 
-	private final LightCache lightCache = new LightCache(1);
+	private final LightCache lightCache = new LightCache();
 
 	private float offset;
 
@@ -58,6 +58,12 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 		halfRope = new ConditionalInstance<>(getHalfRopeModel()).withCondition(this::shouldRenderHalfRope);
 
 		updateOffset(partialTick);
+	}
+
+	@Override
+	public void setSectionCollector(SectionCollector sectionCollector) {
+		super.setSectionCollector(sectionCollector);
+		lightCache.updateSections();
 	}
 
 	protected abstract Instancer<OrientedInstance> getRopeModel();
@@ -172,15 +178,10 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 	}
 
 	private class LightCache {
-		private final ByteList data;
+		private final ByteList data =  new ByteArrayList();
 		private final LongSet sections = new LongOpenHashSet();
 		private final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 		private int sectionCount;
-
-		public LightCache(int initialSize) {
-			data = new ByteArrayList(initialSize);
-			setSize(initialSize);
-		}
 
 		public void setSize(int size) {
 			if (size != data.size()) {
@@ -196,9 +197,16 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 					for (int i = 0; i < sectionCount; i++) {
 						sections.add(SectionPos.asLong(sectionX, sectionY - i, sectionZ));
 					}
-					lightSections.sections(sections);
+					// Will be null during initialization
+					if (lightSections != null) {
+						updateSections();
+					}
 				}
 			}
+		}
+
+		public void updateSections() {
+			lightSections.sections(sections);
 		}
 
 		public void update() {

@@ -59,6 +59,10 @@ public class HandCrankVisual extends KineticBlockEntityVisual<HandCrankBlockEnti
 	@Override
 	protected void _delete() {
 		crank.delete();
+
+		if (rotatingModel != null) {
+			rotatingModel.delete();
+		}
 	}
 
 	@Override
