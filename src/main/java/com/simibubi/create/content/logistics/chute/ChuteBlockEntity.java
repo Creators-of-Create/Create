@@ -83,7 +83,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	int entitySearchCooldown;
 
 	VersionedInventoryTrackerBehaviour invVersionTracker;
-	
+
 	LazyOptional<IItemHandler> capAbove;
 	LazyOptional<IItemHandler> capBelow;
 
@@ -358,30 +358,12 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 	private boolean handleDownwardOutput(boolean simulate) {
 		BlockState blockState = getBlockState();
-		ChuteBlockEntity targetChute = getTargetChute(blockState);
 		Direction direction = AbstractChuteBlock.getChuteFacing(blockState);
 
 		if (level == null || direction == null || !this.canOutputItems())
 			return false;
-		if (!capBelow.isPresent())
-			capBelow = grabCapability(Direction.DOWN);
-		if (capBelow.isPresent()) {
-			if (level.isClientSide && !isVirtual())
-				return false;
-			IItemHandler inv = capBelow.orElse(null);
-			if (invVersionTracker.stillWaiting(inv))
-				return false;
-			ItemStack remainder = ItemHandlerHelper.insertItemStacked(inv, item, simulate);
-			ItemStack held = getItem();
-			if (!simulate)
-				setItem(remainder, itemPosition.getValue(0));
-			if (remainder.getCount() != held.getCount())
-				return true;
-			invVersionTracker.awaitNewVersion(inv);
-			if (direction == Direction.DOWN)
-				return false;
-		}
 
+		ChuteBlockEntity targetChute = getTargetChute(blockState);
 		if (targetChute != null) {
 			boolean canInsert = targetChute.canAcceptItem(item);
 			if (!simulate && canInsert) {
@@ -389,6 +371,26 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 				setItem(ItemStack.EMPTY);
 			}
 			return canInsert;
+		}
+		else {
+			if (!capBelow.isPresent())
+				capBelow = grabCapability(Direction.DOWN);
+			if (capBelow.isPresent()) {
+				if (level.isClientSide && !isVirtual())
+					return false;
+				IItemHandler inv = capBelow.orElse(null);
+				if (invVersionTracker.stillWaiting(inv))
+					return false;
+				ItemStack remainder = ItemHandlerHelper.insertItemStacked(inv, item, simulate);
+				ItemStack held = getItem();
+				if (!simulate)
+					setItem(remainder, itemPosition.getValue(0));
+				if (remainder.getCount() != held.getCount())
+					return true;
+				invVersionTracker.awaitNewVersion(inv);
+				if (direction == Direction.DOWN)
+					return false;
+			}
 		}
 
 		// Diagonal chutes cannot drop items
