@@ -11,5 +11,14 @@
       "chance": 0.25
     }
   ],
-  "processingTime": 350
+  "processingTime": 350,
+  "conditions": [
+    {
+      "value": {
+        "modid": "exnihilosequentia",
+        "type": "forge:mod_loaded"
+      },
+      "type": "forge:not"
+    }
+  ]
 }

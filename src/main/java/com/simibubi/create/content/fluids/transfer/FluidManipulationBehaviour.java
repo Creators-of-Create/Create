@@ -38,11 +38,11 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 
 	public static record BlockPosEntry(BlockPos pos, int distance) {
 	};
-	
+
 	public static class ChunkNotLoadedException extends Exception {
 		private static final long serialVersionUID = 1L;
 	}
-	
+
 	BoundingBox affectedArea;
 	BlockPos rootPos;
 	boolean infinite;
@@ -148,7 +148,7 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 		BiConsumer<BlockPos, Integer> add, boolean searchDownward) throws ChunkNotLoadedException {
 		Level world = getWorld();
 		int maxBlocks = maxBlocks();
-		int maxRange = canDrainInfinitely(fluid) ? maxRange() : maxRange() / 2;
+		int maxRange = maxRange();
 		int maxRangeSq = maxRange * maxRange;
 		int i;
 
@@ -162,7 +162,7 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 
 			if (!world.isLoaded(currentPos))
 				throw new ChunkNotLoadedException();
-			
+
 			FluidState fluidState = world.getFluidState(currentPos);
 			if (fluidState.isEmpty())
 				continue;
@@ -205,7 +205,7 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 	protected void playEffect(Level world, BlockPos pos, Fluid fluid, boolean fillSound) {
 		if (fluid == null)
 			return;
-		
+
 		BlockPos splooshPos = pos == null ? blockEntity.getBlockPos() : pos;
 
 		SoundEvent soundevent = fillSound ? fluid.getAttributes()

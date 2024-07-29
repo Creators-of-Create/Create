@@ -85,6 +85,10 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
 	public boolean isBracketPresent() {
 		return bracket != null;
 	}
+	
+	public boolean isBracketValid(BlockState bracketState) {
+		return bracketState.getBlock() instanceof BracketBlock;
+	}
 
 	@Nullable
 	public BlockState getBracket() {
@@ -110,7 +114,7 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
 
 	@Override
 	public void write(CompoundTag nbt, boolean clientPacket) {
-		if (isBracketPresent()) {
+		if (isBracketPresent() && isBracketValid(bracket)) {
 			nbt.put("Bracket", NbtUtils.writeBlockState(bracket));
 		}
 		if (clientPacket && reRender) {
@@ -122,8 +126,12 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
 
 	@Override
 	public void read(CompoundTag nbt, boolean clientPacket) {
-		if (nbt.contains("Bracket"))
-			bracket = NbtUtils.readBlockState(nbt.getCompound("Bracket"));
+		if (nbt.contains("Bracket")) {
+			bracket = null;
+			BlockState readBlockState = NbtUtils.readBlockState(nbt.getCompound("Bracket"));
+			if (isBracketValid(readBlockState))
+				bracket = readBlockState;
+		}
 		if (clientPacket && nbt.contains("Redraw"))
 			getWorld().sendBlockUpdated(getPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), 16);
 		super.read(nbt, clientPacket);

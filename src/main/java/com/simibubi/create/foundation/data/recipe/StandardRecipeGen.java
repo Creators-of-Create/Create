@@ -1174,7 +1174,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		RAW_ZINC_ORE = create(AllItems.ZINC_INGOT::get).withSuffix("_from_raw_ore")
 			.viaCooking(AllItems.RAW_ZINC::get)
 			.rewardXP(.7f)
-			.inBlastFurnace()
+			.inBlastFurnace(),
+
+		UA_TREE_FERTILIZER = create(AllItems.TREE_FERTILIZER::get).returns(2)
+			.whenModLoaded(Mods.UA.getId()).unlockedBy(() -> Items.BONE_MEAL)
+			.viaShapeless(b -> b.requires(Ingredient.of(ItemTags.SMALL_FLOWERS), 2)
+					.requires(AllItemTags.UA_CORAL.tag).requires(Items.BONE_MEAL))
 
 	;
 

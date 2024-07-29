@@ -1,0 +1,20 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:sand"
+    }
+  ],
+  "results": [
+    {
+      "item": "exnihilosequentia:dust"
+    }
+  ],
+  "processingTime": 200,
+  "conditions": [
+    {
+      "modid": "exnihilosequentia",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

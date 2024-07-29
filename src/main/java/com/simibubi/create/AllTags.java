@@ -1,6 +1,8 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.AllTags.NameSpace.CURIOS;
 import static com.simibubi.create.AllTags.NameSpace.FORGE;
+import static com.simibubi.create.AllTags.NameSpace.GS;
 import static com.simibubi.create.AllTags.NameSpace.MOD;
 import static com.simibubi.create.AllTags.NameSpace.QUARK;
 import static com.simibubi.create.AllTags.NameSpace.TIC;
@@ -57,7 +59,9 @@ public class AllTags {
 		MOD(Create.ID, false, true),
 		FORGE("forge"),
 		TIC("tconstruct"),
-		QUARK("quark")
+		QUARK("quark"),
+		GS("galosphere"),
+		CURIOS("curios")
 
 		;
 
@@ -101,6 +105,8 @@ public class AllTags {
 		VALVE_HANDLES,
 		WINDMILL_SAILS,
 		WRENCH_PICKUP,
+
+		CORALS,
 
 		RELOCATION_NOT_SUPPORTED(FORGE),
 		WG_STONE(FORGE),
@@ -182,7 +188,15 @@ public class AllTags {
 		STRIPPED_LOGS(FORGE),
 		STRIPPED_WOOD(FORGE),
 		PLATES(FORGE),
-		WRENCH(FORGE, "tools/wrench")
+		OBSIDIAN_DUST(FORGE,"dusts/obsidian"),
+		WRENCH(FORGE, "tools/wrench"),
+
+		ALLURITE(MOD,"stone_types/galosphere/allurite"),
+		AMETHYST(MOD,"stone_types/galosphere/amethyst"),
+		LUMIERE(MOD, "stone_types/galosphere/lumiere"),
+
+		UA_CORAL(MOD, "upgrade_aquatic/coral"),
+		CURIOS_HEAD(CURIOS, "head")
 
 		;
 

@@ -160,16 +160,12 @@ public class DeployerFakePlayer extends FakePlayer {
 
 		CKinetics.DeployerAggroSetting setting = AllConfigs.server().kinetics.ignoreDeployerAttacks.get();
 
-		switch (setting) {
-		case ALL:
-			event.setCanceled(true);
-			break;
-		case CREEPERS:
-			if (mob instanceof Creeper)
-				event.setCanceled(true);
-			break;
-		case NONE:
-		default:
+		switch(setting) {
+			case ALL -> event.setCanceled(true);
+			case CREEPERS -> {
+				if (mob instanceof Creeper)
+					event.setCanceled(true);
+			}
 		}
 	}
 
