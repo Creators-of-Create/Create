@@ -74,6 +74,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	ChuteItemHandler itemHandler;
 	LazyOptional<IItemHandler> lazyHandler;
 	boolean canPickUpItems;
+	boolean previouslyPowered;
 
 	float bottomPullDistance;
 	float beltBelowOffset;
@@ -83,7 +84,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	int entitySearchCooldown;
 
 	VersionedInventoryTrackerBehaviour invVersionTracker;
-	
+
 	LazyOptional<IItemHandler> capAbove;
 	LazyOptional<IItemHandler> capBelow;
 
@@ -340,8 +341,9 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	private void handleInput(IItemHandler inv, float startLocation) {
 		if (inv == null)
 			return;
-		if (invVersionTracker.stillWaiting(inv))
+		if (!previouslyPowered && invVersionTracker.stillWaiting(inv))
 			return;
+		setPreviouslyPowered(false);
 		Predicate<ItemStack> canAccept = this::canAcceptItem;
 		int count = getExtractionAmount();
 		ExtractionCountMode mode = getExtractionMode();
@@ -759,6 +761,15 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 	public ItemStack getItem() {
 		return item;
+	}
+
+	/**
+	 * Sets whether the chute was previously powered, so that we get a tick of skipping invVersionTracker.stillWaiting
+	 * (Only relevant for the smart chute, but the logic that needs it is in here)
+	 * @param previouslyPowered
+	 */
+	public void setPreviouslyPowered(boolean previouslyPowered) {
+		this.previouslyPowered = previouslyPowered;
 	}
 
 	// @Override

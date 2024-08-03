@@ -40,8 +40,12 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 	@Override
 	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random r) {
 		boolean previouslyPowered = state.getValue(POWERED);
-		if (previouslyPowered != worldIn.hasNeighborSignal(pos))
+		if (previouslyPowered != worldIn.hasNeighborSignal(pos)) {
 			worldIn.setBlock(pos, state.cycle(POWERED), 2);
+			if (previouslyPowered) {
+				withBlockEntityDo(worldIn, pos, (c) -> c.setPreviouslyPowered(true));
+			}
+		}
 	}
 
 	@Override
@@ -54,7 +58,7 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
 		return true;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends ChuteBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.SMART_CHUTE.get();
