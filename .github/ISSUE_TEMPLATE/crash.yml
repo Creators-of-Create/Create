@@ -17,17 +17,8 @@ body:
             This file can be found in the \"crash-reports\" folder of your Minecraft folder.
             It will be the newest file there.
             Please upload the file to https://mclo.gs/ and put the link here.
+            Do **not** paste the *contents* of the file here, because that will make this issue very hard to read.
             "
-        validations:
-            required: true
-
-    -   type: dropdown
-        attributes:
-            label: Minecraft Version
-            options:
-                - "1.18.2"
-                - "1.19.2"
-                - "1.20.1"
         validations:
             required: true
 

@@ -19,6 +19,7 @@ body:
             We need the game's log file to see if there's any information there.
             This file can be found in the \"logs\" folder of your Minecraft folder as \"latest.log\".
             Please upload the file to https://mclo.gs/ and put the link here.
+            Do **not** paste the *contents* of the file here, because that will make this issue very hard to read.
             "
         validations:
             required: true
@@ -30,7 +31,7 @@ body:
             Please run the \"/create debuginfo\" command in-game.
             This will copy a bunch of useful information that will greatly help with debugging to your clipboard.
             Please paste this information here.
-            If this command does not exist, your can skip this part.
+            If this command does not exist, you can skip this part.
             "
         validations:
             required: false
