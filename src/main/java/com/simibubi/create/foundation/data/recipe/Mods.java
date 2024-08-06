@@ -1,10 +1,8 @@
 package com.simibubi.create.foundation.data.recipe;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.ItemLike;
 
 public enum Mods {
 

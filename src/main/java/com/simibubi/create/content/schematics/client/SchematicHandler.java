@@ -163,6 +163,8 @@ public class SchematicHandler {
 		
 		try {
 			schematic.placeInWorld(w, pos, pos, placementSettings, w.getRandom(), Block.UPDATE_CLIENTS);
+			for (BlockEntity blockEntity : w.getBlockEntities())
+				blockEntity.setLevel(w);
 		} catch (Exception e) {
 			Minecraft.getInstance().player.displayClientMessage(Lang.translate("schematic.error")
 				.component(), false);

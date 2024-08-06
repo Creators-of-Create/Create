@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.simibubi.create.compat.framedblocks.FramedBlocksInSchematics;
 import com.simibubi.create.foundation.data.recipe.Mods;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
@@ -70,7 +71,10 @@ public class ItemRequirement {
 
 		if (be instanceof ISpecialBlockEntityItemRequirement specialBE)
 			requirement = requirement.union(specialBE.getRequiredItems(state));
-
+		
+		if (com.simibubi.create.compat.Mods.FRAMEDBLOCKS.contains(block))
+			requirement = requirement.union(FramedBlocksInSchematics.getRequiredItems(state, be));
+		
 		return requirement;
 	}
 
