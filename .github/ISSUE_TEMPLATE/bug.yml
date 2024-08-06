@@ -1,5 +1,5 @@
 name: I found a bug!
-description: "Report some other kind of issue. You should ask in the Discord first, to make sure it's actually a bug."
+description: "Report some other kind of issue. You should ask in the Discord first to make sure it's actually a bug with Create."
 labels: [ "type: bug" ]
 body:
     -   type: textarea
@@ -8,7 +8,7 @@ body:
             description: "
             Please describe the issue with as much detail as possible.
             Explain what happened, and what should have happened instead.
-            Add screenshots or videos if they would be useful."
+            Add images, screenshots, or videos if they could be useful."
         validations:
             required: true
 
@@ -16,7 +16,7 @@ body:
         attributes:
             label: Game Log
             description: "
-            We need the game's log file to see if there's any information there.
+            We need the game log for additional information about the bug.
             This file can be found in the \"logs\" folder of your Minecraft folder as \"latest.log\".
             Please upload the file to https://mclo.gs/ and put the link here.
             Do **not** paste the *contents* of the file here, because that will make this issue very hard to read.
@@ -29,7 +29,7 @@ body:
             label: Debug Information
             description: "
             Please run the \"/create debuginfo\" command in-game.
-            This will copy a bunch of useful information that will greatly help with debugging to your clipboard.
+            This will copy useful information to your clipboard that will greatly help with debugging.
             Please paste this information here.
             If this command does not exist, you can skip this part.
             "
@@ -38,4 +38,4 @@ body:
 
     -   type: markdown
         attributes:
-            value: "Thank you for taking the time to report this and help improve Create!"
+            value: "Thank you for taking the time to make a report and help improve Create!"
