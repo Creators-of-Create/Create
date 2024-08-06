@@ -2,7 +2,6 @@ package com.simibubi.create;
 
 import static com.simibubi.create.AllTags.NameSpace.CURIOS;
 import static com.simibubi.create.AllTags.NameSpace.FORGE;
-import static com.simibubi.create.AllTags.NameSpace.GS;
 import static com.simibubi.create.AllTags.NameSpace.MOD;
 import static com.simibubi.create.AllTags.NameSpace.QUARK;
 import static com.simibubi.create.AllTags.NameSpace.TIC;

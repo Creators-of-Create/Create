@@ -1125,7 +1125,7 @@ public abstract class Contraption {
 
 				CompoundTag tag = block.nbt;
 				if (blockEntity != null)
-					tag = NBTProcessors.process(blockEntity, tag, false);
+					tag = NBTProcessors.process(state, blockEntity, tag, false);
 				if (blockEntity != null && tag != null) {
 					tag.putInt("x", targetPos.getX());
 					tag.putInt("y", targetPos.getY());
