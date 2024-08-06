@@ -98,6 +98,16 @@ public class StructureTransform {
 		return vec;
 	}
 
+	public Vec3 unapplyWithoutOffset(Vec3 globalVec) {
+		Vec3 vec = globalVec;
+		if (rotationAxis != null)
+			vec = VecHelper.rotateCentered(vec, -angle, rotationAxis);
+		if (mirror != null)
+			vec = VecHelper.mirrorCentered(vec, mirror);
+
+		return vec;
+	}
+
 	public Vec3 apply(Vec3 localVec) {
 		return applyWithoutOffset(localVec).add(Vec3.atLowerCornerOf(offset));
 	}
@@ -108,6 +118,14 @@ public class StructureTransform {
 
 	public BlockPos apply(BlockPos localPos) {
 		return applyWithoutOffset(localPos).offset(offset);
+	}
+
+	public BlockPos unapply(BlockPos globalPos) {
+		return unapplyWithoutOffset(globalPos.subtract(offset));
+	}
+
+	public BlockPos unapplyWithoutOffset(BlockPos globalPos) {
+		return new BlockPos(unapplyWithoutOffset(VecHelper.getCenterOf(globalPos)));
 	}
 
 	public void apply(BlockEntity be) {
