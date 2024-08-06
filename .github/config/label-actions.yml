@@ -52,11 +52,12 @@
 
 'status: unable to reproduce':
     issues:
+        close: true
+        close-reason: not planned
         comment: >
             @{issue-author}, One of our testers/triagers were unable to reproduce this issues as you've described.
             The issue may possibly be fixed already or caused by another mod you have installed.
             If the issue occurs again please open a new issue.
-        close: true
 
 '-status: unable to reproduce':
     issues:
