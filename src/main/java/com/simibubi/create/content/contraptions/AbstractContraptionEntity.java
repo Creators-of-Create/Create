@@ -870,10 +870,11 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public static class ContraptionRotationState {
 		public static final ContraptionRotationState NONE = new ContraptionRotationState();
 
-		float xRotation = 0;
-		float yRotation = 0;
-		float zRotation = 0;
-		float secondYRotation = 0;
+		public float xRotation = 0;
+		public float yRotation = 0;
+		public float zRotation = 0;
+		public float secondYRotation = 0;
+		
 		Matrix3d matrix;
 
 		public Matrix3d asMatrix() {
