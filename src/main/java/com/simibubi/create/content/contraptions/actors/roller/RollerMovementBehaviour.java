@@ -469,9 +469,10 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (existing.is(toPlace.getBlock()))
 			return PaveResult.PASS;
 		if (!existing.is(BlockTags.LEAVES) && !existing.getMaterial()
-			.isReplaceable()
-			&& !existing.getCollisionShape(level, targetPos)
-				.isEmpty())
+				.isReplaceable()
+				&& (!existing.getCollisionShape(level, targetPos)
+					.isEmpty()
+					|| existing.is(BlockTags.PORTALS)))
 			return PaveResult.FAIL;
 
 		FilterItemStack filter = context.getFilterFromBE();

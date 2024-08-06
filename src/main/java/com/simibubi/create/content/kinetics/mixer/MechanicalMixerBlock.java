@@ -1,10 +1,10 @@
 package com.simibubi.create.content.kinetics.mixer;
 
 import com.simibubi.create.AllBlockEntityTypes;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.KineticBlock;
 import com.simibubi.create.content.kinetics.simpleRelays.ICogWheel;
+import com.simibubi.create.content.processing.basin.BasinBlock;
 import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
@@ -28,7 +28,7 @@ public class MechanicalMixerBlock extends KineticBlock implements IBE<Mechanical
 
 	@Override
 	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
-		return !AllBlocks.BASIN.has(worldIn.getBlockState(pos.below()));
+		return !BasinBlock.isBasin(worldIn, pos.below());
 	}
 
 	@Override

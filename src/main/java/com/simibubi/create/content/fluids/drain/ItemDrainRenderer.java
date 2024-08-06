@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
@@ -78,8 +79,8 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 			.getItemRenderer();
 		int count = (int) (Mth.log2((int) (itemStack.getCount()))) / 2;
 		boolean renderUpright = BeltHelper.isItemUpright(itemStack);
-		boolean blockItem = itemRenderer.getModel(itemStack, null, null, 0)
-			.isGui3d();
+		BakedModel bakedModel = itemRenderer.getModel(itemStack, null, null, 0);
+		boolean blockItem = bakedModel.isGui3d();
 
 		if (renderUpright)
 			ms.translate(0, 3 / 32d, 0);
@@ -117,7 +118,7 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 			ms.scale(.5f, .5f, .5f);
 			if (!blockItem && !renderUpright)
 				msr.rotateX(90);
-			itemRenderer.renderStatic(itemStack, TransformType.FIXED, light, overlay, ms, buffer, 0);
+			itemRenderer.render(itemStack, TransformType.FIXED, false, ms, buffer, light, overlay, bakedModel);
 			ms.popPose();
 
 			if (!renderUpright) {

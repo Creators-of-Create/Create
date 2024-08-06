@@ -6,6 +6,8 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -18,11 +20,16 @@ public enum Mods {
 	CONNECTIVITY,
 	CURIOS,
 	DYNAMICTREES,
+	FUNCTIONALSTORAGE,
 	OCCULTISM,
 	PACKETFIXER,
+	SOPHISTICATEDBACKPACKS,
+	SOPHISTICATEDSTORAGE,
 	STORAGEDRAWERS,
 	TCONSTRUCT,
-	XLPACKETS;
+	FRAMEDBLOCKS,
+	XLPACKETS,
+	MODERNUI;
 
 	private final String id;
 
@@ -43,6 +50,19 @@ public enum Mods {
 
 	public Block getBlock(String id) {
 		return ForgeRegistries.BLOCKS.getValue(rl(id));
+	}
+	
+	public Item getItem(String id) {
+		return ForgeRegistries.ITEMS.getValue(rl(id));
+	}
+	
+	public boolean contains(ItemLike entry) {
+		if (!isLoaded())
+			return false;
+		Item asItem = entry.asItem();
+		return asItem != null && asItem.getRegistryName()
+			.getNamespace()
+			.equals(id);
 	}
 
 	/**

@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -45,9 +46,8 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
 
-		boolean isBlockItem =
-			hasItem && (item.getItem() instanceof BlockItem) && itemRenderer.getModel(item, be.getLevel(), null, 0)
-				.isGui3d();
+		BakedModel bakedModel = itemRenderer.getModel(item, be.getLevel(), null, 0);
+		boolean isBlockItem = hasItem && (item.getItem() instanceof BlockItem) && bakedModel.isGui3d();
 
 		VertexConsumer builder = buffer.getBuffer(be.goggles ? RenderType.cutout() : RenderType.solid());
 		BlockState blockState = be.getBlockState();
@@ -102,7 +102,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 				.multiply(msLocal.last()
 					.pose());
 
-			itemRenderer.renderStatic(item, TransformType.FIXED, light, overlay, ms, buffer, 0);
+			itemRenderer.render(item, TransformType.FIXED, false, ms, buffer, light, overlay, bakedModel);
 			ms.popPose();
 		}
 
@@ -141,13 +141,13 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 			.renderInto(ms, builder);
 
 		transformHead(msr, headAngle);
-		
+
 		if (inverted)
 			msr.rotateZ(180);
-			
+
 		claw.transform(msLocal)
 			.renderInto(ms, builder);
-		
+
 		if (inverted)
 			msr.rotateZ(180);
 

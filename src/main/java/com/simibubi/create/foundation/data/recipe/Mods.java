@@ -1,10 +1,8 @@
 package com.simibubi.create.foundation.data.recipe;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.ItemLike;
 
 public enum Mods {
 
@@ -51,6 +49,10 @@ public enum Mods {
 	GOOD("goodending"),
 	BMK("biomemakeover"),
 	NE("nethers_exoticism"),
+	RU("regions_unexplored"),
+	EO("elementaryores"),
+	IF("iceandfire"),
+	ENS("exnihilosequentia")
 
 	;
 

@@ -48,7 +48,7 @@ public abstract class GaugeBlockEntity extends KineticBlockEntity implements IHa
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		tooltip.add(componentSpacing.plainCopy().append(Lang.translateDirect("gui.gauge.info_header")));
+		Lang.translate("gui.gauge.info_header").forGoggles(tooltip);
 
 		return true;
 	}

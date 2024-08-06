@@ -16,7 +16,7 @@
   ],
   "conditions": [
     {
-      "modid": "atmospheric",
+      "modid": "alexsmobs",
       "type": "forge:mod_loaded"
     }
   ]

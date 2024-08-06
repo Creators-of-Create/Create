@@ -25,6 +25,7 @@ import com.simibubi.create.content.logistics.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.content.logistics.funnel.FunnelBlock;
 import com.simibubi.create.content.logistics.funnel.FunnelBlockEntity;
 import com.simibubi.create.content.logistics.tunnel.BeltTunnelBlock;
+import com.simibubi.create.content.processing.basin.BasinBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
@@ -96,7 +97,7 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		public boolean canCreatePoint(Level level, BlockPos pos, BlockState state) {
-			return AllBlocks.BASIN.has(state);
+			return BasinBlock.isBasin(level, pos);
 		}
 
 		@Override
@@ -182,7 +183,7 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		public ArmInteractionPoint createPoint(Level level, BlockPos pos, BlockState state) {
-			return new TopFaceArmInteractionPoint(this, level, pos, state);
+			return new CrushingWheelPoint(this, level, pos, state);
 		}
 	}
 
@@ -712,4 +713,15 @@ public class AllArmInteractionPointTypes {
 		}
 	}
 
+	public static class CrushingWheelPoint extends DepositOnlyArmInteractionPoint {
+		public CrushingWheelPoint(ArmInteractionPointType type, Level level, BlockPos pos, BlockState state) {
+			super(type, level, pos, state);
+		}
+
+		@Override
+		protected Vec3 getInteractionPositionVector() {
+			return Vec3.atLowerCornerOf(pos)
+					.add(.5f, 1, .5f);
+		}
+	}
 }

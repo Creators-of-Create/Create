@@ -22,6 +22,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent;
 
 public interface IWrenchable {
 
@@ -54,16 +56,26 @@ public interface IWrenchable {
 		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 		Player player = context.getPlayer();
-		if (world instanceof ServerLevel) {
-			if (player != null && !player.isCreative())
-				Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos), player, context.getItemInHand())
-					.forEach(itemStack -> {
-						player.getInventory().placeItemBackInInventory(itemStack);
-					});
-			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
-			world.destroyBlock(pos, false);
-			playRemoveSound(world, pos);
+
+		if (!(world instanceof ServerLevel serverLevel))
+			return InteractionResult.SUCCESS;
+
+		BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), player);
+		MinecraftForge.EVENT_BUS.post(event);
+		if (event.isCanceled())
+			return InteractionResult.SUCCESS;
+
+		if (player != null && !player.isCreative()) {
+			Block.getDrops(state, serverLevel, pos, world.getBlockEntity(pos), player, context.getItemInHand())
+				.forEach(itemStack -> {
+					player.getInventory()
+						.placeItemBackInInventory(itemStack);
+				});
 		}
+
+		state.spawnAfterBreak(serverLevel, pos, ItemStack.EMPTY);
+		world.destroyBlock(pos, false);
+		playRemoveSound(world, pos);
 		return InteractionResult.SUCCESS;
 	}
 
