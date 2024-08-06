@@ -1,5 +1,4 @@
-name: 'Label Actions'
-
+name: "Label Actions"
 on:
     issues:
         types: [labeled, unlabeled]
