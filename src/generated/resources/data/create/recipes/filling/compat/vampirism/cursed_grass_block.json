@@ -1,0 +1,24 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "vampirism:cursed_dirt"
+    },
+    {
+      "fluid": "minecraft:water",
+      "nbt": {},
+      "amount": 500
+    }
+  ],
+  "results": [
+    {
+      "item": "vampirism:cursed_grass_block"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "vampirism",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

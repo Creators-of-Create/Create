@@ -52,7 +52,10 @@ public enum Mods {
 	RU("regions_unexplored"),
 	EO("elementaryores"),
 	IF("iceandfire"),
-	ENS("exnihilosequentia")
+	ENS("exnihilosequentia"),
+	AET("aether"),
+	HH("hauntedharvest"),
+	VMP("vampirism")
 
 	;
 

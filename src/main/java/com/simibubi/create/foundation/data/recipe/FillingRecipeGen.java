@@ -75,10 +75,27 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 		NEA_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Tags.Fluids.MILK, 250)
 			.require(Items.GLASS_BOTTLE)
 			.output(1, Mods.NEA, "milk_bottle", 1)
-			.whenModLoaded(Mods.NEA.getId()))
+			.whenModLoaded(Mods.NEA.getId())),
 
+		AET_GRASS = moddedGrass(Mods.AET, "aether"),
+
+		RU_PEAT_GRAS = moddedGrass(Mods.RU, "peat"),
+
+		RU_SILT_GRAS = moddedGrass(Mods.RU, "silt"),
+
+		// Vampirism
+
+		VMP_CURSED_GRASS = moddedGrass(Mods.VMP, "cursed")
 
 	;
+
+	public GeneratedRecipe moddedGrass(Mods mod, String name) {
+		String grass = name + "_grass_block";
+		return create(mod.recipeId(grass), b -> b.require(Fluids.WATER, 500)
+				.require(mod, name + "_dirt")
+				.output(mod, grass)
+				.whenModLoaded(mod.getId()));
+	}
 
 	public FillingRecipeGen(DataGenerator p_i48262_1_) {
 		super(p_i48262_1_);

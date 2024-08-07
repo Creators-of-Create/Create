@@ -1,0 +1,19 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "regions_unexplored:cursed_grass"
+    }
+  ],
+  "results": [
+    {
+      "item": "vampirism:cursed_earth_path"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "vampirism",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "regions_unexplored:lime_snowbelle"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:lime_dye",
+      "count": 2
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "regions_unexplored",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

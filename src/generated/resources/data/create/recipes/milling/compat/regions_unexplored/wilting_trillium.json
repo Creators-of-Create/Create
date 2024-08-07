@@ -1,0 +1,25 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "regions_unexplored:wilting_trillium"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:brown_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:light_gray_dye",
+      "chance": 0.1
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "regions_unexplored",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
