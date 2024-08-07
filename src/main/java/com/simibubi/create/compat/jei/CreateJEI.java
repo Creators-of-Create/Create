@@ -144,6 +144,7 @@ public class CreateJEI implements IModPlugin {
 
 		smoking = builder(SmokingRecipe.class)
 				.addTypedRecipes(() -> RecipeType.SMOKING)
+				.removeNonAutomation()
 				.catalystStack(ProcessingViaFanCategory.getFan("fan_smoking"))
 				.doubleItemIcon(AllItems.PROPELLER.get(), Items.CAMPFIRE)
 				.emptyBackground(178, 72)
@@ -153,6 +154,7 @@ public class CreateJEI implements IModPlugin {
 				.addTypedRecipesExcluding(() -> RecipeType.SMELTING, () -> RecipeType.BLASTING)
 				.addTypedRecipes(() -> RecipeType.BLASTING)
 				.removeRecipes(() -> RecipeType.SMOKING)
+				.removeNonAutomation()
 				.catalystStack(ProcessingViaFanCategory.getFan("fan_blasting"))
 				.doubleItemIcon(AllItems.PROPELLER.get(), Items.LAVA_BUCKET)
 				.emptyBackground(178, 72)
@@ -258,6 +260,7 @@ public class CreateJEI implements IModPlugin {
 				.addTypedRecipes(AllRecipeTypes.DEPLOYING)
 				.addTypedRecipes(AllRecipeTypes.SANDPAPER_POLISHING::getType, DeployerApplicationRecipe::convert)
 				.addTypedRecipes(AllRecipeTypes.ITEM_APPLICATION::getType, ManualApplicationRecipe::asDeploying)
+				.removeNonAutomation()
 				.catalyst(AllBlocks.DEPLOYER::get)
 				.catalyst(AllBlocks.DEPOT::get)
 				.catalyst(AllItems.BELT_CONNECTOR::get)
@@ -463,6 +466,10 @@ public class CreateJEI implements IModPlugin {
 					return false;
 				});
 			});
+		}
+
+		public CategoryBuilder<T> removeNonAutomation() {
+			return addRecipeListConsumer(recipes -> recipes.removeIf(AllRecipeTypes.CAN_BE_AUTOMATED.negate()));
 		}
 
 		public CategoryBuilder<T> catalystStack(Supplier<ItemStack> supplier) {

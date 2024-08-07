@@ -181,14 +181,14 @@ public class RemovedGuiUtils {
 
 		for (int lineNumber = 0; lineNumber < list.size(); ++lineNumber) {
 			ClientTooltipComponent line = list.get(lineNumber);
-			
+
 			if (line != null)
 				line.renderText(font, tooltipX, tooltipY, mat, renderType);
 
 			if (lineNumber + 1 == titleLinesCount)
 				tooltipY += 2;
 
-			tooltipY += 10;
+			tooltipY += line == null ? 10 : line.getHeight();
 		}
 
 		renderType.endBatch();

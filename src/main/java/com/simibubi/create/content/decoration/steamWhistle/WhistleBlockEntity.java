@@ -112,8 +112,7 @@ public class WhistleBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 		String[] pitches = Lang.translateDirect("generic.notes")
 			.getString()
 			.split(";");
-		MutableComponent textComponent = Components.literal(spacing);
-		tooltip.add(textComponent.append(Lang.translateDirect("generic.pitch", pitches[pitch % pitches.length])));
+		Lang.translate("generic.pitch", pitches[pitch % pitches.length]).forGoggles(tooltip);
 		return true;
 	}
 

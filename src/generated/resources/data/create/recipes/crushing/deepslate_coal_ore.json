@@ -5,22 +5,23 @@
       "item": "minecraft:deepslate_coal_ore"
     }
   ],
-  "processingTime": 250,
   "results": [
     {
-      "item": "minecraft:coal"
+      "item": "minecraft:coal",
+      "count": 2
     },
     {
-      "chance": 0.75,
-      "item": "minecraft:coal"
+      "item": "minecraft:coal",
+      "chance": 0.25
     },
     {
-      "chance": 0.75,
-      "item": "create:experience_nugget"
+      "item": "create:experience_nugget",
+      "chance": 0.75
     },
     {
-      "chance": 0.125,
-      "item": "minecraft:cobbled_deepslate"
+      "item": "minecraft:cobbled_deepslate",
+      "chance": 0.125
     }
-  ]
+  ],
+  "processingTime": 300
 }

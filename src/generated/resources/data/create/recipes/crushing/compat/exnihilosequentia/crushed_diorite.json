@@ -1,0 +1,21 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "exnihilosequentia:crushed_diorite"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:quartz",
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 100,
+  "conditions": [
+    {
+      "modid": "exnihilosequentia",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

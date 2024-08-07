@@ -5,11 +5,20 @@
       "item": "minecraft:diorite"
     }
   ],
-  "processingTime": 350,
   "results": [
     {
-      "chance": 0.25,
-      "item": "minecraft:quartz"
+      "item": "minecraft:quartz",
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 350,
+  "conditions": [
+    {
+      "value": {
+        "modid": "exnihilosequentia",
+        "type": "forge:mod_loaded"
+      },
+      "type": "forge:not"
     }
   ]
 }

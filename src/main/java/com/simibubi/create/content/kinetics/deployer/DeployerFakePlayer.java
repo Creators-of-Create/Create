@@ -40,9 +40,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -110,7 +110,7 @@ public class DeployerFakePlayer extends FakePlayer {
 	public UUID getUUID() {
 		return owner == null ? super.getUUID() : owner;
 	}
-	
+
 	@SubscribeEvent
 	public static void deployerHasEyesOnHisFeet(EntityEvent.Size event) {
 		if (event.getEntity() instanceof DeployerFakePlayer)
@@ -154,26 +154,21 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@SubscribeEvent
-	public static void entitiesDontRetaliate(LivingSetAttackTargetEvent event) {
-		if (!(event.getTarget() instanceof DeployerFakePlayer))
+	public static void entitiesDontRetaliate(LivingChangeTargetEvent event) {
+		if (!(event.getOriginalTarget() instanceof DeployerFakePlayer))
 			return;
 		LivingEntity entityLiving = event.getEntity();
-		if (!(entityLiving instanceof Mob))
+		if (!(entityLiving instanceof Mob mob))
 			return;
-		Mob mob = (Mob) entityLiving;
 
 		CKinetics.DeployerAggroSetting setting = AllConfigs.server().kinetics.ignoreDeployerAttacks.get();
 
-		switch (setting) {
-		case ALL:
-			mob.setTarget(null);
-			break;
-		case CREEPERS:
-			if (mob instanceof Creeper)
-				mob.setTarget(null);
-			break;
-		case NONE:
-		default:
+		switch(setting) {
+			case ALL -> event.setCanceled(true);
+			case CREEPERS -> {
+				if (mob instanceof Creeper)
+					event.setCanceled(true);
+			}
 		}
 	}
 

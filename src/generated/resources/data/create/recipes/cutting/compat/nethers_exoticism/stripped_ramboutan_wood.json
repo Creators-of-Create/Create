@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "nethers_exoticism:stripped_ramboutan_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "nethers_exoticism:ramboutan_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "nethers_exoticism",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

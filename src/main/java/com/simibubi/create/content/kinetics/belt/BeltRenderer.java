@@ -30,6 +30,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
@@ -194,14 +195,12 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 		boolean slopeAlongX = beltFacing
 								.getAxis() == Axis.X;
 
+		Minecraft mc = Minecraft.getInstance();
+		ItemRenderer itemRenderer = mc.getItemRenderer();
 		boolean onContraption = be.getLevel() instanceof WrappedWorld;
 
 		for (TransportedItemStack transported : be.getInventory()
 			.getTransportedItems()) {
-			ms.pushPose();
-            TransformStack.cast(ms)
-				.nudge(transported.angle);
-
 			float offset;
 			float sideOffset;
 			float verticalMovement;
@@ -228,6 +227,18 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 																														.getAxis() == Axis.Z);
 			float slopeAngle = onSlope ? tiltForward ? -45 : 45 : 0;
 
+			Vec3 itemPos = beltStartOffset.add(
+					be.getBlockPos().getX(),
+					be.getBlockPos().getY(),
+					be.getBlockPos().getZ())
+				.add(offsetVec);
+
+			if (this.shouldCullItem(itemPos)) {
+				continue;
+			}
+
+			ms.pushPose();
+			TransformStack.cast(ms).nudge(transported.angle);
 			ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 
 			boolean alongX = beltFacing
@@ -238,12 +249,15 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 			ms.translate(alongX ? sideOffset : 0, 0, alongX ? 0 : sideOffset);
 
 			int stackLight = onContraption ? light : getPackedLight(be, offset);
-			ItemRenderer itemRenderer = Minecraft.getInstance()
-				.getItemRenderer();
+
 			boolean renderUpright = BeltHelper.isItemUpright(transported.stack);
-			boolean blockItem = itemRenderer.getModel(transported.stack, be.getLevel(), null, 0)
-				.isGui3d();
-			int count = (int) (Mth.log2((int) (transported.stack.getCount()))) / 2;
+			BakedModel bakedModel = itemRenderer.getModel(transported.stack, be.getLevel(), null, 0);
+			boolean blockItem = bakedModel.isGui3d();
+
+			int count = 0;
+			if (mc.player.getEyePosition(1.0F).distanceTo(itemPos) < 16)
+				count = (int) (Mth.log2((int) (transported.stack.getCount()))) / 2;
+
 			Random r = new Random(transported.angle);
 
 			boolean slopeShadowOnly = renderUpright && onSlope;
@@ -264,7 +278,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 			}
 
 			if (renderUpright) {
-				Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
+				Entity renderViewEntity = mc.cameraEntity;
 				if (renderViewEntity != null) {
 					Vec3 positionVec = renderViewEntity.position();
 					Vec3 vectorForOffset = BeltHelper.getVectorForOffset(be, offset);
@@ -289,7 +303,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 				}
 
 				ms.scale(.5f, .5f, .5f);
-				itemRenderer.renderStatic(null, transported.stack, TransformType.FIXED, false, ms, buffer, be.getLevel(), stackLight, overlay, 0);
+				itemRenderer.render(transported.stack, TransformType.FIXED, false, ms, buffer, stackLight, overlay, bakedModel);
 				ms.popPose();
 
 				if (!renderUpright) {

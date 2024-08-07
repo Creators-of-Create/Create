@@ -6,6 +6,8 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.framedblocks.FramedBlocksInSchematics;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
@@ -241,15 +243,18 @@ public class BlockHelper {
 		CompoundTag data = null;
 		if (blockEntity == null)
 			return data;
+		
 		if (AllBlockTags.SAFE_NBT.matches(blockState)) {
 			data = blockEntity.saveWithFullMetadata();
-			data = NBTProcessors.process(blockEntity, data, true);
+		
 		} else if (blockEntity instanceof IPartialSafeNBT) {
 			data = new CompoundTag();
 			((IPartialSafeNBT) blockEntity).writeSafe(data);
-			data = NBTProcessors.process(blockEntity, data, true);
-		}
-		return data;
+		
+		} else if (Mods.FRAMEDBLOCKS.contains(blockState.getBlock()))
+			data = FramedBlocksInSchematics.prepareBlockEntityData(blockState, blockEntity);
+		
+		return NBTProcessors.process(blockState, blockEntity, data, true);
 	}
 
 	public static void placeSchematicBlock(Level world, BlockState state, BlockPos target, ItemStack stack,
@@ -296,10 +301,12 @@ public class BlockHelper {
 		if (data != null) {
 			if (existingBlockEntity instanceof IMergeableBE mergeable) {
 				BlockEntity loaded = BlockEntity.loadStatic(target, state, data);
-				if (existingBlockEntity.getType()
-					.equals(loaded.getType())) {
-					mergeable.accept(loaded);
-					return;
+				if (loaded != null) {
+					if (existingBlockEntity.getType()
+						.equals(loaded.getType())) {
+						mergeable.accept(loaded);
+						return;
+					}
 				}
 			}
 			BlockEntity blockEntity = world.getBlockEntity(target);

@@ -283,7 +283,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 		SchematicannonBlockEntity be = menu.contentHolder;
 		renderPrintingProgress(ms, x, y, be.schematicProgress);
-		renderFuelBar(ms, x, y, be.fuelLevel);
+		float amount = be.remainingFuel / (float) be.getShotsPerGunpowder();
+		renderFuelBar(ms, x, y, amount);
 		renderChecklistPrinterProgress(ms, x, y, be.bookPrintingProgress);
 
 		if (!be.inventory.getStackInSlot(0)
@@ -385,10 +386,9 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	}
 
 	protected List<Component> getFuelLevelTooltip(SchematicannonBlockEntity be) {
-		double fuelUsageRate = be.getFuelUsageRate();
-		int shotsLeft = (int) (be.fuelLevel / fuelUsageRate);
-		int shotsLeftWithItems = (int) (shotsLeft + be.inventory.getStackInSlot(4)
-			.getCount() * (be.getFuelAddedByGunPowder() / fuelUsageRate));
+		int shotsLeft = be.remainingFuel;
+		int shotsLeftWithItems = shotsLeft + be.inventory.getStackInSlot(4)
+			.getCount() * be.getShotsPerGunpowder();
 		List<Component> tooltip = new ArrayList<>();
 
 		if (be.hasCreativeCrate) {
@@ -400,7 +400,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			return tooltip;
 		}
 
-		int fillPercent = (int) (be.fuelLevel * 100);
+		int fillPercent = (int) ((be.remainingFuel / (float) be.getShotsPerGunpowder()) * 100);
 		tooltip.add(Lang.translateDirect(_gunpowderLevel, fillPercent));
 		tooltip.add(Lang.translateDirect(_shotsRemaining, Components.literal(Integer.toString(shotsLeft)).withStyle(BLUE))
 			.withStyle(GRAY));

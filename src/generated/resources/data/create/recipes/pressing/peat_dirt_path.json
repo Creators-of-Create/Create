@@ -1,0 +1,19 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "regions_unexplored:peat_dirt"
+    }
+  ],
+  "results": [
+    {
+      "item": "regions_unexplored:peat_dirt_path"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "regions_unexplored",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

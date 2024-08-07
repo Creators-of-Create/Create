@@ -79,7 +79,7 @@ public class AnalogLeverBlockEntity extends SmartBlockEntity implements IHaveGog
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		tooltip.add(componentSpacing.plainCopy().append(Lang.translateDirect("tooltip.analogStrength", this.state)));
+		Lang.translate("tooltip.analogStrength", this.state).forGoggles(tooltip);
 
 		return true;
 	}

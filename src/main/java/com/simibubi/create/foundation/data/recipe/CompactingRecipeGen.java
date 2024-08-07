@@ -42,7 +42,13 @@ public class CompactingRecipeGen extends ProcessingRecipeGen {
 			.output(AllItems.BLAZE_CAKE_BASE.get(), 1)),
 
 		HONEY = create("honey", b -> b.require(AllFluidTags.HONEY.tag, 1000)
-			.output(Items.HONEY_BLOCK, 1))
+			.output(Items.HONEY_BLOCK, 1)),
+
+		ICE = create("ice", b -> b
+			.require(Blocks.SNOW_BLOCK).require(Blocks.SNOW_BLOCK).require(Blocks.SNOW_BLOCK)
+			.require(Blocks.SNOW_BLOCK).require(Blocks.SNOW_BLOCK).require(Blocks.SNOW_BLOCK)
+			.require(Blocks.SNOW_BLOCK).require(Blocks.SNOW_BLOCK).require(Blocks.SNOW_BLOCK)
+			.output(Blocks.ICE))
 
 	;
 

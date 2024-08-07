@@ -82,8 +82,44 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		BLACK_CONCRETE = convert(Blocks.BLACK_CONCRETE_POWDER, Blocks.BLACK_CONCRETE),
 
 		FLOUR = create("wheat_flour", b -> b.require(I.wheatFlour())
-			.output(AllItems.DOUGH.get()))
+			.output(AllItems.DOUGH.get())),
 
+		// Atmospheric
+		ATMO_SAND = create("atmospheric/arid_sand", b -> b.require(Mods.ATM, "arid_sand")
+				.output(.25f, Items.CLAY_BALL, 1)
+				.output(0.05f, Mods.ATM, "aloe_kernels", 1)
+				.whenModLoaded(Mods.ATM.getId())),
+
+		ATMO_RED_SAND = create("atmospheric/red_arid_sand", b -> b.require(Mods.ATM, "red_arid_sand")
+				.output(.125f, Items.CLAY_BALL, 4)
+				.output(0.05f, Mods.ATM, "aloe_kernels", 1)
+				.whenModLoaded(Mods.ATM.getId())),
+
+		// Oh The Biomes You'll Go
+
+		BYG = create("byg/cryptic_magma_block", b -> b.require(Mods.BYG, "cryptic_magma_block")
+				.output(Blocks.OBSIDIAN).whenModLoaded(Mods.BYG.getId())),
+
+		// Endergetic
+
+		ENDER_END = simpleModded(Mods.ENDER, "end_corrock", "petrified_end_corrock"),
+		ENDER_END_BLOCK = simpleModded(Mods.ENDER, "end_corrock_block", "petrified_end_corrock_block"),
+		ENDER_END_CROWN = simpleModded(Mods.ENDER, "end_corrock_crown", "petrified_end_corrock_crown"),
+		ENDER_NETHER = simpleModded(Mods.ENDER, "nether_corrock", "petrified_nether_corrock"),
+		ENDER_NETHER_BLOCK = simpleModded(Mods.ENDER, "nether_corrock_block", "petrified_nether_corrock_block"),
+		ENDER_NETHER_CROWN = simpleModded(Mods.ENDER, "nether_corrock_crown", "petrified_nether_corrock_crown"),
+		ENDER_OVERWORLD = simpleModded(Mods.ENDER, "overworld_corrock", "petrified_overworld_corrock"),
+		ENDER_OVERWORLD_BLOCK = simpleModded(Mods.ENDER, "overworld_corrock_block", "petrified_overworld_corrock_block"),
+		ENDER_OVERWORLD_CROWN = simpleModded(Mods.ENDER, "overworld_corrock_crown", "petrified_overworld_corrock_crown"),
+
+		// Quark
+		Q = simpleModded(Mods.Q, "iron_plate", "rusty_iron_plate"),
+
+		// Supplementaries
+		SUP = simpleModded(Mods.SUP, "blackboard", "blackboard"),
+
+		//Vault Hunters
+		VH = simpleModded(Mods.VH, "ornate_chain", "ornate_chain_rusty")
 	;
 
 	public GeneratedRecipe convert(Block block, Block result) {
@@ -107,6 +143,11 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 					.whenModLoaded(mod.getId()));
 		}
 		return null;
+	}
+
+	public GeneratedRecipe simpleModded(Mods mod, String input, String output) {
+		return create(mod.getId() + "/" + output, b -> b.require(mod, input)
+				.output(mod, output).whenModLoaded(mod.getId()));
 	}
 
 	public WashingRecipeGen(DataGenerator dataGenerator) {

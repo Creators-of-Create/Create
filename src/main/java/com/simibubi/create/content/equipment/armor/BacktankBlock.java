@@ -1,11 +1,15 @@
 package com.simibubi.create.content.equipment.armor;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
+import com.simibubi.create.content.schematics.requirement.ISpecialBlockItemRequirement;
+import com.simibubi.create.content.schematics.requirement.ItemRequirement;
+import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
@@ -13,8 +17,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -33,6 +35,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -40,13 +43,14 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.FakePlayer;
 
-public class BacktankBlock extends HorizontalKineticBlock
-	implements IBE<BacktankBlockEntity>, SimpleWaterloggedBlock {
+public class BacktankBlock extends HorizontalKineticBlock implements IBE<BacktankBlockEntity>, SimpleWaterloggedBlock, ISpecialBlockItemRequirement {
 
 	public BacktankBlock(Properties properties) {
 		super(properties);
@@ -80,9 +84,9 @@ public class BacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
-		LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
-		if (state.getValue(BlockStateProperties.WATERLOGGED)) 
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world,
+		BlockPos pos, BlockPos neighbourPos) {
+		if (state.getValue(BlockStateProperties.WATERLOGGED))
 			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return state;
 	}
@@ -116,11 +120,41 @@ public class BacktankBlock extends HorizontalKineticBlock
 			be.setCapacityEnchantLevel(stack.getEnchantmentLevel(AllEnchantments.CAPACITY.get()));
 			be.setAirLevel(stack.getOrCreateTag()
 				.getInt("Air"));
-			if (stack.isEnchanted())
-				be.setEnchantmentTag(stack.getEnchantmentTags());
+			CompoundTag vanillaTag = stack.getOrCreateTag();
 			if (stack.hasCustomHoverName())
 				be.setCustomName(stack.getHoverName());
+
+			CompoundTag nbt = stack.serializeNBT();
+			CompoundTag forgeCapsTag = nbt.contains("ForgeCaps") ? nbt.getCompound("ForgeCaps") : null;
+			be.setTags(vanillaTag, forgeCapsTag);
 		});
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	// Re-adding ForgeCaps to item here as there is no loot function that can modify
+	// outside of the vanilla tag
+	public List<ItemStack> getDrops(BlockState pState, LootContext.Builder pBuilder) {
+		List<ItemStack> lootDrops = super.getDrops(pState, pBuilder);
+
+		BlockEntity blockEntity = pBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+		if (!(blockEntity instanceof BacktankBlockEntity bbe))
+			return lootDrops;
+
+		CompoundTag forgeCapsTag = bbe.getForgeCapsTag();
+		if (forgeCapsTag == null)
+			return lootDrops;
+
+		return lootDrops.stream()
+			.map(stack -> {
+				if (!(stack.getItem() instanceof BacktankItem))
+					return stack;
+
+				ItemStack modifiedStack = new ItemStack(stack.getItem(), stack.getCount(), forgeCapsTag.copy());
+				modifiedStack.setTag(stack.getTag());
+				return modifiedStack;
+			})
+			.toList();
 	}
 
 	@Override
@@ -149,30 +183,21 @@ public class BacktankBlock extends HorizontalKineticBlock
 	@Override
 	public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos pos, BlockState state) {
 		Item item = asItem();
-		if (item instanceof BacktankItem.BacktankBlockItem placeable) {
+		if (item instanceof BacktankItem.BacktankBlockItem placeable)
 			item = placeable.getActualItem();
-		}
 
-		ItemStack stack = new ItemStack(item);
 		Optional<BacktankBlockEntity> blockEntityOptional = getBlockEntityOptional(blockGetter, pos);
 
+		CompoundTag forgeCapsTag = blockEntityOptional.map(BacktankBlockEntity::getForgeCapsTag)
+			.orElse(null);
+		CompoundTag vanillaTag = blockEntityOptional.map(BacktankBlockEntity::getVanillaTag)
+			.orElse(new CompoundTag());
 		int air = blockEntityOptional.map(BacktankBlockEntity::getAirLevel)
 			.orElse(0);
-		CompoundTag tag = stack.getOrCreateTag();
-		tag.putInt("Air", air);
 
-		ListTag enchants = blockEntityOptional.map(BacktankBlockEntity::getEnchantmentTag)
-			.orElse(new ListTag());
-		if (!enchants.isEmpty()) {
-			ListTag enchantmentTagList = stack.getEnchantmentTags();
-			enchantmentTagList.addAll(enchants);
-			tag.put("Enchantments", enchantmentTagList);
-		}
-
-		Component customName = blockEntityOptional.map(BacktankBlockEntity::getCustomName)
-			.orElse(null);
-		if (customName != null)
-			stack.setHoverName(customName);
+		ItemStack stack = new ItemStack(item, 1, forgeCapsTag);
+		vanillaTag.putInt("Air", air);
+		stack.setTag(vanillaTag);
 		return stack;
 	}
 
@@ -186,7 +211,7 @@ public class BacktankBlock extends HorizontalKineticBlock
 	public Class<BacktankBlockEntity> getBlockEntityClass() {
 		return BacktankBlockEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends BacktankBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.BACKTANK.get();
@@ -195,6 +220,14 @@ public class BacktankBlock extends HorizontalKineticBlock
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity blockEntity) {
+		Item item = asItem();
+		if (item instanceof BacktankItem.BacktankBlockItem placeable)
+			item = placeable.getActualItem();
+		return new ItemRequirement(ItemUseType.CONSUME, item);
 	}
 
 }

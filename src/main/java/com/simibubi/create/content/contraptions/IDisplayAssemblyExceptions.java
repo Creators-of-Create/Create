@@ -22,15 +22,13 @@ public interface IDisplayAssemblyExceptions {
 		if (!tooltip.isEmpty())
 			tooltip.add(Components.immutableEmpty());
 
-		tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
-			.append(Lang.translateDirect("gui.assembly.exception")
-				.withStyle(ChatFormatting.GOLD)));
+		Lang.translate("gui.assembly.exception").style(ChatFormatting.GOLD)
+			.forGoggles(tooltip);
 
 		String text = e.component.getString();
 		Arrays.stream(text.split("\n"))
 			.forEach(l -> TooltipHelper.cutStringTextComponent(l, Palette.GRAY_AND_WHITE)
-				.forEach(c -> tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
-					.append(c))));
+				.forEach(c -> Lang.text(c.getString()).forGoggles(tooltip)));
 
 		return true;
 	}
