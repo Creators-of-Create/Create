@@ -2,8 +2,6 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.List;
 
-import com.simibubi.create.compat.Mods;
-
 import joptsimple.internal.Strings;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -94,6 +92,19 @@ public class LangBuilder {
 	public LangBuilder add(MutableComponent customComponent) {
 		component = component == null ? customComponent : component.append(customComponent);
 		return this;
+	}
+
+	/**
+	 * Appends a component
+	 *
+	 * @param component the component to append
+	 * @return this builder
+	 */
+	public LangBuilder add(Component component) {
+		if (component instanceof MutableComponent mutableComponent)
+			return add(mutableComponent);
+		else
+			return add(component.copy());
 	}
 
 	//
