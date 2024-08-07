@@ -9,6 +9,7 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUs
 import com.simibubi.create.content.schematics.requirement.ItemRequirement.StackRequirement;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class FramedBlocksInSchematics {
 
 	static final List<String> KEYS_TO_RETAIN =
-		List.of("intangible", "glowing", "reinforced", "camo_stack", "camo_stack_two", "camo_state", "camo_state_two");
+		List.of("intangible", "glowing", "reinforced", "camo", "camo_two");
 
 	public static CompoundTag prepareBlockEntityData(BlockState blockState, BlockEntity blockEntity) {
 		CompoundTag data = null;
@@ -32,6 +33,14 @@ public class FramedBlocksInSchematics {
 				keysToRemove.add(key);
 		for (String key : keysToRemove)
 			data.remove(key);
+		
+		if (data.getCompound("camo")
+			.contains("fluid"))
+			data.remove("camo");
+		
+		if (data.getCompound("camo_two")
+			.contains("fluid"))
+			data.remove("camo_two");
 
 		return data;
 	}
@@ -53,17 +62,20 @@ public class FramedBlocksInSchematics {
 			list.add(new StackRequirement(new ItemStack(Mods.FRAMEDBLOCKS.getItem("framed_reinforcement")),
 				ItemUseType.CONSUME));
 
-		if (data.contains("camo_stack"))
-			addCamoStack(data.getCompound("camo_stack"), list);
+		if (data.contains("camo"))
+			addCamoStack(data.getCompound("camo"), list);
 
-		if (data.contains("camo_stack_two"))
-			addCamoStack(data.getCompound("camo_stack_two"), list);
+		if (data.contains("camo_two"))
+			addCamoStack(data.getCompound("camo_two"), list);
 
 		return new ItemRequirement(list);
 	}
 
 	private static void addCamoStack(CompoundTag tag, List<StackRequirement> list) {
-		ItemStack itemStack = ItemStack.of(tag);
+		if (!tag.contains("state"))
+			return;
+		BlockState blockState = NbtUtils.readBlockState(tag.getCompound("state"));
+		ItemStack itemStack = new ItemStack(blockState.getBlock());
 		if (!itemStack.isEmpty())
 			list.add(new StackRequirement(itemStack, ItemUseType.CONSUME));
 	}
