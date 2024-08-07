@@ -126,7 +126,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 		// Upgrade Aquatic
 		UA = cuttingCompat(Mods.UA, "river"),
-		UA_2 = stripAndMakePlanks(Mods.UA, "driftwood", "strippped_driftwood", "driftwood_planks"),
+		UA_2 = stripAndMakePlanks(Mods.UA, "driftwood", "stripped_driftwood", "driftwood_planks"),
 		UA_3 = cuttingCompatLogOnly(Mods.UA, "driftwood"),
 
 		//Vault Hunters
