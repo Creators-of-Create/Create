@@ -117,7 +117,7 @@ public class AllFanProcessingTypes {
 		public List<ItemStack> process(ItemStack stack, Level level) {
 			return null;
 		}
-	
+
 		@Override
 		public void spawnProcessingParticles(Level level, Vec3 pos) {
 		}
@@ -159,14 +159,16 @@ public class AllFanProcessingTypes {
 		public boolean canProcess(ItemStack stack, Level level) {
 			RECIPE_WRAPPER.setItem(0, stack);
 			Optional<SmeltingRecipe> smeltingRecipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.SMELTING, RECIPE_WRAPPER, level);
+				.getRecipeFor(RecipeType.SMELTING, RECIPE_WRAPPER, level)
+				.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 
 			if (smeltingRecipe.isPresent())
 				return true;
 
 			RECIPE_WRAPPER.setItem(0, stack);
 			Optional<BlastingRecipe> blastingRecipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.BLASTING, RECIPE_WRAPPER, level);
+				.getRecipeFor(RecipeType.BLASTING, RECIPE_WRAPPER, level)
+				.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 
 			if (blastingRecipe.isPresent())
 				return true;
@@ -180,11 +182,14 @@ public class AllFanProcessingTypes {
 		public List<ItemStack> process(ItemStack stack, Level level) {
 			RECIPE_WRAPPER.setItem(0, stack);
 			Optional<SmokingRecipe> smokingRecipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, level);
+				.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, level)
+				.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 
 			RECIPE_WRAPPER.setItem(0, stack);
 			Optional<? extends AbstractCookingRecipe> smeltingRecipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.SMELTING, RECIPE_WRAPPER, level);
+				.getRecipeFor(RecipeType.SMELTING, RECIPE_WRAPPER, level)
+				.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
+			
 			if (!smeltingRecipe.isPresent()) {
 				RECIPE_WRAPPER.setItem(0, stack);
 				smeltingRecipe = level.getRecipeManager()
@@ -387,7 +392,9 @@ public class AllFanProcessingTypes {
 		public boolean canProcess(ItemStack stack, Level level) {
 			RECIPE_WRAPPER.setItem(0, stack);
 			Optional<SmokingRecipe> recipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, level);
+				.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, level)
+				.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
+			
 			return recipe.isPresent();
 		}
 
@@ -396,7 +403,8 @@ public class AllFanProcessingTypes {
 		public List<ItemStack> process(ItemStack stack, Level level) {
 			RECIPE_WRAPPER.setItem(0, stack);
 			Optional<SmokingRecipe> smokingRecipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, level);
+				.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, level)
+				.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 
 			if (smokingRecipe.isPresent())
 				return RecipeApplier.applyRecipeOn(level, stack, smokingRecipe.get());

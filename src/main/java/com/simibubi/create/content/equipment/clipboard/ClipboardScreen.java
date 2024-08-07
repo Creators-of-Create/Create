@@ -6,6 +6,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllSoundEvents;
+
+import net.minecraft.client.Minecraft;
+
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -578,8 +584,11 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		if (hoveredEntry != -1) {
 			if (hoveredCheck) {
 				editingIndex = -1;
-				if (hoveredEntry < currentEntries.size())
+				if (hoveredEntry < currentEntries.size()) {
 					currentEntries.get(hoveredEntry).checked ^= true;
+					if (currentEntries.get(hoveredEntry).checked == true) Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(AllSoundEvents.CLIPBOARD_CHECKMARK.getMainEvent(), 0.95f + (float)Math.random() * 0.05f));
+					else Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(AllSoundEvents.CLIPBOARD_ERASE.getMainEvent(), 0.90f + (float)Math.random() * 0.2f));
+				}
 				sendIfEditingBlock();
 				return true;
 			}

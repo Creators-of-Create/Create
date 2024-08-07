@@ -27,6 +27,18 @@
     "minecraft:bell",
     "minecraft:cocoa",
     "minecraft:flower_pot",
+    "minecraft:moss_carpet",
+    "minecraft:bamboo_sapling",
+    "minecraft:big_dripleaf",
+    "minecraft:vine",
+    "minecraft:twisting_vines_plant",
+    "minecraft:twisting_vines",
+    "minecraft:weeping_vines_plant",
+    "minecraft:weeping_vines",
+    "minecraft:cake",
+    "#create:corals",
+    "#minecraft:cave_vines",
+    "#minecraft:banners",
     "#minecraft:beds",
     "#minecraft:doors"
   ]

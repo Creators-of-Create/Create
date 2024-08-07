@@ -16,6 +16,22 @@
       }
     ]
   },
+  "clipboard_check": {
+    "sounds": [
+      {
+        "type": "file",
+        "name": "create:clipboard_check"
+      }
+    ]
+  },
+  "clipboard_erase": {
+    "sounds": [
+      {
+        "type": "file",
+        "name": "create:clipboard_erase"
+      }
+    ]
+  },
   "cogs": {
     "sounds": [
       {
@@ -387,6 +403,27 @@
       }
     ],
     "subtitle": "create.subtitle.slime_added"
+  },
+  "spout": {
+    "sounds": [
+      {
+        "type": "file",
+        "name": "create:spout"
+      },
+      {
+        "type": "file",
+        "name": "create:spout_1"
+      },
+      {
+        "type": "file",
+        "name": "create:spout_2"
+      },
+      {
+        "type": "file",
+        "name": "create:spout_3"
+      }
+    ],
+    "subtitle": "create.subtitle.spout"
   },
   "steam": {
     "sounds": [

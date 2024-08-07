@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 import com.jozufozu.flywheel.core.StitchedSprite;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
@@ -39,8 +41,6 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 	public static final StitchedSprite OAK_PLANKS_TEMPLATE = new StitchedSprite(new ResourceLocation("block/oak_planks"));
 	public static final StitchedSprite OAK_LOG_TEMPLATE = new StitchedSprite(new ResourceLocation("block/oak_log"));
 	public static final StitchedSprite OAK_LOG_TOP_TEMPLATE = new StitchedSprite(new ResourceLocation("block/oak_log_top"));
-
-	private static final String[] LOG_SUFFIXES = new String[] { "_log", "_stem", "_block" };
 
 	protected final boolean large;
 
@@ -94,28 +94,48 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 	public static BakedModel generateModel(BakedModel template, BlockState planksBlockState) {
 		Block planksBlock = planksBlockState.getBlock();
 		ResourceLocation id = RegisteredObjects.getKeyOrThrow(planksBlock);
+		String wood = plankStateToWoodName(planksBlockState);
+
+		if (wood == null)
+			return BakedModelHelper.generateModel(template, sprite -> null);
+
+		String namespace = id.getNamespace();
+		BlockState logBlockState = getLogBlockState(namespace, wood);
+
+		Map<TextureAtlasSprite, TextureAtlasSprite> map = new Reference2ReferenceOpenHashMap<>();
+		map.put(OAK_PLANKS_TEMPLATE.get(), getSpriteOnSide(planksBlockState, Direction.UP));
+		map.put(OAK_LOG_TEMPLATE.get(), getSpriteOnSide(logBlockState, Direction.SOUTH));
+		map.put(OAK_LOG_TOP_TEMPLATE.get(), getSpriteOnSide(logBlockState, Direction.UP));
+
+		return BakedModelHelper.generateModel(template, map::get);
+	}
+	
+	@Nullable
+	private static String plankStateToWoodName(BlockState planksBlockState) {
+		Block planksBlock = planksBlockState.getBlock();
+		ResourceLocation id = RegisteredObjects.getKeyOrThrow(planksBlock);
 		String path = id.getPath();
-
-		if (path.endsWith("_planks")) {
-			String namespace = id.getNamespace();
-			String wood = path.substring(0, path.length() - 7);
-			BlockState logBlockState = getLogBlockState(namespace, wood);
-			
-			Map<TextureAtlasSprite, TextureAtlasSprite> map = new Reference2ReferenceOpenHashMap<>();
-			map.put(OAK_PLANKS_TEMPLATE.get(), getSpriteOnSide(planksBlockState, Direction.UP));
-			map.put(OAK_LOG_TEMPLATE.get(), getSpriteOnSide(logBlockState, Direction.SOUTH));
-			map.put(OAK_LOG_TOP_TEMPLATE.get(), getSpriteOnSide(logBlockState, Direction.UP));
-
-			return BakedModelHelper.generateModel(template, map::get);
-		}
-
-		return BakedModelHelper.generateModel(template, sprite -> null);
+		
+		if (path.endsWith("_planks")) // Covers most wood types
+			return path.substring(0, path.length() - 7);
+		
+		if (path.contains("wood/planks/")) // TerraFirmaCraft
+			return path.substring(12);
+		
+		return null;
 	}
 
+	private static final String[] LOG_LOCATIONS = new String[] {
+
+		"x_log", "x_stem", "x_block", // Covers most wood types
+		"wood/log/x" // TerraFirmaCraft
+
+	};
+
 	private static BlockState getLogBlockState(String namespace, String wood) {
-		for (String suffix : LOG_SUFFIXES) {
+		for (String location : LOG_LOCATIONS) {
 			Optional<BlockState> state =
-				ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(namespace, wood + suffix))
+				ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(namespace, location.replace("x", wood)))
 					.map(Holder::value)
 					.map(Block::defaultBlockState);
 			if (state.isPresent())

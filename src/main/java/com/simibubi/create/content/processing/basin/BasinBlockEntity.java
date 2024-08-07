@@ -379,6 +379,9 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			inserter = BlockEntityBehaviour.get(level, be.getBlockPos(), InvManipulationBehaviour.TYPE);
 		}
 
+		if (be instanceof BasinBlockEntity)
+			filter = null; // Do not test spout outputs against the recipe filter
+
 		IItemHandler targetInv = be == null ? null
 			: be.getCapability(ForgeCapabilities.ITEM_HANDLER, direction.getOpposite())
 				.orElse(inserter == null ? null : inserter.getInventory());
@@ -401,16 +404,21 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 			if (targetInv == null)
 				break;
-			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack, true)
-				.isEmpty())
+
+			ItemStack remainder = ItemHandlerHelper.insertItemStacked(targetInv, itemStack, true);
+			if (remainder.getCount() == itemStack.getCount())
 				continue;
 			if (filter != null && !filter.test(itemStack))
 				continue;
 
-			update = true;
-			ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), false);
-			iterator.remove();
 			visualizedOutputItems.add(IntAttached.withZero(itemStack));
+			update = true;
+
+			remainder = ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), false);
+			if (remainder.isEmpty())
+				iterator.remove();
+			else
+				itemStack.setCount(remainder.getCount());
 		}
 
 		for (Iterator<FluidStack> iterator = spoutputFluidBuffer.iterator(); iterator.hasNext();) {
@@ -546,9 +554,9 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 			if (simulate)
 				return true;
-			for (ItemStack itemStack : outputItems) {
-				spoutputBuffer.add(itemStack.copy());
-			}
+			for (ItemStack itemStack : outputItems)
+				if (!itemStack.isEmpty())
+					spoutputBuffer.add(itemStack.copy());
 			if (!externalTankNotPresent)
 				for (FluidStack fluidStack : outputFluids)
 					spoutputFluidBuffer.add(fluidStack.copy());
@@ -603,7 +611,9 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	public static HeatLevel getHeatLevelOf(BlockState state) {
 		if (state.hasProperty(BlazeBurnerBlock.HEAT_LEVEL))
 			return state.getValue(BlazeBurnerBlock.HEAT_LEVEL);
-		return AllTags.AllBlockTags.PASSIVE_BOILER_HEATERS.matches(state) && BlockHelper.isNotUnheated(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;
+		return AllTags.AllBlockTags.PASSIVE_BOILER_HEATERS.matches(state) && BlockHelper.isNotUnheated(state)
+			? HeatLevel.SMOULDERING
+			: HeatLevel.NONE;
 	}
 
 	public Couple<SmartFluidTankBehaviour> getTanks() {

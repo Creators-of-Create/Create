@@ -1,5 +1,14 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:mod_loaded",
+        "modid": "exnihilosequentia"
+      }
+    }
+  ],
   "ingredients": [
     {
       "item": "minecraft:netherrack"

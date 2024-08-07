@@ -1,7 +1,7 @@
 {
   "type": "create:sequenced_assembly",
   "ingredient": {
-    "item": "create:powdered_obsidian"
+    "tag": "forge:dusts/obsidian"
   },
   "loops": 1,
   "results": [

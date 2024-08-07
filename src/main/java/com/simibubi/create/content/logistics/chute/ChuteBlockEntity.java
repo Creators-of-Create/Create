@@ -224,7 +224,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		// airCurrent.findEntities();
 		if (bottomPullDistance <= 0 && !getItem().isEmpty() || itemSpeed <= 0 || level == null || level.isClientSide)
 			return;
-		if (!canCollectItemsFromBelow())
+		if (!canActivate())
 			return;
 		Vec3 center = VecHelper.getCenterOf(worldPosition);
 		AABB searchArea = new AABB(center.add(0, -bottomPullDistance - 0.5, 0), center.add(0, -0.5, 0)).inflate(.45f);
@@ -305,7 +305,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		if (!up && BlockHelper.noCollisionInSpace(level, worldPosition.below()))
 			spawnAirFlow(0, -1, absMotion, .5f);
 
-		if (up && canCollectItemsFromBelow() && bottomPullDistance > 0) {
+		if (up && canActivate() && bottomPullDistance > 0) {
 			spawnAirFlow(-bottomPullDistance, 0, absMotion, 2);
 			spawnAirFlow(-bottomPullDistance, 0, absMotion, 2);
 		}
@@ -340,6 +340,8 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	private void handleInput(IItemHandler inv, float startLocation) {
 		if (inv == null)
 			return;
+		if (!canActivate())
+			return;
 		if (invVersionTracker.stillWaiting(inv))
 			return;
 		Predicate<ItemStack> canAccept = this::canAcceptItem;
@@ -361,7 +363,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		ChuteBlockEntity targetChute = getTargetChute(blockState);
 		Direction direction = AbstractChuteBlock.getChuteFacing(blockState);
 
-		if (level == null || direction == null || !this.canOutputItems())
+		if (level == null || direction == null || !this.canActivate())
 			return false;
 		if (!capBelow.isPresent())
 			capBelow = grabCapability(Direction.DOWN);
@@ -417,7 +419,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	private boolean handleUpwardOutput(boolean simulate) {
 		BlockState stateAbove = level.getBlockState(worldPosition.above());
 
-		if (level == null || !this.canOutputItems())
+		if (level == null || !this.canActivate())
 			return false;
 
 		if (AbstractChuteBlock.isOpenChute(getBlockState())) {
@@ -492,11 +494,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		return ExtractionCountMode.UPTO;
 	}
 
-	protected boolean canCollectItemsFromBelow() {
-		return true;
-	}
-
-	protected boolean canOutputItems() {
+	protected boolean canActivate() {
 		return true;
 	}
 

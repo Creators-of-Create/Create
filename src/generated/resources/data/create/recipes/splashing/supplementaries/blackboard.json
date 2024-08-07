@@ -1,0 +1,19 @@
+{
+  "type": "create:splashing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "supplementaries"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "supplementaries:blackboard"
+    }
+  ],
+  "results": [
+    {
+      "item": "supplementaries:blackboard"
+    }
+  ]
+}

@@ -174,7 +174,7 @@ public class FluidPropagator {
 		if (PumpBlock.isPump(connectedState) && connectedState.getValue(PumpBlock.FACING)
 			.getAxis() == side.getAxis())
 			return false;
-		if (VanillaFluidTargets.shouldPipesConnectTo(connectedState))
+		if (VanillaFluidTargets.canProvideFluidWithoutCapability(connectedState))
 			return true;
 		if (BlockHelper.hasBlockSolidSide(connectedState, reader, connectedPos, side.getOpposite())
 			&& !AllBlockTags.FAN_TRANSPARENT.matches(connectedState))

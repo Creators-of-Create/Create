@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "nethers_exoticism"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "nethers_exoticism:stripped_ramboutan_log"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 6,
+      "item": "nethers_exoticism:ramboutan_planks"
+    }
+  ]
+}

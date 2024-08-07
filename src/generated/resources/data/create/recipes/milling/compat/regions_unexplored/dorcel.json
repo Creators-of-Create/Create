@@ -1,0 +1,25 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "regions_unexplored:dorcel"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:black_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:brown_dye"
+    }
+  ]
+}

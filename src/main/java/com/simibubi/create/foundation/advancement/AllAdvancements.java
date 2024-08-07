@@ -18,6 +18,7 @@ import com.google.common.collect.Sets;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.advancement.CreateAdvancement.Builder;
 
 import net.minecraft.advancements.Advancement;
@@ -324,7 +325,7 @@ public class AllAdvancements implements DataProvider {
 			.description("Create Chocolate Glazed Berries, a Honeyed Apple, and a Sweet Roll all from the same Spout")
 			.after(STEAM_ENGINE_MAXED)
 			.special(EXPERT)),
-		
+
 		DIVING_SUIT_LAVA = create("diving_suit_lava", b -> b.icon(AllItems.NETHERITE_DIVING_HELMET)
 			.title("Swimming with the Striders")
 			.description("Attempt to take a dive in lava with your netherite diving gear")
@@ -539,7 +540,7 @@ public class AllAdvancements implements DataProvider {
 		TRAIN_TRACK = create("track_0", b -> b.icon(AllBlocks.TRACK)
 			.title("A New Gauge")
 			.description("Obtain some Train Tracks")
-			.whenIconCollected()
+			.whenItemCollected(AllItemTags.TRACKS.tag)
 			.after(STURDY_SHEET)),
 
 		TRAIN_WHISTLE = create("train_whistle", b -> b.icon(AllBlocks.STEAM_WHISTLE)

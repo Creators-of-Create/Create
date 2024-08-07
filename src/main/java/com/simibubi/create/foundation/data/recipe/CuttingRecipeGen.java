@@ -7,6 +7,8 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
+import java.util.Objects;
+
 public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
@@ -109,9 +111,56 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		// Blue Skies (crystallized does not have stripped variants)
 		BSK = cuttingCompat(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple", "cherry"),
 		BSK_2 = stripAndMakePlanks(Mods.BSK, null, "crystallized_log", "crystallized_planks"),
-		BSK_3 = stripAndMakePlanks(Mods.BSK, null, "crystallized_wood", "crystallized_planks")
+		BSK_3 = stripAndMakePlanks(Mods.BSK, null, "crystallized_wood", "crystallized_planks"),
 
-	;
+		// Atmospheric
+
+		ATM = cuttingCompat(Mods.ATM, "aspen", "kousa", "yucca", "morado"),
+		ATM_2 = stripAndMakePlanks(Mods.ATM, "grimwood", "stripped_grimwood", "grimwood_planks"),
+		ATM_3 = stripAndMakePlanks(Mods.ATM, "rosewood", "stripped_rosewood", "rosewood_planks"),
+		ATM_4 = cuttingCompatLogOnly(Mods.ATM, "grimwood", "rosewood"),
+
+		// Autumnity
+		AUTUM = cuttingCompat(Mods.AUTUM, "maple"),
+		AUTUM_2 = stripAndMakePlanks(Mods.AUTUM, "sappy_maple_wood", "sappy_maple_log", "maple_planks"),
+
+		// Endergetic
+
+		ENDERGETIC = stripAndMakePlanks(Mods.ENDER, "poise_stem", "stripped_poise_stem", "poise_planks"),
+
+		// Project Vibrant Journeys
+		PVJ = cuttingCompatLogOnly(Mods.PVJ,"aspen", "baobab", "cottonwood", "fir", "juniper", "mangrove", "maple", "palm", "pine", "redwood", "willow"),
+
+		// Upgrade Aquatic
+		UA = cuttingCompat(Mods.UA, "river"),
+		UA_2 = stripAndMakePlanks(Mods.UA, "driftwood", "strippped_driftwood", "driftwood_planks"),
+		UA_3 = cuttingCompatLogOnly(Mods.UA, "driftwood"),
+
+		//Vault Hunters
+		VH = cuttingCompatLogOnly(Mods.VH, "wooden", "overgrown_wooden", "driftwood", "chromatic"),
+
+		// Nether's Exoticism
+		NE = cuttingCompat(Mods.NE, "ramboutan"),
+		NE_2 = cuttingCompatLogOnly(Mods.NE, "jabuticaba"),
+
+		// Regions Unexplored
+		RU = cuttingCompat(Mods.RU, "baobab", "blackwood", "brimwood", "cobalt", "cypress", "dead", "eucalyptus", "joshua",
+				"kapok", "larch", "magnolia", "maple","mauve", "palm", "pine", "redwood", "socotra", "willow"),
+		RU_2 = stripAndMakePlanks(Mods.RU, "blue_bioshroom_stem", "stripped_blue_bioshroom_stem", "blue_bioshroom_planks"),
+		RU_3 = stripAndMakePlanks(Mods.RU, "blue_bioshroom_hyphae", "stripped_blue_bioshroom_hyphae", "blue_bioshroom_planks"),
+		RU_4 = stripAndMakePlanks(Mods.RU, "green_bioshroom_stem", "stripped_green_bioshroom_stem", "green_bioshroom_planks"),
+		RU_5 = stripAndMakePlanks(Mods.RU, "green_bioshroom_hyphae", "stripped_green_bioshroom_hyphae", "green_bioshroom_planks"),
+		RU_6 = stripAndMakePlanks(Mods.RU, "pink_bioshroom_stem", "stripped_pink_bioshroom_stem", "pink_bioshroom_planks"),
+		RU_7 = stripAndMakePlanks(Mods.RU, "pink_bioshroom_hyphae", "stripped_pink_bioshroom_hyphae", "pink_bioshroom_planks"),
+		RU_8 = stripAndMakePlanks(Mods.RU, "yellow_bioshroom_stem", "stripped_yellow_bioshroom_stem", "yellow_bioshroom_planks"),
+		RU_9 = stripAndMakePlanks(Mods.RU, "yellow_bioshroom_hyphae", "stripped_yellow_bioshroom_hyphae", "yellow_bioshroom_planks"),
+		RU_10 = stripAndMakePlanks(Mods.RU, null, "alpha_wood", "alpha_planks"),
+		RU_11 = stripAndMakePlanks(Mods.RU, "brimwood_log_magma", "stripped_brimwood", null),
+		RU_12 = stripAndMakePlanks(Mods.RU, "ashen_log", "stripped_dead_log", null),
+		RU_13 = stripAndMakePlanks(Mods.RU, "ashen_wood", "stripped_dead_wood", null),
+		RU_14 = stripOnlyDiffModId(Mods.RU, "silver_birch_log", Mods.MC, "stripped_birch_log"),
+		RU_15 = stripOnlyDiffModId(Mods.RU, "silver_birch_wood", Mods.MC, "stripped_birch_wood")
+		;
 
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {
 		return stripAndMakePlanks(wood, stripped, planks, 6);
@@ -141,6 +190,24 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		return null;
 	}
 
+	GeneratedRecipe cuttingCompatLogOnly(Mods mod, String... woodtypes) {
+		for (String type : woodtypes) {
+			String planks = type + "_planks";
+			String strippedPre = mod.strippedIsSuffix ? "" : "stripped_";
+			String strippedPost = mod.strippedIsSuffix ? "_stripped" : "";
+			stripAndMakePlanks(mod, type + "_log", strippedPre + type + "_log" + strippedPost, planks);
+		}
+		return null;
+	}
+
+	GeneratedRecipe stripOnlyDiffModId(Mods mod1, String wood, Mods mod2, String stripped) {
+		create("compat/" + mod1.getId() + "/" + wood, b -> b.duration(50)
+				.require(mod1, wood)
+				.output(1, mod2, stripped, 1)
+				.whenModLoaded(mod1.getId()));
+		return null;
+	}
+
 	GeneratedRecipe stripAndMakePlanks(Mods mod, String wood, String stripped, String planks) {
 		if (wood != null)
 			create("compat/" + mod.getId() + "/" + wood, b -> b.duration(50)
@@ -148,10 +215,17 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 				.output(1, mod, stripped, 1)
 				.whenModLoaded(mod.getId()));
 		if (planks != null)
-			create("compat/" + mod.getId() + "/" + stripped, b -> b.duration(50)
-				.require(mod, stripped)
-				.output(1, mod, planks, 6)
-				.whenModLoaded(mod.getId()));
+			if (!Objects.equals(mod.getId(), Mods.VH.getId())) {
+				create("compat/" + mod.getId() + "/" + stripped, b -> b.duration(50)
+						.require(mod, stripped)
+						.output(1, mod, planks, 6)
+						.whenModLoaded(mod.getId()));
+			} else {
+				create("compat/" + mod.getId() + "/" + stripped, b -> b.duration(50)
+						.require(mod, stripped)
+						.output(1, mod, planks, 4)
+						.whenModLoaded(mod.getId()));
+			}
 		return null;
 	}
 
@@ -163,5 +237,4 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 	protected AllRecipeTypes getRecipeType() {
 		return AllRecipeTypes.CUTTING;
 	}
-
 }

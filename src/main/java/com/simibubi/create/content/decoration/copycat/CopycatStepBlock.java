@@ -4,8 +4,10 @@ import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.content.kinetics.steamEngine.PoweredShaftBlock;
 import com.simibubi.create.foundation.placement.IPlacementHelper;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
+import com.simibubi.create.foundation.placement.PlacementOffset;
 import com.simibubi.create.foundation.placement.PoleHelper;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
@@ -34,6 +36,8 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import org.jetbrains.annotations.NotNull;
 
 public class CopycatStepBlock extends WaterloggedCopycatBlock {
 
@@ -209,10 +213,21 @@ public class CopycatStepBlock extends WaterloggedCopycatBlock {
 		}
 
 		@Override
-		public Predicate<ItemStack> getItemPredicate() {
+		public @NotNull Predicate<ItemStack> getItemPredicate() {
 			return AllBlocks.COPYCAT_STEP::isIn;
 		}
 
+		@Override
+		public @NotNull PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos,
+												  BlockHitResult ray) {
+			PlacementOffset offset = super.getOffset(player, world, state, pos, ray);
+
+			if (offset.isSuccessful())
+				offset.withTransform(offset.getTransform()
+						.andThen(s -> s.setValue(HALF, state.getValue(HALF))));
+
+			return offset;
+		}
 	}
 
 }

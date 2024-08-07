@@ -1538,6 +1538,7 @@ public class AllBlocks {
 		.tag(AllBlockTags.GIRDABLE_TRACKS.tag)
 		.lang("Train Track")
 		.item(TrackBlockItem::new)
+		.tag(AllItemTags.TRACKS.tag)
 		.model((c, p) -> p.generated(c, Create.asResource("item/" + c.getName())))
 		.build()
 		.register();
