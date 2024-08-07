@@ -2,7 +2,7 @@
   "type": "create:filling",
   "ingredients": [
     {
-      "item": "vampirism:cursed_dirt"
+      "item": "regions_unexplored:silt_dirt"
     },
     {
       "fluid": "minecraft:water",
@@ -12,12 +12,12 @@
   ],
   "results": [
     {
-      "item": "vampirism:cursed_gras_block"
+      "item": "regions_unexplored:silt_grass_block"
     }
   ],
   "conditions": [
     {
-      "modid": "vampirism",
+      "modid": "regions_unexplored",
       "type": "forge:mod_loaded"
     }
   ]
