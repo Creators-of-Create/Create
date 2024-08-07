@@ -48,7 +48,14 @@ public class HauntingRecipeGen extends ProcessingRecipeGen {
 		WARPED_FUNGUS = convert(Items.BROWN_MUSHROOM, Items.WARPED_FUNGUS),
 
 		// Farmer's Delight
-		FD = moddedConversion(Mods.FD, "tomato", "rotten_tomato");
+		FD = moddedConversion(Mods.FD, "tomato", "rotten_tomato"),
+
+		// Haunted Harvest
+		HH = create(Mods.HH.recipeId("rotten_apple"), b -> b.require(Items.APPLE)
+				.output(Mods.HH, "rotten_apple")
+				.whenModLoaded(Mods.HH.getId()))
+
+	;
 
 	public GeneratedRecipe convert(ItemLike input, ItemLike result) {
 		return convert(() -> Ingredient.of(input), () -> result);

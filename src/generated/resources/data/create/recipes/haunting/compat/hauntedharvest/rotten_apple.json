@@ -1,0 +1,19 @@
+{
+  "type": "create:haunting",
+  "ingredients": [
+    {
+      "item": "minecraft:apple"
+    }
+  ],
+  "results": [
+    {
+      "item": "hauntedharvest:rotten_apple"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "hauntedharvest",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "regions_unexplored:blue_lupine"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:blue_dye",
+      "count": 2
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "regions_unexplored",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

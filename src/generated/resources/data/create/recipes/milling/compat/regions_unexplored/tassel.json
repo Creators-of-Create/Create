@@ -1,0 +1,29 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "regions_unexplored:tassel"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:light_gray_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:white_dye",
+      "chance": 0.2
+    },
+    {
+      "item": "minecraft:yellow_dye",
+      "chance": 0.05
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "regions_unexplored",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

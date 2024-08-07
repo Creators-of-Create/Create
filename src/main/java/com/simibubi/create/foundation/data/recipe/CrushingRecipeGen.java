@@ -408,7 +408,26 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		ENS_DIORITE = create(Mods.ENS.recipeId("crushed_diorite"), b -> b.duration(100)
 				.require(Mods.ENS, "crushed_diorite")
 				.output(.25f, Items.QUARTZ, 1)
-				.whenModLoaded(Mods.ENS.getId()))
+				.whenModLoaded(Mods.ENS.getId())),
+
+		// Aether
+
+		AET_ZANITE = create(Mods.AET.recipeId("zanite_ore"), b -> b.duration(350)
+				.require(Mods.AET, "zanite_ore")
+				.output(Mods.AET, "zanite_gemstone")
+				.output(0.75f, Mods.AET, "zanite_gemstone", 1)
+				.output(0.125f, Mods.AET, "holystone", 1)
+				.output(0.75f, AllItems.EXP_NUGGET.get())
+				.whenModLoaded(Mods.AET.getId())),
+
+		AET_AMBROSIUM = create(Mods.AET.recipeId("ambrosium_ore"), b -> b.duration(150)
+				.require(Mods.AET, "ambrosium_ore")
+				.output(Mods.AET, "ambrosium_shard")
+				.output(0.75f, Mods.AET, "ambrosium_shard", 1)
+				.output(0.125f, Mods.AET, "holystone", 1)
+				.output(0.75f, AllItems.EXP_NUGGET.get())
+				.whenModLoaded(Mods.AET.getId()))
+
 
 	;
 

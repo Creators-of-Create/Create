@@ -1,0 +1,24 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "aether:aether_dirt"
+    },
+    {
+      "fluid": "minecraft:water",
+      "nbt": {},
+      "amount": 500
+    }
+  ],
+  "results": [
+    {
+      "item": "aether:aether_gras_block"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "aether",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
