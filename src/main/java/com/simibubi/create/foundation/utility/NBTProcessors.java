@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
@@ -11,6 +12,7 @@ import com.simibubi.create.AllBlockEntityTypes;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
@@ -61,9 +63,15 @@ public final class NBTProcessors {
 	
 	// Triggered by block tag, not BE type
 	private static final UnaryOperator<CompoundTag> signProcessor = data -> {
-		for (int i = 0; i < 4; ++i)
-			if (textComponentHasClickEvent(data.getString("Text" + (i + 1))))
-				return null;
+		for (String key : List.of("front_text", "back_text")) {
+			CompoundTag textTag = data.getCompound(key);
+			if (!textTag.contains("messages", Tag.TAG_LIST))
+				continue;
+			for (Tag tag : textTag.getList("messages", Tag.TAG_STRING))
+				if (tag instanceof StringTag stringTag)
+					if (textComponentHasClickEvent(stringTag.getAsString()))
+						return null;
+		}
 		return data;
 	};
 
