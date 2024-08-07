@@ -1,4 +1,4 @@
-// 1.19.2	2024-08-07T13:26:27.8886754	Create's Processing Recipes
+// 1.19.2	2024-08-07T15:05:58.7776609	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -458,6 +458,18 @@ e4c5b799335a71a4259de6519ff9fe86fc014c85 data/create/recipes/cutting/compat/ecol
 45734ddd48ac17b25b88cf1f5b0d227431946cf7 data/create/recipes/cutting/compat/ecologics/walnut_wood.json
 b0be23a2a268557b1ab26518a9d6ff1e492068fa data/create/recipes/cutting/compat/endergetic/poise_stem.json
 1581ae3f152ba5784d6b737ed37e0fe8e6317a76 data/create/recipes/cutting/compat/endergetic/stripped_poise_stem.json
+513c32af17004085c152de0c50ecdc0821ad5736 data/create/recipes/cutting/compat/environmental/cherry_log.json
+dd7f392a18fa58dbcd02e1700a89d847ef912f6a data/create/recipes/cutting/compat/environmental/cherry_wood.json
+bb5be6efdf3a134baed80179e9f65a5e9402e001 data/create/recipes/cutting/compat/environmental/stripped_cherry_log.json
+8938bac54128e55540b9061333cebadb615c5531 data/create/recipes/cutting/compat/environmental/stripped_cherry_wood.json
+962dd25663096fe3883f0aa5a89cea00c312625a data/create/recipes/cutting/compat/environmental/stripped_willow_log.json
+ee28f2a0519c41df80647ec643d20b3ce05d5ca7 data/create/recipes/cutting/compat/environmental/stripped_willow_wood.json
+bfa59f4024105be24f441ec9e1fe2394bb4c32ed data/create/recipes/cutting/compat/environmental/stripped_wisteria_log.json
+15cb849317c8038750000708c93cce535d7662e5 data/create/recipes/cutting/compat/environmental/stripped_wisteria_wood.json
+9c9b4b63d736e9bef583e3e3085df9547bee1ad3 data/create/recipes/cutting/compat/environmental/willow_log.json
+6a6b47c7c058fe67ea0f0f479145e0e921fcd571 data/create/recipes/cutting/compat/environmental/willow_wood.json
+590fa0d5dbc357c4d22f7e79f94365c50ca1c812 data/create/recipes/cutting/compat/environmental/wisteria_log.json
+62b927056738fbbbb1ceb7b2b3f23e45c94cdd1b data/create/recipes/cutting/compat/environmental/wisteria_wood.json
 97d07cbd21b147d93cbfea6534258f0b5faabbbb data/create/recipes/cutting/compat/forbidden_arcanus/aurum_log.json
 b08980c7deb9a4de4983fdae188f0c5ac627c1e5 data/create/recipes/cutting/compat/forbidden_arcanus/aurum_wood.json
 6d4536b52410f319b7848c0a21d18f1e16e6ad4b data/create/recipes/cutting/compat/forbidden_arcanus/cherry_log.json

@@ -3,9 +3,9 @@ package com.simibubi.create.content.contraptions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -48,8 +48,8 @@ public class MountedStorageManager {
 	protected Map<BlockPos, MountedFluidStorage> fluidStorage;
 
 	public MountedStorageManager() {
-		storage = new HashMap<>();
-		fluidStorage = new HashMap<>();
+		storage = new TreeMap<>();
+		fluidStorage = new TreeMap<>();
 	}
 
 	public void entityTick(AbstractContraptionEntity entity) {
