@@ -37,7 +37,7 @@ public class CreateRegistrateTags {
 
 	private static void genBlockTags(RegistrateTagsProvider<Block> provIn) {
 		CreateTagsProvider<Block> prov = new CreateTagsProvider<>(provIn, Block::builtInRegistryHolder);
-		
+
 		prov.tag(AllBlockTags.BRITTLE.tag)
 			.add(Blocks.BELL, Blocks.COCOA, Blocks.FLOWER_POT, Blocks.MOSS_CARPET, Blocks.BAMBOO_SAPLING,
 					Blocks.BIG_DRIPLEAF, Blocks.VINE, Blocks.TWISTING_VINES_PLANT, Blocks.TWISTING_VINES,
@@ -145,7 +145,7 @@ public class CreateRegistrateTags {
 
 	private static void genItemTags(RegistrateTagsProvider<Item> provIn) {
 		CreateTagsProvider<Item> prov = new CreateTagsProvider<>(provIn, Item::builtInRegistryHolder);
-		
+
 		prov.tag(AllItemTags.SLEEPERS.tag)
 			.add(Items.STONE_SLAB, Items.SMOOTH_STONE_SLAB, Items.ANDESITE_SLAB);
 
@@ -232,10 +232,10 @@ public class CreateRegistrateTags {
 
 		helper.add(Mods.ARS_N, "blue_archwood", "purple_archwood", "green_archwood", "red_archwood");
 		helper.add(Mods.BTN, "livingwood", "dreamwood");
-		helper.add(Mods.FA, "cherrywood", "mysterywood");
+		helper.add(Mods.FA, "mysterywood");
 		helper.add(Mods.HEX, "akashic");
 		helper.add(Mods.ID, "menril");
-		helper.add(Mods.BYG, "aspen", "baobab", "enchanted", "cherry", "cika", "cypress", "ebony", "ether",
+		helper.add(Mods.BYG, "aspen", "baobab", "enchanted", "cika", "cypress", "ebony", "ether",
 			"fir", "green_enchanted", "holly", "jacaranda", "lament", "mahogany", "mangrove", "maple", "nightshade",
 			"palm", "palo_verde", "pine", "rainbow_eucalyptus", "redwood", "skyris", "willow", "witch_hazel",
 			"zelkova");
@@ -246,10 +246,10 @@ public class CreateRegistrateTags {
 		helper.add(Mods.AP, "twisted");
 		helper.add(Mods.Q, "azalea", "blossom");
 		helper.add(Mods.ECO, "coconut", "walnut", "azalea");
-		helper.add(Mods.BOP, "fir", "redwood", "cherry", "mahogany", "jacaranda", "palm", "willow", "dead",
+		helper.add(Mods.BOP, "fir", "redwood", "mahogany", "jacaranda", "palm", "willow", "dead",
 			"magic", "umbran", "hellbark");
-		helper.add(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple", "cherry");
-		helper.add(Mods.ENV, "cherry", "willow", "wisteria");
+		helper.add(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple");
+		helper.add(Mods.ENV, "willow", "wisteria");
 		helper.add(Mods.ATM, "aspen", "kousa", "yucca", "morado");
 		helper.add(Mods.ATM_2, "rosewood", "grimwood");
 		helper.add(Mods.GOOD, "muddy_oak", "cypress");
@@ -277,7 +277,7 @@ public class CreateRegistrateTags {
 
 	private static void genFluidTags(RegistrateTagsProvider<Fluid> provIn) {
 		CreateTagsProvider<Fluid> prov = new CreateTagsProvider<>(provIn, Fluid::builtInRegistryHolder);
-		
+
 		prov.tag(AllFluidTags.BOTTOMLESS_ALLOW.tag)
 			.add(Fluids.WATER, Fluids.LAVA);
 
@@ -298,7 +298,7 @@ public class CreateRegistrateTags {
 
 	private static void genEntityTags(RegistrateTagsProvider<EntityType<?>> provIn) {
 		CreateTagsProvider<EntityType<?>> prov = new CreateTagsProvider<>(provIn, EntityType::builtInRegistryHolder);
-		
+
 		prov.tag(AllEntityTags.BLAZE_BURNER_CAPTURABLE.tag)
 			.add(EntityType.BLAZE);
 
