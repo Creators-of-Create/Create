@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
@@ -153,7 +154,11 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		RU_12 = stripAndMakePlanks(Mods.RU, "ashen_log", "stripped_dead_log", null),
 		RU_13 = stripAndMakePlanks(Mods.RU, "ashen_wood", "stripped_dead_wood", null),
 		RU_14 = stripOnlyDiffModId(Mods.RU, "silver_birch_log", Mods.MC, "stripped_birch_log"),
-		RU_15 = stripOnlyDiffModId(Mods.RU, "silver_birch_wood", Mods.MC, "stripped_birch_wood")
+		RU_15 = stripOnlyDiffModId(Mods.RU, "silver_birch_wood", Mods.MC, "stripped_birch_wood"),
+
+		// Environmental
+
+		ENV = cuttingCompat(Mods.ENV, "willow", "cherry", "wisteria")
 		;
 
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {
