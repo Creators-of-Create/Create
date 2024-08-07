@@ -28,7 +28,7 @@ public class VanillaHatOffsetGenerator extends TrainHatInfoProvider {
 		this.makeInfoFor(EntityType.ELDER_GUARDIAN, new Vec3(0.0F, 20.0F, 0.0F));
 		this.makeInfoFor(EntityType.ENDERMITE, new Vec3(0.0F, 2.5F, 0.5F), "segment0", 0.75F);
 		this.makeInfoFor(EntityType.FOX, new Vec3(0.75F, 2.5F, -2.0F));
-		this.makeInfoFor(EntityType.FROG, new Vec3(0.0F, -3.0F, -4.25F), "body/head", 0.5F);
+		this.makeInfoFor(EntityType.FROG, new Vec3(0.0F, -4.0F, -2.5F), "body/head", 0.75F);
 		this.makeInfoFor(EntityType.GHAST, new Vec3(0.0F, 6.0F, 0.0F), "body");
 		this.makeInfoFor(EntityType.GLOW_SQUID, new Vec3(0.0F, 6.0F, 0.0F), "body");
 		this.makeInfoFor(EntityType.GOAT, new Vec3(-0.5F, 2.0F, 0.0F), "nose", 0.5F);
@@ -51,7 +51,7 @@ public class VanillaHatOffsetGenerator extends TrainHatInfoProvider {
 		this.makeInfoFor(EntityType.SHEEP, new Vec3(0.0F, 0.5F, -0.75F));
 		this.makeInfoFor(EntityType.SILVERFISH, new Vec3(0.0F, 3.0F, 0.0F), "segment1");
 		this.makeInfoFor(EntityType.SKELETON_HORSE, new Vec3(0.0F, 0.0F, 2.0F));
-		this.makeInfoFor(EntityType.SLIME, new Vec3(0.0F, 12.0F, 0.0F), "cube", 1.25F);
+		this.makeInfoFor(EntityType.SLIME, new Vec3(0.0F, 21.0F, 0.0F), "cube", 1.25F);
 		this.makeInfoFor(EntityType.SNIFFER, new Vec3(0.0F, 8.0F, -5.0F), "bone/body/head");
 		this.makeInfoFor(EntityType.SPIDER, new Vec3(0.0F, 2.0F, -3.5F));
 		this.makeInfoFor(EntityType.SQUID, new Vec3(0.0F, 6.0F, 0.0F), "body");

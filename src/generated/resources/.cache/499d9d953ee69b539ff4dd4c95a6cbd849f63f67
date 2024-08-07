@@ -1,4 +1,4 @@
-// 1.20.1	2024-02-28T17:24:28.0405516	Create Train Hat Information
+// 1.20.1	2024-08-07T18:01:28.092886	Create Train Hat Information
 be16d47aa64e673b1107a36ce06475016e316fca assets/minecraft/train_hat_info/axolotl.json
 b8ae6d9c8014439f4049622e0d6e79b9d6716260 assets/minecraft/train_hat_info/bat.json
 5053a6c9fb412dfac1bf17eb0f57f9fd314198e4 assets/minecraft/train_hat_info/bee.json
@@ -14,7 +14,7 @@ e524c61954660d3cb605f01395edb25572b59a1c assets/minecraft/train_hat_info/donkey.
 e87dfc580ae1dcc8fcfc88c06f35c783ac415c0e assets/minecraft/train_hat_info/elder_guardian.json
 3f49938e00491599e58c2a05137b36ce194badab assets/minecraft/train_hat_info/endermite.json
 06d87ca89d4eb5d15427868a08a591270157ab8e assets/minecraft/train_hat_info/fox.json
-2fabb0c86b122fb09ec3ab0c650d43d17417ba9f assets/minecraft/train_hat_info/frog.json
+e3abc8745d594537eaeaa82351cac2a0cdcf168f assets/minecraft/train_hat_info/frog.json
 6c1ba6bc216700dc38e9079c9b321cc6f7bd0859 assets/minecraft/train_hat_info/ghast.json
 6c1ba6bc216700dc38e9079c9b321cc6f7bd0859 assets/minecraft/train_hat_info/glow_squid.json
 d1a10e368f5d0abe92fede6208aab41208dcd773 assets/minecraft/train_hat_info/goat.json
@@ -37,7 +37,7 @@ f394d3dbb39e1603efed1f64d904752c2dd01098 assets/minecraft/train_hat_info/pufferf
 855f16860193440c1ccde244e81eac2107a298e0 assets/minecraft/train_hat_info/sheep.json
 82634fddb5303bc6062a4297c202ebb102d004d9 assets/minecraft/train_hat_info/silverfish.json
 e524c61954660d3cb605f01395edb25572b59a1c assets/minecraft/train_hat_info/skeleton_horse.json
-8fcf064b7a73a3eb9f31724f1c2075a26706d6b7 assets/minecraft/train_hat_info/slime.json
+115b6ee3a501f6ef126110cc7a608aa56fa39051 assets/minecraft/train_hat_info/slime.json
 1990e7eb3ba24f2f64eb5aeea6e6e1d4002ca69f assets/minecraft/train_hat_info/sniffer.json
 59ad9206c8deafe586c6dd84d518cc1fa40e274b assets/minecraft/train_hat_info/spider.json
 6c1ba6bc216700dc38e9079c9b321cc6f7bd0859 assets/minecraft/train_hat_info/squid.json
