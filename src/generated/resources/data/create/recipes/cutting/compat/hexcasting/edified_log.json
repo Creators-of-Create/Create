@@ -1,20 +1,20 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "hexcasting"
+    }
+  ],
   "ingredients": [
     {
       "item": "hexcasting:edified_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "hexcasting:edified_log_stripped"
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "hexcasting",
-      "type": "forge:mod_loaded"
+      "item": "hexcasting:stripped_edified_log"
     }
   ]
 }

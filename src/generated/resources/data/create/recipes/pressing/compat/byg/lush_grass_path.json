@@ -1,5 +1,11 @@
 {
   "type": "create:pressing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
   "ingredients": [
     {
       "item": "byg:lush_grass"
@@ -8,12 +14,6 @@
   "results": [
     {
       "item": "byg:lush_grass_path"
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "byg",
-      "type": "forge:mod_loaded"
     }
   ]
 }

@@ -1,21 +1,21 @@
 {
   "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
   "ingredients": [
     {
       "item": "regions_unexplored:purple_coneflower"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:purple_dye",
-      "count": 2
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "regions_unexplored",
-      "type": "forge:mod_loaded"
+      "count": 2,
+      "item": "minecraft:purple_dye"
     }
   ]
 }

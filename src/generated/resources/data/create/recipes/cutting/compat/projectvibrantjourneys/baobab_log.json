@@ -1,20 +1,20 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "projectvibrantjourneys"
+    }
+  ],
   "ingredients": [
     {
       "item": "projectvibrantjourneys:baobab_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "projectvibrantjourneys:stripped_baobab_log"
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "projectvibrantjourneys",
-      "type": "forge:mod_loaded"
     }
   ]
 }

@@ -5,19 +5,19 @@
       "item": "minecraft:gilded_blackstone"
     }
   ],
+  "processingTime": 400,
   "results": [
     {
-      "item": "minecraft:gold_nugget",
-      "count": 18
+      "count": 18,
+      "item": "minecraft:gold_nugget"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "minecraft:blackstone",
-      "chance": 0.125
+      "chance": 0.125,
+      "item": "minecraft:blackstone"
     }
-  ],
-  "processingTime": 400
+  ]
 }

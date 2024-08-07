@@ -1,22 +1,22 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "galosphere"
+    }
+  ],
   "ingredients": [
     {
       "tag": "create:stone_types/galosphere/lumiere"
     }
   ],
+  "processingTime": 300,
   "results": [
     {
-      "item": "galosphere:lumiere_shard",
+      "chance": 0.8,
       "count": 4,
-      "chance": 0.8
-    }
-  ],
-  "processingTime": 300,
-  "conditions": [
-    {
-      "modid": "galosphere",
-      "type": "forge:mod_loaded"
+      "item": "galosphere:lumiere_shard"
     }
   ]
 }

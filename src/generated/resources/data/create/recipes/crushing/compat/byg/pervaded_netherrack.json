@@ -1,33 +1,33 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
   "ingredients": [
     {
       "tag": "forge:ores/emeraldite"
     }
   ],
+  "processingTime": 150,
   "results": [
     {
-      "item": "minecraft:glowstone",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:glowstone"
     },
     {
-      "item": "minecraft:glowstone",
-      "chance": 0.5
+      "chance": 0.5,
+      "item": "minecraft:glowstone"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "minecraft:netherrack",
-      "chance": 0.125
-    }
-  ],
-  "processingTime": 150,
-  "conditions": [
-    {
-      "modid": "byg",
-      "type": "forge:mod_loaded"
+      "chance": 0.125,
+      "item": "minecraft:netherrack"
     }
   ]
 }

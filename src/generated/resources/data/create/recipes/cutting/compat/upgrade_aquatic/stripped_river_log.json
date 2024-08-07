@@ -1,21 +1,21 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "upgrade_aquatic"
+    }
+  ],
   "ingredients": [
     {
       "item": "upgrade_aquatic:stripped_river_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "upgrade_aquatic:river_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "upgrade_aquatic",
-      "type": "forge:mod_loaded"
+      "count": 6,
+      "item": "upgrade_aquatic:river_planks"
     }
   ]
 }

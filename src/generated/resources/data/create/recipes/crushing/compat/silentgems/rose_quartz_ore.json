@@ -1,33 +1,33 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "silentgems"
+    }
+  ],
   "ingredients": [
     {
       "item": "silentgems:rose_quartz_ore"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "silentgems:rose_quartz",
-      "count": 2
+      "count": 2,
+      "item": "silentgems:rose_quartz"
     },
     {
-      "item": "silentgems:rose_quartz",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "silentgems:rose_quartz"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "minecraft:end_stone",
-      "chance": 0.12
-    }
-  ],
-  "processingTime": 350,
-  "conditions": [
-    {
-      "modid": "silentgems",
-      "type": "forge:mod_loaded"
+      "chance": 0.12,
+      "item": "minecraft:end_stone"
     }
   ]
 }

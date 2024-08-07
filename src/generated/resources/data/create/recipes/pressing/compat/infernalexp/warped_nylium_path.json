@@ -1,5 +1,11 @@
 {
   "type": "create:pressing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "infernalexp"
+    }
+  ],
   "ingredients": [
     {
       "item": "minecraft:warped_nylium"
@@ -8,12 +14,6 @@
   "results": [
     {
       "item": "infernalexp:warped_nylium_path"
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "infernalexp",
-      "type": "forge:mod_loaded"
     }
   ]
 }

@@ -1,29 +1,29 @@
 {
   "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
   "ingredients": [
     {
       "item": "atmospheric:hot_monkey_brush"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:orange_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:orange_dye"
     },
     {
-      "item": "minecraft:red_dye",
-      "chance": 0.05
+      "chance": 0.05,
+      "item": "minecraft:red_dye"
     },
     {
-      "item": "minecraft:yellow_dye",
-      "chance": 0.05
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "atmospheric",
-      "type": "forge:mod_loaded"
+      "chance": 0.05,
+      "item": "minecraft:yellow_dye"
     }
   ]
 }

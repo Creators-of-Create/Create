@@ -1,33 +1,33 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "silentgems"
+    }
+  ],
   "ingredients": [
     {
       "item": "silentgems:eculase_ore"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "silentgems:eculase",
-      "count": 2
+      "count": 2,
+      "item": "silentgems:eculase"
     },
     {
-      "item": "silentgems:eculase",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "silentgems:eculase"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "minecraft:netherrack",
-      "chance": 0.12
-    }
-  ],
-  "processingTime": 350,
-  "conditions": [
-    {
-      "modid": "silentgems",
-      "type": "forge:mod_loaded"
+      "chance": 0.12,
+      "item": "minecraft:netherrack"
     }
   ]
 }

@@ -1,29 +1,29 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
   "ingredients": [
     {
       "item": "byg:blue_nether_gold_ore"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "minecraft:gold_nugget",
-      "count": 18
+      "count": 18,
+      "item": "minecraft:gold_nugget"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "byg:blue_netherrack",
-      "chance": 0.125
-    }
-  ],
-  "processingTime": 350,
-  "conditions": [
-    {
-      "modid": "byg",
-      "type": "forge:mod_loaded"
+      "chance": 0.125,
+      "item": "byg:blue_netherrack"
     }
   ]
 }

@@ -39,7 +39,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class PotionFluidHandler {
 
 	public static boolean isPotionItem(ItemStack stack) {
-		return stack.getItem() instanceof PotionItem && !(stack.getContainerItem()
+		return stack.getItem() instanceof PotionItem && !(stack.getCraftingRemainingItem()
 			.getItem() instanceof BucketItem);
 	}
 	

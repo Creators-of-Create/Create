@@ -1,21 +1,21 @@
 {
   "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "biomesoplenty"
+    }
+  ],
   "ingredients": [
     {
       "item": "biomesoplenty:wilted_lily"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:gray_dye",
-      "count": 2
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "biomesoplenty",
-      "type": "forge:mod_loaded"
+      "count": 2,
+      "item": "minecraft:gray_dye"
     }
   ]
 }

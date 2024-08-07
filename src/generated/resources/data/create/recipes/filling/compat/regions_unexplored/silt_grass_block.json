@@ -1,24 +1,24 @@
 {
   "type": "create:filling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
   "ingredients": [
     {
       "item": "regions_unexplored:silt_dirt"
     },
     {
+      "amount": 500,
       "fluid": "minecraft:water",
-      "nbt": {},
-      "amount": 500
+      "nbt": {}
     }
   ],
   "results": [
     {
       "item": "regions_unexplored:silt_grass_block"
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "regions_unexplored",
-      "type": "forge:mod_loaded"
     }
   ]
 }

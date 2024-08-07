@@ -1,24 +1,24 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "exnihilosequentia"
+    }
+  ],
   "ingredients": [
     {
       "item": "exnihilosequentia:crushed_netherrack"
     }
   ],
+  "processingTime": 100,
   "results": [
     {
       "item": "create:cinder_flour"
     },
     {
-      "item": "create:cinder_flour",
-      "chance": 0.5
-    }
-  ],
-  "processingTime": 100,
-  "conditions": [
-    {
-      "modid": "exnihilosequentia",
-      "type": "forge:mod_loaded"
+      "chance": 0.5,
+      "item": "create:cinder_flour"
     }
   ]
 }

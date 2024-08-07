@@ -1,26 +1,26 @@
 {
   "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "upgrade_aquatic"
+    }
+  ],
   "ingredients": [
     {
       "item": "upgrade_aquatic:flowering_rush"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:pink_dye",
-      "count": 3
+      "count": 3,
+      "item": "minecraft:pink_dye"
     },
     {
-      "item": "minecraft:pink_dye",
+      "chance": 0.25,
       "count": 2,
-      "chance": 0.25
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "upgrade_aquatic",
-      "type": "forge:mod_loaded"
+      "item": "minecraft:pink_dye"
     }
   ]
 }

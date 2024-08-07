@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -61,7 +62,7 @@ public enum Mods {
 		if (!isLoaded())
 			return false;
 		Item asItem = entry.asItem();
-		return asItem != null && asItem.getRegistryName()
+		return asItem != null && RegisteredObjects.getKeyOrThrow(asItem)
 			.getNamespace()
 			.equals(id);
 	}

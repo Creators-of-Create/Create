@@ -1,5 +1,11 @@
 {
   "type": "create:pressing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "vampirism"
+    }
+  ],
   "ingredients": [
     {
       "item": "vampirism:cursed_earth"
@@ -8,12 +14,6 @@
   "results": [
     {
       "item": "vampirism:cursed_earth_path"
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "vampirism",
-      "type": "forge:mod_loaded"
     }
   ]
 }

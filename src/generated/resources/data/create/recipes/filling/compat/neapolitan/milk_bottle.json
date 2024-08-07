@@ -1,23 +1,23 @@
 {
   "type": "create:filling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "neapolitan"
+    }
+  ],
   "ingredients": [
     {
       "item": "minecraft:glass_bottle"
     },
     {
-      "fluidTag": "forge:milk",
-      "amount": 250
+      "amount": 250,
+      "fluidTag": "forge:milk"
     }
   ],
   "results": [
     {
       "item": "neapolitan:milk_bottle"
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "neapolitan",
-      "type": "forge:mod_loaded"
     }
   ]
 }

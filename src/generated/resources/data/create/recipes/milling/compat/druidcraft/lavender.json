@@ -1,25 +1,25 @@
 {
   "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "druidcraft"
+    }
+  ],
   "ingredients": [
     {
       "item": "druidcraft:lavender"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:purple_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:purple_dye"
     },
     {
-      "item": "minecraft:purple_dye",
-      "chance": 0.1
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "druidcraft",
-      "type": "forge:mod_loaded"
+      "chance": 0.1,
+      "item": "minecraft:purple_dye"
     }
   ]
 }

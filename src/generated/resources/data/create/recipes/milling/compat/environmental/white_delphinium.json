@@ -1,25 +1,25 @@
 {
   "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "environmental"
+    }
+  ],
   "ingredients": [
     {
       "item": "environmental:white_delphinium"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:white_dye",
-      "count": 3
+      "count": 3,
+      "item": "minecraft:white_dye"
     },
     {
-      "item": "minecraft:white_dye",
-      "chance": 0.1
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "environmental",
-      "type": "forge:mod_loaded"
+      "chance": 0.1,
+      "item": "minecraft:white_dye"
     }
   ]
 }

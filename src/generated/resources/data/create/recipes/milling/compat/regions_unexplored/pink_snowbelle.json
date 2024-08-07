@@ -1,21 +1,21 @@
 {
   "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
   "ingredients": [
     {
       "item": "regions_unexplored:pink_snowbelle"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:pink_dye",
-      "count": 2
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "regions_unexplored",
-      "type": "forge:mod_loaded"
+      "count": 2,
+      "item": "minecraft:pink_dye"
     }
   ]
 }

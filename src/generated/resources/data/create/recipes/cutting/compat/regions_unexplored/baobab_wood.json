@@ -1,20 +1,20 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
   "ingredients": [
     {
       "item": "regions_unexplored:baobab_wood"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "regions_unexplored:stripped_baobab_wood"
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "regions_unexplored",
-      "type": "forge:mod_loaded"
     }
   ]
 }

@@ -1,29 +1,29 @@
 {
   "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
   "ingredients": [
     {
       "item": "regions_unexplored:hyssop"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:purple_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:purple_dye"
     },
     {
-      "item": "minecraft:magenta_dye",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:magenta_dye"
     },
     {
-      "item": "minecraft:green_dye",
-      "chance": 0.1
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "regions_unexplored",
-      "type": "forge:mod_loaded"
+      "chance": 0.1,
+      "item": "minecraft:green_dye"
     }
   ]
 }

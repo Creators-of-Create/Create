@@ -5,10 +5,10 @@
       "tag": "botania:petals/lime"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "minecraft:lime_dye"
     }
-  ],
-  "processingTime": 50
+  ]
 }

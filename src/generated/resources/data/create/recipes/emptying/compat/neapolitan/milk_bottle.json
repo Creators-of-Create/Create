@@ -1,5 +1,11 @@
 {
   "type": "create:emptying",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "neapolitan"
+    }
+  ],
   "ingredients": [
     {
       "item": "farmersdelight:milk_bottle"
@@ -10,14 +16,8 @@
       "item": "minecraft:glass_bottle"
     },
     {
-      "fluid": "minecraft:milk",
-      "amount": 250
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "neapolitan",
-      "type": "forge:mod_loaded"
+      "amount": 250,
+      "fluid": "minecraft:milk"
     }
   ]
 }

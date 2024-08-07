@@ -1,26 +1,26 @@
 {
   "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
   "ingredients": [
     {
       "item": "byg:white_anemone"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:white_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:white_dye"
     },
     {
-      "item": "minecraft:light_gray_dye",
+      "chance": 0.1,
       "count": 2,
-      "chance": 0.1
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "byg",
-      "type": "forge:mod_loaded"
+      "item": "minecraft:light_gray_dye"
     }
   ]
 }

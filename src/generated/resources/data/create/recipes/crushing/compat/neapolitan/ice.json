@@ -1,26 +1,26 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "neapolitan"
+    }
+  ],
   "ingredients": [
     {
       "item": "minecraft:ice"
     }
   ],
+  "processingTime": 100,
   "results": [
     {
-      "item": "neapolitan:ice_cubes",
-      "count": 3
+      "count": 3,
+      "item": "neapolitan:ice_cubes"
     },
     {
-      "item": "neapolitan:ice_cubes",
+      "chance": 0.25,
       "count": 3,
-      "chance": 0.25
-    }
-  ],
-  "processingTime": 100,
-  "conditions": [
-    {
-      "modid": "neapolitan",
-      "type": "forge:mod_loaded"
+      "item": "neapolitan:ice_cubes"
     }
   ]
 }

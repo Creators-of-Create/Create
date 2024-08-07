@@ -1,5 +1,11 @@
 {
   "type": "create:pressing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "infernalexp"
+    }
+  ],
   "ingredients": [
     {
       "item": "minecraft:soul_soil"
@@ -8,12 +14,6 @@
   "results": [
     {
       "item": "infernalexp:soul_soil_path"
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "infernalexp",
-      "type": "forge:mod_loaded"
     }
   ]
 }

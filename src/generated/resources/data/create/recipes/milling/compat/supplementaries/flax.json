@@ -1,29 +1,29 @@
 {
   "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "supplementaries"
+    }
+  ],
   "ingredients": [
     {
       "item": "supplementaries:flax"
     }
   ],
+  "processingTime": 150,
   "results": [
     {
       "item": "minecraft:string"
     },
     {
-      "item": "minecraft:string",
+      "chance": 0.25,
       "count": 2,
-      "chance": 0.25
+      "item": "minecraft:string"
     },
     {
-      "item": "supplementaries:flax_seeds",
-      "chance": 0.25
-    }
-  ],
-  "processingTime": 150,
-  "conditions": [
-    {
-      "modid": "supplementaries",
-      "type": "forge:mod_loaded"
+      "chance": 0.25,
+      "item": "supplementaries:flax_seeds"
     }
   ]
 }

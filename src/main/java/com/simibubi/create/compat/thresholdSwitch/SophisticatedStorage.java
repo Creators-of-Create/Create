@@ -1,6 +1,7 @@
 package com.simibubi.create.compat.thresholdSwitch;
 
 import com.simibubi.create.compat.Mods;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.IItemHandler;
@@ -12,8 +13,7 @@ public class SophisticatedStorage implements ThresholdSwitchCompat {
 		if (be == null)
 			return false;
 
-		String namespace = be.getType()
-			.getRegistryName()
+		String namespace = RegisteredObjects.getKeyOrThrow(be.getType())
 			.getNamespace();
 
 		return

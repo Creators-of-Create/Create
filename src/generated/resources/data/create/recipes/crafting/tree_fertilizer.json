@@ -15,7 +15,7 @@
     }
   ],
   "result": {
-    "item": "create:tree_fertilizer",
-    "count": 2
+    "count": 2,
+    "item": "create:tree_fertilizer"
   }
 }
