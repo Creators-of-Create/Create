@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "environmental:wisteria_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "environmental:stripped_wisteria_wood"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "environmental",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

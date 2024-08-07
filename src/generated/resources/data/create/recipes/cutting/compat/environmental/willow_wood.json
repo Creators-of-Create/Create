@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "environmental:willow_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "environmental:stripped_willow_wood"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "environmental",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

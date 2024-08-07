@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "environmental:cherry_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "environmental:stripped_cherry_log"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "environmental",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
