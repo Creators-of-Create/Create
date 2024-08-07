@@ -8,10 +8,13 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement.StackRequirement;
 
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -63,18 +66,18 @@ public class FramedBlocksInSchematics {
 				ItemUseType.CONSUME));
 
 		if (data.contains("camo"))
-			addCamoStack(data.getCompound("camo"), list);
+			addCamoStack(blockEntity.getLevel().holderLookup(Registries.BLOCK), data.getCompound("camo"), list);
 
 		if (data.contains("camo_two"))
-			addCamoStack(data.getCompound("camo_two"), list);
+			addCamoStack(blockEntity.getLevel().holderLookup(Registries.BLOCK), data.getCompound("camo_two"), list);
 
 		return new ItemRequirement(list);
 	}
 
-	private static void addCamoStack(CompoundTag tag, List<StackRequirement> list) {
+	private static void addCamoStack(HolderGetter<Block> level, CompoundTag tag, List<StackRequirement> list) {
 		if (!tag.contains("state"))
 			return;
-		BlockState blockState = NbtUtils.readBlockState(tag.getCompound("state"));
+		BlockState blockState = NbtUtils.readBlockState(level, tag.getCompound("state"));
 		ItemStack itemStack = new ItemStack(blockState.getBlock());
 		if (!itemStack.isEmpty())
 			list.add(new StackRequirement(itemStack, ItemUseType.CONSUME));

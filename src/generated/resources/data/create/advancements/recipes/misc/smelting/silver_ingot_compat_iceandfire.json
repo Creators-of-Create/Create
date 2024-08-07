@@ -30,5 +30,6 @@
     "recipes": [
       "create:smelting/silver_ingot_compat_iceandfire"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -666,7 +666,7 @@ public abstract class Contraption {
 		if (!(be instanceof IMultiBlockEntityContainer multiBlockBE))
 			return;
 
-		CompoundTag nbt = structureBlockInfo.nbt;
+		CompoundTag nbt = structureBlockInfo.nbt();
 		BlockPos controllerPos = nbt.contains("Controller") ?
 				toLocalPos(NbtUtils.readBlockPos(nbt.getCompound("Controller"))) :
 				localPos;
@@ -795,7 +795,7 @@ public abstract class Contraption {
 
 			Collection<StructureBlockInfo> multiblockParts = capturedMultiblocks.get(controllerPos);
 			ListTag partsNBT = new ListTag();
-			multiblockParts.forEach(info -> partsNBT.add(NbtUtils.writeBlockPos(info.pos)));
+			multiblockParts.forEach(info -> partsNBT.add(NbtUtils.writeBlockPos(info.pos())));
 			tag.put("Parts", partsNBT);
 
 			multiblocksNBT.add(tag);
@@ -1183,14 +1183,14 @@ public abstract class Contraption {
 	protected void translateMultiblockControllers(StructureTransform transform) {
 		if (transform.rotationAxis != null && transform.rotationAxis != Axis.Y && transform.rotation != Rotation.NONE) {
 			capturedMultiblocks.values().forEach(info -> {
-				info.nbt.put("LastKnownPos", NbtUtils.writeBlockPos(BlockPos.ZERO.below(Integer.MAX_VALUE - 1)));
+				info.nbt().put("LastKnownPos", NbtUtils.writeBlockPos(BlockPos.ZERO.below(Integer.MAX_VALUE - 1)));
 			});
 			return;
 		}
 
 		capturedMultiblocks.keySet().forEach(controllerPos -> {
 			Collection<StructureBlockInfo> multiblockParts = capturedMultiblocks.get(controllerPos);
-			Optional<BoundingBox> optionalBoundingBox = BoundingBox.encapsulatingPositions(multiblockParts.stream().map(info -> transform.apply(info.pos)).toList());
+			Optional<BoundingBox> optionalBoundingBox = BoundingBox.encapsulatingPositions(multiblockParts.stream().map(info -> transform.apply(info.pos())).toList());
 			if (optionalBoundingBox.isEmpty())
 				return;
 
@@ -1199,7 +1199,7 @@ public abstract class Contraption {
 			BlockPos newLocalPos = toLocalPos(newControllerPos);
 			BlockPos otherPos = transform.unapply(newControllerPos);
 
-			multiblockParts.forEach(info -> info.nbt.put("Controller", NbtUtils.writeBlockPos(newControllerPos)));
+			multiblockParts.forEach(info -> info.nbt().put("Controller", NbtUtils.writeBlockPos(newControllerPos)));
 
 			if (controllerPos.equals(newLocalPos))
 				return;
@@ -1207,8 +1207,8 @@ public abstract class Contraption {
 			// swap nbt data to the new controller position
 			StructureBlockInfo prevControllerInfo = blocks.get(controllerPos);
 			StructureBlockInfo newControllerInfo = blocks.get(otherPos);
-			blocks.put(otherPos, new StructureBlockInfo(newControllerInfo.pos, newControllerInfo.state, prevControllerInfo.nbt));
-			blocks.put(controllerPos, new StructureBlockInfo(prevControllerInfo.pos, prevControllerInfo.state, newControllerInfo.nbt));
+			blocks.put(otherPos, new StructureBlockInfo(newControllerInfo.pos(), newControllerInfo.state(), prevControllerInfo.nbt()));
+			blocks.put(controllerPos, new StructureBlockInfo(prevControllerInfo.pos(), prevControllerInfo.state(), newControllerInfo.nbt()));
 		});
 	}
 

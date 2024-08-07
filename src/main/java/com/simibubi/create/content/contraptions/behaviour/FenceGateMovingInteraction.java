@@ -15,7 +15,7 @@ public class FenceGateMovingInteraction extends SimpleBlockMovingInteraction {
 	protected BlockState handle(Player player, Contraption contraption, BlockPos pos, BlockState currentState) {
 		SoundEvent sound = currentState.getValue(FenceGateBlock.OPEN) ? SoundEvents.FENCE_GATE_CLOSE
 				: SoundEvents.FENCE_GATE_OPEN;
-		float pitch = player.level.random.nextFloat() * 0.1F + 0.9F;
+		float pitch = player.level().random.nextFloat() * 0.1F + 0.9F;
 		playSound(player, sound, pitch);
 		return currentState.cycle(FenceGateBlock.OPEN);
 	}

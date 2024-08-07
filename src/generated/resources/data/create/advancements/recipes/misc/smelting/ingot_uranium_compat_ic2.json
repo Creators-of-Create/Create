@@ -30,5 +30,6 @@
     "recipes": [
       "create:smelting/ingot_uranium_compat_ic2"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

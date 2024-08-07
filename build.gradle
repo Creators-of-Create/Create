@@ -202,7 +202,7 @@ dependencies {
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
 
     // implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta25")
-    // runtimeOnly fg.deobf("curse.maven:framedblocks-441647:4762544")
+    runtimeOnly fg.deobf("curse.maven:framedblocks-441647:5399211")
     // runtimeOnly fg.deobf("curse.maven:galosphere-631098:4398234")
     // runtimeOnly fg.deobf("curse.maven:elementary-ores-332609:3956498")
     // runtimeOnly fg.deobf("curse.maven:flib-661261:3956196")

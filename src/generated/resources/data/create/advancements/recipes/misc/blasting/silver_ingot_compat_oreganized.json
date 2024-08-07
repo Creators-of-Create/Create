@@ -30,5 +30,6 @@
     "recipes": [
       "create:blasting/silver_ingot_compat_oreganized"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -132,7 +132,7 @@ public final class NBTProcessors {
 				.apply(compound);
 		if (blockEntity instanceof SpawnerBlockEntity)
 			return compound;
-		if (blockState.is(BlockTags.SIGNS))
+		if (blockState.is(BlockTags.ALL_SIGNS))
 			return signProcessor.apply(compound);
 		if (blockEntity.onlyOpCanSetNbt())
 			return null;

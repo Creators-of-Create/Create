@@ -125,7 +125,7 @@ public class StructureTransform {
 	}
 
 	public BlockPos unapplyWithoutOffset(BlockPos globalPos) {
-		return new BlockPos(unapplyWithoutOffset(VecHelper.getCenterOf(globalPos)));
+		return BlockPos.containing(unapplyWithoutOffset(VecHelper.getCenterOf(globalPos)));
 	}
 
 	public void apply(BlockEntity be) {

@@ -41,7 +41,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -129,7 +129,7 @@ public class BacktankBlock extends HorizontalKineticBlock implements IBE<Backtan
 	@SuppressWarnings("deprecation")
 	// Re-adding ForgeCaps to item here as there is no loot function that can modify
 	// outside of the vanilla tag
-	public List<ItemStack> getDrops(BlockState pState, LootContext.Builder pBuilder) {
+	public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pBuilder) {
 		List<ItemStack> lootDrops = super.getDrops(pState, pBuilder);
 
 		BlockEntity blockEntity = pBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);

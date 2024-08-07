@@ -1,5 +1,6 @@
 {
   "type": "minecraft:blasting",
+  "category": "blocks",
   "conditions": [
     {
       "type": "forge:mod_loaded",

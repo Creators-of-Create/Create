@@ -92,7 +92,7 @@ public class CreateRegistrateTags {
 
 		prov.tag(AllBlockTags.SAFE_NBT.tag)
 			.addTag(BlockTags.BANNERS)
-			.addTag(BlockTags.SIGNS);
+			.addTag(BlockTags.ALL_SIGNS);
 
 		prov.tag(AllBlockTags.TREE_ATTACHMENTS.tag)
 			.add(Blocks.BEE_NEST, Blocks.COCOA, Blocks.MANGROVE_PROPAGULE, Blocks.MOSS_CARPET, Blocks.SHROOMLIGHT, Blocks.VINE);
