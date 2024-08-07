@@ -3,9 +3,6 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.content.kinetics.millstone.MillingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.data.DataGenerator;
@@ -20,8 +17,8 @@ import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
-import java.util.function.UnaryOperator;
 
+@SuppressWarnings("unused")
 public class MillingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
@@ -588,11 +585,143 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 				.require(Mods.UA, "white_searocket")
 				.output(Items.WHITE_DYE, 2)
 				.output(.1f, Items.GREEN_DYE)
-				.whenModLoaded(Mods.UA.getId()))
+				.whenModLoaded(Mods.UA.getId())),
 
+		// Regions Unexplored
 
+		RU_ALPHA_DANDELION = ruFlower("alpha_dandelion", List.of(1f, 0.05f),
+				List.of(Items.YELLOW_DYE, Items.YELLOW_DYE), List.of(2, 1)),
 
-		;
+		RU_ALPHA_ROSE = ruFlower("alpha_rose", List.of(1f, 0.05f),
+				List.of(Items.RED_DYE, Items.RED_DYE), List.of(2, 1)),
+
+		RU_ASTER = ruFlower("aster", List.of(1f, 0.2f, 0.05f),
+				List.of(Items.LIGHT_BLUE_DYE, Items.WHITE_DYE, Items.LIGHT_GRAY_DYE), List.of(2, 1, 1)),
+
+		RU_BLACK_SNOWBELLE = ruFlower("black_snowbelle", List.of(1f),
+				List.of(Items.BLACK_DYE), List.of(2)),
+
+		RU_BLEEDING_HEART = ruFlower("bleeding_heart", List.of(1f, 0.1f),
+				List.of(Items.MAGENTA_DYE, Items.PINK_DYE), List.of(2, 1)),
+
+		RU_BLUE_LUPINE = ruFlower("blue_lupine", List.of(1f),
+				List.of(Items.BLUE_DYE), List.of(2)),
+
+		RU_BLUE_SNOWBELLE = ruFlower("blue_snowbelle", List.of(1f),
+				List.of(Items.BLUE_DYE), List.of(2)),
+
+		RU_BROWN_SNOWBELLE = ruFlower("brown_snowbelle", List.of(1f),
+				List.of(Items.BROWN_DYE), List.of(2)),
+
+		RU_CACTUS_FLOWER = ruFlower("cactus_flower", List.of(1f, 0.2f, 0.1f),
+				List.of(Items.MAGENTA_DYE, Items.PURPLE_DYE, Items.GREEN_DYE), List.of(2, 1, 1)),
+
+		RU_CYAN_SNOWBELLE = ruFlower("cyan_snowbelle", List.of(1f),
+				List.of(Items.CYAN_DYE), List.of(2)),
+
+		RU_DAISY = ruFlower("daisy", List.of(1f, 0.2f, 0.05f),
+				List.of(Items.LIGHT_GRAY_DYE, Items.WHITE_DYE, Items.YELLOW_DYE), List.of(2, 1, 1)),
+
+		RU_DAY_LILY = ruFlower("day_lily", List.of(1f, 0.1f, 0.1f),
+				List.of(Items.ORANGE_DYE, Items.LIME_DYE, Items.RED_DYE), List.of(2, 1, 1)),
+
+		RU_DORCEL = ruFlower("dorcel", List.of(1f, 0.1f),
+				List.of(Items.BLACK_DYE, Items.BROWN_DYE), List.of(2, 1)),
+
+		RU_FELICIA_DAISY = ruFlower("felicia_daisy", List.of(1f, 0.2f, 0.05f),
+				List.of(Items.LIGHT_BLUE_DYE, Items.BLUE_DYE, Items.WHITE_DYE), List.of(2, 1, 1)),
+
+		RU_FIREWEED = ruFlower("fireweed", List.of(1f),
+				List.of(Items.MAGENTA_DYE), List.of(2)),
+
+		RU_GLITERING_BLOOM = ruFlower("glistering_bloom", List.of(1f, 0.25f, 0.25f),
+				List.of(Items.PINK_DYE, Items.MAGENTA_DYE, Items.LIGHT_BLUE_DYE), List.of(2, 1, 1)),
+
+		RU_GRAY_SNOWBELLE = ruFlower("gray_snowbelle", List.of(1f),
+				List.of(Items.GRAY_DYE), List.of(2)),
+
+		RU_GREEN_SNOWBELLE = ruFlower("green_snowbelle", List.of(1f),
+				List.of(Items.GREEN_DYE), List.of(2)),
+
+		RU_HIBISCUS = ruFlower("hibiscus", List.of(1f, 0.2f),
+				List.of(Items.YELLOW_DYE, Items.RED_DYE), List.of(2, 1)),
+
+		RU_HYSSOP = ruFlower("hyssop", List.of(1f, 0.1f, 0.1f),
+				List.of(Items.PURPLE_DYE, Items.MAGENTA_DYE, Items.GREEN_DYE), List.of(2, 1, 1)),
+
+		RU_LIGHT_BLUE_SNOWBELLE = ruFlower("light_blue_snowbelle", List.of(1f),
+				List.of(Items.LIGHT_BLUE_DYE), List.of(2)),
+
+		RU_LIGHT_GRAY_SNOWBELLE = ruFlower("light_gray_snowbelle", List.of(1f),
+				List.of(Items.LIGHT_GRAY_DYE), List.of(2)),
+
+		RU_LIME_SNOWBELLE = ruFlower("lime_snowbelle", List.of(1f),
+				List.of(Items.LIME_DYE), List.of(2)),
+
+		RU_MAGENTA_SNOWBELLE = ruFlower("magenta_snowbelle", List.of(1f),
+				List.of(Items.MAGENTA_DYE), List.of(2)),
+
+		RU_MALLOW = ruFlower("mallow", List.of(1f, 0.1f),
+				List.of(Items.ORANGE_DYE, Items.LIME_DYE), List.of(2, 1)),
+
+		RU_ORANGE_CONEFLOWER = ruFlower("orange_coneflower", List.of(1f),
+				List.of(Items.ORANGE_DYE), List.of(2)),
+
+		RU_ORANGE_SNOWBELLE = ruFlower("orange_snowbelle", List.of(1f),
+				List.of(Items.ORANGE_DYE), List.of(2)),
+
+		RU_PINK_LUPINE = ruFlower("pink_lupine", List.of(1f),
+				List.of(Items.PINK_DYE), List.of(2)),
+
+		RU_PINK_SNOWBELLE = ruFlower("pink_snowbelle", List.of(1f),
+				List.of(Items.PINK_DYE), List.of(2)),
+
+		RU_POPPY_BUSH = ruFlower("poppy_bush", List.of(1f, 0.1f),
+				List.of(Items.RED_DYE, Items.GREEN_DYE), List.of(2, 1)),
+
+		RU_PURPLE_CONEFLOWER = ruFlower("purple_coneflower", List.of(1f),
+				List.of(Items.PURPLE_DYE), List.of(2)),
+
+		RU_PURPLE_LUPINE = ruFlower("purple_lupine", List.of(1f),
+				List.of(Items.PURPLE_DYE), List.of(2)),
+
+		RU_PURPLE_SNOWBELLE = ruFlower("purple_snowbelle", List.of(1f),
+				List.of(Items.PURPLE_DYE), List.of(2)),
+
+		RU_RED_LUPINE = ruFlower("red_lupine", List.of(1f),
+				List.of(Items.RED_DYE), List.of(2)),
+
+		RU_RED_SNOWBELLE = ruFlower("red_snowbelle", List.of(1f),
+				List.of(Items.RED_DYE), List.of(2)),
+
+		RU_SALMON_POPPY_BUSH = ruFlower("salmon_poppy_bush", List.of(1f, 0.1f),
+				List.of(Items.PINK_DYE, Items.GREEN_DYE), List.of(2, 1)),
+
+		RU_TASSEL = ruFlower("tassel", List.of(1f, 0.2f, 0.05f),
+				List.of(Items.LIGHT_GRAY_DYE, Items.WHITE_DYE, Items.YELLOW_DYE), List.of(2, 1, 1)),
+
+		RU_TSUBAKI = ruFlower("tsubaki", List.of(1f, 0.1f),
+				List.of(Items.RED_DYE, Items.GREEN_DYE), List.of(2, 1)),
+
+		RU_WARATAH = ruFlower("waratah", List.of(1f, 0.2f, 0.1f),
+				List.of(Items.RED_DYE, Items.RED_DYE, Items.GREEN_DYE), List.of(2, 1, 1)),
+
+		RU_WHITE_SNOWBELLE = ruFlower("white_snowbelle", List.of(1f),
+				List.of(Items.WHITE_DYE), List.of(2)),
+
+		RU_WHITE_TRILLIUM = ruFlower("white_trillium", List.of(1f, 0.2f, 0.05f),
+				List.of(Items.LIGHT_GRAY_DYE, Items.WHITE_DYE, Items.YELLOW_DYE), List.of(2, 1, 1)),
+
+		RU_WILTING_TRILLIUM = ruFlower("wilting_trillium", List.of(1f, 0.1f),
+				List.of(Items.BROWN_DYE, Items.LIGHT_GRAY_DYE), List.of(2, 1)),
+
+		RU_YELLOW_LUPINE = ruFlower("yellow_lupine", List.of(1f),
+				List.of(Items.YELLOW_DYE), List.of(2)),
+
+		RU_YELLOW_SNOWBELLE = ruFlower("yellow_snowbelle", List.of(1f),
+				List.of(Items.YELLOW_DYE), List.of(2))
+
+	;
 
 	protected GeneratedRecipe metalOre(String name, ItemEntry<? extends Item> crushed, int duration) {
 		return create(name + "_ore", b -> b.duration(duration)
@@ -601,8 +730,8 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 			.output(crushed.get()));
 	}
 
-	protected <T extends ProcessingRecipe<?>> GeneratedRecipe bopFlower(String input, List<Float> chances,
-																		List<Item> dyes, List<Integer> amounts) {
+	protected GeneratedRecipe bopFlower(String input, List<Float> chances,
+										List<Item> dyes, List<Integer> amounts) {
 		if (chances.size() == 2) {
 			return create(Mods.BOP.recipeId(input), b -> b.duration(50)
 					.require(Mods.BOP, input)
@@ -626,8 +755,8 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 		}
 	}
 
-	protected <T extends ProcessingRecipe<?>> GeneratedRecipe bygFlower(String input, List<Float> chances,
-																		List<Item> dyes, List<Integer> amounts) {
+	protected GeneratedRecipe bygFlower(String input, List<Float> chances,
+										List<Item> dyes, List<Integer> amounts) {
 		if (chances.size() == 2) {
 			return create(Mods.BYG.recipeId(input), b -> b.duration(50)
 					.require(Mods.BYG, input)
@@ -651,8 +780,8 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 		}
 	}
 
-	protected <T extends ProcessingRecipe<?>> GeneratedRecipe envFlower(String input, List<Float> chances,
-																		List<Item> dyes, List<Integer> amounts) {
+	protected GeneratedRecipe envFlower(String input, List<Float> chances,
+										List<Item> dyes, List<Integer> amounts) {
 		if (chances.size() == 2) {
 			return create(Mods.ENV.recipeId(input), b -> b.duration(50)
 					.require(Mods.ENV, input)
@@ -691,6 +820,31 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 					.output(Mods.MC, color + "_dye"));
 		}
 		return null;
+	}
+
+	protected GeneratedRecipe ruFlower(String input, List<Float> chances,
+									   List<Item> dyes, List<Integer> amounts) {
+		if (chances.size() == 2) {
+			return create(Mods.RU.recipeId(input), b -> b.duration(50)
+					.require(Mods.RU, input)
+					.output(chances.get(0), dyes.get(0), amounts.get(0))
+					.output(chances.get(1), dyes.get(1), amounts.get(1))
+					.whenModLoaded(Mods.RU.getId()));
+		} else if (chances.size() == 3) {
+			return create(Mods.RU.recipeId(input), b -> b.duration(50)
+					.require(Mods.RU, input)
+					.output(chances.get(0), dyes.get(0), amounts.get(0))
+					.output(chances.get(1), dyes.get(1), amounts.get(1))
+					.output(chances.get(2), dyes.get(2), amounts.get(2))
+					.whenModLoaded(Mods.RU.getId()));
+		} else if (chances.size() == 1) {
+			return create(Mods.RU.recipeId(input), b -> b.duration(50)
+					.require(Mods.RU, input)
+					.output(chances.get(0), dyes.get(0), amounts.get(0))
+					.whenModLoaded(Mods.RU.getId()));
+		} else {
+			return null;
+		}
 	}
 
 	public MillingRecipeGen(DataGenerator p_i48262_1_) {

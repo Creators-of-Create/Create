@@ -56,7 +56,44 @@ public class PressingRecipeGen extends ProcessingRecipeGen {
 				.whenModLoaded(Mods.IX.getId())),
 		IX_SOUL_PATH = create(Mods.IX.recipeId("soul_soil_path"), b -> b.require(Blocks.SOUL_SOIL)
 				.output(Mods.IX, "soul_soil_path")
-				.whenModLoaded(Mods.IX.getId()))
+				.whenModLoaded(Mods.IX.getId())),
+
+		// Aether
+
+		AET_DIRT_PATH = create("aether_dirt_path", b -> b.require(Mods.AET, "aether_dirt")
+				.output(Mods.AET, "aether_dirt_path")
+				.whenModLoaded(Mods.AET.getId())),
+
+		AET_DIRT_PATH_GRASS = create("aether_dirt_path_from_grass", b -> b.require(Mods.AET, "aether_grass_block")
+				.output(Mods.AET, "aether_dirt_path")
+				.whenModLoaded(Mods.AET.getId())),
+
+		// Regions Unexplored
+
+		RU_PEAT_PATH = create("peat_dirt_path", b -> b.require(Mods.RU, "peat_dirt")
+				.output(Mods.RU, "peat_dirt_path")
+				.whenModLoaded(Mods.RU.getId())),
+
+		RU_PEAT_PATH_GRASS = create("peat_dirt_path_from_grass", b -> b.require(Mods.RU, "peat_grass_block")
+				.output(Mods.RU, "peat_dirt_path")
+				.whenModLoaded(Mods.RU.getId())),
+
+		RU_SILT_PATH = create("silt_dirt_path", b -> b.require(Mods.RU, "silt_dirt")
+				.output(Mods.RU, "silt_dirt_path")
+				.whenModLoaded(Mods.RU.getId())),
+
+		RU_SILT_PATH_GRASS = create("silt_dirt_path_from_grass", b -> b.require(Mods.RU, "silt_grass_block")
+				.output(Mods.RU, "silt_dirt_path")
+				.whenModLoaded(Mods.RU.getId())),
+
+		// Vampirism
+
+		VMP_CURSED_PATH = moddedPaths(Mods.VMP, "cursed_earth"),
+
+		VMP_CURSED_PATH_GRASS = create("cursed_earth_path_from_grass", b -> b.require(Mods.RU, "cursed_grass")
+				.output(Mods.VMP, "cursed_earth_path")
+					.whenModLoaded(Mods.VMP.getId()))
+
 
 	;
 
