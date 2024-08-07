@@ -1,5 +1,6 @@
 package com.simibubi.create.infrastructure.data;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllEntityTags;
 import com.simibubi.create.AllTags.AllFluidTags;
@@ -23,6 +24,9 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CreateRegistrateTags {
 	public static void addGenerators() {
 		Create.REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, CreateRegistrateTags::genBlockTags);
@@ -35,7 +39,13 @@ public class CreateRegistrateTags {
 		CreateTagsProvider<Block> prov = new CreateTagsProvider<>(provIn, Block::builtInRegistryHolder);
 
 		prov.tag(AllBlockTags.BRITTLE.tag)
-			.add(Blocks.BELL, Blocks.COCOA, Blocks.FLOWER_POT)
+			.add(Blocks.BELL, Blocks.COCOA, Blocks.FLOWER_POT, Blocks.MOSS_CARPET, Blocks.BAMBOO_SAPLING,
+					Blocks.BIG_DRIPLEAF, Blocks.VINE, Blocks.TWISTING_VINES_PLANT, Blocks.TWISTING_VINES,
+					Blocks.WEEPING_VINES_PLANT, Blocks.WEEPING_VINES, Blocks.CAKE
+			)
+			.addTag(AllBlockTags.CORALS.tag)
+			.addTag(BlockTags.CAVE_VINES)
+			.addTag(BlockTags.BANNERS)
 			.addTag(BlockTags.BEDS)
 			.addTag(BlockTags.DOORS);
 
@@ -63,8 +73,14 @@ public class CreateRegistrateTags {
 			.addTag(BlockTags.LEAVES);
 
 		prov.tag(AllBlockTags.MOVABLE_EMPTY_COLLIDER.tag)
-			.add(Blocks.COBWEB, Blocks.POWDER_SNOW, Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK)
-			.addTag(BlockTags.FENCE_GATES);
+			.add(Blocks.COBWEB, Blocks.POWDER_SNOW, Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.BAMBOO_SAPLING,
+					Blocks.VINE, Blocks.TWISTING_VINES_PLANT, Blocks.TWISTING_VINES, Blocks.WEEPING_VINES_PLANT,
+					Blocks.WEEPING_VINES
+			)
+			.addTag(AllBlockTags.CORALS.tag)
+			.addTag(BlockTags.CAVE_VINES)
+			.addTag(BlockTags.FENCE_GATES)
+			.addTag(BlockTags.BANNERS);
 
 		prov.tag(AllBlockTags.ORE_OVERRIDE_STONE.tag)
 			.addTag(BlockTags.STONE_ORE_REPLACEABLES);
@@ -76,7 +92,7 @@ public class CreateRegistrateTags {
 
 		prov.tag(AllBlockTags.SAFE_NBT.tag)
 			.addTag(BlockTags.BANNERS)
-			.addTag(BlockTags.SIGNS);
+			.addTag(BlockTags.ALL_SIGNS);
 
 		prov.tag(AllBlockTags.TREE_ATTACHMENTS.tag)
 			.add(Blocks.BEE_NEST, Blocks.COCOA, Blocks.MANGROVE_PROPAGULE, Blocks.MOSS_CARPET, Blocks.SHROOMLIGHT, Blocks.VINE);
@@ -95,15 +111,28 @@ public class CreateRegistrateTags {
 		prov.tag(AllBlockTags.ROOTS.tag)
 				.add(Blocks.MANGROVE_ROOTS);
 
+		prov.tag(AllBlockTags.CORALS.tag)
+			.add(Blocks.DEAD_TUBE_CORAL, Blocks.DEAD_BRAIN_CORAL, Blocks.DEAD_BUBBLE_CORAL, Blocks.DEAD_FIRE_CORAL,
+					Blocks.DEAD_HORN_CORAL, Blocks.TUBE_CORAL, Blocks.BRAIN_CORAL, Blocks.BUBBLE_CORAL,
+					Blocks.FIRE_CORAL, Blocks.HORN_CORAL, Blocks.DEAD_TUBE_CORAL_FAN,
+					Blocks.DEAD_BRAIN_CORAL_FAN, Blocks.DEAD_BUBBLE_CORAL_FAN, Blocks.DEAD_FIRE_CORAL_FAN,
+					Blocks.DEAD_HORN_CORAL_FAN, Blocks.TUBE_CORAL_FAN, Blocks.BRAIN_CORAL_FAN,
+					Blocks.BUBBLE_CORAL_FAN, Blocks.FIRE_CORAL_FAN, Blocks.HORN_CORAL_FAN,
+					Blocks.DEAD_TUBE_CORAL_WALL_FAN, Blocks.DEAD_BRAIN_CORAL_WALL_FAN,
+					Blocks.DEAD_BUBBLE_CORAL_WALL_FAN, Blocks.DEAD_FIRE_CORAL_WALL_FAN,
+					Blocks.DEAD_HORN_CORAL_WALL_FAN, Blocks.TUBE_CORAL_WALL_FAN, Blocks.BRAIN_CORAL_WALL_FAN,
+					Blocks.BUBBLE_CORAL_WALL_FAN, Blocks.FIRE_CORAL_WALL_FAN, Blocks.HORN_CORAL_WALL_FAN
+			);
+
 		// COMPAT
 
-		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE,
+		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE, List.of(
 				"connector_lv", "connector_lv_relay", "connector_mv", "connector_mv_relay",
 				"connector_hv", "connector_hv_relay", "connector_bundled", "connector_structural",
-				"connector_redstone", "connector_probe", "breaker_switch");
+				"connector_redstone", "connector_probe", "breaker_switch"));
 
 		TagGen.addOptional(prov.tag(AllBlockTags.ROOTS.tag), Mods.TF,
-				"root", "liveroot_block", "mangrove_root");
+				List.of("root", "liveroot_block", "mangrove_root"));
 
 		// VALIDATE
 
@@ -154,9 +183,23 @@ public class CreateRegistrateTags {
 		prov.tag(Tags.Items.INGOTS)
 			.addTag(AllItemTags.CREATE_INGOTS.tag);
 
+		prov.tag(AllItemTags.OBSIDIAN_DUST.tag).add(AllItems.POWDERED_OBSIDIAN.get());
+
 		// COMPAT
 
 		genStrippedWoodItemTags(prov);
+
+		prov.tag(AllItemTags.CURIOS_HEAD.tag).add(AllItems.GOGGLES.get());
+
+		TagGen.addOptional(prov.tag(AllItemTags.ALLURITE.tag), Mods.GS, gsPalette("allurite"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.LUMIERE.tag), Mods.GS, gsPalette("lumiere"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.AMETHYST.tag), Mods.GS, gsPalette("amethyst"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.UA_CORAL.tag), Mods.UA, List.of("acan_coral",
+				"finger_coral", "star_coral", "moss_coral", "petal_coral", "branch_coral",
+				"rock_coral", "pillow_coral", "chrome_coral", "silk_coral"));
 
 		// VALIDATE
 
@@ -165,6 +208,21 @@ public class CreateRegistrateTags {
 				prov.getOrCreateRawBuilder(tag.tag);
 			}
 		}
+	}
+
+	private static ArrayList<String> gsPalette(String material) {
+		ArrayList<String> toReturn = new ArrayList<>();
+		toReturn.add(material + "_block");
+		toReturn.add(material + "_stairs");
+		toReturn.add(material + "_slab");
+		toReturn.add("smooth_" + material);
+		toReturn.add("smooth_" + material + "_stairs");
+		toReturn.add("smooth_" + material + "_slab");
+		toReturn.add(material + "_bricks");
+		toReturn.add(material + "_brick_stairs");
+		toReturn.add(material + "_brick_slab");
+		toReturn.add("chiseled_" + material);
+		return toReturn;
 	}
 
 	private static void genStrippedWoodItemTags(CreateTagsProvider<Item> prov) {
@@ -196,11 +254,25 @@ public class CreateRegistrateTags {
 		helper.add(Mods.ATM_2, "rosewood", "grimwood");
 		helper.add(Mods.GOOD, "muddy_oak", "cypress");
 		helper.add(Mods.BMK, "blighted_balsa", "willow", "swamp_cypress", "ancient_oak");
+		helper.add(Mods.RU, "alpha", "ashen", "baobab", "blackwood", "brimwood", "cobalt", "cypress", "dead", "eucalyptus", "joshua",
+				"kapok", "larch", "magnolia", "maple","mauve", "palm", "pine", "redwood", "socotra", "willow");
 
+
+		TagGen.addOptional(logAppender, Mods.AUTUM, "maple");
 		TagGen.addOptional(logAppender, Mods.IX, "stripped_luminous_stem");
 		TagGen.addOptional(woodAppender, Mods.IX, "stripped_luminous_hyphae");
 		TagGen.addOptional(logAppender, Mods.BYG, "stripped_bulbis_stem");
 		TagGen.addOptional(woodAppender, Mods.BYG, "stripped_bulbis_wood");
+
+		TagGen.addOptional(logAppender, Mods.RU, "stripped_blue_bioshroom_stem");
+		TagGen.addOptional(woodAppender, Mods.RU, "stripped_blue_bioshroom_hyphae");
+		TagGen.addOptional(logAppender, Mods.RU, "stripped_green_bioshroom_stem");
+		TagGen.addOptional(woodAppender, Mods.RU, "stripped_green_bioshroom_hyphae");
+		TagGen.addOptional(logAppender, Mods.RU, "stripped_pink_bioshroom_stem");
+		TagGen.addOptional(woodAppender, Mods.RU, "stripped_pink_bioshroom_hyphae");
+		TagGen.addOptional(logAppender, Mods.RU, "stripped_yellow_bioshroom_stem");
+		TagGen.addOptional(woodAppender, Mods.RU, "stripped_yellow_bioshroom_hyphae");
+		TagGen.addOptional(logAppender, Mods.RU, "brimwood_log_magma");
 	}
 
 	private static void genFluidTags(RegistrateTagsProvider<Fluid> provIn) {

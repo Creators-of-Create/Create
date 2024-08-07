@@ -4,6 +4,15 @@
     "minecraft:powder_snow",
     "minecraft:tripwire",
     "minecraft:tripwire_hook",
-    "#minecraft:fence_gates"
+    "minecraft:bamboo_sapling",
+    "minecraft:vine",
+    "minecraft:twisting_vines_plant",
+    "minecraft:twisting_vines",
+    "minecraft:weeping_vines_plant",
+    "minecraft:weeping_vines",
+    "#create:corals",
+    "#minecraft:cave_vines",
+    "#minecraft:fence_gates",
+    "#minecraft:banners"
   ]
 }

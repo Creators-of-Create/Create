@@ -13,11 +13,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public final class NBTProcessors {
 
@@ -34,13 +36,6 @@ public final class NBTProcessors {
 	}
 
 	static {
-		addProcessor(BlockEntityType.SIGN, data -> {
-			for (int i = 0; i < 4; ++i) {
-				if (textComponentHasClickEvent(data.getString("Text" + (i + 1))))
-					return null;
-			}
-			return data;
-		});
 		addProcessor(BlockEntityType.LECTERN, data -> {
 			if (!data.contains("Book", Tag.TAG_COMPOUND))
 				return data;
@@ -63,6 +58,14 @@ public final class NBTProcessors {
 		addProcessor(AllBlockEntityTypes.CREATIVE_CRATE.get(), itemProcessor("Filter"));
 		addProcessor(AllBlockEntityTypes.PLACARD.get(), itemProcessor("Item"));
 	}
+	
+	// Triggered by block tag, not BE type
+	private static final UnaryOperator<CompoundTag> signProcessor = data -> {
+		for (int i = 0; i < 4; ++i)
+			if (textComponentHasClickEvent(data.getString("Text" + (i + 1))))
+				return null;
+		return data;
+	};
 
 	public static UnaryOperator<CompoundTag> itemProcessor(String tagKey) {
 		return data -> {
@@ -117,7 +120,7 @@ public final class NBTProcessors {
 	private NBTProcessors() {}
 
 	@Nullable
-	public static CompoundTag process(BlockEntity blockEntity, CompoundTag compound, boolean survival) {
+	public static CompoundTag process(BlockState blockState, BlockEntity blockEntity, CompoundTag compound, boolean survival) {
 		if (compound == null)
 			return null;
 		BlockEntityType<?> type = blockEntity.getType();
@@ -129,6 +132,8 @@ public final class NBTProcessors {
 				.apply(compound);
 		if (blockEntity instanceof SpawnerBlockEntity)
 			return compound;
+		if (blockState.is(BlockTags.ALL_SIGNS))
+			return signProcessor.apply(compound);
 		if (blockEntity.onlyOpCanSetNbt())
 			return null;
 		return compound;

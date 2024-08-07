@@ -1,4 +1,4 @@
-// 1.20.1	2024-01-01T12:21:50.031679913	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.20.1	2024-08-07T16:37:59.1558552	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -585,8 +585,8 @@ b0d8f08968763a5f74e5cd5644377a76a9f39753 assets/create/blockstates/yellow_toolbo
 fe8c497aacc641c2f01cec90bba9f19e59cc2ed2 assets/create/blockstates/yellow_valve_handle.json
 e819e93fdcbe9fd9c050a052d2718ff3b3539365 assets/create/blockstates/zinc_block.json
 64121dcb216381c83b4fe28aa361ea07c24c9ad0 assets/create/blockstates/zinc_ore.json
-5bc2e2c67a554384431fbc4b916493fec7203a63 assets/create/lang/en_ud.json
-cb0c666d2a6d52e2c4871d84e9b648103f65b4e2 assets/create/lang/en_us.json
+b9295b12fb7ba72de2f245064305b9dd4d6f9ce1 assets/create/lang/en_ud.json
+16147eb4e472f1e670bcfc65a13ebcda0c8f58b8 assets/create/lang/en_us.json
 a97e1060e00ae701a02e39cd4ef8054cf345fac4 assets/create/models/block/acacia_window.json
 103e032c0b1a0a6a27c67da8c91179a564bd281c assets/create/models/block/acacia_window_pane_noside.json
 fb00b627abda76ad4fea867ca57dbfadd24fffa3 assets/create/models/block/acacia_window_pane_noside_alt.json
@@ -3006,7 +3006,7 @@ bfd871acdde6c239098ead188a5aad7636d11bc0 data/create/loot_tables/blocks/clockwor
 cef6a697d6797dbd5395a4377c3e943ca3099433 data/create/loot_tables/blocks/contraption_controls.json
 93e18057b39238aa3bd913e10ea027eb37d38d94 data/create/loot_tables/blocks/controller_rail.json
 f2058ad809606d54123c7efbad2a6b995ed1defe data/create/loot_tables/blocks/controls.json
-e069fbd8c2331ef76611a33c6d66fd025b65d3b6 data/create/loot_tables/blocks/copper_backtank.json
+639d3d5bbbc452b2c4d170cf005dce9b3bcff26c data/create/loot_tables/blocks/copper_backtank.json
 fa0856e11351ad0882de2066569807e782071881 data/create/loot_tables/blocks/copper_bars.json
 5f48b688829ca7849997d88697cff2de1ede4804 data/create/loot_tables/blocks/copper_casing.json
 0937b9f634b86dbe41e07eda52c69993fce60fb5 data/create/loot_tables/blocks/copper_door.json
@@ -3269,7 +3269,7 @@ fde340fb25b8ac62b53b6e702081d7aa84d22646 data/create/loot_tables/blocks/metal_gi
 1561ba41cff26d63cfde5594524270d81f087eaa data/create/loot_tables/blocks/millstone.json
 d6cb5841ea16472edc4ac08620a44b3dd80893b3 data/create/loot_tables/blocks/minecart_anchor.json
 fa0a57242873c6ee7290da5aeab6f88e37c27b53 data/create/loot_tables/blocks/mysterious_cuckoo_clock.json
-b889fe8bbf2a77a5f280eb4ce84ff1300daf7909 data/create/loot_tables/blocks/netherite_backtank.json
+fe79cb4cbea87efc84d61d3d31f073bf3c64c73d data/create/loot_tables/blocks/netherite_backtank.json
 17c677fdd1aba0b97ef143de2e6a968971793b91 data/create/loot_tables/blocks/nixie_tube.json
 1ffa2df71b22ae8450044bba8486f96b453ed402 data/create/loot_tables/blocks/nozzle.json
 26b602e6b951b37396786e2989c9f21fcbb510b5 data/create/loot_tables/blocks/oak_window.json
@@ -4166,23 +4166,24 @@ fdd28fc956dbec71ba24cdea5adfc049d6eb31e3 data/create/recipes/tuff_pillar_from_st
 93c61ebeda451ebeb37c3047459f95f14fa9f1f9 data/create/recipes/weathered_copper_tile_slab_from_weathered_copper_tiles_stonecutting.json
 8a32b955b4320eddff017378785d1c95e1434229 data/create/recipes/weathered_copper_tile_stairs.json
 f1a03ac86925e26cbec6aeeada2eafb40008fc8e data/create/recipes/weathered_copper_tile_stairs_from_weathered_copper_tiles_stonecutting.json
-8b98a671e80724e815a3af0c3764d760e4170e02 data/create/tags/blocks/brittle.json
+f365be4eda73234b73aa49c97b065f1a8baafbf6 data/create/tags/blocks/brittle.json
 8b6c0b444b15f7fb2d55b9cbcb68537c1269f877 data/create/tags/blocks/casing.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/blocks/contraption_inventory_deny.json
 c7ec0dbc18e9c1b58e568ed925287b89df11a136 data/create/tags/blocks/copycat_allow.json
 876eb9210f4a14898a2fe6d225699c66b5bdfeef data/create/tags/blocks/copycat_deny.json
+7296238b4c6b81251870addce1de8ecda63381dc data/create/tags/blocks/corals.json
 f675c20350ed60da4878b5d6301f02c8c05624bd data/create/tags/blocks/fan_processing_catalysts/blasting.json
 0592b99f657415f6546564ed8efa1fcbef07ba15 data/create/tags/blocks/fan_processing_catalysts/haunting.json
 9386dd9a1d234813f9b8ae4ec88866d396aa1d37 data/create/tags/blocks/fan_processing_catalysts/smoking.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/blocks/fan_processing_catalysts/splashing.json
 6858173c670bb593664ac3c62ded726d57d581f1 data/create/tags/blocks/fan_transparent.json
 2589b135c0e96ad29076569e144528fe32ea5b39 data/create/tags/blocks/girdable_tracks.json
-a1e21c22f32354fd1a82a1b0a59dd786c0deaba0 data/create/tags/blocks/movable_empty_collider.json
+02c0a018f2b8540dc2f1fb420172cc716552f321 data/create/tags/blocks/movable_empty_collider.json
 4970078b49ddac1b1d500ed0469cedf42bdc3d35 data/create/tags/blocks/non_movable.json
 06e13efbb7b0d09ff7ecd1a7dc45a0760b91ad67 data/create/tags/blocks/ore_override_stone.json
 a5874f73c7dc0a3ae12999e6ae8abf45bc7fb9be data/create/tags/blocks/passive_boiler_heaters.json
-6943bee6689085c06d27285a815c21a78ebeb37a data/create/tags/blocks/roots.json
-3928cfdba3f941456bb05005fa0c36966a3aa880 data/create/tags/blocks/safe_nbt.json
+9bc8c13fd80bdbe7f767b91ee1a1042e9aff02b0 data/create/tags/blocks/roots.json
+79ed9149ee2ce143114db4ccafda8a2b6a293aac data/create/tags/blocks/safe_nbt.json
 79418bd729cef417b322cef9b491e7ae83317d61 data/create/tags/blocks/seats.json
 5def5088f7fd31b80e6f28c1c4ea146aa9d7d15b data/create/tags/blocks/toolboxes.json
 2589b135c0e96ad29076569e144528fe32ea5b39 data/create/tags/blocks/tracks.json
@@ -4205,8 +4206,8 @@ f43cac8216e2a9347e48cf93a43de95dd810ca20 data/create/tags/items/contraption_cont
 d371dfd35e49a7bef19f59c03e7f4ae20992f03d data/create/tags/items/create_ingots.json
 910d0f5ccbc4c84b224eca1f1588b1695f41447b data/create/tags/items/crushed_raw_materials.json
 0fa526e7e742573b603ad26b09526cf724efa1dc data/create/tags/items/deployable_drink.json
-12d9a6a2e94d8686e38ba6bf79989b482d4054d2 data/create/tags/items/modded_stripped_logs.json
-66e4892d428d7537a1a064466965429d809529a7 data/create/tags/items/modded_stripped_wood.json
+ae5c7c69acfe764ed2b7bc4f1db35fb941b0c7a5 data/create/tags/items/modded_stripped_logs.json
+20b118c190182ecd9b4ada2bccd4681f7c4225cc data/create/tags/items/modded_stripped_wood.json
 695d75b352fd190b303c724d1aaee9bb786a903b data/create/tags/items/pressurized_air_sources.json
 2cd3adffd8b151354df137a990dcb97996a665bb data/create/tags/items/sandpaper.json
 79418bd729cef417b322cef9b491e7ae83317d61 data/create/tags/items/seats.json
@@ -4218,6 +4219,9 @@ a970ecabfefc20e8911762495da0d5cf1f99c636 data/create/tags/items/stone_types/crim
 8ee57ecfa4e4e5c67b61ef4dd18c1e2715bbe9d8 data/create/tags/items/stone_types/deepslate.json
 f5532145f210fdd0ab12c253d6deabbc8d1601ef data/create/tags/items/stone_types/diorite.json
 23aebee6c6614fdf94804f2a227476523844b888 data/create/tags/items/stone_types/dripstone.json
+5b13401dc5dd5e7d960e855fa091a785b173c48e data/create/tags/items/stone_types/galosphere/allurite.json
+d1254fa8710b3a2cf71847a5e4fd687b27b88c26 data/create/tags/items/stone_types/galosphere/amethyst.json
+e130fd23b642d640f314ec90cc6106669810e650 data/create/tags/items/stone_types/galosphere/lumiere.json
 683700c751c964e47707d836986f8415fbf609d5 data/create/tags/items/stone_types/granite.json
 00f8eb75e9cd1a19fd21800d03f671cc58dbbbe7 data/create/tags/items/stone_types/limestone.json
 00af13f6cea72fb3da0d33e06c16a643ec21b327 data/create/tags/items/stone_types/ochrum.json
@@ -4226,10 +4230,13 @@ e22493305e0cebfb7ededae122e19ee9dd24fc9d data/create/tags/items/stone_types/scor
 7e4d20c52a25a0c0d13e0122be0250718a9fb645 data/create/tags/items/stone_types/tuff.json
 076c79e07eb3a65d74107577dbfd993b13780637 data/create/tags/items/stone_types/veridium.json
 5def5088f7fd31b80e6f28c1c4ea146aa9d7d15b data/create/tags/items/toolboxes.json
+2589b135c0e96ad29076569e144528fe32ea5b39 data/create/tags/items/tracks.json
+a5b5711d1798473a9b25db5b7f749570ed0a2769 data/create/tags/items/upgrade_aquatic/coral.json
 22c744a157399a21492bcd8b211578f8f504e653 data/create/tags/items/upright_on_belt.json
 da739ad2160e7df4e0e5cc89587670ce5e9450c3 data/create/tags/items/valve_handles.json
 c59c9fc0cdd45de659aa8023d36f9decb90f708c data/create/tags/items/vanilla_stripped_logs.json
 64441ac1daa64c81601b94b82b21c0ee862b6344 data/create/tags/items/vanilla_stripped_wood.json
+edf7390f09e622193bbc720ec51ba128ea1e96e6 data/curios/tags/items/head.json
 10d5f0c1763f80860a39398ecc33dbbe43099471 data/forge/tags/blocks/glass/colorless.json
 de1fc89be6a52473d526d3efe0204b9b8489058c data/forge/tags/blocks/glass_panes.json
 81b107ada9c6ac5679a21f8c6a006bf230f69c39 data/forge/tags/blocks/ores.json
@@ -4251,6 +4258,7 @@ cca816b34ac2e9b7933df680aa9778ff2cfe9605 data/forge/tags/fluids/tea.json
 06ebf72e8f6c081862236d4b068b5dfb275a8385 data/forge/tags/items/buckets/honey.json
 801d097b0af7153e0c5c72a924d61f8afb4cf264 data/forge/tags/items/dough.json
 801d097b0af7153e0c5c72a924d61f8afb4cf264 data/forge/tags/items/dough/wheat.json
+5c28c2550ac8f806ae3f2c3ed7cf731036a491d0 data/forge/tags/items/dusts/obsidian.json
 745512f10c4ba52f2c224607377e41011fb2ecfe data/forge/tags/items/flour.json
 745512f10c4ba52f2c224607377e41011fb2ecfe data/forge/tags/items/flour/wheat.json
 10d5f0c1763f80860a39398ecc33dbbe43099471 data/forge/tags/items/glass/colorless.json

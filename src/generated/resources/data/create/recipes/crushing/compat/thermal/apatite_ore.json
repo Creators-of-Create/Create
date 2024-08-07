@@ -1,0 +1,33 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "thermal"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "thermal:apatite_ore"
+    }
+  ],
+  "processingTime": 350,
+  "results": [
+    {
+      "count": 2,
+      "item": "thermal:apatite"
+    },
+    {
+      "chance": 0.25,
+      "item": "thermal:apatite"
+    },
+    {
+      "chance": 0.12,
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    }
+  ]
+}

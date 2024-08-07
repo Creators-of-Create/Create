@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "regions_unexplored:stripped_larch_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 6,
+      "item": "regions_unexplored:larch_planks"
+    }
+  ]
+}

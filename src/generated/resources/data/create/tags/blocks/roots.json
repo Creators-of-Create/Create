@@ -8,6 +8,10 @@
     {
       "id": "twilightforest:liveroot_block",
       "required": false
+    },
+    {
+      "id": "twilightforest:mangrove_root",
+      "required": false
     }
   ]
 }

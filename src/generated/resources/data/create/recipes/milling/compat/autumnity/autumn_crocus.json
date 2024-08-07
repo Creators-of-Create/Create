@@ -1,0 +1,30 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "autumnity"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "autumnity:autumn_crocus"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:magenta_dye"
+    },
+    {
+      "chance": 0.1,
+      "count": 2,
+      "item": "minecraft:pink_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:purple_dye"
+    }
+  ]
+}

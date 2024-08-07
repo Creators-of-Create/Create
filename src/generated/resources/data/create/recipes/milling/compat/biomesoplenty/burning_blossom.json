@@ -1,0 +1,25 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "biomesoplenty"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "biomesoplenty:burning_blossom"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:orange_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:lime_dye"
+    }
+  ]
+}

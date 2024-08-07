@@ -1,0 +1,24 @@
+{
+  "type": "create:filling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "regions_unexplored:peat_dirt"
+    },
+    {
+      "amount": 500,
+      "fluid": "minecraft:water",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "regions_unexplored:peat_grass_block"
+    }
+  ]
+}

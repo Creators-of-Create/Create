@@ -45,7 +45,17 @@ public class HauntingRecipeGen extends ProcessingRecipeGen {
 		SOUL_DIRT = convert(() -> Ingredient.of(ItemTags.DIRT), () -> Blocks.SOUL_SOIL),
 		BLACK_STONE = convert(() -> Ingredient.of(Tags.Items.COBBLESTONE), () -> Blocks.BLACKSTONE),
 		CRIMSON_FUNGUS = convert(Items.RED_MUSHROOM, Items.CRIMSON_FUNGUS),
-		WARPED_FUNGUS = convert(Items.BROWN_MUSHROOM, Items.WARPED_FUNGUS);
+		WARPED_FUNGUS = convert(Items.BROWN_MUSHROOM, Items.WARPED_FUNGUS),
+
+		// Farmer's Delight
+		FD = moddedConversion(Mods.FD, "tomato", "rotten_tomato"),
+
+		// Haunted Harvest
+		HH = create(Mods.HH.recipeId("rotten_apple"), b -> b.require(Items.APPLE)
+				.output(Mods.HH, "rotten_apple")
+				.whenModLoaded(Mods.HH.getId()))
+
+	;
 
 	public GeneratedRecipe convert(ItemLike input, ItemLike result) {
 		return convert(() -> Ingredient.of(input), () -> result);
@@ -57,6 +67,12 @@ public class HauntingRecipeGen extends ProcessingRecipeGen {
 			.getPath()),
 			p -> p.withItemIngredients(input.get())
 				.output(result.get()));
+	}
+
+	public GeneratedRecipe moddedConversion(Mods mod, String input, String output) {
+		return create("compat/" + mod.getId() + "/" + output, p -> p.require(mod, input)
+				.output(mod, output)
+				.whenModLoaded(mod.getId()));
 	}
 
 	public HauntingRecipeGen(PackOutput output) {

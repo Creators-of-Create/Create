@@ -150,25 +150,20 @@ public class DeployerFakePlayer extends FakePlayer {
 
 	@SubscribeEvent
 	public static void entitiesDontRetaliate(LivingChangeTargetEvent event) {
-		if (!(event.getNewTarget() instanceof DeployerFakePlayer))
+		if (!(event.getOriginalTarget() instanceof DeployerFakePlayer))
 			return;
 		LivingEntity entityLiving = event.getEntity();
-		if (!(entityLiving instanceof Mob))
+		if (!(entityLiving instanceof Mob mob))
 			return;
-		Mob mob = (Mob) entityLiving;
 
 		CKinetics.DeployerAggroSetting setting = AllConfigs.server().kinetics.ignoreDeployerAttacks.get();
 
-		switch (setting) {
-		case ALL:
-			mob.setTarget(null);
-			break;
-		case CREEPERS:
-			if (mob instanceof Creeper)
-				mob.setTarget(null);
-			break;
-		case NONE:
-		default:
+		switch(setting) {
+			case ALL -> event.setCanceled(true);
+			case CREEPERS -> {
+				if (mob instanceof Creeper)
+					event.setCanceled(true);
+			}
 		}
 	}
 

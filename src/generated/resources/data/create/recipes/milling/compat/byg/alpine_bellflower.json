@@ -1,0 +1,30 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "byg:alpine_bellflower"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:purple_dye"
+    },
+    {
+      "chance": 0.1,
+      "count": 2,
+      "item": "minecraft:blue_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:green_dye"
+    }
+  ]
+}

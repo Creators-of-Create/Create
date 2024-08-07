@@ -1,0 +1,33 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "silentgems"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "silentgems:turquoise_ore"
+    }
+  ],
+  "processingTime": 350,
+  "results": [
+    {
+      "count": 2,
+      "item": "silentgems:turquoise"
+    },
+    {
+      "chance": 0.25,
+      "item": "silentgems:turquoise"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.12,
+      "item": "minecraft:netherrack"
+    }
+  ]
+}

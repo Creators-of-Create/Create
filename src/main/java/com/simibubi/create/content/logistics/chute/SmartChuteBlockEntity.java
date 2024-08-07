@@ -22,7 +22,7 @@ public class SmartChuteBlockEntity extends ChuteBlockEntity {
 
 	@Override
 	protected boolean canAcceptItem(ItemStack stack) {
-		return super.canAcceptItem(stack) && canCollectItemsFromBelow() && filtering.test(stack);
+		return super.canAcceptItem(stack) && canActivate() && filtering.test(stack);
 	}
 
 	@Override
@@ -37,17 +37,11 @@ public class SmartChuteBlockEntity extends ChuteBlockEntity {
 	}
 
 	@Override
-	protected boolean canCollectItemsFromBelow() {
+	protected boolean canActivate() {
 		BlockState blockState = getBlockState();
 		return blockState.hasProperty(SmartChuteBlock.POWERED) && !blockState.getValue(SmartChuteBlock.POWERED);
 	}
 	
-	@Override
-	protected boolean canOutputItems() {
-		BlockState blockState = getBlockState();
-		return blockState.hasProperty(SmartChuteBlock.POWERED) && !blockState.getValue(SmartChuteBlock.POWERED);
-	}
-
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(filtering =

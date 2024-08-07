@@ -150,14 +150,23 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 			if (simulate) {
 				if (recipe instanceof BasinRecipe basinRecipe) {
 					recipeOutputItems.addAll(basinRecipe.rollResults());
-					recipeOutputFluids.addAll(basinRecipe.getFluidResults());
-					recipeOutputItems.addAll(basinRecipe.getRemainingItems(basin.getInputInventory()));
+					
+					for (FluidStack fluidStack : basinRecipe.getFluidResults())
+						if (!fluidStack.isEmpty())
+							recipeOutputFluids.add(fluidStack);
+					for (ItemStack stack : basinRecipe.getRemainingItems(basin.getInputInventory()))
+						if (!stack.isEmpty())
+							recipeOutputItems.add(stack);
+					
 				} else {
 					recipeOutputItems.add(recipe.getResultItem(basin.getLevel()
 						.registryAccess()));
 
 					if (recipe instanceof CraftingRecipe craftingRecipe) {
-						recipeOutputItems.addAll(craftingRecipe.getRemainingItems(new DummyCraftingContainer(availableItems, extractedItemsFromSlot)));
+						for (ItemStack stack : craftingRecipe
+							.getRemainingItems(new DummyCraftingContainer(availableItems, extractedItemsFromSlot)))
+							if (!stack.isEmpty())
+								recipeOutputItems.add(stack);
 					}
 				}
 			}

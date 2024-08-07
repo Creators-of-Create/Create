@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:blasting",
+  "category": "blocks",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ic2"
+    }
+  ],
+  "cookingtime": 100,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "create:crushed_raw_tin"
+  },
+  "result": "ic2:ingot_tin"
+}

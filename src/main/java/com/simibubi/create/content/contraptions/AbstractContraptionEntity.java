@@ -213,14 +213,18 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		Vec3 transformedVector = getPassengerPosition(passenger, 1);
 		if (transformedVector == null)
 			return;
+
+		float offset = -1 / 8f;
+		if (passenger instanceof AbstractContraptionEntity)
+			offset = 0.0f;
 		callback.accept(passenger, transformedVector.x,
-			transformedVector.y + SeatEntity.getCustomEntitySeatOffset(passenger) - 1 / 8f, transformedVector.z);
+			transformedVector.y + SeatEntity.getCustomEntitySeatOffset(passenger) + offset, transformedVector.z);
 	}
 
 	public Vec3 getPassengerPosition(Entity passenger, float partialTicks) {
 		if (contraption == null)
 			return null;
-		
+
 		UUID id = passenger.getUUID();
 		if (passenger instanceof OrientedContraptionEntity) {
 			BlockPos localPos = contraption.getBearingPosOf(id);
@@ -235,7 +239,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		BlockPos seat = contraption.getSeatOf(id);
 		if (seat == null)
 			return null;
-		
+
 		Vec3 transformedVector = toGlobalVector(Vec3.atLowerCornerOf(seat)
 			.add(.5, passenger.getMyRidingOffset() + ySize - .15f, .5), partialTicks)
 				.add(VecHelper.getCenterOf(BlockPos.ZERO))
@@ -867,10 +871,11 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public static class ContraptionRotationState {
 		public static final ContraptionRotationState NONE = new ContraptionRotationState();
 
-		float xRotation = 0;
-		float yRotation = 0;
-		float zRotation = 0;
-		float secondYRotation = 0;
+		public float xRotation = 0;
+		public float yRotation = 0;
+		public float zRotation = 0;
+		public float secondYRotation = 0;
+		
 		Matrix3d matrix;
 
 		public Matrix3d asMatrix() {

@@ -1,0 +1,22 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "galosphere"
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "create:stone_types/galosphere/amethyst"
+    }
+  ],
+  "processingTime": 300,
+  "results": [
+    {
+      "chance": 0.8,
+      "count": 4,
+      "item": "minecraft:amethyst_shard"
+    }
+  ]
+}

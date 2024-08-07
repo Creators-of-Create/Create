@@ -88,6 +88,13 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 			.build(),
 
+		SPOUTING = create("spout").subtitle("Spout spurts")
+			.addVariant("spout_1")
+			.addVariant("spout_2")
+			.addVariant("spout_3")
+			.category(SoundSource.BLOCKS)
+			.build(),
+
 		CRANKING = create("cranking").subtitle("Hand Crank turns")
 			.playExisting(SoundEvents.WOOD_PLACE, .075f, .5f)
 			.playExisting(SoundEvents.WOODEN_BUTTON_CLICK_OFF, .025f, .5f)
@@ -297,6 +304,14 @@ public class AllSoundEvents {
 			.build(),
 
 		HAUNTED_BELL_USE = create("haunted_bell_use").subtitle("Haunted Bell tolls")
+			.category(SoundSource.BLOCKS)
+				.build(),
+
+		CLIPBOARD_CHECKMARK = create("clipboard_check").noSubtitle()
+			.category(SoundSource.BLOCKS)
+			.build(),
+
+		CLIPBOARD_ERASE = create("clipboard_erase").noSubtitle()
 			.category(SoundSource.BLOCKS)
 			.build();
 

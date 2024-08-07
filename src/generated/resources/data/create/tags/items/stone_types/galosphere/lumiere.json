@@ -1,0 +1,44 @@
+{
+  "values": [
+    {
+      "id": "galosphere:lumiere_block",
+      "required": false
+    },
+    {
+      "id": "galosphere:lumiere_stairs",
+      "required": false
+    },
+    {
+      "id": "galosphere:lumiere_slab",
+      "required": false
+    },
+    {
+      "id": "galosphere:smooth_lumiere",
+      "required": false
+    },
+    {
+      "id": "galosphere:smooth_lumiere_stairs",
+      "required": false
+    },
+    {
+      "id": "galosphere:smooth_lumiere_slab",
+      "required": false
+    },
+    {
+      "id": "galosphere:lumiere_bricks",
+      "required": false
+    },
+    {
+      "id": "galosphere:lumiere_brick_stairs",
+      "required": false
+    },
+    {
+      "id": "galosphere:lumiere_brick_slab",
+      "required": false
+    },
+    {
+      "id": "galosphere:chiseled_lumiere",
+      "required": false
+    }
+  ]
+}

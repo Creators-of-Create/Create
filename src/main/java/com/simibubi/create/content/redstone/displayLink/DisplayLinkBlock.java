@@ -57,7 +57,7 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements IBE<
 		placed = placed.setValue(FACING, context.getClickedFace());
 		return placed.setValue(POWERED, shouldBePowered(placed, context.getLevel(), context.getClickedPos()));
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
@@ -65,7 +65,7 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements IBE<
 	}
 
 	public static void notifyGatherers(LevelAccessor level, BlockPos pos) {
-		forEachAttachedGatherer(level, pos, DisplayLinkBlockEntity::updateGatheredData);
+		forEachAttachedGatherer(level, pos, DisplayLinkBlockEntity::tickSource);
 	}
 
 	@SuppressWarnings("unchecked")
