@@ -3,18 +3,18 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "forbidden_arcanus"
+      "modid": "windswept"
     }
   ],
   "ingredients": [
     {
-      "item": "forbidden_arcanus:cherrywood"
+      "item": "windswept:holly_log"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "forbidden_arcanus:stripped_cherrywood"
+      "item": "windswept:stripped_holly_log"
     }
   ]
 }

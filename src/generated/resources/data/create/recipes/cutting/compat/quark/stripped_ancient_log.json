@@ -3,19 +3,19 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "forbidden_arcanus"
+      "modid": "quark"
     }
   ],
   "ingredients": [
     {
-      "item": "forbidden_arcanus:stripped_mysterywood"
+      "item": "quark:stripped_ancient_log"
     }
   ],
   "processingTime": 50,
   "results": [
     {
       "count": 6,
-      "item": "forbidden_arcanus:mysterywood_planks"
+      "item": "quark:ancient_planks"
     }
   ]
 }

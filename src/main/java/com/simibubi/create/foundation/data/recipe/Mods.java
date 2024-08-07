@@ -13,7 +13,7 @@ public enum Mods {
 	ARS_N("ars_nouveau"),
 	BSK("blue_skies"),
 	BTN("botania", b -> b.omitWoodSuffix()),
-	FA("forbidden_arcanus", b -> b.omitWoodSuffix()),
+	FA("forbidden_arcanus"),
 	HEX("hexcasting"),
 	ID("integrateddynamics", b -> b.strippedWoodIsSuffix()),
 	BYG("byg"),
@@ -55,7 +55,8 @@ public enum Mods {
 	ENS("exnihilosequentia"),
 	AET("aether"),
 	HH("hauntedharvest"),
-	VMP("vampirism")
+	VMP("vampirism"),
+	WSP("windswept")
 
 	;
 

@@ -54,8 +54,8 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		BTN_5 =
 			stripAndMakePlanks(Mods.BTN, "glimmering_dreamwood", "glimmering_stripped_dreamwood", "dreamwood_planks"),
 
-		// Forbidden Arcanus (no _wood suffix)
-		FA = cuttingCompat(Mods.FA, "cherrywood", "mysterywood"),
+		// Forbidden Arcanus
+		FA = cuttingCompat(Mods.FA, "cherry", "aurum"),
 
 		// Hexcasting (stripped is a suffix here)
 		HEX = cuttingCompat(Mods.HEX, "edified"),
@@ -91,7 +91,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		AP = cuttingCompat(Mods.AP, "twisted"),
 
 		// Quark
-		Q = cuttingCompat(Mods.Q, "azalea", "blossom"),
+		Q = cuttingCompat(Mods.Q, "azalea", "blossom", "ancient"),
 
 		// Ecologics
 		ECO = cuttingCompat(Mods.ECO, "coconut", "walnut", "azalea"),
@@ -153,7 +153,15 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		RU_12 = stripAndMakePlanks(Mods.RU, "ashen_log", "stripped_dead_log", null),
 		RU_13 = stripAndMakePlanks(Mods.RU, "ashen_wood", "stripped_dead_wood", null),
 		RU_14 = stripOnlyDiffModId(Mods.RU, "silver_birch_log", Mods.MC, "stripped_birch_log"),
-		RU_15 = stripOnlyDiffModId(Mods.RU, "silver_birch_wood", Mods.MC, "stripped_birch_wood")
+		RU_15 = stripOnlyDiffModId(Mods.RU, "silver_birch_wood", Mods.MC, "stripped_birch_wood"),
+
+		// Windswept
+
+		WSP = cuttingCompat(Mods.WSP, "holly", "chestnut"),
+
+		// Good Ending
+
+		GOOD = cuttingCompat(Mods.GOOD, "muddy_oak", "cypress")
 		;
 
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {
