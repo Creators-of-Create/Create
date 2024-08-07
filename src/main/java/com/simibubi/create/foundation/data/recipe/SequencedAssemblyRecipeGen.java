@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
@@ -51,7 +52,7 @@ public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.largeCog()))
 		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.ironNugget()))),
 
-		REINFORCED_SHEET = create("sturdy_sheet", b -> b.require(AllItems.POWDERED_OBSIDIAN.get())
+		REINFORCED_SHEET = create("sturdy_sheet", b -> b.require(AllItemTags.OBSIDIAN_DUST.tag)
 			.transitionTo(AllItems.INCOMPLETE_REINFORCED_SHEET.get())
 			.addOutput(AllItems.STURDY_SHEET.get(), 1)
 			.loops(1)

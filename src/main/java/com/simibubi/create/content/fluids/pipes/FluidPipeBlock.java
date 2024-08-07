@@ -183,7 +183,7 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 		Direction direction) {
 		if (FluidPropagator.hasFluidCapability(world, neighbourPos, direction.getOpposite()))
 			return true;
-		if (VanillaFluidTargets.shouldPipesConnectTo(neighbour))
+		if (VanillaFluidTargets.canProvideFluidWithoutCapability(neighbour))
 			return true;
 		FluidTransportBehaviour transport = BlockEntityBehaviour.get(world, neighbourPos, FluidTransportBehaviour.TYPE);
 		BracketedBlockEntityBehaviour bracket =

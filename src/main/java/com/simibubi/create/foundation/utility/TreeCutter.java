@@ -57,15 +57,20 @@ public class TreeCutter {
 		return Optional.empty();
 	}
 
+	@Deprecated(forRemoval = true)
+	public static Tree findTree(@Nullable BlockGetter reader, BlockPos pos) {
+		return findTree(reader, pos, Blocks.AIR.defaultBlockState());
+	}
+
 	/**
 	 * Finds a tree at the given pos. Block at the position should be air
 	 *
-	 * @param reader
-	 * @param pos
-	 * @return null if not found or not fully cut
+	 * @param reader the level that will be searched for a tree
+	 * @param pos position that the saw cut at
+	 * @param brokenState block state what was broken by the saw
 	 */
 	@Nonnull
-	public static Tree findTree(@Nullable BlockGetter reader, BlockPos pos) {
+	public static Tree findTree(@Nullable BlockGetter reader, BlockPos pos, BlockState brokenState) {
 		if (reader == null)
 			return NO_TREE;
 
@@ -75,11 +80,14 @@ public class TreeCutter {
 		Set<BlockPos> visited = new HashSet<>();
 		List<BlockPos> frontier = new LinkedList<>();
 
-		// Bamboo, Sugar Cane, Cactus
 		BlockState stateAbove = reader.getBlockState(pos.above());
-		if (isVerticalPlant(stateAbove)) {
+		// Bamboo, Sugar Cane, Cactus
+		if (isVerticalPlant(brokenState)) {
+			if (!isVerticalPlant(stateAbove))
+				return NO_TREE;
+
 			logs.add(pos.above());
-			for (int i = 1; i < 256; i++) {
+			for (int i = 1; i < reader.getHeight(); i++) {
 				BlockPos current = pos.above(i);
 				if (!isVerticalPlant(reader.getBlockState(current)))
 					break;
@@ -90,7 +98,10 @@ public class TreeCutter {
 		}
 
 		// Chorus
-		if (isChorus(stateAbove)) {
+		if (isChorus(brokenState)) {
+			if (!isChorus(stateAbove))
+				return NO_TREE;
+
 			frontier.add(pos.above());
 			while (!frontier.isEmpty()) {
 				BlockPos current = frontier.remove(0);
@@ -287,7 +298,7 @@ public class TreeCutter {
 	}
 
 	public static boolean isRoot(BlockState state) {
-		return state.is(Blocks.MANGROVE_ROOTS);
+		return state.is(AllBlockTags.ROOTS.tag);
 	}
 
 	public static boolean isLog(BlockState state) {

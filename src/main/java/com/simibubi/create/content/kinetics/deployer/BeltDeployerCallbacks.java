@@ -94,7 +94,7 @@ public class BeltDeployerCallbacks {
 
 	public static void activate(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler,
 		DeployerBlockEntity blockEntity, Recipe<?> recipe) {
-		
+
 		List<TransportedItemStack> collect =
 			RecipeApplier.applyRecipeOn(blockEntity.getLevel(), ItemHandlerHelper.copyStackWithSize(transported.stack, 1), recipe)
 				.stream()
@@ -113,7 +113,7 @@ public class BeltDeployerCallbacks {
 				.collect(Collectors.toList());
 
 		blockEntity.award(AllAdvancements.DEPLOYER);
-		
+
 		TransportedItemStack left = transported.copy();
 		blockEntity.player.spawnedItemEffects = transported.stack.copy();
 		left.stack.shrink(1);
@@ -128,8 +128,9 @@ public class BeltDeployerCallbacks {
 		}
 
 		ItemStack heldItem = blockEntity.player.getMainHandItem();
-		boolean unbreakable = heldItem.hasTag() && heldItem.getTag()
-			.getBoolean("Unbreakable");
+		boolean unbreakable = heldItem.hasTag() && (
+				heldItem.getTag().getBoolean("Unbreakable") ||
+				heldItem.getTag().getString("Modifier").equals("forbidden_arcanus:eternal")); // Forbidden Arcanus Compat, See Creators-of-Create#6220
 		boolean keepHeld =
 			recipe instanceof ItemApplicationRecipe && ((ItemApplicationRecipe) recipe).shouldKeepHeldItem();
 

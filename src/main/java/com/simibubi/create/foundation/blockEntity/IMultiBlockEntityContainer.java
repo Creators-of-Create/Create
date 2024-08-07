@@ -13,24 +13,25 @@ import net.minecraftforge.fluids.IFluidTank;
 public interface IMultiBlockEntityContainer {
 
 	BlockPos getController();
-	<T extends BlockEntity & IMultiBlockEntityContainer> T getControllerBE ();
+	<T extends BlockEntity & IMultiBlockEntityContainer> T getControllerBE();
 	boolean isController();
 	void setController(BlockPos pos);
-	void removeController (boolean keepContents);
+	void removeController(boolean keepContents);
 	BlockPos getLastKnownPos();
 
-	void preventConnectivityUpdate ();
-	void notifyMultiUpdated ();
+	void preventConnectivityUpdate();
+	void notifyMultiUpdated();
 
 	// only used for FluidTank windows at present. Might be useful for similar properties on other things?
-	default void setExtraData (@Nullable Object data) {}
+	default void setExtraData(@Nullable Object data) {}
 	@Nullable
-	default Object getExtraData () { return null; }
-	default Object modifyExtraData (Object data) { return data; }
+	default Object getExtraData() { return null; }
+	default Object modifyExtraData(Object data) { return data; }
 
 	// multiblock structural information
 	Direction.Axis getMainConnectionAxis();
-	default Direction.Axis getMainAxisOf (BlockEntity be) { // this feels redundant, but it gives us a default to use when defining ::getMainConnectionAxis
+
+	default Direction.Axis getMainAxisOf(BlockEntity be) { // this feels redundant, but it gives us a default to use when defining ::getMainConnectionAxis
 		BlockState state = be.getBlockState();
 
 		Direction.Axis axis;
@@ -48,13 +49,13 @@ public interface IMultiBlockEntityContainer {
 		return axis;
 	}
 
-	int getMaxLength (Direction.Axis longAxis, int width);
-	int getMaxWidth  ();
+	int getMaxLength(Direction.Axis longAxis, int width);
+	int getMaxWidth();
 
-	int getHeight ();
-	void setHeight (int height);
-	int getWidth  ();
-	void setWidth  (int width);
+	int getHeight();
+	void setHeight(int height);
+	int getWidth();
+	void setWidth(int width);
 
 	public interface Inventory extends IMultiBlockEntityContainer {
 		default boolean hasInventory() { return false; }

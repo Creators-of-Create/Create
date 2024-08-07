@@ -1,0 +1,19 @@
+{
+  "type": "create:splashing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "endergetic"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "endergetic:nether_corrock_crown"
+    }
+  ],
+  "results": [
+    {
+      "item": "endergetic:petrified_nether_corrock_crown"
+    }
+  ]
+}

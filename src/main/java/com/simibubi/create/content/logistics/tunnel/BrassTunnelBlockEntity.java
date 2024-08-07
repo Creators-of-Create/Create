@@ -784,20 +784,13 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		if (allStacks.isEmpty())
 			return false;
 
-		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("tooltip.brass_tunnel.contains"))
-			.withStyle(ChatFormatting.WHITE));
+		Lang.translate("tooltip.brass_tunnel.contains").style(ChatFormatting.WHITE).forGoggles(tooltip);
 		for (ItemStack item : allStacks) {
-			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.brass_tunnel.contains_entry",
-					Components.translatable(item.getDescriptionId())
-						.getString(),
-					item.getCount()))
-				.withStyle(ChatFormatting.GRAY));
+			Lang.translate("tooltip.brass_tunnel.contains_entry",
+					Components.translatable(item.getDescriptionId()).getString(), item.getCount())
+					.style(ChatFormatting.GRAY).forGoggles(tooltip);
 		}
-		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("tooltip.brass_tunnel.retrieve"))
-			.withStyle(ChatFormatting.DARK_GRAY));
+		Lang.translate("tooltip.brass_tunnel.retrieve").style(ChatFormatting.DARK_GRAY).forGoggles(tooltip);
 
 		return true;
 	}

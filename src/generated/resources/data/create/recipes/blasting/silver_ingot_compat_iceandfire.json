@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:blasting",
+  "category": "blocks",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "iceandfire"
+    }
+  ],
+  "cookingtime": 100,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "create:crushed_raw_silver"
+  },
+  "result": "iceandfire:silver_ingot"
+}

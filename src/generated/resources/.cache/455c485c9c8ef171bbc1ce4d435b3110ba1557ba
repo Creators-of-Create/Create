@@ -1,4 +1,4 @@
-// 1.20.1	2023-09-20T19:40:25.3622264	Create's Advancements
+// 1.20.1	2024-08-07T16:05:58.6895379	Create's Advancements
 2661a689fdcf729494f46e3c719f71c62e31582e data/create/advancements/andesite_alloy.json
 fa16c4afe0496edc3f157858a6e0ff177a1622ff data/create/advancements/andesite_casing.json
 5a694002d0a663bc869b09d15924a10c43dc522f data/create/advancements/anvil_plough.json
@@ -77,7 +77,7 @@ b3c18b1d41126d135318769f83ccc6fe51da2c54 data/create/advancements/steam_engine_m
 b77e7b17c397cc88ca2f75f68c52d60488ece97a data/create/advancements/stressometer_maxed.json
 cc75b35e53137d229896c334f09ebc5930f56307 data/create/advancements/sturdy_sheet.json
 4794a7d7ea140333809bb78b77a30997bbb606bd data/create/advancements/super_glue.json
-7431347d2edcda21fbc05541bb5fb8b12c17965b data/create/advancements/track_0.json
+cbc796a4bd3dd9bb3e66ab437b27fcf5a1fdc050 data/create/advancements/track_0.json
 916a9a75900fa36aa3c5422d4e35eeeb57d20f61 data/create/advancements/track_crafting_factory.json
 4938c2be415c15a70a41570bbb49f772eaed5af0 data/create/advancements/track_signal.json
 797f76512083d562549a20e9abc679846cce885f data/create/advancements/train.json

@@ -206,4 +206,8 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 		return stillValid(level, pos, state, false) ? getMaster(level, pos, state) : pos;
 	}
 
+	@Override
+	public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+		return false;
+	}
 }

@@ -27,14 +27,14 @@ public class ElevatorContactEditPacket extends BlockEntityConfigurationPacket<El
 	@Override
 	protected void writeSettings(FriendlyByteBuf buffer) {
 		buffer.writeUtf(shortName, 4);
-		buffer.writeUtf(longName, 30);
+		buffer.writeUtf(longName, 90);
 		buffer.writeVarInt(doorControl.ordinal());
 	}
 
 	@Override
 	protected void readSettings(FriendlyByteBuf buffer) {
 		shortName = buffer.readUtf(4);
-		longName = buffer.readUtf(30);
+		longName = buffer.readUtf(90);
 		doorControl = DoorControl.values()[Mth.clamp(buffer.readVarInt(), 0, DoorControl.values().length)];
 	}
 

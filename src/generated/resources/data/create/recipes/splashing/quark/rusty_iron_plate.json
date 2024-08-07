@@ -1,0 +1,19 @@
+{
+  "type": "create:splashing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "quark"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "quark:iron_plate"
+    }
+  ],
+  "results": [
+    {
+      "item": "quark:rusty_iron_plate"
+    }
+  ]
+}

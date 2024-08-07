@@ -1,0 +1,44 @@
+{
+  "values": [
+    {
+      "id": "galosphere:amethyst_block",
+      "required": false
+    },
+    {
+      "id": "galosphere:amethyst_stairs",
+      "required": false
+    },
+    {
+      "id": "galosphere:amethyst_slab",
+      "required": false
+    },
+    {
+      "id": "galosphere:smooth_amethyst",
+      "required": false
+    },
+    {
+      "id": "galosphere:smooth_amethyst_stairs",
+      "required": false
+    },
+    {
+      "id": "galosphere:smooth_amethyst_slab",
+      "required": false
+    },
+    {
+      "id": "galosphere:amethyst_bricks",
+      "required": false
+    },
+    {
+      "id": "galosphere:amethyst_brick_stairs",
+      "required": false
+    },
+    {
+      "id": "galosphere:amethyst_brick_slab",
+      "required": false
+    },
+    {
+      "id": "galosphere:chiseled_amethyst",
+      "required": false
+    }
+  ]
+}

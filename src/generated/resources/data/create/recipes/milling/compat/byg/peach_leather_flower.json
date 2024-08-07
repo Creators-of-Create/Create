@@ -1,0 +1,25 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "byg:peach_leather_flower"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:pink_dye"
+    },
+    {
+      "chance": 0.25,
+      "item": "minecraft:green_dye"
+    }
+  ]
+}

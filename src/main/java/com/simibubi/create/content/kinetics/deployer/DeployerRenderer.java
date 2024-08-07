@@ -33,6 +33,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -88,9 +89,8 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 			.getItemRenderer();
 
 		ItemDisplayContext transform = ItemDisplayContext.NONE;
-		boolean isBlockItem = (be.heldItem.getItem() instanceof BlockItem)
-			&& itemRenderer.getModel(be.heldItem, be.getLevel(), null, 0)
-				.isGui3d();
+		BakedModel bakedModel = itemRenderer.getModel(be.heldItem, be.getLevel(), null, 0);
+		boolean isBlockItem = (be.heldItem.getItem() instanceof BlockItem) && bakedModel.isGui3d();
 
 		if (displayMode) {
 			float scale = isBlockItem ? 1.25f : 1;
@@ -105,7 +105,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 			transform = punching ? ItemDisplayContext.THIRD_PERSON_RIGHT_HAND : ItemDisplayContext.FIXED;
 		}
 
-		itemRenderer.renderStatic(be.heldItem, transform, light, overlay, ms, buffer, be.getLevel(), 0);
+		itemRenderer.render(be.heldItem, transform, false, ms, buffer, light, overlay, bakedModel);
 		ms.popPose();
 	}
 

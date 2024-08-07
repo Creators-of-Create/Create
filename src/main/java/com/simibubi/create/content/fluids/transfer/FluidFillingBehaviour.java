@@ -282,7 +282,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 	// From FlowingFluidBlock#isBlocked
 	protected boolean canBeReplacedByFluid(BlockGetter world, BlockPos pos, BlockState pState) {
 		Block block = pState.getBlock();
-		if (!(block instanceof DoorBlock) && !pState.is(BlockTags.SIGNS) && !pState.is(Blocks.LADDER)
+		if (!(block instanceof DoorBlock) && !pState.is(BlockTags.ALL_SIGNS) && !pState.is(Blocks.LADDER)
 			&& !pState.is(Blocks.SUGAR_CANE) && !pState.is(Blocks.BUBBLE_COLUMN)) {
 			if (!pState.is(Blocks.NETHER_PORTAL) && !pState.is(Blocks.END_PORTAL) && !pState.is(Blocks.END_GATEWAY)
 				&& !pState.is(Blocks.STRUCTURE_VOID)) {

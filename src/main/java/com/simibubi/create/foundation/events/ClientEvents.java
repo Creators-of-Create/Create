@@ -6,6 +6,7 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
+import com.simibubi.create.content.contraptions.actors.seat.ContraptionPlayerPassengerRotation;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsHandler;
 import com.simibubi.create.content.contraptions.chassis.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.minecart.CouplingHandlerClient;
@@ -172,6 +173,7 @@ public class ClientEvents {
 		CreateClient.VALUE_SETTINGS_HANDLER.tick();
 		ScrollValueHandler.tick();
 		NetheriteBacktankFirstPersonRenderer.clientTick();
+		ContraptionPlayerPassengerRotation.tick();
 	}
 
 	@SubscribeEvent
@@ -227,6 +229,8 @@ public class ClientEvents {
 		buffer.draw();
 		RenderSystem.enableCull();
 		ms.popPose();
+		
+		ContraptionPlayerPassengerRotation.frame();
 	}
 
 	@SubscribeEvent
