@@ -33,7 +33,7 @@ public class TooltipHelper {
 		Component hint = Lang.translateDirect(hintKey);
 		List<Component> cutComponent = cutTextComponent(hint, Palette.GRAY_AND_WHITE);
 		for (Component component : cutComponent)
-			Lang.text(component.getString()).forGoggles(tooltip);
+			Lang.builder().add(component).forGoggles(tooltip);
 	}
 
 	public static String makeProgressBar(int length, int filledLength) {

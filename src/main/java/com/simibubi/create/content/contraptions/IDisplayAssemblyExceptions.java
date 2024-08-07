@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Components;
@@ -28,7 +27,7 @@ public interface IDisplayAssemblyExceptions {
 		String text = e.component.getString();
 		Arrays.stream(text.split("\n"))
 			.forEach(l -> TooltipHelper.cutStringTextComponent(l, Palette.GRAY_AND_WHITE)
-				.forEach(c -> Lang.text(c.getString()).forGoggles(tooltip)));
+				.forEach(c -> Lang.builder().add(c).forGoggles(tooltip)));
 
 		return true;
 	}
