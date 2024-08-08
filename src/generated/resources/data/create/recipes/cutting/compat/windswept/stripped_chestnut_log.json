@@ -3,19 +3,19 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "forbidden_arcanus"
+      "modid": "windswept"
     }
   ],
   "ingredients": [
     {
-      "item": "forbidden_arcanus:stripped_cherrywood_log"
+      "item": "windswept:stripped_chestnut_log"
     }
   ],
   "processingTime": 50,
   "results": [
     {
       "count": 6,
-      "item": "forbidden_arcanus:cherrywood_planks"
+      "item": "windswept:chestnut_planks"
     }
   ]
 }

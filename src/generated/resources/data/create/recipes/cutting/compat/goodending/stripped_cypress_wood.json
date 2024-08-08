@@ -3,18 +3,19 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "forbidden_arcanus"
+      "modid": "goodending"
     }
   ],
   "ingredients": [
     {
-      "item": "forbidden_arcanus:mysterywood"
+      "item": "goodending:stripped_cypress_wood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "forbidden_arcanus:stripped_mysterywood"
+      "count": 6,
+      "item": "goodending:cypress_planks"
     }
   ]
 }

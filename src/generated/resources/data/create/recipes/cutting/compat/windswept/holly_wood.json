@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "windswept"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "windswept:holly_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "windswept:stripped_holly_wood"
+    }
+  ]
+}
