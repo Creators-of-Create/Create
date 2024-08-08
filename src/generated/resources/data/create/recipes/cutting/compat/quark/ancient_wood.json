@@ -3,18 +3,18 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "upgrade_aquatic"
+      "modid": "quark"
     }
   ],
   "ingredients": [
     {
-      "item": "upgrade_aquatic:driftwood"
+      "item": "quark:ancient_wood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "upgrade_aquatic:stripped_driftwood"
+      "item": "quark:stripped_ancient_wood"
     }
   ]
 }

@@ -3,18 +3,18 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "upgrade_aquatic"
+      "modid": "goodending"
     }
   ],
   "ingredients": [
     {
-      "item": "upgrade_aquatic:driftwood"
+      "item": "goodending:muddy_oak_log"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "upgrade_aquatic:stripped_driftwood"
+      "item": "goodending:stripped_muddy_oak_log"
     }
   ]
 }

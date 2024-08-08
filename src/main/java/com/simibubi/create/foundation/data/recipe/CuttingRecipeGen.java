@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
@@ -60,8 +61,8 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		BTN_5 =
 			stripAndMakePlanks(Mods.BTN, "glimmering_dreamwood", "glimmering_stripped_dreamwood", "dreamwood_planks"),
 
-		// Forbidden Arcanus (no _wood suffix)
-		FA = cuttingCompat(Mods.FA, "mysterywood"),
+		// Forbidden Arcanus
+		FA = cuttingCompat(Mods.FA, "cherry", "aurum"),
 
 		// Hexcasting (stripped is a suffix here)
 		HEX = cuttingCompat(Mods.HEX, "edified"),
@@ -97,7 +98,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		AP = cuttingCompat(Mods.AP, "twisted"),
 
 		// Quark
-		Q = cuttingCompat(Mods.Q, "azalea", "blossom"),
+		Q = cuttingCompat(Mods.Q, "azalea", "blossom", "ancient"),
 
 		// Ecologics
 		ECO = cuttingCompat(Mods.ECO, "coconut", "walnut", "azalea"),
@@ -133,7 +134,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 		// Upgrade Aquatic
 		UA = cuttingCompat(Mods.UA, "river"),
-		UA_2 = stripAndMakePlanks(Mods.UA, "driftwood", "strippped_driftwood", "driftwood_planks"),
+		UA_2 = stripAndMakePlanks(Mods.UA, "driftwood", "stripped_driftwood", "driftwood_planks"),
 		UA_3 = cuttingCompatLogOnly(Mods.UA, "driftwood"),
 
 		//Vault Hunters
@@ -159,7 +160,20 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		RU_12 = stripAndMakePlanks(Mods.RU, "ashen_log", "stripped_dead_log", null),
 		RU_13 = stripAndMakePlanks(Mods.RU, "ashen_wood", "stripped_dead_wood", null),
 		RU_14 = stripOnlyDiffModId(Mods.RU, "silver_birch_log", Mods.MC, "stripped_birch_log"),
-		RU_15 = stripOnlyDiffModId(Mods.RU, "silver_birch_wood", Mods.MC, "stripped_birch_wood")
+		RU_15 = stripOnlyDiffModId(Mods.RU, "silver_birch_wood", Mods.MC, "stripped_birch_wood"),
+
+		// Environmental
+
+		ENV = cuttingCompat(Mods.ENV, "willow", "cherry", "wisteria"),
+
+		// Windswept
+
+		WSP = cuttingCompat(Mods.WSP, "holly", "chestnut"),
+
+		// Good Ending
+
+		GOOD = cuttingCompat(Mods.GOOD, "muddy_oak", "cypress")
+
 		;
 
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {

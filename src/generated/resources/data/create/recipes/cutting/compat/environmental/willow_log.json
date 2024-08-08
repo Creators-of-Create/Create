@@ -3,18 +3,18 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "upgrade_aquatic"
+      "modid": "environmental"
     }
   ],
   "ingredients": [
     {
-      "item": "upgrade_aquatic:driftwood"
+      "item": "environmental:willow_log"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "upgrade_aquatic:stripped_driftwood"
+      "item": "environmental:stripped_willow_log"
     }
   ]
 }

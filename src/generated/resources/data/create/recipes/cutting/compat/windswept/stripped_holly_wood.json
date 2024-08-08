@@ -3,18 +3,19 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "upgrade_aquatic"
+      "modid": "windswept"
     }
   ],
   "ingredients": [
     {
-      "item": "upgrade_aquatic:driftwood"
+      "item": "windswept:stripped_holly_wood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "upgrade_aquatic:stripped_driftwood"
+      "count": 6,
+      "item": "windswept:holly_planks"
     }
   ]
 }

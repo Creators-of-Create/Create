@@ -3,18 +3,19 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "upgrade_aquatic"
+      "modid": "goodending"
     }
   ],
   "ingredients": [
     {
-      "item": "upgrade_aquatic:driftwood"
+      "item": "goodending:stripped_cypress_wood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "upgrade_aquatic:stripped_driftwood"
+      "count": 6,
+      "item": "goodending:cypress_planks"
     }
   ]
 }

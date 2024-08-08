@@ -8,13 +8,14 @@
   ],
   "ingredients": [
     {
-      "item": "upgrade_aquatic:driftwood"
+      "item": "upgrade_aquatic:stripped_driftwood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "upgrade_aquatic:stripped_driftwood"
+      "count": 6,
+      "item": "upgrade_aquatic:driftwood_planks"
     }
   ]
 }

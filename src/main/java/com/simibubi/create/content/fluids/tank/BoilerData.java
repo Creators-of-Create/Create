@@ -11,7 +11,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.decoration.steamWhistle.WhistleBlock;
 import com.simibubi.create.content.decoration.steamWhistle.WhistleBlockEntity;
-import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.BlockStressValues;
 import com.simibubi.create.content.kinetics.steamEngine.SteamEngineBlock;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
@@ -151,9 +150,9 @@ public class BoilerData {
 
 		Lang.translate("boiler.status", getHeatLevelTextComponent().withStyle(ChatFormatting.GREEN))
 						.forGoggles(tooltip);
-		Lang.text(getSizeComponent(true, false).getString()).forGoggles(tooltip, 1);
-		Lang.text(getWaterComponent(true, false).getString()).forGoggles(tooltip, 1);
-		Lang.text(getHeatComponent(true, false).getString()).forGoggles(tooltip, 1);
+		Lang.builder().add(getSizeComponent(true, false)).forGoggles(tooltip, 1);
+		Lang.builder().add(getWaterComponent(true, false)).forGoggles(tooltip, 1);
+		Lang.builder().add(getHeatComponent(true, false)).forGoggles(tooltip, 1);
 
 		if (attachedEngines == 0)
 			return true;

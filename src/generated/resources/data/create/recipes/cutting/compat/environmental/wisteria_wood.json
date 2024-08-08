@@ -3,19 +3,18 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "upgrade_aquatic"
+      "modid": "environmental"
     }
   ],
   "ingredients": [
     {
-      "item": "upgrade_aquatic:strippped_driftwood"
+      "item": "environmental:wisteria_wood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "count": 6,
-      "item": "upgrade_aquatic:driftwood_planks"
+      "item": "environmental:stripped_wisteria_wood"
     }
   ]
 }

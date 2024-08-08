@@ -3,18 +3,19 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "upgrade_aquatic"
+      "modid": "forbidden_arcanus"
     }
   ],
   "ingredients": [
     {
-      "item": "upgrade_aquatic:driftwood"
+      "item": "forbidden_arcanus:stripped_cherry_wood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "upgrade_aquatic:stripped_driftwood"
+      "count": 6,
+      "item": "forbidden_arcanus:cherry_planks"
     }
   ]
 }
