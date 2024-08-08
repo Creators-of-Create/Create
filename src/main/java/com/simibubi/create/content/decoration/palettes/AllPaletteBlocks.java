@@ -41,6 +41,7 @@ public class AllPaletteBlocks {
 		.addLayer(() -> RenderType::cutout)
 		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), c::get))
 		.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/"))
+		.loot((t, g) -> t.dropWhenSilkTouch(g))
 		.tag(Tags.Blocks.GLASS_COLORLESS, BlockTags.IMPERMEABLE)
 		.item()
 		.tag(Tags.Items.GLASS_COLORLESS)
