@@ -1,4 +1,4 @@
-// 1.19.2	2024-08-07T13:21:18.6734034	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.2	2024-08-08T08:25:48.5180143	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -3464,7 +3464,7 @@ aeef9300a4f721957066e713d0bc2421316c3e51 data/create/loot_tables/blocks/smart_fl
 f3e65433dca96029dfd7b62a0e065c12e03c8577 data/create/loot_tables/blocks/sticky_mechanical_piston.json
 0c1c96cd4282571e5a687fbf307c2aff3e141286 data/create/loot_tables/blocks/stockpile_switch.json
 d4349935a15fd210e7d3aac28c7627138ac3d40b data/create/loot_tables/blocks/stressometer.json
-86d571cec1ec9b4d65560ac8fc36fd375ec47902 data/create/loot_tables/blocks/tiled_glass.json
+ea842a29275cdbbb4e2d74e49353f6dba18c941b data/create/loot_tables/blocks/tiled_glass.json
 8312dcf33d6ee53b1d160299bcadae2a32c55068 data/create/loot_tables/blocks/tiled_glass_pane.json
 1156b83b9edbb82278dc1939a936f369dcf66d09 data/create/loot_tables/blocks/track.json
 fe945a7be2b853a41dfad1788b710bbcc8195d21 data/create/loot_tables/blocks/track_observer.json

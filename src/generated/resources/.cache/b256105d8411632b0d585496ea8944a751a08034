@@ -1,4 +1,4 @@
-// 1.19.2	2024-08-07T15:05:58.7776609	Create's Processing Recipes
+// 1.19.2	2024-08-08T08:25:48.5628927	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -684,14 +684,14 @@ d9ea151935b7257f9a799be5959d736a20eabf44 data/create/recipes/cutting/compat/twil
 29649f4c23ddc00eebe7352dcca0d4c695807c62 data/create/recipes/cutting/compat/twilightforest/transformation_wood.json
 10227f5cf8a9995f7e59c509ad20a33f907a1203 data/create/recipes/cutting/compat/twilightforest/twilight_oak_log.json
 60c949a998c4ffe6f838faf729ef9a7a247a59df data/create/recipes/cutting/compat/twilightforest/twilight_oak_wood.json
-894d91b2cb339406acb48a29cfabe4c8eafe51bf data/create/recipes/cutting/compat/upgrade_aquatic/driftwood.json
+b6c3111236dea7685ed893a2ddab6bacbb606170 data/create/recipes/cutting/compat/upgrade_aquatic/driftwood.json
 b86b4710a31b8ab98d3f61972fd0e3a80d1cb788 data/create/recipes/cutting/compat/upgrade_aquatic/driftwood_log.json
 1a155ced39a05ccbaa1fcd57052c8acced381860 data/create/recipes/cutting/compat/upgrade_aquatic/river_log.json
 9b29505252b5c529d86e24c9c53d1190e73537d7 data/create/recipes/cutting/compat/upgrade_aquatic/river_wood.json
+1104de0e8917d4fa8e51b036b573ef54bfbc7980 data/create/recipes/cutting/compat/upgrade_aquatic/stripped_driftwood.json
 3fd253db6046bd5276cac5aea203f5293a49f843 data/create/recipes/cutting/compat/upgrade_aquatic/stripped_driftwood_log.json
 ab08c98c58c2beab4805d0576cac3874c4774553 data/create/recipes/cutting/compat/upgrade_aquatic/stripped_river_log.json
 b368756fa5ec34fa279f53fb99aea8f47757828a data/create/recipes/cutting/compat/upgrade_aquatic/stripped_river_wood.json
-b5b38739f5c763a04dd1d8386b9afc1081d1c436 data/create/recipes/cutting/compat/upgrade_aquatic/strippped_driftwood.json
 2619c5f3916147bf13a21f986f1889a67f885d1b data/create/recipes/cutting/compat/windswept/chestnut_log.json
 40068203261db20d74bd84fa8c9e9a6fa9fc4ef5 data/create/recipes/cutting/compat/windswept/chestnut_wood.json
 70a5cf4ac9996f9f424c064fc39fab8901f5c71c data/create/recipes/cutting/compat/windswept/holly_log.json
