@@ -1,4 +1,4 @@
-// 1.20.1	2024-08-07T17:40:53.6104441	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.20.1	2024-08-08T08:37:57.7244288	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -3464,7 +3464,7 @@ cae1bd9100b62841e260880faa80e2442f44a141 data/create/loot_tables/blocks/steam_wh
 074f526902cb5fcff2129614428aba1ea05a6649 data/create/loot_tables/blocks/sticky_mechanical_piston.json
 a7332324e63f7d28621ddfbd54eb3d091461d890 data/create/loot_tables/blocks/stockpile_switch.json
 b13496b1b4bc0be30605832e23894fb374dd796e data/create/loot_tables/blocks/stressometer.json
-2d397c2a37e0d5a6c0028367cc0bdabd75f0c752 data/create/loot_tables/blocks/tiled_glass.json
+6a7df4d2730d57ae6e404b4bc8e01367e5ddbf07 data/create/loot_tables/blocks/tiled_glass.json
 0ad584e41780dc0183af1fa1e49e126730dfdbab data/create/loot_tables/blocks/tiled_glass_pane.json
 ea279a86c8558a3e1e48f4f6f204bb8f084125ca data/create/loot_tables/blocks/track.json
 325af1ed4461435bba044281c9ab73cf312dd324 data/create/loot_tables/blocks/track_observer.json
@@ -4207,7 +4207,7 @@ d371dfd35e49a7bef19f59c03e7f4ae20992f03d data/create/tags/items/create_ingots.js
 910d0f5ccbc4c84b224eca1f1588b1695f41447b data/create/tags/items/crushed_raw_materials.json
 0fa526e7e742573b603ad26b09526cf724efa1dc data/create/tags/items/deployable_drink.json
 1cebeb92bd514b75d54ac6d5708047801f0501c5 data/create/tags/items/modded_stripped_logs.json
-2963c29de72fdc4b0bdf1f4dc5210779993f358e data/create/tags/items/modded_stripped_wood.json
+586f8fc5a8b8559c9dc0017e13c78ad918688fae data/create/tags/items/modded_stripped_wood.json
 695d75b352fd190b303c724d1aaee9bb786a903b data/create/tags/items/pressurized_air_sources.json
 2cd3adffd8b151354df137a990dcb97996a665bb data/create/tags/items/sandpaper.json
 79418bd729cef417b322cef9b491e7ae83317d61 data/create/tags/items/seats.json
