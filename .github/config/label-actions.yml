@@ -14,14 +14,14 @@
         close: true
         close-reason: 'not planned'
         comment: >
-            **Hybrid Server Software**: Create does not support hybrid server software, such as [MohistMC](https://mohistmc.com/), due to code changes that Create might not expect. If you encounter this issue on official Forge/NeoForge server software, feel free to open a new issue. Otherwise, consider reporting this issue to the hybrid server software you are using. Thanks!
+            **Hybrid Server Software**: Create cannot reasonably support hybrid server software, such as [MohistMC](https://mohistmc.com/), as their changes under the hood make it difficult for larger mods to function properly. If you encounter this issue on official Forge/NeoForge server software, feel free to open a new issue. Otherwise, consider reporting this issue to the hybrid server software you are using. Thanks!
 
 'env: outdated create version':
     issues:
         close: true
         close-reason: 'not planned'
         comment: >
-            **Outdated Create Version**: Since you are using an outdated Create verion, please update to the latest version as it may resolve your issue. If this issue persists after updating Create, feel free to open a new issue. Thanks!
+            **Outdated Create Version**: Since you are using an outdated Create version, please update to the latest version as it may resolve your issue. If this issue persists after updating Create, feel free to open a new issue. Thanks!
 
 'env: pojav':
     issues:
