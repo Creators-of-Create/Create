@@ -5,7 +5,7 @@
 'env: fabric':
     issues:
         close: true
-        close-reason: not planned
+        close-reason: 'not planned'
         comment: >
             @{issue-author}, you have specified that this issue happened when using Fabric Loader. This issue tracker is only for issues that happen when using the Forge/NeoForge version of Create; please reopen this issue on [the Create Fabric issue tracker](https://github.com/Fabricators-of-Create/Create/issues).
 
