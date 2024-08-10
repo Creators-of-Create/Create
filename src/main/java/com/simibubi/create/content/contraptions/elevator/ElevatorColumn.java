@@ -33,6 +33,7 @@ public class ElevatorColumn {
 	protected List<Integer> contacts;
 	protected int targetedYLevel;
 	protected boolean isActive;
+	protected boolean targetAvailable;
 
 	@Nullable
 	public static ElevatorColumn get(LevelAccessor level, ColumnCoords coords) {
@@ -49,6 +50,7 @@ public class ElevatorColumn {
 		this.level = level;
 		this.coords = coords;
 		contacts = new ArrayList<>();
+		targetAvailable = false;
 	}
 
 	public void markDirty() {
@@ -113,6 +115,10 @@ public class ElevatorColumn {
 
 	public void target(int yLevel) {
 		targetedYLevel = yLevel;
+	}
+	
+	public boolean isTargetAvailable() {
+		return targetAvailable;
 	}
 
 	public int getTargetedYLevel() {
