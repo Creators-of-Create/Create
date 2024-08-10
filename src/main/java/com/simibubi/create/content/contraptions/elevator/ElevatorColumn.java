@@ -115,6 +115,7 @@ public class ElevatorColumn {
 
 	public void target(int yLevel) {
 		targetedYLevel = yLevel;
+		targetAvailable = true;
 	}
 	
 	public boolean isTargetAvailable() {
