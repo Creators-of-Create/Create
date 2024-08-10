@@ -160,7 +160,7 @@ public class SchematicHandler {
 		BlockPos pos;
 
 		pos = BlockPos.ZERO;
-		
+
 		try {
 			schematic.placeInWorld(w, pos, pos, placementSettings, w.getRandom(), Block.UPDATE_CLIENTS);
 			for (BlockEntity blockEntity : w.getBlockEntities())
@@ -239,6 +239,13 @@ public class SchematicHandler {
 	public void updateRenderers() {
 		for (SchematicRenderer renderer : renderers) {
 			renderer.update();
+		}
+	}
+
+	public void onResourceReload() {
+		for (SchematicRenderer renderer : renderers) {
+			if (renderer.schematic != null)
+				renderer.redraw();
 		}
 	}
 

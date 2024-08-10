@@ -16,6 +16,7 @@ public class ClientResourceReloadListener implements ResourceManagerReloadListen
 		SoundScapes.invalidateAll();
 		LangNumberFormat.numberFormat.update();
 		BeltHelper.uprightCache.clear();
+		CreateClient.SCHEMATIC_HANDLER.onResourceReload();
 	}
 
 }
