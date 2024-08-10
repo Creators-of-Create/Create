@@ -97,6 +97,8 @@ public class SchematicHandler implements IGuiOverlay {
 		if (activeSchematicItem != null && transformation != null)
 			transformation.tick();
 
+		renderers.forEach(SchematicRenderer::tick);
+
 		LocalPlayer player = mc.player;
 		ItemStack stack = findBlueprintInHand(player);
 		if (stack == null) {
@@ -117,7 +119,6 @@ public class SchematicHandler implements IGuiOverlay {
 		if (!active)
 			return;
 
-		renderers.forEach(SchematicRenderer::tick);
 		if (syncCooldown > 0)
 			syncCooldown--;
 		if (syncCooldown == 1)
