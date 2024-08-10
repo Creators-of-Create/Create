@@ -1,96 +1,55 @@
 # Configuration for Label Actions - https://github.com/dessant/label-actions
 
 # ----------------------------------- ISSUES ----------------------------------- #
-'env: hybrid core':
+
+'env: fabric':
     issues:
         close: true
         close-reason: not planned
         comment: >
-            @{issue-author}, Create does not provide support for hybrid cores of any kind due to the fact that they are pretty invasive
-            and make debugging issues really hard.
-            Examples of hybrid cores are server jars that can run both Forge/Neoforge mods and spigot plugins.
-            You are on you're own with any issues that occur while using a hybrid core or any other unsupported server jar.
+            @{issue-author}, you have specified that this issue happened when using Fabric Loader. This issue tracker is only for issues that happen when using the Forge/NeoForge version of Create; please reopen this issue on [the Create Fabric issue tracker](https://github.com/Fabricators-of-Create/Create/issues).
+
+'env: hybrid server':
+    issues:
+        close: true
+        close-reason: 'not planned'
+        comment: >
+            @{issue-author}, you have specified that this issue happened when using hybrid server software. Unfortunately, Create does not support hybrid server software because such software may contain code changes that Create does not expect, leading to issues that are difficult to debug or that cannot even be fixed by Create. If you are still experiencing this issue when using official Forge/NeoForge server software, feel free to open a new issue.
 
 'env: outdated create version':
     issues:
         close: true
-        close-reason: not planned
+        close-reason: 'not planned'
         comment: >
-            @{issue-author}, This issue seems to occur due to a outdated create version, The issue will be closed due to this. If you are
-            able to reproduce this on the latest Create version feel free to open a new issue!
-
-'env: outdated minecraft version':
-    issues:
-        close: true
-        close-reason: not planned
-        comment: >
-            @{issue-author}, This issue is for a minecraft version that Create no longer supports, The currently
-            supported versions can be found [here](https://github.com/Creators-of-Create/Create/wiki/dev.status)
-            If you are able to reproduce this on a version Create currently supports feel free to open a new issue!
+            @{issue-author}, you have specified that this issue happened when using an outdated Create version. Unfortunately, we cannot process all such issues because each Create update contains a multitude of fixes and simply updating Create has a good chance of fixing your issue, saving us some time too. If you are still experiencing this issue after updating Create to the latest version, feel free to open a new issue.
 
 'env: pojav':
     issues:
         close: true
-        close-reason: not planned
+        close-reason: 'not planned'
         comment: >
-            @{issue-author}, Pojav launcher or other launchers that allow you to play java edition on mobile are unsupported, this is due
-            to the fact that phones lack the drivers necessary for mods like Flywheel to support them.
+            @{issue-author}, you have specified that this issue happened when using Pojav. Unfortunately, Create does not support Pojav or other mobile launchers for technical reasons related to rendering. If you are still experiencing this issue on a PC, feel free to open a new issue.
 
-'status: needs info':
-    issues:
-        comment: >
-            @{issue-author}, It appears you haven't attached a log describing your issue or forgot to fill in some fields.
-            Please go back and verify you have attached the crash-log/latest.log in the form of a file upload or link to a https://mclo.gs log.
-            Alongside that please make sure you have clearly described your issue and left exact reproduction steps to the best of your ability.
-            Once you've confirmed that please leave a message here saying "I updated my issue with the needed info." and a triager will take a look.
-
-'-status: needs info':
-    issues:
-        comment: >
-            Thank you for providing more information, this issue will be triaged by a member of our staff soon.
-            Please be patient during this process as there are many issues that need to be triaged alongside this one.
-
-'status: unable to reproduce':
+'env: unsupported minecraft version':
     issues:
         close: true
-        close-reason: not planned
+        close-reason: 'not planned'
         comment: >
-            @{issue-author}, One of our testers/triagers were unable to reproduce this issues as you've described.
-            The issue may possibly be fixed already or caused by another mod you have installed.
-            If the issue occurs again please open a new issue.
-
-'-status: unable to reproduce':
-    issues:
-        comment: >
-            @{issue-author}, Good news! Someone was able to reproduce this issue and has edited it with better reproduction steps.
-        reopen: true
-
-'loader: fabric':
-    issues:
-        close: true
-        close-reason: not planned
-        comment: >
-            @{issue-author}, It appears you've made a issue regarding the Fabric version of Create on the Create-(Forge/Neoforge) issue tracker.
-            Please head to https://github.com/Fabricators-of-Create/Create/issues and open a issue there for Create-Fabric related issues.
+            @{issue-author}, you have specified that this issue happened when using an unsupported Minecraft version. Unfortunately, unsupported Minecraft versions no longer receive Create updates. The current supported Minecraft versions can be found [here](https://github.com/Creators-of-Create/Create/wiki/dev.status). If you are still experiencing this issue on a supported Minecraft version, feel free to open a new issue.
 
 # ----------------------------------- PULL REQUESTS ----------------------------------- #
 
 'pr status: conflicts':
     prs:
         comment: >
-            @{issue-author}, Seems like your PR has some conflicts, please pull in the latest changes and leave a message so we can mark this PR as ready for reviewing
-
-'-pr status: conflicts':
-    prs:
-        comment: >
-            Thank you for fixing this PR's conflicts, this has been added to our merge queue and will be looked at before the next release by the team.
+            @{issue-author}, this pull request has merge conflicts with the target branch. Please merge the latest changes and leave a message here so we can continue with the process of reviewing and merging this pull request.
 
 'pr status: waiting for author':
     prs:
         comment: >
-            @{issue-author}, A staff has left a review or some comments regarding your PR, please make these changes whenever possible and leave a message so we can mark this PR as ready for futher review
+            @{issue-author}, a developer has left a review and requested changes. Please make the requested changes or further discuss them with the developer so this pull request can be merged.
 
-'-pr status: waiting for author':
+'pr status: wrong target':
     prs:
         comment: >
-            Thank you for making the required changes, this has been added to our merge queue and will be looked at before the next release by the team.
+            @{issue-author}, this pull request is targeting the wrong branch. Pull requests should target the branch corresponding to the earliest supported Minecraft version unless the changes are specific to code that only exists for a newer Minecraft version. Please change the target branch, resolve any merge conflicts, and leave a message here so we can continue with the process of reviewing and merging this pull request.
