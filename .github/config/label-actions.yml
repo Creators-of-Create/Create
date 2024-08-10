@@ -7,49 +7,49 @@
         close: true
         close-reason: 'not planned'
         comment: >
-            @{issue-author}, you have specified that this issue happened when using Fabric Loader. This issue tracker is only for issues that happen when using the Forge/NeoForge version of Create; please reopen this issue on [the Create Fabric issue tracker](https://github.com/Fabricators-of-Create/Create/issues).
+            **Fabric Loader**: This issue tracker is only for the Forge/NeoForge versions of Create. Since you mentioned using Fabric Loader, please reopen this issue on the [Create Fabric issue tracker](https://github.com/Fabricators-of-Create/Create/issues). Thanks!
 
 'env: hybrid server':
     issues:
         close: true
         close-reason: 'not planned'
         comment: >
-            @{issue-author}, you have specified that this issue happened when using hybrid server software. Unfortunately, Create does not support hybrid server software because such software may contain code changes that Create does not expect, leading to issues that are difficult to debug or that cannot even be fixed by Create. If you are still experiencing this issue when using official Forge/NeoForge server software, feel free to open a new issue.
+            **Hybrid Server Software**: Create does not support hybrid server software, such as [MohistMC](https://mohistmc.com/), due to code changes that Create might not expect. If you encounter this issue on official Forge/NeoForge server software, feel free to open a new issue. Otherwise, consider reporting this issue to the hybrid server software you are using. Thanks!
 
 'env: outdated create version':
     issues:
         close: true
         close-reason: 'not planned'
         comment: >
-            @{issue-author}, you have specified that this issue happened when using an outdated Create version. Unfortunately, we cannot process all such issues because each Create update contains a multitude of fixes and simply updating Create has a good chance of fixing your issue, saving us some time too. If you are still experiencing this issue after updating Create to the latest version, feel free to open a new issue.
+            **Outdated Create Version**: Since you are using an outdated Create verion, please update to the latest version as it may resolve your issue. If this issue persists after updating Create, feel free to open a new issue. Thanks!
 
 'env: pojav':
     issues:
         close: true
         close-reason: 'not planned'
         comment: >
-            @{issue-author}, you have specified that this issue happened when using Pojav. Unfortunately, Create does not support Pojav or other mobile launchers for technical reasons related to rendering. If you are still experiencing this issue on a PC, feel free to open a new issue.
+            **Pojav**: Create does not support Pojav or other mobile launchers due to rendering limitations. If you encounter this issue on a PC, feel free to open a new issue. Thanks!
 
 'env: unsupported minecraft version':
     issues:
         close: true
         close-reason: 'not planned'
         comment: >
-            @{issue-author}, you have specified that this issue happened when using an unsupported Minecraft version. Unfortunately, unsupported Minecraft versions no longer receive Create updates. The current supported Minecraft versions can be found [here](https://github.com/Creators-of-Create/Create/wiki/dev.status). If you are still experiencing this issue on a supported Minecraft version, feel free to open a new issue.
+            **Unsupported Minecraft Version**: Unsupported Minecraft versions no longer receive Create updates. Please check the [supported Minecraft versions](https://github.com/Creators-of-Create/Create/wiki/dev.status). If you encounter this issue on a supported Minecraft version, feel free to open a new issue. Thanks!
 
 # ----------------------------------- PULL REQUESTS ----------------------------------- #
 
 'pr status: conflicts':
     prs:
         comment: >
-            @{issue-author}, this pull request has merge conflicts with the target branch. Please merge the latest changes and leave a message here so we can continue with the process of reviewing and merging this pull request.
+            @{issue-author}, this pull request has merge conflicts with the target branch. Please merge the latest changes and leave a message here so we can continue with the process of reviewing and merging this pull request. Thanks!
 
 'pr status: waiting for author':
     prs:
         comment: >
-            @{issue-author}, a developer has left a review and requested changes. Please make the requested changes or further discuss them with the developer so this pull request can be merged.
+            @{issue-author}, a developer has left a review and requested changes. Please make the requested changes or further discuss them with the developer so this pull request can be merged. Thanks!
 
 'pr status: wrong target':
     prs:
         comment: >
-            @{issue-author}, this pull request is targeting the wrong branch. Pull requests should target the branch corresponding to the earliest supported Minecraft version unless the changes are specific to code that only exists for a newer Minecraft version. Please change the target branch, resolve any merge conflicts, and leave a message here so we can continue with the process of reviewing and merging this pull request.
+            @{issue-author}, this pull request is targeting the wrong branch. Pull requests should target the branch corresponding to the earliest supported Minecraft version unless the changes are specific to code that only exists for a newer Minecraft version. Please change the target branch, resolve any merge conflicts, and leave a message here so we can continue with the process of reviewing and merging this pull request. Thanks!
