@@ -61,7 +61,7 @@ public abstract class TrainHatInfoProvider implements DataProvider {
 	}
 
 	@Override
-	public final String getName() {
+	public String getName() {
 		return "Create Train Hat Information";
 	}
 }
