@@ -87,7 +87,9 @@ public class ElevatorContraption extends PulleyContraption {
 		ElevatorColumn column = ElevatorColumn.get(level, coords);
 		if (column == null)
 			return null;
-		int targetedYLevel = column.targetedYLevel;
+		if (!column.isTargetAvailable())
+			return null;
+		int targetedYLevel = column.getTargetedYLevel();
 		if (isTargetUnreachable(targetedYLevel))
 			return null;
 		return targetedYLevel;
