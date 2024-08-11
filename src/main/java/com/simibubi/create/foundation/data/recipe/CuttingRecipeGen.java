@@ -62,7 +62,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 			stripAndMakePlanks(Mods.BTN, "glimmering_dreamwood", "glimmering_stripped_dreamwood", "dreamwood_planks"),
 
 		// Forbidden Arcanus
-		FA = cuttingCompat(Mods.FA, "cherry", "aurum"),
+		FA = cuttingCompat(Mods.FA, "aurum"),
 
 		// Hexcasting (stripped is a suffix here)
 		HEX = cuttingCompat(Mods.HEX, "edified"),
@@ -115,7 +115,6 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		BSK_3 = stripAndMakePlanks(Mods.BSK, null, "crystallized_wood", "crystallized_planks"),
 
 		// Atmospheric
-
 		ATM = cuttingCompat(Mods.ATM, "aspen", "kousa", "yucca", "morado"),
 		ATM_2 = stripAndMakePlanks(Mods.ATM, "grimwood", "stripped_grimwood", "grimwood_planks"),
 		ATM_3 = stripAndMakePlanks(Mods.ATM, "rosewood", "stripped_rosewood", "rosewood_planks"),
@@ -126,11 +125,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		AUTUM_2 = stripAndMakePlanks(Mods.AUTUM, "sappy_maple_wood", "sappy_maple_log", "maple_planks"),
 
 		// Endergetic
-
 		ENDERGETIC = stripAndMakePlanks(Mods.ENDER, "poise_stem", "stripped_poise_stem", "poise_planks"),
-
-		// Project Vibrant Journeys
-		PVJ = cuttingCompatLogOnly(Mods.PVJ,"aspen", "baobab", "cottonwood", "fir", "juniper", "mangrove", "maple", "palm", "pine", "redwood", "willow"),
 
 		// Upgrade Aquatic
 		UA = cuttingCompat(Mods.UA, "river"),
@@ -141,7 +136,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		VH = cuttingCompatLogOnly(Mods.VH, "wooden", "overgrown_wooden", "driftwood", "chromatic"),
 
 		// Nether's Exoticism
-		NE = cuttingCompat(Mods.NE, "ramboutan"),
+		NE = cuttingCompat(Mods.NE, "ramboutan"), // This actually errors until they fix their id typo
 		NE_2 = cuttingCompatLogOnly(Mods.NE, "jabuticaba"),
 
 		// Regions Unexplored
@@ -155,7 +150,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		RU_7 = stripAndMakePlanks(Mods.RU, "pink_bioshroom_hyphae", "stripped_pink_bioshroom_hyphae", "pink_bioshroom_planks"),
 		RU_8 = stripAndMakePlanks(Mods.RU, "yellow_bioshroom_stem", "stripped_yellow_bioshroom_stem", "yellow_bioshroom_planks"),
 		RU_9 = stripAndMakePlanks(Mods.RU, "yellow_bioshroom_hyphae", "stripped_yellow_bioshroom_hyphae", "yellow_bioshroom_planks"),
-		RU_10 = stripAndMakePlanks(Mods.RU, null, "alpha_wood", "alpha_planks"),
+		RU_10 = stripAndMakePlanks(Mods.RU, null, "alpha_log", "alpha_planks"),
 		RU_11 = stripAndMakePlanks(Mods.RU, "brimwood_log_magma", "stripped_brimwood", null),
 		RU_12 = stripAndMakePlanks(Mods.RU, "ashen_log", "stripped_dead_log", null),
 		RU_13 = stripAndMakePlanks(Mods.RU, "ashen_wood", "stripped_dead_wood", null),
@@ -163,15 +158,12 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		RU_15 = stripOnlyDiffModId(Mods.RU, "silver_birch_wood", Mods.MC, "stripped_birch_wood"),
 
 		// Environmental
-
 		ENV = cuttingCompat(Mods.ENV, "willow", "cherry", "wisteria"),
 
 		// Windswept
-
 		WSP = cuttingCompat(Mods.WSP, "holly", "chestnut"),
 
 		// Good Ending
-
 		GOOD = cuttingCompat(Mods.GOOD, "muddy_oak", "cypress")
 
 		;

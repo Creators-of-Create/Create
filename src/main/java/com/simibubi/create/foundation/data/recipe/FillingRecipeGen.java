@@ -85,7 +85,10 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 
 		// Vampirism
 
-		VMP_CURSED_GRASS = moddedGrass(Mods.VMP, "cursed")
+		VMP_CURSED_GRASS = create(Mods.VMP.recipeId("cursed_grass"), b -> b.require(Fluids.WATER, 500)
+			.require(Mods.VMP, "cursed_earth")
+			.output(Mods.VMP, "cursed_grass")
+			.whenModLoaded(Mods.VMP.getId()));
 
 	;
 

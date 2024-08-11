@@ -192,23 +192,6 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 			.output(.5f, AllItems.CINDER_FLOUR.get())
 			.whenModMissing(Mods.ENS.getId())),
 
-		// AE2
-		AE2_DEEPSLATE_ORE = create(Mods.AE2.recipeId("deepslate_quartz_ore"), b -> b.duration(300)
-				.require(Mods.AE2, "deepslate_quartz_ore")
-				.output(Mods.AE2, "certus_quartz_crystal")
-				.output(1f, Mods.AE2, "certus_quartz_dust", 4)
-				.output(.5f, Mods.AE2, "certus_quartz_dust", 1)
-				.output(.125f, Items.COBBLED_DEEPSLATE)
-				.whenModLoaded(Mods.AE2.getId())),
-
-		AE2_ORE = create(Mods.AE2.recipeId("quartz_ore"), b -> b.duration(300)
-				.require(Mods.AE2, "quartz_ore")
-				.output(Mods.AE2, "certus_quartz_crystal")
-				.output(1f, Mods.AE2, "certus_quartz_dust", 4)
-				.output(.5f, Mods.AE2, "certus_quartz_dust", 1)
-				.output(.125f, Items.COBBLESTONE)
-				.whenModLoaded(Mods.AE2.getId())),
-
 		// Oh The Biomes You'll Go
 		BYG_AMETRINE_ORE = create(Mods.BYG.recipeId("ametrine_ore"), b -> b.duration(500)
 				.require(AllTags.optionalTag(ForgeRegistries.ITEMS,
@@ -336,17 +319,11 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 
 		// Silent Gems
 
-		SG_STONE = sgStoneOres("agate", "amber", "amethyst", "aquamarine", "garnet", "green_sapphire",
-				"helidor", "morganite", "onyx", "opal", "peridot", "phosphophyllite", "ruby", "sapphire",
-				"tanzite", "topaz"),
+		SG_STONE = sgStoneOres("peridot", "ruby", "sapphire", "topaz"),
 
-		SG_NETHER = sgNetherOres("alexandrite", "ametrine", "beniotite", "black_diamond", "carnelian",
-				"citrine", "eculase", "iolite", "jasper", "lepidolite", "malachite", "moldavite", "moonstone",
-				"spinel", "turquoise", "zircon"),
+		SG_NETHER = sgNetherOres("alexandrite", "black_diamond", "carnelian", "citrine", "iolite", "moldavite", "turquoise"),
 
-		SG_END = sgEndOres("ammolite", "apatite", "cats_eye", "chrysoprase", "coral", "flourite",
-				"jade", "kunzite", "kyanite", "pearl", "pyrope", "rose_quartz", "sodalite", "sunstone",
-				"tektite", "yellow_diamond"),
+		SG_END = sgEndOres("ammolite", "kyanite", "rose_quartz"),
 
 		// Simple Farming
 
@@ -380,11 +357,9 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		EO_EMERALD_NETHER = eoNetherOre("emerald", Items.EMERALD, 1),
 		EO_LAPIS_NETHER = eoNetherOre("lapis", Items.LAPIS_LAZULI, 10),
 		EO_DIAMOND_NETHER = eoNetherOre("diamond", Items.DIAMOND, 1),
-		EO_REDSTONE_NETHER = eoNetherOre("redstone", Items.REDSTONE, 6),
 		EO_GHAST_NETHER = eoNetherOre("ghast", Items.GHAST_TEAR, 1),
 		EO_COAL_END = eoEndOre("coal", Items.COAL, 1),
 		EO_COPPER_END = eoEndOre("copper", AllItems.CRUSHED_COPPER.get(), 5),
-		EO_IRON_END = eoEndOre("iron", AllItems.CRUSHED_IRON.get(), 1),
 		EO_EMERALD_END = eoEndOre("emerald", Items.EMERALD, 1),
 		EO_LAPIS_END = eoEndOre("lapis", Items.LAPIS_LAZULI, 10),
 		EO_DIAMOND_END = eoEndOre("diamond", Items.DIAMOND, 1),

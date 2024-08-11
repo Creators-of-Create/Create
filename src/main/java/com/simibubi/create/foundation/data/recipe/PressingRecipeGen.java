@@ -90,7 +90,7 @@ public class PressingRecipeGen extends ProcessingRecipeGen {
 
 		VMP_CURSED_PATH = moddedPaths(Mods.VMP, "cursed_earth"),
 
-		VMP_CURSED_PATH_GRASS = create("cursed_earth_path_from_grass", b -> b.require(Mods.RU, "cursed_grass")
+		VMP_CURSED_PATH_GRASS = create("cursed_earth_path_from_grass", b -> b.require(Mods.VMP, "cursed_grass")
 				.output(Mods.VMP, "cursed_earth_path")
 					.whenModLoaded(Mods.VMP.getId()))
 
