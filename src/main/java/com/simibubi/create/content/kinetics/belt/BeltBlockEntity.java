@@ -188,6 +188,8 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (!isItemHandlerCap(cap))
 			return super.getCapability(cap, side);
+		if (!BeltBlock.canTransportObjects(getBlockState()))
+			return super.getCapability(cap, side);
 		if (!isRemoved() && !itemHandler.isPresent())
 			initializeItemHandler();
 		return itemHandler.cast();
@@ -489,6 +491,8 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		ItemStack inserted = transportedStack.stack;
 		ItemStack empty = ItemStack.EMPTY;
 
+		if (!BeltBlock.canTransportObjects(getBlockState()))
+			return inserted;
 		if (nextBeltController == null)
 			return inserted;
 		BeltInventory nextInventory = nextBeltController.getInventory();
