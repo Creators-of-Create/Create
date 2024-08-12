@@ -73,7 +73,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			return;
 
 		activate(context, pos, player, mode);
-		checkForPlacementAdvancement();
+		checkForPlacementAdvancement(context, player);
 		tryDisposeOfExcess(context);
 		context.stall = player.blockBreakingProgress != null;
 	}
@@ -109,10 +109,10 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		DeployerHandler.activate(player, vec, pos, facingVec, mode);
 	}
 
-	protected void checkForPlacementAdvancement() {
+	protected void checkForPlacementAdvancement(MovementContext context, DeployerFakePlayer player) {
 		if ((context.contraption instanceof MountedContraption || context.contraption instanceof CarriageContraption)
 			&& player.placedTracks && context.blockEntityData != null && context.blockEntityData.contains("Owner"))
-			AllAdvancements.SELF_DEPLOYING.awardTo(world.getPlayerByUUID(context.blockEntityData.getUUID("Owner")));
+			AllAdvancements.SELF_DEPLOYING.awardTo(context.world.getPlayerByUUID(context.blockEntityData.getUUID("Owner")));
 	}
 
 	protected void activateAsSchematicPrinter(MovementContext context, BlockPos pos, DeployerFakePlayer player,
