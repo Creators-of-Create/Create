@@ -78,7 +78,7 @@ public class DebugInformation {
 					.put("Flywheel Backend", () -> Backend.getBackendType().toString())
 					.put("OpenGL Renderer", GlUtil::getRenderer)
 					.put("OpenGL Version", GlUtil::getOpenGLVersion)
-					.put("Graphics Mode", () -> Minecraft.getInstance().options.graphicsMode().toString())
+					.put("Graphics Mode", () -> Minecraft.getInstance().options.graphicsMode().get().toString())
 					.buildTo(DebugInformation::registerClientInfo);
 		});
 
