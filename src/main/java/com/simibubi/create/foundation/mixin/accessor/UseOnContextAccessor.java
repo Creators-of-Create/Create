@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.mixin;
+package com.simibubi.create.foundation.mixin.accessor;
 
 import net.minecraft.world.item.context.UseOnContext;
 

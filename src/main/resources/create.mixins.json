@@ -16,7 +16,6 @@
     "MainMixin",
     "MapItemSavedDataMixin",
     "TestCommandMixin",
-    "UseOnContextAccessor",
     "WaterWheelFluidSpreadMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
@@ -25,7 +24,8 @@
     "accessor.LivingEntityAccessor",
     "accessor.NbtAccounterAccessor",
     "accessor.ServerLevelAccessor",
-    "accessor.SystemReportAccessor"
+    "accessor.SystemReportAccessor",
+    "accessor.UseOnContextAccessor"
   ],
   "client": [
     "accessor.AgeableListModelAccessor",

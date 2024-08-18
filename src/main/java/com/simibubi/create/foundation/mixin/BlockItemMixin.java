@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.mixin;
 
 import com.simibubi.create.content.kinetics.deployer.DeployerFakePlayer;
 
+import com.simibubi.create.foundation.mixin.accessor.UseOnContextAccessor;
+
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 
