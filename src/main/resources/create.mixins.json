@@ -6,6 +6,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "create.refmap.json",
   "mixins": [
+    "BlockItemMixin",
     "ClientboundMapItemDataPacketMixin",
     "ContraptionDriverInteractMixin",
     "CustomItemUseEffectsMixin",
@@ -15,6 +16,7 @@
     "MainMixin",
     "MapItemSavedDataMixin",
     "TestCommandMixin",
+    "UseOnContextAccessor",
     "WaterWheelFluidSpreadMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
