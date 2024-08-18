@@ -300,7 +300,7 @@ public class DeployerHandler {
 			return;
 		if (useItem == DENY)
 			return;
-		if (item instanceof BlockItem && !(item instanceof CartAssemblerBlockItem)
+		if (item instanceof CartAssemblerBlockItem
 			&& !clickedState.canBeReplaced(new BlockPlaceContext(itemusecontext)))
 			return;
 
