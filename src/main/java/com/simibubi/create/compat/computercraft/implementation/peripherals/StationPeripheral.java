@@ -1,15 +1,22 @@
 package com.simibubi.create.compat.computercraft.implementation.peripherals;
 
+import java.util.ArrayList;
 import java.util.Map;
-
-import javax.annotation.Nullable;
+import java.util.regex.PatternSyntaxException;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.compat.computercraft.events.ComputerEvent;
+import com.simibubi.create.compat.computercraft.events.StationTrainPresenceEvent;
 import com.simibubi.create.compat.computercraft.implementation.CreateLuaTable;
 import com.simibubi.create.content.trains.entity.Train;
+import com.simibubi.create.content.trains.graph.DiscoveredPath;
+import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.schedule.Schedule;
+import com.simibubi.create.content.trains.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.content.trains.station.TrainEditPacket;
@@ -19,6 +26,7 @@ import com.simibubi.create.foundation.utility.StringHelper;
 import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
+import dan200.computercraft.api.lua.MethodResult;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CollectionTag;
 import net.minecraft.nbt.CompoundTag;
@@ -164,6 +172,33 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 		train.runtime.setSchedule(schedule, autoSchedule);
 	}
 
+	@LuaFunction
+	public MethodResult canTrainReach(String destinationFilter) throws LuaException {
+		Train train = getTrainOrThrow();
+
+		String regex = DestinationInstruction.getFilterForRegex(destinationFilter);
+		boolean anyMatch = false;
+		ArrayList<GlobalStation> validStations = new ArrayList<>();
+		try {
+			for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
+				if (!globalStation.name.matches(regex))
+					continue;
+				anyMatch = true;
+				validStations.add(globalStation);
+			}
+		} catch (PatternSyntaxException ignored) {}
+
+		DiscoveredPath best = train.navigation.findPathTo(validStations, Double.MAX_VALUE);
+		if (best == null) {
+			if (anyMatch)
+				return MethodResult.of(false, "cannot-reach");
+			else
+				return MethodResult.of(false, "no-target");
+		}
+
+		return MethodResult.of(true, null);
+	}
+
 	private @NotNull Train getTrainOrThrow() throws LuaException {
 		GlobalStation station = blockEntity.getStation();
 		if (station == null)
@@ -266,6 +301,13 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 		}
 
 		throw new LuaException("unknown object type " + value.getClass().getName());
+	}
+
+	@Override
+	public void prepareComputerEvent(@NotNull ComputerEvent event) {
+		if (event instanceof StationTrainPresenceEvent stpe) {
+			queueEvent(stpe.type.name, stpe.train.name.getString());
+		}
 	}
 
 	@NotNull
