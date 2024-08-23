@@ -2,6 +2,7 @@ package com.simibubi.create.compat.computercraft.implementation;
 
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.DisplayLinkPeripheral;
+import com.simibubi.create.compat.computercraft.implementation.peripherals.NixieTubePeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.SequencedGearshiftPeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.SpeedControllerPeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.SpeedGaugePeripheral;
@@ -12,6 +13,7 @@ import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.speedController.SpeedControllerBlockEntity;
 import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGearshiftBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
+import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
@@ -40,6 +42,8 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
 			return () -> new SpeedControllerPeripheral(scbe, scbe.targetSpeed);
 		if (be instanceof DisplayLinkBlockEntity dlbe)
 			return () -> new DisplayLinkPeripheral(dlbe);
+		if (be instanceof NixieTubeBlockEntity ntbe)
+			return () -> new NixieTubePeripheral(ntbe);
 		if (be instanceof SequencedGearshiftBlockEntity sgbe)
 			return () -> new SequencedGearshiftPeripheral(sgbe);
 		if (be instanceof SpeedGaugeBlockEntity sgbe)

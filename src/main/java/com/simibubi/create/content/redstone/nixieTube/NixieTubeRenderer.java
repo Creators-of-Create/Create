@@ -32,6 +32,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEntity> {
 
+	private static final int GLOW_VIEW_DISTANCE = 96;
 	private static Random r = new Random();
 
 	public NixieTubeRenderer(BlockEntityRendererProvider.Context context) {}
@@ -52,7 +53,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 			.rotateZ(xRot)
 			.unCentre();
 
-		if (be.signalState != null) {
+		if (be.signalState != null || be.computerSignal != null) {
 			renderAsSignal(be, partialTicks, ms, buffer, light, overlay);
 			ms.popPose();
 			return;
@@ -144,59 +145,115 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 		ms.pushPose();
 		ms.translate(1 / 2f, 7.5f / 16f, 1 / 2f);
 		float renderTime = AnimationTickHolder.getRenderTime(be.getLevel());
+		Vec3 lampVec = Vec3.atCenterOf(be.getBlockPos());
+		Vec3 diff = lampVec.subtract(observerVec);
 
-		for (boolean first : Iterate.trueAndFalse) {
-			Vec3 lampVec = Vec3.atCenterOf(be.getBlockPos());
-			Vec3 diff = lampVec.subtract(observerVec);
+		if (be.signalState != null) {
+			for (boolean first : Iterate.trueAndFalse) {
+				if (first && !be.signalState.isRedLight(renderTime))
+					continue;
+				if (!first && !be.signalState.isGreenLight(renderTime) && !be.signalState.isYellowLight(renderTime))
+					continue;
 
-			if (first && !be.signalState.isRedLight(renderTime))
-				continue;
-			if (!first && !be.signalState.isGreenLight(renderTime) && !be.signalState.isYellowLight(renderTime))
-				continue;
+				boolean flip = first == invertTubes;
+				boolean yellow = be.signalState.isYellowLight(renderTime);
 
-			boolean flip = first == invertTubes;
-			boolean yellow = be.signalState.isYellowLight(renderTime);
+				ms.pushPose();
+				ms.translate(flip ? 4 / 16f : -4 / 16f, 0, 0);
 
-			ms.pushPose();
-			ms.translate(flip ? 4 / 16f : -4 / 16f, 0, 0);
+				if (diff.lengthSqr() < GLOW_VIEW_DISTANCE * GLOW_VIEW_DISTANCE) {
+					boolean vert = first ^ facing.getAxis()
+							.isHorizontal();
+					float longSide = yellow ? 1 : 4;
+					float longSideGlow = yellow ? 2 : 5.125f;
 
-			if (diff.lengthSqr() < 96 * 96) {
-				boolean vert = first ^ facing.getAxis()
-					.isHorizontal();
-				float longSide = yellow ? 1 : 4;
-				float longSideGlow = yellow ? 2 : 5.125f;
+					CachedBufferer.partial(AllPartialModels.SIGNAL_WHITE_CUBE, blockState)
+							.light(0xf000f0)
+							.disableDiffuse()
+							.scale(vert ? longSide : 1, vert ? 1 : longSide, 1)
+							.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
 
-				CachedBufferer.partial(AllPartialModels.SIGNAL_WHITE_CUBE, blockState)
-					.light(0xf000f0)
-					.disableDiffuse()
-					.scale(vert ? longSide : 1, vert ? 1 : longSide, 1)
-					.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
+					CachedBufferer
+							.partial(
+									first ? AllPartialModels.SIGNAL_RED_GLOW
+											: yellow ? AllPartialModels.SIGNAL_YELLOW_GLOW : AllPartialModels.SIGNAL_WHITE_GLOW,
+									blockState)
+							.light(0xf000f0)
+							.disableDiffuse()
+							.scale(vert ? longSideGlow : 2, vert ? 2 : longSideGlow, 2)
+							.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+				}
 
 				CachedBufferer
-					.partial(
-						first ? AllPartialModels.SIGNAL_RED_GLOW
-							: yellow ? AllPartialModels.SIGNAL_YELLOW_GLOW : AllPartialModels.SIGNAL_WHITE_GLOW,
-						blockState)
-					.light(0xf000f0)
-					.disableDiffuse()
-					.scale(vert ? longSideGlow : 2, vert ? 2 : longSideGlow, 2)
-					.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+						.partial(first ? AllPartialModels.SIGNAL_RED
+								: yellow ? AllPartialModels.SIGNAL_YELLOW : AllPartialModels.SIGNAL_WHITE, blockState)
+						.light(0xF000F0)
+						.disableDiffuse()
+						.scale(1 + 1 / 16f)
+						.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+
+				ms.popPose();
 			}
+		} else if (be.computerSignal != null) {
+			for (boolean first : Iterate.trueAndFalse) {
+				NixieTubeBlockEntity.ComputerSignal.TubeDisplay tubeDisplay = first ?
+						be.computerSignal.first : be.computerSignal.second;
+				if (tubeDisplay.blinkPeriod == 0 || tubeDisplay.blinkPeriod > 1 && renderTime % tubeDisplay.blinkPeriod < tubeDisplay.blinkOffTime)
+					continue;
 
-			CachedBufferer
-				.partial(first ? AllPartialModels.SIGNAL_RED
-					: yellow ? AllPartialModels.SIGNAL_YELLOW : AllPartialModels.SIGNAL_WHITE, blockState)
-				.light(0xF000F0)
-				.disableDiffuse()
-				.scale(1 + 1 / 16f)
-				.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+				boolean flip = first == invertTubes;
 
-			ms.popPose();
+				ms.pushPose();
+				ms.translate(flip ? 4 / 16f : -4 / 16f, 0, 0);
+
+				if (diff.lengthSqr() < GLOW_VIEW_DISTANCE * GLOW_VIEW_DISTANCE) {
+					boolean horiz = facing.getAxis().isHorizontal();
+					float width = horiz ? tubeDisplay.glowWidth : tubeDisplay.glowHeight;
+					float height = horiz ? tubeDisplay.glowHeight : tubeDisplay.glowWidth;
+
+					CachedBufferer.partial(AllPartialModels.SIGNAL_COMPUTER_WHITE_CUBE, blockState)
+							.light(0xf000f0)
+							.disableDiffuse()
+							.scale(width, height,  1)
+							.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
+
+					CachedBufferer
+							.partial(AllPartialModels.SIGNAL_COMPUTER_WHITE_GLOW, blockState)
+							.light(0xf000f0)
+							.color(
+									Math.min(((tubeDisplay.r & 0xFF) * 6 + 256) >> 3, 255),
+									Math.min(((tubeDisplay.g & 0xFF) * 6 + 256) >> 3, 255),
+									Math.min(((tubeDisplay.b & 0xFF) * 6 + 256) >> 3, 255),
+									255)
+							.disableDiffuse()
+							.scale(width + 1.125f, height + 1.125f, 2)
+							.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+				}
+
+				CachedBufferer
+						.partial(AllPartialModels.SIGNAL_COMPUTER_WHITE_BASE, blockState)
+						.light(0xF000F0)
+						.color(12, 12, 12, 255)
+						.disableDiffuse()
+						.scale(1 + 1.25f / 16f)
+						.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+
+				CachedBufferer
+						.partial(AllPartialModels.SIGNAL_COMPUTER_WHITE, blockState)
+						.light(0xF000F0)
+						.color(tubeDisplay.r, tubeDisplay.g, tubeDisplay.b, 255)
+						.disableDiffuse()
+						.scale(1 + 1 / 16f)
+						.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+
+				ms.popPose();
+			}
 		}
+
 		ms.popPose();
 
 	}
-	
+
 	@Override
 	public int getViewDistance() {
 		return 128;

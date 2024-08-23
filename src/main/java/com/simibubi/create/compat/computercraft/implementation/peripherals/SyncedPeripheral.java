@@ -1,6 +1,9 @@
 package com.simibubi.create.compat.computercraft.implementation.peripherals;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.simibubi.create.compat.computercraft.events.ComputerEvent;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +20,7 @@ import net.minecraftforge.network.PacketDistributor;
 public abstract class SyncedPeripheral<T extends SmartBlockEntity> implements IPeripheral {
 
 	protected final T blockEntity;
-	private final AtomicInteger computers = new AtomicInteger();
+	private final List<@NotNull IComputerAccess> computers = new ArrayList<>();
 
 	public SyncedPeripheral(T blockEntity) {
 		this.blockEntity = blockEntity;
@@ -25,21 +28,34 @@ public abstract class SyncedPeripheral<T extends SmartBlockEntity> implements IP
 
 	@Override
 	public void attach(@NotNull IComputerAccess computer) {
-		computers.incrementAndGet();
-		updateBlockEntity();
+		synchronized (computers) {
+			computers.add(computer);
+			if (computers.size() == 1)
+				onFirstAttach();
+			updateBlockEntity();
+		}
 	}
+
+	protected void onFirstAttach() {}
 
 	@Override
 	public void detach(@NotNull IComputerAccess computer) {
-		computers.decrementAndGet();
-		updateBlockEntity();
+		synchronized (computers) {
+			computers.remove(computer);
+			updateBlockEntity();
+			if (computers.isEmpty())
+				onLastDetach();
+		}
 	}
 
+	protected void onLastDetach() {}
+
 	private void updateBlockEntity() {
-		boolean hasAttachedComputer = computers.get() > 0;
+		boolean hasAttachedComputer = !computers.isEmpty();
 
 		blockEntity.getBehaviour(ComputerBehaviour.TYPE).setHasAttachedComputer(hasAttachedComputer);
-		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new AttachedComputerPacket(blockEntity.getBlockPos(), hasAttachedComputer));
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(),
+				new AttachedComputerPacket(blockEntity.getBlockPos(), hasAttachedComputer));
 	}
 
 	@Override
