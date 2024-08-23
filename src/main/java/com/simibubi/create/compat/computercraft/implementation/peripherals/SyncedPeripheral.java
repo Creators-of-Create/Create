@@ -63,4 +63,21 @@ public abstract class SyncedPeripheral<T extends SmartBlockEntity> implements IP
 		return this == other;
 	}
 
+	public void prepareComputerEvent(@NotNull ComputerEvent event) {}
+
+	/**
+	 * Queue an event to all attached computers. Adds the peripheral attachment name as 1st event argument, followed by
+	 * any optional arguments passed to this method.
+	 */
+	protected void queueEvent(@NotNull String event, @Nullable Object... arguments) {
+		Object[] sourceAndArgs = new Object[arguments.length + 1];
+		System.arraycopy(arguments, 0, sourceAndArgs, 1, arguments.length);
+		synchronized (computers) {
+			for (IComputerAccess computer : computers) {
+				sourceAndArgs[0] = computer.getAttachmentName();
+				computer.queueEvent(event, sourceAndArgs);
+			}
+		}
+	}
+
 }

@@ -2606,6 +2606,7 @@
   "create.track_signal.cannot_change_mode": "Unable to switch mode of this Signal",
   "create.track_signal.mode_change.cross_signal": "-> Allow passage if section fully traversable",
   "create.track_signal.mode_change.entry_signal": "-> Allow passage if section unoccupied",
+  "create.track_signal.mode_controlled_by_computer": "Signal mode is controlled by computer",
   "create.track_target.clear": "Cleared track selection",
   "create.track_target.invalid": "Cannot target this track here",
   "create.track_target.missing": "Right-click the targeted train track first",

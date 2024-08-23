@@ -2594,6 +2594,7 @@
   "create.track_signal.cannot_change_mode": "No se puede cambiar el modo de esta señal",
   "create.track_signal.mode_change.cross_signal": "-> Permitir entrada si la sección se puede atravesar por completo",
   "create.track_signal.mode_change.entry_signal": "-> Permitir entrada si la sección está desocupada",
+  "create.track_signal.mode_controlled_by_computer": "El modo de esta señal está siendo controlado por un ordenador",
   "create.track_target.clear": "Selección de vía borrada",
   "create.track_target.invalid": "No se puede marcar esta vía como objetivo",
   "create.track_target.missing": "Primero haz clic derecho en la vía objetivo",

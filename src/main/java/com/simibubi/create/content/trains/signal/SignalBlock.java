@@ -1,5 +1,6 @@
 package com.simibubi.create.content.trains.signal;
 
+import java.util.Optional;
 import java.util.Random;
 
 import javax.annotation.Nullable;
@@ -76,7 +77,12 @@ public class SignalBlock extends Block implements IBE<SignalBlockEntity>, IWrenc
 		if (pLevel.isClientSide)
 			return;
 		boolean powered = pState.getValue(POWERED);
-		if (powered == pLevel.hasNeighborSignal(pPos))
+		Optional<SignalBlockEntity> ste = getBlockEntityOptional(pLevel, pPos);
+		boolean neighborPowered = false;
+		if (ste.isEmpty() || !ste.get().computerBehaviour.hasAttachedComputer()) {
+			powered = pLevel.hasNeighborSignal(pPos);
+		}
+		if (powered == neighborPowered)
 			return;
 		if (powered) {
 			pLevel.scheduleTick(pPos, this, 4);
@@ -87,10 +93,11 @@ public class SignalBlock extends Block implements IBE<SignalBlockEntity>, IWrenc
 
 	@Override
 	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRand) {
-		if (pState.getValue(POWERED) && !pLevel.hasNeighborSignal(pPos))
+		Optional<SignalBlockEntity> ste = getBlockEntityOptional(pLevel, pPos);
+		if ((ste.isEmpty() || !ste.get().computerBehaviour.hasAttachedComputer()) && pState.getValue(POWERED) && !pLevel.hasNeighborSignal(pPos))
 			pLevel.setBlock(pPos, pState.cycle(POWERED), 2);
 	}
-	
+
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		IBE.onRemove(state, worldIn, pos, newState);
@@ -108,8 +115,13 @@ public class SignalBlock extends Block implements IBE<SignalBlockEntity>, IWrenc
 		if (level.isClientSide)
 			return InteractionResult.SUCCESS;
 		withBlockEntityDo(level, pos, ste -> {
-			SignalBoundary signal = ste.getSignal();
 			Player player = context.getPlayer();
+			if (ste.computerBehaviour.hasAttachedComputer()) {
+				if (player != null)
+					player.displayClientMessage(Lang.translateDirect("track_signal.mode_controlled_by_computer"), true);
+				return;
+			}
+			SignalBoundary signal = ste.getSignal();
 			if (signal != null) {
 				signal.cycleSignalType(pos);
 				if (player != null)
