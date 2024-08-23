@@ -2,6 +2,8 @@ package com.simibubi.create.content.trains.schedule.destination;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.ImmutableList;
@@ -44,9 +46,12 @@ public class DestinationInstruction extends TextScheduleInstruction {
 	public String getFilter() {
 		return getLabelText();
 	}
-	
+
 	public String getFilterForRegex() {
-		String filter = getFilter();
+		return getFilterForRegex(getFilter());
+	}
+
+	public static String getFilterForRegex(@NotNull String filter) {
 		if (filter.isBlank())
 			return filter;
 		return "\\Q" + filter.replace("*", "\\E.*\\Q") + "\\E";
