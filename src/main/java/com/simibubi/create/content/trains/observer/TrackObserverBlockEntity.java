@@ -1,11 +1,18 @@
 package com.simibubi.create.content.trains.observer;
 
 import java.util.List;
+import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.Create;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
+import com.simibubi.create.compat.computercraft.events.TrainPassEvent;
 import com.simibubi.create.content.contraptions.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
@@ -18,17 +25,23 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class TrackObserverBlockEntity extends SmartBlockEntity implements ITransformableBlockEntity {
 
 	public TrackTargetingBehaviour<TrackObserver> edgePoint;
 
 	private FilteringBehaviour filtering;
+
+	public AbstractComputerBehaviour computerBehaviour;
+	public @Nullable UUID passingTrainUUID;
 
 	public TrackObserverBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -38,6 +51,7 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements ITrans
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(edgePoint = new TrackTargetingBehaviour<>(this, EdgePointType.OBSERVER));
 		behaviours.add(filtering = createFilter().withCallback(this::onFilterChanged));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 		filtering.setLabel(Lang.translateDirect("logistics.train_observer.cargo_filter"));
 	}
 
@@ -62,6 +76,17 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements ITrans
 			shouldBePowered = observer.isActivated();
 		if (isBlockPowered() == shouldBePowered)
 			return;
+
+		if (observer != null && computerBehaviour.hasAttachedComputer()) {
+			if (shouldBePowered)
+				passingTrainUUID = observer.getCurrentTrain();
+			if (passingTrainUUID != null) {
+				computerBehaviour.prepareComputerEvent(
+						new TrainPassEvent(Create.RAILWAYS.trains.get(passingTrainUUID), shouldBePowered));
+				if (!shouldBePowered)
+					passingTrainUUID = null;
+			}
+		}
 
 		BlockState blockState = getBlockState();
 		if (blockState.hasProperty(TrackObserverBlock.POWERED))
@@ -108,6 +133,19 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements ITrans
 			}
 
 		});
+	}
+
+	@Override
+	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
+		if (computerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
+		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidateCaps();
+		computerBehaviour.removePeripheral();
 	}
 
 }
