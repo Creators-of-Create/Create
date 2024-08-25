@@ -114,8 +114,10 @@ public class SchematicHandler {
 
 		if (!active || !stack.getTag()
 			.getString("File")
-			.equals(displayedSchematic))
+			.equals(displayedSchematic)) {
+			renderers.forEach(r -> r.setActive(false));
 			init(player, stack);
+		}
 		if (!active)
 			return;
 
