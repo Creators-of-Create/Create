@@ -60,6 +60,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -304,12 +305,24 @@ public class BeltBlock extends HorizontalKineticBlock
 		if (AllBlocks.BRASS_CASING.isIn(heldItem)) {
 			withBlockEntityDo(world, pos, be -> be.setCasingType(CasingType.BRASS));
 			updateCoverProperty(world, pos, world.getBlockState(pos));
+
+			SoundType soundType = AllBlocks.BRASS_CASING.getDefaultState()
+				.getSoundType(world, pos, player);
+			world.playSound(null, pos, soundType.getPlaceSound(), SoundSource.BLOCKS,
+				(soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
+
 			return InteractionResult.SUCCESS;
 		}
 
 		if (AllBlocks.ANDESITE_CASING.isIn(heldItem)) {
 			withBlockEntityDo(world, pos, be -> be.setCasingType(CasingType.ANDESITE));
 			updateCoverProperty(world, pos, world.getBlockState(pos));
+
+			SoundType soundType = AllBlocks.ANDESITE_CASING.getDefaultState()
+				.getSoundType(world, pos, player);
+			world.playSound(null, pos, soundType.getPlaceSound(), SoundSource.BLOCKS,
+				(soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
+
 			return InteractionResult.SUCCESS;
 		}
 

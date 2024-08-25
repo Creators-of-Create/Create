@@ -10,6 +10,7 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltHelper;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
@@ -114,7 +115,7 @@ public class AllArmInteractionPointTypes {
 		@Override
 		public boolean canCreatePoint(Level level, BlockPos pos, BlockState state) {
 			return AllBlocks.BELT.has(state) && !(level.getBlockState(pos.above())
-				.getBlock() instanceof BeltTunnelBlock);
+				.getBlock() instanceof BeltTunnelBlock) && BeltBlock.canTransportObjects(state);
 		}
 
 		@Override

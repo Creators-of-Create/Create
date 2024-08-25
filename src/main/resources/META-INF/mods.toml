@@ -5,12 +5,12 @@ license="MIT"
 
 [[mods]]
 modId="create"
-# The Implementation-Version property in the jar's MANIFEST.MF file will be used as the mod version at runtime 
+# The Implementation-Version property in the jar's MANIFEST.MF file will be used as the mod version at runtime
 version="${file.jarVersion}"
 displayName="Create"
 #updateJSONURL=""
 displayURL="https://www.curseforge.com/minecraft/mc-mods/create"
-logoFile="logo.png"
+logoFile="icon.png"
 #credits=""
 authors="simibubi"
 description='''

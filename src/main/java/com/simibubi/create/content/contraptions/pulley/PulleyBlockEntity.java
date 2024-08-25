@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -194,28 +195,42 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 				if (offset > 0) {
 					BlockPos magnetPos = worldPosition.below((int) offset);
 					FluidState ifluidstate = level.getFluidState(magnetPos);
-					level.destroyBlock(magnetPos, level.getBlockState(magnetPos)
-						.getCollisionShape(level, magnetPos)
-						.isEmpty());
-					level.setBlock(magnetPos, AllBlocks.PULLEY_MAGNET.getDefaultState()
-						.setValue(BlockStateProperties.WATERLOGGED,
-							Boolean.valueOf(ifluidstate.getType() == Fluids.WATER)),
-						66);
+					if (level.getBlockState(magnetPos)
+						.getDestroySpeed(level, magnetPos) != -1) {
+
+						level.destroyBlock(magnetPos, level.getBlockState(magnetPos)
+							.getCollisionShape(level, magnetPos)
+							.isEmpty());
+						level.setBlock(magnetPos, AllBlocks.PULLEY_MAGNET.getDefaultState()
+							.setValue(BlockStateProperties.WATERLOGGED,
+								Boolean.valueOf(ifluidstate.getType() == Fluids.WATER)),
+							66);
+					}
 				}
 
 				boolean[] waterlog = new boolean[(int) offset];
 
-				for (int i = 1; i <= ((int) offset) - 1; i++) {
-					BlockPos ropePos = worldPosition.below(i);
-					FluidState ifluidstate = level.getFluidState(ropePos);
-					waterlog[i] = ifluidstate.getType() == Fluids.WATER;
-					level.destroyBlock(ropePos, level.getBlockState(ropePos)
-						.getCollisionShape(level, ropePos)
-						.isEmpty());
+				for (boolean destroyPass : Iterate.trueAndFalse) {
+					for (int i = 1; i <= ((int) offset) - 1; i++) {
+						BlockPos ropePos = worldPosition.below(i);
+						if (level.getBlockState(ropePos)
+							.getDestroySpeed(level, ropePos) == -1)
+							continue;
+
+						if (destroyPass) {
+							FluidState ifluidstate = level.getFluidState(ropePos);
+							waterlog[i] = ifluidstate.getType() == Fluids.WATER;
+							level.destroyBlock(ropePos, level.getBlockState(ropePos)
+								.getCollisionShape(level, ropePos)
+								.isEmpty());
+							continue;
+						}
+
+						level.setBlock(worldPosition.below(i), AllBlocks.ROPE.getDefaultState()
+							.setValue(BlockStateProperties.WATERLOGGED, waterlog[i]), 66);
+					}
 				}
-				for (int i = 1; i <= ((int) offset) - 1; i++)
-					level.setBlock(worldPosition.below(i), AllBlocks.ROPE.getDefaultState()
-						.setValue(BlockStateProperties.WATERLOGGED, waterlog[i]), 66);
+				
 			}
 
 			if (movedContraption != null && mirrorParent == null)
