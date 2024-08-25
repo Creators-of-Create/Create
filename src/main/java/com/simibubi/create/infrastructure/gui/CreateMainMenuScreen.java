@@ -108,6 +108,8 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 				.render(ms);
 			ms.popPose();
 		}
+		
+	    RenderSystem.enableBlend();
 
 		ms.pushPose();
 		ms.translate(width / 2 - 32, 32, -10);

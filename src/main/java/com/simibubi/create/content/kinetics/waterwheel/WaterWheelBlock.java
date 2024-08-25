@@ -18,6 +18,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -128,6 +129,11 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements IBE<Wate
 
 	public static Couple<Integer> getSpeedRange() {
 		return Couple.create(8, 8);
+	}
+	
+	@Override
+	public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+		return false;
 	}
 
 }

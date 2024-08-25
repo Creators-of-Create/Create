@@ -73,6 +73,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			return;
 
 		activate(context, pos, player, mode);
+		checkForTrackPlacementAdvancement(context, player);
 		tryDisposeOfExcess(context);
 		context.stall = player.blockBreakingProgress != null;
 	}
@@ -80,9 +81,13 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	public void activate(MovementContext context, BlockPos pos, DeployerFakePlayer player, Mode mode) {
 		Level world = context.world;
 
+		player.placedTracks = false;
+
 		FilterItemStack filter = context.getFilterFromBE();
-		if (AllItems.SCHEMATIC.isIn(filter.item()))
+		if (AllItems.SCHEMATIC.isIn(filter.item())) {
 			activateAsSchematicPrinter(context, pos, player, world, filter.item());
+			return;
+		}
 
 		Vec3 facingVec = Vec3.atLowerCornerOf(context.state.getValue(DeployerBlock.FACING)
 			.getNormal());
@@ -101,13 +106,14 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 
 		player.setYRot(AbstractContraptionEntity.yawFromVector(facingVec));
 		player.setXRot(xRot);
-		player.placedTracks = false;
 
 		DeployerHandler.activate(player, vec, pos, facingVec, mode);
+	}
 
+	protected void checkForTrackPlacementAdvancement(MovementContext context, DeployerFakePlayer player) {
 		if ((context.contraption instanceof MountedContraption || context.contraption instanceof CarriageContraption)
 			&& player.placedTracks && context.blockEntityData != null && context.blockEntityData.contains("Owner"))
-			AllAdvancements.SELF_DEPLOYING.awardTo(world.getPlayerByUUID(context.blockEntityData.getUUID("Owner")));
+			AllAdvancements.SELF_DEPLOYING.awardTo(context.world.getPlayerByUUID(context.blockEntityData.getUUID("Owner")));
 	}
 
 	protected void activateAsSchematicPrinter(MovementContext context, BlockPos pos, DeployerFakePlayer player,
@@ -141,7 +147,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		if (!context.contraption.hasUniversalCreativeCrate) {
 			IItemHandler itemHandler = context.contraption.getSharedInventory();
 			for (ItemRequirement.StackRequirement required : requiredItems) {
-				ItemStack stack= ItemHelper
+				ItemStack stack = ItemHelper
 					.extract(itemHandler, required::matches, ExtractionCountMode.EXACTLY,
 						required.stack.getCount(), true);
 				if (stack.isEmpty())
@@ -155,8 +161,11 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		CompoundTag data = BlockHelper.prepareBlockEntityData(blockState, schematicWorld.getBlockEntity(pos));
 		BlockSnapshot blocksnapshot = BlockSnapshot.create(world.dimension(), world, pos);
 		BlockHelper.placeSchematicBlock(world, blockState, pos, contextStack, data);
+
 		if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP))
 			blocksnapshot.restore(true, false);
+		else if (AllBlocks.TRACK.has(blockState))
+			player.placedTracks = true;
 	}
 
 	@Override
