@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class OcclusionTestWorld implements BlockGetter {
+public class OcclusionTestLevel implements BlockGetter {
 	private final Map<BlockPos, BlockState> blocks = new HashMap<>();
 
 	public void setBlock(BlockPos pos, BlockState state) {

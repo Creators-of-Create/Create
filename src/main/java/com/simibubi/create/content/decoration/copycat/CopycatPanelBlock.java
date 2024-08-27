@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.placement.IPlacementHelper;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.placement.PlacementOffset;
 
-import com.simibubi.create.foundation.utility.worldWrappers.OcclusionTestWorld;
+import com.simibubi.create.foundation.utility.worldWrappers.OcclusionTestLevel;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -188,12 +188,16 @@ public class CopycatPanelBlock extends WaterloggedCopycatBlock {
 			if (material.skipRendering(otherMaterial, dir.getOpposite()))
 				return isOccluded(state, neighborState, dir.getOpposite());
 
-			OcclusionTestWorld occlusionTestWorld = new OcclusionTestWorld();
-			occlusionTestWorld.setBlock(pos, material);
-			occlusionTestWorld.setBlock(otherPos, otherMaterial);
-			if (material.isSolidRender(occlusionTestWorld, pos) && otherMaterial.isSolidRender(occlusionTestWorld, otherPos))
-				if(!Block.shouldRenderFace(otherMaterial, occlusionTestWorld, pos, dir.getOpposite(), otherPos))
+			OcclusionTestLevel occlusionTestLevel = new OcclusionTestLevel();
+			occlusionTestLevel.setBlock(pos, material);
+			occlusionTestLevel.setBlock(otherPos, otherMaterial);
+			if (material.isSolidRender(occlusionTestLevel, pos) && otherMaterial.isSolidRender(occlusionTestLevel, otherPos))
+				if(!Block.shouldRenderFace(otherMaterial, occlusionTestLevel, pos, dir.getOpposite(), otherPos)) {
+					occlusionTestLevel.clear();
 					return isOccluded(state, neighborState, dir.getOpposite());
+				}
+
+			occlusionTestLevel.clear();
 		}
 
 		return state.getValue(FACING) == dir.getOpposite()
