@@ -22,6 +22,11 @@ import java.util.Map;
 @MethodsReturnNonnullByDefault
 public class OcclusionTestLevel implements BlockGetter {
 	private final Map<BlockPos, BlockState> blocks = new HashMap<>();
+	private final BlockGetter blockGetter;
+
+	public OcclusionTestLevel(BlockGetter blockGetter) {
+		this.blockGetter = blockGetter;
+	}
 
 	public void setBlock(BlockPos pos, BlockState state) {
 		blocks.put(pos.immutable(), state);
@@ -49,11 +54,11 @@ public class OcclusionTestLevel implements BlockGetter {
 
 	@Override
 	public int getHeight() {
-		return 256;
+		return blockGetter.getHeight();
 	}
 
 	@Override
 	public int getMinBuildHeight() {
-		return 0;
+		return blockGetter.getMinBuildHeight();
 	}
 }

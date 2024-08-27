@@ -188,7 +188,7 @@ public class CopycatPanelBlock extends WaterloggedCopycatBlock {
 			if (material.skipRendering(otherMaterial, dir.getOpposite()))
 				return isOccluded(state, neighborState, dir.getOpposite());
 
-			OcclusionTestLevel occlusionTestLevel = new OcclusionTestLevel();
+			OcclusionTestLevel occlusionTestLevel = new OcclusionTestLevel(level);
 			occlusionTestLevel.setBlock(pos, material);
 			occlusionTestLevel.setBlock(otherPos, otherMaterial);
 			if (material.isSolidRender(occlusionTestLevel, pos) && otherMaterial.isSolidRender(occlusionTestLevel, otherPos))
