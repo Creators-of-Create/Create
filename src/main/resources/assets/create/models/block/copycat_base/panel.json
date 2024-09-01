@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "block/block",
+	"parent": "block/thin_block",
 	"textures": {
 		"1": "create:block/copycat_base",
 		"2": "create:block/copycat_base",

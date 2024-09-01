@@ -1,6 +1,5 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "block/block",
 	"textures": {
 		"0": "create:block/train_door_side",
 		"1": "create:block/train_trapdoor",
