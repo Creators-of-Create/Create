@@ -84,6 +84,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             args '--mod', 'create', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources')
+            environment "DATAGEN", "TRUE"
             mods {
                 create {
                     source sourceSets.main

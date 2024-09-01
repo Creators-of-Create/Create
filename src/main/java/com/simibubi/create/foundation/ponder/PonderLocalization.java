@@ -69,6 +69,12 @@ public class PonderLocalization {
 		return I18n.get(langKeyForShared(key));
 	}
 
+	public static String getShared(ResourceLocation key, Object... params) {
+		if (PonderIndex.editingModeActive())
+			return SHARED.containsKey(key) ? String.format(SHARED.get(key), params) : ("unregistered shared entry: " + key);
+		return I18n.get(langKeyForShared(key), params);
+	}
+
 	public static String getTag(ResourceLocation key) {
 		if (PonderIndex.editingModeActive())
 			return TAG.containsKey(key) ? TAG.get(key)
@@ -91,9 +97,14 @@ public class PonderLocalization {
 
 	public static String getSpecific(ResourceLocation sceneId, String k) {
 		if (PonderIndex.editingModeActive())
-			return SPECIFIC.get(sceneId)
-				.get(k);
+			return SPECIFIC.get(sceneId).get(k);
 		return I18n.get(langKeyForSpecific(sceneId, k));
+	}
+
+	public static String getSpecific(ResourceLocation sceneId, String k, Object... params) {
+		if (PonderIndex.editingModeActive())
+			return String.format(SPECIFIC.get(sceneId).get(k), params);
+		return I18n.get(langKeyForSpecific(sceneId, k), params);
 	}
 
 	//

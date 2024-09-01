@@ -1,5 +1,6 @@
 package com.simibubi.create.infrastructure.data;
 
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 
@@ -25,6 +26,8 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 public class CreateDatagen {
+	public static final boolean IS_RUNNING = isRunning();
+
 	public static void gatherData(GatherDataEvent event) {
 		addExtraRegistrateData();
 
@@ -87,5 +90,15 @@ public class CreateDatagen {
 
 		GeneralText.provideLang(consumer);
 		PonderLocalization.provideLang(Create.ID, consumer);
+	}
+
+	private static boolean isRunning() {
+		try {
+			String result = System.getenv("DATAGEN");
+			return result != null && result.toLowerCase(Locale.ROOT).equals("true");
+		} catch (SecurityException e) {
+			Create.LOGGER.warn("Caught a security exception while trying to access environment variable `DATAGEN`.");
+			return false;
+		}
 	}
 }

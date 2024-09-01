@@ -26,6 +26,10 @@ import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Pointing;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
+import com.simibubi.create.infrastructure.data.CreateDatagen;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -719,7 +723,7 @@ public class RedstoneScenes {
 		scene.overlay.showControls(new InputWindowElement(link2Vec, Pointing.UP).rightClick()
 			.whileSneaking(), 40);
 		scene.idle(7);
-		scene.world.modifyBlock(link2Pos, s -> s.cycle(RedstoneLinkBlock.RECEIVER), true);
+		scene.world.modifyBlock(link2Pos, s -> s.cycle(RedstoneLinkBlock.RECEIVER), false);
 		scene.idle(10);
 		scene.overlay.showText(50)
 			.text("Right-click while Sneaking to toggle receive mode")
@@ -730,7 +734,7 @@ public class RedstoneScenes {
 		scene.overlay.showControls(new InputWindowElement(link3Vec, Pointing.UP).rightClick()
 			.withWrench(), 40);
 		scene.idle(7);
-		scene.world.modifyBlock(link3Pos, s -> s.cycle(RedstoneLinkBlock.RECEIVER), true);
+		scene.world.modifyBlock(link3Pos, s -> s.cycle(RedstoneLinkBlock.RECEIVER), false);
 		scene.idle(10);
 		scene.overlay.showText(50)
 			.text("A simple Right-click with a Wrench can do the same")
@@ -748,9 +752,10 @@ public class RedstoneScenes {
 		scene.effects.indicateRedstone(link3Pos);
 
 		scene.idle(10);
+		int range = CreateDatagen.IS_RUNNING ? 256 : AllConfigs.server().logistics.linkRange.get();
 		scene.overlay.showText(70)
 			.colored(PonderPalette.GREEN)
-			.text("Receivers emit the redstone power of transmitters within 128 blocks")
+			.text("Receivers emit the redstone power of transmitters within %s blocks", range)
 			.placeNearTarget()
 			.pointAt(link2Vec);
 		scene.idle(80);

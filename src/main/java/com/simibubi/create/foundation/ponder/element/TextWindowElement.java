@@ -67,13 +67,27 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			return this;
 		}
 
+		public Builder text(String defaultText, Object... params) {
+			textGetter = scene.registerText(defaultText, params);
+			return this;
+		}
+
 		public Builder sharedText(ResourceLocation key) {
 			textGetter = () -> PonderLocalization.getShared(key);
 			return this;
 		}
 
+		public Builder sharedText(ResourceLocation key, Object... params) {
+			textGetter = () -> PonderLocalization.getShared(key, params);
+			return this;
+		}
+
 		public Builder sharedText(String key) {
 			return sharedText(new ResourceLocation(scene.getNamespace(), key));
+		}
+
+		public Builder sharedText(String key, Object... params) {
+			return sharedText(new ResourceLocation(scene.getNamespace(), key), params);
 		}
 
 		public Builder placeNearTarget() {
@@ -101,13 +115,13 @@ public class TextWindowElement extends AnimatedOverlayElement {
 
 		boolean settled = transform.xRotation.settled() && transform.yRotation.settled();
 		float pY = settled ? (int) sceneToScreen.y : sceneToScreen.y;
-		
+
 		float yDiff = (screen.height / 2f - sceneToScreen.y - 10) / 100f;
 		float targetX = (screen.width * Mth.lerp(yDiff * yDiff, 6f / 8, 5f / 8));
 
 		if (nearScene)
 			targetX = Math.min(targetX, sceneToScreen.x + 50);
-		
+
 		if (settled)
 			targetX = (int) targetX;
 

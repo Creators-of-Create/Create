@@ -385,6 +385,14 @@ public class PonderScene {
 		return supplier;
 	}
 
+	public Supplier<String> registerText(String defaultText, Object... params) {
+		final String key = "text_" + textIndex;
+		PonderLocalization.registerSpecific(sceneId, key, defaultText);
+		Supplier<String> supplier = () -> PonderLocalization.getSpecific(sceneId, key, params);
+		textIndex++;
+		return supplier;
+	}
+
 	public SceneBuilder builder() {
 		return new SceneBuilder(this);
 	}
@@ -460,7 +468,7 @@ public class PonderScene {
 	public int getBasePlateOffsetZ() {
 		return basePlateOffsetZ;
 	}
-	
+
 	public boolean shouldHidePlatformShadow() {
 		return hidePlatformShadow;
 	}
