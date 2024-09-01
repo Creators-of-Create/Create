@@ -863,6 +863,7 @@
 	"create.track_signal.cannot_change_mode": "Unable to switch mode of this Signal",
 	"create.track_signal.mode_change.entry_signal": "-> Allow passage if section unoccupied",
 	"create.track_signal.mode_change.cross_signal": "-> Allow passage if section fully traversable",
+	"create.track_signal.mode_controlled_by_computer": "Signal mode is controlled by computer",
 
 	"create.contraption.controls.start_controlling": "Now controlling: %1$s",
 	"create.contraption.controls.stop_controlling": "Stopped controlling contraption",

@@ -13,8 +13,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.trains.graph.DiscoveredPath;
-
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
@@ -22,6 +20,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.computercraft.events.StationTrainPresenceEvent;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.AssemblyException;
@@ -38,6 +37,7 @@ import com.simibubi.create.content.trains.entity.CarriageContraption;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.entity.TrainPacket;
 import com.simibubi.create.content.trains.entity.TravellingPoint;
+import com.simibubi.create.content.trains.graph.DiscoveredPath;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
@@ -257,6 +257,21 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		if (trainPresent && imminentTrain.runtime.displayLinkUpdateRequested) {
 			DisplayLinkBlock.notifyGatherers(level, worldPosition);
 			imminentTrain.runtime.displayLinkUpdateRequested = false;
+		}
+
+		if (!level.isClientSide && computerBehaviour.hasAttachedComputer()) {
+			if (this.imminentTrain == null && imminentTrain != null)
+				computerBehaviour.prepareComputerEvent(
+						new StationTrainPresenceEvent(StationTrainPresenceEvent.Type.IMMINENT, imminentTrain));
+			if (newlyArrived) {
+				if (trainPresent)
+					computerBehaviour.prepareComputerEvent(
+							new StationTrainPresenceEvent(StationTrainPresenceEvent.Type.ARRIVAL, imminentTrain));
+				else
+					computerBehaviour.prepareComputerEvent(
+							new StationTrainPresenceEvent(StationTrainPresenceEvent.Type.DEPARTURE,
+									Create.RAILWAYS.trains.get(this.imminentTrain)));
+			}
 		}
 
 		if (newlyArrived)

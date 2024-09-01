@@ -2594,6 +2594,7 @@
   "create.track_signal.cannot_change_mode": "Incapable de changer le mode de ce signal",
   "create.track_signal.mode_change.cross_signal": "-> Autoriser le passage si la section est entièrement traversable",
   "create.track_signal.mode_change.entry_signal": "-> Autoriser le passage si la section est inoccupée",
+  "create.track_signal.mode_controlled_by_computer": "Le mode de ce signal est contrôlé par un ordinateur",
   "create.track_target.clear": "Sélection du rail effacée",
   "create.track_target.invalid": "Ne peut pas cibler ce rail ici",
   "create.track_target.missing": "Faites clic droit sur le rail ciblé d'abord",

@@ -156,6 +156,10 @@ public class AllPartialModels {
 		SIGNAL_RED_CUBE = block("track_signal/red_cube"), SIGNAL_RED_GLOW = block("track_signal/red_glow"),
 		SIGNAL_RED = block("track_signal/red_tube"), SIGNAL_YELLOW_CUBE = block("track_signal/yellow_cube"),
 		SIGNAL_YELLOW_GLOW = block("track_signal/yellow_glow"), SIGNAL_YELLOW = block("track_signal/yellow_tube"),
+		SIGNAL_COMPUTER_WHITE_CUBE = block("track_signal/computer_white_cube"),
+		SIGNAL_COMPUTER_WHITE_GLOW = block("track_signal/computer_white_glow"),
+		SIGNAL_COMPUTER_WHITE = block("track_signal/computer_white_tube"),
+		SIGNAL_COMPUTER_WHITE_BASE = block("track_signal/computer_white_tube_base"),
 
 		BLAZE_INERT = block("blaze_burner/blaze/inert"), BLAZE_SUPER_ACTIVE = block("blaze_burner/blaze/super_active"),
 		BLAZE_GOGGLES = block("blaze_burner/goggles"), BLAZE_GOGGLES_SMALL = block("blaze_burner/goggles_small"),

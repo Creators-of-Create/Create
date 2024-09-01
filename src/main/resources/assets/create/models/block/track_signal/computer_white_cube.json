@@ -1,0 +1,20 @@
+{
+  "textures": {
+    "0": "create:block/signal_glow_3",
+    "particle": "create:block/signal_glow_3"
+  },
+  "elements": [
+    {
+      "from": [-0.5, -0.5, -0.5],
+      "to": [0.5, 0.5, 0.5],
+      "faces": {
+        "north": {"uv": [1, 1, 2, 2], "texture": "#0"},
+        "east": {"uv": [1, 1, 2, 2], "texture": "#0"},
+        "south": {"uv": [1, 1, 2, 2], "texture": "#0"},
+        "west": {"uv": [1, 1, 2, 2], "texture": "#0"},
+        "up": {"uv": [1, 1, 2, 2], "texture": "#0"},
+        "down": {"uv": [1, 1, 2, 2], "texture": "#0"}
+      }
+    }
+  ]
+}
