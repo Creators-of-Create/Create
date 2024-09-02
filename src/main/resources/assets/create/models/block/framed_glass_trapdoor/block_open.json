@@ -1,6 +1,5 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "block/block",
 	"textures": {
 		"0": "create:block/glass_door_side",
 		"1": "create:block/palettes/framed_glass",

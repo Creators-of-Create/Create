@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "create:raw_zinc"
-            ]
+            "tag": "forge:raw_materials/zinc"
           }
         ]
       },

@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "item": "create:raw_zinc"
+      "tag": "forge:raw_materials/zinc"
     }
   ],
   "processingTime": 400,

@@ -3,7 +3,7 @@
   "acceptMirrored": true,
   "key": {
     "C": {
-      "item": "minecraft:copper_ingot"
+      "tag": "forge:ingots/copper"
     },
     "L": {
       "item": "create:andesite_alloy"
