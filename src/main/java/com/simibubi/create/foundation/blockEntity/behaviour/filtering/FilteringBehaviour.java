@@ -387,5 +387,9 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 
 		return setFilter(side, copied);
 	}
+	
+	public boolean isRecipeFilter() {
+		return recipeFilter;
+	}
 
 }
