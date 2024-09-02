@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "tag": "forge:ingots/copper"
+    },
+    "S": {
+      "tag": "forge:plates/copper"
+    }
+  },
   "pattern": [
     "SCS"
   ],
-  "key": {
-    "S": {
-      "tag": "forge:plates/copper"
-    },
-    "C": {
-      "tag": "forge:ingots/copper"
-    }
-  },
   "result": {
-    "item": "create:fluid_pipe",
-    "count": 4
+    "count": 4,
+    "item": "create:fluid_pipe"
   }
 }
