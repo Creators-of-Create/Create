@@ -13,10 +13,10 @@
       "item": "create:andesite_alloy"
     },
     "B": {
-      "item": "minecraft:copper_block"
+      "tag": "forge:storage_blocks/copper"
     },
     "P": {
-      "item": "minecraft:copper_ingot"
+      "tag": "forge:ingots/copper"
     }
   },
   "result": {

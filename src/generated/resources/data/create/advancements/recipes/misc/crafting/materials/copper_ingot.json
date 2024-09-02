@@ -11,9 +11,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "create:copper_nugget"
-            ]
+            "tag": "forge:nuggets/copper"
           }
         ]
       }

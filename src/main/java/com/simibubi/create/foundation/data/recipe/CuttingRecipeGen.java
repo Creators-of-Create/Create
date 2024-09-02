@@ -14,7 +14,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
-	ANDESITE_ALLOY = create(I::andesite, b -> b.duration(200)
+	ANDESITE_ALLOY = create(I::andesiteAlloy, b -> b.duration(200)
 		.output(AllBlocks.SHAFT.get(), 6)),
 
 		OAK_WOOD = stripAndMakePlanks(Blocks.OAK_WOOD, Blocks.STRIPPED_OAK_WOOD, Blocks.OAK_PLANKS),

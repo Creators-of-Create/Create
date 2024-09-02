@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "item": "minecraft:raw_gold"
+      "tag": "forge:raw_materials/gold"
     }
   ],
   "results": [

@@ -51,11 +51,11 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 
 		ANDESITE_ALLOY = create("andesite_alloy", b -> b.require(Blocks.ANDESITE)
 			.require(I.ironNugget())
-			.output(I.andesite(), 1)),
+			.output(I.andesiteAlloy(), 1)),
 
 		ANDESITE_ALLOY_FROM_ZINC = create("andesite_alloy_from_zinc", b -> b.require(Blocks.ANDESITE)
 			.require(I.zincNugget())
-			.output(I.andesite(), 1)),
+			.output(I.andesiteAlloy(), 1)),
 
 		// AE2
 

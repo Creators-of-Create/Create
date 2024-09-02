@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "item": "create:raw_zinc_block"
+      "tag": "forge:storage_blocks/raw_zinc"
     }
   ],
   "results": [

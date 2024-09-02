@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "item": "minecraft:raw_iron"
+      "tag": "forge:raw_materials/iron"
     }
   ],
   "results": [
