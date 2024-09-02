@@ -1065,6 +1065,7 @@
   "create.gui.stressometer.no_rotation": "ไม่มีการหมุน",
   "create.gui.stressometer.overstressed": "เครียดเกินขึดจำกัด",
   "create.gui.symmetryWand.mirrorType": "กระจกสะท้อน",
+  "create.gui.symmetryWand.orientation": "ทิศทางการหมุน",
   "create.gui.terrainzapper.brush": "แปรง",
   "create.gui.terrainzapper.brush.cluster": "กลุ่มก้อน",
   "create.gui.terrainzapper.brush.cuboid": "ทรงเหลี่ยม",
