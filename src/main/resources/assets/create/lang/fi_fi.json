@@ -1944,7 +1944,6 @@
   "create.ponder.redstone_link.text_1": "Punakivilähettimet voivat välittää punakivisignaaleja langattomasti",
   "create.ponder.redstone_link.text_2": "R-klikkaa kyykyssä siirtääksesi sen vastaanottotilaan",
   "create.ponder.redstone_link.text_3": "R-klikkaaminen jakoavaimella tekee saman",
-  "create.ponder.redstone_link.text_4": "Vastaanottimet lähettävät 128 palikan sisällä olevien lähettimien signaalin",
   "create.ponder.redstone_link.text_5": "Taajuuden voi määrittää asettamalla esineitä kahteen niille varattuun paikkaan",
   "create.ponder.redstone_link.text_6": "Vain samalla taajuudella olevat lähettimet kommunikoivat",
   "create.ponder.replay": "Toista",

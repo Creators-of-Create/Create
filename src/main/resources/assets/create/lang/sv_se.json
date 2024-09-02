@@ -1944,7 +1944,6 @@
   "create.ponder.redstone_link.text_1": "Redstonelänkar kan skicka redstonesignaler trådlöst",
   "create.ponder.redstone_link.text_2": "Högerklicka medan smygande för att växla mottagningsläge",
   "create.ponder.redstone_link.text_3": "Ett hederligt högerklick med en skiftnyckel fungerar också",
-  "create.ponder.redstone_link.text_4": "Mottagare avger redstonekraften från sändare inom 256 block",
   "create.ponder.redstone_link.text_5": "Ange en frekvens genom att placera föremål i de två rutorna",
   "create.ponder.redstone_link.text_6": "Endast länkar med matchande frekvenser kan kommunicera",
   "create.ponder.replay": "Spela om",

@@ -1944,7 +1944,6 @@
   "create.ponder.redstone_link.text_1": "Legăturile de redstone pot transmite semnale redstone fără fir",
   "create.ponder.redstone_link.text_2": "Clic dreapta în timpul furișării pentru a comuta modul de primire",
   "create.ponder.redstone_link.text_3": "Un clic dreapta simplu cu o cheie poate face același lucru",
-  "create.ponder.redstone_link.text_4": "Receptorii emit puterea redstone a transmițătorilor în 128 de blocuri",
   "create.ponder.redstone_link.text_5": "Plasând obiecte în cele două sloturi poate specifica o frecvență",
   "create.ponder.redstone_link.text_6": "Doar legăturile cu frecvențe potrivite vor comunica",
   "create.ponder.replay": "Reluare",
