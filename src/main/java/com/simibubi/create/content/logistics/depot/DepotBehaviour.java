@@ -307,18 +307,27 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 			return returned;
 		}
 
-		if (!simulate) {
-			if (this.isEmpty()) {
-				if (heldItem.insertedFrom.getAxis()
-					.isHorizontal())
-					AllSoundEvents.DEPOT_SLIDE.playOnServer(getWorld(), getPos());
-				else
-					AllSoundEvents.DEPOT_PLOP.playOnServer(getWorld(), getPos());
-			}
-			this.heldItem = heldItem;
-			onHeldInserted.accept(heldItem.stack);
+		ItemStack returned = ItemStack.EMPTY;
+		int maxCount = heldItem.stack.getMaxStackSize();
+		if (maxCount < heldItem.stack.getCount())
+			returned = ItemHandlerHelper.copyStackWithSize(heldItem.stack, heldItem.stack.getCount() - maxCount);
+
+		if (simulate)
+			return returned;
+		
+		if (this.isEmpty()) {
+			if (heldItem.insertedFrom.getAxis()
+				.isHorizontal())
+				AllSoundEvents.DEPOT_SLIDE.playOnServer(getWorld(), getPos());
+			else
+				AllSoundEvents.DEPOT_PLOP.playOnServer(getWorld(), getPos());
 		}
-		return ItemStack.EMPTY;
+
+		heldItem = heldItem.copy();
+		heldItem.stack.setCount(maxCount);
+		this.heldItem = heldItem;
+		onHeldInserted.accept(heldItem.stack);
+		return returned;
 	}
 
 	public void setHeldItem(TransportedItemStack heldItem) {

@@ -5,7 +5,7 @@
       "tag": "forge:stripped_wood"
     },
     {
-      "item": "minecraft:copper_ingot"
+      "tag": "forge:ingots/copper"
     }
   ],
   "results": [
