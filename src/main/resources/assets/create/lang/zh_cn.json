@@ -1946,6 +1946,7 @@
   "create.ponder.redstone_link.text_1": "无线红石信号终端可以无线传输红石信号",
   "create.ponder.redstone_link.text_2": "潜行右击可以切换接收模式",
   "create.ponder.redstone_link.text_3": "手持扳手右击也可以",
+  "create.ponder.redstone_link.text_4": "接收端会发出由传输端发来的信号，有效距离为 128 格",
   "create.ponder.redstone_link.text_5": "在它们所带的槽位中放上物品，可以为它们指定频率",
   "create.ponder.redstone_link.text_6": "只有频率相互匹配的终端方可互通",
   "create.ponder.replay": "重放",

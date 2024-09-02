@@ -1649,6 +1649,7 @@
   "create.ponder.redstone_link.text_1": "เรดสโตนลิ้งค์สามารถส่งกระแสเรดสโตนโดยไร้สาย",
   "create.ponder.redstone_link.text_2": "คลิกขวาเมื่อย่ออยู่เพื่อสลับการทำงานเป็นตัวรับแทนตัวส่ง",
   "create.ponder.redstone_link.text_3": "หรือการคลิกขวาธรรมดาโดยใช้ประแจก็ได้เช่นกัน",
+  "create.ponder.redstone_link.text_4": "ตัวรับจะส่งกระแสเรดสโตนที่ได้รับจากตัวส่งได้ภายในระยะ 128 บล็อก",
   "create.ponder.redstone_link.text_5": "วางไอเทมในช่องทั้งสองเพื่อกำหนดความถี่",
   "create.ponder.redstone_link.text_6": "ลิงค์จะสื่อสารเฉพาะที่ความถี่เดียวกัน",
   "create.ponder.replay": "เล่นซ้ำ",

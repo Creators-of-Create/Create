@@ -1946,6 +1946,7 @@
   "create.ponder.redstone_link.text_1": "Redstone-Verbindungen können Redstonesignale kabellos übertragen",
   "create.ponder.redstone_link.text_2": "Schleich und Rechtsklicke um auf Empfangmodus zu wechseln",
   "create.ponder.redstone_link.text_3": "Ein einfacher Rechtsklick mit einem Schraubenschlüssel macht dasselbe",
+  "create.ponder.redstone_link.text_4": "Empfänger übertragen die Redstonekraft von Sendern innerhalb von 128 Blöcken",
   "create.ponder.redstone_link.text_5": "Platzieren von Items in den beiden Slots ermöglicht das spezifizieren einer Frequenz",
   "create.ponder.redstone_link.text_6": "Nur Verbindungen mit passenden Frequenzen kommunizieren miteinander",
   "create.ponder.replay": "Wiederholen",

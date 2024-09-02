@@ -1946,6 +1946,7 @@
   "create.ponder.redstone_link.text_1": "Emitery sygnału mogą przesyłać sygnał Redstone bezprzewodowo",
   "create.ponder.redstone_link.text_2": "Kliknij PPM skradając się, aby przełączyć na tryb odbierania",
   "create.ponder.redstone_link.text_3": "Prawe kliknięcie kluczek robi dokładnie to samo",
+  "create.ponder.redstone_link.text_4": "Odbiorniki emitują sygnał Redstone nadajników w zasięgu 128 bloków",
   "create.ponder.redstone_link.text_5": "Wkładając przedmioty do dwóch slotów można sprecyzować częstotliwość",
   "create.ponder.redstone_link.text_6": "Jedynie emitery z pasującymi częstotliwościami będą się ze sobą komunikować",
   "create.ponder.replay": "Powtórka",

@@ -1946,6 +1946,7 @@
   "create.ponder.redstone_link.text_1": "レッドストーンリンクは、レッドストーン信号を無線で送受信できます",
   "create.ponder.redstone_link.text_2": "モードを切り替えるには、スニークしながら右クリックします",
   "create.ponder.redstone_link.text_3": "レンチをもって右クリックでも、モードを切り替えられます",
+  "create.ponder.redstone_link.text_4": "受信機は、128ブロック以内の送信機のレッドストーン信号を受信します",
   "create.ponder.redstone_link.text_5": "2つのスロットにアイテムを設定すると、周波数を設定できます",
   "create.ponder.redstone_link.text_6": "周波数が一致するリンク同士のみが送受信を行います",
   "create.ponder.replay": "最初から",

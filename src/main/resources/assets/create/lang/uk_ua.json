@@ -1946,6 +1946,7 @@
   "create.ponder.redstone_link.text_1": "Редстоунові передавачі можуть передавати редстоуновий сигнал бездротово",
   "create.ponder.redstone_link.text_2": "Клацніть ПКМ крадькома, щоб перемикнути на режим приймача",
   "create.ponder.redstone_link.text_3": "Клацання ПКМ гайковим ключем зробить те саме",
+  "create.ponder.redstone_link.text_4": "Приймачі приймають редстоуновий сигнал у радіусі 128 блоків",
   "create.ponder.redstone_link.text_5": "Покладіть предмети у два слоти, щоб вказати частоту",
   "create.ponder.redstone_link.text_6": "Лише передавачі з однаковими частотами підтримуватимуть зв'язок",
   "create.ponder.replay": "Повторити",

@@ -1946,6 +1946,7 @@
   "create.ponder.redstone_link.text_1": "Conexões de Redstone podem transmitir sinais de Redstone sem fios",
   "create.ponder.redstone_link.text_2": "Clique-direito enquanto se agacha para alternar o modo de recepção",
   "create.ponder.redstone_link.text_3": "Um simples Clique-direito com uma chave inglesa pode fazer o mesmo",
+  "create.ponder.redstone_link.text_4": "Receptores emite o sinal de Redstone dos transmissores até 128 blocos",
   "create.ponder.redstone_link.text_5": "Colocar itens nos dois slots pode especificar uma Frequência",
   "create.ponder.redstone_link.text_6": "Somente as Conexões com frequências correspondentes se comunicarão",
   "create.ponder.replay": "Repetir",

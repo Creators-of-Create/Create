@@ -1946,6 +1946,7 @@
   "create.ponder.redstone_link.text_1": "Redstonelenker kan sende redstone-signaler trådløst",
   "create.ponder.redstone_link.text_2": "Høyreklikk mens du sniker for å veksle mellom sending og mottaking",
   "create.ponder.redstone_link.text_3": "En enkel høyreklikking med skiftenøkkelen vil gjøre det samme",
+  "create.ponder.redstone_link.text_4": "Motakere vil kunne mota redstone-signalet fra avsendere innenfor 256 blokker",
   "create.ponder.redstone_link.text_5": "Frekvensen kan bli spesifisert ved å sette gjenstander i de to plassene på lenken",
   "create.ponder.redstone_link.text_6": "Bare lenker som har samsvarende frekvenser vil kunne kommunisere",
   "create.ponder.replay": "Spill på nytt",

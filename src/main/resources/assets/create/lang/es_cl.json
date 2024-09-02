@@ -1213,6 +1213,7 @@
   "create.ponder.redstone_link.text_1": "Los enlaces de Redstone pueden transmitir señales de redstone de forma inalámbrica",
   "create.ponder.redstone_link.text_2": "Agachate y haz Click-Derecho para alternar el modo de recepción",
   "create.ponder.redstone_link.text_3": "Un simple Click-Derecho con una Llave Inglesa puede hacer lo mismo",
+  "create.ponder.redstone_link.text_4": "Los Receptores emiten la potencia de redstone de los Transmisores dentro de un radio de 128 bloques",
   "create.ponder.redstone_link.text_5": "Colocar objetos en las dos ranuras puede especificar una frecuencia",
   "create.ponder.redstone_link.text_6": "Solo los enlaces con frecuencias coincidentes se comunicarán entre sí",
   "create.ponder.replay": "Reiniciar",
