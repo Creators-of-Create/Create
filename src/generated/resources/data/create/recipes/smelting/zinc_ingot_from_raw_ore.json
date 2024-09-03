@@ -4,7 +4,7 @@
   "cookingtime": 200,
   "experience": 0.7,
   "ingredient": {
-    "item": "create:raw_zinc"
+    "tag": "forge:raw_materials/zinc"
   },
   "result": "create:zinc_ingot"
 }

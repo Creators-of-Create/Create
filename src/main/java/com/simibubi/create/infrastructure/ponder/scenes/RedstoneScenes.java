@@ -750,7 +750,7 @@ public class RedstoneScenes {
 		scene.idle(10);
 		scene.overlay.showText(70)
 			.colored(PonderPalette.GREEN)
-			.text("Receivers emit the redstone power of transmitters within 128 blocks")
+			.text("Receivers emit the redstone power of transmitters within 256 blocks")
 			.placeNearTarget()
 			.pointAt(link2Vec);
 		scene.idle(80);

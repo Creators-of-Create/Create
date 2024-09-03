@@ -1946,7 +1946,7 @@
   "create.ponder.redstone_link.text_1": "Redstone Links can transmit redstone signals wirelessly",
   "create.ponder.redstone_link.text_2": "Right-click while Sneaking to toggle receive mode",
   "create.ponder.redstone_link.text_3": "A simple Right-click with a Wrench can do the same",
-  "create.ponder.redstone_link.text_4": "Receivers emit the redstone power of transmitters within 128 blocks",
+  "create.ponder.redstone_link.text_4": "Receivers emit the redstone power of transmitters within 256 blocks",
   "create.ponder.redstone_link.text_5": "Placing items in the two slots can specify a Frequency",
   "create.ponder.redstone_link.text_6": "Only the links with matching Frequencies will communicate",
   "create.ponder.replay": "Replay",

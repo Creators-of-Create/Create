@@ -44,14 +44,9 @@ public class OpenCreateMenuButton extends Button {
 		ScreenOpener.open(new CreateMainMenuScreen(Minecraft.getInstance().screen));
 	}
 
-	public static class SingleMenuRow {
-		public final String left, right;
-		public SingleMenuRow(String left, String right) {
-			this.left = I18n.get(left);
-			this.right = I18n.get(right);
-		}
-		public SingleMenuRow(String center) {
-			this(center, center);
+	public record SingleMenuRow(String leftTextKey, String rightTextKey) {
+		public SingleMenuRow(String centerTextKey) {
+			this(centerTextKey, centerTextKey);
 		}
 	}
 
@@ -71,11 +66,11 @@ public class OpenCreateMenuButton extends Button {
 			new SingleMenuRow("menu.returnToMenu")
 		));
 
-		protected final List<String> leftButtons, rightButtons;
+		protected final List<String> leftTextKeys, rightTextKeys;
 
-		public MenuRows(List<SingleMenuRow> variants) {
-			leftButtons = variants.stream().map(r -> r.left).collect(Collectors.toList());
-			rightButtons = variants.stream().map(r -> r.right).collect(Collectors.toList());
+		public MenuRows(List<SingleMenuRow> rows) {
+			leftTextKeys = rows.stream().map(SingleMenuRow::leftTextKey).collect(Collectors.toList());
+			rightTextKeys = rows.stream().map(SingleMenuRow::rightTextKey).collect(Collectors.toList());
 		}
 	}
 
@@ -84,39 +79,44 @@ public class OpenCreateMenuButton extends Button {
 
 		@SubscribeEvent
 		public static void onGuiInit(ScreenEvent.Init event) {
-			Screen gui = event.getScreen();
+			Screen screen = event.getScreen();
 
-			MenuRows menu = null;
-			int rowIdx = 0, offsetX = 0;
-			if (gui instanceof TitleScreen) {
+			MenuRows menu;
+			int rowIdx;
+			int offsetX;
+			if (screen instanceof TitleScreen) {
 				menu = MenuRows.MAIN_MENU;
 				rowIdx = AllConfigs.client().mainMenuConfigButtonRow.get();
 				offsetX = AllConfigs.client().mainMenuConfigButtonOffsetX.get();
-			} else if (gui instanceof PauseScreen) {
+			} else if (screen instanceof PauseScreen) {
 				menu = MenuRows.INGAME_MENU;
 				rowIdx = AllConfigs.client().ingameMenuConfigButtonRow.get();
 				offsetX = AllConfigs.client().ingameMenuConfigButtonOffsetX.get();
+			} else {
+				return;
 			}
 
-			if (rowIdx != 0 && menu != null) {
-				boolean onLeft = offsetX < 0;
-				String target = (onLeft ? menu.leftButtons : menu.rightButtons).get(rowIdx - 1);
-
-				int offsetX_ = offsetX;
-				MutableObject<GuiEventListener> toAdd = new MutableObject<>(null);
-				event.getListenersList()
-					.stream()
-					.filter(w -> w instanceof AbstractWidget)
-					.map(w -> (AbstractWidget) w)
-					.filter(w -> w.getMessage()
-						.getString()
-						.equals(target))
-					.findFirst()
-					.ifPresent(w -> toAdd
-						.setValue(new OpenCreateMenuButton(w.getX() + offsetX_ + (onLeft ? -20 : w.getWidth()), w.getY())));
-				if (toAdd.getValue() != null)
-					event.addListener(toAdd.getValue());
+			if (rowIdx == 0) {
+				return;
 			}
+
+			boolean onLeft = offsetX < 0;
+			String targetMessage = I18n.get((onLeft ? menu.leftTextKeys : menu.rightTextKeys).get(rowIdx - 1));
+
+			int offsetX_ = offsetX;
+			MutableObject<GuiEventListener> toAdd = new MutableObject<>(null);
+			event.getListenersList()
+				.stream()
+				.filter(w -> w instanceof AbstractWidget)
+				.map(w -> (AbstractWidget) w)
+				.filter(w -> w.getMessage()
+					.getString()
+					.equals(targetMessage))
+				.findFirst()
+				.ifPresent(w -> toAdd
+					.setValue(new OpenCreateMenuButton(w.getX() + offsetX_ + (onLeft ? -20 : w.getWidth()), w.getY())));
+			if (toAdd.getValue() != null)
+				event.addListener(toAdd.getValue());
 		}
 
 	}

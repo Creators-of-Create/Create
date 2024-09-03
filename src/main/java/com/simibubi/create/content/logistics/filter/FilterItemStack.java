@@ -23,6 +23,10 @@ public class FilterItemStack {
 
 	public static FilterItemStack of(ItemStack filter) {
 		if (filter.hasTag()) {
+			CompoundTag stackTag = filter.getTag();
+			stackTag.remove("Enchantments");
+			stackTag.remove("AttributeModifiers");
+
 			if (AllItems.FILTER.isIn(filter))
 				return new ListFilterItemStack(filter);
 			if (AllItems.ATTRIBUTE_FILTER.isIn(filter))

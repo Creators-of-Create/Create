@@ -22,7 +22,7 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 	CRUSHING_WHEEL = create(AllBlocks.CRUSHING_WHEEL::get).returns(2)
 		.recipe(b -> b.key('P', Ingredient.of(ItemTags.PLANKS))
 			.key('S', Ingredient.of(I.stone()))
-			.key('A', I.andesite())
+			.key('A', I.andesiteAlloy())
 			.patternLine(" AAA ")
 			.patternLine("AAPAA")
 			.patternLine("APSPA")
@@ -55,7 +55,7 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 				.disallowMirrored()),
 
 		POTATO_CANNON = create(AllItems.POTATO_CANNON::get).returns(1)
-			.recipe(b -> b.key('L', I.andesite())
+			.recipe(b -> b.key('L', I.andesiteAlloy())
 				.key('R', I.precisionMechanism())
 				.key('S', AllBlocks.FLUID_PIPE.get())
 				.key('C', Ingredient.of(I.copper()))

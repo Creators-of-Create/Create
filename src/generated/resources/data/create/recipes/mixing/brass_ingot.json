@@ -3,7 +3,7 @@
   "heatRequirement": "heated",
   "ingredients": [
     {
-      "item": "minecraft:copper_ingot"
+      "tag": "forge:ingots/copper"
     },
     {
       "tag": "forge:ingots/zinc"
