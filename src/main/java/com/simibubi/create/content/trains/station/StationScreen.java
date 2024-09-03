@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.content.decoration.slidingDoor.DoorControl;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.Train;
@@ -21,6 +22,7 @@ import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
@@ -44,6 +46,9 @@ public class StationScreen extends AbstractStationScreen {
 	private int leavingAnimation;
 	private LerpedFloat trainPosition;
 	private DoorControl doorControl;
+	
+	private ScrollInput colorTypeScroll;
+	private int messedWithColors;
 
 	private boolean switchingToAssemblyMode;
 
@@ -99,6 +104,20 @@ public class StationScreen extends AbstractStationScreen {
 		dropScheduleButton.withCallback(() -> AllPackets.getChannel()
 			.sendToServer(StationEditPacket.dropSchedule(blockEntity.getBlockPos())));
 		addRenderableWidget(dropScheduleButton);
+		
+		colorTypeScroll = new ScrollInput(x + 166, y + 17, 22, 14).titled(Lang.translateDirect("station.train_map_color"));
+		colorTypeScroll.withRange(0, 16);
+		colorTypeScroll.withStepFunction(ctx -> -colorTypeScroll.standardStep()
+			.apply(ctx));
+		colorTypeScroll.calling(s -> {
+			Train train = displayedTrain.get();
+			if (train != null) {
+				train.mapColorIndex = s;
+				messedWithColors = 10;				
+			}
+		});
+		colorTypeScroll.active = colorTypeScroll.visible = false;
+		addRenderableWidget(colorTypeScroll);
 
 		onTextChanged = s -> trainNameBox.setX(nameBoxX(s, trainNameBox));
 		trainNameBox = new EditBox(font, x + 23, y + 47, background.width - 75, 10, Components.immutableEmpty());
@@ -131,6 +150,12 @@ public class StationScreen extends AbstractStationScreen {
 				.length());
 			trainNameBox.setHighlightPos(trainNameBox.getCursorPosition());
 		}
+		
+		if (messedWithColors > 0) {
+			messedWithColors--;
+			if (messedWithColors == 0)
+				syncTrainNameAndColor();
+		}
 
 		super.tick();
 
@@ -151,6 +176,8 @@ public class StationScreen extends AbstractStationScreen {
 			leavingAnimation = 0;
 			newTrainButton.active = blockEntity.edgePoint.isOrthogonal();
 			newTrainButton.visible = true;
+			colorTypeScroll.visible = false;
+			colorTypeScroll.active = false;
 			Train imminentTrain = getImminent();
 
 			if (imminentTrain != null) {
@@ -161,7 +188,9 @@ public class StationScreen extends AbstractStationScreen {
 				disassembleTrainButton.visible = true;
 				dropScheduleButton.active = blockEntity.trainHasSchedule;
 				dropScheduleButton.visible = true;
-
+				colorTypeScroll.setState(imminentTrain.mapColorIndex);
+				colorTypeScroll.visible = true;
+				colorTypeScroll.active = true;
 				trainNameBox.active = true;
 				trainNameBox.setValue(imminentTrain.name.getString());
 				trainNameBox.setX(nameBoxX(trainNameBox.getValue(), trainNameBox));
@@ -185,6 +214,8 @@ public class StationScreen extends AbstractStationScreen {
 			targetPos -= trainIconWidth - 130;
 
 		if (leavingAnimation > 0) {
+			colorTypeScroll.visible = false;
+			colorTypeScroll.active = false;
 			disassembleTrainButton.active = false;
 			float f = 1 - (leavingAnimation / 80f);
 			trainPosition.setValue(targetPos + f * f * f * (background.width - targetPos + 5));
@@ -301,6 +332,27 @@ public class StationScreen extends AbstractStationScreen {
 			if (font.width(text) > trainNameBox.getWidth())
 				graphics.drawString(font, "...", guiLeft + 26, guiTop + 47, 0xa6a6a6);
 		}
+		
+		if (!Mods.FTBCHUNKS.isLoaded())
+			return;
+		
+		AllGuiTextures sprite = AllGuiTextures.TRAINMAP_SPRITES;
+		sprite.bind();
+		int trainColorIndex = colorTypeScroll.getState();
+		int colorRow = trainColorIndex / 4;
+		int colorCol = trainColorIndex % 4;
+		int rotation = (AnimationTickHolder.getTicks() / 5) % 8;
+
+		for (int slice = 0; slice < 3; slice++) {
+			int row = slice == 0 ? 1 : slice == 2 ? 2 : 3;
+			int col = rotation;
+			int positionX = colorTypeScroll.getX() + 4;
+			int positionY = colorTypeScroll.getY() - 1;
+			int sheetX = col * 16 + colorCol * 128;
+			int sheetY = row * 16 + colorRow * 64;
+
+			graphics.blit(sprite.location, positionX, positionY, sheetX, sheetY, 16, 16, sprite.width, sprite.height);
+		}
 	}
 
 	@Override
@@ -335,19 +387,19 @@ public class StationScreen extends AbstractStationScreen {
 
 		if (hitEnter && trainNameBox.isFocused()) {
 			trainNameBox.setFocused(false);
-			syncTrainName();
+			syncTrainNameAndColor();
 			return true;
 		}
 
 		return super.keyPressed(pKeyCode, pScanCode, pModifiers);
 	}
 
-	private void syncTrainName() {
+	private void syncTrainNameAndColor() {
 		Train train = displayedTrain.get();
 		if (train != null && !trainNameBox.getValue()
 			.equals(train.name.getString()))
 			AllPackets.getChannel()
-				.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
+				.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId(), train.mapColorIndex));
 	}
 
 	private void syncStationName() {
@@ -371,7 +423,8 @@ public class StationScreen extends AbstractStationScreen {
 			return;
 		if (!switchingToAssemblyMode)
 			AllPackets.getChannel()
-				.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
+				.sendToServer(
+					new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId(), train.mapColorIndex));
 		else
 			blockEntity.imminentTrain = null;
 	}

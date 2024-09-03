@@ -141,6 +141,22 @@ repositories {
         name = "squiddev"
         url = "https://squiddev.cc/maven/"
     }
+    maven {
+        name = "ftb"
+        url = "https://maven.saps.dev/releases"
+    }
+	maven {
+        name = "architectury"
+        url = "https://maven.architectury.dev/"
+    }
+	maven {
+        url = "https://jm.gserv.me/repository/maven-public/"
+        content {
+            includeGroup "info.journeymap"
+            includeGroup "mysticdrew"
+        }
+    }
+
 
     maven {
         url = 'https://www.cursemaven.com'
@@ -200,6 +216,14 @@ dependencies {
     // implementation fg.deobf("curse.maven:ic2-classic-242942:5555152")
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
     // implementation fg.deobf("com.railwayteam.railways:railways-1.19.2-1.6.4:all") { transitive = false }
+	
+	implementation fg.deobf("dev.architectury:architectury-forge:9.1.12")
+	implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:2001.3.1")
+	implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:2001.3.0")
+	implementation fg.deobf("dev.ftb.mods:ftb-library-forge:2001.2.4")
+	
+	implementation fg.deobf("curse.maven:journeymap-32274:5457831")
+	// implementation fg.deobf("ignored:journeymap-1.20.1-5.10.1-forge")
 
     // runtimeOnly fg.deobf("curse.maven:framedblocks-441647:5399211")
     // runtimeOnly fg.deobf("curse.maven:galosphere-631098:4574834")

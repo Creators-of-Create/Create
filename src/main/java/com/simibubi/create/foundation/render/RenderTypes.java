@@ -1,12 +1,14 @@
 package com.simibubi.create.foundation.render;
 
 import java.io.IOException;
+import java.util.function.BiFunction;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
 
+import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -123,6 +125,19 @@ public class RenderTypes extends RenderStateShard {
 
 	public static RenderType getItemPartialTranslucent() {
 		return ITEM_PARTIAL_TRANSLUCENT;
+	}
+
+	public static BiFunction<ResourceLocation, Boolean, RenderType> TRAIN_MAP = Util.memoize(RenderTypes::getTrainMap);
+
+	private static RenderType getTrainMap(ResourceLocation locationIn, boolean linearFiltering) {
+		RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+			.setShaderState(RENDERTYPE_TEXT_SHADER)
+			.setTextureState(new RenderStateShard.TextureStateShard(locationIn, linearFiltering, false))
+			.setTransparencyState(NO_TRANSPARENCY)
+			.setLightmapState(LIGHTMAP)
+			.createCompositeState(false);
+		return RenderType.create("create_train_map", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, 256,
+			false, true, rendertype$state);
 	}
 
 	private static final RenderType FLUID = RenderType.create(createLayerName("fluid"),

@@ -29,6 +29,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -419,6 +420,13 @@ public class Carriage {
 			if (entity != null)
 				return entity;
 		}
+		return null;
+	}
+
+	public Pair<ResourceKey<Level>, DimensionalCarriageEntity> anyAvailableDimensionalCarriage() {
+		for (Entry<ResourceKey<Level>, DimensionalCarriageEntity> entry : entities.entrySet())
+			if (entry.getValue().entity.get() != null)
+				return Pair.of(entry.getKey(), entry.getValue());
 		return null;
 	}
 

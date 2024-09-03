@@ -68,6 +68,7 @@ public class TrainPacket extends SimplePacketBase {
 
 		train.name = Component.Serializer.fromJson(buffer.readUtf());
 		train.icon = TrainIconType.byId(buffer.readResourceLocation());
+		train.mapColorIndex = buffer.readVarInt();
 	}
 
 	@Override
@@ -105,6 +106,7 @@ public class TrainPacket extends SimplePacketBase {
 		buffer.writeBoolean(train.doubleEnded);
 		buffer.writeUtf(Component.Serializer.toJson(train.name));
 		buffer.writeResourceLocation(train.icon.id);
+		buffer.writeVarInt(train.mapColorIndex);
 	}
 
 	@Override
