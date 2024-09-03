@@ -2,7 +2,6 @@ package com.simibubi.create.content.trains.track;
 
 import java.util.Iterator;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.simibubi.create.AllBlocks;
@@ -11,6 +10,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -34,7 +34,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
-	public Couple<BlockPos> tePositions;
+	public Couple<BlockPos> bePositions;
 	public Couple<Vec3> starts;
 	public Couple<Vec3> axes;
 	public Couple<Vec3> normals;
@@ -59,7 +59,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
 	public BezierConnection(Couple<BlockPos> positions, Couple<Vec3> starts, Couple<Vec3> axes, Couple<Vec3> normals,
 		boolean primary, boolean girder, TrackMaterial material) {
-		tePositions = positions;
+		bePositions = positions;
 		this.starts = starts;
 		this.axes = axes;
 		this.normals = normals;
@@ -70,7 +70,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	public BezierConnection secondary() {
-		BezierConnection bezierConnection = new BezierConnection(tePositions.swap(), starts.swap(), axes.swap(),
+		BezierConnection bezierConnection = new BezierConnection(bePositions.swap(), starts.swap(), axes.swap(),
 			normals.swap(), !primary, hasGirder, trackMaterial);
 		if (smoothing != null)
 			bezierConnection.smoothing = smoothing.swap();
@@ -96,7 +96,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	private boolean equalsSansMaterialInner(BezierConnection other) {
-		return this == other || (other != null && coupleEquals(this.tePositions, other.tePositions)
+		return this == other || (other != null && coupleEquals(this.bePositions, other.bePositions)
 			&& coupleEquals(this.starts, other.starts) && coupleEquals(this.axes, other.axes)
 			&& coupleEquals(this.normals, other.normals) && this.hasGirder == other.hasGirder);
 	}
@@ -116,7 +116,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	public CompoundTag write(BlockPos localTo) {
-		Couple<BlockPos> tePositions = this.tePositions.map(b -> b.subtract(localTo));
+		Couple<BlockPos> tePositions = this.bePositions.map(b -> b.subtract(localTo));
 		Couple<Vec3> starts = this.starts.map(v -> v.subtract(Vec3.atLowerCornerOf(localTo)));
 
 		CompoundTag compound = new CompoundTag();
@@ -143,7 +143,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	public void write(FriendlyByteBuf buffer) {
-		tePositions.forEach(buffer::writeBlockPos);
+		bePositions.forEach(buffer::writeBlockPos);
 		starts.forEach(v -> VecHelper.write(v, buffer));
 		axes.forEach(v -> VecHelper.write(v, buffer));
 		normals.forEach(v -> VecHelper.write(v, buffer));
@@ -156,7 +156,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	public BlockPos getKey() {
-		return tePositions.getSecond();
+		return bePositions.getSecond();
 	}
 
 	public boolean isPrimary() {
@@ -346,7 +346,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	@Override
 	public Iterator<Segment> iterator() {
 		resolve();
-		var offset = Vec3.atLowerCornerOf(tePositions.getFirst())
+		var offset = Vec3.atLowerCornerOf(bePositions.getFirst())
 			.scale(-1)
 			.add(0, 3 / 16f, 0);
 		return new Bezierator(this, offset);
@@ -378,7 +378,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		if (!level.getGameRules()
 			.getBoolean(GameRules.RULE_DOBLOCKDROPS))
 			return;
-		Vec3 origin = Vec3.atLowerCornerOf(tePositions.getFirst());
+		Vec3 origin = Vec3.atLowerCornerOf(bePositions.getFirst());
 		for (Segment segment : this) {
 			if (segment.index % 2 != 0 || segment.index == getSegmentCount())
 				continue;
@@ -403,7 +403,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 			new BlockParticleOption(ParticleTypes.BLOCK, AllBlocks.METAL_GIRDER.getDefaultState());
 		if (!(level instanceof ServerLevel slevel))
 			return;
-		Vec3 origin = Vec3.atLowerCornerOf(tePositions.getFirst());
+		Vec3 origin = Vec3.atLowerCornerOf(bePositions.getFirst());
 		for (Segment segment : this) {
 			for (int offset : Iterate.positiveAndNegative) {
 				Vec3 v = segment.position.add(segment.normal.scale(14 / 16f * offset))
@@ -542,11 +542,11 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 			angles.railTransforms = Couple.create(null, null);
 
 			PoseStack poseStack = new PoseStack();
-			TransformStack.cast(poseStack)
+			TransformStack.of(poseStack)
 				.translate(prevMiddle)
-				.rotateYRadians(tieAngles.y)
-				.rotateXRadians(tieAngles.x)
-				.rotateZRadians(tieAngles.z)
+				.rotateY((float) tieAngles.y)
+				.rotateX((float) tieAngles.x)
+				.rotateZ((float) tieAngles.z)
 				.translate(-1 / 2f, -2 / 16f - 1 / 256f, 0);
 			angles.tieTransform = poseStack.last();
 
@@ -559,11 +559,11 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				Vec3 anglesI = TrackRenderer.getModelAngles(segment.normal, diff);
 
 				poseStack = new PoseStack();
-				TransformStack.cast(poseStack)
+				TransformStack.of(poseStack)
 					.translate(prevI)
-					.rotateYRadians(anglesI.y)
-					.rotateXRadians(anglesI.x)
-					.rotateZRadians(anglesI.z)
+					.rotateY((float) anglesI.y)
+					.rotateX((float) anglesI.x)
+					.rotateZ((float) anglesI.z)
 					.translate(0, -2 / 16f - 1 / 256f, -1 / 32f)
 					.scale(1, 1, (float) diff.length() * scale);
 				angles.railTransforms.set(first, poseStack.last());
@@ -634,11 +634,11 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				Vec3 beamAngles = TrackRenderer.getModelAngles(segment.normal, beamDiff);
 
 				PoseStack poseStack = new PoseStack();
-				TransformStack.cast(poseStack)
+				TransformStack.of(poseStack)
 					.translate(previousBeam)
-					.rotateYRadians(beamAngles.y)
-					.rotateXRadians(beamAngles.x)
-					.rotateZRadians(beamAngles.z)
+					.rotateY((float) beamAngles.y)
+					.rotateX((float) beamAngles.x)
+					.rotateZ((float) beamAngles.z)
 					.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
 					.scale(1, 1, (float) beamDiff.length() * scale);
 				angles.beams.set(first, poseStack.last());
@@ -653,11 +653,11 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 					Vec3 capAngles = TrackRenderer.getModelAngles(segment.normal, diff);
 
 					poseStack = new PoseStack();
-					TransformStack.cast(poseStack)
+					TransformStack.of(poseStack)
 						.translate(previous)
-						.rotateYRadians(capAngles.y)
-						.rotateXRadians(capAngles.x)
-						.rotateZRadians(capAngles.z)
+						.rotateY((float) capAngles.y)
+						.rotateX((float) capAngles.x)
+						.rotateZ((float) capAngles.z)
 						.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
 						.rotateZ(top ? 0 : 0)
 						.scale(1, 1, (float) diff.length() * scale);

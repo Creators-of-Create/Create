@@ -29,11 +29,13 @@
   ],
   "client": [
     "accessor.AgeableListModelAccessor",
+    "accessor.BufferBuilderAccessor",
     "accessor.FontAccessor",
     "accessor.GameRendererAccessor",
     "accessor.HumanoidArmorLayerAccessor",
     "accessor.MouseHandlerAccessor",
     "accessor.ParticleEngineAccessor",
+    "accessor.RenderSystemAccessor",
     "client.BlockDestructionProgressMixin",
     "client.CameraMixin",
     "client.EntityContraptionInteractionMixin",

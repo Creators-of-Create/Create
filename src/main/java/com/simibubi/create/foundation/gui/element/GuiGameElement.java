@@ -2,8 +2,6 @@ package com.simibubi.create.foundation.gui.element;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
@@ -14,9 +12,11 @@ import com.mojang.math.Axis;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.gui.ILightingSettings;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
@@ -171,8 +171,7 @@ public class GuiGameElement {
 
 			Minecraft mc = Minecraft.getInstance();
 			BlockRenderDispatcher blockRenderer = mc.getBlockRenderer();
-			MultiBufferSource.BufferSource buffer = mc.renderBuffers()
-				.bufferSource();
+			MultiBufferSource.BufferSource buffer = graphics.bufferSource();
 
 			transformMatrix(matrixStack);
 
@@ -188,19 +187,19 @@ public class GuiGameElement {
 				RenderType renderType = Sheets.translucentCullBlockSheet();
 				blockRenderer.getModelRenderer()
 					.renderModel(ms.last(), buffer.getBuffer(renderType), blockState, blockModel, 1, 1, 1,
-						LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, ModelUtil.VIRTUAL_DATA, null);
+						LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, VirtualRenderHelper.VIRTUAL_DATA, null);
 			} else {
 				int color = Minecraft.getInstance()
 					.getBlockColors()
 					.getColor(blockState, null, null, 0);
 				Color rgb = new Color(color == -1 ? this.color : color);
 
-				for (RenderType chunkType : blockModel.getRenderTypes(blockState, RandomSource.create(42L), ModelUtil.VIRTUAL_DATA)) {
+				for (RenderType chunkType : blockModel.getRenderTypes(blockState, RandomSource.create(42L), VirtualRenderHelper.VIRTUAL_DATA)) {
 					RenderType renderType = RenderTypeHelper.getEntityRenderType(chunkType, true);
 					blockRenderer.getModelRenderer()
 						.renderModel(ms.last(), buffer.getBuffer(renderType), blockState, blockModel,
 							rgb.getRedAsFloat(), rgb.getGreenAsFloat(), rgb.getBlueAsFloat(),
-							LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, ModelUtil.VIRTUAL_DATA, chunkType);
+							LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, VirtualRenderHelper.VIRTUAL_DATA, chunkType);
 				}
 			}
 
@@ -264,11 +263,11 @@ public class GuiGameElement {
 			PoseStack matrixStack = graphics.pose();
 			prepareMatrix(matrixStack);
 			transformMatrix(matrixStack);
-			renderItemIntoGUI(matrixStack, stack, customLighting == null);
+			renderItemIntoGUI(graphics, matrixStack, stack, customLighting == null);
 			cleanUpMatrix(matrixStack);
 		}
 
-		public static void renderItemIntoGUI(PoseStack matrixStack, ItemStack stack, boolean useDefaultLighting) {
+		public static void renderItemIntoGUI(GuiGraphics graphics, PoseStack matrixStack, ItemStack stack, boolean useDefaultLighting) {
 			ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 			BakedModel bakedModel = renderer.getModel(stack, null, null, 0);
 
@@ -282,7 +281,7 @@ public class GuiGameElement {
 			matrixStack.translate(0, 0, 100.0F);
 			matrixStack.translate(8.0F, -8.0F, 0.0F);
 			matrixStack.scale(16.0F, 16.0F, 16.0F);
-			MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+			MultiBufferSource.BufferSource buffer = graphics.bufferSource();
 			boolean flatLighting = !bakedModel.usesBlockLight();
 			if (useDefaultLighting && flatLighting) {
 				Lighting.setupForFlatItems();
@@ -291,7 +290,7 @@ public class GuiGameElement {
 			renderer.render(stack, ItemDisplayContext.GUI, false, matrixStack, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, bakedModel);
 			RenderSystem.disableDepthTest();
 			buffer.endBatch();
-			
+
 			RenderSystem.enableDepthTest();
 			if (useDefaultLighting && flatLighting) {
 				Lighting.setupFor3DItems();

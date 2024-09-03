@@ -79,10 +79,12 @@ public class SuperRenderTypeBuffer implements MultiBufferSource {
 				put(map, RenderType.entityGlint());
 				put(map, RenderType.entityGlintDirect());
 				put(map, RenderType.waterMask());
-				put(map, RenderTypes.getOutlineSolid());
 				ModelBakery.DESTROY_TYPES.forEach((p_173062_) -> {
 					put(map, p_173062_);
 				});
+
+				// extras
+				put(map, RenderTypes.outlineSolid());
 			});
 		private final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediateWithBuffers(fixedBuffers, new BufferBuilder(256));
 

@@ -2,13 +2,13 @@ package com.simibubi.create.content.schematics.client;
 
 import static java.lang.Math.abs;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.Mirror;
@@ -22,7 +22,7 @@ public class SchematicTransformation {
 	private Vec3 chasingPos;
 	private Vec3 prevChasingPos;
 	private BlockPos target;
-	
+
 	private LerpedFloat scaleFrontBack, scaleLeftRight;
 	private LerpedFloat rotation;
 	private double xOrigin;
@@ -61,7 +61,7 @@ public class SchematicTransformation {
 		float pt = AnimationTickHolder.getPartialTicks();
 
 		// Translation
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.translate(VecHelper.lerp(pt, prevChasingPos, chasingPos)
 				.subtract(camera));
 		Vec3 rotationOffset = getRotationOffset(true);
@@ -71,9 +71,9 @@ public class SchematicTransformation {
 		float lr = getScaleLR().getValue(pt);
 		float rot = rotation.getValue(pt) + ((fb < 0 && lr < 0) ? 180 : 0);
 		ms.translate(xOrigin, 0, zOrigin);
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.translate(rotationOffset)
-			.rotateY(rot)
+			.rotateYDegrees(rot)
 			.translateBack(rotationOffset);
 		ms.scale(abs(fb), 1, abs(lr));
 		ms.translate(-xOrigin, 0, -zOrigin);

@@ -9,6 +9,7 @@
 		{
 			"from": [7, 14.1, 5],
 			"to": [9, 15.1, 7],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [14, 0, 12, 1], "rotation": 180, "texture": "#4"},
@@ -22,6 +23,7 @@
 		{
 			"from": [9, 14.1, 5],
 			"to": [11, 15.1, 9],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [16, 0, 14, 1], "texture": "#4"},
@@ -34,6 +36,7 @@
 		{
 			"from": [7, 14.1, 9],
 			"to": [11, 15.1, 11],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"east": {"uv": [16, 0, 14, 1], "texture": "#4"},
@@ -46,6 +49,7 @@
 		{
 			"from": [9, 14.1, 7],
 			"to": [11, 15.1, 9],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [12, 0, 13, 2], "rotation": 270, "texture": "#4"},
@@ -59,6 +63,7 @@
 		{
 			"from": [9, 14.1, 5],
 			"to": [11, 15.1, 9],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [16, 0, 14, 1], "texture": "#4"},
@@ -71,6 +76,7 @@
 		{
 			"from": [7, 14.1, 5],
 			"to": [9, 15.1, 7],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [14, 0, 12, 1], "rotation": 180, "texture": "#4"},
@@ -85,6 +91,7 @@
 			"name": "Center",
 			"from": [7, 14, 7],
 			"to": [9, 16, 9],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 15, 8]},
 			"faces": {
 				"north": {"uv": [12.5, 0, 12, 1], "rotation": 90, "texture": "#2"},

@@ -2,7 +2,6 @@ package com.simibubi.create.content.equipment.zapper.terrainzapper;
 
 import static java.lang.Math.max;
 
-import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.Create;
@@ -11,6 +10,7 @@ import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
@@ -22,9 +22,9 @@ import net.minecraft.world.item.ItemStack;
 
 public class WorldshaperItemRenderer extends ZapperItemRenderer {
 
-	protected static final PartialModel CORE = new PartialModel(Create.asResource("item/handheld_worldshaper/core"));
-	protected static final PartialModel CORE_GLOW = new PartialModel(Create.asResource("item/handheld_worldshaper/core_glow"));
-	protected static final PartialModel ACCELERATOR = new PartialModel(Create.asResource("item/handheld_worldshaper/accelerator"));
+	protected static final PartialModel CORE = PartialModel.of(Create.asResource("item/handheld_worldshaper/core"));
+	protected static final PartialModel CORE_GLOW = PartialModel.of(Create.asResource("item/handheld_worldshaper/core_glow"));
+	protected static final PartialModel ACCELERATOR = PartialModel.of(Create.asResource("item/handheld_worldshaper/accelerator"));
 
 	@Override
 	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
@@ -44,7 +44,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer {
 
 		// Core glows
 		float multiplier;
-		if (mainHand || offHand) 
+		if (mainHand || offHand)
 			multiplier = animation;
 		else
 			multiplier = Mth.sin(worldTime * 5);

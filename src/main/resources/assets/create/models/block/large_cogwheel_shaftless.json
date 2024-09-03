@@ -11,6 +11,7 @@
 			"name": "GearCaseInnerRotated",
 			"from": [-2, 6.625, -2],
 			"to": [18, 9.375, 18],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 10, 10, 11.5], "texture": "#4"},
@@ -25,6 +26,7 @@
 			"name": "Gear2",
 			"from": [-7, 6.525, 6.5],
 			"to": [23, 9.475, 9.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 22.5, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 13, 15, 14.5], "texture": "#4"},
@@ -39,6 +41,7 @@
 			"name": "Gear3",
 			"from": [-7, 6.525, 6.5],
 			"to": [23, 9.475, 9.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 13, 15, 14.5], "texture": "#4"},
@@ -53,6 +56,7 @@
 			"name": "Gear4",
 			"from": [6.5, 6.525, -7],
 			"to": [9.5, 9.475, 23],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 22.5, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [10, 9.5, 11.5, 11], "texture": "#4"},
@@ -145,6 +149,7 @@
 			"name": "Gear",
 			"from": [6.5, 6.525, -7],
 			"to": [9.5, 9.475, 23],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [10, 9.5, 11.5, 11], "texture": "#4"},
@@ -159,6 +164,7 @@
 			"name": "Gear5",
 			"from": [-7, 6.525, 6.5],
 			"to": [23, 9.475, 9.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 13, 15, 14.5], "texture": "#4"},
@@ -173,6 +179,7 @@
 			"name": "Gear6",
 			"from": [6.5, 6.525, -7],
 			"to": [9.5, 9.475, 23],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [10, 9.5, 11.5, 11], "texture": "#4"},

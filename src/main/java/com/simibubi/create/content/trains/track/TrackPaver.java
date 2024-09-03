@@ -99,7 +99,7 @@ public class TrackPaver {
 		}
 
 		Map<Pair<Integer, Integer>, Double> yLevels = new HashMap<>();
-		BlockPos tePosition = bc.tePositions.getFirst();
+		BlockPos tePosition = bc.bePositions.getFirst();
 		Vec3 end1 = bc.starts.getFirst()
 			.subtract(Vec3.atLowerCornerOf(tePosition))
 			.add(0, 3 / 16f, 0);

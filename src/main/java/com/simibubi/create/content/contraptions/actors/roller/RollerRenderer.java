@@ -2,19 +2,20 @@ package com.simibubi.create.content.contraptions.actors.roller;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterRenderer;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
@@ -34,6 +35,7 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
 		BlockState blockState = be.getBlockState();
+		VertexConsumer vc = buffer.getBuffer(RenderType.cutoutMipped());
 
 		ms.pushPose();
 		ms.translate(0, -0.25, 0);
@@ -43,21 +45,22 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 			.scale(17 / 16f));
 		HarvesterRenderer.transform(be.getLevel(), facing, superBuffer, be.getAnimatedSpeed(), Vec3.ZERO);
 		superBuffer.translate(0, -.5, .5)
-			.rotateY(90)
+			.rotateYDegrees(90)
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+			.renderInto(ms, vc);
 		ms.popPose();
 
 		CachedBufferer.partial(AllPartialModels.ROLLER_FRAME, blockState)
-			.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing) + 180))
+			.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(facing) + 180), Direction.UP)
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+			.renderInto(ms, vc);
 	}
 
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffers) {
 		BlockState blockState = context.state;
 		Direction facing = blockState.getValue(HORIZONTAL_FACING);
+		VertexConsumer vc = buffers.getBuffer(RenderType.cutoutMipped());
 		SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.ROLLER_WHEEL, blockState);
 		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite())
 			? context.getAnimationSpeed()
@@ -73,18 +76,20 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 		PoseStack viewProjection = matrices.getViewProjection();
 		viewProjection.pushPose();
 		viewProjection.translate(0, -.25, 0);
-		int contraptionWorldLight = ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld);
+		int contraptionWorldLight = LevelRenderer.getLightColor(renderWorld, context.localPos);
 		superBuffer.translate(0, -.5, .5)
-			.rotateY(90)
-			.light(matrices.getWorld(), contraptionWorldLight)
-			.renderInto(viewProjection, buffers.getBuffer(RenderType.cutoutMipped()));
+			.rotateYDegrees(90)
+			.light(contraptionWorldLight)
+			.useLevelLight(context.world, matrices.getWorld())
+			.renderInto(viewProjection, vc);
 		viewProjection.popPose();
 
 		CachedBufferer.partial(AllPartialModels.ROLLER_FRAME, blockState)
 			.transform(matrices.getModel())
-			.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing) + 180))
-			.light(matrices.getWorld(), contraptionWorldLight)
-			.renderInto(viewProjection, buffers.getBuffer(RenderType.cutoutMipped()));
+			.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(facing) + 180), Direction.UP)
+			.light(contraptionWorldLight)
+			.useLevelLight(context.world, matrices.getWorld())
+			.renderInto(viewProjection, vc);
 	}
 
 }

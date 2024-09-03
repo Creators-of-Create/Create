@@ -2,5 +2,6 @@
 	"parent": "create:block/track/obj_track",
 	"loader": "forge:obj",
 	"flip_v": true,
+  "render_type": "minecraft:cutout_mipped",
 	"model": "create:models/block/track/tie.obj"
 }

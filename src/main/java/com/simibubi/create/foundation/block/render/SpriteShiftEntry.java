@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.block.render;
 
-import com.jozufozu.flywheel.core.StitchedSprite;
+import com.simibubi.create.foundation.render.StitchedSprite;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
