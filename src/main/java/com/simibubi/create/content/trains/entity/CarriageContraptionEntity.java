@@ -737,10 +737,10 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private WeakReference<CarriageContraptionInstance> instanceHolder;
+	private WeakReference<CarriageContraptionVisual> instanceHolder;
 
 	@OnlyIn(Dist.CLIENT)
-	public void bindInstance(CarriageContraptionInstance instance) {
+	public void bindInstance(CarriageContraptionVisual instance) {
 		this.instanceHolder = new WeakReference<>(instance);
 		updateRenderedPortalCutoff();
 	}
@@ -780,7 +780,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		// update hidden bogeys (if instanced)
 		if (instanceHolder == null)
 			return;
-		CarriageContraptionInstance instance = instanceHolder.get();
+		CarriageContraptionVisual instance = instanceHolder.get();
 		if (instance == null)
 			return;
 

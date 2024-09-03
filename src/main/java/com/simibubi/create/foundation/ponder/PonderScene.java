@@ -20,8 +20,6 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
-import com.jozufozu.flywheel.util.DiffuseLightCalculator;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.outliner.Outliner;
@@ -32,7 +30,6 @@ import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instruction.HideAllInstruction;
 import com.simibubi.create.foundation.ponder.instruction.PonderInstruction;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
-import com.simibubi.create.foundation.render.ForcedDiffuseState;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
@@ -40,6 +37,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.infrastructure.ponder.PonderIndex;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.Camera;
@@ -236,7 +234,6 @@ public class PonderScene {
 	}
 
 	public void renderScene(SuperRenderTypeBuffer buffer, PoseStack ms, float pt) {
-		ForcedDiffuseState.pushCalculator(DiffuseLightCalculator.DEFAULT);
 		ms.pushPose();
 
 		Minecraft mc = Minecraft.getInstance();
@@ -256,7 +253,6 @@ public class PonderScene {
 		outliner.renderOutlines(ms, buffer, Vec3.ZERO, pt);
 
 		ms.popPose();
-		ForcedDiffuseState.popCalculator();
 	}
 
 	public void renderOverlay(PonderUI screen, GuiGraphics graphics, float partialTicks) {
@@ -462,7 +458,7 @@ public class PonderScene {
 	public int getBasePlateOffsetZ() {
 		return basePlateOffsetZ;
 	}
-	
+
 	public boolean shouldHidePlatformShadow() {
 		return hidePlatformShadow;
 	}
@@ -524,14 +520,14 @@ public class PonderScene {
 		public PoseStack apply(PoseStack ms, float pt) {
 			ms.translate(width / 2, height / 2, 200 + offset);
 
-			TransformStack.cast(ms)
-				.rotateX(-35)
-				.rotateY(55)
+			TransformStack.of(ms)
+				.rotateXDegrees(-35)
+				.rotateYDegrees(55)
 				.translate(offset, 0, 0)
-				.rotateY(-55)
-				.rotateX(35)
-				.rotateX(xRotation.getValue(pt))
-				.rotateY(yRotation.getValue(pt));
+				.rotateYDegrees(-55)
+				.rotateXDegrees(35)
+				.rotateXDegrees(xRotation.getValue(pt))
+				.rotateYDegrees(yRotation.getValue(pt));
 
 			UIRenderHelper.flipForGuiRender(ms);
 			float f = 30 * scaleFactor;

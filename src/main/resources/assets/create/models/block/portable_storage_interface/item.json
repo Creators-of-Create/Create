@@ -91,6 +91,7 @@
 		{
 			"from": [4, 16.1, 13],
 			"to": [6, 18.1, 14],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 17, 13]},
 			"faces": {
 				"east": {"uv": [7.5, 10, 8, 10.5], "texture": "#0"},
@@ -101,6 +102,7 @@
 		{
 			"from": [10, 16.1, 2],
 			"to": [12, 18.1, 3],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 17, 3]},
 			"faces": {
 				"north": {"uv": [10, 15, 11, 16], "texture": "#0"},
@@ -111,6 +113,7 @@
 		{
 			"from": [2, 16.1, 4],
 			"to": [3, 18.1, 6],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [3, 17, 8]},
 			"faces": {
 				"north": {"uv": [7.5, 10, 8, 10.5], "texture": "#0"},
@@ -121,6 +124,7 @@
 		{
 			"from": [13, 16.1, 10],
 			"to": [14, 18.1, 12],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "z", "origin": [13, 17, 8]},
 			"faces": {
 				"north": {"uv": [7.5, 10, 8, 10.5], "texture": "#0"},
@@ -131,6 +135,7 @@
 		{
 			"from": [10, 16.1, 13],
 			"to": [12, 18.1, 14],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 17, 13]},
 			"faces": {
 				"east": {"uv": [7.5, 10, 8, 10.5], "texture": "#0"},
@@ -141,6 +146,7 @@
 		{
 			"from": [4, 16.1, 2],
 			"to": [6, 18.1, 3],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 17, 3]},
 			"faces": {
 				"north": {"uv": [13, 15, 14, 16], "texture": "#0"},
@@ -151,6 +157,7 @@
 		{
 			"from": [2, 16.1, 10],
 			"to": [3, 18.1, 12],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [3, 17, 8]},
 			"faces": {
 				"north": {"uv": [7.5, 10, 8, 10.5], "texture": "#0"},
@@ -161,6 +168,7 @@
 		{
 			"from": [13, 16.1, 4],
 			"to": [14, 18.1, 6],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "z", "origin": [13, 17, 8]},
 			"faces": {
 				"north": {"uv": [7.5, 10, 8, 10.5], "texture": "#0"},

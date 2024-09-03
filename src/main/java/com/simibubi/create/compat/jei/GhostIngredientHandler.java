@@ -29,20 +29,20 @@ public class GhostIngredientHandler<T extends GhostItemMenu<?>>
 		boolean doStart) {
 		boolean isAttributeFilter = gui instanceof AttributeFilterScreen;
 		List<Target<I>> targets = new LinkedList<>();
-		
+
 		if (ingredient.getType() == VanillaTypes.ITEM_STACK) {
 			for (int i = 36; i < gui.getMenu().slots.size(); i++) {
 				if (gui.getMenu().slots.get(i)
 					.isActive())
 					targets.add(new GhostTarget<>(gui, i - 36, isAttributeFilter));
-				
+
 				// Only accept items in 1st slot. 2nd is used for functionality, don't wanna
 				// override that one
 				if (isAttributeFilter)
 					break;
 			}
 		}
-		
+
 		return targets;
 	}
 

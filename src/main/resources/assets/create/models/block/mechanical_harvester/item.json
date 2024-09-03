@@ -25,6 +25,7 @@
 			"name": "Wheel",
 			"from": [1, 0, 3],
 			"to": [1, 12, 15],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 6, 9]},
 			"faces": {
 				"east": {"uv": [0, 0, 12, 12], "texture": "#harvester"},
@@ -96,6 +97,7 @@
 			"name": "Wheel",
 			"from": [15, 0, 3],
 			"to": [15, 12, 15],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 6, 9]},
 			"faces": {
 				"east": {"uv": [0, 0, 12, 12], "texture": "#harvester"},
@@ -133,6 +135,7 @@
 			"name": "Attachment",
 			"from": [0.1, 7, 3],
 			"to": [2, 10, 11],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 10, 3]},
 			"faces": {
 				"north": {"uv": [0, 0, 1.9, 3], "texture": "#andesite_casing_short"},
@@ -147,6 +150,7 @@
 			"name": "Attachment",
 			"from": [14, 7, 3],
 			"to": [15.9, 10, 11],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 10, 3]},
 			"faces": {
 				"north": {"uv": [0, 0, 1.9, 3], "texture": "#andesite_casing_short"},

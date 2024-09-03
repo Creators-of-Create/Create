@@ -52,6 +52,7 @@
 		{
 			"from": [5.85355, 13.25, 1.75],
 			"to": [9.85355, 15.25, 13.75],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [8.35355, 13.25, 7.75]},
 			"faces": {
 				"north": {"uv": [16, 0, 12, 2], "texture": "#4"},
@@ -65,6 +66,7 @@
 		{
 			"from": [7.85355, 11.25, 1.75],
 			"to": [9.85355, 13.25, 13.75],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [8.35355, 13.25, 7.75]},
 			"faces": {
 				"north": {"uv": [16, 2, 14, 4], "texture": "#4"},
@@ -77,6 +79,7 @@
 		{
 			"from": [2.35355, 10.75, 7.75],
 			"to": [14.35355, 12.75, 9.75],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [8.35355, 13.25, 7.75]},
 			"faces": {
 				"north": {"uv": [14, 2, 15, 4], "texture": "#4"},
@@ -89,6 +92,7 @@
 		{
 			"from": [2.35355, 12.75, 5.75],
 			"to": [14.35355, 14.75, 9.75],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [8.35355, 13.25, 7.75]},
 			"faces": {
 				"north": {"uv": [12, 0, 13, 2], "texture": "#4"},

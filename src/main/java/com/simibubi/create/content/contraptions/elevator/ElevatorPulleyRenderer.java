@@ -30,14 +30,13 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer<ElevatorP
 	protected void renderSafe(ElevatorPulleyBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-//		if (Backend.canUseInstancing(be.getLevel()))
+//		if (VisualizationManager.supportsVisualization(be.getLevel()))
 //			return;
 
-		// from KBE. replace with super call when flw instance is implemented
+		// from KBE. replace with super call when flw visual is implemented
 		BlockState state = getRenderedBlockState(be);
 		RenderType type = getRenderType(be, state);
-		if (type != null)
-			renderRotatingBuffer(be, getRotatedModel(be, state), ms, buffer.getBuffer(type), light);
+		renderRotatingBuffer(be, getRotatedModel(be, state), ms, buffer.getBuffer(type), light);
 		//
 
 		float offset = PulleyRenderer.getBlockEntityOffset(partialTicks, be);
@@ -55,9 +54,9 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer<ElevatorP
 
 		SuperByteBuffer magnet = CachedBufferer.partial(AllPartialModels.ELEVATOR_MAGNET, blockState);
 		if (running || offset == 0)
-			AbstractPulleyRenderer.renderAt(world, magnet.centre()
-				.rotateY(blockStateAngle)
-				.unCentre(), offset, pos, ms, vb);
+			AbstractPulleyRenderer.renderAt(world, magnet.center()
+				.rotateYDegrees(blockStateAngle)
+				.uncenter(), offset, pos, ms, vb);
 
 		SuperByteBuffer rotatedCoil = getRotatedCoil(be);
 		if (offset == 0) {
@@ -83,9 +82,9 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer<ElevatorP
 
 		float f = offset % 1;
 		if (f < .25f || f > .75f) {
-			halfRope.centre()
-				.rotateY(blockStateAngle)
-				.unCentre();
+			halfRope.center()
+				.rotateYDegrees(blockStateAngle)
+				.uncenter();
 			AbstractPulleyRenderer.renderAt(world,
 				halfRope.shiftUVScrolling(beltShift, (float) beltScroll * spriteSize), f > .75f ? f - 1 : f, pos, ms,
 				vb);
@@ -95,9 +94,9 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer<ElevatorP
 			return;
 
 		for (int i = 0; i < offset - .25f; i++) {
-			rope.centre()
-				.rotateY(blockStateAngle)
-				.unCentre();
+			rope.center()
+				.rotateYDegrees(blockStateAngle)
+				.uncenter();
 			AbstractPulleyRenderer.renderAt(world, rope.shiftUVScrolling(beltShift, (float) beltScroll * spriteSize),
 				offset - i, pos, ms, vb);
 		}

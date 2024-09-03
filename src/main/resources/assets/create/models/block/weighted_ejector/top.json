@@ -67,6 +67,7 @@
 		{
 			"from": [7, 2, 0],
 			"to": [9, 11, 2],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 11, 1]},
 			"faces": {
 				"north": {"uv": [3, 0, 5, 9], "texture": "#2"},
@@ -80,6 +81,7 @@
 		{
 			"from": [7, 2, 0],
 			"to": [9, 11, 2],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 11, 1]},
 			"faces": {
 				"north": {"uv": [3, 0, 5, 9], "texture": "#2"},
@@ -93,6 +95,7 @@
 		{
 			"from": [7, 10, 1],
 			"to": [9, 12, 10],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 11, 1]},
 			"faces": {
 				"north": {"uv": [0, 0, 2, 2], "rotation": 180, "texture": "#2"},

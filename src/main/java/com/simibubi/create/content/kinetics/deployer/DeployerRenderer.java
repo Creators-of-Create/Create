@@ -3,10 +3,6 @@ package com.simibubi.create.content.kinetics.deployer;
 import static com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.content.kinetics.base.DirectionalKineticBlock.FACING;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -14,7 +10,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
@@ -27,8 +22,13 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -54,7 +54,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		renderItem(be, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnBlockEntity(be, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(be.getLevel())) return;
+		if (VisualizationManager.supportsVisualization(be.getLevel())) return;
 
 		renderComponents(be, partialTicks, ms, buffer, light, overlay);
 	}
@@ -112,7 +112,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 	protected void renderComponents(DeployerBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
-		if (!Backend.canUseInstancing(be.getLevel())) {
+		if (!VisualizationManager.supportsVisualization(be.getLevel())) {
 			KineticBlockEntityRenderer.renderRotatingKineticBlock(be, getRenderedBlockState(be), ms, vb, light);
 		}
 
@@ -148,9 +148,9 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 			axisDirectionMatters && (deployerState.getValue(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z) ? 90
 				: 0;
 
-		buffer.rotateCentered(Direction.UP, (float) ((yRot) / 180 * Math.PI));
-		buffer.rotateCentered(Direction.EAST, (float) ((xRot) / 180 * Math.PI));
-		buffer.rotateCentered(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
+		buffer.rotateCentered((float) ((yRot) / 180 * Math.PI), Direction.UP);
+		buffer.rotateCentered((float) ((xRot) / 180 * Math.PI), Direction.EAST);
+		buffer.rotateCentered((float) ((zRot) / 180 * Math.PI), Direction.SOUTH);
 		return buffer;
 	}
 
@@ -196,13 +196,13 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		float time = AnimationTickHolder.getRenderTime(context.world) / 20;
 		float angle = (time * speed) % 360;
 
-		TransformStack.cast(m)
-			.centre()
-			.rotateY(axis == Direction.Axis.Z ? 90 : 0)
-			.rotateZ(axis.isHorizontal() ? 90 : 0)
-			.unCentre();
+		TransformStack.of(m)
+			.center()
+			.rotateYDegrees(axis == Direction.Axis.Z ? 90 : 0)
+			.rotateZDegrees(axis.isHorizontal() ? 90 : 0)
+			.uncenter();
 		shaft.transform(m);
-		shaft.rotateCentered(Direction.get(AxisDirection.POSITIVE, Direction.Axis.Y), angle);
+		shaft.rotateCentered(angle, Direction.get(AxisDirection.POSITIVE, Direction.Axis.Y));
 		m.popPose();
 
 		if (!context.disabled)
@@ -213,11 +213,14 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		transform(pole, blockState, true);
 		transform(hand, blockState, false);
 
-		shaft.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+		shaft.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+			.useLevelLight(context.world, matrices.getWorld())
 			.renderInto(matrices.getViewProjection(), builder);
-		pole.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+		pole.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+			.useLevelLight(context.world, matrices.getWorld())
 			.renderInto(matrices.getViewProjection(), builder);
-		hand.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+		hand.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+			.useLevelLight(context.world, matrices.getWorld())
 			.renderInto(matrices.getViewProjection(), builder);
 
 		m.popPose();

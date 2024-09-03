@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.actors.contraptionControls;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsBlock;
@@ -17,6 +16,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -135,9 +135,9 @@ public class ContraptionControlsBlockEntity extends SmartBlockEntity {
 		public void rotate(BlockState state, PoseStack ms) {
 			Direction facing = state.getValue(ControlsBlock.FACING);
 			float yRot = AngleHelper.horizontalAngle(facing);
-			TransformStack.cast(ms)
-				.rotateY(yRot + 180)
-				.rotateX(67.5f);
+			TransformStack.of(ms)
+				.rotateYDegrees(yRot + 180)
+				.rotateXDegrees(67.5f);
 		}
 
 		@Override

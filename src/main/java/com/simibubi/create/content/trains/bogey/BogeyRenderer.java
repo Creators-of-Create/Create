@@ -7,21 +7,23 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
+import org.joml.Matrix3fc;
+import org.joml.Matrix4fc;
+import org.joml.Quaternionfc;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.instance.InstanceTypes;
+import dev.engine_room.flywheel.lib.instance.TransformedInstance;
+import dev.engine_room.flywheel.lib.model.Models;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.Transform;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -178,24 +180,24 @@ public abstract class BogeyRenderer {
 	/**
 	 * Provides render implementations a point in setup to instantiate all model data to be needed
 	 *
-	 * @param materialManager The material manager
+	 * @param context The visualization context
 	 * @param carriageBogey The bogey to create data for
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public abstract void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey);
+	public abstract void initialiseContraptionModelData(VisualizationContext context, CarriageBogey carriageBogey);
 
 	/**
 	 * Creates instances of models for in-world rendering to a set length from a provided partial model
 	 *
-	 * @param materialManager The material manager
+	 * @param context The visualization context
 	 * @param model Partial model to be instanced
 	 * @param count Amount of models neeeded
 	 */
-	public void createModelInstance(MaterialManager materialManager, PartialModel model, int count) {
+	public void createModelInstance(VisualizationContext context, PartialModel model, int count) {
+		var instancer = context.instancerProvider()
+				.instancer(InstanceTypes.TRANSFORMED, Models.partial(model));
 		BogeyModelData[] modelData = IntStream.range(0, count)
-				.mapToObj(i -> materialManager.defaultSolid()
-						.material(Materials.TRANSFORMED)
-						.getModel(model).createInstance())
+				.mapToObj(i -> instancer.createInstance())
 				.map(BogeyModelData::new)
 				.toArray(BogeyModelData[]::new);
 		contraptionModelData.put(keyFromModel(model), modelData);
@@ -204,15 +206,15 @@ public abstract class BogeyRenderer {
 	/**
 	 * Creates instances of models for in-contraption rendering to a set length from a provided blockstate
 	 *
-	 * @param materialManager The material manager
+	 * @param context The visualization context
 	 * @param state Blockstate of the model to be created
 	 * @param count Amount of models needed
 	 */
-	public void createModelInstance(MaterialManager materialManager, BlockState state, int count) {
+	public void createModelInstance(VisualizationContext context, BlockState state, int count) {
+		var instancer = context.instancerProvider()
+				.instancer(InstanceTypes.TRANSFORMED, VirtualRenderHelper.blockModel(state));
 		BogeyModelData[] modelData = IntStream.range(0, count)
-				.mapToObj(i -> materialManager.defaultSolid()
-						.material(Materials.TRANSFORMED)
-						.getModel(state).createInstance())
+				.mapToObj(i -> instancer.createInstance())
 				.map(BogeyModelData::new)
 				.toArray(BogeyModelData[]::new);
 		contraptionModelData.put(keyFromModel(state), modelData);
@@ -221,23 +223,23 @@ public abstract class BogeyRenderer {
 	/**
 	 * Creates a single instance of models for in-contraption rendering from a provided blockstate
 	 *
-	 * @param materialManager The material manager
+	 * @param context The visualization context
 	 * @param states Blockstates of the models to be created
 	 */
-	public void createModelInstance(MaterialManager materialManager, BlockState... states) {
+	public void createModelInstance(VisualizationContext context, BlockState... states) {
 		for (BlockState state : states)
-			this.createModelInstance(materialManager, state, 1);
+			this.createModelInstance(context, state, 1);
 	}
 
 	/**
 	 * Helper function to create a single model instance for in-contraption rendering
 	 *
-	 * @param materialManager The material manager
+	 * @param context The visualization context
 	 * @param models The type of model to create instances of
 	 */
-	public void createModelInstance(MaterialManager materialManager, PartialModel... models) {
+	public void createModelInstance(VisualizationContext context, PartialModel... models) {
 		for (PartialModel model : models)
-			createModelInstance(materialManager, model, 1);
+			createModelInstance(context, model, 1);
 	}
 
 	/**
@@ -302,7 +304,7 @@ public abstract class BogeyRenderer {
 	 */
 
 	private String keyFromModel(PartialModel partialModel) {
-		return partialModel.getLocation().toString();
+		return partialModel.modelLocation().toString();
 	}
 
 	/**
@@ -338,44 +340,47 @@ public abstract class BogeyRenderer {
 		}
 
 		public BogeyModelData setTransform(PoseStack ms) {
-			if (this.transform instanceof ModelData model)
-				model.setTransform(ms);
+			if (this.transform instanceof TransformedInstance model)
+				model.setTransform(ms)
+						.setChanged();
 			return this;
 		}
 
 		public BogeyModelData setEmptyTransform() {
-			if (this.transform instanceof ModelData model)
-				model.setEmptyTransform();
+			if (this.transform instanceof TransformedInstance model)
+				model.setZeroTransform()
+						.setChanged();
 			return this;
 		}
 
 		public BogeyModelData delete() {
-			if (this.transform instanceof ModelData model)
+			if (this.transform instanceof TransformedInstance model)
 				model.delete();
 			return this;
 		}
 
 		public BogeyModelData updateLight(int blockLight, int skyLight) {
-			if (this.transform instanceof ModelData model)
-				model.setBlockLight(blockLight).setSkyLight(skyLight);
+			if (this.transform instanceof TransformedInstance model)
+				model.light(blockLight, skyLight)
+						.setChanged();
 			return this;
 		}
 
 		@Override
-		public BogeyModelData mulPose(Matrix4f pose) {
+		public BogeyModelData mulPose(Matrix4fc pose) {
 			this.transform.mulPose(pose);
 			return this;
 		}
 
 		@Override
-		public BogeyModelData mulNormal(Matrix3f normal) {
+		public BogeyModelData mulNormal(Matrix3fc normal) {
 			this.transform.mulNormal(normal);
 			return this;
 		}
 
 		@Override
-		public BogeyModelData multiply(Quaternionf quaternion) {
-			this.transform.multiply(quaternion);
+		public BogeyModelData rotate(Quaternionfc quaternion) {
+			this.transform.rotate(quaternion);
 			return this;
 		}
 
@@ -386,7 +391,7 @@ public abstract class BogeyRenderer {
 		}
 
 		@Override
-		public BogeyModelData translate(double x, double y, double z) {
+		public BogeyModelData translate(float x, float y, float z) {
 			this.transform.translate(x, y, z);
 			return this;
 		}

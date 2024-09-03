@@ -28,7 +28,7 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.elevator.ElevatorContraption;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.mounted.MountedContraption;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
+import com.simibubi.create.content.contraptions.render.ContraptionRenderInfo;
 import com.simibubi.create.content.contraptions.sync.ContraptionSeatMappingPacket;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
@@ -383,7 +383,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 				if (!contraption.deferInvalidate)
 					return;
 				contraption.deferInvalidate = false;
-				ContraptionRenderDispatcher.invalidate(contraption);
+				ContraptionRenderInfo.invalidate(contraption);
 			});
 
 		if (!(level() instanceof ServerLevelAccessor sl))
