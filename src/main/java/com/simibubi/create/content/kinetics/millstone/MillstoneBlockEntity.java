@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
+import com.simibubi.create.content.redstone.thresholdSwitch.ThresholdSwitchObservable;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -34,7 +35,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class MillstoneBlockEntity extends KineticBlockEntity {
+public class MillstoneBlockEntity extends KineticBlockEntity implements ThresholdSwitchObservable {
 
 	public ItemStackHandler inputInv;
 	public ItemStackHandler outputInv;
@@ -121,7 +122,7 @@ public class MillstoneBlockEntity extends KineticBlockEntity {
 		super.invalidate();
 		capability.invalidate();
 	}
-	
+
 	@Override
 	public void destroy() {
 		super.destroy();
@@ -145,7 +146,7 @@ public class MillstoneBlockEntity extends KineticBlockEntity {
 		lastRecipe.rollResults()
 			.forEach(stack -> ItemHandlerHelper.insertItemStacked(outputInv, stack, false));
 		award(AllAdvancements.MILLSTONE);
-		
+
 		sendData();
 		setChanged();
 	}
@@ -202,6 +203,11 @@ public class MillstoneBlockEntity extends KineticBlockEntity {
 			return true;
 		return AllRecipeTypes.MILLING.find(inventoryIn, level)
 			.isPresent();
+	}
+
+	@Override
+	public float getPercent() {
+		return ((float) inputInv.getStackInSlot(0).getCount() / inputInv.getSlotLimit(0)) * 100;
 	}
 
 	private class MillstoneInventoryHandler extends CombinedInvWrapper {
