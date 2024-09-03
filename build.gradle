@@ -186,8 +186,8 @@ dependencies {
     // runtimeOnly fg.deobf("curse.maven:elementary-ores-332609:4622524")
     // runtimeOnly fg.deobf("curse.maven:flib-661261:5495793")
     // runtimeOnly fg.deobf("curse.maven:infernal-expansion-395078:4002091") not updated to 1.20
-    // runtimeOnly fg.deobf("curse.maven:zeta-968868:5597406")
-    // runtimeOnly fg.deobf("curse.maven:quark-243121:5594847")
+    // runtimeOnly fg.deobf("org.violetmoon.zeta:Zeta:1.0-9.44")
+    // runtimeOnly fg.deobf("org.violetmoon.quark:Quark:4.0-461.3475")
     // runtimeOnly fg.deobf("curse.maven:mantle-74924:5339977") not updated to 1.20
     // runtimeOnly fg.deobf("curse.maven:tinkers-construct-74072:5358052") not updated to 1.20
     // runtimeOnly fg.deobf("maven.modrinth:rubidium:0.7.1")
