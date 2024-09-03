@@ -155,6 +155,10 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    maven {
+        name = "IThundxr's Maven"
+        url = "https://maven.ithundxr.dev/releases"
+    }
 
     mavenLocal()
     flatDir {
@@ -197,41 +201,43 @@ dependencies {
         compileOnly fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-${dynamic_trees_minecraft_version}:${dynamic_trees_version}")
     }
 
-    // implementation fg.deobf("curse.maven:ic2-classic-242942:5555152")
-    // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
-    // implementation fg.deobf("com.railwayteam.railways:railways-1.19.2-1.6.4:all") { transitive = false }
+    // implementation fg.deobf("curse.maven:ic2-classic-242942:5555152") not updated to 1.20
+    // implementation fg.deobf("curse.maven:druidcraft-340991:3101903") not updated to 1.20
+    // implementation fg.deobf("com.railwayteam.railways:Steam_Rails-forge-1.20.1:1.6.4+forge-mc1.20.1") { transitive = false }
 
-    // runtimeOnly fg.deobf("curse.maven:framedblocks-441647:5399211")
-    // runtimeOnly fg.deobf("curse.maven:galosphere-631098:4574834")
-    // runtimeOnly fg.deobf("curse.maven:elementary-ores-332609:4514276") 1.19.4 only
-    // runtimeOnly fg.deobf("curse.maven:flib-661261:4479544")
-    // runtimeOnly fg.deobf("curse.maven:infernal-expansion-395078:4002091")
-    // runtimeOnly fg.deobf("vazkii.autoreglib:AutoRegLib:1.8.2-58.126")
-    // runtimeOnly fg.deobf("curse.maven:quark-243121:4812006")
-    // runtimeOnly fg.deobf("curse.maven:mantle-74924:5339977")
-    // runtimeOnly fg.deobf("curse.maven:tinkers-construct-74072:5358052")
-    // runtimeOnly fg.deobf("maven.modrinth:rubidium:0.6.2c")
-    // runtimeOnly fg.deobf("maven.modrinth:aether:1.19.2-1.4.2-forge")
-    // runtimeOnly fg.deobf("maven.modrinth:spark:1.10.38-forge")
-    // runtimeOnly fg.deobf("curse.maven:forbidden-arcanus-309858:4852521")
-    // runtimeOnly fg.deobf("curse.maven:valhelsia-core-416935:4181245")
-    // runtimeOnly fg.deobf("curse.maven:modern-ui-352491:5229370")
-    // runtimeOnly fg.deobf("curse.maven:sophisticated-storage-619320:5194750")
-    // runtimeOnly fg.deobf("curse.maven:sophisticated-core-618298:5296313")
-    // runtimeOnly fg.deobf("curse.maven:functional-storage-556861:5499169")
-    // runtimeOnly fg.deobf("curse.maven:titanium-287342:5356458")
-    // runtimeOnly fg.deobf("curse.maven:storage-drawers-223852:3884263")
-    // runtimeOnly fg.deobf("curse.maven:ftb-chunks-forge-314906:5417874")
-    // runtimeOnly fg.deobf("curse.maven:architectury-api-419699:5137942")
-    // runtimeOnly fg.deobf("curse.maven:ftb-library-forge-404465:4661834")
-    // runtimeOnly fg.deobf("curse.maven:ftb-teams-forge-404468:4611938")
-    // runtimeOnly fg.deobf("curse.maven:citadel-331936:4556677")
-    // runtimeOnly fg.deobf("curse.maven:ice-and-fire-dragons-264231:5037952")
-    // runtimeOnly fg.deobf("curse.maven:exnihilosequentia-400012:4993344")
-    // runtimeOnly fg.deobf("curse.maven:upgrade-aquatic-326895:4777515")
-    // runtimeOnly fg.deobf("curse.maven:blueprint-382216:4749000")
-    // runtimeOnly fg.deobf("curse.maven:windsweptmod-636321:4817132")
-    // runtimeOnly fg.deobf("curse.maven:good-ending-690161:4363719")
+    // runtimeOnly fg.deobf("curse.maven:framedblocks-441647:5629578")
+    // runtimeOnly fg.deobf("curse.maven:galosphere-631098:4983871")
+    // runtimeOnly fg.deobf("curse.maven:elementary-ores-332609:4622524")
+    // runtimeOnly fg.deobf("curse.maven:flib-661261:5495793")
+    // runtimeOnly fg.deobf("curse.maven:infernal-expansion-395078:4002091") not updated to 1.20
+    // runtimeOnly fg.deobf("vazkii.autoreglib:AutoRegLib:1.8.2-58.126") not updated to 1.20
+    // runtimeOnly fg.deobf("curse.maven:quark-243121:5594847")
+    // runtimeOnly fg.deobf("curse.maven:mantle-74924:5339977") not updated to 1.20
+    // runtimeOnly fg.deobf("curse.maven:tinkers-construct-74072:5358052") not updated to 1.20
+    // runtimeOnly fg.deobf("maven.modrinth:rubidium:0.7.1")
+    // runtimeOnly fg.deobf("maven.modrinth:embeddium:0.3.31+mc1.20.1")
+    // runtimeOnly fg.deobf("maven.modrinth:aether:1.20.1-1.4.2-neoforge")
+    // runtimeOnly fg.deobf("maven.modrinth:spark:1.10.53-forge")
+    // runtimeOnly fg.deobf("curse.maven:forbidden-arcanus-309858:5198323")
+    // runtimeOnly fg.deobf("curse.maven:valhelsia-core-416935:5189548")
+    // runtimeOnly fg.deobf("curse.maven:modern-ui-352491:5229575")
+    // runtimeOnly fg.deobf("curse.maven:sophisticated-storage-619320:5654289")
+    // runtimeOnly fg.deobf("curse.maven:sophisticated-core-618298:5654284")
+    // runtimeOnly fg.deobf("curse.maven:functional-storage-556861:5650296")
+    // runtimeOnly fg.deobf("curse.maven:titanium-287342:5468426")
+    // runtimeOnly fg.deobf("curse.maven:storage-drawers-223852:5687960")
+    // runtimeOnly fg.deobf("curse.maven:architectury-api-419699:5137938")
+    // runtimeOnly fg.deobf("curse.maven:ftb-library-forge-404465:5567591")
+    // runtimeOnly fg.deobf("curse.maven:ftb-chunks-forge-314906:5378090")
+    // runtimeOnly fg.deobf("curse.maven:ftb-teams-forge-404468:5267190")
+    // runtimeOnly fg.deobf("curse.maven:citadel-331936:5633260")
+    // runtimeOnly fg.deobf("curse.maven:ice-and-fire-dragons-264231:5633453")
+    // runtimeOnly fg.deobf("curse.maven:exnihilosequentia-400012:4819325")
+    // runtimeOnly fg.deobf("curse.maven:novacore-923669:4815411")
+    // runtimeOnly fg.deobf("curse.maven:upgrade-aquatic-326895:5615651")
+    // runtimeOnly fg.deobf("curse.maven:blueprint-382216:5292242")
+    // runtimeOnly fg.deobf("curse.maven:windsweptmod-636321:4817132") not updated to 1.20
+    // runtimeOnly fg.deobf("curse.maven:good-ending-690161:5024405")
 
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings
