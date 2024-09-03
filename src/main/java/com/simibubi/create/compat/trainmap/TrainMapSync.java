@@ -52,6 +52,7 @@ public class TrainMapSync {
 
 		// Clientside
 		public float[] prevPositions;
+		public List<ResourceKey<Level>> prevDims;
 
 		// Updated every 5 ticks
 		public float[] positions;
@@ -130,13 +131,21 @@ public class TrainMapSync {
 
 		public void updateFrom(TrainMapSyncEntry other, boolean light) {
 			prevPositions = positions;
+			prevDims = dimensions;
 
 			positions = other.positions;
+			dimensions = other.dimensions;
 			state = other.state;
 			signalState = other.signalState;
 			fueled = other.fueled;
 			backwards = other.backwards;
 			targetStationDistance = other.targetStationDistance;
+
+			if (prevDims != null)
+				for (int i = 0; i < Math.min(prevDims.size(), dimensions.size()); i++)
+					if (prevDims.get(i) != dimensions.get(i))
+						for (int j = 0; j < 6; j++)
+							prevPositions[i * 6 + j] = positions[i * 6 + j];
 
 			if (light)
 				return;
@@ -252,7 +261,7 @@ public class TrainMapSync {
 
 				ResourceKey<Level> carriageDim = (leadingDim == null || leadingDim != trailingDim) ? null : leadingDim;
 				entry.dimensions.add(carriageDim);
-				
+
 				leadingPos = leading.getPosition(train.graph);
 				trailingPos = trailing.getPosition(train.graph);
 			}
