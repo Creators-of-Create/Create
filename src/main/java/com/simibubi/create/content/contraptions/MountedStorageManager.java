@@ -22,6 +22,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
@@ -227,7 +228,8 @@ public class MountedStorageManager {
 
 		StructureBlockInfo info = contraption.getBlocks()
 			.get(localPos);
-		if (info != null && info.state().hasProperty(ChestBlock.TYPE)) {
+		boolean isChest = info != null && info.state().hasProperty(ChestBlock.TYPE);
+		if (isChest) {
 			ChestType chestType = info.state().getValue(ChestBlock.TYPE);
 			Direction facing = info.state().getOptionalValue(ChestBlock.FACING)
 				.orElse(Direction.SOUTH);
@@ -255,7 +257,8 @@ public class MountedStorageManager {
 		player.openMenu(MountedStorageInteraction.createMenuProvider(name, handler, slotCount, stillValid));
 
 		Vec3 soundPos = contraption.entity.toGlobalVector(Vec3.atCenterOf(localPos), 0);
-		player.level().playSound(null, BlockPos.containing(soundPos), SoundEvents.BARREL_OPEN, SoundSource.BLOCKS, 0.75f, 1f);
+		SoundEvent soundEvent = isChest ? SoundEvents.CHEST_OPEN : SoundEvents.BARREL_OPEN;
+		player.level().playSound(null, BlockPos.containing(soundPos), soundEvent, SoundSource.BLOCKS, 0.75f, 1f);
 		return true;
 	}
 
