@@ -2,9 +2,14 @@ package com.simibubi.create.content.kinetics.motor;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
+
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
@@ -19,13 +24,16 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 
 	public static final int DEFAULT_SPEED = 16;
 	public static final int MAX_SPEED = 256;
 
-	protected ScrollValueBehaviour generatedSpeed;
+	public ScrollValueBehaviour generatedSpeed;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public CreativeMotorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -41,6 +49,7 @@ public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 		generatedSpeed.value = DEFAULT_SPEED;
 		generatedSpeed.withCallback(i -> this.updateGeneratedRotation());
 		behaviours.add(generatedSpeed);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	@Override
@@ -91,6 +100,19 @@ public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 			return direction.getAxis() != facing.getAxis();
 		}
 
+	}
+
+	@Override
+	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
+		if (computerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
+		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidateCaps();
+		computerBehaviour.removePeripheral();
 	}
 
 }

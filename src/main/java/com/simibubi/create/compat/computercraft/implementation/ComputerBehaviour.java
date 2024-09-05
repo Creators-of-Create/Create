@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.events.ComputerEvent;
+import com.simibubi.create.compat.computercraft.implementation.peripherals.CreativeMotorPeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.DisplayLinkPeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.NixieTubePeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.SequencedGearshiftPeripheral;
@@ -17,6 +18,7 @@ import com.simibubi.create.compat.computercraft.implementation.peripherals.Synce
 import com.simibubi.create.compat.computercraft.implementation.peripherals.TrackObserverPeripheral;
 import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
+import com.simibubi.create.content.kinetics.motor.CreativeMotorBlockEntity;
 import com.simibubi.create.content.kinetics.speedController.SpeedControllerBlockEntity;
 import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGearshiftBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
@@ -49,6 +51,8 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
 	public static NonNullSupplier<SyncedPeripheral<?>> getPeripheralFor(SmartBlockEntity be) {
 		if (be instanceof SpeedControllerBlockEntity scbe)
 			return () -> new SpeedControllerPeripheral(scbe, scbe.targetSpeed);
+		if (be instanceof CreativeMotorBlockEntity cmbe)
+			return () -> new CreativeMotorPeripheral(cmbe, cmbe.generatedSpeed);
 		if (be instanceof DisplayLinkBlockEntity dlbe)
 			return () -> new DisplayLinkPeripheral(dlbe);
 		if (be instanceof NixieTubeBlockEntity ntbe)
