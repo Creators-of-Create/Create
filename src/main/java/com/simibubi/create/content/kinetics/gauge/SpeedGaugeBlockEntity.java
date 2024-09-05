@@ -26,7 +26,7 @@ import net.minecraftforge.common.util.LazyOptional;
 public class SpeedGaugeBlockEntity extends GaugeBlockEntity {
 
 	public AbstractComputerBehaviour computerBehaviour;
-	
+
 	public SpeedGaugeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
@@ -40,6 +40,8 @@ public class SpeedGaugeBlockEntity extends GaugeBlockEntity {
 	@Override
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
+		if (computerBehaviour.hasAttachedComputer())
+			computerBehaviour.prepareComputerEvent(makeComputerKineticsChangeEvent());
 		float speed = Math.abs(getSpeed());
 
 		dialTarget = getDialTarget(speed);

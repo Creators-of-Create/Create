@@ -30,7 +30,7 @@ import net.minecraftforge.common.util.LazyOptional;
 public class StressGaugeBlockEntity extends GaugeBlockEntity {
 
 	public AbstractComputerBehaviour computerBehaviour;
-	
+
 	static BlockPos lastSent;
 
 	public StressGaugeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -47,6 +47,9 @@ public class StressGaugeBlockEntity extends GaugeBlockEntity {
 	@Override
 	public void updateFromNetwork(float maxStress, float currentStress, int networkSize) {
 		super.updateFromNetwork(maxStress, currentStress, networkSize);
+
+		if (computerBehaviour.hasAttachedComputer())
+			computerBehaviour.prepareComputerEvent(makeComputerKineticsChangeEvent());
 
 		if (!StressImpact.isEnabled())
 			dialTarget = 0;
