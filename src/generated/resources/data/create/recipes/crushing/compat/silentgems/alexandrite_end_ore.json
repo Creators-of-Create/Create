@@ -8,7 +8,7 @@
   ],
   "ingredients": [
     {
-      "item": "silentgems:alexandrite_ore"
+      "item": "silentgems:alexandrite_end_ore"
     }
   ],
   "processingTime": 350,
@@ -27,7 +27,7 @@
     },
     {
       "chance": 0.12,
-      "item": "minecraft:cobblestone"
+      "item": "minecraft:end_stone"
     }
   ]
 }
