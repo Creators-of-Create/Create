@@ -8,18 +8,18 @@
   ],
   "ingredients": [
     {
-      "item": "silentgems:alexandrite_ore"
+      "item": "silentgems:deepslate_ruby_ore"
     }
   ],
   "processingTime": 350,
   "results": [
     {
       "count": 2,
-      "item": "silentgems:alexandrite"
+      "item": "silentgems:ruby"
     },
     {
       "chance": 0.25,
-      "item": "silentgems:alexandrite"
+      "item": "silentgems:ruby"
     },
     {
       "chance": 0.75,
@@ -27,7 +27,7 @@
     },
     {
       "chance": 0.12,
-      "item": "minecraft:cobblestone"
+      "item": "minecraft:cobbled_deepslate"
     }
   ]
 }

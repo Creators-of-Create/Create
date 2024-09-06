@@ -8,18 +8,18 @@
   ],
   "ingredients": [
     {
-      "item": "silentgems:alexandrite_ore"
+      "item": "silentgems:heliodor_ore"
     }
   ],
   "processingTime": 350,
   "results": [
     {
       "count": 2,
-      "item": "silentgems:alexandrite"
+      "item": "silentgems:heliodor"
     },
     {
       "chance": 0.25,
-      "item": "silentgems:alexandrite"
+      "item": "silentgems:heliodor"
     },
     {
       "chance": 0.75,

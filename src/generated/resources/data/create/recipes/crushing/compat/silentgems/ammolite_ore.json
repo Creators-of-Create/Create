@@ -27,7 +27,7 @@
     },
     {
       "chance": 0.12,
-      "item": "minecraft:end_stone"
+      "item": "minecraft:cobblestone"
     }
   ]
 }
