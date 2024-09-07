@@ -1,21 +1,25 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
+
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.resources.ResourceLocation;
 
 public enum Mods {
 
-	MEK("mekanism", b -> b.reverseMetalPrefix()),
+	MEK("mekanism", Builder::reverseMetalPrefix),
 	TH("thermal"),
-	IE("immersiveengineering", b -> b.reverseMetalPrefix()),
+	IE("immersiveengineering", Builder::reverseMetalPrefix),
 	FD("farmersdelight"),
 	ARS_N("ars_nouveau"),
 	BSK("blue_skies"),
-	BTN("botania", b -> b.omitWoodSuffix()),
+	BTN("botania", Builder::omitWoodSuffix),
 	FA("forbidden_arcanus", b -> b.omitWoodSuffix()),
 	HEX("hexcasting", b -> b.strippedWoodIsSuffix()),
-	ID("integrateddynamics", b -> b.strippedWoodIsSuffix()),
+	ID("integrateddynamics", Builder::strippedWoodIsSuffix),
 	BYG("byg"),
 	SG("silentgear"),
 	TIC("tconstruct"),
@@ -24,9 +28,9 @@ public enum Mods {
 	BOP("biomesoplenty"),
 	TF("twilightforest"),
 	ECO("ecologics"),
-	IC2("ic2", b -> b.reverseMetalPrefix()),
+	IC2("ic2", b -> b.reverseMetalPrefix().addNameReplacements(Map.of("aluminum", "aluminium"))),
 	ATM("atmospheric"),
-	ATM_2("atmospheric", b -> b.omitWoodSuffix()),
+	ATM_2("atmospheric", Builder::omitWoodSuffix),
 	AUTUM("autumnity"),
 	DRUIDCRAFT("druidcraft"),
 	ENDER("endergetic"),
@@ -64,6 +68,7 @@ public enum Mods {
 	public boolean reversedMetalPrefix;
 	public boolean strippedIsSuffix;
 	public boolean omitWoodSuffix;
+	public final Map<String, String> nameReplacements = new HashMap<>();
 
 	private Mods(String id) {
 		this(id, b -> {
@@ -103,6 +108,7 @@ public enum Mods {
 		return id;
 	}
 
+	@SuppressWarnings("UnusedReturnValue")
 	class Builder {
 
 		Builder reverseMetalPrefix() {
@@ -117,6 +123,12 @@ public enum Mods {
 
 		Builder omitWoodSuffix() {
 			omitWoodSuffix = true;
+			return this;
+		}
+
+		Builder addNameReplacements(Map<String, String> map) {
+			for (String p : map.keySet())
+				nameReplacements.put(p, map.get(p));
 			return this;
 		}
 

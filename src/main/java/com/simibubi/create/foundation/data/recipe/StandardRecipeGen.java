@@ -12,6 +12,7 @@ import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import com.google.common.base.Supplier;
@@ -1225,6 +1226,10 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, CompatMetals metal) {
 		String metalName = metal.getName();
 		for (Mods mod : metal.getMods()) {
+			for (Map.Entry<String, String> entry : mod.nameReplacements.entrySet()) {
+				metalName = metalName.replace(entry.getKey(), entry.getValue());
+			}
+
 			ResourceLocation ingot = mod.ingotOf(metalName);
 			String modId = mod.getId();
 			create(ingot).withSuffix("_compat_" + modId)

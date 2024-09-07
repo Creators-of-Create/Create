@@ -10,6 +10,7 @@ import static com.simibubi.create.foundation.data.recipe.CompatMetals.SILVER;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllItems;
@@ -135,9 +136,12 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CompatMetals metal) {
 		String metalName = metal.getName();
 		for (Mods mod : metal.getMods()) {
+			for (Map.Entry<String, String> entry : mod.nameReplacements.entrySet()) {
+				metalName = metalName.replace(entry.getKey(), entry.getValue());
+			}
+
 			ResourceLocation nugget = mod.nuggetOf(metalName);
-			create(mod.getId() + "/" + crushed.getId()
-				.getPath(),
+			create(mod.getId() + "/" + crushed.getId().getPath(),
 				b -> b.withItemIngredients(Ingredient.of(crushed::get))
 					.output(1, nugget, 9)
 					.whenModLoaded(mod.getId()));
