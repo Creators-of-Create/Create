@@ -6,6 +6,8 @@ plugins {
     id 'org.parchmentmc.librarian.forgegradle' version "${librarian_version}"
     id 'org.spongepowered.mixin' version "${mixingradle_version}"
     id 'com.matthewprenger.cursegradle' version "${cursegradle_version}"
+    id("net.kyori.blossom") version "2.1.0" // https://github.com/KyoriPowered/blossom
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.8" // https://github.com/JetBrains/gradle-idea-ext-plugin
 }
 
 jarJar.enable()
@@ -17,6 +19,7 @@ ext.buildNumber = System.getenv('BUILD_NUMBER')
 group = 'com.simibubi.create'
 archivesBaseName = "create-${artifact_minecraft_version}"
 version = mod_version + (dev && buildNumber != null ? "-${buildNumber}" : '')
+String gitHash = "\"${calculateGitHash() + (hasUnstaged() ? "-modified" : "")}\""
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -217,15 +220,20 @@ dependencies {
     }
 }
 
-sourceSets.main.java {
-	if (!cc_tweaked_enable.toBoolean()) {
-        exclude 'com/simibubi/create/compat/computercraft/implementation/**'
-	}
-}
-
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-    exclude '.cache/'
+sourceSets.main {
+    java {
+        if (!cc_tweaked_enable.toBoolean()) {
+            exclude 'com/simibubi/create/compat/computercraft/implementation/**'
+        }
+    }
+    resources {
+        srcDir 'src/generated/resources'
+        exclude '.cache/'
+    }
+    blossom.javaSources {
+        property("version", build_info_mod_version)
+        property("gitCommit", gitHash.toString())
+    }
 }
 
 // Workaround for SpongePowered/MixinGradle#38
@@ -242,6 +250,11 @@ compileJava {
     options.compilerArgs = ['-Xdiags:verbose']
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 jar {
     archiveClassifier = 'slim'
     manifest {
@@ -253,8 +266,15 @@ jar {
             'Implementation-Version': project.jar.archiveVersion,
             'Implementation-Vendor': 'simibubi',
             'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            'MixinConfigs': 'create.mixins.json'
+            'MixinConfigs': 'create.mixins.json',
+            'Git-Hash': gitHash
         ])
+    }
+}
+
+tasks.named("sourcesJar") {
+    manifest {
+        attributes(Map.of("Git-Hash", gitHash))
     }
 }
 
@@ -266,11 +286,6 @@ task jarJarRelease {
         }
     }
     finalizedBy tasks.jarJar
-}
-
-java {
-    withSourcesJar()
-    withJavadocJar()
 }
 
 void addLicense(jarTask) {
@@ -303,55 +318,31 @@ publishing {
     }
 }
 
-String getChangelogText() {
-    def changelogFile = file('changelog.txt')
-    String str = ''
-    int lineCount = 0
-    boolean done = false
-    changelogFile.eachLine {
-        if (done || it == null) {
-            return
+String calculateGitHash() {
+    try {
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine("git", "rev-parse", "HEAD")
+            standardOutput = stdout
         }
-        if (it.size() > 1) {
-            def temp = it
-            if (lineCount == 0) {
-                temp = "Create ${version}"
-                temp = "<span style=\"font-size: 18px; color: #333399;\">Create v${mod_version}</span>&nbsp;&nbsp;<em>for Minecraft ${minecraft_version}</em><br/>"
-            } else if (it.startsWith('-')) {
-                temp = "&nbsp;&nbsp;&nbsp;$temp<br/>"
-                temp = temp.replaceAll("(\\S+\\/\\S+)#([0-9]+)\\b", "<a href=\"https://github.com/\$1/issues/\$2\">\$0</a>");
-                temp = temp.replaceAll("#([0-9]+)\\b(?!<\\/a>)", "<a href=\"https://github.com/$github_project/issues/\$1\">\$0</a>");
-            } else {
-                temp = "<h4>$temp</h4>"
-            }
-            str += temp
-            lineCount++
-        } else {
-            str += "<p>Please submit any Issues you come across on the&nbsp;<a href=\"https://github.com/${github_project}/issues\" rel=\"nofollow\">Issue Tracker</a>.</p>"
-            done = true
-        }
+        return stdout.toString().trim()
+    } catch(Throwable ignored) {
+        return "unknown"
     }
-    return str
 }
 
-// changelog debugging
-// new File("changelog.html").write getChangelogText()
-// tasks.curseforge.enabled = !dev && project.hasProperty('simi_curseforge_key')
-// curseforge {
-//     if (project.hasProperty('simi_curseforge_key')) {
-//         apiKey = project.simi_curseforge_key
-//     }
-//
-//     project {
-//         id = project.projectId
-//         changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
-//         changelogType = 'html'
-//         releaseType = project.curse_type
-//         mainArtifact(shadowJar) {
-//             displayName = "Create - ${version}"
-//         }
-//         relations {
-//             optionalDependency 'jei'
-//         }
-//     }
-// }
+boolean hasUnstaged() {
+    try {
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine("git", "status", "--porcelain")
+            standardOutput = stdout
+        }
+        String result = stdout.toString().replace("/M gradlew(\\.bat)?/", "").trim()
+        if (!result.isEmpty())
+            println("Found stageable results:\n${result}\n")
+        return !result.isEmpty()
+    }  catch(Throwable ignored) {
+        return false
+    }
+}
