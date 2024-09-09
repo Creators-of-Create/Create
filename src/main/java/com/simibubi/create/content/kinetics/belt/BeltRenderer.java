@@ -203,10 +203,6 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 
 		for (TransportedItemStack transported : be.getInventory()
 			.getTransportedItems()) {
-			ms.pushPose();
-            TransformStack.of(ms)
-				.nudge(transported.angle);
-
 			float offset;
 			float sideOffset;
 			float verticalMovement;
