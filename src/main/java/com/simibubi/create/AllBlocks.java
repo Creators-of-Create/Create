@@ -1956,7 +1956,6 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::wooden)
 		.properties(p -> p.forceSolidOn())
 		.transform(axeOrPickaxe())
-		.tag(AllBlockTags.SAFE_NBT.tag)
 		.blockstate((c, p) -> p.horizontalFaceBlock(c.get(),
 			s -> AssetLookup.partialBaseModel(c, p, s.getValue(ClipboardBlock.WRITTEN) ? "written" : "empty")))
 		.loot((lt, b) -> lt.add(b, BlockLootSubProvider.noDrop()))

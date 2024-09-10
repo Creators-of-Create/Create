@@ -22,7 +22,6 @@
     "create:analog_lever",
     "create:pulse_repeater",
     "create:pulse_extender",
-    "create:clipboard",
     "#minecraft:banners",
     "#minecraft:all_signs"
   ]

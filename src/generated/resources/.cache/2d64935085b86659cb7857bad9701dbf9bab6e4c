@@ -1,4 +1,4 @@
-// 1.20.1	2024-09-02T22:36:27.3056283	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.20.1	2024-09-11T01:36:49.0278055	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -4183,7 +4183,7 @@ f675c20350ed60da4878b5d6301f02c8c05624bd data/create/tags/blocks/fan_processing_
 06e13efbb7b0d09ff7ecd1a7dc45a0760b91ad67 data/create/tags/blocks/ore_override_stone.json
 a5874f73c7dc0a3ae12999e6ae8abf45bc7fb9be data/create/tags/blocks/passive_boiler_heaters.json
 9bc8c13fd80bdbe7f767b91ee1a1042e9aff02b0 data/create/tags/blocks/roots.json
-79ed9149ee2ce143114db4ccafda8a2b6a293aac data/create/tags/blocks/safe_nbt.json
+0d5dac751f52ea8098a7a5a4e1691fe7107c0bf2 data/create/tags/blocks/safe_nbt.json
 79418bd729cef417b322cef9b491e7ae83317d61 data/create/tags/blocks/seats.json
 5def5088f7fd31b80e6f28c1c4ea146aa9d7d15b data/create/tags/blocks/toolboxes.json
 2589b135c0e96ad29076569e144528fe32ea5b39 data/create/tags/blocks/tracks.json
