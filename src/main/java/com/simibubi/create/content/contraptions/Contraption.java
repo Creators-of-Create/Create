@@ -1386,6 +1386,9 @@ public abstract class Contraption {
 
 	private void gatherBBsOffThread() {
 		getContraptionWorld();
+		if (simplifiedEntityColliderProvider != null) {
+			simplifiedEntityColliderProvider.cancel(false);
+		}
 		simplifiedEntityColliderProvider = CompletableFuture.supplyAsync(() -> {
 			VoxelShape combinedShape = Shapes.empty();
 			for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
@@ -1402,7 +1405,6 @@ public abstract class Contraption {
 		})
 			.thenAccept(r -> {
 				simplifiedEntityColliders = Optional.of(r);
-				simplifiedEntityColliderProvider = null;
 			});
 	}
 
