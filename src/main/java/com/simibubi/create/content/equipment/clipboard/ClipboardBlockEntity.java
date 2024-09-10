@@ -57,6 +57,16 @@ public class ClipboardBlockEntity extends SmartBlockEntity {
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {}
 
 	@Override
+	public void writeSafe(CompoundTag tag) {
+		super.writeSafe(tag);
+
+		if (dataContainer.is(AllBlocks.CLIPBOARD.asItem()))
+			tag.put("Item", dataContainer.serializeNBT());
+		else
+			tag.put("Item", AllBlocks.CLIPBOARD.asStack().serializeNBT());
+	}
+
+	@Override
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
 		tag.put("Item", dataContainer.serializeNBT());
