@@ -41,7 +41,7 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 				.addSlot(RecipeIngredientRole.OUTPUT, (xOffset) + layoutEntry.posX() + 1, yOffset + layoutEntry.posY() + 1)
 				.setBackground(getRenderedSlot(layoutEntry.output()), -1, -1)
 				.addItemStack(layoutEntry.output().getStack())
-				.addTooltipCallback(addStochasticTooltip(layoutEntry.output()))
+				.addRichTooltipCallback(addStochasticTooltip(layoutEntry.output()))
 		);
 	}
 

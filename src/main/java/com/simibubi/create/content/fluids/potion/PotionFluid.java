@@ -24,8 +24,16 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class PotionFluid extends VirtualFluid {
 
-	public PotionFluid(Properties properties) {
-		super(properties);
+	public static PotionFluid createSource(Properties properties) {
+		return new PotionFluid(properties, true);
+	}
+
+	public static PotionFluid createFlowing(Properties properties) {
+		return new PotionFluid(properties, false);
+	}
+
+	public PotionFluid(Properties properties, boolean source) {
+		super(properties, source);
 	}
 
 	public static FluidStack of(int amount, Potion potion) {

@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import mezz.jei.api.gui.ingredient.IRecipeSlotRichTooltipCallback;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllFluids;
@@ -108,11 +110,11 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		return recipe.getResultItem(level.registryAccess());
 	}
 
-	public static IRecipeSlotTooltipCallback addStochasticTooltip(ProcessingOutput output) {
+	public static IRecipeSlotRichTooltipCallback addStochasticTooltip(ProcessingOutput output) {
 		return (view, tooltip) -> {
 			float chance = output.getChance();
 			if (chance != 1)
-				tooltip.add(1, Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+				tooltip.add(Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
 					.withStyle(ChatFormatting.GOLD));
 		};
 	}
@@ -130,11 +132,11 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		return display;
 	}
 
-	public static IRecipeSlotTooltipCallback addFluidTooltip() {
+	public static IRecipeSlotRichTooltipCallback addFluidTooltip() {
 		return addFluidTooltip(-1);
 	}
 
-	public static IRecipeSlotTooltipCallback addFluidTooltip(int mbAmount) {
+	public static IRecipeSlotRichTooltipCallback addFluidTooltip(int mbAmount) {
 		return (view, tooltip) -> {
 			Optional<FluidStack> displayed = view.getDisplayedIngredient(ForgeTypes.FLUID_STACK);
 			if (displayed.isEmpty())
@@ -143,26 +145,14 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 			FluidStack fluidStack = displayed.get();
 
 			if (fluidStack.getFluid().isSame(AllFluids.POTION.get())) {
-				Component name = fluidStack.getDisplayName();
-				if (tooltip.isEmpty())
-					tooltip.add(0, name);
-				else
-					tooltip.set(0, name);
-
 				ArrayList<Component> potionTooltip = new ArrayList<>();
 				PotionFluidHandler.addPotionTooltip(fluidStack, potionTooltip, 1);
-				tooltip.addAll(1, potionTooltip.stream().toList());
+				tooltip.addAll(potionTooltip.stream().toList());
 			}
 
 			int amount = mbAmount == -1 ? fluidStack.getAmount() : mbAmount;
 			Component text = Components.literal(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
-			if (tooltip.isEmpty())
-				tooltip.add(0, text);
-			else {
-				List<Component> siblings = tooltip.get(0).getSiblings();
-				siblings.add(Components.literal(" "));
-				siblings.add(text);
-			}
+			tooltip.add(text);
 		};
 	}
 
