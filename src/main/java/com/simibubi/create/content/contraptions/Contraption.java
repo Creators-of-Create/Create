@@ -1199,6 +1199,9 @@ public abstract class Contraption {
 			// swap nbt data to the new controller position
 			StructureBlockInfo prevControllerInfo = blocks.get(controllerPos);
 			StructureBlockInfo newControllerInfo = blocks.get(otherPos);
+			if (prevControllerInfo == null || newControllerInfo == null)
+				return;
+
 			blocks.put(otherPos, new StructureBlockInfo(newControllerInfo.pos(), newControllerInfo.state(), prevControllerInfo.nbt()));
 			blocks.put(controllerPos, new StructureBlockInfo(prevControllerInfo.pos(), prevControllerInfo.state(), newControllerInfo.nbt()));
 		});
