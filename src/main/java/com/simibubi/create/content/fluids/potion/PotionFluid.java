@@ -36,15 +36,17 @@ public class PotionFluid extends VirtualFluid {
 		super(properties, source);
 	}
 
-	public static FluidStack of(int amount, Potion potion) {
-		FluidStack fluidStack = new FluidStack(AllFluids.POTION.get()
-			.getSource(), amount);
+	public static FluidStack of(int amount, Potion potion, BottleType bottleType) {
+
+		FluidStack fluidStack;
+		fluidStack = new FluidStack(AllFluids.POTION.get().getSource(), amount);
 		addPotionToFluidStack(fluidStack, potion);
+		NBTHelper.writeEnum(fluidStack.getOrCreateTag(), "Bottle", bottleType);
 		return fluidStack;
 	}
 
 	public static FluidStack withEffects(int amount, Potion potion, List<MobEffectInstance> customEffects) {
-		FluidStack fluidStack = of(amount, potion);
+		FluidStack fluidStack = of(amount, potion, BottleType.REGULAR);
 		appendEffects(fluidStack, customEffects);
 		return fluidStack;
 	}
