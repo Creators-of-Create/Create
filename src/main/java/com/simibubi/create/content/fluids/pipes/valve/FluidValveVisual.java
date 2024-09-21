@@ -41,7 +41,7 @@ public class FluidValveVisual extends ShaftVisual<FluidValveBlockEntity> impleme
         pointerRotationOffset = twist ? 90 : 0;
         settled = false;
 
-        pointer = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLUID_VALVE_POINTER)).createInstance();
+        pointer = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLUID_VALVE_POINTER)).createInstance();
 
 		transformPointer(partialTick);
 	}

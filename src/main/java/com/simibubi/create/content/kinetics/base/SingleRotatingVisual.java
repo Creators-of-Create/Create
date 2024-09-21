@@ -15,7 +15,7 @@ public class SingleRotatingVisual<T extends KineticBlockEntity> extends KineticB
 
 	public SingleRotatingVisual(VisualizationContext context, T blockEntity, float partialTick) {
 		super(context, blockEntity, partialTick);
-		rotatingModel = instancerProvider.instancer(AllInstanceTypes.ROTATING, model())
+		rotatingModel = instancerProvider().instancer(AllInstanceTypes.ROTATING, model())
 				.createInstance();
 		setup(rotatingModel);
 	}

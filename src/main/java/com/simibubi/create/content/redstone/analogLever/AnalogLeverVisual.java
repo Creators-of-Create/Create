@@ -30,9 +30,9 @@ public class AnalogLeverVisual extends AbstractBlockEntityVisual<AnalogLeverBloc
 	public AnalogLeverVisual(VisualizationContext context, AnalogLeverBlockEntity blockEntity, float partialTick) {
 		super(context, blockEntity, partialTick);
 
-		handle = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ANALOG_LEVER_HANDLE))
+		handle = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ANALOG_LEVER_HANDLE))
 			.createInstance();
-		indicator = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ANALOG_LEVER_INDICATOR))
+		indicator = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ANALOG_LEVER_INDICATOR))
 			.createInstance();
 
 		AttachFace face = blockState.getValue(AnalogLeverBlock.FACE);

@@ -24,8 +24,8 @@ public class SchematicannonVisual extends AbstractBlockEntityVisual<Schematicann
     public SchematicannonVisual(VisualizationContext context, SchematicannonBlockEntity blockEntity, float partialTick) {
         super(context, blockEntity, partialTick);
 
-        connector = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.SCHEMATICANNON_CONNECTOR)).createInstance();
-        pipe = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.SCHEMATICANNON_PIPE)).createInstance();
+        connector = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.SCHEMATICANNON_CONNECTOR)).createInstance();
+        pipe = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.SCHEMATICANNON_PIPE)).createInstance();
 	}
 
     @Override

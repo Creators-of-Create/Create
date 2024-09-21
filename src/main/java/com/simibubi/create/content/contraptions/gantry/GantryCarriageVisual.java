@@ -34,7 +34,7 @@ public class GantryCarriageVisual extends ShaftVisual<GantryCarriageBlockEntity>
 	public GantryCarriageVisual(VisualizationContext context, GantryCarriageBlockEntity blockEntity, float partialTick) {
 		super(context, blockEntity, partialTick);
 
-		gantryCogs = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GANTRY_COGS))
+		gantryCogs = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GANTRY_COGS))
 								 .createInstance();
 
 		facing = blockState.getValue(GantryCarriageBlock.FACING);

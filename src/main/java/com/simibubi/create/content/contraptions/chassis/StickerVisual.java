@@ -29,7 +29,7 @@ public class StickerVisual extends AbstractBlockEntityVisual<StickerBlockEntity>
 	public StickerVisual(VisualizationContext context, StickerBlockEntity blockEntity, float partialTick) {
 		super(context, blockEntity, partialTick);
 
-		head = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.STICKER_HEAD)).createInstance();
+		head = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.STICKER_HEAD)).createInstance();
 
 		fakeWorld = blockEntity.getLevel() != Minecraft.getInstance().level;
 		facing = blockState.getValue(StickerBlock.FACING);

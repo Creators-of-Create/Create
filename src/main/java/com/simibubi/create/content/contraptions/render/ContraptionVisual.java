@@ -93,6 +93,8 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 				.instancer(InstanceTypes.TRANSFORMED, model)
 				.createInstance();
 
+		structure.setChanged();
+
 		for (BlockEntity be : contraption.getRenderedBEs()) {
 			setupVisualizer(be, partialTick);
 		}

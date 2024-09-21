@@ -24,7 +24,7 @@ public class PressVisual extends ShaftVisual<MechanicalPressBlockEntity> impleme
 	public PressVisual(VisualizationContext context, MechanicalPressBlockEntity blockEntity, float partialTick) {
 		super(context, blockEntity, partialTick);
 
-		pressHead = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.MECHANICAL_PRESS_HEAD))
+		pressHead = instancerProvider().instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.MECHANICAL_PRESS_HEAD))
 				.createInstance();
 
 		Quaternionf q = Axis.YP

@@ -27,11 +27,11 @@ public class SteamEngineVisual extends AbstractBlockEntityVisual<SteamEngineBloc
 	public SteamEngineVisual(VisualizationContext context, SteamEngineBlockEntity blockEntity, float partialTick) {
 		super(context, blockEntity, partialTick);
 
-		piston = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_PISTON))
+		piston = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_PISTON))
 				.createInstance();
-		linkage = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_LINKAGE))
+		linkage = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_LINKAGE))
 				.createInstance();
-		connector = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_CONNECTOR))
+		connector = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_CONNECTOR))
 				.createInstance();
 	}
 

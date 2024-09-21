@@ -11,15 +11,15 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.model.Model;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import dev.engine_room.flywheel.lib.model.ModelCache;
 import dev.engine_room.flywheel.lib.model.baked.BakedModelBuilder;
+import dev.engine_room.flywheel.lib.util.ResourceReloadCache;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class WaterWheelVisual<T extends WaterWheelBlockEntity> extends KineticBlockEntityVisual<T> {
-	private static final ModelCache<WaterWheelModelKey> MODEL_CACHE = new ModelCache<>(WaterWheelVisual::createModel);
+	private static final ResourceReloadCache<WaterWheelModelKey, Model> MODEL_CACHE = new ResourceReloadCache<>(WaterWheelVisual::createModel);
 
 	protected final boolean large;
 	protected BlockState lastMaterial;
@@ -42,7 +42,7 @@ public class WaterWheelVisual<T extends WaterWheelBlockEntity> extends KineticBl
 
 	private void setupInstance() {
 		lastMaterial = blockEntity.material;
-		rotatingModel = instancerProvider.instancer(AllInstanceTypes.ROTATING, MODEL_CACHE.get(new WaterWheelModelKey(large, blockState, blockEntity.material)))
+		rotatingModel = instancerProvider().instancer(AllInstanceTypes.ROTATING, MODEL_CACHE.get(new WaterWheelModelKey(large, blockState, blockEntity.material)))
 				.createInstance();
 		setup(rotatingModel);
 	}

@@ -27,12 +27,12 @@ public class MixerVisual extends EncasedCogVisual implements SimpleDynamicVisual
 		super(context, blockEntity, false, partialTick);
 		this.mixer = blockEntity;
 
-		mixerHead = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.MECHANICAL_MIXER_HEAD))
+		mixerHead = instancerProvider().instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.MECHANICAL_MIXER_HEAD))
 			.createInstance();
 
 		mixerHead.setRotationAxis(Direction.Axis.Y);
 
-		mixerPole = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.MECHANICAL_MIXER_POLE))
+		mixerPole = instancerProvider().instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.MECHANICAL_MIXER_POLE))
 				.createInstance();
 
 		animate(partialTick);

@@ -33,7 +33,7 @@ public class SplitShaftVisual extends KineticBlockEntityVisual<SplitShaftBlockEn
 
             float splitSpeed = speed * blockEntity.getRotationSpeedModifier(dir);
 
-			var instance = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, dir))
+			var instance = instancerProvider().instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, dir))
                 .createInstance();
 
 			keys.add(setup(instance, splitSpeed));

@@ -18,27 +18,27 @@ public class RopePulleyVisual extends AbstractPulleyVisual<PulleyBlockEntity> {
 
 	@Override
 	protected Instancer<OrientedInstance> getRopeModel() {
-		return instancerProvider.instancer(InstanceTypes.ORIENTED, VirtualRenderHelper.blockModel(AllBlocks.ROPE.getDefaultState()));
+		return instancerProvider().instancer(InstanceTypes.ORIENTED, VirtualRenderHelper.blockModel(AllBlocks.ROPE.getDefaultState()));
 	}
 
 	@Override
 	protected Instancer<OrientedInstance> getMagnetModel() {
-		return instancerProvider.instancer(InstanceTypes.ORIENTED, VirtualRenderHelper.blockModel(AllBlocks.PULLEY_MAGNET.getDefaultState()));
+		return instancerProvider().instancer(InstanceTypes.ORIENTED, VirtualRenderHelper.blockModel(AllBlocks.PULLEY_MAGNET.getDefaultState()));
 	}
 
 	@Override
 	protected Instancer<OrientedInstance> getHalfMagnetModel() {
-		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_HALF_MAGNET));
+		return instancerProvider().instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_HALF_MAGNET));
 	}
 
 	@Override
 	protected Instancer<OrientedInstance> getCoilModel() {
-		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_COIL, rotatingAbout));
+		return instancerProvider().instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_COIL, rotatingAbout));
 	}
 
 	@Override
 	protected Instancer<OrientedInstance> getHalfRopeModel() {
-		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_HALF));
+		return instancerProvider().instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_HALF));
 	}
 
 	@Override

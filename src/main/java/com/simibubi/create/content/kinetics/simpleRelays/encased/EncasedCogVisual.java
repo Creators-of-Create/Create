@@ -49,7 +49,7 @@ public class EncasedCogVisual extends KineticBlockEntityVisual<KineticBlockEntit
 		super(modelManager, blockEntity, partialTick);
 		this.large = large;
 
-        var instancer = instancerProvider.instancer(AllInstanceTypes.ROTATING, getCogModel());
+        var instancer = instancerProvider().instancer(AllInstanceTypes.ROTATING, getCogModel());
 		rotatingModel = setup(instancer.createInstance());
 
 		RotatingInstance rotatingTopShaft = null;
@@ -60,7 +60,7 @@ public class EncasedCogVisual extends KineticBlockEntityVisual<KineticBlockEntit
 			for (Direction d : Iterate.directionsInAxis(axis)) {
 				if (!def.hasShaftTowards(blockEntity.getLevel(), blockEntity.getBlockPos(), blockState, d))
 					continue;
-				RotatingInstance data = setup(instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, d))
+				RotatingInstance data = setup(instancerProvider().instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, d))
 					.createInstance());
 				if (large) {
 					data.setRotationOffset(BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos));

@@ -52,11 +52,11 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
         xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRot = rotatePole ? 90 : 0;
 
-        pole = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.DEPLOYER_POLE)).createInstance();
+        pole = instancerProvider().instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.DEPLOYER_POLE)).createInstance();
 
 		currentHand = this.blockEntity.getHandPose();
 
-		hand = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(currentHand)).createInstance();
+		hand = instancerProvider().instancer(InstanceTypes.ORIENTED, Models.partial(currentHand)).createInstance();
 
 		progress = getProgress(partialTick);
 		updateRotation(pole, hand, yRot, xRot, zRot);
@@ -69,7 +69,7 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
 
 		if (currentHand != handPose) {
 			currentHand = handPose;
-			instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(currentHand))
+			instancerProvider().instancer(InstanceTypes.ORIENTED, Models.partial(currentHand))
 					.stealInstance(hand);
 		}
 	}

@@ -39,7 +39,7 @@ public class BracketedKineticBlockEntityVisual extends SingleRotatingVisual<Brac
             BlockPos pos = blockEntity.getBlockPos();
             float offset = BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos);
             var model = Models.partial(AllPartialModels.COGWHEEL_SHAFT, axis, BracketedKineticBlockEntityVisual::rotateToAxis);
-            Instancer<RotatingInstance> half = instancerProvider.instancer(AllInstanceTypes.ROTATING, model);
+            Instancer<RotatingInstance> half = instancerProvider().instancer(AllInstanceTypes.ROTATING, model);
 
             additionalShaft = setup(half.createInstance(), speed);
             additionalShaft.setRotationOffset(offset)

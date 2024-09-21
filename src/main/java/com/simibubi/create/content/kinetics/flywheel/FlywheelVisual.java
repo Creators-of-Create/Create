@@ -27,9 +27,9 @@ public class FlywheelVisual extends KineticBlockEntityVisual<FlywheelBlockEntity
 	public FlywheelVisual(VisualizationContext context, FlywheelBlockEntity blockEntity, float partialTick) {
 		super(context, blockEntity, partialTick);
 
-		shaft = setup(instancerProvider.instancer(AllInstanceTypes.ROTATING, VirtualRenderHelper.blockModel(shaft()))
+		shaft = setup(instancerProvider().instancer(AllInstanceTypes.ROTATING, VirtualRenderHelper.blockModel(shaft()))
 			.createInstance());
-		wheel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, VirtualRenderHelper.blockModel(blockState))
+		wheel = instancerProvider().instancer(InstanceTypes.TRANSFORMED, VirtualRenderHelper.blockModel(blockState))
 			.createInstance();
 
 		animate(blockEntity.angle);

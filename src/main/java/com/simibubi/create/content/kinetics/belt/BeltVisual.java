@@ -65,7 +65,7 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
             PartialModel beltPartial = BeltRenderer.getBeltPartial(diagonal, start, end, bottom);
             SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
 
-            Instancer<BeltInstance> beltModel = instancerProvider.instancer(AllInstanceTypes.BELT, Models.partial(beltPartial));
+            Instancer<BeltInstance> beltModel = instancerProvider().instancer(AllInstanceTypes.BELT, Models.partial(beltPartial));
 
             keys.add(setup(beltModel.createInstance(), bottom, spriteShift));
 
@@ -138,7 +138,7 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
             msr.uncenter();
         });
 
-		return instancerProvider.instancer(AllInstanceTypes.ROTATING, model);
+		return instancerProvider().instancer(AllInstanceTypes.ROTATING, model);
     }
 
     private Direction getOrientation() {

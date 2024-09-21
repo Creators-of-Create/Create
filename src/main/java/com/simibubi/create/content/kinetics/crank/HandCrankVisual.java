@@ -27,13 +27,13 @@ public class HandCrankVisual extends KineticBlockEntityVisual<HandCrankBlockEnti
 		facing = blockState.getValue(BlockStateProperties.FACING);
 		Model model = blockEntity.getRenderedHandleInstance();
 
-		crank = instancerProvider.instancer(InstanceTypes.TRANSFORMED, model)
+		crank = instancerProvider().instancer(InstanceTypes.TRANSFORMED, model)
 				.createInstance();
 
 		rotateCrank(partialTick);
 
 		if (blockEntity.shouldRenderShaft()) {
-			rotatingModel = instancerProvider.instancer(AllInstanceTypes.ROTATING, VirtualRenderHelper.blockModel(blockState))
+			rotatingModel = instancerProvider().instancer(AllInstanceTypes.ROTATING, VirtualRenderHelper.blockModel(blockState))
 					.createInstance();
 			setup(rotatingModel);
 		}

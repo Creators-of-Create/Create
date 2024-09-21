@@ -20,7 +20,7 @@ import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.instance.InstanceTypes;
-import dev.engine_room.flywheel.lib.instance.TransformedInstance;
+import dev.engine_room.flywheel.lib.instance.PosedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.Transform;
@@ -195,7 +195,7 @@ public abstract class BogeyRenderer {
 	 */
 	public void createModelInstance(VisualizationContext context, PartialModel model, int count) {
 		var instancer = context.instancerProvider()
-				.instancer(InstanceTypes.TRANSFORMED, Models.partial(model));
+				.instancer(InstanceTypes.POSED, Models.partial(model));
 		BogeyModelData[] modelData = IntStream.range(0, count)
 				.mapToObj(i -> instancer.createInstance())
 				.map(BogeyModelData::new)
@@ -212,7 +212,7 @@ public abstract class BogeyRenderer {
 	 */
 	public void createModelInstance(VisualizationContext context, BlockState state, int count) {
 		var instancer = context.instancerProvider()
-				.instancer(InstanceTypes.TRANSFORMED, VirtualRenderHelper.blockModel(state));
+				.instancer(InstanceTypes.POSED, VirtualRenderHelper.blockModel(state));
 		BogeyModelData[] modelData = IntStream.range(0, count)
 				.mapToObj(i -> instancer.createInstance())
 				.map(BogeyModelData::new)
@@ -340,27 +340,27 @@ public abstract class BogeyRenderer {
 		}
 
 		public BogeyModelData setTransform(PoseStack ms) {
-			if (this.transform instanceof TransformedInstance model)
+			if (this.transform instanceof PosedInstance model)
 				model.setTransform(ms)
 						.setChanged();
 			return this;
 		}
 
 		public BogeyModelData setEmptyTransform() {
-			if (this.transform instanceof TransformedInstance model)
+			if (this.transform instanceof PosedInstance model)
 				model.setZeroTransform()
 						.setChanged();
 			return this;
 		}
 
 		public BogeyModelData delete() {
-			if (this.transform instanceof TransformedInstance model)
+			if (this.transform instanceof PosedInstance model)
 				model.delete();
 			return this;
 		}
 
 		public BogeyModelData updateLight(int blockLight, int skyLight) {
-			if (this.transform instanceof TransformedInstance model)
+			if (this.transform instanceof PosedInstance model)
 				model.light(blockLight, skyLight)
 						.setChanged();
 			return this;

@@ -34,7 +34,7 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
 
 		GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
 
-		Instancer<TransformedInstance> dialModel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_DIAL));
+		Instancer<TransformedInstance> dialModel = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_DIAL));
 		Instancer<TransformedInstance> headModel = getHeadModel();
 
 		var msr = TransformStack.of(ms);
@@ -157,7 +157,7 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
 
 		@Override
 		protected Instancer<TransformedInstance> getHeadModel() {
-			return instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_HEAD_SPEED));
+			return instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_HEAD_SPEED));
 		}
 	}
 
@@ -168,7 +168,7 @@ public abstract class GaugeVisual extends ShaftVisual<GaugeBlockEntity> implemen
 
 		@Override
 		protected Instancer<TransformedInstance> getHeadModel() {
-			return instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_HEAD_STRESS));
+			return instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GAUGE_HEAD_STRESS));
 		}
 	}
 }

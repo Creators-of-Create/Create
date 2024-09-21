@@ -38,7 +38,7 @@ public class BearingVisual<B extends KineticBlockEntity & IBearingBlockEntity> e
 		PartialModel top =
 				blockEntity.isWoodenTop() ? AllPartialModels.BEARING_TOP_WOODEN : AllPartialModels.BEARING_TOP;
 
-		topInstance = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(top))
+		topInstance = instancerProvider().instancer(InstanceTypes.ORIENTED, Models.partial(top))
 				.createInstance();
 
 		topInstance.position(getVisualPosition())

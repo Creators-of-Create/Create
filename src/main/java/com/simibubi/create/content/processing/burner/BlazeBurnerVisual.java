@@ -55,7 +55,7 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 		PartialModel blazeModel = BlazeBurnerRenderer.getBlazeModel(heatLevel, validBlockAbove);
 		isInert = blazeModel == AllPartialModels.BLAZE_INERT;
 
-		head = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(blazeModel))
+		head = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(blazeModel))
 				.createInstance();
 
 		head.light(LightTexture.FULL_BRIGHT);
@@ -66,9 +66,9 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 			PartialModel rodsModel2 = heatLevel == BlazeBurnerBlock.HeatLevel.SEETHING ? AllPartialModels.BLAZE_BURNER_SUPER_RODS_2
 					: AllPartialModels.BLAZE_BURNER_RODS_2;
 
-			smallRods = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(rodsModel))
+			smallRods = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(rodsModel))
 					.createInstance();
-			largeRods = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(rodsModel2))
+			largeRods = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(rodsModel2))
 					.createInstance();
 
 			smallRods.light(LightTexture.FULL_BRIGHT);
@@ -98,7 +98,7 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 			this.validBlockAbove = validBlockAbove;
 
 			PartialModel blazeModel = BlazeBurnerRenderer.getBlazeModel(heatLevel, validBlockAbove);
-			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(blazeModel))
+			instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(blazeModel))
 					.stealInstance(head);
 		}
 
@@ -111,7 +111,7 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 		}
 
 		if (blockEntity.goggles && goggles == null) {
-			goggles = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(isInert ? AllPartialModels.BLAZE_GOGGLES_SMALL : AllPartialModels.BLAZE_GOGGLES))
+			goggles = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(isInert ? AllPartialModels.BLAZE_GOGGLES_SMALL : AllPartialModels.BLAZE_GOGGLES))
 					.createInstance();
 			goggles.light(LightTexture.FULL_BRIGHT);
 		} else if (!blockEntity.goggles && goggles != null) {
@@ -120,7 +120,7 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 		}
 
 		if (blockEntity.hat && hat == null) {
-			hat = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TRAIN_HAT))
+			hat = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TRAIN_HAT))
 					.createInstance();
 			hat.light(LightTexture.FULL_BRIGHT);
 		} else if (!blockEntity.hat && hat != null) {
@@ -194,7 +194,7 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 	}
 
 	private void setupFlameInstance() {
-		flame = instancerProvider.instancer(AllInstanceTypes.SCROLLING, Models.partial(AllPartialModels.BLAZE_BURNER_FLAME))
+		flame = instancerProvider().instancer(AllInstanceTypes.SCROLLING, Models.partial(AllPartialModels.BLAZE_BURNER_FLAME))
 				.createInstance();
 
 		flame.position(getVisualPosition())

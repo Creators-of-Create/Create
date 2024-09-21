@@ -28,10 +28,10 @@ public class ToolBoxVisual extends AbstractBlockEntityVisual<ToolboxBlockEntity>
 		facing = blockState.getValue(ToolboxBlock.FACING)
 				.getOpposite();
 
-		Instancer<TransformedInstance> drawerModel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TOOLBOX_DRAWER));
+		Instancer<TransformedInstance> drawerModel = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TOOLBOX_DRAWER));
 
 		drawers = new TransformedInstance[]{drawerModel.createInstance(), drawerModel.createInstance()};
-		lid = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TOOLBOX_LIDS.get(blockEntity.getColor())))
+		lid = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TOOLBOX_LIDS.get(blockEntity.getColor())))
 				.createInstance();
 	}
 

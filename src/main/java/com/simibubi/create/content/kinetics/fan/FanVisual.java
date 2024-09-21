@@ -29,8 +29,8 @@ public class FanVisual extends KineticBlockEntityVisual<EncasedFanBlockEntity> {
 		direction = blockState.getValue(FACING);
 
 		opposite = direction.getOpposite();
-		shaft = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, opposite)).createInstance();
-		fan = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.ENCASED_FAN_INNER, opposite))
+		shaft = instancerProvider().instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, opposite)).createInstance();
+		fan = instancerProvider().instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.ENCASED_FAN_INNER, opposite))
 				.createInstance();
 
 		setup(shaft);

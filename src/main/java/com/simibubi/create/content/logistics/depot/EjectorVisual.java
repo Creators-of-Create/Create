@@ -22,7 +22,7 @@ public class EjectorVisual extends ShaftVisual<EjectorBlockEntity> implements Si
 	public EjectorVisual(VisualizationContext dispatcher, EjectorBlockEntity blockEntity, float partialTick) {
 		super(dispatcher, blockEntity, partialTick);
 
-		plate = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.EJECTOR_TOP)).createInstance();
+		plate = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.EJECTOR_TOP)).createInstance();
 
 		pivotPlate(getLidProgress(partialTick));
 	}

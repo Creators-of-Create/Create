@@ -49,18 +49,18 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements S
 	public ArmVisual(VisualizationContext context, ArmBlockEntity blockEntity, float partialTick) {
 		super(context, blockEntity, partialTick);
 
-		base = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_BASE))
+		base = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_BASE))
 			.createInstance();
-		lowerBody = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_LOWER_BODY))
+		lowerBody = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_LOWER_BODY))
 			.createInstance();
-		upperBody = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_UPPER_BODY))
+		upperBody = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_UPPER_BODY))
 			.createInstance();
-		claw = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE))
+		claw = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE))
 			.createInstance();
 
-		TransformedInstance clawGrip1 = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_CLAW_GRIP_UPPER))
+		TransformedInstance clawGrip1 = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_CLAW_GRIP_UPPER))
 			.createInstance();
-		TransformedInstance clawGrip2 = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_CLAW_GRIP_LOWER))
+		TransformedInstance clawGrip2 = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_CLAW_GRIP_LOWER))
 			.createInstance();
 
 		clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
@@ -175,7 +175,7 @@ public class ArmVisual extends SingleRotatingVisual<ArmBlockEntity> implements S
 		super.update(pt);
 		models.remove(claw);
 		claw.delete();
-		claw = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE))
+		claw = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE))
 				.createInstance();
 		models.add(claw);
 		updateLight(pt);

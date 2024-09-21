@@ -23,7 +23,7 @@ public class BrassDiodeVisual extends AbstractBlockEntityVisual<BrassDiodeBlockE
     public BrassDiodeVisual(VisualizationContext context, BrassDiodeBlockEntity blockEntity, float partialTick) {
         super(context, blockEntity, partialTick);
 
-        indicator = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLEXPEATER_INDICATOR)).createInstance();
+        indicator = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLEXPEATER_INDICATOR)).createInstance();
 
         indicator.setIdentityTransform()
 				.translate(getVisualPosition())
