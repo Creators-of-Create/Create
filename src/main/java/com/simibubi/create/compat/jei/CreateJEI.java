@@ -370,10 +370,15 @@ public class CreateJEI implements IModPlugin {
 	@Override
 	public void registerExtraIngredients(IExtraIngredientRegistration registration) {
 		Collection<Potion> potions = ForgeRegistries.POTIONS.getValues();
-		Collection<FluidStack> potionFluids = new ArrayList<>(potions.size());
+		Collection<FluidStack> potionFluids = new ArrayList<>(potions.size() * 3);
 		for (Potion potion : potions) {
-			FluidStack potionFluid = PotionFluid.of(1000, potion);
-			potionFluids.add(potionFluid);
+			// @goshante: Ingame potion fluids always have Bottle tag that specifies
+			// to what bottle type this potion belongs
+			// Potion fluid without this tag wouldn't be recognized by other mods
+			for (PotionFluid.BottleType bottleType : PotionFluid.BottleType.values()) {
+				FluidStack potionFluid = PotionFluid.of(1000, potion, bottleType);
+				potionFluids.add(potionFluid);
+			}
 		}
 		registration.addExtraIngredients(ForgeTypes.FLUID_STACK, potionFluids);
 	}

@@ -42,7 +42,7 @@ public class PotionFluidHandler {
 		return stack.getItem() instanceof PotionItem && !(stack.getCraftingRemainingItem()
 			.getItem() instanceof BucketItem);
 	}
-	
+
 	public static Pair<FluidStack, ItemStack> emptyPotion(ItemStack stack, boolean simulate) {
 		FluidStack fluid = getFluidFromPotionItem(stack);
 		if (!simulate)
@@ -69,8 +69,7 @@ public class PotionFluidHandler {
 	public static FluidStack getFluidFromPotion(Potion potion, BottleType bottleType, int amount) {
 		if (potion == Potions.WATER && bottleType == BottleType.REGULAR)
 			return new FluidStack(Fluids.WATER, amount);
-		FluidStack fluid = PotionFluid.of(amount, potion);
-		NBTHelper.writeEnum(fluid.getOrCreateTag(), "Bottle", bottleType);
+		FluidStack fluid = PotionFluid.of(amount, potion, bottleType);
 		return fluid;
 	}
 
