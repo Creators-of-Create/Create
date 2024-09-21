@@ -77,6 +77,8 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 			smallRods = null;
 			largeRods = null;
 		}
+
+		animate(partialTick);
 	}
 
 	@Override
@@ -90,7 +92,11 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 			return;
 		}
 
-		float animation = blockEntity.headAnimation.getValue(ctx.partialTick()) * .175f;
+		animate(ctx.partialTick());
+	}
+
+	private void animate(float partialTicks) {
+		float animation = blockEntity.headAnimation.getValue(partialTicks) * .175f;
 
 		boolean validBlockAbove = animation > 0.125f;
 
@@ -135,7 +141,7 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 		float offset = Mth.sin((float) ((renderTick / 16f) % (2 * Math.PI))) / offsetMult;
 		float headY = offset - (animation * .75f);
 
-		float horizontalAngle = AngleHelper.rad(blockEntity.headAngle.getValue(ctx.partialTick()));
+		float horizontalAngle = AngleHelper.rad(blockEntity.headAngle.getValue(partialTicks));
 
 		head.setIdentityTransform()
 				.translate(getVisualPosition())

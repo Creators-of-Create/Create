@@ -1,5 +1,6 @@
 package com.simibubi.create.content.trains.track;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -31,16 +32,12 @@ import net.minecraft.world.level.LightLayer;
 
 public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 
-	private final List<BezierTrackVisual> visuals;
+	private final List<BezierTrackVisual> visuals = new ArrayList<>();
 
 	public TrackVisual(VisualizationContext context, TrackBlockEntity track, float partialTick) {
 		super(context, track, partialTick);
 
-		visuals = blockEntity.connections.values()
-				.stream()
-				.map(this::createInstance)
-				.filter(Objects::nonNull)
-				.toList();
+		collectConnections();
 	}
 
 	@Override
@@ -49,13 +46,22 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 			return;
 
 		_delete();
+
+		collectConnections();
+
 		lightSections.sections(collectLightSections());
+	}
+
+	private void collectConnections() {
+		blockEntity.connections.values()
+			.stream()
+			.map(this::createInstance)
+			.filter(Objects::nonNull)
+			.forEach(visuals::add);
 	}
 
 	@Override
 	public void updateLight(float partialTick) {
-		if (visuals == null)
-			return;
 		visuals.forEach(BezierTrackVisual::updateLight);
 	}
 
@@ -68,9 +74,8 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 
 	@Override
 	public void _delete() {
-		if (visuals == null)
-			return;
 		visuals.forEach(BezierTrackVisual::delete);
+		visuals.clear();
 	}
 
 	public LongSet collectLightSections() {
@@ -102,8 +107,6 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> {
 
 	@Override
 	public void collectCrumblingInstances(Consumer<Instance> consumer) {
-		if (visuals == null)
-			return;
         for (BezierTrackVisual instance : visuals) {
             instance.collectCrumblingInstances(consumer);
         }
