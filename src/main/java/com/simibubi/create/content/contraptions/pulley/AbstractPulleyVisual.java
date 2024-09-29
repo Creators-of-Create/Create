@@ -5,17 +5,16 @@ import java.util.function.Consumer;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;
-import com.simibubi.create.foundation.render.ConditionalInstance;
-import com.simibubi.create.foundation.render.GroupInstance;
-import com.simibubi.create.foundation.render.SelectInstance;
 
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.instance.Instancer;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.instance.OrientedInstance;
+import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.math.MoreMath;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
+import dev.engine_room.flywheel.lib.visual.util.SmartRecycler;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.bytes.ByteList;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -29,9 +28,8 @@ import net.minecraft.world.level.LightLayer;
 
 public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends ShaftVisual<T> implements SimpleDynamicVisual {
 	private final OrientedInstance coil;
-	private final SelectInstance<OrientedInstance> magnet;
-	private final GroupInstance<OrientedInstance> rope;
-	private final ConditionalInstance<OrientedInstance> halfRope;
+	private final TransformedInstance magnet;
+	private final SmartRecycler<Boolean, TransformedInstance> rope;
 
 	protected final Direction rotatingAbout;
 	protected final Axis rotationAxis;
@@ -50,14 +48,12 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 				.position(getVisualPosition());
 		coil.setChanged();
 
-		magnet = new SelectInstance<>(this::getMagnetModelIndex);
-		magnet.addModel(getMagnetModel())
-				.addModel(getHalfMagnetModel());
+		magnet = magnetInstancer().createInstance();
 
-		rope = new GroupInstance<>(getRopeModel());
-		halfRope = new ConditionalInstance<>(getHalfRopeModel()).withCondition(this::shouldRenderHalfRope);
+		rope = new SmartRecycler<>(b -> b ? getHalfRopeModel().createInstance() : getRopeModel().createInstance());
 
 		updateOffset(partialTick);
+		updateLight(partialTick);
 	}
 
 	@Override
@@ -66,19 +62,23 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 		lightCache.updateSections();
 	}
 
-	protected abstract Instancer<OrientedInstance> getRopeModel();
+	protected abstract Instancer<TransformedInstance> getRopeModel();
 
-	protected abstract Instancer<OrientedInstance> getMagnetModel();
+	protected abstract Instancer<TransformedInstance> getMagnetModel();
 
-	protected abstract Instancer<OrientedInstance> getHalfMagnetModel();
+	protected abstract Instancer<TransformedInstance> getHalfMagnetModel();
 
 	protected abstract Instancer<OrientedInstance> getCoilModel();
 
-	protected abstract Instancer<OrientedInstance> getHalfRopeModel();
+	protected abstract Instancer<TransformedInstance> getHalfRopeModel();
 
 	protected abstract float getOffset(float pt);
 
 	protected abstract boolean isRunning();
+
+	private Instancer<TransformedInstance> magnetInstancer() {
+		return offset > .25f ? getMagnetModel() : getHalfMagnetModel();
+	}
 
 	@Override
 	public void beginFrame(DynamicVisual.Context ctx) {
@@ -86,47 +86,44 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 		coil.rotation(rotationAxis.rotationDegrees(offset * 180))
 				.setChanged();
 
-		int neededRopeCount = getNeededRopeCount();
-		rope.resize(neededRopeCount);
+		magnet.setVisible(isRunning() || offset == 0);
 
-		magnet.update()
-				.get()
-				.ifPresent(data -> {
-					int i = Math.max(0, Mth.floor(offset));
-					int light = lightCache.getPackedLight(i);
-					data.position(getVisualPosition())
-							.translatePosition(0, -offset, 0)
-							.light(light)
-							.setChanged();
-				});
+		magnetInstancer().stealInstance(magnet);
 
-		halfRope.update()
-				.get()
-				.ifPresent(rope1 -> {
-					float f = offset % 1;
-					float halfRopeNudge = f > .75f ? f - 1 : f;
+		magnet.setIdentityTransform()
+				.translate(getVisualPosition())
+				.translate(0, -offset, 0)
+				.light(lightCache.getPackedLight(Math.max(0, Mth.floor(offset))))
+				.setChanged();
 
-					int light = lightCache.getPackedLight(0);
-					rope1.position(getVisualPosition())
-							.translatePosition(0, -halfRopeNudge, 0)
-							.light(light)
-							.setChanged();
-				});
+		rope.resetCount();
+
+		if (shouldRenderHalfRope()) {
+			float f = offset % 1;
+			float halfRopeNudge = f > .75f ? f - 1 : f;
+
+			rope.get(true).setIdentityTransform()
+					.translate(getVisualPosition())
+					.translate(0, -halfRopeNudge, 0)
+					.light(lightCache.getPackedLight(0))
+					.setChanged();
+		}
 
 		if (isRunning()) {
-			int size = rope.size();
-			for (int i = 0; i < size; i++) {
-				int light = lightCache.getPackedLight(size - 1 - i);
+			int neededRopeCount = getNeededRopeCount();
 
-				rope.get(i)
-						.position(getVisualPosition())
-						.translatePosition(0, -offset + i + 1, 0)
-						.light(light)
+			for (int i = 0; i < neededRopeCount; i++) {
+
+				rope.get(false)
+						.setIdentityTransform()
+						.translate(getVisualPosition())
+						.translate(0, -offset + i + 1, 0)
+						.light(lightCache.getPackedLight(neededRopeCount - 1 - i))
 						.setChanged();
 			}
-		} else {
-			rope.clear();
 		}
+
+		rope.discardExtra();
 	}
 
 	@Override
@@ -151,21 +148,11 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 		return offset > .75f && (f < .25f || f > .75f);
 	}
 
-	private int getMagnetModelIndex() {
-		if (isRunning() || offset == 0) {
-			return offset > .25f ? 0 : 1;
-		} else {
-			return -1;
-		}
-	}
-
 	@Override
 	public void collectCrumblingInstances(Consumer<Instance> consumer) {
 		super.collectCrumblingInstances(consumer);
 		consumer.accept(coil);
-		magnet.forEach(consumer);
-		rope.forEach(consumer);
-		halfRope.forEach(consumer);
+		consumer.accept(magnet);
 	}
 
 	@Override
@@ -173,8 +160,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 		super._delete();
 		coil.delete();
 		magnet.delete();
-		rope.clear();
-		halfRope.delete();
+		rope.delete();
 	}
 
 	private class LightCache {
@@ -186,6 +172,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 		public void setSize(int size) {
 			if (size != data.size()) {
 				data.size(size);
+				update();
 
 				int sectionCount = MoreMath.ceilingDiv(size + 15 - pos.getY() + pos.getY() / 4 * 4, SectionPos.SECTION_SIZE);
 				if (sectionCount != this.sectionCount) {
@@ -215,7 +202,7 @@ public abstract class AbstractPulleyVisual<T extends KineticBlockEntity> extends
 			for (int i = 0; i < data.size(); i++) {
 				int blockLight = level.getBrightness(LightLayer.BLOCK, mutablePos);
 				int skyLight = level.getBrightness(LightLayer.SKY, mutablePos);
-				int light = ((skyLight << 4) & 0xF) | (blockLight & 0xF);
+				int light = ((skyLight & 0xF) << 4) | (blockLight & 0xF);
 				data.set(i, (byte) light);
 				mutablePos.move(Direction.DOWN);
 			}

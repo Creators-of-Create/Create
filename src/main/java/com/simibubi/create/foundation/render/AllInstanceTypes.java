@@ -49,7 +49,7 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutByte(ptr + 33, instance.rotationAxisY);
 				MemoryUtil.memPutByte(ptr + 34, instance.rotationAxisZ);
 			})
-			.register();
+			.build();
 
 	public static final InstanceType<BeltInstance> BELT = SimpleInstanceType.builder(BeltInstance::new)
 			.cullShader(asResource("instance/cull/belt.glsl"))
@@ -87,7 +87,7 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutFloat(ptr + 68, instance.maxV);
 				MemoryUtil.memPutFloat(ptr + 72, instance.scrollMult);
 			})
-			.register();
+			.build();
 
 	// TODO: use this for belts too
 	public static final InstanceType<ScrollInstance> SCROLLING = SimpleInstanceType.builder(ScrollInstance::new)
@@ -121,7 +121,7 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutFloat(ptr + 56, instance.scaleU);
 				MemoryUtil.memPutFloat(ptr + 60, instance.scaleV);
 			})
-			.register();
+			.build();
 
 	public static final InstanceType<ActorInstance> ACTOR = SimpleInstanceType.builder(ActorInstance::new)
 			.cullShader(asResource("instance/cull/actor.glsl"))
@@ -151,7 +151,7 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutByte(ptr + 42, instance.rotationCenterZ);
 				MemoryUtil.memPutFloat(ptr + 44, instance.speed);
 			})
-			.register();
+			.build();
 
 	// TODO: remove
 	public static final InstanceType<FlapInstance> FLAP = SimpleInstanceType.builder(FlapInstance::new)
@@ -183,7 +183,7 @@ public class AllInstanceTypes {
 				MemoryUtil.memPutFloat(ptr + 48, instance.flapScale);
 				MemoryUtil.memPutFloat(ptr + 52, instance.flapness);
 			})
-			.register();
+			.build();
 
 	public static void init() {
 		// noop

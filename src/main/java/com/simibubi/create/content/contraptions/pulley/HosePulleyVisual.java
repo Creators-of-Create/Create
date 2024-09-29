@@ -7,6 +7,7 @@ import dev.engine_room.flywheel.api.instance.Instancer;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.instance.InstanceTypes;
 import dev.engine_room.flywheel.lib.instance.OrientedInstance;
+import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
 
 public class HosePulleyVisual extends AbstractPulleyVisual<HosePulleyBlockEntity> {
@@ -15,18 +16,18 @@ public class HosePulleyVisual extends AbstractPulleyVisual<HosePulleyBlockEntity
 	}
 
 	@Override
-	protected Instancer<OrientedInstance> getRopeModel() {
-		return instancerProvider().instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.HOSE));
+	protected Instancer<TransformedInstance> getRopeModel() {
+		return instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.HOSE));
 	}
 
 	@Override
-	protected Instancer<OrientedInstance> getMagnetModel() {
-		return instancerProvider().instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.HOSE_MAGNET));
+	protected Instancer<TransformedInstance> getMagnetModel() {
+		return instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.HOSE_MAGNET));
 	}
 
 	@Override
-	protected Instancer<OrientedInstance> getHalfMagnetModel() {
-		return instancerProvider().instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.HOSE_HALF_MAGNET));
+	protected Instancer<TransformedInstance> getHalfMagnetModel() {
+		return instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.HOSE_HALF_MAGNET));
 	}
 
 	@Override
@@ -35,8 +36,8 @@ public class HosePulleyVisual extends AbstractPulleyVisual<HosePulleyBlockEntity
 	}
 
 	@Override
-	protected Instancer<OrientedInstance> getHalfRopeModel() {
-		return instancerProvider().instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.HOSE_HALF));
+	protected Instancer<TransformedInstance> getHalfRopeModel() {
+		return instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.HOSE_HALF));
 	}
 
 	@Override
