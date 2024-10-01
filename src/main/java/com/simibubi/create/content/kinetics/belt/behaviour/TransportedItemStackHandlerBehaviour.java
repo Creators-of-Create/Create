@@ -47,6 +47,9 @@ public class TransportedItemStackHandlerBehaviour extends BlockEntityBehaviour {
 
 		public static TransportedResult convertToAndLeaveHeld(List<TransportedItemStack> outputs,
 			TransportedItemStack heldOutput) {
+			for (TransportedItemStack output : outputs) {
+				output.processedBy = null;
+			}
 			return new TransportedResult(outputs, heldOutput);
 		}
 
