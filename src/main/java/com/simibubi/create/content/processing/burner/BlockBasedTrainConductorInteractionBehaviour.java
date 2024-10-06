@@ -2,10 +2,10 @@ package com.simibubi.create.content.processing.burner;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.api.contraption.train.TrainConductorHandler;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
-import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.entity.Train;
@@ -21,9 +21,21 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 
-public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour {
+import java.util.function.Predicate;
+
+public class BlockBasedTrainConductorInteractionBehaviour extends MovingInteractionBehaviour {
+
+	private final Predicate<BlockState> isValidConductor;
+	private final TrainConductorHandler.UpdateScheduleCallback callback;
+
+	public BlockBasedTrainConductorInteractionBehaviour(Predicate<BlockState> isValidConductor, TrainConductorHandler.UpdateScheduleCallback callback) {
+		this.isValidConductor = isValidConductor;
+		this.callback = callback;
+	}
 
 	@Override
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
@@ -40,8 +52,7 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 
 		StructureBlockInfo info = carriageContraption.getBlocks()
 			.get(localPos);
-		if (info == null || !info.state().hasProperty(BlazeBurnerBlock.HEAT_LEVEL)
-			|| info.state().getValue(BlazeBurnerBlock.HEAT_LEVEL) == HeatLevel.NONE)
+		if (info == null || !isValidConductor.test(info.state()))
 			return false;
 
 		Direction assemblyDirection = carriageContraption.getAssemblyDirection();
@@ -74,6 +85,7 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 					train.runtime.isAutoSchedule ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"),
 					true);
 				player.setItemInHand(activeHand, train.runtime.returnSchedule());
+				callback.update(false, info.state(), newBlockState -> setBlockState(localPos, contraptionEntity, newBlockState));
 				return true;
 			}
 
@@ -89,7 +101,7 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 				player.displayClientMessage(Lang.translateDirect("schedule.no_stops"), true);
 				return true;
 			}
-
+			callback.update(true, info.state(), newBlockState -> setBlockState(localPos, contraptionEntity, newBlockState));
 			train.runtime.setSchedule(schedule, false);
 			AllAdvancements.CONDUCTOR.awardTo(player);
 			AllSoundEvents.CONFIRM.playOnServer(player.level(), player.blockPosition(), 1, 1);
@@ -105,4 +117,10 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 		return true;
 	}
 
+	private void setBlockState(BlockPos localPos, AbstractContraptionEntity contraption, BlockState newState) {
+		StructureTemplate.StructureBlockInfo info = contraption.getContraption().getBlocks().get(localPos);
+		if (info != null) {
+			setContraptionBlockData(contraption, localPos, new StructureTemplate.StructureBlockInfo(info.pos(), newState, info.nbt()));
+		}
+	}
 }
