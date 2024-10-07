@@ -58,7 +58,7 @@ public final class NBTProcessors {
 		addProcessor(AllBlockEntityTypes.CREATIVE_CRATE.get(), itemProcessor("Filter"));
 		addProcessor(AllBlockEntityTypes.PLACARD.get(), itemProcessor("Item"));
 	}
-	
+
 	// Triggered by block tag, not BE type
 	private static final UnaryOperator<CompoundTag> signProcessor = data -> {
 		for (int i = 0; i < 4; ++i)
@@ -86,14 +86,22 @@ public final class NBTProcessors {
 	}
 
 	public static ItemStack withUnsafeNBTDiscarded(ItemStack stack) {
-		if (stack.getTag() == null)
+		CompoundTag tag = stack.getTag();
+		if (tag == null)
 			return stack;
 		ItemStack copy = stack.copy();
-		stack.getTag()
-			.getAllKeys()
+		copy.setTag(withUnsafeNBTDiscarded(tag));
+		return copy;
+	}
+
+	public static CompoundTag withUnsafeNBTDiscarded(CompoundTag tag) {
+		if (tag == null)
+			return null;
+		CompoundTag copy = tag.copy();
+		tag.getAllKeys()
 			.stream()
 			.filter(NBTProcessors::isUnsafeItemNBTKey)
-			.forEach(copy::removeTagKey);
+			.forEach(copy::remove);
 		return copy;
 	}
 
@@ -136,7 +144,7 @@ public final class NBTProcessors {
 			return signProcessor.apply(compound);
 		if (blockEntity.onlyOpCanSetNbt())
 			return null;
-		return compound;
+		return withUnsafeNBTDiscarded(compound);
 	}
 
 }
