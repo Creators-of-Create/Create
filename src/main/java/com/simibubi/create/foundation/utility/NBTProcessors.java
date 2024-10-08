@@ -72,6 +72,8 @@ public final class NBTProcessors {
 					if (textComponentHasClickEvent(stringTag.getAsString()))
 						return null;
 		}
+		if (data.contains("front_item") || data.contains("back_item"))
+			return null; // "Amendments" compat: sign data contains itemstacks
 		return data;
 	};
 
