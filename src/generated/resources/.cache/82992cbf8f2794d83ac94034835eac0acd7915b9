@@ -1,4 +1,4 @@
-// 1.20.1	2024-09-02T22:36:27.358065	Create's Standard Recipes
+// 1.20.1	2024-10-08T11:30:41.235223596	Create's Standard Recipes
 a8cc4af26f6c7c45a9eef12e92af1452fe042454 data/create/advancements/recipes/combat/crafting/appliances/netherite_backtank.json
 2c2639c7b307ee7c7a4e97e5efebf496788998ad data/create/advancements/recipes/combat/crafting/appliances/netherite_backtank_from_netherite.json
 81dcf0cb1aa99e39bc7d1a386e07cad4cee7d8b9 data/create/advancements/recipes/combat/crafting/appliances/netherite_diving_boots.json
@@ -202,9 +202,9 @@ dd7c250fa8e41cbaae65754f38b8861397718ae4 data/create/advancements/recipes/misc/c
 05a4420a08df24680b8a7c5c94d9a7ad1d13c0df data/create/advancements/recipes/misc/crafting/materials/zinc_nugget_from_decompacting.json
 ec99015f13bb194dfb197ea0839cceaed5135148 data/create/advancements/recipes/misc/crafting/palettes/scorchia.json
 541c3cb26e0cae9ffd3df94829e5f55a62240bd8 data/create/advancements/recipes/misc/crafting/schematics/empty_schematic.json
-3e73c3336f3ab13365d439c491b2e2ce6de6e401 data/create/advancements/recipes/misc/crafting/schematics/schematicannon.json
 6e0b7056d229fc949cc7386aa307d0870929f555 data/create/advancements/recipes/misc/crafting/schematics/schematic_and_quill.json
 f0d041509b3752b3ec6c4ce2b2c6eef9825a0685 data/create/advancements/recipes/misc/crafting/schematics/schematic_table.json
+3e73c3336f3ab13365d439c491b2e2ce6de6e401 data/create/advancements/recipes/misc/crafting/schematics/schematicannon.json
 a8003bd4c06bdf5f2aa3d1789eab2445df9513be data/create/advancements/recipes/misc/crafting/tree_fertilizer.json
 0ac95fd4b991a6c61c1d03cc6a6f2f345530f62a data/create/advancements/recipes/misc/smelting/bread.json
 53cb4643430e3fd69f81c375f3e334a3d6014128 data/create/advancements/recipes/misc/smelting/copper_ingot_from_crushed.json
@@ -448,10 +448,10 @@ cde25f253da4d9800fd8f879a7d208e40510df82 data/create/recipes/crafting/materials/
 11583ad28f32b7f22ffb71e180aface890d1d2d0 data/create/recipes/crafting/materials/zinc_nugget_from_decompacting.json
 d849fafedd10c68e6bc6dc1e5a85be82aae1b139 data/create/recipes/crafting/palettes/scorchia.json
 611c4a553408e0b6ddfcf6ed35bc972bea14ffda data/create/recipes/crafting/schematics/empty_schematic.json
-9a687ee9dab44c439ab669aa596117064fb13457 data/create/recipes/crafting/schematics/schematicannon.json
 4a20356c9ce01ebfbcacbdc5d3c31094a5599a17 data/create/recipes/crafting/schematics/schematic_and_quill.json
 4a297162a630b48407dbc8ff8ca713387dcd3206 data/create/recipes/crafting/schematics/schematic_table.json
-dd2b5bfb7ebd836e8b5639894736c226f2cac8c0 data/create/recipes/crafting/tree_fertilizer.json
+9a687ee9dab44c439ab669aa596117064fb13457 data/create/recipes/crafting/schematics/schematicannon.json
+2cf06129b47d1a2b733619514dc9e8cf1d8967f2 data/create/recipes/crafting/tree_fertilizer.json
 78526658ca5ccaa3729c967b5283069945d183b7 data/create/recipes/smelting/bread.json
 04bb0c80f3b5a6fe86fc4a8ed5293fc74c2d9aba data/create/recipes/smelting/copper_ingot_from_crushed.json
 d5b29fa27977691c3c50eb36c28bfe33b8462d09 data/create/recipes/smelting/glass_from_framed_glass.json
