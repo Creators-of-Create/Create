@@ -273,6 +273,12 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		registerAwardables(behaviours, AllAdvancements.FUNNEL);
 	}
 
+	@Override
+	public void invalidateCaps() {
+		invManipulation.removeListener();
+		super.invalidateCaps();
+	}
+
 	private boolean supportsAmountOnFilter() {
 		BlockState blockState = getBlockState();
 		boolean beltFunnelsupportsAmount = false;
