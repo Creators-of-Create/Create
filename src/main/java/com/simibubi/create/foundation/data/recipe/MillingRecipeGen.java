@@ -817,7 +817,8 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 			create(Mods.BTN.recipeId(color + "_petal"), b -> b.duration(50)
 					.require(AllTags.optionalTag(ForgeRegistries.ITEMS,
 							new ResourceLocation(Mods.BTN.getId(), "petals/" + color)))
-					.output(Mods.MC, color + "_dye"));
+					.output(Mods.MC, color + "_dye")
+					.whenModLoaded(Mods.BTN.getId()));
 		}
 		return null;
 	}
@@ -850,7 +851,7 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 	public MillingRecipeGen(PackOutput output) {
 		super(output);
 	}
-	
+
 	@Override
 	protected AllRecipeTypes getRecipeType() {
 		return AllRecipeTypes.MILLING;
