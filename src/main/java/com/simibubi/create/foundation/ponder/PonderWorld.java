@@ -14,7 +14,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.schematics.SchematicWorld;
-import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.mixin.accessor.ParticleEngineAccessor;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
@@ -252,38 +251,22 @@ public class PonderWorld extends SchematicWorld {
 		smartBlockEntity.markVirtual();
 	}
 
+	@Override
 	public void fixControllerBlockEntities() {
+		super.fixControllerBlockEntities();
 		for (BlockEntity blockEntity : blockEntities.values()) {
-			
-			if (blockEntity instanceof BeltBlockEntity) {
-				BeltBlockEntity beltBlockEntity = (BeltBlockEntity) blockEntity;
-				if (!beltBlockEntity.isController())
+			if (!(blockEntity instanceof BeltBlockEntity beltBlockEntity))
+				continue;
+			if (!beltBlockEntity.isController())
+				continue;
+			BlockPos controllerPos = blockEntity.getBlockPos();
+			for (BlockPos blockPos : BeltBlock.getBeltChain(this, controllerPos)) {
+				BlockEntity blockEntity2 = getBlockEntity(blockPos);
+				if (!(blockEntity2 instanceof BeltBlockEntity))
 					continue;
-				BlockPos controllerPos = blockEntity.getBlockPos();
-				for (BlockPos blockPos : BeltBlock.getBeltChain(this, controllerPos)) {
-					BlockEntity blockEntity2 = getBlockEntity(blockPos);
-					if (!(blockEntity2 instanceof BeltBlockEntity))
-						continue;
-					BeltBlockEntity belt2 = (BeltBlockEntity) blockEntity2;
-					belt2.setController(controllerPos);
-				}
+				BeltBlockEntity belt2 = (BeltBlockEntity) blockEntity2;
+				belt2.setController(controllerPos);
 			}
-			
-			if (blockEntity instanceof IMultiBlockEntityContainer) {
-				IMultiBlockEntityContainer multiBlockEntity = (IMultiBlockEntityContainer) blockEntity;
-				BlockPos lastKnown = multiBlockEntity.getLastKnownPos();
-				BlockPos current = blockEntity.getBlockPos();
-				if (lastKnown == null || current == null)
-					continue;
-				if (multiBlockEntity.isController())
-					continue;
-				if (!lastKnown.equals(current)) {
-					BlockPos newControllerPos = multiBlockEntity.getController()
-						.offset(current.subtract(lastKnown));
-					multiBlockEntity.setController(newControllerPos);
-				}
-			}
-
 		}
 	}
 

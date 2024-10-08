@@ -12,6 +12,7 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.blockEntity.IMergeableBE;
+import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,6 +20,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -316,8 +318,11 @@ public class BlockHelper {
 				data.putInt("x", target.getX());
 				data.putInt("y", target.getY());
 				data.putInt("z", target.getZ());
-				if (blockEntity instanceof KineticBlockEntity)
-					((KineticBlockEntity) blockEntity).warnOfMovement();
+				if (blockEntity instanceof KineticBlockEntity kbe)
+					kbe.warnOfMovement();
+				if (blockEntity instanceof IMultiBlockEntityContainer imbe)
+					if (!imbe.isController())
+						data.put("Controller", NbtUtils.writeBlockPos(imbe.getController()));
 				blockEntity.load(data);
 			}
 		}
