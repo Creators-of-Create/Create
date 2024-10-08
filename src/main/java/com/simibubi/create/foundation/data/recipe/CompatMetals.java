@@ -32,6 +32,12 @@ public enum CompatMetals {
 	public String getName() {
 		return name;
 	}
+	
+	public String getName(Mods mod) {
+		if (this == ALUMINUM && mod == IC2) // include in mods.builder if this happens again
+			return "aluminium";
+		return name;
+	}
 
 	/**
 	 * These mods must provide an ingot and nugget variant of the corresponding metal.
