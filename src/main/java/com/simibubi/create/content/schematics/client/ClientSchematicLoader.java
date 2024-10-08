@@ -1,5 +1,9 @@
 package com.simibubi.create.content.schematics.client;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -13,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
@@ -24,7 +29,12 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtAccounter;
+import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -71,6 +81,14 @@ public class ClientSchematicLoader {
 			if (!validateSizeLimitation(size))
 				return;
 
+			// Validate if the file is encoded in a GZIP compatible format
+			if (!isGZIPEncoded(path.toFile())) {
+				LocalPlayer player = Minecraft.getInstance().player;
+				if (player != null)
+					player.displayClientMessage(Lang.translateDirect("schematics.wrongFormat"), false);
+				return;
+			}
+
 			in = Files.newInputStream(path, StandardOpenOption.READ);
 			activeUploads.put(schematic, in);
 			AllPackets.getChannel().sendToServer(SchematicUploadPacket.begin(schematic, size));
@@ -92,6 +110,21 @@ public class ClientSchematicLoader {
 			return false;
 		}
 		return true;
+	}
+
+	public static boolean isGZIPEncoded(File file) {
+		try (FileInputStream fis = new FileInputStream(file)) {
+			byte[] signature = new byte[2];
+			if (fis.read(signature) != 2)
+				return false;
+
+			int byte1 = signature[0] & 0xFF;
+			int byte2 = signature[1] & 0xFF;
+
+			return byte1 == 0x1F && byte2 == 0x8B;
+		} catch(IOException exception) {
+			return false;
+		}
 	}
 
 	private void continueUpload(String schematic) {
