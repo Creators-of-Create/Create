@@ -680,7 +680,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
 	public Map<Pair<Integer, Integer>, Double> rasterise() {
 		Map<Pair<Integer, Integer>, Double> yLevels = new HashMap<>();
-		BlockPos tePosition = tePositions.getFirst();
+		BlockPos tePosition = bePositions.getFirst();
 		Vec3 end1 = starts.getFirst()
 			.subtract(Vec3.atLowerCornerOf(tePosition))
 			.add(0, 3 / 16f, 0);

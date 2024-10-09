@@ -636,7 +636,7 @@ public class TrainMapManager {
 					if (phase == PHASE_STRAIGHTS)
 						continue;
 
-					BlockPos origin = turn.tePositions.getFirst();
+					BlockPos origin = turn.bePositions.getFirst();
 					Map<Pair<Integer, Integer>, Double> rasterise = turn.rasterise();
 
 					for (boolean antialias : Iterate.falseAndTrue) {
