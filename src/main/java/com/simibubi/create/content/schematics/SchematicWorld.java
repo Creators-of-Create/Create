@@ -10,6 +10,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
@@ -250,6 +252,26 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 			return (ServerLevel) this.world;
 		}
 		throw new IllegalStateException("Cannot use IServerWorld#getWorld in a client environment");
+	}
+	
+	public void fixControllerBlockEntities() {
+		for (BlockEntity blockEntity : blockEntities.values()) {
+			if (!(blockEntity instanceof IMultiBlockEntityContainer multiBlockEntity))
+				continue;
+			BlockPos lastKnown = multiBlockEntity.getLastKnownPos();
+			BlockPos current = blockEntity.getBlockPos();
+			if (lastKnown == null || current == null)
+				continue;
+			if (multiBlockEntity.isController())
+				continue;
+			if (!lastKnown.equals(current)) {
+				BlockPos newControllerPos = multiBlockEntity.getController()
+					.offset(current.subtract(lastKnown));
+				if (multiBlockEntity instanceof SmartBlockEntity sbe)
+					sbe.markVirtual();
+				multiBlockEntity.setController(newControllerPos);
+			}
+		}
 	}
 
 }

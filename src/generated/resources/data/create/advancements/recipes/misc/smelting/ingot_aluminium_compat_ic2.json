@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "create:blasting/ingot_aluminum_compat_ic2"
+        "recipe": "create:smelting/ingot_aluminium_compat_ic2"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "create:blasting/ingot_aluminum_compat_ic2"
+      "create:smelting/ingot_aluminium_compat_ic2"
     ]
   },
   "sends_telemetry_event": false

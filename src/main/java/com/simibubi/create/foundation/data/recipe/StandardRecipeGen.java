@@ -59,6 +59,8 @@ import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 
+import org.jetbrains.annotations.NotNull;
+
 @SuppressWarnings("unused")
 public class StandardRecipeGen extends CreateRecipeProvider {
 
@@ -1178,7 +1180,8 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.inBlastFurnace(),
 
 		UA_TREE_FERTILIZER = create(AllItems.TREE_FERTILIZER::get).returns(2)
-			.whenModLoaded(Mods.UA.getId()).unlockedBy(() -> Items.BONE_MEAL)
+			.unlockedBy(() -> Items.BONE_MEAL)
+			.whenModLoaded(Mods.UA.getId())
 			.viaShapeless(b -> b.requires(Ingredient.of(ItemTags.SMALL_FLOWERS), 2)
 					.requires(AllItemTags.UA_CORAL.tag).requires(Items.BONE_MEAL))
 
@@ -1224,8 +1227,8 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	}
 
 	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, CompatMetals metal) {
-		String metalName = metal.getName();
 		for (Mods mod : metal.getMods()) {
+			String metalName = metal.getName(mod);
 			ResourceLocation ingot = mod.ingotOf(metalName);
 			String modId = mod.getId();
 			create(ingot).withSuffix("_compat_" + modId)
@@ -1375,7 +1378,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				ShapelessRecipeBuilder b = builder.apply(ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, result.get(), amount));
 				if (unlockedBy != null)
 					b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
-				b.save(consumer, createLocation("crafting"));
+
+				b.save(result -> {
+					consumer.accept(
+							!recipeConditions.isEmpty() ? new ConditionSupportingShapelessRecipeResult(result, recipeConditions)
+									: result);
+				}, createLocation("crafting"));
 			});
 		}
 
@@ -1478,10 +1486,10 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 					SimpleCookingRecipeBuilder b = builder.apply(SimpleCookingRecipeBuilder.generic(ingredient.get(),
 						RecipeCategory.MISC, isOtherMod ? Items.DIRT : result.get(), exp,
 						(int) (cookingTime * cookingTimeModifier), serializer));
-					
+
 					if (unlockedBy != null)
 						b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
-					
+
 					b.save(result -> {
 						consumer.accept(
 							isOtherMod ? new ModdedCookingRecipeResult(result, compatDatagenOutput, recipeConditions)
@@ -1502,19 +1510,39 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		super(p_i48262_1_);
 	}
 
-	private static class ModdedCookingRecipeResult implements FinishedRecipe {
+	private record ModdedCookingRecipeResult(FinishedRecipe wrapped, ResourceLocation outputOverride, List<ICondition> conditions) implements FinishedRecipe {
+			@Override
+			public ResourceLocation getId() {
+				return wrapped.getId();
+			}
 
-		private FinishedRecipe wrapped;
-		private ResourceLocation outputOverride;
-		private List<ICondition> conditions;
+			@Override
+			public RecipeSerializer<?> getType() {
+				return wrapped.getType();
+			}
 
-		public ModdedCookingRecipeResult(FinishedRecipe wrapped, ResourceLocation outputOverride,
-			List<ICondition> conditions) {
-			this.wrapped = wrapped;
-			this.outputOverride = outputOverride;
-			this.conditions = conditions;
+			@Override
+			public JsonObject serializeAdvancement() {
+				return wrapped.serializeAdvancement();
+			}
+
+			@Override
+			public ResourceLocation getAdvancementId() {
+				return wrapped.getAdvancementId();
+			}
+
+			@Override
+			public void serializeRecipeData(JsonObject object) {
+				wrapped.serializeRecipeData(object);
+				object.addProperty("result", outputOverride.toString());
+
+				JsonArray conds = new JsonArray();
+				conditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
+				object.add("conditions", conds);
+			}
 		}
 
+	private record ConditionSupportingShapelessRecipeResult(FinishedRecipe wrapped, List<ICondition> conditions) implements FinishedRecipe {
 		@Override
 		public ResourceLocation getId() {
 			return wrapped.getId();
@@ -1536,15 +1564,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		}
 
 		@Override
-		public void serializeRecipeData(JsonObject object) {
-			wrapped.serializeRecipeData(object);
-			object.addProperty("result", outputOverride.toString());
+		public void serializeRecipeData(@NotNull JsonObject pJson) {
+			wrapped.serializeRecipeData(pJson);
 
 			JsonArray conds = new JsonArray();
 			conditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
-			object.add("conditions", conds);
+			pJson.add("conditions", conds);
 		}
-
 	}
-
 }

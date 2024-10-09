@@ -59,8 +59,26 @@ public final class NBTProcessors {
 		});
 		addProcessor(AllBlockEntityTypes.CREATIVE_CRATE.get(), itemProcessor("Filter"));
 		addProcessor(AllBlockEntityTypes.PLACARD.get(), itemProcessor("Item"));
+		addProcessor(AllBlockEntityTypes.CLIPBOARD.get(), data -> {
+			if (!data.contains("Item", Tag.TAG_COMPOUND))
+				return data;
+			CompoundTag book = data.getCompound("Item");
+
+			if (!book.contains("tag", Tag.TAG_COMPOUND))
+				return data;
+			CompoundTag itemData = book.getCompound("tag");
+			
+			for (List<String> entries : NBTHelper.readCompoundList(itemData.getList("Pages", Tag.TAG_COMPOUND),
+				pageTag -> NBTHelper.readCompoundList(pageTag.getList("Entries", Tag.TAG_COMPOUND),
+					tag -> tag.getString("Text")))) {
+				for (String entry : entries)
+					if (textComponentHasClickEvent(entry))
+						return null;
+			}
+			return data;
+		});
 	}
-	
+
 	// Triggered by block tag, not BE type
 	private static final UnaryOperator<CompoundTag> signProcessor = data -> {
 		for (String key : List.of("front_text", "back_text")) {
@@ -72,6 +90,8 @@ public final class NBTProcessors {
 					if (textComponentHasClickEvent(stringTag.getAsString()))
 						return null;
 		}
+		if (data.contains("front_item") || data.contains("back_item"))
+			return null; // "Amendments" compat: sign data contains itemstacks
 		return data;
 	};
 
@@ -94,14 +114,22 @@ public final class NBTProcessors {
 	}
 
 	public static ItemStack withUnsafeNBTDiscarded(ItemStack stack) {
-		if (stack.getTag() == null)
+		CompoundTag tag = stack.getTag();
+		if (tag == null)
 			return stack;
 		ItemStack copy = stack.copy();
-		stack.getTag()
-			.getAllKeys()
+		copy.setTag(withUnsafeNBTDiscarded(tag));
+		return copy;
+	}
+
+	public static CompoundTag withUnsafeNBTDiscarded(CompoundTag tag) {
+		if (tag == null)
+			return null;
+		CompoundTag copy = tag.copy();
+		tag.getAllKeys()
 			.stream()
 			.filter(NBTProcessors::isUnsafeItemNBTKey)
-			.forEach(copy::removeTagKey);
+			.forEach(copy::remove);
 		return copy;
 	}
 
@@ -120,7 +148,13 @@ public final class NBTProcessors {
 	}
 
 	public static boolean textComponentHasClickEvent(String json) {
-		Component component = Component.Serializer.fromJson(json.isEmpty() ? "\"\"" : json);
+		return textComponentHasClickEvent(Component.Serializer.fromJson(json.isEmpty() ? "\"\"" : json));
+	}
+
+	public static boolean textComponentHasClickEvent(Component component) {
+		for (Component sibling : component.getSiblings())
+			if (textComponentHasClickEvent(sibling))
+				return true;
 		return component != null && component.getStyle() != null && component.getStyle()
 			.getClickEvent() != null;
 	}

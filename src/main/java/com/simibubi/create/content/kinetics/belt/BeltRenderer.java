@@ -239,7 +239,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 					be.getBlockPos().getZ())
 				.add(offsetVec);
 
-			if (this.shouldCullItem(itemPos)) {
+			if (this.shouldCullItem(itemPos, be.getLevel())) {
 				continue;
 			}
 

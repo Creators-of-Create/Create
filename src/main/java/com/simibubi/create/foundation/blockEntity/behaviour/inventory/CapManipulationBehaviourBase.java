@@ -80,6 +80,10 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		targetCapability = LazyOptional.empty();
 	}
 
+	public void removeListener() {
+		targetCapability.removeListener(new HashableNonNullConsumer<>(this::onHandlerInvalidated, this));
+	}
+
 	@Override
 	public void lazyTick() {
 		super.lazyTick();

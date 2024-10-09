@@ -73,9 +73,8 @@ public abstract class GeneratingKineticBlockEntity extends KineticBlockEntity {
 		float speed = getTheoreticalSpeed();
 		if (speed != getGeneratedSpeed() && speed != 0)
 			stressBase *= getGeneratedSpeed() / speed;
-		speed = Math.abs(speed);
 
-		float stressTotal = stressBase * speed;
+		float stressTotal = Math.abs(stressBase * speed);
 
 		Lang.number(stressTotal)
 			.translate("generic.unit.stress")
