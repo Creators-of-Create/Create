@@ -106,12 +106,12 @@ public class ClientSchematicLoader {
 
 	public static boolean isGZIPEncoded(File file) {
 		try (FileInputStream fis = new FileInputStream(file)) {
-			byte[] signature = new byte[2];
-			if (fis.read(signature) != 2)
+			byte[] bytes = new byte[2];
+			if (fis.read(bytes) != 2)
 				return false;
 
-			int byte1 = signature[0] & 0xFF;
-			int byte2 = signature[1] & 0xFF;
+			int byte1 = bytes[0] & 0xFF;
+			int byte2 = bytes[1] & 0xFF;
 
 			return byte1 == 0x1F && byte2 == 0x8B;
 		} catch(IOException exception) {
