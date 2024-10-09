@@ -1,5 +1,11 @@
 {
   "type": "create:splashing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ic2"
+    }
+  ],
   "ingredients": [
     {
       "item": "create:crushed_raw_aluminum"
@@ -7,14 +13,8 @@
   ],
   "results": [
     {
-      "item": "ic2:nugget_aluminium",
-      "count": 9
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "ic2",
-      "type": "forge:mod_loaded"
+      "count": 9,
+      "item": "ic2:nugget_aluminium"
     }
   ]
 }

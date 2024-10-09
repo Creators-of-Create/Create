@@ -1,4 +1,4 @@
-// 1.19.2	2024-09-02T22:02:10.2734972	Create's Processing Recipes
+// 1.19.2	2024-10-09T12:03:41.3884566	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -1102,7 +1102,7 @@ e3f12ec5d449caa54ebe1c453a89373492b8f48a data/create/recipes/splashing/endergeti
 64535aaa3a5d4b98791337b1a8ce50ad3d39a8ac data/create/recipes/splashing/gravel.json
 dd9508767f68cc8b5cc2f642690961e0c22c9985 data/create/recipes/splashing/gray_concrete_powder.json
 8908b452e6bc1290ebb8cfefc2c066460de93bff data/create/recipes/splashing/green_concrete_powder.json
-869a639fd7069495693fd2106165b57ce674201b data/create/recipes/splashing/ic2/crushed_raw_aluminum.json
+9764857ea6ee8d31ec37e6022f89dbe662e88591 data/create/recipes/splashing/ic2/crushed_raw_aluminum.json
 6fd01478f838507f9e0daf7eb0a19e8315e03cb8 data/create/recipes/splashing/ic2/crushed_raw_silver.json
 b5a0a0fc79bf310965aa16e78044b3f6a8a9998f data/create/recipes/splashing/ic2/crushed_raw_tin.json
 00b8d0c2577cc36da1c862234b61fb7d1cfe3e65 data/create/recipes/splashing/ic2/crushed_raw_uranium.json
