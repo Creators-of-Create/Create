@@ -218,6 +218,8 @@ public class BeltBlock extends HorizontalKineticBlock
 					.copy(), false);
 				if (remainder.isEmpty())
 					itemEntity.discard();
+				else if (remainder.getCount() != itemEntity.getItem().getCount())
+					itemEntity.setItem(remainder);
 			});
 			return;
 		}

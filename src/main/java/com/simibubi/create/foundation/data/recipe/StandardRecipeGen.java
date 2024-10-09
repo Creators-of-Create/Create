@@ -1223,8 +1223,8 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	}
 
 	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, CompatMetals metal) {
-		String metalName = metal.getName();
 		for (Mods mod : metal.getMods()) {
+			String metalName = metal.getName(mod);
 			ResourceLocation ingot = mod.ingotOf(metalName);
 			String modId = mod.getId();
 			create(ingot).withSuffix("_compat_" + modId)

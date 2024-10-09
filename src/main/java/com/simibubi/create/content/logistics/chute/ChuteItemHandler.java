@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.chute;
 
+import com.simibubi.create.foundation.item.ItemHelper;
+
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
@@ -25,9 +27,10 @@ public class ChuteItemHandler implements IItemHandler {
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		if (!blockEntity.canAcceptItem(stack))
 			return stack;
+		ItemStack remainder = ItemHelper.limitCountToMaxStackSize(stack, simulate);
 		if (!simulate) 
 			blockEntity.setItem(stack);
-		return ItemStack.EMPTY;
+		return remainder;
 	}
 
 	@Override
