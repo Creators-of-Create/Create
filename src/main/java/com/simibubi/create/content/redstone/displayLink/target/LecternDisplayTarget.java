@@ -80,5 +80,10 @@ public class LecternDisplayTarget extends DisplayTarget {
 
 		return written;
 	}
+	
+	@Override
+	public boolean requiresComponentSanitization() {
+		return true;
+	}
 
 }

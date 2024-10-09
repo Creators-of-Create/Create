@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
@@ -57,6 +58,24 @@ public final class NBTProcessors {
 		});
 		addProcessor(AllBlockEntityTypes.CREATIVE_CRATE.get(), itemProcessor("Filter"));
 		addProcessor(AllBlockEntityTypes.PLACARD.get(), itemProcessor("Item"));
+		addProcessor(AllBlockEntityTypes.CLIPBOARD.get(), data -> {
+			if (!data.contains("Item", Tag.TAG_COMPOUND))
+				return data;
+			CompoundTag book = data.getCompound("Item");
+
+			if (!book.contains("tag", Tag.TAG_COMPOUND))
+				return data;
+			CompoundTag itemData = book.getCompound("tag");
+			
+			for (List<String> entries : NBTHelper.readCompoundList(itemData.getList("Pages", Tag.TAG_COMPOUND),
+				pageTag -> NBTHelper.readCompoundList(pageTag.getList("Entries", Tag.TAG_COMPOUND),
+					tag -> tag.getString("Text")))) {
+				for (String entry : entries)
+					if (textComponentHasClickEvent(entry))
+						return null;
+			}
+			return data;
+		});
 	}
 
 	// Triggered by block tag, not BE type
@@ -120,7 +139,13 @@ public final class NBTProcessors {
 	}
 
 	public static boolean textComponentHasClickEvent(String json) {
-		Component component = Component.Serializer.fromJson(json.isEmpty() ? "\"\"" : json);
+		return textComponentHasClickEvent(Component.Serializer.fromJson(json.isEmpty() ? "\"\"" : json));
+	}
+
+	public static boolean textComponentHasClickEvent(Component component) {
+		for (Component sibling : component.getSiblings())
+			if (textComponentHasClickEvent(sibling))
+				return true;
 		return component != null && component.getStyle() != null && component.getStyle()
 			.getClickEvent() != null;
 	}
@@ -144,7 +169,7 @@ public final class NBTProcessors {
 			return signProcessor.apply(compound);
 		if (blockEntity.onlyOpCanSetNbt())
 			return null;
-		return withUnsafeNBTDiscarded(compound);
+		return compound;
 	}
 
 }

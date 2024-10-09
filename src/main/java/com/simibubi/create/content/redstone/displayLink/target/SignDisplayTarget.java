@@ -35,5 +35,10 @@ public class SignDisplayTarget extends DisplayTarget {
 	public DisplayTargetStats provideStats(DisplayLinkContext context) {
 		return new DisplayTargetStats(4, 15, this);
 	}
+	
+	@Override
+	public boolean requiresComponentSanitization() {
+		return true;
+	}
 
 }
