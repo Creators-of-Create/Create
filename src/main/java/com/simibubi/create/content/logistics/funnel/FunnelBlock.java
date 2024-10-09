@@ -93,7 +93,7 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 				withBlockEntityDo(worldIn, pos, be -> {
 					ItemStack toInsert = heldItem.copy();
 					ItemStack remainder = tryInsert(worldIn, pos, toInsert, false);
-					if (!ItemStack.matches(remainder, toInsert))
+					if (!ItemStack.matches(remainder, toInsert) || remainder.getCount() != heldItem.getCount())
 						player.setItemInHand(handIn, remainder);
 				});
 			return InteractionResult.SUCCESS;

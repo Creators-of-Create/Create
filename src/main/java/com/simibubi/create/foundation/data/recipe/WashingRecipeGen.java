@@ -133,8 +133,8 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 	}
 
 	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CompatMetals metal) {
-		String metalName = metal.getName();
 		for (Mods mod : metal.getMods()) {
+			String metalName = metal.getName(mod);
 			ResourceLocation nugget = mod.nuggetOf(metalName);
 			create(mod.getId() + "/" + crushed.getId()
 				.getPath(),

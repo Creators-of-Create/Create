@@ -411,7 +411,8 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			if (filter != null && !filter.test(itemStack))
 				continue;
 
-			visualizedOutputItems.add(IntAttached.withZero(itemStack));
+			if (visualizedOutputItems.size() < 3)
+				visualizedOutputItems.add(IntAttached.withZero(itemStack));
 			update = true;
 
 			remainder = ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), false);
@@ -445,7 +446,8 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 				update = true;
 				iterator.remove();
-				visualizedOutputFluids.add(IntAttached.withZero(fluidStack));
+				if (visualizedOutputFluids.size() < 3)
+					visualizedOutputFluids.add(IntAttached.withZero(fluidStack));
 			}
 		}
 
