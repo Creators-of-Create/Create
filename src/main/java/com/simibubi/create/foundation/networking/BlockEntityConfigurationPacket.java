@@ -5,6 +5,8 @@ import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerPlayerGameMode;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
@@ -33,7 +35,7 @@ public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntit
 	public boolean handle(Context context) {
 		context.enqueueWork(() -> {
 			ServerPlayer player = context.getSender();
-			if (player == null)
+			if (player == null || !player.getAbilities().mayBuild)
 				return;
 			Level world = player.level();
 			if (world == null || !world.isLoaded(pos))
@@ -63,7 +65,7 @@ public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntit
 	protected void applySettings(ServerPlayer player, BE be) {
 		applySettings(be);
 	}
-	
+
 	protected boolean causeUpdate() {
 		return true;
 	}

@@ -92,7 +92,7 @@ public class ValueSettingsInputHandler {
 	}
 
 	public static boolean canInteract(Player player) {
-		return player != null && !player.isSpectator() && !player.isShiftKeyDown();
+		return player != null && player.getAbilities().mayBuild && !player.isShiftKeyDown();
 	}
 
 }
