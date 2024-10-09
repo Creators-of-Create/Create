@@ -466,6 +466,18 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		itemEntity.setDeltaMovement(Vec3.ZERO);
 		getLevel().addFreshEntity(itemEntity);
 	}
+	
+	public void updateMapColor(int color) {
+		GlobalStation station = getStation();
+		if (station == null)
+			return;
+
+		Train train = station.getPresentTrain();
+		if (train == null)
+			return;
+
+		train.mapColorIndex = color;
+	}
 
 	private boolean updateStationState(Consumer<GlobalStation> updateState) {
 		GlobalStation station = getStation();

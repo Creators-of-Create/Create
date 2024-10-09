@@ -1,6 +1,8 @@
 package com.simibubi.create.content.trains.track;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
@@ -8,6 +10,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
@@ -108,7 +111,8 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				.map(v -> v.add(Vec3.atLowerCornerOf(localTo))),
 			Couple.deserializeEach(compound.getList("Axes", Tag.TAG_COMPOUND), VecHelper::readNBTCompound),
 			Couple.deserializeEach(compound.getList("Normals", Tag.TAG_COMPOUND), VecHelper::readNBTCompound),
-			compound.getBoolean("Primary"), compound.getBoolean("Girder"), TrackMaterial.deserialize(compound.getString("Material")));
+			compound.getBoolean("Primary"), compound.getBoolean("Girder"),
+			TrackMaterial.deserialize(compound.getString("Material")));
 
 		if (compound.contains("Smoothing"))
 			smoothing =
@@ -398,7 +402,8 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	public void spawnDestroyParticles(Level level) {
-		BlockParticleOption data = new BlockParticleOption(ParticleTypes.BLOCK, getMaterial().getBlock().defaultBlockState());
+		BlockParticleOption data = new BlockParticleOption(ParticleTypes.BLOCK, getMaterial().getBlock()
+			.defaultBlockState());
 		BlockParticleOption girderData =
 			new BlockParticleOption(ParticleTypes.BLOCK, AllBlocks.METAL_GIRDER.getDefaultState());
 		if (!(level instanceof ServerLevel slevel))
@@ -671,6 +676,106 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		}
 
 		return bakedGirders;
+	}
+
+	public Map<Pair<Integer, Integer>, Double> rasterise() {
+		Map<Pair<Integer, Integer>, Double> yLevels = new HashMap<>();
+		BlockPos tePosition = tePositions.getFirst();
+		Vec3 end1 = starts.getFirst()
+			.subtract(Vec3.atLowerCornerOf(tePosition))
+			.add(0, 3 / 16f, 0);
+		Vec3 end2 = starts.getSecond()
+			.subtract(Vec3.atLowerCornerOf(tePosition))
+			.add(0, 3 / 16f, 0);
+		Vec3 axis1 = axes.getFirst();
+		Vec3 axis2 = axes.getSecond();
+
+		double handleLength = getHandleLength();
+		Vec3 finish1 = axis1.scale(handleLength)
+			.add(end1);
+		Vec3 finish2 = axis2.scale(handleLength)
+			.add(end2);
+
+		Vec3 faceNormal1 = normals.getFirst();
+		Vec3 faceNormal2 = normals.getSecond();
+
+		int segCount = getSegmentCount();
+		float[] lut = getStepLUT();
+		Vec3[] samples = new Vec3[segCount];
+
+		for (int i = 0; i < segCount; i++) {
+			float t = Mth.clamp((i + 0.5f) * lut[i] / segCount, 0, 1);
+			Vec3 result = VecHelper.bezier(end1, end2, finish1, finish2, t);
+			Vec3 derivative = VecHelper.bezierDerivative(end1, end2, finish1, finish2, t)
+				.normalize();
+			Vec3 faceNormal =
+				faceNormal1.equals(faceNormal2) ? faceNormal1 : VecHelper.slerp(t, faceNormal1, faceNormal2);
+			Vec3 normal = faceNormal.cross(derivative)
+				.normalize();
+			Vec3 below = result.add(faceNormal.scale(-.25f));
+			Vec3 rail1 = below.add(normal.scale(.05f));
+			Vec3 rail2 = below.subtract(normal.scale(.05f));
+			Vec3 railMiddle = rail1.add(rail2)
+				.scale(.5);
+			samples[i] = railMiddle;
+		}
+
+		Vec3 center = end1.add(end2)
+			.scale(0.5);
+
+		Pair<Integer, Integer> prev = null;
+		Pair<Integer, Integer> prev2 = null;
+		Pair<Integer, Integer> prev3 = null;
+
+		for (int i = 0; i < segCount; i++) {
+			Vec3 railMiddle = samples[i];
+			BlockPos pos = BlockPos.containing(railMiddle);
+			Pair<Integer, Integer> key = Pair.of(pos.getX(), pos.getZ());
+			boolean alreadyPresent = yLevels.containsKey(key);
+			if (alreadyPresent && yLevels.get(key) <= railMiddle.y)
+				continue;
+			yLevels.put(key, railMiddle.y);
+			if (alreadyPresent)
+				continue;
+
+			if (prev3 != null) { // Remove obsolete pixels
+				boolean doubledViaPrev = isLineDoubled(prev2, prev, key);
+				boolean doubledViaPrev2 = isLineDoubled(prev3, prev2, prev);
+				boolean prevCloser = diff(prev, center) > diff(prev2, center);
+
+				if (doubledViaPrev2 && (!doubledViaPrev || !prevCloser)) {
+					yLevels.remove(prev2);
+					prev2 = prev;
+					prev = key;
+					continue;
+
+				} else if (doubledViaPrev && doubledViaPrev2 && prevCloser) {
+					yLevels.remove(prev);
+					prev = key;
+					continue;
+				}
+			}
+
+			prev3 = prev2;
+			prev2 = prev;
+			prev = key;
+		}
+
+		return yLevels;
+	}
+
+	private double diff(Pair<Integer, Integer> pFrom, Vec3 to) {
+		return to.distanceToSqr(pFrom.getFirst() + 0.5, to.y, pFrom.getSecond() + 0.5);
+	}
+
+	private boolean isLineDoubled(Pair<Integer, Integer> pFrom, Pair<Integer, Integer> pVia,
+		Pair<Integer, Integer> pTo) {
+		int diff1x = pVia.getFirst() - pFrom.getFirst();
+		int diff1z = pVia.getSecond() - pFrom.getSecond();
+		int diff2x = pTo.getFirst() - pVia.getFirst();
+		int diff2z = pTo.getSecond() - pVia.getSecond();
+		return Math.abs(diff1x) + Math.abs(diff1z) == 1 && Math.abs(diff2x) + Math.abs(diff2z) == 1 && diff1x != diff2x
+			&& diff1z != diff2z;
 	}
 
 }

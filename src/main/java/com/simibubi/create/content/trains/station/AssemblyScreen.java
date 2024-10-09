@@ -49,7 +49,7 @@ public class AssemblyScreen extends AbstractStationScreen {
 		iconTypes = TrainIconType.REGISTRY.keySet()
 			.stream()
 			.toList();
-		iconTypeScroll = new ScrollInput(x + 4, y + 17, 184, 14).titled(Lang.translateDirect("station.icon_type"));
+		iconTypeScroll = new ScrollInput(x + 4, y + 17, 162, 14).titled(Lang.translateDirect("station.icon_type"));
 		iconTypeScroll.withRange(0, iconTypes.size());
 		iconTypeScroll.withStepFunction(ctx -> -iconTypeScroll.standardStep()
 			.apply(ctx));
@@ -164,7 +164,7 @@ public class AssemblyScreen extends AbstractStationScreen {
 			ResourceLocation iconId = iconTypes.get(iconTypeScroll.getState());
 			train.icon = TrainIconType.byId(iconId);
 			AllPackets.getChannel()
-				.sendToServer(new TrainEditPacket(train.id, "", iconId));
+				.sendToServer(new TrainEditPacket(train.id, "", iconId, train.mapColorIndex));
 		}
 	}
 

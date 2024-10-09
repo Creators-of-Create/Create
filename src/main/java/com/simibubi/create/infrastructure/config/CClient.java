@@ -88,6 +88,10 @@ public class CClient extends ConfigBase {
 	public final ConfigFloat mountedZoomMultiplier = f(3, 0, "mountedZoomMultiplier", Comments.mountedZoomMultiplier);
 	public final ConfigBool showTrackGraphOnF3 = b(false, "showTrackGraphOnF3", Comments.showTrackGraphOnF3);
 	public final ConfigBool showExtendedTrackGraphOnF3 = b(false, "showExtendedTrackGraphOnF3", Comments.showExtendedTrackGraphOnF3);
+	public final ConfigBool showTrainMapOverlay = b(true, "showTrainMapOverlay", Comments.showTrainMapOverlay);
+	public final ConfigBool trainMapOverlay = b(true, "showTrainMapOverlay", Comments.showTrainMapOverlay);
+	public final ConfigEnum<TrainMapTheme> trainMapColorTheme =
+		e(TrainMapTheme.RED, "trainMapColorTheme", Comments.trainMapColorTheme);
 
 	@Override
 	public String getName() {
@@ -96,6 +100,10 @@ public class CClient extends ConfigBase {
 
 	public enum PlacementIndicatorSetting {
 		TEXTURE, TRIANGLE, NONE
+	}
+	
+	public enum TrainMapTheme {
+		RED, GREY, WHITE
 	}
 
 	private static class Comments {
@@ -157,6 +165,8 @@ public class CClient extends ConfigBase {
 		static String ambientVolumeCap = "Maximum volume modifier of Ambient noise";
 
 		static String trains = "Railway related settings";
+		static String showTrainMapOverlay = "Display Track Networks and Trains on supported map mods";
+		static String trainMapColorTheme = "Track Network Color on maps";
 		static String mountedZoomMultiplier = "How far away the Camera should zoom when seated on a train";
 		static String showTrackGraphOnF3 = "Display nodes and edges of a Railway Network while f3 debug mode is active";
 		static String showExtendedTrackGraphOnF3 = "Additionally display materials of a Rail Network while f3 debug mode is active";
