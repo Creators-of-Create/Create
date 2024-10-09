@@ -1,10 +1,13 @@
 package com.simibubi.create.content.schematics;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,21 +27,27 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CSchematics;
 
+import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.jetbrains.annotations.Nullable;
 
 public class ServerSchematicLoader {
 
-	private Map<String, SchematicUploadEntry> activeUploads;
+	private Map<String, SchematicUploadEntry> activeUploads = new HashMap<>();
 
-	public class SchematicUploadEntry {
+	private Map<String, SchematicFile> sumToSchematic = new Object2ReferenceOpenHashMap<>();
+
+	public static class SchematicUploadEntry {
 		public Level world;
 		public BlockPos tablePos;
 		public OutputStream stream;
@@ -56,19 +65,42 @@ public class ServerSchematicLoader {
 		}
 	}
 
-	public ServerSchematicLoader() {
-		activeUploads = new HashMap<>();
-	}
-
 	public String getSchematicPath() {
 		return "schematics/uploaded";
 	}
 
 	private final ObjectArrayList<String> deadEntries = ObjectArrayList.of();
 
+	@Nullable
+	public SchematicFile getSchematicFileFromSum(String sum) {
+		return sumToSchematic.get(sum);
+	}
+
+	public void computeHashes() {
+		Util.ioPool().submit(() -> {
+			try (Stream<Path> filePaths = Files.find(Path.of(getSchematicPath()), 2,
+					(filePath, attributes) -> filePath.toString().endsWith(".nbt"))) {
+				for (Path path : filePaths.toList()) {
+					try (InputStream stream = new FileInputStream(path.toFile())) {
+						String[] pathSplit = path.toString()
+								.replace("schematics/uploaded/", "")
+								.replace(".nbt", "")
+								.split("/");
+						String playerName = pathSplit[0];
+						String schematicName = pathSplit[1];
+						String schematicMd5Hex = DigestUtils.md5Hex(stream);
+
+						sumToSchematic.computeIfAbsent(schematicMd5Hex, k -> new SchematicFile(playerName, schematicName));
+					}
+				}
+			} catch (IOException ignored) {}
+		});
+	}
+
 	public void tick() {
 		// Detect Timed out Uploads
 		int timeout = getConfig().schematicIdleTimeout.get();
+
 		for (String upload : activeUploads.keySet()) {
 			SchematicUploadEntry entry = activeUploads.get(upload);
 
@@ -82,6 +114,7 @@ public class ServerSchematicLoader {
 		for (String toRemove : deadEntries) {
 			this.cancelUpload(toRemove);
 		}
+
 		deadEntries.clear();
 	}
 
@@ -240,17 +273,22 @@ public class ServerSchematicLoader {
 			table.finishUpload();
 	}
 
+	// Use when the schematic already exists on the server
+	public void useLocalFile(Level level, BlockPos pos, SchematicFile schematicFile) {
+		SchematicTableBlockEntity table = getTable(level, pos);
+		if (table != null) {
+			table.finishUpload();
+			table.inventory.setStackInSlot(1, SchematicItem.create(level.holderLookup(Registries.BLOCK), schematicFile));
+		}
+	}
+
 	public SchematicTableBlockEntity getTable(Level world, BlockPos pos) {
-		BlockEntity be = world.getBlockEntity(pos);
-		if (!(be instanceof SchematicTableBlockEntity))
-			return null;
-		SchematicTableBlockEntity table = (SchematicTableBlockEntity) be;
-		return table;
+		return world.getBlockEntity(pos) instanceof SchematicTableBlockEntity table ? table : null;
 	}
 
 	public void handleFinishedUpload(ServerPlayer player, String schematic) {
-		String playerSchematicId = player.getGameProfile()
-			.getName() + "/" + schematic;
+		String playerName = player.getGameProfile().getName();
+		String playerSchematicId = playerName + "/" + schematic;
 
 		if (activeUploads.containsKey(playerSchematicId)) {
 			try {
@@ -258,6 +296,11 @@ public class ServerSchematicLoader {
 				SchematicUploadEntry removed = activeUploads.remove(playerSchematicId);
 				Level world = removed.world;
 				BlockPos pos = removed.tablePos;
+
+				// It'll be fine:tm:
+				try (InputStream stream = Files.newInputStream(Path.of(playerSchematicId), StandardOpenOption.READ)) {
+					sumToSchematic.computeIfAbsent(DigestUtils.md5Hex(stream), k -> new SchematicFile(playerName, schematic));
+				} catch (IOException ignored) {}
 
 				Create.LOGGER.info("New Schematic Uploaded: " + playerSchematicId);
 				if (pos == null)
@@ -271,9 +314,7 @@ public class ServerSchematicLoader {
 				if (table == null)
 					return;
 				table.finishUpload();
-				table.inventory.setStackInSlot(1, SchematicItem.create(world.holderLookup(Registries.BLOCK), schematic, player.getGameProfile()
-					.getName()));
-
+				table.inventory.setStackInSlot(1, SchematicItem.create(world.holderLookup(Registries.BLOCK), schematic, playerName));
 			} catch (IOException e) {
 				Create.LOGGER.error("Exception Thrown when finishing Upload: " + playerSchematicId);
 				e.printStackTrace();
