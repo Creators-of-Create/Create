@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import net.minecraft.tags.ItemTags;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.simibubi.create.foundation.data.TagGen;
@@ -133,6 +135,12 @@ public class CopperBlockSet {
 
 		if (variant == BlockVariant.INSTANCE && state == WeatherState.UNAFFECTED)
 			builder.recipe((c, p) -> mainBlockRecipe.accept(c, p));
+
+		if (variant == StairVariant.INSTANCE)
+			builder.tag(BlockTags.STAIRS);
+
+		if (variant == SlabVariant.INSTANCE)
+			builder.tag(BlockTags.SLABS);
 
 		if (waxed) {
 			builder.recipe((ctx, prov) -> {
