@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.compat.Mods;
