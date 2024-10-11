@@ -25,6 +25,7 @@
 			"name": "Gear2",
 			"from": [2.5, -10, 6.5],
 			"to": [5.5, 8, 9.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [4, -1, 8]},
 			"faces": {
 				"north": {"uv": [7, 8, 16, 9.5], "rotation": 90, "texture": "#3"},
@@ -39,6 +40,7 @@
 			"name": "Gear3",
 			"from": [2.5, -10, 6.5],
 			"to": [5.5, 8, 9.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [4, -1, 8]},
 			"faces": {
 				"north": {"uv": [7, 8, 16, 9.5], "rotation": 90, "texture": "#3"},
@@ -109,6 +111,7 @@
 			"name": "Gear3",
 			"from": [10.5, -10, 6.5],
 			"to": [13.5, 8, 9.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [12, -1, 8]},
 			"faces": {
 				"north": {"uv": [7, 8, 16, 9.5], "rotation": 90, "texture": "#3"},
@@ -123,6 +126,7 @@
 			"name": "Gear4",
 			"from": [10.5, -10, 6.5],
 			"to": [13.5, 8, 9.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [12, -1, 8]},
 			"faces": {
 				"north": {"uv": [7, 8, 16, 9.5], "rotation": 90, "texture": "#3"},

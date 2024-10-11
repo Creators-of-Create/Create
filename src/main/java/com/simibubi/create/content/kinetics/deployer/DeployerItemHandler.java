@@ -1,6 +1,7 @@
 package com.simibubi.create.content.kinetics.deployer;
 
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -52,9 +53,10 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 
 		ItemStack held = getHeld();
 		if (held.isEmpty()) {
+			ItemStack remainder = ItemHelper.limitCountToMaxStackSize(stack, simulate);
 			if (!simulate)
 				set(stack);
-			return ItemStack.EMPTY;
+			return remainder;
 		}
 
 		if (!ItemHandlerHelper.canItemStacksStack(held, stack))

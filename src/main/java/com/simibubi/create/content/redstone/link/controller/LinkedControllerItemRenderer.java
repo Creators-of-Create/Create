@@ -2,8 +2,6 @@ package com.simibubi.create.content.redstone.link.controller;
 
 import java.util.Vector;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
@@ -15,6 +13,8 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.model.BakedModel;
@@ -25,8 +25,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class LinkedControllerItemRenderer extends CustomRenderedItemModelRenderer {
 
-	protected static final PartialModel POWERED = new PartialModel(Create.asResource("item/linked_controller/powered"));
-	protected static final PartialModel BUTTON = new PartialModel(Create.asResource("item/linked_controller/button"));
+	protected static final PartialModel POWERED = PartialModel.of(Create.asResource("item/linked_controller/powered"));
+	protected static final PartialModel BUTTON = PartialModel.of(Create.asResource("item/linked_controller/button"));
 
 	static LerpedFloat equipProgress;
 	static Vector<LerpedFloat> buttons;
@@ -88,7 +88,7 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 	  	PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms,
   		int light, RenderType renderType, boolean active, boolean renderDepression) {
 		float pt = AnimationTickHolder.getPartialTicks();
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 
 		ms.pushPose();
 
@@ -107,8 +107,8 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 				float equip = equipProgress.getValue(pt);
 				int handModifier = transformType == ItemDisplayContext.FIRST_PERSON_LEFT_HAND ? -1 : 1;
 				msr.translate(0, equip / 4, equip / 4 * handModifier);
-				msr.rotateY(equip * -30 * handModifier);
-				msr.rotateZ(equip * -30);
+				msr.rotateYDegrees(equip * -30 * handModifier);
+				msr.rotateZDegrees(equip * -30);
 				active = true;
 			}
 

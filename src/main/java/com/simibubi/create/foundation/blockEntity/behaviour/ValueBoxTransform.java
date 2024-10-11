@@ -4,11 +4,11 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,7 +42,7 @@ public abstract class ValueBoxTransform {
 	public boolean shouldRender(BlockState state) {
 		return !state.isAir() && getLocalOffset(state) != null;
 	}
-	
+
 	public int getOverrideColor() {
 		return -1;
 	}
@@ -112,9 +112,9 @@ public abstract class ValueBoxTransform {
 		public void rotate(BlockState state, PoseStack ms) {
 			float yRot = AngleHelper.horizontalAngle(getSide()) + 180;
 			float xRot = getSide() == Direction.UP ? 90 : getSide() == Direction.DOWN ? 270 : 0;
-			TransformStack.cast(ms)
-				.rotateY(yRot)
-				.rotateX(xRot);
+			TransformStack.of(ms)
+				.rotateYDegrees(yRot)
+				.rotateXDegrees(xRot);
 		}
 
 		@Override

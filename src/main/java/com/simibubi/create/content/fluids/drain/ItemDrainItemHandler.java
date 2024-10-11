@@ -2,6 +2,7 @@ package com.simibubi.create.content.fluids.drain;
 
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
+import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +39,8 @@ public class ItemDrainItemHandler implements IItemHandler {
 		if (stack.getCount() > 1 && GenericItemEmptying.canItemBeEmptied(blockEntity.getLevel(), stack)) {
 			returned = ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1);
 			stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
-		}
+		} else
+			returned = ItemHelper.limitCountToMaxStackSize(stack, simulate);
 		
 		if (!simulate) {
 			TransportedItemStack heldItem = new TransportedItemStack(stack);

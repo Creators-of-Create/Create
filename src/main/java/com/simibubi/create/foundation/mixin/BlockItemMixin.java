@@ -9,7 +9,6 @@ import net.minecraft.world.item.BlockItem;
 
 import net.minecraft.world.item.context.BlockPlaceContext;
 
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +21,7 @@ public class BlockItemMixin {
 	@Inject(method = "place", at = @At("HEAD"), cancellable = true)
 	private void create$fixDeployerPlacement(BlockPlaceContext pContext, CallbackInfoReturnable<InteractionResult> cir) {
 		BlockState state = pContext.getLevel().getBlockState(((UseOnContextAccessor) pContext).create$getHitResult().getBlockPos());
-		if (state != Blocks.AIR.defaultBlockState() && pContext.getPlayer() instanceof DeployerFakePlayer) {
+		if (!state.canBeReplaced() && pContext.getPlayer() instanceof DeployerFakePlayer) {
 			cir.setReturnValue(InteractionResult.PASS);
 		}
 	}

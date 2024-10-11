@@ -9,8 +9,6 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
-import com.jozufozu.flywheel.Flywheel;
-import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.platform.GlUtil;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.mixin.accessor.SystemReportAccessor;
@@ -18,6 +16,9 @@ import com.simibubi.create.infrastructure.debugInfo.element.DebugInfoSection;
 import com.simibubi.create.infrastructure.debugInfo.element.InfoElement;
 import com.simibubi.create.infrastructure.debugInfo.element.InfoEntry;
 
+import dev.engine_room.flywheel.api.Flywheel;
+import dev.engine_room.flywheel.api.backend.Backend;
+import dev.engine_room.flywheel.api.backend.BackendManager;
 import net.minecraft.SharedConstants;
 import net.minecraft.SystemReport;
 import net.minecraft.Util;
@@ -74,8 +75,13 @@ public class DebugInformation {
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			DebugInfoSection.builder("Graphics")
-					.put("Flywheel Version", Flywheel.getVersion().toString())
-					.put("Flywheel Backend", () -> Backend.getBackendType().toString())
+					.put("Flywheel Version", ModList.get()
+							.getModContainerById(Flywheel.ID)
+							.map(c -> c.getModInfo()
+									.getVersion()
+									.toString())
+							.orElse("None"))
+					.put("Flywheel Backend", () -> Backend.REGISTRY.getIdOrThrow(BackendManager.currentBackend()).toString())
 					.put("OpenGL Renderer", GlUtil::getRenderer)
 					.put("OpenGL Version", GlUtil::getOpenGLVersion)
 					.put("Graphics Mode", () -> Minecraft.getInstance().options.graphicsMode().get().getKey())

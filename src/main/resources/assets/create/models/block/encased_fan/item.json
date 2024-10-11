@@ -94,6 +94,7 @@
 			"name": "Fan",
 			"from": [1, 1, 4],
 			"to": [15, 15, 12],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 22.5, "axis": "z", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [1, 1, 15, 15], "texture": "#fan_blades"},

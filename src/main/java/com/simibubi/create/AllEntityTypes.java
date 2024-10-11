@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.gantry.GantryContraptionEntity;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.glue.SuperGlueRenderer;
 import com.simibubi.create.content.contraptions.render.ContraptionEntityRenderer;
+import com.simibubi.create.content.contraptions.render.ContraptionVisual;
 import com.simibubi.create.content.contraptions.render.OrientedContraptionEntityRenderer;
 import com.simibubi.create.content.equipment.blueprint.BlueprintEntity;
 import com.simibubi.create.content.equipment.blueprint.BlueprintRenderer;
@@ -15,7 +16,7 @@ import com.simibubi.create.content.equipment.potatoCannon.PotatoProjectileEntity
 import com.simibubi.create.content.equipment.potatoCannon.PotatoProjectileRenderer;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntityRenderer;
-import com.simibubi.create.content.trains.entity.CarriageContraptionInstance;
+import com.simibubi.create.content.trains.entity.CarriageContraptionVisual;
 import com.simibubi.create.foundation.data.CreateEntityBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.EntityEntry;
@@ -33,15 +34,22 @@ import net.minecraft.world.entity.MobCategory;
 public class AllEntityTypes {
 
 	public static final EntityEntry<OrientedContraptionEntity> ORIENTED_CONTRAPTION = contraption("contraption",
-		OrientedContraptionEntity::new, () -> OrientedContraptionEntityRenderer::new, 5, 3, true).register();
+		OrientedContraptionEntity::new, () -> OrientedContraptionEntityRenderer::new, 5, 3, true)
+			.visual(() -> ContraptionVisual::new)
+			.register();
 	public static final EntityEntry<ControlledContraptionEntity> CONTROLLED_CONTRAPTION =
 		contraption("stationary_contraption", ControlledContraptionEntity::new, () -> ContraptionEntityRenderer::new,
-			20, 40, false).register();
+			20, 40, false)
+				.visual(() -> ContraptionVisual::new)
+				.register();
 	public static final EntityEntry<GantryContraptionEntity> GANTRY_CONTRAPTION = contraption("gantry_contraption",
-		GantryContraptionEntity::new, () -> ContraptionEntityRenderer::new, 10, 40, false).register();
+		GantryContraptionEntity::new, () -> ContraptionEntityRenderer::new, 10, 40, false)
+			.visual(() -> ContraptionVisual::new)
+			.register();
 	public static final EntityEntry<CarriageContraptionEntity> CARRIAGE_CONTRAPTION =
 		contraption("carriage_contraption", CarriageContraptionEntity::new,
-			() -> CarriageContraptionEntityRenderer::new, 15, 3, true).instance(() -> CarriageContraptionInstance::new)
+			() -> CarriageContraptionEntityRenderer::new, 15, 3, true)
+				.visual(() -> CarriageContraptionVisual::new)
 				.register();
 
 	public static final EntityEntry<SuperGlueEntity> SUPER_GLUE =

@@ -3,7 +3,6 @@ package com.simibubi.create.content.trains.station;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.AssemblyException;
@@ -16,6 +15,7 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
 
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.network.chat.MutableComponent;
@@ -49,7 +49,7 @@ public class AssemblyScreen extends AbstractStationScreen {
 		iconTypes = TrainIconType.REGISTRY.keySet()
 			.stream()
 			.toList();
-		iconTypeScroll = new ScrollInput(x + 4, y + 17, 184, 14).titled(Lang.translateDirect("station.icon_type"));
+		iconTypeScroll = new ScrollInput(x + 4, y + 17, 162, 14).titled(Lang.translateDirect("station.icon_type"));
 		iconTypeScroll.withRange(0, iconTypes.size());
 		iconTypeScroll.withStepFunction(ctx -> -iconTypeScroll.standardStep()
 			.apply(ctx));
@@ -164,7 +164,7 @@ public class AssemblyScreen extends AbstractStationScreen {
 			ResourceLocation iconId = iconTypes.get(iconTypeScroll.getState());
 			train.icon = TrainIconType.byId(iconId);
 			AllPackets.getChannel()
-				.sendToServer(new TrainEditPacket(train.id, "", iconId));
+				.sendToServer(new TrainEditPacket(train.id, "", iconId, train.mapColorIndex));
 		}
 	}
 

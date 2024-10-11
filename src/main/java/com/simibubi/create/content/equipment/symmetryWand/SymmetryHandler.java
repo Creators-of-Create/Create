@@ -52,19 +52,13 @@ public class SymmetryHandler {
 		if (event.getLevel()
 			.isClientSide())
 			return;
-		if (!(event.getEntity() instanceof Player))
+		if (!(event.getEntity() instanceof Player player))
 			return;
 
-		Player player = (Player) event.getEntity();
 		Inventory inv = player.getInventory();
-		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-			if (!inv.getItem(i)
-				.isEmpty()
-				&& inv.getItem(i)
-					.getItem() == AllItems.WAND_OF_SYMMETRY.get()) {
+		for (int i = 0; i < Inventory.getSelectionSize(); i++)
+			if (AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i)))
 				SymmetryWandItem.apply(player.level(), inv.getItem(i), player, event.getPos(), event.getPlacedBlock());
-			}
-		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -75,12 +69,9 @@ public class SymmetryHandler {
 
 		Player player = event.getPlayer();
 		Inventory inv = player.getInventory();
-		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-			if (!inv.getItem(i)
-				.isEmpty() && AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i))) {
+		for (int i = 0; i < Inventory.getSelectionSize(); i++)
+			if (AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i)))
 				SymmetryWandItem.remove(player.level(), inv.getItem(i), player, event.getPos());
-			}
-		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
