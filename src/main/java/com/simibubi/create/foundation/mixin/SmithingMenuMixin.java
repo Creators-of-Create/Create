@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.armor.BacktankItem;
 
 import net.minecraft.world.inventory.SmithingMenu;
@@ -28,7 +29,7 @@ public class SmithingMenuMixin {
 			)
 	)
 	private ItemStack create$preventUnbreakingOnBacktanks(ItemStack original) {
-		if (original.getItem() instanceof BacktankItem) {
+		if (AllItems.COPPER_BACKTANK.is(original) || AllItems.NETHERITE_BACKTANK.is(original)) {
 			Map<Enchantment, Integer> enchantments = new HashMap<>();
 
 			EnchantmentHelper.getEnchantments(original).forEach((enchantment, level) -> {
