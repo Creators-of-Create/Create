@@ -65,12 +65,17 @@ public class BlockHelper {
 			BlockStateProperties.CANDLES
 	);
 
-	private static final List<BooleanProperty> VINE_STATES = List.of(
-			VineBlock.UP,
-			VineBlock.NORTH,
-			VineBlock.EAST,
-			VineBlock.SOUTH,
-			VineBlock.WEST
+	private static final List<Block> VINELIKE_BLOCKS = List.of(
+		Blocks.VINE, Blocks.GLOW_LICHEN
+	);
+
+	private static final List<BooleanProperty> VINELIKE_STATES = List.of(
+			BlockStateProperties.UP,
+			BlockStateProperties.NORTH,
+			BlockStateProperties.EAST,
+			BlockStateProperties.SOUTH,
+			BlockStateProperties.WEST,
+			BlockStateProperties.DOWN
 	);
 
 	public static BlockState setZeroAge(BlockState blockState) {
@@ -117,11 +122,11 @@ public class BlockHelper {
 			if (block.hasProperty(property))
 				amount *= block.getValue(property);
 
-		if (block.is(Blocks.VINE)) {
+		if (VINELIKE_BLOCKS.contains(block.getBlock())) {
 			int vineCount = 0;
 
-			for (BooleanProperty vineState : VINE_STATES) {
-				if (block.getValue(vineState)) {
+			for (BooleanProperty vineState : VINELIKE_STATES) {
+				if (block.hasProperty(vineState) && block.getValue(vineState)) {
 					vineCount++;
 				}
 			}
