@@ -6,22 +6,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.core.model.ModelUtil;
-import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
-import com.jozufozu.flywheel.core.model.ShadeSeparatingVertexConsumer;
-import com.jozufozu.flywheel.util.transform.TransformStack;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.outliner.AABBOutline;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
+import com.simibubi.create.foundation.render.ShadedBlockSbbBuilder;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
@@ -29,6 +23,8 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.lib.model.ModelUtil;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -229,7 +225,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	public void transformMS(PoseStack ms, float pt) {
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.translate(VecHelper.lerp(pt, prevAnimatedOffset, animatedOffset));
 		if (!animatedRotation.equals(Vec3.ZERO) || !prevAnimatedRotation.equals(Vec3.ZERO)) {
 			if (centerOfRotation == null)
@@ -237,18 +233,18 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			double rotX = Mth.lerp(pt, prevAnimatedRotation.x, animatedRotation.x);
 			double rotZ = Mth.lerp(pt, prevAnimatedRotation.z, animatedRotation.z);
 			double rotY = Mth.lerp(pt, prevAnimatedRotation.y, animatedRotation.y);
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.translate(centerOfRotation)
-				.rotateX(rotX)
-				.rotateZ(rotZ)
-				.rotateY(rotY)
+				.rotateX((float) rotX)
+				.rotateZ((float) rotZ)
+				.rotateY((float) rotY)
 				.translateBack(centerOfRotation);
 			if (stabilizationAnchor != null) {
-				TransformStack.cast(ms)
+				TransformStack.of(ms)
 					.translate(stabilizationAnchor)
-					.rotateX(-rotX)
-					.rotateZ(-rotZ)
-					.rotateY(-rotY)
+					.rotateX((float) -rotX)
+					.rotateZ((float) -rotZ)
+					.rotateY((float) -rotY)
 					.translateBack(stabilizationAnchor);
 			}
 		}
@@ -309,7 +305,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	public void renderFirst(PonderWorld world, MultiBufferSource buffer, PoseStack ms, float fade, float pt) {
 		int light = -1;
 		if (fade != 1)
-			light = (int) (Mth.lerp(fade, 5, 14));
+			light = (int) (Mth.lerp(fade, 5, 15));
 		if (redraw) {
 			renderedBlockEntities = null;
 			tickableBlockEntities = null;
@@ -363,14 +359,14 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 		if (redraw)
 			bufferCache.invalidate(DOC_WORLD_SECTION, key);
-		SuperByteBuffer contraptionBuffer =
+		SuperByteBuffer structureBuffer =
 			bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, type));
-		if (contraptionBuffer.isEmpty())
+		if (structureBuffer.isEmpty())
 			return;
 
-		transformMS(contraptionBuffer.getTransforms(), pt);
+		transformMS(structureBuffer.getTransforms(), pt);
 		int light = lightCoordsFromFade(fade);
-		contraptionBuffer
+		structureBuffer
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(type));
 	}
@@ -414,22 +410,22 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 		PoseStack poseStack = objects.poseStack;
 		RandomSource random = objects.random;
-		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
-		BufferBuilder shadedBuilder = objects.shadedBuilder;
-		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
 
-		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
+		ShadedBlockSbbBuilder sbbBuilder = objects.sbbBuilder;
+		sbbBuilder.begin();
 
 		world.setMask(this.section);
+		world.pushFakeLight(0);
 		ModelBlockRenderer.enableCaching();
 		section.forEach(pos -> {
 			BlockState state = world.getBlockState(pos);
 			FluidState fluidState = world.getFluidState(pos);
 
-			poseStack.pushPose();
-			poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
+			if (!fluidState.isEmpty() && ItemBlockRenderTypes.getRenderLayer(fluidState) == layer) {
+				// FIXME: The fluid renderer modulos translation to 0-15 on all axes,
+				// so fluids at positions outside this range will render at the wrong spot.
+				dispatcher.renderLiquid(pos, world, sbbBuilder.unwrap(true), state, fluidState);
+			}
 
 			if (state.getRenderShape() == RenderShape.MODEL) {
 				BakedModel model = dispatcher.getBlockModel(state);
@@ -438,34 +434,27 @@ public class WorldSectionElement extends AnimatedSceneElement {
 				modelData = model.getModelData(world, pos, state, modelData);
 				long seed = state.getSeed(pos);
 				random.setSeed(seed);
+
 				if (model.getRenderTypes(state, random, modelData).contains(layer)) {
-					renderer.tesselateBlock(world, model, state, pos, poseStack, shadeSeparatingWrapper, true,
+					poseStack.pushPose();
+					poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
+					renderer.tesselateBlock(world, model, state, pos, poseStack, sbbBuilder, true,
 						random, seed, OverlayTexture.NO_OVERLAY, modelData, layer);
+					poseStack.popPose();
 				}
 			}
-
-			if (!fluidState.isEmpty() && ItemBlockRenderTypes.getRenderLayer(fluidState) == layer)
-				dispatcher.renderLiquid(pos, world, shadedBuilder, state, fluidState);
-
-			poseStack.popPose();
 		});
 		ModelBlockRenderer.clearCache();
+		world.popLight();
 		world.clearMask();
 
-		shadeSeparatingWrapper.clear();
-		ShadeSeparatedBufferedData bufferedData = ModelUtil.endAndCombine(shadedBuilder, unshadedBuilder);
-
-		SuperByteBuffer sbb = new SuperByteBuffer(bufferedData);
-		bufferedData.release();
-		return sbb;
+		return sbbBuilder.end();
 	}
 
 	private static class ThreadLocalObjects {
 		public final PoseStack poseStack = new PoseStack();
 		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
-		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
-		public final BufferBuilder shadedBuilder = new BufferBuilder(512);
-		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
+		public final ShadedBlockSbbBuilder sbbBuilder = new ShadedBlockSbbBuilder();
 	}
 
 }

@@ -7,7 +7,6 @@ import static com.simibubi.create.AllPartialModels.BOGEY_PISTON;
 import static com.simibubi.create.AllPartialModels.LARGE_BOGEY_WHEELS;
 import static com.simibubi.create.AllPartialModels.SMALL_BOGEY_WHEELS;
 
-import com.jozufozu.flywheel.api.MaterialManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
@@ -16,14 +15,15 @@ import com.simibubi.create.content.trains.entity.CarriageBogey;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 
 public class StandardBogeyRenderer {
 	public static class CommonStandardBogeyRenderer extends BogeyRenderer.CommonRenderer {
 		@Override
-		public void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey) {
-			createModelInstance(materialManager, AllBlocks.SHAFT.getDefaultState()
+		public void initialiseContraptionModelData(VisualizationContext context, CarriageBogey carriageBogey) {
+			createModelInstance(context, AllBlocks.SHAFT.getDefaultState()
 					.setValue(ShaftBlock.AXIS, Direction.Axis.Z), 2);
 		}
 
@@ -34,9 +34,9 @@ public class StandardBogeyRenderer {
 					.setValue(ShaftBlock.AXIS, Direction.Axis.Z), ms, inInstancedContraption, 2);
 			for (int i : Iterate.zeroAndOne) {
 				shafts[i].translate(-.5f, .25f, i * -1)
-						.centre()
-						.rotateZ(wheelAngle)
-						.unCentre()
+						.center()
+						.rotateZDegrees(wheelAngle)
+						.uncenter()
 						.render(ms, light, vb);
 			}
 		}
@@ -45,9 +45,9 @@ public class StandardBogeyRenderer {
 
 	public static class SmallStandardBogeyRenderer extends BogeyRenderer {
 		@Override
-		public void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey) {
-			createModelInstance(materialManager, SMALL_BOGEY_WHEELS, 2);
-			createModelInstance(materialManager, BOGEY_FRAME);
+		public void initialiseContraptionModelData(VisualizationContext context, CarriageBogey carriageBogey) {
+			createModelInstance(context, SMALL_BOGEY_WHEELS, 2);
+			createModelInstance(context, BOGEY_FRAME);
 		}
 
 
@@ -68,7 +68,7 @@ public class StandardBogeyRenderer {
 					ms.pushPose();
 				wheels[(side + 1)/2]
 					.translate(0, 12 / 16f, side)
-					.rotateX(wheelAngle)
+					.rotateXDegrees(wheelAngle)
 					.render(ms, light, vb);
 				if (!inInstancedContraption)
 					ms.popPose();
@@ -78,9 +78,9 @@ public class StandardBogeyRenderer {
 
 	public static class LargeStandardBogeyRenderer extends BogeyRenderer {
 		@Override
-		public void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey) {
-			createModelInstance(materialManager, LARGE_BOGEY_WHEELS, BOGEY_DRIVE, BOGEY_PISTON, BOGEY_PIN);
-			createModelInstance(materialManager, AllBlocks.SHAFT.getDefaultState()
+		public void initialiseContraptionModelData(VisualizationContext context, CarriageBogey carriageBogey) {
+			createModelInstance(context, LARGE_BOGEY_WHEELS, BOGEY_DRIVE, BOGEY_PISTON, BOGEY_PIN);
+			createModelInstance(context, AllBlocks.SHAFT.getDefaultState()
 					.setValue(ShaftBlock.AXIS, Direction.Axis.X), 2);
 		}
 
@@ -99,9 +99,9 @@ public class StandardBogeyRenderer {
 			for (int i : Iterate.zeroAndOne) {
 				secondaryShafts[i]
 						.translate(-.5f, .25f, .5f + i * -2)
-						.centre()
-						.rotateX(wheelAngle)
-						.unCentre()
+						.center()
+						.rotateXDegrees(wheelAngle)
+						.uncenter()
 						.render(ms, light, vb);
 			}
 
@@ -117,14 +117,14 @@ public class StandardBogeyRenderer {
 
 			getTransform(LARGE_BOGEY_WHEELS, ms, inInstancedContraption)
 					.translate(0, 1, 0)
-					.rotateX(wheelAngle)
+					.rotateXDegrees(wheelAngle)
 					.render(ms, light, vb);
 
 			getTransform(BOGEY_PIN, ms, inInstancedContraption)
 					.translate(0, 1, 0)
-					.rotateX(wheelAngle)
+					.rotateXDegrees(wheelAngle)
 					.translate(0, 1 / 4f, 0)
-					.rotateX(-wheelAngle)
+					.rotateXDegrees(-wheelAngle)
 					.render(ms, light, vb);
 
 			if (!inInstancedContraption)

@@ -70,7 +70,7 @@ public class AABBOutline extends Outline {
 		if (lineWidth == 0)
 			return;
 
-		VertexConsumer consumer = buffer.getBuffer(RenderTypes.getOutlineSolid());
+		VertexConsumer consumer = buffer.getBuffer(RenderTypes.outlineSolid());
 		renderBoxEdges(ms, consumer, minPos, maxPos, lineWidth, color, lightmap, disableLineNormals);
 	}
 
@@ -94,7 +94,7 @@ public class AABBOutline extends Outline {
 			return;
 		AllSpecialTextures faceTexture = optionalFaceTexture.get();
 
-		RenderType renderType = RenderTypes.getOutlineTranslucent(faceTexture.getLocation(), cull);
+		RenderType renderType = RenderTypes.outlineTranslucent(faceTexture.getLocation(), cull);
 		VertexConsumer consumer = buffer.getLateBuffer(renderType);
 
 		float alphaMult = highlighted ? 1 : 0.5f;

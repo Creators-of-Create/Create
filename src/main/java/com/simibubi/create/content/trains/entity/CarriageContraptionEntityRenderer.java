@@ -2,11 +2,11 @@ package com.simibubi.create.content.trains.entity;
 
 import java.util.Objects;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.render.ContraptionEntityRenderer;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -58,7 +58,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 				: BlockPos.ZERO.relative(entity.getInitialOrientation()
 					.getCounterClockWise(), bogeySpacing);
 
-			if (!Backend.canUseInstancing(entity.level()) && !entity.getContraption()
+			if (!VisualizationManager.supportsVisualization(entity.level()) && !entity.getContraption()
 				.isHiddenInPortal(bogeyPos)) {
 
 				ms.pushPose();
@@ -83,18 +83,18 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 		float viewXRot, float partialTicks) {
 		boolean selfUpsideDown = bogey.isUpsideDown();
 		boolean leadingUpsideDown = bogey.carriage.leadingBogey().isUpsideDown();
-		TransformStack.cast(ms)
-			.rotateY(viewYRot + 90)
-			.rotateX(-viewXRot)
-			.rotateY(180)
+		TransformStack.of(ms)
+			.rotateYDegrees(viewYRot + 90)
+			.rotateXDegrees(-viewXRot)
+			.rotateYDegrees(180)
 			.translate(0, 0, bogey.isLeading ? 0 : -bogeySpacing)
-			.rotateY(-180)
-			.rotateX(viewXRot)
-			.rotateY(-viewYRot - 90)
-			.rotateY(bogey.yaw.getValue(partialTicks))
-			.rotateX(bogey.pitch.getValue(partialTicks))
+			.rotateYDegrees(-180)
+			.rotateXDegrees(viewXRot)
+			.rotateYDegrees(-viewYRot - 90)
+			.rotateYDegrees(bogey.yaw.getValue(partialTicks))
+			.rotateXDegrees(bogey.pitch.getValue(partialTicks))
 			.translate(0, .5f, 0)
-			.rotateZ(selfUpsideDown ? 180 : 0)
+			.rotateZDegrees(selfUpsideDown ? 180 : 0)
 			.translateY(selfUpsideDown != leadingUpsideDown ? 2 : 0);
 	}
 

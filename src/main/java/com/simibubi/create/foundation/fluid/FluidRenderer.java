@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.fluid;
 
 import java.util.function.Function;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -10,6 +9,7 @@ import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -33,7 +33,7 @@ import net.minecraftforge.fluids.FluidType;
 public class FluidRenderer {
 
 	public static VertexConsumer getFluidBuilder(MultiBufferSource buffer) {
-		return buffer.getBuffer(RenderTypes.getFluid());
+		return buffer.getBuffer(RenderTypes.fluid());
 	}
 
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
@@ -59,12 +59,12 @@ public class FluidRenderer {
 		if (inbound)
 			direction = direction.getOpposite();
 
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 		ms.pushPose();
-		msr.centre()
-			.rotateY(AngleHelper.horizontalAngle(direction))
-			.rotateX(direction == Direction.UP ? 180 : direction == Direction.DOWN ? 0 : 270)
-			.unCentre();
+		msr.center()
+			.rotateYDegrees(AngleHelper.horizontalAngle(direction))
+			.rotateXDegrees(direction == Direction.UP ? 180 : direction == Direction.DOWN ? 0 : 270)
+			.uncenter();
 		ms.translate(.5, 0, .5);
 
 		float h = radius;
@@ -78,7 +78,7 @@ public class FluidRenderer {
 			ms.pushPose();
 			renderFlowingTiledFace(Direction.SOUTH, hMin, yMin, hMax, yMax, h, builder, ms, light, color, flowTexture);
 			ms.popPose();
-			msr.rotateY(90);
+			msr.rotateYDegrees(90);
 		}
 
 		if (progress != 1)
@@ -110,9 +110,9 @@ public class FluidRenderer {
 		Vec3 center = new Vec3(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 		ms.pushPose();
 		if (fluidAttributes.isLighterThanAir())
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.translate(center)
-				.rotateX(180)
+				.rotateXDegrees(180)
 				.translateBack(center);
 
 		for (Direction side : Iterate.directions) {

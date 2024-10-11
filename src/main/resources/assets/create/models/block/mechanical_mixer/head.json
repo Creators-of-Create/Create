@@ -5,7 +5,8 @@
 	"textures": {
 		"6": "create:block/mixer_head"
 	},
-	"elements": [
+  "render_type": "minecraft:cutout",
+  "elements": [
 		{
 			"name": "MixerCenter",
 			"from": [7, -4, 7],

@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.actors.contraptionControls;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -11,6 +10,7 @@ import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.nbt.CompoundTag;
@@ -136,11 +136,6 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 		if (ec.isTargetUnreachable(efs.currentTargetY))
 			efs.currentLongName = Lang.translate("contraption.controls.floor_unreachable")
 				.string();
-	}
-
-	@Override
-	public boolean renderAsNormalBlockEntity() {
-		return true;
 	}
 
 	@Override

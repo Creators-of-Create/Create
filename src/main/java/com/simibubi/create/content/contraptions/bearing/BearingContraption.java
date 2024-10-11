@@ -7,7 +7,6 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.ContraptionType;
-import com.simibubi.create.content.contraptions.render.ContraptionLighter;
 import com.simibubi.create.content.decoration.copycat.CopycatBlockEntity;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -18,8 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BearingContraption extends Contraption {
 
@@ -104,9 +101,4 @@ public class BearingContraption extends Contraption {
 		return facing.getAxis() == this.facing.getAxis();
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	@Override
-	public ContraptionLighter<?> makeLighter() {
-		return new AnchoredLighter(this);
-	}
 }

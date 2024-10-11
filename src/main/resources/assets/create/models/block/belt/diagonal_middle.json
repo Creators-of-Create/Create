@@ -10,6 +10,7 @@
 			"name": "Top Diagonal First",
 			"from": [3, 10, -3.305],
 			"to": [13, 11, 8.02],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
 				"east": {"uv": [3, 4, 4, 16], "rotation": 90, "texture": "#0"},
@@ -22,6 +23,7 @@
 			"name": "Top Diagonal First",
 			"from": [1, 11, -3.3],
 			"to": [15, 13, 8.02],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
 				"east": {"uv": [14, 4, 16, 16], "rotation": 90, "texture": "#0"},
@@ -34,6 +36,7 @@
 			"name": "Top Diagonal",
 			"from": [3, 10, 8],
 			"to": [13, 11, 19.325],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
 				"east": {"uv": [3, 4, 4, 16], "rotation": 90, "texture": "#0"},
@@ -46,6 +49,7 @@
 			"name": "Top Diagonal",
 			"from": [1, 11, 8],
 			"to": [15, 13, 19.325],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
 				"east": {"uv": [14, 4, 16, 16], "rotation": 90, "texture": "#0"},
@@ -58,6 +62,7 @@
 			"name": "Bottom Diagonal First",
 			"from": [3, -3.305, 5],
 			"to": [13, 8.02, 6],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [1, 0, 15, 10], "rotation": 180, "texture": "#0"},
@@ -70,6 +75,7 @@
 			"name": "Bottom Diagonal First",
 			"from": [1, -3.3, 3],
 			"to": [15, 8.02, 5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [1, 4, 15, 16], "rotation": 180, "texture": "#0"},
@@ -82,6 +88,7 @@
 			"name": "Bottom Diagonal",
 			"from": [3, 8, 5],
 			"to": [13, 19.325, 6],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [1, 3, 15, 16], "rotation": 180, "texture": "#0"},
@@ -94,6 +101,7 @@
 			"name": "Bottom Diagonal",
 			"from": [1, 8, 3],
 			"to": [15, 19.325, 5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [1, 4, 15, 16], "rotation": 180, "texture": "#0"},

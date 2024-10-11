@@ -29,12 +29,12 @@ public class BellRenderer<BE extends AbstractBellBlockEntity> extends SafeBlockE
 		SuperByteBuffer bell = CachedBufferer.partial(be.getBellModel(), state);
 
 		if (be.isRinging)
-			bell.rotateCentered(be.ringDirection.getCounterClockWise(), getSwingAngle(be.ringingTicks + partialTicks));
+			bell.rotateCentered(getSwingAngle(be.ringingTicks + partialTicks), be.ringDirection.getCounterClockWise());
 
 		float rY = AngleHelper.horizontalAngle(facing);
 		if (attachment == BellAttachType.SINGLE_WALL || attachment == BellAttachType.DOUBLE_WALL)
 			rY += 90;
-		bell.rotateCentered(Direction.UP, AngleHelper.rad(rY));
+		bell.rotateCentered(AngleHelper.rad(rY), Direction.UP);
 
 		bell.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.cutout()));

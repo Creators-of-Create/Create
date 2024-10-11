@@ -193,6 +193,7 @@
 			"name": "coil",
 			"from": [4, 4, 2],
 			"to": [12, 12, 14],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "z", "origin": [8, 8, 8]},
 			"faces": {
 				"east": {"uv": [2, 1, 14, 9], "rotation": 180, "texture": "#5"},
@@ -205,6 +206,7 @@
 			"name": "coil",
 			"from": [3.5, 3.5, 9],
 			"to": [12.5, 12.5, 13],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "z", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 1, 1], "texture": "#5"},
@@ -219,6 +221,7 @@
 			"name": "coil",
 			"from": [3.5, 3.5, 3],
 			"to": [12.5, 12.5, 7],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "z", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 1, 1], "texture": "#5"},

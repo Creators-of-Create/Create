@@ -9,6 +9,7 @@
 		{
 			"from": [4, 9, -1],
 			"to": [6, 11, 9],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 10, 11]},
 			"faces": {
 				"north": {"uv": [8, 1.5, 9, 2.5], "rotation": 180, "texture": "#1_7"},
@@ -21,6 +22,7 @@
 		{
 			"from": [10, 9, -1],
 			"to": [12, 11, 9],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 10, 11]},
 			"faces": {
 				"north": {"uv": [8, 1.5, 9, 2.5], "rotation": 180, "texture": "#1_7"},

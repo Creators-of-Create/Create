@@ -33,6 +33,6 @@ Technology that empowers the player.'''
 [[dependencies.create]]
     modId="flywheel"
     mandatory=true
-    versionRange="[0.6.11,0.6.12)"
+    versionRange="[1.0.0-alpha,2.0)"
     ordering="AFTER"
     side="CLIENT"

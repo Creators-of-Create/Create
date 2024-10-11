@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
@@ -29,6 +28,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -630,9 +630,9 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 				super.rotate(state, ms);
 				return;
 			}
-			TransformStack.cast(ms)
-				.rotateY(angle(state))
-				.rotateX(90);
+			TransformStack.of(ms)
+				.rotateYDegrees(angle(state))
+				.rotateXDegrees(90);
 		}
 
 		protected float angle(BlockState state) {

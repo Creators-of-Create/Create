@@ -2,8 +2,6 @@ package com.simibubi.create.content.processing.burner;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -18,7 +16,9 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -124,15 +124,7 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 			draw(flameBuffer, horizontalAngle, ms, cutout);
 		}
 
-		PartialModel blazeModel;
-		if (heatLevel.isAtLeast(HeatLevel.SEETHING)) {
-			blazeModel = blockAbove ? AllPartialModels.BLAZE_SUPER_ACTIVE : AllPartialModels.BLAZE_SUPER;
-		} else if (heatLevel.isAtLeast(HeatLevel.FADING)) {
-			blazeModel = blockAbove && heatLevel.isAtLeast(HeatLevel.KINDLED) ? AllPartialModels.BLAZE_ACTIVE
-				: AllPartialModels.BLAZE_IDLE;
-		} else {
-			blazeModel = AllPartialModels.BLAZE_INERT;
-		}
+		var blazeModel = getBlazeModel(heatLevel, blockAbove);
 
 		SuperByteBuffer blazeBuffer = CachedBufferer.partial(blazeModel, blockState);
 		if (modelTransform != null)
@@ -158,14 +150,14 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 			hatBuffer.translate(0, headY, 0);
 			if (blazeModel == AllPartialModels.BLAZE_INERT) {
 				hatBuffer.translateY(0.5f)
-					.centre()
+					.center()
 					.scale(0.75f)
-					.unCentre();
+					.uncenter();
 			} else {
 				hatBuffer.translateY(0.75f);
 			}
 			hatBuffer
-				.rotateCentered(Direction.UP, horizontalAngle + Mth.PI)
+				.rotateCentered(horizontalAngle + Mth.PI, Direction.UP)
 				.translate(0.5f, 0, 0.5f)
 				.light(LightTexture.FULL_BRIGHT)
 				.renderInto(ms, solid);
@@ -195,8 +187,19 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 		ms.popPose();
 	}
 
+	public static PartialModel getBlazeModel(HeatLevel heatLevel, boolean blockAbove) {
+		if (heatLevel.isAtLeast(HeatLevel.SEETHING)) {
+			return blockAbove ? AllPartialModels.BLAZE_SUPER_ACTIVE : AllPartialModels.BLAZE_SUPER;
+		} else if (heatLevel.isAtLeast(HeatLevel.FADING)) {
+			return blockAbove && heatLevel.isAtLeast(HeatLevel.KINDLED) ? AllPartialModels.BLAZE_ACTIVE
+				: AllPartialModels.BLAZE_IDLE;
+		} else {
+			return AllPartialModels.BLAZE_INERT;
+		}
+	}
+
 	private static void draw(SuperByteBuffer buffer, float horizontalAngle, PoseStack ms, VertexConsumer vc) {
-		buffer.rotateCentered(Direction.UP, horizontalAngle)
+		buffer.rotateCentered(horizontalAngle, Direction.UP)
 			.light(LightTexture.FULL_BRIGHT)
 			.renderInto(ms, vc);
 	}

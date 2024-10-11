@@ -1,10 +1,10 @@
 package com.simibubi.create.content.trains.bogey;
 
-import com.jozufozu.flywheel.api.MaterialManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import net.minecraft.nbt.CompoundTag;
 
 public class BackupBogeyRenderer extends BogeyRenderer.CommonRenderer {
@@ -16,7 +16,7 @@ public class BackupBogeyRenderer extends BogeyRenderer.CommonRenderer {
 	}
 
 	@Override
-	public void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey) {
+	public void initialiseContraptionModelData(VisualizationContext context, CarriageBogey carriageBogey) {
 
 	}
 }
