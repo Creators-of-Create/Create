@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.mixin;
 
+import com.simibubi.create.api.TriState;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,15 +24,17 @@ public abstract class CustomItemUseEffectsMixin extends Entity {
 		super(entityType, level);
 	}
 
-	@Shadow public abstract ItemStack getUseItem();
+	@Shadow
+	public abstract ItemStack getUseItem();
 
 	@Inject(method = "shouldTriggerItemUseEffects()Z", at = @At("HEAD"), cancellable = true)
 	private void create$onShouldTriggerUseEffects(CallbackInfoReturnable<Boolean> cir) {
 		ItemStack using = getUseItem();
 		Item item = using.getItem();
 		if (item instanceof CustomUseEffectsItem handler) {
-			if (handler.shouldTriggerUseEffects(using, (LivingEntity) (Object) this) != null)
-				cir.setReturnValue(true);
+			TriState result = handler.shouldTriggerUseEffects(using, (LivingEntity) (Object) this);
+			if (result != TriState.DEFAULT)
+				cir.setReturnValue(result.getValue());
 		}
 	}
 

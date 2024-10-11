@@ -14,7 +14,9 @@ public class EntityMixin {
 	@Inject(method = "fireImmune()Z", at = @At("RETURN"), cancellable = true)
 	private void create$onFireImmune(CallbackInfoReturnable<Boolean> cir) {
 		if (!cir.getReturnValueZ()) {
-			if (((Entity) (Object) this).getPersistentData().getBoolean(NetheriteDivingHandler.FIRE_IMMUNE_KEY))
+			Entity self = (Entity) (Object) this;
+			boolean immune = self.getPersistentData().getBoolean(NetheriteDivingHandler.FIRE_IMMUNE_KEY);
+			if (immune)
 				cir.setReturnValue(true);
 		}
 	}

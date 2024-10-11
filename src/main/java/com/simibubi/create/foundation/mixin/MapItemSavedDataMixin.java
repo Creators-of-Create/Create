@@ -30,18 +30,42 @@ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 @Mixin(MapItemSavedData.class)
 public abstract class MapItemSavedDataMixin implements StationMapData {
-	@Shadow @Final public int centerX;
-	@Shadow @Final public int centerZ;
-	@Shadow @Final public byte scale;
-	@Shadow @Final Map<String, MapDecoration> decorations;
-	@Shadow private int trackedDecorationCount;
+	@Unique
+	private static final String STATION_MARKERS_KEY = "create:stations";
 
-	@Shadow protected abstract void removeDecoration(String pIdentifier);
-	@Shadow protected abstract void setDecorationsDirty();
-	@Shadow public abstract boolean isTrackedCountOverLimit(int pTrackedCount);
 
-	@Unique private static final String STATION_MARKERS_KEY = "create:stations";
-	@Unique private final Map<String, StationMarker> create$stationMarkers = Maps.newHashMap();
+	@Shadow
+	@Final
+	public int centerX;
+
+	@Shadow
+	@Final
+	public int centerZ;
+
+	@Shadow
+	@Final
+	public byte scale;
+
+	@Shadow
+	@Final
+	Map<String, MapDecoration> decorations;
+
+	@Shadow
+	private int trackedDecorationCount;
+
+
+	@Shadow
+	protected abstract void removeDecoration(String pIdentifier);
+
+	@Shadow
+	protected abstract void setDecorationsDirty();
+
+	@Shadow
+	public abstract boolean isTrackedCountOverLimit(int pTrackedCount);
+
+
+	@Unique
+	private final Map<String, StationMarker> create$stationMarkers = Maps.newHashMap();
 
 	@Inject(
 			method = "load(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;",

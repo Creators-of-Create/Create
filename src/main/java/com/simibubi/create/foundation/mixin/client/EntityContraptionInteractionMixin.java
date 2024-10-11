@@ -40,14 +40,28 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 		super(baseClass);
 	}
 
-	@Shadow private Level level;
-	@Shadow private Vec3 position;
-	@Shadow private float nextStep;
-	@Shadow @Final protected RandomSource random;
-	@Shadow private EntityDimensions dimensions;
+	@Shadow
+	private Level level;
 
-	@Shadow protected abstract float nextStep();
-	@Shadow protected abstract void playStepSound(BlockPos pos, BlockState state);
+	@Shadow
+	private Vec3 position;
+
+	@Shadow
+	private float nextStep;
+
+	@Shadow
+	@Final
+	protected RandomSource random;
+
+	@Shadow
+	private EntityDimensions dimensions;
+
+
+	@Shadow
+	protected abstract float nextStep();
+
+	@Shadow
+	protected abstract void playStepSound(BlockPos pos, BlockState state);
 
 	@Unique
 	private Stream<AbstractContraptionEntity> create$getIntersectionContraptionsStream() {
