@@ -134,7 +134,7 @@ public class CopperBlockSet {
 			.simpleItem();
 
 		if (variant == BlockVariant.INSTANCE && state == WeatherState.UNAFFECTED)
-			builder.recipe((c, p) -> mainBlockRecipe.accept(c, p));
+			builder.recipe(mainBlockRecipe::accept);
 
 		if (variant == StairVariant.INSTANCE)
 			builder.tag(BlockTags.STAIRS);
