@@ -1,11 +1,11 @@
 package com.simibubi.create.content.kinetics.deployer;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.BlockState;
@@ -43,12 +43,12 @@ public class DeployerFilterSlot extends ValueBoxTransform.Sided {
 		float yRot = AngleHelper.horizontalAngle(facing) + 180;
 
 		if (facing.getAxis() == Axis.Y)
-			TransformStack.cast(ms)
-				.rotateY(180 + AngleHelper.horizontalAngle(state.getValue(DeployerBlock.FACING)));
+			TransformStack.of(ms)
+				.rotateYDegrees(180 + AngleHelper.horizontalAngle(state.getValue(DeployerBlock.FACING)));
 
-		TransformStack.cast(ms)
-			.rotateY(yRot)
-			.rotateX(xRot);
+		TransformStack.of(ms)
+			.rotateYDegrees(yRot)
+			.rotateXDegrees(xRot);
 	}
 
 	@Override

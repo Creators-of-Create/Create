@@ -67,5 +67,9 @@ public abstract class DisplayTarget extends DisplayBehaviour {
 			tag.remove("DisplayLink");
 		return false;
 	}
+	
+	public boolean requiresComponentSanitization() {
+		return false;
+	}
 
 }

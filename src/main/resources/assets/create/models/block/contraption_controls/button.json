@@ -8,6 +8,7 @@
 		{
 			"from": [4.95, 8.5, 7.95],
 			"to": [11.05, 11, 14.05],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 10, 7]},
 			"faces": {
 				"north": {"uv": [5.5, 12.5, 2.5, 13], "rotation": 180, "texture": "#4"},

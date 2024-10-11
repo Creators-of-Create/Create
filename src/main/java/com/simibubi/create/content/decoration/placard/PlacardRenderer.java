@@ -1,10 +1,10 @@
 package com.simibubi.create.content.decoration.placard;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -38,12 +38,12 @@ public class PlacardRenderer extends SafeBlockEntityRenderer<PlacardBlockEntity>
 		boolean blockItem = bakedModel.isGui3d();
 
 		ms.pushPose();
-		TransformStack.cast(ms)
-			.centre()
-			.rotate(Direction.UP,
-				(face == AttachFace.CEILING ? Mth.PI : 0) + AngleHelper.rad(180 + AngleHelper.horizontalAngle(facing)))
-			.rotate(Direction.EAST,
-				face == AttachFace.CEILING ? -Mth.PI / 2 : face == AttachFace.FLOOR ? Mth.PI / 2 : 0)
+		TransformStack.of(ms)
+			.center()
+			.rotate((face == AttachFace.CEILING ? Mth.PI : 0) + AngleHelper.rad(180 + AngleHelper.horizontalAngle(facing)),
+				Direction.UP)
+			.rotate(face == AttachFace.CEILING ? -Mth.PI / 2 : face == AttachFace.FLOOR ? Mth.PI / 2 : 0,
+				Direction.EAST)
 			.translate(0, 0, 4.5 / 16f)
 			.scale(blockItem ? .5f : .375f);
 

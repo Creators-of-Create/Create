@@ -125,6 +125,7 @@
 			"name": "RoofLeft",
 			"from": [1, 10, 1],
 			"to": [15, 20, 3],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 12, 2]},
 			"faces": {
 				"north": {"uv": [0, 0, 14, 10], "texture": "#1"},
@@ -139,6 +140,7 @@
 			"name": "RoofRight",
 			"from": [1, 10, 13],
 			"to": [15, 20, 15],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 12, 14]},
 			"faces": {
 				"north": {"uv": [0, 0, 14, 10], "texture": "#1"},

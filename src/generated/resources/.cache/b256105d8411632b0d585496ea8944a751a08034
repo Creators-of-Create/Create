@@ -1,4 +1,4 @@
-// 1.20.1	2024-09-02T22:36:27.2901169	Create's Processing Recipes
+// 1.20.1	2024-10-09T12:24:59.1833995	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -792,22 +792,22 @@ e383106ff8f877b5995e20c03af5e41e3db541d9 data/create/recipes/milling/compat/biom
 213e079f32baa2879702b72bdf08f146877a0bb9 data/create/recipes/milling/compat/biomesoplenty/violet.json
 b3f041e005491582f055da15871891357908d998 data/create/recipes/milling/compat/biomesoplenty/wildflower.json
 d08c4fcebb79e2e02ac9cb4623124332a05ed661 data/create/recipes/milling/compat/biomesoplenty/wilted_lily.json
-ca03746c39143de7867aeab2fb450fe0a67b69e3 data/create/recipes/milling/compat/botania/black_petal.json
-3192777eeb363a55174a0eb58197ee686b2e02c7 data/create/recipes/milling/compat/botania/blue_petal.json
-ee99c9bdcc4da8d160fc762ce7b394848d6a86d1 data/create/recipes/milling/compat/botania/brown_petal.json
-1d8dab24913945268f819c24e132d8bb74f792c2 data/create/recipes/milling/compat/botania/cyan_petal.json
-010a111f9810f142315bc94dfb1be03ee02508c4 data/create/recipes/milling/compat/botania/gray_petal.json
-dee8b4c26d6b78aceeb8e5a264693dad4e81dbcb data/create/recipes/milling/compat/botania/green_petal.json
-285a24e440d6a8cf34f2925a3eed7fa1d16e102b data/create/recipes/milling/compat/botania/light_blue_petal.json
-3cc232966240394aaf5a3a5d16a3ceebd41597a0 data/create/recipes/milling/compat/botania/light_gray_petal.json
-1225119a7dc1f69dfaf2cec32a0267b1d47ef72d data/create/recipes/milling/compat/botania/lime_petal.json
-09e114685483329a78c3cecf8b312f16d26cd981 data/create/recipes/milling/compat/botania/magenta_petal.json
-ae3e7eb55dda1846b8fd849ea1c8f1cbd37b9fca data/create/recipes/milling/compat/botania/orange_petal.json
-bf13e9807a96efc1ef684f0129cc21110e44cc4c data/create/recipes/milling/compat/botania/pink_petal.json
-7e0a167201b9c915579ede71ee7128bccdeee9c2 data/create/recipes/milling/compat/botania/purple_petal.json
-4e7c1ae95f10bb3466dd542a2e04c726c599ecd9 data/create/recipes/milling/compat/botania/red_petal.json
-28cbeb278022b2ac62cae2f3deaa65cb375c6456 data/create/recipes/milling/compat/botania/white_petal.json
-dd1e35234c419b1576410a2590fd33d88c8bb9bd data/create/recipes/milling/compat/botania/yellow_petal.json
+4994095300eabfe98a86036e7fbba6c12cddb078 data/create/recipes/milling/compat/botania/black_petal.json
+3516555e62ce7d6f0b5a57375339e69b4de41f83 data/create/recipes/milling/compat/botania/blue_petal.json
+deb37dcb4b323590fbb76f21732e5b9016028f7d data/create/recipes/milling/compat/botania/brown_petal.json
+d831337c28b89ce25a2be50e06719ab3be9400b6 data/create/recipes/milling/compat/botania/cyan_petal.json
+1ec99d5ee65becc6c921827956e26f286398b1ba data/create/recipes/milling/compat/botania/gray_petal.json
+7bcbd91fae49452fe30966b350c6830ad5bb588c data/create/recipes/milling/compat/botania/green_petal.json
+5819b1ff0c54851d4bf7c60228ce2e31b8d8ffee data/create/recipes/milling/compat/botania/light_blue_petal.json
+94b6cb826923907527c57e079d08fb410720b008 data/create/recipes/milling/compat/botania/light_gray_petal.json
+4fe3b309902b0d59971d351d6e4a8066908df195 data/create/recipes/milling/compat/botania/lime_petal.json
+b8f8ea5d52ae9cbdd59d60aabbac660859190855 data/create/recipes/milling/compat/botania/magenta_petal.json
+eab4d51ba92d5a2f172de76bca72cf2746359b68 data/create/recipes/milling/compat/botania/orange_petal.json
+c8cf3978e3bf0ffeccd18c1b16ea26c5e1c18634 data/create/recipes/milling/compat/botania/pink_petal.json
+9ee958eb5fb176902255aa606517a362670f3d60 data/create/recipes/milling/compat/botania/purple_petal.json
+3239b0a1ef91f61ab32f42ac3935ee99316089c5 data/create/recipes/milling/compat/botania/red_petal.json
+15afbebf247ea66e0b023ea84aa5c5dad8ac8466 data/create/recipes/milling/compat/botania/white_petal.json
+9c500a9d6cadb4f673ca63de38c1d3713dab061c data/create/recipes/milling/compat/botania/yellow_petal.json
 c7d2b07396448628123b81e1f34a8b131aa99c83 data/create/recipes/milling/compat/buzzier_bees/buttercup.json
 0c4a3c7da1e151868740db2037504e35a02af3d0 data/create/recipes/milling/compat/buzzier_bees/pink_clover.json
 355e89a3e003ae65ff06a9277c05699220eec569 data/create/recipes/milling/compat/buzzier_bees/white_clover.json
@@ -1033,7 +1033,7 @@ e3f12ec5d449caa54ebe1c453a89373492b8f48a data/create/recipes/splashing/endergeti
 64535aaa3a5d4b98791337b1a8ce50ad3d39a8ac data/create/recipes/splashing/gravel.json
 dd9508767f68cc8b5cc2f642690961e0c22c9985 data/create/recipes/splashing/gray_concrete_powder.json
 8908b452e6bc1290ebb8cfefc2c066460de93bff data/create/recipes/splashing/green_concrete_powder.json
-869a639fd7069495693fd2106165b57ce674201b data/create/recipes/splashing/ic2/crushed_raw_aluminum.json
+9764857ea6ee8d31ec37e6022f89dbe662e88591 data/create/recipes/splashing/ic2/crushed_raw_aluminum.json
 6fd01478f838507f9e0daf7eb0a19e8315e03cb8 data/create/recipes/splashing/ic2/crushed_raw_silver.json
 b5a0a0fc79bf310965aa16e78044b3f6a8a9998f data/create/recipes/splashing/ic2/crushed_raw_tin.json
 00b8d0c2577cc36da1c862234b61fb7d1cfe3e65 data/create/recipes/splashing/ic2/crushed_raw_uranium.json

@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
@@ -55,8 +56,6 @@ import com.simibubi.create.content.contraptions.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlockEntity;
-import com.simibubi.create.content.contraptions.render.ContraptionLighter;
-import com.simibubi.create.content.contraptions.render.EmptyLighter;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import com.simibubi.create.content.kinetics.base.IRotate;
@@ -121,8 +120,6 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -162,8 +159,7 @@ public abstract class Contraption {
 	// Client
 	public Map<BlockPos, ModelData> modelData;
 	public Map<BlockPos, BlockEntity> presentBlockEntities;
-	public List<BlockEntity> maybeInstancedBlockEntities;
-	public List<BlockEntity> specialRenderedBlockEntities;
+	public List<BlockEntity> renderedBlockEntities;
 
 	protected ContraptionWorld world;
 	public boolean deferInvalidate;
@@ -180,8 +176,7 @@ public abstract class Contraption {
 		glueToRemove = new HashSet<>();
 		initialPassengers = new HashMap<>();
 		presentBlockEntities = new HashMap<>();
-		maybeInstancedBlockEntities = new ArrayList<>();
-		specialRenderedBlockEntities = new ArrayList<>();
+		renderedBlockEntities = new ArrayList<>();
 		pendingSubContraptions = new ArrayList<>();
 		stabilizedSubContraptions = new HashMap<>();
 		simplifiedEntityColliders = Optional.empty();
@@ -709,7 +704,7 @@ public abstract class Contraption {
 	public void readNBT(Level world, CompoundTag nbt, boolean spawnData) {
 		blocks.clear();
 		presentBlockEntities.clear();
-		specialRenderedBlockEntities.clear();
+		renderedBlockEntities.clear();
 
 		Tag blocks = nbt.get("Blocks");
 		// used to differentiate between the 'old' and the paletted serialization
@@ -942,20 +937,17 @@ public abstract class Contraption {
 			if (be == null)
 				return;
 			be.setLevel(world);
-			modelData.put(info.pos(), be.getModelData());
 			if (be instanceof KineticBlockEntity kbe)
 				kbe.setSpeed(0);
 			be.getBlockState();
 
-			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(info.state());
-			if (movementBehaviour == null || !movementBehaviour.hasSpecialInstancedRendering())
-				maybeInstancedBlockEntities.add(be);
-
-			if (movementBehaviour != null && !movementBehaviour.renderAsNormalBlockEntity())
-				return;
-
 			presentBlockEntities.put(info.pos(), be);
-			specialRenderedBlockEntities.add(be);
+			modelData.put(info.pos(), be.getModelData());
+
+			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(info.state());
+			if (movementBehaviour == null || !movementBehaviour.disableBlockEntityRendering()) {
+				renderedBlockEntities.add(be);
+			}
 		});
 	}
 
@@ -1151,6 +1143,7 @@ public abstract class Contraption {
 					if (blockEntity instanceof IMultiBlockEntityContainer) {
 						if (tag.contains("LastKnownPos") || capturedMultiblocks.isEmpty()) {
 							tag.put("LastKnownPos", NbtUtils.writeBlockPos(BlockPos.ZERO.below(Integer.MAX_VALUE - 1)));
+							tag.remove("Controller");
 						}
 					}
 
@@ -1207,6 +1200,9 @@ public abstract class Contraption {
 			// swap nbt data to the new controller position
 			StructureBlockInfo prevControllerInfo = blocks.get(controllerPos);
 			StructureBlockInfo newControllerInfo = blocks.get(otherPos);
+			if (prevControllerInfo == null || newControllerInfo == null)
+				return;
+
 			blocks.put(otherPos, new StructureBlockInfo(newControllerInfo.pos(), newControllerInfo.state(), prevControllerInfo.nbt()));
 			blocks.put(controllerPos, new StructureBlockInfo(prevControllerInfo.pos(), prevControllerInfo.state(), newControllerInfo.nbt()));
 		});
@@ -1385,12 +1381,6 @@ public abstract class Contraption {
 		return interactors;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public ContraptionLighter<?> makeLighter() {
-		// TODO: move lighters to registry
-		return new EmptyLighter(this);
-	}
-
 	public void invalidateColliders() {
 		simplifiedEntityColliders = Optional.empty();
 		gatherBBsOffThread();
@@ -1398,6 +1388,9 @@ public abstract class Contraption {
 
 	private void gatherBBsOffThread() {
 		getContraptionWorld();
+		if (simplifiedEntityColliderProvider != null) {
+			simplifiedEntityColliderProvider.cancel(false);
+		}
 		simplifiedEntityColliderProvider = CompletableFuture.supplyAsync(() -> {
 			VoxelShape combinedShape = Shapes.empty();
 			for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
@@ -1414,7 +1407,6 @@ public abstract class Contraption {
 		})
 			.thenAccept(r -> {
 				simplifiedEntityColliders = Optional.of(r);
-				simplifiedEntityColliderProvider = null;
 			});
 	}
 
@@ -1458,12 +1450,18 @@ public abstract class Contraption {
 		return storage.getFluids();
 	}
 
-	public Collection<StructureBlockInfo> getRenderedBlocks() {
-		return blocks.values();
+	public RenderedBlocks getRenderedBlocks() {
+		return new RenderedBlocks(pos -> {
+			StructureBlockInfo info = blocks.get(pos);
+			if (info == null) {
+				return Blocks.AIR.defaultBlockState();
+			}
+			return info.state();
+		}, blocks.keySet());
 	}
 
-	public Collection<BlockEntity> getSpecialRenderedBEs() {
-		return specialRenderedBlockEntities;
+	public Collection<BlockEntity> getRenderedBEs() {
+		return renderedBlockEntities;
 	}
 
 	public boolean isHiddenInPortal(BlockPos localPos) {
@@ -1509,6 +1507,9 @@ public abstract class Contraption {
 				return true;
 		}
 		return false;
+	}
+
+	public record RenderedBlocks(Function<BlockPos, BlockState> lookup, Iterable<BlockPos> positions) {
 	}
 
 }

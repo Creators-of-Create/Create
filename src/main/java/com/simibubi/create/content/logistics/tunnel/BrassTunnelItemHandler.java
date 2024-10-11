@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.tunnel;
 
+import com.simibubi.create.foundation.item.ItemHelper;
+
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -33,9 +35,11 @@ public class BrassTunnelItemHandler implements IItemHandler {
 		
 		if (!blockEntity.canTakeItems())
 			return stack;
+		
+		ItemStack remainder = ItemHelper.limitCountToMaxStackSize(stack, simulate);
 		if (!simulate) 
 			blockEntity.setStackToDistribute(stack, null);
-		return ItemStack.EMPTY;
+		return remainder;
 	}
 
 	@Override

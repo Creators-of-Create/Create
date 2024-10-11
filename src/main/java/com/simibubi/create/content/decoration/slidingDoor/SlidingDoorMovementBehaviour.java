@@ -32,12 +32,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.Vec3;
 
 public class SlidingDoorMovementBehaviour implements MovementBehaviour {
-
-	@Override
-	public boolean renderAsNormalBlockEntity() {
-		return true;
-	}
-
 	@Override
 	public boolean mustTickWhileDisabled() {
 		return true;

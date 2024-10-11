@@ -11,12 +11,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 
 public class BellMovementBehaviour implements MovementBehaviour {
-
-	@Override
-	public boolean renderAsNormalBlockEntity() {
-		return true;
-	}
-	
 	@Override
 	public boolean isActive(MovementContext context) {
 		return MovementBehaviour.super.isActive(context) && !(context.contraption instanceof CarriageContraption);

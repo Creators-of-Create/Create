@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,8 +17,6 @@ import com.simibubi.create.content.contraptions.ContraptionType;
 import com.simibubi.create.content.contraptions.MountedStorageManager;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsBlock;
 import com.simibubi.create.content.contraptions.minecart.TrainCargoManager;
-import com.simibubi.create.content.contraptions.render.ContraptionLighter;
-import com.simibubi.create.content.contraptions.render.NonStationaryLighter;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
@@ -42,8 +39,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -243,13 +238,7 @@ public class CarriageContraption extends Contraption {
 		return ContraptionType.CARRIAGE;
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public ContraptionLighter<?> makeLighter() {
-		return new NonStationaryLighter<>(this);
-	}
-
-	public Direction getAssemblyDirection() {
+    public Direction getAssemblyDirection() {
 		return assemblyDirection;
 	}
 
@@ -265,34 +254,34 @@ public class CarriageContraption extends Contraption {
 		return secondBogeyPos;
 	}
 
-	private Collection<BlockEntity> specialRenderedBEsOutsidePortal = new ArrayList<>();
+	private Collection<BlockEntity> renderedBEsOutsidePortal = new ArrayList<>();
 
 	@Override
-	public Collection<StructureBlockInfo> getRenderedBlocks() {
+	public RenderedBlocks getRenderedBlocks() {
 		if (notInPortal())
 			return super.getRenderedBlocks();
 
-		specialRenderedBEsOutsidePortal = new ArrayList<>();
-		specialRenderedBlockEntities.stream()
+		renderedBEsOutsidePortal = new ArrayList<>();
+		renderedBlockEntities.stream()
 			.filter(be -> !isHiddenInPortal(be.getBlockPos()))
-			.forEach(specialRenderedBEsOutsidePortal::add);
+			.forEach(renderedBEsOutsidePortal::add);
 
-		Collection<StructureBlockInfo> values = new ArrayList<>();
-		for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
-			BlockPos pos = entry.getKey();
-			if (withinVisible(pos))
-				values.add(entry.getValue());
-			else if (atSeam(pos))
-				values.add(new StructureBlockInfo(pos, Blocks.PURPLE_STAINED_GLASS.defaultBlockState(), null));
-		}
-		return values;
+		Map<BlockPos, BlockState> values = new HashMap<>();
+		blocks.forEach((pos, info) -> {
+			if (withinVisible(pos)) {
+				values.put(pos, info.state());
+			} else if (atSeam(pos)) {
+				values.put(pos, Blocks.PURPLE_STAINED_GLASS.defaultBlockState());
+			}
+		});
+		return new RenderedBlocks(pos -> values.getOrDefault(pos, Blocks.AIR.defaultBlockState()), values.keySet());
 	}
 
 	@Override
-	public Collection<BlockEntity> getSpecialRenderedBEs() {
+	public Collection<BlockEntity> getRenderedBEs() {
 		if (notInPortal())
-			return super.getSpecialRenderedBEs();
-		return specialRenderedBEsOutsidePortal;
+			return super.getRenderedBEs();
+		return renderedBEsOutsidePortal;
 	}
 
 	@Override

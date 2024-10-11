@@ -1,7 +1,5 @@
 package com.simibubi.create.content.schematics.cannon;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -13,7 +11,9 @@ import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForEntity;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -39,7 +39,7 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 		if (blocksLaunching)
 			renderLaunchedBlocks(blockEntity, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(blockEntity.getLevel()))
+		if (VisualizationManager.supportsVisualization(blockEntity.getLevel()))
 			return;
 
 		BlockPos pos = blockEntity.getBlockPos();
@@ -58,15 +58,15 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 
 		SuperByteBuffer connector = CachedBufferer.partial(AllPartialModels.SCHEMATICANNON_CONNECTOR, state);
 		connector.translate(.5f, 0, .5f);
-		connector.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
+		connector.rotate((float) ((yaw + 90) / 180 * Math.PI), Direction.UP);
 		connector.translate(-.5f, 0, -.5f);
 		connector.light(light)
 			.renderInto(ms, vb);
 
 		SuperByteBuffer pipe = CachedBufferer.partial(AllPartialModels.SCHEMATICANNON_PIPE, state);
 		pipe.translate(.5f, 15 / 16f, .5f);
-		pipe.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
-		pipe.rotate(Direction.SOUTH, (float) (pitch / 180 * Math.PI));
+		pipe.rotate((float) ((yaw + 90) / 180 * Math.PI), Direction.UP);
+		pipe.rotate((float) (pitch / 180 * Math.PI), Direction.SOUTH);
 		pipe.translate(-.5f, -15 / 16f, -.5f);
 		pipe.translate(0, -recoil / 100, 0);
 		pipe.light(light)
@@ -180,7 +180,7 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 				Minecraft.getInstance()
 					.getBlockRenderer()
 					.renderSingleBlock(state, ms, buffer, light, overlay,
-						ModelUtil.VIRTUAL_DATA, null);
+						VirtualRenderHelper.VIRTUAL_DATA, null);
 			} else if (launched instanceof ForEntity) {
 				// Render the item
 				float scale = 1.2f;

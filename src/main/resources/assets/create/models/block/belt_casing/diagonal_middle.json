@@ -10,6 +10,7 @@
 			"name": "Top Diagonal",
 			"from": [-0.1, 2, -3.325],
 			"to": [16.1, 11, 7.9875],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [8, 2.25, 12, 4.5], "texture": "#4"},
@@ -23,6 +24,7 @@
 			"name": "Top Diagonal",
 			"from": [-0.1, 7.43588, 10.23912],
 			"to": [16.1, 16.43588, 21.55162],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 13.43588, 2.56412]},
 			"faces": {
 				"east": {"uv": [11, 5.75, 8.25, 8], "texture": "#4"},

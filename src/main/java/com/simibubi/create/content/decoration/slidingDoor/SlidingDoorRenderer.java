@@ -1,6 +1,5 @@
 package com.simibubi.create.content.decoration.slidingDoor;
 
-import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -11,6 +10,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
@@ -61,16 +61,16 @@ public class SlidingDoorRenderer extends SafeBlockEntityRenderer<SlidingDoorBloc
 				partial.translate(0, -1 / 512f, 0)
 					.translate(Vec3.atLowerCornerOf(facing.getNormal())
 						.scale(value2 * 1 / 32f));
-				partial.rotateCentered(Direction.UP,
-					Mth.DEG_TO_RAD * AngleHelper.horizontalAngle(facing.getClockWise()));
+				partial.rotateCentered(
+					Mth.DEG_TO_RAD * AngleHelper.horizontalAngle(facing.getClockWise()), Direction.UP);
 
 				if (flip)
 					partial.translate(0, 0, 1);
-				partial.rotateY(91 * f * value * value);
+				partial.rotateYDegrees(91 * f * value * value);
 
 				if (!left)
 					partial.translate(0, 0, f / 2f)
-						.rotateY(-181 * f * value * value);
+						.rotateYDegrees(-181 * f * value * value);
 
 				if (flip)
 					partial.translate(0, 0, -1 / 2f);

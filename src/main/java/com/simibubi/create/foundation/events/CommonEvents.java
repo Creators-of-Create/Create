@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.events;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.trainmap.TrainMapSync;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsServerHandler;
 import com.simibubi.create.content.contraptions.minecart.CouplingPhysics;
@@ -67,6 +68,7 @@ public class CommonEvents {
 		Create.LAGGER.tick();
 		ServerSpeedProvider.serverTick();
 		Create.RAILWAYS.sync.serverTick();
+		TrainMapSync.serverTick(event);
 	}
 
 	@SubscribeEvent

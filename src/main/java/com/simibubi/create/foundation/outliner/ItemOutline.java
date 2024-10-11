@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.outliner;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -26,7 +26,7 @@ public class ItemOutline extends Outline {
 		Minecraft mc = Minecraft.getInstance();
 		ms.pushPose();
 
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.translate(pos.x - camera.x, pos.y - camera.y, pos.z - camera.z)
 			.scale(params.alpha);
 

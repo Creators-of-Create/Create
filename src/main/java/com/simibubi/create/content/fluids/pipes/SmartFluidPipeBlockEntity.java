@@ -2,7 +2,6 @@ package com.simibubi.create.content.fluids.pipes;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.fluids.FluidPropagator;
 import com.simibubi.create.content.fluids.pipes.StraightPipeBlockEntity.StraightPipeFluidTransportBehaviour;
@@ -13,6 +12,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -83,9 +83,9 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity {
 		@Override
 		public void rotate(BlockState state, PoseStack ms) {
 			AttachFace face = state.getValue(SmartFluidPipeBlock.FACE);
-			TransformStack.cast(ms)
-				.rotateY(angleY(state))
-				.rotateX(face == AttachFace.CEILING ? -45 : 45);
+			TransformStack.of(ms)
+				.rotateYDegrees(angleY(state))
+				.rotateXDegrees(face == AttachFace.CEILING ? -45 : 45);
 		}
 
 		protected float angleY(BlockState state) {

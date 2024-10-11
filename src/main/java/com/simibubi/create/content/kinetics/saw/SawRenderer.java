@@ -2,15 +2,11 @@ package com.simibubi.create.content.kinetics.saw;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringRenderer;
@@ -19,8 +15,12 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -46,7 +46,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 		renderItems(be, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnBlockEntity(be, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(be.getLevel()))
+		if (VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
 		renderShaft(be, ms, buffer, light, overlay);
@@ -81,7 +81,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 
 		SuperByteBuffer superBuffer = CachedBufferer.partialFacing(partial, blockState);
 		if (rotate) {
-			superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(90));
+			superBuffer.rotateCentered(AngleHelper.rad(90), Direction.UP);
 		}
 		superBuffer.color(0xFFFFFF)
 			.light(light)
@@ -189,16 +189,17 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 		}
 
 		superBuffer.transform(matrices.getModel())
-			.centre()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(AngleHelper.verticalAngle(facing));
+			.center()
+			.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+			.rotateXDegrees(AngleHelper.verticalAngle(facing));
 
 		if (!SawBlock.isHorizontal(state)) {
-			superBuffer.rotateZ(state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0);
+			superBuffer.rotateZDegrees(state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0);
 		}
 
-		superBuffer.unCentre()
-			.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+		superBuffer.uncenter()
+			.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+			.useLevelLight(context.world, matrices.getWorld())
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.cutoutMipped()));
 	}
 

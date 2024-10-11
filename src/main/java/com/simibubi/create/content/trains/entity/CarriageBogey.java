@@ -5,13 +5,12 @@ import static com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity.
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity;
-import com.simibubi.create.content.trains.bogey.BogeyInstance;
 import com.simibubi.create.content.trains.bogey.BogeyStyle;
+import com.simibubi.create.content.trains.bogey.BogeyVisual;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -22,6 +21,7 @@ import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -199,8 +199,8 @@ public class CarriageBogey {
 		return new CarriageBogey(type, upsideDown, data, points.getFirst(), points.getSecond());
 	}
 
-	public BogeyInstance createInstance(MaterialManager materialManager) {
-		return this.getStyle().createInstance(this, type.getSize(), materialManager);
+	public BogeyVisual createVisual(VisualizationContext context) {
+		return this.getStyle().createVisual(this, type.getSize(), context);
 	}
 
 	public BogeyStyle getStyle() {

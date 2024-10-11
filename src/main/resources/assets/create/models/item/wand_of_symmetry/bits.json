@@ -13,9 +13,10 @@
     "elements": [
         {
             "name": "Square North",
-            "from": [ 7.5, 24.0, 4.0 ], 
-            "to": [ 8.5, 25.0, 5.0 ], 
+            "from": [ 7.5, 24.0, 4.0 ],
+            "to": [ 8.5, 25.0, 5.0 ],
             "shade": false,
+            "forge_data": {"calculate_normals": true},
             "rotation": { "origin": [ 9.0, 24.0, 5.0 ], "axis": "x", "angle": 45.0 },
             "faces": {
                 "north": { "texture": "#3", "uv": [ 2.0, 2.0, 3.0, 3.0 ] },
@@ -28,9 +29,10 @@
         },
         {
             "name": "Square South",
-            "from": [ 7.5, 24.0, 10.0 ], 
-            "to": [ 8.5, 25.0, 11.0 ], 
+            "from": [ 7.5, 24.0, 10.0 ],
+            "to": [ 8.5, 25.0, 11.0 ],
             "shade": false,
+            "forge_data": {"calculate_normals": true},
             "rotation": { "origin": [ 13.0, 24.0, 11.0 ], "axis": "x", "angle": 45.0 },
             "faces": {
                 "north": { "texture": "#3", "uv": [ 2.0, 2.0, 3.0, 3.0 ] },
@@ -43,9 +45,10 @@
         },
         {
             "name": "Square West",
-            "from": [ 11.5, 25.5, 7.5 ], 
-            "to": [ 12.5, 26.5, 8.5 ], 
+            "from": [ 11.5, 25.5, 7.5 ],
+            "to": [ 12.5, 26.5, 8.5 ],
             "shade": false,
+            "forge_data": {"calculate_normals": true},
             "rotation": { "origin": [ 13.0, 24.0, 11.0 ], "axis": "z", "angle": 45.0 },
             "faces": {
                 "north": { "texture": "#3", "uv": [ 2.0, 2.0, 3.0, 3.0 ] },
@@ -58,9 +61,10 @@
         },
         {
             "name": "Square East",
-            "from": [ 7.5, 29.5, 7.5 ], 
-            "to": [ 8.5, 30.5, 8.5 ], 
+            "from": [ 7.5, 29.5, 7.5 ],
+            "to": [ 8.5, 30.5, 8.5 ],
             "shade": false,
+            "forge_data": {"calculate_normals": true},
             "rotation": { "origin": [ 13.0, 24.0, 11.0 ], "axis": "z", "angle": 45.0 },
             "faces": {
                 "north": { "texture": "#3", "uv": [ 2.0, 2.0, 3.0, 3.0 ] },
