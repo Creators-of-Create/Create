@@ -1,9 +1,11 @@
 package com.simibubi.create.foundation.utility;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.compat.Mods;
@@ -42,9 +44,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.IceBlock;
 import net.minecraft.world.level.block.SlimeBlock;
+import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -55,6 +60,19 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.BlockEvent;
 
 public class BlockHelper {
+	public static List<IntegerProperty> COUNT_STATES = List.of(
+			BlockStateProperties.EGGS,
+			BlockStateProperties.PICKLES,
+			BlockStateProperties.CANDLES
+	);
+
+	public static List<BooleanProperty> VINE_STATES = List.of(
+			VineBlock.UP,
+			VineBlock.NORTH,
+			VineBlock.EAST,
+			VineBlock.SOUTH,
+			VineBlock.WEST
+	);
 
 	public static BlockState setZeroAge(BlockState blockState) {
 		if (blockState.hasProperty(BlockStateProperties.AGE_1))
@@ -96,11 +114,21 @@ public class BlockHelper {
 		if (needsTwo)
 			amount *= 2;
 
-		if (block.hasProperty(BlockStateProperties.EGGS))
-			amount *= block.getValue(BlockStateProperties.EGGS);
+		for (IntegerProperty property : COUNT_STATES)
+			if (block.hasProperty(property))
+				amount *= block.getValue(property);
 
-		if (block.hasProperty(BlockStateProperties.PICKLES))
-			amount *= block.getValue(BlockStateProperties.PICKLES);
+		if (block.is(Blocks.VINE)) {
+			int vineCount = 0;
+
+			for (BooleanProperty vineState : VINE_STATES) {
+				if (block.getValue(vineState)) {
+					vineCount++;
+				}
+			}
+
+			amount += vineCount - 1;
+		}
 
 		{
 			// Try held Item first
@@ -243,17 +271,17 @@ public class BlockHelper {
 		CompoundTag data = null;
 		if (blockEntity == null)
 			return data;
-		
+
 		if (AllBlockTags.SAFE_NBT.matches(blockState)) {
 			data = blockEntity.saveWithFullMetadata();
-		
+
 		} else if (blockEntity instanceof IPartialSafeNBT) {
 			data = new CompoundTag();
 			((IPartialSafeNBT) blockEntity).writeSafe(data);
-		
+
 		} else if (Mods.FRAMEDBLOCKS.contains(blockState.getBlock()))
 			data = FramedBlocksInSchematics.prepareBlockEntityData(blockState, blockEntity);
-		
+
 		return NBTProcessors.process(blockState, blockEntity, data, true);
 	}
 
