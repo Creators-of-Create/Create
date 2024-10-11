@@ -59,13 +59,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.BlockEvent;
 
 public class BlockHelper {
-	public static List<IntegerProperty> COUNT_STATES = List.of(
+	private static final List<IntegerProperty> COUNT_STATES = List.of(
 			BlockStateProperties.EGGS,
 			BlockStateProperties.PICKLES,
 			BlockStateProperties.CANDLES
 	);
 
-	public static List<BooleanProperty> VINE_STATES = List.of(
+	private static final List<BooleanProperty> VINE_STATES = List.of(
 			VineBlock.UP,
 			VineBlock.NORTH,
 			VineBlock.EAST,
