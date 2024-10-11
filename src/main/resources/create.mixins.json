@@ -15,6 +15,7 @@
     "LavaSwimmingMixin",
     "MainMixin",
     "MapItemSavedDataMixin",
+    "SmithingMenuMixin",
     "TestCommandMixin",
     "WaterWheelFluidSpreadMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
@@ -47,7 +48,7 @@
     "client.MapRendererMapInstanceMixin",
     "client.PlayerRendererMixin",
     "client.WindowResizeMixin",
-	"compat.JourneyFullscreenMapMixin"
+    "compat.JourneyFullscreenMapMixin"
   ],
   "injectors": {
     "defaultRequire": 1
