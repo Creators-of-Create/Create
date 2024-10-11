@@ -12,7 +12,7 @@ public interface CustomUseEffectsItem {
 	 *
 	 * @param stack The ItemStack being used.
 	 * @param entity The LivingEntity using the item.
-	 * @return {@link TriState#DEFAULT} for default behavior, or boolean to override default behavior
+	 * @return {@link TriState#DEFAULT} for default behavior, or {@link TriState#TRUE} to override default behavior
 	 */
 	default TriState shouldTriggerUseEffects(ItemStack stack, LivingEntity entity) {
 		return TriState.DEFAULT;

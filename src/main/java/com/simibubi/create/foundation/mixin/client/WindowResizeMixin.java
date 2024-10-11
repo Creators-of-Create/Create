@@ -14,7 +14,9 @@ import net.minecraft.client.Minecraft;
 
 @Mixin(Minecraft.class)
 public class WindowResizeMixin {
-	@Shadow @Final private Window window;
+	@Shadow
+	@Final
+	private Window window;
 
 	@Inject(method = "resizeDisplay()V", at = @At("TAIL"))
 	private void create$updateWindowSize(CallbackInfo ci) {

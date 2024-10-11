@@ -12,7 +12,8 @@ import net.minecraft.server.level.BlockDestructionProgress;
 
 @Mixin(BlockDestructionProgress.class)
 public class BlockDestructionProgressMixin implements BlockDestructionProgressExtension {
-	@Unique private Set<BlockPos> create$extraPositions;
+	@Unique
+	private Set<BlockPos> create$extraPositions;
 
 	@Override
 	public Set<BlockPos> create$getExtraPositions() {

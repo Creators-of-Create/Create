@@ -33,7 +33,6 @@ public abstract class MapItemSavedDataMixin implements StationMapData {
 	@Unique
 	private static final String STATION_MARKERS_KEY = "create:stations";
 
-
 	@Shadow
 	@Final
 	public int centerX;
@@ -52,17 +51,6 @@ public abstract class MapItemSavedDataMixin implements StationMapData {
 
 	@Shadow
 	private int trackedDecorationCount;
-
-
-	@Shadow
-	protected abstract void removeDecoration(String pIdentifier);
-
-	@Shadow
-	protected abstract void setDecorationsDirty();
-
-	@Shadow
-	public abstract boolean isTrackedCountOverLimit(int pTrackedCount);
-
 
 	@Unique
 	private final Map<String, StationMarker> create$stationMarkers = Maps.newHashMap();
@@ -121,6 +109,15 @@ public abstract class MapItemSavedDataMixin implements StationMapData {
 			setDecorationsDirty();
 		}
 	}
+
+	@Shadow
+	protected abstract void removeDecoration(String pIdentifier);
+
+	@Shadow
+	protected abstract void setDecorationsDirty();
+
+	@Shadow
+	public abstract boolean isTrackedCountOverLimit(int pTrackedCount);
 
 	@Override
 	public boolean create$toggleStation(LevelAccessor level, BlockPos pos, StationBlockEntity stationBlockEntity) {
