@@ -11,15 +11,11 @@ import net.minecraft.world.entity.Entity;
 
 @Mixin(value = Entity.class, priority = 900)
 public class EntityMixin {
-	
 	@Inject(method = "fireImmune()Z", at = @At("RETURN"), cancellable = true)
-	public void create$onFireImmune(CallbackInfoReturnable<Boolean> cir) {
+	private void create$onFireImmune(CallbackInfoReturnable<Boolean> cir) {
 		if (!cir.getReturnValueZ()) {
-			Entity self = (Entity) (Object) this;
-			boolean immune = self.getPersistentData().getBoolean(NetheriteDivingHandler.FIRE_IMMUNE_KEY);
-			if (immune)
-				cir.setReturnValue(immune);
+			if (((Entity) (Object) this).getPersistentData().getBoolean(NetheriteDivingHandler.FIRE_IMMUNE_KEY))
+				cir.setReturnValue(true);
 		}
 	}
-	
 }

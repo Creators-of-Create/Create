@@ -22,18 +22,15 @@ public abstract class CustomItemUseEffectsMixin extends Entity {
 		super(entityType, level);
 	}
 
-	@Shadow
-	public abstract ItemStack getUseItem();
+	@Shadow public abstract ItemStack getUseItem();
 
 	@Inject(method = "shouldTriggerItemUseEffects()Z", at = @At("HEAD"), cancellable = true)
 	private void create$onShouldTriggerUseEffects(CallbackInfoReturnable<Boolean> cir) {
 		ItemStack using = getUseItem();
 		Item item = using.getItem();
 		if (item instanceof CustomUseEffectsItem handler) {
-			Boolean result = handler.shouldTriggerUseEffects(using, (LivingEntity) (Object) this);
-			if (result != null) {
-				cir.setReturnValue(result);
-			}
+			if (handler.shouldTriggerUseEffects(using, (LivingEntity) (Object) this) != null)
+				cir.setReturnValue(true);
 		}
 	}
 
