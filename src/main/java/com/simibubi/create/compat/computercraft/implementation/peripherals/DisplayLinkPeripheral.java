@@ -36,6 +36,7 @@ public class DisplayLinkPeripheral extends SyncedPeripheral<DisplayLinkBlockEnti
 
 	@LuaFunction(mainThread = true)
 	public final Object[] getSize() {
+		blockEntity.updateGatheredData();
 		DisplayTargetStats stats = blockEntity.activeTarget.provideStats(new DisplayLinkContext(blockEntity.getLevel(), blockEntity));
 		return new Object[]{stats.maxRows(), stats.maxColumns()};
 	}
