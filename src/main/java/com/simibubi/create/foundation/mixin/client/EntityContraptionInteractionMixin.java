@@ -41,7 +41,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 	}
 
 	@Shadow
-	public Level level;
+	private Level level;
 
 	@Shadow
 	private Vec3 position;
@@ -55,6 +55,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 	@Shadow
 	private EntityDimensions dimensions;
+
 
 	@Shadow
 	protected abstract float nextStep();
@@ -98,7 +99,8 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 	}
 
 	// involves block step sounds on contraptions
-	// IFNE line 661 injecting before `!blockstate.isAir(this.world, blockpos)`
+	// injecting before `!blockstate1.isAir(this.world, blockpos)`
+	// `if (this.moveDist > this.nextStep && !blockstate1.isAir()) {`
 	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z", ordinal = 0))
 	private void create$contraptionStepSounds(MoverType mover, Vec3 movement, CallbackInfo ci) {
 		Vec3 worldPos = position.add(0, -0.2, 0);

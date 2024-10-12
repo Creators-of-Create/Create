@@ -21,8 +21,7 @@ public class BlockItemMixin {
 	@Inject(method = "place", at = @At("HEAD"), cancellable = true)
 	private void create$fixDeployerPlacement(BlockPlaceContext pContext, CallbackInfoReturnable<InteractionResult> cir) {
 		BlockState state = pContext.getLevel().getBlockState(((UseOnContextAccessor) pContext).create$getHitResult().getBlockPos());
-		if (!state.canBeReplaced() && pContext.getPlayer() instanceof DeployerFakePlayer) {
+		if (!state.canBeReplaced() && pContext.getPlayer() instanceof DeployerFakePlayer)
 			cir.setReturnValue(InteractionResult.PASS);
-		}
 	}
 }
