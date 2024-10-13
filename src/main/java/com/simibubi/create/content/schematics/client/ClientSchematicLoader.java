@@ -1,5 +1,7 @@
 package com.simibubi.create.content.schematics.client;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -71,6 +73,14 @@ public class ClientSchematicLoader {
 			if (!validateSizeLimitation(size))
 				return;
 
+			// Validate if the file is encoded in a GZIP compatible format
+			if (!isGZIPEncoded(path.toFile())) {
+				LocalPlayer player = Minecraft.getInstance().player;
+				if (player != null)
+					player.displayClientMessage(Lang.translateDirect("schematics.wrongFormat"), false);
+				return;
+			}
+
 			in = Files.newInputStream(path, StandardOpenOption.READ);
 			activeUploads.put(schematic, in);
 			AllPackets.getChannel().sendToServer(SchematicUploadPacket.begin(schematic, size));
@@ -92,6 +102,21 @@ public class ClientSchematicLoader {
 			return false;
 		}
 		return true;
+	}
+
+	public static boolean isGZIPEncoded(File file) {
+		try (FileInputStream fis = new FileInputStream(file)) {
+			byte[] bytes = new byte[2];
+			if (fis.read(bytes) != 2)
+				return false;
+
+			int byte1 = bytes[0] & 0xFF;
+			int byte2 = bytes[1] & 0xFF;
+
+			return byte1 == 0x1F && byte2 == 0x8B;
+		} catch(IOException exception) {
+			return false;
+		}
 	}
 
 	private void continueUpload(String schematic) {
