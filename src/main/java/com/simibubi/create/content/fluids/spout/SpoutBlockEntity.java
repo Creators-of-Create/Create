@@ -232,6 +232,8 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	protected void spawnProcessingParticles(FluidStack fluid) {
 		if (isVirtual())
 			return;
+		if (fluid.isEmpty())
+			return;
 		Vec3 vec = VecHelper.getCenterOf(worldPosition);
 		vec = vec.subtract(0, 8 / 16f, 0);
 		ParticleOptions particle = FluidFX.getFluidParticle(fluid);
