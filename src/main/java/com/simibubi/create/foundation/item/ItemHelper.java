@@ -2,10 +2,17 @@ package com.simibubi.create.foundation.item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
+
+import com.simibubi.create.foundation.block.IBE;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
@@ -26,7 +33,7 @@ public class ItemHelper {
 	public static boolean sameItem(ItemStack stack, ItemStack otherStack) {
 		return !otherStack.isEmpty() && stack.is(otherStack.getItem());
 	}
-	
+
 	public static Predicate<ItemStack> sameItemPredicate(ItemStack stack) {
 		return s -> sameItem(stack, s);
 	}
@@ -71,6 +78,13 @@ public class ItemHelper {
 				return false;
 		}
 		return true;
+	}
+
+	public static <T extends IBE<? extends BlockEntity>> int calcRedstoneFromBlockEntity(T ibe, Level level, BlockPos pos) {
+		return ibe.getBlockEntityOptional(level, pos)
+				.map(be -> be.getCapability(ForgeCapabilities.ITEM_HANDLER))
+				.map(lo -> lo.map(ItemHelper::calcRedstoneFromInventory).orElse(0))
+				.orElse(0);
 	}
 
 	public static int calcRedstoneFromInventory(@Nullable IItemHandler inv) {
