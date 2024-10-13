@@ -1,0 +1,6 @@
+package com.simibubi.create;
+
+public class CreateBuildInfo {
+  public static final String VERSION = "{{ version }}";
+  public static final String GIT_COMMIT = {{ gitCommit }};
+}

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
+import com.simibubi.create.CreateBuildInfo;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -110,7 +111,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 				.render(graphics);
 			ms.popPose();
 		}
-		
+
 	    RenderSystem.enableBlend();
 
 		ms.pushPose();
@@ -130,7 +131,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		ms.translate(0, 0, 200);
 		graphics.drawCenteredString(font, Components.literal(Create.NAME).withStyle(ChatFormatting.BOLD)
 			.append(
-				Components.literal(" v" + Create.VERSION).withStyle(ChatFormatting.BOLD, ChatFormatting.WHITE)),
+				Components.literal(" v" + CreateBuildInfo.VERSION).withStyle(ChatFormatting.BOLD, ChatFormatting.WHITE)),
 			width / 2, 89, 0xFF_E4BB67);
 		ms.popPose();
 
