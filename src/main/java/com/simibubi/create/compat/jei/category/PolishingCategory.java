@@ -40,7 +40,7 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 				.addSlot(RecipeIngredientRole.OUTPUT, 132, 29)
 				.setBackground(getRenderedSlot(output), -1, -1)
 				.addItemStack(output.getStack())
-				.addTooltipCallback(addStochasticTooltip(output));
+				.addRichTooltipCallback(addStochasticTooltip(output));
 	}
 
 	@Override

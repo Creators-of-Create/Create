@@ -47,7 +47,7 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 			builder.addSlot(RecipeIngredientRole.OUTPUT, single ? 132 : 132 + xOffset, 51 + yOffset)
 				.setBackground(getRenderedSlot(output), -1, -1)
 				.addItemStack(output.getStack())
-				.addTooltipCallback(addStochasticTooltip(output));
+				.addRichTooltipCallback(addStochasticTooltip(output));
 		}
 
 		if (recipe.shouldKeepHeldItem())

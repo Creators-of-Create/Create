@@ -67,7 +67,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 					.addSlot(RecipeIngredientRole.INPUT, 17 + xOffset + (i % 3) * 19, 51 - (i / 3) * 19)
 					.setBackground(getRenderedSlot(), -1, -1)
 					.addIngredients(ForgeTypes.FLUID_STACK, withImprovedVisibility(fluidIngredient.getMatchingFluidStacks()))
-					.addTooltipCallback(addFluidTooltip(fluidIngredient.getRequiredAmount()));
+					.addRichTooltipCallback(addFluidTooltip(fluidIngredient.getRequiredAmount()));
 			i++;
 		}
 
@@ -82,7 +82,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 					.addSlot(RecipeIngredientRole.OUTPUT, xPosition, yPosition)
 					.setBackground(getRenderedSlot(result), -1, -1)
 					.addItemStack(result.getStack())
-					.addTooltipCallback(addStochasticTooltip(result));
+					.addRichTooltipCallback(addStochasticTooltip(result));
 			i++;
 		}
 
@@ -94,7 +94,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 					.addSlot(RecipeIngredientRole.OUTPUT, xPosition, yPosition)
 					.setBackground(getRenderedSlot(), -1, -1)
 					.addIngredient(ForgeTypes.FLUID_STACK, withImprovedVisibility(fluidResult))
-					.addTooltipCallback(addFluidTooltip(fluidResult.getAmount()));
+					.addRichTooltipCallback(addFluidTooltip(fluidResult.getAmount()));
 			i++;
 		}
 

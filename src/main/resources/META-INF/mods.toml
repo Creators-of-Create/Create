@@ -36,3 +36,10 @@ Technology that empowers the player.'''
     versionRange="[1.0.0-alpha,2.0)"
     ordering="AFTER"
     side="CLIENT"
+
+[[dependencies.create]]
+    modId="jei"
+    mandatory=false
+    versionRange="[15.19.0,)"
+    ordering="NONE"
+    side="CLIENT"

@@ -1,5 +1,7 @@
 package com.simibubi.create.content.fluids;
 
+import com.simibubi.create.content.fluids.potion.PotionFluid;
+
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -10,17 +12,35 @@ import net.minecraftforge.fluids.ForgeFlowingFluid;
 
 public class VirtualFluid extends ForgeFlowingFluid {
 
-	public VirtualFluid(Properties properties) {
+	public static VirtualFluid createSource(Properties properties) {
+		return new VirtualFluid(properties, true);
+	}
+
+	public static VirtualFluid createFlowing(Properties properties) {
+		return new VirtualFluid(properties, false);
+	}
+
+
+	private final boolean source;
+
+	public VirtualFluid(Properties properties, boolean source) {
 		super(properties);
+		this.source = source;
 	}
 
 	@Override
 	public Fluid getSource() {
+		if (source) {
+			return this;
+		}
 		return super.getSource();
 	}
 
 	@Override
 	public Fluid getFlowing() {
+		if (source) {
+			return super.getFlowing();
+		}
 		return this;
 	}
 
@@ -36,7 +56,7 @@ public class VirtualFluid extends ForgeFlowingFluid {
 
 	@Override
 	public boolean isSource(FluidState p_207193_1_) {
-		return false;
+		return source;
 	}
 
 	@Override

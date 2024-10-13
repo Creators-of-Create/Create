@@ -117,7 +117,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 						.addSlot(RecipeIngredientRole.OUTPUT, 141 + xOffset, 48 + yOffset)
 						.setBackground(getRenderedSlot(output), -1, -1)
 						.addItemStack(output.getStack())
-						.addTooltipCallback(addStochasticTooltip(output));
+						.addRichTooltipCallback(addStochasticTooltip(output));
 				i++;
 			}
 		}
