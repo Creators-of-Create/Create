@@ -82,15 +82,18 @@ public class ServerSchematicLoader {
 					(filePath, attributes) -> filePath.toString().endsWith(".nbt"))) {
 				for (Path path : filePaths.toList()) {
 					try (InputStream stream = new FileInputStream(path.toFile())) {
-						String[] pathSplit = path.toString()
-								.replace("schematics/uploaded/", "")
-								.replace(".nbt", "")
-								.split("/");
-						String playerName = pathSplit[0];
-						String schematicName = pathSplit[1];
 						String schematicMd5Hex = DigestUtils.md5Hex(stream);
 
-						sumToSchematic.computeIfAbsent(schematicMd5Hex, k -> new SchematicFile(playerName, schematicName));
+						sumToSchematic.computeIfAbsent(schematicMd5Hex, k -> {
+							String[] pathSplit = path.toString()
+									.replace("schematics/uploaded/", "")
+									.replace(".nbt", "")
+									.split("/");
+							String playerName = pathSplit[0];
+							String schematicName = pathSplit[1];
+
+							return new SchematicFile(playerName, schematicName);
+						});
 					}
 				}
 			} catch (IOException ignored) {}
