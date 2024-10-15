@@ -57,6 +57,10 @@ public class SchematicItem extends Item {
 		super(properties);
 	}
 
+	public static ItemStack create(HolderGetter<Block> lookup, SchematicFile schematicFile) {
+		return create(lookup, schematicFile.schematicName(), schematicFile.playerName());
+	}
+
 	public static ItemStack create(HolderGetter<Block> lookup, String schematic, String owner) {
 		ItemStack blueprint = AllItems.SCHEMATIC.asStack();
 
