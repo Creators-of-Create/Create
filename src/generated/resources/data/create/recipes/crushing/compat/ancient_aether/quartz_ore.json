@@ -1,0 +1,32 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ancient_aether"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "ancient_aether:aether_quartz_ore"
+    }
+  ],
+  "processingTime": 150,
+  "results": [
+    {
+      "item": "minecraft:quartz"
+    },
+    {
+      "chance": 0.75,
+      "item": "minecraft:quartz"
+    },
+    {
+      "chance": 0.125,
+      "item": "aether:holystone"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    }
+  ]
+}

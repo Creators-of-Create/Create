@@ -431,6 +431,58 @@
     {
       "id": "regions_unexplored:stripped_yellow_bioshroom_hyphae",
       "required": false
+    },
+    {
+      "id": "aether:stripped_skyroot_wood",
+      "required": false
+    },
+    {
+      "id": "deep_aether:stripped_roseroot_wood",
+      "required": false
+    },
+    {
+      "id": "deep_aether:stripped_yagroot_wood",
+      "required": false
+    },
+    {
+      "id": "deep_aether:stripped_cruderoot_wood",
+      "required": false
+    },
+    {
+      "id": "deep_aether:stripped_conberry_wood",
+      "required": false
+    },
+    {
+      "id": "deep_aether:stripped_sunroot_wood",
+      "required": false
+    },
+    {
+      "id": "ancient_aether:stripped_highsproot_wood",
+      "required": false
+    },
+    {
+      "id": "ancient_aether:stripped_sakura_wood",
+      "required": false
+    },
+    {
+      "id": "aether_redux:stripped_fieldsproot_wood",
+      "required": false
+    },
+    {
+      "id": "aether_redux:stripped_blightwillow_wood",
+      "required": false
+    },
+    {
+      "id": "aether_redux:stripped_crystal_wood",
+      "required": false
+    },
+    {
+      "id": "aether_redux:stripped_glacia_wood",
+      "required": false
+    },
+    {
+      "id": "aether_redux:stripped_cloudcap_hyphae",
+      "required": false
     }
   ]
 }

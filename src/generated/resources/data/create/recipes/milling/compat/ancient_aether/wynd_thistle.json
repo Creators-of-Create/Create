@@ -1,0 +1,21 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ancient_aether"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "ancient_aether:wynd_thistle"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:light_blue_dye"
+    }
+  ]
+}

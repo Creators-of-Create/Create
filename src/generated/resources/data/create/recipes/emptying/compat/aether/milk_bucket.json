@@ -1,0 +1,23 @@
+{
+  "type": "create:emptying",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "aether"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "aether:skyroot_milk_bucket"
+    }
+  ],
+  "results": [
+    {
+      "item": "aether:skyroot_bucket"
+    },
+    {
+      "amount": 1000,
+      "fluid": "minecraft:milk"
+    }
+  ]
+}

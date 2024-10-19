@@ -75,7 +75,13 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 		// Regions Unexplored
 
 		RU_PEAT_MUD = moddedMud(Mods.RU, "peat"),
-		RU_SILT_MUD = moddedMud(Mods.RU, "silt")
+		RU_SILT_MUD = moddedMud(Mods.RU, "silt"),
+
+		// Deep Aether
+		D_AET_MUD = create(Mods.D_AET.recipeId("aether_mud"), b -> b.require(Fluids.WATER, 250)
+				.require(Mods.AET, "aether_dirt")
+				.output(Mods.D_AET, "aether_mud")
+				.whenModLoaded(Mods.D_AET.getId()))
 
 	;
 

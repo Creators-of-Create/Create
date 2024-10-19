@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "aether_redux"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "aether_redux:sporing_blightwillow_log"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "aether_redux:stripped_blightwillow_log"
+    }
+  ]
+}

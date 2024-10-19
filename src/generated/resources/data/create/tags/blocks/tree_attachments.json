@@ -5,6 +5,38 @@
     "minecraft:mangrove_propagule",
     "minecraft:moss_carpet",
     "minecraft:shroomlight",
-    "minecraft:vine"
+    "minecraft:vine",
+    {
+      "id": "aether_redux:cloudcap_stem_wall",
+      "required": false
+    },
+    {
+      "id": "aether_redux:cloudcap_spores",
+      "required": false
+    },
+    {
+      "id": "aether_redux:blightwillow_log_wall",
+      "required": false
+    },
+    {
+      "id": "aether_redux:golden_vines",
+      "required": false
+    },
+    {
+      "id": "aether_redux:golden_vines_plant",
+      "required": false
+    },
+    {
+      "id": "deep_aether:aether_moss_carpet",
+      "required": false
+    },
+    {
+      "id": "deep_aether:yagroot_vine",
+      "required": false
+    },
+    {
+      "id": "deep_aether:sunroot_hanger",
+      "required": false
+    }
   ]
 }
