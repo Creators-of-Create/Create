@@ -736,6 +736,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		dimensional.updateRenderedCutoff();
 	}
 
+	// FIXME: entities should not reference their visual in any way
 	@OnlyIn(Dist.CLIENT)
 	private WeakReference<CarriageContraptionVisual> instanceHolder;
 

@@ -66,8 +66,8 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 
 				int light = getBogeyLightCoords(entity, bogey, partialTicks);
 
-				bogey.type.render(null, bogey.wheelAngle.getValue(partialTicks), ms, partialTicks, buffers, light,
-					overlay, bogey.getStyle(), bogey.bogeyData);
+				bogey.getStyle().render(bogey.getSize(), partialTicks, ms, buffers, light,
+					overlay, bogey.wheelAngle.getValue(partialTicks), bogey.bogeyData, true);
 
 				ms.popPose();
 			}
@@ -75,7 +75,6 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 			bogey.updateCouplingAnchor(position, viewXRot, viewYRot, bogeySpacing, partialTicks, bogey.isLeading);
 			if (!carriage.isOnTwoBogeys())
 				bogey.updateCouplingAnchor(position, viewXRot, viewYRot, bogeySpacing, partialTicks, !bogey.isLeading);
-
 		});
 	}
 
@@ -99,7 +98,6 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 	}
 
 	public static int getBogeyLightCoords(CarriageContraptionEntity entity, CarriageBogey bogey, float partialTicks) {
-
 		var lightPos = BlockPos.containing(
 			Objects.requireNonNullElseGet(bogey.getAnchorPosition(), () -> entity.getLightProbePosition(partialTicks)));
 
