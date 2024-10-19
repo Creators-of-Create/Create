@@ -79,6 +79,16 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 
 		AET_GRASS = moddedGrass(Mods.AET, "aether"),
 
+		AET_MILK_BUCKET = create(Mods.AET.recipeId("milk_bucket"), b -> b.require(Tags.Fluids.MILK, 1000)
+				.require(Mods.AET, "skyroot_bucket")
+				.output(Mods.AET, "skyroot_milk_bucket")
+				.whenModLoaded(Mods.AET.getId())),
+
+		AET_WATER_BUCKET = create(Mods.AET.recipeId("water_bucket"), b -> b.require(Fluids.WATER, 1000)
+				.require(Mods.AET, "skyroot_bucket")
+				.output(Mods.AET, "skyroot_water_bucket")
+				.whenModLoaded(Mods.AET.getId())),
+
 		RU_PEAT_GRAS = moddedGrass(Mods.RU, "peat"),
 
 		RU_SILT_GRAS = moddedGrass(Mods.RU, "silt"),
@@ -88,7 +98,14 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 		VMP_CURSED_GRASS = create(Mods.VMP.recipeId("cursed_grass"), b -> b.require(Fluids.WATER, 500)
 			.require(Mods.VMP, "cursed_earth")
 			.output(Mods.VMP, "cursed_grass")
-			.whenModLoaded(Mods.VMP.getId()));
+			.whenModLoaded(Mods.VMP.getId())),
+
+		// Filling a normal bucket with Poison is already provided via Item Capabilities.
+		D_AET_POISON_BUCKET = create(Mods.D_AET.recipeId("skyroot_poison_bucket"), b -> b
+				.require(Mods.D_AET, "poison_fluid", 1000)
+				.require(Mods.AET, "skyroot_bucket")
+				.output(Mods.AET, "skyroot_poison_bucket")
+				.whenModLoaded(Mods.D_AET.getId()))
 
 	;
 

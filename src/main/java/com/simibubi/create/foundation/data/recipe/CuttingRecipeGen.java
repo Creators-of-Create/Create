@@ -164,8 +164,27 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		WSP = cuttingCompat(Mods.WSP, "holly", "chestnut"),
 
 		// Good Ending
-		GOOD = cuttingCompat(Mods.GOOD, "muddy_oak", "cypress")
+		GOOD = cuttingCompat(Mods.GOOD, "muddy_oak", "cypress"),
 
+		// The Aether
+		AET_1 = cuttingCompat(Mods.AET, "skyroot"),
+		AET_2 = stripAndMakePlanks(Mods.AET, "golden_oak_log", "stripped_skyroot_log", null),
+		AET_3 = stripAndMakePlanks(Mods.AET, "golden_oak_wood", "stripped_skyroot_wood", null),
+
+		// Deep Aether
+		D_AET = cuttingCompat(Mods.D_AET, "roseroot", "yagroot", "cruderoot", "conberry", "sunroot"),
+
+		// Ancient Aether
+		A_AET = cuttingCompat(Mods.A_AET, "highsproot", "sakura"),
+
+		// Aether Redux
+		AET_R_1 = cuttingCompat(Mods.AET_R, "fieldsproot", "blightwillow", "crystal", "glacia"),
+		AET_R_2 = stripAndMakePlanks(Mods.AET_R, "sporing_blightwillow_log", "stripped_blightwillow_log", null),
+		AET_R_3 = stripAndMakePlanks(Mods.AET_R, "sporing_blightwillow_wood", "stripped_blightwillow_wood", null),
+		AET_R_4 = stripAndMakePlanks(Mods.AET_R, "cloudcap_stem", "stripped_cloudcap_stem", "cloudcap_planks"),
+		AET_R_5 = stripAndMakePlanks(Mods.AET_R, "cloudcap_hyphae", "stripped_cloudcap_hyphae", "cloudcap_planks"),
+		AET_R_6 = stripAndMakePlanks(Mods.AET_R, null, "jellyshroom_stem", "jellyshroom_planks"),
+		AET_R_7 = stripAndMakePlanks(Mods.AET_R, null, "jellyshroom_hyphae", "jellyshroom_planks")
 		;
 
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {

@@ -1,0 +1,26 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "deep_aether"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "deep_aether:tall_aerlavender"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 3,
+      "item": "minecraft:pink_dye"
+    },
+    {
+      "chance": 0.25,
+      "count": 2,
+      "item": "minecraft:pink_dye"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "ancient_aether:valkyrie_clay"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 3,
+      "item": "ancient_aether:valkyrie_clay_ball"
+    },
+    {
+      "chance": 0.5,
+      "item": "ancient_aether:valkyrie_clay_ball"
+    }
+  ]
+}

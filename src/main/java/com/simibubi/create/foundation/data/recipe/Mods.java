@@ -56,7 +56,10 @@ public enum Mods {
 	AET("aether"),
 	HH("hauntedharvest"),
 	VMP("vampirism"),
-	WSP("windswept")
+	WSP("windswept"),
+	D_AET("deep_aether"),
+	A_AET("ancient_aether"),
+	AET_R("aether_redux")
 
 	;
 

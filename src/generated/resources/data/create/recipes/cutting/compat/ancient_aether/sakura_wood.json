@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ancient_aether"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "ancient_aether:sakura_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "ancient_aether:stripped_sakura_wood"
+    }
+  ]
+}

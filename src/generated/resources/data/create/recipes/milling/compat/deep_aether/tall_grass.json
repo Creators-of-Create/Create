@@ -1,0 +1,29 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "deep_aether"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "deep_aether:tall_golden_grass"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "chance": 0.5,
+      "item": "minecraft:wheat_seeds"
+    },
+    {
+      "chance": 0.4,
+      "item": "deep_aether:golden_grass_seeds"
+    },
+    {
+      "chance": 0.04,
+      "item": "aether:ambrosium_shard"
+    }
+  ]
+}

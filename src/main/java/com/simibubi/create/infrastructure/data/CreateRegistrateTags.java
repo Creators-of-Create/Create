@@ -134,6 +134,17 @@ public class CreateRegistrateTags {
 		TagGen.addOptional(prov.tag(AllBlockTags.ROOTS.tag), Mods.TF,
 				List.of("root", "liveroot_block", "mangrove_root"));
 
+		TagGen.addOptional(prov.tag(AllBlockTags.ROOTS.tag), Mods.D_AET,
+				List.of("yagroot_roots"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.FAN_TRANSPARENT.tag), Mods.D_AET,
+				List.of("yagroot_roots"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.TREE_ATTACHMENTS.tag), Mods.AET_R,
+				List.of("cloudcap_stem_wall", "cloudcap_spores", "blightwillow_log_wall", "golden_vines", "golden_vines_plant"));
+		TagGen.addOptional(prov.tag(AllBlockTags.TREE_ATTACHMENTS.tag), Mods.D_AET,
+				List.of("aether_moss_carpet", "yagroot_vine", "sunroot_hanger"));
+
 		// VALIDATE
 
 		for (AllBlockTags tag : AllBlockTags.values()) {
@@ -200,6 +211,11 @@ public class CreateRegistrateTags {
 		TagGen.addOptional(prov.tag(AllItemTags.UA_CORAL.tag), Mods.UA, List.of("acan_coral",
 				"finger_coral", "star_coral", "moss_coral", "petal_coral", "branch_coral",
 				"rock_coral", "pillow_coral", "chrome_coral", "silk_coral"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag), Mods.AET, List.of("skyroot_bucket",
+				"skyroot_water_bucket", "skyroot_milk_bucket", "skyroot_remedy_bucket", "skyroot_poison_bucket"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag), Mods.D_AET, List.of("poison_bucket"));
 
 		// VALIDATE
 
@@ -273,6 +289,13 @@ public class CreateRegistrateTags {
 		TagGen.addOptional(logAppender, Mods.RU, "stripped_yellow_bioshroom_stem");
 		TagGen.addOptional(woodAppender, Mods.RU, "stripped_yellow_bioshroom_hyphae");
 		TagGen.addOptional(logAppender, Mods.RU, "brimwood_log_magma");
+
+		helper.add(Mods.AET, "skyroot");
+		helper.add(Mods.D_AET, "roseroot", "yagroot", "cruderoot", "conberry", "sunroot");
+		helper.add(Mods.A_AET, "highsproot", "sakura");
+		helper.add(Mods.AET_R, "fieldsproot", "blightwillow", "crystal", "glacia");
+		TagGen.addOptional(logAppender, Mods.AET_R, "stripped_cloudcap_stem");
+		TagGen.addOptional(woodAppender, Mods.AET_R, "stripped_cloudcap_hyphae");
 	}
 
 	private static void genFluidTags(RegistrateTagsProvider<Fluid> provIn) {

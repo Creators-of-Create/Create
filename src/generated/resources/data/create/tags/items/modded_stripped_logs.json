@@ -439,6 +439,58 @@
     {
       "id": "regions_unexplored:brimwood_log_magma",
       "required": false
+    },
+    {
+      "id": "aether:stripped_skyroot_log",
+      "required": false
+    },
+    {
+      "id": "deep_aether:stripped_roseroot_log",
+      "required": false
+    },
+    {
+      "id": "deep_aether:stripped_yagroot_log",
+      "required": false
+    },
+    {
+      "id": "deep_aether:stripped_cruderoot_log",
+      "required": false
+    },
+    {
+      "id": "deep_aether:stripped_conberry_log",
+      "required": false
+    },
+    {
+      "id": "deep_aether:stripped_sunroot_log",
+      "required": false
+    },
+    {
+      "id": "ancient_aether:stripped_highsproot_log",
+      "required": false
+    },
+    {
+      "id": "ancient_aether:stripped_sakura_log",
+      "required": false
+    },
+    {
+      "id": "aether_redux:stripped_fieldsproot_log",
+      "required": false
+    },
+    {
+      "id": "aether_redux:stripped_blightwillow_log",
+      "required": false
+    },
+    {
+      "id": "aether_redux:stripped_crystal_log",
+      "required": false
+    },
+    {
+      "id": "aether_redux:stripped_glacia_log",
+      "required": false
+    },
+    {
+      "id": "aether_redux:stripped_cloudcap_stem",
+      "required": false
     }
   ]
 }

@@ -9,6 +9,30 @@
     "minecraft:splash_potion",
     "minecraft:lingering_potion",
     "minecraft:honey_bottle",
-    "minecraft:cake"
+    "minecraft:cake",
+    {
+      "id": "aether:skyroot_bucket",
+      "required": false
+    },
+    {
+      "id": "aether:skyroot_water_bucket",
+      "required": false
+    },
+    {
+      "id": "aether:skyroot_milk_bucket",
+      "required": false
+    },
+    {
+      "id": "aether:skyroot_remedy_bucket",
+      "required": false
+    },
+    {
+      "id": "aether:skyroot_poison_bucket",
+      "required": false
+    },
+    {
+      "id": "deep_aether:poison_bucket",
+      "required": false
+    }
   ]
 }
