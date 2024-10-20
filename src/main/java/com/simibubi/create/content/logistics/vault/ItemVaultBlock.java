@@ -159,11 +159,7 @@ public class ItemVaultBlock extends Block implements IWrenchable, IBE<ItemVaultB
 
 	@Override
 	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
-		return getBlockEntityOptional(pLevel, pPos)
-			.map(vte -> vte.getCapability(ForgeCapabilities.ITEM_HANDLER))
-			.map(lo -> lo.map(ItemHelper::calcRedstoneFromInventory)
-				.orElse(0))
-			.orElse(0);
+		return ItemHelper.calcRedstoneFromBlockEntity(this, pLevel, pPos);
 	}
 
 	@Override
