@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import net.minecraftforge.fml.loading.FMLLoader;
+
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -152,6 +154,9 @@ public class Create {
 
 		// FIXME: this is not thread-safe
 		Mods.CURIOS.executeIfInstalled(() -> () -> Curios.init(modEventBus, forgeEventBus));
+
+		if (FMLLoader.getDist().isDedicatedServer())
+			SCHEMATIC_RECEIVER.computeHashes();
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {

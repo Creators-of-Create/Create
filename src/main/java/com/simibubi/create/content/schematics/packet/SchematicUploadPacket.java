@@ -1,6 +1,7 @@
 package com.simibubi.create.content.schematics.packet;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.schematics.SchematicFile;
 import com.simibubi.create.content.schematics.table.SchematicTableMenu;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -8,6 +9,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent.Context;
+
+import java.io.File;
 
 public class SchematicUploadPacket extends SimplePacketBase {
 
@@ -20,14 +23,17 @@ public class SchematicUploadPacket extends SimplePacketBase {
 	private String schematic;
 	private byte[] data;
 
+	private String md5Hex;
+
 	public SchematicUploadPacket(int code, String schematic) {
 		this.code = code;
 		this.schematic = schematic;
 	}
 
-	public static SchematicUploadPacket begin(String schematic, long size) {
+	public static SchematicUploadPacket begin(String schematic, long size, String md5Hex) {
 		SchematicUploadPacket pkt = new SchematicUploadPacket(BEGIN, schematic);
 		pkt.size = size;
+		pkt.md5Hex = md5Hex;
 		return pkt;
 	}
 
@@ -45,8 +51,10 @@ public class SchematicUploadPacket extends SimplePacketBase {
 		code = buffer.readInt();
 		schematic = buffer.readUtf(256);
 
-		if (code == BEGIN)
+		if (code == BEGIN) {
 			size = buffer.readLong();
+			md5Hex = buffer.readUtf(32);
+		}
 		if (code == WRITE)
 			data = buffer.readByteArray();
 	}
@@ -56,8 +64,10 @@ public class SchematicUploadPacket extends SimplePacketBase {
 		buffer.writeInt(code);
 		buffer.writeUtf(schematic);
 
-		if (code == BEGIN)
+		if (code == BEGIN) {
 			buffer.writeLong(size);
+			buffer.writeUtf(md5Hex);
+		}
 		if (code == WRITE)
 			buffer.writeByteArray(data);
 	}
@@ -69,9 +79,29 @@ public class SchematicUploadPacket extends SimplePacketBase {
 			if (player == null)
 				return;
 			if (code == BEGIN) {
-				BlockPos pos = ((SchematicTableMenu) player.containerMenu).contentHolder
-						.getBlockPos();
-				Create.SCHEMATIC_RECEIVER.handleNewUpload(player, schematic, size, pos);
+				boolean usedLocalFile = false;
+
+				BlockPos pos = ((SchematicTableMenu) player.containerMenu).contentHolder.getBlockPos();
+
+				SchematicFile schematicFile = Create.SCHEMATIC_RECEIVER.getSchematicFileFromSum(md5Hex);
+
+				if (schematicFile != null) {
+					String filePath = String.format(
+							"%s/%s/%s",
+							Create.SCHEMATIC_RECEIVER.getSchematicPath(),
+							schematicFile.playerName(),
+							schematicFile.schematicName()
+					);
+
+					// Check if the file exists
+					if (new File(filePath).isFile()) {
+						Create.SCHEMATIC_RECEIVER.useLocalFile(player.level(), pos, schematicFile);
+						usedLocalFile = true;
+					}
+				}
+
+				if (!usedLocalFile)
+					Create.SCHEMATIC_RECEIVER.handleNewUpload(player, schematic, size, pos);
 			}
 			if (code == WRITE)
 				Create.SCHEMATIC_RECEIVER.handleWriteRequest(player, schematic, data);

@@ -28,6 +28,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 @OnlyIn(Dist.CLIENT)
 public class ClientSchematicLoader {
 
@@ -73,7 +75,11 @@ public class ClientSchematicLoader {
 
 			in = Files.newInputStream(path, StandardOpenOption.READ);
 			activeUploads.put(schematic, in);
-			AllPackets.getChannel().sendToServer(SchematicUploadPacket.begin(schematic, size));
+
+			try (InputStream stream = Files.newInputStream(path, StandardOpenOption.READ)) {
+				String md5 = DigestUtils.md5Hex(stream);
+				AllPackets.getChannel().sendToServer(SchematicUploadPacket.begin(schematic, size, md5));
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
