@@ -242,9 +242,8 @@ public class ServerSchematicLoader {
 
 	public SchematicTableBlockEntity getTable(Level world, BlockPos pos) {
 		BlockEntity be = world.getBlockEntity(pos);
-		if (!(be instanceof SchematicTableBlockEntity))
+		if (!(be instanceof SchematicTableBlockEntity table))
 			return null;
-		SchematicTableBlockEntity table = (SchematicTableBlockEntity) be;
 		return table;
 	}
 

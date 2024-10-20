@@ -12,6 +12,8 @@ import java.util.zip.GZIPInputStream;
 
 import javax.annotation.Nonnull;
 
+import net.minecraftforge.fml.loading.FMLLoader;
+
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -47,7 +49,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.util.thread.SidedThreadGroups;
 
 public class SchematicItem extends Item {
 
@@ -122,7 +123,7 @@ public class SchematicItem extends Item {
 		Path dir;
 		Path file;
 
-		if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER) {
+		if (FMLLoader.getDist().isDedicatedServer()) {
 			dir = Paths.get("schematics", "uploaded").toAbsolutePath();
 			file = Paths.get(owner, schematic);
 		} else {
