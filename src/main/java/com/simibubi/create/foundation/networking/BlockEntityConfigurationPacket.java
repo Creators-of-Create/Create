@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.networking;
 
 import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,7 +35,7 @@ public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntit
 	public boolean handle(Context context) {
 		context.enqueueWork(() -> {
 			ServerPlayer player = context.getSender();
-			if (player == null)
+			if (player == null || player.isSpectator() || AdventureUtil.isAdventure(player))
 				return;
 			Level world = player.level();
 			if (world == null || !world.isLoaded(pos))
@@ -63,7 +65,7 @@ public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntit
 	protected void applySettings(ServerPlayer player, BE be) {
 		applySettings(be);
 	}
-	
+
 	protected boolean causeUpdate() {
 		return true;
 	}

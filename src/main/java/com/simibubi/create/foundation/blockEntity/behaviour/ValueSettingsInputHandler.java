@@ -5,6 +5,7 @@ import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.SidedFilteringBehaviour;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
 import net.minecraft.core.BlockPos;
@@ -92,7 +93,6 @@ public class ValueSettingsInputHandler {
 	}
 
 	public static boolean canInteract(Player player) {
-		return player != null && !player.isSpectator() && !player.isShiftKeyDown();
+		return player != null && !player.isSpectator() && !player.isShiftKeyDown() && !AdventureUtil.isAdventure(player);
 	}
-
 }
