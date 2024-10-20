@@ -352,7 +352,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<ShaftBlock> SHAFT = REGISTRATE.block("shaft", ShaftBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.METAL).forceSolidOn())
+		.properties(p -> p.mapColor(MapColor.METAL).forceSolidOff())
 		.transform(BlockStressDefaults.setNoImpact())
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.axisBlockProvider(false))
@@ -819,7 +819,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<FluidPipeBlock> FLUID_PIPE = REGISTRATE.block("fluid_pipe", FluidPipeBlock::new)
 		.initialProperties(SharedProperties::copperMetal)
-		.properties(p -> p.forceSolidOn())
+		.properties(p -> p.forceSolidOff())
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.pipe())
 		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
