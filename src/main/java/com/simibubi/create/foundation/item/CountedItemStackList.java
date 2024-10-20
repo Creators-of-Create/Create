@@ -22,7 +22,7 @@ public class CountedItemStackList {
 
 	public CountedItemStackList(IItemHandler inventory, FilteringBehaviour filteringBehaviour) {
 		for (int slot = 0; slot < inventory.getSlots(); slot++) {
-			ItemStack extractItem = inventory.extractItem(slot, inventory.getSlotLimit(slot), true);
+			ItemStack extractItem = inventory.getStackInSlot(slot);
 			if (filteringBehaviour.test(extractItem))
 				add(extractItem);
 		}
