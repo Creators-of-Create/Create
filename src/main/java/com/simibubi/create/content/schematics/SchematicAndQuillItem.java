@@ -61,27 +61,13 @@ public class SchematicAndQuillItem extends Item {
 			BlockPos blockpos = BlockPos.containing(vec3);
 
 			CompoundTag entityTag = new CompoundTag();
-			entityTag.put("pos", newDoubleList(vec3.x, vec3.y, vec3.z));
-			entityTag.put("blockPos", newIntegerList(blockpos.getX(), blockpos.getY(), blockpos.getZ()));
+			entityTag.put("pos", NBTHelper.newDoubleList(vec3.x, vec3.y, vec3.z));
+			entityTag.put("blockPos", NBTHelper.newIntegerList(blockpos.getX(), blockpos.getY(), blockpos.getZ()));
 			entityTag.put("nbt", compoundtag.copy());
 			listtag.add(entityTag);
 		}
 
 		nbt.put("entities", listtag);
-	}
-
-	private static ListTag newIntegerList(int... pValues) {
-		ListTag listtag = new ListTag();
-		for (int i : pValues)
-			listtag.add(IntTag.valueOf(i));
-		return listtag;
-	}
-
-	private static ListTag newDoubleList(double... pValues) {
-		ListTag listtag = new ListTag();
-		for (double d0 : pValues)
-			listtag.add(DoubleTag.valueOf(d0));
-		return listtag;
 	}
 
 }
