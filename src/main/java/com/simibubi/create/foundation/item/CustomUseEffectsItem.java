@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.item;
 
+import com.simibubi.create.api.TriState;
+
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -10,10 +12,10 @@ public interface CustomUseEffectsItem {
 	 *
 	 * @param stack The ItemStack being used.
 	 * @param entity The LivingEntity using the item.
-	 * @return null for default behavior, or boolean to override default behavior
+	 * @return {@link TriState#DEFAULT} for default behavior, or {@link TriState#TRUE}/{@link TriState#FALSE} to override default behavior
 	 */
-	default Boolean shouldTriggerUseEffects(ItemStack stack, LivingEntity entity) {
-		return null;
+	default TriState shouldTriggerUseEffects(ItemStack stack, LivingEntity entity) {
+		return TriState.DEFAULT;
 	}
 
 	/**

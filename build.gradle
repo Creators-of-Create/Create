@@ -58,6 +58,8 @@ minecraft {
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
+            property "mixin.debug.export", "true"
+
             //jvmArgs '-XX:+IgnoreUnrecognizedVMOptions', '-XX:+AllowEnhancedClassRedefinition' // uncomment with jbr
 
             mods {
@@ -167,6 +169,11 @@ dependencies {
         jarJar.ranged(it, '[1.0,2.0)')
     }
 
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")) {
+        jarJar.ranged(it, "[0.4.1,)")
+    }
+
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
     compileOnly fg.deobf("dev.engine_room.flywheel:flywheel-forge-api-${flywheel_minecraft_version}:${flywheel_version}")
@@ -192,12 +199,12 @@ dependencies {
     // implementation fg.deobf("curse.maven:ic2-classic-242942:5555152")
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
     // implementation fg.deobf("com.railwayteam.railways:railways-1.19.2-1.6.4:all") { transitive = false }
-	
+
 	implementation fg.deobf("dev.architectury:architectury-forge:9.1.12")
 	implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:2001.3.1")
 	implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:2001.3.0")
 	implementation fg.deobf("dev.ftb.mods:ftb-library-forge:2001.2.4")
-	
+
 	implementation fg.deobf("curse.maven:journeymap-32274:5457831")
 	// implementation fg.deobf("ignored:journeymap-1.20.1-5.10.1-forge")
 

@@ -41,7 +41,7 @@ public class LevelRendererMixin {
 			Set<BlockPos> extraPositions = handler.getExtraPositions(level, pos, state, progress);
 			if (extraPositions != null) {
 				extraPositions.remove(pos);
-				((BlockDestructionProgressExtension) progressObj).setExtraPositions(extraPositions);
+				((BlockDestructionProgressExtension) progressObj).create$setExtraPositions(extraPositions);
 				for (BlockPos extraPos : extraPositions) {
 					destructionProgress.computeIfAbsent(extraPos.asLong(), l -> Sets.newTreeSet()).add(progressObj);
 				}
@@ -51,7 +51,7 @@ public class LevelRendererMixin {
 
 	@Inject(method = "removeProgress(Lnet/minecraft/server/level/BlockDestructionProgress;)V", at = @At("RETURN"))
 	private void create$onRemoveProgress(BlockDestructionProgress progress, CallbackInfo ci) {
-		Set<BlockPos> extraPositions = ((BlockDestructionProgressExtension) progress).getExtraPositions();
+		Set<BlockPos> extraPositions = ((BlockDestructionProgressExtension) progress).create$getExtraPositions();
 		if (extraPositions != null) {
 			for (BlockPos extraPos : extraPositions) {
 				long l = extraPos.asLong();
