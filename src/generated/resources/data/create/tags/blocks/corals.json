@@ -29,6 +29,182 @@
     "minecraft:brain_coral_wall_fan",
     "minecraft:bubble_coral_wall_fan",
     "minecraft:fire_coral_wall_fan",
-    "minecraft:horn_coral_wall_fan"
+    "minecraft:horn_coral_wall_fan",
+    {
+      "id": "upgrade_aquatic:acan_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:finger_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:star_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:moss_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:petal_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:branch_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:rock_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:pillow_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:silk_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:chrome_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:prismarine_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_acan_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_finger_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_star_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_moss_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_petal_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_branch_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_rock_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_pillow_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_silk_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_chrome_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_prismarine_coral",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:acan_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:finger_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:star_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:moss_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:petal_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:branch_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:rock_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:pillow_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:silk_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:chrome_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:prismarine_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_acan_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_finger_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_star_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_moss_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_petal_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_branch_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_rock_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_pillow_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_silk_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_chrome_coral_fan",
+      "required": false
+    },
+    {
+      "id": "upgrade_aquatic:dead_prismarine_coral_fan",
+      "required": false
+    }
   ]
 }
