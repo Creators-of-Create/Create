@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
@@ -108,13 +109,13 @@ public class NBTHelper {
 			return inbt;
 		return new CompoundTag();
 	}
-	
+
 	public static CompoundTag intToCompound(int i) {
 		CompoundTag compoundTag = new CompoundTag();
 		compoundTag.putInt("V", i);
 		return compoundTag;
 	}
-	
+
 	public static int intFromCompound(CompoundTag compoundTag) {
 		return compoundTag.getInt("V");
 	}
@@ -127,4 +128,29 @@ public class NBTHelper {
 		return new ResourceLocation(nbt.getString(key));
 	}
 
+	/**
+	 * Creates a NBT list from the array of integers passed to this function
+	 */
+	public static ListTag newIntegerList(int... ints) {
+		ListTag listTag = new ListTag();
+
+		for (int i : ints) {
+			listTag.add(IntTag.valueOf(i));
+		}
+
+		return listTag;
+	}
+
+	/**
+	 * Creates a NBT list from the array of doubles passed to this function
+	 */
+	public static ListTag newDoubleList(double... doubles) {
+		ListTag listTag = new ListTag();
+
+		for (double d : doubles) {
+			listTag.add(DoubleTag.valueOf(d));
+		}
+
+		return listTag;
+	}
 }
