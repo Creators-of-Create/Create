@@ -57,10 +57,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(Create.ID)
 public class Create {
-
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.5.2-experimental";
 
 	public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -97,6 +95,8 @@ public class Create {
 	}
 
 	public static void onCtor() {
+		LOGGER.info("{} v{} initializing! Commit hash: {}", NAME, CreateBuildInfo.VERSION, CreateBuildInfo.GIT_COMMIT);
+
 		ModLoadingContext modLoadingContext = ModLoadingContext.get();
 
 		IEventBus modEventBus = FMLJavaModLoadingContext.get()
@@ -174,5 +174,4 @@ public class Create {
 	public static ResourceLocation asResource(String path) {
 		return new ResourceLocation(ID, path);
 	}
-
 }
