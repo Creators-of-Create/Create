@@ -799,6 +799,7 @@ public class Carriage {
 		}
 
 		private void createEntity(Level level, boolean loadPassengers) {
+			serialisedEntity.put("Pos", NBTHelper.newDoubleList(positionAnchor.x(), positionAnchor.y(), positionAnchor.z()));
 			Entity entity = EntityType.create(serialisedEntity, level)
 				.orElse(null);
 
@@ -807,7 +808,6 @@ public class Carriage {
 				return;
 			}
 
-			entity.moveTo(positionAnchor);
 			this.entity = new WeakReference<>(cce);
 
 			cce.setCarriage(Carriage.this);
