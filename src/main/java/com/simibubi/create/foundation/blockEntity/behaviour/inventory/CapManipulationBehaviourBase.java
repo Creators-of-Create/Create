@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.HashableNonNullConsumer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -80,10 +79,6 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		targetCapability = LazyOptional.empty();
 	}
 
-	public void removeListener() {
-		targetCapability.removeListener(new HashableNonNullConsumer<>(this::onHandlerInvalidated, this));
-	}
-
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
@@ -132,8 +127,6 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		Capability<T> capability = capability();
 		targetCapability =
 			bypassSided ? invBE.getCapability(capability) : invBE.getCapability(capability, targetBlockFace.getFace());
-		if (targetCapability.isPresent())
-			targetCapability.addListener(new HashableNonNullConsumer<>(this::onHandlerInvalidated, this));
 	}
 
 	@FunctionalInterface

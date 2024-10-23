@@ -197,7 +197,7 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 	@SuppressWarnings("unchecked")
 	@Override
 	public FluidTankBlockEntity getControllerBE() {
-		if (isController())
+		if (isController() || !hasLevel())
 			return this;
 		BlockEntity blockEntity = level.getBlockEntity(controller);
 		if (blockEntity instanceof FluidTankBlockEntity)
