@@ -1,0 +1,24 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "aether_redux"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "aether_redux:luxweed"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "minecraft:light_blue_dye"
+    },
+    {
+      "chance": 0.5,
+      "item": "minecraft:purple_dye"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "deep_aether"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "deep_aether:stripped_cruderoot_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 6,
+      "item": "deep_aether:cruderoot_planks"
+    }
+  ]
+}

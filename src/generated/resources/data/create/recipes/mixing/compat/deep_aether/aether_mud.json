@@ -1,0 +1,24 @@
+{
+  "type": "create:mixing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "deep_aether"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "aether:aether_dirt"
+    },
+    {
+      "amount": 250,
+      "fluid": "minecraft:water",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "deep_aether:aether_mud"
+    }
+  ]
+}

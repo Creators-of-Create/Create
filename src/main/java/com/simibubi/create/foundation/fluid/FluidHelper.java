@@ -11,6 +11,7 @@ import com.simibubi.create.content.fluids.tank.CreativeFluidTankBlockEntity;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.data.recipe.DatagenFluidStack;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
@@ -133,8 +134,9 @@ public class FluidHelper {
 
 	public static JsonElement serializeFluidStack(FluidStack stack) {
 		JsonObject json = new JsonObject();
-		json.addProperty("fluid", RegisteredObjects.getKeyOrThrow(stack.getFluid())
-			.toString());
+		json.addProperty("fluid", stack instanceof DatagenFluidStack datagenFluidStack ?
+				datagenFluidStack.getActualFluid() :
+				RegisteredObjects.getKeyOrThrow(stack.getFluid()).toString());
 		json.addProperty("amount", stack.getAmount());
 		if (stack.hasTag())
 			json.addProperty("nbt", stack.getTag()

@@ -1,0 +1,21 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "deep_aether"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "deep_aether:echaisy"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:purple_dye"
+    }
+  ]
+}
