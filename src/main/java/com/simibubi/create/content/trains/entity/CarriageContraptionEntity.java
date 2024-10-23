@@ -492,8 +492,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		if (!(contraption instanceof CarriageContraption cc))
 			return sides;
 
-		sides.setFirst(cc.blazeBurnerConductors.getFirst());
-		sides.setSecond(cc.blazeBurnerConductors.getSecond());
+		sides.setFirst(cc.blockConductors.getFirst());
+		sides.setSecond(cc.blockConductors.getSecond());
 
 		for (Entity entity : getPassengers()) {
 			if (entity instanceof Player)

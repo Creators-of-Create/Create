@@ -3,6 +3,9 @@ package com.simibubi.create;
 import static com.simibubi.create.AllInteractionBehaviours.interactionBehaviour;
 import static com.simibubi.create.AllMovementBehaviours.movementBehaviour;
 import static com.simibubi.create.Create.REGISTRATE;
+
+import com.simibubi.create.api.contraption.train.TrainConductorHandler;
+
 import static com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours.assignDataBehaviour;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
 import static com.simibubi.create.foundation.data.BlockStateGen.simpleCubeAll;
@@ -185,7 +188,7 @@ import com.simibubi.create.content.processing.basin.BasinGenerator;
 import com.simibubi.create.content.processing.basin.BasinMovementBehaviour;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockItem;
-import com.simibubi.create.content.processing.burner.BlazeBurnerInteractionBehaviour;
+import com.simibubi.create.content.processing.burner.BlockBasedTrainConductorInteractionBehaviour;
 import com.simibubi.create.content.processing.burner.BlazeBurnerMovementBehaviour;
 import com.simibubi.create.content.processing.burner.LitBlazeBurnerBlock;
 import com.simibubi.create.content.redstone.RoseQuartzLampBlock;
@@ -708,7 +711,7 @@ public class AllBlocks {
 			.loot((lt, block) -> lt.add(block, BlazeBurnerBlock.buildLootTable()))
 			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 			.onRegister(movementBehaviour(new BlazeBurnerMovementBehaviour()))
-			.onRegister(interactionBehaviour(new BlazeBurnerInteractionBehaviour()))
+			.onRegister(block -> TrainConductorHandler.registerBlazeBurner())
 			.item(BlazeBurnerBlockItem::withBlaze)
 			.model(AssetLookup.customBlockItemModel("blaze_burner", "block_with_blaze"))
 			.build()
