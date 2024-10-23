@@ -60,7 +60,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.5.1i";
+	public static final String VERSION = "0.5.1j";
 
 	public static final Logger LOGGER = LogUtils.getLogger();
 

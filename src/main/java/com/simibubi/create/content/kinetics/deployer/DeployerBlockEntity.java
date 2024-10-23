@@ -171,6 +171,8 @@ public class DeployerBlockEntity extends KineticBlockEntity {
 		}
 		if (level.isClientSide)
 			return;
+		if (player == null)
+			return;
 
 		ItemStack stack = player.getMainHandItem();
 		if (state == State.WAITING) {

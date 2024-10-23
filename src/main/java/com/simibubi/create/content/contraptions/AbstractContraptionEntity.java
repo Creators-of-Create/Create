@@ -545,9 +545,12 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		relativeMotion = reverseRotation(relativeMotion, 1);
 		context.relativeMotion = relativeMotion;
 
-		return !BlockPos.containing(previousPosition).equals(gridPosition)
-			|| (context.relativeMotion.length() > 0 || context.contraption instanceof CarriageContraption)
-				&& context.firstMovement;
+		boolean ignoreMotionForFirstMovement =
+			context.contraption instanceof CarriageContraption || actor instanceof PortableStorageInterfaceMovement;
+
+		return !BlockPos.containing(previousPosition)
+			.equals(gridPosition)
+			|| (context.relativeMotion.length() > 0 || ignoreMotionForFirstMovement) && context.firstMovement;
 	}
 
 	public void move(double x, double y, double z) {
