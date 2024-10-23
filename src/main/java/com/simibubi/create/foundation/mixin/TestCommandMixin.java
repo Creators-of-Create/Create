@@ -2,6 +2,11 @@ package com.simibubi.create.foundation.mixin;
 
 import javax.annotation.Nullable;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+
+import com.llamalad7.mixinextras.sugar.Local;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -20,7 +25,7 @@ import net.minecraft.world.level.block.entity.StructureBlockEntity;
 
 @Mixin(TestCommand.class)
 public class TestCommandMixin {
-	@Redirect(
+	@WrapOperation(
 			method = "runTest(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/gametest/framework/MultipleTestTracker;)V",
 			at = @At(
 					value = "INVOKE",
@@ -28,12 +33,11 @@ public class TestCommandMixin {
 			),
 			require = 0 // don't crash if this fails. non-critical
 	)
-	private static TestFunction create$getCorrectTestFunction(String testName,
-															  ServerLevel level, BlockPos pos, @Nullable MultipleTestTracker tracker) {
+	private static TestFunction create$getCorrectTestFunction(String pTestName, Operation<TestFunction> original, @Local(argsOnly = true) ServerLevel level, @Local(argsOnly = true) BlockPos pos) {
 		StructureBlockEntity be = (StructureBlockEntity) level.getBlockEntity(pos);
 		CompoundTag data = be.getPersistentData();
 		if (!data.contains("CreateTestFunction", Tag.TAG_STRING))
-			return GameTestRegistry.getTestFunction(testName);
+			return original.call(pTestName);
 		String name = data.getString("CreateTestFunction");
 		CreateTestFunction function = CreateTestFunction.NAMES_TO_FUNCTIONS.get(name);
 		if (function == null)

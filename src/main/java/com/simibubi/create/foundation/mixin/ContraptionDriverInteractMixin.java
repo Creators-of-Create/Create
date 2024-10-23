@@ -1,32 +1,28 @@
 package com.simibubi.create.foundation.mixin;
 
-import javax.annotation.Nullable;
-
-import org.spongepowered.asm.mixin.Implements;
-import org.spongepowered.asm.mixin.Interface;
-import org.spongepowered.asm.mixin.Intrinsic;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.common.capabilities.CapabilityProvider;
-import net.minecraftforge.common.extensions.IForgeEntity;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 
-@Mixin(Entity.class)
-@Implements(@Interface(iface = IForgeEntity.class, prefix = "iForgeEntity$"))
-public abstract class ContraptionDriverInteractMixin extends CapabilityProvider<Entity> {
-	private ContraptionDriverInteractMixin(Class<Entity> baseClass) {
-		super(baseClass);
-	}
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 
-	@Shadow
-	public abstract Entity getRootVehicle();
-
-	@Nullable
-	@Intrinsic
-	public boolean iForgeEntity$canRiderInteract() {
-		return getRootVehicle() instanceof AbstractContraptionEntity;
+@Mixin(ProjectileUtil.class)
+public class ContraptionDriverInteractMixin {
+	@WrapOperation(
+			method = "getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/entity/Entity;canRiderInteract()Z"
+			)
+	)
+	private static boolean create$contraptionDriverCanInteract(Entity instance, Operation<Boolean> original) {
+		if (instance.getRootVehicle() instanceof AbstractContraptionEntity)
+			return true;
+		return original.call(instance);
 	}
 }

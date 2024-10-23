@@ -29,7 +29,7 @@ import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 @Mixin(MapItemSavedData.class)
-public class MapItemSavedDataMixin implements StationMapData {
+public abstract class MapItemSavedDataMixin implements StationMapData {
 	@Unique
 	private static final String STATION_MARKERS_KEY = "create:stations";
 
@@ -57,7 +57,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 
 	@Inject(
 			method = "load(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;",
-			at = @At("RETURN")
+			at = @At("TAIL")
 	)
 	private static void create$onLoad(CompoundTag compound, CallbackInfoReturnable<MapItemSavedData> cir) {
 		MapItemSavedData mapData = cir.getReturnValue();
@@ -66,15 +66,12 @@ public class MapItemSavedDataMixin implements StationMapData {
 		ListTag listTag = compound.getList(STATION_MARKERS_KEY, Tag.TAG_COMPOUND);
 		for (int i = 0; i < listTag.size(); ++i) {
 			StationMarker stationMarker = StationMarker.load(listTag.getCompound(i));
-			stationMapData.addStationMarker(stationMarker);
+			stationMapData.create$addStationMarker(stationMarker);
 		}
 	}
 
-	@Inject(
-			method = "save(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag;",
-			at = @At("RETURN")
-	)
-	public void create$onSave(CompoundTag compound, CallbackInfoReturnable<CompoundTag> cir) {
+	@Inject(method = "save(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag;", at = @At("TAIL"))
+	private void create$onSave(CompoundTag compound, CallbackInfoReturnable<CompoundTag> cir) {
 		ListTag listTag = new ListTag();
 		for (StationMarker stationMarker : create$stationMarkers.values()) {
 			listTag.add(stationMarker.save());
@@ -83,7 +80,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 	}
 
 	@Override
-	public void addStationMarker(StationMarker marker) {
+	public void create$addStationMarker(StationMarker marker) {
 		create$stationMarkers.put(marker.getId(), marker);
 
 		int scaleMultiplier = 1 << scale;
@@ -114,22 +111,16 @@ public class MapItemSavedDataMixin implements StationMapData {
 	}
 
 	@Shadow
-	private void removeDecoration(String identifier) {
-		throw new AssertionError();
-	}
+	protected abstract void removeDecoration(String pIdentifier);
 
 	@Shadow
-	private void setDecorationsDirty() {
-		throw new AssertionError();
-	}
+	protected abstract void setDecorationsDirty();
 
 	@Shadow
-	public boolean isTrackedCountOverLimit(int trackedCount) {
-		throw new AssertionError();
-	}
+	public abstract boolean isTrackedCountOverLimit(int pTrackedCount);
 
 	@Override
-	public boolean toggleStation(LevelAccessor level, BlockPos pos, StationBlockEntity stationBlockEntity) {
+	public boolean create$toggleStation(LevelAccessor level, BlockPos pos, StationBlockEntity stationBlockEntity) {
 		double xCenter = pos.getX() + 0.5D;
 		double zCenter = pos.getZ() + 0.5D;
 		int scaleMultiplier = 1 << scale;
@@ -150,18 +141,15 @@ public class MapItemSavedDataMixin implements StationMapData {
 		}
 
 		if (!isTrackedCountOverLimit(256)) {
-			addStationMarker(marker);
+			create$addStationMarker(marker);
 			return true;
 		}
 
 		return false;
 	}
 
-	@Inject(
-			method = "checkBanners(Lnet/minecraft/world/level/BlockGetter;II)V",
-			at = @At("RETURN")
-	)
-	public void create$onCheckBanners(BlockGetter blockGetter, int x, int z, CallbackInfo ci) {
+	@Inject(method = "checkBanners(Lnet/minecraft/world/level/BlockGetter;II)V", at = @At("TAIL"))
+	private void create$onCheckBanners(BlockGetter blockGetter, int x, int z, CallbackInfo ci) {
 		create$checkStations(blockGetter, x, z);
 	}
 
@@ -186,7 +174,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 		}
 
 		for (StationMarker marker : newMarkers) {
-			addStationMarker(marker);
+			create$addStationMarker(marker);
 		}
 	}
 }

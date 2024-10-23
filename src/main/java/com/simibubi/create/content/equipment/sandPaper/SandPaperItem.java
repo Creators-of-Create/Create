@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.api.TriState;
 import com.simibubi.create.foundation.item.CustomUseEffectsItem;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.mixin.accessor.LivingEntityAccessor;
@@ -208,9 +209,9 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 	}
 
 	@Override
-	public Boolean shouldTriggerUseEffects(ItemStack stack, LivingEntity entity) {
+	public TriState shouldTriggerUseEffects(ItemStack stack, LivingEntity entity) {
 		// Trigger every tick so that we have more fine grain control over the animation
-		return true;
+		return TriState.TRUE;
 	}
 
 	@Override

@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.mixin.client;
 
 import java.util.Iterator;
 
+import com.llamalad7.mixinextras.sugar.Local;
+
 import org.joml.Matrix4f;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,8 +28,8 @@ public class MapRendererMapInstanceMixin {
 	private MapItemSavedData data;
 
 	@Group(name = "custom_decoration_rendering", min = 1, max = 1)
-	@Inject(method = "draw(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ZI)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/saveddata/maps/MapDecoration;render(I)Z", remap = false), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void create$onDraw(PoseStack poseStack, MultiBufferSource bufferSource, boolean active, int packedLight, CallbackInfo ci, int i, int j, float f, Matrix4f matrix4f, VertexConsumer vertexConsumer, int index, Iterator<MapDecoration> iterator, MapDecoration decoration) {
+	@Inject(method = "draw(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ZI)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/saveddata/maps/MapDecoration;render(I)Z", remap = false))
+	private void create$onDraw(PoseStack poseStack, MultiBufferSource bufferSource, boolean active, int packedLight, CallbackInfo ci, @Local(ordinal = 3) int index, @Local MapDecoration decoration) {
 		if (decoration instanceof CustomRenderedMapDecoration renderer) {
 			renderer.render(poseStack, bufferSource, active, packedLight, data, index);
 		}
@@ -35,7 +37,7 @@ public class MapRendererMapInstanceMixin {
 
 	@Group(name = "custom_decoration_rendering")
 	@Inject(method = "draw(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ZI)V", at = @At(value = "FIELD", target = "net/optifine/reflect/Reflector.ForgeMapDecoration_render:Lnet/optifine/reflect/ReflectorMethod;", opcode = Opcodes.GETSTATIC, ordinal = 1, remap = false), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void create$onDrawOptifine(PoseStack poseStack, MultiBufferSource bufferSource, boolean active, int packedLight, CallbackInfo ci, int i, int j, float f, Matrix4f matrix4f, VertexConsumer vertexConsumer, int index, Iterator<MapDecoration> iterator, MapDecoration decoration) {
+	private void create$onDraw$Optifine(PoseStack poseStack, MultiBufferSource bufferSource, boolean active, int packedLight, CallbackInfo ci, int i, int j, float f, Matrix4f matrix4f, VertexConsumer vertexConsumer, int index, Iterator<MapDecoration> iterator, MapDecoration decoration) {
 		if (decoration instanceof CustomRenderedMapDecoration renderer) {
 			renderer.render(poseStack, bufferSource, active, packedLight, data, index);
 		}
