@@ -2456,6 +2456,7 @@
   "create.schematics.maxAllowedSize": "The maximum allowed schematic file size is:",
   "create.schematics.synchronizing": "Syncing...",
   "create.schematics.uploadTooLarge": "Your schematic exceeds limitations specified by the server.",
+  "create.schematics.wrongFormat": "The schematic you are trying to upload is either corrupt or encoded wrongly! It should be encoded with GZIP compatible format.",
   "create.station.assemble_train": "Assemble Train",
   "create.station.assembly_title": "Train Assembly",
   "create.station.cancel": "Cancel Assembly",

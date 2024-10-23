@@ -374,6 +374,7 @@
 	"create.schematics.synchronizing": "Syncing...",
 	"create.schematics.uploadTooLarge": "Your schematic exceeds limitations specified by the server.",
 	"create.schematics.maxAllowedSize": "The maximum allowed schematic file size is:",
+  "create.schematics.wrongFormat": "The schematic you are trying to upload is either corrupt or encoded wrongly! It should be encoded with GZIP compatible format.",
 
 	"create.gui.schematicTable.refresh": "Refresh Files",
 	"create.gui.schematicTable.open_folder": "Open Folder",
