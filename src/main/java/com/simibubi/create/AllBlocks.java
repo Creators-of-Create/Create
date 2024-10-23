@@ -804,6 +804,7 @@ public class AllBlocks {
 		.properties(p -> p.sound(SoundType.SCAFFOLDING))
 		.transform(axeOrPickaxe())
 		.item(BracketBlockItem::new)
+		.tag(AllItemTags.INVALID_FOR_TRACK_PAVING.tag)
 		.transform(BracketGenerator.itemModel("wooden"))
 		.register();
 
@@ -812,6 +813,7 @@ public class AllBlocks {
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.transform(pickaxeOnly())
 		.item(BracketBlockItem::new)
+		.tag(AllItemTags.INVALID_FOR_TRACK_PAVING.tag)
 		.transform(BracketGenerator.itemModel("metal"))
 		.register();
 
