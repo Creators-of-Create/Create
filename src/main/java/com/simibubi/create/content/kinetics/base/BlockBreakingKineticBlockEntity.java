@@ -110,7 +110,7 @@ public abstract class BlockBreakingKineticBlockEntity extends KineticBlockEntity
 		float breakSpeed = getBreakSpeed();
 		destroyProgress += Mth.clamp((int) (breakSpeed / blockHardness), 1, 10 - destroyProgress);
 		level.playSound(null, worldPosition, stateToBreak.getSoundType()
-			.getHitSound(), SoundSource.NEUTRAL, .25f, 1);
+			.getHitSound(), SoundSource.BLOCKS, .25f, 1);
 
 		if (destroyProgress >= 10) {
 			onBlockBroken(stateToBreak);
@@ -142,7 +142,7 @@ public abstract class BlockBreakingKineticBlockEntity extends KineticBlockEntity
 				return;
 			if (level.restoringBlockSnapshots)
 				return;
-			
+
 			ItemEntity itementity = new ItemEntity(level, vec.x, vec.y, vec.z, stack);
 			itementity.setDefaultPickUpDelay();
 			itementity.setDeltaMovement(Vec3.ZERO);
