@@ -791,6 +791,8 @@ public class Carriage {
 		}
 
 		private void createEntity(Level level, boolean loadPassengers) {
+			if (positionAnchor != null)
+				serialisedEntity.put("Pos", VecHelper.writeNBT(positionAnchor));
 			Entity entity = EntityType.create(serialisedEntity, level)
 				.orElse(null);
 
