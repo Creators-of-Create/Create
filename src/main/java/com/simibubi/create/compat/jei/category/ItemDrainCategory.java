@@ -91,7 +91,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 				.addSlot(RecipeIngredientRole.OUTPUT, 132, 8)
 				.setBackground(getRenderedSlot(), -1, -1)
 				.addIngredient(ForgeTypes.FLUID_STACK, withImprovedVisibility(recipe.getResultingFluid()))
-				.addTooltipCallback(addFluidTooltip(recipe.getResultingFluid().getAmount()));
+				.addRichTooltipCallback(addFluidTooltip(recipe.getResultingFluid().getAmount()));
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 132, 27)
 				.setBackground(getRenderedSlot(), -1, -1)
