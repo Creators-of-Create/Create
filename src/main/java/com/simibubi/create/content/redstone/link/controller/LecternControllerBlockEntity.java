@@ -146,8 +146,8 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 	}
 
 	public void setController(ItemStack newController) {
-		controllerNbt = newController.getTag();
 		if (newController != null) {
+			controllerNbt = newController.getTag();
 			AllSoundEvents.CONTROLLER_PUT.playOnServer(level, worldPosition);
 		}
 	}
