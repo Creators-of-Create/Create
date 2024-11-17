@@ -29,13 +29,13 @@ public class DoorMovingInteraction extends SimpleBlockMovingInteraction {
 		BlockPos otherPos = currentState.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
 		StructureBlockInfo info = contraption.getBlocks()
 			.get(otherPos);
-		if (info.state().hasProperty(DoorBlock.OPEN)) {
+		if (info != null && info.state().hasProperty(DoorBlock.OPEN)) {
 			BlockState newState = info.state().cycle(DoorBlock.OPEN);
 			setContraptionBlockData(contraption.entity, otherPos, new StructureBlockInfo(info.pos(), newState, info.nbt()));
 		}
 
 		currentState = currentState.cycle(DoorBlock.OPEN);
-		
+
 		if (player != null) {
 
 			if (trainDoor) {
