@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.logistics.filter.AttributeFilterMenu.WhitelistMode;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
@@ -125,7 +126,7 @@ public class FilterItem extends Item implements MenuProvider {
 				.getList("MatchedAttributes", Tag.TAG_COMPOUND);
 			for (Tag inbt : attributes) {
 				CompoundTag compound = (CompoundTag) inbt;
-				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
+				ItemAttribute attribute = ItemAttribute.loadStatic(compound);
 				if (attribute == null)
 					continue;
 				boolean inverted = compound.getBoolean("Inverted");

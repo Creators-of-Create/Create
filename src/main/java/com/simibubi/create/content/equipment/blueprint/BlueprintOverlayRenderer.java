@@ -14,7 +14,8 @@ import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.Blueprint
 import com.simibubi.create.content.logistics.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.content.logistics.filter.FilterItem;
 import com.simibubi.create.content.logistics.filter.FilterItemStack;
-import com.simibubi.create.content.logistics.filter.ItemAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.attributes.InTagAttribute;
 import com.simibubi.create.content.trains.track.TrackPlacement.PlacementInfo;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
@@ -319,8 +320,8 @@ public class BlueprintOverlayRenderer {
 				WhitelistMode whitelistMode = WhitelistMode.values()[tag.getInt("WhitelistMode")];
 				ListTag attributes = tag.getList("MatchedAttributes", net.minecraft.nbt.Tag.TAG_COMPOUND);
 				if (whitelistMode == WhitelistMode.WHITELIST_DISJ && attributes.size() == 1) {
-					ItemAttribute fromNBT = ItemAttribute.fromNBT((CompoundTag) attributes.get(0));
-					if (fromNBT instanceof ItemAttribute.InTag inTag) {
+					ItemAttribute fromNBT = ItemAttribute.loadStatic((CompoundTag) attributes.get(0));
+					if (fromNBT instanceof InTagAttribute inTag) {
 						ITagManager<Item> tagManager = ForgeRegistries.ITEMS.tags();
 						if (tagManager.isKnownTagName(inTag.tag)) {
 							ITag<Item> taggedItems = tagManager.getTag(inTag.tag);

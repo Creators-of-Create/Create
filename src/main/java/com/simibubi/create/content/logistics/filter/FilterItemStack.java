@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.nbt.CompoundTag;
@@ -39,7 +40,7 @@ public class FilterItemStack {
 	public static FilterItemStack of(CompoundTag tag) {
 		return of(ItemStack.of(tag));
 	}
-	
+
 	public static FilterItemStack empty() {
 		return of(ItemStack.EMPTY);
 	}
@@ -51,16 +52,16 @@ public class FilterItemStack {
 	public CompoundTag serializeNBT() {
 		return filterItemStack.serializeNBT();
 	}
-	
+
 	public ItemStack item() {
 		return filterItemStack;
 	}
-	
+
 	public FluidStack fluid(Level level) {
 		resolveFluid(level);
 		return filterFluidStack;
 	}
-	
+
 	public boolean isFilterItem() {
 		return filterItemStack.getItem() instanceof FilterItem;
 	}
@@ -98,7 +99,7 @@ public class FilterItemStack {
 	}
 
 	//
-	
+
 	private void resolveFluid(Level world) {
 		if (!fluidExtracted) {
 			fluidExtracted = true;
@@ -183,7 +184,7 @@ public class FilterItemStack {
 					.getList("MatchedAttributes", Tag.TAG_COMPOUND);
 			for (Tag inbt : attributes) {
 				CompoundTag compound = (CompoundTag) inbt;
-				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
+				ItemAttribute attribute = ItemAttribute.loadStatic(compound);
 				if (attribute != null)
 					attributeTests.add(Pair.of(attribute, compound.getBoolean("Inverted")));
 			}

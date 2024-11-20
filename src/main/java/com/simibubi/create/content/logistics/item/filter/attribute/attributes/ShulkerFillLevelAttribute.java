@@ -1,42 +1,40 @@
-package com.simibubi.create.content.logistics.filter.attribute;
+package com.simibubi.create.content.logistics.item.filter.attribute.attributes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.logistics.filter.ItemAttribute;
+import org.jetbrains.annotations.NotNull;
+
+import com.simibubi.create.content.logistics.item.filter.attribute.AllItemAttributeTypes;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 
 public class ShulkerFillLevelAttribute implements ItemAttribute {
 	public static final ShulkerFillLevelAttribute EMPTY = new ShulkerFillLevelAttribute(null);
 
-	private final ShulkerLevels levels;
+	private ShulkerLevels levels;
 
 	public ShulkerFillLevelAttribute(ShulkerLevels levels) {
 		this.levels = levels;
 	}
 
 	@Override
-	public boolean appliesTo(ItemStack stack) {
+	public boolean appliesTo(ItemStack stack, Level level) {
 		return levels != null && levels.canApply(stack);
-	}
-
-	@Override
-	public List<ItemAttribute> listAttributesOf(ItemStack stack) {
-		return Arrays.stream(ShulkerLevels.values())
-				.filter(shulkerLevels -> shulkerLevels.canApply(stack))
-				.map(ShulkerFillLevelAttribute::new)
-				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -53,17 +51,24 @@ public class ShulkerFillLevelAttribute implements ItemAttribute {
 	}
 
 	@Override
-	public void writeNBT(CompoundTag nbt) {
+	public ItemAttributeType getType() {
+		return AllItemAttributeTypes.SHULKER_FILL_LEVEL;
+	}
+
+	@Override
+	public void save(CompoundTag nbt) {
 		if (levels != null)
 			nbt.putString("id", levels.key);
 	}
 
 	@Override
-	public ItemAttribute readNBT(CompoundTag nbt) {
-		return nbt.contains("id") ? new ShulkerFillLevelAttribute(ShulkerLevels.fromKey(nbt.getString("id"))) : EMPTY;
+	public void load(CompoundTag nbt) {
+		if (nbt.contains("id")) {
+			levels = ShulkerLevels.fromKey(nbt.getString("id"));
+		}
 	}
 
-	enum ShulkerLevels {
+	enum ShulkerLevels implements StringRepresentable {
 		EMPTY("empty", amount -> amount == 0),
 		PARTIAL("partial", amount -> amount > 0 && amount < Integer.MAX_VALUE),
 		FULL("full", amount -> amount == Integer.MAX_VALUE);
@@ -77,12 +82,17 @@ public class ShulkerFillLevelAttribute implements ItemAttribute {
 		}
 
 		@Nullable
-		public static ShulkerLevels fromKey(String key) {
+		public static ShulkerFillLevelAttribute.ShulkerLevels fromKey(String key) {
 			return Arrays.stream(values()).filter(shulkerLevels -> shulkerLevels.key.equals(key)).findFirst().orElse(null);
 		}
 
 		private static boolean isShulker(ItemStack stack) {
 			return Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock;
+		}
+
+		@Override
+		public String getSerializedName() {
+			return Lang.asId(name());
 		}
 
 		public boolean canApply(ItemStack testStack) {
@@ -104,6 +114,26 @@ public class ShulkerFillLevelAttribute implements ItemAttribute {
 				return requiredSize.test(isFull ? Integer.MAX_VALUE : rawSize);
 			}
 			return requiredSize.test(0);
+		}
+	}
+
+	public static class Type implements ItemAttributeType {
+		@Override
+		public @NotNull ItemAttribute createAttribute() {
+			return EMPTY;
+		}
+
+		@Override
+		public List<ItemAttribute> getAllAttributes(ItemStack stack, Level level) {
+			List<ItemAttribute> list = new ArrayList<>();
+
+			for (ShulkerLevels shulkerLevels : ShulkerLevels.values()) {
+				if (shulkerLevels.canApply(stack)) {
+					list.add(new ShulkerFillLevelAttribute(shulkerLevels));
+				}
+			}
+
+			return list;
 		}
 	}
 }

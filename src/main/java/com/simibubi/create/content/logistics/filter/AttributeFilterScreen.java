@@ -7,8 +7,11 @@ import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.AllRegistries;
 import com.simibubi.create.content.logistics.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.content.logistics.filter.FilterScreenPacket.Option;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
@@ -148,8 +151,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 			.plainCopy()
 			.append("..."));
 		attributesOfItem.clear();
-		for (ItemAttribute itemAttribute : ItemAttribute.types)
-			attributesOfItem.addAll(itemAttribute.listAttributesOf(stack, minecraft.level));
+		for (ItemAttributeType type : AllRegistries.ITEM_ATTRIBUTE_TYPES.get())
+			attributesOfItem.addAll(type.getAllAttributes(stack, minecraft.level));
 		List<Component> options = attributesOfItem.stream()
 			.map(a -> a.format(false))
 			.collect(Collectors.toList());
@@ -161,11 +164,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 			attributeSelectorLabel.setTextAndTrim(options.get(i), true, 112);
 			ItemAttribute selected = attributesOfItem.get(i);
 			for (Pair<ItemAttribute, Boolean> existing : menu.selectedAttributes) {
-				CompoundTag testTag = new CompoundTag();
-				CompoundTag testTag2 = new CompoundTag();
-				existing.getFirst()
-					.serializeNBT(testTag);
-				selected.serializeNBT(testTag2);
+				CompoundTag testTag = ItemAttribute.saveStatic(existing.getFirst());
+				CompoundTag testTag2 = ItemAttribute.saveStatic(selected);
 				if (testTag.equals(testTag2)) {
 					add.active = false;
 					addInverted.active = false;
@@ -232,9 +232,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 			return false;
 		add.active = false;
 		addInverted.active = false;
-		CompoundTag tag = new CompoundTag();
 		ItemAttribute itemAttribute = attributesOfItem.get(index);
-		itemAttribute.serializeNBT(tag);
+		CompoundTag tag = ItemAttribute.saveStatic(itemAttribute);
 		AllPackets.getChannel()
 			.sendToServer(new FilterScreenPacket(inverted ? Option.ADD_INVERTED_TAG : Option.ADD_TAG, tag));
 		menu.appendSelectedAttribute(itemAttribute, inverted);
