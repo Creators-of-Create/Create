@@ -45,8 +45,7 @@ public class FilterScreenPacket extends SimplePacketBase {
 			if (player == null)
 				return;
 
-			if (player.containerMenu instanceof FilterMenu) {
-				FilterMenu c = (FilterMenu) player.containerMenu;
+			if (player.containerMenu instanceof FilterMenu c) {
 				if (option == Option.WHITELIST)
 					c.blacklist = false;
 				if (option == Option.BLACKLIST)
@@ -61,8 +60,7 @@ public class FilterScreenPacket extends SimplePacketBase {
 							net.minecraft.world.item.ItemStack.of(data.getCompound("Item")));
 			}
 
-			if (player.containerMenu instanceof AttributeFilterMenu) {
-				AttributeFilterMenu c = (AttributeFilterMenu) player.containerMenu;
+			if (player.containerMenu instanceof AttributeFilterMenu c) {
 				if (option == Option.WHITELIST)
 					c.whitelistMode = WhitelistMode.WHITELIST_DISJ;
 				if (option == Option.WHITELIST2)

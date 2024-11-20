@@ -152,8 +152,8 @@ public class FilterItem extends Item implements MenuProvider {
 		ItemStack heldItem = player.getItemInHand(hand);
 
 		if (!player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
-			if (!world.isClientSide && player instanceof ServerPlayer)
-				NetworkHooks.openScreen((ServerPlayer) player, this, buf -> {
+			if (!world.isClientSide && player instanceof ServerPlayer serverPlayer)
+				NetworkHooks.openScreen(serverPlayer, this, buf -> {
 					buf.writeItem(heldItem);
 				});
 			return InteractionResultHolder.success(heldItem);
