@@ -25,7 +25,7 @@ public class AllRegistries {
 	}
 
 	@SubscribeEvent
-	private static void registerRegistries(NewRegistryEvent event) {
+	public static void registerRegistries(NewRegistryEvent event) {
 		ITEM_ATTRIBUTE_TYPES = event.create(new RegistryBuilder<ItemAttributeType>()
 				.setName(Keys.ITEM_ATTRIBUTE_TYPES.location())
 				.disableSaving());
