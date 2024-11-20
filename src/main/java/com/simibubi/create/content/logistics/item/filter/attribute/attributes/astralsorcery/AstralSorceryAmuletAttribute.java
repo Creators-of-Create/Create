@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.item.filter.attribute.attributes.a
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.content.logistics.item.filter.attribute.AllItemAttributeTypes;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
@@ -62,7 +64,7 @@ public class AstralSorceryAmuletAttribute implements ItemAttribute {
 
 	@Override
 	public ItemAttributeType getType() {
-		return null;
+		return AllItemAttributeTypes.ASTRAL_AMULET.get();
 	}
 
 	@Override

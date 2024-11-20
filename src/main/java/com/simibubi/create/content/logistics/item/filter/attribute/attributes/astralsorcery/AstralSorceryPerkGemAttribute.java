@@ -51,7 +51,7 @@ public class AstralSorceryPerkGemAttribute implements ItemAttribute {
 
 	@Override
 	public ItemAttributeType getType() {
-		return AllItemAttributeTypes.ASTRAL_PERK_GEM;
+		return AllItemAttributeTypes.ASTRAL_PERK_GEM.get();
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class BookCopyAttribute implements ItemAttribute {
 
 	@Override
 	public ItemAttributeType getType() {
-		return AllItemAttributeTypes.BOOK_COPY;
+		return AllItemAttributeTypes.BOOK_COPY.get();
 	}
 
 	@Override

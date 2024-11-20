@@ -20,8 +20,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class EnchantAttribute implements ItemAttribute {
-	public static final EnchantAttribute EMPTY = new EnchantAttribute(null);
-
 	private @Nullable Enchantment enchantment;
 
 	public EnchantAttribute(@Nullable Enchantment enchantment) {
@@ -48,7 +46,7 @@ public class EnchantAttribute implements ItemAttribute {
 
 	@Override
 	public ItemAttributeType getType() {
-		return AllItemAttributeTypes.HAS_ENCHANT;
+		return AllItemAttributeTypes.HAS_ENCHANT.get();
 	}
 
 	@Override
@@ -71,7 +69,7 @@ public class EnchantAttribute implements ItemAttribute {
 	public static class Type implements ItemAttributeType {
 		@Override
 		public @NotNull ItemAttribute createAttribute() {
-			return EMPTY;
+			return new EnchantAttribute(null);
 		}
 
 		@Override

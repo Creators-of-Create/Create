@@ -2,12 +2,15 @@ package com.simibubi.create.content.logistics.item.filter.attribute;
 
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import com.simibubi.create.content.logistics.item.filter.attribute.attributes.astralsorcery.AstralSorceryAttunementAttribute;
 
 import com.simibubi.create.content.logistics.item.filter.attribute.attributes.astralsorcery.AstralSorceryCrystalAttribute;
 
 import com.simibubi.create.content.logistics.item.filter.attribute.attributes.astralsorcery.AstralSorceryPerkGemAttribute;
+
+import com.simibubi.create.content.logistics.item.filter.attribute.legacydeserializers.AllItemAttributeLegacyDeserializers;
 
 import org.jetbrains.annotations.ApiStatus;
 
@@ -47,7 +50,7 @@ public class AllItemAttributeTypes {
 	private static final DeferredRegister<ItemAttributeType> REGISTER = DeferredRegister.create(AllRegistries.Keys.ITEM_ATTRIBUTE_TYPES, Create.ID);
 	private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 
-	public static final ItemAttributeType
+	public static final Supplier<ItemAttributeType>
 			PLACEABLE = singleton("placeable", s -> s.getItem() instanceof BlockItem),
 			CONSUMABLE = singleton("consumable", ItemStack::isEdible),
 			FLUID_CONTAINER = singleton("fluid_container", s -> s.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM)
@@ -102,20 +105,23 @@ public class AllItemAttributeTypes {
 						.getMaxLevel() <= e.getValue());
 	}
 
-	private static ItemAttributeType singleton(String id, Predicate<ItemStack> predicate) {
+	private static Supplier<ItemAttributeType> singleton(String id, Predicate<ItemStack> predicate) {
 		return register(id, new SingletonItemAttribute.Type(type -> new SingletonItemAttribute(type, (stack, level) -> predicate.test(stack), id)));
 	}
 
-	private static ItemAttributeType singleton(String id, BiPredicate<ItemStack, Level> predicate) {
+	private static Supplier<ItemAttributeType> singleton(String id, BiPredicate<ItemStack, Level> predicate) {
 		return register(id, new SingletonItemAttribute.Type(type -> new SingletonItemAttribute(type, predicate, id)));
 	}
 
-	private static ItemAttributeType register(String id, ItemAttributeType type) {
-		return REGISTER.register(id, () -> type).get();
+	private static Supplier<ItemAttributeType> register(String id, ItemAttributeType type) {
+		return REGISTER.register(id, () -> type);
 	}
 
 	@ApiStatus.Internal
 	public static void register(IEventBus modEventBus) {
 		REGISTER.register(modEventBus);
+
+		// Register legacy deserializers to maintain backwards compatability
+		AllItemAttributeLegacyDeserializers.register();
 	}
 }

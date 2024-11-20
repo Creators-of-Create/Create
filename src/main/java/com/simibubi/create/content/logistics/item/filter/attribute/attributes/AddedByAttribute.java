@@ -58,7 +58,7 @@ public class AddedByAttribute implements ItemAttribute {
 
 	@Override
 	public ItemAttributeType getType() {
-		return AllItemAttributeTypes.ADDED_BY;
+		return AllItemAttributeTypes.ADDED_BY.get();
 	}
 
 	public static class Type implements ItemAttributeType {

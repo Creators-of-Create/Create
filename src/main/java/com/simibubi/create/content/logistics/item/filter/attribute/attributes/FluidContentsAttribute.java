@@ -21,8 +21,6 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class FluidContentsAttribute implements ItemAttribute {
-	public static final FluidContentsAttribute EMPTY = new FluidContentsAttribute(null);
-
 	private @Nullable Fluid fluid;
 
 	public FluidContentsAttribute(@Nullable Fluid fluid) {
@@ -64,7 +62,7 @@ public class FluidContentsAttribute implements ItemAttribute {
 
 	@Override
 	public ItemAttributeType getType() {
-		return AllItemAttributeTypes.HAS_FLUID;
+		return AllItemAttributeTypes.HAS_FLUID.get();
 	}
 
 	@Override
@@ -87,7 +85,7 @@ public class FluidContentsAttribute implements ItemAttribute {
 	public static class Type implements ItemAttributeType {
 		@Override
 		public @NotNull ItemAttribute createAttribute() {
-			return EMPTY;
+			return new FluidContentsAttribute(null);
 		}
 
 		@Override

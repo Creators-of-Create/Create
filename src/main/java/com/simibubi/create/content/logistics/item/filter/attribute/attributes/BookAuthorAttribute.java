@@ -45,7 +45,7 @@ public class BookAuthorAttribute implements ItemAttribute {
 
 	@Override
 	public ItemAttributeType getType() {
-		return AllItemAttributeTypes.BOOK_AUTHOR;
+		return AllItemAttributeTypes.BOOK_AUTHOR.get();
 	}
 
 	@Override

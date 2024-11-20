@@ -24,8 +24,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 
 public class ShulkerFillLevelAttribute implements ItemAttribute {
-	public static final ShulkerFillLevelAttribute EMPTY = new ShulkerFillLevelAttribute(null);
-
 	private ShulkerLevels levels;
 
 	public ShulkerFillLevelAttribute(ShulkerLevels levels) {
@@ -52,7 +50,7 @@ public class ShulkerFillLevelAttribute implements ItemAttribute {
 
 	@Override
 	public ItemAttributeType getType() {
-		return AllItemAttributeTypes.SHULKER_FILL_LEVEL;
+		return AllItemAttributeTypes.SHULKER_FILL_LEVEL.get();
 	}
 
 	@Override
@@ -120,7 +118,7 @@ public class ShulkerFillLevelAttribute implements ItemAttribute {
 	public static class Type implements ItemAttributeType {
 		@Override
 		public @NotNull ItemAttribute createAttribute() {
-			return EMPTY;
+			return new ShulkerFillLevelAttribute(null);
 		}
 
 		@Override

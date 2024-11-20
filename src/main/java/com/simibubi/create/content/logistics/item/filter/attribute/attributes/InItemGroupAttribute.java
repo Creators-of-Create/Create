@@ -19,8 +19,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.CreativeModeTabRegistry;
 
 public class InItemGroupAttribute implements ItemAttribute {
-	public static final InItemGroupAttribute EMPTY = new InItemGroupAttribute(null);
-
 	private CreativeModeTab group;
 
 	public InItemGroupAttribute(CreativeModeTab group) {
@@ -68,7 +66,7 @@ public class InItemGroupAttribute implements ItemAttribute {
 
 	@Override
 	public ItemAttributeType getType() {
-		return AllItemAttributeTypes.IN_ITEM_GROUP;
+		return AllItemAttributeTypes.IN_ITEM_GROUP.get();
 	}
 
 	@Override
@@ -92,7 +90,7 @@ public class InItemGroupAttribute implements ItemAttribute {
 	public static class Type implements ItemAttributeType {
 		@Override
 		public @NotNull ItemAttribute createAttribute() {
-			return EMPTY;
+			return new InItemGroupAttribute(null);
 		}
 
 		@Override

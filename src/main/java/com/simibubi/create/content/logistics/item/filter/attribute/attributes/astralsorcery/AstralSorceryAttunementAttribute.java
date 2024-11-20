@@ -55,7 +55,7 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
 
 	@Override
 	public ItemAttributeType getType() {
-		return AllItemAttributeTypes.ASTRAL_ATTUNMENT;
+		return AllItemAttributeTypes.ASTRAL_ATTUNMENT.get();
 	}
 
 	@Override

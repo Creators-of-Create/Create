@@ -25,8 +25,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class ColorAttribute implements ItemAttribute {
-	public static final ColorAttribute EMPTY = new ColorAttribute(DyeColor.PURPLE);
-
 	private DyeColor color;
 
 	public ColorAttribute(DyeColor color) {
@@ -81,7 +79,7 @@ public class ColorAttribute implements ItemAttribute {
 
 	@Override
 	public ItemAttributeType getType() {
-		return AllItemAttributeTypes.HAS_COLOR;
+		return AllItemAttributeTypes.HAS_COLOR.get();
 	}
 
 	@Override
@@ -99,7 +97,7 @@ public class ColorAttribute implements ItemAttribute {
 	public static class Type implements ItemAttributeType {
 		@Override
 		public @NotNull ItemAttribute createAttribute() {
-			return EMPTY;
+			return new ColorAttribute(DyeColor.PURPLE);
 		}
 
 		@Override
