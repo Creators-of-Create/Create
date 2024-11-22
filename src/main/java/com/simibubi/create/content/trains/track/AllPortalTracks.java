@@ -6,6 +6,7 @@ import java.util.function.UnaryOperator;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.betterend.BetterEndPortalCompat;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.simibubi.create.foundation.utility.BlockFace;
@@ -105,6 +106,8 @@ public class AllPortalTracks {
 		registerIntegration(Blocks.NETHER_PORTAL, AllPortalTracks::nether);
 		if (Mods.AETHER.isLoaded())
 			registerIntegration(Mods.AETHER.rl("aether_portal"), AllPortalTracks::aether);
+		if (Mods.BETTEREND.isLoaded())
+			registerIntegration(Mods.BETTEREND.rl("end_portal_block"), AllPortalTracks::betterend);
 	}
 
 	/**
@@ -145,45 +148,55 @@ public class AllPortalTracks {
 	}
 
 	/**
+	 * Portal track provider for the Better End mod's portal.
+	 *
+	 * @param inbound A pair containing the current {@link ServerLevel} and inbound {@link BlockFace}.
+	 * @return A pair with the target {@link ServerLevel} and outbound {@link BlockFace}, or {@code null} if not applicable.
+	 */
+	private static Pair<ServerLevel, BlockFace> betterend(Pair<ServerLevel, BlockFace> inbound) {
+		return portalProvider(inbound, Level.OVERWORLD, Level.END, BetterEndPortalCompat::getBetterEndPortalInfo);
+	}
+
+	/**
 	 * Provides a standard portal track provider that handles portal traversal between two dimensions.
 	 *
-	 * @param inbound             A pair containing the current {@link ServerLevel} and inbound {@link BlockFace}.
-	 * @param firstDimension      The first dimension (typically the Overworld).
-	 * @param secondDimension     The second dimension (e.g., Nether, Aether).
-	 * @param customPortalForcer  A function to obtain the {@link ITeleporter} for the target level.
+	 * @param inbound            A pair containing the current {@link ServerLevel} and inbound {@link BlockFace}.
+	 * @param firstDimension     The first dimension (typically the Overworld).
+	 * @param secondDimension    The second dimension (e.g., Nether, Aether).
+	 * @param customPortalForcer A function to obtain the {@link ITeleporter} for the target level.
 	 * @return A pair with the target {@link ServerLevel} and outbound {@link BlockFace}, or {@code null} if not applicable.
 	 */
 	public static Pair<ServerLevel, BlockFace> standardPortalProvider(
-			Pair<ServerLevel, BlockFace> inbound,
-			ResourceKey<Level> firstDimension,
-			ResourceKey<Level> secondDimension,
-			Function<ServerLevel, ITeleporter> customPortalForcer
+		Pair<ServerLevel, BlockFace> inbound,
+		ResourceKey<Level> firstDimension,
+		ResourceKey<Level> secondDimension,
+		Function<ServerLevel, ITeleporter> customPortalForcer
 	) {
 		return portalProvider(
-				inbound,
-				firstDimension,
-				secondDimension,
-				(otherLevel, probe) -> {
-					ITeleporter teleporter = customPortalForcer.apply(otherLevel);
-					return teleporter.getPortalInfo(probe, otherLevel, probe::findDimensionEntryPoint);
-				}
+			inbound,
+			firstDimension,
+			secondDimension,
+			(otherLevel, probe) -> {
+				ITeleporter teleporter = customPortalForcer.apply(otherLevel);
+				return teleporter.getPortalInfo(probe, otherLevel, probe::findDimensionEntryPoint);
+			}
 		);
 	}
 
 	/**
 	 * Generalized portal provider method that calculates the corresponding outbound track across a portal.
 	 *
-	 * @param inbound             A pair containing the current {@link ServerLevel} and inbound {@link BlockFace}.
-	 * @param firstDimension      The first dimension.
-	 * @param secondDimension     The second dimension.
-	 * @param portalInfoProvider  A function that provides the {@link PortalInfo} given the target level and probe entity.
+	 * @param inbound            A pair containing the current {@link ServerLevel} and inbound {@link BlockFace}.
+	 * @param firstDimension     The first dimension.
+	 * @param secondDimension    The second dimension.
+	 * @param portalInfoProvider A function that provides the {@link PortalInfo} given the target level and probe entity.
 	 * @return A pair with the target {@link ServerLevel} and outbound {@link BlockFace}, or {@code null} if not applicable.
 	 */
 	public static Pair<ServerLevel, BlockFace> portalProvider(
-			Pair<ServerLevel, BlockFace> inbound,
-			ResourceKey<Level> firstDimension,
-			ResourceKey<Level> secondDimension,
-			BiFunction<ServerLevel, SuperGlueEntity, PortalInfo> portalInfoProvider
+		Pair<ServerLevel, BlockFace> inbound,
+		ResourceKey<Level> firstDimension,
+		ResourceKey<Level> secondDimension,
+		BiFunction<ServerLevel, SuperGlueEntity, PortalInfo> portalInfoProvider
 	) {
 		ServerLevel level = inbound.getFirst();
 		ResourceKey<Level> resourceKey = level.dimension() == secondDimension ? firstDimension : secondDimension;
