@@ -1,11 +1,6 @@
 package com.simibubi.create.content.logistics.depot;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.util.transform.Rotate;
-import com.jozufozu.flywheel.util.transform.TransformStack;
-import com.jozufozu.flywheel.util.transform.Translate;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.ShaftRenderer;
@@ -15,6 +10,10 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.transform.Rotate;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.Translate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -41,18 +40,17 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		VertexConsumer vertexBuilder = buffer.getBuffer(RenderType.solid());
 		float lidProgress = be.getLidProgress(partialTicks);
 		float angle = lidProgress * 70;
 
-		if (!Backend.canUseInstancing(be.getLevel())) {
+		if (!VisualizationManager.supportsVisualization(be.getLevel())) {
 			SuperByteBuffer model = CachedBufferer.partial(AllPartialModels.EJECTOR_TOP, be.getBlockState());
 			applyLidAngle(be, angle, model);
 			model.light(light)
-					.renderInto(ms, vertexBuilder);
+					.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		}
 
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 
 		float maxTime =
 				(float) (be.earlyTarget != null ? be.earlyTargetTime : be.launcher.getTotalFlyingTicks());
@@ -66,8 +64,8 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 			msr.translate(launchedItemLocation.subtract(Vec3.atLowerCornerOf(be.getBlockPos())));
 			Vec3 itemRotOffset = VecHelper.voxelSpace(0, 3, 0);
 			msr.translate(itemRotOffset);
-			msr.rotateY(AngleHelper.horizontalAngle(be.getFacing()));
-			msr.rotateX(time * 40);
+			msr.rotateYDegrees(AngleHelper.horizontalAngle(be.getFacing()));
+			msr.rotateXDegrees(time * 40);
 			msr.translateBack(itemRotOffset);
 			Minecraft.getInstance()
 				.getItemRenderer()
@@ -81,10 +79,10 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 
 		ms.pushPose();
 		applyLidAngle(be, angle, msr);
-		msr.centre()
-			.rotateY(-180 - AngleHelper.horizontalAngle(be.getBlockState()
+		msr.center()
+			.rotateYDegrees(-180 - AngleHelper.horizontalAngle(be.getBlockState()
 				.getValue(EjectorBlock.HORIZONTAL_FACING)))
-			.unCentre();
+			.uncenter();
 		DepotRenderer.renderItemsOf(be, partialTicks, ms, buffer, light, overlay, behaviour);
 		ms.popPose();
 	}
@@ -94,12 +92,12 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 	}
 
 	static <T extends Translate<T> & Rotate<T>> void applyLidAngle(KineticBlockEntity be, Vec3 rotationOffset, float angle, T tr) {
-		tr.centre()
-			.rotateY(180 + AngleHelper.horizontalAngle(be.getBlockState()
+		tr.center()
+			.rotateYDegrees(180 + AngleHelper.horizontalAngle(be.getBlockState()
 				.getValue(EjectorBlock.HORIZONTAL_FACING)))
-			.unCentre()
+			.uncenter()
 			.translate(rotationOffset)
-			.rotateX(-angle)
+			.rotateXDegrees(-angle)
 			.translateBack(rotationOffset);
 	}
 

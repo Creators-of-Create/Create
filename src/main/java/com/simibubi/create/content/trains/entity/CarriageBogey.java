@@ -5,12 +5,11 @@ import static com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity.
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity;
-import com.simibubi.create.content.trains.bogey.BogeyInstance;
+import com.simibubi.create.content.trains.bogey.BogeySizes.BogeySize;
 import com.simibubi.create.content.trains.bogey.BogeyStyle;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackGraph;
@@ -184,7 +183,7 @@ public class CarriageBogey {
 		tag.put("Points", points.serializeEach(tp -> tp.write(dimensions)));
 		tag.putBoolean("UpsideDown", upsideDown);
 		bogeyData.putBoolean(UPSIDE_DOWN_KEY, upsideDown);
-		NBTHelper.writeResourceLocation(bogeyData, BOGEY_STYLE_KEY, getStyle().name);
+		NBTHelper.writeResourceLocation(bogeyData, BOGEY_STYLE_KEY, getStyle().id);
 		tag.put(BOGEY_DATA_KEY, bogeyData);
 		return tag;
 	}
@@ -199,20 +198,20 @@ public class CarriageBogey {
 		return new CarriageBogey(type, upsideDown, data, points.getFirst(), points.getSecond());
 	}
 
-	public BogeyInstance createInstance(MaterialManager materialManager) {
-		return this.getStyle().createInstance(this, type.getSize(), materialManager);
-	}
-
 	public BogeyStyle getStyle() {
 		ResourceLocation location = NBTHelper.readResourceLocation(this.bogeyData, BOGEY_STYLE_KEY);
 		BogeyStyle style = AllBogeyStyles.BOGEY_STYLES.get(location);
 		return style != null ? style : AllBogeyStyles.STANDARD; // just for safety
 	}
 
+	public BogeySize getSize() {
+		return type.getSize();
+	}
+
 	private CompoundTag createBogeyData() {
 		BogeyStyle style = type != null ? type.getDefaultStyle() : AllBogeyStyles.STANDARD;
 		CompoundTag nbt = style.defaultData != null ? style.defaultData : new CompoundTag();
-		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, style.name);
+		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, style.id);
 		nbt.putBoolean(UPSIDE_DOWN_KEY, isUpsideDown());
 		return nbt;
 	}

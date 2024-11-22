@@ -101,7 +101,7 @@ public class TrackPaverV2 {
 		Map<Pair<Integer, Integer>, Double> yLevels = new HashMap<>();
 		Map<Pair<Integer, Integer>, Double> tLevels = new HashMap<>();
 
-		BlockPos tePosition = bc.tePositions.getFirst();
+		BlockPos bePosition = bc.bePositions.getFirst();
 		double radius = -task.getHorizontalInterval()
 			.getFirst();
 		double r1 = radius - .575;
@@ -109,10 +109,10 @@ public class TrackPaverV2 {
 
 		double handleLength = bc.getHandleLength();
 		Vec3 start = bc.starts.getFirst()
-			.subtract(Vec3.atLowerCornerOf(tePosition))
+			.subtract(Vec3.atLowerCornerOf(bePosition))
 			.add(0, 3 / 16f, 0);
 		Vec3 end = bc.starts.getSecond()
-			.subtract(Vec3.atLowerCornerOf(tePosition))
+			.subtract(Vec3.atLowerCornerOf(bePosition))
 			.add(0, 3 / 16f, 0);
 		Vec3 startHandle = bc.axes.getFirst()
 			.scale(handleLength)
@@ -190,7 +190,7 @@ public class TrackPaverV2 {
 			BlockPos targetPos = new BlockPos(entry.getKey()
 				.getFirst(), floor,
 				entry.getKey()
-					.getSecond()).offset(tePosition);
+					.getSecond()).offset(bePosition);
 			task.put(targetPos.getX(), targetPos.getZ(), targetPos.getY() + (yValue - floor >= .5 ? .5f : 0));
 		}
 	}

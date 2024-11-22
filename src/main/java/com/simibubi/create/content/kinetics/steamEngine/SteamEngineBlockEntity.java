@@ -249,7 +249,7 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 			return null;
 
 		axis = KineticBlockEntityRenderer.getRotationAxisOf(shaft);
-		angle = KineticBlockEntityRenderer.getAngleForTe(shaft, shaft.getBlockPos(), axis);
+		angle = KineticBlockEntityRenderer.getAngleForBe(shaft, shaft.getBlockPos(), axis);
 
 		if (axis == facingAxis)
 			return null;

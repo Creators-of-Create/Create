@@ -4,11 +4,11 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -60,10 +60,10 @@ public abstract class GhostBlockRenderer {
 			ms.pushPose();
 			ms.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
 
-			for (RenderType layer : model.getRenderTypes(state, RandomSource.create(42L), ModelUtil.VIRTUAL_DATA)) {
+			for (RenderType layer : model.getRenderTypes(state, RandomSource.create(42L), VirtualRenderHelper.VIRTUAL_DATA)) {
 				VertexConsumer vb = buffer.getEarlyBuffer(layer);
 				renderer.renderModel(ms.last(), vb, state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
-					ModelUtil.VIRTUAL_DATA, layer);
+					VirtualRenderHelper.VIRTUAL_DATA, layer);
 			}
 
 			ms.popPose();
@@ -95,7 +95,7 @@ public abstract class GhostBlockRenderer {
 
 			renderModel(ms.last(), vb, state, model, 1f, 1f, 1f, alpha,
 				LevelRenderer.getLightColor(mc.level, pos), OverlayTexture.NO_OVERLAY,
-				ModelUtil.VIRTUAL_DATA, layer);
+				VirtualRenderHelper.VIRTUAL_DATA, layer);
 
 			ms.popPose();
 		}

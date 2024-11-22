@@ -1,6 +1,5 @@
 package com.simibubi.create.content.kinetics.clock;
 
-import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -10,6 +9,7 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -79,7 +79,7 @@ public class CuckooClockRenderer extends KineticBlockEntityRenderer<CuckooClockB
 			PartialModel partialModel = (be.animationType == Animation.PIG ? AllPartialModels.CUCKOO_PIG : AllPartialModels.CUCKOO_CREEPER);
 			SuperByteBuffer figure =
 					CachedBufferer.partial(partialModel, blockState);
-			figure.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(direction.getCounterClockWise())));
+			figure.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(direction.getCounterClockWise())), Direction.UP);
 			figure.translate(offset, 0, 0);
 			figure.light(light)
 					.renderInto(ms, vb);
@@ -98,9 +98,9 @@ public class CuckooClockRenderer extends KineticBlockEntityRenderer<CuckooClockB
 		float pivotX = 2 / 16f;
 		float pivotY = 6 / 16f;
 		float pivotZ = 8 / 16f;
-		buffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing.getCounterClockWise())));
+		buffer.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(facing.getCounterClockWise())), Direction.UP);
 		buffer.translate(pivotX, pivotY, pivotZ);
-		buffer.rotate(Direction.EAST, AngleHelper.rad(angle));
+		buffer.rotate(AngleHelper.rad(angle), Direction.EAST);
 		buffer.translate(-pivotX, -pivotY, -pivotZ);
 		return buffer;
 	}
@@ -109,9 +109,9 @@ public class CuckooClockRenderer extends KineticBlockEntityRenderer<CuckooClockB
 		float pivotX = 2 / 16f;
 		float pivotY = 0;
 		float pivotZ = (left ? 6 : 10) / 16f;
-		buffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing.getCounterClockWise())));
+		buffer.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(facing.getCounterClockWise())), Direction.UP);
 		buffer.translate(pivotX, pivotY, pivotZ);
-		buffer.rotate(Direction.UP, AngleHelper.rad(angle) * (left ? -1 : 1));
+		buffer.rotate(AngleHelper.rad(angle) * (left ? -1 : 1), Direction.UP);
 		buffer.translate(-pivotX, -pivotY, -pivotZ);
 		return buffer;
 	}

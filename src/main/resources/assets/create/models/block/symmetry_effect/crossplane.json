@@ -22,6 +22,7 @@
 			"name": "rod_left_bottom",
 			"from": [1, 3, 7],
 			"to": [3, 4, 9],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 2, 1], "texture": "#2"},
@@ -36,6 +37,7 @@
 			"name": "rod_left_bottom",
 			"from": [13, 3, 7],
 			"to": [15, 4, 9],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 2, 1], "texture": "#2"},
@@ -50,6 +52,7 @@
 			"name": "rod_left_top",
 			"from": [1, 12, 7],
 			"to": [3, 13, 9],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 2, 1], "texture": "#2"},
@@ -64,6 +67,7 @@
 			"name": "rod_left_top",
 			"from": [13, 12, 7],
 			"to": [15, 13, 9],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 2, 1], "texture": "#2"},
@@ -79,6 +83,7 @@
 			"from": [1, 4, 7.5],
 			"to": [3, 12, 8.5],
 			"shade": false,
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [3, 5, 1, 13], "texture": "#2"},
@@ -92,6 +97,7 @@
 			"from": [13, 4, 7.5],
 			"to": [15, 12, 8.5],
 			"shade": false,
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [1, 3, 3, 11], "texture": "#2"},

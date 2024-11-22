@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
@@ -18,6 +17,7 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -129,21 +129,21 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 
 	private void renderToolbox(GuiGraphics graphics, int x, int y, float partialTicks) {
         PoseStack ms = graphics.pose();
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.pushPose()
 			.translate(x, y, 100)
 			.scale(50)
-			.rotateX(-22)
-			.rotateY(-202);
+			.rotateXDegrees(-22)
+			.rotateYDegrees(-202);
 
 		GuiGameElement.of(AllBlocks.TOOLBOXES.get(color)
 			.getDefaultState())
 			.render(graphics);
 
-        TransformStack.cast(ms)
+        TransformStack.of(ms)
 			.pushPose()
 			.translate(0, -6 / 16f, 12 / 16f)
-			.rotateX(-105 * menu.contentHolder.lid.getValue(partialTicks))
+			.rotateXDegrees(-105 * menu.contentHolder.lid.getValue(partialTicks))
 			.translate(0, 6 / 16f, -12 / 16f);
 		GuiGameElement.of(AllPartialModels.TOOLBOX_LIDS.get(color))
 			.render(graphics);

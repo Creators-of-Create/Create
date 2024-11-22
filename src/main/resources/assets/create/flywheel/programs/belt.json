@@ -1,4 +1,0 @@
-{
-  "vertex": "create:belt.vert",
-  "fragment": "flywheel:block.frag"
-}

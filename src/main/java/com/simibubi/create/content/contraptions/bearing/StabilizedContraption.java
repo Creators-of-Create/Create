@@ -3,15 +3,11 @@ package com.simibubi.create.content.contraptions.bearing;
 import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.ContraptionType;
-import com.simibubi.create.content.contraptions.render.ContraptionLighter;
-import com.simibubi.create.content.contraptions.render.NonStationaryLighter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class StabilizedContraption extends Contraption {
 
@@ -66,9 +62,4 @@ public class StabilizedContraption extends Contraption {
 		return facing;
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public ContraptionLighter<?> makeLighter() {
-		return new NonStationaryLighter<>(this);
-	}
 }

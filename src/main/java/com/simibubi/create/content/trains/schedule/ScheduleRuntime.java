@@ -9,7 +9,6 @@ import java.util.regex.PatternSyntaxException;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.trains.display.GlobalTrainDisplayData.TrainDeparturePrediction;
 import com.simibubi.create.content.trains.entity.Carriage;
-import com.simibubi.create.content.trains.entity.Navigation;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.DiscoveredPath;
 import com.simibubi.create.content.trains.graph.EdgePointType;
@@ -184,7 +183,7 @@ public class ScheduleRuntime {
 				cooldown = INTERVAL;
 				return null;
 			}
-			
+
 			try {
 				for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
 					if (!globalStation.name.matches(regex))
@@ -193,7 +192,7 @@ public class ScheduleRuntime {
 					validStations.add(globalStation);
 				}
 			} catch (PatternSyntaxException ignored) {}
-			
+
 			DiscoveredPath best = train.navigation.findPathTo(validStations, Double.MAX_VALUE);
 			if (best == null) {
 				if (anyMatch)
@@ -330,9 +329,9 @@ public class ScheduleRuntime {
 			return accumulatedTime;
 		if (predictionTicks.size() <= currentEntry)
 			return accumulatedTime;
-		
+
 		int departureTime = estimateStayDuration(index);
-		
+
 		if (accumulatedTime < 0) {
 			predictions.add(createPrediction(index, filter.getFilter(), currentTitle, accumulatedTime));
 			return Math.min(accumulatedTime, departureTime);
@@ -348,10 +347,10 @@ public class ScheduleRuntime {
 
 		if (accumulatedTime != TBD)
 			accumulatedTime += departureTime;
-		
+
 		if (departureTime == INVALID)
 			accumulatedTime = INVALID;
-		
+
 		return accumulatedTime;
 	}
 
@@ -379,7 +378,7 @@ public class ScheduleRuntime {
 	private TrainDeparturePrediction createPrediction(int index, String destination, String currentTitle, int time) {
 		if (time == INVALID)
 			return null;
-		
+
 		int size = schedule.entries.size();
 		if (index >= size) {
 			if (!schedule.cyclic)

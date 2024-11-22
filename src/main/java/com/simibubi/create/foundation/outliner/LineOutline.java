@@ -34,7 +34,7 @@ public class LineOutline extends Outline {
 		if (width == 0)
 			return;
 
-		VertexConsumer consumer = buffer.getBuffer(RenderTypes.getOutlineSolid());
+		VertexConsumer consumer = buffer.getBuffer(RenderTypes.outlineSolid());
 		params.loadColor(colorTemp);
 		Vector4f color = colorTemp;
 		int lightmap = params.lightmap;

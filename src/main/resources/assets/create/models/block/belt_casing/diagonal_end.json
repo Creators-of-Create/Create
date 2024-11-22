@@ -44,6 +44,7 @@
 			"name": "4",
 			"from": [-0.1, 2, 11.303],
 			"to": [16.1, 11, 19.328],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [39, 8, 8]},
 			"faces": {
 				"north": {"uv": [12, 2.25, 16, 4.5], "texture": "#7"},

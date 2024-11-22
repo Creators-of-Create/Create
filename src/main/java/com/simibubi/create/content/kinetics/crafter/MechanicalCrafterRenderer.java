@@ -3,9 +3,6 @@ package com.simibubi.create.content.kinetics.crafter;
 import static com.simibubi.create.content.kinetics.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 import static com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer.standardKineticRotationTransform;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -20,6 +17,9 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pointing;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -122,8 +122,8 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 					offset = value == Pointing.UP ? -1 : value == Pointing.LEFT ? 2 : value == Pointing.RIGHT ? -2 : 1;
 				}
 
-				TransformStack.cast(ms)
-					.rotateY(180)
+				TransformStack.of(ms)
+					.rotateYDegrees(180)
 					.translate(0, 0, (x + y * 3 + offset * 9) / 1024f );
 				Minecraft.getInstance()
 					.getItemRenderer()
@@ -169,12 +169,12 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 		BlockState blockState = be.getBlockState();
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-		if (!Backend.canUseInstancing(be.getLevel())) {
+		if (!VisualizationManager.supportsVisualization(be.getLevel())) {
 			SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.SHAFTLESS_COGWHEEL, blockState);
 			standardKineticRotationTransform(superBuffer, be, light);
-			superBuffer.rotateCentered(Direction.UP, (float) (blockState.getValue(HORIZONTAL_FACING)
-				.getAxis() != Direction.Axis.X ? 0 : Math.PI / 2));
-			superBuffer.rotateCentered(Direction.EAST, (float) (Math.PI / 2));
+			superBuffer.rotateCentered((float) (blockState.getValue(HORIZONTAL_FACING)
+				.getAxis() != Direction.Axis.X ? 0 : Math.PI / 2), Direction.UP);
+			superBuffer.rotateCentered((float) (Math.PI / 2), Direction.EAST);
 			superBuffer.renderInto(ms, vb);
 		}
 
@@ -215,8 +215,8 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 		float xRot = crafterState.getValue(MechanicalCrafterBlock.POINTING)
 			.getXRotation();
 		float yRot = AngleHelper.horizontalAngle(crafterState.getValue(HORIZONTAL_FACING));
-		buffer.rotateCentered(Direction.UP, (float) ((yRot + 90) / 180 * Math.PI));
-		buffer.rotateCentered(Direction.EAST, (float) ((xRot) / 180 * Math.PI));
+		buffer.rotateCentered((float) ((yRot + 90) / 180 * Math.PI), Direction.UP);
+		buffer.rotateCentered((float) ((xRot) / 180 * Math.PI), Direction.EAST);
 		return buffer;
 	}
 

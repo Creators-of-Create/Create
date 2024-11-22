@@ -37,6 +37,7 @@
 			"name": "axle",
 			"from": [8.35355, 5, 7.14645],
 			"to": [9.35355, 12, 8.14645],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "y", "origin": [8.5, 11, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 2, 14], "texture": "#5"},
@@ -93,6 +94,7 @@
 			"name": "gear case",
 			"from": [7.5, 6, 7],
 			"to": [9.5, 7, 9],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "y", "origin": [8.5, 11, 8]},
 			"faces": {
 				"north": {"uv": [12, 12, 16, 14], "texture": "#5"},

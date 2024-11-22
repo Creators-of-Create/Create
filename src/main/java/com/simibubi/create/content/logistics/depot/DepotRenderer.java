@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.depot;
 
 import java.util.Random;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.belt.BeltHelper;
@@ -11,6 +10,7 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -39,7 +39,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 		int light, int overlay, DepotBehaviour depotBehaviour) {
 
 		TransportedItemStack transported = depotBehaviour.heldItem;
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 		Vec3 itemPosition = VecHelper.getCenterOf(be.getBlockPos());
 
 		ms.pushPose();
@@ -86,10 +86,10 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 			msr.nudge(i);
 
 			boolean renderUpright = BeltHelper.isItemUpright(stack);
-			msr.rotateY(360 / 8f * i);
+			msr.rotateYDegrees(360 / 8f * i);
 			ms.translate(.35f, 0, 0);
 			if (renderUpright)
-				msr.rotateY(-(360 / 8f * i));
+				msr.rotateYDegrees(-(360 / 8f * i));
 			Random r = new Random(i + 1);
 			int angle = (int) (360 * r.nextFloat());
 			renderItem(be.getLevel(), ms, buffer, light, overlay, stack, renderUpright ? angle + 90 : angle, r, itemPosition);
@@ -103,14 +103,14 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 		int angle, Random r, Vec3 itemPosition) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 		int count = (int) (Mth.log2((int) (itemStack.getCount()))) / 2;
 		boolean renderUpright = BeltHelper.isItemUpright(itemStack);
 		BakedModel bakedModel = itemRenderer.getModel(itemStack, null, null, 0);
 		boolean blockItem = bakedModel.isGui3d();
 
 		ms.pushPose();
-		msr.rotateY(angle);
+		msr.rotateYDegrees(angle);
 
 		if (renderUpright) {
 			Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
@@ -131,14 +131,14 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 			ms.scale(.5f, .5f, .5f);
 			if (!blockItem && !renderUpright) {
 				ms.translate(0, -3 / 16f, 0);
-				msr.rotateX(90);
+				msr.rotateXDegrees(90);
 			}
 			itemRenderer.render(itemStack, ItemDisplayContext.FIXED, false, ms, buffer, light, overlay, bakedModel);
 			ms.popPose();
 
 			if (!renderUpright) {
 				if (!blockItem)
-					msr.rotateY(10);
+					msr.rotateYDegrees(10);
 				ms.translate(0, blockItem ? 1 / 64d : 1 / 16d, 0);
 			} else
 				ms.translate(0, 0, -1 / 16f);

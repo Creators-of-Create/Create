@@ -21,17 +21,20 @@ public class TrainEditPacket extends SimplePacketBase {
 	private String name;
 	private UUID id;
 	private ResourceLocation iconType;
+	private int mapColor;
 
-	public TrainEditPacket(UUID id, String name, ResourceLocation iconType) {
+	public TrainEditPacket(UUID id, String name, ResourceLocation iconType, int mapColor) {
 		this.name = name;
 		this.id = id;
 		this.iconType = iconType;
+		this.mapColor = mapColor;
 	}
 
 	public TrainEditPacket(FriendlyByteBuf buffer) {
 		id = buffer.readUUID();
 		name = buffer.readUtf(256);
 		iconType = buffer.readResourceLocation();
+		mapColor = buffer.readVarInt();
 	}
 
 	@Override
@@ -39,6 +42,7 @@ public class TrainEditPacket extends SimplePacketBase {
 		buffer.writeUUID(id);
 		buffer.writeUtf(name);
 		buffer.writeResourceLocation(iconType);
+		buffer.writeVarInt(mapColor);
 	}
 
 	@Override
@@ -52,8 +56,9 @@ public class TrainEditPacket extends SimplePacketBase {
 			if (!name.isBlank())
 				train.name = Components.literal(name);
 			train.icon = TrainIconType.byId(iconType);
+			train.mapColorIndex = mapColor;
 			if (sender != null)
-				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainEditReturnPacket(id, name, iconType));
+				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainEditReturnPacket(id, name, iconType, mapColor));
 		});
 		return true;
 	}
@@ -64,8 +69,8 @@ public class TrainEditPacket extends SimplePacketBase {
 			super(buffer);
 		}
 
-		public TrainEditReturnPacket(UUID id, String name, ResourceLocation iconType) {
-			super(id, name, iconType);
+		public TrainEditReturnPacket(UUID id, String name, ResourceLocation iconType,  int mapColor) {
+			super(id, name, iconType, mapColor);
 		}
 
 	}

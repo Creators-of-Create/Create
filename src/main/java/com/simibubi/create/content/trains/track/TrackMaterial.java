@@ -10,12 +10,12 @@ import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.Create;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -163,7 +163,7 @@ public class TrackMaterial {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public record TrackModelHolder(PartialModel tie, PartialModel segment_left, PartialModel segment_right) {
+	public record TrackModelHolder(PartialModel tie, PartialModel leftSegment, PartialModel rightSegment) {
 		static final TrackModelHolder DEFAULT = new TrackModelHolder(AllPartialModels.TRACK_TIE,
 			AllPartialModels.TRACK_SEGMENT_LEFT, AllPartialModels.TRACK_SEGMENT_RIGHT);
 	}

@@ -1,6 +1,5 @@
 package com.simibubi.create.infrastructure.gui;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -20,6 +19,7 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
@@ -93,14 +93,14 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		RenderSystem.enableDepthTest();
 
 		PoseStack ms = graphics.pose();
-		
+
 		for (int side : Iterate.positiveAndNegative) {
 			ms.pushPose();
 			ms.translate(width / 2, 60, 200);
 			ms.scale(24 * side, 24 * side, 32);
 			ms.translate(-1.75 * ((alpha * alpha) / 2f + .5f), .25f, 0);
-			TransformStack.cast(ms)
-				.rotateX(45);
+			TransformStack.of(ms)
+				.rotateXDegrees(45);
 			GuiGameElement.of(AllBlocks.LARGE_COGWHEEL.getDefaultState())
 				.rotateBlock(0, Util.getMillis() / 32f * side, 0)
 				.render(graphics);

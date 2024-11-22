@@ -6,11 +6,6 @@ import net.minecraft.world.level.block.CampfireBlock;
 
 public class CampfireMovementBehaviour implements MovementBehaviour {
 	@Override
-	public boolean renderAsNormalBlockEntity() {
-		return true;
-	}
-
-	@Override
 	public void tick(MovementContext context) {
 		if (context.world == null || !context.world.isClientSide || context.position == null
 			|| !context.state.getValue(CampfireBlock.LIT) || context.disabled)

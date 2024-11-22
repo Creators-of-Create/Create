@@ -25,6 +25,7 @@
 			"name": "Rod Bottom Core",
 			"from": [6.5, 7, 6.5],
 			"to": [9.5, 17, 9.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [5, 6, 8, 16], "texture": "#6"},
@@ -52,6 +53,7 @@
 			"name": "Rod Top Core",
 			"from": [6.5, 27, 6.5],
 			"to": [9.5, 30, 9.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [8, 1, 11, 4], "texture": "#6"},

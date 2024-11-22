@@ -21,6 +21,7 @@
 		{
 			"from": [-3.5, -2.5, 0.5],
 			"to": [2.5, -1.5, 1.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 22.5, "axis": "z", "origin": [2.5, -2.5, 1.5]},
 			"faces": {
 				"north": {"uv": [2, 5, 1, 10], "texture": "#0"},
@@ -32,6 +33,7 @@
 		{
 			"from": [-3.5, -2.5, -1.5],
 			"to": [2.5, -1.5, -0.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 22.5, "axis": "z", "origin": [2.5, -2.5, 1.5]},
 			"faces": {
 				"north": {"uv": [2, 5, 1, 10], "texture": "#0"},

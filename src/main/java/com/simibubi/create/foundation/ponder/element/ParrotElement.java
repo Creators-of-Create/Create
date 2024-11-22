@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.ponder.element;
 
 import java.util.function.Supplier;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
@@ -12,6 +11,7 @@ import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -111,7 +111,7 @@ public class ParrotElement extends AnimatedSceneElement {
 		entity.xRotO = entity.getXRot();
 		entity.yRotO = entity.getYRot();
 	}
-	
+
 	public void setConductor(boolean isConductor) {
 		if (entity == null) {
 			deferConductor = isConductor;
@@ -147,8 +147,8 @@ public class ParrotElement extends AnimatedSceneElement {
 		ms.translate(Mth.lerp(pt, entity.xo, entity.getX()), Mth.lerp(pt, entity.yo, entity.getY()),
 			Mth.lerp(pt, entity.zo, entity.getZ()));
 
-		TransformStack.cast(ms)
-			.rotateY(AngleHelper.angleLerp(pt, entity.yRotO, entity.getYRot()));
+		TransformStack.of(ms)
+			.rotateYDegrees(AngleHelper.angleLerp(pt, entity.yRotO, entity.getYRot()));
 
 		entityrenderermanager.render(entity, 0, 0, 0, 0, pt, ms, buffer, lightCoordsFromFade(fade));
 		ms.popPose();

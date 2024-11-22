@@ -26,6 +26,7 @@
 			"name": "Gear6",
 			"from": [5.5, 7, -1],
 			"to": [11.5, 10, 17],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [8.5, 8.5, 8]},
 			"faces": {
 				"north": {"uv": [9, 10, 10.5, 13], "rotation": 90, "texture": "#5"},
@@ -40,6 +41,7 @@
 			"name": "Gear7",
 			"from": [5.5, -0.5, 6.5],
 			"to": [11.5, 17.5, 9.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [8.5, 8.5, 8]},
 			"faces": {
 				"north": {"uv": [0, 10, 9, 13], "rotation": 90, "texture": "#5"},
@@ -123,6 +125,7 @@
 		{
 			"from": [1.70355, 6.15, 2],
 			"to": [3.70355, 10.15, 14],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [3.35355, 8.25, 7.75]},
 			"faces": {
 				"north": {"uv": [16, 0, 12, 2], "rotation": 90, "texture": "#4"},
@@ -136,6 +139,7 @@
 		{
 			"from": [3.70355, 8.15, 2],
 			"to": [5.70355, 10.15, 14],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [3.35355, 8.25, 7.75]},
 			"faces": {
 				"north": {"uv": [16, 2, 14, 4], "rotation": 90, "texture": "#4"},
@@ -148,6 +152,7 @@
 		{
 			"from": [3.85355, 2.5, 7.75],
 			"to": [5.85355, 14.5, 9.75],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "y", "origin": [3.35355, 8.25, 7.75]},
 			"faces": {
 				"north": {"uv": [14, 2, 15, 4], "rotation": 90, "texture": "#4"},
@@ -160,6 +165,7 @@
 		{
 			"from": [1.85355, 2.5, 5.75],
 			"to": [3.85355, 14.5, 9.75],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "y", "origin": [3.35355, 8.25, 7.75]},
 			"faces": {
 				"north": {"uv": [12, 0, 13, 2], "rotation": 90, "texture": "#4"},

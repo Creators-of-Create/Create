@@ -1,6 +1,5 @@
 package com.simibubi.create.content.fluids.tank;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -10,6 +9,7 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -82,7 +82,7 @@ public class FluidTankRenderer extends SafeBlockEntityRenderer<FluidTankBlockEnt
 		BlockState blockState = be.getBlockState();
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		ms.pushPose();
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 		msr.translate(be.width / 2f, 0.5, be.width / 2f);
 
 		float dialPivot = 5.75f / 16;
@@ -91,17 +91,17 @@ public class FluidTankRenderer extends SafeBlockEntityRenderer<FluidTankBlockEnt
 		for (Direction d : Iterate.horizontalDirections) {
 			ms.pushPose();
 			CachedBufferer.partial(AllPartialModels.BOILER_GAUGE, blockState)
-				.rotateY(d.toYRot())
-				.unCentre()
+				.rotateYDegrees(d.toYRot())
+				.uncenter()
 				.translate(be.width / 2f - 6 / 16f, 0, 0)
 				.light(light)
 				.renderInto(ms, vb);
 			CachedBufferer.partial(AllPartialModels.BOILER_GAUGE_DIAL, blockState)
-				.rotateY(d.toYRot())
-				.unCentre()
+				.rotateYDegrees(d.toYRot())
+				.uncenter()
 				.translate(be.width / 2f - 6 / 16f, 0, 0)
 				.translate(0, dialPivot, dialPivot)
-				.rotateX(-90 * progress)
+				.rotateXDegrees(-90 * progress)
 				.translate(0, -dialPivot, -dialPivot)
 				.light(light)
 				.renderInto(ms, vb);

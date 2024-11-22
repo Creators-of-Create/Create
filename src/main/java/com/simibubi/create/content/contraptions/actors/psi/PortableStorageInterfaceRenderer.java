@@ -2,23 +2,23 @@ package com.simibubi.create.content.contraptions.actors.psi;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -35,7 +35,7 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 	@Override
 	protected void renderSafe(PortableStorageInterfaceBlockEntity be, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
-		if (Backend.canUseInstancing(be.getLevel()))
+		if (VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
 		BlockState blockState = be.getBlockState();
@@ -55,8 +55,8 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 		float progress = animation.getValue(renderPartialTicks);
 		boolean lit = animation.settled();
 		render(blockState, lit, progress, matrices.getModel(),
-			sbb -> sbb
-				.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			sbb -> sbb.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+				.useLevelLight(context.world, matrices.getWorld())
 				.renderInto(matrices.getViewProjection(), vb));
 	}
 
@@ -80,10 +80,10 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 	}
 
 	private static void rotateToFacing(SuperByteBuffer buffer, Direction facing) {
-		buffer.centre()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-			.unCentre();
+		buffer.center()
+			.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+			.rotateXDegrees(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
+			.uncenter();
 	}
 
 	static PortableStorageInterfaceBlockEntity getTargetPSI(MovementContext context) {

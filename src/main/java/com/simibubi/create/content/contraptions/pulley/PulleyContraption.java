@@ -3,18 +3,15 @@ package com.simibubi.create.content.contraptions.pulley;
 import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.ContraptionType;
 import com.simibubi.create.content.contraptions.TranslatingContraption;
-import com.simibubi.create.content.contraptions.render.ContraptionLighter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class PulleyContraption extends TranslatingContraption {
 
 	int initialOffset;
-	
+
 	@Override
 	public ContraptionType getType() {
 		return ContraptionType.PULLEY;
@@ -57,13 +54,7 @@ public class PulleyContraption extends TranslatingContraption {
 		super.readNBT(world, nbt, spawnData);
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public ContraptionLighter<?> makeLighter() {
-		return new PulleyLighter(this);
-	}
-
-	public int getInitialOffset() {
+    public int getInitialOffset() {
 		return initialOffset;
 	}
 }

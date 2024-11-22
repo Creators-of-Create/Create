@@ -106,7 +106,7 @@ public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankB
 	@Override
 	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
 		FluidTankBlockEntity tankAt = ConnectivityHandler.partAt(getBlockEntityType(), world, pos);
-		if (tankAt == null)
+		if (tankAt == null || !tankAt.hasLevel())
 			return 0;
 		FluidTankBlockEntity controllerBE = tankAt.getControllerBE();
 		if (controllerBE == null || !controllerBE.window)

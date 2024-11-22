@@ -19,7 +19,6 @@ import com.simibubi.create.content.contraptions.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.ContraptionType;
 import com.simibubi.create.content.contraptions.TranslatingContraption;
 import com.simibubi.create.content.contraptions.piston.MechanicalPistonBlock.PistonState;
-import com.simibubi.create.content.contraptions.render.ContraptionLighter;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -36,8 +35,6 @@ import net.minecraft.world.level.block.state.properties.PistonType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class PistonContraption extends TranslatingContraption {
 
@@ -244,9 +241,4 @@ public class PistonContraption extends TranslatingContraption {
 		return tag;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	@Override
-	public ContraptionLighter<?> makeLighter() {
-		return new PistonLighter(this);
-	}
 }

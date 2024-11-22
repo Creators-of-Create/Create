@@ -12,10 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.jozufozu.flywheel.light.LightListener;
-import com.jozufozu.flywheel.light.LightUpdater;
-import com.jozufozu.flywheel.util.box.GridAlignedBB;
-import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -33,9 +29,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryTrackerBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
@@ -44,7 +38,6 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -52,16 +45,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.IItemHandler;
 
 public class BeltBlockEntity extends KineticBlockEntity {
-
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public Optional<DyeColor> color;
 	public int beltLength;
@@ -76,9 +65,6 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	public VersionedInventoryTrackerBehaviour invVersionTracker;
 
 	public CompoundTag trackerUpdateTag;
-
-	@OnlyIn(Dist.CLIENT)
-	public BeltLighter lighter;
 
 	public static enum CasingType {
 		NONE, ANDESITE, BRASS;
@@ -119,11 +105,6 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		if (!isController())
 			return;
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-			if (beltLength > 0 && lighter == null) {
-				lighter = new BeltLighter();
-			}
-		});
 		invalidateRenderBoundingBox();
 
 		getInventory().tick();
@@ -200,7 +181,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		if (isController())
 			getInventory().ejectAll();
 	}
-	
+
 	@Override
 	public void invalidate() {
 		super.invalidate();
@@ -227,7 +208,6 @@ public class BeltBlockEntity extends KineticBlockEntity {
 
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
-		int prevBeltLength = beltLength;
 		super.read(compound, clientPacket);
 
 		if (compound.getBoolean("IsController"))
@@ -242,13 +222,6 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			trackerUpdateTag = compound;
 			index = compound.getInt("Index");
 			beltLength = compound.getInt("Length");
-			if (prevBeltLength != beltLength) {
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-					if (lighter != null) {
-						lighter.initializeLight();
-					}
-				});
-			}
 		}
 
 		if (isController())
@@ -287,7 +260,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			return false;
 		if (level.isClientSide())
 			return true;
-		
+
 		for (BlockPos blockPos : BeltBlock.getBeltChain(level, getController())) {
 			BeltBlockEntity belt = BeltHelper.getSegmentBE(level, blockPos);
 			if (belt == null)
@@ -296,7 +269,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			belt.setChanged();
 			belt.sendData();
 		}
-		
+
 		return true;
 	}
 
@@ -435,7 +408,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	public void setCasingType(CasingType type) {
 		if (casing == type)
 			return;
-		
+
 		BlockState blockState = getBlockState();
 		boolean shouldBlockHaveCasing = type != CasingType.NONE;
 
@@ -446,7 +419,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 16);
 			return;
 		}
-		
+
 		if (casing != CasingType.NONE)
 			level.levelEvent(2001, worldPosition,
 				Block.getId(casing == CasingType.ANDESITE ? AllBlocks.ANDESITE_CASING.getDefaultState()
@@ -468,7 +441,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			return false;
 		return getMovementFacing() != side.getOpposite();
 	}
-	
+
 	private boolean isOccupied(Direction side) {
 		BeltBlockEntity nextBeltController = getControllerBE();
 		if (nextBeltController == null)
@@ -579,109 +552,6 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			return isController();
 		BlockState state = getBlockState();
 		return state != null && state.hasProperty(BeltBlock.PART) && state.getValue(BeltBlock.PART) == BeltPart.START;
-	}
-
-	/**
-	 * Hide this behavior in an inner class to avoid loading LightListener on servers.
-	 */
-	@OnlyIn(Dist.CLIENT)
-	class BeltLighter implements LightListener {
-		private byte[] light;
-
-		public BeltLighter() {
-			initializeLight();
-			LightUpdater.get(level)
-					.addListener(this);
-		}
-
-		/**
-		 * Get the number of belt segments represented by the lighter.
-		 * @return The number of segments.
-		 */
-		public int lightSegments() {
-			return light == null ? 0 : light.length / 2;
-		}
-
-		/**
-		 * Get the light value for a given segment.
-		 * @param segment The segment to get the light value for.
-		 * @return The light value.
-		 */
-		public int getPackedLight(int segment) {
-			return light == null ? 0 : LightTexture.pack(light[segment * 2], light[segment * 2 + 1]);
-		}
-
-		@Override
-		public GridAlignedBB getVolume() {
-			BlockPos endPos = BeltHelper.getPositionForOffset(BeltBlockEntity.this, beltLength - 1);
-			GridAlignedBB bb = GridAlignedBB.from(worldPosition, endPos);
-			bb.fixMinMax();
-			return bb;
-		}
-
-		@Override
-		public boolean isListenerInvalid() {
-			return remove;
-		}
-
-		@Override
-		public void onLightUpdate(LightLayer type, ImmutableBox changed) {
-			if (remove)
-				return;
-			if (level == null)
-				return;
-
-			GridAlignedBB beltVolume = getVolume();
-
-			if (beltVolume.intersects(changed)) {
-				if (type == LightLayer.BLOCK)
-					updateBlockLight();
-
-				if (type == LightLayer.SKY)
-					updateSkyLight();
-			}
-		}
-
-		private void initializeLight() {
-			light = new byte[beltLength * 2];
-
-			Vec3i vec = getBeltFacing().getNormal();
-			BeltSlope slope = getBlockState().getValue(BeltBlock.SLOPE);
-			int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
-
-			MutableBlockPos pos = new MutableBlockPos(controller.getX(), controller.getY(), controller.getZ());
-			for (int i = 0; i < beltLength * 2; i += 2) {
-				light[i] = (byte) level.getBrightness(LightLayer.BLOCK, pos);
-				light[i + 1] = (byte) level.getBrightness(LightLayer.SKY, pos);
-				pos.move(vec.getX(), verticality, vec.getZ());
-			}
-		}
-
-		private void updateBlockLight() {
-			Vec3i vec = getBeltFacing().getNormal();
-			BeltSlope slope = getBlockState().getValue(BeltBlock.SLOPE);
-			int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
-
-			MutableBlockPos pos = new MutableBlockPos(controller.getX(), controller.getY(), controller.getZ());
-			for (int i = 0; i < beltLength * 2; i += 2) {
-				light[i] = (byte) level.getBrightness(LightLayer.BLOCK, pos);
-
-				pos.move(vec.getX(), verticality, vec.getZ());
-			}
-		}
-
-		private void updateSkyLight() {
-			Vec3i vec = getBeltFacing().getNormal();
-			BeltSlope slope = getBlockState().getValue(BeltBlock.SLOPE);
-			int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
-
-			MutableBlockPos pos = new MutableBlockPos(controller.getX(), controller.getY(), controller.getZ());
-			for (int i = 1; i < beltLength * 2; i += 2) {
-				light[i] = (byte) level.getBrightness(LightLayer.SKY, pos);
-
-				pos.move(vec.getX(), verticality, vec.getZ());
-			}
-		}
 	}
 
 	public void setCovered(boolean blockCoveringBelt) {

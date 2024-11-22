@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.AllItems;
@@ -33,8 +30,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -57,15 +52,12 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> extends Block implements IBE<T>, ProperWaterloggedBlock, ISpecialBlockItemRequirement, IWrenchable {
 	public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 	static final List<ResourceLocation> BOGEYS = new ArrayList<>();
 	public BogeySizes.BogeySize size;
-
 
 	public AbstractBogeyBlock(Properties pProperties, BogeySizes.BogeySize size) {
 		super(pProperties);
@@ -91,7 +83,7 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 	/**
 	 * Only for internal Create use. If you have your own style set, do not call this method
 	 */
-	@Deprecated
+	@ApiStatus.Internal
 	public static void registerStandardBogey(ResourceLocation block) {
 		BOGEYS.add(block);
 	}
@@ -147,30 +139,6 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 		return false;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public void render(@Nullable BlockState state, float wheelAngle, PoseStack ms, float partialTicks,
-		MultiBufferSource buffers, int light, int overlay, BogeyStyle style, CompoundTag bogeyData) {
-		if (style == null)
-			style = getDefaultStyle();
-
-		final Optional<BogeyRenderer.CommonRenderer> commonRenderer
-				= style.getInWorldCommonRenderInstance();
-		final BogeyRenderer renderer = style.getInWorldRenderInstance(this.getSize());
-		if (state != null) {
-			ms.translate(.5f, .5f, .5f);
-			if (state.getValue(AXIS) == Direction.Axis.X)
-				ms.mulPose(Axis.YP.rotationDegrees(90));
-		}
-		ms.translate(0, -1.5 - 1 / 128f, 0);
-		VertexConsumer vb = buffers.getBuffer(RenderType.cutoutMipped());
-		if (bogeyData == null)
-			bogeyData = new CompoundTag();
-		renderer.render(bogeyData, wheelAngle, ms, light, vb, state == null);
-		CompoundTag finalBogeyData = bogeyData;
-		commonRenderer.ifPresent(common ->
-				common.render(finalBogeyData, wheelAngle, ms, light, vb, state == null));
-	}
-
 	public BogeySizes.BogeySize getSize() {
 		return this.size;
 	}
@@ -216,9 +184,9 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 
 			Set<BogeySizes.BogeySize> validSizes = style.validSizes();
 
-			for (int i = 0; i < BogeySizes.count(); i++) {
+			for (int i = 0; i < BogeySizes.all().size(); i++) {
 				if (validSizes.contains(size)) break;
-				size = size.increment();
+				size = size.nextBySize();
 			}
 
 			sbbe.setBogeyStyle(style);
@@ -227,7 +195,7 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 			sbbe.setBogeyData(sbbe.getBogeyData().merge(defaultData));
 
 			if (size == getSize()) {
-				if (state.getBlock() != style.getBlockOfSize(size)) {
+				if (state.getBlock() != style.getBlockForSize(size)) {
 					CompoundTag oldData = sbbe.getBogeyData();
 					level.setBlock(pos, copyProperties(state, getStateOfSize(sbbe, size)), Block.UPDATE_ALL);
 					if (!(level.getBlockEntity(pos) instanceof AbstractBogeyBlockEntity bogeyBlockEntity))
@@ -328,7 +296,7 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 
 	public BlockState getStateOfSize(AbstractBogeyBlockEntity sbbe, BogeySizes.BogeySize size) {
 		BogeyStyle style = sbbe.getStyle();
-		BlockState state = style.getBlockOfSize(size).defaultBlockState();
+		BlockState state = style.getBlockForSize(size).defaultBlockState();
 		return copyProperties(sbbe.getBlockState(), state);
 	}
 

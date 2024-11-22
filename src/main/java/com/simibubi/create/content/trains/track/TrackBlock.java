@@ -24,8 +24,6 @@ import com.simibubi.create.foundation.block.IHaveBigOutline;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Predicates;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
@@ -54,6 +52,8 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.ChatFormatting;
@@ -371,7 +371,7 @@ public class TrackBlock extends Block
 
 		Map<BlockPos, BezierConnection> connections = trackBE.getConnections();
 		connections.forEach((connectedPos, bc) -> ITrackBlock.addToListIfConnected(connectedTo, list,
-			(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.tePositions.get(b)) : bc.starts.get(b), bc.normals::get,
+			(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.bePositions.get(b)) : bc.starts.get(b), bc.normals::get,
 			b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, bc::yOffsetAt, null, bc,
 			(b, v) -> ITrackBlock.getMaterialSimple(world, v, bc.getMaterial())));
 
@@ -654,8 +654,8 @@ public class TrackBlock extends Block
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel prepareAssemblyOverlay(BlockGetter world, BlockPos pos, BlockState state, Direction direction,
 		PoseStack ms) {
-		TransformStack.cast(ms)
-			.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(direction)));
+		TransformStack.of(ms)
+			.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(direction)), Direction.UP);
 		return AllPartialModels.TRACK_ASSEMBLING_OVERLAY;
 	}
 
@@ -663,7 +663,7 @@ public class TrackBlock extends Block
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel prepareTrackOverlay(BlockGetter world, BlockPos pos, BlockState state,
 		BezierTrackPointLocation bezierPoint, AxisDirection direction, PoseStack ms, RenderedTrackOverlayType type) {
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 
 		Vec3 axis = null;
 		Vec3 diff = null;
@@ -702,17 +702,17 @@ public class TrackBlock extends Block
 
 		Vec3 angles = TrackRenderer.getModelAngles(normal, diff);
 
-		msr.centre()
-			.rotateYRadians(angles.y)
-			.rotateXRadians(angles.x)
-			.unCentre();
+		msr.center()
+			.rotateY((float) angles.y)
+			.rotateX((float) angles.x)
+			.uncenter();
 
 		if (axis != null)
 			msr.translate(0, axis.y != 0 ? 7 / 16f : 0, axis.y != 0 ? direction.getStep() * 2.5f / 16f : 0);
 		else {
 			msr.translate(0, 4 / 16f, 0);
 			if (direction == AxisDirection.NEGATIVE)
-				msr.rotateCentered(Direction.UP, Mth.PI);
+				msr.rotateCentered(Mth.PI, Direction.UP);
 		}
 
 		if (bezierPoint == null && world.getBlockEntity(pos) instanceof TrackBlockEntity trackTE
@@ -720,9 +720,9 @@ public class TrackBlock extends Block
 			double yOffset = 0;
 			for (BezierConnection bc : trackTE.connections.values())
 				yOffset += bc.starts.getFirst().y - pos.getY();
-			msr.centre()
-				.rotateX(-direction.getStep() * trackTE.tilt.smoothingAngle.get())
-				.unCentre()
+			msr.center()
+				.rotateXDegrees((float) (-direction.getStep() * trackTE.tilt.smoothingAngle.get()))
+				.uncenter()
 				.translate(0, yOffset / 2, 0);
 		}
 

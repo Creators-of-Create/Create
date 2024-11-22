@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.bearing;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -10,6 +8,8 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -27,7 +27,7 @@ public class BearingRenderer<T extends KineticBlockEntity & IBearingBlockEntity>
 	protected void renderSafe(T be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (Backend.canUseInstancing(be.getLevel())) return;
+		if (VisualizationManager.supportsVisualization(be.getLevel())) return;
 
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
@@ -42,9 +42,9 @@ public class BearingRenderer<T extends KineticBlockEntity & IBearingBlockEntity>
 
 		if (facing.getAxis()
 				.isHorizontal())
-			superBuffer.rotateCentered(Direction.UP,
-					AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())));
-		superBuffer.rotateCentered(Direction.EAST, AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)));
+			superBuffer.rotateCentered(
+					AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())), Direction.UP);
+		superBuffer.rotateCentered(AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)), Direction.EAST);
 		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 

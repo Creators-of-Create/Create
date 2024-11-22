@@ -171,6 +171,8 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 
 	@Override
 	protected void handle(GlobalRailwayManager manager, TrackGraph graph) {
+		manager.version++;
+		
 		if (packetDeletesGraph) {
 			manager.removeGraph(graph);
 			return;

@@ -1,6 +1,5 @@
 package com.simibubi.create.content.processing.burner;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -13,6 +12,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -30,11 +30,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BlazeBurnerMovementBehaviour implements MovementBehaviour {
 
-	@Override
-	public boolean renderAsNormalBlockEntity() {
-		return false;
-	}
-	
 	@Override
 	public ItemStack canBeDisabledVia(MovementContext context) {
 		return null;
@@ -115,6 +110,11 @@ public class BlazeBurnerMovementBehaviour implements MovementBehaviour {
 			if (carriageContraption.inControl(context.localPos, direction))
 				return true;
 		return false;
+	}
+
+	@Override
+	public boolean disableBlockEntityRendering() {
+		return true;
 	}
 
 	@Override

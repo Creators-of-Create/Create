@@ -2,7 +2,6 @@ package com.simibubi.create.content.kinetics.saw;
 
 import java.util.Optional;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
@@ -10,6 +9,7 @@ import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
@@ -88,6 +88,11 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 		ItemEntity entity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, remainder);
 		entity.setDeltaMovement(context.relativeMotion.scale(distance / 20f));
 		world.addFreshEntity(entity);
+	}
+
+	@Override
+	public boolean disableBlockEntityRendering() {
+		return true;
 	}
 
 	@Override

@@ -61,6 +61,7 @@
 			"name": "External",
 			"from": [-0.05, -3, 13],
 			"to": [16.05, 16, 19],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [0, -3, 13]},
 			"faces": {
 				"north": {"uv": [0, 0, 8, 9.5], "texture": "#direction"},
@@ -75,6 +76,7 @@
 			"name": "Internal",
 			"from": [1.9, -3, 19],
 			"to": [14.1, 10.05, 13],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [0, -3, 13]},
 			"faces": {
 				"east": {"uv": [13, 6, 16, 12.5], "rotation": 180, "texture": "#base"},

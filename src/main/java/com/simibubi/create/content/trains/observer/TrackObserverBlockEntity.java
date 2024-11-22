@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.StructureTransform;
@@ -17,6 +16,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -73,7 +73,7 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements ITrans
 	public TrackObserver getObserver() {
 		return edgePoint.getEdgePoint();
 	}
-	
+
 	public ItemStack getFilter() {
 		return filtering.getFilter();
 	}
@@ -98,8 +98,8 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements ITrans
 
 			@Override
 			public void rotate(BlockState state, PoseStack ms) {
-				TransformStack.cast(ms)
-					.rotateX(90);
+				TransformStack.of(ms)
+					.rotateXDegrees(90);
 			}
 
 			@Override

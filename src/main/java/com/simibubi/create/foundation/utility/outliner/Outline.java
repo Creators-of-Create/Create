@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import org.joml.Matrix3f;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllSpecialTextures;
@@ -16,6 +15,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
@@ -47,9 +47,10 @@ public abstract class Outline {
 			.length();
 		float vAngle = AngleHelper.deg(Mth.atan2(hDistance, diff.y)) - 90;
 		ms.pushPose();
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.translate(start)
-			.rotateY(hAngle).rotateX(vAngle);
+			.rotateYDegrees(hAngle)
+			.rotateXDegrees(vAngle);
 		renderAACuboidLine(ms, buffer, Vec3.ZERO, new Vec3(0, 0, diff.length()));
 		ms.popPose();
 	}
@@ -59,7 +60,7 @@ public abstract class Outline {
 		if (lineWidth == 0)
 			return;
 
-		VertexConsumer builder = buffer.getBuffer(RenderTypes.getOutlineSolid());
+		VertexConsumer builder = buffer.getBuffer(RenderTypes.outlineSolid());
 
 		Vec3 diff = end.subtract(start);
 		if (diff.x + diff.y + diff.z < 0) {

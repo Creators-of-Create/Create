@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.gui;
 
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -10,7 +9,6 @@ public class CustomLightingSettings implements ILightingSettings {
 
 	private Vector3f light1;
 	private Vector3f light2;
-	private Matrix4f lightMatrix;
 
 	protected CustomLightingSettings(float yRot, float xRot) {
 		init(yRot, xRot, 0, 0, false);
@@ -32,14 +30,11 @@ public class CustomLightingSettings implements ILightingSettings {
 		} else {
 			light2 = new Vector3f();
 		}
-
-		lightMatrix = new Matrix4f();
-		lightMatrix.identity();
 	}
 
 	@Override
 	public void applyLighting() {
-		RenderSystem.setupLevelDiffuseLighting(light1, light2, lightMatrix);
+		RenderSystem.setShaderLights(light1, light2);
 	}
 
 	public static Builder builder() {

@@ -16,9 +16,9 @@ public class TrainStatus {
 
 	Train train;
 
-	boolean navigation;
-	boolean track;
-	boolean conductor;
+	public boolean navigation;
+	public boolean track;
+	public boolean conductor;
 
 	List<Component> queued = new ArrayList<>();
 

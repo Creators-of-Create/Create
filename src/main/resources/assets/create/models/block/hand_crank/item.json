@@ -65,6 +65,7 @@
 			"name": "Grip",
 			"from": [-0.5, 6.5, 3],
 			"to": [2.5, 9.5, 9],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [1, 8, 9]},
 			"faces": {
 				"north": {"uv": [6, 11, 9, 14], "rotation": 90, "texture": "#0"},

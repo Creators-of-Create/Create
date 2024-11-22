@@ -23,6 +23,7 @@
 		{
 			"from": [6, 1, 14.95],
 			"to": [10, 1, 15.95],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 1, 15]},
 			"faces": {
 				"up": {"uv": [12, 0, 16, 1], "rotation": 180, "texture": "#0"},

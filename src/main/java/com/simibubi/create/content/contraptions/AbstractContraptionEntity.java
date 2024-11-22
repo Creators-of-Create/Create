@@ -28,7 +28,7 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.elevator.ElevatorContraption;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.mounted.MountedContraption;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
+import com.simibubi.create.content.contraptions.render.ContraptionRenderInfo;
 import com.simibubi.create.content.contraptions.sync.ContraptionSeatMappingPacket;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
@@ -383,7 +383,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 				if (!contraption.deferInvalidate)
 					return;
 				contraption.deferInvalidate = false;
-				ContraptionRenderDispatcher.invalidate(contraption);
+				ContraptionRenderInfo.invalidate(contraption);
 			});
 
 		if (!(level() instanceof ServerLevelAccessor sl))
@@ -545,9 +545,12 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		relativeMotion = reverseRotation(relativeMotion, 1);
 		context.relativeMotion = relativeMotion;
 
-		return !BlockPos.containing(previousPosition).equals(gridPosition)
-			|| (context.relativeMotion.length() > 0 || context.contraption instanceof CarriageContraption)
-				&& context.firstMovement;
+		boolean ignoreMotionForFirstMovement =
+			context.contraption instanceof CarriageContraption || actor instanceof PortableStorageInterfaceMovement;
+
+		return !BlockPos.containing(previousPosition)
+			.equals(gridPosition)
+			|| (context.relativeMotion.length() > 0 || ignoreMotionForFirstMovement) && context.firstMovement;
 	}
 
 	public void move(double x, double y, double z) {

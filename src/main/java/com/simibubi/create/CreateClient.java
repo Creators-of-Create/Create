@@ -1,8 +1,8 @@
 package com.simibubi.create;
 
 import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
-import com.simibubi.create.content.contraptions.render.SBBContraptionManager;
+import com.simibubi.create.content.contraptions.render.ContraptionRenderInfo;
+import com.simibubi.create.content.contraptions.render.ContraptionRenderInfoManager;
 import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
 import com.simibubi.create.content.equipment.bell.SoulPulseEffectHandler;
 import com.simibubi.create.content.equipment.potatoCannon.PotatoCannonRenderHandler;
@@ -18,8 +18,9 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsClient;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.outliner.Outliner;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.CreateContexts;
+import com.simibubi.create.foundation.render.StitchedSprite;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.ModelSwapper;
@@ -62,8 +63,10 @@ public class CreateClient {
 	public static void onCtorClient(IEventBus modEventBus, IEventBus forgeEventBus) {
 		modEventBus.addListener(CreateClient::clientInit);
 		modEventBus.addListener(AllParticleTypes::registerFactories);
-		modEventBus.addListener(CreateContexts::flwInit);
-		modEventBus.addListener(ContraptionRenderDispatcher::gatherContext);
+
+		modEventBus.addListener(StitchedSprite::onTextureStitchPost);
+
+		AllInstanceTypes.init();
 
 		MODEL_SWAPPER.registerListeners(modEventBus);
 
@@ -77,7 +80,7 @@ public class CreateClient {
 		BUFFER_CACHE.registerCompartment(CachedBufferer.DIRECTIONAL_PARTIAL);
 		BUFFER_CACHE.registerCompartment(KineticBlockEntityRenderer.KINETIC_BLOCK);
 		BUFFER_CACHE.registerCompartment(WaterWheelRenderer.WATER_WHEEL);
-		BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
+		BUFFER_CACHE.registerCompartment(ContraptionRenderInfo.CONTRAPTION, 20);
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		AllPartialModels.init();
@@ -92,7 +95,7 @@ public class CreateClient {
 		BUFFER_CACHE.invalidate();
 
 		SCHEMATIC_HANDLER.updateRenderers();
-		ContraptionRenderDispatcher.reset();
+		ContraptionRenderInfoManager.resetAll();
 	}
 
 	public static void checkGraphicsFanciness() {

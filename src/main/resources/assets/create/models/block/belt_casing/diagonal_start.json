@@ -11,6 +11,7 @@
 			"name": "1",
 			"from": [-0.1, 2, -3.325],
 			"to": [16.1, 11, 4.7],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [-22, 8, 8]},
 			"faces": {
 				"north": {"uv": [8, 2.25, 12, 4.5], "texture": "#7"},

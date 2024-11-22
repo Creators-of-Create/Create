@@ -1,70 +1,78 @@
 package com.simibubi.create.content.trains.bogey;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import com.simibubi.create.Create;
 
 import net.minecraft.resources.ResourceLocation;
 
-public class BogeySizes {
-	private static final Collection<BogeySize> BOGEY_SIZES = new HashSet<>();
-	public static final BogeySize SMALL = new BogeySize(Create.ID, "small", 6.5f / 16f);
-	public static final BogeySize LARGE = new BogeySize(Create.ID, "large", 12.5f / 16f);
+public final class BogeySizes {
+	private static final Map<ResourceLocation, BogeySize> BOGEY_SIZES = new HashMap<>();
+	private static final List<BogeySize> SORTED_INCREASING = new ArrayList<>();
+	private static final List<BogeySize> SORTED_DECREASING = new ArrayList<>();
+	@UnmodifiableView
+	private static final Map<ResourceLocation, BogeySize> BOGEY_SIZES_VIEW = Collections.unmodifiableMap(BOGEY_SIZES);
+	@UnmodifiableView
+	private static final List<BogeySize> SORTED_INCREASING_VIEW = Collections.unmodifiableList(SORTED_INCREASING);
+	@UnmodifiableView
+	private static final List<BogeySize> SORTED_DECREASING_VIEW = Collections.unmodifiableList(SORTED_DECREASING);
+
+	public static final BogeySize SMALL = new BogeySize(Create.asResource("small"), 6.5f / 16f);
+	public static final BogeySize LARGE = new BogeySize(Create.asResource("large"), 12.5f / 16f);
 
 	static {
-		BOGEY_SIZES.add(SMALL);
-		BOGEY_SIZES.add(LARGE);
+		register(SMALL);
+		register(LARGE);
 	}
 
-	public static BogeySize addSize(String modId, String name, float size) {
-		ResourceLocation location = new ResourceLocation(modId, name);
-		return addSize(location, size);
+	private BogeySizes() {
 	}
 
-	public static BogeySize addSize(ResourceLocation location, float size) {
-		BogeySize customSize = new BogeySize(location, size);
-		BOGEY_SIZES.add(customSize);
-		return customSize;
-	}
-
-	public static List<BogeySize> getAllSizesSmallToLarge() {
-		return BOGEY_SIZES.stream()
-				.sorted(Comparator.comparing(BogeySize::wheelRadius))
-				.collect(Collectors.toList());
-	}
-
-	public static List<BogeySize> getAllSizesLargeToSmall() {
-		List<BogeySize> sizes = getAllSizesSmallToLarge();
-		Collections.reverse(sizes);
-		return sizes;
-	}
-
-	public static int count() {
-		return BOGEY_SIZES.size();
-	}
-
-	public record BogeySize(ResourceLocation location, float wheelRadius) {
-		public BogeySize(String modId, String name, float wheelRadius) {
-			this(new ResourceLocation(modId, name), wheelRadius);
+	public static void register(BogeySize size) {
+		ResourceLocation id = size.id();
+		if (BOGEY_SIZES.containsKey(id)) {
+			throw new IllegalArgumentException();
 		}
+		BOGEY_SIZES.put(id, size);
 
-		public BogeySize increment() {
-			List<BogeySize> values = getAllSizesSmallToLarge();
+		SORTED_INCREASING.add(size);
+		SORTED_DECREASING.add(size);
+		SORTED_INCREASING.sort(Comparator.comparing(BogeySize::wheelRadius));
+		SORTED_DECREASING.sort(Comparator.comparing(BogeySize::wheelRadius).reversed());
+	}
+
+	@UnmodifiableView
+	public static Map<ResourceLocation, BogeySize> all() {
+		return BOGEY_SIZES_VIEW;
+	}
+
+	@UnmodifiableView
+	public static List<BogeySize> allSortedIncreasing() {
+		return SORTED_INCREASING_VIEW;
+	}
+
+	@UnmodifiableView
+	public static List<BogeySize> allSortedDecreasing() {
+		return SORTED_DECREASING_VIEW;
+	}
+
+	@ApiStatus.Internal
+	public static void init() {
+	}
+
+	public record BogeySize(ResourceLocation id, float wheelRadius) {
+		public BogeySize nextBySize() {
+			List<BogeySize> values = allSortedIncreasing();
 			int ordinal = values.indexOf(this);
 			return values.get((ordinal + 1) % values.size());
 		}
-
-		public boolean is(BogeySize size) {
-			return size.location == this.location;
-		}
-	}
-
-	public static void init() {
-
 	}
 }

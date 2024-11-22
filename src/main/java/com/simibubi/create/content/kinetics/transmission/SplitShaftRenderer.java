@@ -1,6 +1,5 @@
 package com.simibubi.create.content.kinetics.transmission;
 
-import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.IRotate;
@@ -10,6 +9,7 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -27,7 +27,7 @@ public class SplitShaftRenderer extends KineticBlockEntityRenderer<SplitShaftBlo
 	@Override
 	protected void renderSafe(SplitShaftBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 			int light, int overlay) {
-		if (Backend.canUseInstancing(be.getLevel())) return;
+		if (VisualizationManager.supportsVisualization(be.getLevel())) return;
 
 		Block block = be.getBlockState().getBlock();
 		final Axis boxAxis = ((IRotate) block).getRotationAxis(be.getBlockState());

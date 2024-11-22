@@ -11,8 +11,6 @@ import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.ContraptionType;
 import com.simibubi.create.content.contraptions.mounted.CartAssemblerBlockEntity.CartMovementMode;
-import com.simibubi.create.content.contraptions.render.ContraptionLighter;
-import com.simibubi.create.content.contraptions.render.NonStationaryLighter;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -32,8 +30,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class MountedContraption extends Contraption {
@@ -159,10 +155,5 @@ public class MountedContraption extends Contraption {
 		if (cart instanceof Container container)
 			storage.attachExternal(new ContraptionInvWrapper(true, new InvWrapper(container)));
 	}
-	
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public ContraptionLighter<?> makeLighter() {
-		return new NonStationaryLighter<>(this);
-	}
+
 }

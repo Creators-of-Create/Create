@@ -15,7 +15,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import com.google.common.collect.ImmutableList;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -49,6 +48,7 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -560,8 +560,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		matrixStack.popPose();
 
 		if (xOffset + 16 > cardWidth - 26) {
-			TransformStack.cast(matrixStack)
-				.rotateZ(-90);
+			TransformStack.of(matrixStack)
+				.rotateZDegrees(-90);
 			int zLevel = 200;
 			graphics.fillGradient(-cardHeight + 2, 18, -2 - cardHeader, 28, zLevel, 0x44000000, 0x00000000);
 			graphics.fillGradient(-cardHeight + 2, cardWidth - 26, -2 - cardHeader, cardWidth - 16, zLevel, 0x00000000,

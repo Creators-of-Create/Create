@@ -22,6 +22,7 @@
 			"name": "Attachment",
 			"from": [14, 7, 5],
 			"to": [15.9, 10, 13],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [16, 10, 13]},
 			"faces": {
 				"north": {"uv": [0.1, 8, 2, 11], "texture": "#andesite_casing_short"},
@@ -36,6 +37,7 @@
 			"name": "Attachment",
 			"from": [0.1, 7, 5],
 			"to": [2, 10, 13],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [16, 10, 13]},
 			"faces": {
 				"north": {"uv": [14, 8, 15.9, 11], "texture": "#andesite_casing_short"},

@@ -9,15 +9,13 @@ import java.util.function.BiConsumer;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.actors.roller.RollerBlockEntity.RollingMode;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.pulley.PulleyContraption;
-import com.simibubi.create.content.contraptions.render.ActorInstance;
+import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.trains.bogey.StandardBogeyBlock;
@@ -37,8 +35,11 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -70,21 +71,21 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 	}
 
 	@Override
-	public boolean hasSpecialInstancedRendering() {
+	public boolean disableBlockEntityRendering() {
 		return true;
 	}
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
-		MovementContext context) {
-		return new RollerActorInstance(materialManager, simulationWorld, context);
+	public ActorVisual createVisual(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
+		MovementContext movementContext) {
+		return new RollerActorVisual(visualizationContext, simulationWorld, movementContext);
 	}
 
 	@Override
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffers) {
-		if (!ContraptionRenderDispatcher.canInstance())
+		if (!VisualizationManager.supportsVisualization(context.world))
 			RollerRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 

@@ -2,10 +2,10 @@ package com.simibubi.create.foundation.blockEntity.behaviour;
 
 import org.joml.Matrix3f;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.simpleRelays.AbstractSimpleShaftBlock;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -47,17 +47,17 @@ public class ValueBoxRenderer {
 		int itemLight = Mth.floor(sl + .5) << 20 | (Mth.floor(bl + .5) & 0xf) << 4;
 
 		ms.pushPose();
-		TransformStack.cast(ms)
-			.rotateX(230);
+		TransformStack.of(ms)
+			.rotateXDegrees(230);
 		Matrix3f copy = new Matrix3f(ms.last()
 			.normal());
 		ms.popPose();
 
 		ms.pushPose();
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.translate(0, 0, -1 / 4f)
 			.translate(0, 0, 1 / 32f + .001)
-			.rotateY(180);
+			.rotateYDegrees(180);
 
 		PoseStack squashedMS = new PoseStack();
 		squashedMS.last()

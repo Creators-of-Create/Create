@@ -37,6 +37,7 @@
 			"name": "Cog",
 			"from": [7, 5, 3],
 			"to": [9, 13, 5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [8, 9, 5]},
 			"faces": {
 				"north": {"uv": [4, 4, 5, 9], "rotation": 180, "texture": "#cog"},
@@ -51,6 +52,7 @@
 			"name": "Cog",
 			"from": [7, 5, 3],
 			"to": [9, 13, 5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "z", "origin": [8, 9, 5]},
 			"faces": {
 				"north": {"uv": [4, 4, 5, 9], "rotation": 180, "texture": "#cog"},

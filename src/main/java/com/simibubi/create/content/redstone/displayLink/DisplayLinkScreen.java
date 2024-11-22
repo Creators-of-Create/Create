@@ -3,7 +3,6 @@ package com.simibubi.create.content.redstone.displayLink;
 import java.util.Collections;
 import java.util.List;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.redstone.displayLink.source.DisplaySource;
@@ -29,6 +28,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.infrastructure.ponder.AllPonderTags;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -274,12 +274,12 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		ms.popPose();
 
 		ms.pushPose();
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 				.pushPose()
 				.translate(x + background.width + 4, y + background.height + 4, 100)
 				.scale(40)
-				.rotateX(-22)
-				.rotateY(63);
+				.rotateXDegrees(-22)
+				.rotateYDegrees(63);
 		GuiGameElement.of(blockEntity.getBlockState()
 						.setValue(DisplayLinkBlock.FACING, Direction.UP))
 				.render(graphics);

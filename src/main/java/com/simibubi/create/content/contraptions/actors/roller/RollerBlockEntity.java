@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.actors.roller;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -16,6 +15,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -182,11 +182,11 @@ public class RollerBlockEntity extends SmartBlockEntity {
 		public void rotate(BlockState state, PoseStack ms) {
 			Direction facing = state.getValue(RollerBlock.FACING);
 			float yRot = AngleHelper.horizontalAngle(facing) + 180;
-			TransformStack.cast(ms)
-				.rotateY(yRot)
-				.rotateX(90);
+			TransformStack.of(ms)
+				.rotateYDegrees(yRot)
+				.rotateXDegrees(90);
 		}
-		
+
 		@Override
 		public boolean testHit(BlockState state, Vec3 localHit) {
 			Vec3 offset = getLocalOffset(state);

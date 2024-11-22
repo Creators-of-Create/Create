@@ -16,6 +16,7 @@
 			"name": "Cube",
 			"from": [4, 30, 4],
 			"to": [12, 32, 12],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [8, 15, 0]},
 			"faces": {
 				"north": {"uv": [6, 0, 14, 2], "texture": "#3"},
@@ -30,6 +31,7 @@
 			"name": "Cube",
 			"from": [4.5, 20, 4.5],
 			"to": [11.5, 31, 11.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [8, 15, 0]},
 			"faces": {
 				"north": {"uv": [8, 1, 15, 12], "texture": "#3"},
@@ -44,6 +46,7 @@
 			"name": "Cube",
 			"from": [6, 13, -1.5],
 			"to": [10, 17, 17.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [8, 15, 0]},
 			"faces": {
 				"north": {"uv": [10, 8, 14, 12], "texture": "#3"},
@@ -58,6 +61,7 @@
 			"name": "Cube",
 			"from": [3.5, 10, 3.5],
 			"to": [12.5, 20, 12.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [8, 15, 0]},
 			"faces": {
 				"north": {"uv": [4, 6, 13, 16], "texture": "#3"},
@@ -109,6 +113,7 @@
 			"name": "Cube",
 			"from": [-2, -0.2, 5],
 			"to": [18, 3, 11],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 16, 3], "texture": "#0"},
@@ -123,6 +128,7 @@
 			"name": "Cube",
 			"from": [-2, -0.1, 5],
 			"to": [18, 3, 11],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 16, 3], "texture": "#0"},

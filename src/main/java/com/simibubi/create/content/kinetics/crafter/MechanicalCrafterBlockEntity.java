@@ -121,12 +121,6 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
 	}
 
 	@Override
-	public void invalidateCaps() {
-		inserting.removeListener();
-		super.invalidateCaps();
-	}
-
-	@Override
 	public void onSpeedChanged(float previousSpeed) {
 		super.onSpeedChanged(previousSpeed);
 		if (!Mth.equal(getSpeed(), 0)) {
@@ -138,7 +132,6 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
 
 	public void blockChanged() {
 		removeBehaviour(InvManipulationBehaviour.TYPE);
-		inserting.removeListener();
 		inserting = new InvManipulationBehaviour(this, this::getTargetFace);
 		attachBehaviourLate(inserting);
 	}

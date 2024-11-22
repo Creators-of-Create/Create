@@ -1,6 +1,8 @@
 package com.simibubi.create.content.trains.schedule.hat;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.Contraption;
@@ -10,13 +12,13 @@ import com.simibubi.create.foundation.mixin.accessor.AgeableListModelAccessor;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.Couple;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.ModelPart.Cube;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -33,9 +35,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
 	public TrainHatArmorLayer(RenderLayerParent<T, M> renderer) {
@@ -49,10 +48,9 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			return;
 
 		M entityModel = getParentModel();
-		RenderType renderType = Sheets.cutoutBlockSheet();
 		ms.pushPose();
 
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 		TrainHatInfo info = TrainHatInfoReloadListener.getHatInfoFor(entity.getType());
 		List<ModelPart> partsToHead = new ArrayList<>();
 
@@ -86,12 +84,12 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 
 			ms.scale(1, -1, -1);
 			ms.translate(0, -2.25F / 16.0F, 0);
-			msr.rotateX(-8.5F);
+			msr.rotateXDegrees(-8.5F);
 			BlockState air = Blocks.AIR.defaultBlockState();
 			CachedBufferer.partial(AllPartialModels.TRAIN_HAT, air)
-					.forEntityRender()
+					.disableDiffuse()
 					.light(light)
-					.renderInto(ms, buffer.getBuffer(renderType));
+					.renderInto(ms, buffer.getBuffer(Sheets.cutoutBlockSheet()));
 		}
 
 		ms.popPose();

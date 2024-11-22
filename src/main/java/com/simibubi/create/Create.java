@@ -60,7 +60,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.5.1i";
+	public static final String VERSION = "0.5.2-experimental";
 
 	public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -136,7 +136,7 @@ public class Create {
 		AllFanProcessingTypes.register();
 		BlockSpoutingBehaviour.registerDefaults();
 		BogeySizes.init();
-		AllBogeyStyles.register();
+		AllBogeyStyles.init();
 		// ----
 
 		ComputerCraftProxy.register();

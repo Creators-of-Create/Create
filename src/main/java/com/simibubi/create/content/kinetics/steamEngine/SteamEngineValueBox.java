@@ -1,12 +1,12 @@
 package com.simibubi.create.content.kinetics.steamEngine;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.BlockState;
@@ -73,10 +73,10 @@ public class SteamEngineValueBox extends ValueBoxTransform.Sided {
 				roll = p.getXRotation();
 
 		float yRot = AngleHelper.horizontalAngle(facing) + (facing == Direction.DOWN ? 180 : 0);
-		TransformStack.cast(ms)
-			.rotateY(yRot)
-			.rotateX(facing == Direction.DOWN ? -90 : 90)
-			.rotateY(roll);
+		TransformStack.of(ms)
+			.rotateYDegrees(yRot)
+			.rotateXDegrees(facing == Direction.DOWN ? -90 : 90)
+			.rotateYDegrees(roll);
 	}
 
 	@Override

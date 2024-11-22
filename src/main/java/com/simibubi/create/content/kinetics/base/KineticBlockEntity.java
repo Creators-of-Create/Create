@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.equipment.goggles.IHaveHoveringInformation;
@@ -28,6 +27,7 @@ import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -68,7 +68,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	private int validationCountdown;
 	protected float lastStressApplied;
 	protected float lastCapacityProvided;
-	
+
 	public SequenceContext sequenceContext;
 
 	public KineticBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
@@ -265,7 +265,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 			effects.triggerOverStressedEffect();
 
 		if (clientPacket)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> VisualizationHelper.queueUpdate(this));
 	}
 
 	public float getGeneratedSpeed() {
@@ -578,7 +578,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	public void requestModelDataUpdate() {
 		super.requestModelDataUpdate();
 		if (!this.remove)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> VisualizationHelper.queueUpdate(this));
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -603,7 +603,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	public int getRotationAngleOffset(Axis axis) {
 		return 0;
 	}
-	
+
 	protected boolean syncSequenceContext() {
 		return false;
 	}

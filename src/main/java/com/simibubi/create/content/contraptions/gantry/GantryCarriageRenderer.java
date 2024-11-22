@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.gantry;
 
-import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -11,6 +10,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -31,7 +31,7 @@ public class GantryCarriageRenderer extends KineticBlockEntityRenderer<GantryCar
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(be.getLevel())) return;
+		if (VisualizationManager.supportsVisualization(be.getLevel())) return;
 
 		BlockState state = be.getBlockState();
 		Direction facing = state.getValue(GantryCarriageBlock.FACING);
@@ -55,14 +55,14 @@ public class GantryCarriageRenderer extends KineticBlockEntityRenderer<GantryCar
 				angleForBE *= -1;
 
 		SuperByteBuffer cogs = CachedBufferer.partial(AllPartialModels.GANTRY_COGS, state);
-		cogs.centre()
-				.rotateY(AngleHelper.horizontalAngle(facing))
-				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-				.rotateY(alongFirst ^ facing.getAxis() == Axis.X ? 0 : 90)
+		cogs.center()
+				.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+				.rotateXDegrees(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
+				.rotateYDegrees(alongFirst ^ facing.getAxis() == Axis.X ? 0 : 90)
 				.translate(0, -9 / 16f, 0)
-				.rotateX(-angleForBE)
+				.rotateXDegrees(-angleForBE)
 				.translate(0, 9 / 16f, 0)
-				.unCentre();
+				.uncenter();
 
 		cogs.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));

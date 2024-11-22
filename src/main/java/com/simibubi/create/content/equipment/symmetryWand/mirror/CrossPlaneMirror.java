@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.Lang;
 
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
@@ -97,10 +97,10 @@ public class CrossPlaneMirror extends SymmetryMirror {
 	@Override
 	public void applyModelTransform(PoseStack ms) {
 		super.applyModelTransform(ms);
-		TransformStack.cast(ms)
-			.centre()
-			.rotateY(((Align) orientation) == Align.Y ? 0 : 45)
-			.unCentre();
+		TransformStack.of(ms)
+			.center()
+			.rotateYDegrees(((Align) orientation) == Align.Y ? 0 : 45)
+			.uncenter();
 	}
 
 	@Override

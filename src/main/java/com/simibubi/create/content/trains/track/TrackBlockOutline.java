@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllShapes;
@@ -17,6 +16,7 @@ import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -154,11 +154,11 @@ public class TrackBlockOutline {
 		Vec3 vec = result.vec()
 			.subtract(camera);
 		Vec3 angles = result.angles();
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.pushPose()
 			.translate(vec.x, vec.y + .125f, vec.z)
-			.rotateYRadians(angles.y)
-			.rotateXRadians(angles.x)
+			.rotateY((float) angles.y)
+			.rotateX((float) angles.x)
 			.translate(-.5, -.125f, -.5);
 
 		boolean holdingTrack = AllTags.AllBlockTags.TRACKS.matches(Minecraft.getInstance().player.getMainHandItem());
@@ -194,7 +194,7 @@ public class TrackBlockOutline {
 		boolean canConnectFrom = !shape.isJunction()
 			&& !(mc.level.getBlockEntity(pos)instanceof TrackBlockEntity tbe && tbe.isTilted());
 
-		walkShapes(shape, TransformStack.cast(ms), s -> {
+		walkShapes(shape, TransformStack.of(ms), s -> {
 			renderShape(s, ms, vb, holdingTrack ? canConnectFrom : null);
 			event.setCanceled(true);
 		});
@@ -259,24 +259,24 @@ public class TrackBlockOutline {
 			for (Direction d : Iterate.horizontalDirections) {
 				if (TrackShape.asPortal(d) != shape)
 					continue;
-				msr.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(d)));
+				msr.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(d)), Direction.UP);
 				renderer.accept(LONG_ORTHO_OFFSET);
 				return;
 			}
 		}
 
 		if (shape == TrackShape.PD || shape == TrackShape.CR_PDX || shape == TrackShape.CR_PDZ) {
-			msr.rotateCentered(Direction.UP, angle45);
+			msr.rotateCentered(angle45, Direction.UP);
 			renderer.accept(LONG_ORTHO);
 		} else if (shape == TrackShape.ND || shape == TrackShape.CR_NDX || shape == TrackShape.CR_NDZ) {
-			msr.rotateCentered(Direction.UP, -Mth.PI / 4);
+			msr.rotateCentered(-Mth.PI / 4, Direction.UP);
 			renderer.accept(LONG_ORTHO);
 		}
 
 		if (shape == TrackShape.CR_O)
 			renderer.accept(AllShapes.TRACK_CROSS);
 		else if (shape == TrackShape.CR_D) {
-			msr.rotateCentered(Direction.UP, angle45);
+			msr.rotateCentered(angle45, Direction.UP);
 			renderer.accept(LONG_CROSS);
 		}
 
@@ -284,8 +284,8 @@ public class TrackBlockOutline {
 			return;
 
 		msr.translate(0, 1, 0);
-		msr.rotateCentered(Direction.UP, Mth.PI - AngleHelper.rad(shape.getModelRotation()));
-		msr.rotateXRadians(angle45);
+		msr.rotateCentered(Mth.PI - AngleHelper.rad(shape.getModelRotation()), Direction.UP);
+		msr.rotateX(angle45);
 		msr.translate(0, -3 / 16f, 1 / 16f);
 		renderer.accept(LONG_ORTHO);
 	}

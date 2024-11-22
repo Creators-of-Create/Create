@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions;
 
 import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.bearing.BearingContraption;
@@ -11,6 +10,7 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -51,7 +51,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		entity.setContraption(contraption);
 		return entity;
 	}
-	
+
 	@Override
 	public void setPos(double x, double y, double z) {
 		super.setPos(x, y, z);
@@ -246,10 +246,12 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		float angle = getAngle(partialTicks);
 		Axis axis = getRotationAxis();
 
-		TransformStack.cast(matrixStack)
-			.nudge(getId())
-			.centre()
-			.rotate(angle, axis)
-			.unCentre();
+		if (axis != null) {
+			TransformStack.of(matrixStack)
+					.nudge(getId())
+					.center()
+					.rotateDegrees(angle, axis)
+					.uncenter();
+		}
 	}
 }

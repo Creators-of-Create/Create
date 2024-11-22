@@ -23,11 +23,6 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 	}
 
 	@Override
-	public boolean renderAsNormalBlockEntity() {
-		return true;
-	}
-
-	@Override
 	public void tick(MovementContext context) {
 		MovementBehaviour.super.tick(context);
 		if (context.temporaryData == null || (boolean) context.temporaryData) {

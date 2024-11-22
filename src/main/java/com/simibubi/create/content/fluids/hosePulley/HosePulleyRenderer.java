@@ -1,11 +1,11 @@
 package com.simibubi.create.content.fluids.hosePulley;
 
-import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.pulley.AbstractPulleyRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction.Axis;
 

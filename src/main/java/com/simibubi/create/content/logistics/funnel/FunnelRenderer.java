@@ -1,8 +1,5 @@
 package com.simibubi.create.content.logistics.funnel;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -12,6 +9,9 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -30,7 +30,7 @@ public class FunnelRenderer extends SmartBlockEntityRenderer<FunnelBlockEntity> 
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		if (!be.hasFlap() || Backend.canUseInstancing(be.getLevel()))
+		if (!be.hasFlap() || VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
 		BlockState blockState = be.getBlockState();
@@ -39,16 +39,16 @@ public class FunnelRenderer extends SmartBlockEntityRenderer<FunnelBlockEntity> 
 			: AllPartialModels.BELT_FUNNEL_FLAP);
 		SuperByteBuffer flapBuffer = CachedBufferer.partial(partialModel, blockState);
 		Vec3 pivot = VecHelper.voxelSpace(0, 10, 9.5f);
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 
 		float horizontalAngle = AngleHelper.horizontalAngle(FunnelBlock.getFunnelFacing(blockState)
 			.getOpposite());
 		float f = be.flap.getValue(partialTicks);
 
 		ms.pushPose();
-		msr.centre()
-			.rotateY(horizontalAngle)
-			.unCentre();
+		msr.center()
+			.rotateYDegrees(horizontalAngle)
+			.uncenter();
 		ms.translate(0.075f / 16f, 0, -be.getFlapOffset());
 
 		for (int segment = 0; segment <= 3; segment++) {
@@ -61,7 +61,7 @@ public class FunnelRenderer extends SmartBlockEntityRenderer<FunnelBlockEntity> 
 				flapAngle *= .5f;
 
 			msr.translate(pivot)
-				.rotateX(flapAngle)
+				.rotateXDegrees(flapAngle)
 				.translateBack(pivot);
 
 			flapBuffer.light(light)

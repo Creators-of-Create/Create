@@ -11,6 +11,7 @@
 			"name": "Rod Back Cap",
 			"from": [6.5, 4, 14],
 			"to": [9.5, 7, 15],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "z", "origin": [8, 5.5, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 3, 3], "texture": "#0"},
@@ -25,6 +26,7 @@
 			"name": "Rod Back Cap",
 			"from": [7, 4.5, 15],
 			"to": [9, 6.5, 17],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -45, "axis": "z", "origin": [8, 5.5, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 2, 2], "texture": "#0"},
@@ -65,6 +67,7 @@
 			"name": "Connector",
 			"from": [5.75, 4, 6],
 			"to": [10.25, 8, 8],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 4, 8]},
 			"faces": {
 				"north": {"uv": [5, 0, 9.5, 4], "texture": "#0"},
@@ -79,6 +82,7 @@
 			"name": "Connector",
 			"from": [5.75, 4, 8],
 			"to": [10.25, 6, 10],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 4, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 4.5, 2], "texture": "#0"},
@@ -107,6 +111,7 @@
 			"name": "Grip",
 			"from": [7.1, 1, 12],
 			"to": [8.9, 5, 15],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 2, 14]},
 			"faces": {
 				"north": {"uv": [5, 7, 6.8, 11], "texture": "#1"},
@@ -121,6 +126,7 @@
 			"name": "Trigger",
 			"from": [7.4, 3, 11],
 			"to": [8.6, 6, 13],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 2, 14]},
 			"faces": {
 				"north": {"uv": [6, 4, 7, 7], "texture": "#3_0"},
@@ -135,6 +141,7 @@
 			"name": "Scope",
 			"from": [7.5, 7.5, 5.5],
 			"to": [8.5, 8.5, 10.5],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 4]},
 			"faces": {
 				"north": {"uv": [0, 0, 1, 1], "texture": "#1"},

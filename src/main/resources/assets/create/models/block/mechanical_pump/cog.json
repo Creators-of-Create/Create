@@ -25,6 +25,7 @@
 			"name": "Gear7",
 			"from": [6.5, -1, 5],
 			"to": [9.5, 17, 11],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 6.5]},
 			"faces": {
 				"north": {"uv": [0, 8.5, 9, 10], "rotation": 90, "texture": "#5"},
@@ -39,6 +40,7 @@
 			"name": "Gear8",
 			"from": [-1, 6.5, 5],
 			"to": [17, 9.5, 11],
+			"forge_data": {"calculate_normals": true},
 			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 6.5]},
 			"faces": {
 				"north": {"uv": [0, 8.5, 9, 10], "texture": "#5"},

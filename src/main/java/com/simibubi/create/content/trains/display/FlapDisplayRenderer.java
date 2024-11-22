@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.joml.Matrix4f;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.font.GlyphInfo;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
@@ -16,6 +15,7 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
@@ -56,11 +56,11 @@ public class FlapDisplayRenderer extends KineticBlockEntityRenderer<FlapDisplayB
 		List<FlapDisplayLayout> lines = be.getLines();
 
 		ms.pushPose();
-		TransformStack.cast(ms)
-			.centre()
-			.rotateY(AngleHelper.horizontalAngle(be.getBlockState()
+		TransformStack.of(ms)
+			.center()
+			.rotateYDegrees(AngleHelper.horizontalAngle(be.getBlockState()
 				.getValue(FlapDisplayBlock.HORIZONTAL_FACING)))
-			.unCentre()
+			.uncenter()
 			.translate(0, 0, -3 / 16f);
 
 		ms.translate(0, 1, 1);
