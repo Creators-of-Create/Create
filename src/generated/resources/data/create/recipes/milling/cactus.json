@@ -1,14 +1,5 @@
 {
   "type": "create:milling",
-  "conditions": [
-    {
-      "type": "forge:not",
-      "value": {
-        "type": "forge:mod_loaded",
-        "modid": "quark"
-      }
-    }
-  ],
   "ingredients": [
     {
       "item": "minecraft:cactus"

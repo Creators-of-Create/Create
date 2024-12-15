@@ -62,8 +62,7 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 
 		CACTUS = create(() -> Blocks.CACTUS, b -> b.duration(50)
 			.output(Items.GREEN_DYE, 2)
-			.output(.1f, Items.GREEN_DYE, 1)
-			.whenModMissing("quark")),
+			.output(.1f, Items.GREEN_DYE, 1)),
 
 		SEA_PICKLE = create(() -> Blocks.SEA_PICKLE, b -> b.duration(50)
 			.output(Items.LIME_DYE, 2)
