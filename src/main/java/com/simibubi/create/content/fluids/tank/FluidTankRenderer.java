@@ -73,7 +73,7 @@ public class FluidTankRenderer extends SafeBlockEntityRenderer<FluidTankBlockEnt
 
 		ms.pushPose();
 		ms.translate(0, clampedLevel - totalHeight, 0);
-		FluidRenderer.renderFluidBox(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light, false);
+		FluidRenderer.renderFluidBoxGassesInverted(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light, false);
 		ms.popPose();
 	}
 

@@ -51,7 +51,7 @@ public class SpoutRenderer extends SafeBlockEntityRenderer<SpoutBlockEntity> {
 			if (!top) ms.translate(0, yOffset, 0);
 			else ms.translate(0, max - min, 0);
 
-			FluidRenderer.renderFluidBox(fluidStack,
+			FluidRenderer.renderFluidBoxGassesInverted(fluidStack,
 					min, min - yOffset, min,
 					max, min, max,
 					buffer, ms, light, false);
@@ -68,7 +68,7 @@ public class SpoutRenderer extends SafeBlockEntityRenderer<SpoutBlockEntity> {
 		if (processingTicks != -1) {
 			radius = (float) (Math.pow(((2 * processingProgress) - 1), 2) - 1);
 			AABB bb = new AABB(0.5, .5, 0.5, 0.5, -1.2, 0.5).inflate(radius / 32f);
-			FluidRenderer.renderFluidBox(fluidStack, (float) bb.minX, (float) bb.minY, (float) bb.minZ,
+			FluidRenderer.renderFluidBoxGassesInverted(fluidStack, (float) bb.minX, (float) bb.minY, (float) bb.minZ,
 				(float) bb.maxX, (float) bb.maxY, (float) bb.maxZ, buffer, ms, light, true);
 		}
 

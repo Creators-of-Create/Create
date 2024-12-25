@@ -90,11 +90,17 @@ public class FluidRenderer {
 	public static void renderFluidBox(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax, float yMax,
 		float zMax, MultiBufferSource buffer, PoseStack ms, int light, boolean renderBottom) {
 		renderFluidBox(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, getFluidBuilder(buffer), ms, light,
-			renderBottom);
+			renderBottom, false);
+	}
+
+	public static void renderFluidBoxGassesInverted(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax, float yMax,
+													float zMax, MultiBufferSource buffer, PoseStack ms, int light, boolean renderBottom) {
+		renderFluidBox(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, getFluidBuilder(buffer), ms, light,
+				renderBottom, true);
 	}
 
 	public static void renderFluidBox(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax, float yMax,
-		float zMax, VertexConsumer builder, PoseStack ms, int light, boolean renderBottom) {
+		float zMax, VertexConsumer builder, PoseStack ms, int light, boolean renderBottom, boolean shouldInvertGasses) {
 		Fluid fluid = fluidStack.getFluid();
 		IClientFluidTypeExtensions clientFluid = IClientFluidTypeExtensions.of(fluid);
 		FluidType fluidAttributes = fluid.getFluidType();
@@ -109,7 +115,7 @@ public class FluidRenderer {
 
 		Vec3 center = new Vec3(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 		ms.pushPose();
-		if (fluidAttributes.isLighterThanAir())
+		if (shouldInvertGasses && fluidAttributes.isLighterThanAir())
 			TransformStack.of(ms)
 				.translate(center)
 				.rotateXDegrees(180)
