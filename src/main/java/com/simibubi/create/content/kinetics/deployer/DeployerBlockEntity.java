@@ -551,7 +551,10 @@ public class DeployerBlockEntity extends KineticBlockEntity {
 		ItemStack heldItemMainhand = player.getMainHandItem();
 		if (heldItemMainhand.getItem() instanceof SandPaperItem) {
 			sandpaperInv.setItem(0, stack);
-			return checkRecipe(AllRecipeTypes.SANDPAPER_POLISHING, sandpaperInv, level).orElse(null);
+			Optional<? extends Recipe<? extends Container>> polishingRecipe = checkRecipe(AllRecipeTypes.SANDPAPER_POLISHING, sandpaperInv, level);
+			if (polishingRecipe.isPresent()){
+				return polishingRecipe.get();
+			}
 		}
 
 		recipeInv.setItem(0, stack);
