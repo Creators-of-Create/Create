@@ -104,6 +104,7 @@ public class AllTags {
 		WINDMILL_SAILS,
 		WRENCH_PICKUP,
 		ROOTS,
+		SUGAR_CANE_VARIANTS,
 
 		CORALS,
 
