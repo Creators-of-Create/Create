@@ -141,7 +141,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 		List<FlapDisplayLayout> lines = getLines();
 		if (lineIndex >= lines.size())
 			return;
-		
+
 		FlapDisplayLayout layout = lines.get(lineIndex);
 		if (!layout.isLayout("Default"))
 			layout.loadDefault(getMaxCharCount());
@@ -173,7 +173,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 		colour[lineIndex] = color == DyeColor.WHITE ? null : color;
 		notifyUpdate();
 	}
-	
+
 	public void setGlowing(int lineIndex) {
 		glowingLines[lineIndex] = true;
 		notifyUpdate();
@@ -210,7 +210,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 		for (int j = 0; j < manualLines.length; j++)
 			if (manualLines[j])
 				NBTHelper.putMarker(tag, "CustomLine" + j);
-		
+
 		for (int j = 0; j < glowingLines.length; j++)
 			if (glowingLines[j])
 				NBTHelper.putMarker(tag, "GlowingLine" + j);
@@ -239,7 +239,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 		manualLines = new boolean[ySize * 2];
 		for (int i = 0; i < ySize * 2; i++)
 			manualLines[i] = tag.contains("CustomLine" + i);
-		
+
 		glowingLines = new boolean[ySize * 2];
 		for (int i = 0; i < ySize * 2; i++)
 			glowingLines[i] = tag.contains("GlowingLine" + i);
@@ -323,12 +323,12 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 	public int getLineColor(int line) {
 		DyeColor color = colour[line];
 		return color == null ? 0xFF_D3C6BA
-			: DyeHelper.DYE_TABLE.get(color)
+			: DyeHelper.getDyeColors(color)
 				.getFirst() | 0xFF_000000;
 	}
-	
+
 	public boolean isLineGlowing(int line) {
 		return glowingLines[line];
 	}
-	
+
 }

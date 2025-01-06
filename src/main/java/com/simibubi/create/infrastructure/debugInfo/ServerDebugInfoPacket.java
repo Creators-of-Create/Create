@@ -84,7 +84,7 @@ public class ServerDebugInfoPacket extends SimplePacketBase {
 		String text = output.toString();
 		Minecraft.getInstance().keyboardHandler.setClipboard(text);
 		Lang.translate("command.debuginfo.saved_to_clipboard")
-			.color(DyeHelper.DYE_TABLE.get(DyeColor.LIME)
+			.color(DyeHelper.getDyeColors(DyeColor.LIME)
 				.getFirst())
 			.sendChat(player);
 	}
