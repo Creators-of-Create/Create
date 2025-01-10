@@ -47,6 +47,11 @@ public final class NBTProcessors {
 				return data;
 			CompoundTag tag = book.getCompound("tag");
 
+			// Check for book & quill, which does not have json pages and
+			// therefore can't have click events. Written books have an "author" tag.
+			if (!tag.contains("author", Tag.TAG_LIST))
+				return data;
+
 			if (!tag.contains("pages", Tag.TAG_LIST))
 				return data;
 			ListTag pages = tag.getList("pages", Tag.TAG_STRING);
@@ -67,7 +72,7 @@ public final class NBTProcessors {
 			if (!book.contains("tag", Tag.TAG_COMPOUND))
 				return data;
 			CompoundTag itemData = book.getCompound("tag");
-			
+
 			for (List<String> entries : NBTHelper.readCompoundList(itemData.getList("Pages", Tag.TAG_COMPOUND),
 				pageTag -> NBTHelper.readCompoundList(pageTag.getList("Entries", Tag.TAG_COMPOUND),
 					tag -> tag.getString("Text")))) {
