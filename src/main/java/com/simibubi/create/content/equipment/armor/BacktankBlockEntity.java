@@ -120,10 +120,10 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 		compound.putInt("Air", airLevel);
 		compound.putInt("Timer", airLevelTimer);
 		compound.putInt("CapacityEnchantment", capacityEnchantLevel);
-		
+
 		if (this.customName != null)
 			compound.putString("CustomName", Component.Serializer.toJson(this.customName));
-		
+
 		compound.put("VanillaTag", vanillaTag);
 		if (forgeCapsTag != null)
 			compound.put("ForgeCapsTag", forgeCapsTag);
@@ -136,10 +136,10 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 		airLevel = compound.getInt("Air");
 		airLevelTimer = compound.getInt("Timer");
 		capacityEnchantLevel = compound.getInt("CapacityEnchantment");
-		
+
 		if (compound.contains("CustomName", 8))
 			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
-		
+
 		vanillaTag = compound.getCompound("VanillaTag");
 		forgeCapsTag = compound.contains("ForgeCapsTag") ? compound.getCompound("ForgeCapsTag") : null;
 
@@ -181,16 +181,18 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 	public void setCapacityEnchantLevel(int capacityEnchantLevel) {
 		this.capacityEnchantLevel = capacityEnchantLevel;
 	}
-	
+
 	public void setTags(CompoundTag vanillaTag, @Nullable CompoundTag forgeCapsTag) {
-		this.vanillaTag = vanillaTag;
-		this.forgeCapsTag = forgeCapsTag;
+		this.vanillaTag = vanillaTag.copy();
+		this.forgeCapsTag = forgeCapsTag == null ? null : forgeCapsTag.copy();
+		// Prevent nesting of the ctrl+pick block added tag
+		vanillaTag.remove("BlockEntityTag");
 	}
 
 	public CompoundTag getVanillaTag() {
 		return vanillaTag;
 	}
-	
+
 	public CompoundTag getForgeCapsTag() {
 		return forgeCapsTag;
 	}
