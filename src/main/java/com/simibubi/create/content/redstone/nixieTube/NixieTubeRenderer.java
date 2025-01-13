@@ -86,7 +86,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 		float charWidth = fontRenderer.width(c);
 		float shadowOffset = .5f;
 		float flicker = r.nextFloat();
-		Couple<Integer> couple = DyeHelper.DYE_TABLE.get(color);
+		Couple<Integer> couple = DyeHelper.getDyeColors(color);
 		int brightColor = couple.getFirst();
 		int darkColor = couple.getSecond();
 		int flickeringBrightColor = Color.mixColors(brightColor, darkColor, flicker / 4);

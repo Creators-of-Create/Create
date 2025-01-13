@@ -646,45 +646,30 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		public ItemStack insert(ItemStack stack, boolean simulate) {
-			Item item = stack.getItem();
-			if (!(item instanceof RecordItem))
+			if (!(stack.getItem() instanceof RecordItem))
 				return stack;
-			if (cachedState.getOptionalValue(JukeboxBlock.HAS_RECORD)
-				.orElse(true))
+			if (cachedState.getOptionalValue(JukeboxBlock.HAS_RECORD).orElse(true))
 				return stack;
-			BlockEntity blockEntity = level.getBlockEntity(pos);
-			if (!(blockEntity instanceof JukeboxBlockEntity jukeboxBE))
+			if (!(level.getBlockEntity(pos) instanceof JukeboxBlockEntity jukeboxBE))
 				return stack;
-			if (!jukeboxBE.getFirstItem()
-				.isEmpty())
+			if (!jukeboxBE.getFirstItem().isEmpty())
 				return stack;
 			ItemStack remainder = stack.copy();
 			ItemStack toInsert = remainder.split(1);
-			if (!simulate) {
-				jukeboxBE.setFirstItem(toInsert);
-				level.setBlock(pos, cachedState.setValue(JukeboxBlock.HAS_RECORD, true), 2);
-				level.levelEvent(null, 1010, pos, Item.getId(item));
-			}
+			if (!simulate)
+				jukeboxBE.setItem(0, toInsert);
 			return remainder;
 		}
 
 		@Override
 		public ItemStack extract(int slot, int amount, boolean simulate) {
-			if (!cachedState.getOptionalValue(JukeboxBlock.HAS_RECORD)
-				.orElse(false))
+			if (!cachedState.getOptionalValue(JukeboxBlock.HAS_RECORD).orElse(false))
 				return ItemStack.EMPTY;
-			BlockEntity blockEntity = level.getBlockEntity(pos);
-			if (!(blockEntity instanceof JukeboxBlockEntity jukeboxBE))
+			if (!(level.getBlockEntity(pos) instanceof JukeboxBlockEntity jukeboxBE))
 				return ItemStack.EMPTY;
-			ItemStack record = jukeboxBE.getFirstItem();
-			if (record.isEmpty())
-				return ItemStack.EMPTY;
-			if (!simulate) {
-				level.levelEvent(1010, pos, 0);
-				jukeboxBE.clearContent();
-				level.setBlock(pos, cachedState.setValue(JukeboxBlock.HAS_RECORD, false), 2);
-			}
-			return record;
+			if (!simulate)
+				return jukeboxBE.removeItem(slot, amount);
+			return jukeboxBE.getFirstItem();
 		}
 	}
 
