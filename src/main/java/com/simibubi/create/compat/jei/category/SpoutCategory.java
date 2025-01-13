@@ -63,7 +63,16 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 			if (!capability.isPresent())
 				continue;
 
+			var existingFluidHandler = capability.orElse(null);
+			int numTanks = existingFluidHandler.getTanks();
+			FluidStack existingFluid = numTanks == 1 ? existingFluidHandler.getFluidInTank(0) : FluidStack.EMPTY;
+
 			for (FluidStack fluidStack : fluidStacks) {
+				// Hoist the fluid equality check to avoid the work of copying the stack + populating capabilities
+				// when most fluids will not match
+				if (numTanks == 1 && (!existingFluid.isEmpty() && !existingFluid.isFluidEqual(fluidStack))) {
+					continue;
+				}
 				ItemStack copy = stack.copy();
 				copy.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM)
 					.ifPresent(fhi -> {

@@ -107,7 +107,7 @@ public class ContraptionControlsBlockEntity extends SmartBlockEntity {
 
 	public static void sendStatus(Player player, ItemStack filter, boolean enabled) {
 		MutableComponent state = Lang.translate("contraption.controls.actor_toggle." + (enabled ? "on" : "off"))
-			.color(DyeHelper.DYE_TABLE.get(enabled ? DyeColor.LIME : DyeColor.ORANGE)
+			.color(DyeHelper.getDyeColors(enabled ? DyeColor.LIME : DyeColor.ORANGE)
 				.getFirst())
 			.component();
 

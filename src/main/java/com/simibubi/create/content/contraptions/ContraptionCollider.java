@@ -14,7 +14,6 @@ import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.AllPackets;
@@ -161,8 +160,7 @@ public class ContraptionCollider {
 					List<AABB> bbs = new ArrayList<>();
 					List<VoxelShape> potentialHits =
 						getPotentiallyCollidedShapes(world, contraption, localBB.expandTowards(motionCopy));
-					potentialHits.forEach(shape -> shape.toAabbs()
-						.forEach(bbs::add));
+					potentialHits.forEach(shape -> bbs.addAll(shape.toAabbs()));
 					return bbs;
 
 				});
@@ -669,19 +667,23 @@ public class ContraptionCollider {
 		BlockPos min = BlockPos.containing(blockScanBB.minX, blockScanBB.minY, blockScanBB.minZ);
 		BlockPos max = BlockPos.containing(blockScanBB.maxX, blockScanBB.maxY, blockScanBB.maxZ);
 
-		List<VoxelShape> potentialHits = BlockPos.betweenClosedStream(min, max)
-			.filter(contraption.getBlocks()::containsKey)
-			.filter(Predicates.not(contraption::isHiddenInPortal))
-			.map(p -> {
-				BlockState blockState = contraption.getBlocks()
-					.get(p).state();
-				BlockPos pos = contraption.getBlocks()
-					.get(p).pos();
-				VoxelShape collisionShape = blockState.getCollisionShape(world, p);
-				return collisionShape.move(pos.getX(), pos.getY(), pos.getZ());
-			})
-			.filter(Predicates.not(VoxelShape::isEmpty))
-			.toList();
+		List<VoxelShape> potentialHits = new ArrayList<>();
+
+		for (BlockPos p : BlockPos.betweenClosed(min, max)) {
+			if (contraption.blocks.containsKey(p) && !contraption.isHiddenInPortal(p)) {
+				StructureBlockInfo info = contraption.getBlocks().get(p);
+
+				BlockState blockState = info.state();
+				BlockPos pos = info.pos();
+
+				VoxelShape collisionShape = blockState.getCollisionShape(world, p)
+						.move(pos.getX(), pos.getY(), pos.getZ());
+
+				if (!collisionShape.isEmpty()) {
+					potentialHits.add(collisionShape);
+				}
+			}
+		}
 
 		return potentialHits;
 	}

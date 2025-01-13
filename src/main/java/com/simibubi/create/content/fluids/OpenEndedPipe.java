@@ -192,7 +192,7 @@ public class OpenEndedPipe extends FlowSource {
 		if (!FluidHelper.hasBlockState(fluid.getFluid()))
 			return true;
 
-		if (!fluidState.isEmpty() && fluidState.getType() != fluid.getFluid()) {
+		if (!fluidState.isEmpty() && FluidHelper.convertToStill(fluidState.getType()) != fluid.getFluid()) {
 			FluidReactions.handlePipeSpillCollision(world, outputPos, fluid.getFluid(), fluidState);
 			return false;
 		}

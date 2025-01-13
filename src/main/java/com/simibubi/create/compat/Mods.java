@@ -33,7 +33,8 @@ public enum Mods {
 	XLPACKETS,
 	MODERNUI,
 	FTBCHUNKS,
-	JOURNEYMAP;
+	JOURNEYMAP,
+	BETTEREND;
 
 	private final String id;
 
@@ -55,11 +56,11 @@ public enum Mods {
 	public Block getBlock(String id) {
 		return ForgeRegistries.BLOCKS.getValue(rl(id));
 	}
-	
+
 	public Item getItem(String id) {
 		return ForgeRegistries.ITEMS.getValue(rl(id));
 	}
-	
+
 	public boolean contains(ItemLike entry) {
 		if (!isLoaded())
 			return false;

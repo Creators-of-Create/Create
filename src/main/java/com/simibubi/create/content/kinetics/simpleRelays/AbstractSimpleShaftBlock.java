@@ -37,7 +37,10 @@ public abstract class AbstractSimpleShaftBlock extends AbstractShaftBlock implem
 
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state != newState && !isMoving)
+		boolean wasWaterLogged = state.hasProperty(WATERLOGGED) &&
+				newState.hasProperty(WATERLOGGED) &&
+				(state.getValue(WATERLOGGED) != newState.getValue(WATERLOGGED));
+		if (state != newState && !isMoving && !wasWaterLogged)
 			removeBracket(world, pos, true).ifPresent(stack -> Block.popResource(world, pos, stack));
 		super.onRemove(state, world, pos, newState, isMoving);
 	}
