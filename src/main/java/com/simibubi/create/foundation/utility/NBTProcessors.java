@@ -15,13 +15,16 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public final class NBTProcessors {
 
@@ -43,14 +46,14 @@ public final class NBTProcessors {
 				return data;
 			CompoundTag book = data.getCompound("Book");
 
+			// Writable books can't have click events, so they're safe to keep
+			ResourceLocation writableBookResource = ForgeRegistries.ITEMS.getKey(Items.WRITABLE_BOOK);
+			if (writableBookResource != null && book.getString("id").equals(writableBookResource.toString()))
+				return data;
+
 			if (!book.contains("tag", Tag.TAG_COMPOUND))
 				return data;
 			CompoundTag tag = book.getCompound("tag");
-
-			// Check for book & quill, which does not have json pages and
-			// therefore can't have click events. Written books have an "author" tag.
-			if (!tag.contains("author", Tag.TAG_LIST))
-				return data;
 
 			if (!tag.contains("pages", Tag.TAG_LIST))
 				return data;
