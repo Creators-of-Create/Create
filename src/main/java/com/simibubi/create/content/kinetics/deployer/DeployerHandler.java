@@ -185,7 +185,7 @@ public class DeployerHandler {
 						FoodProperties foodProperties = item.getFoodProperties(stack, player);
 						if (playerEntity.canEat(foodProperties.canAlwaysEat())) {
 							ItemStack copy = stack.copy();
-							playerEntity.eat(world, stack);
+							player.setItemInHand(hand, stack.finishUsingItem(world, playerEntity));
 							player.spawnedItemEffects = copy;
 							success = true;
 						}
