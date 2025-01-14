@@ -184,8 +184,9 @@ public class DeployerHandler {
 					if (stack.isEdible()) {
 						FoodProperties foodProperties = item.getFoodProperties(stack, player);
 						if (playerEntity.canEat(foodProperties.canAlwaysEat())) {
+							ItemStack copy = stack.copy();
 							playerEntity.eat(world, stack);
-							player.spawnedItemEffects = stack.copy();
+							player.spawnedItemEffects = copy;
 							success = true;
 						}
 					}
