@@ -1,6 +1,8 @@
 package com.simibubi.create.content.kinetics.belt.transport;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import com.simibubi.create.content.kinetics.belt.BeltHelper;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
@@ -27,6 +29,7 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 
 	public FanProcessingType processedBy;
 	public int processingTime;
+	public Set<FanProcessingType> cannotBeProcessedBy;
 
 	public TransportedItemStack(ItemStack stack) {
 		this.stack = stack;
@@ -34,6 +37,7 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 		angle = centered ? 180 : R.nextInt(360);
 		sideOffset = prevSideOffset = getTargetSideOffset();
 		insertedFrom = Direction.UP;
+		cannotBeProcessedBy = new HashSet<>();
 	}
 
 	public float getTargetSideOffset() {

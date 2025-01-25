@@ -53,18 +53,21 @@ public class FanProcessing {
 
 	public static TransportedResult applyProcessing(TransportedItemStack transported, Level world, FanProcessingType type) {
 		TransportedResult ignore = TransportedResult.doNothing();
+		if (transported.cannotBeProcessedBy.contains(type)) {
+			return ignore;
+		}
 		if (transported.processedBy != type) {
+			if (!type.canProcess(transported.stack, world)) {
+				transported.cannotBeProcessedBy.add(type);
+				return ignore;
+			}
 			transported.processedBy = type;
 			int timeModifierForStackSize = ((transported.stack.getCount() - 1) / 16) + 1;
 			int processingTime =
 				(int) (AllConfigs.server().kinetics.fanProcessingTime.get() * timeModifierForStackSize) + 1;
 			transported.processingTime = processingTime;
-			if (!type.canProcess(transported.stack, world))
-				transported.processingTime = -1;
 			return ignore;
 		}
-		if (transported.processingTime == -1)
-			return ignore;
 		if (transported.processingTime-- > 0)
 			return ignore;
 
