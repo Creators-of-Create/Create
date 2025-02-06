@@ -1,5 +1,6 @@
 package com.simibubi.create.content.equipment.extendoGrip;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -29,6 +30,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -182,8 +186,18 @@ public class ExtendoGripItem extends Item {
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void consumeDurabilityOnPlace(EntityPlaceEvent event) {
 		Entity entity = event.getEntity();
-		if (entity instanceof Player)
-			findAndDamageExtendoGrip((Player) entity);
+		if (entity instanceof Player player) {
+			if (event.getPlacedBlock().is(Blocks.FROSTED_ICE)) {
+				for (ItemStack armorSlot : player.getArmorSlots()) {
+					for (Enchantment enchantment : armorSlot.getAllEnchantments().keySet()) {
+						if (!enchantment.equals(Enchantments.FROST_WALKER)) {
+							findAndDamageExtendoGrip(player);
+						}
+					}
+				}
+			}
+			else findAndDamageExtendoGrip(player);
+		}
 	}
 
 //	@SubscribeEvent(priority = EventPriority.LOWEST)
