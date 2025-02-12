@@ -195,91 +195,11 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		URANIUM_RAW_BLOCK = moddedRawOreBlock(URANIUM, AllItems.CRUSHED_URANIUM::get),
 		NICKEL_RAW_BLOCK = moddedRawOreBlock(NICKEL, AllItems.CRUSHED_NICKEL::get),
 
-		// Oh The Biomes You'll Go
-		BYG_AMETRINE_ORE = create(Mods.BYG.recipeId("ametrine_ore"), b -> b.duration(500)
-				.require(AllTags.optionalTag(ForgeRegistries.ITEMS,
-						new ResourceLocation("forge", "ores/ametrine")))
-				.output(1f, Mods.BYG, "ametrine_gems", 2)
-				.output(.25f, Mods.BYG, "ametrine_gems", 1)
-				.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-				.output(.125f, Mods.BYG, "cobbled_ether_stone", 1)
-				.whenModLoaded(Mods.BYG.getId())),
-
-		BYG_ANTHRACITE_ORE = create(Mods.BYG.recipeId("anthracite_ore"), b -> b.duration(150)
-				.require(AllTags.optionalTag(ForgeRegistries.ITEMS,
-						new ResourceLocation("forge", "ores/anthracite")))
-				.output(1f, Mods.BYG, "anthracite", 2)
-				.output(.5f, Mods.BYG, "anthracite", 1)
-				.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-				.output(.125f, Mods.BYG, "brimstone", 1)
-				.whenModLoaded(Mods.BYG.getId())),
-
-		BYG_BLUE_GOLD_ORE = create(Mods.BYG.recipeId("blue_nether_gold_ore"), b -> b.duration(350)
-				.require(Mods.BYG, "blue_nether_gold_ore")
-				.output(1f, Items.GOLD_NUGGET, 18)
-				.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-				.output(.125f, Mods.BYG, "blue_netherrack", 1)
-				.whenModLoaded(Mods.BYG.getId())),
-
-		BYG_BLUE_QUARTZ_ORE = create(Mods.BYG.recipeId("blue_nether_quartz_ore"), b -> b.duration(350)
-				.require(Mods.BYG, "blue_nether_quartz_ore")
-				.output(1f, Items.QUARTZ, 2)
-				.output(.25f, Items.QUARTZ, 1)
-				.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-				.output(.125f, Mods.BYG, "blue_netherrack", 1)
-				.whenModLoaded(Mods.BYG.getId())),
-
-		BYG_BRIMSTONE_GOLD_ORE = create(Mods.BYG.recipeId("brimstone_nether_gold_ore"), b -> b.duration(350)
-				.require(Mods.BYG, "brimstone_nether_gold_ore")
-				.output(1f, Items.GOLD_NUGGET, 18)
-				.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-				.output(.125f, Mods.BYG, "brimstone", 1)
-				.whenModLoaded(Mods.BYG.getId())),
-
-		BYG_BRIMSTONE_QUARTZ_ORE = create(Mods.BYG.recipeId("brimstone_nether_quartz_ore"), b -> b.duration(350)
-				.require(Mods.BYG, "brimstone_nether_quartz_ore")
-				.output(1f, Items.QUARTZ, 2)
-				.output(.25f, Items.QUARTZ, 1)
-				.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-				.output(.125f, Mods.BYG, "brimstone", 1)
-				.whenModLoaded(Mods.BYG.getId())),
-
-		BYG_REDSTONE_ORE = create(Mods.BYG.recipeId("cryptic_redstone_ore"), b -> b.duration(250)
-				.require(Mods.BYG, "cryptic_redstone_ore")
-				.output(1f, Items.REDSTONE, 6)
-				.output(.5f, Items.REDSTONE, 1)
-				.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-				.output(.125f, Mods.BYG, "cryptic_stone", 1)
-				.whenModLoaded(Mods.BYG.getId())),
-
-		BYG_EMERALDITE_ORE = create(Mods.BYG.recipeId("emeraldite_ore"), b -> b.duration(500)
-				.require(AllTags.forgeItemTag("ores/emeraldite"))
-				.output(1f,Mods.BYG, "emeraldite_shards", 2)
-				.output(.25f, Mods.BYG, "emeraldite_shards", 1)
-				.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-				.output(.125f, Mods.BYG, "scoria_cobblestone", 1)
-				.whenModLoaded(Mods.BYG.getId())),
-
-		BYG_LIGNITE_ORE = create(Mods.BYG.recipeId("lignite_ore"), b -> b.duration(300)
-				.require(AllTags.forgeItemTag("ores/lignite"))
-				.output(1f,Mods.BYG, "lignite", 2)
-				.output(.5f, Mods.BYG, "lignite", 2)
-				.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-				.output(.125f, Mods.BYG, "cobbled_ether_stone", 1)
-				.whenModLoaded(Mods.BYG.getId())),
-
-		BYG_NETHERRACK_ORE = create(Mods.BYG.recipeId("pervaded_netherrack"), b -> b.duration(150)
-				.require(AllTags.forgeItemTag("ores/emeraldite"))
-				.output(1f, Items.GLOWSTONE, 2)
-				.output(.5f, Items.GLOWSTONE, 1)
-				.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-				.output(.125f, Items.NETHERRACK, 1)
-				.whenModLoaded(Mods.BYG.getId())),
-
-		BYG_RED_ROCK_ORE = create(Mods.BYG.recipeId("red_rock"), b -> b.duration(150)
-				.require(Mods.BYG, "red_rock")
+		// Oh The Biomes We've Gone
+		BWG_RED_ROCK_ORE = create(Mods.BWG.recipeId("red_rock"), b -> b.duration(150)
+				.require(Mods.BWG, "red_rock")
 				.output(1f, Items.RED_SAND, 1)
-				.whenModLoaded(Mods.BYG.getId())),
+				.whenModLoaded(Mods.BWG.getId())),
 
 		// Druidcraft
 

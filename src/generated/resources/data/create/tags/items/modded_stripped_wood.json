@@ -37,103 +37,107 @@
       "required": false
     },
     {
-      "id": "byg:stripped_aspen_wood",
+      "id": "biomeswevegone:stripped_aspen_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_baobab_wood",
+      "id": "biomeswevegone:stripped_baobab_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_enchanted_wood",
+      "id": "biomeswevegone:stripped_blue_enchanted_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_cika_wood",
+      "id": "biomeswevegone:stripped_cika_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_cypress_wood",
+      "id": "biomeswevegone:stripped_cypress_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_ebony_wood",
+      "id": "biomeswevegone:stripped_ebony_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_ether_wood",
+      "id": "biomeswevegone:stripped_fir_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_fir_wood",
+      "id": "biomeswevegone:stripped_florus_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_green_enchanted_wood",
+      "id": "biomeswevegone:stripped_green_enchanted_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_holly_wood",
+      "id": "biomeswevegone:stripped_holly_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_jacaranda_wood",
+      "id": "biomeswevegone:stripped_ironwood_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_lament_wood",
+      "id": "biomeswevegone:stripped_jacaranda_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_mahogany_wood",
+      "id": "biomeswevegone:stripped_mahogany_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_mangrove_wood",
+      "id": "biomeswevegone:stripped_mangrove_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_maple_wood",
+      "id": "biomeswevegone:stripped_maple_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_nightshade_wood",
+      "id": "biomeswevegone:stripped_palm_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_palm_wood",
+      "id": "biomeswevegone:stripped_palo_verde_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_palo_verde_wood",
+      "id": "biomeswevegone:stripped_pine_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_pine_wood",
+      "id": "biomeswevegone:stripped_rainbow_eucalyptus_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_rainbow_eucalyptus_wood",
+      "id": "biomeswevegone:stripped_redwood_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_redwood_wood",
+      "id": "biomeswevegone:stripped_sakura_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_skyris_wood",
+      "id": "biomeswevegone:stripped_skyris_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_willow_wood",
+      "id": "biomeswevegone:stripped_white_mangrove_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_witch_hazel_wood",
+      "id": "biomeswevegone:stripped_willow_wood",
       "required": false
     },
     {
-      "id": "byg:stripped_zelkova_wood",
+      "id": "biomeswevegone:stripped_witch_hazel_wood",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:stripped_zelkova_wood",
       "required": false
     },
     {
@@ -410,10 +414,6 @@
     },
     {
       "id": "infernalexp:stripped_luminous_hyphae",
-      "required": false
-    },
-    {
-      "id": "byg:stripped_bulbis_wood",
       "required": false
     },
     {

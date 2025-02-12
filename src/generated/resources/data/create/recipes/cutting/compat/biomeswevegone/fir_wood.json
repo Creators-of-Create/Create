@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "biomeswevegone"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "biomeswevegone:fir_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "biomeswevegone:stripped_fir_wood"
+    }
+  ]
+}

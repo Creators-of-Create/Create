@@ -238,10 +238,10 @@ public class CreateRegistrateTags {
 		helper.add(Mods.FA, "mysterywood");
 		helper.add(Mods.HEX, "akashic");
 		helper.add(Mods.ID, "menril");
-		helper.add(Mods.BYG, "aspen", "baobab", "enchanted", "cika", "cypress", "ebony", "ether",
-			"fir", "green_enchanted", "holly", "jacaranda", "lament", "mahogany", "mangrove", "maple", "nightshade",
-			"palm", "palo_verde", "pine", "rainbow_eucalyptus", "redwood", "skyris", "willow", "witch_hazel",
-			"zelkova");
+		helper.add(Mods.BWG, "aspen", "baobab", "blue_enchanted", "cika", "cypress", "ebony",
+			"fir", "florus", "green_enchanted", "holly", "ironwood", "jacaranda", "mahogany", "mangrove", "maple",
+			"palm", "palo_verde", "pine", "rainbow_eucalyptus", "redwood", "sakura", "skyris", "white_mangrove",
+				"willow", "witch_hazel", "zelkova");
 		helper.add(Mods.SG, "netherwood");
 		helper.add(Mods.TF, "twilight_oak", "canopy", "mangrove", "dark", "time", "transformation", "mining",
 			"sorting");
@@ -264,8 +264,6 @@ public class CreateRegistrateTags {
 		TagGen.addOptional(logAppender, Mods.AUTUM, "maple");
 		TagGen.addOptional(logAppender, Mods.IX, "stripped_luminous_stem");
 		TagGen.addOptional(woodAppender, Mods.IX, "stripped_luminous_hyphae");
-		TagGen.addOptional(logAppender, Mods.BYG, "stripped_bulbis_stem");
-		TagGen.addOptional(woodAppender, Mods.BYG, "stripped_bulbis_wood");
 
 		TagGen.addOptional(logAppender, Mods.RU, "stripped_blue_bioshroom_stem");
 		TagGen.addOptional(woodAppender, Mods.RU, "stripped_blue_bioshroom_hyphae");

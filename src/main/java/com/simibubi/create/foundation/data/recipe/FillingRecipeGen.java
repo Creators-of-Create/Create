@@ -67,10 +67,10 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 			.output(1, Mods.AM, "lava_bottle", 1)
 			.whenModLoaded(Mods.AM.getId())),
 
-		BYG_LUSH_GRASS = create(Mods.BYG.recipeId("lush_grass_block"), b -> b.require(Mods.BYG, "lush_dirt")
+		BYG_LUSH_GRASS = create(Mods.BWG.recipeId("lush_grass_block"), b -> b.require(Mods.BWG, "lush_dirt")
 			.require(Fluids.WATER, 500)
-			.output(Mods.BYG, "lush_grass_block")
-			.whenModLoaded(Mods.BYG.getId())),
+			.output(Mods.BWG, "lush_grass_block")
+			.whenModLoaded(Mods.BWG.getId())),
 
 		NEA_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Tags.Fluids.MILK, 250)
 			.require(Items.GLASS_BOTTLE)

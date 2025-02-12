@@ -37,103 +37,107 @@
       "required": false
     },
     {
-      "id": "byg:stripped_aspen_log",
+      "id": "biomeswevegone:stripped_aspen_log",
       "required": false
     },
     {
-      "id": "byg:stripped_baobab_log",
+      "id": "biomeswevegone:stripped_baobab_log",
       "required": false
     },
     {
-      "id": "byg:stripped_enchanted_log",
+      "id": "biomeswevegone:stripped_blue_enchanted_log",
       "required": false
     },
     {
-      "id": "byg:stripped_cika_log",
+      "id": "biomeswevegone:stripped_cika_log",
       "required": false
     },
     {
-      "id": "byg:stripped_cypress_log",
+      "id": "biomeswevegone:stripped_cypress_log",
       "required": false
     },
     {
-      "id": "byg:stripped_ebony_log",
+      "id": "biomeswevegone:stripped_ebony_log",
       "required": false
     },
     {
-      "id": "byg:stripped_ether_log",
+      "id": "biomeswevegone:stripped_fir_log",
       "required": false
     },
     {
-      "id": "byg:stripped_fir_log",
+      "id": "biomeswevegone:stripped_florus_log",
       "required": false
     },
     {
-      "id": "byg:stripped_green_enchanted_log",
+      "id": "biomeswevegone:stripped_green_enchanted_log",
       "required": false
     },
     {
-      "id": "byg:stripped_holly_log",
+      "id": "biomeswevegone:stripped_holly_log",
       "required": false
     },
     {
-      "id": "byg:stripped_jacaranda_log",
+      "id": "biomeswevegone:stripped_ironwood_log",
       "required": false
     },
     {
-      "id": "byg:stripped_lament_log",
+      "id": "biomeswevegone:stripped_jacaranda_log",
       "required": false
     },
     {
-      "id": "byg:stripped_mahogany_log",
+      "id": "biomeswevegone:stripped_mahogany_log",
       "required": false
     },
     {
-      "id": "byg:stripped_mangrove_log",
+      "id": "biomeswevegone:stripped_mangrove_log",
       "required": false
     },
     {
-      "id": "byg:stripped_maple_log",
+      "id": "biomeswevegone:stripped_maple_log",
       "required": false
     },
     {
-      "id": "byg:stripped_nightshade_log",
+      "id": "biomeswevegone:stripped_palm_log",
       "required": false
     },
     {
-      "id": "byg:stripped_palm_log",
+      "id": "biomeswevegone:stripped_palo_verde_log",
       "required": false
     },
     {
-      "id": "byg:stripped_palo_verde_log",
+      "id": "biomeswevegone:stripped_pine_log",
       "required": false
     },
     {
-      "id": "byg:stripped_pine_log",
+      "id": "biomeswevegone:stripped_rainbow_eucalyptus_log",
       "required": false
     },
     {
-      "id": "byg:stripped_rainbow_eucalyptus_log",
+      "id": "biomeswevegone:stripped_redwood_log",
       "required": false
     },
     {
-      "id": "byg:stripped_redwood_log",
+      "id": "biomeswevegone:stripped_sakura_log",
       "required": false
     },
     {
-      "id": "byg:stripped_skyris_log",
+      "id": "biomeswevegone:stripped_skyris_log",
       "required": false
     },
     {
-      "id": "byg:stripped_willow_log",
+      "id": "biomeswevegone:stripped_white_mangrove_log",
       "required": false
     },
     {
-      "id": "byg:stripped_witch_hazel_log",
+      "id": "biomeswevegone:stripped_willow_log",
       "required": false
     },
     {
-      "id": "byg:stripped_zelkova_log",
+      "id": "biomeswevegone:stripped_witch_hazel_log",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:stripped_zelkova_log",
       "required": false
     },
     {
@@ -414,10 +418,6 @@
     },
     {
       "id": "infernalexp:stripped_luminous_stem",
-      "required": false
-    },
-    {
-      "id": "byg:stripped_bulbis_stem",
       "required": false
     },
     {
