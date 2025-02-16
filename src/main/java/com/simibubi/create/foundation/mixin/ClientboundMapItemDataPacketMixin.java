@@ -55,6 +55,10 @@ public class ClientboundMapItemDataPacketMixin {
 
 	@Inject(method = "<init>(Lnet/minecraft/network/FriendlyByteBuf;)V", at = @At("RETURN"))
 	private void create$onInit(FriendlyByteBuf buf, CallbackInfo ci) {
+		if(!buf.isReadable()) {
+			return;
+		}
+
 		create$stationIndices = buf.readVarIntArray();
 
 		if (decorations != null) {
