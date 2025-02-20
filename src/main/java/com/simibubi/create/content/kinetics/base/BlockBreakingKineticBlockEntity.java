@@ -130,7 +130,7 @@ public abstract class BlockBreakingKineticBlockEntity extends KineticBlockEntity
 	}
 
 	public static boolean isBreakable(BlockState stateToBreak, float blockHardness) {
-		return !(stateToBreak.liquid() || stateToBreak.getBlock() instanceof AirBlock || blockHardness == -1 || AllBlockTags.NON_DESTROYABLE.matches(stateToBreak));
+		return !(stateToBreak.liquid() || stateToBreak.getBlock() instanceof AirBlock || blockHardness == -1 || AllBlockTags.NON_BREAKABLE.matches(stateToBreak));
 	}
 
 	public void onBlockBroken(BlockState stateToBreak) {
