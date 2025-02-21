@@ -70,7 +70,7 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 	}
 
 	public ItemStack getController() {
-		return getController();
+		return ItemStack.of(controllerNbt);
 	}
 
 	public boolean hasUser() { return user != null; }
