@@ -31,7 +31,7 @@ import net.minecraft.world.item.Item;
 @ApiStatus.Internal
 public class RuntimeDataGenerator {
 	private static final Pattern STRIPPED_WOODS_REGEX = Pattern.compile("stripped_(\\w*)_(log|wood|stem|hyphae)");
-	private static final Pattern NON_STRIPPED_WOODS_REGEX = Pattern.compile("(?!stripped_)([a-z]+)_(log|wood|stem|hyphae)");
+	private static final Pattern NON_STRIPPED_WOODS_REGEX = Pattern.compile("^(?!stripped_)([a-z_]+)_(log|wood|stem|hyphae)");
 	private static final Multimap<ResourceLocation, TagEntry> TAGS = HashMultimap.create();
 	private static final Object2ObjectOpenHashMap<ResourceLocation, JsonObject> JSON_FILES = new Object2ObjectOpenHashMap<>();
 
