@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.DisplayLinkPeripheral;
+import com.simibubi.create.compat.computercraft.implementation.peripherals.RedstoneRequesterPeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.SequencedGearshiftPeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.SpeedControllerPeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.SpeedGaugePeripheral;
@@ -13,6 +14,7 @@ import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.speedController.SpeedControllerBlockEntity;
 import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGearshiftBlockEntity;
+import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -45,6 +47,8 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
 			return () -> new StressGaugePeripheral(sgbe);
 		if (be instanceof StationBlockEntity sbe)
 			return () -> new StationPeripheral(sbe);
+		if (be instanceof RedstoneRequesterBlockEntity rrbe)
+			return () -> new RedstoneRequesterPeripheral(rrbe);
 
 		throw new IllegalArgumentException(
 			"No peripheral available for " + BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(be.getType()));
