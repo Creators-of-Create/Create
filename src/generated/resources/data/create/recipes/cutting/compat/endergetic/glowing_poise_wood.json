@@ -3,19 +3,18 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "ars_nouveau"
+      "modid": "endergetic"
     }
   ],
   "ingredients": [
     {
-      "item": "ars_nouveau:stripped_blue_archwood_log"
+      "item": "endergetic:glowing_poise_wood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "count": 6,
-      "item": "ars_nouveau:archwood_planks"
+      "item": "endergetic:stripped_poise_wood"
     }
   ]
 }

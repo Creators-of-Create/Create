@@ -3,18 +3,19 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "ars_nouveau"
+      "modid": "ars_elemental"
     }
   ],
   "ingredients": [
     {
-      "item": "ars_nouveau:blue_archwood_wood"
+      "item": "ars_elemental:stripped_yellow_archwood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "ars_nouveau:stripped_blue_archwood_wood"
+      "count": 6,
+      "item": "ars_nouveau:archwood_planks"
     }
   ]
 }

@@ -20,7 +20,6 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 		BAMBOO_PLANKS = create(() -> Blocks.BAMBOO_PLANKS, b -> b.duration(20)
 			.output(Blocks.BAMBOO_MOSAIC, 1)),
-		BAMBOO_BLOCK = stripAndMakePlanks(Blocks.BAMBOO_BLOCK, Blocks.STRIPPED_BAMBOO_BLOCK, Blocks.BAMBOO_PLANKS, 3),
 
 		/*
 		 * Mod compat
@@ -88,7 +87,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 				.whenModLoaded(mod1.getId()));
 		return null;
 	}
-	
+
 	GeneratedRecipe stripAndMakePlanksDiffPlanksModId(Mods mod1, String log, String stripped, Mods mod2, String planks) {
 		if (log != null)
 			create("compat/" + mod1.getId() + "/" + log, b -> b.duration(50)
