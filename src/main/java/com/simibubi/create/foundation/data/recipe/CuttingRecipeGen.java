@@ -31,8 +31,15 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		ARS_E_2 = stripAndMakePlanksDiffPlanksModId(Mods.ARS_E, null, "stripped_yellow_archwood", Mods.ARS_N, "archwood_planks"),
 
 		// Regions Unexplored
-		RU_1 = stripOnlyDiffModId(Mods.RU, "silver_birch_log", Mods.MC, "stripped_birch_log"),
-		RU_2 = stripOnlyDiffModId(Mods.RU, "silver_birch_wood", Mods.MC, "stripped_birch_wood"),
+		RU_1 = stripAndMakePlanks(Mods.RU, "brimwood_log_magma", "stripped_brimwood_log", null),
+		RU_2 = stripAndMakePlanks(Mods.RU, "ashen_log", "stripped_dead_log", null),
+		RU_3 = stripAndMakePlanks(Mods.RU, "ashen_wood", "stripped_dead_wood", null),
+		RU_4 = stripOnlyDiffModId(Mods.RU, "silver_birch_log", Mods.MC, "stripped_birch_log"),
+		RU_5 = stripOnlyDiffModId(Mods.RU, "silver_birch_wood", Mods.MC, "stripped_birch_wood"),
+
+		// Autumnity
+		AUTUM_1 = stripAndMakePlanks(Mods.AUTUM, null, "sappy_maple_log", "maple_planks"),
+		AUTUM_2 = stripAndMakePlanks(Mods.AUTUM, null, "sappy_maple_wood", "maple_planks"),
 
 		// Endergetic Expansion
 		ENDERGETIC_1 = stripAndMakePlanks(Mods.ENDER, "glowing_poise_stem", "stripped_poise_stem", null),

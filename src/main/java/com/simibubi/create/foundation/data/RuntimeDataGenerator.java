@@ -36,8 +36,8 @@ import net.minecraft.world.item.Item;
 public class RuntimeDataGenerator {
 	// (variant_prefix, optional)stripped_(wood_name)(type)endofline
 	private static final Pattern STRIPPED_WOODS_REGEX = Pattern.compile("(\\w*)??stripped_(\\w*)(_log|_wood|_stem|_hyphae|_block|(?<!_)wood)$");
-	// startofline(not preceded by stripped_)(wood_name)(type)(intentional empty group s.t. group counts match up in the patterns)
-	private static final Pattern NON_STRIPPED_WOODS_REGEX = Pattern.compile("^(?!stripped_)([a-z_]+)(_log|_wood|_stem|_hyphae|_block)()");
+	// startofline(not preceded by stripped_)(wood_name)(type)(variant suffix, optional, that doesn't end in _stripped)endofline
+	private static final Pattern NON_STRIPPED_WOODS_REGEX = Pattern.compile("^(?!stripped_)([a-z_]+)(_log|_wood|_stem|_hyphae|(?<!bioshroom)_block)(([a-z_]+)(?<!_stripped))?$");
 	private static final Multimap<ResourceLocation, TagEntry> TAGS = HashMultimap.create();
 	private static final Object2ObjectOpenHashMap<ResourceLocation, JsonObject> JSON_FILES = new Object2ObjectOpenHashMap<>();
 	private static final Map<ResourceLocation, ResourceLocation> MISMATCHED_WOOD_NAMES = ImmutableMap.<ResourceLocation, ResourceLocation>builder()

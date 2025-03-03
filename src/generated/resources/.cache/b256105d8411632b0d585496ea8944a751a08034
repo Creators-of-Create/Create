@@ -1,4 +1,4 @@
-// 1.20.1	2025-03-03T02:24:21.0094458	Create's Processing Recipes
+// 1.20.1	2025-03-03T16:11:40.9779167	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -172,6 +172,8 @@ af1ca00e05d554bba1d85c766e52560d5ea8fe4d data/create/recipes/cutting/compat/ars_
 1a66e7e6dfba9531bbb5a1d0bf014e16d6cbb6be data/create/recipes/cutting/compat/ars_nouveau/stripped_purple_archwood_wood.json
 5c1c8275b2e30fdf387dcf358fd41e995e817c86 data/create/recipes/cutting/compat/ars_nouveau/stripped_red_archwood_log.json
 9dc5bd8a1002b9d299d60a405720950eb0b4e9ab data/create/recipes/cutting/compat/ars_nouveau/stripped_red_archwood_wood.json
+b66953dee0ea9804e22aa6f296c49e81f34d2d18 data/create/recipes/cutting/compat/autumnity/sappy_maple_log.json
+a663ac9e710bc05e30eecddd527c843616b5faf1 data/create/recipes/cutting/compat/autumnity/sappy_maple_wood.json
 0a6040818c3076341e97072fd7f2c649da7cf020 data/create/recipes/cutting/compat/endergetic/glowing_poise_stem.json
 7b39e948941fdeedf8eff188d495ad8450a55a3c data/create/recipes/cutting/compat/endergetic/glowing_poise_wood.json
 c2f1bca179d6218aa75526df386106b72eb0dd67 data/create/recipes/cutting/compat/immersiveengineering/wire_aluminum.json
@@ -179,6 +181,9 @@ c2f1bca179d6218aa75526df386106b72eb0dd67 data/create/recipes/cutting/compat/imme
 e9086dc98d03798ded6f3170a5c51528d1f5eba7 data/create/recipes/cutting/compat/immersiveengineering/wire_electrum.json
 ca543d1e95ac73dbf3eaac91e80830fb3a071276 data/create/recipes/cutting/compat/immersiveengineering/wire_lead.json
 bcab848fda66d20cf871f97db3c7c41f7c4b55c9 data/create/recipes/cutting/compat/immersiveengineering/wire_steel.json
+27585fe96d7e211e4469c437c82c89c1268cf0bf data/create/recipes/cutting/compat/regions_unexplored/ashen_log.json
+bf04910ca9246aec3146eff28bc7d5d778c5d6d4 data/create/recipes/cutting/compat/regions_unexplored/ashen_wood.json
+2dcbacc9105ece46b17ff124d7e8a8116e16a811 data/create/recipes/cutting/compat/regions_unexplored/brimwood_log_magma.json
 aa75d5f92d23fb24aece736145ac8372f6cff3f3 data/create/recipes/cutting/compat/regions_unexplored/silver_birch_log.json
 3218231281a0afda1cef330a022e450efac18927 data/create/recipes/cutting/compat/regions_unexplored/silver_birch_wood.json
 7a01147d3c7d8fb9acb870b33e5a792328f88c3c data/create/recipes/deploying/cogwheel.json
