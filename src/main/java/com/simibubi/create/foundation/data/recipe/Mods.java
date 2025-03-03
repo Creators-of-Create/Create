@@ -64,7 +64,7 @@ public enum Mods {
 	UUE("unusualend"),
 	UG("undergarden"),
 	DD("deeperdarker"),
-	ARS_E("ars_elemental")
+	ARS_E("ars_elemental", b -> b.omitWoodSuffix())
 
 	;
 
