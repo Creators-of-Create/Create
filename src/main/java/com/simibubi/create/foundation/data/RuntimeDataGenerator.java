@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.collect.ImmutableMap;
+
+import com.simibubi.create.foundation.data.recipe.Mods;
+
 import org.jetbrains.annotations.ApiStatus;
 
 import com.google.common.collect.HashMultimap;
@@ -30,10 +34,17 @@ import net.minecraft.world.item.Item;
 
 @ApiStatus.Internal
 public class RuntimeDataGenerator {
-	private static final Pattern STRIPPED_WOODS_REGEX = Pattern.compile("stripped_(\\w*)_(log|wood|stem|hyphae)");
-	private static final Pattern NON_STRIPPED_WOODS_REGEX = Pattern.compile("^(?!stripped_)([a-z_]+)_(log|wood|stem|hyphae)");
+	// (variant_prefix, optional)stripped_(wood_name)(type)endofline
+	private static final Pattern STRIPPED_WOODS_REGEX = Pattern.compile("(\\w*)??stripped_(\\w*)(_log|_wood|_stem|_hyphae|_block|(?<!_)wood)$");
+	// startofline(not preceded by stripped_)(wood_name)(type)(intentional empty group s.t. group counts match up in the patterns)
+	private static final Pattern NON_STRIPPED_WOODS_REGEX = Pattern.compile("^(?!stripped_)([a-z_]+)(_log|_wood|_stem|_hyphae|_block)()");
 	private static final Multimap<ResourceLocation, TagEntry> TAGS = HashMultimap.create();
 	private static final Object2ObjectOpenHashMap<ResourceLocation, JsonObject> JSON_FILES = new Object2ObjectOpenHashMap<>();
+
+	private static final Map<ResourceLocation, ResourceLocation> MISMATCHED_WOOD_NAMES = ImmutableMap.<ResourceLocation, ResourceLocation>builder()
+		.put(Mods.ARS_N.asResource("blue_archwood"), Mods.ARS_N.asResource("archwood"))
+		.put(Mods.DD.asResource("blooming"), Mods.DD.asResource("bloom"))
+		.build();
 
 	public static void insertIntoPack(DynamicPack dynamicPack) {
 		for (ResourceLocation itemId : BuiltInRegistries.ITEM.keySet())
@@ -71,30 +82,34 @@ public class RuntimeDataGenerator {
 		}
 
 		if (hasFoundMatch) {
-			String type = match.group(2);
-			ResourceLocation matched = itemId.withPath(match.group(1));
-			ResourceLocation base = matched.withSuffix("_");
-			ResourceLocation nonStrippedId = base.withSuffix(type);
-			ResourceLocation planksId = base.withSuffix("planks");
-			ResourceLocation stairsId = base.withSuffix("stairs");
-			ResourceLocation slabId = base.withSuffix("slab");
-			ResourceLocation fenceId = base.withSuffix("fence");
-			ResourceLocation fenceGateId = base.withSuffix("fence_gate");
-			ResourceLocation doorId = base.withSuffix("door");
-			ResourceLocation trapdoorId = base.withSuffix("trapdoor");
-			ResourceLocation pressurePlateId = base.withSuffix("pressure_plate");
-			ResourceLocation buttonId = base.withSuffix("button");
-			ResourceLocation signId = base.withSuffix("sign");
+			String prefix = noStrippedVariant ? "" : match.group(1) != null ? match.group(1) : "";
+			String type = match.group(noStrippedVariant ? 2 : 3);
+			ResourceLocation matched = itemId.withPath(match.group(noStrippedVariant ? 1 : 2));
+			// re-add 'wood' to wood types such as Botania's livingwood
+			ResourceLocation base = matched.withSuffix("wood".equals(match.group(3)) ? "wood" : "");
+			base = MISMATCHED_WOOD_NAMES.getOrDefault(base, base);
+			ResourceLocation nonStrippedId = matched.withSuffix(type).withPrefix(prefix);
+			ResourceLocation planksId = base.withSuffix("_planks");
+			ResourceLocation stairsId = base.withSuffix("_stairs");
+			ResourceLocation slabId = base.withSuffix("_slab");
+			ResourceLocation fenceId = base.withSuffix("_fence");
+			ResourceLocation fenceGateId = base.withSuffix("_fence_gate");
+			ResourceLocation doorId = base.withSuffix("_door");
+			ResourceLocation trapdoorId = base.withSuffix("_trapdoor");
+			ResourceLocation pressurePlateId = base.withSuffix("_pressure_plate");
+			ResourceLocation buttonId = base.withSuffix("_button");
+			ResourceLocation signId = base.withSuffix("_sign");
+			// Bamboo, GotD whistlecane
+			int planksCount = type.contains("block") ? 3 : 6;
 
 			if (!noStrippedVariant) {
 				simpleWoodRecipe(nonStrippedId, itemId);
-				simpleWoodRecipe(itemId, planksId, 6);
+				simpleWoodRecipe(itemId, planksId, planksCount);
 			} else if (BuiltInRegistries.ITEM.containsKey(planksId)) {
 				ResourceLocation tag = Create.asResource("runtime_generated/compat/" + itemId.getNamespace() + "/" + matched.getPath());
 				insertIntoTag(tag, itemId);
-				insertIntoTag(tag, nonStrippedId);
 
-				simpleWoodRecipe(TagKey.create(Registries.ITEM, tag), planksId, 6);
+				simpleWoodRecipe(TagKey.create(Registries.ITEM, tag), planksId, planksCount);
 			}
 
 			if (!path.contains("_wood") && !path.contains("_hyphae") && BuiltInRegistries.ITEM.containsKey(planksId)) {
