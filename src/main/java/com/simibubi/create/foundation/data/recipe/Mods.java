@@ -63,7 +63,8 @@ public enum Mods {
 	GOTD("gardens_of_the_dead"),
 	UUE("unusualend"),
 	UG("undergarden"),
-	DD("deeperdarker")
+	DD("deeperdarker"),
+	ARS_E("ars_elemental")
 
 	;
 

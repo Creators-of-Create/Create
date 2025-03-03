@@ -283,6 +283,7 @@ public class CreateRegistrateTags {
 		helper.add(Mods.BMK, "blighted_balsa", "willow", "swamp_cypress", "ancient_oak");
 		helper.add(Mods.RU, "alpha", "ashen", "baobab", "blackwood", "brimwood", "cobalt", "cypress", "dead", "eucalyptus", "joshua",
 			"kapok", "larch", "magnolia", "maple", "mauve", "palm", "pine", "redwood", "socotra", "willow");
+		helper.add(Mods.ARS_E, "yellow_archwood");
 
 
 		TagGen.addOptional(logAppender, Mods.AUTUM, "maple");

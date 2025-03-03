@@ -26,13 +26,19 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		 * Mod compat
 		 */
 
-		// Ars Nouveau (all logs yield the same plank)
-		ARS_N = cuttingCompat(Mods.ARS_N, "blue_archwood", "purple_archwood", "green_archwood", "red_archwood"),
+		// Ars Nouveau (all logs yield the same plank) (blue is covered by RuntimeDataGenerator to handle the planks into other recipes)
+		ARS_N = cuttingCompat(Mods.ARS_N, "purple_archwood", "green_archwood", "red_archwood"),
+		ARS_E_1 = stripAndMakePlanksDiffPlanksModId(Mods.ARS_E, null, "stripped_yellow_archwood_log", Mods.ARS_N, "archwood_planks"),
+		ARS_E_2 = stripAndMakePlanksDiffPlanksModId(Mods.ARS_E, null, "stripped_yellow_archwood", Mods.ARS_N, "archwood_planks"),
 
 		// Regions Unexplored
-		RU_14 = stripOnlyDiffModId(Mods.RU, "silver_birch_log", Mods.MC, "stripped_birch_log"),
-		RU_15 = stripOnlyDiffModId(Mods.RU, "silver_birch_wood", Mods.MC, "stripped_birch_wood"),
-		
+		RU_1 = stripOnlyDiffModId(Mods.RU, "silver_birch_log", Mods.MC, "stripped_birch_log"),
+		RU_2 = stripOnlyDiffModId(Mods.RU, "silver_birch_wood", Mods.MC, "stripped_birch_wood"),
+
+		// Endergetic Expansion
+		ENDERGETIC_1 = stripAndMakePlanks(Mods.ENDER, "glowing_poise_stem", "stripped_poise_stem", null),
+		ENDERGETIC_2 = stripAndMakePlanks(Mods.ENDER, "glowing_poise_wood", "stripped_poise_wood", null),
+
 		// IE
 		IE_WIRES = ieWires("copper", "electrum", "aluminum", "steel", "lead")
 		;
@@ -79,6 +85,20 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		create("compat/" + mod1.getId() + "/" + wood, b -> b.duration(50)
 				.require(mod1, wood)
 				.output(1, mod2, stripped, 1)
+				.whenModLoaded(mod1.getId()));
+		return null;
+	}
+	
+	GeneratedRecipe stripAndMakePlanksDiffPlanksModId(Mods mod1, String log, String stripped, Mods mod2, String planks) {
+		if (log != null)
+			create("compat/" + mod1.getId() + "/" + log, b -> b.duration(50)
+				.require(mod1, log)
+				.output(1, mod1, stripped, 1)
+				.whenModLoaded(mod1.getId()));
+		if (planks != null) // Shouldn't be needed as stripAndMakePlanks can already do what this method does if planks is null
+			create("compat/" + mod1.getId() + "/" + stripped, b -> b.duration(50)
+				.require(mod1, stripped)
+				.output(1, mod2, planks, 6)
 				.whenModLoaded(mod1.getId()));
 		return null;
 	}
