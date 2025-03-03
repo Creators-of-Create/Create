@@ -40,9 +40,9 @@ public class RuntimeDataGenerator {
 	private static final Pattern NON_STRIPPED_WOODS_REGEX = Pattern.compile("^(?!stripped_)([a-z_]+)(_log|_wood|_stem|_hyphae|_block)()");
 	private static final Multimap<ResourceLocation, TagEntry> TAGS = HashMultimap.create();
 	private static final Object2ObjectOpenHashMap<ResourceLocation, JsonObject> JSON_FILES = new Object2ObjectOpenHashMap<>();
-
 	private static final Map<ResourceLocation, ResourceLocation> MISMATCHED_WOOD_NAMES = ImmutableMap.<ResourceLocation, ResourceLocation>builder()
-		.put(Mods.ARS_N.asResource("blue_archwood"), Mods.ARS_N.asResource("archwood"))
+		.put(Mods.ARS_N.asResource("blue_archwood"), Mods.ARS_N.asResource("archwood")) // Generate recipes for planks -> everything else
+		//.put(Mods.UUE.asResource("chorus_cane"), Mods.UUE.asResource("chorus_nest")) // Has a weird setup with both normal and stripped planks, that it already provides cutting recipes for
 		.put(Mods.DD.asResource("blooming"), Mods.DD.asResource("bloom"))
 		.build();
 
@@ -90,8 +90,8 @@ public class RuntimeDataGenerator {
 			base = MISMATCHED_WOOD_NAMES.getOrDefault(base, base);
 			ResourceLocation nonStrippedId = matched.withSuffix(type).withPrefix(prefix);
 			ResourceLocation planksId = base.withSuffix("_planks");
-			ResourceLocation stairsId = base.withSuffix("_stairs");
-			ResourceLocation slabId = base.withSuffix("_slab");
+			ResourceLocation stairsId = base.withSuffix(base.getNamespace().equals(Mods.BTN.getId()) ? "_planks_stairs" : "_stairs");
+			ResourceLocation slabId = base.withSuffix(base.getNamespace().equals(Mods.BTN.getId()) ? "_planks_slab" : "_slab");
 			ResourceLocation fenceId = base.withSuffix("_fence");
 			ResourceLocation fenceGateId = base.withSuffix("_fence_gate");
 			ResourceLocation doorId = base.withSuffix("_door");
