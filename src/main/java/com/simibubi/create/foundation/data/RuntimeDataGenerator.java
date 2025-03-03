@@ -34,9 +34,11 @@ import net.minecraft.world.item.Item;
 
 @ApiStatus.Internal
 public class RuntimeDataGenerator {
-	// (variant_prefix, optional)stripped_(wood_name)(type)endofline
-	private static final Pattern STRIPPED_WOODS_REGEX = Pattern.compile("(\\w*)??stripped_(\\w*)(_log|_wood|_stem|_hyphae|_block|(?<!_)wood)$");
-	// startofline(not preceded by stripped_)(wood_name)(type)(variant suffix, optional, that doesn't end in _stripped)endofline
+	// (1. variant_prefix, optional, can be null)stripped_(2. wood name)(3. type)(4. empty group)endofline
+	private static final Pattern STRIPPED_WOODS_PREFIX_REGEX = Pattern.compile("(\\w*)??stripped_(\\w*)(_log|_wood|_stem|_hyphae|_block|(?<!_)wood)()$");
+	// (1. wood name)(2. type)(3. variant_suffix, optional)_stripped(4. 2nd variant_suffix, optional)
+	private static final Pattern STRIPPED_WOOD_SUFFIX_REGEX = Pattern.compile("(\\w*)(_log|_wood|_stem|_hyphae|_block|(?<!_)wood)(\\w*)_stripped(\\w*)");
+	// startofline(not preceded by stripped_)(1. wood_name)(2. type)(3. (4. variant suffix), optional, that doesn't end in _stripped, can be null)endofline
 	private static final Pattern NON_STRIPPED_WOODS_REGEX = Pattern.compile("^(?!stripped_)([a-z_]+)(_log|_wood|_stem|_hyphae|(?<!bioshroom)_block)(([a-z_]+)(?<!_stripped))?$");
 	private static final Multimap<ResourceLocation, TagEntry> TAGS = HashMultimap.create();
 	private static final Object2ObjectOpenHashMap<ResourceLocation, JsonObject> JSON_FILES = new Object2ObjectOpenHashMap<>();
@@ -70,25 +72,33 @@ public class RuntimeDataGenerator {
 	private static void cuttingRecipes(ResourceLocation itemId) {
 		String path = itemId.getPath();
 
-		Matcher match = STRIPPED_WOODS_REGEX.matcher(path);
+		Matcher match = STRIPPED_WOODS_PREFIX_REGEX.matcher(path);
 		boolean hasFoundMatch = match.find();
+		boolean strippedInPrefix = hasFoundMatch;
+
+		if (!hasFoundMatch) {
+			match = STRIPPED_WOOD_SUFFIX_REGEX.matcher(path);
+			hasFoundMatch = match.find();
+		}
 
 		// Last ditch attempt. Try to find logs without stripped variants
 		boolean noStrippedVariant = false;
-		if (!hasFoundMatch && !BuiltInRegistries.ITEM.containsKey(itemId.withPrefix("stripped_"))) {
+		if (!hasFoundMatch && !BuiltInRegistries.ITEM.containsKey(itemId.withPrefix("stripped_"))
+			&& !BuiltInRegistries.ITEM.containsKey(itemId.withSuffix("_stripped"))) {
 			match = NON_STRIPPED_WOODS_REGEX.matcher(path);
 			hasFoundMatch = match.find();
 			noStrippedVariant = true;
 		}
 
 		if (hasFoundMatch) {
-			String prefix = noStrippedVariant ? "" : match.group(1) != null ? match.group(1) : "";
-			String type = match.group(noStrippedVariant ? 2 : 3);
-			ResourceLocation matched = itemId.withPath(match.group(noStrippedVariant ? 1 : 2));
+			String prefix = strippedInPrefix && match.group(1) != null ? match.group(1) : "";
+			String suffix = !strippedInPrefix && !noStrippedVariant ? match.group(3) + match.group(4) : "";
+			String type = match.group(strippedInPrefix ? 3 : 2);
+			ResourceLocation matched_name = itemId.withPath(match.group(strippedInPrefix ? 2 : 1));
 			// re-add 'wood' to wood types such as Botania's livingwood
-			ResourceLocation base = matched.withSuffix("wood".equals(match.group(3)) ? "wood" : "");
+			ResourceLocation base = matched_name.withSuffix(type.equals("wood") ? "wood" : "");
 			base = MISMATCHED_WOOD_NAMES.getOrDefault(base, base);
-			ResourceLocation nonStrippedId = matched.withSuffix(type).withPrefix(prefix);
+			ResourceLocation nonStrippedId = matched_name.withSuffix(type).withPrefix(prefix).withSuffix(suffix);
 			ResourceLocation planksId = base.withSuffix("_planks");
 			ResourceLocation stairsId = base.withSuffix(base.getNamespace().equals(Mods.BTN.getId()) ? "_planks_stairs" : "_stairs");
 			ResourceLocation slabId = base.withSuffix(base.getNamespace().equals(Mods.BTN.getId()) ? "_planks_slab" : "_slab");
@@ -106,7 +116,7 @@ public class RuntimeDataGenerator {
 				simpleWoodRecipe(nonStrippedId, itemId);
 				simpleWoodRecipe(itemId, planksId, planksCount);
 			} else if (BuiltInRegistries.ITEM.containsKey(planksId)) {
-				ResourceLocation tag = Create.asResource("runtime_generated/compat/" + itemId.getNamespace() + "/" + matched.getPath());
+				ResourceLocation tag = Create.asResource("runtime_generated/compat/" + itemId.getNamespace() + "/" + base.getPath());
 				insertIntoTag(tag, itemId);
 
 				simpleWoodRecipe(TagKey.create(Registries.ITEM, tag), planksId, planksCount);
