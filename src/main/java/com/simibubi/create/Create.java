@@ -2,8 +2,6 @@ package com.simibubi.create;
 
 import java.util.Random;
 
-import com.simibubi.create.compat.inventorySorter.InventorySorterCompat;
-
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -12,6 +10,7 @@ import com.mojang.logging.LogUtils;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.compat.curios.Curios;
+import com.simibubi.create.compat.inventorySorter.InventorySorterCompat;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.equipment.potatoCannon.AllPotatoProjectileBlockHitActions;
 import com.simibubi.create.content.equipment.potatoCannon.AllPotatoProjectileEntityHitActions;
@@ -21,6 +20,7 @@ import com.simibubi.create.content.kinetics.TorquePropagator;
 import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
 import com.simibubi.create.content.kinetics.mechanicalArm.AllArmInteractionPointTypes;
 import com.simibubi.create.content.logistics.item.filter.attribute.AllItemAttributeTypes;
+import com.simibubi.create.content.logistics.packager.AllUnpackingHandlers;
 import com.simibubi.create.content.logistics.packagerLink.GlobalLogisticsManager;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
@@ -177,6 +177,7 @@ public class Create {
 			AllContraptionMovementSettings.registerDefaults();
 			AllOpenPipeEffectHandlers.registerDefaults();
 			AllMountedDispenseItemBehaviors.registerDefaults();
+			AllUnpackingHandlers.registerDefaults();
 			// --
 
 			AllAdvancements.register();
