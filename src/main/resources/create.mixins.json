@@ -42,6 +42,7 @@
   "client": [
     "accessor.AgeableListModelAccessor",
     "accessor.FontAccessor",
+    "accessor.FrustumAccessor",
     "accessor.HumanoidArmorLayerAccessor",
     "accessor.LevelRendererAccessor",
     "accessor.MouseHandlerAccessor",

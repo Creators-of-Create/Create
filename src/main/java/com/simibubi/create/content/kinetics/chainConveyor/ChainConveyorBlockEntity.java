@@ -54,6 +54,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import net.minecraftforge.common.extensions.IForgeBlockEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ChainConveyorBlockEntity extends KineticBlockEntity implements TransformableBlockEntity {
@@ -87,7 +88,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 
 	@Override
 	protected AABB createRenderBoundingBox() {
-		return new AABB(worldPosition).inflate(connections.isEmpty() ? 3 : 64);
+		return IForgeBlockEntity.INFINITE_EXTENT_AABB;
 	}
 
 	@Override
