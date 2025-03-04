@@ -581,13 +581,11 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		for (boolean front : Iterate.trueAndFalse) {
 			SignText text = sign.getText(front);
 			Component[] messages = text.getMessages(false);
-			int i = 0;
 			StringBuilder address = new StringBuilder();
 			for (Component component : messages) {
-				String text1 = messages[i].getString();
+				String text1 = component.getString();
 				if (!text1.isBlank())
 					address.append(" ").append(text1);
-				i++;
 			}
 			String finalAddress = address.toString();
 			if (!finalAddress.isBlank()) return finalAddress;
