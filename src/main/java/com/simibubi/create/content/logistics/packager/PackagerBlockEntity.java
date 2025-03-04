@@ -160,7 +160,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 	public InventorySummary getAvailableItems() {
 		return getAvailableItems(false);
 	}
-	
+
 	public InventorySummary getAvailableItems(boolean scanInputSlots) {
 		if (availableItems != null && invVersionTracker.stillWaiting(targetInventory.getInventory()))
 			return availableItems;
@@ -580,11 +580,17 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			return null;
 		for (boolean front : Iterate.trueAndFalse) {
 			SignText text = sign.getText(front);
-			for (Component component : text.getMessages(false)) {
-				String address = component.getString();
-				if (!address.isBlank())
-					return address;
+			Component[] messages = text.getMessages(false);
+			int i = 0;
+			StringBuilder address = new StringBuilder();
+			for (Component component : messages) {
+				String text1 = messages[i].getString();
+				if (!text1.isBlank())
+					address.append(" ").append(text1);
+				i++;
 			}
+			String finalAddress = address.toString();
+			if (!finalAddress.isBlank()) return finalAddress;
 		}
 		return null;
 	}
