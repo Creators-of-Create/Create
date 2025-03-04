@@ -36,12 +36,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConveyorBlockEntity> {
 
 	public static final ResourceLocation CHAIN_LOCATION = new ResourceLocation("textures/block/chain.png");
-	public static final int MIP_DISTANCE = 48;
+	public static final int MIP_DISTANCE_SQR = 48 * 48;
 
 	public ChainConveyorRenderer(Context context) {
 		super(context);
@@ -132,6 +133,15 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 		}
 	}
 
+	private static Vec3 getClosestPointOnChain(Vec3 cam, Vec3 start, Vec3 end) {
+		Vec3 seg = end.subtract(start);
+		Vec3 start2cam = cam.subtract(start);
+
+		double t = Mth.clamp(start2cam.dot(seg) / seg.lengthSqr(), 0.0, 1.0);
+
+		return start.add(seg.scale(t));
+	}
+
 	private void renderChains(ChainConveyorBlockEntity be, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		float time = AnimationTickHolder.getRenderTime(be.getLevel()) / (360f / Math.abs(be.getSpeed()));
@@ -184,10 +194,14 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 			int light2 = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, tilePos.offset(blockPos)),
 				level.getBrightness(LightLayer.SKY, tilePos.offset(blockPos)));
 
-			boolean far = Minecraft.getInstance().level == be.getLevel() && !Minecraft.getInstance()
-				.getBlockEntityRenderDispatcher().camera.getPosition()
-					.closerThan(Vec3.atCenterOf(tilePos)
-						.add(blockPos.getX() / 2f, blockPos.getY() / 2f, blockPos.getZ() / 2f), MIP_DISTANCE);
+			boolean far = false;
+			if (Minecraft.getInstance().level == be.getLevel()) {
+				Vec3 camPos = Minecraft.getInstance()
+					.getBlockEntityRenderDispatcher().camera.getPosition();
+				Vec3 closest = getClosestPointOnChain(camPos, stats.start(), stats.end());
+				if (closest.distanceToSqr(camPos) > MIP_DISTANCE_SQR)
+					far = true;
+			}
 
 			renderChain(ms, buffer, animation, stats.chainLength(), light1, light2, far);
 
