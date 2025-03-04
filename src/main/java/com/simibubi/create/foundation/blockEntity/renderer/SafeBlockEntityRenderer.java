@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.CachedRenderBBBlockEntity;
 import com.simibubi.create.foundation.mixin.accessor.LevelRendererAccessor;
 
+import com.simibubi.create.foundation.mixin.accessor.FrustumAccessor;
 import com.simibubi.create.foundation.mixin.accessor.LevelRendererAccessor;
 
 import net.createmod.ponder.api.level.PonderLevel;
@@ -18,6 +19,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import org.joml.FrustumIntersection;
 
 public abstract class SafeBlockEntityRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
 	@Override
@@ -36,14 +39,20 @@ public abstract class SafeBlockEntityRenderer<T extends BlockEntity> implements 
 			.getBlock() == Blocks.AIR;
 	}
 
+	public Frustum getFrustum() {
+		LevelRendererAccessor accessor = (LevelRendererAccessor) Minecraft.getInstance().levelRenderer;
+		return accessor.create$getCapturedFrustum() != null ? accessor.create$getCapturedFrustum() : accessor.create$getCullingFrustum();
+	}
+
+	public FrustumIntersection getFrustumIntersection() {
+		return ((FrustumAccessor) getFrustum()).create$getFrustumIntersection();
+	}
+
 	public boolean shouldCullItem(Vec3 itemPos, Level level) {
 		if (level instanceof PonderLevel)
 			return false;
 
-		LevelRendererAccessor accessor = (LevelRendererAccessor) Minecraft.getInstance().levelRenderer;
-		Frustum frustum = accessor.create$getCapturedFrustum() != null ?
-			accessor.create$getCapturedFrustum() :
-			accessor.create$getCullingFrustum();
+		Frustum frustum = getFrustum();
 
 		AABB itemBB = new AABB(
 				itemPos.x - 0.25,

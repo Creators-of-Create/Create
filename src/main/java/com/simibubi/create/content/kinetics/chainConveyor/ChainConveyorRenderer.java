@@ -3,6 +3,7 @@ package com.simibubi.create.content.kinetics.chainConveyor;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.joml.FrustumIntersection;
 import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -52,25 +53,33 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 		BlockPos pos = be.getBlockPos();
 
-		renderChains(be, ms, buffer, light, overlay);
+		FrustumIntersection frustum = null;
+		Vec3 camPos = null;
+		if(Minecraft.getInstance().level == be.getLevel())
+		{
+			frustum = getFrustumIntersection();
+			camPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+		}
+		renderChains(be, ms, buffer, light, overlay, frustum, camPos);
 
 		if (VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
-		CachedBuffers.partial(AllPartialModels.CHAIN_CONVEYOR_WHEEL, be.getBlockState())
-			.light(light)
-			.overlay(overlay)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+		if (frustum != null && frustum.testAab(pos.getX() - 2 - (float) camPos.x, pos.getY() - (float) camPos.y, pos.getZ() - 2 - (float) camPos.z, pos.getX() + 2 - (float) camPos.x, pos.getY() + 1 - (float) camPos.y, pos.getZ() + 2 - (float) camPos.z))
+			CachedBuffers.partial(AllPartialModels.CHAIN_CONVEYOR_WHEEL, be.getBlockState())
+				.light(light)
+				.overlay(overlay)
+				.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 
 		for (ChainConveyorPackage box : be.loopingPackages)
-			renderBox(be, ms, buffer, overlay, pos, box, partialTicks);
+			renderBox(be, ms, buffer, overlay, pos, box, partialTicks, frustum, camPos);
 		for (Entry<BlockPos, List<ChainConveyorPackage>> entry : be.travellingPackages.entrySet())
 			for (ChainConveyorPackage box : entry.getValue())
-				renderBox(be, ms, buffer, overlay, pos, box, partialTicks);
+				renderBox(be, ms, buffer, overlay, pos, box, partialTicks, frustum, camPos);
 	}
 
 	private void renderBox(ChainConveyorBlockEntity be, PoseStack ms, MultiBufferSource buffer, int overlay,
-		BlockPos pos, ChainConveyorPackage box, float partialTicks) {
+		BlockPos pos, ChainConveyorPackage box, float partialTicks, FrustumIntersection frustum, Vec3 camPos) {
 		if (box.worldPosition == null)
 			return;
 		if (box.item == null || box.item.isEmpty())
@@ -82,6 +91,9 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 
 		Vec3 position = physicsData.prevPos.lerp(physicsData.pos, partialTicks);
 		Vec3 targetPosition = physicsData.prevTargetPos.lerp(physicsData.targetPos, partialTicks);
+		if (frustum != null && !frustum.testSphere((float) (targetPosition.x - camPos.x), (float) (targetPosition.y - camPos.y), (float) (targetPosition.z - camPos.z), 1))
+			return;
+
 		float yaw = AngleHelper.angleLerp(partialTicks, physicsData.prevYaw, physicsData.yaw);
 		Vec3 offset =
 			new Vec3(targetPosition.x - pos.getX(), targetPosition.y - pos.getY(), targetPosition.z - pos.getZ());
@@ -141,7 +153,7 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 	}
 
 	private void renderChains(ChainConveyorBlockEntity be, PoseStack ms, MultiBufferSource buffer, int light,
-		int overlay) {
+		int overlay, FrustumIntersection frustum, Vec3 camPos) {
 		float time = AnimationTickHolder.getRenderTime(be.getLevel()) / (360f / Math.abs(be.getSpeed()));
 		time %= 1;
 		if (time < 0)
@@ -154,6 +166,10 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 			if (stats == null)
 				continue;
 
+			if (frustum != null && !frustum.testLineSegment((float) (stats.start().x - camPos.x), (float) (stats.start().y - camPos.y), (float) (stats.start().z - camPos.z),
+				(float) (stats.end().x - camPos.x), (float) (stats.end().y - camPos.y), (float) (stats.end().z - camPos.z))) {
+				continue;
+			}
 			Vec3 diff = stats.end()
 				.subtract(stats.start());
 			double yaw = (float) Mth.RAD_TO_DEG * Mth.atan2(diff.x, diff.z);
@@ -193,9 +209,7 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 				level.getBrightness(LightLayer.SKY, tilePos.offset(blockPos)));
 
 			boolean far = false;
-			if (Minecraft.getInstance().level == be.getLevel()) {
-				Vec3 camPos = Minecraft.getInstance()
-					.getBlockEntityRenderDispatcher().camera.getPosition();
+			if (frustum != null) {
 				Vec3 closest = getClosestPointOnChain(camPos, stats.start(), stats.end());
 				if (closest.distanceToSqr(camPos) > MIP_DISTANCE_SQR)
 					far = true;

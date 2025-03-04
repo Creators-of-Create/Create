@@ -53,6 +53,7 @@
     "accessor.AgeableListModelAccessor",
     "accessor.EntityRenderDispatcherAccessor",
     "accessor.FontAccessor",
+    "accessor.FrustumAccessor",
     "accessor.GuiAccessor",
     "accessor.HumanoidArmorLayerAccessor",
     "accessor.LevelRendererAccessor",
