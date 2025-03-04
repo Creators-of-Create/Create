@@ -60,12 +60,13 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 			frustum = getFrustumIntersection();
 			camPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 		}
-		renderChains(be, ms, buffer, light, overlay, frustum, camPos);
+		boolean renderCentre = frustum != null && frustum.testAab(pos.getX() - 2 - (float) camPos.x, pos.getY() - (float) camPos.y, pos.getZ() - 2 - (float) camPos.z, pos.getX() + 2 - (float) camPos.x, pos.getY() + 1 - (float) camPos.y, pos.getZ() + 2 - (float) camPos.z);
+		renderChains(be, ms, buffer, light, overlay, frustum, camPos, renderCentre);
 
 		if (VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
-		if (frustum != null && frustum.testAab(pos.getX() - 2 - (float) camPos.x, pos.getY() - (float) camPos.y, pos.getZ() - 2 - (float) camPos.z, pos.getX() + 2 - (float) camPos.x, pos.getY() + 1 - (float) camPos.y, pos.getZ() + 2 - (float) camPos.z))
+		if (renderCentre)
 			CachedBuffers.partial(AllPartialModels.CHAIN_CONVEYOR_WHEEL, be.getBlockState())
 				.light(light)
 				.overlay(overlay)
@@ -153,7 +154,7 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 	}
 
 	private void renderChains(ChainConveyorBlockEntity be, PoseStack ms, MultiBufferSource buffer, int light,
-		int overlay, FrustumIntersection frustum, Vec3 camPos) {
+		int overlay, FrustumIntersection frustum, Vec3 camPos, boolean renderCentre) {
 		float time = AnimationTickHolder.getRenderTime(be.getLevel()) / (360f / Math.abs(be.getSpeed()));
 		time %= 1;
 		if (time < 0)
@@ -166,22 +167,10 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 			if (stats == null)
 				continue;
 
-			if (frustum != null && !frustum.testLineSegment((float) (stats.start().x - camPos.x), (float) (stats.start().y - camPos.y), (float) (stats.start().z - camPos.z),
-				(float) (stats.end().x - camPos.x), (float) (stats.end().y - camPos.y), (float) (stats.end().z - camPos.z))) {
-				continue;
-			}
 			Vec3 diff = stats.end()
 				.subtract(stats.start());
 			double yaw = (float) Mth.RAD_TO_DEG * Mth.atan2(diff.x, diff.z);
-			double pitch = (float) Mth.RAD_TO_DEG * Mth.atan2(diff.y, diff.multiply(1, 0, 1)
-				.length());
-
-			Level level = be.getLevel();
-			BlockPos tilePos = be.getBlockPos();
-			Vec3 startOffset = stats.start()
-				.subtract(Vec3.atCenterOf(tilePos));
-
-			if (!VisualizationManager.supportsVisualization(be.getLevel())) {
+			if (!VisualizationManager.supportsVisualization(be.getLevel()) && renderCentre) {
 				SuperByteBuffer guard =
 					CachedBuffers.partial(AllPartialModels.CHAIN_CONVEYOR_GUARD, be.getBlockState());
 				guard.center();
@@ -192,6 +181,18 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 					.overlay(overlay)
 					.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 			}
+			if (frustum != null && !frustum.testLineSegment((float) (stats.start().x - camPos.x), (float) (stats.start().y - camPos.y), (float) (stats.start().z - camPos.z),
+				(float) (stats.end().x - camPos.x), (float) (stats.end().y - camPos.y), (float) (stats.end().z - camPos.z))) {
+				continue;
+			}
+
+			double pitch = (float) Mth.RAD_TO_DEG * Mth.atan2(diff.y, diff.multiply(1, 0, 1)
+				.length());
+
+			Level level = be.getLevel();
+			BlockPos tilePos = be.getBlockPos();
+			Vec3 startOffset = stats.start()
+				.subtract(Vec3.atCenterOf(tilePos));
 
 			ms.pushPose();
 			var chain = TransformStack.of(ms);
