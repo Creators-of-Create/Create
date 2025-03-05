@@ -60,7 +60,7 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 		if(Minecraft.getInstance().level == be.getLevel())
 		{
 			frustum = getFrustumIntersection();
-			camPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+			camPos = Minecraft.getInstance().getBlockEntityRenderDispatcher().camera.getPosition();
 		}
 		boolean renderCentre = frustum != null && frustum.testAab(pos.getX() - 2 - (float) camPos.x, pos.getY() - (float) camPos.y, pos.getZ() - 2 - (float) camPos.z, pos.getX() + 2 - (float) camPos.x, pos.getY() + 1 - (float) camPos.y, pos.getZ() + 2 - (float) camPos.z);
 		renderChains(be, ms, buffer, light, overlay, frustum, camPos, renderCentre);
