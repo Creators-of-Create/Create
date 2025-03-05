@@ -78,7 +78,7 @@ public interface ValueSettingsBehaviour extends ClipboardCloneable {
 		origin.getWorld()
 			.playSound(null, origin.getPos(), SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.25f, 2f);
 		origin.getWorld()
-			.playSound(null, origin.getPos(), SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.get(), SoundSource.BLOCKS, 0.03f,
+			.playSound(null, origin.getPos(), SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), SoundSource.BLOCKS, 0.03f,
 				1.125f);
 	}
 
@@ -87,13 +87,13 @@ public interface ValueSettingsBehaviour extends ClipboardCloneable {
 	default boolean bypassesInput(ItemStack mainhandItem) {
 		return false;
 	}
-	
+
 	default boolean mayInteract(Player player) {
 		return true;
 	}
-	
+
 	default int netId() {
 		return 0;
 	}
-	
+
 }

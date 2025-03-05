@@ -8,10 +8,7 @@ void flw_instanceVertex(in FlwInstance instance) {
 
     flw_vertexPos.xyz = rotateByQuaternion(rotated, kineticRot) + instance.pos + .5;
     flw_vertexNormal = rotateByQuaternion(rotateByQuaternion(flw_vertexNormal, instance.rotation), kineticRot);
+    flw_vertexColor *= instance.color;
     flw_vertexLight = max(vec2(instance.light) / 256., flw_vertexLight);
     flw_vertexOverlay = instance.overlay;
-
-    #if defined(DEBUG_RAINBOW)
-    flw_vertexColor = instance.color;
-    #endif
 }

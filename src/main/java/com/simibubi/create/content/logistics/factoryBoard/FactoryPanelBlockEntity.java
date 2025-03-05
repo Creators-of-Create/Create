@@ -133,7 +133,8 @@ public class FactoryPanelBlockEntity extends SmartBlockEntity {
 		FactoryPanelBehaviour behaviour = panels.get(slot);
 		if (behaviour != null && !behaviour.isActive()) {
 			behaviour.enable();
-			behaviour.setNetwork(frequency);
+			if (frequency != null)
+				behaviour.setNetwork(frequency);
 			redraw = true;
 			lastShape = null;
 			

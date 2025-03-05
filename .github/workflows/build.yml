@@ -25,7 +25,7 @@ jobs:
           gradle-home-cache-cleanup: true
 
       - name: Validate Gradle Wrapper Integrity
-        uses: gradle/wrapper-validation-action@v2
+        uses: gradle/actions/wrapper-validation@v3
 
       - name: Build
         run: ./gradlew build

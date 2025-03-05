@@ -34,7 +34,8 @@ public enum Mods {
 	MODERNUI,
 	FTBCHUNKS,
 	JOURNEYMAP,
-	FTBLIBRARY;
+	FTBLIBRARY,
+	INVENTORYSORTER;
 
 	private final String id;
 

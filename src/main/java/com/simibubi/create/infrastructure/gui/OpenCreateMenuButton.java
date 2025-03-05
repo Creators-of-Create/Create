@@ -20,6 +20,7 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.world.item.ItemStack;
 
@@ -30,15 +31,20 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 public class OpenCreateMenuButton extends Button {
 
-	public static final ItemStack ICON = AllItems.GOGGLES.asStack();
-
 	public OpenCreateMenuButton(int x, int y) {
 		super(x, y, 20, 20, CommonComponents.EMPTY, OpenCreateMenuButton::click, DEFAULT_NARRATION);
 	}
 
 	@Override
 	public void renderString(GuiGraphics graphics, Font pFont, int pColor) {
-		graphics.renderItem(ICON, getX() + 2, getY() + 2);
+		ItemStack icon = AllItems.GOGGLES.asStack();
+		BakedModel bakedmodel = Minecraft.getInstance()
+			.getItemRenderer()
+			.getModel(icon, Minecraft.getInstance().level, Minecraft.getInstance().player, 0);
+		if (bakedmodel == null)
+			return;
+		
+		graphics.renderItem(icon, getX() + 2, getY() + 2);
 	}
 
 	public static void click(Button b) {

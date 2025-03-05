@@ -15,9 +15,9 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
+import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -30,24 +30,24 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public class BlockEntityRenderHelper {
 
 	public static void renderBlockEntities(Level world, Iterable<BlockEntity> customRenderBEs, PoseStack ms,
-			MultiBufferSource buffer) {
+										   MultiBufferSource buffer) {
 		renderBlockEntities(world, null, customRenderBEs, ms, null, buffer);
 	}
 
 	public static void renderBlockEntities(Level world, Iterable<BlockEntity> customRenderBEs, PoseStack ms,
-			MultiBufferSource buffer, float pt) {
+										   MultiBufferSource buffer, float pt) {
 		renderBlockEntities(world, null, customRenderBEs, ms, null, buffer, pt);
 	}
 
 	public static void renderBlockEntities(Level world, @Nullable VirtualRenderWorld renderWorld,
-			Iterable<BlockEntity> customRenderBEs, PoseStack ms, @Nullable Matrix4f lightTransform, MultiBufferSource buffer) {
+										   Iterable<BlockEntity> customRenderBEs, PoseStack ms, @Nullable Matrix4f lightTransform, MultiBufferSource buffer) {
 		renderBlockEntities(world, renderWorld, customRenderBEs, ms, lightTransform, buffer,
 			AnimationTickHolder.getPartialTicks());
 	}
 
 	public static void renderBlockEntities(Level world, @Nullable VirtualRenderWorld renderWorld,
-			Iterable<BlockEntity> customRenderBEs, PoseStack ms, @Nullable Matrix4f lightTransform, MultiBufferSource buffer,
-			float pt) {
+										   Iterable<BlockEntity> customRenderBEs, PoseStack ms, @Nullable Matrix4f lightTransform, MultiBufferSource buffer,
+										   float pt) {
 		Iterator<BlockEntity> iterator = customRenderBEs.iterator();
 		while (iterator.hasNext()) {
 			BlockEntity blockEntity = iterator.next();
@@ -59,6 +59,9 @@ public class BlockEntityRenderHelper {
 				iterator.remove();
 				continue;
 			}
+
+			if (!renderer.shouldRender(blockEntity, Minecraft.getInstance().gameRenderer.getMainCamera().getPosition()))
+				continue;
 
 			BlockPos pos = blockEntity.getBlockPos();
 			ms.pushPose();
@@ -103,7 +106,7 @@ public class BlockEntityRenderHelper {
 	}
 
 	public static int getCombinedLight(Level world, BlockPos worldPos, @Nullable VirtualRenderWorld renderWorld,
-			BlockPos renderWorldPos) {
+									   BlockPos renderWorldPos) {
 		int worldLight = LevelRenderer.getLightColor(world, worldPos);
 
 		if (renderWorld != null) {

@@ -1,6 +1,5 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.api.behaviour.display.DisplaySource.displaySource;
 import static com.simibubi.create.api.behaviour.display.DisplayTarget.displayTarget;
 import static com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour.interactionBehaviour;
@@ -275,6 +274,11 @@ import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.util.ForgeSoundType;
+
 import net.createmod.catnip.data.Couple;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
@@ -315,13 +319,9 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.ForgeSoundType;
-
 @SuppressWarnings("removal")
 public class AllBlocks {
+	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	static {
 		REGISTRATE.setCreativeTab(AllCreativeModeTabs.BASE_CREATIVE_TAB);
@@ -876,7 +876,7 @@ public class AllBlocks {
 		.properties(p -> p.forceSolidOff())
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.pipe())
-		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::withoutAO))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::withAO))
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -915,7 +915,7 @@ public class AllBlocks {
 							.build();
 					}, BlockStateProperties.WATERLOGGED);
 			})
-			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::withoutAO))
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::withAO))
 			.loot((p, b) -> p.dropOther(b, FLUID_PIPE.get()))
 			.register();
 
@@ -924,7 +924,7 @@ public class AllBlocks {
 		.properties(p -> p.mapColor(MapColor.STONE))
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(true))
-		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::withoutAO))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::withAO))
 		.transform(CStress.setImpact(4.0))
 		.item()
 		.transform(customItemModel())
@@ -936,7 +936,7 @@ public class AllBlocks {
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW))
 			.transform(pickaxeOnly())
 			.blockstate(new SmartFluidPipeGenerator()::generate)
-			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::withoutAO))
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::withAO))
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -948,7 +948,7 @@ public class AllBlocks {
 		.blockstate((c, p) -> BlockStateGen.directionalAxisBlock(c, p,
 			(state, vertical) -> AssetLookup.partialBaseModel(c, p, vertical ? "vertical" : "horizontal",
 				state.getValue(FluidValveBlock.ENABLED) ? "open" : "closed")))
-		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::withoutAO))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::withAO))
 		.item()
 		.transform(customItemModel())
 		.register();

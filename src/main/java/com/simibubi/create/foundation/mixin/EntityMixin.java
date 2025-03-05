@@ -12,7 +12,7 @@ import com.simibubi.create.content.equipment.armor.NetheriteDivingHandler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
 
-@Mixin(Entity.class)
+@Mixin(value = Entity.class, priority = 1500)
 public class EntityMixin {
 	@ModifyExpressionValue(method = "canEnterPose", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;noCollision(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Z"))
 	public boolean create$playerHidingAsBoxIsCrouchingNotSwimming(boolean original, @Local(argsOnly = true) Pose pose) {

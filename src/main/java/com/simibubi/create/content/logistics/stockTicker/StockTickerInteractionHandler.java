@@ -15,6 +15,12 @@ import com.simibubi.create.content.logistics.tableCloth.ShoppingListItem;
 import com.simibubi.create.content.logistics.tableCloth.ShoppingListItem.ShoppingList;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteractSpecific;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.network.NetworkHooks;
+
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.ChatFormatting;
@@ -29,11 +35,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteractSpecific;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.network.NetworkHooks;
 
 @EventBusSubscriber
 public class StockTickerInteractionHandler {
@@ -104,6 +105,14 @@ public class StockTickerInteractionHandler {
 		ShoppingList list = ShoppingListItem.getList(mainHandItem);
 		if (list == null)
 			return;
+
+		if (!tickerBE.behaviour.freqId.equals(list.shopNetwork())) {
+			AllSoundEvents.DENY.playOnServer(level, player.blockPosition());
+			CreateLang.translate("stock_keeper.wrong_network")
+				.style(ChatFormatting.RED)
+				.sendStatus(player);
+			return;
+		}
 
 		Couple<InventorySummary> bakeEntries = list.bakeEntries(level, null);
 		InventorySummary paymentEntries = bakeEntries.getSecond();

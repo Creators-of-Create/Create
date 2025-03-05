@@ -24,12 +24,12 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class AllPotatoProjectileBlockHitActions {
-	
+
 	static {
 		register("plant_crop", PlantCrop.CODEC);
 		register("place_block_on_ground", PlaceBlockOnGround.CODEC);
 	}
-	
+
 	public static void init() {
 	}
 
@@ -61,12 +61,12 @@ public class AllPotatoProjectileBlockHitActions {
 			if (!level.getBlockState(placePos)
 				.canBeReplaced())
 				return false;
-			if (!(cropBlock.get() instanceof IPlantable))
+			if (!(cropBlock.value() instanceof IPlantable))
 				return false;
 			BlockState blockState = level.getBlockState(hitPos);
-			if (!blockState.canSustainPlant(level, hitPos, face, (IPlantable) cropBlock.get()))
+			if (!blockState.canSustainPlant(level, hitPos, face, (IPlantable) cropBlock.value()))
 				return false;
-			level.setBlock(placePos, cropBlock.get()
+			level.setBlock(placePos, cropBlock.value()
 				.defaultBlockState(), 3);
 			return true;
 		}
@@ -111,7 +111,7 @@ public class AllPotatoProjectileBlockHitActions {
 					y = Math.max(y, placePos.getY());
 
 				FallingBlockEntity falling = FallingBlockEntityAccessor.create$callInit(level, placePos.getX() + 0.5, y,
-					placePos.getZ() + 0.5, block.get().defaultBlockState());
+					placePos.getZ() + 0.5, block.value().defaultBlockState());
 				falling.time = 1;
 				level.addFreshEntity(falling);
 			}

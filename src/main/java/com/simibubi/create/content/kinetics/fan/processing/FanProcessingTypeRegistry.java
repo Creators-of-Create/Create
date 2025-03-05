@@ -16,7 +16,7 @@ public class FanProcessingTypeRegistry {
 
 	@UnmodifiableView
 	public static List<FanProcessingType> getSortedTypesView() {
-		if (sortedTypes == null) {
+		if (sortedTypes == null || sortedTypesView == null) {
 			sortedTypes = new ReferenceArrayList<>();
 
 			CreateBuiltInRegistries.FAN_PROCESSING_TYPE.forEach(sortedTypes::add);

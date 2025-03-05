@@ -2904,6 +2904,7 @@
   "create.stock_keeper.stock_level_too_low": "Purchase cancelled: Stock levels lower than expected",
   "create.stock_keeper.too_broke": "You cannot afford this purchase",
   "create.stock_keeper.use_list_to_add_purchases": "Use this list to add more to your purchase",
+  "create.stock_keeper.wrong_network": "This list is for another shop",
   "create.stock_ticker.click_to_retrieve": "Click to retrieve",
   "create.stock_ticker.contains_payments": "Contains payments:",
   "create.stock_ticker.keeper_missing": "Seat a mob or blaze burner next to this block to use it",

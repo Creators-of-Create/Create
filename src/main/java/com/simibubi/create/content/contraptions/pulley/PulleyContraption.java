@@ -15,7 +15,7 @@ public class PulleyContraption extends TranslatingContraption {
 
 	@Override
 	public ContraptionType getType() {
-		return AllContraptionTypes.PULLEY.get();
+		return AllContraptionTypes.PULLEY.value();
 	}
 
 	public PulleyContraption() {}

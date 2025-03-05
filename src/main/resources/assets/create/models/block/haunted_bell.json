@@ -92,5 +92,12 @@
 			"color": 0,
 			"children": [0, 1, 2, 3, 4, 5, 6]
 		}
-	]
+	],
+	"display": {
+		"fixed": {
+			"rotation": [0, 0, 0],
+			"translation": [0, 0, -1],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
 }

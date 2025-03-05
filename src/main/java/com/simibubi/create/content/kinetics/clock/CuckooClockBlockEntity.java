@@ -8,10 +8,10 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 
 import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -82,9 +82,9 @@ public class CuckooClockBlockEntity extends KineticBlockEntity {
 				moveHands(hours, minutes);
 
 				if (AnimationTickHolder.getTicks() % 6 == 0)
-					playSound(SoundEvents.NOTE_BLOCK_HAT.get(), 1 / 16f, 2f);
+					playSound(SoundEvents.NOTE_BLOCK_HAT.value(), 1 / 16f, 2f);
 				else if (AnimationTickHolder.getTicks() % 3 == 0)
-					playSound(SoundEvents.NOTE_BLOCK_HAT.get(), 1 / 16f, 1.5f);
+					playSound(SoundEvents.NOTE_BLOCK_HAT.value(), 1 / 16f, 1.5f);
 			}
 			return;
 		}
@@ -117,9 +117,9 @@ public class CuckooClockBlockEntity extends KineticBlockEntity {
 
 			if (animationType == Animation.NONE) {
 				if (AnimationTickHolder.getTicks() % 32 == 0)
-					playSound(SoundEvents.NOTE_BLOCK_HAT.get(), 1 / 16f, 2f);
+					playSound(SoundEvents.NOTE_BLOCK_HAT.value(), 1 / 16f, 2f);
 				else if (AnimationTickHolder.getTicks() % 16 == 0)
-					playSound(SoundEvents.NOTE_BLOCK_HAT.get(), 1 / 16f, 1.5f);
+					playSound(SoundEvents.NOTE_BLOCK_HAT.value(), 1 / 16f, 1.5f);
 			} else {
 
 				boolean isSurprise = animationType == Animation.SURPRISE;
@@ -131,9 +131,9 @@ public class CuckooClockBlockEntity extends KineticBlockEntity {
 				// sounds
 
 				if (value == 1)
-					playSound(SoundEvents.NOTE_BLOCK_CHIME.get(), 2, .5f);
+					playSound(SoundEvents.NOTE_BLOCK_CHIME.value(), 2, .5f);
 				if (value == 21)
-					playSound(SoundEvents.NOTE_BLOCK_CHIME.get(), 2, 0.793701f);
+					playSound(SoundEvents.NOTE_BLOCK_CHIME.value(), 2, 0.793701f);
 
 				if (value > 30 && isSurprise) {
 					Vec3 pos = VecHelper.offsetRandomly(VecHelper.getCenterOf(this.worldPosition), level.random, .5f);

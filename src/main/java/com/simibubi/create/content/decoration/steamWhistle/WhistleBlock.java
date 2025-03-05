@@ -138,7 +138,7 @@ public class WhistleBlock extends Block implements IBE<WhistleBlockEntity>, IWre
 		for (int i = 1; i <= 6; i++) {
 			BlockState blockState = pLevel.getBlockState(currentPos);
 			float pVolume = (soundtype.getVolume() + 1.0F) / 2.0F;
-			SoundEvent growSound = SoundEvents.NOTE_BLOCK_XYLOPHONE.get();
+			SoundEvent growSound = SoundEvents.NOTE_BLOCK_XYLOPHONE.value();
 			SoundEvent hitSound = soundtype.getHitSound();
 
 			if (AllBlocks.STEAM_WHISTLE_EXTENSION.has(blockState)) {

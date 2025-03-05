@@ -23,6 +23,8 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.minecraftforge.items.SlotItemHandler;
+
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
 import net.createmod.catnip.gui.UIRenderHelper;
@@ -39,8 +41,6 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-
-import net.minecraftforge.items.SlotItemHandler;
 
 public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<StockKeeperCategoryMenu>
 	implements ScreenWithStencils {
@@ -119,7 +119,7 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 		if (editingItem == null)
 			return;
 
-		playUiSound(SoundEvents.UI_BUTTON_CLICK.get(), 1, 1);
+		playUiSound(SoundEvents.UI_BUTTON_CLICK.value(), 1, 1);
 
 		removeWidget(editorConfirm);
 		removeWidget(editorEditBox);
@@ -127,14 +127,14 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 		ItemStack stackInSlot = menu.proxyInventory.getStackInSlot(0)
 			.copy();
 		boolean empty = stackInSlot.isEmpty();
-		
+
 		if (empty && editingIndex != -1)
 			schedule.remove(editingIndex);
-		
+
 		if (!empty) {
 			String value = editorEditBox.getValue();
 			stackInSlot.setHoverName(value.isBlank() ? null : Component.literal(value));
-			
+
 			if (editingIndex == -1)
 				schedule.add(stackInSlot);
 			else
@@ -249,10 +249,14 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 		return cardHeight;
 	}
 
-	private Component clickToEdit = CreateLang.translateDirect("gui.schedule.lmb_edit")
+	private final Component clickToEdit = CreateLang.translateDirect("gui.schedule.lmb_edit")
 		.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC);
 
 	public boolean action(@Nullable GuiGraphics graphics, double mouseX, double mouseY, int click) {
+		// Prevent actions outside the window for them
+		if (mouseX < leftPos || mouseX >= leftPos + imageWidth || mouseY < topPos + 15 || mouseY >= topPos + 99)
+			return false;
+
 		if (editingItem != null)
 			return false;
 
@@ -348,7 +352,7 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 			renderActionTooltip(graphics, ImmutableList.of(CreateLang.translate("gui.stock_ticker.new_category")
 				.component()), mx, my);
 			if (click == 0) {
-				playUiSound(SoundEvents.UI_BUTTON_CLICK.get(), 1f, 1f);
+				playUiSound(SoundEvents.UI_BUTTON_CLICK.value(), 1f, 1f);
 				startEditing(-1);
 			}
 		}
@@ -368,7 +372,7 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 			return true;
 		}
 		if (action(null, pMouseX, pMouseY, pButton)) {
-			playUiSound(SoundEvents.UI_BUTTON_CLICK.get(), 1f, 1f);
+			playUiSound(SoundEvents.UI_BUTTON_CLICK.value(), 1f, 1f);
 			return true;
 		}
 

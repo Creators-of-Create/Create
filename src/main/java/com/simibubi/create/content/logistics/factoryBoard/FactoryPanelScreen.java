@@ -46,6 +46,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
+
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -128,7 +129,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 					if (ingredient.test(bigItemStack.stack))
 						craftingIngredient = new BigItemStack(bigItemStack.stack, 1);
 			craftingIngredients.add(craftingIngredient);
-			
+
 			if (width < 3 && (i + 1) % width == 0)
 				for (int j = 0; j < 3 - width; j++)
 					craftingIngredients.add(emptyIngredient);
@@ -136,7 +137,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 
 		while (craftingIngredients.size() < 9)
 			craftingIngredients.add(emptyIngredient);
-		
+
 		return craftingIngredients;
 	}
 
@@ -191,7 +192,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 		});
 		newInputButton.setToolTip(CreateLang.translate("gui.factory_panel.connect_input")
 			.component());
-		
+
 		relocateButton = new IconButton(x + 31, y + 67, AllIcons.I_MOVE_GAUGE);
 		relocateButton.withCallback(() -> {
 			FactoryPanelConnectionHandler.startRelocating(behaviour);
@@ -199,7 +200,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 		});
 		relocateButton.setToolTip(CreateLang.translate("gui.factory_panel.relocate")
 			.component());
-		
+
 		if (!restocker) {
 			addRenderableWidget(newInputButton);
 			addRenderableWidget(relocateButton);
@@ -440,7 +441,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 				mouseX, mouseY);
 			return;
 		}
-		
+
 		if (itemStack.stack.isEmpty()) {
 			graphics.renderComponentTooltip(font, List.of(CreateLang.translate("gui.factory_panel.empty_panel")
 				.color(ScrollInput.HEADER_RGB)
@@ -566,7 +567,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 			playButtonSound();
 			return true;
 		}
-		
+
 		// remove redstone connections
 		itemX = x + 9;
 		itemY = y + windowHeight - 24;
@@ -583,14 +584,14 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 	public void playButtonSound() {
 		Minecraft.getInstance()
 			.getSoundManager()
-			.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.get(), 1.0f, 0.25f));
+			.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1.0f, 0.25f));
 	}
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double pDelta) {
 		int x = guiLeft;
 		int y = guiTop;
-		
+
 		if (addressBox.mouseScrolled(mouseX, mouseY, pDelta))
 			return true;
 

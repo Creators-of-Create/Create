@@ -50,7 +50,7 @@ public class GantryContraption extends TranslatingContraption {
 
 	@Override
 	public ContraptionType getType() {
-		return AllContraptionTypes.GANTRY.get();
+		return AllContraptionTypes.GANTRY.value();
 	}
 
 	public Direction getFacing() {

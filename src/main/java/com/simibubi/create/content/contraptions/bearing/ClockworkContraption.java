@@ -26,7 +26,7 @@ public class ClockworkContraption extends Contraption {
 
 	@Override
 	public ContraptionType getType() {
-		return AllContraptionTypes.CLOCKWORK.get();
+		return AllContraptionTypes.CLOCKWORK.value();
 	}
 
 	private void ignoreBlocks(Set<BlockPos> blocks, BlockPos anchor) {

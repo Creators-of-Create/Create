@@ -72,7 +72,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomArmP
 			return null;
 		}
 
-		return new Ammo(ammoStack, optionalType.get().get());
+		return new Ammo(ammoStack, optionalType.get().value());
 	}
 
 	@Override

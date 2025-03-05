@@ -3,6 +3,8 @@ package com.simibubi.create.content.kinetics.base;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import dev.engine_room.flywheel.api.instance.InstanceHandle;
 import dev.engine_room.flywheel.api.instance.InstanceType;
 import dev.engine_room.flywheel.lib.instance.ColoredLitOverlayInstance;
@@ -63,10 +65,14 @@ public class RotatingInstance extends ColoredLitOverlayInstance {
 	public RotatingInstance setup(KineticBlockEntity blockEntity, Axis axis, float speed) {
 		var blockState = blockEntity.getBlockState();
 		var pos = blockEntity.getBlockPos();
-		return setRotationAxis(axis)
+		var instance = setRotationAxis(axis)
 			.setRotationalSpeed(speed * RotatingInstance.SPEED_MULTIPLIER)
-			.setRotationOffset(KineticBlockEntityVisual.rotationOffset(blockState, axis, pos) + blockEntity.getRotationAngleOffset(axis))
-			.setColor(blockEntity);
+			.setRotationOffset(KineticBlockEntityVisual.rotationOffset(blockState, axis, pos) + blockEntity.getRotationAngleOffset(axis));
+
+		if (AllConfigs.client().rainbowDebug.get())
+			instance.setColor(blockEntity);
+
+		return instance;
 	}
 
 	public RotatingInstance rotateToFace(Direction.Axis axis) {

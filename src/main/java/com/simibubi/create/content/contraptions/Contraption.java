@@ -992,7 +992,7 @@ public abstract class Contraption {
 	}
 
 	@Nullable
-	private static BlockEntity readBlockEntity(Level level, StructureBlockInfo info, CompoundTag tag) {
+	protected BlockEntity readBlockEntity(Level level, StructureBlockInfo info, CompoundTag tag) {
 		BlockState state = info.state();
 		BlockPos pos = info.pos();
 		CompoundTag nbt = info.nbt();

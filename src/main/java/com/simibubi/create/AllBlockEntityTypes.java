@@ -1,7 +1,5 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.Create.REGISTRATE;
-
 import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsBlockEntity;
 import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsRenderer;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterBlockEntity;
@@ -230,9 +228,11 @@ import com.simibubi.create.content.trains.track.TrackMaterial;
 import com.simibubi.create.content.trains.track.TrackRenderer;
 import com.simibubi.create.content.trains.track.TrackVisual;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
+import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
 public class AllBlockEntityTypes {
+	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	// Schematics
 	public static final BlockEntityEntry<SchematicannonBlockEntity> SCHEMATICANNON = REGISTRATE
@@ -991,5 +991,6 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.CLIPBOARD)
 		.register();
 
-	public static void register() {}
+	public static void register() {
+	}
 }

@@ -23,6 +23,7 @@ import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
@@ -43,7 +44,7 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 
 	@Override
 	protected void renderSafe(ContraptionControlsBlockEntity blockEntity, float pt, PoseStack ms,
-		MultiBufferSource buffer, int light, int overlay) {
+							  MultiBufferSource buffer, int light, int overlay) {
 		BlockState blockState = blockEntity.getBlockState();
 		Direction facing = blockState.getValue(ContraptionControlsBlock.FACING)
 			.getOpposite();
@@ -70,7 +71,7 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 	}
 
 	public static void renderInContraption(MovementContext ctx, VirtualRenderWorld renderWorld,
-		ContraptionMatrices matrices, MultiBufferSource buffer) {
+										   ContraptionMatrices matrices, MultiBufferSource buffer) {
 
 		if (!(ctx.temporaryData instanceof ElevatorFloorSelection efs))
 			return;
@@ -95,16 +96,26 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 		PoseStack ms = matrices.getViewProjection();
 		var msr = TransformStack.of(ms);
 
+		float buttondepth = 0;
+		if (ctx.contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
+			buttondepth = -1 / 24f * cbe.button.getValue(AnimationTickHolder.getPartialTicks(renderWorld));
+
+		ms.pushPose();
+		msr.translate(ctx.localPos);
+		ms.translate(0, buttondepth, 0);
+		VertexConsumer vc = buffer.getBuffer(RenderType.solid());
+		CachedBuffers.partialFacing(AllPartialModels.CONTRAPTION_CONTROLS_BUTTON, ctx.state, ctx.state.getValue(ContraptionControlsBlock.FACING).getOpposite())
+			.light(LevelRenderer.getLightColor(renderWorld, ctx.localPos))
+			.useLevelLight(ctx.world, matrices.getWorld())
+			.renderInto(ms, vc);
+		ms.popPose();
+
 		ms.pushPose();
 		msr.translate(ctx.localPos);
 		msr.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(ctx.state.getValue(ContraptionControlsBlock.FACING))),
 			Direction.UP);
-		ms.translate(0.275f + 0.125f, 1 + 2/16f, 0.5f);
+		ms.translate(0.275f + 0.125f, 1 + 2 / 16f, 0.5f);
 		msr.rotate(AngleHelper.rad(67.5f), Direction.WEST);
-
-		float buttondepth = -.25f;
-		if (ctx.contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
-			buttondepth += -1 / 24f * cbe.button.getValue(AnimationTickHolder.getPartialTicks(renderWorld));
 
 		if (!text.isBlank() && playerDistance < 100) {
 			int actualWidth = fontRenderer.width(text);
@@ -113,9 +124,9 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 			float heightCentering = (width - 8f) / 2;
 
 			ms.pushPose();
-			ms.translate(0, .15f, buttondepth);
+			ms.translate(0, .15f, buttondepth - .25f);
 			ms.scale(scale, -scale, scale);
-			ms.translate(Math.max(0, width - actualWidth) / 2, heightCentering, 0);
+			ms.translate((float) Math.max(0, width - actualWidth) / 2, heightCentering, 0);
 			NixieTubeRenderer.drawInWorldString(ms, buffer, text, flickeringBrightColor);
 			ms.translate(shadowOffset, shadowOffset, -1 / 16f);
 			NixieTubeRenderer.drawInWorldString(ms, buffer, text, Color.mixColors(darkColor, 0, .35f));
@@ -131,7 +142,7 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 			ms.pushPose();
 			ms.translate(-.0635f, 0.06f, buttondepth);
 			ms.scale(scale, -scale, scale);
-			ms.translate(Math.max(0, width - actualWidth) / 2, heightCentering, 0);
+			ms.translate((float) Math.max(0, width - actualWidth) / 2, heightCentering, 0);
 			NixieTubeRenderer.drawInWorldString(ms, buffer, description, flickeringBrightColor);
 			ms.popPose();
 		}

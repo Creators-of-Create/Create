@@ -16,7 +16,7 @@ apply from: "gradle/property_loader.gradle"
 
 boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false')
 ext.buildNumber = System.getenv('BUILD_NUMBER')
-String gitHash = "\"${calculateGitHash() + (hasUnstaged() ? "-modified" : "")}\""
+String gitHash = "${calculateGitHash() + (hasUnstaged() ? "-modified" : "")}"
 
 base {
     archivesName = "create-${artifact_minecraft_version}"
@@ -34,8 +34,9 @@ if (ponderInWorkspace) {
 project.logger.lifecycle("MultiModWorkspace ${inMultiModWorkspace ? 'enabled' : 'disabled'} for project ${project.name}.")
 project.logger.lifecycle("Dependencies included in Workspace: [Ponder: ${ponderInWorkspace}]")
 
+def refmap
 mixin {
-    add sourceSets.main, 'create.refmap.json'
+    refmap = add sourceSets.main, 'create.refmap.json'
     config 'create.mixins.json'
 }
 
@@ -149,34 +150,19 @@ repositories {
 }
 
 dependencies {
-    jarJar("com.tterrag.registrate:Registrate:${registrate_version}") {
-        version {
-            strictly "[MC1.20-1.3.3,)"
-        }
-    }
-    jarJar("dev.engine-room.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}") {
-        version {
-            strictly "[1.0,2.0)"
-        }
-    }
+    modImplementation(jarJar("com.tterrag.registrate:Registrate:${registrate_version}"))
+    jarJar("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
 
-    jarJar("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}") {
-        version {
-            strictly "[${ponder_version},)"
-        }
-    }
-
-    implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}")) {
-        version {
-            strictly "[${mixin_extras_version},)"
-        }
-    }
-
-    modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}"))
 
     modCompileOnly("dev.engine-room.flywheel:flywheel-forge-api-${flywheel_minecraft_version}:${flywheel_version}")
-    modRuntimeOnly("dev.engine-room.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
-    modRuntimeOnly("dev.engine-room.vanillin:vanillin-forge-${flywheel_minecraft_version}:${flywheel_version}")
+    modRuntimeOnly(jarJar("dev.engine-room.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}") {
+        version {
+            strictly "[1.0,2.0)"
+            prefer "1.0.1"
+        }
+    })
+    modRuntimeOnly("dev.engine-room.vanillin:vanillin-forge-${flywheel_minecraft_version}:${vanillin_version}")
 
     if (ponderInWorkspace) {
         implementation project(":ponder:Common")
@@ -247,6 +233,7 @@ dependencies {
     // modRuntimeOnly("curse.maven:blueprint-382216:4749000")
     // modRuntimeOnly("curse.maven:windsweptmod-636321:4817132")
     // modRuntimeOnly("curse.maven:good-ending-690161:4363719")
+    // modRuntimeOnly("curse.maven:inventory-sorter-240633:5979609")
 
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings
@@ -306,11 +293,26 @@ tasks.named("sourcesJar") {
     ])
 }
 
+final slimJar = tasks.register("slimJar", Jar) {
+    archiveClassifier = "slim"
+    from(sourceSets.main.output)
+    from(refmap)
+    manifest.attributes([
+        "MixinConfigs": "create.mixins.json",
+        "Git-Hash"    : gitHash
+    ])
+}
+obfuscation.reobfuscate(slimJar, sourceSets.main)
+
 project.publishing {
     publications {
         mavenJava(MavenPublication) {
             artifactId base.archivesName.get()
             from components.java
+
+            artifact(tasks.jar) {
+                classifier = "all"
+            }
         }
     }
 
@@ -337,6 +339,7 @@ publishMods {
     file = reobfJar.archiveFile
     changelog = ChangelogText.getChangelogText(project).toString()
     type = STABLE
+    version = "$minecraft_version-$mod_version"
     displayName = "$mod_name $mod_version for mc$minecraft_version"
     modLoaders.add("forge")
     modLoaders.add("neoforge")

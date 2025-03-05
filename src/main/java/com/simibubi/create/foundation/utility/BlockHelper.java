@@ -10,6 +10,9 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.api.schematic.nbt.PartialSafeNBT;
 import com.simibubi.create.api.schematic.nbt.SafeNbtWriterRegistry;
 import com.simibubi.create.api.schematic.nbt.SafeNbtWriterRegistry.SafeNbtWriter;
+import com.simibubi.create.api.schematic.state.SchematicStateFilter;
+import com.simibubi.create.api.schematic.state.SchematicStateFilterRegistry;
+import com.simibubi.create.api.schematic.state.SchematicStateFilterRegistry.StateFilter;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.framedblocks.FramedBlocksInSchematics;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -17,6 +20,10 @@ import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.blockEntity.IMergeableBE;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
+
+import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.level.BlockEvent;
 
 import net.createmod.catnip.nbt.NBTProcessors;
 import net.minecraft.core.BlockPos;
@@ -58,15 +65,11 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.material.FluidState;
 
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.level.BlockEvent;
-
 public class BlockHelper {
 	private static final List<IntegerProperty> COUNT_STATES = List.of(
-			BlockStateProperties.EGGS,
-			BlockStateProperties.PICKLES,
-			BlockStateProperties.CANDLES
+		BlockStateProperties.EGGS,
+		BlockStateProperties.PICKLES,
+		BlockStateProperties.CANDLES
 	);
 
 	private static final List<Block> VINELIKE_BLOCKS = List.of(
@@ -74,12 +77,12 @@ public class BlockHelper {
 	);
 
 	private static final List<BooleanProperty> VINELIKE_STATES = List.of(
-			BlockStateProperties.UP,
-			BlockStateProperties.NORTH,
-			BlockStateProperties.EAST,
-			BlockStateProperties.SOUTH,
-			BlockStateProperties.WEST,
-			BlockStateProperties.DOWN
+		BlockStateProperties.UP,
+		BlockStateProperties.NORTH,
+		BlockStateProperties.EAST,
+		BlockStateProperties.SOUTH,
+		BlockStateProperties.WEST,
+		BlockStateProperties.DOWN
 	);
 
 	public static BlockState setZeroAge(BlockState blockState) {
@@ -193,12 +196,12 @@ public class BlockHelper {
 	}
 
 	public static void destroyBlock(Level world, BlockPos pos, float effectChance,
-		Consumer<ItemStack> droppedItemCallback) {
+									Consumer<ItemStack> droppedItemCallback) {
 		destroyBlockAs(world, pos, null, ItemStack.EMPTY, effectChance, droppedItemCallback);
 	}
 
 	public static void destroyBlockAs(Level world, BlockPos pos, @Nullable Player player, ItemStack usedTool,
-		float effectChance, Consumer<ItemStack> droppedItemCallback) {
+									  float effectChance, Consumer<ItemStack> droppedItemCallback) {
 		FluidState fluidState = world.getFluidState(pos);
 		BlockState state = world.getBlockState(pos);
 
@@ -233,8 +236,8 @@ public class BlockHelper {
 					.ultraWarm())
 					return;
 
-				 BlockState blockstate = world.getBlockState(pos.below());
-		         if (blockstate.blocksMotion() || blockstate.liquid())
+				BlockState blockstate = world.getBlockState(pos.below());
+				if (blockstate.blocksMotion() || blockstate.liquid())
 					world.setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
 				return;
 			}
@@ -297,8 +300,16 @@ public class BlockHelper {
 	}
 
 	public static void placeSchematicBlock(Level world, BlockState state, BlockPos target, ItemStack stack,
-		@Nullable CompoundTag data) {
+										   @Nullable CompoundTag data) {
+		Block block = state.getBlock();
 		BlockEntity existingBlockEntity = world.getBlockEntity(target);
+
+		StateFilter filter = SchematicStateFilterRegistry.REGISTRY.get(state);
+		if (filter != null) {
+			state = filter.filterStates(existingBlockEntity, state);
+		} else if (block instanceof SchematicStateFilter schematicStateFilter) {
+			state = schematicStateFilter.filterStates(existingBlockEntity, state);
+		}
 
 		// Piston
 		if (state.hasProperty(BlockStateProperties.EXTENDED))
@@ -306,10 +317,10 @@ public class BlockHelper {
 		if (state.hasProperty(BlockStateProperties.WATERLOGGED))
 			state = state.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE);
 
-		if (state.getBlock() == Blocks.COMPOSTER)
+		if (block == Blocks.COMPOSTER)
 			state = Blocks.COMPOSTER.defaultBlockState();
-		else if (state.getBlock() != Blocks.SEA_PICKLE && state.getBlock() instanceof IPlantable)
-			state = ((IPlantable) state.getBlock()).getPlant(world, target);
+		else if (block != Blocks.SEA_PICKLE && block instanceof IPlantable)
+			state = ((IPlantable) block).getPlant(world, target);
 		else if (state.is(BlockTags.CAULDRONS))
 			state = Blocks.CAULDRON.defaultBlockState();
 
@@ -365,7 +376,7 @@ public class BlockHelper {
 		try {
 			state.getBlock()
 				.setPlacedBy(world, target, state, null, stack);
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 	}
 
@@ -378,13 +389,13 @@ public class BlockHelper {
 	}
 
 	public static boolean hasBlockSolidSide(BlockState p_220056_0_, BlockGetter p_220056_1_, BlockPos p_220056_2_,
-		Direction p_220056_3_) {
+											Direction p_220056_3_) {
 		return !p_220056_0_.is(BlockTags.LEAVES)
 			&& Block.isFaceFull(p_220056_0_.getCollisionShape(p_220056_1_, p_220056_2_), p_220056_3_);
 	}
 
 	public static boolean extinguishFire(Level world, @Nullable Player p_175719_1_, BlockPos p_175719_2_,
-		Direction p_175719_3_) {
+										 Direction p_175719_3_) {
 		p_175719_2_ = p_175719_2_.relative(p_175719_3_);
 		if (world.getBlockState(p_175719_2_)
 			.getBlock() == Blocks.FIRE) {
@@ -404,7 +415,7 @@ public class BlockHelper {
 	}
 
 	public static <T extends Comparable<T>> BlockState copyProperty(Property<T> property, BlockState fromState,
-		BlockState toState) {
+																	BlockState toState) {
 		if (fromState.hasProperty(property) && toState.hasProperty(property)) {
 			return toState.setValue(property, fromState.getValue(property));
 		}

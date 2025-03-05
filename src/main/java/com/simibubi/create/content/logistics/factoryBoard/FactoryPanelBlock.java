@@ -122,16 +122,16 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 		if (blockState.is(this) && location != null && fpbe != null) {
 			if (!level.isClientSide()) {
 				PanelSlot targetedSlot = getTargetedSlot(pos, blockState, location);
-				UUID networkFromStack = LogisticallyLinkedBlockItem.networkFromStack(pContext.getItemInHand());
+				ItemStack panelItem = FactoryPanelBlockItem.fixCtrlCopiedStack(pContext.getItemInHand());
+				UUID networkFromStack = LogisticallyLinkedBlockItem.networkFromStack(panelItem);
 				Player pPlayer = pContext.getPlayer();
 
 				if (fpbe.addPanel(targetedSlot, networkFromStack) && pPlayer != null) {
 					pPlayer.displayClientMessage(CreateLang.translateDirect("logistically_linked.connected"), true);
 
 					if (!pPlayer.isCreative()) {
-						ItemStack item = pContext.getItemInHand();
-						item.shrink(1);
-						if (item.isEmpty())
+						panelItem.shrink(1);
+						if (panelItem.isEmpty())
 							pPlayer.setItemInHand(pContext.getHand(), ItemStack.EMPTY);
 					}
 				}
@@ -217,7 +217,7 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 
 		PanelSlot newSlot = getTargetedSlot(pPos, pState, location);
 		withBlockEntityDo(pLevel, pPos, fpbe -> {
-			if (!fpbe.addPanel(newSlot, LogisticallyLinkedBlockItem.networkFromStack(item)))
+			if (!fpbe.addPanel(newSlot, LogisticallyLinkedBlockItem.networkFromStack(FactoryPanelBlockItem.fixCtrlCopiedStack(item))))
 				return;
 			pPlayer.displayClientMessage(CreateLang.translateDirect("logistically_linked.connected"), true);
 			pLevel.playSound(null, pPos, soundType.getPlaceSound(), SoundSource.BLOCKS);

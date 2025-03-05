@@ -1,1 +1,27 @@
-{}
+{
+  "advancement.create.andesite_alloy": "أحجار أكثر قوة",
+  "advancement.create.andesite_alloy.desc": "احصل على بعض سبائك الأنديسيت, تصنع أهم مورد",
+  "advancement.create.andesite_casing": "العصر الأنديسي",
+  "advancement.create.andesite_casing.desc": "قم بتطبيق سبيكة أنديسايت على الخشب المجرد، لإنشاء غلاف أساسي لماكيناتك",
+  "advancement.create.anvil_plough": "مدفعية الحداد",
+  "advancement.create.anvil_plough.desc": "أطلق سندانًا باستخدام المحاريث الميكانيكية",
+  "advancement.create.arm_blaze_burner": "كومبست-أو-ترون",
+  "advancement.create.arm_blaze_burner.desc": "وجّه ذراعًا ميكانيكيًا لإطعام مشعل اللهب الخاص بك",
+  "advancement.create.arm_many_targets": "أورجنّايز-أو-ترون",
+  "advancement.create.arm_many_targets.desc": "برمج ذراعًا ميكانيكيًا مع 10 أو أكثر من مواقع الإخراج",
+  "advancement.create.backtank": "ضغط للذهاب",
+  "advancement.create.backtank.desc": "اصنع خزان نحاسي واجعله يجمع ضغط الهواء",
+  "advancement.create.belt": "محرك الطحالب",
+  "advancement.create.belt.desc": "وصل عمودين معًا بحزام ميكانيكي",
+  "advancement.create.belt_funnel_kiss": "الببغاوات والأجنحة",
+  "advancement.create.belt_funnel_kiss.desc": "اجعل القمعين المثبتين على الحزام يتعانقان\n§7 (تقدم مخفي)",
+  "advancement.create.brass": "سبائك حقيقية",
+  "advancement.create.brass.desc": "اصنع سبائك النحاس عن طريق سبك سبائك النحاس والزنك في الخلاط الميكانيكي المسخن بواسطة اللهب",
+  "advancement.create.brass_casing": "عصر النحاس",
+  "advancement.create.burner": "مدفأة واعية",
+  "advancement.create.wrench_goggles": "مُجهّز",
+  "advancement.create.wrench_goggles.desc": "تجهيز نظارات المهندس ومفتاح",
+  "create.ponder.belt_casing.text_2": "يمكن استخدام مفتاح لإزالة الغلاف",
+  "create.subtitle.wrench_rotate": "مفتاح مستعمل",
+  "item.create.wrench": "مفتاح"
+}

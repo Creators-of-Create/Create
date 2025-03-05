@@ -38,7 +38,7 @@ public class StabilizedContraption extends Contraption {
 
 	@Override
 	public ContraptionType getType() {
-		return AllContraptionTypes.STABILIZED.get();
+		return AllContraptionTypes.STABILIZED.value();
 	}
 
 	@Override

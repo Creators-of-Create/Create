@@ -113,7 +113,8 @@ public class PackageDefragmenter {
 
 					ItemStack output = ItemHandlerHelper.copyStackWithSize(entry.stack, removedAmount);
 					targetAmount -= removedAmount;
-					targetedEntry.count = targetAmount;
+					if (targetedEntry != null)
+						targetedEntry.count = targetAmount;
 					entry.count -= removedAmount;
 					outputSlots.add(output);
 				}

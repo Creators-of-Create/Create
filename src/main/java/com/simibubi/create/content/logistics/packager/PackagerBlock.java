@@ -11,6 +11,11 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.items.IItemHandler;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -32,10 +37,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.items.IItemHandler;
 
 public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<PackagerBlockEntity>, IWrenchable {
 
@@ -55,7 +56,7 @@ public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<Pac
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
 		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Capability<IItemHandler> itemCap = ForgeCapabilities.ITEM_HANDLER;
@@ -72,7 +73,7 @@ public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<Pac
 				break;
 			}
 		}
-		
+
 		Player player = context.getPlayer();
 		if (preferredFacing == null) {
 			Direction facing = context.getNearestLookingDirection();
@@ -91,13 +92,13 @@ public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<Pac
 		}
 
 		return super.getStateForPlacement(context).setValue(POWERED, context.getLevel()
-			.hasNeighborSignal(context.getClickedPos()))
+				.hasNeighborSignal(context.getClickedPos()))
 			.setValue(FACING, preferredFacing);
 	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-		BlockHitResult hit) {
+								 BlockHitResult hit) {
 		if (player == null)
 			return InteractionResult.PASS;
 
@@ -106,7 +107,7 @@ public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<Pac
 			return InteractionResult.PASS;
 		if (AllBlocks.FACTORY_GAUGE.isIn(itemInHand))
 			return InteractionResult.PASS;
-		if (AllBlocks.STOCK_LINK.isIn(itemInHand) && !state.getValue(LINKED))
+		if (AllBlocks.STOCK_LINK.isIn(itemInHand) && !(state.hasProperty(LINKED) && state.getValue(LINKED)))
 			return InteractionResult.PASS;
 		if (AllBlocks.PACKAGE_FROGPORT.isIn(itemInHand))
 			return InteractionResult.PASS;
@@ -155,14 +156,14 @@ public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<Pac
 	public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
 		super.onNeighborChange(state, level, pos, neighbor);
 		if (neighbor.relative(state.getOptionalValue(FACING)
-			.orElse(Direction.UP))
+				.orElse(Direction.UP))
 			.equals(pos))
 			withBlockEntityDo(level, pos, PackagerBlockEntity::triggerStockCheck);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-		boolean isMoving) {
+								boolean isMoving) {
 		if (worldIn.isClientSide)
 			return;
 		boolean previouslyPowered = state.getValue(POWERED);
@@ -206,12 +207,12 @@ public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<Pac
 	@Override
 	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
 		return getBlockEntityOptional(pLevel, pPos).map(pbe -> {
-			boolean empty = pbe.inventory.getStackInSlot(0)
-				.isEmpty();
-			if (pbe.animationTicks != 0)
-				empty = false;
-			return empty ? 0 : 15;
-		})
+				boolean empty = pbe.inventory.getStackInSlot(0)
+					.isEmpty();
+				if (pbe.animationTicks != 0)
+					empty = false;
+				return empty ? 0 : 15;
+			})
 			.orElse(0);
 	}
 

@@ -14,6 +14,8 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedBlockAndTintGetter;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
+import net.minecraftforge.client.model.data.ModelData;
+
 import dev.engine_room.flywheel.api.material.CardinalLightingMode;
 import dev.engine_room.flywheel.api.model.Model;
 import dev.engine_room.flywheel.api.task.Plan;
@@ -30,7 +32,7 @@ import dev.engine_room.flywheel.lib.instance.InstanceTypes;
 import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.material.SimpleMaterial;
 import dev.engine_room.flywheel.lib.model.ModelUtil;
-import dev.engine_room.flywheel.lib.model.baked.ForgeMultiBlockModelBuilder;
+import dev.engine_room.flywheel.lib.model.baked.ForgeBlockModelBuilder;
 import dev.engine_room.flywheel.lib.task.ForEachPlan;
 import dev.engine_room.flywheel.lib.task.NestedPlan;
 import dev.engine_room.flywheel.lib.task.PlanMap;
@@ -47,8 +49,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-
-import net.minecraftforge.client.model.data.ModelData;
 
 public class ContraptionVisual<E extends AbstractContraptionEntity> extends AbstractEntityVisual<E> implements DynamicVisual, TickableVisual, LightUpdatedVisual, ShaderLightVisual {
 	protected static final int LIGHT_PADDING = 1;
@@ -97,7 +97,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 			}
 		};
 
-		model = new ForgeMultiBlockModelBuilder(modelWorld, blocks.positions())
+		model = new ForgeBlockModelBuilder(modelWorld, blocks.positions())
 			.modelDataLookup(pos -> contraption.modelData.getOrDefault(pos, ModelData.EMPTY))
 			.materialFunc((renderType, aBoolean) -> SimpleMaterial.builderOf(ModelUtil.getMaterial(renderType, aBoolean))
 				.cardinalLightingMode(CardinalLightingMode.CHUNK))
@@ -135,7 +135,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 	}
 
 	@SuppressWarnings("unchecked")
-	protected  <T extends BlockEntity> void setupVisualizer(T be, float partialTicks) {
+	protected <T extends BlockEntity> void setupVisualizer(T be, float partialTicks) {
 		BlockEntityVisualizer<? super T> visualizer = (BlockEntityVisualizer<? super T>) VisualizerRegistry.getVisualizer(be.getType());
 		if (visualizer == null) {
 			return;
@@ -185,17 +185,17 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 	@Override
 	public Plan<TickableVisual.Context> planTick() {
 		return NestedPlan.of(
-				ForEachPlan.of(() -> actors, ActorVisual::tick),
-				tickableVisuals
+			ForEachPlan.of(() -> actors, ActorVisual::tick),
+			tickableVisuals
 		);
 	}
 
 	@Override
 	public Plan<DynamicVisual.Context> planFrame() {
 		return NestedPlan.of(
-				RunnablePlan.of(this::beginFrame),
-				ForEachPlan.of(() -> actors, ActorVisual::beginFrame),
-				dynamicVisuals
+			RunnablePlan.of(this::beginFrame),
+			ForEachPlan.of(() -> actors, ActorVisual::beginFrame),
+			dynamicVisuals
 		);
 	}
 
@@ -204,7 +204,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		setEmbeddingMatrices(partialTick);
 
 		if (hasMovedSections()) {
- 			sectionCollector.sections(collectLightSections());
+			sectionCollector.sections(collectLightSections());
 		}
 
 		if (hasMovedBlocks()) {
@@ -285,13 +285,13 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		int maxY = maxLight(boundingBox.maxY);
 		int maxZ = maxLight(boundingBox.maxZ);
 
-		return minBlock != BlockPos.asLong(minX, minY, minZ) || maxBlock !=  BlockPos.asLong(maxX, maxY, maxZ);
+		return minBlock != BlockPos.asLong(minX, minY, minZ) || maxBlock != BlockPos.asLong(maxX, maxY, maxZ);
 	}
 
 	protected boolean hasMovedSections() {
 		var boundingBox = entity.getBoundingBox();
 
-        var minSectionX = minLightSection(boundingBox.minX);
+		var minSectionX = minLightSection(boundingBox.minX);
 		var minSectionY = minLightSection(boundingBox.minY);
 		var minSectionZ = minLightSection(boundingBox.minZ);
 		int maxSectionX = maxLightSection(boundingBox.maxX);
