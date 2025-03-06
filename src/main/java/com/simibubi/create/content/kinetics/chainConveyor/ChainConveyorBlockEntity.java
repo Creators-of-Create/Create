@@ -88,7 +88,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 
 	@Override
 	protected AABB createRenderBoundingBox() {
-		return IForgeBlockEntity.INFINITE_EXTENT_AABB;
+		return connections.isEmpty() ? new AABB(worldPosition).inflate(3) : IForgeBlockEntity.INFINITE_EXTENT_AABB;
 	}
 
 	@Override
