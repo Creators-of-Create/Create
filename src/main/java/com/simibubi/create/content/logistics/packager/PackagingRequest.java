@@ -2,6 +2,8 @@ package com.simibubi.create.content.logistics.packager;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
 
@@ -11,10 +13,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public record PackagingRequest(ItemStack item, MutableInt count, String address, int linkIndex,
-	MutableBoolean finalLink, MutableInt packageCounter, int orderId, @Nullable PackageOrder context) {
+	MutableBoolean finalLink, MutableInt packageCounter, int orderId, @Nullable PackageOrderContext context) {
 
 	public static PackagingRequest create(ItemStack item, int count, String address, int linkIndex,
-		MutableBoolean finalLink, int packageCount, int orderId, @Nullable PackageOrder context) {
+		MutableBoolean finalLink, int packageCount, int orderId, @Nullable PackageOrderContext context) {
 		return new PackagingRequest(item, new MutableInt(count), address, linkIndex, finalLink,
 			new MutableInt(packageCount), orderId, context);
 	}
@@ -39,8 +41,8 @@ public record PackagingRequest(ItemStack item, MutableInt count, String address,
 		MutableBoolean finalLink = new MutableBoolean(tag.getBoolean("FinalLink"));
 		int packageCount = tag.getInt("PackageCount");
 		int orderId = tag.getInt("OrderId");
-		PackageOrder orderContext =
-			tag.contains("OrderContext") ? PackageOrder.read(tag.getCompound("OrderContext")) : null;
+		PackageOrderContext orderContext =
+			tag.contains("OrderContext") ? PackageOrderContext.read(tag.getCompound("OrderContext")) : null;
 		return create(item, count, address, linkIndex, finalLink, packageCount, orderId, orderContext);
 	}
 

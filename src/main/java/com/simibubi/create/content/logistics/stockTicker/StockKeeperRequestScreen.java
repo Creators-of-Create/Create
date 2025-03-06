@@ -495,7 +495,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 				.style(ChatFormatting.ITALIC)
 				.component(), addressBox.getX(), addressBox.getY(), 0xff_CDBCA8, false);
 		}
-		
+
 		// Render keeper
 		int entitySizeOffset = 0;
 		LivingEntity keeper = stockKeeper.get();
@@ -1334,7 +1334,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		SimpleChannel channel = AllPackets.getChannel();
 		BlockPos pos = blockEntity.getBlockPos();
 		channel.sendToServer(new PackageOrderRequestPacket(pos, new PackageOrder(Collections.emptyList()),
-			addressBox.getValue(), false, PackageOrder.empty()));
+			addressBox.getValue(), false, PackageOrderContext.empty()));
 		channel.sendToServer(new StockKeeperCategoryHidingPacket(pos, new ArrayList<>(hiddenCategories)));
 		super.removed();
 	}
@@ -1354,10 +1354,19 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			forcedEntries.add(toOrder.stack.copy(), -1 - Math.max(0, countOf - toOrder.count));
 		}
 
-		PackageOrder craftingRequest = PackageOrder.empty();
-		if (canRequestCraftingPackage && !itemsToOrder.isEmpty() && !recipesToOrder.isEmpty())
-			if (recipesToOrder.get(0).recipe instanceof CraftingRecipe cr)
-				craftingRequest = new PackageOrder(FactoryPanelScreen.convertRecipeToPackageOrderContext(cr, itemsToOrder));
+		PackageOrderContext craftingRequest = PackageOrderContext.empty();
+		if (canRequestCraftingPackage && !itemsToOrder.isEmpty() && !recipesToOrder.isEmpty()) {
+			List<List<BigItemStack>> craftList = new ArrayList<>();
+			List<Integer> amountList = new ArrayList<>();
+			for (CraftableBigItemStack cBIS : recipesToOrder) {
+				if(cBIS.recipe instanceof CraftingRecipe cr) {
+					craftList.add(FactoryPanelScreen.convertRecipeToPackageOrderContext(cr, itemsToOrder));
+					amountList.add(cBIS.count / cBIS.getOutputCount(blockEntity.getLevel()));
+				}
+			}
+			craftingRequest = new PackageOrderContext(craftList, amountList);
+		}
+
 
 		AllPackets.getChannel()
 			.sendToServer(new PackageOrderRequestPacket(blockEntity.getBlockPos(), new PackageOrder(itemsToOrder),
@@ -1490,8 +1499,6 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		}
 
 		canRequestCraftingPackage = false;
-		if (recipesToOrder.size() != 1)
-			return;
 		for (BigItemStack ordered : itemsToOrder)
 			if (usedItems.getCountOf(ordered.stack) != ordered.count)
 				return;

@@ -8,6 +8,7 @@ import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -91,7 +92,7 @@ public class RedstoneRequesterBlock extends Block implements IBE<RedstoneRequest
 	}
 
 	public static void programRequester(ServerPlayer player, StockTickerBlockEntity be, PackageOrder order,
-		String address, PackageOrder orderContext) {
+		String address, PackageOrderContext orderContext) {
 		ItemStack stack = player.getMainHandItem();
 		boolean isRequester = AllBlocks.REDSTONE_REQUESTER.isIn(stack);
 		boolean isShopCloth = AllItemTags.TABLE_CLOTHS.matches(stack);

@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllSoundEvents;
@@ -76,7 +78,7 @@ public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 	}
 
 	public Pair<PackagerBlockEntity, PackagingRequest> processRequest(ItemStack stack, int amount, String address,
-		int linkIndex, MutableBoolean finalLink, int orderId, @Nullable PackageOrder orderContext,
+		int linkIndex, MutableBoolean finalLink, int orderId, @Nullable PackageOrderContext orderContext,
 		@Nullable IItemHandler ignoredHandler) {
 		PackagerBlockEntity packager = getPackager();
 		if (packager == null)

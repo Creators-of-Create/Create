@@ -16,9 +16,9 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 	private PackageOrder order;
 	private String address;
 	private boolean encodeRequester;
-	private PackageOrder craftingRequest;
+	private PackageOrderContext craftingRequest;
 
-	public PackageOrderRequestPacket(BlockPos pos, PackageOrder order, String address, boolean encodeRequester, PackageOrder craftingRequest) {
+	public PackageOrderRequestPacket(BlockPos pos, PackageOrder order, String address, boolean encodeRequester, PackageOrderContext craftingRequest) {
 		super(pos);
 		this.order = order;
 		this.address = address;
@@ -43,7 +43,7 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 		address = buffer.readUtf();
 		order = PackageOrder.read(buffer);
 		encodeRequester = buffer.readBoolean();
-		craftingRequest = PackageOrder.read(buffer);
+		craftingRequest = PackageOrderContext.read(buffer);
 	}
 
 	@Override

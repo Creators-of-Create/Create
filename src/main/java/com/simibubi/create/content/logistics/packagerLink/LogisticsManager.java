@@ -11,6 +11,8 @@ import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.google.common.cache.Cache;
@@ -26,6 +28,7 @@ import com.simibubi.create.foundation.utility.TickBasedCache;
 
 import net.createmod.catnip.data.Pair;
 import net.minecraft.world.item.ItemStack;
+
 import net.minecraftforge.items.IItemHandler;
 
 public class LogisticsManager {
@@ -63,7 +66,7 @@ public class LogisticsManager {
 	}
 
 	public static boolean broadcastPackageRequest(UUID freqId, RequestType type, PackageOrder order,
-		IItemHandler ignoredHandler, String address, @Nullable PackageOrder orderContext) {
+												  IItemHandler ignoredHandler, String address, @Nullable PackageOrderContext orderContext) {
 		if (order.isEmpty())
 			return false;
 
@@ -81,13 +84,13 @@ public class LogisticsManager {
 	}
 
 	public static Multimap<PackagerBlockEntity, PackagingRequest> findPackagersForRequest(UUID freqId,
-		PackageOrder order, @Nullable PackageOrder customContext, @Nullable IItemHandler ignoredHandler,
-		String address) {
+																						  PackageOrder order, @Nullable PackageOrderContext customContext, @Nullable IItemHandler ignoredHandler,
+																						  String address) {
 		List<BigItemStack> stacks = new ArrayList<>();
 		for (BigItemStack stack : order.stacks())
 			if (!stack.stack.isEmpty() && stack.count > 0)
 				stacks.add(stack);
-		
+
 		Multimap<PackagerBlockEntity, PackagingRequest> requests = HashMultimap.create();
 
 		// Packages need to track their index and successors for successful defrag
@@ -96,9 +99,17 @@ public class LogisticsManager {
 		MutableBoolean finalLinkTracker = new MutableBoolean(false);
 
 		// First box needs to carry the order specifics for successful defrag
-		PackageOrder contextToSend = order;
-		if (customContext != null)
-			contextToSend = customContext;
+		PackageOrderContext contextToSend = new PackageOrderContext(List.of(order.stacks()), List.of(1));
+		if (customContext != null) {
+			List<List<BigItemStack>> contextList = new ArrayList<>();
+			List<Integer> amountList = new ArrayList<>();
+			contextList.add(order.stacks());
+			amountList.add(1);
+			// add other context afterwards
+			contextList.addAll(customContext.contextStacks());
+			amountList.addAll(customContext.amounts());
+			contextToSend = new PackageOrderContext(contextList, amountList);
+		}
 
 		// Packages from future orders should not be merged in the packager queue
 		int orderId = r.nextInt();

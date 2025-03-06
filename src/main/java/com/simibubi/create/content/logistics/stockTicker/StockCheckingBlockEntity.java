@@ -42,9 +42,9 @@ public abstract class StockCheckingBlockEntity extends SmartBlockEntity {
 		String address) {
 		return broadcastPackageRequest(type, order, ignoredHandler, address, null);
 	}
-	
+
 	public boolean broadcastPackageRequest(RequestType type, PackageOrder order, IItemHandler ignoredHandler,
-		String address, @Nullable PackageOrder orderContext) {
+		String address, @Nullable PackageOrderContext orderContext) {
 		return LogisticsManager.broadcastPackageRequest(behaviour.freqId, type, order, ignoredHandler, address, orderContext);
 	}
 

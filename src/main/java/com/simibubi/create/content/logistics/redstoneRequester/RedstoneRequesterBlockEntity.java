@@ -7,6 +7,7 @@ import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour.RequestType;
 import com.simibubi.create.content.logistics.packagerLink.WiFiParticle;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
 import com.simibubi.create.content.logistics.stockTicker.StockCheckingBlockEntity;
 
 import net.minecraft.core.BlockPos;
@@ -29,7 +30,7 @@ public class RedstoneRequesterBlockEntity extends StockCheckingBlockEntity imple
 
 	public boolean allowPartialRequests;
 	public PackageOrder encodedRequest = PackageOrder.empty();
-	public PackageOrder encodedRequestContext = PackageOrder.empty();
+	public PackageOrderContext encodedRequestContext = PackageOrderContext.empty();
 	public String encodedTargetAdress = "";
 
 	public boolean lastRequestSucceeded;
@@ -89,7 +90,7 @@ public class RedstoneRequesterBlockEntity extends StockCheckingBlockEntity imple
 		lastRequestSucceeded = tag.getBoolean("Success");
 		allowPartialRequests = tag.getBoolean("AllowPartial");
 		encodedRequest = PackageOrder.read(tag.getCompound("EncodedRequest"));
-		encodedRequestContext = PackageOrder.read(tag.getCompound("EncodedRequestContext"));
+		encodedRequestContext = PackageOrderContext.read(tag.getCompound("EncodedRequestContext"));
 		encodedTargetAdress = tag.getString("EncodedAddress");
 	}
 

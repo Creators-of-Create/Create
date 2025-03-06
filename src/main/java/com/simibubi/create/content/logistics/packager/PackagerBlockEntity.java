@@ -24,6 +24,7 @@ import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlockEntit
 import com.simibubi.create.content.logistics.packagerLink.RequestPromiseQueue;
 import com.simibubi.create.content.logistics.packagerLink.WiFiEffectPacket;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -160,7 +161,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 	public InventorySummary getAvailableItems() {
 		return getAvailableItems(false);
 	}
-	
+
 	public InventorySummary getAvailableItems(boolean scanInputSlots) {
 		if (availableItems != null && invVersionTracker.stillWaiting(targetInventory.getInventory()))
 			return availableItems;
@@ -325,7 +326,8 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			return false;
 
 		ItemStackHandler contents = PackageItem.getContents(box);
-		PackageOrder orderContext = PackageItem.getOrderContext(box);
+		PackageOrderContext orderContext = PackageItem.getOrderContext(box);
+		boolean hasCraftingContext = orderContext != null && !orderContext.contextStacks().isEmpty() && orderContext.contextStacks().size() >= 2;
 		IItemHandler targetInv = targetInventory.getInventory();
 		BlockEntity targetBE =
 			level.getBlockEntity(worldPosition.relative(getBlockState().getOptionalValue(PackagerBlock.FACING)
@@ -354,9 +356,10 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 					continue;
 
 				// Follow crafting arrangement
-				if (targetIsCrafter && orderContext != null && orderContext.stacks()
+				// Get second slot in craftingContext, as first one is always a list of all requested items
+				if (targetIsCrafter && hasCraftingContext && orderContext.contextStacks().get(1)
 					.size() > slot) {
-					BigItemStack targetStack = orderContext.stacks()
+					BigItemStack targetStack = orderContext.contextStacks().get(1)
 						.get(slot);
 					if (targetStack.stack.isEmpty())
 						break;
@@ -444,7 +447,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		boolean finalLinkInOrder = false;
 		int packageIndexAtLink = 0;
 		boolean finalPackageAtLink = false;
-		PackageOrder orderContext = null;
+		PackageOrderContext orderContext = null;
 		boolean requestQueue = queuedRequests != null;
 
 		if (requestQueue && !queuedRequests.isEmpty()) {

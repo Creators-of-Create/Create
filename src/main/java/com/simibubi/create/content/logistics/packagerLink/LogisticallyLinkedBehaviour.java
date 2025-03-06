@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.google.common.cache.Cache;
@@ -171,7 +173,7 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 	}
 
 	public Pair<PackagerBlockEntity, PackagingRequest> processRequest(ItemStack stack, int amount, String address,
-		int linkIndex, MutableBoolean finalLink, int orderId, @Nullable PackageOrder orderContext,
+		int linkIndex, MutableBoolean finalLink, int orderId, @Nullable PackageOrderContext orderContext,
 		@Nullable IItemHandler ignoredHandler) {
 
 		if (blockEntity instanceof PackagerLinkBlockEntity plbe)
@@ -186,7 +188,7 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 			return plbe.fetchSummaryFromPackager(ignoredHandler);
 		return InventorySummary.EMPTY;
 	}
-	
+
 	public void deductFromAccurateSummary(ItemStackHandler packageContents) {
 		InventorySummary summary = LogisticsManager.ACCURATE_SUMMARIES.getIfPresent(freqId);
 		if (summary == null)

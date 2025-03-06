@@ -13,6 +13,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+
 import org.joml.Math;
 
 import com.google.common.collect.HashMultimap;
@@ -431,14 +433,14 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 
 		// Input items may come from differing networks
 		Map<UUID, Collection<BigItemStack>> asMap = toRequest.asMap();
-		PackageOrder requestContext = new PackageOrder(toRequestAsList);
+		PackageOrderContext requestContext = new PackageOrderContext(List.of(toRequestAsList), List.of(1));
 		List<Multimap<PackagerBlockEntity, PackagingRequest>> requests = new ArrayList<>();
 
 		// Panel may enforce item arrangement
 		if (!activeCraftingArrangement.isEmpty())
-			requestContext = new PackageOrder(activeCraftingArrangement.stream()
+			requestContext = new PackageOrderContext(List.of(activeCraftingArrangement.stream()
 				.map(BigItemStack::new)
-				.toList());
+				.toList()), List.of(1));
 
 		// Collect request distributions
 		for (Entry<UUID, Collection<BigItemStack>> entry : asMap.entrySet()) {

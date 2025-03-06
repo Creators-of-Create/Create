@@ -97,7 +97,7 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 
 	@Override
 	public boolean broadcastPackageRequest(RequestType type, PackageOrder order, IItemHandler ignoredHandler,
-										   String address, @Nullable PackageOrder orderContext) {
+										   String address, @Nullable PackageOrderContext orderContext) {
 		boolean result = super.broadcastPackageRequest(type, order, ignoredHandler, address, orderContext);
 		previouslyUsedAddress = address;
 		notifyUpdate();

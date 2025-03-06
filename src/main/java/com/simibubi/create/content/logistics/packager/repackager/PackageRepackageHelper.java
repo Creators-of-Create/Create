@@ -1,0 +1,296 @@
+package com.simibubi.create.content.logistics.packager.repackager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.common.collect.Lists;
+import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.BigItemStack;
+import com.simibubi.create.content.logistics.box.PackageItem;
+
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+
+import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
+
+public class PackageRepackageHelper {
+
+	protected Map<Integer, List<ItemStack>> collectedPackages = new HashMap<>();
+
+	public void clear() {
+		collectedPackages.clear();
+	}
+
+	public boolean isFragmented(ItemStack box) {
+		if (!box.hasTag() || !box.getTag()
+			.contains("Fragment"))
+			return false;
+
+		CompoundTag fragTag = box.getTag()
+			.getCompound("Fragment");
+
+		return !(fragTag.getInt("LinkIndex") == 0 && fragTag.getBoolean("IsFinalLink") && fragTag.getInt("Index") == 0
+			&& fragTag.getBoolean("IsFinal"));
+	}
+
+	public int addPackageFragment(ItemStack box) {
+		int collectedOrderId = PackageItem.getOrderId(box);
+		if (collectedOrderId == -1)
+			return -1;
+
+		List<ItemStack> collectedOrder = collectedPackages.computeIfAbsent(collectedOrderId, $ -> Lists.newArrayList());
+		collectedOrder.add(box);
+
+		if (!isOrderComplete(collectedOrderId))
+			return -1;
+
+		return collectedOrderId;
+	}
+
+	public List<ItemStack> repack(int orderId) {
+		List<ItemStack> exportingPackages = new ArrayList<>();
+		String address = "";
+		PackageOrderContext orderContext = null;
+		List<BigItemStack> allItems = new ArrayList<>();
+
+		for (ItemStack box : collectedPackages.get(orderId)) {
+			address = PackageItem.getAddress(box);
+			if (box.hasTag() && box.getTag()
+				.getCompound("Fragment")
+				.contains("OrderContext"))
+				orderContext = PackageOrderContext.read(box.getTag()
+					.getCompound("Fragment")
+					.getCompound("OrderContext"));
+			ItemStackHandler contents = PackageItem.getContents(box);
+			Slots:
+			for (int slot = 0; slot < contents.getSlots(); slot++) {
+				ItemStack stackInSlot = contents.getStackInSlot(slot);
+				for (BigItemStack existing : allItems) {
+					if (!ItemHandlerHelper.canItemStacksStack(stackInSlot, existing.stack))
+						continue;
+					existing.count += stackInSlot.getCount();
+					continue Slots;
+				}
+				allItems.add(new BigItemStack(stackInSlot, stackInSlot.getCount()));
+			}
+		}
+
+		List<BigItemStack> orderedStacks = new ArrayList<>();
+		if (orderContext != null) {
+			for (BigItemStack stack : orderContext.contextStacks().get(0)) {
+				orderedStacks.add(new BigItemStack(stack.stack, stack.count));
+			}
+		}
+
+		List<ItemStack> outputSlots = new ArrayList<>();
+
+		Repack:
+		while (true) {
+			allItems.removeIf(e -> e.count == 0);
+			if (allItems.isEmpty())
+				break;
+
+			BigItemStack targetedEntry = null;
+			if (!orderedStacks.isEmpty())
+				targetedEntry = orderedStacks.remove(0);
+
+			ItemSearch:
+			for (BigItemStack entry : allItems) {
+				int targetAmount = entry.count;
+				if (targetAmount == 0)
+					continue;
+				if (targetedEntry != null) {
+					targetAmount = targetedEntry.count;
+					if (!ItemHandlerHelper.canItemStacksStack(entry.stack, targetedEntry.stack))
+						continue;
+				}
+
+				while (targetAmount > 0) {
+					int removedAmount = Math.min(Math.min(targetAmount, entry.stack.getMaxStackSize()), entry.count);
+					if (removedAmount == 0)
+						continue ItemSearch;
+
+					ItemStack output = ItemHandlerHelper.copyStackWithSize(entry.stack, removedAmount);
+					targetAmount -= removedAmount;
+					if (targetedEntry != null)
+						targetedEntry.count = targetAmount;
+					entry.count -= removedAmount;
+					outputSlots.add(output);
+				}
+
+				continue Repack;
+			}
+		}
+
+		int currentSlot = 0;
+		ItemStackHandler target = new ItemStackHandler(PackageItem.SLOTS);
+
+		for (ItemStack item : outputSlots) {
+			target.setStackInSlot(currentSlot++, item);
+			if (currentSlot < PackageItem.SLOTS)
+				continue;
+			exportingPackages.add(PackageItem.containing(target));
+			target = new ItemStackHandler(PackageItem.SLOTS);
+			currentSlot = 0;
+		}
+
+		for (int slot = 0; slot < target.getSlots(); slot++)
+			if (!target.getStackInSlot(slot)
+				.isEmpty()) {
+				exportingPackages.add(PackageItem.containing(target));
+				break;
+			}
+
+		for (ItemStack box : exportingPackages)
+			PackageItem.addAddress(box, address);
+
+		for (int i = 0; i < exportingPackages.size(); i++) {
+			ItemStack box = exportingPackages.get(i);
+			boolean isfinal = i == exportingPackages.size() - 1;
+			PackageItem.setOrder(box, orderId, 0, true, 0, true, isfinal ? new PackageOrderContext(orderContext.contextStacks(), orderContext.amounts()) : null);
+		}
+
+		return exportingPackages;
+	}
+
+	private boolean isOrderComplete(int orderId) {
+		boolean finalLinkReached = false;
+		Links:
+		for (int linkCounter = 0; linkCounter < 1000; linkCounter++) {
+			if (finalLinkReached)
+				break;
+			Packages:
+			for (int packageCounter = 0; packageCounter < 1000; packageCounter++) {
+				for (ItemStack box : collectedPackages.get(orderId)) {
+					CompoundTag tag = box.getOrCreateTag()
+						.getCompound("Fragment");
+					if (linkCounter != tag.getInt("LinkIndex"))
+						continue;
+					if (packageCounter != tag.getInt("Index"))
+						continue;
+					finalLinkReached = tag.getBoolean("IsFinalLink");
+					if (tag.getBoolean("IsFinal"))
+						continue Links;
+					continue Packages;
+				}
+				return false;
+			}
+		}
+		return true;
+	}
+
+	protected boolean shouldSplit(ItemStack box) {
+		if (!box.hasTag() || !box.getTag()
+			.contains("Fragment"))
+			return false;
+
+		CompoundTag fragTag = box.getTag()
+			.getCompound("Fragment");
+
+		if (!fragTag.contains("OrderContext"))
+			return false;
+
+		PackageOrderContext orderContext = PackageOrderContext.read(box.getTag()
+			.getCompound("Fragment")
+			.getCompound("OrderContext"));
+
+		// If contextStacks are > 2, there is at least two crafting recipes in the request, need to split
+		// If the amount of any request is higher than one, need to split
+		return orderContext.contextStacks().size() > 2 || orderContext.amounts().stream().anyMatch(a -> a > 1);
+	}
+
+	protected List<ItemStack> split(ItemStack box) {
+		PackageOrderContext orderContext = PackageOrderContext.read(box.getTag()
+			.getCompound("Fragment")
+			.getCompound("OrderContext"));
+		int orderId = PackageItem.getOrderId(box);
+		String address = PackageItem.getAddress(box);
+		ItemStackHandler contents = PackageItem.getContents(box);
+		// Get all available items
+		List<BigItemStack> allItems = new ArrayList<>();
+		AllItems:
+		for (int slot = 0; slot < contents.getSlots(); slot++) {
+			ItemStack stackInSlot = contents.getStackInSlot(slot);
+			if (stackInSlot.isEmpty())
+				continue;
+			for (BigItemStack existing : allItems) {
+				if (!ItemHandlerHelper.canItemStacksStack(stackInSlot, existing.stack))
+					continue;
+				existing.count += stackInSlot.getCount();
+				continue AllItems;
+			}
+			allItems.add(new BigItemStack(stackInSlot.copy(), stackInSlot.getCount()));
+		}
+
+		List<ItemStack> packages = new ArrayList<>();
+		// Each context list is a unique crafting recipe
+		for (int i = 1; i < orderContext.contextStacks().size(); i++) {
+			int amount = orderContext.amounts().get(i);
+			List<BigItemStack> packRequest = orderContext.contextStacks().get(i);
+			// Create a package per requested amount of the recipe
+			for (int j = 0; j < amount; j++) {
+				allItems.removeIf(e -> e.count == 0);
+				List<BigItemStack> packRequestInstance = new ArrayList<>();
+				List<ItemStack> outputSlots = new ArrayList<>();
+
+				PackRequestFill:
+				for (BigItemStack bis : packRequest) {
+					if (bis.stack.isEmpty())
+						continue;
+					for (BigItemStack existing : packRequestInstance) {
+						if (!ItemHandlerHelper.canItemStacksStack(bis.stack, existing.stack))
+							continue;
+						existing.count += bis.count;
+						continue PackRequestFill;
+					}
+					packRequestInstance.add(new BigItemStack(bis.stack, bis.count));
+				}
+
+				for (BigItemStack targetedEntry : packRequestInstance) {
+					int targetAmount = targetedEntry.count;
+					ItemSearch:
+					for (BigItemStack entry : allItems) {
+						if (!ItemHandlerHelper.canItemStacksStack(targetedEntry.stack, entry.stack))
+							continue;
+						while (targetAmount > 0) {
+							int removedAmount = Math.min(Math.min(targetAmount, entry.stack.getMaxStackSize()), entry.count);
+							if (removedAmount == 0)
+								continue ItemSearch;
+
+							ItemStack output = ItemHandlerHelper.copyStackWithSize(entry.stack, removedAmount);
+							targetAmount -= removedAmount;
+							entry.count -= removedAmount;
+							outputSlots.add(output);
+						}
+					}
+					// Sanity check, if there is a targetAmount left the package didn't contain enough items to fulfill everything
+					// Shouldn't happen with just Create itself, but can happen with malformed packages
+					if (targetAmount > 0) {
+						Create.LOGGER.error("Package splitting failed because package did not contain enough items to fulfill all requests");
+						return null;
+					}
+				}
+
+				ItemStackHandler target = new ItemStackHandler(PackageItem.SLOTS);
+				for (int k = 0; k < outputSlots.size(); k++)
+					target.setStackInSlot(i, outputSlots.get(i));
+				ItemStack packageItem = PackageItem.containing(target);
+				PackageItem.addAddress(packageItem, address);
+				List<List<BigItemStack>> newCraftContext = new ArrayList<>();
+				// First slots of context is always content of package
+				newCraftContext.add(packRequest);
+				// Second is the actual crafting recipe
+				newCraftContext.add(packRequest);
+				PackageItem.setOrder(packageItem, orderId, 0, true, 0, true, new PackageOrderContext(newCraftContext, List.of(1, 1)));
+				packages.add(packageItem);
+			}
+		}
+		return packages;
+	}
+
+}

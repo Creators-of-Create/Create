@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.redstoneRequester;
 
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.ChatFormatting;
@@ -14,7 +15,7 @@ import net.minecraft.world.level.Level;
 public class AutoRequestData {
 
 	public PackageOrder encodedRequest = PackageOrder.empty();
-	public PackageOrder encodedRequestContext = PackageOrder.empty();
+	public PackageOrderContext encodedRequestContext = PackageOrderContext.empty();
 	public String encodedTargetAdress = "";
 	public BlockPos targetOffset = BlockPos.ZERO;
 	public String targetDim = "";
@@ -27,7 +28,7 @@ public class AutoRequestData {
 		requestData.isValid = tag.getBoolean("Valid");
 		requestData.encodedTargetAdress = tag.getString("EncodedAddress");
 		requestData.encodedRequest = PackageOrder.read(tag.getCompound("EncodedRequest"));
-		requestData.encodedRequestContext = PackageOrder.read(tag.getCompound("EncodedRequestContext"));
+		requestData.encodedRequestContext = PackageOrderContext.read(tag.getCompound("EncodedRequestContext"));
 		return requestData;
 	}
 

@@ -11,6 +11,8 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.box.PackageStyles.PackageStyle;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
 
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+
 import net.createmod.catnip.data.Glob;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
@@ -107,7 +109,7 @@ public class PackageItem extends Item {
 	}
 
 	public static void setOrder(ItemStack box, int orderId, int linkIndex, boolean isFinalLink, int fragmentIndex,
-								boolean isFinal, @Nullable PackageOrder orderContext) {
+								boolean isFinal, @Nullable PackageOrderContext orderContext) {
 		CompoundTag tag = new CompoundTag();
 		tag.putInt("OrderId", orderId);
 		tag.putInt("LinkIndex", linkIndex);
@@ -128,14 +130,14 @@ public class PackageItem extends Item {
 			.getInt("OrderId");
 	}
 
-	public static PackageOrder getOrderContext(ItemStack box) {
+	public static PackageOrderContext getOrderContext(ItemStack box) {
 		CompoundTag tag = box.getTag();
 		if (tag == null || !tag.contains("Fragment"))
 			return null;
 		CompoundTag frag = tag.getCompound("Fragment");
 		if (!frag.contains("OrderContext"))
 			return null;
-		return PackageOrder.read(frag.getCompound("OrderContext"));
+		return PackageOrderContext.read(frag.getCompound("OrderContext"));
 	}
 
 	public static void addOrderContext(ItemStack box, PackageOrder orderContext) {
