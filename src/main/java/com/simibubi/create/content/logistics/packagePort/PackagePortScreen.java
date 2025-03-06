@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.gui.widget.AbstractSimiWidget;
@@ -121,6 +122,9 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 
 		String text = addressBox.getValue();
 		if (!addressBox.isFocused()) {
+			if (addressBox.getValue().contains("@s") && AllConfigs.server().logistics.allowSelfAddress.get()) {
+				addressBox.setValue(addressBox.getValue().replace("@s", this.getMenu().player.getName().getString()));
+			}
 			if (addressBox.getValue()
 				.isEmpty()) {
 				text = icon.getHoverName()
@@ -177,6 +181,9 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 
 	@Override
 	public void removed() {
+		addressBox.setValue(addressBox.getValue().replace(
+			"@s", AllConfigs.server().logistics.allowSelfAddress.get() ? this.getMenu().player.getName().getString() : "@s"
+		));
 		AllPackets.getChannel()
 			.sendToServer(new PackagePortConfigurationPacket(menu.contentHolder.getBlockPos(), addressBox.getValue(),
 				acceptPackages.green));
