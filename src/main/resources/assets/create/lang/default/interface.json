@@ -347,6 +347,7 @@
 	"create.stock_keeper.stock_level_too_low": "Purchase cancelled: Stock levels lower than expected",
 	"create.stock_keeper.cash_register_full": "Purchase cancelled: Not enough space in Cash Register",
 	"create.stock_keeper.too_broke": "You cannot afford this purchase",
+  "create.stock_keeper.wrong_network": "This list is for another shop",
 
 	"create.stock_ticker.contains_payments": "Contains payments:",
 	"create.stock_ticker.click_to_retrieve": "Click to retrieve",
@@ -1024,7 +1025,7 @@
 	"create.contraption.door_control.player_facing": "You are facing: %1$s",
 
 	"create.packager.no_portable_storage": "Packagers cannot interface with Portable Storage directly",
-	
+
 	"create.packager_link.set": "Target selected",
 	"create.packager_link.success": "Successfully bound to target",
 	"create.packager_link.clear": "Cleared selection",

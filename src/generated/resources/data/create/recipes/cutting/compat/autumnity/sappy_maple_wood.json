@@ -3,18 +3,19 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "ars_nouveau"
+      "modid": "autumnity"
     }
   ],
   "ingredients": [
     {
-      "item": "ars_nouveau:blue_archwood_log"
+      "item": "autumnity:sappy_maple_wood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "ars_nouveau:stripped_blue_archwood_log"
+      "count": 6,
+      "item": "autumnity:maple_planks"
     }
   ]
 }

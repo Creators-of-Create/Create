@@ -1,5 +1,8 @@
 package com.simibubi.create.content.decoration.palettes;
 
+import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
+import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
+
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -9,6 +12,7 @@ import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
+
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.tags.TagKey;
@@ -16,11 +20,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
-import static com.simibubi.create.Create.REGISTRATE;
-import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
-import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
-
 public class PalettesVariantEntry {
+	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	public final ImmutableList<BlockEntry<? extends Block>> registeredBlocks;
 	public final ImmutableList<BlockEntry<? extends Block>> registeredPartials;
@@ -70,10 +71,10 @@ public class PalettesVariantEntry {
 					.register());
 		}
 
-		Create.REGISTRATE.addDataGenerator(ProviderType.RECIPE,
+		REGISTRATE.addDataGenerator(ProviderType.RECIPE,
 			p -> p.stonecutting(DataIngredient.tag(paletteStoneVariants.materialTag), RecipeCategory.BUILDING_BLOCKS,
 				baseBlock));
-		Create.REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, p -> p.addTag(paletteStoneVariants.materialTag)
+		REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, p -> p.addTag(paletteStoneVariants.materialTag)
 			.add(baseBlock.get()
 				.asItem()));
 

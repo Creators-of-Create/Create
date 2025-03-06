@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -13,12 +12,17 @@ import org.jetbrains.annotations.NotNull;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import mezz.jei.api.forge.ForgeTypes;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotRichTooltipCallback;
+import mezz.jei.api.gui.ingredient.IRecipeSlotView;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
@@ -117,41 +121,41 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		};
 	}
 
-	public static List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
-		return stacks.stream()
-			.map(CreateRecipeCategory::withImprovedVisibility)
-			.collect(Collectors.toList());
+	@SuppressWarnings("removal") // see below
+	public static IRecipeSlotBuilder addFluidSlot(IRecipeLayoutBuilder builder, int x, int y, FluidIngredient ingredient) {
+		int amount = ingredient.getRequiredAmount();
+		return builder.addSlot(RecipeIngredientRole.OUTPUT, x, y)
+			.setBackground(getRenderedSlot(), -1, -1)
+			.addIngredients(ForgeTypes.FLUID_STACK, ingredient.getMatchingFluidStacks())
+			.setFluidRenderer(amount, false, 16, 16) // make fluid take up the full slot
+			.addTooltipCallback(CreateRecipeCategory::addPotionTooltip);
 	}
 
-	public static FluidStack withImprovedVisibility(FluidStack stack) {
-		FluidStack display = stack.copy();
-		int displayedAmount = (int) (stack.getAmount() * .75f) + 250;
-		display.setAmount(displayedAmount);
-		return display;
+	@SuppressWarnings("removal") // see below
+	public static IRecipeSlotBuilder addFluidSlot(IRecipeLayoutBuilder builder, int x, int y, FluidStack stack) {
+		return builder.addSlot(RecipeIngredientRole.OUTPUT, x, y)
+			.setBackground(getRenderedSlot(), -1, -1)
+			.addIngredient(ForgeTypes.FLUID_STACK, stack)
+			.setFluidRenderer(stack.getAmount(), false, 16, 16) // make fluid take up the full slot
+			.addTooltipCallback(CreateRecipeCategory::addPotionTooltip);
 	}
 
-	public static IRecipeSlotRichTooltipCallback addFluidTooltip() {
-		return addFluidTooltip(-1);
-	}
+	// IRecipeSlotTooltipCallback is deprecated, but the replacement requires that all tooltip lines
+	// get added to the bottom. This looks terrible for potion fluids, and doesn't match how potion items look.
+	// https://github.com/mezz/JustEnoughItems/issues/3931
+	private static void addPotionTooltip(IRecipeSlotView view, List<Component> tooltip) {
+		Optional<FluidStack> displayed = view.getDisplayedIngredient(ForgeTypes.FLUID_STACK);
+		if (displayed.isEmpty())
+			return;
 
-	public static IRecipeSlotRichTooltipCallback addFluidTooltip(int mbAmount) {
-		return (view, tooltip) -> {
-			Optional<FluidStack> displayed = view.getDisplayedIngredient(ForgeTypes.FLUID_STACK);
-			if (displayed.isEmpty())
-				return;
+		FluidStack fluidStack = displayed.get();
 
-			FluidStack fluidStack = displayed.get();
-
-			if (fluidStack.getFluid().isSame(AllFluids.POTION.get())) {
-				ArrayList<Component> potionTooltip = new ArrayList<>();
-				PotionFluidHandler.addPotionTooltip(fluidStack, potionTooltip, 1);
-				tooltip.addAll(potionTooltip.stream().toList());
-			}
-
-			int amount = mbAmount == -1 ? fluidStack.getAmount() : mbAmount;
-			Component text = Component.literal(String.valueOf(amount)).append(CreateLang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
-			tooltip.add(text);
-		};
+		if (fluidStack.getFluid().isSame(AllFluids.POTION.get())) {
+			ArrayList<Component> potionTooltip = new ArrayList<>();
+			PotionFluidHandler.addPotionTooltip(fluidStack, potionTooltip, 1);
+			// append after item name
+			tooltip.addAll(1, potionTooltip.stream().toList());
+		}
 	}
 
 	protected static IDrawable asDrawable(AllGuiTextures texture) {

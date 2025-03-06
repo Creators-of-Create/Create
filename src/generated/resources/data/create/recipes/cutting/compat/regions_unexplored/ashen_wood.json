@@ -3,19 +3,18 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "ars_nouveau"
+      "modid": "regions_unexplored"
     }
   ],
   "ingredients": [
     {
-      "item": "ars_nouveau:stripped_blue_archwood_log"
+      "item": "regions_unexplored:ashen_wood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "count": 6,
-      "item": "ars_nouveau:archwood_planks"
+      "item": "regions_unexplored:stripped_dead_wood"
     }
   ]
 }
