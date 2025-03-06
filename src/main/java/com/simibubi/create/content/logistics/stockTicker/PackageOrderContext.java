@@ -13,67 +13,82 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 
+/**
+ * Package ordering context containing additional information of package orders.
+ *
+ * @param contextStacks
+ * @param amounts
+ */
 public record PackageOrderContext(List<List<BigItemStack>> contextStacks, List<Integer> amounts) {
 
-	public CompoundTag write() {
-		CompoundTag tag = new CompoundTag();
-		ListTag outer = new ListTag();
-		for (List<BigItemStack> stack : contextStacks) {
-			outer.add(NBTHelper.writeCompoundList(stack, BigItemStack::write));
-		}
-		tag.put("Entries", outer);
-		tag.put("Amounts", new IntArrayTag(amounts));
-		return tag;
-	}
+    public CompoundTag write() {
+        CompoundTag tag = new CompoundTag();
+        ListTag outer = new ListTag();
+        for (List<BigItemStack> stack : contextStacks) {
+            outer.add(NBTHelper.writeCompoundList(stack, BigItemStack::write));
+        }
+        tag.put("Entries", outer);
+        tag.put("Amounts", new IntArrayTag(amounts));
+        return tag;
+    }
 
-	public static PackageOrderContext empty() {
-		return new PackageOrderContext(List.of(), List.of());
-	}
+    public static boolean hasCraftingInformation(PackageOrderContext context) {
+        if (context == null) {
+            return false;
+        }
 
-	public boolean isEmpty() {
-		return contextStacks.isEmpty();
-	}
+        // First stack is always the requested content, so crafting information is present as soon as there is a second entry.
+        return context.contextStacks.size() > 1;
+    }
 
-	public static PackageOrderContext read(CompoundTag tag) {
-		List<List<BigItemStack>> stacks = new ArrayList<>();
-		for (Tag t : tag.getList("Entries", Tag.TAG_LIST)) {
-			if (t instanceof ListTag list)
-				stacks.add(NBTHelper.readCompoundList(list, BigItemStack::read));
-		}
-		List<Integer> amounts = Arrays.stream(tag.getIntArray("Amounts")).boxed().toList();
-		return new PackageOrderContext(stacks, amounts);
-	}
+    public static PackageOrderContext empty() {
+        return new PackageOrderContext(List.of(), List.of());
+    }
 
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeVarInt(contextStacks.size());
-		for (List<BigItemStack> list : contextStacks) {
-			buffer.writeVarInt(list.size());
-			for (BigItemStack itemStack : list)
-				itemStack.send(buffer);
-		}
-		buffer.writeVarInt(amounts.size());
-		for (Integer amount : amounts) {
-			buffer.writeVarInt(amount);
-		}
-	}
+    public boolean isEmpty() {
+        return contextStacks.isEmpty();
+    }
 
-	public static PackageOrderContext read(FriendlyByteBuf buffer) {
-		int size = buffer.readVarInt();
-		List<List<BigItemStack>> stacks = new ArrayList<>();
-		for (int i = 0; i < size; i++) {
-			List<BigItemStack> list = new ArrayList<>();
-			int innerSize = buffer.readVarInt();
-			for (int j = 0; j < innerSize; j++) {
-				list.add(BigItemStack.receive(buffer));
-			}
-			stacks.add(list);
-		}
-		List<Integer> amounts = new ArrayList<>();
-		size = buffer.readVarInt();
-		for (int i = 0; i < size; i++) {
-			amounts.add(buffer.readVarInt());
-		}
-		return new PackageOrderContext(stacks, amounts);
-	}
+    public static PackageOrderContext read(CompoundTag tag) {
+        List<List<BigItemStack>> stacks = new ArrayList<>();
+        for (Tag t : tag.getList("Entries", Tag.TAG_LIST)) {
+            if (t instanceof ListTag list)
+                stacks.add(NBTHelper.readCompoundList(list, BigItemStack::read));
+        }
+        List<Integer> amounts = Arrays.stream(tag.getIntArray("Amounts")).boxed().toList();
+        return new PackageOrderContext(stacks, amounts);
+    }
+
+    public void write(FriendlyByteBuf buffer) {
+        buffer.writeVarInt(contextStacks.size());
+        for (List<BigItemStack> list : contextStacks) {
+            buffer.writeVarInt(list.size());
+            for (BigItemStack itemStack : list)
+                itemStack.send(buffer);
+        }
+        buffer.writeVarInt(amounts.size());
+        for (Integer amount : amounts) {
+            buffer.writeVarInt(amount);
+        }
+    }
+
+    public static PackageOrderContext read(FriendlyByteBuf buffer) {
+        int size = buffer.readVarInt();
+        List<List<BigItemStack>> stacks = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            List<BigItemStack> list = new ArrayList<>();
+            int innerSize = buffer.readVarInt();
+            for (int j = 0; j < innerSize; j++) {
+                list.add(BigItemStack.receive(buffer));
+            }
+            stacks.add(list);
+        }
+        List<Integer> amounts = new ArrayList<>();
+        size = buffer.readVarInt();
+        for (int i = 0; i < size; i++) {
+            amounts.add(buffer.readVarInt());
+        }
+        return new PackageOrderContext(stacks, amounts);
+    }
 
 }

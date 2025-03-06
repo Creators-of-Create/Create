@@ -95,6 +95,7 @@ public class RepackagerBlockEntity extends PackagerBlockEntity {
 					List<ItemStack> boxesToExport = repackageHelper.split(extracted);
 					// If split fails, just treat package as normal package
 					if (boxesToExport != null) {
+						targetInv.extractItem(slot, 1, false);
 						pushPackages(boxesToExport);
 						return;
 					}

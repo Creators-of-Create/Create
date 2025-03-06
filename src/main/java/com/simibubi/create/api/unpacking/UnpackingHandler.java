@@ -2,6 +2,8 @@ package com.simibubi.create.api.unpacking;
 
 import java.util.List;
 
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,5 +40,5 @@ public interface UnpackingHandler {
 	 * @param simulate true if the unpacking should only be simulated
 	 * @return true if all items have been unpacked successfully
 	 */
-	boolean unpack(Level level, BlockPos pos, BlockState state, Direction side, List<ItemStack> items, @Nullable PackageOrder order, boolean simulate);
+	boolean unpack(Level level, BlockPos pos, BlockState state, Direction side, List<ItemStack> items, @Nullable PackageOrderContext order, boolean simulate);
 }

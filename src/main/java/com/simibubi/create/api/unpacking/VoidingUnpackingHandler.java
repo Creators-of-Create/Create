@@ -2,6 +2,8 @@ package com.simibubi.create.api.unpacking;
 
 import java.util.List;
 
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
@@ -19,7 +21,7 @@ public enum VoidingUnpackingHandler implements UnpackingHandler {
 	INSTANCE;
 
 	@Override
-	public boolean unpack(Level level, BlockPos pos, BlockState state, Direction side, List<ItemStack> items, @Nullable PackageOrder order, boolean simulate) {
+	public boolean unpack(Level level, BlockPos pos, BlockState state, Direction side, List<ItemStack> items, @Nullable PackageOrderContext order, boolean simulate) {
 		return true;
 	}
 }

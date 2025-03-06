@@ -333,7 +333,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		if (items.isEmpty())
 			return true;
 
-		PackageOrder orderContext = PackageItem.getOrderContext(box);
+		PackageOrderContext orderContext = PackageItem.getOrderContext(box);
 
 		Direction facing = getBlockState().getOptionalValue(PackagerBlock.FACING).orElse(Direction.UP);
 		BlockPos target = worldPosition.relative(facing.getOpposite());

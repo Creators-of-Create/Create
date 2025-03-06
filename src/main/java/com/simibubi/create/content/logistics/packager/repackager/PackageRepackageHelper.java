@@ -278,7 +278,7 @@ public class PackageRepackageHelper {
 
 				ItemStackHandler target = new ItemStackHandler(PackageItem.SLOTS);
 				for (int k = 0; k < outputSlots.size(); k++)
-					target.setStackInSlot(i, outputSlots.get(i));
+					target.setStackInSlot(k, outputSlots.get(k));
 				ItemStack packageItem = PackageItem.containing(target);
 				PackageItem.addAddress(packageItem, address);
 				List<List<BigItemStack>> newCraftContext = new ArrayList<>();
