@@ -16,8 +16,6 @@ import com.simibubi.create.foundation.data.recipe.Mods;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
 
-import net.minecraftforge.common.Tags;
-
 import net.minecraft.data.tags.TagsProvider.TagAppender;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -29,8 +27,18 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
+import net.minecraftforge.common.Tags;
+
 public class CreateRegistrateTags {
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
+
+	private static final Block[] SHULKER_BOXES = {
+		Blocks.SHULKER_BOX,
+		Blocks.WHITE_SHULKER_BOX, Blocks.ORANGE_SHULKER_BOX, Blocks.MAGENTA_SHULKER_BOX, Blocks.LIGHT_BLUE_SHULKER_BOX,
+		Blocks.YELLOW_SHULKER_BOX, Blocks.LIME_SHULKER_BOX, Blocks.PINK_SHULKER_BOX, Blocks.GRAY_SHULKER_BOX,
+		Blocks.LIGHT_GRAY_SHULKER_BOX, Blocks.CYAN_SHULKER_BOX, Blocks.PURPLE_SHULKER_BOX, Blocks.BLUE_SHULKER_BOX,
+		Blocks.BROWN_SHULKER_BOX, Blocks.GREEN_SHULKER_BOX, Blocks.RED_SHULKER_BOX, Blocks.BLACK_SHULKER_BOX
+	};
 
 	public static void addGenerators() {
 		REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, CreateRegistrateTags::genBlockTags);
@@ -116,13 +124,14 @@ public class CreateRegistrateTags {
 		prov.tag(AllBlockTags.CHEST_MOUNTED_STORAGE.tag).add(
 			Blocks.CHEST, Blocks.TRAPPED_CHEST
 		);
-		prov.tag(AllBlockTags.SIMPLE_MOUNTED_STORAGE.tag).add(
-			Blocks.BARREL, Blocks.SHULKER_BOX,
-			Blocks.WHITE_SHULKER_BOX, Blocks.ORANGE_SHULKER_BOX, Blocks.MAGENTA_SHULKER_BOX, Blocks.LIGHT_BLUE_SHULKER_BOX,
-			Blocks.YELLOW_SHULKER_BOX, Blocks.LIME_SHULKER_BOX, Blocks.PINK_SHULKER_BOX, Blocks.GRAY_SHULKER_BOX,
-			Blocks.LIGHT_GRAY_SHULKER_BOX, Blocks.CYAN_SHULKER_BOX, Blocks.PURPLE_SHULKER_BOX, Blocks.BLUE_SHULKER_BOX,
-			Blocks.BROWN_SHULKER_BOX, Blocks.GREEN_SHULKER_BOX, Blocks.RED_SHULKER_BOX, Blocks.BLACK_SHULKER_BOX
-		);
+		prov.tag(AllBlockTags.SIMPLE_MOUNTED_STORAGE.tag)
+			.add(Blocks.BARREL)
+			.add(SHULKER_BOXES);
+
+		prov.tag(AllBlockTags.SINGLE_BLOCK_INVENTORIES.tag)
+			.add(SHULKER_BOXES)
+			.add(Blocks.HOPPER, Blocks.DISPENSER, Blocks.DROPPER, Blocks.CHISELED_BOOKSHELF, Blocks.JUKEBOX)
+			.addTag(Tags.Blocks.BARRELS);
 
 		prov.tag(AllBlockTags.ROOTS.tag)
 			.add(Blocks.MANGROVE_ROOTS);

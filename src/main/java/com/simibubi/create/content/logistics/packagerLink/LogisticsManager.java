@@ -19,6 +19,7 @@ import com.google.common.cache.Cache;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.content.logistics.BigItemStack;
+import com.simibubi.create.content.logistics.packager.IdentifiedInventory;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 import com.simibubi.create.content.logistics.packager.PackagingRequest;
@@ -57,7 +58,7 @@ public class LogisticsManager {
 		return InventorySummary.EMPTY;
 	}
 
-	public static int getStockOf(UUID freqId, ItemStack stack, @Nullable IItemHandler ignoredHandler) {
+	public static int getStockOf(UUID freqId, ItemStack stack, @Nullable IdentifiedInventory ignoredHandler) {
 		int sum = 0;
 		for (LogisticallyLinkedBehaviour link : LogisticallyLinkedBehaviour.getAllPresent(freqId, false))
 			sum += link.getSummary(ignoredHandler)
@@ -66,7 +67,7 @@ public class LogisticsManager {
 	}
 
 	public static boolean broadcastPackageRequest(UUID freqId, RequestType type, PackageOrder order,
-												  IItemHandler ignoredHandler, String address, @Nullable PackageOrderContext orderContext) {
+												  @Nullable IdentifiedInventory ignoredHandler, String address, @Nullable PackageOrderContext orderContext) {
 		if (order.isEmpty())
 			return false;
 
@@ -84,7 +85,7 @@ public class LogisticsManager {
 	}
 
 	public static Multimap<PackagerBlockEntity, PackagingRequest> findPackagersForRequest(UUID freqId,
-																						  PackageOrder order, @Nullable PackageOrderContext customContext, @Nullable IItemHandler ignoredHandler,
+																						  PackageOrder order, @Nullable PackageOrderContext customContext, @Nullable IdentifiedInventory ignoredHandler,
 																						  String address) {
 		List<BigItemStack> stacks = new ArrayList<>();
 		for (BigItemStack stack : order.stacks())

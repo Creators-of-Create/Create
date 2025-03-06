@@ -6,7 +6,7 @@ import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.api.unpacking.UnpackingHandler;
+import com.simibubi.create.api.packager.unpacking.UnpackingHandler;
 import com.simibubi.create.content.kinetics.crafter.ConnectedInputHandler.ConnectedInput;
 import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterBlockEntity;
 import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterBlockEntity.Inventory;
@@ -43,7 +43,7 @@ public enum CrafterUnpackingHandler implements UnpackingHandler {
 
 		// insert in the order's defined ordering
 		int max = Math.min(inventories.size(), craftingContext.size());
-		for (int i = 0; i < max; i++) {
+		outer: for (int i = 0; i < max; i++) {
 			BigItemStack targetStack = craftingContext.get(i);
 			if (targetStack.stack.isEmpty())
 				continue;
@@ -59,6 +59,8 @@ public enum CrafterUnpackingHandler implements UnpackingHandler {
 					ItemStack toInsert = stack.copyWithCount(1);
 					if (inventory.insertItem(0, toInsert, simulate).isEmpty()) {
 						stack.shrink(1);
+						// one item per crafter, move to next once successful
+						continue outer;
 					}
 				}
 			}

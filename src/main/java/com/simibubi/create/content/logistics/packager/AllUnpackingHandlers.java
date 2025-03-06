@@ -1,8 +1,8 @@
 package com.simibubi.create.content.logistics.packager;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.api.unpacking.UnpackingHandler;
-import com.simibubi.create.api.unpacking.VoidingUnpackingHandler;
+import com.simibubi.create.api.packager.unpacking.UnpackingHandler;
+import com.simibubi.create.api.packager.unpacking.VoidingUnpackingHandler;
 import com.simibubi.create.impl.unpacking.BasinUnpackingHandler;
 import com.simibubi.create.impl.unpacking.CrafterUnpackingHandler;
 

@@ -7,10 +7,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.unpacking.UnpackingHandler;
+import com.simibubi.create.api.packager.unpacking.UnpackingHandler;
 import com.simibubi.create.content.contraptions.actors.psi.PortableStorageInterfaceBlockEntity;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.box.PackageItem;
@@ -36,6 +38,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedI
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.math.BlockFace;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -510,11 +513,14 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			return null;
 		for (boolean front : Iterate.trueAndFalse) {
 			SignText text = sign.getText(front);
+			String address = "";
 			for (Component component : text.getMessages(false)) {
-				String address = component.getString();
-				if (!address.isBlank())
-					return address;
+				String string = component.getString();
+				if (!string.isBlank())
+					address += string.trim() + " ";
 			}
+			if (!address.isBlank())
+				return address.trim();
 		}
 		return null;
 	}
@@ -591,22 +597,34 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		return animationTicks >= CYCLE / 2 ? ItemStack.EMPTY : heldBox;
 	}
 
-	public boolean isTargetingSameInventory(IItemHandler inventory) {
-		IItemHandler myInventory = targetInventory.getInventory();
-		if (myInventory == null || inventory == null)
+	public boolean isTargetingSameInventory(@Nullable IdentifiedInventory inventory) {
+		if (inventory == null)
 			return false;
 
-		if (myInventory == inventory)
+		IItemHandler targetHandler = this.targetInventory.getInventory();
+		if (targetHandler == null)
+			return false;
+
+		if (inventory.identifier() != null) {
+			BlockFace face = this.targetInventory.getTarget().getOpposite();
+			return inventory.identifier().contains(face);
+		} else {
+			return isSameInventoryFallback(targetHandler, inventory.handler());
+		}
+	}
+
+	private static boolean isSameInventoryFallback(IItemHandler first, IItemHandler second) {
+		if (first == second)
 			return true;
 
 		// If a contained ItemStack instance is the same, we can be pretty sure these
 		// inventories are the same (works for compound inventories)
-		for (int i = 0; i < inventory.getSlots(); i++) {
-			ItemStack stackInSlot = inventory.getStackInSlot(i);
+		for (int i = 0; i < second.getSlots(); i++) {
+			ItemStack stackInSlot = second.getStackInSlot(i);
 			if (stackInSlot.isEmpty())
 				continue;
-			for (int j = 0; j < myInventory.getSlots(); j++)
-				if (stackInSlot == myInventory.getStackInSlot(j))
+			for (int j = 0; j < first.getSlots(); j++)
+				if (stackInSlot == first.getStackInSlot(j))
 					return true;
 			break;
 		}

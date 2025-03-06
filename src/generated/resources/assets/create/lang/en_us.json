@@ -2201,7 +2201,7 @@
   "create.ponder.packager_address.text_12": "Inspect them to find out more about their behaviour",
   "create.ponder.packager_address.text_2": "When a sign is placed on a packager..",
   "create.ponder.packager_address.text_3": "→ Warehouse",
-  "create.ponder.packager_address.text_4": "Created packages will carry the written line of text as their address",
+  "create.ponder.packager_address.text_4": "Created packages will carry the written lines of text as their address",
   "create.ponder.packager_address.text_5": "Package filters route packages based on their address",
   "create.ponder.packager_address.text_6": "→ Warehouse",
   "create.ponder.packager_address.text_7": "Factory",

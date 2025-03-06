@@ -65,6 +65,12 @@ public class CClient extends ConfigBase {
 			Comments.enableAmbientSounds);
 	public final ConfigFloat ambientVolumeCap = f(.1f, 0, 1, "ambientVolumeCap",
 			Comments.ambientVolumeCap);
+	
+	//integration
+	public final ConfigGroup integration = group(1, "jeiIntegration",
+		Comments.integration);
+	public final ConfigBool syncJeiSearch = b(true, "syncJeiSearch",
+		Comments.syncJeiSearch);
 
 	//train group
 	public final ConfigGroup trains = group(1, "trains", Comments.trains);
@@ -145,6 +151,8 @@ public class CClient extends ConfigBase {
 		static String fluidFogSettings = "Configure your vision range when submerged in Create's custom fluids";
 		static String honeyTransparencyMultiplier = "The vision range through honey will be multiplied by this factor";
 		static String chocolateTransparencyMultiplier = "The vision range though chocolate will be multiplied by this factor";
+		static String integration = "Mod Integration and JEI";
+		static String syncJeiSearch = "Whether to auto-update the JEI search when searching in the stock keeper UI";
 	}
 
 }

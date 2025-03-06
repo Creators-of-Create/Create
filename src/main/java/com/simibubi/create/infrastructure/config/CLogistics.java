@@ -14,6 +14,7 @@ public class CLogistics extends ConfigBase {
 	public final ConfigInt vaultCapacity = i(20, 1, 2048, "vaultCapacity", Comments.vaultCapacity);
 	public final ConfigInt chainConveyorCapacity = i(20, 1, "chainConveyorCapacity", Comments.chainConveyorCapacity);
 	public final ConfigInt brassTunnelTimer = i(10, 1, 10, "brassTunnelTimer", Comments.brassTunnelTimer);
+	public final ConfigInt factoryGaugeTimer = i(100, 5, "factoryGaugeTimer", Comments.factoryGaugeTimer);
 	public final ConfigBool seatHostileMobs = b(true, "seatHostileMobs", Comments.seatHostileMobs);
 
 	@Override
@@ -34,6 +35,7 @@ public class CLogistics extends ConfigBase {
 		static String vaultCapacity = "The total amount of stacks a vault can hold per block in size.";
 		static String chainConveyorCapacity = "The amount of packages a chain conveyor can carry at a time.";
 		static String brassTunnelTimer = "The amount of ticks a brass tunnel waits between distributions.";
+		static String factoryGaugeTimer = "The amount of ticks a factory gauge waits between requests.";
 		static String seatHostileMobs = "Whether hostile mobs walking near a seat will start riding it.";
 	}
 
