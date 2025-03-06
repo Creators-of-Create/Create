@@ -11,7 +11,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.box.PackageStyles.PackageStyle;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
 
-import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderCraftingContext;
 
 import net.createmod.catnip.data.Glob;
 import net.createmod.catnip.math.VecHelper;
@@ -43,6 +43,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -109,7 +110,7 @@ public class PackageItem extends Item {
 	}
 
 	public static void setOrder(ItemStack box, int orderId, int linkIndex, boolean isFinalLink, int fragmentIndex,
-								boolean isFinal, @Nullable PackageOrderContext orderContext) {
+								boolean isFinal, @Nullable PackageOrder orderContext, @Nullable PackageOrderCraftingContext orderCraftingContext) {
 		CompoundTag tag = new CompoundTag();
 		tag.putInt("OrderId", orderId);
 		tag.putInt("LinkIndex", linkIndex);
@@ -118,6 +119,8 @@ public class PackageItem extends Item {
 		tag.putBoolean("IsFinal", isFinal);
 		if (orderContext != null)
 			tag.put("OrderContext", orderContext.write());
+		if (orderCraftingContext != null)
+			tag.put("OrderCraftingContext", orderCraftingContext.write());
 		box.getOrCreateTag()
 			.put("Fragment", tag);
 	}
@@ -130,20 +133,38 @@ public class PackageItem extends Item {
 			.getInt("OrderId");
 	}
 
-	public static PackageOrderContext getOrderContext(ItemStack box) {
+	public static PackageOrder getOrderContext(ItemStack box) {
 		CompoundTag tag = box.getTag();
 		if (tag == null || !tag.contains("Fragment"))
 			return null;
 		CompoundTag frag = tag.getCompound("Fragment");
 		if (!frag.contains("OrderContext"))
 			return null;
-		return PackageOrderContext.read(frag.getCompound("OrderContext"));
+		return PackageOrder.read(frag.getCompound("OrderContext"));
+	}
+
+	public static PackageOrderCraftingContext getOrderCraftingContext(ItemStack box) {
+		CompoundTag tag = box.getTag();
+		if (tag == null || !tag.contains("Fragment"))
+			return null;
+		CompoundTag frag = tag.getCompound("Fragment");
+		if (!frag.contains("OrderContext"))
+			return null;
+		return PackageOrderCraftingContext.read(frag.getCompound("OrderCraftingContext"));
 	}
 
 	public static void addOrderContext(ItemStack box, PackageOrder orderContext) {
 		CompoundTag tag = box.getOrCreateTagElement("Fragment");
 		if (orderContext != null)
 			tag.put("OrderContext", orderContext.write());
+		box.getOrCreateTag()
+			.put("Fragment", tag);
+	}
+
+	public static void addOrderCraftingContext(ItemStack box, PackageOrderCraftingContext orderCraftingContext) {
+		CompoundTag tag = box.getOrCreateTagElement("Fragment");
+		if (orderCraftingContext != null)
+			tag.put("OrderCraftingContext", orderCraftingContext.write());
 		box.getOrCreateTag()
 			.put("Fragment", tag);
 	}

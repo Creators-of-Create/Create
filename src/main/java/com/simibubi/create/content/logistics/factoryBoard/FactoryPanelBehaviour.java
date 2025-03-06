@@ -15,7 +15,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderCraftingContext;
 
 import org.joml.Math;
 
@@ -434,12 +434,12 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 
 		// Input items may come from differing networks
 		Map<UUID, Collection<BigItemStack>> asMap = toRequest.asMap();
-		PackageOrderContext requestContext = new PackageOrderContext(List.of(toRequestAsList), List.of(1));
+		PackageOrderCraftingContext craftingContext = new PackageOrderCraftingContext(List.of(toRequestAsList), List.of(1));
 		List<Multimap<PackagerBlockEntity, PackagingRequest>> requests = new ArrayList<>();
 
 		// Panel may enforce item arrangement
 		if (!activeCraftingArrangement.isEmpty())
-			requestContext = new PackageOrderContext(List.of(activeCraftingArrangement.stream()
+			craftingContext = new PackageOrderCraftingContext(List.of(activeCraftingArrangement.stream()
 				.map(BigItemStack::new)
 				.toList()), List.of(1));
 
@@ -447,7 +447,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		for (Entry<UUID, Collection<BigItemStack>> entry : asMap.entrySet()) {
 			PackageOrder order = new PackageOrder(new ArrayList<>(entry.getValue()));
 			Multimap<PackagerBlockEntity, PackagingRequest> request =
-				LogisticsManager.findPackagersForRequest(entry.getKey(), order, requestContext, null, recipeAddress);
+				LogisticsManager.findPackagersForRequest(entry.getKey(), order, null, craftingContext, null, recipeAddress);
 			requests.add(request);
 		}
 
@@ -497,7 +497,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		sendEffect(getPanelPosition(), true);
 
 		if (!LogisticsManager.broadcastPackageRequest(network, RequestType.RESTOCK, order,
-			packager.targetInventory.getIdentifiedInventory(), recipeAddress, null))
+			packager.targetInventory.getIdentifiedInventory(), recipeAddress, null, null))
 			return;
 
 		restockerPromises.add(new RequestPromise(orderedItem));

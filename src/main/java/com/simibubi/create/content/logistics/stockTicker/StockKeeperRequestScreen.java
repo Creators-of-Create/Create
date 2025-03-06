@@ -297,7 +297,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			ItemStack stack = blockEntity.categories.get(i);
 			CategoryEntry entry = new CategoryEntry(i, stack.isEmpty() ? ""
 				: stack.getHoverName()
-					.getString(),
+				.getString(),
 				0);
 			entry.hidden = hiddenCategories.contains(i);
 			categories.add(entry);
@@ -820,12 +820,12 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		if (addressBox.getValue()
 			.isBlank() && !addressBox.isFocused() && addressBox.isHovered()) {
 			graphics.renderComponentTooltip(font, List.of(CreateLang.translate("gui.factory_panel.restocker_address")
-				.color(ScrollInput.HEADER_RGB)
-				.component(),
-				CreateLang.translate("gui.schedule.lmb_edit")
-					.style(ChatFormatting.DARK_GRAY)
-					.style(ChatFormatting.ITALIC)
-					.component()),
+						.color(ScrollInput.HEADER_RGB)
+						.component(),
+					CreateLang.translate("gui.schedule.lmb_edit")
+						.style(ChatFormatting.DARK_GRAY)
+						.style(ChatFormatting.ITALIC)
+						.component()),
 				mouseX, mouseY);
 		}
 	}
@@ -1104,9 +1104,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 				if (!entry.hidden) {
 					hiddenCategories.add(indexOf);
 					playUiSound(SoundEvents.ITEM_FRAME_ROTATE_ITEM, 1f, 1.5f);
-				}
-
-				else {
+				} else {
 					hiddenCategories.remove(indexOf);
 					playUiSound(SoundEvents.ITEM_FRAME_ROTATE_ITEM, 1f, 0.675f);
 				}
@@ -1341,7 +1339,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		SimpleChannel channel = AllPackets.getChannel();
 		BlockPos pos = blockEntity.getBlockPos();
 		channel.sendToServer(new PackageOrderRequestPacket(pos, new PackageOrder(Collections.emptyList()),
-			addressBox.getValue(), false, PackageOrderContext.empty()));
+			addressBox.getValue(), false, PackageOrder.empty(), PackageOrderCraftingContext.empty()));
 		channel.sendToServer(new StockKeeperCategoryHidingPacket(pos, new ArrayList<>(hiddenCategories)));
 		super.removed();
 	}
@@ -1361,23 +1359,23 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			forcedEntries.add(toOrder.stack.copy(), -1 - Math.max(0, countOf - toOrder.count));
 		}
 
-		PackageOrderContext craftingRequest = PackageOrderContext.empty();
+		PackageOrderCraftingContext craftingRequest = PackageOrderCraftingContext.empty();
 		if (canRequestCraftingPackage && !itemsToOrder.isEmpty() && !recipesToOrder.isEmpty()) {
 			List<List<BigItemStack>> craftList = new ArrayList<>();
 			List<Integer> amountList = new ArrayList<>();
 			for (CraftableBigItemStack cBIS : recipesToOrder) {
-				if(cBIS.recipe instanceof CraftingRecipe cr) {
+				if (cBIS.recipe instanceof CraftingRecipe cr) {
 					craftList.add(FactoryPanelScreen.convertRecipeToPackageOrderContext(cr, itemsToOrder));
 					amountList.add(cBIS.count / cBIS.getOutputCount(blockEntity.getLevel()));
 				}
 			}
-			craftingRequest = new PackageOrderContext(craftList, amountList);
+			craftingRequest = new PackageOrderCraftingContext(craftList, amountList);
 		}
 
 
 		AllPackets.getChannel()
 			.sendToServer(new PackageOrderRequestPacket(blockEntity.getBlockPos(), new PackageOrder(itemsToOrder),
-				addressBox.getValue(), encodeRequester, craftingRequest));
+				addressBox.getValue(), encodeRequester, PackageOrder.empty(), craftingRequest));
 
 		itemsToOrder = new ArrayList<>();
 		recipesToOrder = new ArrayList<>();
@@ -1524,7 +1522,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			List<BigItemStack> valid = new ArrayList<>();
 			for (List<BigItemStack> list : summary.getItemMap()
 				.values())
-				Entries: for (BigItemStack entry : list) {
+				Entries:for (BigItemStack entry : list) {
 					if (!ingredient.test(entry.stack))
 						continue;
 					BigItemStack asBis = new BigItemStack(entry.stack,
@@ -1620,5 +1618,5 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		if (Mods.JEI.isLoaded() && AllConfigs.client().syncJeiSearch.get())
 			CreateJEI.runtime.getIngredientFilter().setFilterText(searchBox.getValue());
 	}
-	
+
 }

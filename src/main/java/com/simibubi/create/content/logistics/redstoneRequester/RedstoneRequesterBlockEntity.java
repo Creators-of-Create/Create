@@ -7,7 +7,7 @@ import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour.RequestType;
 import com.simibubi.create.content.logistics.packagerLink.WiFiParticle;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
-import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderCraftingContext;
 import com.simibubi.create.content.logistics.stockTicker.StockCheckingBlockEntity;
 
 import net.minecraft.core.BlockPos;
@@ -23,6 +23,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.network.NetworkHooks;
 
@@ -30,7 +31,7 @@ public class RedstoneRequesterBlockEntity extends StockCheckingBlockEntity imple
 
 	public boolean allowPartialRequests;
 	public PackageOrder encodedRequest = PackageOrder.empty();
-	public PackageOrderContext encodedRequestContext = PackageOrderContext.empty();
+	public PackageOrderCraftingContext encodedRequestContext = PackageOrderCraftingContext.empty();
 	public String encodedTargetAdress = "";
 
 	public boolean lastRequestSucceeded;
@@ -78,7 +79,7 @@ public class RedstoneRequesterBlockEntity extends StockCheckingBlockEntity imple
 			}
 		}
 
-		broadcastPackageRequest(RequestType.REDSTONE, encodedRequest, null, encodedTargetAdress, encodedRequestContext.isEmpty() ? null : encodedRequestContext);
+		broadcastPackageRequest(RequestType.REDSTONE, encodedRequest, null, encodedTargetAdress, null, encodedRequestContext.isEmpty() ? null : encodedRequestContext);
 		AllPackets.sendToNear(level, worldPosition, 32, new RedstoneRequesterEffectPacket(worldPosition, anySucceeded));
 		lastRequestSucceeded = true;
 	}
@@ -90,7 +91,7 @@ public class RedstoneRequesterBlockEntity extends StockCheckingBlockEntity imple
 		lastRequestSucceeded = tag.getBoolean("Success");
 		allowPartialRequests = tag.getBoolean("AllowPartial");
 		encodedRequest = PackageOrder.read(tag.getCompound("EncodedRequest"));
-		encodedRequestContext = PackageOrderContext.read(tag.getCompound("EncodedRequestContext"));
+		encodedRequestContext = PackageOrderCraftingContext.read(tag.getCompound("EncodedRequestContext"));
 		encodedTargetAdress = tag.getString("EncodedAddress");
 	}
 
@@ -130,8 +131,8 @@ public class RedstoneRequesterBlockEntity extends StockCheckingBlockEntity imple
 
 	@Override
 	public Component getDisplayName() {
-        return Component.empty();
-    }
+		return Component.empty();
+	}
 
 	@Override
 	public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {

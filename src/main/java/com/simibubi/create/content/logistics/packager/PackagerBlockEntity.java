@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
@@ -26,8 +28,7 @@ import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlock;
 import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlockEntity;
 import com.simibubi.create.content.logistics.packagerLink.RequestPromiseQueue;
 import com.simibubi.create.content.logistics.packagerLink.WiFiEffectPacket;
-import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
-import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderCraftingContext;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -304,9 +305,9 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 	public boolean isTooBusyFor(RequestType type) {
 		int queue = queuedExitingPackages.size();
 		return queue >= switch (type) {
-		case PLAYER -> 50;
-		case REDSTONE -> 20;
-		case RESTOCK -> 10;
+			case PLAYER -> 50;
+			case REDSTONE -> 20;
+			case RESTOCK -> 10;
 		};
 	}
 
@@ -336,7 +337,8 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		if (items.isEmpty())
 			return true;
 
-		PackageOrderContext orderContext = PackageItem.getOrderContext(box);
+		PackageOrder orderContext = PackageItem.getOrderContext(box);
+		PackageOrderCraftingContext orderCraftingContext = PackageItem.getOrderCraftingContext(box);
 
 		Direction facing = getBlockState().getOptionalValue(PackagerBlock.FACING).orElse(Direction.UP);
 		BlockPos target = worldPosition.relative(facing.getOpposite());
@@ -345,7 +347,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		UnpackingHandler handler = UnpackingHandler.REGISTRY.get(targetState);
 		UnpackingHandler toUse = handler != null ? handler : UnpackingHandler.DEFAULT;
 		// note: handler may modify the passed items
-		boolean unpacked = toUse.unpack(level, target, targetState, facing, items, orderContext, simulate);
+		boolean unpacked = toUse.unpack(level, target, targetState, facing, items, orderContext, orderCraftingContext, simulate);
 
 		if (unpacked && !simulate) {
 			previouslyUnwrapped = box;
@@ -377,7 +379,8 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		boolean finalLinkInOrder = false;
 		int packageIndexAtLink = 0;
 		boolean finalPackageAtLink = false;
-		PackageOrderContext orderContext = null;
+		PackageOrder orderContext = null;
+		PackageOrderCraftingContext orderCraftingContext = null;
 		boolean requestQueue = queuedRequests != null;
 
 		if (requestQueue && !queuedRequests.isEmpty()) {
@@ -390,9 +393,11 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			packageIndexAtLink = nextRequest.packageCounter()
 				.getAndIncrement();
 			orderContext = nextRequest.context();
+			orderCraftingContext = nextRequest.craftingContext();
 		}
 
-		Outer: for (int i = 0; i < PackageItem.SLOTS; i++) {
+		Outer:
+		for (int i = 0; i < PackageItem.SLOTS; i++) {
 			boolean continuePacking = true;
 
 			while (continuePacking) {
@@ -452,6 +457,8 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 					continuePacking = true;
 					if (nextRequest.context() != null)
 						orderContext = nextRequest.context();
+					if (nextRequest.craftingContext() != null)
+						orderCraftingContext = nextRequest.craftingContext();
 
 					if (bulky)
 						break Outer;
@@ -474,7 +481,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			PackageItem.addAddress(createdBox, fixedAddress);
 		if (requestQueue)
 			PackageItem.setOrder(createdBox, fixedOrderId, linkIndexInOrder, finalLinkInOrder, packageIndexAtLink,
-				finalPackageAtLink, orderContext);
+				finalPackageAtLink, orderContext, orderCraftingContext);
 		if (!requestQueue && !signBasedAddress.isBlank())
 			PackageItem.addAddress(createdBox, signBasedAddress);
 

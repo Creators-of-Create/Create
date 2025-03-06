@@ -16,13 +16,15 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 	private PackageOrder order;
 	private String address;
 	private boolean encodeRequester;
-	private PackageOrderContext craftingRequest;
+	private PackageOrder context;
+	private PackageOrderCraftingContext craftingRequest;
 
-	public PackageOrderRequestPacket(BlockPos pos, PackageOrder order, String address, boolean encodeRequester, PackageOrderContext craftingRequest) {
+	public PackageOrderRequestPacket(BlockPos pos, PackageOrder order, String address, boolean encodeRequester, PackageOrder context, PackageOrderCraftingContext craftingRequest) {
 		super(pos);
 		this.order = order;
 		this.address = address;
 		this.encodeRequester = encodeRequester;
+		this.context = context;
 		this.craftingRequest = craftingRequest;
 	}
 
@@ -35,6 +37,7 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 		buffer.writeUtf(address);
 		order.write(buffer);
 		buffer.writeBoolean(encodeRequester);
+		context.write(buffer);
 		craftingRequest.write(buffer);
 	}
 
@@ -43,11 +46,13 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 		address = buffer.readUtf();
 		order = PackageOrder.read(buffer);
 		encodeRequester = buffer.readBoolean();
-		craftingRequest = PackageOrderContext.read(buffer);
+		context = PackageOrder.read(buffer);
+		craftingRequest = PackageOrderCraftingContext.read(buffer);
 	}
 
 	@Override
-	protected void applySettings(StockTickerBlockEntity be) {}
+	protected void applySettings(StockTickerBlockEntity be) {
+	}
 
 	@Override
 	protected void applySettings(ServerPlayer player, StockTickerBlockEntity be) {
@@ -65,7 +70,7 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 			WiFiEffectPacket.send(player.level(), pos);
 		}
 
-		be.broadcastPackageRequest(RequestType.PLAYER, order, null, address, craftingRequest.isEmpty() ? null : craftingRequest);
+		be.broadcastPackageRequest(RequestType.PLAYER, order, null, address, context.isEmpty() ? null : context, craftingRequest.isEmpty() ? null : craftingRequest);
 		return;
 	}
 

@@ -16,15 +16,15 @@ import net.minecraft.network.FriendlyByteBuf;
 /**
  * Package ordering context containing additional information of package orders.
  *
- * @param contextStacks
+ * @param stacks
  * @param amounts
  */
-public record PackageOrderContext(List<List<BigItemStack>> contextStacks, List<Integer> amounts) {
+public record PackageOrderCraftingContext(List<List<BigItemStack>> stacks, List<Integer> amounts) {
 
     public CompoundTag write() {
         CompoundTag tag = new CompoundTag();
         ListTag outer = new ListTag();
-        for (List<BigItemStack> stack : contextStacks) {
+        for (List<BigItemStack> stack : stacks) {
             outer.add(NBTHelper.writeCompoundList(stack, BigItemStack::write));
         }
         tag.put("Entries", outer);
@@ -32,36 +32,36 @@ public record PackageOrderContext(List<List<BigItemStack>> contextStacks, List<I
         return tag;
     }
 
-    public static boolean hasCraftingInformation(PackageOrderContext context) {
+    public static boolean hasCraftingInformation(PackageOrderCraftingContext context) {
         if (context == null) {
             return false;
         }
 
-        // First stack is always the requested content, so crafting information is present as soon as there is a second entry.
-        return context.contextStacks.size() > 1;
+		// Only a valid crafting packet if it contains exactly one recipe
+        return context.stacks.size() == 1;
     }
 
-    public static PackageOrderContext empty() {
-        return new PackageOrderContext(List.of(), List.of());
+    public static PackageOrderCraftingContext empty() {
+        return new PackageOrderCraftingContext(List.of(), List.of());
     }
 
     public boolean isEmpty() {
-        return contextStacks.isEmpty();
+        return stacks.isEmpty();
     }
 
-    public static PackageOrderContext read(CompoundTag tag) {
+    public static PackageOrderCraftingContext read(CompoundTag tag) {
         List<List<BigItemStack>> stacks = new ArrayList<>();
         for (Tag t : tag.getList("Entries", Tag.TAG_LIST)) {
             if (t instanceof ListTag list)
                 stacks.add(NBTHelper.readCompoundList(list, BigItemStack::read));
         }
         List<Integer> amounts = Arrays.stream(tag.getIntArray("Amounts")).boxed().toList();
-        return new PackageOrderContext(stacks, amounts);
+        return new PackageOrderCraftingContext(stacks, amounts);
     }
 
     public void write(FriendlyByteBuf buffer) {
-        buffer.writeVarInt(contextStacks.size());
-        for (List<BigItemStack> list : contextStacks) {
+        buffer.writeVarInt(stacks.size());
+        for (List<BigItemStack> list : stacks) {
             buffer.writeVarInt(list.size());
             for (BigItemStack itemStack : list)
                 itemStack.send(buffer);
@@ -72,7 +72,7 @@ public record PackageOrderContext(List<List<BigItemStack>> contextStacks, List<I
         }
     }
 
-    public static PackageOrderContext read(FriendlyByteBuf buffer) {
+    public static PackageOrderCraftingContext read(FriendlyByteBuf buffer) {
         int size = buffer.readVarInt();
         List<List<BigItemStack>> stacks = new ArrayList<>();
         for (int i = 0; i < size; i++) {
@@ -88,7 +88,7 @@ public record PackageOrderContext(List<List<BigItemStack>> contextStacks, List<I
         for (int i = 0; i < size; i++) {
             amounts.add(buffer.readVarInt());
         }
-        return new PackageOrderContext(stacks, amounts);
+        return new PackageOrderCraftingContext(stacks, amounts);
     }
 
 }

@@ -2,12 +2,12 @@ package com.simibubi.create.impl.unpacking;
 
 import java.util.List;
 
-import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderCraftingContext;
 
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.api.packager.unpacking.UnpackingHandler;
-import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 
 import net.minecraft.core.BlockPos;
@@ -21,7 +21,7 @@ public enum BasinUnpackingHandler implements UnpackingHandler {
 	INSTANCE;
 
 	@Override
-	public boolean unpack(Level level, BlockPos pos, BlockState state, Direction side, List<ItemStack> items, @Nullable PackageOrderContext order, boolean simulate) {
+	public boolean unpack(Level level, BlockPos pos, BlockState state, Direction side, List<ItemStack> items, @Nullable PackageOrder orderContext, @Nullable PackageOrderCraftingContext orderCraftingContext, boolean simulate) {
 		BlockEntity be = level.getBlockEntity(pos);
 		if (!(be instanceof BasinBlockEntity basin))
 			return false;
@@ -29,7 +29,7 @@ public enum BasinUnpackingHandler implements UnpackingHandler {
 		basin.inputInventory.packagerMode = true;
 
 		try {
-			return UnpackingHandler.DEFAULT.unpack(level, pos, state, side, items, order, simulate);
+			return UnpackingHandler.DEFAULT.unpack(level, pos, state, side, items, orderContext, orderCraftingContext, simulate);
 		} finally {
 			basin.inputInventory.packagerMode = false;
 		}

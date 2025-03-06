@@ -7,7 +7,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.logistics.stockTicker.PackageOrderContext;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderCraftingContext;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
@@ -17,7 +18,6 @@ import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 import com.simibubi.create.content.logistics.packager.PackagingRequest;
 import com.simibubi.create.content.logistics.packager.repackager.RepackagerBlockEntity;
-import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
 import com.simibubi.create.content.redstone.displayLink.LinkWithBulbBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
@@ -69,8 +69,8 @@ public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 			vec3 = vec3.add(0, 0.25, 0);
 
 		vec3 = vec3.add(Vec3.atLowerCornerOf(state.getOptionalValue(PackagerLinkBlock.FACING)
-			.orElse(Direction.SOUTH)
-			.getNormal())
+				.orElse(Direction.SOUTH)
+				.getNormal())
 			.scale(f * 0.125));
 
 		pulse();
@@ -78,8 +78,8 @@ public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 	}
 
 	public Pair<PackagerBlockEntity, PackagingRequest> processRequest(ItemStack stack, int amount, String address,
-		int linkIndex, MutableBoolean finalLink, int orderId, @Nullable PackageOrderContext orderContext,
-		@Nullable IdentifiedInventory ignoredHandler) {
+																	  int linkIndex, MutableBoolean finalLink, int orderId, @Nullable PackageOrder context, @Nullable PackageOrderCraftingContext craftingContext,
+																	  @Nullable IdentifiedInventory ignoredHandler) {
 		PackagerBlockEntity packager = getPackager();
 		if (packager == null)
 			return null;
@@ -92,7 +92,7 @@ public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 			return null;
 		int toWithdraw = Math.min(amount, availableCount);
 		return Pair.of(packager,
-			PackagingRequest.create(stack, toWithdraw, address, linkIndex, finalLink, 0, orderId, orderContext));
+			PackagingRequest.create(stack, toWithdraw, address, linkIndex, finalLink, 0, orderId, context, craftingContext));
 	}
 
 	@Override
