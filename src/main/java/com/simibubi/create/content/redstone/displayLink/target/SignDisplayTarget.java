@@ -20,7 +20,7 @@ public class SignDisplayTarget extends DisplayTarget {
 			return;
 
 		boolean changed = false;
-		SignText signText = new SignText();
+		SignText signText = ((SignBlockEntity) be).getFrontText();
 		for (int i = 0; i < text.size() && i + line < 4; i++) {
 			if (i == 0)
 				reserve(i + line, sign, context);
