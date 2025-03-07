@@ -292,8 +292,6 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
-		if (pUseContext.isSecondaryUseActive())
-			return false;
 		if (!AllBlocks.FACTORY_GAUGE.isIn(pUseContext.getItemInHand()))
 			return false;
 		Vec3 location = pUseContext.getClickLocation();
