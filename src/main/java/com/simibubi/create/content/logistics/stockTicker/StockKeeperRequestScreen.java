@@ -1221,7 +1221,9 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		int current = existingOrder.count;
 
 		if (hasShiftDown()) {
-			transfer = (remove ? -1 : 1) * (((Math.floorDiv(current, stackSnapping) + (remove ? -1 : 1)) * stackSnapping) - current);
+			int target = ((Math.floorDiv(current, stackSnapping) + (remove ? -1 : 1)) * stackSnapping);
+			target = Math.max(1, target);
+			transfer = (remove ? -1 : 1) * (target - current);
 		}
 
 		if (remove) {
