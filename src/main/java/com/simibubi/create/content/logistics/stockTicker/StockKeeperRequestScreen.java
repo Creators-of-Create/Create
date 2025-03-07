@@ -246,6 +246,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		searchBox.setMaxLength(50);
 		searchBox.setBordered(false);
 		searchBox.setTextColor(0x4A2D31);
+		searchBox.setFocused(true);
 		addWidget(searchBox);
 
 		boolean initial = addressBox == null;
