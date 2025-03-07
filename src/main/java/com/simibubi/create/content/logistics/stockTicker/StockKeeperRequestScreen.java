@@ -1125,8 +1125,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		boolean recipeClicked = hoveredSlot.getFirst() == -2;
 		BigItemStack entry = recipeClicked ? recipesToOrder.get(hoveredSlot.getSecond())
 			: orderClicked ? itemsToOrder.get(hoveredSlot.getSecond())
-			: displayedItems.get(hoveredSlot.getFirst())
-			.get(hoveredSlot.getSecond());
+			: displayedItems.get(hoveredSlot.getFirst()).get(hoveredSlot.getSecond());
 
 		ItemStack itemStack = entry.stack;
 		int transfer = hasShiftDown() ? itemStack.getMaxStackSize() : hasControlDown() ? 10 : 1;
@@ -1152,6 +1151,9 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		int current = existingOrder.count;
 
 		if (rmbClicked || orderClicked) {
+			if (rmbClicked) {
+				transfer = existingOrder.count == 1 ? 1 : existingOrder.count / 2;
+			}
 			existingOrder.count = current - transfer;
 			if (existingOrder.count <= 0) {
 				itemsToOrder.remove(existingOrder);
@@ -1196,10 +1198,10 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		boolean recipeClicked = hoveredSlot.getFirst() == -2;
 		BigItemStack entry = recipeClicked ? recipesToOrder.get(hoveredSlot.getSecond())
 			: orderClicked ? itemsToOrder.get(hoveredSlot.getSecond())
-			: displayedItems.get(hoveredSlot.getFirst())
-			.get(hoveredSlot.getSecond());
+			: displayedItems.get(hoveredSlot.getFirst()).get(hoveredSlot.getSecond());
 
 		boolean remove = scrollY < 0;
+		int stackSnapping = entry.stack.getMaxStackSize() / 4;
 		int transfer = Mth.ceil(Math.abs(scrollY)) * (hasControlDown() ? 10 : 1);
 
 		if (recipeClicked && entry instanceof CraftableBigItemStack cbis) {
@@ -1211,12 +1213,16 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		if (existingOrder == null) {
 			if (itemsToOrder.size() >= cols || remove)
 				return true;
-			itemsToOrder.add(existingOrder = new BigItemStack(entry.stack.copyWithCount(1), 0));
+			itemsToOrder.add(existingOrder = new BigItemStack(entry.stack.copyWithCount(hasShiftDown() ? stackSnapping : 1), 0));
 			playUiSound(SoundEvents.WOOL_STEP, 0.75f, 1.2f);
 			playUiSound(SoundEvents.BAMBOO_WOOD_STEP, 0.75f, 0.8f);
 		}
 
 		int current = existingOrder.count;
+
+		if (hasShiftDown()) {
+			transfer = (remove ? -1 : 1) * (((Math.floorDiv(current, stackSnapping) + (remove ? -1 : 1)) * stackSnapping) - current);
+		}
 
 		if (remove) {
 			existingOrder.count = current - transfer;
