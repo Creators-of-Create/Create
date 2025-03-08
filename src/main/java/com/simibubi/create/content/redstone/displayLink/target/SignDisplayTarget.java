@@ -20,22 +20,25 @@ public class SignDisplayTarget extends DisplayTarget {
 			return;
 
 		boolean changed = false;
-		SignText signText = ((SignBlockEntity) be).getFrontText();
+		SignText signTextFront = ((SignBlockEntity) be).getFrontText();
+		SignText signTextBack = ((SignBlockEntity) be).getBackText();
 		for (int i = 0; i < text.size() && i + line < 4; i++) {
 			if (i == 0)
 				reserve(i + line, sign, context);
 			if (i > 0 && isReserved(i + line, sign, context))
 				break;
 
-			signText = signText.setMessage(i + line, text.get(i));
+			//signText = signText.setMessage(i + line, text.get(i));
+			signTextFront = signTextFront.setMessage(i + line, text.get(i));
+			signTextBack = signTextBack.setMessage(i + line, text.get(i));
 			changed = true;
 		}
 
 		if (changed)
-			for (boolean side : Iterate.trueAndFalse)
-				sign.setText(signText, side);
-		context.level()
-			.sendBlockUpdated(context.getTargetPos(), sign.getBlockState(), sign.getBlockState(), 2);
+			context.level().sendBlockUpdated(context.getTargetPos(), sign.getBlockState(), sign.getBlockState(), 2);
+			sign.setText(signTextFront, true);
+			context.level().sendBlockUpdated(context.getTargetPos(), sign.getBlockState(), sign.getBlockState(), 2);
+			sign.setText(signTextBack, false);
 	}
 
 	@Override
