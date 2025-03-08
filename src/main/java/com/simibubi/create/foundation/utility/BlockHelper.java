@@ -232,13 +232,10 @@ public class BlockHelper {
 			// Simulating IceBlock#playerDestroy. Not calling method directly as it would drop item
 			// entities as a side-effect
 			if (state.getBlock() instanceof IceBlock && usedTool.getEnchantmentLevel(Enchantments.SILK_TOUCH) == 0) {
-				if (world.dimensionType()
-					.ultraWarm())
-					return;
-
-				BlockState blockstate = world.getBlockState(pos.below());
-				if (blockstate.blocksMotion() || blockstate.liquid())
-					world.setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
+				BlockState below = world.getBlockState(pos.below());
+				world.setBlockAndUpdate(pos,
+					(world.dimensionType().ultraWarm() || (!below.blocksMotion() && !below.liquid())) ?
+						Blocks.AIR.defaultBlockState() : Blocks.WATER.defaultBlockState());
 				return;
 			}
 
