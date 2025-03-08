@@ -3,6 +3,11 @@ package com.simibubi.create.content.logistics.packagerLink;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.phys.HitResult.Type;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,6 +70,18 @@ public class LogisticallyLinkedBlockItem extends BlockItem {
 		CreateLang.translate("logistically_linked.tooltip_clear")
 			.style(ChatFormatting.GRAY)
 			.addTo(tooltipComponents);
+	}
+
+	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+		ItemStack itemstack = player.getItemInHand(usedHand);
+		Minecraft mc = Minecraft.getInstance();
+		if (!itemstack.getComponents().has(DataComponents.BLOCK_ENTITY_DATA))
+			return InteractionResultHolder.fail(itemstack);
+		if (player.isShiftKeyDown() && (mc.hitResult == null || mc.hitResult.getType() == Type.MISS)) {
+			itemstack.remove(DataComponents.BLOCK_ENTITY_DATA);
+			return InteractionResultHolder.success(itemstack);
+		}
+		return InteractionResultHolder.pass(itemstack);
 	}
 
 	@Override
