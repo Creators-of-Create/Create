@@ -63,9 +63,8 @@ public class BogeyBlockEntityVisual extends AbstractBlockEntityVisual<AbstractBo
 			}
 			lastStyle = style;
 			bogey = lastStyle.createVisual(bogeySize, visualizationContext, context.partialTick(), false);
+			updateLight(context.partialTick());
 		}
-
-		updateLight(context.partialTick());
 		
 		updateBogey(context.partialTick());
 	}
