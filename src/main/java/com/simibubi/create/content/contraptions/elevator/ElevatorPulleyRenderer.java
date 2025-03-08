@@ -105,7 +105,7 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer<ElevatorP
 
 	@Override
 	public int getViewDistance() {
-		return 128;
+		return 512;
 	}
 
 	@Override
