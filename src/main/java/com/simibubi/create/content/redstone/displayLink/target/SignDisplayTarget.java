@@ -27,18 +27,17 @@ public class SignDisplayTarget extends DisplayTarget {
 				reserve(i + line, sign, context);
 			if (i > 0 && isReserved(i + line, sign, context))
 				break;
-
-			//signText = signText.setMessage(i + line, text.get(i));
+			
 			signTextFront = signTextFront.setMessage(i + line, text.get(i));
 			signTextBack = signTextBack.setMessage(i + line, text.get(i));
 			changed = true;
 		}
 
 		if (changed)
-			context.level().sendBlockUpdated(context.getTargetPos(), sign.getBlockState(), sign.getBlockState(), 2);
 			sign.setText(signTextFront, true);
 			context.level().sendBlockUpdated(context.getTargetPos(), sign.getBlockState(), sign.getBlockState(), 2);
 			sign.setText(signTextBack, false);
+			context.level().sendBlockUpdated(context.getTargetPos(), sign.getBlockState(), sign.getBlockState(), 2);
 	}
 
 	@Override
