@@ -5,10 +5,10 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.content.itemprocessing.specifics.press.PressProcessingSpecifics;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.kinetics.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.kinetics.press.PressingBehaviour.Mode;
-import com.simibubi.create.content.kinetics.press.PressingBehaviour.PressingBehaviourSpecifics;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinOperatingBlockEntity;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
@@ -38,7 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implements PressingBehaviourSpecifics {
+public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implements PressProcessingSpecifics {
 
 	private static final Object compressingRecipesKey = new Object();
 
@@ -112,7 +112,7 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 	}
 
 	@Override
-	public boolean tryProcessInWorld(ItemEntity itemEntity, boolean simulate) {
+	public boolean tryProcessItemInWorld(ItemEntity itemEntity, boolean simulate) {
 		ItemStack item = itemEntity.getItem();
 		Optional<RecipeHolder<PressingRecipe>> recipe = getRecipe(item);
 		if (!recipe.isPresent())
@@ -168,7 +168,7 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 	}
 
 	@Override
-	public void onPressingCompleted() {
+	public void onFinished() {
 		if (pressingBehaviour.onBasin() && matchBasinRecipe(currentRecipe)
 			&& getBasin().filter(BasinBlockEntity::canContinueProcessing)
 				.isPresent())

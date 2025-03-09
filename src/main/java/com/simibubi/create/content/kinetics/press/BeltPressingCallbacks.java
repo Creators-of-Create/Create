@@ -1,56 +1,54 @@
 package com.simibubi.create.content.kinetics.press;
 
-import static com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult.HOLD;
-import static com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult.PASS;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.kinetics.belt.BeltHelper;
-import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.kinetics.press.PressingBehaviour.Mode;
+
+import com.simibubi.create.content.processing.ProcessingResult;
 
 import net.minecraft.world.item.ItemStack;
 
 public class BeltPressingCallbacks {
 
 	static ProcessingResult onItemReceived(TransportedItemStack transported,
-		TransportedItemStackHandlerBehaviour handler, PressingBehaviour behaviour) {
+										   TransportedItemStackHandlerBehaviour handler, PressingBehaviour behaviour) {
 		if (behaviour.specifics.getKineticSpeed() == 0)
-			return PASS;
+			return ProcessingResult.PASS;
 		if (behaviour.running)
-			return HOLD;
+			return ProcessingResult.HOLD;
 		if (!behaviour.specifics.tryProcessOnBelt(transported, null, true))
-			return PASS;
+			return ProcessingResult.PASS;
 
 		behaviour.start(Mode.BELT);
-		return HOLD;
+		return ProcessingResult.HOLD;
 	}
 
 	static ProcessingResult whenItemHeld(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler,
 		PressingBehaviour behaviour) {
 
 		if (behaviour.specifics.getKineticSpeed() == 0)
-			return PASS;
+			return ProcessingResult.PASS;
 		if (!behaviour.running)
-			return PASS;
+			return ProcessingResult.PASS;
 		if (behaviour.runningTicks != PressingBehaviour.CYCLE / 2)
-			return HOLD;
+			return ProcessingResult.HOLD;
 
 		behaviour.particleItems.clear();
 		ArrayList<ItemStack> results = new ArrayList<>();
 		if (!behaviour.specifics.tryProcessOnBelt(transported, results, false))
-			return PASS;
+			return ProcessingResult.PASS;
 
 		boolean bulk = behaviour.specifics.canProcessInBulk() || transported.stack.getCount() == 1;
 
 		transported.clearFanProcessingData();
-		
+
 		List<TransportedItemStack> collect = results.stream()
 			.map(stack -> {
 				TransportedItemStack copy = transported.copy();
@@ -79,7 +77,7 @@ public class BeltPressingCallbacks {
 		}
 
 		behaviour.blockEntity.sendData();
-		return HOLD;
+		return ProcessingResult.HOLD;
 	}
 
 }

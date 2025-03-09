@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour;
+import com.simibubi.create.content.itemprocessing.ICanProcessItems;
+import com.simibubi.create.content.itemprocessing.specifics.ICanProcessInWorldItems;
+import com.simibubi.create.content.itemprocessing.specifics.ProcessingSpecifics;
+import com.simibubi.create.content.itemprocessing.specifics.press.PressProcessingSpecifics;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.processing.basin.BasinBlock;
@@ -28,14 +31,14 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class PressingBehaviour extends BeltProcessingBehaviour {
+public class PressingBehaviour extends ICanProcessItems {
 
 	public static final int CYCLE = 240;
 	public static final int ENTITY_SCAN = 10;
 
 	public List<ItemStack> particleItems = new ArrayList<>();
 
-	public PressingBehaviourSpecifics specifics;
+	public PressProcessingSpecifics specifics;
 	public int prevRunningTicks;
 	public int runningTicks;
 	public boolean running;
@@ -44,24 +47,8 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 
 	int entityScanCooldown;
 
-	public interface PressingBehaviourSpecifics {
-		public boolean tryProcessInBasin(boolean simulate);
-
-		public boolean tryProcessOnBelt(TransportedItemStack input, List<ItemStack> outputList, boolean simulate);
-
-		public boolean tryProcessInWorld(ItemEntity itemEntity, boolean simulate);
-
-		public boolean canProcessInBulk();
-
-		public void onPressingCompleted();
-
-		public int getParticleAmount();
-
-		public float getKineticSpeed();
-	}
-
-	public <T extends SmartBlockEntity & PressingBehaviourSpecifics> PressingBehaviour(T be) {
-		super(be);
+	public <T extends SmartBlockEntity & PressProcessingSpecifics> PressingBehaviour(T be) {
+		super(PressingBehaviour.CYCLE, PressingBehaviour.ENTITY_SCAN, be);
 		this.specifics = be;
 		mode = Mode.WORLD;
 		entityScanCooldown = ENTITY_SCAN;
@@ -134,7 +121,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 
 		if (!running || level == null) {
 			if (level != null && !level.isClientSide) {
-
+				// server side code
 				if (specifics.getKineticSpeed() == 0)
 					return;
 				if (entityScanCooldown > 0)
@@ -152,7 +139,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 						new AABB(worldPosition.below()).deflate(.125f))) {
 						if (!itemEntity.isAlive() || !itemEntity.onGround())
 							continue;
-						if (!specifics.tryProcessInWorld(itemEntity, true))
+						if (!specifics.tryProcessItemInWorld(itemEntity, true))
 							continue;
 						start(Mode.WORLD);
 						return;
@@ -163,7 +150,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 			return;
 		}
 
-		if (level.isClientSide && runningTicks == -CYCLE / 2) {
+		if (level.isClientSide && (runningTicks == -CYCLE / 2)) {
 			prevRunningTicks = CYCLE / 2;
 			return;
 		}
