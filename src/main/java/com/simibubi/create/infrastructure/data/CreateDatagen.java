@@ -32,6 +32,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 public class CreateDatagen {
 	public static void gatherData(GatherDataEvent event) {
+		if (!event.getMods().contains(Create.ID)) return;
 		addExtraRegistrateData();
 
 		DataGenerator generator = event.getGenerator();
