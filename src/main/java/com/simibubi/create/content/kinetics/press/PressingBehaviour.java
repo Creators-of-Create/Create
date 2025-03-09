@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class PressingBehaviour extends ICanProcessItems {
+public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics> {
 
 	public static final int CYCLE = 240;
 	public static final int ENTITY_SCAN = 10;
@@ -39,16 +39,19 @@ public class PressingBehaviour extends ICanProcessItems {
 	public List<ItemStack> particleItems = new ArrayList<>();
 
 	public PressProcessingSpecifics specifics;
-	public int prevRunningTicks;
-	public int runningTicks;
-	public boolean running;
+
+	/**
+	 * to be shard with client
+	 */
 	public boolean finished;
+
+
 	public Mode mode;
 
 	int entityScanCooldown;
 
 	public <T extends SmartBlockEntity & PressProcessingSpecifics> PressingBehaviour(T be) {
-		super(PressingBehaviour.CYCLE, PressingBehaviour.ENTITY_SCAN, be);
+		super(PressingBehaviour.CYCLE, PressingBehaviour.ENTITY_SCAN, be, be);
 		this.specifics = be;
 		mode = Mode.WORLD;
 		entityScanCooldown = ENTITY_SCAN;
@@ -58,10 +61,11 @@ public class PressingBehaviour extends ICanProcessItems {
 
 	@Override
 	public void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		running = compound.getBoolean("Running");
+		setProcessing(compound.getBoolean("Running"));
 		mode = Mode.values()[compound.getInt("Mode")];
 		finished = compound.getBoolean("Finished");
-		prevRunningTicks = runningTicks = compound.getInt("Ticks");
+		setProcessTicks(compound.getInt("Ticks"));
+
 		super.read(compound, registries, clientPacket);
 
 		if (clientPacket) {
@@ -73,10 +77,10 @@ public class PressingBehaviour extends ICanProcessItems {
 
 	@Override
 	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		compound.putBoolean("Running", running);
+		compound.putBoolean("Running", isProcessing());
 		compound.putInt("Mode", mode.ordinal());
 		compound.putBoolean("Finished", finished);
-		compound.putInt("Ticks", runningTicks);
+		compound.putInt("Ticks", getFinishedTicks());
 		super.write(compound, registries, clientPacket);
 
 		if (clientPacket) {
@@ -85,23 +89,26 @@ public class PressingBehaviour extends ICanProcessItems {
 		}
 	}
 
-	public float getRenderedHeadOffset(float partialTicks) {
-		if (!running)
-			return 0;
-		int runningTicks = Math.abs(this.runningTicks);
-		float ticks = Mth.lerp(partialTicks, prevRunningTicks, runningTicks);
-		if (runningTicks < (CYCLE * 2) / 3)
-			return (float) Mth.clamp(Math.pow(ticks / CYCLE * 2, 3), 0, 1);
-		return Mth.clamp((CYCLE - ticks) / CYCLE * 3, 0, 1);
+	@Override
+	public void onInWorldProcessBegin() {
+		start(Mode.WORLD);
 	}
 
 	public void start(Mode mode) {
 		this.mode = mode;
-		running = true;
-		prevRunningTicks = 0;
-		runningTicks = 0;
+		setProcessing(true);
 		particleItems.clear();
 		blockEntity.sendData();
+	}
+
+	public float getRenderedHeadOffset(float partialTicks) {
+		if (!isProcessing())
+			return 0;
+		int runningTicks = Math.abs(this.getFinishedTicks());
+		float ticks = Mth.lerp(partialTicks, this.getPrevFinishedTicks(), runningTicks);
+		if (runningTicks < (CYCLE * 2) / 3)
+			return (float) Mth.clamp(Math.pow(ticks / CYCLE * 2, 3), 0, 1);
+		return Mth.clamp((CYCLE - ticks) / CYCLE * 3, 0, 1);
 	}
 
 	public boolean inWorld() {
@@ -113,49 +120,20 @@ public class PressingBehaviour extends ICanProcessItems {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void modifyProcessingTicks(Level level, int prevTicks, int ticks, int cycle) {
+		if (prevTicks < CYCLE / 2 && ticks >= CYCLE / 2) {
+			setFinishedTicks(CYCLE / 2);
+			// Pause the ticks until a packet is received
+			if (level.isClientSide && !blockEntity.isVirtual())
+				setFinishedTicks(-(CYCLE / 2));
+		}
+	}
 
-		Level level = getWorld();
+	@Override
+	public void onProcessTick(Level level, int finishedTicks, int cycle) {
 		BlockPos worldPosition = getPos();
 
-		if (!running || level == null) {
-			if (level != null && !level.isClientSide) {
-				// server side code
-				if (specifics.getKineticSpeed() == 0)
-					return;
-				if (entityScanCooldown > 0)
-					entityScanCooldown--;
-				if (entityScanCooldown <= 0) {
-					entityScanCooldown = ENTITY_SCAN;
-
-					if (BlockEntityBehaviour.get(level, worldPosition.below(2),
-						TransportedItemStackHandlerBehaviour.TYPE) != null)
-						return;
-					if (BasinBlock.isBasin(level, worldPosition.below(2)))
-						return;
-
-					for (ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class,
-						new AABB(worldPosition.below()).deflate(.125f))) {
-						if (!itemEntity.isAlive() || !itemEntity.onGround())
-							continue;
-						if (!specifics.tryProcessItemInWorld(itemEntity, true))
-							continue;
-						start(Mode.WORLD);
-						return;
-					}
-				}
-
-			}
-			return;
-		}
-
-		if (level.isClientSide && (runningTicks == -CYCLE / 2)) {
-			prevRunningTicks = CYCLE / 2;
-			return;
-		}
-
-		if (runningTicks == CYCLE / 2 && specifics.getKineticSpeed() != 0) {
+		if (finishedTicks == cycle / 2 && specifics.getKineticSpeed() != 0) {
 			if (inWorld())
 				applyInWorld();
 			if (onBasin())
@@ -171,24 +149,11 @@ public class PressingBehaviour extends ICanProcessItems {
 			if (!level.isClientSide)
 				blockEntity.sendData();
 		}
+	}
 
-		if (!level.isClientSide && runningTicks > CYCLE) {
-			finished = true;
-			running = false;
-			particleItems.clear();
-			specifics.onPressingCompleted();
-			blockEntity.sendData();
-			return;
-		}
-
-		prevRunningTicks = runningTicks;
-		runningTicks += getRunningTickSpeed();
-		if (prevRunningTicks < CYCLE / 2 && runningTicks >= CYCLE / 2) {
-			runningTicks = CYCLE / 2;
-			// Pause the ticks until a packet is received
-			if (level.isClientSide && !blockEntity.isVirtual())
-				runningTicks = -(CYCLE / 2);
-		}
+	@Override
+	public void onProcessedFinish() {
+		this.finished = true;
 	}
 
 	protected void applyOnBasin() {
@@ -218,14 +183,15 @@ public class PressingBehaviour extends ICanProcessItems {
 				continue;
 
 			entityScanCooldown = 0;
-			if (specifics.tryProcessInWorld(itemEntity, false))
+			if (specifics.tryProcessItemInWorld(itemEntity, false))
 				blockEntity.sendData();
 			if (!bulk)
 				break;
 		}
 	}
 
-	public int getRunningTickSpeed() {
+	@Override
+	public int getScaledProcessingTicks() {
 		float speed = specifics.getKineticSpeed();
 		if (speed == 0)
 			return 0;
@@ -283,7 +249,7 @@ public class PressingBehaviour extends ICanProcessItems {
 	public enum Mode {
 		WORLD(1), BELT(19f / 16f), BASIN(22f / 16f);
 
-		public float headOffset;
+		public final float headOffset;
 
 		Mode(float headOffset) {
 			this.headOffset = headOffset;
