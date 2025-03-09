@@ -52,8 +52,8 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		return ore(Blocks.NETHERRACK, ore, raw, expectedAmount, duration);
 	}
 
-	protected <T extends ProcessingRecipe<?>> GeneratedRecipe ore(ItemLike stoneType, Supplier<ItemLike> ore, Supplier<ItemLike> raw,
-																							 float expectedAmount, int duration) {
+	protected GeneratedRecipe ore(ItemLike stoneType, Supplier<ItemLike> ore, Supplier<ItemLike> raw,
+								  float expectedAmount, int duration) {
 		return create(ore, b -> {
 			b.duration(duration)
 				.output(raw.get(), Mth.floor(expectedAmount));

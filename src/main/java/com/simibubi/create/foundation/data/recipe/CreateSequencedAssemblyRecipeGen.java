@@ -19,7 +19,8 @@ import net.minecraft.world.level.material.Fluids;
 
 import java.util.stream.Stream;
 
-public class CreateSequencedAssemblyRecipeGen extends SequencedAssemblyRecipeGen {
+@SuppressWarnings("unused")
+public final class CreateSequencedAssemblyRecipeGen extends SequencedAssemblyRecipeGen {
 
 	GeneratedRecipe
 
@@ -37,7 +38,7 @@ public class CreateSequencedAssemblyRecipeGen extends SequencedAssemblyRecipeGen
 //		.addStep(FillingRecipe::new, rb -> rb.require(Fluids.WATER, 100))
 //		)
 
-		PRECISION_MECHANISM = create("precision_mechanism", b -> b.require(I.goldSheet())
+	PRECISION_MECHANISM = create("precision_mechanism", b -> b.require(I.goldSheet())
 		.transitionTo(AllItems.INCOMPLETE_PRECISION_MECHANISM.get())
 		.addOutput(AllItems.PRECISION_MECHANISM.get(), 120)
 		.addOutput(AllItems.GOLDEN_SHEET.get(), 8)

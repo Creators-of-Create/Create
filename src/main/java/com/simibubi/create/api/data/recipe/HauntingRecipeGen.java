@@ -3,7 +3,6 @@ package com.simibubi.create.api.data.recipe;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.Create;
 
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.data.PackOutput;

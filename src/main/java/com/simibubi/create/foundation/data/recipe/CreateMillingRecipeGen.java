@@ -726,7 +726,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		super(output, Create.ID);
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe bopFlower(String input, List<Float> chances,
+	SequencedAssemblyRecipeGen.GeneratedRecipe bopFlower(String input, List<Float> chances,
 																   List<Item> dyes, List<Integer> amounts) {
 		if (chances.size() == 2) {
 			return create(Mods.BOP.recipeId(input), b -> b.duration(50)
@@ -751,7 +751,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		}
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe bygFlower(String input, List<Float> chances,
+	SequencedAssemblyRecipeGen.GeneratedRecipe bygFlower(String input, List<Float> chances,
 																   List<Item> dyes, List<Integer> amounts) {
 		if (chances.size() == 2) {
 			return create(Mods.BYG.recipeId(input), b -> b.duration(50)
@@ -776,7 +776,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		}
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe envFlower(String input, List<Float> chances,
+	SequencedAssemblyRecipeGen.GeneratedRecipe envFlower(String input, List<Float> chances,
 																   List<Item> dyes, List<Integer> amounts) {
 		if (chances.size() == 2) {
 			return create(Mods.ENV.recipeId(input), b -> b.duration(50)
@@ -801,14 +801,14 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		}
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe bopFlower(String input, Float chance, Item dye, int amount) {
+	SequencedAssemblyRecipeGen.GeneratedRecipe bopFlower(String input, Float chance, Item dye, int amount) {
 		return create(Mods.BOP.recipeId(input), b -> b.duration(50)
 				.require(Mods.BOP, input)
 				.output(chance, dye, amount)
 				.whenModLoaded(Mods.BOP.getId()));
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe botaniaPetals(String... colors) {
+	SequencedAssemblyRecipeGen.GeneratedRecipe botaniaPetals(String... colors) {
 		for (String color : colors) {
 			create(Mods.BTN.recipeId(color + "_petal"), b -> b.duration(50)
 					.require(AllTags.optionalTag(ForgeRegistries.ITEMS,
@@ -819,7 +819,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		return null;
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe ruFlower(String input, List<Float> chances,
+	SequencedAssemblyRecipeGen.GeneratedRecipe ruFlower(String input, List<Float> chances,
 																  List<Item> dyes, List<Integer> amounts) {
 		if (chances.size() == 2) {
 			return create(Mods.RU.recipeId(input), b -> b.duration(50)

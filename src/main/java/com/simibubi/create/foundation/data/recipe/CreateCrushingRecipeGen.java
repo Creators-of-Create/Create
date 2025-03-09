@@ -420,7 +420,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 		.require(Mods.IE, "slag").output(Mods.IE, "slag_gravel")
 		.whenModLoaded(Mods.IE.getId()));
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe sgStoneOres(String... types) {
+	SequencedAssemblyRecipeGen.GeneratedRecipe sgStoneOres(String... types) {
 		for (String type : types) {
 			create(Mods.SILENT_GEMS.recipeId(type + "_ore"), b -> b.duration(350)
 					.require(Mods.SILENT_GEMS, type + "_ore")
@@ -433,7 +433,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 		return null;
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe sgNetherOres(String... types) {
+	SequencedAssemblyRecipeGen.GeneratedRecipe sgNetherOres(String... types) {
 		for (String type : types) {
 			create(Mods.SILENT_GEMS.recipeId(type + "_ore"), b -> b.duration(350)
 					.require(Mods.SILENT_GEMS, type + "_ore")
@@ -446,7 +446,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 		return null;
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe sgEndOres(String... types) {
+	SequencedAssemblyRecipeGen.GeneratedRecipe sgEndOres(String... types) {
 		for (String type : types) {
 			create(Mods.SILENT_GEMS.recipeId(type + "_ore"), b -> b.duration(350)
 					.require(Mods.SILENT_GEMS, type + "_ore")
@@ -459,7 +459,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 		return null;
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe sfPlants(String... types) {
+	SequencedAssemblyRecipeGen.GeneratedRecipe sfPlants(String... types) {
 		for (String type : types) {
 			create(Mods.SF.recipeId(type), b -> b.duration(150)
 					.require(Mods.SF, type)
@@ -471,7 +471,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 		return null;
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe thOres(String... types) {
+	SequencedAssemblyRecipeGen.GeneratedRecipe thOres(String... types) {
 		for (String type : types) {
 			create(Mods.TH.recipeId(type + "_ore"), b -> b.duration(350)
 					.require(Mods.TH, type + "_ore")
@@ -484,7 +484,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 		return null;
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe eoNetherOre(String material, ItemLike result, int count){
+	SequencedAssemblyRecipeGen.GeneratedRecipe eoNetherOre(String material, ItemLike result, int count){
 		String oreName = "ore_" + material + "_nether";
 		return create(Mods.EO.recipeId(oreName), b -> b.duration(350)
 				.require(Mods.EO, oreName)
@@ -495,7 +495,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 				.whenModLoaded(Mods.EO.getId()));
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe eoEndOre(String material, ItemLike result, int count){
+	SequencedAssemblyRecipeGen.GeneratedRecipe eoEndOre(String material, ItemLike result, int count){
 		String oreName = "ore_" + material + "_end";
 		return create(Mods.EO.recipeId(oreName), b -> b.duration(350)
 				.require(Mods.EO, oreName)
@@ -506,7 +506,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 				.whenModLoaded(Mods.EO.getId()));
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe ensStones(String... stones) {
+	SequencedAssemblyRecipeGen.GeneratedRecipe ensStones(String... stones) {
 		for (String stone : stones) {
 			String crushed = "crushed_" + stone;
 			create(Mods.ENS.recipeId(stone), b -> b.duration(350)
@@ -521,7 +521,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 		super(output, Create.ID);
 	}
 
-	protected SequencedAssemblyRecipeGen.GeneratedRecipe ensMineralRecycling(AllPaletteStoneTypes type,
+	SequencedAssemblyRecipeGen.GeneratedRecipe ensMineralRecycling(AllPaletteStoneTypes type,
 																			 UnaryOperator<ProcessingRecipeBuilder<ProcessingRecipe<?>>> transform) {
 		create(Lang.asId(type.name()) + "_recycling", b -> transform.apply(b.require(type.materialTag)));
 		return create(type.getBaseBlock()::get, b -> transform.apply(b.whenModMissing(Mods.ENS.getId())));

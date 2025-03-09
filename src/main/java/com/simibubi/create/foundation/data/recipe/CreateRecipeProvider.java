@@ -27,9 +27,9 @@ import net.minecraftforge.fluids.FluidType;
 
 public final class CreateRecipeProvider extends RecipeProvider {
 
-	protected static final List<ProcessingRecipeGen> GENERATORS = new ArrayList<>();
-	protected static final int BUCKET = FluidType.BUCKET_VOLUME;
-	protected static final int BOTTLE = 250;
+	static final List<ProcessingRecipeGen> GENERATORS = new ArrayList<>();
+	static final int BUCKET = FluidType.BUCKET_VOLUME;
+	static final int BOTTLE = 250;
 
 	public CreateRecipeProvider(PackOutput output) {
 		super(output);

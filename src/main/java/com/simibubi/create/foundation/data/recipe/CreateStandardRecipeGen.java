@@ -67,7 +67,7 @@ import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 
 @SuppressWarnings("unused")
-public class CreateStandardRecipeGen extends BaseRecipeProvider {
+public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 	protected final List<GeneratedRecipe> all = new ArrayList<>();
 
 	/*

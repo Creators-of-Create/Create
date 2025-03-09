@@ -3,7 +3,6 @@ package com.simibubi.create.api.data.recipe;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-import com.simibubi.create.Create;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;

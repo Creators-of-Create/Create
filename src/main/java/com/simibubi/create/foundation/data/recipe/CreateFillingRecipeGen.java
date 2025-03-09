@@ -103,7 +103,6 @@ public final class CreateFillingRecipeGen extends FillingRecipeGen {
 			.output(Mods.IE, "treated_wood_horizontal")
 			.whenModLoaded(Mods.IE.getId()));
 
-	;
 
 	public CreateFillingRecipeGen(PackOutput output) {
 		super(output, Create.ID);
