@@ -13,6 +13,7 @@ import dev.engine_room.flywheel.api.visualization.VisualizationLevel;
 import it.unimi.dsi.fastutil.objects.Object2ShortMap;
 import it.unimi.dsi.fastutil.objects.Object2ShortOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -26,6 +27,7 @@ import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.Block;
@@ -66,6 +68,8 @@ public class VirtualRenderWorld extends Level implements VisualizationLevel {
 
 	protected final BlockPos.MutableBlockPos scratchPos = new BlockPos.MutableBlockPos();
 
+	private int externalPackedLight = 0;
+
 	public VirtualRenderWorld(Level level) {
 		this(level, Vec3i.ZERO);
 	}
@@ -95,6 +99,31 @@ public class VirtualRenderWorld extends Level implements VisualizationLevel {
 			return -(((Math.abs(a) - 1) | 15) + 1);
 		} else {
 			return ((a - 1) | 15) + 1;
+		}
+	}
+
+	/**
+	 * Set an external light value that will be maxed with any light queries.
+	 */
+	public void setExternalLight(int packedLight) {
+		this.externalPackedLight = packedLight;
+	}
+
+	/**
+	 * Reset the external light.
+	 */
+	public void resetExternalLight() {
+		this.externalPackedLight = 0;
+	}
+
+	@Override
+	public int getBrightness(LightLayer lightType, BlockPos blockPos) {
+		var selfBrightness = super.getBrightness(lightType, blockPos);
+
+		if (lightType == LightLayer.SKY) {
+			return Math.max(selfBrightness, LightTexture.sky(externalPackedLight));
+		} else {
+			return Math.max(selfBrightness, LightTexture.block(externalPackedLight));
 		}
 	}
 

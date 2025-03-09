@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.equipment.armor.CardboardArmorHandler;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltPart;
@@ -63,7 +64,7 @@ public class BeltMovementHandler {
 		if (!entity.isAlive())
 			return false;
 		if (entity instanceof Player p && p.isShiftKeyDown()
-			&& !AllItems.CARDBOARD_BOOTS.isIn(p.getItemBySlot(EquipmentSlot.FEET)))
+			&& !CardboardArmorHandler.testForStealth(entity))
 			return false;
 		return true;
 	}

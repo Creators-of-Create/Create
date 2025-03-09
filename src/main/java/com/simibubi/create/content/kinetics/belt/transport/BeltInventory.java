@@ -147,8 +147,7 @@ public class BeltInventory {
 			}
 			float limitedMovement =
 				beltMovementPositive ? Math.min(movement, diffToEnd) : Math.max(movement, diffToEnd);
-			float extraOffset = BeltHelper.getSegmentBE(belt.getLevel(), belt.getBlockPos().relative(movementFacing.getOpposite())) != null ? .275f : 0;
-			float nextOffset = currentItem.beltPosition + limitedMovement - extraOffset;
+			float nextOffset = currentItem.beltPosition + limitedMovement;
 
 			// Belt item processing
 			if (!onClient && horizontal) {

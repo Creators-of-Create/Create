@@ -379,7 +379,7 @@ public class PackagerScenes {
 
 		scene.overlay()
 			.showText(100)
-			.text("Created packages will carry the written line of text as their address")
+			.text("Created packages will carry the written lines of text as their address")
 			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector()

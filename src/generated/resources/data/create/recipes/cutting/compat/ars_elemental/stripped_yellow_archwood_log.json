@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ars_elemental"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "ars_elemental:stripped_yellow_archwood_log"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 6,
+      "item": "ars_nouveau:archwood_planks"
+    }
+  ]
+}

@@ -1,13 +1,9 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.Create.REGISTRATE;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
-
-import com.simibubi.create.content.fluids.VirtualFluid;
 
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
@@ -16,11 +12,21 @@ import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
+import com.simibubi.create.content.fluids.VirtualFluid;
 import com.simibubi.create.content.fluids.potion.PotionFluid;
 import com.simibubi.create.content.fluids.potion.PotionFluid.PotionFluidType;
+import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;
 import com.tterrag.registrate.util.entry.FluidEntry;
+
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.fluids.FluidInteractionRegistry;
+import net.minecraftforge.fluids.FluidInteractionRegistry.InteractionInformation;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 
 import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Camera;
@@ -33,15 +39,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.fluids.FluidInteractionRegistry;
-import net.minecraftforge.fluids.FluidInteractionRegistry.InteractionInformation;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
 
 public class AllFluids {
+	private static final CreateRegistrate REGISTRATE = Create.registrate();
+
 	static {
 		REGISTRATE.setCreativeTab(AllCreativeModeTabs.BASE_CREATIVE_TAB);
 	}
@@ -76,8 +77,8 @@ public class AllFluids {
 
 	public static final FluidEntry<ForgeFlowingFluid.Flowing> CHOCOLATE =
 		REGISTRATE.standardFluid("chocolate",
-			SolidRenderedPlaceableFluidType.create(0x622020,
-				() -> 1f / 32f * AllConfigs.client().chocolateTransparencyMultiplier.getF()))
+				SolidRenderedPlaceableFluidType.create(0x622020,
+					() -> 1f / 32f * AllConfigs.client().chocolateTransparencyMultiplier.getF()))
 			.lang("Chocolate")
 			.tag(AllTags.forgeFluidTag("chocolate"))
 			.properties(b -> b.viscosity(1500)
@@ -90,33 +91,34 @@ public class AllFluids {
 
 	// Load this class
 
-	public static void register() {}
+	public static void register() {
+	}
 
 	public static void registerFluidInteractions() {
 		FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new InteractionInformation(
-				HONEY.get().getFluidType(),
-				fluidState -> {
-					if (fluidState.isSource()) {
-						return Blocks.OBSIDIAN.defaultBlockState();
-					} else {
-						return AllPaletteStoneTypes.LIMESTONE.getBaseBlock()
-								.get()
-								.defaultBlockState();
-					}
+			HONEY.get().getFluidType(),
+			fluidState -> {
+				if (fluidState.isSource()) {
+					return Blocks.OBSIDIAN.defaultBlockState();
+				} else {
+					return AllPaletteStoneTypes.LIMESTONE.getBaseBlock()
+						.get()
+						.defaultBlockState();
 				}
+			}
 		));
 
 		FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new InteractionInformation(
-				CHOCOLATE.get().getFluidType(),
-				fluidState -> {
-					if (fluidState.isSource()) {
-						return Blocks.OBSIDIAN.defaultBlockState();
-					} else {
-						return AllPaletteStoneTypes.SCORIA.getBaseBlock()
-								.get()
-								.defaultBlockState();
-					}
+			CHOCOLATE.get().getFluidType(),
+			fluidState -> {
+				if (fluidState.isSource()) {
+					return Blocks.OBSIDIAN.defaultBlockState();
+				} else {
+					return AllPaletteStoneTypes.SCORIA.getBaseBlock()
+						.get()
+						.defaultBlockState();
 				}
+			}
 		));
 	}
 
@@ -172,14 +174,14 @@ public class AllFluids {
 
 				@Override
 				public @NotNull Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level,
-					int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
+														int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
 					Vector3f customFogColor = TintedFluidType.this.getCustomFogColor();
 					return customFogColor == null ? fluidFogColor : customFogColor;
 				}
 
 				@Override
 				public void modifyFogRender(Camera camera, FogMode mode, float renderDistance, float partialTick,
-					float nearDistance, float farDistance, FogShape shape) {
+											float nearDistance, float farDistance, FogShape shape) {
 					float modifier = TintedFluidType.this.getFogDistanceModifier();
 					float baseWaterFog = 96.0f;
 					if (modifier != 1f) {
@@ -221,7 +223,7 @@ public class AllFluids {
 		}
 
 		private SolidRenderedPlaceableFluidType(Properties properties, ResourceLocation stillTexture,
-			ResourceLocation flowingTexture) {
+												ResourceLocation flowingTexture) {
 			super(properties, stillTexture, flowingTexture);
 		}
 

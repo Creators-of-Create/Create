@@ -1,7 +1,5 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.Create.REGISTRATE;
-
 import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsBlockEntity;
 import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsRenderer;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterBlockEntity;
@@ -56,6 +54,7 @@ import com.simibubi.create.content.fluids.drain.ItemDrainRenderer;
 import com.simibubi.create.content.fluids.hosePulley.HosePulleyBlockEntity;
 import com.simibubi.create.content.fluids.hosePulley.HosePulleyRenderer;
 import com.simibubi.create.content.fluids.pipes.FluidPipeBlockEntity;
+import com.simibubi.create.content.fluids.pipes.GlassPipeVisual;
 import com.simibubi.create.content.fluids.pipes.SmartFluidPipeBlockEntity;
 import com.simibubi.create.content.fluids.pipes.StraightPipeBlockEntity;
 import com.simibubi.create.content.fluids.pipes.TransparentStraightPipeRenderer;
@@ -230,9 +229,11 @@ import com.simibubi.create.content.trains.track.TrackMaterial;
 import com.simibubi.create.content.trains.track.TrackRenderer;
 import com.simibubi.create.content.trains.track.TrackVisual;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
+import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
 public class AllBlockEntityTypes {
+	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	// Schematics
 	public static final BlockEntityEntry<SchematicannonBlockEntity> SCHEMATICANNON = REGISTRATE
@@ -400,6 +401,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<StraightPipeBlockEntity> GLASS_FLUID_PIPE = REGISTRATE
 		.blockEntity("glass_fluid_pipe", StraightPipeBlockEntity::new)
+		.visual(() -> GlassPipeVisual::new, false)
 		.validBlocks(AllBlocks.GLASS_FLUID_PIPE)
 		.renderer(() -> TransparentStraightPipeRenderer::new)
 		.register();
@@ -991,5 +993,6 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.CLIPBOARD)
 		.register();
 
-	public static void register() {}
+	public static void register() {
+	}
 }

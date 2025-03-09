@@ -16,7 +16,7 @@ apply from: "gradle/property_loader.gradle"
 
 boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false')
 ext.buildNumber = System.getenv('BUILD_NUMBER')
-String gitHash = "\"${calculateGitHash() + (hasUnstaged() ? "-modified" : "")}\""
+String gitHash = "${calculateGitHash() + (hasUnstaged() ? "-modified" : "")}"
 
 base {
     archivesName = "create-${artifact_minecraft_version}"
@@ -34,8 +34,9 @@ if (ponderInWorkspace) {
 project.logger.lifecycle("MultiModWorkspace ${inMultiModWorkspace ? 'enabled' : 'disabled'} for project ${project.name}.")
 project.logger.lifecycle("Dependencies included in Workspace: [Ponder: ${ponderInWorkspace}]")
 
+def refmap
 mixin {
-    add sourceSets.main, 'create.refmap.json'
+    refmap = add sourceSets.main, 'create.refmap.json'
     config 'create.mixins.json'
 }
 
@@ -158,7 +159,7 @@ dependencies {
     modRuntimeOnly(jarJar("dev.engine-room.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}") {
         version {
             strictly "[1.0,2.0)"
-            prefer "1.0.1"
+            prefer flywheel_version
         }
     })
     modRuntimeOnly("dev.engine-room.vanillin:vanillin-forge-${flywheel_minecraft_version}:${vanillin_version}")
@@ -233,6 +234,8 @@ dependencies {
     // modRuntimeOnly("curse.maven:windsweptmod-636321:4817132")
     // modRuntimeOnly("curse.maven:good-ending-690161:4363719")
     // modRuntimeOnly("curse.maven:inventory-sorter-240633:5979609")
+    // modRuntimeOnly("curse.maven:sophisticated-storage-619320:6217888")
+    // modRuntimeOnly("curse.maven:sophisticated-core-618298:6266807")
 
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings
@@ -294,9 +297,11 @@ tasks.named("sourcesJar") {
 
 final slimJar = tasks.register("slimJar", Jar) {
     archiveClassifier = "slim"
-    from sourceSets.main.output
+    from(sourceSets.main.output)
+    from(refmap)
     manifest.attributes([
-        "Git-Hash": gitHash
+        "MixinConfigs": "create.mixins.json",
+        "Git-Hash"    : gitHash
     ])
 }
 obfuscation.reobfuscate(slimJar, sourceSets.main)

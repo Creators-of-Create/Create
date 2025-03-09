@@ -18,7 +18,6 @@ public class BeltCrusherInteractionHandler {
 
 	public static boolean checkForCrushers(BeltInventory beltInventory, TransportedItemStack currentItem,
 										   float nextOffset) {
-
 		boolean beltMovementPositive = beltInventory.beltMovementPositive;
 		int firstUpcomingSegment = (int) Math.floor(currentItem.beltPosition);
 		int step = beltMovementPositive ? 1 : -1;
@@ -40,6 +39,9 @@ public class BeltCrusherInteractionHandler {
 			float crusherEntry = segment + .5f;
 			crusherEntry += .399f * (beltMovementPositive ? -1 : 1);
 			float postCrusherEntry = crusherEntry + .799f * (!beltMovementPositive ? -1 : 1);
+
+			float extraOffset = BeltHelper.getSegmentBE(world, beltInventory.belt.getBlockPos().relative(movementFacing.getOpposite())) != null ? .275f : 0;
+			nextOffset -= extraOffset;
 
 			boolean hasCrossed = nextOffset > crusherEntry && nextOffset < postCrusherEntry && beltMovementPositive
 				|| nextOffset < crusherEntry && nextOffset > postCrusherEntry && !beltMovementPositive;

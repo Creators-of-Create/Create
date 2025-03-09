@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.content.logistics.packager.IdentifiedInventory;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 import com.simibubi.create.content.logistics.packager.PackagingRequest;
@@ -30,7 +31,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.items.IItemHandler;
 
 public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 
@@ -43,7 +43,7 @@ public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 		placedBy = null;
 	}
 
-	public InventorySummary fetchSummaryFromPackager(@Nullable IItemHandler ignoredHandler) {
+	public InventorySummary fetchSummaryFromPackager(@Nullable IdentifiedInventory ignoredHandler) {
 		PackagerBlockEntity packager = getPackager();
 		if (packager == null)
 			return InventorySummary.EMPTY;
@@ -77,7 +77,7 @@ public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 
 	public Pair<PackagerBlockEntity, PackagingRequest> processRequest(ItemStack stack, int amount, String address,
 		int linkIndex, MutableBoolean finalLink, int orderId, @Nullable PackageOrder orderContext,
-		@Nullable IItemHandler ignoredHandler) {
+		@Nullable IdentifiedInventory ignoredHandler) {
 		PackagerBlockEntity packager = getPackager();
 		if (packager == null)
 			return null;

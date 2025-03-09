@@ -28,6 +28,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -107,11 +108,9 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 				.addSlot(RecipeIngredientRole.INPUT, 27, 51)
 				.setBackground(getRenderedSlot(), -1, -1)
 				.addIngredients(recipe.getIngredients().get(0));
-		builder
-				.addSlot(RecipeIngredientRole.INPUT, 27, 32)
-				.setBackground(getRenderedSlot(), -1, -1)
-				.addIngredients(ForgeTypes.FLUID_STACK, withImprovedVisibility(recipe.getRequiredFluid().getMatchingFluidStacks()))
-				.addRichTooltipCallback(addFluidTooltip(recipe.getRequiredFluid().getRequiredAmount()));
+
+		addFluidSlot(builder, 27, 32, recipe.getRequiredFluid());
+
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 132, 51)
 				.setBackground(getRenderedSlot(), -1, -1)

@@ -68,8 +68,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.extensions.IForgeBaseRailBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
@@ -427,7 +427,7 @@ public class DeployerHandler {
 		if (honeyLevel < 5)
 			return InteractionResult.PASS;
 
-		if (prevHeldItem.getItem() == Items.SHEARS) {
+		if (prevHeldItem.canPerformAction(ToolActions.SHEARS_HARVEST)) {
 			world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BEEHIVE_SHEAR,
 				SoundSource.NEUTRAL, 1.0F, 1.0F);
 			// <> BeehiveBlock#dropHoneycomb
