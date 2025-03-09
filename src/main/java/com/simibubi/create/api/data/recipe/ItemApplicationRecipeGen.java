@@ -1,8 +1,7 @@
-package com.simibubi.create.foundation.data.recipe;
+package com.simibubi.create.api.data.recipe;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags.AllItemTags;
 
@@ -11,22 +10,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.common.Tags.Items;
 
 public class ItemApplicationRecipeGen extends ProcessingRecipeGen {
-
-	GeneratedRecipe BOUND_CARDBOARD_BLOCK = create("bound_cardboard_inworld",
-		b -> b.require(AllBlocks.CARDBOARD_BLOCK.asItem())
-			.require(Items.STRING)
-			.output(AllBlocks.BOUND_CARDBOARD_BLOCK.asStack()));
-
-	GeneratedRecipe ANDESITE = woodCasing("andesite", I::andesiteAlloy, I::andesiteCasing);
-	GeneratedRecipe COPPER = woodCasingTag("copper", I::copper, I::copperCasing);
-	GeneratedRecipe BRASS = woodCasingTag("brass", I::brass, I::brassCasing);
-	GeneratedRecipe RAILWAY = create("railway_casing", b -> b.require(I.brassCasing())
-		.require(I.sturdySheet())
-		.output(I.railwayCasing()));
-
 	protected GeneratedRecipe woodCasing(String type, Supplier<ItemLike> ingredient, Supplier<ItemLike> output) {
 		return woodCasingIngredient(type, () -> Ingredient.of(ingredient.get()), output);
 	}
@@ -36,7 +21,7 @@ public class ItemApplicationRecipeGen extends ProcessingRecipeGen {
 	}
 
 	protected GeneratedRecipe woodCasingIngredient(String type, Supplier<Ingredient> ingredient,
-		Supplier<ItemLike> output) {
+																			  Supplier<ItemLike> output) {
 		create(type + "_casing_from_log", b -> b.require(AllItemTags.STRIPPED_LOGS.tag)
 			.require(ingredient.get())
 			.output(output.get()));
@@ -45,8 +30,8 @@ public class ItemApplicationRecipeGen extends ProcessingRecipeGen {
 			.output(output.get()));
 	}
 
-	public ItemApplicationRecipeGen(PackOutput output) {
-		super(output);
+	public ItemApplicationRecipeGen(PackOutput output, String defaultNamespace) {
+		super(output, defaultNamespace);
 	}
 
 	@Override

@@ -1,0 +1,34 @@
+package com.simibubi.create.api.data.recipe;
+
+import java.util.function.Supplier;
+
+import com.simibubi.create.AllRecipeTypes;
+import com.tterrag.registrate.util.entry.ItemEntry;
+
+import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+
+public class WashingRecipeGen extends ProcessingRecipeGen {
+
+	public GeneratedRecipe convert(Block block, Block result) {
+		return create(() -> block, b -> b.output(result));
+	}
+
+	public GeneratedRecipe crushedOre(ItemEntry<Item> crushed, Supplier<ItemLike> nugget, Supplier<ItemLike> secondary,
+																 float secondaryChance) {
+		return create(crushed::get, b -> b.output(nugget.get(), 9)
+			.output(secondaryChance, secondary.get(), 1));
+	}
+
+	public WashingRecipeGen(PackOutput output, String defaultNamespace) {
+		super(output, defaultNamespace);
+	}
+
+	@Override
+	protected AllRecipeTypes getRecipeType() {
+		return AllRecipeTypes.SPLASHING;
+	}
+
+}

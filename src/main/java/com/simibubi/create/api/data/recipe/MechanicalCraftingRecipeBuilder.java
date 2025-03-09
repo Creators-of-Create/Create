@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.data.recipe;
+package com.simibubi.create.api.data.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
