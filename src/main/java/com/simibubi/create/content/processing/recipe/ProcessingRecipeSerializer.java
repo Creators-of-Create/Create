@@ -48,12 +48,12 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 					i.getFluidIngredients().forEach(o -> list.add(Either.right(o)));
 					return list;
 				}),
-			Codec.either(ProcessingOutput.CODEC, FluidStack.CODEC).listOf().fieldOf("results").forGetter(i -> {
-					List<Either<ProcessingOutput, FluidStack>> list = new ArrayList<>();
-					i.getRollableResults().forEach(o -> list.add(Either.left(o)));
-					i.getFluidResults().forEach(o -> list.add(Either.right(o)));
+			Codec.either(FluidStack.CODEC, ProcessingOutput.CODEC).listOf().fieldOf("results").forGetter(i -> {
+					List<Either<FluidStack, ProcessingOutput>> list = new ArrayList<>();
+					i.getFluidResults().forEach(o -> list.add(Either.left(o)));
+					i.getRollableResults().forEach(o -> list.add(Either.right(o)));
 					return list;
-				}),
+				}), // Fluid and item outputs both using "id" as key, try deserializing as fluid first
 			ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("processing_time", 0).forGetter(T::getProcessingDuration),
 			HeatCondition.CODEC.optionalFieldOf("heat_requirement", HeatCondition.NONE).forGetter(T::getRequiredHeat)
 		).apply(instance, (ingredients, results, processingTime, heatRequirement) -> {
@@ -73,9 +73,9 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 				either.right().ifPresent(fluidIngredientList::add);
 			}
 
-			for (Either<ProcessingOutput, FluidStack> either : results) {
-				either.left().ifPresent(processingOutputList::add);
-				either.right().ifPresent(fluidStackOutputList::add);
+			for (Either<FluidStack, ProcessingOutput> either : results) {
+				either.left().ifPresent(fluidStackOutputList::add);
+				either.right().ifPresent(processingOutputList::add);
 			}
 
 			builder.withItemIngredients(ingredientList)
