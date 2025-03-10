@@ -12,8 +12,8 @@ import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltPart;
 import com.simibubi.create.content.kinetics.mechanicalArm.ArmBlockEntity.Phase;
 import com.simibubi.create.content.kinetics.press.MechanicalPressBlockEntity;
-import com.simibubi.create.content.kinetics.press.PressingBehaviour.Mode;
 import com.simibubi.create.content.kinetics.simpleRelays.ShaftBlock;
+import com.simibubi.create.content.processing.ProcessingMode;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.nbt.NBTHelper;
@@ -550,7 +550,7 @@ public class BeltScenes {
 
 		Class<MechanicalPressBlockEntity> type = MechanicalPressBlockEntity.class;
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
-			.start(Mode.BELT));
+			.startProcessing(ProcessingMode.BELT));
 		scene.idle(15);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));

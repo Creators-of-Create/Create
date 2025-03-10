@@ -36,7 +36,7 @@ public class MechanicalPressRenderer extends KineticBlockEntityRenderer<Mechanic
 		BlockState blockState = be.getBlockState();
 		PressingBehaviour pressingBehaviour = be.getPressingBehaviour();
 		float renderedHeadOffset =
-			pressingBehaviour.getRenderedHeadOffset(partialTicks) * pressingBehaviour.mode.headOffset;
+			pressingBehaviour.getRenderedHeadOffset(partialTicks) * pressingBehaviour.modeToHeadOffset();
 
 		SuperByteBuffer headRender = CachedBuffers.partialFacing(AllPartialModels.MECHANICAL_PRESS_HEAD, blockState,
 			blockState.getValue(HORIZONTAL_FACING));

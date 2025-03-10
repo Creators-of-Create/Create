@@ -4,6 +4,8 @@ import com.simibubi.create.content.itemprocessing.specifics.ICanProcessInBasin;
 import com.simibubi.create.content.itemprocessing.specifics.ICanProcessInWorldItems;
 import com.simibubi.create.content.itemprocessing.specifics.ICanProcessItemsOnBelt;
 import com.simibubi.create.content.itemprocessing.specifics.ICreateParticles;
+import com.simibubi.create.content.itemprocessing.specifics.IProduceParticles;
+import com.simibubi.create.content.itemprocessing.specifics.ProcessingSpecifics;
 import com.simibubi.create.content.kinetics.IHaveKineticSpeed;
 
 /**
@@ -14,5 +16,6 @@ public interface PressProcessingSpecifics extends
 	ICanProcessInWorldItems,
 	ICanProcessInBasin,
 	ICanProcessItemsOnBelt,
-	ICreateParticles {
+	ICreateParticles,
+	ProcessingSpecifics {
 }

@@ -7,14 +7,16 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
+import java.util.function.BiFunction;
+
 /**
- * Models the process of a machine modifying an item.
- * For example mechanical press recipes
+ * Behaviour for BlockEntities which can process items on belts or depots beneath them.
+ * block. Example use: Mechanical Press
  */
 abstract public class ProcessingBehaviour extends BlockEntityBehaviour {
 
-	protected ProcessingCallback onItemEnter;
-	protected ProcessingCallback continueProcessing;
+	protected BiFunction<TransportedItemStack, TransportedItemStackHandlerBehaviour, ProcessingResult> onItemEnter;
+	protected BiFunction<TransportedItemStack, TransportedItemStackHandlerBehaviour, ProcessingResult> continueProcessing;
 
 	public ProcessingBehaviour(SmartBlockEntity be) {
 		super(be);

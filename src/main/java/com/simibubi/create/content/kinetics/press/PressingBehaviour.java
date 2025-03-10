@@ -5,13 +5,17 @@ import java.util.List;
 
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.itemprocessing.ICanProcessItems;
+import com.simibubi.create.content.itemprocessing.specifics.IProduceParticles;
 import com.simibubi.create.content.itemprocessing.specifics.press.PressProcessingSpecifics;
+import com.simibubi.create.content.processing.ProcessingMode;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
 import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.nbt.NBTHelper;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -25,38 +29,39 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics> {
+public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics> implements IProduceParticles {
 
 	public static final int CYCLE = 240;
 	public static final int ENTITY_SCAN = 10;
 
-	public List<ItemStack> particleItems = new ArrayList<>();
+	private final List<ItemStack> particleItems = new ArrayList<>();
 
-	public PressProcessingSpecifics specifics;
+	private final PressProcessingSpecifics specifics;
 
 	/**
 	 * to be shard with client
 	 */
-	public boolean finished;
+	private boolean finished;
 
+	/**
+	 * Current processing mode
+	 */
+	private ProcessingMode mode;
 
-	public Mode mode;
-
-	int entityScanCooldown;
 
 	public <T extends SmartBlockEntity & PressProcessingSpecifics> PressingBehaviour(T be) {
 		super(PressingBehaviour.CYCLE, PressingBehaviour.ENTITY_SCAN, be, be);
 		this.specifics = be;
-		mode = Mode.WORLD;
-		entityScanCooldown = ENTITY_SCAN;
-		whenItemEnters((s, i) -> BeltPressingCallbacks.onItemReceived(s, i, this));
-		whileItemHeld((s, i) -> BeltPressingCallbacks.whenItemHeld(s, i, this));
+		mode = ProcessingMode.WORLD;
+		BeltPressingCallbacks callbacks = new BeltPressingCallbacks();
+		whenItemEnters(( s, i) -> callbacks.onItemReceived(s, i, this));
+		whileItemHeld((s, i) -> callbacks.whenItemHeld(s, i, this));
 	}
 
 	@Override
-	public void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+	public void read(CompoundTag compound, Provider registries, boolean clientPacket) {
 		setProcessing(compound.getBoolean("Running"));
-		mode = Mode.values()[compound.getInt("Mode")];
+		mode = ProcessingMode.values()[compound.getInt("Mode")];
 		finished = compound.getBoolean("Finished");
 		setProcessTicks(compound.getInt("Ticks"));
 
@@ -70,7 +75,7 @@ public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics
 	}
 
 	@Override
-	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+	public void write(CompoundTag compound, Provider registries, boolean clientPacket) {
 		compound.putBoolean("Running", isProcessing());
 		compound.putInt("Mode", mode.ordinal());
 		compound.putBoolean("Finished", finished);
@@ -84,15 +89,21 @@ public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics
 	}
 
 	@Override
-	public void onInWorldProcessBegin() {
-		start(Mode.WORLD);
-	}
-
-	public void start(Mode mode) {
+	public void onProcessStarted(ProcessingMode mode) {
 		this.mode = mode;
-		setProcessing(true);
 		particleItems.clear();
 		blockEntity.sendData();
+	}
+
+	public float modeToHeadOffset() {
+		return switch (mode) {
+			case BELT:
+				yield 19f / 16f;
+			case BASIN:
+				yield 22f / 16f;
+			case WORLD:
+				yield 1;
+		};
 	}
 
 	public float getRenderedHeadOffset(float partialTicks) {
@@ -106,11 +117,11 @@ public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics
 	}
 
 	public boolean inWorld() {
-		return mode == Mode.WORLD;
+		return mode == ProcessingMode.WORLD;
 	}
 
 	public boolean onBasin() {
-		return mode == Mode.BASIN;
+		return mode == ProcessingMode.BASIN;
 	}
 
 	@Override
@@ -143,6 +154,20 @@ public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics
 			if (!level.isClientSide)
 				blockEntity.sendData();
 		}
+	}
+
+	@Override
+	public void clearParticles() {
+		particleItems.clear();
+	}
+
+	@Override
+	public void addParticle(Particle particle) {
+	}
+
+	@Override
+	public void addParticleItem(ItemStack itemStack) {
+		particleItems.add(itemStack);
 	}
 
 	@Override
@@ -198,13 +223,13 @@ public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics
 
 		BlockPos worldPosition = getPos();
 
-		if (mode == Mode.BASIN)
+		if (mode == ProcessingMode.BASIN)
 			particleItems
 				.forEach(stack -> makeCompactingParticleEffect(VecHelper.getCenterOf(worldPosition.below(2)), stack));
-		if (mode == Mode.BELT)
+		if (mode == ProcessingMode.BELT)
 			particleItems.forEach(stack -> makePressingParticleEffect(VecHelper.getCenterOf(worldPosition.below(2))
 				.add(0, 8 / 16f, 0), stack));
-		if (mode == Mode.WORLD)
+		if (mode == ProcessingMode.WORLD)
 			particleItems.forEach(stack -> makePressingParticleEffect(VecHelper.getCenterOf(worldPosition.below(1))
 				.add(0, -1 / 4f, 0), stack));
 
@@ -239,15 +264,4 @@ public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics
 				motion.y + .25f, motion.z);
 		}
 	}
-
-	public enum Mode {
-		WORLD(1), BELT(19f / 16f), BASIN(22f / 16f);
-
-		public final float headOffset;
-
-		Mode(float headOffset) {
-			this.headOffset = headOffset;
-		}
-	}
-
 }

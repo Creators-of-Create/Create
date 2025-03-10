@@ -2,7 +2,7 @@ package com.simibubi.create.content.itemprocessing.specifics;
 
 import net.minecraft.world.entity.item.ItemEntity;
 
-public interface ICanProcessInWorldItems extends ProcessingSpecifics {
+public interface ICanProcessInWorldItems {
 
 	/**
 	 * Tries to process the item in world, this means the item is dropped in the bounding box of the machine

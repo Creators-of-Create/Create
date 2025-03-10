@@ -7,7 +7,8 @@ import com.simibubi.create.content.kinetics.deployer.DeployerBlockEntity;
 import com.simibubi.create.content.kinetics.millstone.MillstoneBlockEntity;
 import com.simibubi.create.content.kinetics.mixer.MechanicalMixerBlockEntity;
 import com.simibubi.create.content.kinetics.press.MechanicalPressBlockEntity;
-import com.simibubi.create.content.kinetics.press.PressingBehaviour.Mode;
+
+import com.simibubi.create.content.processing.ProcessingMode;
 import com.simibubi.create.content.processing.basin.BasinBlock;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
@@ -317,7 +318,7 @@ public class ProcessingScenes {
 
 		Class<MechanicalPressBlockEntity> type = MechanicalPressBlockEntity.class;
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
-			.start(Mode.BELT));
+			.startProcessing(ProcessingMode.BELT));
 		scene.idle(30);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
@@ -348,7 +349,7 @@ public class ProcessingScenes {
 		scene.idle(15);
 		scene.world().stallBeltItem(ingot, true);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
-			.start(Mode.BELT));
+			.startProcessing(ProcessingMode.BELT));
 
 		scene.overlay().showText(50)
 			.pointAt(pressSide)
@@ -367,7 +368,7 @@ public class ProcessingScenes {
 		scene.idle(15);
 		scene.world().stallBeltItem(ingot2, true);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
-			.start(Mode.BELT));
+			.startProcessing(ProcessingMode.BELT));
 		scene.idle(30);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
@@ -498,7 +499,7 @@ public class ProcessingScenes {
 		scene.idle(30);
 		Class<MechanicalPressBlockEntity> type = MechanicalPressBlockEntity.class;
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
-			.start(Mode.BASIN));
+			.startProcessing(ProcessingMode.BASIN));
 		scene.idle(30);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.makeCompactingParticleEffect(util.vector().centerOf(basin), copper));
@@ -523,7 +524,7 @@ public class ProcessingScenes {
 		scene.overlay().showControls(util.vector().topOf(basin), Pointing.DOWN, 30).withItem(log);
 		scene.idle(30);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
-			.start(Mode.BASIN));
+			.startProcessing(ProcessingMode.BASIN));
 		scene.idle(30);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.makeCompactingParticleEffect(util.vector().centerOf(basin), log));
@@ -816,7 +817,7 @@ public class ProcessingScenes {
 
 		Class<MechanicalPressBlockEntity> type = MechanicalPressBlockEntity.class;
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
-			.start(Mode.BASIN));
+			.startProcessing(ProcessingMode.BASIN));
 		scene.idle(30);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.makeCompactingParticleEffect(util.vector().centerOf(basinPos), stack));
@@ -852,7 +853,7 @@ public class ProcessingScenes {
 		scene.overlay().showControls(util.vector().topOf(basinPos), Pointing.RIGHT, 30).withItem(nugget);
 		scene.idle(30);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
-			.start(Mode.BASIN));
+			.startProcessing(ProcessingMode.BASIN));
 		scene.idle(30);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.makeCompactingParticleEffect(util.vector().centerOf(basinPos), nugget));
@@ -862,7 +863,7 @@ public class ProcessingScenes {
 		scene.overlay().showControls(util.vector().topOf(basinPos), Pointing.RIGHT, 30).withItem(ingot);
 		scene.idle(30);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
-			.start(Mode.BASIN));
+			.startProcessing(ProcessingMode.BASIN));
 		scene.idle(30);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.makeCompactingParticleEffect(util.vector().centerOf(basinPos), ingot));

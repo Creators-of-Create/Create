@@ -13,11 +13,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-/**
- * Behaviour for BlockEntities which can process items on belts or depots beneath
- * them. Currently only supports placement location 2 spaces above the belt
- * block. Example use: Mechanical Press
- */
+import java.util.function.BiFunction;
+
+
 public class BeltProcessingBehaviour extends ProcessingBehaviour {
 
 	public static final BehaviourType<BeltProcessingBehaviour> TYPE = new BehaviourType<>();
@@ -26,7 +24,7 @@ public class BeltProcessingBehaviour extends ProcessingBehaviour {
 		super(be);
 	}
 
-	public BeltProcessingBehaviour whenItemEnters(ProcessingCallback callback) {
+	public BeltProcessingBehaviour whenItemEnters(BiFunction<TransportedItemStack, TransportedItemStackHandlerBehaviour, ProcessingResult> callback) {
 		onItemEnter = callback;
 		return this;
 	}
@@ -40,7 +38,7 @@ public class BeltProcessingBehaviour extends ProcessingBehaviour {
 	 * @param callback for the machine to do its processing
 	 * @return this
 	 */
-	public BeltProcessingBehaviour whileItemHeld(ProcessingCallback callback) {
+	public BeltProcessingBehaviour whileItemHeld(BiFunction<TransportedItemStack, TransportedItemStackHandlerBehaviour, ProcessingResult>  callback) {
 		continueProcessing = callback;
 		return this;
 	}

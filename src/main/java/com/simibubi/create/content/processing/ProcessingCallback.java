@@ -11,7 +11,7 @@ public interface ProcessingCallback {
 	/**
 	 *
 	 * @param stack which is being processed
-	 * @param inventory TODO find out what this does :)
+	 * @param inventory belt handler
 	 * @return state of process after callback
 	 */
 	ProcessingResult apply(TransportedItemStack stack, TransportedItemStackHandlerBehaviour inventory);
