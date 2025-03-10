@@ -21,7 +21,7 @@ public class BeltPressingCallbacks {
 										   TransportedItemStackHandlerBehaviour handler, PressingBehaviour behaviour) {
 		if (behaviour.specifics.getKineticSpeed() == 0)
 			return ProcessingResult.PASS;
-		if (behaviour.running)
+		if (behaviour.isProcessing())
 			return ProcessingResult.HOLD;
 		if (!behaviour.specifics.tryProcessOnBelt(transported, null, true))
 			return ProcessingResult.PASS;
@@ -35,9 +35,9 @@ public class BeltPressingCallbacks {
 
 		if (behaviour.specifics.getKineticSpeed() == 0)
 			return ProcessingResult.PASS;
-		if (!behaviour.running)
+		if (!behaviour.isProcessing())
 			return ProcessingResult.PASS;
-		if (behaviour.runningTicks != PressingBehaviour.CYCLE / 2)
+		if (behaviour.getFinishedTicks() != PressingBehaviour.CYCLE / 2)
 			return ProcessingResult.HOLD;
 
 		behaviour.particleItems.clear();

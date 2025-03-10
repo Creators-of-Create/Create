@@ -5,17 +5,11 @@ import java.util.List;
 
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.itemprocessing.ICanProcessItems;
-import com.simibubi.create.content.itemprocessing.specifics.ICanProcessInWorldItems;
-import com.simibubi.create.content.itemprocessing.specifics.ProcessingSpecifics;
 import com.simibubi.create.content.itemprocessing.specifics.press.PressProcessingSpecifics;
-import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
-import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
-import com.simibubi.create.content.processing.basin.BasinBlock;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
-import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -121,12 +115,12 @@ public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics
 
 	@Override
 	public void modifyProcessingTicks(Level level, int prevTicks, int ticks, int cycle) {
-		if (prevTicks < CYCLE / 2 && ticks >= CYCLE / 2) {
-			setFinishedTicks(CYCLE / 2);
-			// Pause the ticks until a packet is received
-			if (level.isClientSide && !blockEntity.isVirtual())
-				setFinishedTicks(-(CYCLE / 2));
-		}
+//		if (prevTicks < CYCLE / 2 && ticks >= CYCLE / 2) {
+//			setFinishedTicks(CYCLE / 2);
+//			// Pause the ticks until a packet is received
+//			if (level.isClientSide && !blockEntity.isVirtual())
+//				setProcessTicks(-(CYCLE / 2));
+//		}
 	}
 
 	@Override
@@ -154,6 +148,7 @@ public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics
 	@Override
 	public void onProcessedFinish() {
 		this.finished = true;
+		blockEntity.sendData();
 	}
 
 	protected void applyOnBasin() {
@@ -182,7 +177,6 @@ public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics
 			if (!entity.isAlive() || !entity.onGround())
 				continue;
 
-			entityScanCooldown = 0;
 			if (specifics.tryProcessItemInWorld(itemEntity, false))
 				blockEntity.sendData();
 			if (!bulk)

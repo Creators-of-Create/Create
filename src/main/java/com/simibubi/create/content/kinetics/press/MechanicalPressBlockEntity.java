@@ -222,7 +222,7 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 
 	@Override
 	public void startProcessingBasin() {
-		if (pressingBehaviour.running && pressingBehaviour.runningTicks <= PressingBehaviour.CYCLE / 2)
+		if (pressingBehaviour.isProcessing() && pressingBehaviour.getFinishedTicks() <= PressingBehaviour.CYCLE / 2)
 			return;
 		super.startProcessingBasin();
 		pressingBehaviour.start(Mode.BASIN);
@@ -231,14 +231,14 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 	@Override
 	protected void onBasinRemoved() {
 		pressingBehaviour.particleItems.clear();
-		pressingBehaviour.running = false;
-		pressingBehaviour.runningTicks = 0;
+		pressingBehaviour.setProcessing(false);
+		pressingBehaviour.setFinishedTicks(0);
 		sendData();
 	}
 
 	@Override
 	protected boolean isRunning() {
-		return pressingBehaviour.running;
+		return pressingBehaviour.isProcessing();
 	}
 
 	@Override

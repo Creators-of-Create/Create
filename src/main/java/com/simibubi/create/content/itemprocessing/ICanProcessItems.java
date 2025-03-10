@@ -1,6 +1,7 @@
 package com.simibubi.create.content.itemprocessing;
 
 
+import com.simibubi.create.Create;
 import com.simibubi.create.content.itemprocessing.specifics.ICanProcessInWorldItems;
 import com.simibubi.create.content.itemprocessing.specifics.ProcessingSpecifics;
 import com.simibubi.create.content.kinetics.IHaveKineticSpeed;
@@ -38,12 +39,11 @@ public abstract class ICanProcessItems <T extends ProcessingSpecifics> extends B
 	/**
 	 * used to track ticks finished on client or something
 	 */
-	private int prevFinishedTicks;
-
+	private int prevFinishedTicks = 0;
 	/**
 	 * ticks this process has already finished
 	 */
-	private int finishedTicks;
+	private int finishedTicks = 0;
 
 	/**
 	 * @param cycle ticks it takes to process (for example mechanical press to press an item)
@@ -71,7 +71,7 @@ public abstract class ICanProcessItems <T extends ProcessingSpecifics> extends B
 		}
 
 		//item in world processing
-		if (!isProcessing && !level.isClientSide) {
+		if (!level.isClientSide && !isProcessing) {
 			if (specifics instanceof IHaveKineticSpeed && ((IHaveKineticSpeed) specifics).getKineticSpeed() == 0) {
 				return;
 			}
@@ -109,6 +109,10 @@ public abstract class ICanProcessItems <T extends ProcessingSpecifics> extends B
 			}
 		}
 
+		if (!isProcessing) {
+			return;
+		}
+
 		//animation sync with client????
 		if (level.isClientSide && (finishedTicks == -cycle / 2)) {
 			prevFinishedTicks = cycle / 2;
@@ -119,9 +123,11 @@ public abstract class ICanProcessItems <T extends ProcessingSpecifics> extends B
 
 		boolean isProcessedFinished = finishedTicks > cycle;
 		if (!level.isClientSide && isProcessedFinished) {
-			isProcessing = false;
+			setProcessTicks(0);
+			setProcessing(false);
 			specifics.onFinished();
 			onProcessedFinish();
+			return;
 		}
 
 		prevFinishedTicks = finishedTicks;
@@ -187,11 +193,13 @@ public abstract class ICanProcessItems <T extends ProcessingSpecifics> extends B
 	}
 
 	public void startInWorldProcessing() {
+		onInWorldProcessBegin();
+		setProcessTicks(0);
 		startProcessing();
 	}
 
 	public void startProcessing() {
-		isProcessing = true;
+		setProcessing(true);
 	}
 
 	/**
@@ -207,5 +215,6 @@ public abstract class ICanProcessItems <T extends ProcessingSpecifics> extends B
 	 */
 	public void setProcessing(boolean processing) {
 		isProcessing = processing;
+		Create.LOGGER.info(processing ? "Processing started" : "Processing stopped");
 	}
 }
