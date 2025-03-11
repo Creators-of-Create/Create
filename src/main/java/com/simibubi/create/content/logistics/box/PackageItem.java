@@ -133,6 +133,11 @@ public class PackageItem extends Item {
 			.getInt("OrderId");
 	}
 
+	@Nullable
+	/**
+	 * Ordered items and their amount in the original, combined request\n
+	 * (Present in all non-redstone packages)
+	 */
 	public static PackageOrder getOrderContext(ItemStack box) {
 		CompoundTag tag = box.getTag();
 		if (tag == null || !tag.contains("Fragment"))
@@ -143,12 +148,17 @@ public class PackageItem extends Item {
 		return PackageOrder.read(frag.getCompound("OrderContext"));
 	}
 
+	@Nullable
+	/**
+	 * Recipes and their count encoded in the original request\n
+	 * (Specific to crafting packages)
+	 */
 	public static PackageOrderCraftingContext getOrderCraftingContext(ItemStack box) {
 		CompoundTag tag = box.getTag();
 		if (tag == null || !tag.contains("Fragment"))
 			return null;
 		CompoundTag frag = tag.getCompound("Fragment");
-		if (!frag.contains("OrderContext"))
+		if (!frag.contains("OrderCraftingContext"))
 			return null;
 		return PackageOrderCraftingContext.read(frag.getCompound("OrderCraftingContext"));
 	}

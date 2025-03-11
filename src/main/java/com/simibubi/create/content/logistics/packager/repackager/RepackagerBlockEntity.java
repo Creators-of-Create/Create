@@ -65,7 +65,9 @@ public class RepackagerBlockEntity extends PackagerBlockEntity {
 	}
 
 	public void attemptToSend(List<PackagingRequest> queuedRequests) {
-		if (queuedRequests == null && (!heldBox.isEmpty() || animationTicks != 0) && buttonCooldown > 0)
+		if (!heldBox.isEmpty() || animationTicks != 0 || buttonCooldown > 0)
+			return;
+		if (!queuedExitingPackages.isEmpty())
 			return;
 
 		IItemHandler targetInv = targetInventory.getInventory();
@@ -134,19 +136,26 @@ public class RepackagerBlockEntity extends PackagerBlockEntity {
 		if (repackageHelper.shouldSplit(first)) {
 			List<ItemStack> splitToExport = repackageHelper.split(first);
 			// Same here, if split fails just output it normally
-			if (splitToExport != null) {
+			if (splitToExport != null && !splitToExport.isEmpty()) {
 				splitToExport.addAll(boxesToExport.subList(1, boxesToExport.size()));
 				boxesToExport = splitToExport;
 			}
 		}
+		
 		pushPackages(boxesToExport);
 	}
 
 	protected void pushPackages(List<ItemStack> toPush) {
-		heldBox = toPush.get(0)
+		ItemStack firstToPush = toPush.get(0)
 			.copy();
-		animationInward = false;
-		animationTicks = CYCLE;
+		if (!heldBox.isEmpty() || animationTicks != 0) {
+			queuedExitingPackages.add(firstToPush);
+		} else {
+			heldBox = firstToPush;
+			animationInward = false;
+			animationTicks = CYCLE;
+		}
+		
 		queuedExitingPackages.addAll(toPush.subList(1, toPush.size()));
 		notifyUpdate();
 	}
