@@ -36,7 +36,7 @@ public class CEquipment extends ConfigBase {
 		static String maxPotatoCannonShots =
 			"Amount of free Potato Cannon shots provided by one filled Copper Backtank. Set to 0 makes Potato Cannons unbreakable";
 		static String shouldScaleWaterFogDistance =
-			"Scale the range of visibility of the diving helmet underwater";
+			"Scale the underwater visibility range of the diving helmet";
 //		static String zapperUndoLogLength = "The maximum amount of operations a blockzapper can remember for undoing. (0 to disable undo)";
 	}
 
