@@ -65,6 +65,11 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 			AllAdvancements.TRACK_CRAFTING);
 	}
 
+	@Override
+	public int getEntityScanCooldown() {
+		return PressingBehaviour.ENTITY_SCAN;
+	}
+
 	public void onItemPressed(ItemStack result) {
 		award(AllAdvancements.PRESS);
 		if (AllTags.AllBlockTags.TRACKS.matches(result))

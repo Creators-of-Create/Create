@@ -82,9 +82,10 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		tank = SmartFluidTankBehaviour.single(this, 1000);
 		behaviours.add(tank);
 
-		beltProcessing = new BeltProcessingBehaviour(this).whenItemEnters(this::onItemReceived)
-			.whileItemHeld(this::whenItemHeld);
-		behaviours.add(beltProcessing);
+		//TODO Rewrite spout logic
+//		beltProcessing = new BeltProcessingBehaviour(this).whenItemEnters(this::onItemReceived)
+//			.whileItemHeld(this::whenItemHeld);
+//		behaviours.add(beltProcessing);
 
 		registerAwardables(behaviours, AllAdvancements.SPOUT, AllAdvancements.FOODS);
 	}

@@ -1,5 +1,7 @@
 package com.simibubi.create.content.kinetics.belt.behaviour;
 
+import com.simibubi.create.content.itemprocessing.ItemProcessor;
+import com.simibubi.create.content.itemprocessing.specifics.ProcessingSpecifics;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.funnel.AbstractFunnelBlock;
 import com.simibubi.create.content.processing.ProcessingBehaviour;
@@ -15,33 +17,32 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.BiFunction;
 
+/**
+ * Entity can process items which are running on a belt
+ * Use this inside your entities for general item processing and belt processing.
+ *
+ * @param <T> processing specifics
+ * @see ProcessingSpecifics
+ */
+public abstract class BeltProcessingBehaviour<T extends ProcessingSpecifics> extends ItemProcessor<T> {
 
-public class BeltProcessingBehaviour extends ProcessingBehaviour {
+	public static BehaviourType<BeltProcessingBehaviour<?>> TYPE = new BehaviourType<>("belt_processing_behaviour");
 
-	public static final BehaviourType<BeltProcessingBehaviour> TYPE = new BehaviourType<>();
-
-	public BeltProcessingBehaviour(SmartBlockEntity be) {
-		super(be);
+	public BeltProcessingBehaviour(int cycle, SmartBlockEntity be, T specifics) {
+		super(cycle, be, specifics);
+		onItemEnter = this::whenItemEnters;
+		continueProcessing = this::whileItemHeld;
 	}
 
-	public BeltProcessingBehaviour whenItemEnters(BiFunction<TransportedItemStack, TransportedItemStackHandlerBehaviour, ProcessingResult> callback) {
-		onItemEnter = callback;
-		return this;
-	}
+	public abstract ProcessingResult whenItemEnters(TransportedItemStack itemStack, TransportedItemStackHandlerBehaviour handler);
 
 	/**
-	 * Sets the callback for the machine to process a given item, when the item is stopped for processing
-	 *
-	 * Executed in
-	 * @see BeltProcessingBehaviour#handleHeldItem(TransportedItemStack, TransportedItemStackHandlerBehaviour)
-	 *
-	 * @param callback for the machine to do its processing
-	 * @return this
+	 * Called as long as the item is held on the belt.
+	 * @param itemStack the stack being on the belt
+	 * @param handler the belt
 	 */
-	public BeltProcessingBehaviour whileItemHeld(BiFunction<TransportedItemStack, TransportedItemStackHandlerBehaviour, ProcessingResult>  callback) {
-		continueProcessing = callback;
-		return this;
-	}
+	public abstract ProcessingResult whileItemHeld(TransportedItemStack itemStack, TransportedItemStackHandlerBehaviour handler);
+
 
 	/**
 	 * Checks if a block is above the belt, Funnels are ignored from blocking the belt.

@@ -5,12 +5,12 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.itemprocessing.specifics.ICanProcessInWorldItems;
 import com.simibubi.create.content.itemprocessing.specifics.ProcessingSpecifics;
 import com.simibubi.create.content.kinetics.IHaveKineticSpeed;
-import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.content.processing.ProcessingBehaviour;
 import com.simibubi.create.content.processing.ProcessingMode;
 import com.simibubi.create.content.processing.basin.BasinBlock;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
-
+import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
@@ -29,12 +29,10 @@ import net.minecraft.world.phys.AABB;
  * This class only handles the processing of items. This means how many ticks it will take etc.
  * It will also, if the specifics have it, try to start in world processing.
  *
- * Belt processing is handled in the super class
- * @see BeltProcessingBehaviour
  * @param <T> the processing specifics.
  * @see ProcessingSpecifics
  */
-public abstract class ICanProcessItems <T extends ProcessingSpecifics> extends BeltProcessingBehaviour {
+public abstract class ItemProcessor<T extends ProcessingSpecifics> extends ProcessingBehaviour {
 
 	private final int cycle;
 	private final int entityScan;
@@ -58,14 +56,19 @@ public abstract class ICanProcessItems <T extends ProcessingSpecifics> extends B
 
 	/**
 	 * @param cycle ticks it takes to process (for example mechanical press to press an item)
-	 * @param entityScan ticks to wait until to scan for new entities in processing bounding box
 	 * @param smartBlockEntity entity to process items
 	 */
-	public ICanProcessItems(int cycle, int entityScan, SmartBlockEntity smartBlockEntity, T specifics) {
+	public ItemProcessor(int cycle, SmartBlockEntity smartBlockEntity, T specifics) {
 		super(smartBlockEntity);
 		this.cycle = cycle;
-		this.entityScan = entityScan;
-		this.entityScanCooldown = entityScan;
+
+		if (specifics instanceof ICanProcessInWorldItems ic) {
+			this.entityScan = ic.getEntityScanCooldown();
+		} else {
+			this.entityScan = 0;
+		}
+
+		this.entityScanCooldown = this.entityScan;
 		this.specifics = specifics;
 	}
 
@@ -148,7 +151,7 @@ public abstract class ICanProcessItems <T extends ProcessingSpecifics> extends B
 
 	/**
 	 * each valid process tick for this process
-	 * @see ICanProcessItems
+	 * @see ItemProcessor
 	 * @param level where the process is happening
 	 * @param finishedTicks ticks already finished for this process
 	 * @param cycle ticks required for this process

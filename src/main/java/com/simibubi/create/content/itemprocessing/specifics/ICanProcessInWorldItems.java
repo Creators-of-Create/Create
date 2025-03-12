@@ -12,4 +12,10 @@ public interface ICanProcessInWorldItems {
 	 */
 	boolean tryProcessItemInWorld(ItemEntity itemEntity, boolean simulate);
 
+	/**
+	 * Determines how many ticks the processor should wait until it scans again for items
+	 * @return ticks
+	 */
+	int getEntityScanCooldown();
+
 }

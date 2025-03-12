@@ -125,10 +125,11 @@ public class DeployerBlockEntity extends KineticBlockEntity {
 		super.addBehaviours(behaviours);
 		filtering = new FilteringBehaviour(this, new DeployerFilterSlot());
 		behaviours.add(filtering);
-		processingBehaviour =
-			new BeltProcessingBehaviour(this).whenItemEnters((s, i) -> BeltDeployerCallbacks.onItemReceived(s, i, this))
-				.whileItemHeld((s, i) -> BeltDeployerCallbacks.whenItemHeld(s, i, this));
-		behaviours.add(processingBehaviour);
+		//TODO Reword Deployer Block entity as well
+//		processingBehaviour =
+//			new BeltProcessingBehaviour(this).whenItemEnters((s, i) -> BeltDeployerCallbacks.onItemReceived(s, i, this))
+//				.whileItemHeld((s, i) -> BeltDeployerCallbacks.whenItemHeld(s, i, this));
+//		behaviours.add(processingBehaviour);
 
 		registerAwardables(behaviours, AllAdvancements.TRAIN_CASING, AllAdvancements.ANDESITE_CASING,
 			AllAdvancements.BRASS_CASING, AllAdvancements.COPPER_CASING, AllAdvancements.FIST_BUMP,

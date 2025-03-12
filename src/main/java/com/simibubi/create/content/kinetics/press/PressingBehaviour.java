@@ -2,19 +2,25 @@ package com.simibubi.create.content.kinetics.press;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.itemprocessing.ICanProcessItems;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.itemprocessing.specifics.IProduceParticles;
 import com.simibubi.create.content.itemprocessing.specifics.press.PressProcessingSpecifics;
+import com.simibubi.create.content.kinetics.belt.BeltHelper;
+import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour;
+import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.processing.ProcessingMode;
+import com.simibubi.create.content.processing.ProcessingResult;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
 import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -29,7 +35,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics> implements IProduceParticles {
+public class PressingBehaviour extends BeltProcessingBehaviour<PressProcessingSpecifics> implements IProduceParticles {
 
 	public static final int CYCLE = 240;
 	public static final int ENTITY_SCAN = 10;
@@ -50,12 +56,9 @@ public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics
 
 
 	public <T extends SmartBlockEntity & PressProcessingSpecifics> PressingBehaviour(T be) {
-		super(PressingBehaviour.CYCLE, PressingBehaviour.ENTITY_SCAN, be, be);
+		super(PressingBehaviour.CYCLE, be, be);
 		this.specifics = be;
 		mode = ProcessingMode.WORLD;
-		BeltPressingCallbacks callbacks = new BeltPressingCallbacks();
-		whenItemEnters(( s, i) -> callbacks.onItemReceived(s, i, this));
-		whileItemHeld((s, i) -> callbacks.whenItemHeld(s, i, this));
 	}
 
 	@Override
@@ -93,6 +96,68 @@ public class PressingBehaviour extends ICanProcessItems<PressProcessingSpecifics
 		this.mode = mode;
 		particleItems.clear();
 		blockEntity.sendData();
+	}
+
+	@Override
+	public ProcessingResult whenItemEnters(TransportedItemStack itemStack, TransportedItemStackHandlerBehaviour handler) {
+		if (specifics.getKineticSpeed() == 0)
+			return ProcessingResult.PASS;
+		if (isProcessing())
+			return ProcessingResult.HOLD;
+		if (!specifics.tryProcessOnBelt(itemStack, null, true))
+			return ProcessingResult.PASS;
+
+		startProcessing(ProcessingMode.BELT);
+		return ProcessingResult.HOLD;
+	}
+
+	@Override
+	public ProcessingResult whileItemHeld(TransportedItemStack itemStack, TransportedItemStackHandlerBehaviour handler) {
+		if (specifics.getKineticSpeed() == 0)
+			return ProcessingResult.PASS;
+		if (!isProcessing())
+			return ProcessingResult.PASS;
+		if (getFinishedTicks() != PressingBehaviour.CYCLE / 2)
+			return ProcessingResult.HOLD;
+
+		clearParticles();
+		ArrayList<ItemStack> results = new ArrayList<>();
+		if (!specifics.tryProcessOnBelt(itemStack, results, false))
+			return ProcessingResult.PASS;
+
+		boolean bulk = specifics.canProcessInBulk() || itemStack.stack.getCount() == 1;
+
+		itemStack.clearFanProcessingData();
+
+		List<TransportedItemStack> collect = results.stream()
+			.map(stack -> {
+				TransportedItemStack copy = itemStack.copy();
+				boolean centered = BeltHelper.isItemUpright(stack);
+				copy.stack = stack;
+				copy.locked = true;
+				copy.angle = centered ? 180 : Create.RANDOM.nextInt(360);
+				return copy;
+			})
+			.collect(Collectors.toList());
+
+		if (bulk) {
+			if (collect.isEmpty())
+				handler.handleProcessingOnItem(itemStack, TransportedResult.removeItem());
+			else
+				handler.handleProcessingOnItem(itemStack, TransportedResult.convertTo(collect));
+
+		} else {
+			TransportedItemStack left = itemStack.copy();
+			left.stack.shrink(1);
+
+			if (collect.isEmpty())
+				handler.handleProcessingOnItem(itemStack, TransportedResult.convertTo(left));
+			else
+				handler.handleProcessingOnItem(itemStack, TransportedResult.convertToAndLeaveHeld(collect, left));
+		}
+
+		blockEntity.sendData();
+		return ProcessingResult.HOLD;
 	}
 
 	public float modeToHeadOffset() {
