@@ -104,11 +104,6 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer<ElevatorP
 	}
 
 	@Override
-	public int getViewDistance() {
-		return 128;
-	}
-
-	@Override
 	public boolean shouldRenderOffScreen(ElevatorPulleyBlockEntity p_188185_1_) {
 		return true;
 	}

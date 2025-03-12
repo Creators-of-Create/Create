@@ -59,6 +59,7 @@ public class InputEvents {
 		int button = event.getButton();
 		boolean pressed = !(event.getAction() == 0);
 
+		RadialWrenchHandler.onKeyInput(button, pressed);
 		if (CreateClient.SCHEMATIC_HANDLER.onMouseInput(button, pressed))
 			event.setCanceled(true);
 		else if (CreateClient.SCHEMATIC_AND_QUILL_HANDLER.onMouseInput(button, pressed))

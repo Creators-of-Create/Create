@@ -19,6 +19,7 @@ import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.filter.FilterItem;
 import com.simibubi.create.content.logistics.filter.FilterItemStack;
+import com.simibubi.create.content.logistics.packager.IdentifiedInventory;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour.RequestType;
 import com.simibubi.create.content.logistics.packagerLink.WiFiParticle;
@@ -96,7 +97,7 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 	}
 
 	@Override
-	public boolean broadcastPackageRequest(RequestType type, PackageOrder order, IItemHandler ignoredHandler,
+	public boolean broadcastPackageRequest(RequestType type, PackageOrder order, IdentifiedInventory ignoredHandler,
 										   String address, @Nullable PackageOrder orderContext) {
 		boolean result = super.broadcastPackageRequest(type, order, ignoredHandler, address, orderContext);
 		previouslyUsedAddress = address;

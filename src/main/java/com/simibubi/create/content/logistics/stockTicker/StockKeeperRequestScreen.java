@@ -25,6 +25,8 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllItemTags;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.jei.CreateJEI;
 import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
 import com.simibubi.create.content.equipment.clipboard.ClipboardEntry;
 import com.simibubi.create.content.logistics.AddressEditBox;
@@ -40,6 +42,7 @@ import com.simibubi.create.foundation.gui.ScreenWithStencils;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.createmod.catnip.animation.AnimationTickHolder;
@@ -269,6 +272,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		if (initial) {
 			playUiSound(SoundEvents.WOOD_HIT, 0.5f, 1.5f);
 			playUiSound(SoundEvents.BOOK_PAGE_TURN, 1, 1);
+			syncJEI();
 		}
 	}
 
@@ -1036,6 +1040,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			refreshSearchNextTick = true;
 			moveToTopNextTick = true;
 			searchBox.setFocused(true);
+			syncJEI();
 			return true;
 		}
 
@@ -1299,6 +1304,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		if (!Objects.equals(s, searchBox.getValue())) {
 			refreshSearchNextTick = true;
 			moveToTopNextTick = true;
+			syncJEI();
 		}
 		return true;
 	}
@@ -1325,6 +1331,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		if (!Objects.equals(s, searchBox.getValue())) {
 			refreshSearchNextTick = true;
 			moveToTopNextTick = true;
+			syncJEI();
 		}
 		return true;
 	}
@@ -1602,4 +1609,9 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			list.remove(chosen);
 	}
 
+	private void syncJEI() {
+		if (Mods.JEI.isLoaded() && AllConfigs.client().syncJeiSearch.get())
+			CreateJEI.runtime.getIngredientFilter().setFilterText(searchBox.getValue());
+	}
+	
 }

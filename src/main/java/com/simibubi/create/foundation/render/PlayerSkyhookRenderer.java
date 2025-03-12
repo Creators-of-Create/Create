@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.math.AngleHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -39,6 +40,9 @@ public class PlayerSkyhookRenderer {
 	}
 
 	private static void setHangingPose(HumanoidModel<?> model) {
+		if (Minecraft.getInstance().isPaused())
+			return;
+
 		model.head.x = 0;
 		model.hat.x = 0;
 		model.body.resetPose();

@@ -59,10 +59,11 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
-import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
+import net.minecraft.resources.ResourceLocation;
 
 public class AllCreatePonderScenes {
 
@@ -111,19 +112,19 @@ public class AllCreatePonderScenes {
 			.addStoryBoard("creative_motor", KineticsScenes::creativeMotor, AllCreatePonderTags.KINETIC_SOURCES)
 			.addStoryBoard("creative_motor_mojang", KineticsScenes::creativeMotorMojang);
 		HELPER.addStoryBoard(AllBlocks.WATER_WHEEL, "water_wheel", KineticsScenes::waterWheel,
-							 AllCreatePonderTags.KINETIC_SOURCES);
+			AllCreatePonderTags.KINETIC_SOURCES);
 		HELPER.addStoryBoard(AllBlocks.LARGE_WATER_WHEEL, "large_water_wheel", KineticsScenes::largeWaterWheel,
-							 AllCreatePonderTags.KINETIC_SOURCES);
+			AllCreatePonderTags.KINETIC_SOURCES);
 
 		HELPER.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank, AllCreatePonderTags.KINETIC_SOURCES);
 
 		HELPER.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle,
-							 AllCreatePonderTags.KINETIC_SOURCES);
+			AllCreatePonderTags.KINETIC_SOURCES);
 		HELPER.forComponents(AllBlocks.DYED_VALVE_HANDLES.toArray())
 			.addStoryBoard("valve_handle", KineticsScenes::valveHandle);
 
 		HELPER.addStoryBoard(AllBlocks.ENCASED_CHAIN_DRIVE, "chain_drive/relay", ChainDriveScenes::chainDriveAsRelay,
-							 AllCreatePonderTags.KINETIC_RELAYS);
+			AllCreatePonderTags.KINETIC_RELAYS);
 		HELPER.forComponents(AllBlocks.ENCASED_CHAIN_DRIVE, AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
 			.addStoryBoard("chain_drive/gearshift", ChainDriveScenes::adjustableChainGearshift);
 
@@ -209,7 +210,7 @@ public class AllCreatePonderScenes {
 		// Mechanical Piston
 		HELPER.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
 			.addStoryBoard("mechanical_piston/anchor", PistonScenes::movement, AllCreatePonderTags.KINETIC_APPLIANCES,
-						   AllCreatePonderTags.MOVEMENT_ANCHOR);
+				AllCreatePonderTags.MOVEMENT_ANCHOR);
 		HELPER
 			.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON,
 				AllBlocks.PISTON_EXTENSION_POLE)
@@ -220,7 +221,7 @@ public class AllCreatePonderScenes {
 		// Pulleys
 		HELPER.forComponents(AllBlocks.ROPE_PULLEY)
 			.addStoryBoard("rope_pulley/anchor", PulleyScenes::movement, AllCreatePonderTags.KINETIC_APPLIANCES,
-						   AllCreatePonderTags.MOVEMENT_ANCHOR)
+				AllCreatePonderTags.MOVEMENT_ANCHOR)
 			.addStoryBoard("rope_pulley/modes", PulleyScenes::movementModes)
 			.addStoryBoard("rope_pulley/multi_rope", PulleyScenes::multiRope)
 			.addStoryBoard("rope_pulley/attachment", PulleyScenes::attachment);
@@ -232,7 +233,7 @@ public class AllCreatePonderScenes {
 		HELPER.forComponents(AllBlocks.WINDMILL_BEARING)
 			.addStoryBoard("windmill_bearing/source", BearingScenes::windmillsAsSource, AllCreatePonderTags.KINETIC_SOURCES)
 			.addStoryBoard("windmill_bearing/structure", BearingScenes::windmillsAnyStructure,
-						   AllCreatePonderTags.MOVEMENT_ANCHOR);
+				AllCreatePonderTags.MOVEMENT_ANCHOR);
 		HELPER.forComponents(AllBlocks.SAIL)
 			.addStoryBoard("sail", BearingScenes::sail);
 		HELPER.forComponents(AllBlocks.SAIL_FRAME)
@@ -241,20 +242,20 @@ public class AllCreatePonderScenes {
 		// Mechanical Bearing
 		HELPER.forComponents(AllBlocks.MECHANICAL_BEARING)
 			.addStoryBoard("mechanical_bearing/anchor", BearingScenes::mechanicalBearing, AllCreatePonderTags.KINETIC_APPLIANCES,
-						   AllCreatePonderTags.MOVEMENT_ANCHOR)
+				AllCreatePonderTags.MOVEMENT_ANCHOR)
 			.addStoryBoard("mechanical_bearing/modes", BearingScenes::bearingModes)
 			.addStoryBoard("mechanical_bearing/stabilized", BearingScenes::stabilizedBearings,
-						   AllCreatePonderTags.CONTRAPTION_ACTOR);
+				AllCreatePonderTags.CONTRAPTION_ACTOR);
 
 		// Clockwork Bearing
 		HELPER.addStoryBoard(AllBlocks.CLOCKWORK_BEARING, "clockwork_bearing", BearingScenes::clockwork,
-							 AllCreatePonderTags.KINETIC_APPLIANCES, AllCreatePonderTags.MOVEMENT_ANCHOR);
+			AllCreatePonderTags.KINETIC_APPLIANCES, AllCreatePonderTags.MOVEMENT_ANCHOR);
 
 		// Gantries
 		HELPER.addStoryBoard(AllBlocks.GANTRY_SHAFT, "gantry/intro", GantryScenes::introForShaft,
-							 AllCreatePonderTags.KINETIC_APPLIANCES, AllCreatePonderTags.MOVEMENT_ANCHOR);
+			AllCreatePonderTags.KINETIC_APPLIANCES, AllCreatePonderTags.MOVEMENT_ANCHOR);
 		HELPER.addStoryBoard(AllBlocks.GANTRY_CARRIAGE, "gantry/intro", GantryScenes::introForPinion,
-							 AllCreatePonderTags.KINETIC_APPLIANCES, AllCreatePonderTags.MOVEMENT_ANCHOR);
+			AllCreatePonderTags.KINETIC_APPLIANCES, AllCreatePonderTags.MOVEMENT_ANCHOR);
 		HELPER.forComponents(AllBlocks.GANTRY_SHAFT, AllBlocks.GANTRY_CARRIAGE)
 			.addStoryBoard("gantry/redstone", GantryScenes::redstone)
 			.addStoryBoard("gantry/direction", GantryScenes::direction)
@@ -280,7 +281,7 @@ public class AllCreatePonderScenes {
 		HELPER.forComponents(AllBlocks.MECHANICAL_DRILL)
 			.addStoryBoard("mechanical_drill/breaker", MechanicalDrillScenes::breaker, AllCreatePonderTags.KINETIC_APPLIANCES)
 			.addStoryBoard("mechanical_drill/contraption", MechanicalDrillScenes::contraption,
-						   AllCreatePonderTags.CONTRAPTION_ACTOR);
+				AllCreatePonderTags.CONTRAPTION_ACTOR);
 		HELPER.forComponents(AllBlocks.DEPLOYER)
 			.addStoryBoard("deployer/filter", DeployerScenes::filter, AllCreatePonderTags.KINETIC_APPLIANCES)
 			.addStoryBoard("deployer/modes", DeployerScenes::modes)
@@ -316,7 +317,7 @@ public class AllCreatePonderScenes {
 			.addStoryBoard("fluid_tank/sizes", FluidTankScenes::sizes);
 		HELPER.forComponents(AllBlocks.CREATIVE_FLUID_TANK)
 			.addStoryBoard("fluid_tank/storage_creative", FluidTankScenes::creative, AllCreatePonderTags.FLUIDS,
-						   AllCreatePonderTags.CREATIVE)
+				AllCreatePonderTags.CREATIVE)
 			.addStoryBoard("fluid_tank/sizes_creative", FluidTankScenes::sizes);
 		HELPER.forComponents(AllBlocks.HOSE_PULLEY)
 			.addStoryBoard("hose_pulley/intro", HosePulleyScenes::intro, AllCreatePonderTags.FLUIDS, AllCreatePonderTags.KINETIC_APPLIANCES)
@@ -328,7 +329,7 @@ public class AllCreatePonderScenes {
 			.addStoryBoard("item_drain", DrainScenes::emptying, AllCreatePonderTags.FLUIDS);
 		HELPER.forComponents(AllBlocks.PORTABLE_FLUID_INTERFACE)
 			.addStoryBoard("portable_interface/transfer_fluid", FluidMovementActorScenes::transfer, AllCreatePonderTags.FLUIDS,
-						   AllCreatePonderTags.CONTRAPTION_ACTOR)
+				AllCreatePonderTags.CONTRAPTION_ACTOR)
 			.addStoryBoard("portable_interface/redstone_fluid", MovementActorScenes::psiRedstone);
 
 		// Redstone
@@ -389,15 +390,15 @@ public class AllCreatePonderScenes {
 		HELPER.forComponents(TrackMaterial.allBlocks()
 				.stream()
 				.map((trackSupplier) -> new BlockEntry<TrackBlock>(
-						// note: these blocks probably WON'T be in the Create Registrate, but a simple
-						// code trace reveals the Entry's registrate isn't used
-						Create.REGISTRATE,
-						RegistryObject.create(ForgeRegistries.BLOCKS.getKey(trackSupplier.get()), ForgeRegistries.BLOCKS)
+					// note: these blocks probably WON'T be in the Create Registrate, but a simple
+					// code trace reveals the Entry's registrate isn't used
+					Create.registrate(),
+					RegistryObject.create(ForgeRegistries.BLOCKS.getKey(trackSupplier.get()), ForgeRegistries.BLOCKS)
 				))
 				.toArray(BlockEntry[]::new))
-				.addStoryBoard("train_track/placement", TrackScenes::placement)
-				.addStoryBoard("train_track/portal", TrackScenes::portal)
-				.addStoryBoard("train_track/chunks", TrackScenes::chunks);
+			.addStoryBoard("train_track/placement", TrackScenes::placement)
+			.addStoryBoard("train_track/portal", TrackScenes::portal)
+			.addStoryBoard("train_track/chunks", TrackScenes::chunks);
 
 		HELPER.forComponents(AllBlocks.TRACK_STATION)
 			.addStoryBoard("train_station/assembly", TrainStationScenes::assembly)

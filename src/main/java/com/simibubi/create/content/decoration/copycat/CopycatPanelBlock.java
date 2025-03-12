@@ -3,6 +3,8 @@ package com.simibubi.create.content.decoration.copycat;
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 
@@ -90,7 +92,10 @@ public class CopycatPanelBlock extends WaterloggedCopycatBlock {
 
 	@Override
 	public boolean isIgnoredConnectivitySide(BlockAndTintGetter reader, BlockState state, Direction face,
-											 BlockPos fromPos, BlockPos toPos) {
+											 @Nullable BlockPos fromPos, @Nullable BlockPos toPos) {
+		if (fromPos == null || toPos == null)
+			return true;
+
 		Direction facing = state.getValue(FACING);
 		BlockState toState = reader.getBlockState(toPos);
 

@@ -30,7 +30,6 @@ import net.minecraft.SystemReport;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import oshi.SystemInfo;
 
 /**
  * Allows for providing easily accessible debugging information.
@@ -72,6 +71,8 @@ public class DebugInformation {
 	static {
 		DebugInfoSection.builder(Create.NAME)
 			.put("Mod Version", CreateBuildInfo.VERSION)
+			.put("Mod Git Commit", CreateBuildInfo.GIT_COMMIT)
+			.put("Ponder Version", getVersionOfMod("ponder"))
 			.put("Forge Version", getVersionOfMod("forge"))
 			.put("Minecraft Version", SharedConstants.getCurrentVersion().getName())
 			.buildTo(DebugInformation::registerBothInfo);
@@ -115,7 +116,11 @@ public class DebugInformation {
 	public static Collection<InfoElement> listAllOtherMods() {
 		List<InfoElement> mods = new ArrayList<>();
 		ModList.get().forEachModContainer((id, mod) -> {
-			if (!id.equals(Create.ID) && !id.equals("forge") && !id.equals("minecraft") && !id.equals("flywheel")) {
+			if (!id.equals(Create.ID) &&
+				!id.equals("forge") &&
+				!id.equals("minecraft") &&
+				!id.equals("flywheel") &&
+				!id.equals("ponder")) {
 				IModInfo info = mod.getModInfo();
 				String name = info.getDisplayName();
 				String version = info.getVersion().toString();
@@ -141,10 +146,11 @@ public class DebugInformation {
 	}
 
 	public static String getTotalRam() {
-		long availableMemory = new SystemInfo().getHardware().getMemory().getAvailable();
-		long totalMemory = new SystemInfo().getHardware().getMemory().getTotal();
+		Runtime runtime = Runtime.getRuntime();
+		long availableMemory = runtime.freeMemory();
+		long totalMemory = runtime.totalMemory();
 		long usedMemory = totalMemory - availableMemory;
-		return String.format("%s bytes (%s MiB) / %s bytes (%s MiB)", usedMemory, usedMemory / 1049000, totalMemory, totalMemory / 1049000);
+		return String.format("%s bytes (%s MiB) / %s bytes (%s MiB)", usedMemory, usedMemory / 1048576L, totalMemory, totalMemory / 1048576L);
 	}
 
 	public static String getCpuInfo() {

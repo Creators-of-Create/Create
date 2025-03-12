@@ -3,14 +3,17 @@ package com.simibubi.create.content.logistics.packager;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.packager.unpacking.UnpackingHandler;
 import com.simibubi.create.content.contraptions.actors.psi.PortableStorageInterfaceBlockEntity;
-import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterBlockEntity;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.crate.BottomlessItemHandler;
@@ -24,7 +27,6 @@ import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlockEntit
 import com.simibubi.create.content.logistics.packagerLink.RequestPromiseQueue;
 import com.simibubi.create.content.logistics.packagerLink.WiFiEffectPacket;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
-import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -35,6 +37,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedI
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.math.BlockFace;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -51,6 +54,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
+
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -160,7 +164,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 	public InventorySummary getAvailableItems() {
 		return getAvailableItems(false);
 	}
-	
+
 	public InventorySummary getAvailableItems(boolean scanInputSlots) {
 		if (availableItems != null && invVersionTracker.stillWaiting(targetInventory.getInventory()))
 			return availableItems;
@@ -324,104 +328,32 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		if (animationTicks > 0)
 			return false;
 
+		Objects.requireNonNull(this.level);
+
 		ItemStackHandler contents = PackageItem.getContents(box);
-		PackageOrder orderContext = PackageItem.getOrderContext(box);
-		IItemHandler targetInv = targetInventory.getInventory();
-		BlockEntity targetBE =
-			level.getBlockEntity(worldPosition.relative(getBlockState().getOptionalValue(PackagerBlock.FACING)
-				.orElse(Direction.UP)
-				.getOpposite()));
-
-		if (targetInv == null)
-			return false;
-
-		boolean targetIsCreativeCrate = targetInv instanceof BottomlessItemHandler;
-		boolean targetIsCrafter = targetBE instanceof MechanicalCrafterBlockEntity;
-
-		if (targetBE instanceof BasinBlockEntity basin)
-			basin.inputInventory.packagerMode = true;
-
-		for (int slot = 0; slot < targetInv.getSlots(); slot++) {
-			ItemStack itemInSlot = targetInv.getStackInSlot(slot);
-			if (!simulate)
-				itemInSlot = itemInSlot.copy();
-
-			int itemsAddedToSlot = 0;
-
-			for (int boxSlot = 0; boxSlot < contents.getSlots(); boxSlot++) {
-				ItemStack toInsert = contents.getStackInSlot(boxSlot);
-				if (toInsert.isEmpty())
-					continue;
-
-				// Follow crafting arrangement
-				if (targetIsCrafter && orderContext != null && orderContext.stacks()
-					.size() > slot) {
-					BigItemStack targetStack = orderContext.stacks()
-						.get(slot);
-					if (targetStack.stack.isEmpty())
-						break;
-					if (!ItemHandlerHelper.canItemStacksStack(toInsert, targetStack.stack))
-						continue;
-				}
-
-				if (targetInv.insertItem(slot, toInsert, true)
-					.getCount() == toInsert.getCount())
-					continue;
-
-				if (itemInSlot.isEmpty()) {
-					int maxStackSize = targetInv.getSlotLimit(slot);
-					if (maxStackSize < toInsert.getCount()) {
-						toInsert.shrink(maxStackSize);
-						toInsert = ItemHandlerHelper.copyStackWithSize(toInsert, maxStackSize);
-					} else
-						contents.setStackInSlot(boxSlot, ItemStack.EMPTY);
-
-					itemInSlot = toInsert;
-					if (!simulate)
-						itemInSlot = itemInSlot.copy();
-
-					targetInv.insertItem(slot, toInsert, simulate);
-					continue;
-				}
-
-				if (!ItemHandlerHelper.canItemStacksStack(toInsert, itemInSlot))
-					continue;
-
-				int insertedAmount = toInsert.getCount() - targetInv.insertItem(slot, toInsert, simulate)
-					.getCount();
-				int slotLimit = (int) ((targetInv.getStackInSlot(slot)
-					.isEmpty() ? itemInSlot.getMaxStackSize() / 64f : 1) * targetInv.getSlotLimit(slot));
-				int insertableAmountWithPreviousItems =
-					Math.min(toInsert.getCount(), slotLimit - itemInSlot.getCount() - itemsAddedToSlot);
-
-				int added = Math.min(insertedAmount, Math.max(0, insertableAmountWithPreviousItems));
-				itemsAddedToSlot += added;
-
-				contents.setStackInSlot(boxSlot,
-					ItemHandlerHelper.copyStackWithSize(toInsert, toInsert.getCount() - added));
-			}
-		}
-
-		if (targetBE instanceof BasinBlockEntity basin)
-			basin.inputInventory.packagerMode = false;
-
-		if (!targetIsCreativeCrate)
-			for (int boxSlot = 0; boxSlot < contents.getSlots(); boxSlot++)
-				if (!contents.getStackInSlot(boxSlot)
-					.isEmpty())
-					return false;
-
-		if (simulate)
+		List<ItemStack> items = ItemHelper.getNonEmptyStacks(contents);
+		if (items.isEmpty())
 			return true;
 
-		if (targetBE instanceof MechanicalCrafterBlockEntity mcbe)
-			mcbe.checkCompletedRecipe(true);
+		PackageOrder orderContext = PackageItem.getOrderContext(box);
 
-		previouslyUnwrapped = box;
-		animationInward = true;
-		animationTicks = CYCLE;
-		notifyUpdate();
-		return true;
+		Direction facing = getBlockState().getOptionalValue(PackagerBlock.FACING).orElse(Direction.UP);
+		BlockPos target = worldPosition.relative(facing.getOpposite());
+		BlockState targetState = level.getBlockState(target);
+
+		UnpackingHandler handler = UnpackingHandler.REGISTRY.get(targetState);
+		UnpackingHandler toUse = handler != null ? handler : UnpackingHandler.DEFAULT;
+		// note: handler may modify the passed items
+		boolean unpacked = toUse.unpack(level, target, targetState, facing, items, orderContext, simulate);
+
+		if (unpacked && !simulate) {
+			previouslyUnwrapped = box;
+			animationInward = true;
+			animationTicks = CYCLE;
+			notifyUpdate();
+		}
+
+		return unpacked;
 	}
 
 	public void attemptToSend(List<PackagingRequest> queuedRequests) {
@@ -580,11 +512,14 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			return null;
 		for (boolean front : Iterate.trueAndFalse) {
 			SignText text = sign.getText(front);
+			String address = "";
 			for (Component component : text.getMessages(false)) {
-				String address = component.getString();
-				if (!address.isBlank())
-					return address;
+				String string = component.getString();
+				if (!string.isBlank())
+					address += string.trim() + " ";
 			}
+			if (!address.isBlank())
+				return address.trim();
 		}
 		return null;
 	}
@@ -661,22 +596,34 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		return animationTicks >= CYCLE / 2 ? ItemStack.EMPTY : heldBox;
 	}
 
-	public boolean isTargetingSameInventory(IItemHandler inventory) {
-		IItemHandler myInventory = targetInventory.getInventory();
-		if (myInventory == null || inventory == null)
+	public boolean isTargetingSameInventory(@Nullable IdentifiedInventory inventory) {
+		if (inventory == null)
 			return false;
 
-		if (myInventory == inventory)
+		IItemHandler targetHandler = this.targetInventory.getInventory();
+		if (targetHandler == null)
+			return false;
+
+		if (inventory.identifier() != null) {
+			BlockFace face = this.targetInventory.getTarget().getOpposite();
+			return inventory.identifier().contains(face);
+		} else {
+			return isSameInventoryFallback(targetHandler, inventory.handler());
+		}
+	}
+
+	private static boolean isSameInventoryFallback(IItemHandler first, IItemHandler second) {
+		if (first == second)
 			return true;
 
 		// If a contained ItemStack instance is the same, we can be pretty sure these
 		// inventories are the same (works for compound inventories)
-		for (int i = 0; i < inventory.getSlots(); i++) {
-			ItemStack stackInSlot = inventory.getStackInSlot(i);
+		for (int i = 0; i < second.getSlots(); i++) {
+			ItemStack stackInSlot = second.getStackInSlot(i);
 			if (stackInSlot.isEmpty())
 				continue;
-			for (int j = 0; j < myInventory.getSlots(); j++)
-				if (stackInSlot == myInventory.getStackInSlot(j))
+			for (int j = 0; j < first.getSlots(); j++)
+				if (stackInSlot == first.getStackInSlot(j))
 					return true;
 			break;
 		}
