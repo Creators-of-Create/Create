@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.packager.repackager;
 
 import java.util.List;
 
+import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.crate.BottomlessItemHandler;
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
@@ -12,7 +13,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.minecraftforge.items.IItemHandler;
 
 public class RepackagerBlockEntity extends PackagerBlockEntity {
@@ -93,15 +93,6 @@ public class RepackagerBlockEntity extends PackagerBlockEntity {
 				continue;
 
 			if (!repackageHelper.isFragmented(extracted)) {
-				if (repackageHelper.shouldSplit(extracted)) {
-					List<ItemStack> boxesToExport = repackageHelper.split(extracted);
-					// If split fails, just treat package as normal package
-					if (boxesToExport != null) {
-						targetInv.extractItem(slot, 1, false);
-						pushPackages(boxesToExport);
-						return;
-					}
-				}
 				targetInv.extractItem(slot, 1, false);
 				heldBox = extracted.copy();
 				animationInward = false;
@@ -118,7 +109,7 @@ public class RepackagerBlockEntity extends PackagerBlockEntity {
 		if (completedOrderId == -1)
 			return;
 
-		List<ItemStack> boxesToExport = repackageHelper.repack(completedOrderId);
+		List<BigItemStack> boxesToExport = repackageHelper.repack(completedOrderId, level.getRandom());
 
 		for (int slot = 0; slot < targetInv.getSlots(); slot++) {
 			ItemStack extracted = targetInv.extractItem(slot, 1, true);
@@ -132,31 +123,7 @@ public class RepackagerBlockEntity extends PackagerBlockEntity {
 		if (boxesToExport.isEmpty())
 			return;
 
-		ItemStack first = boxesToExport.get(0);
-		if (repackageHelper.shouldSplit(first)) {
-			List<ItemStack> splitToExport = repackageHelper.split(first);
-			// Same here, if split fails just output it normally
-			if (splitToExport != null && !splitToExport.isEmpty()) {
-				splitToExport.addAll(boxesToExport.subList(1, boxesToExport.size()));
-				boxesToExport = splitToExport;
-			}
-		}
-		
-		pushPackages(boxesToExport);
-	}
-
-	protected void pushPackages(List<ItemStack> toPush) {
-		ItemStack firstToPush = toPush.get(0)
-			.copy();
-		if (!heldBox.isEmpty() || animationTicks != 0) {
-			queuedExitingPackages.add(firstToPush);
-		} else {
-			heldBox = firstToPush;
-			animationInward = false;
-			animationTicks = CYCLE;
-		}
-		
-		queuedExitingPackages.addAll(toPush.subList(1, toPush.size()));
+		queuedExitingPackages.addAll(boxesToExport);
 		notifyUpdate();
 	}
 

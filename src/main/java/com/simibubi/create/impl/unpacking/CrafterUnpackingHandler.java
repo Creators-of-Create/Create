@@ -2,9 +2,6 @@ package com.simibubi.create.impl.unpacking;
 
 import java.util.List;
 
-import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
-import com.simibubi.create.content.logistics.stockTicker.PackageOrderCraftingContext;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.api.packager.unpacking.UnpackingHandler;
@@ -12,6 +9,7 @@ import com.simibubi.create.content.kinetics.crafter.ConnectedInputHandler.Connec
 import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterBlockEntity;
 import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterBlockEntity.Inventory;
 import com.simibubi.create.content.logistics.BigItemStack;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,20 +17,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public enum CrafterUnpackingHandler implements UnpackingHandler {
 	INSTANCE;
 
 	@Override
-	public boolean unpack(Level level, BlockPos pos, BlockState state, Direction side, List<ItemStack> items, @Nullable PackageOrder orderContext, @Nullable PackageOrderCraftingContext orderCraftingContext, boolean simulate) {
-		if (!PackageOrderCraftingContext.hasCraftingInformation(orderCraftingContext)) {
-			return DEFAULT.unpack(level, pos, state, side, items, null, null, simulate);
-		}
+	public boolean unpack(Level level, BlockPos pos, BlockState state, Direction side, List<ItemStack> items, @Nullable PackageOrderWithCrafts orderContext, boolean simulate) {
+		if (!PackageOrderWithCrafts.hasCraftingInformation(orderContext))
+			return DEFAULT.unpack(level, pos, state, side, items, null, simulate);
 
 		// Get item placement
-		List<BigItemStack> craftingContext = orderCraftingContext.stacks().get(0);
+		List<BigItemStack> craftingContext = orderContext.getCraftingInformation();
 
 		BlockEntity be = level.getBlockEntity(pos);
 		if (!(be instanceof MechanicalCrafterBlockEntity crafter))

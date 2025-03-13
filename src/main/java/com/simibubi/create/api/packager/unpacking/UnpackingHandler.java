@@ -2,13 +2,11 @@ package com.simibubi.create.api.packager.unpacking;
 
 import java.util.List;
 
-import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
-import com.simibubi.create.content.logistics.stockTicker.PackageOrderCraftingContext;
-
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.api.registry.SimpleRegistry;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.impl.unpacking.DefaultUnpackingHandler;
 
 import net.minecraft.core.BlockPos;
@@ -38,9 +36,8 @@ public interface UnpackingHandler {
 	 *
 	 * @param items    the list of non-empty item stacks to unpack. May be freely modified
 	 * @param orderContext    the order context, if present
-	 * @param orderContext    the order crafting context, if present
 	 * @param simulate true if the unpacking should only be simulated
 	 * @return true if all items have been unpacked successfully
 	 */
-	boolean unpack(Level level, BlockPos pos, BlockState state, Direction side, List<ItemStack> items, @Nullable PackageOrder orderContext, @Nullable PackageOrderCraftingContext orderCraftingContext, boolean simulate);
+	boolean unpack(Level level, BlockPos pos, BlockState state, Direction side, List<ItemStack> items, @Nullable PackageOrderWithCrafts orderContext, boolean simulate);
 }

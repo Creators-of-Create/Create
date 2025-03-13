@@ -11,8 +11,6 @@ import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.logistics.stockTicker.PackageOrderCraftingContext;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.google.common.cache.Cache;
@@ -24,7 +22,7 @@ import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 import com.simibubi.create.content.logistics.packager.PackagingRequest;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour.RequestType;
-import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.foundation.utility.TickBasedCache;
 
 import net.createmod.catnip.data.Pair;
@@ -64,13 +62,11 @@ public class LogisticsManager {
 		return sum;
 	}
 
-	public static boolean broadcastPackageRequest(UUID freqId, RequestType type, PackageOrder order,
-												  @Nullable IdentifiedInventory ignoredHandler, String address, @Nullable PackageOrder orderContext, @Nullable PackageOrderCraftingContext orderCraftingContextContext) {
+	public static boolean broadcastPackageRequest(UUID freqId, RequestType type, PackageOrderWithCrafts order, @Nullable IdentifiedInventory ignoredHandler, String address) {
 		if (order.isEmpty())
 			return false;
 
-		Multimap<PackagerBlockEntity, PackagingRequest> requests =
-			findPackagersForRequest(freqId, order, orderContext, orderCraftingContextContext, ignoredHandler, address);
+		Multimap<PackagerBlockEntity, PackagingRequest> requests = findPackagersForRequest(freqId, order, ignoredHandler, address);
 
 		// Check if packagers have accumulated too many packages already
 		for (PackagerBlockEntity packager : requests.keySet())
@@ -83,11 +79,9 @@ public class LogisticsManager {
 	}
 
 	public static Multimap<PackagerBlockEntity, PackagingRequest> findPackagersForRequest(UUID freqId,
-																						  PackageOrder order, @Nullable PackageOrder customContext,
-																						  @Nullable PackageOrderCraftingContext craftingContext,
-																						  @Nullable IdentifiedInventory ignoredHandler,
-																						  String address) {
+		PackageOrderWithCrafts order, @Nullable IdentifiedInventory ignoredHandler, String address) {
 		List<BigItemStack> stacks = new ArrayList<>();
+
 		for (BigItemStack stack : order.stacks())
 			if (!stack.stack.isEmpty() && stack.count > 0)
 				stacks.add(stack);
@@ -100,10 +94,7 @@ public class LogisticsManager {
 		MutableBoolean finalLinkTracker = new MutableBoolean(false);
 
 		// First box needs to carry the order specifics for successful defrag
-		PackageOrder context = new PackageOrder(order.stacks());
-		if (customContext != null && !customContext.isEmpty())
-			// TODO: Check what could be a use for this? This would break repackaging of split requests if set
-			context = customContext;
+		PackageOrderWithCrafts context = order;
 
 		// Packages from future orders should not be merged in the packager queue
 		int orderId = r.nextInt();
@@ -123,7 +114,7 @@ public class LogisticsManager {
 
 				// Only send context and craftingContext with first package
 				Pair<PackagerBlockEntity, PackagingRequest> request = link.processRequest(requestedItem, remainingCount,
-					address, linkIndex, isFinalLink, orderId, context, context != null ? craftingContext : null, ignoredHandler);
+					address, linkIndex, isFinalLink, orderId, context, ignoredHandler);
 				if (request == null)
 					continue;
 

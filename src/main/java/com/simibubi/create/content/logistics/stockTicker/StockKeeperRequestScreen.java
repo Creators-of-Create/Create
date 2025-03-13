@@ -33,6 +33,7 @@ import com.simibubi.create.content.logistics.AddressEditBox;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelScreen;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts.CraftingEntry;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerRenderer;
@@ -1338,8 +1339,8 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 	public void removed() {
 		SimpleChannel channel = AllPackets.getChannel();
 		BlockPos pos = blockEntity.getBlockPos();
-		channel.sendToServer(new PackageOrderRequestPacket(pos, new PackageOrder(Collections.emptyList()),
-			addressBox.getValue(), false, PackageOrder.empty(), PackageOrderCraftingContext.empty()));
+		channel.sendToServer(
+			new PackageOrderRequestPacket(pos, PackageOrderWithCrafts.empty(), addressBox.getValue(), false));
 		channel.sendToServer(new StockKeeperCategoryHidingPacket(pos, new ArrayList<>(hiddenCategories)));
 		super.removed();
 	}
@@ -1359,23 +1360,24 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			forcedEntries.add(toOrder.stack.copy(), -1 - Math.max(0, countOf - toOrder.count));
 		}
 
-		PackageOrderCraftingContext craftingRequest = PackageOrderCraftingContext.empty();
+		PackageOrderWithCrafts order = PackageOrderWithCrafts.simple(itemsToOrder);
+		
 		if (canRequestCraftingPackage && !itemsToOrder.isEmpty() && !recipesToOrder.isEmpty()) {
-			List<List<BigItemStack>> craftList = new ArrayList<>();
-			List<Integer> amountList = new ArrayList<>();
-			for (CraftableBigItemStack cBIS : recipesToOrder) {
-				if (cBIS.recipe instanceof CraftingRecipe cr) {
-					craftList.add(FactoryPanelScreen.convertRecipeToPackageOrderContext(cr, itemsToOrder));
-					amountList.add(cBIS.count / cBIS.getOutputCount(blockEntity.getLevel()));
-				}
+			List<CraftingEntry> craftList = new ArrayList<>();
+			for (CraftableBigItemStack cbis : recipesToOrder) {
+				if (!(cbis.recipe instanceof CraftingRecipe cr))
+					continue;
+				PackageOrder pattern =
+					new PackageOrder(FactoryPanelScreen.convertRecipeToPackageOrderContext(cr, itemsToOrder));
+				int count = cbis.count / cbis.getOutputCount(blockEntity.getLevel());
+				craftList.add(new CraftingEntry(pattern, count));
 			}
-			craftingRequest = new PackageOrderCraftingContext(craftList, amountList);
+			order = new PackageOrderWithCrafts(order.orderedStacks(), craftList);
 		}
 
-
 		AllPackets.getChannel()
-			.sendToServer(new PackageOrderRequestPacket(blockEntity.getBlockPos(), new PackageOrder(itemsToOrder),
-				addressBox.getValue(), encodeRequester, PackageOrder.empty(), craftingRequest));
+			.sendToServer(new PackageOrderRequestPacket(blockEntity.getBlockPos(), order, addressBox.getValue(),
+				encodeRequester));
 
 		itemsToOrder = new ArrayList<>();
 		recipesToOrder = new ArrayList<>();
