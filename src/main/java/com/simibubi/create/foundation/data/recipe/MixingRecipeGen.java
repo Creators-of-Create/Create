@@ -1,9 +1,12 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags.AllItemTags;
+import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 
 import net.minecraft.core.HolderLookup;
@@ -13,12 +16,11 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
+
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.BlockTagIngredient;
 
-import java.util.concurrent.CompletableFuture;
-
-public class MixingRecipeGen extends ProcessingRecipeGen {
+public class MixingRecipeGen extends StandardProcessingRecipeGen<MixingRecipe> {
 
 	GeneratedRecipe
 
@@ -66,7 +68,7 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 		MUD = create("mud_by_mixing", b -> b.require(new BlockTagIngredient(BlockTags.CONVERTABLE_TO_MUD).toVanilla())
 			.require(Fluids.WATER, 250)
 			.output(Blocks.MUD, 1)),
-		
+
 		PULP = create("cardboard_pulp", b -> b
 			.require(AllItemTags.PULPIFIABLE.tag)
 			.require(AllItemTags.PULPIFIABLE.tag)

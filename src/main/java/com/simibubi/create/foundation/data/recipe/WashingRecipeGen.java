@@ -17,6 +17,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
+import com.simibubi.create.content.kinetics.fan.processing.SplashingRecipe;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.core.HolderLookup;
@@ -29,9 +30,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+
 import net.neoforged.neoforge.common.Tags;
 
-public class WashingRecipeGen extends ProcessingRecipeGen {
+public class WashingRecipeGen extends StandardProcessingRecipeGen<SplashingRecipe> {
 
 	GeneratedRecipe
 
@@ -91,7 +93,7 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		BLUE_CONCRETE = convert(Blocks.BLUE_CONCRETE_POWDER, Blocks.BLUE_CONCRETE),
 		CYAN_CONCRETE = convert(Blocks.CYAN_CONCRETE_POWDER, Blocks.CYAN_CONCRETE),
 		BLACK_CONCRETE = convert(Blocks.BLACK_CONCRETE_POWDER, Blocks.BLACK_CONCRETE),
-		
+
 		FLOUR = create("wheat_flour", b -> b.require(I.wheatFlour())
 			.output(AllItems.DOUGH.get())),
 

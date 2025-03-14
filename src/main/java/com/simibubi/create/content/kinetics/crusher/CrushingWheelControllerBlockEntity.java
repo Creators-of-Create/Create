@@ -9,7 +9,7 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.processing.recipe.ProcessingInventory;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
@@ -18,9 +18,9 @@ import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -300,7 +300,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 	}
 
 	private void applyRecipe() {
-		Optional<RecipeHolder<ProcessingRecipe<RecipeWrapper>>> recipe = findRecipe();
+		Optional<RecipeHolder<StandardProcessingRecipe<RecipeWrapper>>> recipe = findRecipe();
 
 		List<ItemStack> list = new ArrayList<>();
 		if (recipe.isPresent()) {
@@ -322,8 +322,8 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 
 	}
 
-	public Optional<RecipeHolder<ProcessingRecipe<RecipeWrapper>>> findRecipe() {
-		Optional<RecipeHolder<ProcessingRecipe<RecipeWrapper>>> crushingRecipe = AllRecipeTypes.CRUSHING.find(wrapper, level);
+	public Optional<RecipeHolder<StandardProcessingRecipe<RecipeWrapper>>> findRecipe() {
+		Optional<RecipeHolder<StandardProcessingRecipe<RecipeWrapper>>> crushingRecipe = AllRecipeTypes.CRUSHING.find(wrapper, level);
 		if (!crushingRecipe.isPresent())
 			crushingRecipe = AllRecipeTypes.MILLING.find(wrapper, level);
 		return crushingRecipe;
@@ -355,7 +355,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 	}
 
 	private void itemInserted(ItemStack stack) {
-		Optional<RecipeHolder<ProcessingRecipe<RecipeWrapper>>> recipe = findRecipe();
+		Optional<RecipeHolder<StandardProcessingRecipe<RecipeWrapper>>> recipe = findRecipe();
 		inventory.remainingTime = recipe.isPresent() ? recipe.get().value()
 			.getProcessingDuration() : 100;
 		inventory.appliedRecipe = false;

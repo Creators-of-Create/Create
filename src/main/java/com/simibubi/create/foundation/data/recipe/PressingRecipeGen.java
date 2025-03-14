@@ -1,8 +1,11 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.content.kinetics.press.PressingRecipe;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -10,9 +13,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 
-import java.util.concurrent.CompletableFuture;
-
-public class PressingRecipeGen extends ProcessingRecipeGen {
+public class PressingRecipeGen extends StandardProcessingRecipeGen<PressingRecipe> {
 
 	GeneratedRecipe
 
@@ -94,9 +95,9 @@ public class PressingRecipeGen extends ProcessingRecipeGen {
 				.whenModLoaded(Mods.RU.getId())),
 
 		// IE
-		
+
 		IE_PLATES = iePlates("aluminum", "lead", "silver", "nickel", "uranium", "constantan", "electrum", "steel"),
-		
+
 		// Vampirism
 
 		VMP_CURSED_PATH = moddedPaths(Mods.VMP, "cursed_earth"),

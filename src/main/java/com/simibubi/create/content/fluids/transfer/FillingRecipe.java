@@ -7,8 +7,8 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.content.processing.sequenced.IAssemblyRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -18,11 +18,12 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-public class FillingRecipe extends ProcessingRecipe<SingleRecipeInput> implements IAssemblyRecipe {
+public class FillingRecipe extends StandardProcessingRecipe<SingleRecipeInput> implements IAssemblyRecipe {
 
 	public FillingRecipe(ProcessingRecipeParams params) {
 		super(AllRecipeTypes.FILLING, params);
@@ -51,7 +52,7 @@ public class FillingRecipe extends ProcessingRecipe<SingleRecipeInput> implement
 
 	public FluidIngredient getRequiredFluid() {
 		if (fluidIngredients.isEmpty())
-			throw new IllegalStateException("Filling Recipe: " + id.toString() + " has no fluid ingredient!");
+			throw new IllegalStateException("Filling Recipe has no fluid ingredient!");
 		return fluidIngredients.get(0);
 	}
 

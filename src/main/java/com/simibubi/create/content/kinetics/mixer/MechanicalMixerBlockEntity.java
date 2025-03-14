@@ -10,7 +10,7 @@ import com.simibubi.create.content.fluids.potion.PotionMixingRecipes;
 import com.simibubi.create.content.kinetics.press.MechanicalPressBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinOperatingBlockEntity;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -41,6 +41,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -140,8 +141,8 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 			if ((!level.isClientSide || isVirtual()) && runningTicks == 20) {
 				if (processingTicks < 0) {
 					float recipeSpeed = 1;
-					if (currentRecipe instanceof ProcessingRecipe) {
-						int t = ((ProcessingRecipe<?>) currentRecipe).getProcessingDuration();
+					if (currentRecipe instanceof StandardProcessingRecipe) {
+						int t = ((StandardProcessingRecipe<?>) currentRecipe).getProcessingDuration();
 						if (t != 0)
 							recipeSpeed = t / 100f;
 					}

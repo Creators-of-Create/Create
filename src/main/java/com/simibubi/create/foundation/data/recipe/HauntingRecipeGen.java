@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.kinetics.fan.processing.HauntingRecipe;
 
 import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.core.HolderLookup;
@@ -15,9 +16,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
+
 import net.neoforged.neoforge.common.Tags;
 
-public class HauntingRecipeGen extends ProcessingRecipeGen {
+public class HauntingRecipeGen extends StandardProcessingRecipeGen<HauntingRecipe> {
 
 	GeneratedRecipe
 

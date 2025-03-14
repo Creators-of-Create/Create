@@ -5,16 +5,21 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe;
+import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe.Builder;
+import com.simibubi.create.content.kinetics.deployer.ManualApplicationRecipe;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+
 import net.neoforged.neoforge.common.Tags;
 
-public class ItemApplicationRecipeGen extends ProcessingRecipeGen {
+public class ItemApplicationRecipeGen extends ProcessingRecipeGen<ItemApplicationRecipe.Builder<ManualApplicationRecipe>> {
 
 	GeneratedRecipe BOUND_CARDBOARD_BLOCK = create("bound_cardboard_inworld",
 		b -> b.require(AllBlocks.CARDBOARD_BLOCK.asItem())
@@ -53,6 +58,11 @@ public class ItemApplicationRecipeGen extends ProcessingRecipeGen {
 	@Override
 	protected AllRecipeTypes getRecipeType() {
 		return AllRecipeTypes.ITEM_APPLICATION;
+	}
+
+	@Override
+	protected Builder<ManualApplicationRecipe> getBuilder(ResourceLocation id) {
+		return new Builder<>(ManualApplicationRecipe::new, id);
 	}
 
 }

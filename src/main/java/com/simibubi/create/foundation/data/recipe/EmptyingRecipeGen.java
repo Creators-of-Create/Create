@@ -5,14 +5,16 @@ import java.util.concurrent.CompletableFuture;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.fluids.transfer.EmptyingRecipe;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
+
 import net.neoforged.neoforge.common.NeoForgeMod;
 
-public class EmptyingRecipeGen extends ProcessingRecipeGen {
+public class EmptyingRecipeGen extends StandardProcessingRecipeGen<EmptyingRecipe> {
 
 	/*
 	 * potion/water bottles are handled internally

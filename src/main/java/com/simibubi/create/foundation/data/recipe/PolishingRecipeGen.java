@@ -1,14 +1,15 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 
-import java.util.concurrent.CompletableFuture;
-
-public class PolishingRecipeGen extends ProcessingRecipeGen {
+public class PolishingRecipeGen extends StandardProcessingRecipeGen<SandPaperPolishingRecipe> {
 
 	GeneratedRecipe
 

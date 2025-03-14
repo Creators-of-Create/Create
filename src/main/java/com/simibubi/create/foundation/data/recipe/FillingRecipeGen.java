@@ -7,15 +7,17 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
+import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.material.Fluids;
+
 import net.neoforged.neoforge.common.Tags;
 
-public class FillingRecipeGen extends ProcessingRecipeGen {
+public class FillingRecipeGen extends StandardProcessingRecipeGen<FillingRecipe> {
 
 	GeneratedRecipe
 
@@ -92,7 +94,7 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 			.require(Mods.VMP, "cursed_earth")
 			.output(Mods.VMP, "cursed_grass")
 			.whenModLoaded(Mods.VMP.getId())),
-	
+
 		// IE
 
 		IE_TREATED_WOOD = create(Mods.IE.recipeId("treated_wood_in_spout"),

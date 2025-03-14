@@ -3,14 +3,14 @@ package com.simibubi.create.content.kinetics.fan.processing;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 
 @ParametersAreNonnullByDefault
-public class HauntingRecipe extends ProcessingRecipe<SingleRecipeInput> {
+public class HauntingRecipe extends StandardProcessingRecipe<SingleRecipeInput> {
 
 	public HauntingRecipe(ProcessingRecipeParams params) {
 		super(AllRecipeTypes.HAUNTING, params);

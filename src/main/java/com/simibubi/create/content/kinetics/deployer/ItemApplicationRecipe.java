@@ -1,37 +1,27 @@
 package com.simibubi.create.content.kinetics.deployer;
 
-import java.util.function.Function;
-
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 
-import net.minecraft.network.FriendlyByteBuf;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
-public class ItemApplicationRecipe extends ProcessingRecipe<RecipeWrapper> {
-	public static <T extends ProcessingRecipe<?>> MapCodec<T> codec(AllRecipeTypes recipeTypes) {
-		return RecordCodecBuilder.mapCodec(i -> i.group(
-			ProcessingRecipeSerializer.<T>codec(recipeTypes).forGetter(Function.identity()),
-			Codec.BOOL.optionalFieldOf("keep_held_item", false)
-				.forGetter(r -> r instanceof ItemApplicationRecipe iar && iar.keepHeldItem)
-		).apply(i, (parent, keepHeldItem) -> {
-			if (parent instanceof ItemApplicationRecipe iar)
-				iar.keepHeldItem = keepHeldItem;
-			return parent;
-		}));
-	}
+public class ItemApplicationRecipe extends ProcessingRecipe<RecipeWrapper, ItemApplicationRecipeParams> {
 
 	private boolean keepHeldItem;
 
-	public ItemApplicationRecipe(AllRecipeTypes type, ProcessingRecipeParams params) {
+	public ItemApplicationRecipe(AllRecipeTypes type, ItemApplicationRecipeParams params) {
 		super(type, params);
 		keepHeldItem = params.keepHeldItem;
 	}
@@ -57,25 +47,60 @@ public class ItemApplicationRecipe extends ProcessingRecipe<RecipeWrapper> {
 
 	public Ingredient getRequiredHeldItem() {
 		if (ingredients.size() < 2)
-			throw new IllegalStateException("Item Application Recipe: " + id.toString() + " has no tool!");
+			throw new IllegalStateException("Item Application Recipe has no tool!");
 		return ingredients.get(1);
 	}
 
 	public Ingredient getProcessedItem() {
 		if (ingredients.isEmpty())
-			throw new IllegalStateException("Item Application Recipe: " + id.toString() + " has no ingredient!");
+			throw new IllegalStateException("Item Application Recipe has no ingredient!");
 		return ingredients.get(0);
 	}
 
-	@Override
-	public void readAdditional(FriendlyByteBuf buffer) {
-		super.readAdditional(buffer);
-		keepHeldItem = buffer.readBoolean();
+	@FunctionalInterface
+	public interface Factory<R extends ItemApplicationRecipe> extends ProcessingRecipe.Factory<ItemApplicationRecipeParams, R> {
+		R create(ItemApplicationRecipeParams params);
 	}
 
-	@Override
-	public void writeAdditional(FriendlyByteBuf buffer) {
-		super.writeAdditional(buffer);
-		buffer.writeBoolean(keepHeldItem);
+	public static class Builder<R extends ItemApplicationRecipe> extends ProcessingRecipeBuilder<ItemApplicationRecipeParams, R, Builder<R>> {
+		public Builder(Factory<R> factory, ResourceLocation recipeId) {
+			super(factory, recipeId);
+		}
+
+		@Override
+		protected ItemApplicationRecipeParams createParams() {
+			return new ItemApplicationRecipeParams();
+		}
+
+		@Override
+		public Builder<R> self() {
+			return this;
+		}
+
+		public Builder<R> toolNotConsumed() {
+			params.keepHeldItem = true;
+			return this;
+		}
+	}
+
+	public static class Serializer<R extends ItemApplicationRecipe> implements RecipeSerializer<R> {
+		private final MapCodec<R> codec;
+		private final StreamCodec<RegistryFriendlyByteBuf, R> streamCodec;
+
+		public Serializer(ProcessingRecipe.Factory<ItemApplicationRecipeParams, R> factory) {
+			this.codec = ItemApplicationRecipeParams.CODEC.xmap(factory::create, recipe -> recipe.getParams());
+			this.streamCodec = ItemApplicationRecipeParams.STREAM_CODEC.map(factory::create, recipe -> recipe.getParams());
+		}
+
+		@Override
+		public MapCodec<R> codec() {
+			return codec;
+		}
+
+		@Override
+		public StreamCodec<RegistryFriendlyByteBuf, R> streamCodec() {
+			return streamCodec;
+		}
+
 	}
 }

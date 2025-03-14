@@ -5,8 +5,8 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 @ParametersAreNonnullByDefault
-public class SandPaperPolishingRecipe extends ProcessingRecipe<SingleRecipeInput> {
+public class SandPaperPolishingRecipe extends StandardProcessingRecipe<SingleRecipeInput> {
 
 	public SandPaperPolishingRecipe(ProcessingRecipeParams params) {
 		super(AllRecipeTypes.SANDPAPER_POLISHING, params);

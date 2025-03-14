@@ -6,7 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
+import com.simibubi.create.content.kinetics.saw.CuttingRecipe;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 @SuppressWarnings("unused")
-public class CuttingRecipeGen extends ProcessingRecipeGen {
+public class CuttingRecipeGen extends StandardProcessingRecipeGen<CuttingRecipe> {
 
 	GeneratedRecipe
 		ANDESITE_ALLOY = create(I::andesiteAlloy, b -> b.duration(200)
@@ -135,7 +135,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 	public CuttingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		super(output, registries);
 	}
-	
+
 	GeneratedRecipe ieWires(String... metals) {
 		for (String metal : metals)
 			create(Mods.IE.recipeId("wire_" + metal), b -> b.duration(50)

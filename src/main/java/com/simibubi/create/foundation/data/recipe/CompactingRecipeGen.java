@@ -1,20 +1,21 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.AllTags.AllFluidTags;
+import com.simibubi.create.content.kinetics.mixer.CompactingRecipe;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
+
 import net.neoforged.neoforge.common.Tags;
 
-import java.util.concurrent.CompletableFuture;
-
-public class CompactingRecipeGen extends ProcessingRecipeGen {
+public class CompactingRecipeGen extends StandardProcessingRecipeGen<CompactingRecipe> {
 
 	GeneratedRecipe
 

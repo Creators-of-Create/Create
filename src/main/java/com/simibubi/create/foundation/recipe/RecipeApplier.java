@@ -39,7 +39,7 @@ public class RecipeApplier {
 	public static List<ItemStack> applyRecipeOn(Level level, ItemStack stackIn, Recipe<?> recipe) {
 		List<ItemStack> stacks;
 
-		if (recipe instanceof ProcessingRecipe<?> pr) {
+		if (recipe instanceof ProcessingRecipe<?, ?> pr) {
 			stacks = new ArrayList<>();
 			for (int i = 0; i < stackIn.getCount(); i++) {
 				List<ProcessingOutput> outputs =

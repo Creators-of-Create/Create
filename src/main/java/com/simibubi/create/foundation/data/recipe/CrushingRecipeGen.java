@@ -19,8 +19,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.content.kinetics.crusher.CrushingRecipe;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe.Builder;
 
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.HolderLookup;
@@ -34,11 +34,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
+
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.NotCondition;
 import net.neoforged.neoforge.common.conditions.TagEmptyCondition;
 
-public class CrushingRecipeGen extends ProcessingRecipeGen {
+public class CrushingRecipeGen extends StandardProcessingRecipeGen<CrushingRecipe> {
 
 	GeneratedRecipe
 
@@ -407,17 +408,17 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 				.output(0.125f, Mods.AET, "holystone", 1)
 				.output(0.75f, AllItems.EXP_NUGGET.get())
 				.whenModLoaded(Mods.AET.getId())),
-		
+
 		// IE
-		
+
 		IE_COKE_DUST = create(Mods.IE.recipeId("coal_coke"), b -> b.duration(200)
 			.require(Mods.IE, "coal_coke").output(Mods.IE, "dust_coke")
 			.whenModLoaded(Mods.IE.getId())),
-		
+
 		IE_COKE_BLOCK = create(Mods.IE.recipeId("coke_block"), b -> b.duration(200)
 			.require(Mods.IE, "coke").output(1, Mods.IE.asResource("dust_coke"), 9)
 			.whenModLoaded(Mods.IE.getId())),
-	
+
 		IE_SLAG_GRAVEL = create(Mods.IE.recipeId("slag"), b -> b.duration(200)
 			.require(Mods.IE, "slag").output(Mods.IE, "slag_gravel")
 			.whenModLoaded(Mods.IE.getId()));
@@ -433,13 +434,13 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 	}
 
 	protected GeneratedRecipe mineralRecycling(AllPaletteStoneTypes type,
-		UnaryOperator<ProcessingRecipeBuilder<ProcessingRecipe<?>>> transform) {
+		UnaryOperator<Builder<CrushingRecipe>> transform) {
 		create(Lang.asId(type.name()) + "_recycling", b -> transform.apply(b.require(type.materialTag)));
 		return create(type.getBaseBlock()::get, transform);
 	}
 
 	protected GeneratedRecipe ensMineralRecycling(AllPaletteStoneTypes type,
-											   UnaryOperator<ProcessingRecipeBuilder<ProcessingRecipe<?>>> transform) {
+											   UnaryOperator<Builder<CrushingRecipe>> transform) {
 		create(Lang.asId(type.name()) + "_recycling", b -> transform.apply(b.require(type.materialTag)));
 		return create(type.getBaseBlock()::get, b -> transform.apply(b.whenModMissing(Mods.ENS.getId())));
 	}
@@ -462,7 +463,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 	protected GeneratedRecipe ore(ItemLike stoneType, Supplier<ItemLike> ore, Supplier<ItemLike> raw,
 		float expectedAmount, int duration) {
 		return create(ore, b -> {
-			ProcessingRecipeBuilder<ProcessingRecipe<?>> builder = b.duration(duration)
+			var builder = b.duration(duration)
 				.output(raw.get(), Mth.floor(expectedAmount));
 			float extra = expectedAmount - Mth.floor(expectedAmount);
 			if (extra > 0)

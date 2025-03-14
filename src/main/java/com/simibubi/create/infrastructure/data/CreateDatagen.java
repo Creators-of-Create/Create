@@ -14,8 +14,8 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.data.CreateDatamapProvider;
 import com.simibubi.create.foundation.data.DamageTypeTagGen;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
-import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
+import com.simibubi.create.foundation.data.recipe.StandardProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
 import com.simibubi.create.foundation.utility.FilesHelper;
@@ -60,7 +60,7 @@ public class CreateDatagen {
 		generator.addProvider(event.includeServer(), new CreateEnchantmentTagsProvider(output, lookupProvider, existingFileHelper));
 
 		if (event.includeServer()) {
-			ProcessingRecipeGen.registerAll(generator, output, lookupProvider);
+			StandardProcessingRecipeGen.registerAll(generator, output, lookupProvider);
 		}
 
 		event.getGenerator().addProvider(true, Create.registrate().setDataProvider(new RegistrateDataProvider(Create.registrate(), Create.ID, event)));

@@ -8,7 +8,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.category.animations.AnimatedItemDrain;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.fluids.transfer.EmptyingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe.Builder;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
 
@@ -16,7 +16,6 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.runtime.IIngredientManager;
@@ -27,8 +26,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackLinkedSet;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-
 import net.minecraft.world.item.crafting.RecipeHolder;
+
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
@@ -50,7 +49,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 				FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
 				Ingredient potion = Ingredient.of(stack);
 				ResourceLocation id = Create.asResource("potions");
-				EmptyingRecipe recipe = new ProcessingRecipeBuilder<>(EmptyingRecipe::new, id)
+				EmptyingRecipe recipe = new Builder<>(EmptyingRecipe::new, id)
 						.withItemIngredients(potion)
 						.withFluidOutputs(fluidFromPotionItem)
 						.withSingleItemOutput(new ItemStack(Items.GLASS_BOTTLE))
@@ -83,7 +82,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 
 			ResourceLocation id = Create.asResource("empty_" + itemName.getNamespace() + "_" + itemName.getPath() + "_of_"
 					+ fluidName.getNamespace() + "_" + fluidName.getPath());
-			EmptyingRecipe recipe = new ProcessingRecipeBuilder<>(EmptyingRecipe::new, id)
+			EmptyingRecipe recipe = new Builder<>(EmptyingRecipe::new, id)
 					.withItemIngredients(ingredient)
 					.withFluidOutputs(extracted)
 					.withSingleItemOutput(result)

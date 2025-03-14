@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.content.kinetics.millstone.MillingRecipe;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.core.HolderLookup;
@@ -15,12 +16,13 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.NotCondition;
 import net.neoforged.neoforge.common.conditions.TagEmptyCondition;
 
 @SuppressWarnings("unused")
-public class MillingRecipeGen extends ProcessingRecipeGen {
+public class MillingRecipeGen extends StandardProcessingRecipeGen<MillingRecipe> {
 
 	GeneratedRecipe
 

@@ -1,14 +1,20 @@
 package com.simibubi.create.compat.jei.category;
 
+import java.util.List;
+import java.util.function.Supplier;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.CreateLang;
+
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -17,10 +23,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
-import java.util.function.Supplier;
 
 @ParametersAreNonnullByDefault
 public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends CreateRecipeCategory<T> {
@@ -91,7 +93,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 
 	protected abstract void renderAttachedBlock(GuiGraphics graphics);
 
-	public static abstract class MultiOutput<T extends ProcessingRecipe<?>> extends ProcessingViaFanCategory<T> {
+	public static abstract class MultiOutput<T extends StandardProcessingRecipe<?>> extends ProcessingViaFanCategory<T> {
 
 		public MultiOutput(Info<T> info) {
 			super(info);
