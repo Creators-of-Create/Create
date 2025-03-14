@@ -12,15 +12,19 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ClipContext.Fluid;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult.Type;
 public class LogisticallyLinkedBlockItem extends BlockItem {
 
 	public LogisticallyLinkedBlockItem(Block pBlock, Properties pProperties) {
@@ -36,7 +40,7 @@ public class LogisticallyLinkedBlockItem extends BlockItem {
 		return pStack.hasTag() && pStack.getTag()
 			.contains(BLOCK_ENTITY_TAG);
 	}
-	
+
 	@Nullable
 	public static UUID networkFromStack(ItemStack pStack) {
 		if (!isTuned(pStack))
@@ -110,6 +114,17 @@ public class LogisticallyLinkedBlockItem extends BlockItem {
 
 		player.displayClientMessage(CreateLang.translateDirect("logistically_linked.tuned"), true);
 		stack.setTag(stackTag);
+	}
+
+	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+		ItemStack itemstack = player.getItemInHand(usedHand);
+		if (level.isClientSide) return InteractionResultHolder.pass(itemstack);
+		BlockHitResult hitResult = getPlayerPOVHitResult(level, player, Fluid.NONE);
+		if (itemstack.getTag() != null && !itemstack.getTag().contains(BLOCK_ENTITY_TAG))
+			return InteractionResultHolder.fail(itemstack);
+		if (player.isShiftKeyDown() && hitResult.getType() == Type.MISS && itemstack.getTag() != null)
+			itemstack.getTag().remove(BLOCK_ENTITY_TAG);
+		return InteractionResultHolder.success(itemstack);
 	}
 
 }
