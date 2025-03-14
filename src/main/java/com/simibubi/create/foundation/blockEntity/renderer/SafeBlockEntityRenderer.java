@@ -35,16 +35,16 @@ public abstract class SafeBlockEntityRenderer<T extends BlockEntity> implements 
 			.getBlock() == Blocks.AIR;
 	}
 
-	public Frustum getFrustum() {
+	static public Frustum getFrustum() {
 		LevelRendererAccessor accessor = (LevelRendererAccessor) Minecraft.getInstance().levelRenderer;
 		return accessor.create$getCapturedFrustum() != null ? accessor.create$getCapturedFrustum() : accessor.create$getCullingFrustum();
 	}
 
-	public FrustumIntersection getFrustumIntersection() {
+	static public FrustumIntersection getFrustumIntersection() {
 		return ((FrustumAccessor) getFrustum()).create$getFrustumIntersection();
 	}
 
-	public boolean shouldCullItem(Vec3 itemPos, Level level) {
+	static public boolean shouldCullItem(Vec3 itemPos, Level level) {
 		if (level instanceof PonderLevel)
 			return false;
 
