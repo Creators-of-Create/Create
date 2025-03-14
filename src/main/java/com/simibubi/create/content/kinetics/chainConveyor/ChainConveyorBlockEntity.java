@@ -54,8 +54,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.common.extensions.IForgeBlockEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
+
 
 public class ChainConveyorBlockEntity extends KineticBlockEntity implements TransformableBlockEntity {
 
@@ -88,7 +88,30 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 
 	@Override
 	protected AABB createRenderBoundingBox() {
-		return connections.isEmpty() ? new AABB(worldPosition).inflate(3) : IForgeBlockEntity.INFINITE_EXTENT_AABB;
+		if (connections.isEmpty()) {
+			return new AABB(worldPosition).inflate(3);
+		} else {
+			Vec3 mid = Vec3.atLowerCornerOf(worldPosition);
+			double minX = mid.x;
+			double minY = mid.y;
+			double minZ = mid.z;
+			double maxX = mid.x;
+			double maxY = mid.y;
+			double maxZ = mid.z;
+
+			for (BlockPos connection : connections) {
+				ConnectionStats stats = connectionStats.get(connection);
+				if (stats == null)
+					continue;
+				minX = Math.min(minX, Math.min(stats.start.x, stats.end.x));
+				minY = Math.min(minY, Math.min(stats.start.y, stats.end.y));
+				minZ = Math.min(minZ, Math.min(stats.start.z, stats.end.z));
+				maxX = Math.max(maxX, Math.max(stats.start.x, stats.end.x));
+				maxY = Math.max(maxY, Math.max(stats.start.y, stats.end.y));
+				maxZ = Math.max(maxZ, Math.max(stats.start.z, stats.end.z));
+			}
+			return new AABB(minX, minY, minZ, maxX, maxY, maxZ).inflate(3);
+		}
 	}
 
 	@Override
