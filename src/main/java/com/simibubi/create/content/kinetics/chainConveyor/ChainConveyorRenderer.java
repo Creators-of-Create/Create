@@ -267,8 +267,6 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 				level.getBrightness(LightLayer.SKY, tilePos.offset(blockPos)));
 
 
-			Vector3f length = calculateLODCut(stats.start(), stats.end(), camPos);
-			Vec3 dir = stats.end().subtract(stats.start()).normalize();
 			Vec3 startOffset = stats.start().subtract(Vec3.atCenterOf(tilePos));
 			ms.pushPose();
 			var chain = TransformStack.of(ms);
@@ -282,18 +280,23 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 
 			ms.translate(0.5D, 0.0D, 0.5D);
 
-			if (length.x > 1e-6f) {
-				renderChain(ms, buffer, animation, 0, length.x, light1, light2, true);
-			}
+			if (frustum != null) {
+				Vector3f length = calculateLODCut(stats.start(), stats.end(), camPos);
+				if (length.x > 1e-6f) {
+					renderChain(ms, buffer, animation, 0, length.x, light1, light2, true);
+				}
 
-			if (length.y > 1e-6f) {
-				chain.translate(0, length.x, 0);
-				renderChain(ms, buffer, animation, length.x, length.y, light1, light2, false);
-			}
+				if (length.y > 1e-6f) {
+					chain.translate(0, length.x, 0);
+					renderChain(ms, buffer, animation, length.x, length.y, light1, light2, false);
+				}
 
-			if (length.z > 1e-6f) {
-				chain.translate(0, length.y, 0);
-				renderChain(ms, buffer, animation, 0, length.z, light1, light2, true);
+				if (length.z > 1e-6f) {
+					chain.translate(0, length.y, 0);
+					renderChain(ms, buffer, animation, 0, length.z, light1, light2, true);
+				}
+			} else {
+				renderChain(ms, buffer, animation, 0, stats.chainLength(), light1, light2, false);
 			}
 
 			ms.popPose();
