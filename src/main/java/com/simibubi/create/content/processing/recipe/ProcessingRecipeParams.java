@@ -3,6 +3,7 @@ package com.simibubi.create.content.processing.recipe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
@@ -13,6 +14,7 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.MapLike;
 import com.mojang.serialization.RecordBuilder;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
@@ -26,36 +28,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class ProcessingRecipeParams {
-	protected static final List<String> KEYS =
-		ImmutableList.of("ingredients", "results", "processing_time", "heat_requirement");
-	protected static final MapCodec<List<Either<Ingredient, FluidIngredient>>> INGREDIENTS_CODEC =
-		Codec.either(Ingredient.CODEC, FluidIngredient.CODEC).listOf().fieldOf("ingredients");
-	protected static final MapCodec<List<Either<ProcessingOutput, FluidStack>>> RESULTS_CODEC =
-		Codec.either(ProcessingOutput.CODEC, FluidStack.CODEC).listOf().fieldOf("results");
-	protected static final	 MapCodec<Integer> PROCESSING_TIME_CODEC =
-		Codec.INT.optionalFieldOf("processing_time", 0);
-	protected static MapCodec<HeatCondition> HEAT_REQUIREMENT_CODEC =
-		HeatCondition.CODEC.optionalFieldOf("heat_requirement", HeatCondition.NONE);
-	public static MapCodec<ProcessingRecipeParams> CODEC = new MapCodec<>() {
-		@Override
-		public <T> Stream<T> keys(DynamicOps<T> ops) {
-			return KEYS.stream().map(ops::createString);
-		}
-
-		@Override
-		public <T> DataResult<ProcessingRecipeParams> decode(DynamicOps<T> ops, MapLike<T> input) {
-			return new ProcessingRecipeParams().decode(ops, input).map(Function.identity());
-		}
-
-		@Override
-		public <T> RecordBuilder<T> encode(ProcessingRecipeParams input, DynamicOps<T> ops, RecordBuilder<T> prefix) {
-			return input.encode(ops, prefix);
-		}
-	};
-	public static StreamCodec<RegistryFriendlyByteBuf, ProcessingRecipeParams> STREAM_CODEC = StreamCodec.of(
-		(buffer, params) -> params.encode(buffer),
-		buffer -> Util.make(new ProcessingRecipeParams(), params -> params.decode(buffer))
-	);
+	public static MapCodec<ProcessingRecipeParams> CODEC = codec(ProcessingRecipeParams::new);
+	public static StreamCodec<RegistryFriendlyByteBuf, ProcessingRecipeParams> STREAM_CODEC = streamCodec(ProcessingRecipeParams::new);
 
 	protected NonNullList<Ingredient> ingredients;
 	protected NonNullList<ProcessingOutput> results;
@@ -73,44 +47,62 @@ public class ProcessingRecipeParams {
 		requiredHeat = HeatCondition.NONE;
 	}
 
-	protected <T> RecordBuilder<T> encode(DynamicOps<T> ops, RecordBuilder<T> builder) {
+	protected static <P extends ProcessingRecipeParams> MapCodec<P> codec(Supplier<P> factory) {
+		return RecordCodecBuilder.mapCodec(instance -> instance.group(
+			Codec.either(Ingredient.CODEC, FluidIngredient.CODEC).listOf().fieldOf("ingredients")
+				.forGetter(ProcessingRecipeParams::ingredients),
+			Codec.either(ProcessingOutput.CODEC, FluidStack.CODEC).listOf().fieldOf("results")
+				.forGetter(ProcessingRecipeParams::results),
+			Codec.INT.optionalFieldOf("processing_time", 0)
+				.forGetter(ProcessingRecipeParams::processingDuration),
+			HeatCondition.CODEC.optionalFieldOf("heat_requirement", HeatCondition.NONE)
+				.forGetter(ProcessingRecipeParams::requiredHeat)
+		).apply(instance, (ingredients, results, processingDuration, requiredHeat) -> {
+			P params = factory.get();
+			ingredients.forEach(either -> either
+				.ifLeft(params.ingredients::add)
+				.ifRight(params.fluidIngredients::add));
+			results.forEach(either -> either
+				.ifLeft(params.results::add)
+				.ifRight(params.fluidResults::add));
+			params.processingDuration = processingDuration;
+			params.requiredHeat = requiredHeat;
+			return params;
+		}));
+	}
+
+	protected static <P extends ProcessingRecipeParams> StreamCodec<RegistryFriendlyByteBuf, P> streamCodec(Supplier<P> factory) {
+		return StreamCodec.of(
+			(buffer, params) -> params.encode(buffer),
+			buffer -> {
+				P params = factory.get();
+				params.decode(buffer);
+				return params;
+			});
+	}
+
+	protected final List<Either<Ingredient, FluidIngredient>> ingredients() {
 		List<Either<Ingredient, FluidIngredient>> ingredients =
 			new ArrayList<>(this.ingredients.size() + this.fluidIngredients.size());
 		this.ingredients.forEach(ingredient -> ingredients.add(Either.left(ingredient)));
 		this.fluidIngredients.forEach(ingredient -> ingredients.add(Either.right(ingredient)));
-		INGREDIENTS_CODEC.encode(ingredients, ops, builder);
+		return ingredients;
+	}
+
+	protected final List<Either<ProcessingOutput, FluidStack>> results() {
 		List<Either<ProcessingOutput, FluidStack>> results =
 			new ArrayList<>(this.results.size() + this.fluidResults.size());
 		this.results.forEach(result -> results.add(Either.left(result)));
 		this.fluidResults.forEach(result -> results.add(Either.right(result)));
-		RESULTS_CODEC.encode(results, ops, builder);
-		PROCESSING_TIME_CODEC.encode(processingDuration, ops, builder);
-		HEAT_REQUIREMENT_CODEC.encode(requiredHeat, ops, builder);
-		return builder;
+		return results;
 	}
 
-	protected <T> DataResult<? extends ProcessingRecipeParams> decode(DynamicOps<T> ops, MapLike<T> input) {
-		var ingredients = INGREDIENTS_CODEC.decode(ops, input);
-		if (ingredients.isError()) return ingredients.map(it -> this);
-		ingredients.getOrThrow().forEach(either -> either
-			.ifLeft(this.ingredients::add)
-			.ifRight(this.fluidIngredients::add));
+	protected final int processingDuration() {
+		return processingDuration;
+	}
 
-		var results = RESULTS_CODEC.decode(ops, input);
-		if (results.isError()) return results.map(it -> this);
-		results.getOrThrow().forEach(either -> either
-			.ifLeft(this.results::add)
-			.ifRight(this.fluidResults::add));
-
-		var processingTime = PROCESSING_TIME_CODEC.decode(ops, input);
-		if (processingTime.isError()) return processingTime.map(it -> this);
-		this.processingDuration = processingTime.getOrThrow();
-
-		var heatRequirement = HEAT_REQUIREMENT_CODEC.decode(ops, input);
-		if (heatRequirement.isError()) return heatRequirement.map(it -> this);
-		this.requiredHeat = heatRequirement.getOrThrow();
-
-		return DataResult.success(this);
+	protected final HeatCondition requiredHeat() {
+		return requiredHeat;
 	}
 
 	protected void encode(RegistryFriendlyByteBuf buffer) {
