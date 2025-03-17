@@ -437,7 +437,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		// Panel may enforce item arrangement
 		if (!activeCraftingArrangement.isEmpty())
 			craftingContext = PackageOrderWithCrafts.singleRecipe(activeCraftingArrangement.stream()
-				.map(BigItemStack::new)
+				.map(stack -> new BigItemStack(stack.copyWithCount(1)))
 				.toList());
 
 		// Collect request distributions
