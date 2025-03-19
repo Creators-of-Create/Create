@@ -34,7 +34,7 @@ public abstract class SequencedAssemblySubCategory {
 		return width;
 	}
 
-	public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int x) {}
+	public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int index, int x) {}
 
 	public abstract void draw(SequencedRecipe<?> recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY, int index);
 
@@ -70,18 +70,19 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int x) {
+		public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int index, int x) {
 			FluidIngredient fluidIngredient = recipe.getRecipe()
 					.getFluidIngredients()
 					.get(0);
 
-			CreateRecipeCategory.addFluidSlot(builder, x + 4, 15, fluidIngredient);
+			CreateRecipeCategory.addFluidSlot(builder, x + 4, 15, fluidIngredient).setSlotName("Spout" + index);
 		}
 
 		@Override
 		public void draw(SequencedRecipe<?> recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY, int index) {
-			FluidStack fluid = iRecipeSlotsView.getSlotViews().get(1)
-				.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).orElse(FluidStack.EMPTY);
+			FluidStack fluid = iRecipeSlotsView.findSlotByName("Spout" + index)
+				.flatMap(slot -> slot.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK))
+				.orElse(FluidStack.EMPTY);
 			PoseStack ms = graphics.pose();
 			spout.offset = index;
 			ms.pushPose();
@@ -104,7 +105,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int x) {
+		public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int index, int x) {
 			IRecipeSlotBuilder slot = builder
 					.addSlot(RecipeIngredientRole.INPUT, x + 4, 15)
 					.setBackground(CreateRecipeCategory.getRenderedSlot(), -1, -1)
