@@ -63,6 +63,11 @@ public class AnimatedSpout extends AnimatedKinetics {
 			.scale(scale)
 			.render(graphics);
 
+		if (fluid.isEmpty()) {
+			matrixStack.popPose();
+			return;
+		}
+
 		AnimatedKinetics.DEFAULT_LIGHTING.applyLighting();
 		matrixStack.pushPose();
 		UIRenderHelper.flipForGuiRender(matrixStack);
