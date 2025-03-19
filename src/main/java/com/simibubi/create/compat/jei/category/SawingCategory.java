@@ -9,6 +9,7 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -23,7 +24,8 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, CuttingRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<CuttingRecipe> holder, IFocusGroup focuses) {
+		CuttingRecipe recipe = holder.value();
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 44, 5)
 				.setBackground(getRenderedSlot(), -1, -1)
@@ -44,7 +46,7 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 	}
 
 	@Override
-	public void draw(CuttingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<CuttingRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 70, 6);
 		AllGuiTextures.JEI_SHADOW.render(graphics, 72 - 17, 42 + 13);
 

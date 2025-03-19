@@ -10,6 +10,7 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedSpout;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe.Builder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -51,7 +52,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 				FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
 				Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
 				ResourceLocation id = Create.asResource("potions");
-				FillingRecipe recipe = new Builder<>(FillingRecipe::new, id)
+				FillingRecipe recipe = new StandardProcessingRecipe.Builder<>(FillingRecipe::new, id)
 						.withItemIngredients(bottle)
 						.withFluidIngredients(FluidIngredient.fromFluidStack(fluidFromPotionItem))
 						.withSingleItemOutput(stack)
@@ -92,7 +93,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 					ResourceLocation fluidName = RegisteredObjectsHelper.getKeyOrThrow(fluidCopy.getFluid());
 					ResourceLocation id = Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()
 							+ "_with_" + fluidName.getNamespace() + "_" + fluidName.getPath());
-					FillingRecipe recipe = new Builder<>(FillingRecipe::new, id)
+					FillingRecipe recipe = new StandardProcessingRecipe.Builder<>(FillingRecipe::new, id)
 							.withItemIngredients(bucket)
 							.withFluidIngredients(FluidIngredient.fromFluidStack(fluidCopy))
 							.withSingleItemOutput(container)
@@ -104,7 +105,8 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, FillingRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<FillingRecipe> holder, IFocusGroup focuses) {
+		FillingRecipe recipe = holder.value();
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 27, 51)
 				.setBackground(getRenderedSlot(), -1, -1)
@@ -119,11 +121,13 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 	}
 
 	@Override
-	public void draw(FillingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<FillingRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		FillingRecipe recipe = holder.value();
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29);
-		spout.withFluids(recipe.getRequiredFluid()
-			.getMatchingFluidStacks())
+		FluidStack fluid = iRecipeSlotsView.getSlotViews().get(1)
+			.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).orElse(FluidStack.EMPTY);
+		spout.withFluid(fluid)
 			.draw(graphics, getBackground().getWidth() / 2 - 13, 22);
 	}
 

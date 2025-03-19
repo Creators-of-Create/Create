@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.minecraft.world.item.crafting.RecipeHolder;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.AllBlocks;
@@ -42,7 +44,8 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, BasinRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<BasinRecipe> holder, IFocusGroup focuses) {
+		BasinRecipe recipe = holder.value();
 		List<Pair<Ingredient, MutableInt>> condensedIngredients = ItemHelper.condenseIngredients(recipe.getIngredients());
 
 		int size = condensedIngredients.size() + recipe.getFluidIngredients().size();
@@ -106,7 +109,8 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 	}
 
 	@Override
-	public void draw(BasinRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<BasinRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		BasinRecipe recipe = holder.value();
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 
 		boolean noHeat = requiredHeat == HeatCondition.NONE;

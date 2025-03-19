@@ -23,6 +23,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 @ParametersAreNonnullByDefault
 public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends CreateRecipeCategory<T> {
@@ -40,7 +41,8 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, T recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<T> holder, IFocusGroup focuses) {
+		T recipe = holder.value();
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 21, 48)
 				.setBackground(getRenderedSlot(), -1, -1)
@@ -52,7 +54,8 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 	}
 
 	@Override
-	public void draw(T recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<T> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		T recipe = holder.value();
 		renderWidgets(graphics, recipe, mouseX, mouseY);
 
 		PoseStack matrixStack = graphics.pose();
@@ -100,7 +103,8 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 		}
 
 		@Override
-		public void setRecipe(IRecipeLayoutBuilder builder, T recipe, IFocusGroup focuses) {
+		public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<T> holder, IFocusGroup focuses) {
+			T recipe = holder.value();
 			List<ProcessingOutput> results = recipe.getRollableResults();
 			int xOffsetAmount = 1 - Math.min(3, results.size());
 

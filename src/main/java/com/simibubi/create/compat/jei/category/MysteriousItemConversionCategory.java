@@ -32,7 +32,8 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, ConversionRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<ConversionRecipe> holder, IFocusGroup focuses) {
+		ConversionRecipe recipe = holder.value();
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 27, 17)
 				.setBackground(getRenderedSlot(), -1, -1)
@@ -44,7 +45,7 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 	}
 
 	@Override
-	public void draw(ConversionRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<ConversionRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52, 20);
 		AllGuiTextures.JEI_QUESTION_MARK.render(graphics, 77, 5);
 	}

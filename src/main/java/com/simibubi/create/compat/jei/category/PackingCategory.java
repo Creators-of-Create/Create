@@ -12,6 +12,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -40,12 +41,12 @@ public class PackingCategory extends BasinCategory {
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, BasinRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<BasinRecipe> holder, IFocusGroup focuses) {
 		if (type == PackingType.COMPACTING) {
-			super.setRecipe(builder, recipe, focuses);
+			super.setRecipe(builder, holder, focuses);
 			return;
 		}
-
+		BasinRecipe recipe = holder.value();
 		int i = 0;
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		int size = ingredients.size();
@@ -67,15 +68,15 @@ public class PackingCategory extends BasinCategory {
 	}
 
 	@Override
-	public void draw(BasinRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<BasinRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		if (type == PackingType.COMPACTING) {
-			super.draw(recipe, iRecipeSlotsView, graphics, mouseX, mouseY);
+			super.draw(holder, iRecipeSlotsView, graphics, mouseX, mouseY);
 		} else {
 			AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 136, 32);
 			AllGuiTextures.JEI_SHADOW.render(graphics, 81, 68);
 		}
 
-
+		BasinRecipe recipe = holder.value();
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (requiredHeat != HeatCondition.NONE)
 			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())

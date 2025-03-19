@@ -18,6 +18,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -32,7 +33,8 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, ItemApplicationRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<ItemApplicationRecipe> holder, IFocusGroup focuses) {
+		ItemApplicationRecipe recipe = holder.value();
 		builder.addSlot(RecipeIngredientRole.INPUT, 27, 38)
 				.setBackground(getRenderedSlot(), -1, -1)
 				.addIngredients(recipe.getProcessedItem());
@@ -61,7 +63,7 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 	}
 
 	@Override
-	public void draw(ItemApplicationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<ItemApplicationRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 47);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 74, 10);
 

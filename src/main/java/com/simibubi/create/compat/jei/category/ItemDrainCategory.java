@@ -8,6 +8,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.category.animations.AnimatedItemDrain;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.fluids.transfer.EmptyingRecipe;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe.Builder;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -49,7 +50,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 				FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
 				Ingredient potion = Ingredient.of(stack);
 				ResourceLocation id = Create.asResource("potions");
-				EmptyingRecipe recipe = new Builder<>(EmptyingRecipe::new, id)
+				EmptyingRecipe recipe = new StandardProcessingRecipe.Builder<>(EmptyingRecipe::new, id)
 						.withItemIngredients(potion)
 						.withFluidOutputs(fluidFromPotionItem)
 						.withSingleItemOutput(new ItemStack(Items.GLASS_BOTTLE))
@@ -82,7 +83,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 
 			ResourceLocation id = Create.asResource("empty_" + itemName.getNamespace() + "_" + itemName.getPath() + "_of_"
 					+ fluidName.getNamespace() + "_" + fluidName.getPath());
-			EmptyingRecipe recipe = new Builder<>(EmptyingRecipe::new, id)
+			EmptyingRecipe recipe = new StandardProcessingRecipe.Builder<>(EmptyingRecipe::new, id)
 					.withItemIngredients(ingredient)
 					.withFluidOutputs(extracted)
 					.withSingleItemOutput(result)
@@ -92,7 +93,8 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, EmptyingRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<EmptyingRecipe> holder, IFocusGroup focuses) {
+		EmptyingRecipe recipe = holder.value();
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 27, 8)
 				.setBackground(getRenderedSlot(), -1, -1)
@@ -107,7 +109,8 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 	}
 
 	@Override
-	public void draw(EmptyingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<EmptyingRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		EmptyingRecipe recipe = holder.value();
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 37);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 73, 4);
 		drain.withFluid(recipe.getResultingFluid())

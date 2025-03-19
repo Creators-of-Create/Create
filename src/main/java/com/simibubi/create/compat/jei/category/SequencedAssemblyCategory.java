@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.minecraft.world.item.crafting.RecipeHolder;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -40,7 +42,8 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, SequencedAssemblyRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<SequencedAssemblyRecipe> holder, IFocusGroup focuses) {
+		SequencedAssemblyRecipe recipe = holder.value();
 		boolean noRandomOutput = recipe.getOutputChance() == 1;
 		int xOffset = noRandomOutput ? 0 : -7;
 
@@ -87,7 +90,8 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 	final String[] romans = { "I", "II", "III", "IV", "V", "VI", "-" };
 
 	@Override
-	public void draw(SequencedAssemblyRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<SequencedAssemblyRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		SequencedAssemblyRecipe recipe = holder.value();
 		Font font = Minecraft.getInstance().font;
 
 		PoseStack matrixStack = graphics.pose();
@@ -131,7 +135,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			int subWidth = subCategory.getWidth();
             MutableComponent component = Component.literal("" + romans[Math.min(i, 6)]);
 			graphics.drawString(font, component, font.width(component) / -2 + subWidth / 2, 2, 0x888888, false);
-			subCategory.draw(sequencedRecipe, graphics, mouseX, mouseY, i);
+			subCategory.draw(sequencedRecipe, iRecipeSlotsView, graphics, mouseX, mouseY, i);
 			matrixStack.translate(subWidth + margin, 0, 0);
 		}
 		matrixStack.popPose();
@@ -141,7 +145,8 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 
 	@Override
 	@NotNull
-	public List<Component> getTooltipStrings(SequencedAssemblyRecipe recipe, IRecipeSlotsView iRecipeSlotsView, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(RecipeHolder<SequencedAssemblyRecipe> holder, IRecipeSlotsView iRecipeSlotsView, double mouseX, double mouseY) {
+		SequencedAssemblyRecipe recipe = holder.value();
 		List<Component> tooltip = new ArrayList<>();
 
 		MutableComponent junk = CreateLang.translateDirect("recipe.assembly.junk");

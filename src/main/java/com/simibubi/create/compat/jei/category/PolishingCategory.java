@@ -16,8 +16,11 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRecipe> {
@@ -30,7 +33,8 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, SandPaperPolishingRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<SandPaperPolishingRecipe> holder, IFocusGroup focuses) {
+		SandPaperPolishingRecipe recipe = holder.value();
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 27, 29)
 				.setBackground(getRenderedSlot(), -1, -1)
@@ -45,17 +49,13 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 	}
 
 	@Override
-	public void draw(SandPaperPolishingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<SandPaperPolishingRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 61, 21);
 		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52, 32);
 
-		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		ItemStack[] matchingStacks = ingredients.get(0)
-			.getItems();
-		if (matchingStacks.length == 0)
-			return;
+		ItemStack input = iRecipeSlotsView.getSlotViews().getFirst().getDisplayedItemStack().orElse(ItemStack.EMPTY);
 
-		renderedSandpaper.set(AllDataComponents.SAND_PAPER_POLISHING, new SandPaperItemComponent(matchingStacks[0]));
+		renderedSandpaper.set(AllDataComponents.SAND_PAPER_POLISHING, new SandPaperItemComponent(input));
 		renderedSandpaper.set(AllDataComponents.SAND_PAPER_JEI, Unit.INSTANCE);
 		GuiGameElement.of(renderedSandpaper)
 				.<GuiGameElement.GuiRenderBuilder>at(getBackground().getWidth() / 2 - 16, 0, 0)

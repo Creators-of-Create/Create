@@ -9,6 +9,7 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -23,7 +24,8 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, AbstractCrushingRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<AbstractCrushingRecipe> holder, IFocusGroup focuses) {
+		AbstractCrushingRecipe recipe = holder.value();
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 15, 9)
 				.setBackground(getRenderedSlot(), -1, -1)
@@ -47,7 +49,7 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 	}
 
 	@Override
-	public void draw(AbstractCrushingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<AbstractCrushingRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_ARROW.render(graphics, 85, 32);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 43, 4);
 		millstone.draw(graphics, 48, 27);

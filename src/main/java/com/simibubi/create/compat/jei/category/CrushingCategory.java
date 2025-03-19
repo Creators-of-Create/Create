@@ -17,6 +17,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.createmod.catnip.layout.LayoutHelper;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 @ParametersAreNonnullByDefault
 public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecipe> {
@@ -28,7 +29,8 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, AbstractCrushingRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<AbstractCrushingRecipe> holder, IFocusGroup focuses) {
+		AbstractCrushingRecipe recipe = holder.value();
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 51, 3)
 				.setBackground(getRenderedSlot(), -1, -1)
@@ -65,7 +67,7 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 	) {}
 
 	@Override
-	public void draw(AbstractCrushingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(RecipeHolder<AbstractCrushingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 72, 7);
 
 		crushingWheels.draw(graphics, 62, 59);
