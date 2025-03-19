@@ -49,9 +49,9 @@ public class ProcessingRecipeParams {
 
 	protected static <P extends ProcessingRecipeParams> MapCodec<P> codec(Supplier<P> factory) {
 		return RecordCodecBuilder.mapCodec(instance -> instance.group(
-			Codec.either(Ingredient.CODEC, FluidIngredient.CODEC).listOf().fieldOf("ingredients")
+			Codec.either(FluidIngredient.CODEC, Ingredient.CODEC).listOf().fieldOf("ingredients")
 				.forGetter(ProcessingRecipeParams::ingredients),
-			Codec.either(ProcessingOutput.CODEC, FluidStack.CODEC).listOf().fieldOf("results")
+			Codec.either(FluidStack.CODEC, ProcessingOutput.CODEC).listOf().fieldOf("results")
 				.forGetter(ProcessingRecipeParams::results),
 			Codec.INT.optionalFieldOf("processing_time", 0)
 				.forGetter(ProcessingRecipeParams::processingDuration),
@@ -60,11 +60,11 @@ public class ProcessingRecipeParams {
 		).apply(instance, (ingredients, results, processingDuration, requiredHeat) -> {
 			P params = factory.get();
 			ingredients.forEach(either -> either
-				.ifLeft(params.ingredients::add)
-				.ifRight(params.fluidIngredients::add));
+				.ifRight(params.ingredients::add)
+				.ifLeft(params.fluidIngredients::add));
 			results.forEach(either -> either
-				.ifLeft(params.results::add)
-				.ifRight(params.fluidResults::add));
+				.ifRight(params.results::add)
+				.ifLeft(params.fluidResults::add));
 			params.processingDuration = processingDuration;
 			params.requiredHeat = requiredHeat;
 			return params;
@@ -81,19 +81,19 @@ public class ProcessingRecipeParams {
 			});
 	}
 
-	protected final List<Either<Ingredient, FluidIngredient>> ingredients() {
-		List<Either<Ingredient, FluidIngredient>> ingredients =
+	protected final List<Either<FluidIngredient, Ingredient>> ingredients() {
+		List<Either<FluidIngredient, Ingredient>> ingredients =
 			new ArrayList<>(this.ingredients.size() + this.fluidIngredients.size());
-		this.ingredients.forEach(ingredient -> ingredients.add(Either.left(ingredient)));
-		this.fluidIngredients.forEach(ingredient -> ingredients.add(Either.right(ingredient)));
+		this.ingredients.forEach(ingredient -> ingredients.add(Either.right(ingredient)));
+		this.fluidIngredients.forEach(ingredient -> ingredients.add(Either.left(ingredient)));
 		return ingredients;
 	}
 
-	protected final List<Either<ProcessingOutput, FluidStack>> results() {
-		List<Either<ProcessingOutput, FluidStack>> results =
+	protected final List<Either<FluidStack, ProcessingOutput>> results() {
+		List<Either<FluidStack, ProcessingOutput>> results =
 			new ArrayList<>(this.results.size() + this.fluidResults.size());
-		this.results.forEach(result -> results.add(Either.left(result)));
-		this.fluidResults.forEach(result -> results.add(Either.right(result)));
+		this.results.forEach(result -> results.add(Either.right(result)));
+		this.fluidResults.forEach(result -> results.add(Either.left(result)));
 		return results;
 	}
 
