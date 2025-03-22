@@ -196,9 +196,27 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			return availableItems;
 		}
 
+		// Create Dummy Inventory
+		ItemStackHandler dummyInv = new ItemStackHandler(targetInv.getSlots());
+		for (int i = 0; i < targetInv.getSlots(); i++) {
+			dummyInv.setStackInSlot(i, targetInv.getStackInSlot(i).copy());
+		}
+
 		for (int slot = 0; slot < targetInv.getSlots(); slot++) {
 			int slotLimit = targetInv.getSlotLimit(slot);
-			availableItems.add(scanInputSlots ? targetInv.getStackInSlot(slot) : targetInv.extractItem(slot, slotLimit, true));
+			int totalCount = 0;
+			// Repeatedly extract items from the dummy inventory until none remain.
+			while (true) {
+				ItemStack extracted = dummyInv.extractItem(slot, slotLimit, false);
+				if (extracted.isEmpty())
+					break;
+				totalCount += extracted.getCount();
+			}
+
+			if (totalCount > 0) {
+				ItemStack prototype = targetInv.getStackInSlot(slot);
+				availableItems.add(prototype, totalCount);
+			}
 		}
 
 		invVersionTracker.awaitNewVersion(targetInventory.getInventory());
