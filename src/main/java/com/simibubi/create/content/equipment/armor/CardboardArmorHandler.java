@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingVisibilityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,13 +32,31 @@ public class CardboardArmorHandler {
 			return;
 		if (!testForStealth(entity))
 			return;
-		
+
 		event.setNewSize(EntityDimensions.fixed(0.6F, 0.8F));
 		event.setNewEyeHeight(0.6F);
-		
+
 		if (!entity.level()
 			.isClientSide() && entity instanceof Player p)
 			AllAdvancements.CARDBOARD_ARMOR.awardTo(p);
+	}
+
+	@SubscribeEvent
+	public static void playerChangesEquipment(LivingEquipmentChangeEvent event) {
+		if (event.getEntity() instanceof Player player && player.getPose() == Pose.CROUCHING) {
+			if (
+				AllItems.CARDBOARD_HELMET.isIn(player.getItemBySlot(EquipmentSlot.HEAD))
+				|| AllItems.CARDBOARD_CHESTPLATE.isIn(player.getItemBySlot(EquipmentSlot.CHEST))
+				|| AllItems.CARDBOARD_LEGGINGS.isIn(player.getItemBySlot(EquipmentSlot.LEGS))
+				|| AllItems.CARDBOARD_BOOTS.isIn(player.getItemBySlot(EquipmentSlot.FEET))
+			) { //assuming player is putting on last piece or took off first piece of cardboard armor
+				if (!player.level().isClientSide()) {
+					Pose pose = player.getPose();
+					player.setPose(pose == Pose.CROUCHING ? Pose.STANDING : Pose.CROUCHING);
+					player.setPose(pose);
+				}
+			}
+		}
 	}
 
 	@SubscribeEvent
