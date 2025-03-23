@@ -71,15 +71,17 @@ public class ProcessingOutput {
 	}
 
 	public ItemStack rollOutput() {
-		int outputAmount = count;
-		for (int roll = 0; roll < count; roll++)
+		int count = this.count;
+		for (int roll = 0; roll < this.count; roll++)
 			if (r.nextFloat() > chance)
-				outputAmount--;
-		if (outputAmount == 0)
+				count--;
+		if (count == 0)
 			return ItemStack.EMPTY;
-		ItemStack out = item.getDefaultInstance();
-		out.setCount(outputAmount);
-		return out;
+		ItemStack output = item.getDefaultInstance();
+		output.setCount(count);
+		if (!patch.isEmpty())
+			output.applyComponents(patch);
+		return output;
 	}
 
 	// Remove in 1.22
