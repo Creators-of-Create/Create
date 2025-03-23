@@ -78,7 +78,7 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 
 				if (onAbove.getState() / valueStep == 0 && state / valueStep == 0)
 					return;
-				
+
 				if (onAbove.getState() / valueStep <= state / valueStep) {
 					onAbove.setState((state + valueStep) / valueStep * valueStep);
 					onAbove.onChanged();
@@ -152,16 +152,13 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 		inputBg.render(graphics, x + 44, y + 21);
 		inputBg.render(graphics, x + 44, y + 21 + 24);
 
-		int valueStep = 1;
+		int valueStep = getValueStep();
 		boolean stacks = inStacks.getState() == 1;
-		if (typeOfCurrentTarget == ThresholdType.FLUID)
-			valueStep = 1000;
 
 		if (forItems) {
 			Component suffix =
 				inStacks.getState() == 0 ? CreateLang.translateDirect("schedule.condition.threshold.items")
 					: CreateLang.translateDirect("schedule.condition.threshold.stacks");
-			valueStep = inStacks.getState() == 0 ? 1 : 64;
 			graphics.drawString(font, suffix, x + 105, y + 28, 0xFFFFFFFF, true);
 			graphics.drawString(font, suffix, x + 105, y + 28 + 24, 0xFFFFFFFF, true);
 
@@ -328,12 +325,7 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 
 	private int getValueStep() {
 		boolean stacks = inStacks.getState() == 1;
-		int valueStep = 1;
-		if (blockEntity.getTypeOfCurrentTarget() == ThresholdType.FLUID)
-			valueStep = 1000;
-		else if (stacks)
-			valueStep = 64;
-		return valueStep;
+		return blockEntity.getValueStep(stacks);
 	}
 
 	@Override

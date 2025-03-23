@@ -299,6 +299,17 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 		return ThresholdType.UNSUPPORTED;
 	}
 
+	public int getValueStep(boolean stacks) {
+		if (level.getBlockEntity(getTargetPos()) instanceof ThresholdSwitchObservable observable)
+			return observable.getValueStep(stacks);
+		int valueStep = 1;
+		if (getTypeOfCurrentTarget() == ThresholdType.FLUID)
+			valueStep = 1000;
+		else if (stacks)
+			valueStep = 64;
+		return valueStep;
+	}
+
 	protected void scheduleBlockTick() {
 		Block block = getBlockState().getBlock();
 		if (!level.getBlockTicks()
