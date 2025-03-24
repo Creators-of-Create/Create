@@ -1,5 +1,7 @@
 package com.simibubi.create.compat.jei.category.animations;
 
+import java.util.List;
+
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -17,10 +19,10 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 public class AnimatedSpout extends AnimatedKinetics {
 
-	private FluidStack fluid = FluidStack.EMPTY;
+	private List<FluidStack> fluids;
 
-	public AnimatedSpout withFluid(FluidStack fluid) {
-		this.fluid = fluid;
+	public AnimatedSpout withFluids(List<FluidStack> fluids) {
+		this.fluids = fluids;
 		return this;
 	}
 
@@ -69,7 +71,8 @@ public class AnimatedSpout extends AnimatedKinetics {
 		matrixStack.scale(16, 16, 16);
 		float from = 3f / 16f;
 		float to = 17f / 16f;
-		FluidRenderer.renderFluidBox(fluid.getFluid(), fluid.getAmount(), from, from, from, to, to, to, graphics.bufferSource(), matrixStack, LightTexture.FULL_BRIGHT, false, true, fluid.getComponentsPatch());
+		FluidStack fluidStack = fluids.get(0);
+		FluidRenderer.renderFluidBox(fluidStack.getFluid(), fluidStack.getAmount(), from, from, from, to, to, to, graphics.bufferSource(), matrixStack, LightTexture.FULL_BRIGHT, false, true, fluidStack.getComponentsPatch());
 		matrixStack.popPose();
 
 		float width = 1 / 128f * squeeze;
@@ -79,7 +82,7 @@ public class AnimatedSpout extends AnimatedKinetics {
 		matrixStack.translate(-0.5f, 0, -0.5f);
 		from = -width / 2 + 0.5f;
 		to = width / 2 + 0.5f;
-		FluidRenderer.renderFluidBox(fluid.getFluid(), fluid.getAmount(), from, 0, from, to, 2, to, graphics.bufferSource(), matrixStack, LightTexture.FULL_BRIGHT, false, true, fluid.getComponentsPatch());
+		FluidRenderer.renderFluidBox(fluidStack.getFluid(), fluidStack.getAmount(), from, 0, from, to, 2, to, graphics.bufferSource(), matrixStack, LightTexture.FULL_BRIGHT, false, true, fluidStack.getComponentsPatch());
 		graphics.flush();
 		Lighting.setupFor3DItems();
 

@@ -135,7 +135,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			int subWidth = subCategory.getWidth();
             MutableComponent component = Component.literal("" + romans[Math.min(i, 6)]);
 			graphics.drawString(font, component, font.width(component) / -2 + subWidth / 2, 2, 0x888888, false);
-			subCategory.draw(sequencedRecipe, iRecipeSlotsView, graphics, mouseX, mouseY, i);
+			subCategory.draw(sequencedRecipe, graphics, mouseX, mouseY, i);
 			matrixStack.translate(subWidth + margin, 0, 0);
 		}
 		matrixStack.popPose();

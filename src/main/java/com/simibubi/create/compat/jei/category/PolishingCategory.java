@@ -20,8 +20,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import java.util.Optional;
-
 @ParametersAreNonnullByDefault
 public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRecipe> {
 
@@ -50,12 +48,17 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 
 	@Override
 	public void draw(RecipeHolder<SandPaperPolishingRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		SandPaperPolishingRecipe recipe = holder.value();
 		AllGuiTextures.JEI_SHADOW.render(graphics, 61, 21);
 		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52, 32);
 
-		ItemStack input = iRecipeSlotsView.getSlotViews().getFirst().getDisplayedItemStack().orElse(ItemStack.EMPTY);
+		NonNullList<Ingredient> ingredients = recipe.getIngredients();
+		ItemStack[] matchingStacks = ingredients.get(0)
+			.getItems();
+		if (matchingStacks.length == 0)
+			return;
 
-		renderedSandpaper.set(AllDataComponents.SAND_PAPER_POLISHING, new SandPaperItemComponent(input));
+		renderedSandpaper.set(AllDataComponents.SAND_PAPER_POLISHING, new SandPaperItemComponent(matchingStacks[0]));
 		renderedSandpaper.set(AllDataComponents.SAND_PAPER_JEI, Unit.INSTANCE);
 		GuiGameElement.of(renderedSandpaper)
 				.<GuiGameElement.GuiRenderBuilder>at(getBackground().getWidth() / 2 - 16, 0, 0)

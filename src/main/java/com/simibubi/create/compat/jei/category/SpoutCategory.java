@@ -11,7 +11,6 @@ import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe.Builder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -125,9 +124,8 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 		FillingRecipe recipe = holder.value();
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29);
-		FluidStack fluid = iRecipeSlotsView.getSlotViews().get(1)
-			.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).orElse(FluidStack.EMPTY);
-		spout.withFluid(fluid)
+		spout.withFluids(recipe.getRequiredFluid()
+			.getMatchingFluidStacks())
 			.draw(graphics, getBackground().getWidth() / 2 - 13, 22);
 	}
 

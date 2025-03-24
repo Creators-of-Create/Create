@@ -13,14 +13,10 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
-import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-
-import net.neoforged.neoforge.fluids.FluidStack;
 
 public abstract class SequencedAssemblySubCategory {
 
@@ -36,7 +32,7 @@ public abstract class SequencedAssemblySubCategory {
 
 	public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int x) {}
 
-	public abstract void draw(SequencedRecipe<?> recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY, int index);
+	public abstract void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index);
 
 	public static class AssemblyPressing extends SequencedAssemblySubCategory {
 
@@ -48,7 +44,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
 			PoseStack ms = graphics.pose();
 			press.offset = index;
 			ms.pushPose();
@@ -79,15 +75,16 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY, int index) {
-			FluidStack fluid = iRecipeSlotsView.getSlotViews().get(1)
-				.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).orElse(FluidStack.EMPTY);
+		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
 			PoseStack ms = graphics.pose();
 			spout.offset = index;
 			ms.pushPose();
 			ms.translate(-7, 50, 0);
 			ms.scale(.75f, .75f, .75f);
-			spout.withFluid(fluid)
+			spout.withFluids(recipe.getRecipe()
+				.getFluidIngredients()
+				.get(0)
+				.getMatchingFluidStacks())
 				.draw(graphics, getWidth() / 2, 0);
 			ms.popPose();
 		}
@@ -118,7 +115,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
 			PoseStack ms = graphics.pose();
 			deployer.offset = index;
 			ms.pushPose();
@@ -140,7 +137,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
 			PoseStack ms = graphics.pose();
 			ms.pushPose();
 			ms.translate(0, 51.5f, 0);
