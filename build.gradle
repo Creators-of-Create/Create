@@ -200,6 +200,7 @@ dependencies {
     modImplementation("dev.ftb.mods:ftb-library-forge:2001.2.4")
 
     modImplementation("curse.maven:journeymap-32274:5457831")
+    modImplementation("curse.maven:xaeros-world-map-317780:6212636")
     // modImplementation("ignored:journeymap-1.20.1-5.10.1-forge")
 
     // modRuntimeOnly("curse.maven:framedblocks-441647:5399211")

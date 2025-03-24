@@ -55,7 +55,8 @@
     "client.LevelRendererMixin",
     "client.MapRendererMapInstanceMixin",
     "client.PlayerRendererMixin",
-    "compat.JourneyFullscreenMapMixin"
+    "compat.JourneyFullscreenMapMixin",
+    "compat.XaeroFullscreenMapMixin"
   ],
   "injectors": {
     "defaultRequire": 1
