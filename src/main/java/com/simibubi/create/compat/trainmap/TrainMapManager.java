@@ -11,6 +11,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.trainmap.TrainMapSync.SignalState;
 import com.simibubi.create.compat.trainmap.TrainMapSync.TrainMapSyncEntry;
 import com.simibubi.create.compat.trainmap.TrainMapSync.TrainState;
@@ -24,6 +25,7 @@ import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.mixin.compat.XaeroFullscreenMapAccessor;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CClient;
@@ -48,7 +50,14 @@ import net.minecraft.world.phys.Vec3;
 public class TrainMapManager {
 
 	public static void tick() {
-		tick(Minecraft.getInstance().level.dimension());
+		ResourceKey<Level> playerDimension = Minecraft.getInstance().level.dimension();
+
+		if (Mods.XAEROWORLDMAP.isLoaded() && XaeroTrainMap.isMapOpen()) {
+			ResourceKey<Level> renderedDimension = XaeroTrainMap.getRenderedDimension();
+			tick(renderedDimension != null ? renderedDimension : playerDimension);
+		} else {
+			tick(playerDimension);
+		}
 	}
 
 	public static void tick(ResourceKey<Level> dimension) {

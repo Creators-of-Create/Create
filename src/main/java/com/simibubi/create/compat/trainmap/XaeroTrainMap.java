@@ -3,6 +3,7 @@ package com.simibubi.create.compat.trainmap;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.RemovedGuiUtils;
+import com.simibubi.create.foundation.mixin.compat.XaeroFullscreenMapAccessor;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -10,7 +11,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
+
+import net.minecraft.world.level.Level;
 
 import net.minecraftforge.client.event.InputEvent;
 
@@ -21,9 +25,10 @@ import java.util.List;
 public class XaeroTrainMap {
 
 	private static boolean requesting;
+	private static ResourceKey<Level> renderedDimension;
 
 	public static void tick() {
-		if (!AllConfigs.client().showTrainMapOverlay.get() || !(Minecraft.getInstance().screen instanceof GuiMap)) {
+		if (!AllConfigs.client().showTrainMapOverlay.get() || !isMapOpen()) {
 			if (requesting)
 				TrainMapSyncClient.stopRequesting();
 			requesting = false;
@@ -53,6 +58,8 @@ public class XaeroTrainMap {
 			renderToggleWidgetAndTooltip(graphics, screen, mX, mY);
 			return;
 		}
+
+		renderedDimension = ((XaeroFullscreenMapAccessor) screen).getMapProcessor().getMapWorld().getCurrentDimension().getDimId();
 
 		Minecraft mc = Minecraft.getInstance();
 		Window window = mc.getWindow();
@@ -96,5 +103,13 @@ public class XaeroTrainMap {
 		RemovedGuiUtils.drawHoveringText(graphics, List.of(CreateLang.translate("train_map.toggle")
 			.component()), mouseX, mouseY + 20, screen.width, screen.height, 256, Minecraft.getInstance().font);
 		return true;
+	}
+
+	public static ResourceKey<Level> getRenderedDimension(){
+		return renderedDimension;
+	}
+
+	public static boolean isMapOpen(){
+		return (Minecraft.getInstance().screen instanceof GuiMap);
 	}
 }
