@@ -102,7 +102,7 @@ public class ProcessingOutput {
 	public static final Codec<ProcessingOutput> CODEC_OLD = RecordCodecBuilder.create(i -> i.group(
 		ITEM_CODEC_OLD.fieldOf("item").forGetter(s -> s.datagenOutput != null ? Either.right(Pair.of(s.datagenOutput, s.count)) : Either.left(s.item.getDefaultInstance())),
 		ExtraCodecs.intRange(1, 99).optionalFieldOf("count", 1).forGetter(s -> s.count),
-		ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("chance", 1F).forGetter(s -> s.chance)
+		Codec.FLOAT.validate(ProcessingOutput::validateChance).optionalFieldOf("chance", 1F).forGetter(s -> s.chance)
 	).apply(i, (item, count, chance) -> item.map(
 		stack -> new ProcessingOutput(stack.getItem(), count, chance),
 		compat -> new ProcessingOutput(compat.getFirst(), compat.getSecond(), chance)
@@ -121,7 +121,7 @@ public class ProcessingOutput {
 		}),
 		ExtraCodecs.intRange(1, 99).optionalFieldOf("count", 1).forGetter(s -> s.count),
 		DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(s -> s.patch),
-		ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("chance", 1F).forGetter(s -> s.chance)
+		Codec.FLOAT.validate(ProcessingOutput::validateChance).optionalFieldOf("chance", 1F).forGetter(s -> s.chance)
 	).apply(i, (item, count, components, chance) -> item.map(
 		stack -> new ProcessingOutput(stack, count, components, chance),
 		compat -> new ProcessingOutput(compat, count, chance)
@@ -129,5 +129,13 @@ public class ProcessingOutput {
 
 	// Remove fallback in 1.22
 	public static final Codec<ProcessingOutput> CODEC = Codec.withAlternative(CODEC_NEW, CODEC_OLD);
+
+	private static DataResult<Float> validateChance(float chance) {
+		if (chance > 1F)
+			return DataResult.error(() -> "Processing output chance must not be greater than 1, but got: " + chance);
+		if (chance <= 0F)
+			return DataResult.error(() -> "Processing output chance must be greater than 0, but got: " + chance);
+		return DataResult.success(chance);
+	}
 
 }
