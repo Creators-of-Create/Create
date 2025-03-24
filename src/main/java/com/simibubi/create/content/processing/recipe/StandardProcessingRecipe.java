@@ -49,8 +49,8 @@ public abstract class StandardProcessingRecipe<T extends RecipeInput> extends Pr
 
 		public Serializer(Factory<R> factory) {
 			this.factory = factory;
-			this.codec = ProcessingRecipeParams.CODEC.xmap(factory::create, recipe -> recipe.getParams());
-			this.streamCodec = ProcessingRecipeParams.STREAM_CODEC.map(factory::create, recipe -> recipe.getParams());
+			this.codec = ProcessingRecipe.codec(factory, ProcessingRecipeParams.CODEC);
+			this.streamCodec = ProcessingRecipeParams.STREAM_CODEC.map(factory::create, ProcessingRecipe::getParams);
 		}
 
 		@Override

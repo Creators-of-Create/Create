@@ -2,10 +2,20 @@ package com.simibubi.create.content.processing.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
+
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.simibubi.create.foundation.codec.ResourceLocationAwareOps;
+
+import net.minecraft.util.ExtraCodecs;
 
 import org.slf4j.Logger;
 
@@ -211,6 +221,21 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 
 	public IRecipeTypeInfo getTypeInfo() {
 		return typeInfo;
+	}
+
+	public static <P extends ProcessingRecipeParams, R extends ProcessingRecipe<?, P>> MapCodec<R> codec(
+		Factory<P, R> factory, MapCodec<P> paramsCodec
+	) {
+		return RecordCodecBuilder.mapCodec(instance -> instance.group(
+			paramsCodec.xmap(factory::create, recipe -> recipe.getParams()).forGetter(Function.identity()),
+			ExtraCodecs.retrieveContext(ops -> ops instanceof ResourceLocationAwareOps awareOps
+				? DataResult.success(Optional.ofNullable(awareOps.getResourceLocation()))
+				: DataResult.success(Optional.<ResourceLocation>empty())
+			).forGetter(recipe -> Optional.empty())
+		).apply(instance, (recipe, id) -> {
+			id.ifPresent(recipe::validate);
+			return recipe;
+		}));
 	}
 
 	@FunctionalInterface

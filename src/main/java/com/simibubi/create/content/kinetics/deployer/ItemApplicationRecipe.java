@@ -5,9 +5,6 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
-
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -88,8 +85,8 @@ public class ItemApplicationRecipe extends ProcessingRecipe<RecipeWrapper, ItemA
 		private final StreamCodec<RegistryFriendlyByteBuf, R> streamCodec;
 
 		public Serializer(ProcessingRecipe.Factory<ItemApplicationRecipeParams, R> factory) {
-			this.codec = ItemApplicationRecipeParams.CODEC.xmap(factory::create, recipe -> recipe.getParams());
-			this.streamCodec = ItemApplicationRecipeParams.STREAM_CODEC.map(factory::create, recipe -> recipe.getParams());
+			this.codec = ProcessingRecipe.codec(factory, ItemApplicationRecipeParams.CODEC);
+			this.streamCodec = ItemApplicationRecipeParams.STREAM_CODEC.map(factory::create, ProcessingRecipe::getParams);
 		}
 
 		@Override

@@ -18,6 +18,8 @@
     "MobMixin",
     "PlayerMixin",
     "ProjectileUtilMixin",
+    "RecipeManagerMixin",
+    "RegistryOpsMixin",
     "ShulkerBoxBlockMixin",
     "SmithingMenuMixin",
     "SmithingTrimRecipeMixin",
