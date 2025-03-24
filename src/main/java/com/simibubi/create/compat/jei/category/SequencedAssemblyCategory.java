@@ -70,11 +70,9 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		width -= margin;
 		int x = width / -2 + getBackground().getWidth() / 2;
 
-		List<SequencedRecipe<?>> sequence = recipe.getSequence();
-		for (int i = 0; i < sequence.size(); i++) {
-			SequencedRecipe<?> sequencedRecipe = sequence.get(i);
+		for (SequencedRecipe<?> sequencedRecipe : recipe.getSequence()) {
 			SequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
-			subCategory.setRecipe(builder, sequencedRecipe, focuses, i, x);
+			subCategory.setRecipe(builder, sequencedRecipe, focuses, x);
 			x += subCategory.getWidth() + margin;
 		}
 	}
