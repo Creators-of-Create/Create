@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.client.event.InputEvent;
 
 import xaero.map.gui.GuiMap;
+import xaero.map.gui.ScreenBase;
 
 import java.util.List;
 
@@ -110,6 +111,6 @@ public class XaeroTrainMap {
 	}
 
 	public static boolean isMapOpen(){
-		return (Minecraft.getInstance().screen instanceof GuiMap);
+		return (Minecraft.getInstance().screen instanceof ScreenBase);
 	}
 }
