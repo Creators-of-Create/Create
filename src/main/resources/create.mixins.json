@@ -56,7 +56,8 @@
     "client.MapRendererMapInstanceMixin",
     "client.PlayerRendererMixin",
     "compat.JourneyFullscreenMapMixin",
-    "compat.XaeroFullscreenMapMixin"
+    "compat.XaeroFullscreenMapMixin",
+    "compat.XaeroPauseScreenOverrideMixin"
   ],
   "injectors": {
     "defaultRequire": 1

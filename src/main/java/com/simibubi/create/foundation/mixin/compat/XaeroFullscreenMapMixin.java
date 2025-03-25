@@ -29,7 +29,7 @@ public abstract class XaeroFullscreenMapMixin {
 	private MapProcessor mapProcessor;
 
 	@Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", at = @At(value = "INVOKE",
-		target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
+		target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"), require = 0)
 	public void create$xaeroMapFullscreenRender(GuiGraphics graphics, int mouseX, int mouseY, float pt, CallbackInfo ci) {
 		XaeroTrainMap.onRender(graphics, (GuiMap) (Object) this, mapProcessor, cameraX, cameraZ, mouseX, mouseY, scale, pt);
 	}
