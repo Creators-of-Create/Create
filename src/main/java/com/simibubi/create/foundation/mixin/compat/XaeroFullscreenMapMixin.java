@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import xaero.map.MapProcessor;
 import xaero.map.gui.GuiMap;
 
 @Mixin(GuiMap.class)
@@ -24,9 +25,12 @@ public abstract class XaeroFullscreenMapMixin {
 	@Shadow(remap = false)
 	private double scale;
 
+	@Shadow(remap = false)
+	private MapProcessor mapProcessor;
+
 	@Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", at = @At(value = "INVOKE",
 		target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
 	public void create$xaeroMapFullscreenRender(GuiGraphics graphics, int mouseX, int mouseY, float pt, CallbackInfo ci) {
-		XaeroTrainMap.onRender(graphics, (GuiMap) (Object) this, cameraX, cameraZ, mouseX, mouseY, scale, pt);
+		XaeroTrainMap.onRender(graphics, (GuiMap) (Object) this, mapProcessor, cameraX, cameraZ, mouseX, mouseY, scale, pt);
 	}
 }

@@ -3,7 +3,6 @@ package com.simibubi.create.compat.trainmap;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.RemovedGuiUtils;
-import com.simibubi.create.foundation.mixin.compat.XaeroFullscreenMapAccessor;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -18,6 +17,7 @@ import net.minecraft.world.level.Level;
 
 import net.minecraftforge.client.event.InputEvent;
 
+import xaero.map.MapProcessor;
 import xaero.map.gui.GuiMap;
 import xaero.map.gui.ScreenBase;
 
@@ -54,13 +54,13 @@ public class XaeroTrainMap {
 	}
 
 	// Called by XaeroFullscreenMapMixin
-	public static void onRender(GuiGraphics graphics, GuiMap screen, double x, double z, int mX, int mY, double mapScale, float pt) {
+	public static void onRender(GuiGraphics graphics, GuiMap screen, MapProcessor processor, double x, double z, int mX, int mY, double mapScale, float pt) {
 		if (!AllConfigs.client().showTrainMapOverlay.get()) {
 			renderToggleWidgetAndTooltip(graphics, screen, mX, mY);
 			return;
 		}
 
-		renderedDimension = ((XaeroFullscreenMapAccessor) screen).getMapProcessor().getMapWorld().getCurrentDimension().getDimId();
+		renderedDimension = processor.getMapWorld().getCurrentDimension().getDimId();
 
 		Minecraft mc = Minecraft.getInstance();
 		Window window = mc.getWindow();
