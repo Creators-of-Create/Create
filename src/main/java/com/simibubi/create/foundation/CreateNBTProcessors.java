@@ -21,8 +21,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class CreateNBTProcessors {
 	public static void register() {
-		// Remove the first layer of commands while preserving the styles.
-		// Since recursive commands won't be executed, there's no need to handle them.
+		// Remove commands while preserving the styles.
 		NBTProcessors.addProcessor(BlockEntityType.SIGN, data -> {
 			var front_text = data.getCompound("front_text").getList("messages", Tag.TAG_STRING);
 			var back_text = data.getCompound("back_text").getList("messages", Tag.TAG_STRING);
@@ -90,18 +89,6 @@ public class CreateNBTProcessors {
 				removeCommand(textComponent2);
 		}
 		return textComponent;
-	}
-	private static void tryRemovingCommand(ListTag front_text, int i) {
-		if(NBTProcessors.textComponentHasClickEvent(front_text.get(i).getAsString()))
-		{
-			var text =
-				Component.Serializer.fromJson(front_text.get(i).getAsString());
-			if (text != null) {
-				text.setStyle(text.getStyle().withClickEvent(null));
-				front_text.remove(i);
-				front_text.add(i,StringTag.valueOf(Component.Serializer.toJson(text)));
-			}
-		}
 	}
 
 	public static CompoundTag clipboardProcessor(CompoundTag data) {
