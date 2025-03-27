@@ -89,6 +89,7 @@ public class LitBlazeBurnerBlock extends Block implements IWrenchable {
 		return AllItems.EMPTY_BLAZE_BURNER.asStack();
 	}
 
+	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
 		world.addAlwaysVisibleParticle(ParticleTypes.LARGE_SMOKE, true,
