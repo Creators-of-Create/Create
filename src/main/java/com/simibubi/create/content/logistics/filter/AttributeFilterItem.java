@@ -31,7 +31,7 @@ public class AttributeFilterItem extends FilterItem {
 	}
 
 	@Override
-	protected List<Component> makeSummary(ItemStack filter) {
+	public List<Component> makeSummary(ItemStack filter) {
 		if (!filter.hasTag()) return Collections.emptyList();
 
 		List<Component> list = new ArrayList<>();

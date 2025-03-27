@@ -71,7 +71,7 @@ public abstract class FilterItem extends Item implements MenuProvider, SupportsI
 		tooltip.addAll(makeSummary);
 	}
 
-	protected abstract List<Component> makeSummary(ItemStack filter);
+	public abstract List<Component> makeSummary(ItemStack filter);
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {

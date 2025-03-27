@@ -19,7 +19,7 @@ public class PackageFilterItem extends FilterItem{
 	}
 
 	@Override
-	protected List<Component> makeSummary(ItemStack filter) {
+	public List<Component> makeSummary(ItemStack filter) {
 		if (!filter.hasTag()) return Collections.emptyList();
 
 		String address = filter.getOrCreateTag()
