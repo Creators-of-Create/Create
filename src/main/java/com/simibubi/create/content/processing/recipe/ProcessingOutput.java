@@ -56,15 +56,28 @@ public class ProcessingOutput {
 	}
 
 	public ProcessingOutput(ResourceLocation item, int count, float chance) {
+		this(item, count, DataComponentPatch.EMPTY, chance);
+	}
+
+	public ProcessingOutput(ResourceLocation item, int count, DataComponentPatch patch, float chance) {
 		this.item = Items.AIR;
 		this.datagenOutput = item;
 		this.count = count;
-		this.patch = DataComponentPatch.EMPTY;
+		this.patch = patch;
 		this.chance = chance;
 	}
 
+	private ItemStack getStack(int count) {
+		// Should only be used outside datagen,
+		// no need to check datagenOutput here
+		var stack = new ItemStack(item, count);
+		if (!patch.isEmpty())
+			stack.applyComponents(patch);
+		return stack;
+	}
+
 	public ItemStack getStack() {
-		return new ItemStack(datagenOutput != null ? BuiltInRegistries.ITEM.get(datagenOutput) : item, count);
+		return getStack(count);
 	}
 
 	public float getChance() {
@@ -72,19 +85,17 @@ public class ProcessingOutput {
 	}
 
 	public ItemStack rollOutput() {
-		int count = this.count;
 		if (chance < 1F) {
+			int count = this.count;
 			for (int roll = 0; roll < this.count; roll++)
 				if (r.nextFloat() > chance)
 					count--;
 			if (count == 0)
 				return ItemStack.EMPTY;
+			return getStack(count);
+		} else {
+			return getStack();
 		}
-		ItemStack output = item.getDefaultInstance();
-		output.setCount(count);
-		if (!patch.isEmpty())
-			output.applyComponents(patch);
-		return output;
 	}
 
 	// Remove in 1.22
