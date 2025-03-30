@@ -199,14 +199,14 @@ public class OpenEndedPipe extends FlowSource {
 			return true;
 		}
 
+		if (!AllConfigs.server().fluids.pipesPlaceFluidSourceBlocks.get())
+			return true;
+
 		if (waterlog) {
 			world.setBlock(outputPos, state.setValue(WATERLOGGED, true), 3);
 			world.scheduleTick(outputPos, Fluids.WATER, 1);
 			return true;
 		}
-
-		if (!AllConfigs.server().fluids.pipesPlaceFluidSourceBlocks.get())
-			return true;
 
 		world.setBlock(outputPos, fluid.getFluid()
 			.defaultFluidState()
