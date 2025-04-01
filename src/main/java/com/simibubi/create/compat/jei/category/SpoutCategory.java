@@ -1,13 +1,15 @@
 package com.simibubi.create.compat.jei.category;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.api.fluids.transfer.ItemFilling;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSpout;
-import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
@@ -26,7 +28,6 @@ import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -34,6 +35,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @ParametersAreNonnullByDefault
 public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
@@ -45,25 +47,21 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 	}
 
 	public static void consumeRecipes(Consumer<FillingRecipe> consumer, IIngredientManager ingredientManager) {
+		Collection<ItemStack> itemStacks = ingredientManager.getAllIngredients(VanillaTypes.ITEM_STACK);
 		Collection<FluidStack> fluidStacks = ingredientManager.getAllIngredients(ForgeTypes.FLUID_STACK);
-		for (ItemStack stack : ingredientManager.getAllIngredients(VanillaTypes.ITEM_STACK)) {
-			if (PotionFluidHandler.isPotionItem(stack)) {
-				FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
-				Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
-				consumer.accept(new ProcessingRecipeBuilder<>(FillingRecipe::new, Create.asResource("potions"))
-					.withItemIngredients(bottle)
-					.withFluidIngredients(FluidIngredient.fromFluidStack(fluidFromPotionItem))
-					.withSingleItemOutput(stack)
-					.build());
-				continue;
-			}
-
+		ForgeRegistries.ITEMS.getValues()
+			.stream()
+			.map(ItemFilling.REGISTRY::get)
+			.filter(list -> !list.isEmpty())
+			.flatMap(Collection::stream)
+			.forEach(filling -> filling.provideRecipes(consumer, itemStacks, fluidStacks));
+		for (ItemStack stack : itemStacks) {
 			LazyOptional<IFluidHandlerItem> capability =
 				stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
 			if (!capability.isPresent())
 				continue;
 
-			var existingFluidHandler = capability.orElse(null);
+			var existingFluidHandler = capability.orElseThrow(NullPointerException::new);
 			int numTanks = existingFluidHandler.getTanks();
 			FluidStack existingFluid = numTanks == 1 ? existingFluidHandler.getFluidInTank(0) : FluidStack.EMPTY;
 

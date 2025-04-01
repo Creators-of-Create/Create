@@ -1,20 +1,16 @@
 package com.simibubi.create.content.fluids.transfer;
 
-import com.simibubi.create.AllFluids;
-import com.simibubi.create.AllItems;
-import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
-import com.simibubi.create.foundation.fluid.FluidHelper;
+import java.util.List;
+
+import com.simibubi.create.api.fluids.transfer.ItemFilling;
 
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MilkBucketItem;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
+
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -31,10 +27,10 @@ public class GenericItemFilling {
 	 * Forge without looking into what it actually does. In all cases this is
 	 * incorrect because having a non-bucket item turn into a bucket item does not
 	 * make sense.
-	 * 
+	 *
 	 * <p>This check is only necessary for filling since a FluidBucketWrapper will be
 	 * empty if it is initialized with a non-bucket item.
-	 * 
+	 *
 	 * @param stack The ItemStack.
 	 * @param fluidHandler The IFluidHandlerItem instance retrieved from the ItemStack.
 	 * @return If the IFluidHandlerItem is valid for the passed ItemStack.
@@ -44,22 +40,23 @@ public class GenericItemFilling {
 		if (fluidHandler.getClass() == FluidBucketWrapper.class) {
 			Item item = stack.getItem();
 			// Forge does not patch the FluidBucketWrapper onto subclasses of BucketItem
-			if (item.getClass() != BucketItem.class && !(item instanceof MilkBucketItem)) {
-				return false;
-			}
+            return item.getClass() == BucketItem.class || item instanceof MilkBucketItem;
 		}
 		return true;
 	}
 
 	public static boolean canItemBeFilled(Level world, ItemStack stack) {
-		if (stack.getItem() == Items.GLASS_BOTTLE)
-			return true;
-		if (stack.getItem() == Items.MILK_BUCKET)
+		Item item = stack.getItem();
+		if (item == Items.MILK_BUCKET)
 			return false;
+		List<ItemFilling> allFilling = ItemFilling.REGISTRY.get(item);
+		if (!allFilling.isEmpty() && allFilling.stream().anyMatch(filling -> filling.canItemBeFilled(world, stack))) {
+			return true;
+		}
 
 		LazyOptional<IFluidHandlerItem> capability =
 			stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
-		IFluidHandlerItem tank = capability.orElse(null);
+		IFluidHandlerItem tank = capability.resolve().orElse(null);
 		if (tank == null)
 			return false;
 		if (!isFluidHandlerValid(stack, tank))
@@ -73,20 +70,26 @@ public class GenericItemFilling {
 	}
 
 	public static int getRequiredAmountForItem(Level world, ItemStack stack, FluidStack availableFluid) {
-		if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(availableFluid))
-			return PotionFluidHandler.getRequiredAmountForFilledBottle(stack, availableFluid);
-		if (stack.getItem() == Items.BUCKET && canFillBucketInternally(availableFluid))
-			return 1000;
+		Item item = stack.getItem();
+		List<ItemFilling> allFilling = ItemFilling.REGISTRY.get(item);
+		if (!allFilling.isEmpty()) {
+			for (ItemFilling filling : allFilling) {
+				if (!filling.canItemBeFilled(world, stack))
+					continue;
+				int amount = filling.getRequiredAmountForItem(world, stack, availableFluid);
+				if (amount >= 0)
+					return amount;
+			}
+		}
 
 		LazyOptional<IFluidHandlerItem> capability =
 			stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
-		IFluidHandlerItem tank = capability.orElse(null);
+		IFluidHandlerItem tank = capability.resolve().orElse(null);
 		if (tank == null)
 			return -1;
 		if (tank instanceof FluidBucketWrapper) {
-			Item filledBucket = availableFluid.getFluid()
-				.getBucket();
-			if (filledBucket == null || filledBucket == Items.AIR)
+			Item filledBucket = availableFluid.getFluid().getBucket();
+			if (filledBucket == Items.AIR)
 				return -1;
 			if (!((FluidBucketWrapper) tank).getFluid()
 				.isEmpty())
@@ -98,44 +101,26 @@ public class GenericItemFilling {
 		return filled == 0 ? -1 : filled;
 	}
 
-	private static boolean canFillGlassBottleInternally(FluidStack availableFluid) {
-		Fluid fluid = availableFluid.getFluid();
-		if (fluid.isSame(Fluids.WATER))
-			return true;
-		if (fluid.isSame(AllFluids.POTION.get()))
-			return true;
-		if (fluid.isSame(AllFluids.TEA.get()))
-			return true;
-		return false;
-	}
-
-	private static boolean canFillBucketInternally(FluidStack availableFluid) {
-		return false;
-	}
-
 	public static ItemStack fillItem(Level world, int requiredAmount, ItemStack stack, FluidStack availableFluid) {
 		FluidStack toFill = availableFluid.copy();
 		toFill.setAmount(requiredAmount);
 		availableFluid.shrink(requiredAmount);
 
-		if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(toFill)) {
-			ItemStack fillBottle = ItemStack.EMPTY;
-			Fluid fluid = toFill.getFluid();
-			if (FluidHelper.isWater(fluid))
-				fillBottle = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
-			else if (fluid.isSame(AllFluids.TEA.get()))
-				fillBottle = AllItems.BUILDERS_TEA.asStack();
-			else
-				fillBottle = PotionFluidHandler.fillBottle(stack, toFill);
-			stack.shrink(1);
-			return fillBottle;
+		Item item = stack.getItem();
+		List<ItemFilling> allFilling = ItemFilling.REGISTRY.get(item);
+		if (!allFilling.isEmpty()) {
+			for (ItemFilling filling : allFilling) {
+				if (!filling.canItemBeFilled(world, stack))
+					continue;
+				return filling.fillItem(world, stack, toFill);
+			}
 		}
 
 		ItemStack split = stack.copy();
 		split.setCount(1);
 		LazyOptional<IFluidHandlerItem> capability =
 			split.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
-		IFluidHandlerItem tank = capability.orElse(null);
+		IFluidHandlerItem tank = capability.resolve().orElse(null);
 		if (tank == null)
 			return ItemStack.EMPTY;
 		tank.fill(toFill, FluidAction.EXECUTE);

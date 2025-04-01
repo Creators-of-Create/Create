@@ -184,6 +184,8 @@ public class Create {
 			AllMountedDispenseItemBehaviors.registerDefaults();
 			AllUnpackingHandlers.registerDefaults();
 			AllInventoryIdentifiers.registerDefaults();
+			AllItemFillings.registerDefaults();
+			AllItemEmptyings.registerDefaults();
 			// --
 
 			AllAdvancements.register();

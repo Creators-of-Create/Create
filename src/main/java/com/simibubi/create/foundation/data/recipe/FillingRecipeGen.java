@@ -11,24 +11,12 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.material.Fluids;
+
 import net.minecraftforge.common.Tags;
 
 public class FillingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
-
-	HONEY_BOTTLE = create("honey_bottle", b -> b.require(AllFluidTags.HONEY.tag, 250)
-		.require(Items.GLASS_BOTTLE)
-		.output(Items.HONEY_BOTTLE)),
-
-		BUILDERS_TEA = create("builders_tea", b -> b.require(AllFluids.TEA.get(), 250)
-			.require(Items.GLASS_BOTTLE)
-			.output(AllItems.BUILDERS_TEA.get())),
-
-		FD_MILK = create(Mods.FD.recipeId("milk_bottle"), b -> b.require(Tags.Fluids.MILK, 250)
-			.require(Items.GLASS_BOTTLE)
-			.output(1, Mods.FD, "milk_bottle", 1)
-			.whenModLoaded(Mods.FD.getId())),
 
 		BLAZE_CAKE = create("blaze_cake", b -> b.require(Fluids.LAVA, 250)
 			.require(AllItems.BLAZE_CAKE_BASE.get())
@@ -63,20 +51,10 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 			.output(Items.GLOWSTONE_DUST)),
 
 
-		AM_LAVA = create(Mods.AM.recipeId("lava_bottle"), b -> b.require(Fluids.LAVA, 250)
-			.require(Items.GLASS_BOTTLE)
-			.output(1, Mods.AM, "lava_bottle", 1)
-			.whenModLoaded(Mods.AM.getId())),
-
 		BYG_LUSH_GRASS = create(Mods.BYG.recipeId("lush_grass_block"), b -> b.require(Mods.BYG, "lush_dirt")
 			.require(Fluids.WATER, 500)
 			.output(Mods.BYG, "lush_grass_block")
 			.whenModLoaded(Mods.BYG.getId())),
-
-		NEA_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Tags.Fluids.MILK, 250)
-			.require(Items.GLASS_BOTTLE)
-			.output(1, Mods.NEA, "milk_bottle", 1)
-			.whenModLoaded(Mods.NEA.getId())),
 
 		AET_GRASS = moddedGrass(Mods.AET, "aether"),
 
@@ -90,7 +68,7 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 			.require(Mods.VMP, "cursed_earth")
 			.output(Mods.VMP, "cursed_grass")
 			.whenModLoaded(Mods.VMP.getId())),
-	
+
 		// IE
 
 		IE_TREATED_WOOD = create(Mods.IE.recipeId("treated_wood_in_spout"),
