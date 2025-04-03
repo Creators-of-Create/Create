@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.actors.harvester;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.mixin.accessor.CropBlockAccessor;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllTags.AllBlockTags;
@@ -170,7 +172,7 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 
 		Block block = state.getBlock();
 		if (block instanceof CropBlock crop) {
-			return crop.getStateForAge(0);
+			return state.setValue(((CropBlockAccessor) crop).create$callGetAgeProperty(), 0);
 		}
 		if (block == Blocks.SWEET_BERRY_BUSH) {
 			return state.setValue(BlockStateProperties.AGE_3, Integer.valueOf(1));
