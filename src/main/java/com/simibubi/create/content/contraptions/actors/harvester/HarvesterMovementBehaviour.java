@@ -172,7 +172,13 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 
 		Block block = state.getBlock();
 		if (block instanceof CropBlock crop) {
-			return state.setValue(((CropBlockAccessor) crop).create$callGetAgeProperty(), 0);
+			BlockState newState = crop.getStateForAge(0);
+			// Different block indicates an intentional override that converts the crop another block.
+			// In that case, the returned state should be respected.
+			// Not very likely for age 0, but it's safer to check it anyway.
+			return newState.is(block)
+				? state.setValue(((CropBlockAccessor) crop).create$callGetAgeProperty(), 0)
+				: newState;
 		}
 		if (block == Blocks.SWEET_BERRY_BUSH) {
 			return state.setValue(BlockStateProperties.AGE_3, Integer.valueOf(1));
