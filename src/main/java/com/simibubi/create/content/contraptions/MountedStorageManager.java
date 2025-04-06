@@ -97,9 +97,7 @@ public class MountedStorageManager {
 
 		this.allItemStorages = ImmutableMap.copyOf(this.itemsBuilder);
 
-		this.items = new MountedItemStorageWrapper(subMap(this.allItemStorages, this::isExposed));
-
-		this.allItems = this.items;
+        this.initializeManagerItems(new MountedItemStorageWrapper(subMap(this.allItemStorages, this::isExposed)));
 		this.itemsBuilder = null;
 
 		ImmutableMap<BlockPos, MountedItemStorage> fuelMap = subMap(this.allItemStorages, this::canUseForFuel);
@@ -114,6 +112,11 @@ public class MountedStorageManager {
 		this.syncedFluids = ImmutableMap.copyOf(this.syncedFluidsBuilder);
 		this.syncedFluidsBuilder = null;
 	}
+
+    protected void initializeManagerItems(MountedItemStorageWrapper items) {
+        this.items = items;
+        this.allItems = this.items;
+    }
 
 	private boolean isExposed(MountedItemStorage storage) {
 		return !AllMountedItemStorageTypeTags.INTERNAL.matches(storage);
