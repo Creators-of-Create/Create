@@ -1270,6 +1270,8 @@
   "create.gui.package_port.catch_packages": "Catch packages addressed to...",
   "create.gui.package_port.catch_packages_empty": "Leave empty to match non-addressed",
   "create.gui.package_port.catch_packages_wildcard": "Use * as a text wildcard",
+  "create.gui.package_port.catch_packages_regex": "Regex: Escape special characters with \\",
+  "create.gui.package_port.catch_packages_wildcard_regex": "Use .* as a text wildcard",
   "create.gui.package_port.not_targeting_anything": "No target selected",
   "create.gui.package_port.send_and_receive": "Send and receive packages",
   "create.gui.package_port.send_only": "Only send packages",

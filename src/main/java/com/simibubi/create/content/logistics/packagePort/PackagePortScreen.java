@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.packagePort;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -14,6 +15,8 @@ import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.gui.widget.AbstractSimiWidget;
 import net.createmod.catnip.platform.CatnipServices;
@@ -24,6 +27,10 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMenu> {
 
@@ -149,16 +156,32 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 		graphics.renderItem(menu.contentHolder.target.getIcon(), x + 1, y + 1);
 
 		if (addressBox.isHovered()) {
-			graphics.renderComponentTooltip(font, List.of(CreateLang.translate("gui.package_port.catch_packages")
-				.color(AbstractSimiWidget.HEADER_RGB)
-				.component(),
+			List<@NotNull Component> staticTooltip = List.of(CreateLang.translate("gui.package_port.catch_packages")
+					.color(AbstractSimiWidget.HEADER_RGB)
+					.component(),
 				CreateLang.translate("gui.package_port.catch_packages_empty")
 					.style(ChatFormatting.GRAY)
-					.component(),
-				CreateLang.translate("gui.package_port.catch_packages_wildcard")
+					.component());
+			List<@NotNull Component> dynamicTooltip;
+
+			if (AllConfigs.server().logistics.useRegexForLogistics.get()) {
+				dynamicTooltip = List.of(
+					CreateLang.translate("gui.package_port.catch_packages_wildcard_regex")
+						.style(ChatFormatting.GRAY)
+						.component(),
+					CreateLang.translate("gui.package_port.catch_packages_regex")
+						.style(ChatFormatting.GOLD)
+						.component());
+			} else {
+				dynamicTooltip = List.of(
+					CreateLang.translate("gui.package_port.catch_packages_wildcard")
 					.style(ChatFormatting.GRAY)
-					.component()),
-				pMouseX, pMouseY);
+					.component());
+			}
+
+			List<@NotNull Component> fullTooltip = Stream.concat(staticTooltip.stream(), dynamicTooltip.stream()).toList();
+
+			graphics.renderComponentTooltip(font, fullTooltip, pMouseX, pMouseY);
 		}
 	}
 
