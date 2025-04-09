@@ -32,7 +32,6 @@ public class LogisticParser {
 	// Glob regex creation:
 	// - Uses the current glob parser
 	public static Pattern globToRegex(String pattern, String defaultGlobIfError) {
-		boolean usingRawRegex = AllConfigs.server().logistics.useRegexForLogistics.get();
 		try {
 			return Pattern.compile(Glob.toRegexPattern(pattern));
 		} catch (PatternSyntaxException e) {
