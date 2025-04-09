@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.google.re2j.Pattern;
+import com.simibubi.create.foundation.utility.LogisticParser;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.ImmutableList;
@@ -17,7 +20,6 @@ import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.Glob;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
@@ -54,8 +56,8 @@ public class DestinationInstruction extends TextScheduleInstruction {
 		return getLabelText();
 	}
 
-	public String getFilterForRegex() {
-		return Glob.toRegexPattern(getFilter(), "");
+	public Pattern getFilterForRegex() {
+		return LogisticParser.dynamicToRegex(getFilter(), "");
 	}
 
 	@Override
@@ -78,7 +80,7 @@ public class DestinationInstruction extends TextScheduleInstruction {
 	@Override
 	@Nullable
 	public DiscoveredPath start(ScheduleRuntime runtime, Level level) {
-		String regex = getFilterForRegex();
+		Pattern regex = getFilterForRegex();
 		boolean anyMatch = false;
 		ArrayList<GlobalStation> validStations = new ArrayList<>();
 		Train train = runtime.train;
@@ -91,7 +93,7 @@ public class DestinationInstruction extends TextScheduleInstruction {
 
 
 		for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
-			if (!globalStation.name.matches(regex))
+			if (!LogisticParser.anyMatches(regex, globalStation.name))
 				continue;
 			anyMatch = true;
 			validStations.add(globalStation);

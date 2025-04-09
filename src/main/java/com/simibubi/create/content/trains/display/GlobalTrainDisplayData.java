@@ -6,10 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.re2j.Pattern;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.Train;
 
-import net.createmod.catnip.data.Glob;
+import com.simibubi.create.foundation.utility.LogisticParser;
 
 import net.minecraft.network.chat.MutableComponent;
 
@@ -32,11 +33,10 @@ public class GlobalTrainDisplayData {
 	}
 
 	public static List<TrainDeparturePrediction> prepare(String filter, int maxLines) {
-		String regex = Glob.toRegexPattern(filter, "");
+		Pattern regex = LogisticParser.dynamicToRegex(filter, "");
 		return statusByDestination.entrySet()
 			.stream()
-			.filter(e -> e.getKey()
-				.matches(regex))
+			.filter(e -> LogisticParser.anyMatches(regex, e.getKey()))
 			.flatMap(e -> e.getValue()
 				.stream())
 			.sorted()

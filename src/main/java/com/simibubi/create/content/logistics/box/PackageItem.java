@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.google.re2j.Pattern;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllDataComponents;
@@ -16,8 +17,9 @@ import com.simibubi.create.content.logistics.box.PackageStyles.PackageStyle;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.foundation.item.ItemHelper;
 
+import com.simibubi.create.foundation.utility.LogisticParser;
+
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.data.Glob;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -146,11 +148,9 @@ public class PackageItem extends Item {
 	public static boolean matchAddress(String boxAddress, String address) {
 		if (address.isBlank())
 			return boxAddress.isBlank();
-		if (address.equals("*") || boxAddress.equals("*"))
-			return true;
-		String matcher = Glob.toRegexPattern(address, "");
-		String boxMatcher = Glob.toRegexPattern(boxAddress, "");
-		return address.matches(boxMatcher) || boxAddress.matches(matcher);
+		Pattern matcher = LogisticParser.dynamicToRegex(address, "");
+		Pattern boxMatcher = LogisticParser.dynamicToRegex(boxAddress, "");
+		return LogisticParser.anyMatches(boxMatcher, address) || LogisticParser.anyMatches(matcher, boxAddress);
 	}
 
 	public static String getAddress(ItemStack box) {

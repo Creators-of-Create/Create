@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.google.re2j.Pattern;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllDataComponents;
@@ -322,14 +323,14 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> im
 				continue;
 			if (destination == field)
 				continue;
-			String filter = destination.getFilterForRegex();
-			if (filter.isBlank())
+			Pattern filter = destination.getFilterForRegex();
+			if (filter.pattern().isBlank())
 				continue;
 			Graphs:
 			for (Iterator<TrackGraph> iterator = viableGraphs.iterator(); iterator.hasNext(); ) {
 				TrackGraph trackGraph = iterator.next();
 				for (GlobalStation station : trackGraph.getPoints(EdgePointType.STATION)) {
-					if (station.name.matches(filter))
+					if (filter.matches(station.name))
 						continue Graphs;
 				}
 				iterator.remove();

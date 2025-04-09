@@ -132,9 +132,13 @@ repositories {
             includeGroup "mysticdrew"
         }
     }
+    maven { url = "https://oss.sonatype.org" } // RE2J
 }
 
 dependencies {
+    jarJar(implementation("com.google.re2j:re2j:1.8"))
+    additionalRuntimeClasspath "com.google.re2j:re2j:1.8"
+
     jarJar(implementation("com.tterrag.registrate:Registrate:${registrate_version}"))
     jarJar("net.createmod.ponder:Ponder-NeoForge-${minecraft_version}:${ponder_version}")
 
@@ -171,9 +175,10 @@ dependencies {
     }
 
     runtimeOnly("dev.architectury:architectury-neoforge:13.0.8")
-    implementation("dev.ftb.mods:ftb-chunks-neoforge:2101.1.1")
-    implementation("dev.ftb.mods:ftb-teams-neoforge:2101.1.0")
-    implementation("dev.ftb.mods:ftb-library-neoforge:2101.1.3")
+    // Commented out because these Maven pages don't appear to exist, and are only extra compat (not important)
+//    implementation("dev.ftb.mods:ftb-chunks-neoforge:2101.1.1")
+//    implementation("dev.ftb.mods:ftb-teams-neoforge:2101.1.0")
+//    implementation("dev.ftb.mods:ftb-library-neoforge:2101.1.3")
 
     implementation("maven.modrinth:journeymap:1.21.1-6.0.0-beta.32+neoforge")
     implementation("info.journeymap:journeymap-api-neoforge:2.0.0-1.21.1-SNAPSHOT") {

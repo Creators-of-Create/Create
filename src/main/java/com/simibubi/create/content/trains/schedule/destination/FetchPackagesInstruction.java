@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.PatternSyntaxException;
 
+import com.google.re2j.Pattern;
+
+import com.simibubi.create.foundation.utility.LogisticParser;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.ImmutableList;
@@ -21,7 +25,6 @@ import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.station.GlobalStation.GlobalPackagePort;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.Glob;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
@@ -64,10 +67,10 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 		return getLabelText();
 	}
 
-	public String getFilterForRegex() {
+	public Pattern getFilterForRegex() {
 		if (getFilter().isBlank())
-			return Glob.toRegexPattern("*", "");
-		return Glob.toRegexPattern(getFilter(), "");
+			return LogisticParser.globToRegex("*", "");
+		return LogisticParser.dynamicToRegex(getFilter(), "");
 	}
 
 	@Override
@@ -102,8 +105,8 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 		MinecraftServer server = level.getServer();
 		if (server == null)
 			return null;
-		
-		String regex = getFilterForRegex();
+
+		Pattern regex = getFilterForRegex();
 		boolean anyMatch = false;
 		ArrayList<GlobalStation> validStations = new ArrayList<>();
 		Train train = runtime.train;
@@ -118,7 +121,7 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 			ServerLevel dimLevel = server.getLevel(globalStation.blockEntityDimension);
 			if (dimLevel == null)
 				continue;
-			
+
 			for (Entry<BlockPos, GlobalPackagePort> entry : globalStation.connectedPorts.entrySet()) {
 				GlobalPackagePort port = entry.getValue();
 				BlockPos pos = entry.getKey();
@@ -134,8 +137,7 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 					if (PackageItem.matchAddress(stack, port.address))
 						continue;
 					try {
-						if (!PackageItem.getAddress(stack)
-							.matches(regex))
+						if (!regex.matches(PackageItem.getAddress(stack)))
 							continue;
 						anyMatch = true;
 						validStations.add(globalStation);
