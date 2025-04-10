@@ -312,17 +312,18 @@ public class ServerSchematicLoader {
 		if (!tryDeleteOldestSchematic(playerSchematics))
 			return;
 
-		SchematicExportResult result = SchematicExport.saveSchematic(
-			playerSchematics, schematic, true,
-			world, pos, pos.offset(bounds).offset(-1, -1, -1)
-		);
-		if (result != null)
+		try {
+			SchematicExport.saveSchematic(
+				playerSchematics, schematic, true,
+				world, pos, pos.offset(bounds).offset(-1, -1, -1)
+			);
 			player.setItemInHand(InteractionHand.MAIN_HAND,
 				SchematicItem.create(world, schematic, playerName));
-		else
+		} catch (IOException e) {
 			CreateLang.translate("schematicAndQuill.instant_failed")
 				.style(ChatFormatting.RED)
 				.sendStatus(player);
+		}
 	}
 
 	private boolean tryDeleteOldestSchematic(Path dir) {

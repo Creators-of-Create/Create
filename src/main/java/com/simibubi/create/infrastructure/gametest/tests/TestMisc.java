@@ -26,6 +26,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedstoneLampBlock;
 
+import java.io.IOException;
+
 @GameTestGroup(path = "misc")
 public class TestMisc {
 	@GameTest(template = "schematicannon", timeoutTicks = FIFTEEN_SECONDS)
@@ -34,10 +36,14 @@ public class TestMisc {
 		BlockPos whiteEndBottom = helper.absolutePos(new BlockPos(5, 2, 1));
 		BlockPos redEndTop = helper.absolutePos(new BlockPos(5, 4, 7));
 		ServerLevel level = helper.getLevel();
-		SchematicExport.saveSchematic(
-			SchematicExport.SCHEMATICS.resolve("uploaded/Deployer"), "schematicannon_gametest", true,
-			level, whiteEndBottom, redEndTop
-		);
+		try {
+			SchematicExport.saveSchematic(
+				SchematicExport.SCHEMATICS.resolve("uploaded/Deployer"), "schematicannon_gametest", true,
+				level, whiteEndBottom, redEndTop
+			);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 		ItemStack schematic =
 			SchematicItem.create(level, "schematicannon_gametest.nbt", "Deployer");
 		// deploy to pos

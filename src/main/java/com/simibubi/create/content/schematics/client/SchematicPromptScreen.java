@@ -1,5 +1,9 @@
 package com.simibubi.create.content.schematics.client;
 
+import com.simibubi.create.Create;
+import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.Tooltip;
+
 import org.lwjgl.glfw.GLFW;
 
 import com.simibubi.create.AllItems;
@@ -16,6 +20,8 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
+import java.io.IOException;
+
 public class SchematicPromptScreen extends AbstractSimiScreen {
 
 	private AllGuiTextures background;
@@ -23,11 +29,15 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 	private final Component convertLabel = CreateLang.translateDirect("schematicAndQuill.convert");
 	private final Component abortLabel = CreateLang.translateDirect("action.discard");
 	private final Component confirmLabel = CreateLang.translateDirect("action.saveToFile");
+	private final Component overwriteLabel = CreateLang.translateDirect("action.overwrite");
+
+	private Component errorLabel = null;
 
 	private EditBox nameField;
 	private IconButton confirm;
 	private IconButton abort;
 	private IconButton convert;
+	private Checkbox overwriteBox;
 
 	public SchematicPromptScreen() {
 		super(CreateLang.translateDirect("schematicAndQuill.title"));
@@ -72,6 +82,10 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		});
 		convert.setToolTip(convertLabel);
 		addRenderableWidget(convert);
+
+		overwriteBox = new Checkbox(x + 28, y + 52, 20, 20, Component.empty(), false, false);
+		overwriteBox.setTooltip(Tooltip.create(overwriteLabel));
+		addRenderableWidget(overwriteBox);
 	}
 
 	@Override
@@ -90,6 +104,8 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 			.scale(3)
 			.at(x + background.getWidth() + 6, y + background.getHeight() - 38, -200)
 			.render(graphics);
+		if (errorLabel != null)
+			graphics.drawString(font, errorLabel, x + 8, y + 90, 0xF05050, false);
 	}
 
 	@Override
@@ -106,7 +122,12 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 	}
 
 	private void confirm(boolean convertImmediately) {
-		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.saveSchematic(nameField.getValue(), convertImmediately);
-		onClose();
+		try {
+			CreateClient.SCHEMATIC_AND_QUILL_HANDLER.saveSchematic(nameField.getValue(), overwriteBox.selected(), convertImmediately);
+			onClose();
+		} catch (IOException e) {
+			errorLabel = CreateLang.translateDirect("schematicAndQuill.failed", e.getMessage());
+			Create.LOGGER.error("Failed to save schematic: {}:{}", e.getClass(), e.getMessage());
+		}
 	}
 }

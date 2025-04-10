@@ -203,18 +203,12 @@ public class SchematicAndQuillHandler {
 			&& Minecraft.getInstance().screen == null;
 	}
 
-	public void saveSchematic(String string, boolean convertImmediately) {
+	public void saveSchematic(String string, boolean overwrite, boolean convertImmediately) throws IOException {
 		SchematicExportResult result = SchematicExport.saveSchematic(
-				SchematicExport.SCHEMATICS, string, false,
+				SchematicExport.SCHEMATICS, string, overwrite,
 				Minecraft.getInstance().level, firstPos, secondPos
 		);
 		LocalPlayer player = Minecraft.getInstance().player;
-		if (result == null) {
-			CreateLang.translate("schematicAndQuill.failed")
-					.style(ChatFormatting.RED)
-					.sendStatus(player);
-			return;
-		}
 		Path file = result.file();
 		CreateLang.translate("schematicAndQuill.saved", file.getFileName())
 				.sendStatus(player);
@@ -222,14 +216,10 @@ public class SchematicAndQuillHandler {
 		secondPos = null;
 		if (!convertImmediately)
 			return;
-		try {
-			if (!ClientSchematicLoader.validateSizeLimitation(Files.size(file)))
-				return;
-			AllPackets.getChannel()
-				.sendToServer(new InstantSchematicPacket(result.fileName(), result.origin(), result.bounds()));
-		} catch (IOException e) {
-			Create.LOGGER.error("Error instantly uploading Schematic file: " + file, e);
-		}
+		if (!ClientSchematicLoader.validateSizeLimitation(Files.size(file)))
+			return;
+		AllPackets.getChannel()
+			.sendToServer(new InstantSchematicPacket(result.fileName(), result.origin(), result.bounds()));
 	}
 
 	private Outliner outliner() {
