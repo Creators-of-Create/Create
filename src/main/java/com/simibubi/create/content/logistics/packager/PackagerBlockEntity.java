@@ -133,11 +133,11 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			if (!level.isClientSide() && !queuedExitingPackages.isEmpty() && heldBox.isEmpty()) {
 				BigItemStack entry = queuedExitingPackages.get(0);
 				heldBox = entry.stack.copy();
-				
+
 				entry.count--;
 				if (entry.count <= 0)
 					queuedExitingPackages.remove(0);
-				
+
 				animationInward = false;
 				animationTicks = CYCLE;
 				notifyUpdate();
@@ -167,10 +167,6 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 	}
 
 	public InventorySummary getAvailableItems() {
-		return getAvailableItems(false);
-	}
-
-	public InventorySummary getAvailableItems(boolean scanInputSlots) {
 		if (availableItems != null && invVersionTracker.stillWaiting(targetInventory.getInventory()))
 			return availableItems;
 
@@ -190,7 +186,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 
 		for (int slot = 0; slot < targetInv.getSlots(); slot++) {
 			int slotLimit = targetInv.getSlotLimit(slot);
-			availableItems.add(scanInputSlots ? targetInv.getStackInSlot(slot) : targetInv.extractItem(slot, slotLimit, true));
+			availableItems.add(targetInv.getStackInSlot(slot));
 		}
 
 		invVersionTracker.awaitNewVersion(targetInventory.getInventory());

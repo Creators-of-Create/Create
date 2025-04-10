@@ -711,7 +711,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		PackagerBlockEntity packager = panelBE.getRestockedPackager();
 		if (packager == null)
 			return InventorySummary.EMPTY;
-		return packager.getAvailableItems(true);
+		return packager.getAvailableItems();
 	}
 
 	public int getPromised() {
