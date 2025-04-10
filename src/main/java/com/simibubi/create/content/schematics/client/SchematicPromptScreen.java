@@ -32,6 +32,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 	private final Component overwriteLabel = CreateLang.translateDirect("action.overwrite");
 
 	private Component errorLabel = null;
+	private Component errorDetailLabel = null;
 
 	private EditBox nameField;
 	private IconButton confirm;
@@ -106,6 +107,8 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 			.render(graphics);
 		if (errorLabel != null)
 			graphics.drawString(font, errorLabel, x + 8, y + 90, 0xF05050, false);
+		if (errorDetailLabel != null)
+			graphics.drawString(font, errorDetailLabel, x + 8, y + 98, 0xF05050, false);
 	}
 
 	@Override
@@ -126,8 +129,10 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 			CreateClient.SCHEMATIC_AND_QUILL_HANDLER.saveSchematic(nameField.getValue(), overwriteBox.selected(), convertImmediately);
 			onClose();
 		} catch (IOException e) {
-			errorLabel = CreateLang.translateDirect("schematicAndQuill.failed", e.getMessage());
-			Create.LOGGER.error("Failed to save schematic: {}:{}", e.getClass(), e.getMessage());
+			errorLabel = CreateLang.translateDirect("schematicAndQuill.failed");
+			var errorName = e.getClass().getName();
+			errorDetailLabel = Component.literal(errorName + ": " + e.getMessage());
+			Create.LOGGER.error("Failed to save schematic: {}:{}", errorName, e.getMessage());
 		}
 	}
 }
