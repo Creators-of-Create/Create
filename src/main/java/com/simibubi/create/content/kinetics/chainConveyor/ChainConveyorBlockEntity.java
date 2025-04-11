@@ -421,7 +421,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 
 	public boolean addLoopingPackage(ChainConveyorPackage box) {
 		loopingPackages.add(box);
-		notifyUpdate();
+		updatePortRegexSettings();
 		return true;
 	}
 
