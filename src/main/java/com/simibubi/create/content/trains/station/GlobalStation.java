@@ -72,6 +72,7 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 			port.address = c.getString("Address");
 			port.offlineBuffer.deserializeNBT(registries, c.getCompound("OfflineBuffer"));
 			port.primed = c.getBoolean("Primed");
+			port.usesRegex = c.getBoolean("UsesRegex");
 			connectedPorts.put(NBTHelper.readBlockPos(c, "Pos"), port);
 		});
 	}
@@ -96,6 +97,7 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 			c.putString("Address", e.getValue().address);
 			c.put("OfflineBuffer", e.getValue().offlineBuffer.serializeNBT(registries));
 			c.putBoolean("Primed", e.getValue().primed);
+			c.putBoolean("UsesRegex", e.getValue().usesRegex);
 			c.put("Pos", NbtUtils.writeBlockPos(e.getKey()));
 			return c;
 		}));
@@ -166,6 +168,7 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 	// Package Port integration
 	public static class GlobalPackagePort {
 		public String address = "";
+		public boolean usesRegex = false;
 		public ItemStackHandler offlineBuffer = new ItemStackHandler(18);
 		public boolean primed = false;
 	}
@@ -205,7 +208,7 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 					ItemStack stack = postboxInventory.getStackInSlot(slot);
 					if (!PackageItem.isPackage(stack))
 						continue;
-					if (PackageItem.matchAddress(stack, port.address))
+					if (PackageItem.matchAddress(stack, port.address, port.usesRegex))
 						continue;
 
 					ItemStack result = ItemHandlerHelper.insertItemStacked(carriageInventory, stack, false);
@@ -230,7 +233,7 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 					BlockPos pos = entry.getKey();
 					PostboxBlockEntity box = null;
 
-					if (!PackageItem.matchAddress(stack, port.address))
+					if (!PackageItem.matchAddress(stack, port.address, port.usesRegex))
 						continue;
 
 					IItemHandler postboxInventory = port.offlineBuffer;

@@ -1,5 +1,11 @@
 package com.simibubi.create.content.logistics.filter;
 
+import com.simibubi.create.foundation.gui.AllIcons;
+
+import com.simibubi.create.foundation.utility.CreateLang;
+
+import net.minecraft.ChatFormatting;
+
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,9 +22,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class PackageFilterScreen extends AbstractFilterScreen<PackageFilterMenu> {
 
 	private AddressEditBox addressBox;
+	private IconButton useGlobPatternButton, useRegexButton;
 	private boolean deferFocus;
 
 	public PackageFilterScreen(PackageFilterMenu menu, Inventory inv, Component title) {
@@ -37,6 +46,7 @@ public class PackageFilterScreen extends AbstractFilterScreen<PackageFilterMenu>
 
 	@Override
 	protected void init() {
+		AtomicBoolean regexState = new AtomicBoolean(menu.useRegex);
 		setWindowOffset(-11, 7);
 		super.init();
 
@@ -48,6 +58,31 @@ public class PackageFilterScreen extends AbstractFilterScreen<PackageFilterMenu>
 		addressBox.setValue(menu.address);
 		addressBox.setResponder(this::onAddressEdited);
 		addRenderableWidget(addressBox);
+
+		useGlobPatternButton = new IconButton(x + 18, y + 28 + 36, AllIcons.I_GLOB_PATTERN);
+		useGlobPatternButton.withCallback(() -> {
+			useGlobPatternButton.green = true;
+			useRegexButton.green = false;
+			regexState.set(false);
+			onRegexToggled(regexState);
+		});
+		useGlobPatternButton.setToolTip(CreateLang.translate("gui.package_filter.use_glob_patterns")
+			.style(ChatFormatting.WHITE)
+			.component());
+		addRenderableWidget(useGlobPatternButton);
+
+		useRegexButton = new IconButton(x + 18 + 18, y + 28 + 36, AllIcons.I_REGEX);
+		useRegexButton.active = menu.usingRegex();
+		useRegexButton.withCallback(() -> {
+			useGlobPatternButton.green = false;
+			useRegexButton.green = true;
+			regexState.set(true);
+			onRegexToggled(regexState);
+		});
+		useRegexButton.setToolTip(CreateLang.translate("gui.package_filter.use_regex")
+			.style(ChatFormatting.GOLD)
+			.component());
+		addRenderableWidget(useRegexButton);
 
 		setFocused(addressBox);
 	}
@@ -69,6 +104,13 @@ public class PackageFilterScreen extends AbstractFilterScreen<PackageFilterMenu>
 		CompoundTag tag = new CompoundTag();
 		tag.putString("Address", s);
 		CatnipServices.NETWORK.sendToServer(new FilterScreenPacket(Option.UPDATE_ADDRESS, tag));
+	}
+
+	public void onRegexToggled(AtomicBoolean b) {
+		menu.useRegex = b.get();
+		CompoundTag tag = new CompoundTag();
+		tag.putBoolean("UseRegex", b.get());
+		CatnipServices.NETWORK.sendToServer(new FilterScreenPacket(Option.UPDATE_MATCH_TYPE, tag));
 	}
 
 	@Override

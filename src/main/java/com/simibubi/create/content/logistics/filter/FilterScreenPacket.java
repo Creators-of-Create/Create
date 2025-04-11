@@ -66,11 +66,13 @@ public record FilterScreenPacket(Option option, @Nullable CompoundTag data) impl
 		if (player.containerMenu instanceof PackageFilterMenu c) {
 			if (option == Option.UPDATE_ADDRESS)
 				c.address = tag.getString("Address");
+			if (option == Option.UPDATE_MATCH_TYPE)
+				c.useRegex = tag.getBoolean("UseRegex");
 		}
 	}
 
 	public enum Option {
-		WHITELIST, WHITELIST2, BLACKLIST, RESPECT_DATA, IGNORE_DATA, UPDATE_FILTER_ITEM, ADD_TAG, ADD_INVERTED_TAG, UPDATE_ADDRESS;
+		WHITELIST, WHITELIST2, BLACKLIST, RESPECT_DATA, IGNORE_DATA, UPDATE_FILTER_ITEM, ADD_TAG, ADD_INVERTED_TAG, UPDATE_ADDRESS, UPDATE_MATCH_TYPE;
 
 		public static final StreamCodec<ByteBuf, Option> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(Option.class);
 	}

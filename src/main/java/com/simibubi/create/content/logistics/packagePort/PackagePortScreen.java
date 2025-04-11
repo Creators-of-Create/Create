@@ -30,8 +30,6 @@ import net.minecraft.world.item.ItemStack;
 
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-
 public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMenu> {
 
 	private boolean frogMode;
@@ -41,6 +39,8 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 	private IconButton confirmButton;
 	private IconButton dontAcceptPackages;
 	private IconButton acceptPackages;
+	private IconButton useGlobPatterns;
+	private IconButton useRegex;
 
 	private ItemStack icon;
 
@@ -89,7 +89,10 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 			dontAcceptPackages.green = false;
 		});
 		acceptPackages.green = menu.contentHolder.acceptsPackages;
-		acceptPackages.setToolTip(CreateLang.translateDirect("gui.package_port.send_and_receive"));
+		acceptPackages.setToolTip(
+			CreateLang.translate("gui.package_port.send_and_receive")
+				.style(ChatFormatting.WHITE)
+				.component());
 		addRenderableWidget(acceptPackages);
 
 		dontAcceptPackages = new IconButton(x + 37 + 18, y + background.getHeight() - 24, AllIcons.I_SEND_ONLY);
@@ -98,8 +101,43 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 			dontAcceptPackages.green = true;
 		});
 		dontAcceptPackages.green = !menu.contentHolder.acceptsPackages;
-		dontAcceptPackages.setToolTip(CreateLang.translateDirect("gui.package_port.send_only"));
+		dontAcceptPackages.setToolTip(
+			CreateLang.translate("gui.package_port.send_only")
+				.style(ChatFormatting.WHITE)
+				.component());
 		addRenderableWidget(dontAcceptPackages);
+
+		useGlobPatterns = new IconButton(x + 37 + 18 + 22, y + background.getHeight() - 24, AllIcons.I_GLOB_PATTERN);
+		useGlobPatterns.withCallback(() -> {
+			useGlobPatterns.green = true;
+			useRegex.green = false;
+		});
+		useGlobPatterns.green = !menu.contentHolder.usesRegex;
+		useGlobPatterns.visible = menu.contentHolder.acceptsPackages;
+		useGlobPatterns.setToolTip(
+			CreateLang.translate("gui.package_port.use_glob_patterns")
+				.style(ChatFormatting.WHITE)
+				.component());
+		addRenderableWidget(useGlobPatterns);
+
+		useRegex = new IconButton(x + 37 + 18 + 22 + 18, y + background.getHeight() - 24, AllIcons.I_REGEX);
+		useRegex.withCallback(() -> {
+			useRegex.green = true;
+			useGlobPatterns.green = false;
+		});
+		useRegex.green = menu.contentHolder.usesRegex;
+
+		boolean regexEnabled = AllConfigs.server().logistics.enableAdvancedRegex.get();
+
+		useRegex.visible = menu.contentHolder.acceptsPackages;
+		useRegex.active = regexEnabled;
+		useRegex.setToolTip(
+			CreateLang.translate("gui.package_port.use_regex")
+				.style(ChatFormatting.WHITE)
+				.component());
+
+		addRenderableWidget(useRegex);
+
 
 		containerTick();
 
@@ -114,6 +152,8 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 	protected void containerTick() {
 		acceptPackages.visible = menu.contentHolder.target != null;
 		dontAcceptPackages.visible = menu.contentHolder.target != null;
+		useRegex.visible = menu.contentHolder.target != null;
+		useGlobPatterns.visible = menu.contentHolder.target != null;
 		super.containerTick();
 	}
 
@@ -164,7 +204,7 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 					.component());
 			List<@NotNull Component> dynamicTooltip;
 
-			if (AllConfigs.server().logistics.useRegexForLogistics.get()) {
+			if (AllConfigs.server().logistics.enableAdvancedRegex.get()) {
 				dynamicTooltip = List.of(
 					CreateLang.translate("gui.package_port.catch_packages_wildcard_regex")
 						.style(ChatFormatting.GRAY)
@@ -201,7 +241,7 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 	@Override
 	public void removed() {
 		CatnipServices.NETWORK.sendToServer(new PackagePortConfigurationPacket(menu.contentHolder.getBlockPos(), addressBox.getValue(),
-				acceptPackages.green));
+				acceptPackages.green, useRegex.green));
 		super.removed();
 	}
 

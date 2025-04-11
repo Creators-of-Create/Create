@@ -153,9 +153,9 @@ public abstract class PackagePortTarget {
 			String portFilter = ppbe.getFilterString();
 			if (portFilter == null)
 				return;
-			actualBe.routingTable.receivePortInfo(portFilter, connection == null ? BlockPos.ZERO : connection);
+			actualBe.routingTable.receivePortInfo(portFilter, ppbe.usesRegex, connection == null ? BlockPos.ZERO : connection);
 			Map<BlockPos, ConnectedPort> portMap = connection == null ? actualBe.loopPorts : actualBe.travelPorts;
-			portMap.put(relativePos.multiply(-1), new ConnectedPort(chainPos, connection, portFilter));
+			portMap.put(relativePos.multiply(-1), new ConnectedPort(chainPos, connection, portFilter, ppbe.usingRegex()));
 		}
 
 		@Override

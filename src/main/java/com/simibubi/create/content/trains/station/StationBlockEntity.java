@@ -62,7 +62,6 @@ import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import dan200.computercraft.api.peripheral.PeripheralCapability;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.math.VecHelper;
@@ -999,6 +998,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 
 		GlobalPackagePort globalPackagePort = new GlobalPackagePort();
 		globalPackagePort.address = ppbe.addressFilter;
+		globalPackagePort.usesRegex = ppbe.usingRegex();
 		station.connectedPorts.put(ppbe.getBlockPos(), globalPackagePort);
 	}
 

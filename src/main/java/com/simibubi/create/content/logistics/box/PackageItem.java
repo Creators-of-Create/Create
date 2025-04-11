@@ -141,17 +141,20 @@ public class PackageItem extends Item {
 		box.set(AllDataComponents.PACKAGE_ORDER_CONTEXT, orderContext);
 	}
 
-	public static boolean matchAddress(ItemStack box, String address) {
-		return matchAddress(getAddress(box), address);
+	public static boolean matchAddress(ItemStack box, String address, boolean useRegex) {
+		return matchAddress(getAddress(box), address, useRegex);
 	}
 
-	public static boolean matchAddress(String boxAddress, String address) {
+	public static boolean matchAddress(String boxAddress, String address, boolean useRegex) {
 		if (address.isBlank())
 			return boxAddress.isBlank();
-		Pattern matcher = LogisticParser.dynamicToRegex(address, "");
-		Pattern boxMatcher = LogisticParser.dynamicToRegex(boxAddress, "");
-		return LogisticParser.anyMatches(boxMatcher, address) || LogisticParser.anyMatches(matcher, boxAddress);
+		Pattern addressMatcher = LogisticParser.dynamicToRegex(address, "", useRegex);
+		Pattern boxAddressMatcher = LogisticParser.dynamicToRegex(boxAddress, "", useRegex);
+
+		return LogisticParser.anyMatches(addressMatcher, boxAddress) || LogisticParser.anyMatches(boxAddressMatcher, address);
 	}
+
+	// public static boolean
 
 	public static String getAddress(ItemStack box) {
 		return box.getOrDefault(AllDataComponents.PACKAGE_ADDRESS, "");

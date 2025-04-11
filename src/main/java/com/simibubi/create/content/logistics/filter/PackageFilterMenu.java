@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.filter;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllMenuTypes;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -14,6 +16,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 public class PackageFilterMenu extends AbstractFilterMenu {
 
 	String address;
+	boolean useRegex;
 	EditBox addressInput;
 
 	public PackageFilterMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
@@ -55,17 +58,23 @@ public class PackageFilterMenu extends AbstractFilterMenu {
 	protected void initAndReadInventory(ItemStack filterItem) {
 		super.initAndReadInventory(filterItem);
 		address = filterItem.getOrDefault(AllDataComponents.PACKAGE_ADDRESS, "");
+		useRegex = filterItem.getOrDefault(AllDataComponents.FILTER_BY_REGEX, false);
+	}
+
+	public boolean usingRegex() {
+		return AllConfigs.server().logistics.enableAdvancedRegex.get() && useRegex;
 	}
 
 	@Override
 	protected void saveData(ItemStack filterItem) {
 		super.saveData(filterItem);
+		filterItem.set(AllDataComponents.FILTER_BY_REGEX, useRegex);
 		if (address.isBlank())
 			filterItem.remove(AllDataComponents.PACKAGE_ADDRESS);
 		else
 			filterItem.set(AllDataComponents.PACKAGE_ADDRESS, address);
 	}
-	
+
 	@Override
 	public ItemStack quickMoveStack(Player playerIn, int index) {
 		return ItemStack.EMPTY;

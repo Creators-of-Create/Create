@@ -11,12 +11,11 @@ public class LogisticParser {
 	// Dynamic regex creation:
 	// - If raw regex is enabled, uses a SAFE RE2/J parser
 	// - Otherwise, uses the current glob parser
-	public static Pattern dynamicToRegex(String pattern, String defaultPatternIfError) {
-		boolean usingRawRegex = AllConfigs.server().logistics.useRegexForLogistics.get();
-		if (usingRawRegex) {
-			return toRegex(pattern, defaultPatternIfError);
-		}
-		return globToRegex(pattern, defaultPatternIfError);
+	public static Pattern dynamicToRegex(String pattern, String defaultPatternIfError, boolean usingRawRegex) {
+		return usingRawRegex ? toRegex(pattern, defaultPatternIfError) : globToRegex(pattern, defaultPatternIfError);
+		//	return AllConfigs.server().logistics.enableAdvancedRegex.get()
+		//		? toRegex(pattern, defaultPatternIfError)
+		//		: globToRegex(pattern, defaultPatternIfError);
 	}
 
 	// Basic regex creation:
@@ -41,5 +40,9 @@ public class LogisticParser {
 
 	public static boolean anyMatches(Pattern pattern, String match) {
 		return pattern.matcher(match).find();
+	}
+
+	public static boolean matchesAll(String pattern, boolean useRegex) {
+		return pattern.equals(useRegex ? ".*" : "*");
 	}
 }

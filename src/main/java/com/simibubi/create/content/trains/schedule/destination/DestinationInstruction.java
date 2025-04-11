@@ -6,7 +6,10 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.google.re2j.Pattern;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.LogisticParser;
+
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,6 +33,8 @@ import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import org.jetbrains.annotations.NotNull;
+
 public class DestinationInstruction extends TextScheduleInstruction {
 
 	@Override
@@ -52,12 +57,38 @@ public class DestinationInstruction extends TextScheduleInstruction {
 		return AllBlocks.TRACK_STATION.asStack();
 	}
 
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
+		List<@NotNull String> scrollInputOptions = AllConfigs.server().logistics.enableAdvancedRegex.get()
+			? List.of("use_glob", "use_regex")
+			: List.of("use_glob");
+
+		builder.addTextInput(0, 103-18-9, (e, t) -> modifyEditBox(e), "Text")
+			.addSelectionScrollInput(103-22,
+				40,
+				(si, l) -> si.forOptions(CreateLang
+						.translatedOptions("gui.schedule.fetch_packages",
+							scrollInputOptions))
+					.titled(CreateLang
+						.translate("gui.schedule.fetch_packages.address_matching")
+						.component()),
+				"UseRegex");
+	}
+
+	public boolean useRegex() {
+		Create.LOGGER.info("Regex key was " + data.getInt("UseRegex"));
+		return data.getInt("UseRegex") == 1;
+	}
+
 	public String getFilter() {
 		return getLabelText();
 	}
 
-	public Pattern getFilterForRegex() {
-		return LogisticParser.dynamicToRegex(getFilter(), "");
+	public Pattern getFilterRegex() {
+		if (getFilter().isBlank())
+			return Pattern.compile(".*");
+		return LogisticParser.dynamicToRegex(getFilter(), "", useRegex());
 	}
 
 	@Override
@@ -80,7 +111,7 @@ public class DestinationInstruction extends TextScheduleInstruction {
 	@Override
 	@Nullable
 	public DiscoveredPath start(ScheduleRuntime runtime, Level level) {
-		Pattern regex = getFilterForRegex();
+		Pattern regex = getFilterRegex();
 		boolean anyMatch = false;
 		ArrayList<GlobalStation> validStations = new ArrayList<>();
 		Train train = runtime.train;

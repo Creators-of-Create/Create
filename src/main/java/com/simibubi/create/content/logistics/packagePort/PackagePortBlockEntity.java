@@ -13,6 +13,8 @@ import com.simibubi.create.foundation.blockEntity.behaviour.animatedContainer.An
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import net.createmod.catnip.codecs.CatnipCodecUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -35,6 +37,7 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 public abstract class PackagePortBlockEntity extends SmartBlockEntity implements MenuProvider {
 
 	public boolean acceptsPackages;
+	public boolean usesRegex;
 	public String addressFilter;
 	public PackagePortTarget target;
 	public SmartInventory inventory;
@@ -46,6 +49,7 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 	public PackagePortBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		addressFilter = "";
+		usesRegex = false;
 		acceptsPackages = true;
 		inventory = new SmartInventory(18, this);
 		itemHandler = new PackagePortAutomationInventoryWrapper(inventory, this);
@@ -61,6 +65,7 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 
 	public void filterChanged() {
 		if (target != null) {
+			System.out.println("FilterChanged Event");
 			target.deregister(this, level, worldPosition);
 			target.register(this, level, worldPosition);
 		}
@@ -77,6 +82,10 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 		return acceptsPackages ? addressFilter : null;
 	}
 
+	public boolean usingRegex() {
+		return usesRegex && AllConfigs.server().logistics.enableAdvancedRegex.get();
+	}
+
 	@Override
 	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.write(tag, registries, clientPacket);
@@ -84,6 +93,7 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 			tag.put("Target", CatnipCodecUtils.encode(PackagePortTarget.CODEC, target).orElseThrow());
 		tag.putString("AddressFilter", addressFilter);
 		tag.putBoolean("AcceptsPackages", acceptsPackages);
+		tag.putBoolean("UsesRegex", usingRegex());
 		tag.put("Inventory", inventory.serializeNBT(registries));
 	}
 
@@ -95,6 +105,7 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 		target = CatnipCodecUtils.decode(PackagePortTarget.CODEC, tag.getCompound("Target")).orElse(null);
 		addressFilter = tag.getString("AddressFilter");
 		acceptsPackages = tag.getBoolean("AcceptsPackages");
+		usesRegex = tag.getBoolean("UsesRegex");
 		if (clientPacket && prevTarget != target)
 			invalidateRenderBoundingBox();
 	}

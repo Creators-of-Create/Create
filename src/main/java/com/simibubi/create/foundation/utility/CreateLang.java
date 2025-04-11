@@ -33,6 +33,13 @@ public class CreateLang extends Lang {
 		return result;
 	}
 
+	public static List<Component> translatedOptions(String prefix, List<String> keys) {
+		List<Component> result = new ArrayList<>(keys.size());
+		for (String key : keys)
+			result.add(translate((prefix != null ? prefix + "." : "") + key).component());
+		return result;
+	}
+
 	//
 
 	public static LangBuilder builder() {

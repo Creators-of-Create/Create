@@ -7,7 +7,12 @@ import java.util.regex.PatternSyntaxException;
 
 import com.google.re2j.Pattern;
 
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.LogisticParser;
+
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
+import net.createmod.catnip.data.Glob;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -40,6 +45,8 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
+import org.jetbrains.annotations.NotNull;
+
 public class FetchPackagesInstruction extends TextScheduleInstruction {
 
 	@Override
@@ -63,14 +70,37 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 		return PackageStyles.getDefaultBox();
 	}
 
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
+		List<@NotNull String> scrollInputOptions = AllConfigs.server().logistics.enableAdvancedRegex.get()
+			? List.of("use_glob", "use_regex")
+			: List.of("use_glob");
+
+		builder.addTextInput(0, 103-18-9, (e, t) -> modifyEditBox(e), "Text")
+			.addSelectionScrollInput(103-22,
+				40,
+				(si, l) -> si.forOptions(CreateLang
+					.translatedOptions("gui.schedule.fetch_packages",
+						scrollInputOptions))
+					.titled(CreateLang
+						.translate("gui.schedule.fetch_packages.address_matching")
+						.component()),
+				"UseRegex");
+	}
+
+	public boolean useRegex() {
+		return data.getString("UseRegex").contains("Regex");
+	}
+
 	public String getFilter() {
 		return getLabelText();
 	}
 
-	public Pattern getFilterForRegex() {
+	public Pattern getFilterRegex() {
 		if (getFilter().isBlank())
-			return LogisticParser.globToRegex("*", "");
-		return LogisticParser.dynamicToRegex(getFilter(), "");
+			return Pattern.compile(".*");
+		return LogisticParser.dynamicToRegex(getFilter(), "", useRegex());
 	}
 
 	@Override
@@ -106,7 +136,6 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 		if (server == null)
 			return null;
 
-		Pattern regex = getFilterForRegex();
 		boolean anyMatch = false;
 		ArrayList<GlobalStation> validStations = new ArrayList<>();
 		Train train = runtime.train;
@@ -121,20 +150,22 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 			ServerLevel dimLevel = server.getLevel(globalStation.blockEntityDimension);
 			if (dimLevel == null)
 				continue;
+			Pattern regex = getFilterRegex();
 
 			for (Entry<BlockPos, GlobalPackagePort> entry : globalStation.connectedPorts.entrySet()) {
 				GlobalPackagePort port = entry.getValue();
 				BlockPos pos = entry.getKey();
 
 				IItemHandlerModifiable postboxInventory = port.offlineBuffer;
-				if (dimLevel.isLoaded(pos) && dimLevel.getBlockEntity(pos) instanceof PostboxBlockEntity ppbe)
+				if (dimLevel.isLoaded(pos) && dimLevel.getBlockEntity(pos) instanceof PostboxBlockEntity ppbe) {
 					postboxInventory = ppbe.inventory;
+				}
 
 				for (int slot = 0; slot < postboxInventory.getSlots(); slot++) {
 					ItemStack stack = postboxInventory.getStackInSlot(slot);
 					if (!PackageItem.isPackage(stack))
 						continue;
-					if (PackageItem.matchAddress(stack, port.address))
+					if (PackageItem.matchAddress(stack, port.address, port.usesRegex))
 						continue;
 					try {
 						if (!regex.matches(PackageItem.getAddress(stack)))

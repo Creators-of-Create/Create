@@ -314,6 +314,11 @@ public class AllDataComponents {
 		builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8)
 	);
 
+	public static final DataComponentType<Boolean> FILTER_BY_REGEX = register(
+		"filter_by_regex",
+		builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+	);
+
 	public static final DataComponentType<ItemContainerContents> PACKAGE_CONTENTS = register(
 		"package_contents",
 		builder -> builder.persistent(ItemContainerContents.CODEC).networkSynchronized(ItemContainerContents.STREAM_CODEC)

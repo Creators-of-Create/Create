@@ -165,10 +165,11 @@ public class AllIcons implements ScreenElement {
 
 		I_SEND_ONLY = newRow(),
 		I_SEND_AND_RECEIVE = next(),
+		I_GLOB_PATTERN = next(),
+		I_REGEX = next(),
 		I_PARTIAL_REQUESTS = next(),
 		I_FULL_REQUESTS = next(),
 		I_MOVE_GAUGE = next();
-	;
 
 	public AllIcons(int x, int y) {
 		iconX = x * 16;

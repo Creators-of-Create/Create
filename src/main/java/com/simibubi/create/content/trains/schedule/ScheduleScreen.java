@@ -323,7 +323,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> im
 				continue;
 			if (destination == field)
 				continue;
-			Pattern filter = destination.getFilterForRegex();
+			Pattern filter = destination.getFilterRegex();
 			if (filter.pattern().isBlank())
 				continue;
 			Graphs:

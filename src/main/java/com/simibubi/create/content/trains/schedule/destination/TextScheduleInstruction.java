@@ -13,7 +13,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 public abstract class TextScheduleInstruction extends ScheduleInstruction {
-
 	protected String getLabelText() {
 		return textData("Text");
 	}

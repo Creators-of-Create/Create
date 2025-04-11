@@ -295,8 +295,9 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 			if (!PackageItem.isPackage(stack))
 				return false;
 			String filterString = getFilterString();
+			boolean usesRegex = usingRegex();
 			return filterString == null || handler instanceof PackagerItemHandler
-				|| !PackageItem.matchAddress(stack, filterString);
+				|| !PackageItem.matchAddress(stack, filterString, usesRegex);
 		}, false);
 		if (extract.isEmpty())
 			return false;

@@ -239,16 +239,18 @@ public class FilterItemStack {
 	public static class PackageFilterItemStack extends FilterItemStack {
 
 		public String filterString;
+		public boolean useRegex;
 
 		protected PackageFilterItemStack(ItemStack filter) {
 			super(filter);
 			filterString = PackageItem.getAddress(filter);
+			useRegex = filter.getOrDefault(AllDataComponents.FILTER_BY_REGEX, false);
 		}
 
 		@Override
 		public boolean test(Level world, ItemStack stack, boolean matchNBT) {
 			return (filterString.isBlank() && super.test(world, stack, matchNBT))
-				|| PackageItem.isPackage(stack) && PackageItem.matchAddress(stack, filterString);
+				|| PackageItem.isPackage(stack) && PackageItem.matchAddress(stack, filterString, useRegex);
 		}
 
 		@Override

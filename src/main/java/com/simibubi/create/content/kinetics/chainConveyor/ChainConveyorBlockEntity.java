@@ -21,6 +21,7 @@ import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorShape.Cha
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorShape.ChainConveyorOBB;
 import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.content.logistics.box.PackageItem;
+import com.simibubi.create.content.logistics.packagePort.PackagePortBlockEntity;
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockEntity;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
@@ -57,12 +58,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import org.checkerframework.checker.units.qual.C;
+
 public class ChainConveyorBlockEntity extends KineticBlockEntity implements TransformableBlockEntity {
 
 	public record ConnectionStats(float tangentAngle, float chainLength, Vec3 start, Vec3 end) {
 	}
 
-	public record ConnectedPort(float chainPosition, @Nullable BlockPos connection, String filter) {
+	public record ConnectedPort(float chainPosition, @Nullable BlockPos connection, String filter, boolean usesRegex) {
 	}
 
 	public Set<BlockPos> connections = new HashSet<>();
@@ -84,6 +87,30 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 	public ChainConveyorBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 		super(typeIn, pos, state);
 		checkInvalid = true;
+	}
+
+	private void updatePortRegexSettings() {
+		updatePortsRegexSettings(travelPorts);
+		updatePortsRegexSettings(loopPorts);
+		notifyUpdate();
+	}
+
+	private void updatePortsRegexSettings(Map<BlockPos, ConnectedPort> ports) {
+		for (Entry<BlockPos, ConnectedPort> entry : ports.entrySet()) {
+			BlockPos targetPos = entry.getKey();
+			ConnectedPort port = entry.getValue();
+			if (port.usesRegex()) continue;
+
+			BlockEntity be = level.getBlockEntity(worldPosition.offset(targetPos));
+			boolean newState = be instanceof PackagePortBlockEntity ppbe && ppbe.usingRegex();
+
+			if (newState != port.usesRegex) {
+				ports.put(targetPos, new ConnectedPort(port.chainPosition(),
+					port.connection(),
+					port.filter(),
+					newState));
+			}
+		}
 	}
 
 	@Override
@@ -206,9 +233,9 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 				box.chainPosition += serverSpeed * distancePerTick;
 				box.chainPosition = Math.min(stats.chainLength, box.chainPosition);
 
-				float anticipatePosition = box.chainPosition;
-				anticipatePosition += serverSpeed * distancePerTick * 4;
-				anticipatePosition = Math.min(stats.chainLength, anticipatePosition);
+				float anticipatedPosition = box.chainPosition;
+				anticipatedPosition += serverSpeed * distancePerTick * 4;
+				anticipatedPosition = Math.min(stats.chainLength, anticipatedPosition);
 
 				if (level.isClientSide() && !isVirtual())
 					continue;
@@ -223,9 +250,9 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 						continue;
 
 					boolean notAtPositionYet = box.chainPosition < chainPosition;
-					if (notAtPositionYet && anticipatePosition < chainPosition)
+					if (notAtPositionYet && anticipatedPosition < chainPosition)
 						continue;
-					if (!PackageItem.matchAddress(box.item, port.filter()))
+					if (!PackageItem.matchAddress(box.item, port.filter(), port.usesRegex()))
 						continue;
 					if (notAtPositionYet) {
 						notifyPortToAnticipate(portEntry.getKey());
@@ -276,7 +303,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 				boolean notAtPositionYet = !loopThresholdCrossed(box.chainPosition, prevChainPosition, offBranchAngle);
 				if (notAtPositionYet && !loopThresholdCrossed(anticipatePosition, prevChainPosition, offBranchAngle))
 					continue;
-				if (!PackageItem.matchAddress(box.item, port.filter()))
+				if (!PackageItem.matchAddress(box.item, port.filter(), port.usesRegex()))
 					continue;
 				if (notAtPositionYet) {
 					notifyPortToAnticipate(portEntry.getKey());

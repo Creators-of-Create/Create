@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.simibubi.create.foundation.utility.LogisticParser;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.content.logistics.box.PackageItem;
@@ -17,7 +19,7 @@ public class ChainConveyorRoutingTable {
 	public static final int ENTRY_TIMEOUT = 100;
 	public static final int PORT_ENTRY_TIMEOUT = 20;
 
-	public record RoutingTableEntry(String port, int distance, BlockPos nextConnection, MutableInt timeout,
+	public record RoutingTableEntry(String port, boolean useRegex, int distance, BlockPos nextConnection, MutableInt timeout,
 		boolean endOfRoute) {
 
 		public void tick() {
@@ -29,7 +31,7 @@ public class ChainConveyorRoutingTable {
 		}
 
 		public RoutingTableEntry copyForNeighbour(BlockPos connection) {
-			return new RoutingTableEntry(port, distance + 1, connection.multiply(-1), new MutableInt(ENTRY_TIMEOUT),
+			return new RoutingTableEntry(port, useRegex, distance + 1, connection.multiply(-1), new MutableInt(ENTRY_TIMEOUT),
 				false);
 		}
 
@@ -49,13 +51,13 @@ public class ChainConveyorRoutingTable {
 		return changed || lastUpdate > ENTRY_TIMEOUT - 20;
 	}
 
-	public void receivePortInfo(String filter, BlockPos connection) {
-		insert(new RoutingTableEntry(filter, "*".equals(filter) ? 1000 : 0, connection, new MutableInt(PORT_ENTRY_TIMEOUT), true));
+	public void receivePortInfo(String filter, boolean usesRegex, BlockPos connection) {
+		insert(new RoutingTableEntry(filter, usesRegex, LogisticParser.matchesAll(filter, usesRegex) ? 1000 : 0, connection, new MutableInt(PORT_ENTRY_TIMEOUT), true));
 	}
 
 	public BlockPos getExitFor(ItemStack box) {
 		for (RoutingTableEntry entry : entriesByDistance)
-			if (PackageItem.matchAddress(box, entry.port()))
+			if (PackageItem.matchAddress(box, entry.port(), entry.useRegex()))
 				return entry.nextConnection();
 		return BlockPos.ZERO;
 	}

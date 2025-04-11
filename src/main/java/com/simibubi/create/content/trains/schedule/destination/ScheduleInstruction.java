@@ -34,6 +34,7 @@ public abstract class ScheduleInstruction extends ScheduleDataEntry {
 		CompoundTag dataCopy =  data.copy();
 		writeAdditional(registries, dataCopy);
 		tag.putString("Id", getId().toString());
+
 		tag.put("Data", dataCopy);
 		return tag;
 	}

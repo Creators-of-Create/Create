@@ -29,7 +29,8 @@ public class PackagePortAutomationInventoryWrapper extends ItemHandlerWrapper {
 			if (!PackageItem.isPackage(stack))
 				return false;
 			String filterString = ppbe.getFilterString();
-			return filterString != null && PackageItem.matchAddress(stack, filterString);
+			boolean usesRegex = ppbe.usingRegex();
+			return filterString != null && PackageItem.matchAddress(stack, filterString, usesRegex);
 		}, simulate);
 		access = false;
 
@@ -41,7 +42,8 @@ public class PackagePortAutomationInventoryWrapper extends ItemHandlerWrapper {
 		if (!PackageItem.isPackage(stack))
 			return stack;
 		String filterString = ppbe.getFilterString();
-		if (filterString != null && PackageItem.matchAddress(stack, filterString))
+		boolean usesRegex = ppbe.usingRegex();
+		if (filterString != null && PackageItem.matchAddress(stack, filterString, usesRegex))
 			return stack;
 		return super.insertItem(slot, stack, simulate);
 	}
