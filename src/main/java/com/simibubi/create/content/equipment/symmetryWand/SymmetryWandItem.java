@@ -199,6 +199,14 @@ public class SymmetryWandItem extends Item {
 		if (!BlockItem.BY_BLOCK.containsKey(block.getBlock()))
 			return;
 
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		ItemStack itemStack = null;
+
+		if (blockEntity != null) {
+			int preferredSlot = player.getInventory().selected;
+			itemStack = player.getInventory().getItem(preferredSlot);
+		}
+
 		Map<BlockPos, BlockState> blockSet = new HashMap<>();
 		blockSet.put(pos, block);
 		SymmetryMirror symmetry = SymmetryMirror.fromNBT((CompoundTag) wand.getTag()
@@ -208,7 +216,7 @@ public class SymmetryWandItem extends Item {
 		if (mirrorPos.distanceTo(Vec3.atLowerCornerOf(pos)) > AllConfigs.server().equipment.maxSymmetryWandRange.get())
 			return;
 		if (!player.isCreative() && isHoldingBlock(player, block)
-			&& BlockHelper.findAndRemoveInInventory(block, player, 1) == 0)
+			&& BlockHelper.findAndRemoveInInventory(block, itemStack, player, 1) == 0)
 			return;
 
 		symmetry.process(blockSet);
@@ -228,6 +236,20 @@ public class SymmetryWandItem extends Item {
 
 				if (player.isCreative()) {
 					world.setBlockAndUpdate(position, blockState);
+
+					BlockEntity mirroredBlockEntity = world.getBlockEntity(position);
+
+					if (mirroredBlockEntity != null) {
+						CompoundTag sourceTag = blockEntity.saveWithFullMetadata();
+
+						sourceTag.remove("x");
+						sourceTag.remove("y");
+						sourceTag.remove("z");
+
+						mirroredBlockEntity.load(sourceTag);
+						mirroredBlockEntity.setChanged();
+					}
+
 					targets.add(position);
 					continue;
 				}
@@ -240,12 +262,12 @@ public class SymmetryWandItem extends Item {
 
 				if (AllBlocks.CART_ASSEMBLER.has(blockState)) {
 					BlockState railBlock = CartAssemblerBlock.getRailBlock(blockState);
-					if (BlockHelper.findAndRemoveInInventory(railBlock, player, 1) == 0)
+					if (BlockHelper.findAndRemoveInInventory(railBlock, itemStack, player, 1) == 0)
 						continue;
-					if (BlockHelper.findAndRemoveInInventory(blockState, player, 1) == 0)
+					if (BlockHelper.findAndRemoveInInventory(blockState, itemStack, player, 1) == 0)
 						blockState = railBlock;
 				} else {
-					if (BlockHelper.findAndRemoveInInventory(blockState, player, 1) == 0)
+					if (BlockHelper.findAndRemoveInInventory(blockState, itemStack, player, 1) == 0)
 						continue;
 				}
 
@@ -253,6 +275,19 @@ public class SymmetryWandItem extends Item {
 				FluidState ifluidstate = world.getFluidState(position);
 				world.setBlock(position, ifluidstate.createLegacyBlock(), Block.UPDATE_KNOWN_SHAPE);
 				world.setBlockAndUpdate(position, blockState);
+
+				BlockEntity mirroredBlockEntity = world.getBlockEntity(position);
+
+				if (mirroredBlockEntity != null) {
+					CompoundTag sourceTag = blockEntity.saveWithFullMetadata();
+
+					sourceTag.remove("x");
+					sourceTag.remove("y");
+					sourceTag.remove("z");
+
+					mirroredBlockEntity.load(sourceTag);
+					mirroredBlockEntity.setChanged();
+				}
 
 				CompoundTag wandNbt = wand.getOrCreateTag();
 				wandNbt.putBoolean("Simulate", true);
@@ -306,6 +341,7 @@ public class SymmetryWandItem extends Item {
 				continue;
 
 			BlockState blockstate = world.getBlockState(position);
+			BlockEntity blockEntity = blockstate.hasBlockEntity() ? world.getBlockEntity(position) : null;
 			if (!blockstate.isAir()) {
 				targets.add(position);
 				world.levelEvent(2001, position, Block.getId(blockstate));
@@ -316,7 +352,6 @@ public class SymmetryWandItem extends Item {
 						.isEmpty())
 						player.getMainHandItem()
 							.mineBlock(world, blockstate, position, player);
-					BlockEntity blockEntity = blockstate.hasBlockEntity() ? world.getBlockEntity(position) : null;
 					Block.dropResources(blockstate, world, pos, blockEntity, player, player.getMainHandItem()); // Add fortune, silk touch and other loot modifiers
 				}
 			}
