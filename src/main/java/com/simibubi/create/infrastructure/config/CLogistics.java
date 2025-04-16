@@ -1,6 +1,5 @@
 package com.simibubi.create.infrastructure.config;
 
-
 import net.createmod.catnip.config.ConfigBase;
 
 public class CLogistics extends ConfigBase {
@@ -8,7 +7,6 @@ public class CLogistics extends ConfigBase {
 	public final ConfigInt defaultExtractionTimer = i(8, 1, "defaultExtractionTimer", Comments.defaultExtractionTimer);
 	public final ConfigInt psiTimeout = i(60, 1, "psiTimeout", Comments.psiTimeout);
 	public final ConfigInt mechanicalArmRange = i(5, 1, "mechanicalArmRange", Comments.mechanicalArmRange);
-	public final ConfigBool enableAdvancedRegex = b(false, "enableAdvancedRegex", Comments.enableAdvancedRegex);
 	public final ConfigInt packagePortRange = i(5, 1, "packagePortRange", Comments.packagePortRange);
 	public final ConfigInt linkRange = i(256, 1, "linkRange", Comments.linkRange);
 	public final ConfigInt displayLinkRange = i(64, 1, "displayLinkRange", Comments.displayLinkRange);
@@ -32,7 +30,6 @@ public class CLogistics extends ConfigBase {
 		static String psiTimeout =
 			"The amount of ticks a portable storage interface waits for transfers until letting contraptions move along.";
 		static String mechanicalArmRange = "Maximum distance in blocks a Mechanical Arm can reach across.";
-		static String enableAdvancedRegex = "Whether to enable the use of regex-based address matching in Frogports, Package Filters, etc.";
 		static String packagePortRange = "Maximum distance in blocks a Package Port can be placed at from its target.";
 		static String vaultCapacity = "The total amount of stacks a vault can hold per block in size.";
 		static String chainConveyorCapacity = "The amount of packages a chain conveyor can carry at a time.";

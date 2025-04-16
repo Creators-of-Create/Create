@@ -62,7 +62,7 @@ public class PackageFilterMenu extends AbstractFilterMenu {
 	}
 
 	public boolean usingRegex() {
-		return AllConfigs.server().logistics.enableAdvancedRegex.get() && useRegex;
+		return AllConfigs.server().extras.enableAdvancedRegex.get() && useRegex;
 	}
 
 	@Override

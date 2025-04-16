@@ -10,6 +10,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.Create;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
@@ -17,6 +18,8 @@ import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEnti
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity.ConnectionStats;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorPackage;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
+
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
@@ -125,8 +128,10 @@ public abstract class PackagePortTarget {
 
 		@Override
 		public void register(PackagePortBlockEntity ppbe, LevelAccessor level, BlockPos portPos) {
-			if (!(be(level, portPos) instanceof ChainConveyorBlockEntity clbe))
+			if (!(be(level, portPos) instanceof ChainConveyorBlockEntity clbe)) {
+				Create.LOGGER.warn("No valid attached ChainConveyor");
 				return;
+			}
 			ChainConveyorBlockEntity actualBe = clbe;
 
 			// Jump to opposite chain if motion reversed
@@ -153,9 +158,10 @@ public abstract class PackagePortTarget {
 			String portFilter = ppbe.getFilterString();
 			if (portFilter == null)
 				return;
-			actualBe.routingTable.receivePortInfo(portFilter, ppbe.usesRegex, connection == null ? BlockPos.ZERO : connection);
+			actualBe.routingTable.receivePortInfo(portFilter, ppbe.usingRegex(), connection == null ? BlockPos.ZERO : connection);
 			Map<BlockPos, ConnectedPort> portMap = connection == null ? actualBe.loopPorts : actualBe.travelPorts;
 			portMap.put(relativePos.multiply(-1), new ConnectedPort(chainPos, connection, portFilter, ppbe.usingRegex()));
+			actualBe.notifyUpdate();
 		}
 
 		@Override

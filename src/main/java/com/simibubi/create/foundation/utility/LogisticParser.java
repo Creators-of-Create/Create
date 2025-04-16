@@ -1,11 +1,10 @@
 package com.simibubi.create.foundation.utility;
 
+import java.util.regex.PatternSyntaxException;
+
 import com.google.re2j.Pattern;
-import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.data.Glob;
-
-import java.util.regex.PatternSyntaxException;
 
 public class LogisticParser {
 	// Dynamic regex creation:
@@ -13,7 +12,7 @@ public class LogisticParser {
 	// - Otherwise, uses the current glob parser
 	public static Pattern dynamicToRegex(String pattern, String defaultPatternIfError, boolean usingRawRegex) {
 		return usingRawRegex ? toRegex(pattern, defaultPatternIfError) : globToRegex(pattern, defaultPatternIfError);
-		//	return AllConfigs.server().logistics.enableAdvancedRegex.get()
+		//	return AllConfigs.server().extras.enableAdvancedRegex.get()
 		//		? toRegex(pattern, defaultPatternIfError)
 		//		: globToRegex(pattern, defaultPatternIfError);
 	}

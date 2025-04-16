@@ -33,7 +33,7 @@ public class GlobalTrainDisplayData {
 	}
 
 	public static List<TrainDeparturePrediction> prepare(String filter, int maxLines) {
-		Pattern regex = LogisticParser.toRegex(filter, "");
+		Pattern regex = LogisticParser.globToRegex(filter, "");
 		return statusByDestination.entrySet()
 			.stream()
 			.filter(e -> LogisticParser.anyMatches(regex, e.getKey()))

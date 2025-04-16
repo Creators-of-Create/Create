@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.simibubi.create.foundation.utility.LogisticParser;
-
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.content.logistics.box.PackageItem;
+import com.simibubi.create.foundation.utility.LogisticParser;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -52,7 +51,7 @@ public class ChainConveyorRoutingTable {
 	}
 
 	public void receivePortInfo(String filter, boolean usesRegex, BlockPos connection) {
-		insert(new RoutingTableEntry(filter, usesRegex, LogisticParser.matchesAll(filter, usesRegex) ? 1000 : 0, connection, new MutableInt(PORT_ENTRY_TIMEOUT), true));
+		insert(new RoutingTableEntry(filter, usesRegex, LogisticParser.matchesAll(filter, usesRegex) ? Integer.MAX_VALUE : 0, connection, new MutableInt(PORT_ENTRY_TIMEOUT), true));
 	}
 
 	public BlockPos getExitFor(ItemStack box) {

@@ -73,7 +73,7 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
-		List<@NotNull String> scrollInputOptions = AllConfigs.server().logistics.enableAdvancedRegex.get()
+		List<@NotNull String> scrollInputOptions = AllConfigs.server().extras.enableAdvancedRegex.get()
 			? List.of("use_glob", "use_regex")
 			: List.of("use_glob");
 

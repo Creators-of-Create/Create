@@ -127,7 +127,7 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 		});
 		useRegex.green = menu.contentHolder.usesRegex;
 
-		boolean regexEnabled = AllConfigs.server().logistics.enableAdvancedRegex.get();
+		boolean regexEnabled = AllConfigs.server().extras.enableAdvancedRegex.get();
 
 		useRegex.visible = menu.contentHolder.acceptsPackages;
 		useRegex.active = regexEnabled;
@@ -204,7 +204,7 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 					.component());
 			List<@NotNull Component> dynamicTooltip;
 
-			if (AllConfigs.server().logistics.enableAdvancedRegex.get()) {
+			if (AllConfigs.server().extras.enableAdvancedRegex.get()) {
 				dynamicTooltip = List.of(
 					CreateLang.translate("gui.package_port.catch_packages_wildcard_regex")
 						.style(ChatFormatting.GRAY)

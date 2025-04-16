@@ -14,7 +14,8 @@ public class CServer extends ConfigBase {
 	public final CLogistics logistics = nested(0, CLogistics::new, Comments.logistics);
 	public final CSchematics schematics = nested(0, CSchematics::new, Comments.schematics);
 	public final CEquipment equipment = nested(0, CEquipment::new, Comments.equipment);
-	public final CTrains trains = nested(0, CTrains::new, Comments.trains);
+	public final CTrains trains = nested(1, CTrains::new, Comments.trains);
+	public final CExtras extras = nested(0, CExtras::new, Comments.extras);
 
 	@Override
 	public String getName() {
@@ -29,6 +30,7 @@ public class CServer extends ConfigBase {
 		static String logistics = "Tweaks for logistical components";
 		static String equipment = "Equipment and gadgets added by Create";
 		static String trains = "Create's builtin Railway systems";
+		static String extras = "Advanced options for additional customization";
 		static String infrastructure = "The Backbone of Create";
 		static String tickrateSyncTimer =
 			"The amount of time a server waits before sending out tickrate synchronization packets.";

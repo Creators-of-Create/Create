@@ -21,7 +21,6 @@ import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorShape.Cha
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorShape.ChainConveyorOBB;
 import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.content.logistics.box.PackageItem;
-import com.simibubi.create.content.logistics.packagePort.PackagePortBlockEntity;
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockEntity;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
@@ -58,8 +57,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import org.checkerframework.checker.units.qual.C;
-
 public class ChainConveyorBlockEntity extends KineticBlockEntity implements TransformableBlockEntity {
 
 	public record ConnectionStats(float tangentAngle, float chainLength, Vec3 start, Vec3 end) {
@@ -89,30 +86,6 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 		checkInvalid = true;
 	}
 
-	private void updatePortRegexSettings() {
-		updatePortsRegexSettings(travelPorts);
-		updatePortsRegexSettings(loopPorts);
-		notifyUpdate();
-	}
-
-	private void updatePortsRegexSettings(Map<BlockPos, ConnectedPort> ports) {
-		for (Entry<BlockPos, ConnectedPort> entry : ports.entrySet()) {
-			BlockPos targetPos = entry.getKey();
-			ConnectedPort port = entry.getValue();
-			if (port.usesRegex()) continue;
-
-			BlockEntity be = level.getBlockEntity(worldPosition.offset(targetPos));
-			boolean newState = be instanceof PackagePortBlockEntity ppbe && ppbe.usingRegex();
-
-			if (newState != port.usesRegex) {
-				ports.put(targetPos, new ConnectedPort(port.chainPosition(),
-					port.connection(),
-					port.filter(),
-					newState));
-			}
-		}
-	}
-
 	@Override
 	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).inflate(connections.isEmpty() ? 3 : 64);
@@ -132,11 +105,9 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 	public boolean canAcceptPackagesFor(@Nullable BlockPos connection) {
 		if (connection == null && !canAcceptMorePackages())
 			return false;
-		if (connection != null
-			&& (!(level.getBlockEntity(worldPosition.offset(connection)) instanceof ChainConveyorBlockEntity otherClbe)
-			|| !otherClbe.canAcceptMorePackages()))
-			return false;
-		return true;
+		return connection == null
+			|| (level.getBlockEntity(worldPosition.offset(connection)) instanceof ChainConveyorBlockEntity otherClbe
+			&& otherClbe.canAcceptMorePackages());
 	}
 
 	public boolean canAcceptMorePackagesFromOtherConveyor() {
@@ -421,7 +392,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 
 	public boolean addLoopingPackage(ChainConveyorPackage box) {
 		loopingPackages.add(box);
-		updatePortRegexSettings();
+		notifyUpdate();
 		return true;
 	}
 
@@ -820,8 +791,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 			.toList());
 
 		HashMap<BlockPos, List<ChainConveyorPackage>> newMap = new HashMap<>();
-		travellingPackages.entrySet()
-			.forEach(e -> newMap.put(transform.applyWithoutOffset(e.getKey()), e.getValue()));
+		travellingPackages.forEach((key, value) -> newMap.put(transform.applyWithoutOffset(key), value));
 		travellingPackages = newMap;
 
 		connectionStats = null;

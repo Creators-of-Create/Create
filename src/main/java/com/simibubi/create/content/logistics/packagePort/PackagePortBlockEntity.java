@@ -12,7 +12,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.animatedContainer.AnimatedContainerBehaviour;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.CreateLang;
-
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.codecs.CatnipCodecUtils;
@@ -65,7 +64,6 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 
 	public void filterChanged() {
 		if (target != null) {
-			System.out.println("FilterChanged Event");
 			target.deregister(this, level, worldPosition);
 			target.register(this, level, worldPosition);
 		}
@@ -83,7 +81,7 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 	}
 
 	public boolean usingRegex() {
-		return usesRegex && AllConfigs.server().logistics.enableAdvancedRegex.get();
+		return usesRegex && AllConfigs.server().extras.enableAdvancedRegex.get();
 	}
 
 	@Override
@@ -93,7 +91,7 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 			tag.put("Target", CatnipCodecUtils.encode(PackagePortTarget.CODEC, target).orElseThrow());
 		tag.putString("AddressFilter", addressFilter);
 		tag.putBoolean("AcceptsPackages", acceptsPackages);
-		tag.putBoolean("UsesRegex", usingRegex());
+		tag.putBoolean("UsesRegex", usesRegex);
 		tag.put("Inventory", inventory.serializeNBT(registries));
 	}
 

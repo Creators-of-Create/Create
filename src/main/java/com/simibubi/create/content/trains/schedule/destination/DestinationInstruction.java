@@ -60,7 +60,7 @@ public class DestinationInstruction extends TextScheduleInstruction {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
-		List<@NotNull String> scrollInputOptions = AllConfigs.server().logistics.enableAdvancedRegex.get()
+		List<@NotNull String> scrollInputOptions = AllConfigs.server().extras.enableAdvancedRegex.get()
 			? List.of("use_glob", "use_regex")
 			: List.of("use_glob");
 
@@ -77,7 +77,6 @@ public class DestinationInstruction extends TextScheduleInstruction {
 	}
 
 	public boolean useRegex() {
-		Create.LOGGER.info("Regex key was " + data.getInt("UseRegex"));
 		return data.getInt("UseRegex") == 1;
 	}
 
