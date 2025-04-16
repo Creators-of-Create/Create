@@ -1,6 +1,6 @@
 name: Build
 
-on: [ workflow_dispatch, push, pull_request ]
+on: [ workflow_dispatch, pull_request ]
 
 jobs:
   build:
@@ -27,8 +27,3 @@ jobs:
 
       - name: Build
         run: ./gradlew build
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Artifacts
-          path: build/libs/

@@ -123,22 +123,21 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		};
 	}
 
-	@SuppressWarnings("removal") // see below
 	public static IRecipeSlotBuilder addFluidSlot(IRecipeLayoutBuilder builder, int x, int y, FluidIngredient ingredient) {
-		int amount = ingredient.getRequiredAmount();
-		return builder.addSlot(RecipeIngredientRole.OUTPUT, x, y)
-			.setBackground(getRenderedSlot(), -1, -1)
-			.addIngredients(NeoForgeTypes.FLUID_STACK, ingredient.getMatchingFluidStacks())
-			.setFluidRenderer(amount, false, 16, 16) // make fluid take up the full slot
-			.addTooltipCallback(CreateRecipeCategory::addPotionTooltip);
+		return addFluidSlot(builder, x, y, RecipeIngredientRole.INPUT)
+			.addIngredients(NeoForgeTypes.FLUID_STACK, ingredient.getMatchingFluidStacks());
+	}
+
+	public static IRecipeSlotBuilder addFluidSlot(IRecipeLayoutBuilder builder, int x, int y, FluidStack stack) {
+		return addFluidSlot(builder, x, y, RecipeIngredientRole.OUTPUT)
+			.addIngredient(NeoForgeTypes.FLUID_STACK, stack);
 	}
 
 	@SuppressWarnings("removal") // see below
-	public static IRecipeSlotBuilder addFluidSlot(IRecipeLayoutBuilder builder, int x, int y, FluidStack stack) {
-		return builder.addSlot(RecipeIngredientRole.OUTPUT, x, y)
+	public static IRecipeSlotBuilder addFluidSlot(IRecipeLayoutBuilder builder, int x, int y, RecipeIngredientRole role) {
+		return builder.addSlot(role, x, y)
 			.setBackground(getRenderedSlot(), -1, -1)
-			.addIngredient(NeoForgeTypes.FLUID_STACK, stack)
-			.setFluidRenderer(stack.getAmount(), false, 16, 16) // make fluid take up the full slot
+			.setFluidRenderer(1, false, 16, 16) // make fluid take up the full slot
 			.addTooltipCallback(CreateRecipeCategory::addPotionTooltip);
 	}
 

@@ -133,8 +133,8 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 		if (!hasEntity()) {
 
 			float processingSpeed =
-				Mth.clamp((speed) / (!inventory.appliedRecipe ? Mth.log2(inventory.getStackInSlot(0)
-					.getCount()) : 1), .25f, 20);
+				Mth.clamp((speed) / (!inventory.appliedRecipe ? (float) Math.log(inventory.getStackInSlot(0)
+					.getCount())/(float) Math.log(2) : 1), .25f, 20);
 			inventory.remainingTime -= processingSpeed;
 			spawnParticles(inventory.getStackInSlot(0));
 

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class ProcessingInventory extends ItemStackHandler {
@@ -17,7 +18,7 @@ public class ProcessingInventory extends ItemStackHandler {
 	private boolean limit;
 
 	public ProcessingInventory(Consumer<ItemStack> callback) {
-		super(16);
+		super(32);
 		this.callback = callback;
 	}
 
@@ -69,7 +70,7 @@ public class ProcessingInventory extends ItemStackHandler {
 		recipeDuration = nbt.getFloat("RecipeTime");
 		appliedRecipe = nbt.getBoolean("AppliedRecipe");
 		super.deserializeNBT(registries, nbt);
-		if(isEmpty())
+		if (isEmpty())
 			appliedRecipe = false;
 	}
 
