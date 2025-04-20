@@ -70,9 +70,8 @@ public class GenericItemEmptying {
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return Pair.of(resultingFluid, resultingItem);
-		resultingFluid = tank.drain(1000, simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE);
-		resultingItem = tank.getContainer()
-			.copy();
+		resultingFluid = tank.drain(1000, FluidAction.EXECUTE);
+		resultingItem = tank.getContainer().copy();
 		if (!simulate)
 			stack.shrink(1);
 
