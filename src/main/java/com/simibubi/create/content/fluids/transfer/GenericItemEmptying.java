@@ -15,6 +15,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -70,8 +71,11 @@ public class GenericItemEmptying {
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return Pair.of(resultingFluid, resultingItem);
-		resultingFluid = tank.drain(1000, FluidAction.EXECUTE);
-		resultingItem = tank.getContainer().copy();
+		resultingFluid = tank.drain(1000, simulate? FluidAction.SIMULATE: FluidAction.EXECUTE);
+		if (tank instanceof FluidBucketWrapper){
+			resultingItem = tank.getContainer().copy().getCraftingRemainingItem();
+		} else
+			resultingItem = tank.getContainer().copy();
 		if (!simulate)
 			stack.shrink(1);
 
