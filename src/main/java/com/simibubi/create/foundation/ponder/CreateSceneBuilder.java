@@ -305,6 +305,53 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 				linkBlockEntity -> linkBlockEntity.pulse());
 		}
 
+		@Override
+		public void restoreBlocks(Selection selection) {
+			super.restoreBlocks(selection);
+			markSmartBlockEntityVirtual(selection);
+		}
+
+		@Override
+		public void setBlocks(Selection selection, BlockState state, boolean spawnParticles) {
+			super.setBlocks(selection, state, spawnParticles);
+			markSmartBlockEntityVirtual(selection);
+		}
+
+		@Override
+		public void setBlock(BlockPos pos, BlockState state, boolean spawnParticles) {
+			super.setBlock(pos, state, spawnParticles);
+			markSmartBlockEntityVirtual(pos);
+		}
+
+		@Override
+		public void replaceBlocks(Selection selection, BlockState state, boolean spawnParticles) {
+			super.replaceBlocks(selection, state, spawnParticles);
+			markSmartBlockEntityVirtual(selection);
+		}
+
+		@Override
+		public void modifyBlock(BlockPos pos, UnaryOperator<BlockState> stateFunc, boolean spawnParticles) {
+			super.modifyBlock(pos, stateFunc, spawnParticles);
+			markSmartBlockEntityVirtual(pos);
+		}
+
+		@Override
+		public void modifyBlocks(Selection selection, UnaryOperator<BlockState> stateFunc, boolean spawnParticles) {
+			super.modifyBlocks(selection, stateFunc, spawnParticles);
+			markSmartBlockEntityVirtual(selection);
+		}
+
+		private void markSmartBlockEntityVirtual(BlockPos pos) {
+			addInstruction(scene -> {
+				if(scene.getWorld().getBlockEntity(pos) instanceof SmartBlockEntity smartBlockEntity) smartBlockEntity.markVirtual();
+			});
+		}
+
+		private void markSmartBlockEntityVirtual(Selection selection) {
+			addInstruction(scene -> selection.forEach(pos->{
+				if(scene.getWorld().getBlockEntity(pos) instanceof SmartBlockEntity smartBlockEntity) smartBlockEntity.markVirtual();
+			}));
+		}
 	}
 
 	public class SpecialInstructions extends PonderSpecialInstructions {
