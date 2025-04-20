@@ -73,7 +73,7 @@ public class GenericItemEmptying {
 			return Pair.of(resultingFluid, resultingItem);
 		resultingFluid = tank.drain(1000, simulate? FluidAction.SIMULATE: FluidAction.EXECUTE);
 		if (tank instanceof FluidBucketWrapper){
-			resultingItem = tank.getContainer().copy().getCraftingRemainingItem();
+			resultingItem = simulate? tank.getContainer().copy().getCraftingRemainingItem() : tank.getContainer().copy();
 		} else
 			resultingItem = tank.getContainer().copy();
 		if (!simulate)
