@@ -3,6 +3,8 @@ package com.simibubi.create.content.fluids;
 import java.lang.ref.WeakReference;
 import java.util.function.Predicate;
 
+import net.createmod.ponder.api.level.PonderLevel;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.ICapabilityProvider;
@@ -89,6 +91,9 @@ public abstract class FlowSource {
 						() -> !networkBE.isRemoved(),
 						() -> fluidHandlerCache = EMPTY
 					));
+				else if (blockEntity != null && world instanceof PonderLevel ponderLevel) {
+					fluidHandlerCache = ICapabilityProvider.of(()->ponderLevel.getCapability(Capabilities.FluidHandler.BLOCK, blockEntity.getBlockPos(), location.getOppositeFace()));
+				}
 			}
 		}
 
