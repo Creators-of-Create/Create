@@ -165,6 +165,9 @@ public class CreateRegistrateTags {
 		TagGen.addOptional(prov.tag(AllBlockTags.ROOTS.tag), Mods.TF,
 			List.of("root", "liveroot_block", "mangrove_root"));
 
+		TagGen.addOptional(prov.tag(AllBlockTags.THRESHOLD_SWITCH_IGNORE_ITEMS.tag), Mods.MEK,
+			List.of("basic_fluid_tank", "advanced_fluid_tank", "elite_fluid_tank", "ultimate_fluid_tank"));
+
 		// VALIDATE
 
 		for (AllBlockTags tag : AllBlockTags.values()) {

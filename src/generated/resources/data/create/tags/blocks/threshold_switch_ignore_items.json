@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "mekanism:basic_fluid_tank",
+      "required": false
+    },
+    {
+      "id": "mekanism:advanced_fluid_tank",
+      "required": false
+    },
+    {
+      "id": "mekanism:elite_fluid_tank",
+      "required": false
+    },
+    {
+      "id": "mekanism:ultimate_fluid_tank",
+      "required": false
+    }
+  ]
+}

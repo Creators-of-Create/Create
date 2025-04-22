@@ -2,6 +2,7 @@ package com.simibubi.create.content.redstone.thresholdSwitch;
 
 import java.util.List;
 
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.compat.thresholdSwitch.FunctionalStorage;
 import com.simibubi.create.compat.thresholdSwitch.SophisticatedStorage;
 import com.simibubi.create.compat.thresholdSwitch.StorageDrawers;
@@ -144,12 +145,12 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 			currentMaxLevel = StorageDrawers.getTotalStorageSpace(observedInventory.getInventory());
 		*/
 
-		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
+		} else if (shouldMeasureItems() || shouldMeasureFluids()) {
 			currentMinLevel = 0;
 			currentLevel = 0;
 			currentMaxLevel = 0;
 
-			if (observedInventory.hasInventory()) {
+			if (shouldMeasureItems()) {
 
 				// Item inventory
 				IItemHandler inv = observedInventory.getInventory();
@@ -181,7 +182,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 				}
 			}
 
-			if (observedTank.hasInventory()) {
+			if (shouldMeasureFluids()) {
 				// Fluid inventory
 				IFluidHandler tank = observedTank.getInventory();
 				for (int slot = 0; slot < tank.getTanks(); slot++) {
@@ -248,6 +249,22 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 		return worldPosition.relative(ThresholdSwitchBlock.getTargetDirection(getBlockState()));
 	}
 
+	private boolean shouldMeasureItems() {
+		BlockPos target = getTargetPos();
+		if (AllBlockTags.THRESHOLD_SWITCH_IGNORE_ITEMS.matches(level.getBlockState(target))) {
+			return false;
+		}
+		return observedInventory.hasInventory();
+	}
+
+	private boolean shouldMeasureFluids() {
+		BlockPos target = getTargetPos();
+		if (AllBlockTags.THRESHOLD_SWITCH_IGNORE_FLUIDS.matches(level.getBlockState(target))) {
+			return false;
+		}
+		return observedTank.hasInventory();
+	}
+
 	public ItemStack getDisplayItemForScreen() {
 		BlockPos target = getTargetPos();
 		return new ItemStack(level.getBlockState(target)
@@ -273,13 +290,24 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 	}
 
 	public ThresholdType getTypeOfCurrentTarget() {
-		if (observedInventory.hasInventory())
+		if (shouldMeasureItems())
 			return ThresholdType.ITEM;
-		if (observedTank.hasInventory())
+		if (shouldMeasureFluids())
 			return ThresholdType.FLUID;
 		if (level.getBlockEntity(getTargetPos()) instanceof ThresholdSwitchObservable)
 			return ThresholdType.CUSTOM;
 		return ThresholdType.UNSUPPORTED;
+	}
+
+	public int getValueStep(boolean stacks) {
+		if (level.getBlockEntity(getTargetPos()) instanceof ThresholdSwitchObservable observable)
+			return observable.getValueStep(stacks);
+		int valueStep = 1;
+		if (getTypeOfCurrentTarget() == ThresholdType.FLUID)
+			valueStep = 1000;
+		else if (stacks)
+			valueStep = 64;
+		return valueStep;
 	}
 
 	protected void scheduleBlockTick() {
