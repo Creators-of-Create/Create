@@ -1,4 +1,4 @@
-// 1.20.1	2025-03-03T16:11:40.9779167	Create's Processing Recipes
+// 1.20.1	2025-04-22T22:16:48.2352599	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -404,8 +404,8 @@ c8cf3978e3bf0ffeccd18c1b16ea26c5e1c18634 data/create/recipes/milling/compat/bota
 15afbebf247ea66e0b023ea84aa5c5dad8ac8466 data/create/recipes/milling/compat/botania/white_petal.json
 9c500a9d6cadb4f673ca63de38c1d3713dab061c data/create/recipes/milling/compat/botania/yellow_petal.json
 c7d2b07396448628123b81e1f34a8b131aa99c83 data/create/recipes/milling/compat/buzzier_bees/buttercup.json
-0c4a3c7da1e151868740db2037504e35a02af3d0 data/create/recipes/milling/compat/buzzier_bees/pink_clover.json
-355e89a3e003ae65ff06a9277c05699220eec569 data/create/recipes/milling/compat/buzzier_bees/white_clover.json
+de3017a93bbbbc1ce57f152bb9aa1aa26ea6d5a6 data/create/recipes/milling/compat/buzzier_bees/pink_clover.json
+6ce891299d4a8b6d1327bc0acc0fe3ee6b334ae9 data/create/recipes/milling/compat/buzzier_bees/white_clover.json
 558968f56003e0e780549b0480baf188a97ab6be data/create/recipes/milling/compat/byg/allium_flower_bush.json
 889ef537dc5f143f32c272a68f15c8c81c3f57a9 data/create/recipes/milling/compat/byg/alpine_bellflower.json
 7c8697b5edc4dcb69eff85648fa3ae4488a5300f data/create/recipes/milling/compat/byg/amaranth.json
