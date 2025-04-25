@@ -14,6 +14,7 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.api.contraption.transformable.TransformableBlockEntity;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
+import com.simibubi.create.content.trains.track.BezierConnection.BezierPixel;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.blockEntity.IMergeableBE;
 import com.simibubi.create.foundation.blockEntity.RemoveBlockEntityPacket;
@@ -363,10 +364,10 @@ public class TrackBlockEntity extends SmartBlockEntity implements TransformableB
 	}
 
 	public void manageFakeTracksAlong(BezierConnection bc, boolean remove) {
-		Map<Pair<Integer, Integer>, Double> yLevels = bc.rasterise();
+		Map<Pair<Integer, Integer>, BezierPixel> bcPixels = bc.rasterise();
 
-		for (Entry<Pair<Integer, Integer>, Double> entry : yLevels.entrySet()) {
-			double yValue = entry.getValue();
+		for (Entry<Pair<Integer, Integer>, BezierPixel> entry : bcPixels.entrySet()) {
+			double yValue = entry.getValue().yLevel;
 			int floor = Mth.floor(yValue);
 			BlockPos targetPos = new BlockPos(entry.getKey()
 				.getFirst(), floor,
