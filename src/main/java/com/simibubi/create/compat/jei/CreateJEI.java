@@ -567,7 +567,7 @@ public class CreateJEI implements IModPlugin {
 			}
 
 			CreateRecipeCategory.Info<T> info = new CreateRecipeCategory.Info<>(
-					new mezz.jei.api.recipe.RecipeType<>(Create.asResource(name), recipeClass),
+					mezz.jei.api.recipe.RecipeType.createRecipeHolderType(Create.asResource(name)),
 					CreateLang.translateDirect("recipe." + name), background, icon, recipesSupplier, catalysts);
 			CreateRecipeCategory<T> category = factory.create(info);
 			allCategories.add(category);
