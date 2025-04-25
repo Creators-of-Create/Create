@@ -2,31 +2,21 @@ package com.simibubi.create.content.processing.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.base.Joiner;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.simibubi.create.foundation.codec.ResourceLocationAwareOps;
-
-import net.minecraft.util.ExtraCodecs;
-
-import org.slf4j.Logger;
-
-import com.simibubi.create.Create;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -89,40 +79,37 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 		return 0;
 	}
 
-	//TODO: Recipe id is no longer avcailable on construct,
-	// 		validation should be called in a reload listener after RecipeManager if needed,
-	//		currently only validates recipes created from builder for datagen
-	public void validate(ResourceLocation id) {
-		Logger logger = Create.LOGGER;
-		String messageHeader = "Your custom " + typeInfo.getId() + " recipe (" + id + ")";
+	public List<String> validate() {
+		List<String> errors = new ArrayList<>();
 		int ingredientCount = ingredients.size();
 		int outputCount = results.size();
 
 		if (ingredientCount > getMaxInputCount())
-			logger.warn(messageHeader + " has more item inputs (" + ingredientCount + ") than supported ("
+			errors.add("Recipe has more item inputs (" + ingredientCount + ") than supported ("
 				+ getMaxInputCount() + ").");
 
 		if (outputCount > getMaxOutputCount())
-			logger.warn(messageHeader + " has more item outputs (" + outputCount + ") than supported ("
+			errors.add("Recipe has more item outputs (" + outputCount + ") than supported ("
 				+ getMaxOutputCount() + ").");
 
 		ingredientCount = fluidIngredients.size();
 		outputCount = fluidResults.size();
 
 		if (ingredientCount > getMaxFluidInputCount())
-			logger.warn(messageHeader + " has more fluid inputs (" + ingredientCount + ") than supported ("
+			errors.add("Recipe has more fluid inputs (" + ingredientCount + ") than supported ("
 						+ getMaxFluidInputCount() + ").");
 
 		if (outputCount > getMaxFluidOutputCount())
-			logger.warn(messageHeader + " has more fluid outputs (" + outputCount + ") than supported ("
+			errors.add("Recipe has more fluid outputs (" + outputCount + ") than supported ("
 						+ getMaxFluidOutputCount() + ").");
 
 		if (processingDuration > 0 && !canSpecifyDuration())
-			logger.warn(messageHeader + " specified a duration. Durations have no impact on this type of recipe.");
+			errors.add("Recipe specified a duration. Durations have no impact on this type of recipe.");
 
 		if (requiredHeat != HeatCondition.NONE && !canRequireHeat())
-			logger.warn(
-				messageHeader + " specified a heat condition. Heat conditions have no impact on this type of recipe.");
+			errors.add("Recipe specified a heat condition. Heat conditions have no impact on this type of recipe.");
+
+		return errors;
 	}
 
 	public P getParams() {
@@ -226,16 +213,14 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 	public static <P extends ProcessingRecipeParams, R extends ProcessingRecipe<?, P>> MapCodec<R> codec(
 		Factory<P, R> factory, MapCodec<P> paramsCodec
 	) {
-		return RecordCodecBuilder.mapCodec(instance -> instance.group(
-			paramsCodec.xmap(factory::create, recipe -> recipe.getParams()).forGetter(Function.identity()),
-			ExtraCodecs.retrieveContext(ops -> ops instanceof ResourceLocationAwareOps awareOps
-				? DataResult.success(Optional.ofNullable(awareOps.getResourceLocation()))
-				: DataResult.success(Optional.<ResourceLocation>empty())
-			).forGetter(recipe -> Optional.empty())
-		).apply(instance, (recipe, id) -> {
-			id.ifPresent(recipe::validate);
-			return recipe;
-		}));
+		return paramsCodec.xmap(factory::create, recipe -> recipe.getParams())
+			.validate(recipe -> {
+				var errors = recipe.validate();
+				if (errors.isEmpty())
+					return DataResult.success(recipe);
+				errors.add(recipe.getClass().getSimpleName() + " failed validation:");
+				return DataResult.error(() -> Joiner.on('\n').join(errors), recipe);
+			});
 	}
 
 	@FunctionalInterface

@@ -3,6 +3,8 @@ package com.simibubi.create.content.processing.recipe;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.base.Joiner;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe.Factory;
 import com.simibubi.create.foundation.data.SimpleDatagenIngredient;
 import com.simibubi.create.foundation.data.recipe.Mods;
@@ -106,7 +108,11 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 		IRecipeTypeInfo recipeType = recipe.getTypeInfo();
 		ResourceLocation typeId = recipeType.getId();
 		ResourceLocation id = recipeId.withPrefix(typeId.getPath() + "/");
-		recipe.validate(id);
+		var errors = recipe.validate();
+		if (!errors.isEmpty()) {
+			errors.add(recipe.getClass().getSimpleName() + "with id " + id + " failed validation:");
+			Create.LOGGER.warn(Joiner.on('\n').join(errors));
+		}
 		consumer.accept(id, recipe, null, recipeConditions.toArray(new ICondition[0]));
 	}
 
@@ -127,11 +133,6 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 
 	public S require(Mods mod, String id) {
 		params.ingredients.add(new SimpleDatagenIngredient(mod, id).toVanilla());
-		return self();
-	}
-
-	public S require(ResourceLocation ingredient) {
-		params.ingredients.add(DataIngredient.ingredient(null, ingredient).toVanilla());
 		return self();
 	}
 
