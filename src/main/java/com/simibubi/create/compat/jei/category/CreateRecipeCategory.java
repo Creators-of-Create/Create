@@ -23,7 +23,9 @@ import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.neoforge.NeoForgeTypes;
+import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 
 import net.createmod.catnip.config.ConfigBase.ConfigBool;
@@ -31,6 +33,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.ItemLike;
 
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllFluids;
@@ -81,6 +84,29 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		this.icon = info.icon();
 		this.recipes = info.recipes();
 		this.catalysts = info.catalysts();
+	}
+
+	@Override
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<T> recipe, IFocusGroup focuses) {
+		setRecipe(builder, recipe.value(), focuses);
+	}
+
+	@Override
+	public void draw(RecipeHolder<T> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+		draw(recipe.value(), recipeSlotsView, guiGraphics, mouseX, mouseY);
+	}
+
+	@Override
+	public List<Component> getTooltipStrings(RecipeHolder<T> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+		return getTooltipStrings(recipe.value(), recipeSlotsView, mouseX, mouseY);
+	}
+
+	public void setRecipe(IRecipeLayoutBuilder builder, T recipe, IFocusGroup focuses) {}
+
+	public void draw(T recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {}
+
+	public List<Component> getTooltipStrings(T recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+		return List.of();
 	}
 
 	@NotNull

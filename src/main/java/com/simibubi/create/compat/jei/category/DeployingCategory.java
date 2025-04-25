@@ -12,7 +12,6 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -27,8 +26,7 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<DeployerApplicationRecipe> holder, IFocusGroup focuses) {
-		DeployerApplicationRecipe recipe = holder.value();
+	public void setRecipe(IRecipeLayoutBuilder builder, DeployerApplicationRecipe recipe, IFocusGroup focuses) {
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 27, 51)
 				.setBackground(getRenderedSlot(), -1, -1)
@@ -56,8 +54,7 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 	}
 
 	@Override
-	public void draw(RecipeHolder<DeployerApplicationRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-		DeployerApplicationRecipe recipe = holder.value();
+	public void draw(DeployerApplicationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29 + (recipe.getRollableResults().size() > 2 ? -19 : 0));
 		deployer.draw(graphics, getBackground().getWidth() / 2 - 13, 22);

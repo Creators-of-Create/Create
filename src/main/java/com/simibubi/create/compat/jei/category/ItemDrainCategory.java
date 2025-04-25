@@ -93,8 +93,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<EmptyingRecipe> holder, IFocusGroup focuses) {
-		EmptyingRecipe recipe = holder.value();
+	public void setRecipe(IRecipeLayoutBuilder builder, EmptyingRecipe recipe, IFocusGroup focuses) {
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 27, 8)
 				.setBackground(getRenderedSlot(), -1, -1)
@@ -109,8 +108,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 	}
 
 	@Override
-	public void draw(RecipeHolder<EmptyingRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-		EmptyingRecipe recipe = holder.value();
+	public void draw(EmptyingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 37);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 73, 4);
 		drain.withFluid(recipe.getResultingFluid())

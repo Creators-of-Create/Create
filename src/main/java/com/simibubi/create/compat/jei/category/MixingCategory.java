@@ -6,7 +6,6 @@ import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -39,9 +38,9 @@ public class MixingCategory extends BasinCategory {
 	}
 
 	@Override
-	public void draw(RecipeHolder<BasinRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-		super.draw(holder, iRecipeSlotsView, graphics, mouseX, mouseY);
-		BasinRecipe recipe = holder.value();
+	public void draw(BasinRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		super.draw(recipe, iRecipeSlotsView, graphics, mouseX, mouseY);
+
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (requiredHeat != HeatCondition.NONE)
 			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())

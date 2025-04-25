@@ -16,7 +16,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -31,8 +30,7 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<SandPaperPolishingRecipe> holder, IFocusGroup focuses) {
-		SandPaperPolishingRecipe recipe = holder.value();
+	public void setRecipe(IRecipeLayoutBuilder builder, SandPaperPolishingRecipe recipe, IFocusGroup focuses) {
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 27, 29)
 				.setBackground(getRenderedSlot(), -1, -1)
@@ -47,8 +45,7 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 	}
 
 	@Override
-	public void draw(RecipeHolder<SandPaperPolishingRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-		SandPaperPolishingRecipe recipe = holder.value();
+	public void draw(SandPaperPolishingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 61, 21);
 		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52, 32);
 

@@ -29,8 +29,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<CondensedBlockCuttingRecipe> holder, IFocusGroup focuses) {
-		CondensedBlockCuttingRecipe recipe = holder.value();
+	public void setRecipe(IRecipeLayoutBuilder builder, CondensedBlockCuttingRecipe recipe, IFocusGroup focuses) {
 		List<List<ItemStack>> results = recipe.getCondensedOutputs();
 
 		builder
@@ -52,7 +51,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 	}
 
 	@Override
-	public void draw(RecipeHolder<CondensedBlockCuttingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(CondensedBlockCuttingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 31, 6);
 		AllGuiTextures.JEI_SHADOW.render(graphics, 33 - 17, 37 + 13);
 		saw.draw(graphics, 33, 37);

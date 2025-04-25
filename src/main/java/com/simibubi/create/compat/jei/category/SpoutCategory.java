@@ -104,8 +104,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<FillingRecipe> holder, IFocusGroup focuses) {
-		FillingRecipe recipe = holder.value();
+	public void setRecipe(IRecipeLayoutBuilder builder, FillingRecipe recipe, IFocusGroup focuses) {
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 27, 51)
 				.setBackground(getRenderedSlot(), -1, -1)
@@ -120,8 +119,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 	}
 
 	@Override
-	public void draw(RecipeHolder<FillingRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-		FillingRecipe recipe = holder.value();
+	public void draw(FillingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29);
 		spout.withFluids(recipe.getRequiredFluid()

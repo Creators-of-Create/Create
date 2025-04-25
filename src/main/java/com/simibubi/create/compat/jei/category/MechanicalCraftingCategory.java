@@ -7,7 +7,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.world.item.Item;
 
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
 import org.jetbrains.annotations.NotNull;
@@ -47,8 +46,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<CraftingRecipe> holder, IFocusGroup focuses) {
-		CraftingRecipe recipe = holder.value();
+	public void setRecipe(IRecipeLayoutBuilder builder, CraftingRecipe recipe, IFocusGroup focuses) {
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 134, 81)
 			.addItemStack(getResultItem(recipe));
 
@@ -98,9 +96,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	}
 
 	@Override
-	public void draw(RecipeHolder<CraftingRecipe> holder, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX,
+	public void draw(CraftingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX,
 		double mouseY) {
-		CraftingRecipe recipe = holder.value();
 		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		float scale = getScale(recipe);
