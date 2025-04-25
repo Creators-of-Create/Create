@@ -1556,6 +1556,7 @@
   "create.logistics.recipe_filter": "Recipe Filter",
   "create.logistics.redstone_interval": "Redstone Interval",
   "create.logistics.secondFrequency": "Frequency #2",
+  "create.logistics.stock_ticker.requires_items_in_inventory": "Not enough %1$s items in Inventory",
   "create.logistics.train_observer.cargo_filter": "Cargo Filter",
   "create.logistics.when_multiple_outputs_available": "Distribution Method",
   "create.materialChecklist": "Material Checklist",
