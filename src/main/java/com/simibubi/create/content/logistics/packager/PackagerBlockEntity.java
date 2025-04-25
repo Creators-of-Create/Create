@@ -7,12 +7,15 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.packager.unpacking.UnpackingHandler;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.actors.psi.PortableStorageInterfaceBlockEntity;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.box.PackageItem;
@@ -85,6 +88,8 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 
 	private AdvancementBehaviour advancements;
 
+	public AbstractComputerBehaviour computerBehaviour;
+  
 	//
 
 	public PackagerBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
@@ -108,6 +113,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			.withFilter(this::supportsBlockEntity));
 		behaviours.add(invVersionTracker = new VersionedInventoryTrackerBehaviour(this));
 		behaviours.add(advancements = new AdvancementBehaviour(this, AllAdvancements.PACKAGER));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	private boolean supportsBlockEntity(BlockEntity target) {
@@ -584,11 +590,20 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		queuedExitingPackages.clear();
 	}
 
+	@NotNull
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
 		if (cap == ForgeCapabilities.ITEM_HANDLER)
 			return invProvider.cast();
+		if (computerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
 		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidateCaps();
+		computerBehaviour.removePeripheral();
 	}
 
 	public float getTrayOffset(float partialTicks) {
