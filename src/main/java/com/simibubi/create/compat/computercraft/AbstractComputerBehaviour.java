@@ -48,6 +48,8 @@ public class AbstractComputerBehaviour extends BlockEntityBehaviour {
 	public boolean hasAttachedComputer() {
 		return hasAttachedComputer;
 	}
+  
+  public void sendEvent(String eventName, Object... args) {}
 
 	@Override
 	public BehaviourType<?> getType() {

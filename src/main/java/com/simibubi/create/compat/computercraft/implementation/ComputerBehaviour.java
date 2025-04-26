@@ -8,6 +8,7 @@ import com.simibubi.create.compat.computercraft.implementation.peripherals.Speed
 import com.simibubi.create.compat.computercraft.implementation.peripherals.SpeedGaugePeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.StationPeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.StressGaugePeripheral;
+import com.simibubi.create.compat.computercraft.implementation.peripherals.SyncedPeripheral;
 import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.speedController.SpeedControllerBlockEntity;
@@ -75,5 +76,14 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
 		if (peripheral != null)
 			peripheral.invalidate();
 	}
+
+  @Override
+  public void sendEvent(String eventName, Object... args) {
+    getPeripheralCapability().ifPresent(cap -> {
+      if (cap instanceof SyncedPeripheral<?> peripheral) {
+        peripheral.sendEvent(eventName, args);
+      }
+    });
+  }
 
 }

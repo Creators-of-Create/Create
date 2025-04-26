@@ -1,6 +1,7 @@
 package com.simibubi.create.compat.computercraft.implementation.peripherals;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +18,7 @@ import net.minecraftforge.network.PacketDistributor;
 public abstract class SyncedPeripheral<T extends SmartBlockEntity> implements IPeripheral {
 
 	protected final T blockEntity;
-	private final AtomicInteger computers = new AtomicInteger();
+	private final Set<IComputerAccess> computerAccesses = ConcurrentHashMap.newKeySet();
 
 	public SyncedPeripheral(T blockEntity) {
 		this.blockEntity = blockEntity;
@@ -25,21 +26,27 @@ public abstract class SyncedPeripheral<T extends SmartBlockEntity> implements IP
 
 	@Override
 	public void attach(@NotNull IComputerAccess computer) {
-		computers.incrementAndGet();
+		computerAccesses.add(computer);
 		updateBlockEntity();
 	}
 
 	@Override
 	public void detach(@NotNull IComputerAccess computer) {
-		computers.decrementAndGet();
+		computerAccesses.remove(computer);
 		updateBlockEntity();
 	}
 
 	private void updateBlockEntity() {
-		boolean hasAttachedComputer = computers.get() > 0;
+		boolean hasAttachedComputer = computerAccesses.size() > 0;
 
 		blockEntity.getBehaviour(ComputerBehaviour.TYPE).setHasAttachedComputer(hasAttachedComputer);
 		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new AttachedComputerPacket(blockEntity.getBlockPos(), hasAttachedComputer));
+	}
+  
+	public void sendEvent(String eventName, Object... args) {
+		for (IComputerAccess computer : computerAccesses) {
+			computer.queueEvent(eventName, args);
+		}
 	}
 
 	@Override
