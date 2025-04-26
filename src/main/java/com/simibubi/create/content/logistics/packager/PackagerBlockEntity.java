@@ -16,6 +16,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.api.packager.unpacking.UnpackingHandler;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
+import com.simibubi.create.compat.computercraft.implementation.peripherals.PackagerPeripheral;
 import com.simibubi.create.content.contraptions.actors.psi.PortableStorageInterfaceBlockEntity;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.box.PackageItem;
@@ -139,6 +140,8 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			if (!level.isClientSide() && !queuedExitingPackages.isEmpty() && heldBox.isEmpty()) {
 				BigItemStack entry = queuedExitingPackages.get(0);
 				heldBox = entry.stack.copy();
+        computerBehaviour.sendEvent("Create_Packager_Send", PackageItem.getAddress(heldBox));
+        
 				
 				entry.count--;
 				if (entry.count <= 0)
@@ -358,6 +361,9 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 
 		if (unpacked && !simulate) {
 			previouslyUnwrapped = box;
+
+      computerBehaviour.sendEvent("Create_Packager_Receive", PackageItem.getAddress(box));
+      
 			animationInward = true;
 			animationTicks = CYCLE;
 			notifyUpdate();
@@ -499,6 +505,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		}
 
 		heldBox = createdBox;
+    computerBehaviour.sendEvent("Create_Packager_Send", PackageItem.getAddress(heldBox));
 		animationInward = false;
 		animationTicks = CYCLE;
 
