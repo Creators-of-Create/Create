@@ -708,13 +708,12 @@ public class TrainMapManager {
 									continue;
 								}
 
-								int colorBelow = map.getPixel(x + xDelta, z + 1);
-								mainColorBelow |= colorBelow == mainColor;
+								int colorBelow = map.getPixel(x + xDelta, z + 1) & 0xFFFFFF;
+								mainColorBelow |= colorBelow == (mainColor & 0xFFFFFF);
 
 								if (isSectionTheme) {
 									for (EdgeGroupColor groupColor : EdgeGroupColor.values()) {
-										Color groupMainColor =  groupColor.get();
-										mainColorBelow |= colorBelow == FastColor.ABGR32.color(0xFF, groupMainColor.getBlue(), groupMainColor.getGreen(), groupMainColor.getRed());
+										mainColorBelow |= colorBelow == (groupColor.getBGR() & 0xFFFFFF);
 									}
 								}
 							}
