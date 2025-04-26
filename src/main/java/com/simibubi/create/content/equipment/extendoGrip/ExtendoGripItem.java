@@ -1,5 +1,6 @@
 package com.simibubi.create.content.equipment.extendoGrip;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -29,6 +30,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -46,6 +52,7 @@ import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.BlockEvent.BreakEvent;
 import net.minecraftforge.event.level.BlockEvent.EntityPlaceEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -181,8 +188,10 @@ public class ExtendoGripItem extends Item {
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void consumeDurabilityOnPlace(EntityPlaceEvent event) {
 		Entity entity = event.getEntity();
-		if (entity instanceof Player)
-			findAndDamageExtendoGrip((Player) entity);
+		if (entity instanceof Player player) {
+			if (!event.getBlockSnapshot().getReplacedBlock().is(Blocks.WATER) && !event.getBlockSnapshot().getCurrentBlock().is(Blocks.WATER))
+				findAndDamageExtendoGrip(player);
+		}
 	}
 
 //	@SubscribeEvent(priority = EventPriority.LOWEST)
