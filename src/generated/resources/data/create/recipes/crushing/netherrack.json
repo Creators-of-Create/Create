@@ -7,6 +7,13 @@
         "type": "forge:mod_loaded",
         "modid": "exnihilosequentia"
       }
+    },
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:mod_loaded",
+        "modid": "exdeorum"
+      }
     }
   ],
   "ingredients": [

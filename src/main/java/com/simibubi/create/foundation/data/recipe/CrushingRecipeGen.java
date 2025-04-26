@@ -102,7 +102,8 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		NETHERRACK = create(() -> Blocks.NETHERRACK, b -> b.duration(250)
 			.output(AllItems.CINDER_FLOUR.get())
 			.output(.5f, AllItems.CINDER_FLOUR.get())
-			.whenModMissing(Mods.ENS.getId())),
+			.whenModMissing(Mods.ENS.getId())
+			.whenModMissing(Mods.ED.getId())),
 
 		OBSIDIAN = create(() -> Blocks.OBSIDIAN, b -> b.duration(500)
 			.output(AllItems.POWDERED_OBSIDIAN.get())
@@ -388,6 +389,20 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 				.output(.25f, Items.QUARTZ, 1)
 				.whenModLoaded(Mods.ENS.getId())),
 
+		// Ex Deorum
+
+		ED_STONES = edStones("blackstone", "deepslate", "end_stone", "netherrack"),
+
+		ED_DUST = create(Mods.ED.recipeId("dust"), b -> b.duration(200)
+				.require(Blocks.SAND).output(Mods.ED, "dust")
+				.whenModLoaded(Mods.ED.getId())),
+
+		ED_NETHERRACK = create(Mods.ED.recipeId("crushed_netherrack"), b -> b.duration(100)
+				.require(Mods.ED, "crushed_netherrack")
+				.output(AllItems.CINDER_FLOUR.get())
+				.output(.5f, AllItems.CINDER_FLOUR.get())
+				.whenModLoaded(Mods.ED.getId())),
+
 		// Aether
 
 		AET_ZANITE = create(Mods.AET.recipeId("zanite_ore"), b -> b.duration(350)
@@ -615,6 +630,17 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 					.require(Mods.MC, stone)
 					.output(Mods.ENS, crushed)
 					.whenModLoaded(Mods.ENS.getId()));
+		}
+		return null;
+	}
+
+	protected GeneratedRecipe edStones(String... stones) {
+		for (String stone : stones) {
+			String crushed = "crushed_" + stone;
+			create(Mods.ED.recipeId(stone), b -> b.duration(350)
+					.require(Mods.MC, stone)
+					.output(Mods.ED, crushed)
+					.whenModLoaded(Mods.ED.getId()));
 		}
 		return null;
 	}

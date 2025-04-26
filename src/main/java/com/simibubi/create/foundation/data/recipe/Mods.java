@@ -53,6 +53,7 @@ public enum Mods {
 	EO("elementaryores"),
 	IF("iceandfire"),
 	ENS("exnihilosequentia"),
+	ED("exdeorum"),
 	AET("aether"),
 	HH("hauntedharvest"),
 	VMP("vampirism"),
