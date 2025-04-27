@@ -86,4 +86,8 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
     });
   }
 
+  public void registerItemDetailProviders() {
+    PackagerPeripheral.registerItemDetailProviders();
+  }
+
 }
