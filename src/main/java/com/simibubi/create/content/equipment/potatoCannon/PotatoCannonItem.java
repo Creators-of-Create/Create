@@ -272,7 +272,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomArmP
 
 	@Override
 	public boolean onEntitySwing(ItemStack stack, LivingEntity entity, InteractionHand hand) {
-		return false;
+		return true;
 	}
 
 	@Override
