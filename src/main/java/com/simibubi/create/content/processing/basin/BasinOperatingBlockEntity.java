@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.google.common.base.Predicates;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -125,7 +124,11 @@ public abstract class BasinOperatingBlockEntity extends KineticBlockEntity {
 			.orElse(true))
 			return new ArrayList<>();
 
-		List<Recipe<?>> list = RecipeFinder.get(getRecipeCacheKey(), level, Predicates.and(this::matchStaticFilters, this::matchBasinRecipe));
+		List<Recipe<?>> list = new ArrayList<>();
+		for (Recipe<?> r : RecipeFinder.get(getRecipeCacheKey(), level, this::matchStaticFilters))
+			if (matchBasinRecipe(r))
+				list.add(r);
+
 		list.sort((r1, r2) -> r2.getIngredients().size() - r1.getIngredients().size());
 
 		return list;
