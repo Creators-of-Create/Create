@@ -58,7 +58,11 @@ public abstract class SyncedPeripheral<T extends SmartBlockEntity> implements IP
   
 	public void sendEvent(String eventName, Object... args) {
 		for (IComputerAccess computer : computerAccesses) {
-			computer.queueEvent(eventName, args);
+			String side = computer.getAttachmentName();
+      Object[] fullArgs = new Object[args.length + 1];
+      fullArgs[0] = side;
+      System.arraycopy(args, 0, fullArgs, 1, args.length);
+      computer.queueEvent(eventName, fullArgs);
 		}
 	}
 
