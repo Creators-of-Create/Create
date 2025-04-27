@@ -48,6 +48,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -140,8 +141,9 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			if (!level.isClientSide() && !queuedExitingPackages.isEmpty() && heldBox.isEmpty()) {
 				BigItemStack entry = queuedExitingPackages.get(0);
 				heldBox = entry.stack.copy();
-        computerBehaviour.sendEvent("Create_Packager_Send", PackageItem.getAddress(heldBox));
-        
+
+        List<Object> details = PackagerPeripheral.getPackageItemDetails(heldBox);
+        computerBehaviour.sendEvent("Create_Packager_Holding_Package", details.get(0), details.get(1), details.get(2), details.get(3));
 				
 				entry.count--;
 				if (entry.count <= 0)
@@ -362,7 +364,8 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		if (unpacked && !simulate) {
 			previouslyUnwrapped = box;
 
-      computerBehaviour.sendEvent("Create_Packager_Receive", PackageItem.getAddress(box));
+      List<Object> details = PackagerPeripheral.getPackageItemDetails(heldBox);
+      computerBehaviour.sendEvent("Create_Packager_Receive", details.get(0), details.get(1), details.get(2), details.get(3));
       
 			animationInward = true;
 			animationTicks = CYCLE;
@@ -505,8 +508,11 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		}
 
 		heldBox = createdBox;
-    computerBehaviour.sendEvent("Create_Packager_Send", PackageItem.getAddress(heldBox));
-		animationInward = false;
+
+    List<Object> details = PackagerPeripheral.getPackageItemDetails(heldBox);
+    computerBehaviour.sendEvent("Create_Packager_Holding_Package", details.get(0), details.get(1), details.get(2), details.get(3));
+		
+    animationInward = false;
 		animationTicks = CYCLE;
 
 		advancements.awardPlayer(AllAdvancements.PACKAGER);
