@@ -1,9 +1,13 @@
 package com.simibubi.create.foundation.events;
 
+import com.simibubi.create.AllTags.AllItemTags;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.elevator.ElevatorControlsHandler;
 import com.simibubi.create.content.contraptions.wrench.RadialWrenchHandler;
 import com.simibubi.create.content.equipment.toolbox.ToolboxHandlerClient;
+import com.simibubi.create.content.equipment.wrench.IWrenchable;
+import com.simibubi.create.content.equipment.wrench.WrenchItem;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorConnectionHandler;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorInteractionHandler;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainPackageInteractionHandler;
@@ -16,6 +20,8 @@ import com.simibubi.create.content.trains.track.CurvedTrackInteraction;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -108,6 +114,14 @@ public class InputEvents {
 		} else if (PackagePortTargetSelectionHandler.onUse()) {
 			event.setCanceled(true);
 			return;
+		}
+		
+		if (mc.player != null) {
+			ItemStack itemInHand = mc.player.getItemInHand(event.getHand());
+			if (AllItemTags.WRENCH.matches(itemInHand))
+				return;
+			if (itemInHand.is(Items.CHAIN) || AllBlocks.PACKAGE_FROGPORT.isIn(itemInHand))
+				return;
 		}
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {

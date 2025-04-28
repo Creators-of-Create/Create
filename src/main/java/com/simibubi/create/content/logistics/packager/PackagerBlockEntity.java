@@ -26,7 +26,7 @@ import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlock;
 import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlockEntity;
 import com.simibubi.create.content.logistics.packagerLink.RequestPromiseQueue;
 import com.simibubi.create.content.logistics.packagerLink.WiFiEffectPacket;
-import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -54,7 +54,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -72,7 +71,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 	public ItemStack heldBox;
 	public ItemStack previouslyUnwrapped;
 
-	public List<ItemStack> queuedExitingPackages;
+	public List<BigItemStack> queuedExitingPackages;
 
 	public PackagerItemHandler inventory;
 	private final LazyOptional<IItemHandler> invProvider;
@@ -132,7 +131,13 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			previouslyUnwrapped = ItemStack.EMPTY;
 
 			if (!level.isClientSide() && !queuedExitingPackages.isEmpty() && heldBox.isEmpty()) {
-				heldBox = queuedExitingPackages.remove(0);
+				BigItemStack entry = queuedExitingPackages.get(0);
+				heldBox = entry.stack.copy();
+				
+				entry.count--;
+				if (entry.count <= 0)
+					queuedExitingPackages.remove(0);
+				
 				animationInward = false;
 				animationTicks = CYCLE;
 				notifyUpdate();
@@ -303,9 +308,9 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 	public boolean isTooBusyFor(RequestType type) {
 		int queue = queuedExitingPackages.size();
 		return queue >= switch (type) {
-		case PLAYER -> 50;
-		case REDSTONE -> 20;
-		case RESTOCK -> 10;
+			case PLAYER -> 50;
+			case REDSTONE -> 20;
+			case RESTOCK -> 10;
 		};
 	}
 
@@ -335,8 +340,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		if (items.isEmpty())
 			return true;
 
-		PackageOrder orderContext = PackageItem.getOrderContext(box);
-
+		PackageOrderWithCrafts orderContext = PackageItem.getOrderContext(box);
 		Direction facing = getBlockState().getOptionalValue(PackagerBlock.FACING).orElse(Direction.UP);
 		BlockPos target = worldPosition.relative(facing.getOpposite());
 		BlockState targetState = level.getBlockState(target);
@@ -376,7 +380,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		boolean finalLinkInOrder = false;
 		int packageIndexAtLink = 0;
 		boolean finalPackageAtLink = false;
-		PackageOrder orderContext = null;
+		PackageOrderWithCrafts orderContext = null;
 		boolean requestQueue = queuedRequests != null;
 
 		if (requestQueue && !queuedRequests.isEmpty()) {
@@ -391,7 +395,8 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			orderContext = nextRequest.context();
 		}
 
-		Outer: for (int i = 0; i < PackageItem.SLOTS; i++) {
+		Outer:
+		for (int i = 0; i < PackageItem.SLOTS; i++) {
 			boolean continuePacking = true;
 
 			while (continuePacking) {
@@ -483,7 +488,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			plbe.behaviour.deductFromAccurateSummary(extractedItems);
 
 		if (!heldBox.isEmpty() || animationTicks != 0) {
-			queuedExitingPackages.add(createdBox);
+			queuedExitingPackages.add(new BigItemStack(createdBox, 1));
 			return;
 		}
 
@@ -540,7 +545,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		previouslyUnwrapped = ItemStack.of(compound.getCompound("InsertedBox"));
 		if (clientPacket)
 			return;
-		queuedExitingPackages = NBTHelper.readItemList(compound.getList("QueuedPackages", Tag.TAG_COMPOUND));
+		queuedExitingPackages = NBTHelper.readCompoundList(compound.getList("QueuedExitingPackages", Tag.TAG_COMPOUND), BigItemStack::read);
 		if (compound.contains("LastSummary"))
 			availableItems = InventorySummary.read(compound.getCompound("LastSummary"));
 	}
@@ -556,7 +561,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		compound.put("InsertedBox", previouslyUnwrapped.serializeNBT());
 		if (clientPacket)
 			return;
-		compound.put("QueuedPackages", NBTHelper.writeItemList(queuedExitingPackages));
+		compound.put("QueuedExitingPackages", NBTHelper.writeCompoundList(queuedExitingPackages, BigItemStack::write));
 		if (availableItems != null)
 			compound.put("LastSummary", availableItems.write());
 	}
@@ -571,8 +576,11 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 	public void destroy() {
 		super.destroy();
 		ItemHelper.dropContents(level, worldPosition, inventory);
-		queuedExitingPackages.forEach(stack -> Containers.dropItemStack(level, worldPosition.getX(),
-			worldPosition.getY(), worldPosition.getZ(), stack));
+		queuedExitingPackages.forEach(bigStack -> {
+			for (int i = 0; i < bigStack.count; i++)
+				Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(),
+					bigStack.stack.copy());
+		});
 		queuedExitingPackages.clear();
 	}
 

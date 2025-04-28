@@ -9,7 +9,7 @@ import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.box.PackageStyles.PackageStyle;
-import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 
 import net.createmod.catnip.data.Glob;
 import net.createmod.catnip.math.VecHelper;
@@ -107,7 +107,7 @@ public class PackageItem extends Item {
 	}
 
 	public static void setOrder(ItemStack box, int orderId, int linkIndex, boolean isFinalLink, int fragmentIndex,
-								boolean isFinal, @Nullable PackageOrder orderContext) {
+		boolean isFinal, @Nullable PackageOrderWithCrafts orderContext) {
 		CompoundTag tag = new CompoundTag();
 		tag.putInt("OrderId", orderId);
 		tag.putInt("LinkIndex", linkIndex);
@@ -128,17 +128,22 @@ public class PackageItem extends Item {
 			.getInt("OrderId");
 	}
 
-	public static PackageOrder getOrderContext(ItemStack box) {
+	@Nullable
+	/**
+	 * Ordered items and their amount in the original, combined request\n
+	 * (Present in all non-redstone packages)
+	 */
+	public static PackageOrderWithCrafts getOrderContext(ItemStack box) {
 		CompoundTag tag = box.getTag();
 		if (tag == null || !tag.contains("Fragment"))
 			return null;
 		CompoundTag frag = tag.getCompound("Fragment");
 		if (!frag.contains("OrderContext"))
 			return null;
-		return PackageOrder.read(frag.getCompound("OrderContext"));
+		return PackageOrderWithCrafts.read(frag.getCompound("OrderContext"));
 	}
 
-	public static void addOrderContext(ItemStack box, PackageOrder orderContext) {
+	public static void addOrderContext(ItemStack box, PackageOrderWithCrafts orderContext) {
 		CompoundTag tag = box.getOrCreateTagElement("Fragment");
 		if (orderContext != null)
 			tag.put("OrderContext", orderContext.write());

@@ -39,6 +39,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.MapColor;
 
 public class AllFluids {
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
@@ -70,6 +71,9 @@ public class AllFluids {
 				.explosionResistance(100f))
 			.tag(AllFluidTags.HONEY.tag)
 			.source(ForgeFlowingFluid.Source::new) // TODO: remove when Registrate fixes FluidBuilder
+			.block()
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW))
+			.build()
 			.bucket()
 			.tag(AllTags.forgeItemTag("buckets/honey"))
 			.build()
@@ -87,6 +91,9 @@ public class AllFluids {
 				.tickRate(25)
 				.slopeFindDistance(3)
 				.explosionResistance(100f))
+			.block()
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_BROWN))
+			.build()
 			.register();
 
 	// Load this class

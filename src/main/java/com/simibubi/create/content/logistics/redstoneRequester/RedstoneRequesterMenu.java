@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMenuTypes;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
 
 import net.minecraft.client.Minecraft;
@@ -14,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
@@ -72,11 +74,17 @@ public class RedstoneRequesterMenu extends GhostItemMenu<RedstoneRequesterBlockE
 	protected void saveData(RedstoneRequesterBlockEntity contentHolder) {
 		List<BigItemStack> stacks = contentHolder.encodedRequest.stacks();
 		ArrayList<BigItemStack> list = new ArrayList<>();
-		for (int i = 0; i < ghostInventory.getSlots(); i++)
-			list.add(new BigItemStack(ghostInventory.getStackInSlot(i)
-				.copyWithCount(1), i < stacks.size() ? stacks.get(i).count : 1));
+		for (int i = 0; i < ghostInventory.getSlots(); i++) {
+			ItemStack stackInSlot = ghostInventory.getStackInSlot(i);
+			if (stackInSlot.isEmpty())
+				continue;
+			list.add(new BigItemStack(stackInSlot.copyWithCount(1), i < stacks.size() ? stacks.get(i).count : 1));
+		}
 
-		contentHolder.encodedRequest = new PackageOrder(list);
+		PackageOrderWithCrafts newRequest = new PackageOrderWithCrafts(new PackageOrder(list), contentHolder.encodedRequest.orderedCrafts());
+		if (!newRequest.orderedStacksMatchOrderedRecipes())
+			newRequest = PackageOrderWithCrafts.simple(newRequest.stacks());
+		contentHolder.encodedRequest = newRequest;
 		contentHolder.sendData();
 	}
 

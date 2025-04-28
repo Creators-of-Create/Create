@@ -132,7 +132,8 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 
 			if (width < 3 && (i + 1) % width == 0)
 				for (int j = 0; j < 3 - width; j++)
-					craftingIngredients.add(emptyIngredient);
+					if (craftingIngredients.size() < 9)
+						craftingIngredients.add(emptyIngredient);
 		}
 
 		while (craftingIngredients.size() < 9)
