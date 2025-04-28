@@ -1,11 +1,11 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.List;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.MillingRecipeGen;
-
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -13,16 +13,13 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.List;
 
 @SuppressWarnings("unused")
 public final class CreateMillingRecipeGen extends MillingRecipeGen {
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	GRANITE = create(() -> Blocks.GRANITE, b -> b.duration(200)
 		.output(Blocks.RED_SAND)),
@@ -305,13 +302,13 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		.whenModLoaded(Mods.BB.getId())),
 
 	BB_PINK_CLOVER = create(Mods.BB.recipeId("pink_clover"), b -> b.duration(50)
-		.require(Mods.BB, "buttercup")
+        .require(Mods.BB, "pink_clover")
 		.output(Items.PINK_DYE, 2)
 		.output(.1f, Items.LIME_DYE)
 		.whenModLoaded(Mods.BB.getId())),
 
 	BB_WHITE_CLOVER = create(Mods.BB.recipeId("white_clover"), b -> b.duration(50)
-		.require(Mods.BB, "buttercup")
+        .require(Mods.BB, "white_clover")
 		.output(Items.WHITE_DYE, 2)
 		.output(.1f, Items.LIME_DYE)
 		.whenModLoaded(Mods.BB.getId())),
@@ -722,11 +719,8 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		List.of(Items.YELLOW_DYE), List.of(2))
 
 		;
-	public CreateMillingRecipeGen(PackOutput output) {
-		super(output, Create.ID);
-	}
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe bopFlower(String input, List<Float> chances,
+	GeneratedRecipe bopFlower(String input, List<Float> chances,
 																   List<Item> dyes, List<Integer> amounts) {
 		if (chances.size() == 2) {
 			return create(Mods.BOP.recipeId(input), b -> b.duration(50)
@@ -751,7 +745,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		}
 	}
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe bygFlower(String input, List<Float> chances,
+	GeneratedRecipe bygFlower(String input, List<Float> chances,
 																   List<Item> dyes, List<Integer> amounts) {
 		if (chances.size() == 2) {
 			return create(Mods.BYG.recipeId(input), b -> b.duration(50)
@@ -776,7 +770,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		}
 	}
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe envFlower(String input, List<Float> chances,
+	GeneratedRecipe envFlower(String input, List<Float> chances,
 																   List<Item> dyes, List<Integer> amounts) {
 		if (chances.size() == 2) {
 			return create(Mods.ENV.recipeId(input), b -> b.duration(50)
@@ -801,14 +795,14 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		}
 	}
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe bopFlower(String input, Float chance, Item dye, int amount) {
+	GeneratedRecipe bopFlower(String input, Float chance, Item dye, int amount) {
 		return create(Mods.BOP.recipeId(input), b -> b.duration(50)
 				.require(Mods.BOP, input)
 				.output(chance, dye, amount)
 				.whenModLoaded(Mods.BOP.getId()));
 	}
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe botaniaPetals(String... colors) {
+	GeneratedRecipe botaniaPetals(String... colors) {
 		for (String color : colors) {
 			create(Mods.BTN.recipeId(color + "_petal"), b -> b.duration(50)
 					.require(AllTags.optionalTag(ForgeRegistries.ITEMS,
@@ -819,7 +813,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		return null;
 	}
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe ruFlower(String input, List<Float> chances,
+	GeneratedRecipe ruFlower(String input, List<Float> chances,
 																  List<Item> dyes, List<Integer> amounts) {
 		if (chances.size() == 2) {
 			return create(Mods.RU.recipeId(input), b -> b.duration(50)
@@ -842,5 +836,9 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		} else {
 			return null;
 		}
+	}
+
+	public CreateMillingRecipeGen(PackOutput output) {
+		super(output, Create.ID);
 	}
 }
