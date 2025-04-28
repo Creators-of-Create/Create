@@ -69,7 +69,7 @@ public class AddressEditBox extends EditBox {
 
 	@Override
 	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-		if (pButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+		if (pButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT && !Screen.hasShiftDown()) {
 			if (isMouseOver(pMouseX, pMouseY)) {
 				setValue("");
 				return true;
