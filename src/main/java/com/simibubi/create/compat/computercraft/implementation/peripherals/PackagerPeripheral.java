@@ -12,12 +12,20 @@ import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.detail.VanillaDetailRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public class PackagerPeripheral extends SyncedPeripheral<PackagerBlockEntity> {
 
   public PackagerPeripheral(PackagerBlockEntity blockEntity) {
     super(blockEntity);
+  }
+
+  protected final ItemStack getHeldStack() throws LuaException {
+    ItemStack stack = this.blockEntity.inventory.getStackInSlot(1);
+    if (stack.isEmpty())
+      throw new LuaException("No package in packager");
+    return stack;
   }
 
   @LuaFunction
@@ -48,9 +56,7 @@ public class PackagerPeripheral extends SyncedPeripheral<PackagerBlockEntity> {
 
   @LuaFunction
   public final CreateLuaTable getHeldItems() throws LuaException {
-    ItemStack stack = getHeldStack();
-    
-    return fromCompoundTag(PackageItem.getContents(stack).serializeNBT());
+    return getHeldItemsTable(getHeldStack());
   }
 
   protected static CreateLuaTable getHeldContextTable(ItemStack stack) {
@@ -67,7 +73,7 @@ public class PackagerPeripheral extends SyncedPeripheral<PackagerBlockEntity> {
   
   protected static CreateLuaTable getHeldItemsTable(ItemStack stack) {
     try {
-      return fromCompoundTag(PackageItem.getContents(stack).serializeNBT());
+      return fromCompoundTag(PackageItem.getContents(stack).serializeNBT()).getTable("items");
     } catch (LuaException e) {
       return new CreateLuaTable();
     }
@@ -77,13 +83,6 @@ public class PackagerPeripheral extends SyncedPeripheral<PackagerBlockEntity> {
   public static List<Object> getPackageItemDetails(ItemStack stack) {
     return List.of(PackageItem.getAddress(stack), PackageItem.getOrderId(stack), getHeldItemsTable(stack), getHeldContextTable(stack));
   }
-
-  protected final ItemStack getHeldStack() throws LuaException {
-    ItemStack stack = this.blockEntity.inventory.getStackInSlot(1);
-    if (stack.isEmpty())
-      throw new LuaException("No package in packager");
-    return stack;
-  }
   
   public static void registerItemDetailProviders() {
     VanillaDetailRegistries.ITEM_STACK.addProvider((out, stack) -> {
@@ -91,10 +90,10 @@ public class PackagerPeripheral extends SyncedPeripheral<PackagerBlockEntity> {
         return;
       
       List<Object> details = getPackageItemDetails(stack);
-      out.put("address", details.get(0));
-      out.put("orderID", details.get(1));
-      out.put("items", details.get(2));
-      out.put("orderContext", details.get(3));
+      out.put("package_address", details.get(0));
+      out.put("package_orderID", details.get(1));
+      out.put("package_items", details.get(2));
+      out.put("package_orderContext", details.get(3));
     });
   }
 
