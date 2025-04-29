@@ -4,6 +4,10 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 
+import com.simibubi.create.AllTags;
+
+import com.simibubi.create.AllTags.AllBlockTags;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -64,7 +68,7 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellBlockEntity
 			return state;
 
 		Block underBlock = underState.getBlock();
-		if (!(Blocks.SOUL_FIRE.equals(underBlock) || Blocks.SOUL_CAMPFIRE.equals(underBlock)))
+		if (!AllBlockTags.FAN_PROCESSING_CATALYSTS_HAUNTING.matches(underBlock))
 			return state;
 
 		if (world.isClientSide()) {
