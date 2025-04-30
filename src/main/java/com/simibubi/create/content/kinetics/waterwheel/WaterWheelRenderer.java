@@ -108,7 +108,7 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 		String path = id.getPath();
 
 		if (path.endsWith("_planks")) // Covers most wood types
-			return path.substring(0, path.length() - 7);
+			return (path.startsWith("archwood") ? "blue_" : "") + path.substring(0, path.length() - 7);
 
 		if (path.contains("wood/planks/")) // TerraFirmaCraft
 			return path.substring(12);
