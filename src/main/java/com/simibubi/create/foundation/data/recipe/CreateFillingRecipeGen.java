@@ -23,7 +23,7 @@ import net.minecraftforge.common.Tags;
 @SuppressWarnings("unused")
 public final class CreateFillingRecipeGen extends FillingRecipeGen {
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	HONEY_BOTTLE = create("honey_bottle", b -> b.require(AllFluidTags.HONEY.tag, 250)
 		.require(Items.GLASS_BOTTLE)
@@ -112,7 +112,7 @@ public final class CreateFillingRecipeGen extends FillingRecipeGen {
 		super(output, Create.ID);
 	}
 
-	public SequencedAssemblyRecipeGen.GeneratedRecipe moddedGrass(Mods mod, String name) {
+	public GeneratedRecipe moddedGrass(Mods mod, String name) {
 		String grass = name + "_grass_block";
 		return create(mod.recipeId(grass), b -> b.require(Fluids.WATER, 500)
 				.require(mod, name + "_dirt")

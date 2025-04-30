@@ -22,7 +22,7 @@ import net.minecraftforge.common.Tags;
 @SuppressWarnings("unused")
 public final class CreateHauntingRecipeGen extends HauntingRecipeGen {
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	BRASS_BELL = convert(() -> Ingredient.of(AllBlocks.PECULIAR_BELL.get()), AllBlocks.HAUNTED_BELL::get),
 
@@ -66,7 +66,7 @@ public final class CreateHauntingRecipeGen extends HauntingRecipeGen {
 		super(output, Create.ID);
 	}
 
-	public SequencedAssemblyRecipeGen.GeneratedRecipe moddedConversion(Mods mod, String input, String output) {
+	public GeneratedRecipe moddedConversion(Mods mod, String input, String output) {
 		return create("compat/" + mod.getId() + "/" + output, p -> p.require(mod, input)
 				.output(mod, output)
 				.whenModLoaded(mod.getId()));

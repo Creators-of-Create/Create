@@ -27,7 +27,7 @@ import net.minecraftforge.common.Tags;
 @SuppressWarnings("unused")
 public final class CreateMixingRecipeGen extends MixingRecipeGen {
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	TEMP_LAVA = create("lava_from_cobble", b -> b.require(Tags.Items.COBBLESTONE)
 		.output(Fluids.LAVA, 50)
@@ -102,7 +102,7 @@ public final class CreateMixingRecipeGen extends MixingRecipeGen {
 		super(output, Create.ID);
 	}
 
-	public SequencedAssemblyRecipeGen.GeneratedRecipe moddedMud(Mods mod, String name) {
+	public GeneratedRecipe moddedMud(Mods mod, String name) {
 		String mud = name + "_mud";
 		return create(mod.recipeId(mud), b -> b.require(Fluids.WATER, 250)
 				.require(mod, name + "_dirt")

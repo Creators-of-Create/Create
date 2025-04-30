@@ -39,7 +39,7 @@ import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
 @SuppressWarnings("unused")
 public final class CreateWashingRecipeGen extends WashingRecipeGen {
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	WOOL = create("wool", b -> b.require(ItemTags.WOOL)
 		.output(Items.WHITE_WOOL)),
@@ -145,7 +145,7 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 		super(output, Create.ID);
 	}
 
-	public SequencedAssemblyRecipeGen.GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CompatMetals metal) {
+	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CompatMetals metal) {
 		for (Mods mod : metal.getMods()) {
 			String metalName = metal.getName(mod);
 			ResourceLocation nugget = mod.nuggetOf(metalName);
@@ -158,7 +158,7 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 		return null;
 	}
 
-	public SequencedAssemblyRecipeGen.GeneratedRecipe simpleModded(Mods mod, String input, String output) {
+	public GeneratedRecipe simpleModded(Mods mod, String input, String output) {
 		return create(mod.getId() + "/" + output, b -> b.require(mod, input)
 				.output(mod, output).whenModLoaded(mod.getId()));
 	}

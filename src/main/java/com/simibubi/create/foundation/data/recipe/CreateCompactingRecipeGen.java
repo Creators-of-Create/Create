@@ -25,7 +25,7 @@ public final class CreateCompactingRecipeGen extends CompactingRecipeGen {
 		super(output, Create.ID);
 	}
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	GRANITE = create("granite_from_flint", b -> b.require(Items.FLINT)
 		.require(Items.FLINT)

@@ -23,7 +23,7 @@ import net.minecraftforge.common.Tags;
 @SuppressWarnings("unused")
 public final class CreateMechanicalCraftingRecipeGen extends MechanicalCraftingRecipeGen {
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	CRUSHING_WHEEL = create(AllBlocks.CRUSHING_WHEEL::get).returns(2)
 		.recipe(b -> b.key('P', Ingredient.of(ItemTags.PLANKS))

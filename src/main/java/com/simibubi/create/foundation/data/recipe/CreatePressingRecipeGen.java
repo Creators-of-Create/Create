@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.Blocks;
 @SuppressWarnings("unused")
 public final class CreatePressingRecipeGen extends PressingRecipeGen {
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	SUGAR_CANE = create(() -> Items.SUGAR_CANE, b -> b.output(Items.PAPER)),
 
@@ -117,14 +117,14 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 		super(output, Create.ID);
 	}
 
-	private SequencedAssemblyRecipeGen.GeneratedRecipe moddedPaths(Mods mod, String... blocks) {
+	private GeneratedRecipe moddedPaths(Mods mod, String... blocks) {
 		for(String block : blocks) {
 			moddedCompacting(mod, block, block + "_path");
 		}
 		return null;
 	}
 
-	private SequencedAssemblyRecipeGen.GeneratedRecipe iePlates(String... metals) {
+	private GeneratedRecipe iePlates(String... metals) {
 		for (String metal : metals)
 			create(Mods.IE.recipeId("plate_" + metal), b -> b.require(AllTags.forgeItemTag("ingots/" + metal))
 				.output(Mods.IE, "plate_" + metal)
@@ -132,7 +132,7 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 		return null;
 	}
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe moddedCompacting(Mods mod, String input, String output) {
+	GeneratedRecipe moddedCompacting(Mods mod, String input, String output) {
 		return create("compat/" + mod.getId() + "/" + output, b -> b.require(mod, input)
 				.output(mod, output)
 				.whenModLoaded(mod.getId()));

@@ -25,7 +25,7 @@ public final class CreateEmptyingRecipeGen extends EmptyingRecipeGen {
 	 * potion/water bottles are handled internally
 	 */
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	HONEY_BOTTLE = create("honey_bottle", b -> b.require(Items.HONEY_BOTTLE)
 		.output(AllFluids.HONEY.get(), 250)

@@ -18,7 +18,7 @@ import net.minecraftforge.common.Tags.Items;
 @SuppressWarnings("unused")
 public final class CreateItemApplicationRecipeGen extends ItemApplicationRecipeGen {
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	BOUND_CARDBOARD_BLOCK = create("bound_cardboard_inworld",
 		b -> b.require(AllBlocks.CARDBOARD_BLOCK.asItem())

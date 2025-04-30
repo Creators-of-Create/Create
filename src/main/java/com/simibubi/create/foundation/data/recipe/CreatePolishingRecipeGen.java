@@ -16,7 +16,7 @@ import net.minecraft.data.PackOutput;
 @SuppressWarnings("unused")
 public final class CreatePolishingRecipeGen extends PolishingRecipeGen {
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	ROSE_QUARTZ = create(AllItems.ROSE_QUARTZ::get, b -> b.output(AllItems.POLISHED_ROSE_QUARTZ.get()))
 

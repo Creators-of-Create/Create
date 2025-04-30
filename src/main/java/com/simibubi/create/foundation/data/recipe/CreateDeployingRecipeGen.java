@@ -21,10 +21,10 @@ import java.util.List;
 @SuppressWarnings("unused")
 public final class CreateDeployingRecipeGen extends DeployingRecipeGen {
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe COPPER_TILES = copperChain(AllBlocks.COPPER_TILES);
-	SequencedAssemblyRecipeGen.GeneratedRecipe COPPER_SHINGLES = copperChain(AllBlocks.COPPER_SHINGLES);
+	GeneratedRecipe COPPER_TILES = copperChain(AllBlocks.COPPER_TILES);
+	GeneratedRecipe COPPER_SHINGLES = copperChain(AllBlocks.COPPER_SHINGLES);
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	COGWHEEL = create("cogwheel", b -> b.require(I.shaft())
 		.require(I.planks())
@@ -34,7 +34,7 @@ public final class CreateDeployingRecipeGen extends DeployingRecipeGen {
 		.require(I.planks())
 		.output(I.largeCog()));
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	CB1 = addWax(() -> Blocks.WAXED_COPPER_BLOCK, () -> Blocks.COPPER_BLOCK),
 	CB2 = addWax(() -> Blocks.WAXED_EXPOSED_COPPER, () -> Blocks.EXPOSED_COPPER),
@@ -56,7 +56,7 @@ public final class CreateDeployingRecipeGen extends DeployingRecipeGen {
 	CCS3 = addWax(() -> Blocks.WAXED_WEATHERED_CUT_COPPER_SLAB, () -> Blocks.WEATHERED_CUT_COPPER_SLAB),
 	CCS4 = addWax(() -> Blocks.WAXED_OXIDIZED_CUT_COPPER_SLAB, () -> Blocks.OXIDIZED_CUT_COPPER_SLAB);
 
-	SequencedAssemblyRecipeGen.GeneratedRecipe
+	GeneratedRecipe
 
 	CB_OX = oxidizationChain(List.of(() -> Blocks.COPPER_BLOCK, () -> Blocks.EXPOSED_COPPER, () -> Blocks.WEATHERED_COPPER, () -> Blocks.OXIDIZED_COPPER)),
 	CCB_OX = oxidizationChain(List.of(() -> Blocks.CUT_COPPER, () -> Blocks.EXPOSED_CUT_COPPER, () -> Blocks.WEATHERED_CUT_COPPER, () -> Blocks.OXIDIZED_CUT_COPPER)),
