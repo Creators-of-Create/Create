@@ -364,7 +364,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		if (unpacked && !simulate) {
 			previouslyUnwrapped = box;
 
-      List<Object> details = PackagerPeripheral.getPackageItemDetails(heldBox);
+      List<Object> details = PackagerPeripheral.getPackageItemDetails(box);
       computerBehaviour.sendEvent("Create_Packager_Receive", details.get(0), details.get(1), details.get(2), details.get(3));
       
 			animationInward = true;
