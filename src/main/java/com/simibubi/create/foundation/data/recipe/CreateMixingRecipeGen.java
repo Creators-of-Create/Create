@@ -4,6 +4,7 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.MixingRecipeGen;
 
 import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
@@ -19,6 +20,10 @@ import net.minecraft.world.level.material.Fluids;
 
 import net.minecraftforge.common.Tags;
 
+/**
+ * Create's own Data Generation for Mixing recipes
+ * @see MixingRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreateMixingRecipeGen extends MixingRecipeGen {
 

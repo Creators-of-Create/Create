@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.data.recipe;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.DeployingRecipeGen;
 
 import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
@@ -13,6 +14,10 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.List;
 
+/**
+ * Create's own Data Generation for Deploying recipes
+ * @see DeployingRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreateDeployingRecipeGen extends DeployingRecipeGen {
 

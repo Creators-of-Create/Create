@@ -5,6 +5,7 @@ import java.util.List;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.MillingRecipeGen;
 
 import net.minecraft.data.PackOutput;
@@ -16,6 +17,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
+/**
+ * Create's own Data Generation for Milling recipes
+ * @see MillingRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreateMillingRecipeGen extends MillingRecipeGen {
 

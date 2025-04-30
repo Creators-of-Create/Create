@@ -17,6 +17,7 @@ import java.util.function.UnaryOperator;
 
 import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
 
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
 
 import org.jetbrains.annotations.NotNull;
@@ -66,9 +67,18 @@ import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 
+/**
+ * Create's own Data Generation for all vanilla recipe types.
+ * @see ShapedRecipeBuilder
+ * @see ShapelessRecipeBuilder
+ * @see SimpleCookingRecipeBuilder
+ * @see SmithingTransformRecipeBuilder
+ * @see SpecialRecipeBuilder
+ * @see net.minecraftforge.common.crafting.ConditionalRecipe.Builder
+ */
 @SuppressWarnings("unused")
 public final class CreateStandardRecipeGen extends BaseRecipeProvider {
-	protected final List<GeneratedRecipe> all = new ArrayList<>();
+	final List<GeneratedRecipe> all = new ArrayList<>();
 
 	/*
 	 * Recipes are added through fields, so one can navigate to the right one easily

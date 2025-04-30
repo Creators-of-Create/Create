@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.data.recipe;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.ItemApplicationRecipeGen;
 
 import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
@@ -10,6 +11,10 @@ import net.minecraft.data.PackOutput;
 
 import net.minecraftforge.common.Tags.Items;
 
+/**
+ * Create's own Data Generation for Item Application recipes
+ * @see ItemApplicationRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreateItemApplicationRecipeGen extends ItemApplicationRecipeGen {
 

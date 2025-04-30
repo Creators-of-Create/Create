@@ -9,6 +9,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
 
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.ProcessingRecipeGen;
 
 import net.minecraft.data.CachedOutput;
@@ -25,6 +26,9 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.fluids.FluidType;
 
+/**
+ * The class that handles gathering all of Create's generated recipes for all types.
+ */
 public final class CreateRecipeProvider extends RecipeProvider {
 
 	static final List<ProcessingRecipeGen> GENERATORS = new ArrayList<>();

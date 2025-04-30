@@ -16,6 +16,10 @@ import net.minecraft.world.level.material.Fluids;
 
 import net.minecraftforge.common.Tags;
 
+/**
+ * Create's own Data Generation for Filling recipes
+ * @see FillingRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreateFillingRecipeGen extends FillingRecipeGen {
 

@@ -15,6 +15,10 @@ import net.minecraft.world.level.material.Fluids;
 
 import net.minecraftforge.common.Tags;
 
+/**
+ * Create's own Data Generation for Compacting recipes
+ * @see CompactingRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreateCompactingRecipeGen extends CompactingRecipeGen {
 	public CreateCompactingRecipeGen(PackOutput output) {

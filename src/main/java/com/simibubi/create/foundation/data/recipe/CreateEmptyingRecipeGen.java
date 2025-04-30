@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.EmptyingRecipeGen;
 
 import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
@@ -13,6 +14,10 @@ import net.minecraft.world.level.material.Fluids;
 
 import net.minecraftforge.common.ForgeMod;
 
+/**
+ * Create's own Data Generation for Emptying recipes
+ * @see EmptyingRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreateEmptyingRecipeGen extends EmptyingRecipeGen {
 

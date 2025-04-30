@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeGen;
 
 import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
@@ -15,6 +16,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import net.minecraftforge.common.Tags;
 
+/**
+ * Create's own Data Generation for Mechanical Crafting recipes
+ * @see MechanicalCraftingRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreateMechanicalCraftingRecipeGen extends MechanicalCraftingRecipeGen {
 

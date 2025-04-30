@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
@@ -19,6 +20,10 @@ import net.minecraft.world.level.material.Fluids;
 
 import java.util.stream.Stream;
 
+/**
+ * Create's own Data Generation for Sequenced Assembly recipes
+ * @see SequencedAssemblyRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreateSequencedAssemblyRecipeGen extends SequencedAssemblyRecipeGen {
 

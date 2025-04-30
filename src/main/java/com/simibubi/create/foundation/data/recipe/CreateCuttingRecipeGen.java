@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.CuttingRecipeGen;
 
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
@@ -12,6 +13,10 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.Objects;
 
+/**
+ * Create's own Data Generation for Cutting recipes
+ * @see CuttingRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreateCuttingRecipeGen extends CuttingRecipeGen {
 

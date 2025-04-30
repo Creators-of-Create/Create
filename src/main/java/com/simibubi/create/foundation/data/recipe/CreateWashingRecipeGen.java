@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.api.data.recipe.WashingRecipeGen;
 
@@ -31,6 +32,10 @@ import static com.simibubi.create.foundation.data.recipe.CompatMetals.SILVER;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
 
+/**
+ * Create's own Data Generation for Washing recipes
+ * @see WashingRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreateWashingRecipeGen extends WashingRecipeGen {
 

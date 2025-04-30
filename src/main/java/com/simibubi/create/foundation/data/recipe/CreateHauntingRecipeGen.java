@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.data.recipe;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.HauntingRecipeGen;
 
 import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
@@ -14,6 +15,10 @@ import net.minecraft.world.level.block.Blocks;
 
 import net.minecraftforge.common.Tags;
 
+/**
+ * Create's own Data Generation for Haunting recipes
+ * @see HauntingRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreateHauntingRecipeGen extends HauntingRecipeGen {
 

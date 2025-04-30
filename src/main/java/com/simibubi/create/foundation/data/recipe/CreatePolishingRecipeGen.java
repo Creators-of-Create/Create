@@ -2,12 +2,17 @@ package com.simibubi.create.foundation.data.recipe;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.PolishingRecipeGen;
 
 import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 
 import net.minecraft.data.PackOutput;
 
+/**
+ * Create's own Data Generation for the singular default polishing recipe
+ * @see PolishingRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreatePolishingRecipeGen extends PolishingRecipeGen {
 

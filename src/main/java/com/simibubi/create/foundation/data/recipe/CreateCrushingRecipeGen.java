@@ -35,6 +35,10 @@ import static com.simibubi.create.foundation.data.recipe.CompatMetals.SILVER;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
 
+/**
+ * Create's own Data Generation for Crushing recipes
+ * @see CrushingRecipeGen
+ */
 @SuppressWarnings("unused")
 public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 
