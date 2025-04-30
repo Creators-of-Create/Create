@@ -41,6 +41,10 @@ public abstract class ProcessingRecipeGen extends BaseRecipeProvider {
 		return generatedRecipe;
 	}
 
+	/**
+	 * Create a new processing recipe, with supplied name and recipe definitions
+	 * provided by the function
+	 */
 	protected <T extends ProcessingRecipe<?>> GeneratedRecipe createWithDeferredId(Supplier<ResourceLocation> name,
 																											  UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
 		ProcessingRecipeSerializer<T> serializer = getSerializer();
@@ -60,6 +64,11 @@ public abstract class ProcessingRecipeGen extends BaseRecipeProvider {
 		return createWithDeferredId(() -> name, transform);
 	}
 
+	/**
+	 * Gets this recipe generators generated recipe type.
+	 * Subclasses should override this to return an instance of IRecipeTypeInfo
+	 * Create uses an enum, however this is not in any way required for addons.
+	 */
 	protected abstract IRecipeTypeInfo getRecipeType();
 
 	protected <T extends ProcessingRecipe<?>> ProcessingRecipeSerializer<T> getSerializer() {
@@ -91,6 +100,12 @@ public abstract class ProcessingRecipeGen extends BaseRecipeProvider {
 		return create(modid, singleIngredient, transform);
 	}
 
+
+	/**
+	 * Gets a display name for this recipe generator.
+	 * It is recommended to override this for a prettier name, however that is not
+	 * required.
+	 */
 	@NotNull
 	@Override
 	public String getName() {
