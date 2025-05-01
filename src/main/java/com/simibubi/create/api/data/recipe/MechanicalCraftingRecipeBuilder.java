@@ -29,6 +29,10 @@ import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 
+/**
+ * The builder for building Mechanical Crafting recipes.
+ * @see MechanicalCraftingRecipeGen
+ */
 public class MechanicalCraftingRecipeBuilder {
 
 	private final Item result;
@@ -38,64 +42,66 @@ public class MechanicalCraftingRecipeBuilder {
 	private boolean acceptMirrored;
 	private List<ICondition> recipeConditions;
 
-	public MechanicalCraftingRecipeBuilder(ItemLike p_i48261_1_, int p_i48261_2_) {
-		result = p_i48261_1_.asItem();
-		count = p_i48261_2_;
+	public MechanicalCraftingRecipeBuilder(ItemLike result, int resultCount) {
+		this.result = result.asItem();
+		count = resultCount;
 		acceptMirrored = true;
 		recipeConditions = new ArrayList<>();
 	}
 
 	/**
-	 * Creates a new builder for a shaped recipe.
+	 * Creates a new builder for a shaped recipe with the specified result with a count of 1
 	 */
-	public static MechanicalCraftingRecipeBuilder shapedRecipe(ItemLike p_200470_0_) {
-		return shapedRecipe(p_200470_0_, 1);
+	public static MechanicalCraftingRecipeBuilder shapedRecipe(ItemLike result) {
+		return shapedRecipe(result, 1);
 	}
 
 	/**
-	 * Creates a new builder for a shaped recipe.
+	 * Creates a new builder for a shaped recipe with the specified result and count.
 	 */
-	public static MechanicalCraftingRecipeBuilder shapedRecipe(ItemLike p_200468_0_, int p_200468_1_) {
-		return new MechanicalCraftingRecipeBuilder(p_200468_0_, p_200468_1_);
+	public static MechanicalCraftingRecipeBuilder shapedRecipe(ItemLike result, int resultCount) {
+		return new MechanicalCraftingRecipeBuilder(result, resultCount);
 	}
 
 	/**
-	 * Adds a key to the recipe pattern.
+	 * Adds a new unique key to the recipe key for use in the pattern
 	 */
-	public MechanicalCraftingRecipeBuilder key(Character p_200469_1_, TagKey<Item> p_200469_2_) {
-		return this.key(p_200469_1_, Ingredient.of(p_200469_2_));
+	public MechanicalCraftingRecipeBuilder key(Character c, TagKey<Item> tag) {
+		return this.key(c, Ingredient.of(tag));
 	}
 
 	/**
-	 * Adds a key to the recipe pattern.
+	 * Adds a new unique key to the recipe key for use in the pattern
 	 */
-	public MechanicalCraftingRecipeBuilder key(Character p_200462_1_, ItemLike p_200462_2_) {
-		return this.key(p_200462_1_, Ingredient.of(p_200462_2_));
+	public MechanicalCraftingRecipeBuilder key(Character c, ItemLike item) {
+		return this.key(c, Ingredient.of(item));
 	}
 
 	/**
-	 * Adds a key to the recipe pattern.
+	 * Adds a new unique key to the recipe key for use in the pattern
 	 */
-	public MechanicalCraftingRecipeBuilder key(Character p_200471_1_, Ingredient p_200471_2_) {
-		if (this.key.containsKey(p_200471_1_)) {
-			throw new IllegalArgumentException("Symbol '" + p_200471_1_ + "' is already defined!");
-		} else if (p_200471_1_ == ' ') {
+	public MechanicalCraftingRecipeBuilder key(Character c, Ingredient ingredient) {
+		if (this.key.containsKey(c)) {
+			throw new IllegalArgumentException("Symbol '" + c + "' is already defined!");
+		} else if (c == ' ') {
 			throw new IllegalArgumentException("Symbol ' ' (whitespace) is reserved and cannot be defined");
 		} else {
-			this.key.put(p_200471_1_, p_200471_2_);
+			this.key.put(c, ingredient);
 			return this;
 		}
 	}
 
 	/**
-	 * Adds a new entry to the patterns for this recipe.
+	 * Adds a new line to the pattern for this recipe. All lines
+	 * for a pattern must be the same length, pad with spaces (empty slots)
+	 * if necessary.
 	 */
-	public MechanicalCraftingRecipeBuilder patternLine(String p_200472_1_) {
-		if (!this.pattern.isEmpty() && p_200472_1_.length() != this.pattern.get(0)
+	public MechanicalCraftingRecipeBuilder patternLine(String line) {
+		if (!this.pattern.isEmpty() && line.length() != this.pattern.get(0)
 			.length()) {
 			throw new IllegalArgumentException("Pattern must be the same width on every line!");
 		} else {
-			this.pattern.add(p_200472_1_);
+			this.pattern.add(line);
 			return this;
 		}
 	}
@@ -111,38 +117,39 @@ public class MechanicalCraftingRecipeBuilder {
 	/**
 	 * Builds this recipe into a {@link FinishedRecipe}.
 	 */
-	public void build(Consumer<FinishedRecipe> p_200464_1_) {
-		this.build(p_200464_1_, CatnipServices.REGISTRIES.getKeyOrThrow(this.result));
+	public void build(Consumer<FinishedRecipe> out) {
+		this.build(out, CatnipServices.REGISTRIES.getKeyOrThrow(this.result));
 	}
 
 	/**
 	 * Builds this recipe into a {@link FinishedRecipe}. Use
-	 * {@link #build(Consumer)} if save is the same as the ID for the result.
+	 * {@link #build(Consumer)} if the recipe id is the same as the result item id
 	 */
-	public void build(Consumer<FinishedRecipe> p_200466_1_, String p_200466_2_) {
+	public void build(Consumer<FinishedRecipe> out, String id) {
 		ResourceLocation resourcelocation = CatnipServices.REGISTRIES.getKeyOrThrow(this.result);
-		if ((new ResourceLocation(p_200466_2_)).equals(resourcelocation)) {
-			throw new IllegalStateException("Shaped Recipe " + p_200466_2_ + " should remove its 'save' argument");
+		if ((new ResourceLocation(id)).equals(resourcelocation)) {
+			throw new IllegalStateException("Shaped Recipe " + id + " should remove its 'id' argument");
 		} else {
-			this.build(p_200466_1_, new ResourceLocation(p_200466_2_));
+			this.build(out, new ResourceLocation(id));
 		}
 	}
 
 	/**
 	 * Builds this recipe into a {@link FinishedRecipe}.
 	 */
-	public void build(Consumer<FinishedRecipe> p_200467_1_, ResourceLocation p_200467_2_) {
-		validate(p_200467_2_);
-		p_200467_1_
-			.accept(new MechanicalCraftingRecipeBuilder.Result(p_200467_2_, result, count, pattern, key, acceptMirrored, recipeConditions));
+	public void build(Consumer<FinishedRecipe> out, ResourceLocation id) {
+		validate(id);
+		out
+			.accept(new MechanicalCraftingRecipeBuilder.Result(id, result, count, pattern, key, acceptMirrored, recipeConditions));
 	}
 
 	/**
 	 * Makes sure that this recipe is valid.
+	 * @param recipeId The id of this recipe, only used for error messages.
 	 */
-	private void validate(ResourceLocation p_200463_1_) {
+	private void validate(ResourceLocation recipeId) {
 		if (pattern.isEmpty()) {
-			throw new IllegalStateException("No pattern is defined for shaped recipe " + p_200463_1_ + "!");
+			throw new IllegalStateException("No pattern is defined for shaped recipe " + recipeId + "!");
 		} else {
 			Set<Character> set = Sets.newHashSet(key.keySet());
 			set.remove(' ');
@@ -152,25 +159,34 @@ public class MechanicalCraftingRecipeBuilder {
 					char c0 = s.charAt(i);
 					if (!key.containsKey(c0) && c0 != ' ')
 						throw new IllegalStateException(
-							"Pattern in recipe " + p_200463_1_ + " uses undefined symbol '" + c0 + "'");
+							"Pattern in recipe " + recipeId + " uses undefined symbol '" + c0 + "'");
 					set.remove(c0);
 				}
 			}
 
 			if (!set.isEmpty())
 				throw new IllegalStateException(
-					"Ingredients are defined but not used in pattern for recipe " + p_200463_1_);
+					"Ingredients are defined but not used in pattern for recipe " + recipeId);
 		}
 	}
 
+	/**
+	 * Add a new condition so this recipe is only enabled when the specified mod is loaded.
+	 */
 	public MechanicalCraftingRecipeBuilder whenModLoaded(String modid) {
 		return withCondition(new ModLoadedCondition(modid));
 	}
 
+	/**
+	 * Add a new condition so this recipe is only enabled when the specified mod is not loaded.
+	 */
 	public MechanicalCraftingRecipeBuilder whenModMissing(String modid) {
 		return withCondition(new NotCondition(new ModLoadedCondition(modid)));
 	}
 
+	/**
+	 * Add a new condition so this recipe is only enabled when the condition is true.
+	 */
 	public MechanicalCraftingRecipeBuilder withCondition(ICondition condition) {
 		recipeConditions.add(condition);
 		return this;
@@ -185,44 +201,44 @@ public class MechanicalCraftingRecipeBuilder {
 		private final boolean acceptMirrored;
 		private List<ICondition> recipeConditions;
 
-		public Result(ResourceLocation p_i48271_2_, Item p_i48271_3_, int p_i48271_4_, List<String> p_i48271_6_,
+		public Result(ResourceLocation recipeId, Item result, int count, List<String> pattern,
 			Map<Character, Ingredient> p_i48271_7_, boolean asymmetrical, List<ICondition> recipeConditions) {
-			this.id = p_i48271_2_;
-			this.result = p_i48271_3_;
-			this.count = p_i48271_4_;
-			this.pattern = p_i48271_6_;
+			this.id = recipeId;
+			this.result = result;
+			this.count = count;
+			this.pattern = pattern;
 			this.key = p_i48271_7_;
 			this.acceptMirrored = asymmetrical;
 			this.recipeConditions = recipeConditions;
 		}
 
-		public void serializeRecipeData(JsonObject p_218610_1_) {
+		public void serializeRecipeData(JsonObject o) {
 			JsonArray jsonarray = new JsonArray();
 			for (String s : this.pattern)
 				jsonarray.add(s);
 
-			p_218610_1_.add("pattern", jsonarray);
+			o.add("pattern", jsonarray);
 			JsonObject jsonobject = new JsonObject();
 			for (Entry<Character, Ingredient> entry : this.key.entrySet())
 				jsonobject.add(String.valueOf(entry.getKey()), entry.getValue()
 					.toJson());
 
-			p_218610_1_.add("key", jsonobject);
+			o.add("key", jsonobject);
 			JsonObject jsonobject1 = new JsonObject();
 			jsonobject1.addProperty("item", CatnipServices.REGISTRIES.getKeyOrThrow(this.result)
 				.toString());
 			if (this.count > 1)
 				jsonobject1.addProperty("count", this.count);
 
-			p_218610_1_.add("result", jsonobject1);
-			p_218610_1_.addProperty("acceptMirrored", acceptMirrored);
+			o.add("result", jsonobject1);
+			o.addProperty("acceptMirrored", acceptMirrored);
 
 			if (recipeConditions.isEmpty())
 				return;
 
 			JsonArray conds = new JsonArray();
 			recipeConditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
-			p_218610_1_.add("conditions", conds);
+			o.add("conditions", conds);
 		}
 
 		public RecipeSerializer<?> getType() {
