@@ -9,7 +9,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
-public class HauntingRecipeGen extends ProcessingRecipeGen {
+public abstract class HauntingRecipeGen extends ProcessingRecipeGen {
 
 	public GeneratedRecipe convert(ItemLike input, ItemLike result) {
 		return convert(() -> Ingredient.of(input), () -> result);

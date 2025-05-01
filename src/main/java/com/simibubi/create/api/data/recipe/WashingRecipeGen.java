@@ -10,7 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
-public class WashingRecipeGen extends ProcessingRecipeGen {
+public abstract class WashingRecipeGen extends ProcessingRecipeGen {
 
 	public GeneratedRecipe convert(Block block, Block result) {
 		return create(() -> block, b -> b.output(result));

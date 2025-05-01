@@ -4,7 +4,7 @@ import com.simibubi.create.AllRecipeTypes;
 
 import net.minecraft.data.PackOutput;
 
-public class MixingRecipeGen extends ProcessingRecipeGen {
+public abstract class MixingRecipeGen extends ProcessingRecipeGen {
 
 	public MixingRecipeGen(PackOutput output, String defaultNamespace) {
 		super(output, defaultNamespace);

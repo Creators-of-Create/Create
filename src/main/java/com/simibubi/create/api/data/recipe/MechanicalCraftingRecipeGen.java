@@ -12,7 +12,7 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
-public class MechanicalCraftingRecipeGen extends BaseRecipeProvider {
+public abstract class MechanicalCraftingRecipeGen extends BaseRecipeProvider {
 
 	public MechanicalCraftingRecipeGen(PackOutput output, String defaultNamespace) {
 		super(output, defaultNamespace);

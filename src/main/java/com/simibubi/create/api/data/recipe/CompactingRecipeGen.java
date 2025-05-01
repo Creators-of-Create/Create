@@ -11,7 +11,7 @@ import net.minecraft.data.PackOutput;
  * For an example of how you might do this, see Create's implementation: {@link com.simibubi.create.foundation.data.recipe.CreateCompactingRecipeGen}.
  * Needs to be added to a registered recipe provider to do anything, see {@link com.simibubi.create.foundation.data.recipe.CreateRecipeProvider}
  */
-public class CompactingRecipeGen extends ProcessingRecipeGen {
+public abstract class CompactingRecipeGen extends ProcessingRecipeGen {
 
 	public CompactingRecipeGen(PackOutput generator, String defaultNamespace) {
 		super(generator, defaultNamespace);

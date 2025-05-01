@@ -4,7 +4,7 @@ import com.simibubi.create.AllRecipeTypes;
 
 import net.minecraft.data.PackOutput;
 
-public class PressingRecipeGen extends ProcessingRecipeGen {
+public abstract class PressingRecipeGen extends ProcessingRecipeGen {
 
 	public PressingRecipeGen(PackOutput output, String defaultNamespace) {
 		super(output, defaultNamespace);

@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
 
-public class CrushingRecipeGen extends ProcessingRecipeGen {
+public abstract class CrushingRecipeGen extends ProcessingRecipeGen {
 
 	protected GeneratedRecipe mineralRecycling(AllPaletteStoneTypes type, Supplier<ItemLike> crushed,
 																		  Supplier<ItemLike> nugget, float chance) {

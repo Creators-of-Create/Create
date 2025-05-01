@@ -6,7 +6,7 @@ import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeB
 
 import net.minecraft.data.PackOutput;
 
-public class SequencedAssemblyRecipeGen extends BaseRecipeProvider {
+public abstract class SequencedAssemblyRecipeGen extends BaseRecipeProvider {
 
 	public SequencedAssemblyRecipeGen(PackOutput output, String defaultNamespace) {
 		super(output, defaultNamespace);

@@ -4,7 +4,7 @@ import com.simibubi.create.AllRecipeTypes;
 
 import net.minecraft.data.PackOutput;
 
-public class PolishingRecipeGen extends ProcessingRecipeGen {
+public abstract class PolishingRecipeGen extends ProcessingRecipeGen {
 
 	public PolishingRecipeGen(PackOutput output, String defaultNamespace) {
 		super(output, defaultNamespace);

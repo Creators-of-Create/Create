@@ -14,7 +14,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.WeatheringCopper.WeatherState;
 
-public class DeployingRecipeGen extends ProcessingRecipeGen {
+public abstract class DeployingRecipeGen extends ProcessingRecipeGen {
 
 	public GeneratedRecipe copperChain(CopperBlockSet set) {
 		for (Variant<?> variant : set.getVariants()) {

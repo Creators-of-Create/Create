@@ -11,7 +11,7 @@ import net.minecraftforge.common.crafting.conditions.NotCondition;
 import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
 
 @SuppressWarnings("unused")
-public class MillingRecipeGen extends ProcessingRecipeGen {
+public abstract class MillingRecipeGen extends ProcessingRecipeGen {
 
 	protected GeneratedRecipe metalOre(String name, ItemEntry<? extends Item> crushed, int duration) {
 		return create(name + "_ore", b -> b.duration(duration)

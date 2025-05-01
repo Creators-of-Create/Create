@@ -5,7 +5,6 @@ import java.util.List;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.MillingRecipeGen;
 
 import net.minecraft.data.PackOutput;

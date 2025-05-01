@@ -11,7 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
-public class ItemApplicationRecipeGen extends ProcessingRecipeGen {
+public abstract class ItemApplicationRecipeGen extends ProcessingRecipeGen {
 	protected GeneratedRecipe woodCasing(String type, Supplier<ItemLike> ingredient, Supplier<ItemLike> output) {
 		return woodCasingIngredient(type, () -> Ingredient.of(ingredient.get()), output);
 	}
