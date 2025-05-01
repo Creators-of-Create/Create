@@ -12,6 +12,13 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
+/**
+ * The base class for Mechanical Crafting recipe generation.
+ * Addons should extend this and use the {@link #create(Supplier)} method to
+ * make recipes.
+ * For an example of how you might do this, see Create's implementation: {@link com.simibubi.create.foundation.data.recipe.CreateMechanicalCraftingRecipeGen}.
+ * Needs to be added to a registered recipe provider to do anything, see {@link com.simibubi.create.foundation.data.recipe.CreateRecipeProvider}
+ */
 public abstract class MechanicalCraftingRecipeGen extends BaseRecipeProvider {
 
 	public MechanicalCraftingRecipeGen(PackOutput output, String defaultNamespace) {

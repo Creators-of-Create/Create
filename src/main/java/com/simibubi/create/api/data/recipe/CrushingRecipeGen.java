@@ -22,6 +22,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
 
+/**
+ * The base class for Crushing recipe generation.
+ * Addons should extend this and use the {@link ProcessingRecipeGen#create} methods
+ * or the helper methods contained in this class to make recipes.
+ * For an example of how you might do this, see Create's implementation: {@link com.simibubi.create.foundation.data.recipe.CreateCrushingRecipeGen}.
+ * Needs to be added to a registered recipe provider to do anything, see {@link com.simibubi.create.foundation.data.recipe.CreateRecipeProvider}
+ */
 public abstract class CrushingRecipeGen extends ProcessingRecipeGen {
 
 	protected GeneratedRecipe mineralRecycling(AllPaletteStoneTypes type, Supplier<ItemLike> crushed,

@@ -14,6 +14,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.WeatheringCopper.WeatherState;
 
+/**
+ * The base class for Deploying recipe generation.
+ * Addons should extend this and use the {@link ProcessingRecipeGen#create} methods
+ * or the helper methods contained in this class to make recipes.
+ * For an example of how you might do this, see Create's implementation: {@link com.simibubi.create.foundation.data.recipe.CreateDeployingRecipeGen}.
+ * Needs to be added to a registered recipe provider to do anything, see {@link com.simibubi.create.foundation.data.recipe.CreateRecipeProvider}
+ */
 public abstract class DeployingRecipeGen extends ProcessingRecipeGen {
 
 	public GeneratedRecipe copperChain(CopperBlockSet set) {

@@ -11,6 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * A class containing some basic setup for other recipe generators to use.
+ * Addons should extend this if they add a custom recipe type that is not
+ * a processing recipe type and want to use Create's helpers.
+ * For processing recipes extend {@link ProcessingRecipeGen}.
+ */
 public abstract class BaseRecipeProvider extends RecipeProvider {
 	protected final String modid;
 	protected final List<GeneratedRecipe> all = new ArrayList<>();

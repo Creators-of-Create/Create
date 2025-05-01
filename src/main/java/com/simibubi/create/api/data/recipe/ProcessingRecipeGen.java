@@ -16,6 +16,11 @@ import net.minecraft.world.level.ItemLike;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A base class for all processing recipes, containing helper methods
+ * for datagenning processing recipes. Addons should extend this for
+ * custom processing recipe types, and return that recipe type in {@link #getRecipeType()}.
+ */
 public abstract class ProcessingRecipeGen extends BaseRecipeProvider {
 
 	public ProcessingRecipeGen(PackOutput generator, String defaultNamespace) {
@@ -85,7 +90,7 @@ public abstract class ProcessingRecipeGen extends BaseRecipeProvider {
 
 	/**
 	 * Create a new processing recipe, with recipe definitions provided by the
-	 * function under the default namespace
+	 * function, under the default namespace
 	 */
 	protected <T extends ProcessingRecipe<?>> GeneratedRecipe create(String name, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
 		return create(asResource(name), transform);

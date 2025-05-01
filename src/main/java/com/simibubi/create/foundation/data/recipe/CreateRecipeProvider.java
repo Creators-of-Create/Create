@@ -26,7 +26,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.fluids.FluidType;
 
 /**
- * The class that handles gathering all of Create's generated recipes for all types.
+ * The class that handles gathering Create's generated recipes for most types.
  * Data here is only generated when running server dategen
  * @see com.simibubi.create.infrastructure.data.CreateDatagen
  */

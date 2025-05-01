@@ -6,6 +6,13 @@ import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeB
 
 import net.minecraft.data.PackOutput;
 
+/**
+ * The base class for Sequenced Assembly recipe generation.
+ * Addons should extend this and use {@link #create(String, UnaryOperator)} to modify builders
+ * to create recipes.
+ * For an example of how you might do this, see Create's implementation: {@link com.simibubi.create.foundation.data.recipe.CreateSequencedAssemblyRecipeGen}.
+ * Needs to be added to a registered recipe provider to do anything, see {@link com.simibubi.create.foundation.data.recipe.CreateRecipeProvider}
+ */
 public abstract class SequencedAssemblyRecipeGen extends BaseRecipeProvider {
 
 	public SequencedAssemblyRecipeGen(PackOutput output, String defaultNamespace) {
