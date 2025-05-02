@@ -49,9 +49,9 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.data.Pair;
 import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.ChatFormatting;
@@ -70,8 +70,8 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackLinkedSet;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -414,7 +414,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 
 		boolean failed = false;
 
-		Map<UUID, Map<Pair<Item, CompoundTag>, ItemStackConnections>> consolidated = new HashMap<>();
+		Map<UUID, Map<ItemStack, ItemStackConnections>> consolidated = new HashMap<>();
 
 		for (FactoryPanelConnection connection : targetedBy.values()) {
 			FactoryPanelBehaviour source = at(getWorld(), connection);
@@ -422,18 +422,19 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 				return;
 
 			ItemStack item = source.getFilter();
-			Pair<Item, CompoundTag> key = Pair.of(item.getItem(), item.getTag());
 
-			Map<Pair<Item, CompoundTag>, ItemStackConnections> networkItemCounts = consolidated.computeIfAbsent(source.network, $ -> new HashMap<>());
-			networkItemCounts.computeIfAbsent(key, $ -> new ItemStackConnections(item));
-			ItemStackConnections existingConnections = networkItemCounts.get(key);
+
+
+			Map<ItemStack, ItemStackConnections> networkItemCounts = consolidated.computeIfAbsent(source.network, $ -> new Object2ObjectOpenCustomHashMap<>(ItemStackLinkedSet.TYPE_AND_TAG));
+			networkItemCounts.computeIfAbsent(item, $ -> new ItemStackConnections(item));
+			ItemStackConnections existingConnections = networkItemCounts.get(item);
 			existingConnections.add(connection);
 			existingConnections.totalAmount += connection.amount;
 		}
 
 		Multimap<UUID, BigItemStack> toRequest = HashMultimap.create();
 
-		for (Entry<UUID, Map<Pair<Item, CompoundTag>, ItemStackConnections>> entry : consolidated.entrySet()) {
+		for (Entry<UUID, Map<ItemStack, ItemStackConnections>> entry : consolidated.entrySet()) {
 			UUID network = entry.getKey();
 			InventorySummary summary = LogisticsManager.getSummaryOfNetwork(network, true);
 
