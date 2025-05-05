@@ -3,6 +3,7 @@ package com.simibubi.create;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.simibubi.create.api.behaviour.spouting.TankFillingBehavior;
 import com.simibubi.create.api.behaviour.spouting.BlockSpoutingBehaviour;
 import com.simibubi.create.api.behaviour.spouting.CauldronSpoutingBehavior;
 import com.simibubi.create.api.behaviour.spouting.StateChangingBehavior;
@@ -32,6 +33,8 @@ public class AllBlockSpoutingBehaviours {
 		BlockSpoutingBehaviour.BY_BLOCK.register(Blocks.FARMLAND, StateChangingBehavior.incrementingState(100, isWater, FarmBlock.MOISTURE));
 		BlockSpoutingBehaviour.BY_BLOCK.register(Blocks.WATER_CAULDRON, StateChangingBehavior.incrementingState(250, isWater, LayeredCauldronBlock.LEVEL));
 		BlockSpoutingBehaviour.BY_BLOCK.register(Blocks.CAULDRON, CauldronSpoutingBehavior.INSTANCE);
+
+		BlockSpoutingBehaviour.BY_BLOCK_ENTITY.register(AllBlockEntityTypes.BASIN.get(), TankFillingBehavior.INSTANCE);
 
 		if (!Mods.TCONSTRUCT.isLoaded())
 			return;
