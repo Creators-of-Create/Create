@@ -20,3 +20,9 @@ jobs:
 
       - name: Build
         run: ./gradlew build
+        
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: output
+          path: build/**/*.jar
