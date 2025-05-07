@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -7,6 +8,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.schedule.DestinationSuggestions;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -25,6 +27,7 @@ public class AddressEditBox extends EditBox {
 	private DestinationSuggestions destinationSuggestions;
 	private Consumer<String> mainResponder;
 	private String prevValue = "=)";
+	private Field shiftPressedField;
 	
 	public AddressEditBox(Screen screen, Font pFont, int pX, int pY, int pWidth, int pHeight, boolean anchorToBottom) {
 		this(screen, pFont, pX, pY, pWidth, pHeight, anchorToBottom, null);
@@ -32,6 +35,14 @@ public class AddressEditBox extends EditBox {
 	
 	public AddressEditBox(Screen screen, Font pFont, int pX, int pY, int pWidth, int pHeight, boolean anchorToBottom, String localAddress) {
         super(pFont, pX, pY, pWidth, pHeight, Component.empty());
+
+		try {
+			shiftPressedField = EditBox.class.getDeclaredField("shiftPressed");
+			shiftPressedField.setAccessible(true);
+		} catch (Exception e) {
+			Create.LOGGER.error("Failed to get shiftPressed field from EditBox", e);
+		}
+
 		destinationSuggestions = AddressEditBoxHelper.createSuggestions(screen, this, anchorToBottom, localAddress);
 		destinationSuggestions.setAllowSuggestions(true);
 		destinationSuggestions.updateCommandInfo();
@@ -69,20 +80,14 @@ public class AddressEditBox extends EditBox {
 
 	@Override
 	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-		boolean wasFocused = isFocused();
-
-		// Simulate key press to update super.shiftPressed
-		super.setFocused(true);
-		super.keyPressed(0, 0, 0);
-		super.setFocused(wasFocused);
-
-		if (pButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT && !Screen.hasShiftDown()) {
+		if (pButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
 			if (isMouseOver(pMouseX, pMouseY)) {
 				setValue("");
 				return true;
 			}
 		}
 		
+		boolean wasFocused = isFocused();
 		if (super.mouseClicked(pMouseX, pMouseY, pButton)) {
 			if (!wasFocused) {
 				setHighlightPos(0);
@@ -95,9 +100,33 @@ public class AddressEditBox extends EditBox {
 		return false;
 	}
 
+	public boolean getShiftPressed() {
+		try {
+			return (boolean) shiftPressedField.get(this);
+		} catch (Exception e) {
+			Create.LOGGER.error("Failed to get shiftPressed field on EditBox", e);
+			return false;
+		}
+	}
+	public void setShiftPressed(boolean pressed) {
+		try {
+			shiftPressedField.setBoolean(this, pressed);
+		} catch (Exception e) {
+			Create.LOGGER.error("Failed to set shiftPressed field on EditBox", e);
+		}
+	}
+
 	@Override
 	public void setValue(String text) {
+		/*
+		 * Ensuring that shiftPressed is false before setting the value is a necessary workaround
+		 * because the vanilla EditBox implementation doesn't account for setValue being called
+		 * via non-key events (e.g. mouse click).
+		 */
+		boolean wasShiftPressed = getShiftPressed();
+		setShiftPressed(false);
 		super.setValue(text);
+		setShiftPressed(wasShiftPressed);
 	}
 
 	@Override
