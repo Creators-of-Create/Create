@@ -69,6 +69,13 @@ public class AddressEditBox extends EditBox {
 
 	@Override
 	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+		boolean wasFocused = isFocused();
+
+		// Simulate key press to update super.shiftPressed
+		super.setFocused(true);
+		super.keyPressed(0, 0, 0);
+		super.setFocused(wasFocused);
+
 		if (pButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT && !Screen.hasShiftDown()) {
 			if (isMouseOver(pMouseX, pMouseY)) {
 				setValue("");
@@ -76,7 +83,6 @@ public class AddressEditBox extends EditBox {
 			}
 		}
 		
-		boolean wasFocused = isFocused();
 		if (super.mouseClicked(pMouseX, pMouseY, pButton)) {
 			if (!wasFocused) {
 				setHighlightPos(0);
