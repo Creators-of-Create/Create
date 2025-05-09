@@ -51,7 +51,7 @@ public class PressVisual extends ShaftVisual<MechanicalPressBlockEntity> impleme
 	private float getRenderedHeadOffset(float pt) {
 		PressingBehaviour pressingBehaviour = blockEntity.getPressingBehaviour();
 		return pressingBehaviour.getRenderedHeadOffset(pt)
-			* pressingBehaviour.mode.headOffset;
+			* pressingBehaviour.modeToHeadOffset();
 	}
 
 	@Override

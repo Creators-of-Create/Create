@@ -5,10 +5,10 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.content.itemprocessing.specifics.press.PressProcessingSpecifics;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.kinetics.crafter.MechanicalCraftingRecipe;
-import com.simibubi.create.content.kinetics.press.PressingBehaviour.Mode;
-import com.simibubi.create.content.kinetics.press.PressingBehaviour.PressingBehaviourSpecifics;
+import com.simibubi.create.content.processing.ProcessingMode;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinOperatingBlockEntity;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
@@ -38,7 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implements PressingBehaviourSpecifics {
+public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implements PressProcessingSpecifics {
 
 	private static final Object compressingRecipesKey = new Object();
 
@@ -63,6 +63,11 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 
 		registerAwardables(behaviours, AllAdvancements.PRESS, AllAdvancements.COMPACTING,
 			AllAdvancements.TRACK_CRAFTING);
+	}
+
+	@Override
+	public int getEntityScanCooldown() {
+		return PressingBehaviour.ENTITY_SCAN;
 	}
 
 	public void onItemPressed(ItemStack result) {
@@ -91,7 +96,7 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 				ItemStack stackInSlot = inputs.getItem(slot);
 				if (stackInSlot.isEmpty())
 					continue;
-				pressingBehaviour.particleItems.add(stackInSlot);
+				pressingBehaviour.addParticleItem(stackInSlot);
 			}
 		}
 
@@ -112,7 +117,7 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 	}
 
 	@Override
-	public boolean tryProcessInWorld(ItemEntity itemEntity, boolean simulate) {
+	public boolean tryProcessItemInWorld(ItemEntity itemEntity, boolean simulate) {
 		ItemStack item = itemEntity.getItem();
 		Optional<RecipeHolder<PressingRecipe>> recipe = getRecipe(item);
 		if (!recipe.isPresent())
@@ -121,7 +126,7 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 			return true;
 
 		ItemStack itemCreated = ItemStack.EMPTY;
-		pressingBehaviour.particleItems.add(item);
+		pressingBehaviour.addParticleItem(item);
 		if (canProcessInBulk() || item.getCount() == 1) {
 			RecipeApplier.applyRecipeOn(itemEntity, recipe.get().value());
 			itemCreated = itemEntity.getItem()
@@ -152,7 +157,7 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 			return false;
 		if (simulate)
 			return true;
-		pressingBehaviour.particleItems.add(input.stack);
+		pressingBehaviour.addParticleItem(input.stack);
 		List<ItemStack> outputs = RecipeApplier.applyRecipeOn(level,
 			canProcessInBulk() ? input.stack : input.stack.copyWithCount(1), recipe.get());
 
@@ -168,7 +173,7 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 	}
 
 	@Override
-	public void onPressingCompleted() {
+	public void onFinished() {
 		if (pressingBehaviour.onBasin() && matchBasinRecipe(currentRecipe)
 			&& getBasin().filter(BasinBlockEntity::canContinueProcessing)
 				.isPresent())
@@ -222,23 +227,23 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 
 	@Override
 	public void startProcessingBasin() {
-		if (pressingBehaviour.running && pressingBehaviour.runningTicks <= PressingBehaviour.CYCLE / 2)
+		if (pressingBehaviour.isProcessing() && pressingBehaviour.getFinishedTicks() <= PressingBehaviour.CYCLE / 2)
 			return;
 		super.startProcessingBasin();
-		pressingBehaviour.start(Mode.BASIN);
+		pressingBehaviour.startProcessing(ProcessingMode.BASIN);
 	}
 
 	@Override
 	protected void onBasinRemoved() {
-		pressingBehaviour.particleItems.clear();
-		pressingBehaviour.running = false;
-		pressingBehaviour.runningTicks = 0;
+		pressingBehaviour.clearParticles();
+		pressingBehaviour.setProcessing(false);
+		pressingBehaviour.setFinishedTicks(0);
 		sendData();
 	}
 
 	@Override
 	protected boolean isRunning() {
-		return pressingBehaviour.running;
+		return pressingBehaviour.isProcessing();
 	}
 
 	@Override

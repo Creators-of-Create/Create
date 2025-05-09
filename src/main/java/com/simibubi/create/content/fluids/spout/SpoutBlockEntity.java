@@ -1,7 +1,7 @@
 package com.simibubi.create.content.fluids.spout;
 
-import static com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult.HOLD;
-import static com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult.PASS;
+import static com.simibubi.create.content.processing.ProcessingResult.HOLD;
+import static com.simibubi.create.content.processing.ProcessingResult.PASS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import com.simibubi.create.api.behaviour.spouting.BlockSpoutingBehaviour;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.fluids.FluidFX;
 import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour;
-import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult;
+import com.simibubi.create.content.processing.ProcessingResult;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
@@ -82,9 +82,10 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		tank = SmartFluidTankBehaviour.single(this, 1000);
 		behaviours.add(tank);
 
-		beltProcessing = new BeltProcessingBehaviour(this).whenItemEnters(this::onItemReceived)
-			.whileItemHeld(this::whenItemHeld);
-		behaviours.add(beltProcessing);
+		//TODO Rewrite spout logic
+//		beltProcessing = new BeltProcessingBehaviour(this).whenItemEnters(this::onItemReceived)
+//			.whileItemHeld(this::whenItemHeld);
+//		behaviours.add(beltProcessing);
 
 		registerAwardables(behaviours, AllAdvancements.SPOUT, AllAdvancements.FOODS);
 	}

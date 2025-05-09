@@ -14,6 +14,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * Models an item stack on a belt which is being transported
+ */
 public class TransportedItemStack implements Comparable<TransportedItemStack> {
 
 	private static Random R = new Random();

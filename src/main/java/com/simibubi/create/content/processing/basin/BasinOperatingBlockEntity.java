@@ -22,6 +22,9 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import org.checkerframework.checker.units.qual.C;
 
+/**
+ * Machine can operate on a basin block
+ */
 public abstract class BasinOperatingBlockEntity extends KineticBlockEntity {
 
 	public DeferralBehaviour basinChecker;
@@ -135,7 +138,7 @@ public abstract class BasinOperatingBlockEntity extends KineticBlockEntity {
 			.sorted((r1, r2) -> r2.getIngredients()
 				.size()
 				- r1.getIngredients()
-					.size())
+				.size())
 			.collect(Collectors.toList());
 	}
 

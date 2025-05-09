@@ -1,7 +1,12 @@
 package com.simibubi.create.content.kinetics.belt.behaviour;
 
+import com.simibubi.create.content.itemprocessing.ItemProcessor;
+import com.simibubi.create.content.itemprocessing.specifics.ProcessingSpecifics;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.funnel.AbstractFunnelBlock;
+import com.simibubi.create.content.processing.ProcessingBehaviour;
+import com.simibubi.create.content.processing.ProcessingCallback;
+import com.simibubi.create.content.processing.ProcessingResult;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -10,38 +15,43 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.function.BiFunction;
+
 /**
- * Behaviour for BlockEntities which can process items on belts or depots beneath
- * them. Currently only supports placement location 2 spaces above the belt
- * block. Example use: Mechanical Press
+ * Entity can process items which are running on a belt
+ * Use this inside your entities for general item processing and belt processing.
+ *
+ * @param <T> processing specifics
+ * @see ProcessingSpecifics
  */
-public class BeltProcessingBehaviour extends BlockEntityBehaviour {
+public abstract class BeltProcessingBehaviour<T extends ProcessingSpecifics> extends ItemProcessor<T> {
 
-	public static final BehaviourType<BeltProcessingBehaviour> TYPE = new BehaviourType<>();
+	public static BehaviourType<BeltProcessingBehaviour<?>> TYPE = new BehaviourType<>("belt_processing_behaviour");
 
-	public static enum ProcessingResult {
-		PASS, HOLD, REMOVE;
+	public BeltProcessingBehaviour(int cycle, SmartBlockEntity be, T specifics) {
+		super(cycle, be, specifics);
+		onItemEnter = this::whenItemEnters;
+		continueProcessing = this::whileItemHeld;
 	}
 
-	private ProcessingCallback onItemEnter;
-	private ProcessingCallback continueProcessing;
+	public abstract ProcessingResult whenItemEnters(TransportedItemStack itemStack, TransportedItemStackHandlerBehaviour handler);
 
-	public BeltProcessingBehaviour(SmartBlockEntity be) {
-		super(be);
-		onItemEnter = (s, i) -> ProcessingResult.PASS;
-		continueProcessing = (s, i) -> ProcessingResult.PASS;
-	}
+	/**
+	 * Called as long as the item is held on the belt.
+	 * @param itemStack the stack being on the belt
+	 * @param handler the belt
+	 */
+	public abstract ProcessingResult whileItemHeld(TransportedItemStack itemStack, TransportedItemStackHandlerBehaviour handler);
 
-	public BeltProcessingBehaviour whenItemEnters(ProcessingCallback callback) {
-		onItemEnter = callback;
-		return this;
-	}
 
-	public BeltProcessingBehaviour whileItemHeld(ProcessingCallback callback) {
-		continueProcessing = callback;
-		return this;
-	}
-
+	/**
+	 * Checks if a block is above the belt, Funnels are ignored from blocking the belt.
+	 * A blocked means, that items are not transported in the belt direction.
+	 *
+	 * @param world where the belt is located
+	 * @param processingSpace location of the current item process on the belt
+	 * @return whether the belt is blocked or not
+	 */
 	public static boolean isBlocked(BlockGetter world, BlockPos processingSpace) {
 		BlockState blockState = world.getBlockState(processingSpace.above());
 		if (AbstractFunnelBlock.isFunnel(blockState))
@@ -54,19 +64,4 @@ public class BeltProcessingBehaviour extends BlockEntityBehaviour {
 	public BehaviourType<?> getType() {
 		return TYPE;
 	}
-
-	public ProcessingResult handleReceivedItem(TransportedItemStack stack,
-		TransportedItemStackHandlerBehaviour inventory) {
-		return onItemEnter.apply(stack, inventory);
-	}
-
-	public ProcessingResult handleHeldItem(TransportedItemStack stack, TransportedItemStackHandlerBehaviour inventory) {
-		return continueProcessing.apply(stack, inventory);
-	}
-
-	@FunctionalInterface
-	public interface ProcessingCallback {
-		public ProcessingResult apply(TransportedItemStack stack, TransportedItemStackHandlerBehaviour inventory);
-	}
-
 }
