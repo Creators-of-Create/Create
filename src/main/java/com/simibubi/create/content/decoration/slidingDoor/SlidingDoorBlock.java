@@ -118,7 +118,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
-		BlockPos pCurrentPos, BlockPos pFacingPos) {
+								  BlockPos pCurrentPos, BlockPos pFacingPos) {
 		BlockState blockState = super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
 		if (blockState.isAir())
 			return blockState;
@@ -157,7 +157,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 
 	@Override
 	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos,
-		boolean pIsMoving) {
+								boolean pIsMoving) {
 		boolean lower = pState.getValue(HALF) == DoubleBlockHalf.LOWER;
 		boolean isPowered = isDoorPowered(pLevel, pPos, pState);
 		if (defaultBlockState().is(pBlock))
@@ -169,8 +169,8 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 		if (be != null && be.deferUpdate)
 			return;
 
-		BlockState changedState = pState.setValue(POWERED, Boolean.valueOf(isPowered))
-			.setValue(OPEN, Boolean.valueOf(isPowered));
+		BlockState changedState = pState.setValue(POWERED, isPowered)
+			.setValue(OPEN, isPowered);
 		if (isPowered)
 			changedState = changedState.setValue(VISIBLE, false);
 
@@ -185,8 +185,8 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 			BlockState otherDoor = pLevel.getBlockState(otherPos);
 
 			if (isDoubleDoor(changedState, hinge, facing, otherDoor)) {
-				otherDoor = otherDoor.setValue(POWERED, Boolean.valueOf(isPowered))
-					.setValue(OPEN, Boolean.valueOf(isPowered));
+				otherDoor = otherDoor.setValue(POWERED, isPowered)
+					.setValue(OPEN, isPowered);
 				if (isPowered)
 					otherDoor = otherDoor.setValue(VISIBLE, false);
 				pLevel.setBlock(otherPos, otherDoor, 2);
@@ -214,23 +214,26 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 
 	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
+								 BlockHitResult pHit) {
 
 		pState = pState.cycle(OPEN);
-		if (pState.getValue(OPEN))
+		boolean isOpen = pState.getValue(OPEN);
+		if (isOpen)
 			pState = pState.setValue(VISIBLE, false);
 		pLevel.setBlock(pPos, pState, 10);
-		pLevel.gameEvent(pPlayer, isOpen(pState) ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pPos);
+		pLevel.gameEvent(pPlayer, isOpen ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pPos);
 
 		DoorHingeSide hinge = pState.getValue(HINGE);
 		Direction facing = pState.getValue(FACING);
 		BlockPos otherPos =
 			pPos.relative(hinge == DoorHingeSide.LEFT ? facing.getClockWise() : facing.getCounterClockWise());
 		BlockState otherDoor = pLevel.getBlockState(otherPos);
-		if (isDoubleDoor(pState, hinge, facing, otherDoor))
+		if (isDoubleDoor(pState, hinge, facing, otherDoor)) {
 			use(otherDoor, pLevel, otherPos, pPlayer, pHand, pHit);
-		else if (pState.getValue(OPEN))
+		} else if (isOpen) {
+			this.playSound(pPlayer, pLevel, pPos, true);
 			pLevel.gameEvent(pPlayer, GameEvent.BLOCK_OPEN, pPos);
+		}
 
 		return InteractionResult.sidedSuccess(pLevel.isClientSide);
 	}
