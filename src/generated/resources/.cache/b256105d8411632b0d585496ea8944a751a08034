@@ -1,4 +1,4 @@
-// 1.20.1	2025-04-22T22:16:48.2352599	Create's Processing Recipes
+// 1.20.1	2025-04-25T23:52:00.2834496	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -43,6 +43,12 @@ fa4af21ec7ca9d6bd96278135b2007ebca0f70cc data/create/recipes/crushing/compat/ele
 42a9c2ddfac196865694db470638c81f73c46bb9 data/create/recipes/crushing/compat/elementaryores/ore_lapis_end.json
 eac0542063e8718c9788c8b60144e35bbfdfcb24 data/create/recipes/crushing/compat/elementaryores/ore_lapis_nether.json
 afed14982eb85caf831e84a7e4309aa166f53823 data/create/recipes/crushing/compat/elementaryores/ore_redstone_end.json
+748628d3226455b1956150a1ddd7d0ed0b2c30af data/create/recipes/crushing/compat/exdeorum/blackstone.json
+8edd0b6aacf2a33fc602b3078d22fcc691895083 data/create/recipes/crushing/compat/exdeorum/crushed_netherrack.json
+62c4028dbda8528476f73fca1ee5ec2a7b2d9cb4 data/create/recipes/crushing/compat/exdeorum/deepslate.json
+55d6a3ef641d14f30a658f5c0bdde83ef7dbf323 data/create/recipes/crushing/compat/exdeorum/dust.json
+e7c225b660c33df18c0200384ece97e18ee8a69d data/create/recipes/crushing/compat/exdeorum/end_stone.json
+bdd42c9f1f8842372f9c8669cc0b6c99a7bd483b data/create/recipes/crushing/compat/exdeorum/netherrack.json
 d98fab5641d0b4245d27bf0e3ce60676fb1980eb data/create/recipes/crushing/compat/exnihilosequentia/andesite.json
 4153b4d4aaa532f93af0b12b8c65c665687d7dcd data/create/recipes/crushing/compat/exnihilosequentia/crushed_diorite.json
 dc2553cb5b88b17b50b39d4f1177b3985d7d2700 data/create/recipes/crushing/compat/exnihilosequentia/crushed_netherrack.json
@@ -108,7 +114,7 @@ c9a47b29ba75ba29c8cb630fe32c4bf2f1f1d1ae data/create/recipes/crushing/iron_ore.j
 855b6655dea911724ee68d07b993f17440ac422e data/create/recipes/crushing/lapis_ore.json
 492827ab3d55ca3edfef5eb006b1f77d62e1b446 data/create/recipes/crushing/lead_ore.json
 e170bc17a796c73a05d2d77a85c086cfaac55c31 data/create/recipes/crushing/leather_horse_armor.json
-606ccdf3119a62ab461028192d191ffb10332e21 data/create/recipes/crushing/netherrack.json
+cb11973bbec627a8d76378177b028a2e26d8d496 data/create/recipes/crushing/netherrack.json
 07e8991a2161aab4dd73bb74900fd0c70aad2847 data/create/recipes/crushing/nether_gold_ore.json
 c7c0d94707c2858a87d01cff6b284d7fb85acdbe data/create/recipes/crushing/nether_quartz_ore.json
 0380b9416b263de2ee6a6cd1f4064df2e243c047 data/create/recipes/crushing/nether_wart_block.json
