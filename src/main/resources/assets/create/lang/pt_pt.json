@@ -1169,6 +1169,7 @@
   "create.gui.contraptions.not_fast_enough": "Este %1$s _não_ está a rodar com _velocidade_ _suficiente_.",
   "create.gui.factory_panel.connect_input": "Adicionar nova conexão",
   "create.gui.factory_panel.crafting_input": "Ingredientes empacotados",
+  "create.gui.factory_panel.inactive": " Inativo ",
   "create.gui.factory_panel.left_click_disconnect": "Clica com o botão esquerdo para desconectar",
   "create.gui.factory_panel.left_click_reset": "Clica com o botão esquerdo para reiniciar",
   "create.gui.factory_panel.no_open_promises": "Nenhuma promessa aberta",

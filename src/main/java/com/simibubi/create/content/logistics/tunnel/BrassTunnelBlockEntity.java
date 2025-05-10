@@ -770,7 +770,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 
 		SelectionMode(AllIcons icon) {
 			this.icon = icon;
-			this.translationKey = "tunnel.selection_mode." + Lang.asId(name());
+			this.translationKey = "create.tunnel.selection_mode." + Lang.asId(name());
 		}
 
 		@Override

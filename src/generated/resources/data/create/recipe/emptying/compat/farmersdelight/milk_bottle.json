@@ -18,11 +18,11 @@
   ],
   "results": [
     {
-      "id": "minecraft:glass_bottle"
-    },
-    {
       "amount": 250,
       "id": "minecraft:milk"
+    },
+    {
+      "id": "minecraft:glass_bottle"
     }
   ]
 }

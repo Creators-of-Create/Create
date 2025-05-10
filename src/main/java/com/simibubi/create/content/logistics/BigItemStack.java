@@ -1,6 +1,9 @@
 package com.simibubi.create.content.logistics;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -72,4 +75,12 @@ public class BigItemStack {
 		return "(" + stack.getHoverName()
 			.getString() + " x" + count + ")";
 	}
+
+	public static List<BigItemStack> duplicateWrappers(List<BigItemStack> list) {
+		List<BigItemStack> copy = new ArrayList<>();
+		for (BigItemStack bigItemStack : list)
+			copy.add(new BigItemStack(bigItemStack.stack, bigItemStack.count));
+		return copy;
+	}
+
 }

@@ -85,29 +85,6 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		this.catalysts = info.catalysts();
 	}
 
-	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<T> recipe, IFocusGroup focuses) {
-		setRecipe(builder, recipe.value(), focuses);
-	}
-
-	@Override
-	public void draw(RecipeHolder<T> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
-		draw(recipe.value(), recipeSlotsView, guiGraphics, mouseX, mouseY);
-	}
-
-	@Override
-	public List<Component> getTooltipStrings(RecipeHolder<T> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-		return getTooltipStrings(recipe.value(), recipeSlotsView, mouseX, mouseY);
-	}
-
-	public void setRecipe(IRecipeLayoutBuilder builder, T recipe, IFocusGroup focuses) {}
-
-	public void draw(T recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {}
-
-	public List<Component> getTooltipStrings(T recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-		return List.of();
-	}
-
 	@NotNull
 	@Override
 	public RecipeType<RecipeHolder<T>> getRecipeType() {
@@ -129,8 +106,31 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		return icon;
 	}
 
+	@Override
+	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<T> holder, IFocusGroup focuses) {
+		setRecipe(builder, holder.value(), focuses);
+	}
+
+	@Override
+	public void draw(RecipeHolder<T> holder, IRecipeSlotsView recipeSlotsView, GuiGraphics gui, double mouseX, double mouseY) {
+		draw(holder.value(), recipeSlotsView, gui, mouseX, mouseY);
+	}
+
+	@Override
+	public List<Component> getTooltipStrings(RecipeHolder<T> holder, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+		return getTooltipStrings(holder.value(), recipeSlotsView, mouseX, mouseY);
+	}
+
+	protected abstract void setRecipe(IRecipeLayoutBuilder builder, T recipe, IFocusGroup focuses);
+
+	protected abstract void draw(T recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics gui, double mouseX, double mouseY);
+
+	protected List<Component> getTooltipStrings(T recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+		return List.of();
+	}
+
 	public void registerRecipes(IRecipeRegistration registration) {
-		registration.addRecipes(type, recipes.get().stream().toList());
+		registration.addRecipes(type, recipes.get());
 	}
 
 	public void registerCatalysts(IRecipeCatalystRegistration registration) {
@@ -266,7 +266,6 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 			return addRecipeListConsumer(recipes -> recipes.addAll(collection.get()));
 		}
 
-		@SuppressWarnings("unchecked")
 		public Builder<T> addAllRecipesIf(Predicate<RecipeHolder<T>> pred) {
 			return addRecipeListConsumer(recipes -> consumeAllRecipesOfType(recipe -> {
 				if (pred.test(recipe)) recipes.add(recipe);

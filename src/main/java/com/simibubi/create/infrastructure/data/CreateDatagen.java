@@ -20,7 +20,6 @@ import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.tterrag.registrate.providers.ProviderType;
-import com.tterrag.registrate.providers.RegistrateDataProvider;
 
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.core.HolderLookup;
@@ -31,9 +30,14 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 public class CreateDatagen {
+	public static void gatherDataHighPriority(GatherDataEvent event) {
+		if (event.getMods().contains(Create.ID))
+			addExtraRegistrateData();
+	}
+
 	public static void gatherData(GatherDataEvent event) {
-		if (!event.getMods().contains(Create.ID)) return;
-		addExtraRegistrateData();
+		if (!event.getMods().contains(Create.ID))
+			return;
 
 		DataGenerator generator = event.getGenerator();
 		PackOutput output = generator.getPackOutput();
@@ -62,8 +66,6 @@ public class CreateDatagen {
 		if (event.includeServer()) {
 			StandardProcessingRecipeGen.registerAll(generator, output, lookupProvider);
 		}
-
-		event.getGenerator().addProvider(true, Create.registrate().setDataProvider(new RegistrateDataProvider(Create.registrate(), Create.ID, event)));
 	}
 
 	private static void addExtraRegistrateData() {

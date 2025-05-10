@@ -25,6 +25,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public abstract class FluidTransportBehaviour extends BlockEntityBehaviour {
@@ -87,7 +88,7 @@ public abstract class FluidTransportBehaviour extends BlockEntityBehaviour {
 			boolean sendUpdate = false;
 			for (PipeConnection connection : connections) {
 				sendUpdate |= connection.flipFlowsIfPressureReversed();
-				connection.manageSource(world, pos);
+				connection.manageSource(world, pos, blockEntity);
 			}
 			if (sendUpdate)
 				blockEntity.notifyUpdate();

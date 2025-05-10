@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.ICapabilityProvider;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.createmod.catnip.math.BlockFace;
+import net.createmod.ponder.api.level.PonderLevel;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -59,7 +60,8 @@ public abstract class FlowSource {
 
 	public abstract boolean isEndpoint();
 
-	public void manageSource(Level world) {}
+	public void manageSource(Level world, BlockEntity networkBE) {
+	}
 
 	public void whileFlowPresent(Level world, boolean pulling) {}
 
@@ -76,18 +78,27 @@ public abstract class FlowSource {
 			fluidHandlerCache = EMPTY;
 		}
 
-		public void manageSource(Level world) {
+		public void manageSource(Level level, BlockEntity networkBE) {
 			if (fluidHandlerCache == null) {
-				BlockEntity blockEntity = world.getBlockEntity(location.getConnectedPos());
-				if (blockEntity != null && world instanceof ServerLevel serverLevel)
-					fluidHandlerCache = ICapabilityProvider.of(BlockCapabilityCache.create(
-						Capabilities.FluidHandler.BLOCK,
-						serverLevel,
-						blockEntity.getBlockPos(),
-						location.getOppositeFace(),
-						() -> !blockEntity.isRemoved(),
-						() -> fluidHandlerCache = EMPTY
-					));
+				BlockEntity blockEntity = level.getBlockEntity(location.getConnectedPos());
+				if (blockEntity != null) {
+					if (level instanceof ServerLevel serverLevel) {
+						fluidHandlerCache = ICapabilityProvider.of(BlockCapabilityCache.create(
+							Capabilities.FluidHandler.BLOCK,
+							serverLevel,
+							blockEntity.getBlockPos(),
+							location.getOppositeFace(),
+							() -> !networkBE.isRemoved(),
+							() -> fluidHandlerCache = EMPTY
+						));
+					} else if (level instanceof PonderLevel) {
+						fluidHandlerCache = ICapabilityProvider.of(() -> level.getCapability(
+							Capabilities.FluidHandler.BLOCK,
+							blockEntity.getBlockPos(),
+							location.getOppositeFace()
+						));
+					}
+				}
 			}
 		}
 
@@ -111,7 +122,7 @@ public abstract class FlowSource {
 		}
 
 		@Override
-		public void manageSource(Level world) {
+		public void manageSource(Level world, BlockEntity networkBE) {
 			if (cached != null && cached.get() != null && !cached.get().blockEntity.isRemoved())
 				return;
 			cached = null;

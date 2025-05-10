@@ -1,7 +1,5 @@
 package com.simibubi.create.content.processing.burner;
 
-import java.util.Random;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
@@ -13,6 +11,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -89,8 +88,9 @@ public class LitBlazeBurnerBlock extends Block implements IWrenchable {
 		return AllItems.EMPTY_BLAZE_BURNER.asStack();
 	}
 
+	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+	public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
 		world.addAlwaysVisibleParticle(ParticleTypes.LARGE_SMOKE, true,
 			(double) pos.getX() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1),
 			(double) pos.getY() + random.nextDouble() + random.nextDouble(),

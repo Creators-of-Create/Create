@@ -10,16 +10,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.simibubi.create.foundation.mixin.accessor.AbstractRegistrateAccessor;
-import com.simibubi.create.impl.registrate.CreateRegistrateRegistrationCallbackImpl;
-import com.simibubi.create.impl.registrate.CreateRegistrateRegistrationCallbackImpl.CallbackImpl;
-
-import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.fluids.BaseFlowingFluid;
-import net.neoforged.neoforge.registries.DeferredHolder;
-
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.CreateClient;
@@ -34,12 +24,13 @@ import com.simibubi.create.content.fluids.VirtualFluid;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.item.TooltipModifier;
+import com.simibubi.create.impl.registrate.CreateRegistrateRegistrationCallbackImpl;
+import com.simibubi.create.impl.registrate.CreateRegistrateRegistrationCallbackImpl.CallbackImpl;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.BlockEntityBuilder.BlockEntityFactory;
 import com.tterrag.registrate.builders.Builder;
 import com.tterrag.registrate.builders.FluidBuilder;
-import com.tterrag.registrate.providers.RegistrateDataProvider;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
@@ -66,7 +57,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	private static final Map<RegistryEntry<?, ?>, DeferredHolder<CreativeModeTab, CreativeModeTab>> TAB_LOOKUP = Collections.synchronizedMap(new IdentityHashMap<>());
@@ -326,14 +319,5 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		ConnectedTextureBehaviour behavior = behaviorSupplier.get();
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
 			.register(RegisteredObjectsHelper.getKeyOrThrow(entry), model -> new CTModel(model, behavior));
-	}
-
-	@Override
-	protected void onData(@NotNull GatherDataEvent event) {} // NO-OP so this doesn't run before create can add its generators
-
-	@ApiStatus.Internal
-	public RegistrateDataProvider setDataProvider(RegistrateDataProvider provider) {
-		((AbstractRegistrateAccessor) this).create$setProvider(provider);
-		return provider;
 	}
 }

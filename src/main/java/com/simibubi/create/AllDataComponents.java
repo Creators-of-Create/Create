@@ -11,6 +11,7 @@ import com.simibubi.create.content.equipment.clipboard.ClipboardEntry;
 import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides.ClipboardType;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperItemComponent;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.SymmetryMirror;
+import com.simibubi.create.content.equipment.toolbox.ToolboxInventory;
 import com.simibubi.create.content.equipment.zapper.PlacementPatterns;
 import com.simibubi.create.content.equipment.zapper.terrainzapper.PlacementOptions;
 import com.simibubi.create.content.equipment.zapper.terrainzapper.TerrainBrushes;
@@ -46,6 +47,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -249,9 +251,9 @@ public class AllDataComponents {
 			builder -> builder.persistent(ItemContainerContents.CODEC).networkSynchronized(ItemContainerContents.STREAM_CODEC)
 	);
 
-	public static final DataComponentType<ItemContainerContents> TOOLBOX_INVENTORY = register(
+	public static final DataComponentType<ToolboxInventory> TOOLBOX_INVENTORY = register(
 			"toolbox_inventory",
-			builder -> builder.persistent(ItemContainerContents.CODEC).networkSynchronized(ItemContainerContents.STREAM_CODEC)
+		builder -> builder.persistent(ToolboxInventory.BACKWARDS_COMPAT_CODEC).networkSynchronized(ToolboxInventory.STREAM_CODEC)
 	);
 
 	public static final DataComponentType<UUID> TOOLBOX_UUID = register(

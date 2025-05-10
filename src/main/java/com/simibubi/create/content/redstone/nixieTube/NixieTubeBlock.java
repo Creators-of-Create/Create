@@ -83,20 +83,17 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 		if (!display && dye == null)
 			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		String tagElement = stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
+		Component component = stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty());
 
 		if (AllBlocks.CLIPBOARD.isIn(stack)) {
 			List<ClipboardEntry> entries = ClipboardEntry.getLastViewedEntries(stack);
-			for (int i = 0; i < entries.size();) {
-				tagElement = Component.Serializer.toJson(entries.get(i).text, level.registryAccess());
-				break;
-			}
+			component = entries.getFirst().text;
 		}
 
 		if (level.isClientSide)
 			return ItemInteractionResult.SUCCESS;
 
-		String tagUsed = tagElement;
+		String tagUsed = Component.Serializer.toJson(component, level.registryAccess());
 		walkNixies(level, pos, (currentPos, rowPosition) -> {
 			if (display)
 				withBlockEntityDo(level, currentPos, be -> be.displayCustomText(tagUsed, rowPosition));

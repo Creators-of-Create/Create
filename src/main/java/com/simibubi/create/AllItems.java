@@ -256,6 +256,7 @@ public class AllItems {
 	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
 		.properties(p -> p.stacksTo(1)
 			.durability(99))
+		.tag(ItemTags.DURABILITY_ENCHANTABLE)
 		.register();
 
 	public static final ItemEntry<MinecartCouplingItem> MINECART_COUPLING =
@@ -290,7 +291,7 @@ public class AllItems {
 				p -> new BacktankItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving"),
 					COPPER_BACKTANK_PLACEABLE))
 			.model(AssetLookup.customGenericItemModel("_", "item"))
-			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag, AllItemTags.DIVING_ARMOR.tag)
+			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
 			.tag(ItemTags.CHEST_ARMOR)
 			.register(),
 
@@ -300,7 +301,7 @@ public class AllItems {
 					NETHERITE_BACKTANK_PLACEABLE))
 			.model(AssetLookup.customGenericItemModel("_", "item"))
 			.properties(p -> p.fireResistant())
-			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag, AllItemTags.DIVING_ARMOR.tag)
+			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
 			.tag(ItemTags.CHEST_ARMOR)
 			.register();
 
@@ -311,14 +312,14 @@ public class AllItems {
 			.item("copper_diving_helmet",
 				p -> new DivingHelmetItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
 			.properties(p -> p.durability(Type.HELMET.getDurability(7)))
-			.tag(ItemTags.HEAD_ARMOR, AllItemTags.DIVING_ARMOR.tag)
+			.tag(ItemTags.HEAD_ARMOR)
 			.register(),
 
 		NETHERITE_DIVING_HELMET = REGISTRATE
 			.item("netherite_diving_helmet",
 				p -> new DivingHelmetItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
 			.properties(p -> p.fireResistant().durability(Type.HELMET.getDurability(37)))
-			.tag(ItemTags.HEAD_ARMOR, AllItemTags.DIVING_ARMOR.tag)
+			.tag(ItemTags.HEAD_ARMOR)
 			.register();
 
 	public static final ItemEntry<? extends DivingBootsItem>
@@ -328,21 +329,21 @@ public class AllItems {
 			.item("copper_diving_boots",
 				p -> new DivingBootsItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
 			.properties(p -> p.durability(Type.BOOTS.getDurability(7)))
-			.tag(ItemTags.FOOT_ARMOR, AllItemTags.DIVING_ARMOR.tag)
+			.tag(ItemTags.FOOT_ARMOR)
 			.register(),
 
 		NETHERITE_DIVING_BOOTS = REGISTRATE
 			.item("netherite_diving_boots",
 				p -> new DivingBootsItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
 			.properties(p -> p.fireResistant().durability(Type.BOOTS.getDurability(37)))
-			.tag(ItemTags.FOOT_ARMOR, AllItemTags.DIVING_ARMOR.tag)
+			.tag(ItemTags.FOOT_ARMOR)
 			.register();
 
 	public static final ItemEntry<? extends BaseArmorItem>
 
 		CARDBOARD_HELMET = REGISTRATE.item("cardboard_helmet", p -> new CardboardArmorItem(ArmorItem.Type.HELMET, p))
 			.properties(p -> p.durability(Type.HELMET.getDurability(4)))
-			.tag(ItemTags.HEAD_ARMOR, ItemTags.TRIMMABLE_ARMOR)
+			.tag(ItemTags.HEAD_ARMOR)
 			.onRegisterAfter(Registries.ITEM, v -> ItemDescription.useKey(v, "item.create.cardboard_armor"))
 			.model(TrimmableArmorModelGenerator::generate)
 			.clientExtension(() -> () -> new CardboardArmorStealthOverlay())
@@ -351,7 +352,7 @@ public class AllItems {
 		CARDBOARD_CHESTPLATE =
 			REGISTRATE.item("cardboard_chestplate", p -> new CardboardArmorItem(ArmorItem.Type.CHESTPLATE, p))
 				.properties(p -> p.durability(Type.CHESTPLATE.getDurability(4)))
-				.tag(ItemTags.CHEST_ARMOR, ItemTags.TRIMMABLE_ARMOR)
+				.tag(ItemTags.CHEST_ARMOR)
 				.onRegisterAfter(Registries.ITEM, v -> ItemDescription.useKey(v, "item.create.cardboard_armor"))
 				.model(TrimmableArmorModelGenerator::generate)
 				.register(),
@@ -359,14 +360,14 @@ public class AllItems {
 		CARDBOARD_LEGGINGS =
 			REGISTRATE.item("cardboard_leggings", p -> new CardboardArmorItem(ArmorItem.Type.LEGGINGS, p))
 				.properties(p -> p.durability(Type.LEGGINGS.getDurability(4)))
-				.tag(ItemTags.LEG_ARMOR, ItemTags.TRIMMABLE_ARMOR)
+				.tag(ItemTags.LEG_ARMOR)
 				.onRegisterAfter(Registries.ITEM, v -> ItemDescription.useKey(v, "item.create.cardboard_armor"))
 				.model(TrimmableArmorModelGenerator::generate)
 				.register(),
 
 		CARDBOARD_BOOTS = REGISTRATE.item("cardboard_boots", p -> new CardboardArmorItem(ArmorItem.Type.BOOTS, p))
 			.properties(p -> p.durability(Type.BOOTS.getDurability(4)))
-			.tag(ItemTags.FOOT_ARMOR, ItemTags.TRIMMABLE_ARMOR)
+			.tag(ItemTags.FOOT_ARMOR)
 			.onRegisterAfter(Registries.ITEM, v -> ItemDescription.useKey(v, "item.create.cardboard_armor"))
 			.model(TrimmableArmorModelGenerator::generate)
 			.register();
@@ -410,11 +411,12 @@ public class AllItems {
 		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
 			.properties(p -> p.durability(100))
 			.model(AssetLookup.itemModelWithPartials())
-			.tag(net.neoforged.neoforge.common.Tags.Items.ENCHANTABLES)
+			.tag(Tags.Items.ENCHANTABLES, ItemTags.DURABILITY_ENCHANTABLE, ItemTags.BOW_ENCHANTABLE)
 			.register();
 
 	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
 		.properties(p -> p.rarity(Rarity.UNCOMMON))
+		.tag(ItemTags.DURABILITY_ENCHANTABLE)
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
 

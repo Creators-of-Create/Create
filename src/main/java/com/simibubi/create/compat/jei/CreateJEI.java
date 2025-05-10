@@ -2,11 +2,14 @@ package com.simibubi.create.compat.jei;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -19,7 +22,6 @@ import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
-import com.simibubi.create.compat.jei.category.CreateRecipeCategory.Builder;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory.Factory;
 import com.simibubi.create.compat.jei.category.CrushingCategory;
 import com.simibubi.create.compat.jei.category.DeployingCategory;
@@ -66,13 +68,16 @@ import com.simibubi.create.content.trains.schedule.ScheduleScreen;
 import com.simibubi.create.foundation.data.recipe.LogStrippingFakeRecipes;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.RecipeGenericsUtil;
-
 import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.infrastructure.config.CRecipes;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IPlatformFluidHelper;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -85,6 +90,7 @@ import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
 import mezz.jei.api.runtime.IJeiRuntime;
+import net.createmod.catnip.config.ConfigBase.ConfigBool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Holder.Reference;
@@ -104,6 +110,7 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.SmokingRecipe;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -409,7 +416,7 @@ public class CreateJEI implements IModPlugin {
 		registration.addGhostIngredientHandler(FactoryPanelSetItemScreen.class, new GhostIngredientHandler());
 	}
 
-	private class CategoryBuilder<T extends Recipe<?>> extends Builder<T> {
+	private class CategoryBuilder<T extends Recipe<?>> extends CreateRecipeCategory.Builder<T> {
 		public CategoryBuilder(Class<? extends T> recipeClass) {
 			super(recipeClass);
 		}

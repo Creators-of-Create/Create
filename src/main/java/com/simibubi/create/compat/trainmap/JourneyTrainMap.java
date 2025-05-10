@@ -4,23 +4,44 @@ import java.util.List;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.RemovedGuiUtils;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import journeymap.api.v2.client.display.Context;
+import journeymap.api.v2.client.IClientAPI;
+import journeymap.api.v2.client.IClientPlugin;
+import journeymap.api.v2.client.JourneyMapPlugin;
+import journeymap.api.v2.client.display.Context.UI;
+import journeymap.api.v2.client.event.FullscreenRenderEvent;
 import journeymap.api.v2.client.util.UIState;
+import journeymap.api.v2.common.event.FullscreenEventRegistry;
 import journeymap.client.ui.fullscreen.Fullscreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.Mth;
-import net.neoforged.neoforge.client.event.InputEvent;
 
-public class JourneyTrainMap {
+import net.neoforged.neoforge.client.event.InputEvent.MouseButton.Pre;
+
+@JourneyMapPlugin(apiVersion = "2.0.0")
+public class JourneyTrainMap implements IClientPlugin {
 
 	private static boolean requesting;
+
+	public JourneyTrainMap() {
+	}
+
+	@Override
+	public void initialize(IClientAPI jmClientApi) {
+		FullscreenEventRegistry.FULLSCREEN_RENDER_EVENT.subscribe(Create.ID, JourneyTrainMap::onRender);
+	}
+
+	@Override
+	public String getModId() {
+		return Create.ID;
+	}
 
 	public static void tick() {
 		if (!AllConfigs.client().showTrainMapOverlay.get() || !(Minecraft.getInstance().screen instanceof Fullscreen)) {
@@ -34,7 +55,7 @@ public class JourneyTrainMap {
 		TrainMapSyncClient.requestData();
 	}
 
-	public static void mouseClick(InputEvent.MouseButton.Pre event) {
+	public static void mouseClick(Pre event) {
 		Minecraft mc = Minecraft.getInstance();
 		if (!(mc.screen instanceof Fullscreen screen))
 			return;
@@ -47,12 +68,20 @@ public class JourneyTrainMap {
 			event.setCanceled(true);
 	}
 
-	// Called by JourneyFullscreenMapMixin
-	public static void onRender(GuiGraphics graphics, Fullscreen screen, double x, double z, int mX, int mY, float pt) {
+	// GuiGraphics graphics, Fullscreen screen, double x, double z, int mX, int mY, float pt
+	public static void onRender(FullscreenRenderEvent event) {
+		GuiGraphics graphics = event.getGraphics();
+		Fullscreen screen = (Fullscreen) event.getFullscreen();
+		double x = screen.getCenterBlockX(true);
+		double z = screen.getCenterBlockZ(true);
+		int mX = event.getMouseX();
+		int mY = event.getMouseY();
+		float pt = event.getPartialTicks();
+
 		UIState state = screen.getUiState();
 		if (state == null)
 			return;
-		if (state.ui != Context.UI.Fullscreen)
+		if (state.ui != UI.Fullscreen)
 			return;
 		if (!state.active)
 			return;
@@ -76,17 +105,15 @@ public class JourneyTrainMap {
 
 		float mouseX = mX - screen.width / 2.0f;
 		float mouseY = mY - screen.height / 2.0f;
-		mouseX /= scale;
-		mouseY /= scale;
-		mouseX += x;
-		mouseY += z;
+		mouseX /= (float) scale;
+		mouseY /= (float) scale;
 
 		Rect2i bounds =
 			new Rect2i(Mth.floor(-screen.width / 2.0f / scale + x), Mth.floor(-screen.height / 2.0f / scale + z),
 				Mth.floor(screen.width / scale), Mth.floor(screen.height / scale));
 
 		List<FormattedText> tooltip =
-			TrainMapManager.renderAndPick(graphics, Mth.floor(mouseX), Mth.floor(mouseY), pt, false, bounds);
+			TrainMapManager.renderAndPick(graphics, Mth.floor(mouseX), Mth.floor(mouseY), false, bounds);
 
 		pose.popPose();
 

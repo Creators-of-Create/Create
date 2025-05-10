@@ -132,7 +132,7 @@ public class WindmillBearingBlockEntity extends MechanicalBearingBlockEntity {
 
 		private RotationDirection(AllIcons icon) {
 			this.icon = icon;
-			translationKey = "generic." + Lang.asId(name());
+			translationKey = "create.generic." + Lang.asId(name());
 		}
 
 		@Override

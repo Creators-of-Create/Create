@@ -9,15 +9,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.simibubi.create.AllTags.AllMountedItemStorageTypeTags;
-
-import net.createmod.catnip.codecs.CatnipCodecUtils;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
+import com.simibubi.create.AllTags.AllMountedItemStorageTypeTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.contraption.storage.SyncedMountedStorage;
 import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorage;
@@ -34,6 +31,7 @@ import com.simibubi.create.content.logistics.depot.storage.DepotMountedStorage;
 import com.simibubi.create.content.logistics.vault.ItemVaultMountedStorage;
 import com.simibubi.create.impl.contraption.storage.FallbackMountedStorage;
 
+import net.createmod.catnip.codecs.CatnipCodecUtils;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
@@ -74,7 +72,7 @@ public class MountedStorageManager {
 	private ImmutableMap<BlockPos, SyncedMountedStorage> syncedFluids;
 
 	private List<IItemHandlerModifiable> externalHandlers;
-	private CombinedInvWrapper allItems;
+	protected CombinedInvWrapper allItems;
 
 	// ticks until storage can sync again
 	private int syncCooldown;

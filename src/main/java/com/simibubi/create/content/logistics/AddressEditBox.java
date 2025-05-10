@@ -25,13 +25,13 @@ public class AddressEditBox extends EditBox {
 	private DestinationSuggestions destinationSuggestions;
 	private Consumer<String> mainResponder;
 	private String prevValue = "=)";
-	
+
 	public AddressEditBox(Screen screen, Font pFont, int pX, int pY, int pWidth, int pHeight, boolean anchorToBottom) {
 		this(screen, pFont, pX, pY, pWidth, pHeight, anchorToBottom, null);
 	}
-	
+
 	public AddressEditBox(Screen screen, Font pFont, int pX, int pY, int pWidth, int pHeight, boolean anchorToBottom, String localAddress) {
-        super(pFont, pX, pY, pWidth, pHeight, Component.empty());
+		super(pFont, pX, pY, pWidth, pHeight, Component.empty());
 		destinationSuggestions = AddressEditBoxHelper.createSuggestions(screen, this, anchorToBottom, localAddress);
 		destinationSuggestions.setAllowSuggestions(true);
 		destinationSuggestions.updateCommandInfo();
@@ -75,7 +75,7 @@ public class AddressEditBox extends EditBox {
 				return true;
 			}
 		}
-		
+
 		boolean wasFocused = isFocused();
 		if (super.mouseClicked(pMouseX, pMouseY, pButton)) {
 			if (!wasFocused) {
@@ -91,6 +91,7 @@ public class AddressEditBox extends EditBox {
 
 	@Override
 	public void setValue(String text) {
+		setHighlightPos(0);
 		super.setValue(text);
 	}
 
@@ -117,8 +118,8 @@ public class AddressEditBox extends EditBox {
 		if (pMouseX >= itemX && pMouseX < itemX + 16 && pMouseY >= itemY && pMouseY < itemY + 16) {
 			List<Component> promiseTip = List.of();
 			promiseTip = List.of(CreateLang.translate("gui.address_box.clipboard_tip")
-				.color(ScrollInput.HEADER_RGB)
-				.component(),
+					.color(ScrollInput.HEADER_RGB)
+					.component(),
 				CreateLang.translate("gui.address_box.clipboard_tip_1")
 					.style(ChatFormatting.GRAY)
 					.component(),

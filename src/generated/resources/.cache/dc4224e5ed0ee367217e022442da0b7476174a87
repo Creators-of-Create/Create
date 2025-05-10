@@ -1,4 +1,4 @@
-// 1.21.1	2025-03-06T17:07:43.020738809	Registrate Provider for create [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2025-05-09T18:19:43.730859095	Registrate Provider for create [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -2579,6 +2579,7 @@ e475ad1c52bffedfc544e5331a87c1f5c45149fd data/c/tags/block/ores_in_ground/deepsl
 18f54179c6f809ff4aee792702fa35d3053e5dc4 data/c/tags/block/storage_blocks/cardboard.json
 bcd593714f43bc6a0aefbd714c24db3cf9e71250 data/c/tags/block/storage_blocks/raw_zinc.json
 41b2a17b5ebcff5623e25dc6232f73cf9aa70387 data/c/tags/block/storage_blocks/zinc.json
+986440996701ed47b9f9f8b8ed4ef9d711571fa4 data/c/tags/entity_type/teleporting_not_supported.json
 8140415f1c16f09167f41eeee25c09706a944be0 data/c/tags/fluid/chocolates.json
 0ccc9ff76001cdd7db1b79c1371f59d3283abe64 data/c/tags/fluid/honey.json
 cca816b34ac2e9b7933df680aa9778ff2cfe9605 data/c/tags/fluid/teas.json
@@ -3398,7 +3399,7 @@ bb9d906a97810ed1461ed321ef8e4bee1dd104fb data/create/loot_table/blocks/blue_sail
 2b7aa6506e02be7a7b76228bc16bf05d0920195e data/create/loot_table/blocks/blue_table_cloth.json
 8db18471fdedf92ab335c2fb4ec7525cb9e4deaf data/create/loot_table/blocks/blue_toolbox.json
 6d7ecb10e21b1e12c83c71736f14cbba3ccd7aaf data/create/loot_table/blocks/blue_valve_handle.json
-53e01f63aa47aa00575240ccdf867b4d6c392385 data/create/loot_table/blocks/bound_cardboard_block.json
+13d77897fe33778996bddec2fa5f367984507899 data/create/loot_table/blocks/bound_cardboard_block.json
 7d8b199f381003e5a74a8144976b65c93a09dbcb data/create/loot_table/blocks/brass_bars.json
 64a5869c6b3edeca06771f8ef64ef9521d83302a data/create/loot_table/blocks/brass_belt_funnel.json
 78ecee2c9baf6b0c78f6c7aa692e102a3f4dda74 data/create/loot_table/blocks/brass_block.json
@@ -4785,7 +4786,6 @@ d371dfd35e49a7bef19f59c03e7f4ae20992f03d data/create/tags/item/create_ingots.jso
 910d0f5ccbc4c84b224eca1f1588b1695f41447b data/create/tags/item/crushed_raw_materials.json
 0fa526e7e742573b603ad26b09526cf724efa1dc data/create/tags/item/deployable_drink.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/item/dispense_behavior_wrap_blacklist.json
-01652011251c3fb39bba3ad02fc4bb2c1883f865 data/create/tags/item/diving_armor.json
 ebd7b09daf2f64c0c04d821696b0e145683d8693 data/create/tags/item/dyed_table_cloths.json
 d2bb65d893d71d2d9871f81f430c233a93adb4bb data/create/tags/item/invalid_for_track_paving.json
 cebf5fd98eddf5c14befdd47052be678eea79542 data/create/tags/item/packages.json
@@ -4842,6 +4842,8 @@ cd2613a4722ce79366433181095c27463e7c61b8 data/minecraft/tags/block/stairs.json
 01d32d3b7b033aff44c047bf289d696de0b0c715 data/minecraft/tags/item/beacon_payment_items.json
 056046998d063e7405c267f1ec2923260ef8c109 data/minecraft/tags/item/chest_armor.json
 71aef080a900d9e86818cf579438c3d826d6567e data/minecraft/tags/item/doors.json
+1b1f3841906d294c4737d5ceaffd8852d950debf data/minecraft/tags/item/enchantable/bow.json
+8af94e2d73f4897c2bb2eeab107b066a476e2506 data/minecraft/tags/item/enchantable/durability.json
 1a9ce7d5f5fe92d3b73e269cd5dbf5cd1f1fe5b8 data/minecraft/tags/item/foot_armor.json
 9eb6474e9336c2c378100b7e2577a6ba9c62e403 data/minecraft/tags/item/head_armor.json
 afdac448376ff5624f49cbf31feedf691ecbc4c5 data/minecraft/tags/item/leg_armor.json
@@ -4849,6 +4851,6 @@ afdac448376ff5624f49cbf31feedf691ecbc4c5 data/minecraft/tags/item/leg_armor.json
 1ac7c46815461cbec0d4d97f25c085fdc8375dab data/minecraft/tags/item/slabs.json
 dafa3bdb72fef5e6c0201c05846db3f2b214e587 data/minecraft/tags/item/stairs.json
 11427a72e181857e22ec37a22462bc652e127cc5 data/minecraft/tags/item/trapdoors.json
-15d3621abbef2048a7c258d410e40d9d87e55dd7 data/minecraft/tags/item/trimmable_armor.json
+4d07dc9a0f77c799b54a0a36e48b8d1e93cd518a data/minecraft/tags/item/trimmable_armor.json
 2bcba05954ff7bc4cf9cc520478083da9973ec76 data/minecraft/tags/item/walls.json
 71aef080a900d9e86818cf579438c3d826d6567e data/quark/tags/block/non_double_door.json

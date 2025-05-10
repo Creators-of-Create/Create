@@ -53,6 +53,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
+
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -156,6 +157,7 @@ public class Create {
 		modEventBus.addListener(Create::init);
 		modEventBus.addListener(Create::onRegister);
 		modEventBus.addListener(AllEntityTypes::registerEntityAttributes);
+		modEventBus.addListener(EventPriority.HIGHEST, CreateDatagen::gatherDataHighPriority);
 		modEventBus.addListener(EventPriority.LOWEST, CreateDatagen::gatherData);
 		modEventBus.addListener(AllSoundEvents::register);
 

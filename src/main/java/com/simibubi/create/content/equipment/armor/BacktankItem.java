@@ -1,7 +1,13 @@
 package com.simibubi.create.content.equipment.armor;
 
+import java.util.Locale;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.foundation.item.LayeredArmorItem;
+
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -15,11 +21,9 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Locale;
-import java.util.function.Supplier;
 
 public class BacktankItem extends BaseArmorItem {
 	public static final EquipmentSlot SLOT = EquipmentSlot.CHEST;
@@ -53,6 +57,13 @@ public class BacktankItem extends BaseArmorItem {
 	@Override
 	public boolean isEnchantable(ItemStack p_77616_1_) {
 		return true;
+	}
+
+	@Override
+	public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+		if (enchantment.is(Enchantments.MENDING) || enchantment.is(Enchantments.UNBREAKING))
+			return false;
+		return super.supportsEnchantment(stack, enchantment);
 	}
 
 	@Override

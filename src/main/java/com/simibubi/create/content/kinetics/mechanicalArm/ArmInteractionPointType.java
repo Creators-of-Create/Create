@@ -2,11 +2,11 @@ package com.simibubi.create.content.kinetics.mechanicalArm;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
@@ -17,31 +17,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class ArmInteractionPointType {
-	private static List<ArmInteractionPointType> sortedTypes = null;
+	private static final List<ArmInteractionPointType> SORTED_TYPES = new ReferenceArrayList<>();
 	@UnmodifiableView
-	private static List<ArmInteractionPointType> sortedTypesView = null;
+	public static final List<ArmInteractionPointType> SORTED_TYPES_VIEW = Collections.unmodifiableList(SORTED_TYPES);
 
-	public static void forEach(Consumer<ArmInteractionPointType> action) {
-		getSorted().forEach(action);
-	}
-
-	@UnmodifiableView
-	public static List<ArmInteractionPointType> getSorted() {
-		if (sortedTypes == null) {
-			sortedTypes = new ReferenceArrayList<>();
-
-			CreateBuiltInRegistries.ARM_INTERACTION_POINT_TYPE.forEach(sortedTypes::add);
-			sortedTypes.sort((t1, t2) -> t2.getPriority() - t1.getPriority());
-
-			sortedTypesView = Collections.unmodifiableList(sortedTypes);
-		}
-
-		return sortedTypesView;
+	@Internal
+	public static void init() {
+		SORTED_TYPES.clear();
+		CreateBuiltInRegistries.ARM_INTERACTION_POINT_TYPE.forEach(SORTED_TYPES::add);
+		SORTED_TYPES.sort((t1, t2) -> t2.getPriority() - t1.getPriority());
 	}
 
 	@Nullable
 	public static ArmInteractionPointType getPrimaryType(Level level, BlockPos pos, BlockState state) {
-		for (ArmInteractionPointType type : getSorted())
+		for (ArmInteractionPointType type : SORTED_TYPES_VIEW)
 			if (type.canCreatePoint(level, pos, state))
 				return type;
 		return null;

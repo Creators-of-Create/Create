@@ -406,7 +406,7 @@ public class ClockworkBearingBlockEntity extends KineticBlockEntity
 
 		private ClockHands(AllIcons icon) {
 			this.icon = icon;
-			translationKey = "contraptions.clockwork." + Lang.asId(name());
+			translationKey = "create.contraptions.clockwork." + Lang.asId(name());
 		}
 
 		@Override

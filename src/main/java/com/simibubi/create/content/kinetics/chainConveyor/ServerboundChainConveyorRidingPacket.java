@@ -2,6 +2,7 @@ package com.simibubi.create.content.kinetics.chainConveyor;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
@@ -26,6 +27,11 @@ public class ServerboundChainConveyorRidingPacket extends BlockEntityConfigurati
 	@Override
 	public PacketTypeProvider getTypeProvider() {
 		return AllPackets.CHAIN_CONVEYOR_RIDING;
+	}
+
+	@Override
+	protected int maxRange() {
+		return AllConfigs.server().kinetics.maxChainConveyorLength.get() * 2;
 	}
 
 	@Override

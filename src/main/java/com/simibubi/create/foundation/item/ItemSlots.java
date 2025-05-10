@@ -11,6 +11,9 @@ import com.simibubi.create.foundation.codec.CreateCodecs;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 
@@ -25,6 +28,12 @@ public class ItemSlots {
 		Codec.unboundedMap(CreateCodecs.boundedIntStr(0), ItemStack.CODEC).fieldOf("items").forGetter(ItemSlots::toBoxedMap),
 		ExtraCodecs.NON_NEGATIVE_INT.fieldOf("size").forGetter(ItemSlots::getSize)
 	).apply(instance, ItemSlots::deserialize));
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, ItemSlots> STREAM_CODEC = StreamCodec.composite(
+		ByteBufCodecs.map(HashMap::new, ByteBufCodecs.INT, ItemStack.STREAM_CODEC), ItemSlots::toBoxedMap,
+		ByteBufCodecs.INT, ItemSlots::getSize,
+		ItemSlots::deserialize
+	);
 
 	private final Int2ObjectMap<ItemStack> map;
 	private int size;

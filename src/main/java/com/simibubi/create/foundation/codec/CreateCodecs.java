@@ -20,9 +20,9 @@ public class CreateCodecs {
 		String::valueOf
 	);
 
-	public static final Codec<ItemStackHandler> ITEM_STACK_HANDLER = ItemSlots.CODEC.xmap(
+	public static final Codec<ItemStackHandler> ITEM_STACK_HANDLER = Codec.lazyInitialized(() -> ItemSlots.CODEC.xmap(
 		slots -> slots.toHandler(ItemStackHandler::new), ItemSlots::fromHandler
-	);
+	));
 
 	public static Codec<Integer> boundedIntStr(int min) {
 		return INT_STR.validate(i -> i >= min ? DataResult.success(i) : DataResult.error(() -> "Value under minimum of " + min));

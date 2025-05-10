@@ -40,6 +40,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 
+
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 @ParametersAreNonnullByDefault
@@ -120,8 +121,13 @@ public class StockKeeperTransferHandler implements IUniversalRecipeTransferHandl
 		if (!doTransfer)
 			return null;
 
-		CraftableBigItemStack cbis = new CraftableBigItemStack(recipe.getResultItem(player.level()
-			.registryAccess()), recipe);
+		ItemStack result = recipe.getResultItem(player.level()
+			.registryAccess());
+
+		if (result.isEmpty())
+			return null;
+
+		CraftableBigItemStack cbis = new CraftableBigItemStack(result, recipe);
 
 		screen.recipesToOrder.add(cbis);
 		screen.searchBox.setValue("");

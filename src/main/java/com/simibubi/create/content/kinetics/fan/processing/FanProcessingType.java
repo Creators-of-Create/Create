@@ -38,7 +38,7 @@ public interface FanProcessingType {
 
 	@Nullable
 	static FanProcessingType getAt(Level level, BlockPos pos) {
-		for (FanProcessingType type : FanProcessingTypeRegistry.getSortedTypesView()) {
+		for (FanProcessingType type : FanProcessingTypeRegistry.SORTED_TYPES_VIEW) {
 			if (type.isValidAt(level, pos)) {
 				return type;
 			}

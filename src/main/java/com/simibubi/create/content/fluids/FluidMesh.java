@@ -67,7 +67,7 @@ public class FluidMesh {
 				vertexList.y(i, 0);
 			}
 
-			float textureScale = 1;
+			float textureScale = 1 / 16f;
 
 			float left = -width;
 			float right = width;
@@ -146,7 +146,7 @@ public class FluidMesh {
 				vertexList.v(i, 0);
 			}
 
-			float textureScale = 0.5f;
+			float textureScale = 1 / 32f;
 
 			float shrink = texture.uvShrinkRatio() * 0.25f * textureScale;
 			float centerU = texture.getU0() + (texture.getU1() - texture.getU0()) * 0.5f;

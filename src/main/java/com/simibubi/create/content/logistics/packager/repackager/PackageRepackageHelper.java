@@ -193,7 +193,7 @@ public class PackageRepackageHelper {
 			ItemStackHandler target = new ItemStackHandler(PackageItem.SLOTS);
 			List<BigItemStack> stacks = craftingEntry.pattern().stacks();
 			for (int currentSlot = 0; currentSlot < Math.min(stacks.size(), target.getSlots()); currentSlot++)
-				target.setStackInSlot(currentSlot, stacks.get(currentSlot).stack.copy());
+				target.setStackInSlot(currentSlot, stacks.get(currentSlot).stack.copyWithCount(1));
 			
 			ItemStack box = PackageItem.containing(target);
 			PackageItem.setOrder(box, r.nextInt(), 0, true, 0, true,

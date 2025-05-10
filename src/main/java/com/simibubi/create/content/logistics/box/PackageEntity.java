@@ -16,6 +16,7 @@ import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.ponder.api.level.PonderLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -309,6 +310,9 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 			return false;
 		}
 
+		if (!box.getItem().canBeHurtBy(box, source))
+			return false;
+
 		if (source.equals(damageSources().inWall()) && (isPassenger() || insertionDelay < 20))
 			return false;
 
@@ -463,5 +467,10 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 	@Override
 	public boolean isAffectedByPotions() {
 		return false;
+	}
+
+	@Override
+	public boolean fireImmune() {
+		return box.has(DataComponents.FIRE_RESISTANT) || super.fireImmune();
 	}
 }

@@ -1,4 +1,19 @@
 ------------------------------------------------------
+Create 6.0.4
+------------------------------------------------------
+
+#### Bug Fixes
+
+- Fixed crash when using mechanical arms with composters #7965
+- Fixed chocolate and honey having the wrong map color #5409
+- Fixed goggles not swapping with helmet when equipped #7977
+- Fixed fluid pipe visuals rendering with incorrect uv scale
+- Fixed Re-packager creating invalid item stacks when factory gauges were assigned larger stacks #7963
+- Fixed nixie tubes not updating their text in ponder scenes #7978
+- Clicking conveyors with chains or the wrench now takes priority over picking up packagers from them
+- Fix Processing recipes ignoring item components (1.21) #7962
+
+------------------------------------------------------
 Create 6.0.3
 ------------------------------------------------------
 

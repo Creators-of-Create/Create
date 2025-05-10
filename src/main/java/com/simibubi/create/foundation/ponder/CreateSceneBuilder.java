@@ -29,8 +29,8 @@ import com.simibubi.create.foundation.ponder.element.ExpandedParrotElement;
 import com.simibubi.create.foundation.ponder.instruction.AnimateBlockEntityInstruction;
 
 import net.createmod.catnip.data.FunctionalHelper;
-import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.ponder.api.element.ElementLink;
 import net.createmod.ponder.api.element.ParrotElement;
 import net.createmod.ponder.api.element.ParrotPose;
@@ -107,11 +107,11 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 
 				Vec3 location = VecHelper.getCenterOf(displayPos);
 				RotationIndicatorParticleData particleData = new RotationIndicatorParticleData(color, particleSpeed,
-						kb.getParticleInitialRadius(), kb.getParticleTargetRadius(), 20, rotationAxis);
+					kb.getParticleInitialRadius(), kb.getParticleTargetRadius(), 20, rotationAxis);
 
 				for (int i = 0; i < 20; i++)
 					scene.getWorld()
-							.addParticle(particleData, location.x, location.y, location.z, 0, 0, 0);
+						.addParticle(particleData, location.x, location.y, location.z, 0, 0, 0);
 			});
 		}
 
@@ -175,7 +175,7 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 					controllerBE.tick();
 
 				com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour transporter =
-						beltBlockEntity.getBehaviour(com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TYPE);
+					beltBlockEntity.getBehaviour(com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TYPE);
 				transporter.handleProcessingOnAllItems(tis -> {
 					BeltItemElement tracker = new BeltItemElement(tis);
 					scene.addElement(tracker);
@@ -194,7 +194,7 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 				if (!(blockEntity instanceof SmartBlockEntity beltBlockEntity))
 					return;
 				TransportedItemStackHandlerBehaviour transporter =
-						beltBlockEntity.getBehaviour(TransportedItemStackHandlerBehaviour.TYPE);
+					beltBlockEntity.getBehaviour(TransportedItemStackHandlerBehaviour.TYPE);
 				if (transporter == null)
 					return;
 				transporter.handleCenteredProcessingOnAllItems(.52f, tis -> TransportedItemStackHandlerBehaviour.TransportedResult.removeItem());
@@ -248,12 +248,12 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 		public void instructArm(BlockPos armLocation, ArmBlockEntity.Phase phase, ItemStack heldItem,
 								int targetedPoint) {
 			modifyBlockEntityNBT(scene.getSceneBuildingUtil().select().position(armLocation), ArmBlockEntity.class,
-					compound -> {
-						NBTHelper.writeEnum(compound, "Phase", phase);
-						compound.put("HeldItem", heldItem.saveOptional(world().getHolderLookupProvider()));
-						compound.putInt("TargetPointIndex", targetedPoint);
-						compound.putFloat("MovementProgress", 0);
-					});
+				compound -> {
+					NBTHelper.writeEnum(compound, "Phase", phase);
+					compound.put("HeldItem", heldItem.saveOptional(world().getHolderLookupProvider()));
+					compound.putInt("TargetPointIndex", targetedPoint);
+					compound.putFloat("MovementProgress", 0);
+				});
 		}
 
 		public void flapFunnel(BlockPos position, boolean outward) {
@@ -277,22 +277,22 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 
 		public void animateTrainStation(BlockPos position, boolean trainPresent) {
 			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select().position(position), StationBlockEntity.class,
-					c -> c.putBoolean("ForceFlag", trainPresent));
+				c -> c.putBoolean("ForceFlag", trainPresent));
 		}
 
 		public void conductorBlaze(BlockPos position, boolean conductor) {
 			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select().position(position), BlazeBurnerBlockEntity.class,
-					c -> c.putBoolean("TrainHat", conductor));
+				c -> c.putBoolean("TrainHat", conductor));
 		}
 
 		public void changeSignalState(BlockPos position, SignalBlockEntity.SignalState state) {
 			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select().position(position), SignalBlockEntity.class,
-					c -> NBTHelper.writeEnum(c, "State", state));
+				c -> NBTHelper.writeEnum(c, "State", state));
 		}
 
 		public void setDisplayBoardText(BlockPos position, int line, Component text) {
 			modifyBlockEntity(position, FlapDisplayBlockEntity.class,
-					t -> t.applyTextManually(line, text));
+				t -> t.applyTextManually(line, text));
 		}
 
 		public void dyeDisplayBoard(BlockPos position, int line, DyeColor color) {
@@ -300,10 +300,33 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 		}
 
 		public void flashDisplayLink(BlockPos position) {
-			modifyBlockEntity(position, LinkWithBulbBlockEntity.class,
-				linkBlockEntity -> linkBlockEntity.pulse());
+			modifyBlockEntity(position, LinkWithBulbBlockEntity.class, LinkWithBulbBlockEntity::pulse);
 		}
 
+		@Override
+		public void restoreBlocks(Selection selection) {
+			super.restoreBlocks(selection);
+			markSmartBlockEntityVirtual(selection);
+		}
+
+		@Override
+		public void setBlocks(Selection selection, BlockState state, boolean spawnParticles) {
+			super.setBlocks(selection, state, spawnParticles);
+			markSmartBlockEntityVirtual(selection);
+		}
+
+		@Override
+		public void modifyBlocks(Selection selection, UnaryOperator<BlockState> stateFunc, boolean spawnParticles) {
+			super.modifyBlocks(selection, stateFunc, spawnParticles);
+			markSmartBlockEntityVirtual(selection);
+		}
+
+		private void markSmartBlockEntityVirtual(Selection selection) {
+			addInstruction(scene -> selection.forEach(pos -> {
+				if (scene.getWorld().getBlockEntity(pos) instanceof SmartBlockEntity smartBlockEntity)
+					smartBlockEntity.markVirtual();
+			}));
+		}
 	}
 
 	public class SpecialInstructions extends PonderSpecialInstructions {
@@ -323,13 +346,13 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 
 		public ElementLink<ParrotElement> birbOnSpinnyShaft(BlockPos pos) {
 			return createBirb(VecHelper.getCenterOf(pos)
-					.add(0, 0.5, 0), () -> new ParrotSpinOnComponentPose(pos));
+				.add(0, 0.5, 0), () -> new ParrotSpinOnComponentPose(pos));
 		}
 
 		public void conductorBirb(ElementLink<ParrotElement> birb, boolean conductor) {
 			addInstruction(scene -> scene.resolveOptional(birb)
-					.map(FunctionalHelper.filterAndCast(ExpandedParrotElement.class))
-					.ifPresent(expandedBirb -> expandedBirb.setConductor(conductor)));
+				.map(FunctionalHelper.filterAndCast(ExpandedParrotElement.class))
+				.ifPresent(expandedBirb -> expandedBirb.setConductor(conductor)));
 		}
 
 		public static class ParrotSpinOnComponentPose extends ParrotPose {

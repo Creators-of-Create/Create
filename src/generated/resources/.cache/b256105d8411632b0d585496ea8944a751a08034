@@ -1,4 +1,4 @@
-// 1.21.1	2025-03-06T17:07:43.015655185	Create's Processing Recipes
+// 1.21.1	2025-05-09T18:19:43.719585411	Create's Processing Recipes
 202c419d3093cc50ef6730a409b8855ba758fee9 data/create/recipe/compacting/andesite_from_flint.json
 d97f4e06363879d033b2151995a5d4f19ad7ef3a data/create/recipe/compacting/blaze_cake.json
 b76c988d1e4493d8e69791d3144d514501d355d0 data/create/recipe/compacting/chocolate.json
@@ -353,11 +353,11 @@ e6858f2544f5419b2bcd1c1ea3adb7276a8520f6 data/create/recipe/deploying/weathered_
 7d8c72a593a6a1b295e7cdc5892d13c39f98fad6 data/create/recipe/deploying/weathered_cut_copper_slab_from_removing_wax.json
 78ff5aa43f23bdf184d7e40c9d1b09c093196f25 data/create/recipe/deploying/weathered_cut_copper_stairs_from_deoxidising.json
 7bf411ccdf292c0bb367061d0befa296765791db data/create/recipe/deploying/weathered_cut_copper_stairs_from_removing_wax.json
-c7f7d1b135507fe1365bce9cbee200cf00b5786c data/create/recipe/emptying/builders_tea.json
-b81dc47c4b875c2602ff4c52906754de0a8135fc data/create/recipe/emptying/compat/alexsmobs/lava_bottle.json
-5ba4a699215b41e606a429a09f207b92cd3dea13 data/create/recipe/emptying/compat/farmersdelight/milk_bottle.json
-a74b7b67a0b60419b28a3a8fa5ebcf86c0d5a9e2 data/create/recipe/emptying/compat/neapolitan/milk_bottle.json
-7aa973ac3c046d9eece53d723c72dc123feec522 data/create/recipe/emptying/honey_bottle.json
+e6f917b4f276d55be03d0f3ac53c4f4eaec2edc6 data/create/recipe/emptying/builders_tea.json
+589862238fb9995bfd07e64853e3a4eef0b14341 data/create/recipe/emptying/compat/alexsmobs/lava_bottle.json
+eba96605e33601f0c28e16c6ef1c90fe66ff9efb data/create/recipe/emptying/compat/farmersdelight/milk_bottle.json
+91ce24b5b4fdbd935e23ed43bb09b9b14b24de60 data/create/recipe/emptying/compat/neapolitan/milk_bottle.json
+067c34a6fa066d01f8118b5c17bd0246c5e13988 data/create/recipe/emptying/honey_bottle.json
 f4c1f8e9ffbc66595fa0914a9ec91b16a9974d67 data/create/recipe/filling/blaze_cake.json
 1adec52e02372a896ef2bd4f8247f50138e1125f data/create/recipe/filling/builders_tea.json
 b5ebd4312cb103f866acf34454ac3ec4bd91fa99 data/create/recipe/filling/chocolate_glazed_berries.json
@@ -459,8 +459,8 @@ c064491ca5a4f7b96313840f317313fb5e64169f data/create/recipe/milling/compat/botan
 23570f3cdc77b18ab1b9b8d7e7d11e1a555950fe data/create/recipe/milling/compat/botania/white_petal.json
 79c01ed4829fdbc2247937694b58ca45aff22d20 data/create/recipe/milling/compat/botania/yellow_petal.json
 0b6c594bdc1c0ed446c6b4198056eee79a0cff0c data/create/recipe/milling/compat/buzzier_bees/buttercup.json
-cfbd4254b767f2a2761be78cdbea56bac6ee1ffe data/create/recipe/milling/compat/buzzier_bees/pink_clover.json
-a62f75ca1f84aee2bd227ad3522ecf87d42072f7 data/create/recipe/milling/compat/buzzier_bees/white_clover.json
+d270bb517cfc8b17e51128894f2cb484e114d7fa data/create/recipe/milling/compat/buzzier_bees/pink_clover.json
+5a51337ccc252af5216528abe16119eda363f615 data/create/recipe/milling/compat/buzzier_bees/white_clover.json
 a9d7b0b6c832e2319677cc9c89cf6c38ecbb97f0 data/create/recipe/milling/compat/byg/allium_flower_bush.json
 0bb8d73bf703cdf4cb845c83d0597bcd312cfad4 data/create/recipe/milling/compat/byg/alpine_bellflower.json
 20cec1d72528c8b72048f61e3c5222a370ab90da data/create/recipe/milling/compat/byg/amaranth.json

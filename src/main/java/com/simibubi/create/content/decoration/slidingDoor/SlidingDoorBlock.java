@@ -119,7 +119,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
-		BlockPos pCurrentPos, BlockPos pFacingPos) {
+								  BlockPos pCurrentPos, BlockPos pFacingPos) {
 		BlockState blockState = super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
 		if (blockState.isAir())
 			return blockState;
@@ -158,7 +158,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 
 	@Override
 	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos,
-		boolean pIsMoving) {
+								boolean pIsMoving) {
 		boolean lower = pState.getValue(HALF) == DoubleBlockHalf.LOWER;
 		boolean isPowered = isDoorPowered(pLevel, pPos, pState);
 		if (defaultBlockState().is(pBlock))
@@ -170,8 +170,8 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 		if (be != null && be.deferUpdate)
 			return;
 
-		BlockState changedState = pState.setValue(POWERED, Boolean.valueOf(isPowered))
-			.setValue(OPEN, Boolean.valueOf(isPowered));
+		BlockState changedState = pState.setValue(POWERED, isPowered)
+			.setValue(OPEN, isPowered);
 		if (isPowered)
 			changedState = changedState.setValue(VISIBLE, false);
 
@@ -186,8 +186,8 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 			BlockState otherDoor = pLevel.getBlockState(otherPos);
 
 			if (isDoubleDoor(changedState, hinge, facing, otherDoor)) {
-				otherDoor = otherDoor.setValue(POWERED, Boolean.valueOf(isPowered))
-					.setValue(OPEN, Boolean.valueOf(isPowered));
+				otherDoor = otherDoor.setValue(POWERED, isPowered)
+					.setValue(OPEN, isPowered);
 				if (isPowered)
 					otherDoor = otherDoor.setValue(VISIBLE, false);
 				pLevel.setBlock(otherPos, otherDoor, 2);
@@ -216,7 +216,8 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
 		state = state.cycle(OPEN);
-		if (state.getValue(OPEN))
+		boolean isOpen = state.getValue(OPEN);
+		if (isOpen)
 			state = state.setValue(VISIBLE, false);
 		level.setBlock(pos, state, 10);
 		level.gameEvent(player, isOpen(state) ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
@@ -228,8 +229,10 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 		BlockState otherDoor = level.getBlockState(otherPos);
 		if (isDoubleDoor(state, hinge, facing, otherDoor))
 			useWithoutItem(otherDoor, level, otherPos, player, hitResult);
-		else if (state.getValue(OPEN))
+		else if (isOpen) {
+			this.playSound(player, level, pos, true);
 			level.gameEvent(player, GameEvent.BLOCK_OPEN, pos);
+		}
 
 		return InteractionResult.sidedSuccess(level.isClientSide);
 	}

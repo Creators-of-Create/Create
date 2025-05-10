@@ -15,6 +15,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -55,15 +56,28 @@ public class ProcessingOutput {
 	}
 
 	public ProcessingOutput(ResourceLocation item, int count, float chance) {
+		this(item, count, DataComponentPatch.EMPTY, chance);
+	}
+
+	public ProcessingOutput(ResourceLocation item, int count, DataComponentPatch patch, float chance) {
 		this.item = Items.AIR;
 		this.datagenOutput = item;
 		this.count = count;
-		this.patch = DataComponentPatch.EMPTY;
+		this.patch = patch;
 		this.chance = chance;
 	}
 
+	private ItemStack getStack(int count) {
+		// Should only be used outside datagen,
+		// no need to check datagenOutput here
+		var stack = new ItemStack(item, count);
+		if (!patch.isEmpty())
+			stack.applyComponents(patch);
+		return stack;
+	}
+
 	public ItemStack getStack() {
-		return new ItemStack(datagenOutput != null ? BuiltInRegistries.ITEM.get(datagenOutput) : item, count);
+		return getStack(count);
 	}
 
 	public float getChance() {
@@ -71,15 +85,17 @@ public class ProcessingOutput {
 	}
 
 	public ItemStack rollOutput() {
-		int outputAmount = count;
-		for (int roll = 0; roll < count; roll++)
-			if (r.nextFloat() > chance)
-				outputAmount--;
-		if (outputAmount == 0)
-			return ItemStack.EMPTY;
-		ItemStack out = item.getDefaultInstance();
-		out.setCount(outputAmount);
-		return out;
+		if (chance < 1F) {
+			int count = this.count;
+			for (int roll = 0; roll < this.count; roll++)
+				if (r.nextFloat() > chance)
+					count--;
+			if (count == 0)
+				return ItemStack.EMPTY;
+			return getStack(count);
+		} else {
+			return getStack();
+		}
 	}
 
 	// Remove in 1.22
@@ -96,10 +112,10 @@ public class ProcessingOutput {
 	@Deprecated(forRemoval = true)
 	public static final Codec<ProcessingOutput> CODEC_OLD = RecordCodecBuilder.create(i -> i.group(
 		ITEM_CODEC_OLD.fieldOf("item").forGetter(s -> s.datagenOutput != null ? Either.right(Pair.of(s.datagenOutput, s.count)) : Either.left(s.item.getDefaultInstance())),
-		Codec.INT.optionalFieldOf("count", 1).forGetter(s -> s.count),
-		Codec.FLOAT.optionalFieldOf("chance", 1F).forGetter(s -> s.chance)
+		ExtraCodecs.intRange(1, 99).optionalFieldOf("count", 1).forGetter(s -> s.count),
+		ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("chance", 1F).forGetter(s -> s.chance)
 	).apply(i, (item, count, chance) -> item.map(
-		stack -> new ProcessingOutput(stack.getItem(), count, chance),
+		stack -> new ProcessingOutput(stack.getItem(), count, stack.getComponentsPatch(), chance),
 		compat -> new ProcessingOutput(compat.getFirst(), compat.getSecond(), chance)
 	)));
 
@@ -114,15 +130,15 @@ public class ProcessingOutput {
 				return Either.right(s.datagenOutput);
 			return Either.left(s.item);
 		}),
-		Codec.INT.optionalFieldOf("count", 1).forGetter(s -> s.count),
+		ExtraCodecs.intRange(1, 99).optionalFieldOf("count", 1).forGetter(s -> s.count),
 		DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(s -> s.patch),
-		Codec.FLOAT.optionalFieldOf("chance", 1F).forGetter(s -> s.chance)
+		ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("chance", 1F).forGetter(s -> s.chance)
 	).apply(i, (item, count, components, chance) -> item.map(
 		stack -> new ProcessingOutput(stack, count, components, chance),
 		compat -> new ProcessingOutput(compat, count, chance)
 	)));
 
-	// Remove fallback in 1.22
+	// TODO - Remove fallback in 1.22
 	public static final Codec<ProcessingOutput> CODEC = Codec.withAlternative(CODEC_NEW, CODEC_OLD);
 
 }

@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.events;
 
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.elevator.ElevatorControlsHandler;
 import com.simibubi.create.content.contraptions.wrench.RadialWrenchHandler;
@@ -17,6 +19,8 @@ import com.simibubi.create.content.trains.track.CurvedTrackInteraction;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -108,6 +112,14 @@ public class InputEvents {
 		} else if (PackagePortTargetSelectionHandler.onUse()) {
 			event.setCanceled(true);
 			return;
+		}
+		
+		if (mc.player != null) {
+			ItemStack itemInHand = mc.player.getItemInHand(event.getHand());
+			if (AllItemTags.WRENCH.matches(itemInHand))
+				return;
+			if (itemInHand.is(Items.CHAIN) || AllBlocks.PACKAGE_FROGPORT.isIn(itemInHand))
+				return;
 		}
 
 		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> {

@@ -4,17 +4,11 @@ import java.util.List;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.tick.EntityTickEvent;
-
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup.RegistryLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,6 +20,10 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
+
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 
 @EventBusSubscriber
 public class DivingHelmetItem extends BaseArmorItem {
@@ -73,17 +71,12 @@ public class DivingHelmetItem extends BaseArmorItem {
 	}
 
 	@SubscribeEvent
-	public static void breatheUnderwater(EntityTickEvent.Pre event) {
-		if (!(event.getEntity() instanceof LivingEntity entity))
-			return;
+	public static void breatheUnderwater(LivingBreatheEvent event) {
+		LivingEntity entity = event.getEntity();
+		Level level = entity.level();
 
-		Level world = entity.level();
-		boolean second = world.getGameTime() % 20 == 0;
-		boolean drowning = entity.getAirSupply() == 0;
-
-		if (world.isClientSide)
-			entity.getPersistentData()
-				.remove("VisualBacktankAir");
+		if (level.isClientSide)
+			entity.getPersistentData().remove("VisualBacktankAir");
 
 		ItemStack helmet = getWornItem(entity);
 		if (helmet.isEmpty())
@@ -95,7 +88,7 @@ public class DivingHelmetItem extends BaseArmorItem {
 
 		if (!entity.canDrownInFluidType(entity.getEyeInFluidType()) && !lavaDiving)
 			return;
-		if (entity instanceof Player && ((Player) entity).isCreative())
+		if (entity instanceof Player player && (player.isSpectator() || player.isCreative()))
 			return;
 
 		List<ItemStack> backtanks = BacktankUtil.getAllWithAir(entity);
@@ -110,19 +103,16 @@ public class DivingHelmetItem extends BaseArmorItem {
 				return;
 		}
 
-		if (drowning)
-			entity.setAirSupply(10);
+		float visualBacktankAir = 0f;
+		for (ItemStack stack : backtanks)
+			visualBacktankAir += BacktankUtil.getAir(stack);
 
-		if (world.isClientSide)
+		if (level.isClientSide)
 			entity.getPersistentData()
-				.putInt("VisualBacktankAir", Math.round(backtanks.stream()
-					.map(BacktankUtil::getAir)
-					.reduce(0, Integer::sum)));
+				.putInt("VisualBacktankAir", Math.round(visualBacktankAir));
 
-		if (!second)
-			return;
-
-		BacktankUtil.consumeAir(entity, backtanks.get(0), 1);
+		if (level.getGameTime() % 20 == 0)
+			BacktankUtil.consumeAir(entity, backtanks.get(0), 1);
 
 		if (lavaDiving)
 			return;
@@ -130,7 +120,7 @@ public class DivingHelmetItem extends BaseArmorItem {
 		if (entity instanceof ServerPlayer sp)
 			AllAdvancements.DIVING_SUIT.awardTo(sp);
 
-		entity.setAirSupply(Math.min(entity.getMaxAirSupply(), entity.getAirSupply() + 10));
-		entity.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 30, 0, true, false, true));
+		event.setCanBreathe(true);
+		event.setRefillAirAmount(entity.getMaxAirSupply());
 	}
 }

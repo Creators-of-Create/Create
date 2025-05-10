@@ -95,41 +95,43 @@ public class ArmInteractionPoint {
 	}
 
 	@Nullable
-	protected IItemHandler getHandler() {
-		if (cachedHandler == null && !level.isClientSide()) {
+	protected IItemHandler getHandler(ArmBlockEntity armBlockEntity) {
+		if (cachedHandler == null && level instanceof ServerLevel serverLevel) {
 			BlockEntity be = level.getBlockEntity(pos);
 			if (be == null)
 				return null;
 			cachedHandler = BlockCapabilityCache.create(
-					Capabilities.ItemHandler.BLOCK,
-					(ServerLevel) level,
-					pos,
-					Direction.UP
+				Capabilities.ItemHandler.BLOCK,
+				serverLevel,
+				pos,
+				Direction.UP,
+				() -> !armBlockEntity.isRemoved(),
+				() -> cachedHandler = null
 			);
 		}
 		return cachedHandler.getCapability();
 	}
 
-	public ItemStack insert(ItemStack stack, boolean simulate) {
-		IItemHandler handler = getHandler();
+	public ItemStack insert(ArmBlockEntity armBlockEntity, ItemStack stack, boolean simulate) {
+		IItemHandler handler = getHandler(armBlockEntity);
 		if (handler == null)
 			return stack;
 		return ItemHandlerHelper.insertItem(handler, stack, simulate);
 	}
 
-	public ItemStack extract(int slot, int amount, boolean simulate) {
-		IItemHandler handler = getHandler();
+	public ItemStack extract(ArmBlockEntity armBlockEntity, int slot, int amount, boolean simulate) {
+		IItemHandler handler = getHandler(armBlockEntity);
 		if (handler == null)
 			return ItemStack.EMPTY;
 		return handler.extractItem(slot, amount, simulate);
 	}
 
-	public ItemStack extract(int slot, boolean simulate) {
-		return extract(slot, 64, simulate);
+	public ItemStack extract(ArmBlockEntity armBlockEntity, int slot, boolean simulate) {
+		return extract(armBlockEntity, slot, 64, simulate);
 	}
 
-	public int getSlotCount() {
-		IItemHandler handler = getHandler();
+	public int getSlotCount(ArmBlockEntity armBlockEntity) {
+		IItemHandler handler = getHandler(armBlockEntity);
 		if (handler == null)
 			return 0;
 		return handler.getSlots();
@@ -193,8 +195,8 @@ public class ArmInteractionPoint {
 	}
 
 	public enum Mode {
-		DEPOSIT("mechanical_arm.deposit_to", 0xDDC166),
-		TAKE("mechanical_arm.extract_from", 0x7FCDE0);
+		DEPOSIT("create.mechanical_arm.deposit_to", 0xDDC166),
+		TAKE("create.mechanical_arm.extract_from", 0x7FCDE0);
 
 		private final String translationKey;
 		private final int color;

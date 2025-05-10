@@ -26,6 +26,7 @@ import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.levelWrappers.WrappedLevel;
 import net.createmod.catnip.math.AngleHelper;
+import net.createmod.ponder.api.level.PonderLevel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -287,7 +288,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 		boolean blockItem = bakedModel.isGui3d();
 
 		int count = 0;
-		if (mc.player.getEyePosition(1.0F).distanceTo(itemPos) < 16)
+		if (be.getLevel() instanceof PonderLevel || mc.player.getEyePosition(1.0F).distanceTo(itemPos) < 16)
 			count = (int) (Mth.log2((int) (transported.stack.getCount()))) / 2;
 
 		Random r = new Random(transported.angle);

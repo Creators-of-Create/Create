@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
@@ -11,21 +12,14 @@ import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 
 public class FanProcessingTypeRegistry {
-	private static List<FanProcessingType> sortedTypes = null;
+	private static final List<FanProcessingType> SORTED_TYPES = new ReferenceArrayList<>();
 	@UnmodifiableView
-	private static List<FanProcessingType> sortedTypesView = null;
+	public static final List<FanProcessingType> SORTED_TYPES_VIEW = Collections.unmodifiableList(SORTED_TYPES);
 
-	@UnmodifiableView
-	public static List<FanProcessingType> getSortedTypesView() {
-		if (sortedTypes == null || sortedTypesView == null) {
-			sortedTypes = new ReferenceArrayList<>();
-
-			CreateBuiltInRegistries.FAN_PROCESSING_TYPE.forEach(sortedTypes::add);
-			sortedTypes.sort((t1, t2) -> t2.getPriority() - t1.getPriority());
-
-			sortedTypesView = Collections.unmodifiableList(sortedTypes);
-		}
-
-		return sortedTypesView;
+	@Internal
+	public static void init() {
+		SORTED_TYPES.clear();
+		CreateBuiltInRegistries.FAN_PROCESSING_TYPE.forEach(SORTED_TYPES::add);
+		SORTED_TYPES.sort((t1, t2) -> t2.getPriority() - t1.getPriority());
 	}
 }

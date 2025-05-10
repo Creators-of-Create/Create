@@ -5,7 +5,6 @@
   "package": "com.simibubi.create.foundation.mixin",
   "compatibilityLevel": "JAVA_21",
   "refmap": "create.refmap.json",
-  "plugin": "com.simibubi.create.foundation.mixin.CreateMixinPlugin",
   "mixins": [
     "ArmorTrimMixin",
     "BlockItemMixin",
@@ -20,11 +19,10 @@
     "ProjectileUtilMixin",
     "ShulkerBoxBlockMixin",
     "SmithingMenuMixin",
-    "SmithingTrimRecipeMixin",
     "TestCommandMixin",
     "WaterWheelFluidSpreadMixin",
-    "accessor.AbstractRegistrateAccessor",
     "accessor.BlockBehaviourAccessor",
+    "accessor.BlockLootSubProviderAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
     "accessor.FlowingFluidAccessor",
@@ -44,7 +42,6 @@
     "accessor.StateHolderAccessor",
     "accessor.SystemReportAccessor",
     "accessor.UseOnContextAccessor",
-    "compat.journeymap.MapRendererAccessor",
     "datafixer.BlockPosFormatAndRenamesFixMixin",
     "datafixer.ItemStackComponentizationFixMixin",
     "datafixer.V1460Mixin"
@@ -67,8 +64,7 @@
     "client.HumanoidArmorLayerMixin",
     "client.HumanoidModelMixin",
     "client.LevelRendererMixin",
-    "client.PlayerRendererMixin",
-    "compat.journeymap.JourneyFullscreenMapMixin"
+    "client.PlayerRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
