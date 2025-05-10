@@ -25,6 +25,7 @@
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.BlockLootSubProviderAccessor",
     "accessor.BuiltInRegistriesAccessor",
+    "accessor.ConcretePowderBlockAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
     "accessor.FlowingFluidAccessor",
