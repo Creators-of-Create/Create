@@ -20,6 +20,9 @@ import com.simibubi.create.content.processing.burner.LitBlazeBurnerBlock;
 import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
+
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.theme.Color;
@@ -54,9 +57,6 @@ import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class AllFanProcessingTypes {
 	public static final BlastingType BLASTING = register("blasting", new BlastingType());
@@ -95,41 +95,6 @@ public class AllFanProcessingTypes {
 			return type;
 		}
 		return FanProcessingType.parse(str);
-	}
-
-	public static class NoneType implements FanProcessingType {
-		@Override
-		public boolean isValidAt(Level level, BlockPos pos) {
-			return true;
-		}
-
-		@Override
-		public int getPriority() {
-			return -1000000;
-		}
-
-		@Override
-		public boolean canProcess(ItemStack stack, Level level) {
-			return false;
-		}
-
-		@Override
-		@Nullable
-		public List<ItemStack> process(ItemStack stack, Level level) {
-			return null;
-		}
-
-		@Override
-		public void spawnProcessingParticles(Level level, Vec3 pos) {
-		}
-
-		@Override
-		public void morphAirFlow(AirFlowParticleAccess particleAccess, RandomSource random) {
-		}
-
-		@Override
-		public void affectEntity(Entity entity, Level level) {
-		}
 	}
 
 	public static class BlastingType implements FanProcessingType {

@@ -40,9 +40,6 @@ public class BeltCrusherInteractionHandler {
 			crusherEntry += .399f * (beltMovementPositive ? -1 : 1);
 			float postCrusherEntry = crusherEntry + .799f * (!beltMovementPositive ? -1 : 1);
 
-			float extraOffset = BeltHelper.getSegmentBE(world, beltInventory.belt.getBlockPos().relative(movementFacing.getOpposite())) != null ? .275f : 0;
-			nextOffset -= extraOffset;
-
 			boolean hasCrossed = nextOffset > crusherEntry && nextOffset < postCrusherEntry && beltMovementPositive
 				|| nextOffset < crusherEntry && nextOffset > postCrusherEntry && !beltMovementPositive;
 			if (!hasCrossed)

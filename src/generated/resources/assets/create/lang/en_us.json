@@ -1040,7 +1040,7 @@
   "create.display_source.boiler.not_enough_space": "Not enough space ",
   "create.display_source.boiler_status": "Boiler Status",
   "create.display_source.combine_item_names": "Combine Item Names",
-  "create.display_source.computer_display_source": "From Computer",
+  "create.display_source.computer": "From Computer",
   "create.display_source.count_items": "Amount of matching Items",
   "create.display_source.current_floor": "Elevator Location",
   "create.display_source.entity_name": "Entity Name",

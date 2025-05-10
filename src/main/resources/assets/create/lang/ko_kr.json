@@ -3003,7 +3003,7 @@
   "create.tooltip.chute.items_move_up": "아이템이 위로 이동",
   "create.tooltip.chute.no_fans_attached": "선풍기가 부착되지 않음",
   "create.tooltip.deployer.contains": "아이템: %1$s x%2$s",
-  "create.tooltip.deployer.header": "기계손 정보",
+  "create.tooltip.deployer.header": "기계 손 정보",
   "create.tooltip.deployer.punching": "모드: 공격",
   "create.tooltip.deployer.using": "모드: 사용",
   "create.tooltip.generationSpeed": "%1$s %2$s만큼 발전함",
