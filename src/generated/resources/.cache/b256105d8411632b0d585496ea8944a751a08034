@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-28T03:52:11.4148206	Create's Processing Recipes
+// 1.21.1	2026-02-28T03:59:34.4761105	Create's Processing Recipes
 cb988d3be6b4a28e4d13dc73d61eed3670520e8e data/create/recipe/compacting/andesite_from_flint.json
 d97f4e06363879d033b2151995a5d4f19ad7ef3a data/create/recipe/compacting/blaze_cake.json
 7879a7ba9019a2938363449d3a0e13013a4ad606 data/create/recipe/compacting/chocolate.json
@@ -719,6 +719,7 @@ c54388708dfdec4a93c020bda7167b62b1cf087d data/create/recipe/pressing/compat/bett
 6ce1ac57a46c3cde0a1e17cea815c99e675600e6 data/create/recipe/pressing/compat/betterendforge/pink_moss_path.json
 ad48806f090e484d30618991d97c28c770e337a8 data/create/recipe/pressing/compat/betterendforge/shadow_grass_path.json
 de828f97caf1ee7cdec3b370d1e4a294c962b5fb data/create/recipe/pressing/compat/biomeswevegone/lush_grass_path.json
+901b1b87824c9bd2e402af8f9fe96c492a74aa00 data/create/recipe/pressing/compat/environmental/dirt_path.json
 7bb33457151329dc4a98443bdfa78e9f3c4a78ee data/create/recipe/pressing/compat/environmental/mycelium_path.json
 217cddf9249cfaa2938a839bfc6ab77a9e64c484 data/create/recipe/pressing/compat/environmental/podzol_path.json
 538b3309eb187c867c33fe7caf5b3253c667ad7e data/create/recipe/pressing/compat/immersiveengineering/plate_aluminum.json
@@ -737,7 +738,8 @@ e46781712bb0c59500239c155ba79e799f4db859 data/create/recipe/pressing/copper_ingo
 b4d28672d2ff6a4deff2731f82e6057727dfe9e2 data/create/recipe/pressing/cursed_earth_path_from_grass.json
 9ebdee08dbbe33b8ef5448fdac7d78beafa059dd data/create/recipe/pressing/gold_ingot.json
 580198603373700c9720e457dd79b692add84526 data/create/recipe/pressing/iron_ingot.json
-0b556ee184cde4630bee05e3b123c7bd455df151 data/create/recipe/pressing/path.json
+010b5b2376d670a3383bd598ce5e3fe387ecbca0 data/create/recipe/pressing/path.json
+84de696295cb383578d7e1c8d34e2b672dcfeb86 data/create/recipe/pressing/path_from_grass.json
 3e45ee1c1f96dbebb96ead7be3d614348784bc9c data/create/recipe/pressing/peat_dirt_path.json
 babc90476b5dc540e2200f36400f6aedc5d2471c data/create/recipe/pressing/peat_dirt_path_from_grass.json
 83d1ee1605d8441d6640b7a47128dcd0113d241e data/create/recipe/pressing/silt_dirt_path.json
