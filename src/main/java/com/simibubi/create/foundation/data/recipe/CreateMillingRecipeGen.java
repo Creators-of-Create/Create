@@ -581,8 +581,8 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	ENV_BIRD_OF_PARADISE = envFlower("bird_of_paradise", List.of(1f, .25f, .25f),
 		List.of(Items.ORANGE_DYE, Items.BLUE_DYE, Items.RED_DYE), List.of(3, 1, 1)),
 
-	ENV_BLUE_DELPHINIUM = envFlower("blue_delphinium", List.of(1f, .1f),
-		List.of(Items.BLUE_DYE, Items.BLUE_DYE), List.of(3, 1)),
+	ENV_BLUE_DELPHINIUM = envFlower("blue_delphinium", List.of(1f,.1f),
+		List.of(Items.LIGHT_BLUE_DYE, Items.LIGHT_BLUE_DYE), List.of(3,1)),
 
 	ENV_BLUEBELL = envFlower("bluebell", List.of(1f),
 		List.of(Items.BLUE_DYE), List.of(2)),
@@ -590,8 +590,8 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	ENV_CARTWHEEL = envFlower("cartwheel", List.of(1f, .1f),
 		List.of(Items.PINK_DYE, Items.ORANGE_DYE), List.of(2, 1)),
 
-	ENV_DIANTHUS = envFlower("dianthus", List.of(1f, .1f),
-		List.of(Items.GREEN_DYE, Items.GREEN_DYE), List.of(2, 1)),
+	ENV_DIANTHUS = envFlower("dianthus", List.of(1f,.1f),
+		List.of(Items.LIME_DYE, Items.LIME_DYE), List.of(2,1)),
 
 	ENV_MAGENTA_HIBISCUS = envFlower("magenta_hibiscus", List.of(1f, .1f),
 		List.of(Items.MAGENTA_DYE, Items.MAGENTA_DYE), List.of(2, 1)),
@@ -623,11 +623,14 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	ENV_WHITE_DELPHINIUM = envFlower("white_delphinium", List.of(1f, .1f),
 		List.of(Items.WHITE_DYE, Items.WHITE_DYE), List.of(3, 1)),
 
-	ENV_WHITE_LOTUS_FLOWER = envFlower("white_lotus_flower", List.of(1f, .1f),
-		List.of(Items.WHITE_DYE, Items.LIME_DYE), List.of(2, 1)),
+	ENV_WHITE_LOTUS_FLOWER = envFlower("white_lotus_flower", List.of(1f,.1f),
+		List.of(Items.WHITE_DYE, Items.WHITE_DYE), List.of(2,1)),
 
 	ENV_YELLOW_HIBISCUS = envFlower("yellow_hibiscus", List.of(1f, .1f),
 		List.of(Items.YELLOW_DYE, Items.YELLOW_DYE), List.of(2, 1)),
+
+	ENV_TASSELFLOWER = envFlower("tasselflower", List.of(1f, .1f),
+		List.of(Items.ORANGE_DYE, Items.GREEN_DYE), List.of(2,1)),
 
 	// Duidcraft
 	DC_LAVENDER = create(Mods.DRUIDCRAFT.recipeId("lavender"), b -> b.duration(50)
