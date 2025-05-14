@@ -242,7 +242,7 @@ dependencies {
     // modRuntimeOnly("curse.maven:silent-lib-242998:4585754")
     // modRuntimeOnly("curse.maven:silents-gems-220311:5193708")
     // modRuntimeOnly("curse.maven:project-vibrant-journeys-300297:5676296")
-    
+
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings
     // This allows 'Settings > Build, Execution, and Deployment > Build Tools > Gradle > Build and run using' set to IntelliJ to work correctly
