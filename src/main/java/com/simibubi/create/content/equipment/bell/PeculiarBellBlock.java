@@ -4,9 +4,7 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 
-import com.simibubi.create.AllTags;
-
-import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes.HauntingType;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,7 +14,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -67,8 +64,7 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellBlockEntity
 		if (!AllBlocks.PECULIAR_BELL.has(state))
 			return state;
 
-		Block underBlock = underState.getBlock();
-		if (!AllBlockTags.FAN_PROCESSING_CATALYSTS_HAUNTING.matches(underBlock))
+		if (!new HauntingType().isValidAt(world, pos.below()))
 			return state;
 
 		if (world.isClientSide()) {
