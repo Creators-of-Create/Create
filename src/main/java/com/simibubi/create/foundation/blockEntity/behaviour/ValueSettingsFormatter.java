@@ -5,13 +5,12 @@ import java.util.function.Function;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBehaviour.ValueSettings;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.INamedIconOptions;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class ValueSettingsFormatter {
-
-	private Function<ValueSettings, MutableComponent> formatter;
+	private final Function<ValueSettings, MutableComponent> formatter;
 
 	public ValueSettingsFormatter(Function<ValueSettings, MutableComponent> formatter) {
 		this.formatter = formatter;
@@ -23,10 +22,10 @@ public class ValueSettingsFormatter {
 
 	public static class ScrollOptionSettingsFormatter extends ValueSettingsFormatter {
 
-		private INamedIconOptions[] options;
+		private final INamedIconOptions[] options;
 
 		public ScrollOptionSettingsFormatter(INamedIconOptions[] options) {
-			super(v -> CreateLang.translateDirect(options[v.value()].getTranslationKey()));
+			super(v -> Component.translatable(options[v.value()].getTranslationKey()));
 			this.options = options;
 		}
 
@@ -35,5 +34,4 @@ public class ValueSettingsFormatter {
 		}
 
 	}
-
 }

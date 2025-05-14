@@ -1,4 +1,48 @@
 ------------------------------------------------------
+Create 6.0.4
+------------------------------------------------------
+
+#### Bug Fixes
+
+- Fixed crash when using mechanical arms with composters #7965
+- Fixed chocolate and honey having the wrong map color #5409
+- Fixed goggles not swapping with helmet when equipped #7977
+- Fixed fluid pipe visuals rendering with incorrect uv scale
+- Fixed Re-packager creating invalid item stacks when factory gauges were assigned larger stacks #7963
+- Fixed nixie tubes not updating their text in ponder scenes #7978
+- Clicking conveyors with chains or the wrench now takes priority over picking up packagers from them
+- Fix Processing recipes ignoring item components (1.21) #7962
+
+------------------------------------------------------
+Create 6.0.3
+------------------------------------------------------
+
+#### Bug Fixes
+
+- Fixed certain block entities not rendering on contraptions #7790 #7782 #7774
+- Fixed sign text and color getting removed by display links #7250
+- Changed sandpaper item rendering to use Gui transform
+- Fixed crash when using or viewing sandpaper polishing recipes (1.21)
+- Fixed crash with recent versions of ftb library
+- Fixed belts interacting with horizontal crushing wheels inconsistently #7445
+- Allow Re-Packager to split packages with multiple crafting recipes into single packages 
+- Fixed contraptions not able to break ice blocks #4415
+- Increased rope pulley view distance #4836
+- Fixed create datagen running in addon workspaces (#7862)
+- Fixed Fluid recipes missing outputs, and crash when using create fluid buckets on basin (#7884)
+- Fixed crash when placing empty linked controllers in lecterns #7876
+- Fixed issues with elevator contact display link behavior
+- Fixed double chest lighting on contraptions
+- Added flywheel optimisations for fluids in windowed pipes
+- Fixed bogey lighting not updating correctly while switching between styles
+- Fixed cardboard sword not being enchantable #7736
+- Fixed crash with redstone requester #7788
+- Fixed being able to enchant cardboard swords with other enchantments when using anvils
+- Fixed metal ladders being able to hang in wrong directions #7395
+- Fixed player chain conveyor animation playing when game is paused #7390
+- Fixed elevator floor description rendering being offset from the controls block
+
+------------------------------------------------------
 Create 6.0.2
 ------------------------------------------------------
 
