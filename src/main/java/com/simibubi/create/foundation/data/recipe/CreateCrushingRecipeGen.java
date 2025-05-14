@@ -454,32 +454,6 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 		return null;
 	}
 
-	GeneratedRecipe sgNetherOres(String... types) {
-		for (String type : types) {
-			create(Mods.SILENT_GEMS.recipeId(type + "_ore"), b -> b.duration(350)
-				.require(Mods.SILENT_GEMS, type + "_ore")
-				.output(1f, Mods.SILENT_GEMS, type, 2)
-				.output(.25f, Mods.SILENT_GEMS, type, 1)
-				.output(.75f, AllItems.EXP_NUGGET.get())
-				.output(.12f, Items.NETHERRACK)
-				.whenModLoaded(Mods.SILENT_GEMS.getId()));
-		}
-		return null;
-	}
-
-	GeneratedRecipe sgEndOres(String... types) {
-		for (String type : types) {
-			create(Mods.SILENT_GEMS.recipeId(type + "_ore"), b -> b.duration(350)
-				.require(Mods.SILENT_GEMS, type + "_ore")
-				.output(1f, Mods.SILENT_GEMS, type, 2)
-				.output(.25f, Mods.SILENT_GEMS, type, 1)
-				.output(.75f, AllItems.EXP_NUGGET.get())
-				.output(.12f, Items.END_STONE)
-				.whenModLoaded(Mods.SILENT_GEMS.getId()));
-		}
-		return null;
-	}
-
 	GeneratedRecipe sfPlants(String... types) {
 		for (String type : types) {
 			create(Mods.SF.recipeId(type), b -> b.duration(150)
