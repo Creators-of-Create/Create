@@ -6,7 +6,6 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.CrushingRecipeGen;
 
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
@@ -44,7 +43,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 
 	GeneratedRecipe
 
-	BLAZE_ROD = create(() -> Items.BLAZE_ROD, b -> b.duration(100)
+		BLAZE_ROD = create(() -> Items.BLAZE_ROD, b -> b.duration(100)
 		.output(Items.BLAZE_POWDER, 3)
 		.output(.25f, Items.BLAZE_POWDER, 3)),
 
@@ -427,12 +426,12 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 	GeneratedRecipe sgStoneOres(String... types) {
 		for (String type : types) {
 			create(Mods.SILENT_GEMS.recipeId(type + "_ore"), b -> b.duration(350)
-					.require(Mods.SILENT_GEMS, type + "_ore")
-					.output(1f, Mods.SILENT_GEMS, type, 2)
-					.output(.25f, Mods.SILENT_GEMS, type, 1)
-					.output(.75f, AllItems.EXP_NUGGET.get())
-					.output(.12f, Items.COBBLESTONE)
-					.whenModLoaded(Mods.SILENT_GEMS.getId()));
+				.require(Mods.SILENT_GEMS, type + "_ore")
+				.output(1f, Mods.SILENT_GEMS, type, 2)
+				.output(.25f, Mods.SILENT_GEMS, type, 1)
+				.output(.75f, AllItems.EXP_NUGGET.get())
+				.output(.12f, Items.COBBLESTONE)
+				.whenModLoaded(Mods.SILENT_GEMS.getId()));
 		}
 		return null;
 	}
@@ -440,12 +439,12 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 	GeneratedRecipe sgNetherOres(String... types) {
 		for (String type : types) {
 			create(Mods.SILENT_GEMS.recipeId(type + "_ore"), b -> b.duration(350)
-					.require(Mods.SILENT_GEMS, type + "_ore")
-					.output(1f, Mods.SILENT_GEMS, type, 2)
-					.output(.25f, Mods.SILENT_GEMS, type, 1)
-					.output(.75f, AllItems.EXP_NUGGET.get())
-					.output(.12f, Items.NETHERRACK)
-					.whenModLoaded(Mods.SILENT_GEMS.getId()));
+				.require(Mods.SILENT_GEMS, type + "_ore")
+				.output(1f, Mods.SILENT_GEMS, type, 2)
+				.output(.25f, Mods.SILENT_GEMS, type, 1)
+				.output(.75f, AllItems.EXP_NUGGET.get())
+				.output(.12f, Items.NETHERRACK)
+				.whenModLoaded(Mods.SILENT_GEMS.getId()));
 		}
 		return null;
 	}
@@ -453,12 +452,12 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 	GeneratedRecipe sgEndOres(String... types) {
 		for (String type : types) {
 			create(Mods.SILENT_GEMS.recipeId(type + "_ore"), b -> b.duration(350)
-					.require(Mods.SILENT_GEMS, type + "_ore")
-					.output(1f, Mods.SILENT_GEMS, type, 2)
-					.output(.25f, Mods.SILENT_GEMS, type, 1)
-					.output(.75f, AllItems.EXP_NUGGET.get())
-					.output(.12f, Items.END_STONE)
-					.whenModLoaded(Mods.SILENT_GEMS.getId()));
+				.require(Mods.SILENT_GEMS, type + "_ore")
+				.output(1f, Mods.SILENT_GEMS, type, 2)
+				.output(.25f, Mods.SILENT_GEMS, type, 1)
+				.output(.75f, AllItems.EXP_NUGGET.get())
+				.output(.12f, Items.END_STONE)
+				.whenModLoaded(Mods.SILENT_GEMS.getId()));
 		}
 		return null;
 	}
@@ -466,11 +465,11 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 	GeneratedRecipe sfPlants(String... types) {
 		for (String type : types) {
 			create(Mods.SF.recipeId(type), b -> b.duration(150)
-					.require(Mods.SF, type)
-					.output(1f, AllItems.WHEAT_FLOUR.get(), 1)
-					.output(.25f, AllItems.WHEAT_FLOUR.get(), 2)
-					.output(.25f, Mods.SF, type + "_seeds", 1)
-					.whenModLoaded(Mods.SF.getId()));
+				.require(Mods.SF, type)
+				.output(1f, AllItems.WHEAT_FLOUR.get(), 1)
+				.output(.25f, AllItems.WHEAT_FLOUR.get(), 2)
+				.output(.25f, Mods.SF, type + "_seeds", 1)
+				.whenModLoaded(Mods.SF.getId()));
 		}
 		return null;
 	}
@@ -478,12 +477,12 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 	GeneratedRecipe thOres(String... types) {
 		for (String type : types) {
 			create(Mods.TH.recipeId(type + "_ore"), b -> b.duration(350)
-					.require(Mods.TH, type + "_ore")
-					.output(1f, Mods.TH, type, 2)
-					.output(.25f, Mods.TH, type, 1)
-					.output(.12f, Items.COBBLESTONE)
-					.output(.75f, AllItems.EXP_NUGGET.get())
-					.whenModLoaded(Mods.TH.getId()));
+				.require(Mods.TH, type + "_ore")
+				.output(1f, Mods.TH, type, 2)
+				.output(.25f, Mods.TH, type, 1)
+				.output(.12f, Items.COBBLESTONE)
+				.output(.75f, AllItems.EXP_NUGGET.get())
+				.whenModLoaded(Mods.TH.getId()));
 		}
 		return null;
 	}
@@ -491,32 +490,32 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 	GeneratedRecipe eoNetherOre(String material, ItemLike result, int count){
 		String oreName = "ore_" + material + "_nether";
 		return create(Mods.EO.recipeId(oreName), b -> b.duration(350)
-				.require(Mods.EO, oreName)
-				.output(1f, result, count)
-				.output(.25f, result)
-				.output(.75f, AllItems.EXP_NUGGET.get())
-				.output(.12f, Items.NETHERRACK)
-				.whenModLoaded(Mods.EO.getId()));
+			.require(Mods.EO, oreName)
+			.output(1f, result, count)
+			.output(.25f, result)
+			.output(.75f, AllItems.EXP_NUGGET.get())
+			.output(.12f, Items.NETHERRACK)
+			.whenModLoaded(Mods.EO.getId()));
 	}
 
 	GeneratedRecipe eoEndOre(String material, ItemLike result, int count){
 		String oreName = "ore_" + material + "_end";
 		return create(Mods.EO.recipeId(oreName), b -> b.duration(350)
-				.require(Mods.EO, oreName)
-				.output(1f, result, count)
-				.output(.25f, result)
-				.output(.75f, AllItems.EXP_NUGGET.get())
-				.output(.12f, Items.END_STONE)
-				.whenModLoaded(Mods.EO.getId()));
+			.require(Mods.EO, oreName)
+			.output(1f, result, count)
+			.output(.25f, result)
+			.output(.75f, AllItems.EXP_NUGGET.get())
+			.output(.12f, Items.END_STONE)
+			.whenModLoaded(Mods.EO.getId()));
 	}
 
 	GeneratedRecipe ensStones(String... stones) {
 		for (String stone : stones) {
 			String crushed = "crushed_" + stone;
 			create(Mods.ENS.recipeId(stone), b -> b.duration(350)
-					.require(Mods.MC, stone)
-					.output(Mods.ENS, crushed)
-					.whenModLoaded(Mods.ENS.getId()));
+				.require(Mods.MC, stone)
+				.output(Mods.ENS, crushed)
+				.whenModLoaded(Mods.ENS.getId()));
 		}
 		return null;
 	}
