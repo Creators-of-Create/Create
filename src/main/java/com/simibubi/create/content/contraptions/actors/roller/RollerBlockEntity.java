@@ -157,7 +157,7 @@ public class RollerBlockEntity extends SmartBlockEntity {
 
 		private RollingMode(AllIcons icon) {
 			this.icon = icon;
-			translationKey = "contraptions.roller_mode." + Lang.asId(name());
+			translationKey = "create.contraptions.roller_mode." + Lang.asId(name());
 		}
 
 		@Override
