@@ -267,17 +267,13 @@ import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.UncontainableBlockItem;
+import com.simibubi.create.foundation.mixin.accessor.BlockLootSubProviderAccessor;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.infrastructure.config.CStress;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
-
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.ForgeSoundType;
 
 import net.createmod.catnip.data.Couple;
 import net.minecraft.client.renderer.RenderType;
@@ -318,6 +314,11 @@ import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+
+import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.util.ForgeSoundType;
 
 @SuppressWarnings("removal")
 public class AllBlocks {
@@ -2594,12 +2595,15 @@ public class AllBlocks {
 			.transform(axeOnly())
 			.blockstate(BlockStateGen.horizontalAxisBlockProvider(false))
 			.loot((r, b) -> r.add(b, LootTable.lootTable()
+				.withPool(LootPool.lootPool()
+					.setRolls(ConstantValue.exactly(1.0F))
+					.add(LootItem.lootTableItem(b)
+						.when(BlockLootSubProviderAccessor.create$HAS_SILK_TOUCH())
+						.otherwise(r.applyExplosionCondition(b, LootItem.lootTableItem(Items.STRING)))))
 				.withPool(r.applyExplosionCondition(b, LootPool.lootPool()
 					.setRolls(ConstantValue.exactly(1.0F))
-					.add(LootItem.lootTableItem(Items.STRING))))
-				.withPool(r.applyExplosionCondition(b, LootPool.lootPool()
-					.setRolls(ConstantValue.exactly(1.0F))
-					.add(LootItem.lootTableItem(AllBlocks.CARDBOARD_BLOCK.asItem()))))))
+					.add(LootItem.lootTableItem(AllBlocks.CARDBOARD_BLOCK.asItem()))
+					.when(BlockLootSubProviderAccessor.create$HAS_SILK_TOUCH().invert())))))
 			.item(CardboardBlockItem::new)
 			.build()
 			.lang("Bound Block of Cardboard")
