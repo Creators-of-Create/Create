@@ -110,15 +110,9 @@ public class ScheduleRuntime {
 			ticksInTransit++;
 			return;
 		}
-		if (currentEntry >= schedule.entries.size()) {
-			currentEntry = 0;
-			if (!schedule.cyclic) {
-				paused = true;
-				completed = true;
-			}
+		
+		if (checkEndOfScheduleReached())
 			return;
-		}
-
 		if (cooldown-- > 0)
 			return;
 		if (state == State.IN_TRANSIT)
@@ -142,6 +136,18 @@ public class ScheduleRuntime {
 			state = State.IN_TRANSIT;
 			ticksInTransit = 0;
 		}
+	}
+
+	private boolean checkEndOfScheduleReached() {
+		if (currentEntry < schedule.entries.size())
+			return false;
+
+		currentEntry = 0;
+		if (!schedule.cyclic) {
+			paused = true;
+			completed = true;
+		}
+		return true;
 	}
 
 	public void tickConditions(Level level) {
@@ -182,6 +188,9 @@ public class ScheduleRuntime {
 	}
 
 	public DiscoveredPath startCurrentInstruction(Level level) {
+		if (checkEndOfScheduleReached())
+			return null;
+		
 		ScheduleEntry entry = schedule.entries.get(currentEntry);
 		ScheduleInstruction instruction = entry.instruction;
 		return instruction.start(this, level);

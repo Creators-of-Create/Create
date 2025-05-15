@@ -1,0 +1,33 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "biomeswevegone"
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "forge:ores/anthracite"
+    }
+  ],
+  "processingTime": 150,
+  "results": [
+    {
+      "count": 2,
+      "item": "biomeswevegone:anthracite"
+    },
+    {
+      "chance": 0.5,
+      "item": "biomeswevegone:anthracite"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "item": "biomeswevegone:brimstone"
+    }
+  ]
+}

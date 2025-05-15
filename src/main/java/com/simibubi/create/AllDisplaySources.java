@@ -1,7 +1,5 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.Create.REGISTRATE;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +33,7 @@ import com.simibubi.create.content.redstone.displayLink.source.StationSummaryDis
 import com.simibubi.create.content.redstone.displayLink.source.StopWatchDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.source.TimeOfDayDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.source.TrainStatusDisplaySource;
+import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraftforge.registries.ForgeRegistries;
@@ -47,6 +46,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class AllDisplaySources {
+	private static final CreateRegistrate REGISTRATE = Create.registrate();
+
 	public static final RegistryEntry<DeathCounterDisplaySource> DEATH_COUNT = REGISTRATE.displaySource("death_count", DeathCounterDisplaySource::new)
 		.associate(Blocks.RESPAWN_ANCHOR)
 		.register();

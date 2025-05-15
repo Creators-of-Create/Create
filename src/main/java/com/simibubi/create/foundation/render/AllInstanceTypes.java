@@ -4,6 +4,7 @@ import static com.simibubi.create.Create.asResource;
 
 import org.lwjgl.system.MemoryUtil;
 
+import com.simibubi.create.content.fluids.FluidInstance;
 import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.content.processing.burner.ScrollInstance;
 import com.simibubi.create.content.processing.burner.ScrollTransformedInstance;
@@ -120,6 +121,32 @@ public class AllInstanceTypes {
 			MemoryUtil.memPutFloat(ptr + 96, instance.scaleV);
 			MemoryUtil.memPutFloat(ptr + 100, instance.offsetU);
 			MemoryUtil.memPutFloat(ptr + 104, instance.offsetV);
+		})
+		.build();
+
+	public static final InstanceType<FluidInstance> FLUID = SimpleInstanceType.builder(FluidInstance::new)
+		.cullShader(asResource("instance/cull/fluid.glsl"))
+		.vertexShader(asResource("instance/fluid.vert"))
+		.layout(LayoutBuilder.create()
+			.matrix("pose", FloatRepr.FLOAT, 4)
+			.vector("color", FloatRepr.NORMALIZED_UNSIGNED_BYTE, 4)
+			.vector("light", IntegerRepr.SHORT, 2)
+			.vector("overlay", IntegerRepr.SHORT, 2)
+			.scalar("progress", FloatRepr.FLOAT)
+			.scalar("vScale", FloatRepr.FLOAT)
+			.scalar("v0", FloatRepr.FLOAT)
+			.build())
+		.writer((ptr, instance) -> {
+			ExtraMemoryOps.putMatrix4f(ptr, instance.pose);
+			MemoryUtil.memPutByte(ptr + 64, instance.red);
+			MemoryUtil.memPutByte(ptr + 65, instance.green);
+			MemoryUtil.memPutByte(ptr + 66, instance.blue);
+			MemoryUtil.memPutByte(ptr + 67, instance.alpha);
+			ExtraMemoryOps.put2x16(ptr + 68, instance.light);
+			ExtraMemoryOps.put2x16(ptr + 72, instance.overlay);
+			MemoryUtil.memPutFloat(ptr + 76, instance.progress);
+			MemoryUtil.memPutFloat(ptr + 80, instance.vScale);
+			MemoryUtil.memPutFloat(ptr + 84, instance.v0);
 		})
 		.build();
 

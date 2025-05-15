@@ -1,0 +1,33 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "biomeswevegone"
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "forge:ores/emeraldite"
+    }
+  ],
+  "processingTime": 500,
+  "results": [
+    {
+      "count": 2,
+      "item": "biomeswevegone:emeraldite_shards"
+    },
+    {
+      "chance": 0.25,
+      "item": "biomeswevegone:emeraldite_shards"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "item": "biomeswevegone:scoria_cobblestone"
+    }
+  ]
+}

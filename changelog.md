@@ -1,10 +1,95 @@
 ------------------------------------------------------
+Create 6.0.4
+------------------------------------------------------
+
+#### Bug Fixes
+
+- Fixed crash when using mechanical arms with composters #7965
+- Fixed chocolate and honey having the wrong map color #5409
+- Fixed goggles not swapping with helmet when equipped #7977
+- Fixed fluid pipe visuals rendering with incorrect uv scale
+- Fixed Re-packager creating invalid item stacks when factory gauges were assigned larger stacks #7963
+- Fixed nixie tubes not updating their text in ponder scenes #7978
+- Clicking conveyors with chains or the wrench now takes priority over picking up packagers from them
+- Fix Processing recipes ignoring item components (1.21) #7962
+
+------------------------------------------------------
+Create 6.0.3
+------------------------------------------------------
+
+#### Bug Fixes
+
+- Fixed certain block entities not rendering on contraptions #7790 #7782 #7774
+- Fixed sign text and color getting removed by display links #7250
+- Changed sandpaper item rendering to use Gui transform
+- Fixed crash when using or viewing sandpaper polishing recipes (1.21)
+- Fixed crash with recent versions of ftb library
+- Fixed belts interacting with horizontal crushing wheels inconsistently #7445
+- Allow Re-Packager to split packages with multiple crafting recipes into single packages 
+- Fixed contraptions not able to break ice blocks #4415
+- Increased rope pulley view distance #4836
+- Fixed create datagen running in addon workspaces (#7862)
+- Fixed Fluid recipes missing outputs, and crash when using create fluid buckets on basin (#7884)
+- Fixed crash when placing empty linked controllers in lecterns #7876
+- Fixed issues with elevator contact display link behavior
+- Fixed double chest lighting on contraptions
+- Added flywheel optimisations for fluids in windowed pipes
+- Fixed bogey lighting not updating correctly while switching between styles
+- Fixed cardboard sword not being enchantable #7736
+- Fixed crash with redstone requester #7788
+- Fixed being able to enchant cardboard swords with other enchantments when using anvils
+- Fixed metal ladders being able to hang in wrong directions #7395
+- Fixed player chain conveyor animation playing when game is paused #7390
+- Fixed elevator floor description rendering being offset from the controls block
+
+------------------------------------------------------
 Create 6.0.2
 ------------------------------------------------------
 
 #### Bug Fixes
 
-- Fix warning getting logged when cc: tweaked isn't installed
+- Fix warning getting logged when CC: Tweaked isn't installed
+- Fix crash when using LecternDisplayTarget #7579 #7600
+- Fix crash with fluids on contraptions
+- Fixed Shopping lists disappearing when clicking a different table cloth #7548
+- Fix mixin conflict with immersive portals
+- Fix factory gauge display sources causing crashes #7645
+- Fix Schematics sometimes rendering block entity elements when it shouldn't #7639
+- Fix Chiseled Bookshelves having wrong the blockstates when placed with a schematic cannon #7642
+- Fix horizontal crushing wheels not working properly #7445
+- Fix rotating shader not correctly handling color
+- Fix StockKeeperCategoryScreen filter buttons being clickable outside the window bounds #7668
+- Fix diving armor being trimmable (1.21.1)
+- Fix diving helmets not having aqua affinity #7433 (1.21.1)
+- Fix crash when using deployers wielding weapons #7704 (1.21.1)
+- Fix threshold switch UI causing a crash if opened too quickly after breaking the storage block it was looking at #7676
+- Fix rotated steam engines still working #7616
+- Fix button of contraption controls not rendering on contraptions #7701
+- Fix error/crash with CurrentFloorDisplaySource #7700
+- Fix the ability to redeem shopping lists at other shop networks #7657
+- Add bowls, mushroom stew and suspicious stew to the upright on belt tag
+- Fix shopping lists not working on servers
+- Fix rotation keybind not supporting mouse buttons
+- Fixed deployers not being able to harvest honeycomb with modded shears #4570
+- Safety check for schedule pointer exceeding the total count #7492
+- Fixed packager unpacking leading to item multiplication in special modded inventories #7426
+- Fixed redstone links not updating neighbours when toggling from receiver to transmitter #7715
+- Fix KineticStressDisplaySource not working properly #7659
+- Fix sequenced assembly not correctly handling errors (1.21.1)
+- The JEI search bar is now synchronised to the stock keeper search bar (configurable)
+- Fixed JEI plugin modifying ingredient fluid amounts for visual purposes
+- Fixed belts moving a sneaking player even when not wearing the full cardboard set #7691
+- Packagers can now read multiple lines on signs for package addressing
+- Factory Gauge request interval is now configurable
+- Fixed train map integration crashing when there are derailed trains or trains in another dimension (1.21.1)
+- Fixed cardboard armor rendering not respecting custom player scaling
+
+#### API Changes
+
+- Implement custom unpacking API
+- Implement InventoryIdentifier API
+- Lock Create's registrate instance behind a caller check, prevent other mods and addons from using it
+- Implement CreateRegistrateRegistrationCallback
 
 ------------------------------------------------------
 Create 6.0.1

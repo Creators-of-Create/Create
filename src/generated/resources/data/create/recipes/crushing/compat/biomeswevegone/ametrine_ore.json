@@ -1,0 +1,33 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "biomeswevegone"
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "forge:ores/ametrine"
+    }
+  ],
+  "processingTime": 500,
+  "results": [
+    {
+      "count": 2,
+      "item": "biomeswevegone:ametrine_gems"
+    },
+    {
+      "chance": 0.25,
+      "item": "biomeswevegone:ametrine_gems"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "item": "biomeswevegone:cobbled_ether_stone"
+    }
+  ]
+}

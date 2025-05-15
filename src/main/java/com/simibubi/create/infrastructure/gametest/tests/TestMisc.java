@@ -86,12 +86,14 @@ public class TestMisc {
 	public static void thresholdSwitchPulley(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(3, 7, 1);
 		BlockPos switchPos = new BlockPos(1, 6, 1);
+		BlockPos finalPos = new BlockPos(2, 2, 1);
 		helper.pullLever(lever);
 		helper.succeedWhen(() -> {
 			ThresholdSwitchBlockEntity switchBe = helper.getBlockEntity(AllBlockEntityTypes.THRESHOLD_SWITCH.get(), switchPos);
 			int level = switchBe.getStockLevel();
-			if (level < 0 || level > 100)
-				helper.fail("Invalid level: " + level);
+			int expectedLevel = helper.absolutePos(finalPos).getY();
+			if (level != expectedLevel)
+				helper.fail("Unexpected level: " + level);
 		});
 	}
 

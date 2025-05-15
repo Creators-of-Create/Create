@@ -60,8 +60,18 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource r) {
-		updateTransmittedSignal(state, worldIn, pos);
+	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource r) {
+		updateTransmittedSignal(state, level, pos);
+
+		if (state.getValue(RECEIVER))
+			return;
+		Direction attachedFace = state.getValue(RedstoneLinkBlock.FACING)
+			.getOpposite();
+		BlockPos attachedPos = pos.relative(attachedFace);
+		level.blockUpdated(pos, level.getBlockState(pos)
+			.getBlock());
+		level.blockUpdated(attachedPos, level.getBlockState(attachedPos)
+			.getBlock());
 	}
 
 	@Override

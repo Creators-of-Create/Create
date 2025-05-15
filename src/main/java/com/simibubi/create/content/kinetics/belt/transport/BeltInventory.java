@@ -42,7 +42,7 @@ public class BeltInventory {
 	final List<TransportedItemStack> toRemove;
 	boolean beltMovementPositive;
 	final float SEGMENT_WINDOW = .75f;
-	
+
 	TransportedItemStack lazyClientItem;
 
 	public BeltInventory(BeltBlockEntity be) {
@@ -235,7 +235,7 @@ public class BeltInventory {
 	}
 
 	protected boolean handleBeltProcessingAndCheckIfRemoved(TransportedItemStack currentItem, float nextOffset,
-		boolean noMovement) {
+															boolean noMovement) {
 		int currentSegment = (int) currentItem.beltPosition;
 
 		// Continue processing if held
@@ -449,7 +449,7 @@ public class BeltInventory {
 	}
 
 	public void applyToEachWithin(float position, float maxDistanceToPosition,
-		Function<TransportedItemStack, TransportedResult> processFunction) {
+								  Function<TransportedItemStack, TransportedResult> processFunction) {
 		boolean dirty = false;
 		for (TransportedItemStack transported : items) {
 			if (toRemove.contains(transported))
