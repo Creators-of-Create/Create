@@ -8,18 +8,18 @@
   ],
   "ingredients": [
     {
-      "item": "biomeswevegone:white_allium"
+      "item": "biomeswevegone:compat/biomeswevegone/winter_cyclamen"
     }
   ],
   "processingTime": 50,
   "results": [
     {
       "count": 2,
-      "item": "minecraft:white_dye"
+      "item": "minecraft:cyan_dye"
     },
     {
       "chance": 0.1,
-      "item": "minecraft:purple_dye"
+      "item": "minecraft:green_dye"
     }
   ]
 }

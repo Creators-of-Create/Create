@@ -8,23 +8,17 @@
   ],
   "ingredients": [
     {
-      "item": "biomeswevegone:white_allium_flower_bush"
+      "item": "biomeswevegone:orchid"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "count": 3,
-      "item": "minecraft:white_dye"
+      "count": 2,
+      "item": "minecraft:pink_dye"
     },
     {
       "chance": 0.05,
-      "count": 2,
-      "item": "minecraft:green_dye"
-    },
-    {
-      "chance": 0.25,
-      "count": 2,
       "item": "minecraft:white_dye"
     }
   ]

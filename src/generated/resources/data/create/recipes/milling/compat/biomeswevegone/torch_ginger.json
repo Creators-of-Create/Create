@@ -8,14 +8,14 @@
   ],
   "ingredients": [
     {
-      "item": "biomeswevegone:winter_cyclamen"
+      "item": "biomeswevegone:torch_ginger"
     }
   ],
   "processingTime": 50,
   "results": [
     {
       "count": 2,
-      "item": "minecraft:cyan_dye"
+      "item": "minecraft:red_dye"
     },
     {
       "chance": 0.1,

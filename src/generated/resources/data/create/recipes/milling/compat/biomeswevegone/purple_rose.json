@@ -8,18 +8,18 @@
   ],
   "ingredients": [
     {
-      "item": "biomeswevegone:white_sage"
+      "item": "biomeswevegone:purple_rose"
     }
   ],
   "processingTime": 50,
   "results": [
     {
       "count": 2,
-      "item": "minecraft:white_dye"
+      "item": "minecraft:purple_dye"
     },
     {
       "chance": 0.1,
-      "item": "minecraft:gray_dye"
+      "item": "minecraft:magenta_dye"
     }
   ]
 }

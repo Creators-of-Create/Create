@@ -8,12 +8,12 @@
   ],
   "ingredients": [
     {
-      "item": "biomeswevegone:lush_dirt"
+      "item": "biomeswevegone:lush_grass"
     }
   ],
   "results": [
     {
-      "item": "biomeswevegone:lush_dirt_path"
+      "item": "biomeswevegone:lush_grass_path"
     }
   ]
 }
