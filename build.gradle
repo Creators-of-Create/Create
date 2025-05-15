@@ -242,6 +242,10 @@ dependencies {
     // modRuntimeOnly("curse.maven:silent-lib-242998:4585754")
     // modRuntimeOnly("curse.maven:silents-gems-220311:5193708")
     // modRuntimeOnly("curse.maven:project-vibrant-journeys-300297:5676296")
+    // modRuntimeOnly("curse.maven:geckolib-388172:6333474")
+    // modRuntimeOnly("curse.maven:oh-the-trees-youll-grow-962544:6479077")
+    // modRuntimeOnly("curse.maven:corgilib-693313:6002849")
+    // modRuntimeOnly("curse.maven:oh-the-biomes-weve-gone-1070751:6416899")
 
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings
