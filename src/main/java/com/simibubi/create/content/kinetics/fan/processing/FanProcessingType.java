@@ -2,8 +2,6 @@ package com.simibubi.create.content.kinetics.fan.processing;
 
 import java.util.List;
 
-import net.minecraft.world.level.LevelAccessor;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
@@ -18,7 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public interface FanProcessingType {
-	boolean isValidAt(LevelAccessor level, BlockPos pos);
+	boolean isValidAt(Level level, BlockPos pos);
 
 	int getPriority();
 

@@ -102,7 +102,7 @@ public class AllFanProcessingTypes {
 		private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 
 		@Override
-		public boolean isValidAt(LevelAccessor level, BlockPos pos) {
+		public boolean isValidAt(Level level, BlockPos pos) {
 			FluidState fluidState = level.getFluidState(pos);
 			if (AllFluidTags.FAN_PROCESSING_CATALYSTS_BLASTING.matches(fluidState)) {
 				return true;
@@ -206,7 +206,7 @@ public class AllFanProcessingTypes {
 		private static final HauntingWrapper HAUNTING_WRAPPER = new HauntingWrapper();
 
 		@Override
-		public boolean isValidAt(LevelAccessor level, BlockPos pos) {
+		public boolean isValidAt(Level level, BlockPos pos) {
 			FluidState fluidState = level.getFluidState(pos);
 			if (AllFluidTags.FAN_PROCESSING_CATALYSTS_HAUNTING.matches(fluidState)) {
 				return true;
@@ -323,7 +323,7 @@ public class AllFanProcessingTypes {
 		private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 
 		@Override
-		public boolean isValidAt(LevelAccessor level, BlockPos pos) {
+		public boolean isValidAt(Level level, BlockPos pos) {
 			FluidState fluidState = level.getFluidState(pos);
 			if (AllFluidTags.FAN_PROCESSING_CATALYSTS_SMOKING.matches(fluidState)) {
 				return true;
@@ -403,7 +403,7 @@ public class AllFanProcessingTypes {
 		private static final SplashingWrapper SPLASHING_WRAPPER = new SplashingWrapper();
 
 		@Override
-		public boolean isValidAt(LevelAccessor level, BlockPos pos) {
+		public boolean isValidAt(Level level, BlockPos pos) {
 			FluidState fluidState = level.getFluidState(pos);
 			if (AllFluidTags.FAN_PROCESSING_CATALYSTS_SPLASHING.matches(fluidState)) {
 				return true;

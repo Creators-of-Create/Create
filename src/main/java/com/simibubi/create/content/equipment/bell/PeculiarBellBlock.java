@@ -13,7 +13,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -47,20 +46,20 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellBlockEntity
 
 		Level world = ctx.getLevel();
 		BlockPos pos = ctx.getClickedPos();
-		return tryConvert(world, pos, newState, world.getBlockState(pos.relative(Direction.DOWN)));
+		return tryConvert(world, pos, newState);
 	}
 
 	@Override
 	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world,
 										  BlockPos currentPos, BlockPos facingPos) {
 		BlockState newState = super.updateShape(state, facing, facingState, world, currentPos, facingPos);
-		if (facing != Direction.DOWN)
+		if (facing != Direction.DOWN || !(world instanceof Level level))
 			return newState;
 
-		return tryConvert(world, currentPos, newState, facingState);
+		return tryConvert(level, currentPos, newState);
 	}
 
-	protected BlockState tryConvert(LevelAccessor world, BlockPos pos, BlockState state, BlockState underState) {
+	protected BlockState tryConvert(Level world, BlockPos pos, BlockState state) {
 		if (!AllBlocks.PECULIAR_BELL.has(state))
 			return state;
 
