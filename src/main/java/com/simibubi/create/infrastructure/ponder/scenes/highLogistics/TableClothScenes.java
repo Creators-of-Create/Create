@@ -7,7 +7,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.redstoneRequester.AutoRequestData;
-import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.content.logistics.tableCloth.TableClothBlock;
 import com.simibubi.create.content.logistics.tableCloth.TableClothBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
@@ -108,7 +108,7 @@ public class TableClothScenes {
 			.modifyBlockEntity(util.grid()
 				.at(3, 2, 3), TableClothBlockEntity.class, be -> {
 					AutoRequestData d = new AutoRequestData();
-					d.encodedRequest = new PackageOrder(List.of(new BigItemStack(grass)));
+					d.encodedRequest = PackageOrderWithCrafts.simple(List.of(new BigItemStack(grass)));
 					d.isValid = true;
 					be.requestData = d;
 					be.priceTag.setFilter(new ItemStack(Items.DIAMOND));
@@ -246,7 +246,7 @@ public class TableClothScenes {
 			.modifyBlockEntity(util.grid()
 				.at(5, 2, 1), TableClothBlockEntity.class, be -> {
 					AutoRequestData d = new AutoRequestData();
-					d.encodedRequest = new PackageOrder(List.of(new BigItemStack(logItem1)));
+					d.encodedRequest = PackageOrderWithCrafts.simple(List.of(new BigItemStack(logItem1)));
 					d.isValid = true;
 					be.requestData = d;
 					be.facing = Direction.NORTH;

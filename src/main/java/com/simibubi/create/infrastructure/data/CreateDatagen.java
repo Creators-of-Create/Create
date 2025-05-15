@@ -11,21 +11,21 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.data.DamageTypeTagGen;
-import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
-import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
-import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
-import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
+import com.simibubi.create.foundation.data.recipe.CreateMechanicalCraftingRecipeGen;
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider;
+import com.simibubi.create.foundation.data.recipe.CreateSequencedAssemblyRecipeGen;
+import com.simibubi.create.foundation.data.recipe.CreateStandardRecipeGen;
 import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.tterrag.registrate.providers.ProviderType;
+
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
 
 public class CreateDatagen {
 	public static void gatherData(GatherDataEvent event) {
@@ -47,20 +47,20 @@ public class CreateDatagen {
 		generator.addProvider(event.includeServer(), new CreateMountedItemStorageTypeTagsProvider(output, lookupProvider, existingFileHelper));
 		generator.addProvider(event.includeServer(), new DamageTypeTagGen(output, lookupProvider, existingFileHelper));
 		generator.addProvider(event.includeServer(), new AllAdvancements(output));
-		generator.addProvider(event.includeServer(), new StandardRecipeGen(output));
-		generator.addProvider(event.includeServer(), new MechanicalCraftingRecipeGen(output));
-		generator.addProvider(event.includeServer(), new SequencedAssemblyRecipeGen(output));
+		generator.addProvider(event.includeServer(), new CreateStandardRecipeGen(output));
+		generator.addProvider(event.includeServer(), new CreateMechanicalCraftingRecipeGen(output));
+		generator.addProvider(event.includeServer(), new CreateSequencedAssemblyRecipeGen(output));
 		generator.addProvider(event.includeServer(), new VanillaHatOffsetGenerator(output));
 
 		if (event.includeServer()) {
-			ProcessingRecipeGen.registerAll(generator, output);
+			CreateRecipeProvider.registerAllProcessing(generator, output);
 		}
 	}
 
 	private static void addExtraRegistrateData() {
 		CreateRegistrateTags.addGenerators();
 
-		Create.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> {
+		Create.registrate().addDataGenerator(ProviderType.LANG, provider -> {
 			BiConsumer<String, String> langConsumer = provider::add;
 
 			provideDefaultLang("interface", langConsumer);

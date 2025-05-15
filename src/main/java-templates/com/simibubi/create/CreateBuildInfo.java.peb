@@ -2,5 +2,5 @@ package com.simibubi.create;
 
 public class CreateBuildInfo {
     public static String VERSION = "{{ version }}";
-    public static String GIT_COMMIT = {{ gitCommit }};
+    public static String GIT_COMMIT = "{{ gitCommit }}";
 }

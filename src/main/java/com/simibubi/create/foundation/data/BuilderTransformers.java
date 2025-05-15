@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.data;
 
-import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour.interactionBehaviour;
 import static com.simibubi.create.api.behaviour.movement.MovementBehaviour.movementBehaviour;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
@@ -59,6 +58,10 @@ import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
+import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.common.Tags;
+
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
@@ -91,14 +94,9 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.Tags;
-
 public class BuilderTransformers {
-
 	public static <B extends EncasedShaftBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedShaft(String casing,
-		Supplier<CTSpriteShiftEntry> casingShift) {
+																										 Supplier<CTSpriteShiftEntry> casingShift) {
 		return builder -> encasedBase(builder, () -> AllBlocks.SHAFT.get())
 			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCTBehaviour(casingShift.get())))
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift.get(),
@@ -139,15 +137,15 @@ public class BuilderTransformers {
 
 	public static <B extends TrapDoorBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> trapdoor(boolean orientable) {
 		return b -> b.blockstate((c, p) -> {
-			ModelFile bottom = AssetLookup.partialBaseModel(c, p, "bottom");
-			ModelFile top = AssetLookup.partialBaseModel(c, p, "top");
-			ModelFile open = AssetLookup.partialBaseModel(c, p, "open");
-			if (orientable)
-				p.trapdoorBlock(c.get(), bottom, top, open, orientable);
-			else
-				BlockStateGen.uvLockedTrapdoorBlock(c.get(), bottom, top, open)
-					.accept(c, p);
-		})
+				ModelFile bottom = AssetLookup.partialBaseModel(c, p, "bottom");
+				ModelFile top = AssetLookup.partialBaseModel(c, p, "top");
+				ModelFile open = AssetLookup.partialBaseModel(c, p, "open");
+				if (orientable)
+					p.trapdoorBlock(c.get(), bottom, top, open, orientable);
+				else
+					BlockStateGen.uvLockedTrapdoorBlock(c.get(), bottom, top, open)
+						.accept(c, p);
+			})
 			.transform(pickaxeOnly())
 			.tag(BlockTags.TRAPDOORS)
 			.onRegister(interactionBehaviour(new TrapdoorMovingInteraction()))
@@ -192,7 +190,7 @@ public class BuilderTransformers {
 	}
 
 	private static <B extends EncasedCogwheelBlock, P> BlockBuilder<B, P> encasedCogwheelBase(BlockBuilder<B, P> b,
-		String casing, Supplier<CTSpriteShiftEntry> casingShift, Supplier<ItemLike> drop, boolean large) {
+																							  String casing, Supplier<CTSpriteShiftEntry> casingShift, Supplier<ItemLike> drop, boolean large) {
 		String encasedSuffix = "_encased_cogwheel_side" + (large ? "_connected" : "");
 		String blockFolder = large ? "encased_large_cogwheel" : "encased_cogwheel";
 		String wood = casing.equals("brass") ? "dark_oak" : "spruce";
@@ -201,7 +199,7 @@ public class BuilderTransformers {
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift.get(),
 				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS)
 					&& !s.getValue(f.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
-						: EncasedCogwheelBlock.BOTTOM_SHAFT))))
+					: EncasedCogwheelBlock.BOTTOM_SHAFT))))
 			.blockstate((c, p) -> axisBlock(c, p, blockState -> {
 				String suffix = (blockState.getValue(EncasedCogwheelBlock.TOP_SHAFT) ? "_top" : "")
 					+ (blockState.getValue(EncasedCogwheelBlock.BOTTOM_SHAFT) ? "_bottom" : "");
@@ -224,7 +222,7 @@ public class BuilderTransformers {
 	}
 
 	private static <B extends RotatedPillarKineticBlock, P> BlockBuilder<B, P> encasedBase(BlockBuilder<B, P> b,
-		Supplier<ItemLike> drop) {
+																						   Supplier<ItemLike> drop) {
 		return b.initialProperties(SharedProperties::stone)
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(CStress.setNoImpact())
@@ -242,7 +240,7 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> ladder(String name,
-		Supplier<DataIngredient> ingredient, MapColor color) {
+																					   Supplier<DataIngredient> ingredient, MapColor color) {
 		return b -> b.initialProperties(() -> Blocks.LADDER)
 			.properties(p -> p.mapColor(color))
 			.addLayer(() -> RenderType::cutout)
@@ -261,8 +259,8 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> scaffold(String name,
-		Supplier<DataIngredient> ingredient, MapColor color, CTSpriteShiftEntry scaffoldShift,
-		CTSpriteShiftEntry scaffoldInsideShift, CTSpriteShiftEntry casingShift) {
+																						 Supplier<DataIngredient> ingredient, MapColor color, CTSpriteShiftEntry scaffoldShift,
+																						 CTSpriteShiftEntry scaffoldInsideShift, CTSpriteShiftEntry casingShift) {
 		return b -> b.initialProperties(() -> Blocks.SCAFFOLDING)
 			.properties(p -> p.sound(SoundType.COPPER)
 				.mapColor(color))
@@ -327,7 +325,7 @@ public class BuilderTransformers {
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 				.cubeColumn(c.getName(), ct.get()
-					.getOriginalResourceLocation(),
+						.getOriginalResourceLocation(),
 					ct2.get()
 						.getOriginalResourceLocation())))
 			.onRegister(connectedTextures(() -> new HorizontalCTBehaviour(ct.get(), ct2.get())))
@@ -387,7 +385,7 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> bearing(String prefix,
-		String backTexture) {
+																						String backTexture) {
 		ResourceLocation baseBlockModelLocation = Create.asResource("block/bearing/block");
 		ResourceLocation baseItemModelLocation = Create.asResource("block/bearing/item");
 		ResourceLocation topTextureLocation = Create.asResource("block/bearing_top");
@@ -411,7 +409,7 @@ public class BuilderTransformers {
 		return b -> b.initialProperties(SharedProperties::stone)
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> {
-				String[] variants = { "single", "top", "bottom", "left", "right" };
+				String[] variants = {"single", "top", "bottom", "left", "right"};
 				Map<String, ModelFile> models = new HashMap<>();
 
 				ResourceLocation crate = p.modLoc("block/crate_" + type);
@@ -478,8 +476,8 @@ public class BuilderTransformers {
 
 	public static ItemBuilder<PackageItem, CreateRegistrate> packageItem(PackageStyle style) {
 		String size = "_" + style.width() + "x" + style.height();
-		return REGISTRATE.item(style.getItemId()
-			.getPath(), p -> new PackageItem(p, style))
+		return Create.registrate().item(style.getItemId()
+				.getPath(), p -> new PackageItem(p, style))
 			.properties(p -> p.stacksTo(1))
 			.tag(AllItemTags.PACKAGES.tag)
 			.model((c, p) -> {
@@ -491,15 +489,15 @@ public class BuilderTransformers {
 			})
 			.lang((style.rare() ? "Rare"
 				: style.type()
-					.substring(0, 1)
-					.toUpperCase(Locale.ROOT)
-					+ style.type()
-						.substring(1))
+				.substring(0, 1)
+				.toUpperCase(Locale.ROOT)
+				+ style.type()
+				.substring(1))
 				+ " Package");
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> tableCloth(String name,
-		NonNullSupplier<? extends Block> initialProps, boolean dyed) {
+																						   NonNullSupplier<? extends Block> initialProps, boolean dyed) {
 		return b -> {
 			TagKey<Block> soundTag = dyed ? BlockTags.COMBINATION_STEP_SOUND_BLOCKS : BlockTags.INSIDE_STEP_SOUND_BLOCKS;
 
@@ -517,7 +515,7 @@ public class BuilderTransformers {
 				item.tag(AllItemTags.DYED_TABLE_CLOTHS.tag);
 
 			return item.model((c, p) -> p.withExistingParent(name + "_table_cloth", p.modLoc("block/table_cloth/item"))
-				.texture("0", p.modLoc("block/table_cloth/" + name)))
+					.texture("0", p.modLoc("block/table_cloth/" + name)))
 				.tag(AllItemTags.TABLE_CLOTHS.tag)
 				.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, c.get())
 					.requires(c.get())

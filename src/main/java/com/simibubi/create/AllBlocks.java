@@ -1,6 +1,5 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.api.behaviour.display.DisplaySource.displaySource;
 import static com.simibubi.create.api.behaviour.display.DisplayTarget.displayTarget;
 import static com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour.interactionBehaviour;
@@ -268,6 +267,7 @@ import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.UncontainableBlockItem;
+import com.simibubi.create.foundation.mixin.accessor.BlockLootSubProviderAccessor;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.infrastructure.config.CStress;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
@@ -322,6 +322,7 @@ import net.minecraftforge.common.util.ForgeSoundType;
 
 @SuppressWarnings("removal")
 public class AllBlocks {
+	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	static {
 		REGISTRATE.setCreativeTab(AllCreativeModeTabs.BASE_CREATIVE_TAB);
@@ -806,8 +807,7 @@ public class AllBlocks {
 		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
 			.sound(SoundType.NETHERITE_BLOCK)
 			.noOcclusion()
-			.isSuffocating((level, pos, state) -> false)
-			.isRedstoneConductor((level, pos, state) -> false))
+			.isSuffocating((state, level, pos) -> false))
 		.transform(pickaxeOnly())
 		.addLayer(() -> RenderType::cutoutMipped)
 		.blockstate(new ChuteGenerator()::generate)
@@ -820,8 +820,8 @@ public class AllBlocks {
 		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
 			.sound(SoundType.NETHERITE_BLOCK)
 			.noOcclusion()
-			.isSuffocating((level, pos, state) -> false)
-			.isRedstoneConductor((level, pos, state) -> false))
+			.isSuffocating((state, level, pos) -> false)
+			.isRedstoneConductor((state, level, pos) -> false))
 		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(pickaxeOnly())
 		.blockstate((c, p) -> BlockStateGen.simpleBlock(c, p, AssetLookup.forPowered(c, p)))
@@ -2595,12 +2595,15 @@ public class AllBlocks {
 			.transform(axeOnly())
 			.blockstate(BlockStateGen.horizontalAxisBlockProvider(false))
 			.loot((r, b) -> r.add(b, LootTable.lootTable()
+				.withPool(LootPool.lootPool()
+					.setRolls(ConstantValue.exactly(1.0F))
+					.add(LootItem.lootTableItem(b)
+						.when(BlockLootSubProviderAccessor.create$HAS_SILK_TOUCH())
+						.otherwise(r.applyExplosionCondition(b, LootItem.lootTableItem(Items.STRING)))))
 				.withPool(r.applyExplosionCondition(b, LootPool.lootPool()
 					.setRolls(ConstantValue.exactly(1.0F))
-					.add(LootItem.lootTableItem(Items.STRING))))
-				.withPool(r.applyExplosionCondition(b, LootPool.lootPool()
-					.setRolls(ConstantValue.exactly(1.0F))
-					.add(LootItem.lootTableItem(AllBlocks.CARDBOARD_BLOCK.asItem()))))))
+					.add(LootItem.lootTableItem(AllBlocks.CARDBOARD_BLOCK.asItem()))
+					.when(BlockLootSubProviderAccessor.create$HAS_SILK_TOUCH().invert())))))
 			.item(CardboardBlockItem::new)
 			.build()
 			.lang("Bound Block of Cardboard")

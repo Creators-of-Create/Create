@@ -2,16 +2,16 @@ package com.simibubi.create;
 
 import java.util.Random;
 
-import com.simibubi.create.compat.inventorySorter.InventorySorterCompat;
-
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.logging.LogUtils;
+import com.simibubi.create.api.registrate.CreateRegistrateRegistrationCallback;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.compat.curios.Curios;
+import com.simibubi.create.compat.inventorySorter.InventorySorterCompat;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.equipment.potatoCannon.AllPotatoProjectileBlockHitActions;
 import com.simibubi.create.content.equipment.potatoCannon.AllPotatoProjectileEntityHitActions;
@@ -21,6 +21,8 @@ import com.simibubi.create.content.kinetics.TorquePropagator;
 import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
 import com.simibubi.create.content.kinetics.mechanicalArm.AllArmInteractionPointTypes;
 import com.simibubi.create.content.logistics.item.filter.attribute.AllItemAttributeTypes;
+import com.simibubi.create.content.logistics.packager.AllInventoryIdentifiers;
+import com.simibubi.create.content.logistics.packager.AllUnpackingHandlers;
 import com.simibubi.create.content.logistics.packagerLink.GlobalLogisticsManager;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
@@ -68,6 +70,8 @@ public class Create {
 
 	public static final Logger LOGGER = LogUtils.getLogger();
 
+	private static final StackWalker STACK_WALKER = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
 		.disableHtmlEscaping()
 		.create();
@@ -81,16 +85,15 @@ public class Create {
 	/**
 	 * <b>Other mods should not use this field!</b> If you are an addon developer, create your own instance of
 	 * {@link CreateRegistrate}.
+	 * </br
+	 * If you were using this instance to render a callback listener use {@link CreateRegistrateRegistrationCallback#register} instead.
 	 */
-	public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(ID)
-		.defaultCreativeTab((ResourceKey<CreativeModeTab>) null);
-
-	static {
-		REGISTRATE.setTooltipModifierFactory(item ->
+	private static final CreateRegistrate REGISTRATE = CreateRegistrate.create(ID)
+		.defaultCreativeTab((ResourceKey<CreativeModeTab>) null)
+		.setTooltipModifierFactory(item ->
 			new ItemDescription.Modifier(item, FontHelper.Palette.STANDARD_CREATE)
 				.andThen(TooltipModifier.mapNull(KineticStats.create(item)))
 		);
-	}
 
 	public static final ServerSchematicLoader SCHEMATIC_RECEIVER = new ServerSchematicLoader();
 	public static final RedstoneLinkNetworkHandler REDSTONE_LINK_NETWORK_HANDLER = new RedstoneLinkNetworkHandler();
@@ -138,6 +141,8 @@ public class Create {
 
 		AllConfigs.register(modLoadingContext);
 
+		AllSchematicStateFilters.registerDefaults();
+
 		// FIXME: some of these registrations are not thread-safe
 		BogeySizes.init();
 		AllBogeyStyles.init();
@@ -177,6 +182,8 @@ public class Create {
 			AllContraptionMovementSettings.registerDefaults();
 			AllOpenPipeEffectHandlers.registerDefaults();
 			AllMountedDispenseItemBehaviors.registerDefaults();
+			AllUnpackingHandlers.registerDefaults();
+			AllInventoryIdentifiers.registerDefaults();
 			// --
 
 			AllAdvancements.register();
@@ -200,5 +207,11 @@ public class Create {
 
 	public static ResourceLocation asResource(String path) {
 		return new ResourceLocation(ID, path);
+	}
+
+	public static CreateRegistrate registrate() {
+		if (!STACK_WALKER.getCallerClass().getPackageName().startsWith("com.simibubi.create"))
+			throw new UnsupportedOperationException("Other mods are not permitted to use create's registrate instance.");
+		return REGISTRATE;
 	}
 }

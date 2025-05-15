@@ -2,13 +2,18 @@ package com.simibubi.create.foundation.data.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.Create;
 
+import com.simibubi.create.api.data.recipe.ProcessingRecipeGen;
+
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -18,32 +23,55 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.fluids.FluidType;
 
-public abstract class CreateRecipeProvider extends RecipeProvider {
+/**
+ * The class that handles gathering Create's generated recipes for most types.
+ * Data here is only generated when running server dategen
+ * @see com.simibubi.create.infrastructure.data.CreateDatagen
+ */
+public final class CreateRecipeProvider extends RecipeProvider {
 
-	protected final List<GeneratedRecipe> all = new ArrayList<>();
+	static final List<ProcessingRecipeGen> GENERATORS = new ArrayList<>();
+	static final int BUCKET = FluidType.BUCKET_VOLUME;
+	static final int BOTTLE = 250;
 
 	public CreateRecipeProvider(PackOutput output) {
 		super(output);
 	}
 
 	@Override
-	protected void buildRecipes(Consumer<FinishedRecipe> p_200404_1_) {
-		all.forEach(c -> c.register(p_200404_1_));
-		Create.LOGGER.info(getName() + " registered " + all.size() + " recipe" + (all.size() == 1 ? "" : "s"));
-	}
+	protected void buildRecipes(Consumer<FinishedRecipe> writer) {}
 
-	protected GeneratedRecipe register(GeneratedRecipe recipe) {
-		all.add(recipe);
-		return recipe;
-	}
+	public static void registerAllProcessing(DataGenerator gen, PackOutput output) {
+		GENERATORS.add(new CreateCrushingRecipeGen(output));
+		GENERATORS.add(new CreateMillingRecipeGen(output));
+		GENERATORS.add(new CreateCuttingRecipeGen(output));
+		GENERATORS.add(new CreateWashingRecipeGen(output));
+		GENERATORS.add(new CreatePolishingRecipeGen(output));
+		GENERATORS.add(new CreateDeployingRecipeGen(output));
+		GENERATORS.add(new CreateMixingRecipeGen(output));
+		GENERATORS.add(new CreateCompactingRecipeGen(output));
+		GENERATORS.add(new CreatePressingRecipeGen(output));
+		GENERATORS.add(new CreateFillingRecipeGen(output));
+		GENERATORS.add(new CreateEmptyingRecipeGen(output));
+		GENERATORS.add(new CreateHauntingRecipeGen(output));
+		GENERATORS.add(new CreateItemApplicationRecipeGen(output));
 
-	@FunctionalInterface
-	public interface GeneratedRecipe {
-		void register(Consumer<FinishedRecipe> consumer);
-	}
+		gen.addProvider(true, new DataProvider() {
 
-	protected static class Marker {
+			@Override
+			public String getName() {
+				return "Create's Processing Recipes";
+			}
+
+			@Override
+			public CompletableFuture<?> run(CachedOutput dc) {
+				return CompletableFuture.allOf(GENERATORS.stream()
+					.map(gen -> gen.run(dc))
+					.toArray(CompletableFuture[]::new));
+			}
+		});
 	}
 
 	protected static class I {
@@ -91,11 +119,11 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ItemLike andesiteCasing() {
 			return AllBlocks.ANDESITE_CASING.get();
 		}
-		
+
 		static ItemLike vault() {
 			return AllBlocks.ITEM_VAULT.get();
 		}
-		
+
 		static ItemLike stockLink() {
 			return AllBlocks.STOCK_LINK.get();
 		}
@@ -131,7 +159,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ItemLike brassCasing() {
 			return AllBlocks.BRASS_CASING.get();
 		}
-		
+
 		static ItemLike cardboard() {
 			return AllItems.CARDBOARD.get();
 		}

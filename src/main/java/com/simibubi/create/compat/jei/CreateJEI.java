@@ -89,6 +89,7 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.createmod.catnip.config.ConfigBase.ConfigBool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.RegistryAccess;
@@ -117,6 +118,8 @@ public class CreateJEI implements IModPlugin {
 
 	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
 	private IIngredientManager ingredientManager;
+	
+	public static IJeiRuntime runtime;
 
 	private void loadCategories() {
 		allCategories.clear();
@@ -608,5 +611,10 @@ public class CreateJEI implements IModPlugin {
 		RegistryAccess registryAccess = Minecraft.getInstance().level.registryAccess();
 		return ItemHelper.sameItem(recipe1.getResultItem(registryAccess), recipe2.getResultItem(registryAccess));
 	}
+	
+	@Override
+    public void onRuntimeAvailable(IJeiRuntime runtime) {
+        CreateJEI.runtime = runtime;
+    }
 
 }

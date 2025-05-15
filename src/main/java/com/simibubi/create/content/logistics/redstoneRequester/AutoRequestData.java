@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.redstoneRequester;
 
-import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.ChatFormatting;
@@ -13,8 +13,7 @@ import net.minecraft.world.level.Level;
 
 public class AutoRequestData {
 
-	public PackageOrder encodedRequest = PackageOrder.empty();
-	public PackageOrder encodedRequestContext = PackageOrder.empty();
+	public PackageOrderWithCrafts encodedRequest = PackageOrderWithCrafts.empty();
 	public String encodedTargetAdress = "";
 	public BlockPos targetOffset = BlockPos.ZERO;
 	public String targetDim = "";
@@ -26,8 +25,7 @@ public class AutoRequestData {
 		requestData.targetDim = tag.getString("TargetDim");
 		requestData.isValid = tag.getBoolean("Valid");
 		requestData.encodedTargetAdress = tag.getString("EncodedAddress");
-		requestData.encodedRequest = PackageOrder.read(tag.getCompound("EncodedRequest"));
-		requestData.encodedRequestContext = PackageOrder.read(tag.getCompound("EncodedRequestContext"));
+		requestData.encodedRequest = PackageOrderWithCrafts.read(tag.getCompound("EncodedRequest"));
 		return requestData;
 	}
 
@@ -37,7 +35,6 @@ public class AutoRequestData {
 		tag.putBoolean("Valid", isValid);
 		tag.putString("EncodedAddress", encodedTargetAdress);
 		tag.put("EncodedRequest", encodedRequest.write());
-		tag.put("EncodedRequestContext", encodedRequestContext.write());
 	}
 
 	public void writeToItem(BlockPos position, ItemStack itemStack) {

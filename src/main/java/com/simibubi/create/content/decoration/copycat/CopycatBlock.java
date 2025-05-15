@@ -1,12 +1,16 @@
 package com.simibubi.create.content.decoration.copycat;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.ModelDataManager;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
@@ -46,9 +50,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.ModelDataManager;
 
 public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEntity>, IWrenchable {
 
@@ -59,7 +60,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	@Nullable
 	@Override
 	public <S extends BlockEntity> BlockEntityTicker<S> getTicker(Level p_153212_, BlockState p_153213_,
-		BlockEntityType<S> p_153214_) {
+																  BlockEntityType<S> p_153214_) {
 		return null;
 	}
 
@@ -89,7 +90,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 
 	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
+								 BlockHitResult pHit) {
 
 		if (pPlayer == null)
 			return InteractionResult.PASS;
@@ -215,7 +216,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	}
 
 	public BlockState prepareMaterial(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer,
-		InteractionHand pHand, BlockHitResult pHit, BlockState material) {
+									  InteractionHand pHand, BlockHitResult pHit, BlockState material) {
 		return material;
 	}
 
@@ -250,7 +251,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side,
-		BlockState queryState, BlockPos queryPos) {
+									@Nullable BlockState queryState, @Nullable BlockPos queryPos) {
 
 		if (isIgnoredConnectivitySide(level, state, side, pos, queryPos))
 			return state;
@@ -262,12 +263,12 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	}
 
 	public boolean isIgnoredConnectivitySide(BlockAndTintGetter reader, BlockState state, Direction face,
-		BlockPos fromPos, BlockPos toPos) {
+											 @Nullable BlockPos fromPos, @Nullable BlockPos toPos) {
 		return false;
 	}
 
 	public abstract boolean canConnectTexturesToward(BlockAndTintGetter reader, BlockPos fromPos, BlockPos toPos,
-		BlockState state);
+													 BlockState state);
 
 	//
 
@@ -314,7 +315,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 
 	@Override
 	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos,
-		Player player) {
+									   Player player) {
 		BlockState material = getMaterial(level, pos);
 		if (AllBlocks.COPYCAT_BASE.has(material) || player != null && player.isShiftKeyDown())
 			return new ItemStack(this);
@@ -323,7 +324,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 
 	@Override
 	public boolean addLandingEffects(BlockState state1, ServerLevel level, BlockPos pos, BlockState state2,
-		LivingEntity entity, int numberOfParticles) {
+									 LivingEntity entity, int numberOfParticles) {
 		return getMaterial(level, pos).addLandingEffects(level, pos, state2, entity, numberOfParticles);
 	}
 
@@ -344,7 +345,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 
 	@Override
 	public boolean isValidSpawn(BlockState state, BlockGetter level, BlockPos pos, Type type,
-		EntityType<?> entityType) {
+								EntityType<?> entityType) {
 		return false;
 	}
 
@@ -372,7 +373,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 
 		@Override
 		public int getColor(BlockState pState, @Nullable BlockAndTintGetter pLevel, @Nullable BlockPos pPos,
-			int pTintIndex) {
+							int pTintIndex) {
 			if (pLevel == null || pPos == null)
 				return GrassColor.get(0.5D, 1.0D);
 			return Minecraft.getInstance()

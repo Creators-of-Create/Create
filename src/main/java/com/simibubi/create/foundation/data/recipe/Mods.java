@@ -4,6 +4,11 @@ import java.util.function.Consumer;
 
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * A helper class for mods that Create has built in compatibility for.
+ * Not considered part of Create's API, addons wishing to add to this should make
+ * their own instead, with their own helper methods in the generation classes.
+ */
 public enum Mods {
 
 	MEK("mekanism", b -> b.reverseMetalPrefix()),
@@ -57,7 +62,15 @@ public enum Mods {
 	AET("aether"),
 	HH("hauntedharvest"),
 	VMP("vampirism"),
-	WSP("windswept")
+	WSP("windswept"),
+	D_AET("deep_aether"),
+	A_AET("ancient_aether"),
+	AET_R("aether_redux"),
+	GOTD("gardens_of_the_dead"),
+	UUE("unusualend"),
+	UG("undergarden"),
+	DD("deeperdarker"),
+	ARS_E("ars_elemental", b -> b.omitWoodSuffix())
 
 	;
 
