@@ -22,7 +22,6 @@ import com.simibubi.create.foundation.recipe.RecipeApplier;
 
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-import net.minecraft.world.level.LevelAccessor;
 
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.createmod.catnip.math.VecHelper;
