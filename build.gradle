@@ -294,14 +294,14 @@ jar {
     }
 
     manifest.attributes([
-            "MixinConfigs": "create.mixins.json",
-            "Git-Hash"    : gitHash
+        "MixinConfigs": "create.mixins.json",
+        "Git-Hash"    : gitHash
     ])
 }
 
 tasks.named("sourcesJar") {
     manifest.attributes([
-            "Git-Hash": gitHash
+        "Git-Hash": gitHash
     ])
 }
 
