@@ -110,9 +110,8 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 		if (station == null)
 			throw new LuaException("station is not connected to a track");
 
-		if (station.getPresentTrain() == null) {
+		if (station.getPresentTrain() == null)
 			return null;
-		}
 
 		DimensionPalette dimensions = new DimensionPalette();
 		return fromCompoundTag(station.getPresentTrain().write(dimensions));
@@ -133,12 +132,11 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 		if (station == null)
 			throw new LuaException("station is not connected to a track");
 
-		if (station.getPresentTrain() == null) {
+		if (station.getImminentTrain() == null)
 			return null;
-		}
 
 		DimensionPalette dimensions = new DimensionPalette();
-		return fromCompoundTag(station.getPresentTrain().write(dimensions));
+		return fromCompoundTag(station.getImminentTrain().write(dimensions));
 	}
 
 	@LuaFunction
@@ -156,12 +154,11 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 		if (station == null)
 			throw new LuaException("station is not connected to a track");
 
-		if (station.getPresentTrain() == null) {
+		if (station.getNearestTrain() == null)
 			return null;
-		}
 
 		DimensionPalette dimensions = new DimensionPalette();
-		return fromCompoundTag(station.getPresentTrain().write(dimensions));
+		return fromCompoundTag(station.getNearestTrain().write(dimensions));
 	}
 
 	@LuaFunction
