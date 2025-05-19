@@ -9,6 +9,7 @@ import com.simibubi.create.content.trains.track.TrackTargetingBehaviour;
 import com.simibubi.create.content.trains.track.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.render.CachedBuffers;
@@ -23,11 +24,15 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class SignalRenderer extends SafeBlockEntityRenderer<SignalBlockEntity> {
 
-	public SignalRenderer(BlockEntityRendererProvider.Context context) {}
+	public SignalRenderer(BlockEntityRendererProvider.Context context) {
+	}
 
 	@Override
 	protected void renderSafe(SignalBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
-		int light, int overlay) {
+							  int light, int overlay) {
+		if (VisualizationManager.supportsVisualization(be.getLevel()))
+			return;
+
 		BlockState blockState = be.getBlockState();
 		SignalState signalState = be.getState();
 		OverlayState overlayState = be.getOverlay();

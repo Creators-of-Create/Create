@@ -13,8 +13,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.phys.Vec3;
+
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class TrainHatInfoReloadListener {
@@ -46,7 +49,12 @@ public class TrainHatInfoReloadListener {
 		Create.LOGGER.info("Loaded {} train hat configurations.", ENTITY_INFO_MAP.size());
 	}
 
-	public static TrainHatInfo getHatInfoFor(EntityType<?> type) {
-		return ENTITY_INFO_MAP.getOrDefault(type, DEFAULT);
+	public static TrainHatInfo getHatInfoFor(Entity entity) {
+		// Manual override for snow golems, they are a special case when they have a pumpkin on their head
+		if (entity instanceof SnowGolem snowGolem && snowGolem.hasPumpkin()) {
+			return new TrainHatInfo("", 0, new Vec3(0.0F, -3.0F, 0.0F), 1.18F);
+		}
+
+		return ENTITY_INFO_MAP.getOrDefault(entity.getType(), DEFAULT);
 	}
 }

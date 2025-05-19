@@ -26,6 +26,7 @@
     "accessor.BlockLootSubProviderAccessor",
     "accessor.BuiltInRegistriesAccessor",
     "accessor.ConcretePowderBlockAccessor",
+    "accessor.CropBlockAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
     "accessor.FlowingFluidAccessor",

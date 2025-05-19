@@ -235,8 +235,8 @@ dependencies {
     // modRuntimeOnly("curse.maven:windsweptmod-636321:4817132")
     // modRuntimeOnly("curse.maven:good-ending-690161:4363719")
     // modRuntimeOnly("curse.maven:inventory-sorter-240633:5979609")
-    // modRuntimeOnly("curse.maven:sophisticated-storage-619320:6217888")
-    // modRuntimeOnly("curse.maven:sophisticated-core-618298:6266807")
+    // modRuntimeOnly("curse.maven:sophisticated-storage-619320:6539224")
+    // modRuntimeOnly("curse.maven:sophisticated-core-618298:6545102")
 
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings
