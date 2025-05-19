@@ -13,6 +13,8 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 
+import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
+
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.NonNullList;
@@ -40,7 +42,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 		this.factory = factory;
 	}
 
-	public static <T extends ProcessingRecipe<?>> MapCodec<T> codec(AllRecipeTypes recipeTypes) {
+	public static <T extends ProcessingRecipe<?>> MapCodec<T> codec(IRecipeTypeInfo recipeType) {
 		return RecordCodecBuilder.mapCodec(instance -> instance.group(
 				Codec.either(Ingredient.CODEC, FluidIngredient.CODEC).listOf().fieldOf("ingredients").forGetter(i -> {
 					List<Either<Ingredient, FluidIngredient>> list = new ArrayList<>();
@@ -57,10 +59,10 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 			ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("processing_time", 0).forGetter(T::getProcessingDuration),
 			HeatCondition.CODEC.optionalFieldOf("heat_requirement", HeatCondition.NONE).forGetter(T::getRequiredHeat)
 		).apply(instance, (ingredients, results, processingTime, heatRequirement) -> {
-			if (!(recipeTypes.serializerSupplier.get() instanceof ProcessingRecipeSerializer processingRecipeSerializer))
-				throw new RuntimeException("Not a processing recipe serializer " + recipeTypes.serializerSupplier.get());
+			if (!(recipeType.getSerializer() instanceof ProcessingRecipeSerializer processingRecipeSerializer))
+				throw new RuntimeException("Not a processing recipe serializer " + recipeType.getSerializer());
 
-			ProcessingRecipeBuilder<T> builder = new ProcessingRecipeBuilder<T>(processingRecipeSerializer.getFactory(), recipeTypes.id);
+			ProcessingRecipeBuilder<T> builder = new ProcessingRecipeBuilder<T>(processingRecipeSerializer.getFactory(), recipeType.getId());
 
 			NonNullList<Ingredient> ingredientList = NonNullList.create();
 			NonNullList<FluidIngredient> fluidIngredientList = NonNullList.create();
