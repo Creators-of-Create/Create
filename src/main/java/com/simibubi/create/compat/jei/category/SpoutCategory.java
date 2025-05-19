@@ -121,9 +121,10 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 	public void draw(FillingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29);
-		spout.withFluids(recipe.getRequiredFluid()
-			.getMatchingFluidStacks())
-			.draw(graphics, getBackground().getWidth() / 2 - 13, 22);
+		var fluid = iRecipeSlotsView.getSlotViews().get(1)
+			.getDisplayedIngredient(ForgeTypes.FLUID_STACK)
+			.orElse(FluidStack.EMPTY);
+		spout.withFluid(fluid).draw(graphics, getBackground().getWidth() / 2 - 13, 22);
 	}
 
 }

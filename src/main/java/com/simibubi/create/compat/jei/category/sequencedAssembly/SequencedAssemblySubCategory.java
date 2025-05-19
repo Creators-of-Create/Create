@@ -11,12 +11,16 @@ import com.simibubi.create.content.processing.sequenced.SequencedRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+
+import net.minecraftforge.fluids.FluidStack;
 
 public abstract class SequencedAssemblySubCategory {
 
@@ -30,9 +34,19 @@ public abstract class SequencedAssemblySubCategory {
 		return width;
 	}
 
+	@Deprecated(forRemoval = true)
 	public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int x) {}
 
-	public abstract void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index);
+	public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int x, int index) {
+		setRecipe(builder, recipe, focuses, x);
+	}
+
+	@Deprecated(forRemoval = true)
+	public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {}
+
+	public void draw(SequencedRecipe<?> recipe, IRecipeSlotsView slotsView, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+		draw(recipe, graphics, mouseX, mouseY, index);
+	}
 
 	public static class AssemblyPressing extends SequencedAssemblySubCategory {
 
@@ -44,7 +58,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, IRecipeSlotsView slotsView, GuiGraphics graphics, double mouseX, double mouseY, int index) {
 			PoseStack ms = graphics.pose();
 			press.offset = index;
 			ms.pushPose();
@@ -66,25 +80,25 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int x) {
+		public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int x, int index) {
 			FluidIngredient fluidIngredient = recipe.getRecipe()
 					.getFluidIngredients()
 					.get(0);
 
-			CreateRecipeCategory.addFluidSlot(builder, x + 4, 15, fluidIngredient);
+			CreateRecipeCategory.addFluidSlot(builder, x + 4, 15, fluidIngredient).setSlotName("Spout" + index);
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, IRecipeSlotsView slotsView, GuiGraphics graphics, double mouseX, double mouseY, int index) {
 			PoseStack ms = graphics.pose();
 			spout.offset = index;
 			ms.pushPose();
 			ms.translate(-7, 50, 0);
 			ms.scale(.75f, .75f, .75f);
-			spout.withFluids(recipe.getRecipe()
-				.getFluidIngredients()
-				.get(0)
-				.getMatchingFluidStacks())
+			var fluid = slotsView.findSlotByName("Spout" + index)
+				.flatMap(slot -> slot.getDisplayedIngredient(ForgeTypes.FLUID_STACK))
+				.orElse(FluidStack.EMPTY);
+			spout.withFluid(fluid)
 				.draw(graphics, getWidth() / 2, 0);
 			ms.popPose();
 		}
@@ -101,7 +115,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int x) {
+		public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int x, int index) {
 			IRecipeSlotBuilder slot = builder
 					.addSlot(RecipeIngredientRole.INPUT, x + 4, 15)
 					.setBackground(CreateRecipeCategory.getRenderedSlot(), -1, -1)
@@ -115,7 +129,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, IRecipeSlotsView slotsView, GuiGraphics graphics, double mouseX, double mouseY, int index) {
 			PoseStack ms = graphics.pose();
 			deployer.offset = index;
 			ms.pushPose();
@@ -137,7 +151,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, IRecipeSlotsView slotsView, GuiGraphics graphics, double mouseX, double mouseY, int index) {
 			PoseStack ms = graphics.pose();
 			ms.pushPose();
 			ms.translate(0, 51.5f, 0);

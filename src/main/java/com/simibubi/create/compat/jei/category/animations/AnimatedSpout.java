@@ -22,10 +22,19 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class AnimatedSpout extends AnimatedKinetics {
 
-	private List<FluidStack> fluids;
+	private FluidStack fluid = FluidStack.EMPTY;
 
+	/**
+	 * @deprecated Use the single fluid stack version
+	 */
+	@Deprecated(forRemoval = true)
 	public AnimatedSpout withFluids(List<FluidStack> fluids) {
-		this.fluids = fluids;
+		this.fluid = fluids.get(0);
+		return this;
+	}
+
+	public AnimatedSpout withFluid(FluidStack fluid) {
+		this.fluid = fluid;
 		return this;
 	}
 
@@ -68,28 +77,33 @@ public class AnimatedSpout extends AnimatedKinetics {
 			.scale(scale)
 			.render(graphics);
 
-		AnimatedKinetics.DEFAULT_LIGHTING.applyLighting();
-		BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance()
-			.getBuilder());
-		matrixStack.pushPose();
-		UIRenderHelper.flipForGuiRender(matrixStack);
-		matrixStack.scale(16, 16, 16);
-		float from = 3f / 16f;
-		float to = 17f / 16f;
-		FluidStack fluidStack = fluids.get(0);
-		FluidRenderer.renderFluidBox(fluidStack.getFluid(), fluidStack.getAmount(), from, from, from, to, to, to, buffer, matrixStack, LightTexture.FULL_BRIGHT, false, true, fluidStack.getTag());
-		matrixStack.popPose();
+		if (!fluid.isEmpty()) {
+			AnimatedKinetics.DEFAULT_LIGHTING.applyLighting();
+			matrixStack.pushPose();
+			UIRenderHelper.flipForGuiRender(matrixStack);
+			matrixStack.scale(16, 16, 16);
+			float from = 3f / 16f;
+			float to = 17f / 16f;
+			FluidRenderer.renderFluidBox(fluid.getFluid(), fluid.getAmount(),
+				from, from, from, to, to, to,
+				graphics.bufferSource(), matrixStack, LightTexture.FULL_BRIGHT,
+				false, true, fluid.getTag());
+			matrixStack.popPose();
 
-		float width = 1 / 128f * squeeze;
-		matrixStack.translate(scale / 2f, scale * 1.5f, scale / 2f);
-		UIRenderHelper.flipForGuiRender(matrixStack);
-		matrixStack.scale(16, 16, 16);
-		matrixStack.translate(-0.5f, 0, -0.5f);
-		from = -width / 2 + 0.5f;
-		to = width / 2 + 0.5f;
-		FluidRenderer.renderFluidBox(fluidStack.getFluid(), fluidStack.getAmount(), from, 0, from, to, 2, to, buffer, matrixStack, LightTexture.FULL_BRIGHT, false, true, fluidStack.getTag());
-		buffer.endBatch();
-		Lighting.setupFor3DItems();
+			float width = 1 / 128f * squeeze;
+			matrixStack.translate(scale / 2f, scale * 1.5f, scale / 2f);
+			UIRenderHelper.flipForGuiRender(matrixStack);
+			matrixStack.scale(16, 16, 16);
+			matrixStack.translate(-0.5f, 0, -0.5f);
+			from = -width / 2 + 0.5f;
+			to = width / 2 + 0.5f;
+			FluidRenderer.renderFluidBox(fluid.getFluid(), fluid.getAmount(),
+				from, 0, from, to, 2, to,
+				graphics.bufferSource(), matrixStack, LightTexture.FULL_BRIGHT,
+				false, true, fluid.getTag());
+			graphics.flush();
+			Lighting.setupFor3DItems();
+		}
 
 		matrixStack.popPose();
 	}

@@ -47,15 +47,11 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 		AllGuiTextures.JEI_SHADOW.render(graphics, 61, 21);
 		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52, 32);
 
-		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		ItemStack[] matchingStacks = ingredients.get(0)
-			.getItems();
-		if (matchingStacks.length == 0)
-			return;
+		ItemStack stack = iRecipeSlotsView.getSlotViews().get(0).getDisplayedItemStack().orElse(ItemStack.EMPTY);
 
 
 		CompoundTag tag = renderedSandpaper.getOrCreateTag();
-		tag.put("Polishing", matchingStacks[0].serializeNBT());
+		tag.put("Polishing", stack.serializeNBT());
 		tag.putBoolean("JEI", true);
 		GuiGameElement.of(renderedSandpaper)
 				.<GuiGameElement.GuiRenderBuilder>at(getBackground().getWidth() / 2 - 16, 0, 0)
