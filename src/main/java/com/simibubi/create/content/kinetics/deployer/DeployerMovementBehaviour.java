@@ -6,6 +6,10 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.trains.track.ITrackBlock;
+
+import net.minecraftforge.common.extensions.IForgeBaseRailBlock;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -164,7 +168,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 
 		if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP))
 			blocksnapshot.restore(true, false);
-		else if (AllBlocks.TRACK.has(blockState))
+		else if (blockState.getBlock() instanceof IForgeBaseRailBlock || blockState.getBlock() instanceof ITrackBlock)
 			player.placedTracks = true;
 	}
 
