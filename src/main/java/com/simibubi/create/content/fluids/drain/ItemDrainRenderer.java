@@ -10,10 +10,10 @@ import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
-import com.simibubi.create.foundation.fluid.FluidRenderer;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.platform.NeoForgeCatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -26,6 +26,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEntity> {
@@ -149,8 +150,8 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 			float yOffset = (7 / 16f) * level;
 			ms.pushPose();
 			ms.translate(0, yOffset, 0);
-			FluidRenderer.renderFluidBox(fluidStack.getFluid(), fluidStack.getAmount(), min, yMin - yOffset, min,
-					max, yMin, max, buffer, ms, light, false, false, fluidStack.getComponentsPatch());
+			NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(fluidStack, min, yMin - yOffset, min, max, yMin,
+				max, buffer, ms, light, false, false);
 			ms.popPose();
 		}
 
@@ -174,8 +175,8 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 		if (processingTicks != -1) {
 			radius = (float) (Math.pow(((2 * processingProgress) - 1), 2) - 1);
 			AABB bb = new AABB(0.5, 1.0, 0.5, 0.5, 0.25, 0.5).inflate(radius / 32f);
-			FluidRenderer.renderFluidBox(fluidStack2.getFluid(), fluidStack2.getAmount(), (float) bb.minX, (float) bb.minY, (float) bb.minZ,
-				(float) bb.maxX, (float) bb.maxY, (float) bb.maxZ, buffer, ms, light, true, false, fluidStack2.getComponentsPatch());
+			NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(fluidStack2, (float) bb.minX, (float) bb.minY, (float) bb.minZ,
+				(float) bb.maxX, (float) bb.maxY, (float) bb.maxZ, buffer, ms, light, true, false);
 		}
 
 	}

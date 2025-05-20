@@ -14,6 +14,7 @@ import com.simibubi.create.content.trains.graph.TrackNodeLocation.DiscoveredLoca
 import com.simibubi.create.content.trains.track.TrackTargetingBehaviour.RenderedTrackOverlayType;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.Affine;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.core.BlockPos;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -54,20 +56,20 @@ public interface ITrackBlock {
 	}
 
 	public static Collection<DiscoveredLocation> walkConnectedTracks(BlockGetter worldIn, TrackNodeLocation location,
-		boolean linear) {
+																	 boolean linear) {
 		BlockGetter world = location != null && worldIn instanceof ServerLevel sl ? sl.getServer()
 			.getLevel(location.dimension) : worldIn;
 		List<DiscoveredLocation> list = new ArrayList<>();
 		for (BlockPos blockPos : location.allAdjacent()) {
 			BlockState blockState = world.getBlockState(blockPos);
-			if (blockState.getBlock()instanceof ITrackBlock track)
+			if (blockState.getBlock() instanceof ITrackBlock track)
 				list.addAll(track.getConnected(world, blockPos, blockState, linear, location));
 		}
 		return list;
 	}
 
 	public default Collection<DiscoveredLocation> getConnected(BlockGetter worldIn, BlockPos pos, BlockState state,
-		boolean linear, @Nullable TrackNodeLocation connectedTo) {
+															   boolean linear, @Nullable TrackNodeLocation connectedTo) {
 		BlockGetter world = connectedTo != null && worldIn instanceof ServerLevel sl ? sl.getServer()
 			.getLevel(connectedTo.dimension) : worldIn;
 		Vec3 center = Vec3.atBottomCenterOf(pos)
@@ -107,9 +109,9 @@ public interface ITrackBlock {
 	}
 
 	public static void addToListIfConnected(@Nullable TrackNodeLocation fromEnd, Collection<DiscoveredLocation> list,
-		BiFunction<Double, Boolean, Vec3> offsetFactory, Function<Boolean, Vec3> normalFactory,
-		Function<Boolean, ResourceKey<Level>> dimensionFactory, Function<Vec3, Integer> yOffsetFactory, Vec3 axis,
-		BezierConnection viaTurn, BiFunction<Boolean, Vec3, TrackMaterial> materialFactory) {
+											BiFunction<Double, Boolean, Vec3> offsetFactory, Function<Boolean, Vec3> normalFactory,
+											Function<Boolean, ResourceKey<Level>> dimensionFactory, Function<Vec3, Integer> yOffsetFactory, Vec3 axis,
+											BezierConnection viaTurn, BiFunction<Boolean, Vec3, TrackMaterial> materialFactory) {
 
 		Vec3 firstOffset = offsetFactory.apply(0.5d, true);
 		DiscoveredLocation firstLocation =
@@ -158,20 +160,20 @@ public interface ITrackBlock {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public PartialModel prepareTrackOverlay(BlockGetter world, BlockPos pos, BlockState state,
-		BezierTrackPointLocation bezierPoint, AxisDirection direction, PoseStack transform,
-		RenderedTrackOverlayType type);
+	public <Self extends Affine<Self>> PartialModel prepareTrackOverlay(Affine<Self> affine, BlockGetter world, BlockPos pos, BlockState state,
+																		BezierTrackPointLocation bezierPoint, AxisDirection direction,
+																		RenderedTrackOverlayType type);
 
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel prepareAssemblyOverlay(BlockGetter world, BlockPos pos, BlockState state, Direction direction,
-		PoseStack ms);
+											   PoseStack ms);
 
 	public default boolean isSlope(BlockGetter world, BlockPos pos, BlockState state) {
 		return getTrackAxes(world, pos, state).get(0).y != 0;
 	}
 
 	public default Pair<Vec3, AxisDirection> getNearestTrackAxis(BlockGetter world, BlockPos pos, BlockState state,
-		Vec3 lookVec) {
+																 Vec3 lookVec) {
 		Vec3 best = null;
 		double bestDiff = Double.MAX_VALUE;
 		for (Vec3 vec3 : getTrackAxes(world, pos, state)) {

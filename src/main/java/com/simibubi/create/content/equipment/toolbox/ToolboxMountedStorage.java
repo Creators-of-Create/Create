@@ -49,7 +49,11 @@ public class ToolboxMountedStorage extends WrapperMountedItemStorage<ToolboxInve
 		// the inventory will send updates to the block entity, make an isolated copy to avoid that
 		ToolboxInventory copy = new ToolboxInventory(null);
 		ItemHelper.copyContents(toolbox.inventory, copy);
-		copy.filters = toolbox.inventory.filters.stream().map(ItemStack::copy).toList();
+
+		copy.filters.clear();
+		for (ItemStack stack : toolbox.inventory.filters)
+			copy.filters.add(stack.copy());
+
 		return new ToolboxMountedStorage(copy);
 	}
 

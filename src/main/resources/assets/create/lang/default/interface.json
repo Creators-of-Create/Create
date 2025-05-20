@@ -1110,6 +1110,10 @@
 	"create.gui.factory_panel.expected_output_tip_1": "after each successful request",
 	"create.gui.factory_panel.expected_output_tip_2": "Scroll to change",
 
+  "create.gui.pojav.title": "Create is not supported on PojavLauncher.",
+  "create.gui.pojav.content": "Mobile devices have extremely low quality graphics drivers, which cause visual issues that are impossible for Create to fix. No support will be provided for any issues you encounter.",
+  "create.gui.pojav.continue": "Continue Anyway",
+
 	"create.factory_panel.click_to_configure": "Click to configure",
 	"create.factory_panel.hold_to_set_amount": "Click and hold for target amount",
 	"create.factory_panel.target_amount": "Target Amount in Storage",

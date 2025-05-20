@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.ftb.FTBIntegration;
+import com.simibubi.create.compat.pojav.PojavChecker;
 import com.simibubi.create.compat.sodium.SodiumCompat;
 import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderInfo;
@@ -85,6 +86,7 @@ public class CreateClient {
 
 		Mods.FTBLIBRARY.executeIfInstalled(() -> () -> FTBIntegration.init(modEventBus, neoEventBus));
 		Mods.SODIUM.executeIfInstalled(() -> () -> SodiumCompat.init(modEventBus, neoEventBus));
+		PojavChecker.init();
 	}
 
 	public static void clientInit(final FMLClientSetupEvent event) {
