@@ -2,9 +2,11 @@ package com.simibubi.create.content.trains.graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
@@ -136,6 +138,8 @@ public class TrackGraphSync {
 		packet.fullWipe = true;
 		int sent = 0;
 
+		Set<TrackEdgePoint> sentPoints = new HashSet<>();
+
 		for (TrackNode node : graph.nodes.values()) {
 			TrackGraphSyncPacket currentPacket = packet;
 			currentPacket.addedNodes.put(node.getNetId(), Pair.of(node.getLocation(), node.getNormal()));
@@ -150,12 +154,24 @@ public class TrackGraphSync {
 			TrackGraphSyncPacket currentPacket = packet;
 			if (!graph.connectionsByNode.containsKey(node))
 				continue;
-			graph.connectionsByNode.get(node)
-				.forEach((node2, edge) -> {
-					Couple<Integer> key = Couple.create(node.getNetId(), node2.getNetId());
-					currentPacket.addedEdges.add(Pair.of(Pair.of(key, edge.getTrackMaterial()), edge.getTurn()));
-					currentPacket.syncEdgeData(node, node2, edge);
-				});
+
+			for (Entry<TrackNode,TrackEdge> entry : graph.connectionsByNode.get(node).entrySet()) {
+				TrackNode node2 = entry.getKey();
+				TrackEdge edge = entry.getValue();
+
+				Couple<Integer> key = Couple.create(node.getNetId(), node2.getNetId());
+				currentPacket.addedEdges.add(Pair.of(Pair.of(key, edge.getTrackMaterial()), edge.getTurn()));
+				currentPacket.syncEdgeData(node, node2, edge);
+
+				for (TrackEdgePoint point : edge.edgeData.getPoints()) {
+					if (sentPoints.contains(point))
+						continue;
+
+					sentPoints.add(point);
+					currentPacket.addedEdgePoints.add(point);
+					sent++;
+				}
+			}
 
 			if (sent++ < 1000)
 				continue;
@@ -166,6 +182,10 @@ public class TrackGraphSync {
 
 		for (EdgePointType<?> type : EdgePointType.TYPES.values()) {
 			for (TrackEdgePoint point : graph.getPoints(type)) {
+				if (sentPoints.contains(point))
+					continue;
+
+				sentPoints.add(point);
 				packet.addedEdgePoints.add(point);
 
 				if (sent++ < 1000)

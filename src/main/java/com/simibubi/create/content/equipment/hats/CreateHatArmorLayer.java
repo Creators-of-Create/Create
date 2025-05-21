@@ -33,91 +33,90 @@ import net.minecraft.world.level.block.state.BlockState;
 public class CreateHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
 	public CreateHatArmorLayer(RenderLayerParent<T, M> renderer) {
-			super(renderer);
+		super(renderer);
 	}
 
-		public void render(PoseStack ms, MultiBufferSource buffer, int light, LivingEntity entity, float limbSwing, float limbSwingAmount,
-		float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-			PartialModel hat = EntityHats.getHatFor(entity);
-			if (hat == null)
-				return;
+	public void render(PoseStack ms, MultiBufferSource buffer, int light, LivingEntity entity, float limbSwing, float limbSwingAmount,
+					   float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+		PartialModel hat = EntityHats.getHatFor(entity);
+		if (hat == null)
+			return;
 
-			M entityModel = getParentModel();
-				ms.pushPose();
+		M entityModel = getParentModel();
+		ms.pushPose();
 
-				var msr = TransformStack.of(ms);
-				TrainHatInfo info = TrainHatInfoReloadListener.getHatInfoFor(entity.getType());
-				List<ModelPart> partsToHead = new ArrayList<>();
+		var msr = TransformStack.of(ms);
+		TrainHatInfo info = TrainHatInfoReloadListener.getHatInfoFor(entity);
+		List<ModelPart> partsToHead = new ArrayList<>();
 
-				if (entityModel instanceof AgeableListModel<?> model) {
-					if (model.young) {
-						if (model.scaleHead) {
-							float f = 1.5F / model.babyHeadScale;
-							ms.scale(f, f, f);
-						}
-						ms.translate(0.0D, model.babyYHeadOffset / 16.0F, model.babyZHeadOffset / 16.0F);
-					}
-
-					ModelPart head = getHeadPart(model);
-					if (head != null) {
-						partsToHead.addAll(TrainHatInfo.getAdjustedPart(info, head, ""));
-					}
-				} else if (entityModel instanceof HierarchicalModel<?> model) {
-					partsToHead.addAll(TrainHatInfo.getAdjustedPart(info, model.root(), "head"));
+		if (entityModel instanceof AgeableListModel<?> model) {
+			if (model.young) {
+				if (model.scaleHead) {
+					float f = 1.5F / model.babyHeadScale;
+					ms.scale(f, f, f);
 				}
-
-				if (!partsToHead.isEmpty()) {
-					partsToHead.forEach(part -> part.translateAndRotate(ms));
-
-					ModelPart lastChild = partsToHead.get(partsToHead.size() - 1);
-					if (!lastChild.isEmpty()) {
-						Cube cube = lastChild.cubes.get(Mth.clamp(info.cubeIndex(), 0, lastChild.cubes.size() - 1));
-						ms.translate(info.offset().x() / 16.0F, (cube.minY - cube.maxY + info.offset().y()) / 16.0F, info.offset().z() / 16.0F);
-						float max = Math.max(cube.maxX - cube.minX, cube.maxZ - cube.minZ) / 8.0F * info.scale();
-						ms.scale(max, max, max);
-					}
-
-					ms.scale(1, -1, -1);
-					ms.translate(0, -2.25F / 16.0F, 0);
-					msr.rotateXDegrees(-8.5F);
-					BlockState air = Blocks.AIR.defaultBlockState();
-					CachedBuffers.partial(hat, air)
-						.disableDiffuse()
-						.light(light)
-						.renderInto(ms, buffer.getBuffer(Sheets.cutoutBlockSheet()));
-				}
-
-				ms.popPose();
+				ms.translate(0.0D, model.babyYHeadOffset / 16.0F, model.babyZHeadOffset / 16.0F);
 			}
 
-			public static void registerOnAll(EntityRenderDispatcher renderManager) {
-				for (EntityRenderer<? extends Player> renderer : renderManager.getSkinMap()
-					.values())
-					registerOn(renderer);
-				for (EntityRenderer<?> renderer : ((EntityRenderDispatcherAccessor) renderManager).create$getRenderers().values())
-					registerOn(renderer);
+			ModelPart head = getHeadPart(model);
+			if (head != null) {
+				partsToHead.addAll(TrainHatInfo.getAdjustedPart(info, head, ""));
 			}
-
-			@SuppressWarnings({"rawtypes", "unchecked"})
-			public static void registerOn(EntityRenderer<?> entityRenderer) {
-				if (!(entityRenderer instanceof LivingEntityRenderer<?, ?> livingRenderer))
-					return;
-
-				EntityModel<?> model = livingRenderer.getModel();
-
-				if (!(model instanceof HierarchicalModel) && !(model instanceof AgeableListModel))
-					return;
-
-				CreateHatArmorLayer<?, ?> layer = new CreateHatArmorLayer<>(livingRenderer);
-				livingRenderer.addLayer((CreateHatArmorLayer) layer);
-			}
-
-			private static ModelPart getHeadPart(AgeableListModel<?> model) {
-				for (ModelPart part : ((AgeableListModelAccessor) model).create$callHeadParts())
-					return part;
-				for (ModelPart part : ((AgeableListModelAccessor) model).create$callBodyParts())
-					return part;
-				return null;
-			}
-
+		} else if (entityModel instanceof HierarchicalModel<?> model) {
+			partsToHead.addAll(TrainHatInfo.getAdjustedPart(info, model.root(), "head"));
 		}
+
+		if (!partsToHead.isEmpty()) {
+			partsToHead.forEach(part -> part.translateAndRotate(ms));
+
+			ModelPart lastChild = partsToHead.get(partsToHead.size() - 1);
+			if (!lastChild.isEmpty()) {
+				Cube cube = lastChild.cubes.get(Mth.clamp(info.cubeIndex(), 0, lastChild.cubes.size() - 1));
+				ms.translate(info.offset().x() / 16.0F, (cube.minY - cube.maxY + info.offset().y()) / 16.0F, info.offset().z() / 16.0F);
+				float max = Math.max(cube.maxX - cube.minX, cube.maxZ - cube.minZ) / 8.0F * info.scale();
+				ms.scale(max, max, max);
+			}
+
+			ms.scale(1, -1, -1);
+			ms.translate(0, -2.25F / 16.0F, 0);
+			msr.rotateXDegrees(-8.5F);
+			BlockState air = Blocks.AIR.defaultBlockState();
+			CachedBuffers.partial(hat, air)
+				.disableDiffuse()
+				.light(light)
+				.renderInto(ms, buffer.getBuffer(Sheets.cutoutBlockSheet()));
+		}
+
+		ms.popPose();
+	}
+
+	public static void registerOnAll(EntityRenderDispatcher renderManager) {
+		for (EntityRenderer<? extends Player> renderer : renderManager.getSkinMap()
+			.values())
+			registerOn(renderer);
+		for (EntityRenderer<?> renderer : ((EntityRenderDispatcherAccessor) renderManager).create$getRenderers().values())
+			registerOn(renderer);
+	}
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public static void registerOn(EntityRenderer<?> entityRenderer) {
+		if (!(entityRenderer instanceof LivingEntityRenderer<?, ?> livingRenderer))
+			return;
+
+		EntityModel<?> model = livingRenderer.getModel();
+
+		if (!(model instanceof HierarchicalModel) && !(model instanceof AgeableListModel))
+			return;
+
+		CreateHatArmorLayer<?, ?> layer = new CreateHatArmorLayer<>(livingRenderer);
+		livingRenderer.addLayer((CreateHatArmorLayer) layer);
+	}
+
+	private static ModelPart getHeadPart(AgeableListModel<?> model) {
+		for (ModelPart part : ((AgeableListModelAccessor) model).create$callHeadParts())
+			return part;
+		for (ModelPart part : ((AgeableListModelAccessor) model).create$callBodyParts())
+			return part;
+		return null;
+	}
+}

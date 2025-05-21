@@ -175,7 +175,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		}
 
 		// Settings
-		SchematicannonOptions options = CatnipCodecUtils.decode(SchematicannonOptions.CODEC, compound.getCompound("Options"))
+		SchematicannonOptions options = CatnipCodecUtils.decode(SchematicannonOptions.CODEC, registries, compound.getCompound("Options"))
 			.orElse(new SchematicannonOptions(2, true, false));
 		replaceMode = options.replaceMode;
 		skipMissing = options.skipMissing;
@@ -249,7 +249,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 			compound.put("MissingItem", missingItem.saveOptional(registries));
 
 		// Settings
-		Tag options = CatnipCodecUtils.encode(SchematicannonOptions.CODEC, new SchematicannonOptions(replaceMode, skipMissing, replaceBlockEntities)).orElseThrow();
+		Tag options = CatnipCodecUtils.encode(SchematicannonOptions.CODEC, registries, new SchematicannonOptions(replaceMode, skipMissing, replaceBlockEntities)).orElseThrow();
 		compound.put("Options", options);
 
 		// Printer & Flying Blocks

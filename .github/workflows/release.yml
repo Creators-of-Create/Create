@@ -18,7 +18,7 @@ jobs:
           cache-disabled: true
 
       - name: Validate Gradle Wrapper Integrity
-        uses: gradle/actions/wrapper-validation@v3
+        uses: gradle/actions/wrapper-validation@v4
 
       - name: Build & Publish
         env:

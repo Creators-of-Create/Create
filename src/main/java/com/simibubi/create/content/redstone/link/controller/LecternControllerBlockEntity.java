@@ -49,7 +49,7 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 	@Override
 	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.write(compound, registries, clientPacket);
-		compound.put("ControllerData", CatnipCodecUtils.encode(ItemContainerContents.CODEC, controllerData).orElseThrow());
+		compound.put("ControllerData", CatnipCodecUtils.encode(ItemContainerContents.CODEC, registries, controllerData).orElseThrow());
 		if (user != null)
 			compound.putUUID("User", user);
 	}
@@ -57,14 +57,14 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 	@Override
 	public void writeSafe(CompoundTag compound, HolderLookup.Provider registries) {
 		super.writeSafe(compound, registries);
-		compound.put("ControllerData", CatnipCodecUtils.encode(ItemContainerContents.CODEC, controllerData).orElseThrow());
+		compound.put("ControllerData", CatnipCodecUtils.encode(ItemContainerContents.CODEC, registries, controllerData).orElseThrow());
 	}
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
 
-		controllerData = CatnipCodecUtils.decode(ItemContainerContents.CODEC, compound.get("ControllerData"))
+		controllerData = CatnipCodecUtils.decode(ItemContainerContents.CODEC, registries, compound.get("ControllerData"))
 			.orElse(ItemContainerContents.EMPTY);
 		user = compound.hasUUID("User") ? compound.getUUID("User") : null;
 	}

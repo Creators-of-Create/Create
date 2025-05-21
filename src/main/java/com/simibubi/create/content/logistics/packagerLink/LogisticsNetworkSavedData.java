@@ -25,7 +25,7 @@ public class LogisticsNetworkSavedData extends SavedData {
 	public CompoundTag save(CompoundTag nbt, HolderLookup.Provider registries) {
 		GlobalLogisticsManager logistics = Create.LOGISTICS;
 		nbt.put("LogisticsNetworks",
-			NBTHelper.writeCompoundList(logistics.logisticsNetworks.values(), LogisticsNetwork::write));
+			NBTHelper.writeCompoundList(logistics.logisticsNetworks.values(), network -> network.write(registries)));
 		return nbt;
 	}
 
@@ -33,7 +33,7 @@ public class LogisticsNetworkSavedData extends SavedData {
 		LogisticsNetworkSavedData sd = new LogisticsNetworkSavedData();
 		sd.logisticsNetworks = new HashMap<>();
 		NBTHelper.iterateCompoundList(nbt.getList("LogisticsNetworks", Tag.TAG_COMPOUND), c -> {
-			LogisticsNetwork network = LogisticsNetwork.read(c);
+			LogisticsNetwork network = LogisticsNetwork.read(c, registries);
 			sd.logisticsNetworks.put(network.id, network);
 		});
 		return sd;

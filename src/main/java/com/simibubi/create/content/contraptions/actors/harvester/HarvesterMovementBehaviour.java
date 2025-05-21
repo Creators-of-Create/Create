@@ -2,8 +2,6 @@ package com.simibubi.create.content.contraptions.actors.harvester;
 
 import javax.annotation.Nullable;
 
-import net.neoforged.neoforge.common.SpecialPlantable;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllTags.AllBlockTags;
@@ -12,6 +10,7 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.mixin.accessor.CropBlockAccessor;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -37,6 +36,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.SpecialPlantable;
 
 public class HarvesterMovementBehaviour implements MovementBehaviour {
 
@@ -170,7 +170,11 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 
 		Block block = state.getBlock();
 		if (block instanceof CropBlock crop) {
-			return crop.getStateForAge(0);
+			BlockState newState = crop.getStateForAge(0);
+			if (!newState.is(block))
+				return newState;
+			IntegerProperty ageProperty = ((CropBlockAccessor) crop).create$callGetAgeProperty();
+			return state.setValue(ageProperty, 0);
 		}
 		if (block == Blocks.SWEET_BERRY_BUSH) {
 			return state.setValue(BlockStateProperties.AGE_3, Integer.valueOf(1));

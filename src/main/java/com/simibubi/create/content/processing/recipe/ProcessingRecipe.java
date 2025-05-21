@@ -17,6 +17,8 @@ import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -221,6 +223,12 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 				errors.add(recipe.getClass().getSimpleName() + " failed validation:");
 				return DataResult.error(() -> Joiner.on('\n').join(errors), recipe);
 			});
+	}
+
+	public static <P extends ProcessingRecipeParams, R extends ProcessingRecipe<?, P>> StreamCodec<RegistryFriendlyByteBuf, R> streamCodec(
+		Factory<P, R> factory, StreamCodec<RegistryFriendlyByteBuf, P> streamCodec
+	) {
+		return streamCodec.map(factory::create, ProcessingRecipe::getParams);
 	}
 
 	@FunctionalInterface

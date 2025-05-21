@@ -10,6 +10,7 @@ import java.util.Map;
 import com.mojang.serialization.Codec;
 
 import net.createmod.catnip.codecs.CatnipCodecUtils;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -105,15 +106,15 @@ public class RequestPromiseQueue {
 		return all;
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(HolderLookup.Provider registries) {
 		CompoundTag tag = new CompoundTag();
-		tag.put("List", CatnipCodecUtils.encode(Codec.list(RequestPromise.CODEC), flatten(false)).orElseThrow());
+		tag.put("List", CatnipCodecUtils.encode(Codec.list(RequestPromise.CODEC), registries, flatten(false)).orElseThrow());
 		return tag;
 	}
 
-	public static RequestPromiseQueue read(CompoundTag tag, Runnable onChanged) {
+	public static RequestPromiseQueue read(CompoundTag tag, HolderLookup.Provider registries, Runnable onChanged) {
 		RequestPromiseQueue queue = new RequestPromiseQueue(onChanged);
-		List<RequestPromise> promises = CatnipCodecUtils.decode(Codec.list(RequestPromise.CODEC), tag.get("List")).orElse(List.of());
+		List<RequestPromise> promises = CatnipCodecUtils.decode(Codec.list(RequestPromise.CODEC), registries, tag.get("List")).orElse(List.of());
 		for (RequestPromise promise : promises) {
 			queue.add(promise);
 		}

@@ -80,6 +80,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -717,7 +718,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		PackagerBlockEntity packager = panelBE.getRestockedPackager();
 		if (packager == null)
 			return InventorySummary.EMPTY;
-		return packager.getAvailableItems(true);
+		return packager.getAvailableItems();
 	}
 
 	public int getPromised() {
@@ -785,7 +786,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		panelTag.putInt("RecipeOutput", 1);
 
 		if (panelBE().restocker)
-			panelTag.put("Promises", restockerPromises.write());
+			panelTag.put("Promises", restockerPromises.write(registries));
 
 		nbt.put(CreateLang.asId(slot.name()), panelTag);
 	}
@@ -806,9 +807,9 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		panelTag.putBoolean("PromisedSatisfied", promisedSatisfied);
 		panelTag.putBoolean("Waiting", waitingForNetwork);
 		panelTag.putBoolean("RedstonePowered", redstonePowered);
-		panelTag.put("Targeting", CatnipCodecUtils.encode(CatnipCodecs.set(FactoryPanelPosition.CODEC), targeting).orElseThrow());
-		panelTag.put("TargetedBy", CatnipCodecUtils.encode(Codec.list(FactoryPanelConnection.CODEC), new ArrayList<>(targetedBy.values())).orElseThrow());
-		panelTag.put("TargetedByLinks", CatnipCodecUtils.encode(Codec.list(FactoryPanelConnection.CODEC), new ArrayList<>(targetedByLinks.values())).orElseThrow());
+		panelTag.put("Targeting", CatnipCodecUtils.encode(CatnipCodecs.set(FactoryPanelPosition.CODEC), registries, targeting).orElseThrow());
+		panelTag.put("TargetedBy", CatnipCodecUtils.encode(Codec.list(FactoryPanelConnection.CODEC), registries, new ArrayList<>(targetedBy.values())).orElseThrow());
+		panelTag.put("TargetedByLinks", CatnipCodecUtils.encode(Codec.list(FactoryPanelConnection.CODEC), registries, new ArrayList<>(targetedByLinks.values())).orElseThrow());
 		panelTag.putString("RecipeAddress", recipeAddress);
 		panelTag.putInt("RecipeOutput", recipeOutput);
 		panelTag.putInt("PromiseClearingInterval", promiseClearingInterval);
@@ -816,7 +817,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		panelTag.put("Craft", NBTHelper.writeItemList(activeCraftingArrangement, registries));
 
 		if (panelBE().restocker && !clientPacket)
-			panelTag.put("Promises", restockerPromises.write());
+			panelTag.put("Promises", restockerPromises.write(registries));
 
 		nbt.put(CreateLang.asId(slot.name()), panelTag);
 	}
@@ -846,14 +847,14 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 			network = panelTag.getUUID("Freq");
 
 		targeting.clear();
-		targeting.addAll(CatnipCodecUtils.decode(CatnipCodecs.set(FactoryPanelPosition.CODEC), panelTag.get("Targeting")).orElse(Set.of()));
+		targeting.addAll(CatnipCodecUtils.decode(CatnipCodecs.set(FactoryPanelPosition.CODEC), registries, panelTag.get("Targeting")).orElse(Set.of()));
 
 		targetedBy.clear();
-		CatnipCodecUtils.decode(Codec.list(FactoryPanelConnection.CODEC), panelTag.get("TargetedBy")).orElse(List.of())
+		CatnipCodecUtils.decode(Codec.list(FactoryPanelConnection.CODEC), registries, panelTag.get("TargetedBy")).orElse(List.of())
 			.forEach(c -> targetedBy.put(c.from, c));
 
 		targetedByLinks.clear();
-		CatnipCodecUtils.decode(Codec.list(FactoryPanelConnection.CODEC), panelTag.get("TargetedByLinks")).orElse(List.of())
+		CatnipCodecUtils.decode(Codec.list(FactoryPanelConnection.CODEC), registries, panelTag.get("TargetedByLinks")).orElse(List.of())
 			.forEach(c -> targetedByLinks.put(c.from.pos(), c));
 
 		activeCraftingArrangement = NBTHelper.readItemList(panelTag.getList("Craft", Tag.TAG_COMPOUND), registries);
@@ -861,7 +862,8 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		recipeOutput = panelTag.getInt("RecipeOutput");
 
 		if (nbt.getBoolean("Restocker") && !clientPacket) {
-			restockerPromises = RequestPromiseQueue.read(panelTag.getCompound("Promises"), () -> {});
+			restockerPromises = RequestPromiseQueue.read(panelTag.getCompound("Promises"), registries, () -> {
+			});
 			promisePrimedForMarkDirty = false;
 		}
 	}

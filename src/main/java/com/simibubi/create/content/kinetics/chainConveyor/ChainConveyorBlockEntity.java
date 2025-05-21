@@ -668,7 +668,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 	@Override
 	public void writeSafe(CompoundTag tag, HolderLookup.Provider registries) {
 		super.writeSafe(tag, registries);
-		tag.put("Connections", CatnipCodecUtils.encode(CatnipCodecs.set(BlockPos.CODEC), connections).orElseThrow());
+		tag.put("Connections", CatnipCodecUtils.encode(CatnipCodecs.set(BlockPos.CODEC), registries, connections).orElseThrow());
 	}
 
 	@Override
@@ -679,7 +679,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 			chainDestroyedEffectToSend = null;
 		}
 
-		compound.put("Connections", CatnipCodecUtils.encode(CatnipCodecs.set(BlockPos.CODEC), connections).orElseThrow());
+		compound.put("Connections", CatnipCodecUtils.encode(CatnipCodecs.set(BlockPos.CODEC), registries, connections).orElseThrow());
 		compound.put("TravellingPackages", NBTHelper.writeCompoundList(travellingPackages.entrySet(), entry -> {
 			CompoundTag compoundTag = new CompoundTag();
 			compoundTag.put("Target", NbtUtils.writeBlockPos(entry.getKey()));
@@ -699,7 +699,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 
 		int sizeBefore = connections.size();
 		connections.clear();
-		CatnipCodecUtils.decode(CatnipCodecs.set(BlockPos.CODEC), compound.get("Connections")).ifPresent(connections::addAll);
+		CatnipCodecUtils.decode(CatnipCodecs.set(BlockPos.CODEC), registries, compound.get("Connections")).ifPresent(connections::addAll);
 		travellingPackages.clear();
 		NBTHelper.iterateCompoundList(compound.getList("TravellingPackages", Tag.TAG_COMPOUND),
 			c -> travellingPackages.put(NBTHelper.readBlockPos(c, "Target"),

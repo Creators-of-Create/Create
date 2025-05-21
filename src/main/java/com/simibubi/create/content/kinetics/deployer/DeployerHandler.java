@@ -20,7 +20,7 @@ import com.simibubi.create.content.trains.track.ITrackBlock;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import net.createmod.catnip.levelWrappers.WrappedLevel;
+import net.createmod.catnip.levelWrappers.WrappedServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -77,13 +77,13 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClick
 
 public class DeployerHandler {
 
-	private static final class ItemUseWorld extends WrappedLevel {
+	private static final class ItemUseWorld extends WrappedServerLevel {
 		private final Direction face;
 		private final BlockPos pos;
 		boolean rayMode = false;
 
-		private ItemUseWorld(Level world, Direction face, BlockPos pos) {
-			super(world);
+		private ItemUseWorld(ServerLevel level, Direction face, BlockPos pos) {
+			super(level);
 			this.face = face;
 			this.pos = pos;
 		}
@@ -151,14 +151,14 @@ public class DeployerHandler {
 		Item item = stack.getItem();
 
 		// Check for entities
-		final Level world = player.level();
-		List<Entity> entities = world.getEntitiesOfClass(Entity.class, new AABB(clickedPos))
+		final ServerLevel level = player.serverLevel();
+		List<Entity> entities = level.getEntitiesOfClass(Entity.class, new AABB(clickedPos))
 			.stream()
 			.filter(e -> !(e instanceof AbstractContraptionEntity))
 			.toList();
 		InteractionHand hand = InteractionHand.MAIN_HAND;
 		if (!entities.isEmpty()) {
-			Entity entity = entities.get(world.random.nextInt(entities.size()));
+			Entity entity = entities.get(level.random.nextInt(entities.size()));
 			List<ItemEntity> capturedDrops = new ArrayList<>();
 			boolean success = false;
 			entity.captureDrops(capturedDrops);
@@ -188,14 +188,14 @@ public class DeployerHandler {
 						FoodProperties foodProperties = item.getFoodProperties(stack, player);
 						if (foodProperties != null && playerEntity.canEat(foodProperties.canAlwaysEat())) {
 							ItemStack copy = stack.copy();
-							player.setItemInHand(hand, stack.finishUsingItem(world, playerEntity));
+							player.setItemInHand(hand, stack.finishUsingItem(level, playerEntity));
 							player.spawnedItemEffects = copy;
 							success = true;
 						}
 					}
 					if (AllItemTags.DEPLOYABLE_DRINK.matches(stack)) {
 						player.spawnedItemEffects = stack.copy();
-						player.setItemInHand(hand, stack.finishUsingItem(world, playerEntity));
+						player.setItemInHand(hand, stack.finishUsingItem(level, playerEntity));
 						success = true;
 					}
 				}
@@ -218,10 +218,10 @@ public class DeployerHandler {
 		// Shoot ray
 		ClipContext rayTraceContext =
 			new ClipContext(rayOrigin, rayTarget, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player);
-		BlockHitResult result = world.clip(rayTraceContext);
+		BlockHitResult result = level.clip(rayTraceContext);
 		if (result.getBlockPos() != clickedPos)
 			result = new BlockHitResult(result.getLocation(), result.getDirection(), clickedPos, result.isInside());
-		BlockState clickedState = world.getBlockState(clickedPos);
+		BlockState clickedState = level.getBlockState(clickedPos);
 		Direction face = result.getDirection();
 		if (face == null)
 			face = Direction.getNearest(extensionVector.x, extensionVector.y, extensionVector.z)
@@ -229,9 +229,9 @@ public class DeployerHandler {
 
 		// Left click
 		if (mode == Mode.PUNCH) {
-			if (!world.mayInteract(player, clickedPos))
+			if (!level.mayInteract(player, clickedPos))
 				return;
-			if (clickedState.getShape(world, clickedPos)
+			if (clickedState.getShape(level, clickedPos)
 				.isEmpty()) {
 				player.blockBreakingProgress = null;
 				return;
@@ -239,25 +239,25 @@ public class DeployerHandler {
 			LeftClickBlock event = CommonHooks.onLeftClickBlock(player, clickedPos, face, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK);
 			if (event.isCanceled())
 				return;
-			if (BlockHelper.extinguishFire(world, player, clickedPos, face))
+			if (BlockHelper.extinguishFire(level, player, clickedPos, face))
 				return;
 			if (event.getUseBlock() != TriState.FALSE)
-				clickedState.attack(world, clickedPos, player);
+				clickedState.attack(level, clickedPos, player);
 			if (stack.isEmpty())
 				return;
 
-			float progress = clickedState.getDestroyProgress(player, world, clickedPos) * 16;
+			float progress = clickedState.getDestroyProgress(player, level, clickedPos) * 16;
 			float before = 0;
 			Pair<BlockPos, Float> blockBreakingProgress = player.blockBreakingProgress;
 			if (blockBreakingProgress != null)
 				before = blockBreakingProgress.getValue();
 			progress += before;
-			world.playSound(null, clickedPos, clickedState.getSoundType()
+			level.playSound(null, clickedPos, clickedState.getSoundType()
 				.getHitSound(), SoundSource.NEUTRAL, .25f, 1);
 
 			if (progress >= 1) {
 				tryHarvestBlock(player, player.gameMode, clickedPos);
-				world.destroyBlockProgress(player.getId(), clickedPos, -1);
+				level.destroyBlockProgress(player.getId(), clickedPos, -1);
 				player.blockBreakingProgress = null;
 				return;
 			}
@@ -267,7 +267,7 @@ public class DeployerHandler {
 			}
 
 			if ((int) (before * 10) != (int) (progress * 10))
-				world.destroyBlockProgress(player.getId(), clickedPos, (int) (progress * 10));
+				level.destroyBlockProgress(player.getId(), clickedPos, (int) (progress * 10));
 			player.blockBreakingProgress = Pair.of(clickedPos, progress);
 			return;
 		}
@@ -276,7 +276,7 @@ public class DeployerHandler {
 		UseOnContext itemusecontext = new UseOnContext(player, hand, result);
 		TriState useBlock = TriState.DEFAULT;
 		TriState useItem = TriState.DEFAULT;
-		if (!clickedState.getShape(world, clickedPos)
+		if (!clickedState.getShape(level, clickedPos)
 			.isEmpty()) {
 			RightClickBlock event = CommonHooks.onRightClickBlock(player, hand, clickedPos, result);
 			useBlock = event.getUseBlock();
@@ -293,11 +293,11 @@ public class DeployerHandler {
 		boolean holdingSomething = !player.getMainHandItem()
 			.isEmpty();
 		boolean flag1 =
-			!(player.isShiftKeyDown() && holdingSomething) || (stack.doesSneakBypassUse(world, clickedPos, player));
+			!(player.isShiftKeyDown() && holdingSomething) || (stack.doesSneakBypassUse(level, clickedPos, player));
 
 		// Use on block
 		if (useBlock != TriState.FALSE && flag1
-			&& safeOnUse(clickedState, world, clickedPos, player, hand, result).consumesAction())
+			&& safeOnUse(clickedState, level, clickedPos, player, hand, result).consumesAction())
 			return;
 		if (stack.isEmpty())
 			return;
@@ -311,7 +311,7 @@ public class DeployerHandler {
 		if (item == Items.FLINT_AND_STEEL) {
 			Direction newFace = result.getDirection();
 			BlockPos newPos = result.getBlockPos();
-			if (!BaseFireBlock.canBePlacedAt(world, clickedPos, newFace))
+			if (!BaseFireBlock.canBePlacedAt(level, clickedPos, newFace))
 				newFace = Direction.UP;
 			if (clickedState.isAir())
 				newPos = newPos.relative(face.getOpposite());
@@ -334,14 +334,14 @@ public class DeployerHandler {
 			return;
 
 		// buckets create their own ray, We use a fake wall to contain the active area
-		Level itemUseWorld = world;
+		Level itemUseWorld = level;
 		if (item instanceof BucketItem || item instanceof SandPaperItem)
-			itemUseWorld = new ItemUseWorld(world, face, pos);
+			itemUseWorld = new ItemUseWorld(level, face, pos);
 
 		InteractionResultHolder<ItemStack> onItemRightClick = item.use(itemUseWorld, player, hand);
 
 		if (onItemRightClick.getResult().consumesAction() && item instanceof MobBucketItem bucketItem)
-			bucketItem.checkExtraContent(player, world, stack, clickedPos);
+			bucketItem.checkExtraContent(player, level, stack, clickedPos);
 
 		ItemStack resultStack = onItemRightClick.getObject();
 		if (resultStack != stack || resultStack.getCount() != stack.getCount() || resultStack.getUseDuration(player) > 0
@@ -351,12 +351,12 @@ public class DeployerHandler {
 
 		if (stack.getItem() instanceof SandPaperItem && stack.has(AllDataComponents.SAND_PAPER_POLISHING)) {
 			player.spawnedItemEffects = stack.get(AllDataComponents.SAND_PAPER_POLISHING).item();
-			AllSoundEvents.SANDING_SHORT.playOnServer(world, pos, .25f, 1f);
+			AllSoundEvents.SANDING_SHORT.playOnServer(level, pos, .25f, 1f);
 		}
 
 		if (!player.getUseItem()
 			.isEmpty())
-			player.setItemInHand(hand, stack.finishUsingItem(world, player));
+			player.setItemInHand(hand, stack.finishUsingItem(level, player));
 
 		player.stopUsingItem();
 	}

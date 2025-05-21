@@ -14,10 +14,13 @@ import com.simibubi.create.content.contraptions.actors.contraptionControls.Contr
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.elevator.ElevatorContraption;
 import com.simibubi.create.content.contraptions.elevator.ElevatorTargetFloorPacket;
-
+import com.simibubi.create.content.trains.entity.Carriage;
+import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.content.trains.entity.Train;
 
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -96,6 +99,24 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 
 		AllSoundEvents.CONTROLLER_CLICK.play(player.level(), null,
 			BlockPos.containing(contraptionEntity.toGlobalVector(Vec3.atCenterOf(localPos), 1)), 1, disable ? 0.8f : 1.5f);
+
+		if (!(contraptionEntity instanceof CarriageContraptionEntity cce))
+			return true;
+		if (!filter.is(ItemTags.DOORS))
+			return true;
+		
+		// Special case: Doors are toggled on all carriages of a train
+		Carriage carriage = cce.getCarriage();
+		Train train = carriage.train;
+		for (Carriage c : train.carriages) {
+			CarriageContraptionEntity anyAvailableEntity = c.anyAvailableEntity();
+			if (anyAvailableEntity == null)
+				continue;
+			Contraption cpt = anyAvailableEntity.getContraption();
+			cpt.setActorsActive(filter, !disable);
+			ContraptionControlsBlockEntity.sendStatus(player, filter, !disable);
+			send(anyAvailableEntity, filter, disable);
+		}
 
 		return true;
 	}

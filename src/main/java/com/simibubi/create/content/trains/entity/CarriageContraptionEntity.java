@@ -49,6 +49,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
 
@@ -259,6 +260,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 			entityData.set(TRACK_GRAPH, Optional.ofNullable(carriage.train.graph)
 				.map(g -> g.id));
+
+			level().gameEvent(this, GameEvent.RESONATE_8, this.position());
 
 			return;
 		}

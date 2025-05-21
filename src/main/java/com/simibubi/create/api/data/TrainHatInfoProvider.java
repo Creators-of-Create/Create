@@ -9,6 +9,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.schedule.hat.TrainHatInfo;
 import com.simibubi.create.content.trains.schedule.hat.TrainHatInfoReloadListener;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -21,7 +22,7 @@ public abstract class TrainHatInfoProvider implements DataProvider {
 	protected final Map<ResourceLocation, TrainHatInfo> trainHatOffsets = new HashMap<>();
 	private final PackOutput.PathProvider path;
 
-	public TrainHatInfoProvider(PackOutput output) {
+	public TrainHatInfoProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		this.path = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, TrainHatInfoReloadListener.HAT_INFO_DIRECTORY);
 	}
 

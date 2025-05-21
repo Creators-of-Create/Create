@@ -175,7 +175,7 @@ public class BeltSlicer {
 						continue;
 					int count = itemstack.getCount();
 
-					if (AllItems.BELT_CONNECTOR.isIn(itemstack)) {
+					if (AllItems.BELT_CONNECTOR.isIn(itemstack) && !beltFound) {
 						if (!world.isClientSide)
 							itemstack.shrink(1);
 						beltFound = true;
@@ -193,8 +193,10 @@ public class BeltSlicer {
 					}
 				}
 
-				if (!world.isClientSide)
+				if (!world.isClientSide){
 					player.getInventory().placeItemBackInInventory(AllBlocks.SHAFT.asStack(amountRetrieved));
+					if (beltFound) player.getInventory().placeItemBackInInventory(AllItems.BELT_CONNECTOR.asStack());
+				}
 				return ItemInteractionResult.FAIL;
 			}
 		}

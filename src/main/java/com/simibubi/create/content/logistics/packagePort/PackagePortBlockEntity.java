@@ -81,7 +81,7 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.write(tag, registries, clientPacket);
 		if (target != null)
-			tag.put("Target", CatnipCodecUtils.encode(PackagePortTarget.CODEC, target).orElseThrow());
+			tag.put("Target", CatnipCodecUtils.encode(PackagePortTarget.CODEC, registries, target).orElseThrow());
 		tag.putString("AddressFilter", addressFilter);
 		tag.putBoolean("AcceptsPackages", acceptsPackages);
 		tag.put("Inventory", inventory.serializeNBT(registries));
@@ -92,7 +92,7 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 		super.read(tag, registries, clientPacket);
 		inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
 		PackagePortTarget prevTarget = target;
-		target = CatnipCodecUtils.decode(PackagePortTarget.CODEC, tag.getCompound("Target")).orElse(null);
+		target = CatnipCodecUtils.decode(PackagePortTarget.CODEC, registries, tag.getCompound("Target")).orElse(null);
 		addressFilter = tag.getString("AddressFilter");
 		acceptsPackages = tag.getBoolean("AcceptsPackages");
 		if (clientPacket && prevTarget != target)

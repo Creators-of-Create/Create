@@ -13,10 +13,10 @@ import com.simibubi.create.compat.curios.CuriosDataGenerator;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.data.CreateDatamapProvider;
 import com.simibubi.create.foundation.data.DamageTypeTagGen;
-import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
-import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
-import com.simibubi.create.foundation.data.recipe.StandardProcessingRecipeGen;
-import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
+import com.simibubi.create.foundation.data.recipe.CreateMechanicalCraftingRecipeGen;
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider;
+import com.simibubi.create.foundation.data.recipe.CreateSequencedAssemblyRecipeGen;
+import com.simibubi.create.foundation.data.recipe.CreateStandardRecipeGen;
 import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.tterrag.registrate.providers.ProviderType;
@@ -55,16 +55,16 @@ public class CreateDatagen {
 		generator.addProvider(event.includeServer(), new CreateMountedItemStorageTypeTagsProvider(output, lookupProvider, existingFileHelper));
 		generator.addProvider(event.includeServer(), new DamageTypeTagGen(output, lookupProvider, existingFileHelper));
 		generator.addProvider(event.includeServer(), new AllAdvancements(output, lookupProvider));
-		generator.addProvider(event.includeServer(), new StandardRecipeGen(output, lookupProvider));
-		generator.addProvider(event.includeServer(), new MechanicalCraftingRecipeGen(output, lookupProvider));
-		generator.addProvider(event.includeServer(), new SequencedAssemblyRecipeGen(output, lookupProvider));
+		generator.addProvider(event.includeServer(), new CreateStandardRecipeGen(output, lookupProvider));
+		generator.addProvider(event.includeServer(), new CreateMechanicalCraftingRecipeGen(output, lookupProvider));
+		generator.addProvider(event.includeServer(), new CreateSequencedAssemblyRecipeGen(output, lookupProvider));
 		generator.addProvider(event.includeServer(), new CreateDatamapProvider(output, lookupProvider));
-		generator.addProvider(event.includeServer(), new VanillaHatOffsetGenerator(output));
+		generator.addProvider(event.includeServer(), new VanillaHatOffsetGenerator(output, lookupProvider));
 		generator.addProvider(event.includeServer(), new CuriosDataGenerator(output, lookupProvider, existingFileHelper));
 		generator.addProvider(event.includeServer(), new CreateEnchantmentTagsProvider(output, lookupProvider, existingFileHelper));
 
 		if (event.includeServer()) {
-			StandardProcessingRecipeGen.registerAll(generator, output, lookupProvider);
+			CreateRecipeProvider.registerAllProcessing(generator, output, lookupProvider);
 		}
 	}
 

@@ -14,7 +14,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 
 import net.createmod.catnip.codecs.CatnipCodecUtils;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 
 public class FactoryPanelSupportBehaviour extends BlockEntityBehaviour {
@@ -126,13 +125,13 @@ public class FactoryPanelSupportBehaviour extends BlockEntityBehaviour {
 
 	@Override
 	public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
-		nbt.put("LinkedGauges", CatnipCodecUtils.encode(Codec.list(FactoryPanelPosition.CODEC), linkedPanels).orElseThrow());
+		nbt.put("LinkedGauges", CatnipCodecUtils.encode(Codec.list(FactoryPanelPosition.CODEC), registries, linkedPanels).orElseThrow());
 	}
 
 	@Override
 	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		linkedPanels.clear();
-		CatnipCodecUtils.decode(Codec.list(FactoryPanelPosition.CODEC), nbt.get("LinkedGauges")).ifPresent(linkedPanels::addAll);
+		CatnipCodecUtils.decode(Codec.list(FactoryPanelPosition.CODEC), registries, nbt.get("LinkedGauges")).ifPresent(linkedPanels::addAll);
 	}
 
 	@Override

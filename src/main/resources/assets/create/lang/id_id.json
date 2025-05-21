@@ -557,7 +557,7 @@
   "create.contraptions.windmill.rotation_direction": "Arah Rotasi",
   "create.crafting_blueprint.optional": "Opsional",
   "create.display_source.boiler.not_enough_space": "Tidak cukup ruang ",
-  "create.display_source.computer_display_source": "Dari Komputer",
+  "create.display_source.computer": "Dari Komputer",
   "create.display_source.current_floor": "Lokasi Elevator",
   "create.display_source.entity_name": "Nama Entitas",
   "create.display_source.fill_level.percent": "Persen",

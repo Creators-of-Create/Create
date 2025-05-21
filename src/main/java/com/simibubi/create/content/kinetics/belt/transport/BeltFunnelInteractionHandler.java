@@ -114,7 +114,7 @@ public class BeltFunnelInteractionHandler {
 			funnelBE.flap(true);
 			funnelBE.onTransfer(toInsert);
 			currentItem.stack = remainder;
-			beltInventory.belt.sendData();
+			beltInventory.belt.notifyUpdate();
 			if (blocking)
 				return true;
 		}

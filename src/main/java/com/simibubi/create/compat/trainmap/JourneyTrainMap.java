@@ -14,11 +14,13 @@ import journeymap.api.v2.client.IClientPlugin;
 import journeymap.api.v2.client.JourneyMapPlugin;
 import journeymap.api.v2.client.display.Context.UI;
 import journeymap.api.v2.client.event.FullscreenRenderEvent;
+import journeymap.api.v2.client.fullscreen.IFullscreen;
 import journeymap.api.v2.client.util.UIState;
 import journeymap.api.v2.common.event.FullscreenEventRegistry;
 import journeymap.client.ui.fullscreen.Fullscreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.Mth;
@@ -71,14 +73,15 @@ public class JourneyTrainMap implements IClientPlugin {
 	// GuiGraphics graphics, Fullscreen screen, double x, double z, int mX, int mY, float pt
 	public static void onRender(FullscreenRenderEvent event) {
 		GuiGraphics graphics = event.getGraphics();
-		Fullscreen screen = (Fullscreen) event.getFullscreen();
-		double x = screen.getCenterBlockX(true);
-		double z = screen.getCenterBlockZ(true);
+		IFullscreen fullscreen = event.getFullscreen();
+		Screen screen = fullscreen.getScreen();
+		double x = fullscreen.getCenterBlockX(true);
+		double z = fullscreen.getCenterBlockZ(true);
 		int mX = event.getMouseX();
 		int mY = event.getMouseY();
 		float pt = event.getPartialTicks();
 
-		UIState state = screen.getUiState();
+		UIState state = fullscreen.getUiState();
 		if (state == null)
 			return;
 		if (state.ui != UI.Fullscreen)
@@ -121,7 +124,7 @@ public class JourneyTrainMap implements IClientPlugin {
 			RemovedGuiUtils.drawHoveringText(graphics, tooltip, mX, mY, screen.width, screen.height, 256, mc.font);
 	}
 
-	private static boolean renderToggleWidgetAndTooltip(GuiGraphics graphics, Fullscreen screen, int mouseX,
+	private static boolean renderToggleWidgetAndTooltip(GuiGraphics graphics, Screen screen, int mouseX,
 		int mouseY) {
 		TrainMapManager.renderToggleWidget(graphics, 3, 30);
 		if (!TrainMapManager.isToggleWidgetHovered(mouseX, mouseY, 3, 30))

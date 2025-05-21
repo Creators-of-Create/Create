@@ -26,6 +26,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.common.conditions.NotCondition;
+import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, R extends ProcessingRecipe<?, P>, S extends ProcessingRecipeBuilder<P, R, S>> {
@@ -128,6 +129,11 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 
 	public S require(Ingredient ingredient) {
 		params.ingredients.add(ingredient);
+		return self();
+	}
+
+	public S require(ICustomIngredient ingredient) {
+		params.ingredients.add(ingredient.toVanilla());
 		return self();
 	}
 

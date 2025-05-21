@@ -4,6 +4,11 @@ import java.util.function.Consumer;
 
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * A helper class for mods that Create has built in compatibility for.
+ * Not considered part of Create's API, addons wishing to add to this should make
+ * their own instead, with their own helper methods in the generation classes.
+ */
 public enum Mods {
 
 	MEK("mekanism", b -> b.reverseMetalPrefix()),

@@ -48,6 +48,7 @@ description='''${mod_description}'''
 [[dependencies."${mod_id}"]]
 modId = "sodium"
 type = "optional"
+reason = "Versions before 0.6.9 do not include the neccesary APIs Create needs to work properly with Sodium."
 versionRange = "[0.6.9,)"
 ordering = "NONE"
 side = "CLIENT"
@@ -56,6 +57,7 @@ side = "CLIENT"
 [[dependencies."${mod_id}"]]
 modId = "lithium"
 type = "optional"
+reason = "Versions before 0.14.7 crash when paired with Create, Update Lithium."
 versionRange = "[0.14.7,)"
 ordering = "NONE"
 side = "BOTH"
@@ -64,6 +66,25 @@ side = "BOTH"
 [[dependencies."${mod_id}"]]
 modId = "journeymap"
 type = "optional"
+reason = "Versions before 1.21.1-6.0.0-beta.46 do not contain the APIs Create requires to work with JourneyMap."
 versionRange = "[1.21.1-6.0.0-beta.46,)"
 ordering = "NONE"
 side = "CLIENT"
+
+# Incompatible Mods
+
+# Users should use lithium instead, it's up to date and does not crash with level wrappers (anymore)
+[[dependencies."${mod_id}"]]
+modId = "radium"
+type = "incompatible"
+reason = "Radium is a unofficial port of Lithium, Lithium is now natively available for NeoForge and does not suffer from the same issues radium does, use Lithium instead."
+ordering = "NONE"
+side = "BOTH"
+
+# Does not improve memory usage, results in connected textures not working as intended.
+[[dependencies."${mod_id}"]]
+modId = "palladium"
+type = "incompatible"
+reason = "Palladium does not improve memory usage by anything meaningful, and results in broken visuals for Create's blocks with connected textures."
+ordering = "NONE"
+side = "BOTH"

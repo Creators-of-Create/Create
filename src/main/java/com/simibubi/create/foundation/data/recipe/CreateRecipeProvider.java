@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.ProcessingRecipeGen;
+import com.simibubi.create.api.data.recipe.StandardProcessingRecipeGen;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -20,33 +22,58 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.fluids.FluidType;
 
-public abstract class CreateRecipeProvider extends RecipeProvider {
+/**
+ * The class that handles gathering Create's generated recipes for most types.
+ * Data here is only generated when running server dategen
+ * @see com.simibubi.create.infrastructure.data.CreateDatagen
+ */
+public final class CreateRecipeProvider extends RecipeProvider {
 
-	protected final List<GeneratedRecipe> all = new ArrayList<>();
+	static final List<ProcessingRecipeGen<?, ?, ?>> GENERATORS = new ArrayList<>();
+	static final int BUCKET = FluidType.BUCKET_VOLUME;
+	static final int BOTTLE = 250;
 
 	public CreateRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		super(output, registries);
 	}
 
 	@Override
-	protected void buildRecipes(@NotNull RecipeOutput pRecipeOutput) {
-		all.forEach(c -> c.register(pRecipeOutput));
-		Create.LOGGER.info("{} registered {} recipe{}", getName(), all.size(), all.size() == 1 ? "" : "s");
+	protected void buildRecipes(RecipeOutput recipeOutput) {
 	}
 
-	protected GeneratedRecipe register(GeneratedRecipe recipe) {
-		all.add(recipe);
-		return recipe;
-	}
+	public static void registerAllProcessing(DataGenerator gen, PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+		GENERATORS.add(new CreateCrushingRecipeGen(output, registries));
+		GENERATORS.add(new CreateMillingRecipeGen(output, registries));
+		GENERATORS.add(new CreateCuttingRecipeGen(output, registries));
+		GENERATORS.add(new CreateWashingRecipeGen(output, registries));
+		GENERATORS.add(new CreatePolishingRecipeGen(output, registries));
+		GENERATORS.add(new CreateDeployingRecipeGen(output, registries));
+		GENERATORS.add(new CreateMixingRecipeGen(output, registries));
+		GENERATORS.add(new CreateCompactingRecipeGen(output, registries));
+		GENERATORS.add(new CreatePressingRecipeGen(output, registries));
+		GENERATORS.add(new CreateFillingRecipeGen(output, registries));
+		GENERATORS.add(new CreateEmptyingRecipeGen(output, registries));
+		GENERATORS.add(new CreateHauntingRecipeGen(output, registries));
+		GENERATORS.add(new CreateItemApplicationRecipeGen(output, registries));
 
-	@FunctionalInterface
-	public interface GeneratedRecipe {
-		void register(RecipeOutput output);
-	}
+		gen.addProvider(true, new DataProvider() {
 
-	protected static class Marker {
+			@Override
+			public String getName() {
+				return "Create's Processing Recipes";
+			}
+
+			@Override
+			public CompletableFuture<?> run(CachedOutput dc) {
+				return CompletableFuture.allOf(GENERATORS.stream()
+					.map(gen -> gen.run(dc))
+					.toArray(CompletableFuture[]::new));
+			}
+		});
 	}
 
 	protected static class I {
@@ -94,11 +121,11 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ItemLike andesiteCasing() {
 			return AllBlocks.ANDESITE_CASING.get();
 		}
-		
+
 		static ItemLike vault() {
 			return AllBlocks.ITEM_VAULT.get();
 		}
-		
+
 		static ItemLike stockLink() {
 			return AllBlocks.STOCK_LINK.get();
 		}
@@ -134,7 +161,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ItemLike brassCasing() {
 			return AllBlocks.BRASS_CASING.get();
 		}
-		
+
 		static ItemLike cardboard() {
 			return AllItems.CARDBOARD.get();
 		}

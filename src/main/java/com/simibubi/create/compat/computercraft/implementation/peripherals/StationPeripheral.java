@@ -150,15 +150,15 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 
 	@LuaFunction(mainThread = true)
 	public final void setSchedule(IArguments arguments) throws LuaException {
-		if (arguments.getTable(0).size() != 2)
-			throw new LuaException("Not a valid schedule");
-
-		Object entries = arguments.getTable(0).get("entries");
-		if (entries instanceof Map<?, ?> map && map.isEmpty())
-			throw new LuaException("Schedule must have at least one entry");
-
 		Train train = getTrainOrThrow();
 		Schedule schedule = Schedule.fromTag(blockEntity.getLevel().registryAccess(), toCompoundTag(new CreateLuaTable(arguments.getTable(0))));
+
+		// We must check the completed schedule, because `toCompoundTag` normalizes all CompoundTag keys to CamelCase
+		// and so `Entries`, `entries`, `EnTrIeS`, etc. will all be converted to `Entries` in the schedule
+		// https://github.com/Creators-of-Create/Create/issues/8504
+		if (schedule.entries.isEmpty())
+			throw new LuaException("Schedule must have at least one entry");
+
 		boolean autoSchedule = train.runtime.getSchedule() == null || train.runtime.isAutoSchedule;
 		train.runtime.setSchedule(schedule, autoSchedule);
 	}

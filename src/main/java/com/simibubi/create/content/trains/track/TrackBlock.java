@@ -46,6 +46,7 @@ import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.Affine;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -178,7 +179,7 @@ public class TrackBlock extends Block
 				if (level.getBlockState(offset)
 					.isFaceSturdy(level, offset, Direction.UP)
 					&& !level.getBlockState(offset.above())
-						.isFaceSturdy(level, offset, Direction.DOWN)) {
+					.isFaceSturdy(level, offset, Direction.DOWN)) {
 					if (best == TrackShape.XO)
 						best = neg ? TrackShape.AW : TrackShape.AE;
 					if (best == TrackShape.ZO)
@@ -294,20 +295,20 @@ public class TrackBlock extends Block
 		Player player = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10, Predicates.alwaysTrue());
 		if (player == null)
 			return;
-        player.displayClientMessage(Component.literal("<!> ")
+		player.displayClientMessage(Component.literal("<!> ")
 			.append(CreateLang.translateDirect("portal_track.failed"))
 			.withStyle(ChatFormatting.GOLD), false);
 		MutableComponent component = failPos != null
 			? CreateLang.translateDirect("portal_track." + fail, failPos.getX(), failPos.getY(), failPos.getZ())
 			: CreateLang.translateDirect("portal_track." + fail);
-        player.displayClientMessage(Component.literal(" - ")
+		player.displayClientMessage(Component.literal(" - ")
 			.withStyle(ChatFormatting.GRAY)
 			.append(component.withStyle(st -> st.withColor(0xFFD3B4))), false);
 	}
 
 	@Override
 	public BlockState updateShape(BlockState state, Direction pDirection, BlockState pNeighborState,
-		LevelAccessor level, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+								  LevelAccessor level, BlockPos pCurrentPos, BlockPos pNeighborPos) {
 		updateWater(level, state, pCurrentPos);
 		TrackShape shape = state.getValue(SHAPE);
 		if (!shape.isPortal())
@@ -336,7 +337,7 @@ public class TrackBlock extends Block
 
 	@Override
 	public Collection<DiscoveredLocation> getConnected(BlockGetter worldIn, BlockPos pos, BlockState state,
-		boolean linear, TrackNodeLocation connectedTo) {
+													   boolean linear, TrackNodeLocation connectedTo) {
 		Collection<DiscoveredLocation> list;
 		BlockGetter world = connectedTo != null && worldIn instanceof ServerLevel sl ? sl.getServer()
 			.getLevel(connectedTo.dimension) : worldIn;
@@ -394,7 +395,7 @@ public class TrackBlock extends Block
 
 		getTrackAxes(world, pos, state).forEach(axis -> {
 			ITrackBlock.addToListIfConnected(connectedTo, list, (d, b) -> (b ? axis : boundAxis).scale(d)
-				.add(b ? center : boundCenter), b -> (b ? shape : boundShape).getNormal(),
+					.add(b ? center : boundCenter), b -> (b ? shape : boundShape).getNormal(),
 				b -> b ? level.dimension() : otherLevel.dimension(), v -> 0, axis, null,
 				(b, v) -> ITrackBlock.getMaterialSimple(b ? level : otherLevel, v));
 		});
@@ -484,56 +485,56 @@ public class TrackBlock extends Block
 
 	private VoxelShape getFullShape(BlockState state) {
 		switch (state.getValue(SHAPE)) {
-		case AE:
-			return TRACK_ASC.get(Direction.EAST);
-		case AW:
-			return TRACK_ASC.get(Direction.WEST);
-		case AN:
-			return TRACK_ASC.get(Direction.NORTH);
-		case AS:
-			return TRACK_ASC.get(Direction.SOUTH);
-		case CR_D:
-			return TRACK_CROSS_DIAG;
-		case CR_NDX:
-			return TRACK_CROSS_ORTHO_DIAG.get(Direction.SOUTH);
-		case CR_NDZ:
-			return TRACK_CROSS_DIAG_ORTHO.get(Direction.SOUTH);
-		case CR_O:
-			return TRACK_CROSS;
-		case CR_PDX:
-			return TRACK_CROSS_DIAG_ORTHO.get(Direction.EAST);
-		case CR_PDZ:
-			return TRACK_CROSS_ORTHO_DIAG.get(Direction.EAST);
-		case ND:
-			return TRACK_DIAG.get(Direction.SOUTH);
-		case PD:
-			return TRACK_DIAG.get(Direction.EAST);
-		case XO:
-			return TRACK_ORTHO.get(Direction.EAST);
-		case ZO:
-			return TRACK_ORTHO.get(Direction.SOUTH);
-		case TE:
-			return TRACK_ORTHO_LONG.get(Direction.EAST);
-		case TW:
-			return TRACK_ORTHO_LONG.get(Direction.WEST);
-		case TS:
-			return TRACK_ORTHO_LONG.get(Direction.SOUTH);
-		case TN:
-			return TRACK_ORTHO_LONG.get(Direction.NORTH);
-		case NONE:
-		default:
+			case AE:
+				return TRACK_ASC.get(Direction.EAST);
+			case AW:
+				return TRACK_ASC.get(Direction.WEST);
+			case AN:
+				return TRACK_ASC.get(Direction.NORTH);
+			case AS:
+				return TRACK_ASC.get(Direction.SOUTH);
+			case CR_D:
+				return TRACK_CROSS_DIAG;
+			case CR_NDX:
+				return TRACK_CROSS_ORTHO_DIAG.get(Direction.SOUTH);
+			case CR_NDZ:
+				return TRACK_CROSS_DIAG_ORTHO.get(Direction.SOUTH);
+			case CR_O:
+				return TRACK_CROSS;
+			case CR_PDX:
+				return TRACK_CROSS_DIAG_ORTHO.get(Direction.EAST);
+			case CR_PDZ:
+				return TRACK_CROSS_ORTHO_DIAG.get(Direction.EAST);
+			case ND:
+				return TRACK_DIAG.get(Direction.SOUTH);
+			case PD:
+				return TRACK_DIAG.get(Direction.EAST);
+			case XO:
+				return TRACK_ORTHO.get(Direction.EAST);
+			case ZO:
+				return TRACK_ORTHO.get(Direction.SOUTH);
+			case TE:
+				return TRACK_ORTHO_LONG.get(Direction.EAST);
+			case TW:
+				return TRACK_ORTHO_LONG.get(Direction.WEST);
+			case TS:
+				return TRACK_ORTHO_LONG.get(Direction.SOUTH);
+			case TN:
+				return TRACK_ORTHO_LONG.get(Direction.NORTH);
+			case NONE:
+			default:
 		}
 		return AllShapes.TRACK_FALLBACK;
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
-		CollisionContext pContext) {
+										CollisionContext pContext) {
 		switch (pState.getValue(SHAPE)) {
-		case AE, AW, AN, AS:
-			return Shapes.empty();
-		default:
-			return AllShapes.TRACK_COLLISION;
+			case AE, AW, AN, AS:
+				return Shapes.empty();
+			default:
+				return AllShapes.TRACK_COLLISION;
 		}
 	}
 
@@ -647,7 +648,7 @@ public class TrackBlock extends Block
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel prepareAssemblyOverlay(BlockGetter world, BlockPos pos, BlockState state, Direction direction,
-		PoseStack ms) {
+											   PoseStack ms) {
 		TransformStack.of(ms)
 			.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(direction)), Direction.UP);
 		return AllPartialModels.TRACK_ASSEMBLING_OVERLAY;
@@ -655,10 +656,8 @@ public class TrackBlock extends Block
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public PartialModel prepareTrackOverlay(BlockGetter world, BlockPos pos, BlockState state,
-		BezierTrackPointLocation bezierPoint, AxisDirection direction, PoseStack ms, RenderedTrackOverlayType type) {
-		var msr = TransformStack.of(ms);
-
+	public <Self extends Affine<Self>> PartialModel prepareTrackOverlay(Affine<Self> affine, BlockGetter world, BlockPos pos, BlockState state,
+																		BezierTrackPointLocation bezierPoint, AxisDirection direction, RenderedTrackOverlayType type) {
 		Vec3 axis = null;
 		Vec3 diff = null;
 		Vec3 normal = null;
@@ -679,8 +678,8 @@ public class TrackBlock extends Block
 					.subtract(bc.getPosition(tpre))
 					.normalize();
 
-				msr.translate(offset.subtract(Vec3.atBottomCenterOf(pos)));
-				msr.translate(0, -4 / 16f, 0);
+				affine.translate(offset.subtract(Vec3.atBottomCenterOf(pos)));
+				affine.translate(0, -4 / 16f, 0);
 			} else
 				return null;
 		}
@@ -696,17 +695,17 @@ public class TrackBlock extends Block
 
 		Vec3 angles = TrackRenderer.getModelAngles(normal, diff);
 
-		msr.center()
+		affine.center()
 			.rotateY((float) angles.y)
 			.rotateX((float) angles.x)
 			.uncenter();
 
 		if (axis != null)
-			msr.translate(0, axis.y != 0 ? 7 / 16f : 0, axis.y != 0 ? direction.getStep() * 2.5f / 16f : 0);
+			affine.translate(0, axis.y != 0 ? 7 / 16f : 0, axis.y != 0 ? direction.getStep() * 2.5f / 16f : 0);
 		else {
-			msr.translate(0, 4 / 16f, 0);
+			affine.translate(0, 4 / 16f, 0);
 			if (direction == AxisDirection.NEGATIVE)
-				msr.rotateCentered(Mth.PI, Direction.UP);
+				affine.rotateCentered(Mth.PI, Direction.UP);
 		}
 
 		if (bezierPoint == null && world.getBlockEntity(pos) instanceof TrackBlockEntity trackTE
@@ -714,17 +713,17 @@ public class TrackBlock extends Block
 			double yOffset = 0;
 			for (BezierConnection bc : trackTE.connections.values())
 				yOffset += bc.starts.getFirst().y - pos.getY();
-			msr.center()
+			affine.center()
 				.rotateXDegrees((float) (-direction.getStep() * trackTE.tilt.smoothingAngle.get()))
 				.uncenter()
 				.translate(0, yOffset / 2, 0);
 		}
 
 		return switch (type) {
-		case DUAL_SIGNAL -> AllPartialModels.TRACK_SIGNAL_DUAL_OVERLAY;
-		case OBSERVER -> AllPartialModels.TRACK_OBSERVER_OVERLAY;
-		case SIGNAL -> AllPartialModels.TRACK_SIGNAL_OVERLAY;
-		case STATION -> AllPartialModels.TRACK_STATION_OVERLAY;
+			case DUAL_SIGNAL -> AllPartialModels.TRACK_SIGNAL_DUAL_OVERLAY;
+			case OBSERVER -> AllPartialModels.TRACK_OBSERVER_OVERLAY;
+			case SIGNAL -> AllPartialModels.TRACK_SIGNAL_OVERLAY;
+			case STATION -> AllPartialModels.TRACK_STATION_OVERLAY;
 		};
 	}
 
