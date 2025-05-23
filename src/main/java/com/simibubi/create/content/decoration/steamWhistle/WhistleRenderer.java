@@ -30,8 +30,8 @@ public class WhistleRenderer extends SafeBlockEntityRenderer<WhistleBlockEntity>
 		Direction direction = blockState.getValue(WhistleBlock.FACING);
 		WhistleSize size = blockState.getValue(WhistleBlock.SIZE);
 
-		PartialModel mouth = size == WhistleSize.LARGE ? AllPartialModels.WHISTLE_MOUTH_LARGE
-			: size == WhistleSize.MEDIUM ? AllPartialModels.WHISTLE_MOUTH_MEDIUM : AllPartialModels.WHISTLE_MOUTH_SMALL;
+		PartialModel mouth = size == WhistleSize.LARGEST ? AllPartialModels.WHISTLE_MOUTH_LARGEST :size == WhistleSize.LARGE ? AllPartialModels.WHISTLE_MOUTH_LARGE
+			: size == WhistleSize.MEDIUM ? AllPartialModels.WHISTLE_MOUTH_MEDIUM : size == WhistleSize.SMALL ? AllPartialModels.WHISTLE_MOUTH_SMALL : AllPartialModels.WHISTLE_MOUTH_SMALLEST;
 
 		float offset = be.animation.getValue(partialTicks);
 		if (be.animation.getChaseTarget() > 0 && be.animation.getValue() > 0.5f) {

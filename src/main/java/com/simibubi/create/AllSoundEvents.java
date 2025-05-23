@@ -60,7 +60,7 @@ public class AllSoundEvents {
 			.playExisting(SoundEvents.WOOL_BREAK, .0425f, .75f)
 			.category(SoundSource.BLOCKS)
 			.build(),
-			
+
 		PACKAGER = create("packager").subtitle("Packager packages")
 			.playExisting(SoundEvents.SHULKER_OPEN, 0.5f, 0.75f)
 			.category(SoundSource.BLOCKS)
@@ -138,12 +138,12 @@ public class AllSoundEvents {
 		CARDBOARD_SWORD = create("cardboard_bonk").subtitle("Resonant bonk")
 			.category(SoundSource.PLAYERS)
 			.build(),
-			
+
 		FROGPORT_OPEN = create("frogport_open").subtitle("Frogport opens")
 			.playExisting(SoundEvents.WARDEN_TENDRIL_CLICKS, 1f, 2f)
 			.category(SoundSource.BLOCKS)
 			.build(),
-			
+
 		FROGPORT_CLOSE = create("frogport_close").subtitle("Frogport shuts")
 			.category(SoundSource.BLOCKS)
 			.build(),
@@ -154,7 +154,7 @@ public class AllSoundEvents {
 			.addVariant("frogport_catch_3")
 			.category(SoundSource.BLOCKS)
 			.build(),
-			
+
 		STOCK_LINK = create("stock_link").subtitle("Stock link reacts")
 			.category(SoundSource.BLOCKS)
 			.build(),
@@ -191,7 +191,7 @@ public class AllSoundEvents {
 			.playExisting(SoundEvents.NETHERITE_BLOCK_HIT, .25f, .75f)
 			.category(SoundSource.BLOCKS)
 			.build(),
-			
+
 		PACKAGE_POP = create("package_pop").subtitle("Package breaks")
 			.playExisting(SoundEvents.CHISELED_BOOKSHELF_BREAK, .75f, 1f)
 			.playExisting(SoundEvents.WOOL_BREAK, .25f, 1.15f)
@@ -252,7 +252,7 @@ public class AllSoundEvents {
 			.playExisting(SoundEvents.GENERIC_EAT, .5f, 1f)
 			.category(SoundSource.BLOCKS)
 			.build(),
-			
+
 		ITEM_HATCH = create("item_hatch").subtitle("Item Hatch opens")
 			.playExisting(SoundEvents.BARREL_OPEN, .25f, 1.4f)
 			.playExisting(SoundEvents.NETHERITE_BLOCK_PLACE, .75f, 1.15f)
@@ -278,9 +278,14 @@ public class AllSoundEvents {
 			.playExisting(SoundEvents.BELL_BLOCK)
 			.category(SoundSource.BLOCKS)
 			.build(),
-			
+
 		DESK_BELL_USE = create("desk_bell").subtitle("Reception bell dings")
 			.category(SoundSource.BLOCKS)
+			.attenuationDistance(64)
+			.build(),
+
+		WHISTLE_HIGHEST = create("whistle_highest").subtitle("Highest whistling")
+			.category(SoundSource.RECORDS)
 			.attenuationDistance(64)
 			.build(),
 
@@ -295,6 +300,11 @@ public class AllSoundEvents {
 			.build(),
 
 		WHISTLE_LOW = create("whistle_low").subtitle("Low whistling")
+			.category(SoundSource.RECORDS)
+			.attenuationDistance(64)
+			.build(),
+
+		WHISTLE_LOWEST = create("whistle_lowest").subtitle("Lowest whistling")
 			.category(SoundSource.RECORDS)
 			.attenuationDistance(64)
 			.build(),

@@ -630,6 +630,16 @@
     ],
     "subtitle": "create.subtitle.whistle_high"
   },
+  "whistle_highest": {
+    "sounds": [
+      {
+        "type": "file",
+        "attenuation_distance": 64,
+        "name": "create:whistle_highest"
+      }
+    ],
+    "subtitle": "create.subtitle.whistle_highest"
+  },
   "whistle_low": {
     "sounds": [
       {
@@ -639,6 +649,16 @@
       }
     ],
     "subtitle": "create.subtitle.whistle_low"
+  },
+  "whistle_lowest": {
+    "sounds": [
+      {
+        "type": "file",
+        "attenuation_distance": 64,
+        "name": "create:whistle_lowest"
+      }
+    ],
+    "subtitle": "create.subtitle.whistle_lowest"
   },
   "whistle_train": {
     "sounds": [

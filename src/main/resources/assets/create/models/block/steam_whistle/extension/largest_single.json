@@ -1,0 +1,55 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/whistle",
+		"particle": "create:block/whistle_particle"
+	},
+	"elements": [
+		{
+			"name": "Whistle Large Cap",
+			"from": [1, 8, 1],
+			"to": [15, 10, 15],
+			"faces": {
+				"north": {"uv": [12.5, 0.75, 15.5, 1.25], "texture": "#0"},
+				"east": {"uv": [12.5, 0.75, 15.5, 1.25], "texture": "#0"},
+				"south": {"uv": [12.5, 0.75, 15.5, 1.25], "texture": "#0"},
+				"west": {"uv": [12.5, 0.75, 15.5, 1.25], "texture": "#0"},
+				"up": {"uv": [0.5, 12.5, 3.5, 15.5], "texture": "#0"},
+				"down": {"uv": [12.5, 12.5, 15.5, 15.5], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Whistle large Extension",
+			"from": [2, 0, 2],
+			"to": [14, 8, 14],
+			"faces": {
+				"north": {"uv": [12.75, 1.5, 15.25, 3.5], "texture": "#0"},
+				"east": {"uv": [12.75, 1.5, 15.25, 3.5], "texture": "#0"},
+				"south": {"uv": [12.75, 1.5, 15.25, 3.5], "texture": "#0"},
+				"west": {"uv": [12.75, 1.5, 15.25, 3.5], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "large_single",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "Whistle Large",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"children": [
+						{
+							"name": "Extension",
+							"origin": [8, 8, 8],
+							"color": 0,
+							"children": [0, 1]
+						}
+					]
+				}
+			]
+		}
+	]
+}

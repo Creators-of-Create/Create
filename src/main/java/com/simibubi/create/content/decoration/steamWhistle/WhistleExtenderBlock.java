@@ -160,18 +160,18 @@ public class WhistleExtenderBlock extends Block implements IWrenchable {
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
 		WhistleSize size = pState.getValue(SIZE);
 		switch (pState.getValue(SHAPE)) {
-		case DOUBLE:
-			return size == WhistleSize.LARGE ? AllShapes.WHISTLE_EXTENDER_LARGE_DOUBLE
-				: size == WhistleSize.MEDIUM ? AllShapes.WHISTLE_EXTENDER_MEDIUM_DOUBLE
-					: AllShapes.WHISTLE_EXTENDER_SMALL_DOUBLE;
-		case DOUBLE_CONNECTED:
-			return size == WhistleSize.LARGE ? AllShapes.WHISTLE_EXTENDER_LARGE_DOUBLE_CONNECTED
-				: size == WhistleSize.MEDIUM ? AllShapes.WHISTLE_EXTENDER_MEDIUM_DOUBLE_CONNECTED
-					: AllShapes.WHISTLE_EXTENDER_SMALL_DOUBLE_CONNECTED;
-		case SINGLE:
-		default:
-			return size == WhistleSize.LARGE ? AllShapes.WHISTLE_EXTENDER_LARGE
-				: size == WhistleSize.MEDIUM ? AllShapes.WHISTLE_EXTENDER_MEDIUM : AllShapes.WHISTLE_EXTENDER_SMALL;
+			case DOUBLE:
+				return size == WhistleSize.LARGEST ? AllShapes.WHISTLE_EXTENDER_LARGEST_DOUBLE : size == WhistleSize.LARGE ? AllShapes.WHISTLE_EXTENDER_LARGE_DOUBLE
+					: size == WhistleSize.MEDIUM ? AllShapes.WHISTLE_EXTENDER_MEDIUM_DOUBLE
+					: size == WhistleSize.SMALL ? AllShapes.WHISTLE_EXTENDER_SMALL_DOUBLE : AllShapes.WHISTLE_EXTENDER_SMALLEST_DOUBLE;
+			case DOUBLE_CONNECTED:
+				return size == WhistleSize.LARGEST ? AllShapes.WHISTLE_EXTENDER_LARGEST_DOUBLE_CONNECTED : size == WhistleSize.LARGE ? AllShapes.WHISTLE_EXTENDER_LARGE_DOUBLE_CONNECTED
+					: size == WhistleSize.MEDIUM ? AllShapes.WHISTLE_EXTENDER_MEDIUM_DOUBLE_CONNECTED : size == WhistleSize.SMALL ? AllShapes.WHISTLE_EXTENDER_SMALL_DOUBLE_CONNECTED :
+					AllShapes.WHISTLE_EXTENDER_SMALLEST_DOUBLE_CONNECTED;
+			case SINGLE:
+			default:
+				return size == WhistleSize.LARGEST ? AllShapes.WHISTLE_EXTENDER_LARGEST : size == WhistleSize.LARGE ? AllShapes.WHISTLE_EXTENDER_LARGE
+					: size == WhistleSize.MEDIUM ? AllShapes.WHISTLE_EXTENDER_MEDIUM : size == WhistleSize.SMALL ? AllShapes.WHISTLE_EXTENDER_SMALL : AllShapes.WHISTLE_EXTENDER_SMALLEST;
 		}
 	}
 

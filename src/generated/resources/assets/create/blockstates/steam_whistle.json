@@ -8,6 +8,14 @@
       "model": "create:block/steam_whistle/block_large_wall",
       "y": 270
     },
+    "facing=east,powered=false,size=largest,wall=false": {
+      "model": "create:block/steam_whistle/block_largest_floor",
+      "y": 270
+    },
+    "facing=east,powered=false,size=largest,wall=true": {
+      "model": "create:block/steam_whistle/block_largest_wall",
+      "y": 270
+    },
     "facing=east,powered=false,size=medium,wall=false": {
       "model": "create:block/steam_whistle/block_medium_floor",
       "y": 270
@@ -24,12 +32,28 @@
       "model": "create:block/steam_whistle/block_small_wall",
       "y": 270
     },
+    "facing=east,powered=false,size=smallest,wall=false": {
+      "model": "create:block/steam_whistle/block_smallest_floor",
+      "y": 270
+    },
+    "facing=east,powered=false,size=smallest,wall=true": {
+      "model": "create:block/steam_whistle/block_smallest_wall",
+      "y": 270
+    },
     "facing=east,powered=true,size=large,wall=false": {
       "model": "create:block/steam_whistle/block_large_floor_powered",
       "y": 270
     },
     "facing=east,powered=true,size=large,wall=true": {
       "model": "create:block/steam_whistle/block_large_wall_powered",
+      "y": 270
+    },
+    "facing=east,powered=true,size=largest,wall=false": {
+      "model": "create:block/steam_whistle/block_largest_floor_powered",
+      "y": 270
+    },
+    "facing=east,powered=true,size=largest,wall=true": {
+      "model": "create:block/steam_whistle/block_largest_wall_powered",
       "y": 270
     },
     "facing=east,powered=true,size=medium,wall=false": {
@@ -48,12 +72,28 @@
       "model": "create:block/steam_whistle/block_small_wall_powered",
       "y": 270
     },
+    "facing=east,powered=true,size=smallest,wall=false": {
+      "model": "create:block/steam_whistle/block_smallest_floor_powered",
+      "y": 270
+    },
+    "facing=east,powered=true,size=smallest,wall=true": {
+      "model": "create:block/steam_whistle/block_smallest_wall_powered",
+      "y": 270
+    },
     "facing=north,powered=false,size=large,wall=false": {
       "model": "create:block/steam_whistle/block_large_floor",
       "y": 180
     },
     "facing=north,powered=false,size=large,wall=true": {
       "model": "create:block/steam_whistle/block_large_wall",
+      "y": 180
+    },
+    "facing=north,powered=false,size=largest,wall=false": {
+      "model": "create:block/steam_whistle/block_largest_floor",
+      "y": 180
+    },
+    "facing=north,powered=false,size=largest,wall=true": {
+      "model": "create:block/steam_whistle/block_largest_wall",
       "y": 180
     },
     "facing=north,powered=false,size=medium,wall=false": {
@@ -72,12 +112,28 @@
       "model": "create:block/steam_whistle/block_small_wall",
       "y": 180
     },
+    "facing=north,powered=false,size=smallest,wall=false": {
+      "model": "create:block/steam_whistle/block_smallest_floor",
+      "y": 180
+    },
+    "facing=north,powered=false,size=smallest,wall=true": {
+      "model": "create:block/steam_whistle/block_smallest_wall",
+      "y": 180
+    },
     "facing=north,powered=true,size=large,wall=false": {
       "model": "create:block/steam_whistle/block_large_floor_powered",
       "y": 180
     },
     "facing=north,powered=true,size=large,wall=true": {
       "model": "create:block/steam_whistle/block_large_wall_powered",
+      "y": 180
+    },
+    "facing=north,powered=true,size=largest,wall=false": {
+      "model": "create:block/steam_whistle/block_largest_floor_powered",
+      "y": 180
+    },
+    "facing=north,powered=true,size=largest,wall=true": {
+      "model": "create:block/steam_whistle/block_largest_wall_powered",
       "y": 180
     },
     "facing=north,powered=true,size=medium,wall=false": {
@@ -96,11 +152,25 @@
       "model": "create:block/steam_whistle/block_small_wall_powered",
       "y": 180
     },
+    "facing=north,powered=true,size=smallest,wall=false": {
+      "model": "create:block/steam_whistle/block_smallest_floor_powered",
+      "y": 180
+    },
+    "facing=north,powered=true,size=smallest,wall=true": {
+      "model": "create:block/steam_whistle/block_smallest_wall_powered",
+      "y": 180
+    },
     "facing=south,powered=false,size=large,wall=false": {
       "model": "create:block/steam_whistle/block_large_floor"
     },
     "facing=south,powered=false,size=large,wall=true": {
       "model": "create:block/steam_whistle/block_large_wall"
+    },
+    "facing=south,powered=false,size=largest,wall=false": {
+      "model": "create:block/steam_whistle/block_largest_floor"
+    },
+    "facing=south,powered=false,size=largest,wall=true": {
+      "model": "create:block/steam_whistle/block_largest_wall"
     },
     "facing=south,powered=false,size=medium,wall=false": {
       "model": "create:block/steam_whistle/block_medium_floor"
@@ -114,11 +184,23 @@
     "facing=south,powered=false,size=small,wall=true": {
       "model": "create:block/steam_whistle/block_small_wall"
     },
+    "facing=south,powered=false,size=smallest,wall=false": {
+      "model": "create:block/steam_whistle/block_smallest_floor"
+    },
+    "facing=south,powered=false,size=smallest,wall=true": {
+      "model": "create:block/steam_whistle/block_smallest_wall"
+    },
     "facing=south,powered=true,size=large,wall=false": {
       "model": "create:block/steam_whistle/block_large_floor_powered"
     },
     "facing=south,powered=true,size=large,wall=true": {
       "model": "create:block/steam_whistle/block_large_wall_powered"
+    },
+    "facing=south,powered=true,size=largest,wall=false": {
+      "model": "create:block/steam_whistle/block_largest_floor_powered"
+    },
+    "facing=south,powered=true,size=largest,wall=true": {
+      "model": "create:block/steam_whistle/block_largest_wall_powered"
     },
     "facing=south,powered=true,size=medium,wall=false": {
       "model": "create:block/steam_whistle/block_medium_floor_powered"
@@ -132,12 +214,26 @@
     "facing=south,powered=true,size=small,wall=true": {
       "model": "create:block/steam_whistle/block_small_wall_powered"
     },
+    "facing=south,powered=true,size=smallest,wall=false": {
+      "model": "create:block/steam_whistle/block_smallest_floor_powered"
+    },
+    "facing=south,powered=true,size=smallest,wall=true": {
+      "model": "create:block/steam_whistle/block_smallest_wall_powered"
+    },
     "facing=west,powered=false,size=large,wall=false": {
       "model": "create:block/steam_whistle/block_large_floor",
       "y": 90
     },
     "facing=west,powered=false,size=large,wall=true": {
       "model": "create:block/steam_whistle/block_large_wall",
+      "y": 90
+    },
+    "facing=west,powered=false,size=largest,wall=false": {
+      "model": "create:block/steam_whistle/block_largest_floor",
+      "y": 90
+    },
+    "facing=west,powered=false,size=largest,wall=true": {
+      "model": "create:block/steam_whistle/block_largest_wall",
       "y": 90
     },
     "facing=west,powered=false,size=medium,wall=false": {
@@ -156,12 +252,28 @@
       "model": "create:block/steam_whistle/block_small_wall",
       "y": 90
     },
+    "facing=west,powered=false,size=smallest,wall=false": {
+      "model": "create:block/steam_whistle/block_smallest_floor",
+      "y": 90
+    },
+    "facing=west,powered=false,size=smallest,wall=true": {
+      "model": "create:block/steam_whistle/block_smallest_wall",
+      "y": 90
+    },
     "facing=west,powered=true,size=large,wall=false": {
       "model": "create:block/steam_whistle/block_large_floor_powered",
       "y": 90
     },
     "facing=west,powered=true,size=large,wall=true": {
       "model": "create:block/steam_whistle/block_large_wall_powered",
+      "y": 90
+    },
+    "facing=west,powered=true,size=largest,wall=false": {
+      "model": "create:block/steam_whistle/block_largest_floor_powered",
+      "y": 90
+    },
+    "facing=west,powered=true,size=largest,wall=true": {
+      "model": "create:block/steam_whistle/block_largest_wall_powered",
       "y": 90
     },
     "facing=west,powered=true,size=medium,wall=false": {
@@ -178,6 +290,14 @@
     },
     "facing=west,powered=true,size=small,wall=true": {
       "model": "create:block/steam_whistle/block_small_wall_powered",
+      "y": 90
+    },
+    "facing=west,powered=true,size=smallest,wall=false": {
+      "model": "create:block/steam_whistle/block_smallest_floor_powered",
+      "y": 90
+    },
+    "facing=west,powered=true,size=smallest,wall=true": {
+      "model": "create:block/steam_whistle/block_smallest_wall_powered",
       "y": 90
     }
   }

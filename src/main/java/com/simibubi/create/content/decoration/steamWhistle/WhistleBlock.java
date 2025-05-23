@@ -56,7 +56,7 @@ public class WhistleBlock extends Block implements IBE<WhistleBlockEntity>, IWre
 
 	public static enum WhistleSize implements StringRepresentable {
 
-		SMALL, MEDIUM, LARGE;
+		SMALLEST, SMALL, MEDIUM, LARGE, LARGEST;
 
 		@Override
 		public String getSerializedName() {
@@ -214,12 +214,24 @@ public class WhistleBlock extends Block implements IBE<WhistleBlockEntity>, IWre
 	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
 		WhistleSize size = pState.getValue(SIZE);
-		if (!pState.getValue(WALL))
-			return size == WhistleSize.SMALL ? AllShapes.WHISTLE_SMALL_FLOOR
-				: size == WhistleSize.MEDIUM ? AllShapes.WHISTLE_MEDIUM_FLOOR : AllShapes.WHISTLE_LARGE_FLOOR;
 		Direction direction = pState.getValue(FACING);
-		return (size == WhistleSize.SMALL ? AllShapes.WHISTLE_SMALL_WALL
-			: size == WhistleSize.MEDIUM ? AllShapes.WHISTLE_MEDIUM_WALL : AllShapes.WHISTLE_LARGE_WALL).get(direction);
+		if (!pState.getValue(WALL)) {
+			return switch (size) {
+				case SMALL -> AllShapes.WHISTLE_SMALL_FLOOR;
+				case MEDIUM -> AllShapes.WHISTLE_MEDIUM_FLOOR;
+				case LARGE -> AllShapes.WHISTLE_LARGE_FLOOR;
+				case SMALLEST -> AllShapes.WHISTLE_SMALLEST_FLOOR;
+				case LARGEST -> AllShapes.WHISTLE_LARGEST_FLOOR;
+			};
+		}
+		return switch (size) {
+			case SMALL -> AllShapes.WHISTLE_SMALL_WALL.get(direction);
+			case MEDIUM -> AllShapes.WHISTLE_MEDIUM_WALL.get(direction);
+			case LARGE -> AllShapes.WHISTLE_LARGE_WALL.get(direction);
+			case SMALLEST -> AllShapes.WHISTLE_SMALLEST_WALL.get(direction);
+			case LARGEST  -> AllShapes.WHISTLE_LARGEST_WALL.get(direction);
+		};
+
 	}
 
 	@Override

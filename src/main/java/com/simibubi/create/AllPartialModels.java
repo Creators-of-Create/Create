@@ -192,9 +192,11 @@ public class AllPartialModels {
 		BLAZE_BURNER_SUPER_RODS = block("blaze_burner/superheated_rods_small"),
 		BLAZE_BURNER_SUPER_RODS_2 = block("blaze_burner/superheated_rods_large"),
 
+		WHISTLE_MOUTH_LARGEST = block("steam_whistle/largest_mouth"),
 		WHISTLE_MOUTH_LARGE = block("steam_whistle/large_mouth"),
 		WHISTLE_MOUTH_MEDIUM = block("steam_whistle/medium_mouth"),
 		WHISTLE_MOUTH_SMALL = block("steam_whistle/small_mouth"),
+		WHISTLE_MOUTH_SMALLEST = block("steam_whistle/smallest_mouth"),
 
 		WATER_WHEEL = block("water_wheel/wheel"), LARGE_WATER_WHEEL = block("large_water_wheel/block"),
 		LARGE_WATER_WHEEL_EXTENSION = block("large_water_wheel/block_extension"),
