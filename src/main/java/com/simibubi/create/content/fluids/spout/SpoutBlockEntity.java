@@ -235,9 +235,7 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	}
 
 	protected void spawnProcessingParticles(FluidStack fluid) {
-		if (isVirtual())
-			return;
-		if (fluid.isEmpty())
+		if (isVirtual() || fluid.isEmpty())
 			return;
 		Vec3 vec = VecHelper.getCenterOf(worldPosition);
 		vec = vec.subtract(0, 8 / 16f, 0);
@@ -248,7 +246,7 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	protected static int SPLASH_PARTICLE_COUNT = 20;
 
 	protected void spawnSplash(FluidStack fluid) {
-		if (isVirtual())
+		if (isVirtual() || fluid.isEmpty())
 			return;
 		Vec3 vec = VecHelper.getCenterOf(worldPosition);
 		vec = vec.subtract(0, 2 - 5 / 16f, 0);

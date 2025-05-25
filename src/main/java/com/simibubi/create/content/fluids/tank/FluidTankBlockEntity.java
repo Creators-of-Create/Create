@@ -504,6 +504,15 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 	}
 
 	@Override
+	public void writeSafe(CompoundTag compound, HolderLookup.Provider registries) {
+		if (isController()) {
+			compound.putBoolean("Window", window);
+			compound.putInt("Size", width);
+			compound.putInt("Height", height);
+		}
+	}
+
+	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		registerAwardables(behaviours, AllAdvancements.STEAM_ENGINE_MAXED, AllAdvancements.PIPE_ORGAN);
 	}

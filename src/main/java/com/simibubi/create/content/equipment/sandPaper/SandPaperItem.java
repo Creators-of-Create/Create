@@ -210,7 +210,8 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 	public boolean triggerUseEffects(ItemStack stack, LivingEntity entity, int count, RandomSource random) {
 		if (stack.has(AllDataComponents.SAND_PAPER_POLISHING)) {
 			ItemStack polishing = stack.get(AllDataComponents.SAND_PAPER_POLISHING).item();
-			((LivingEntityAccessor) entity).create$callSpawnItemParticles(polishing, 1);
+			if (!polishing.isEmpty())
+				((LivingEntityAccessor) entity).create$callSpawnItemParticles(polishing, 1);
 		}
 
 		// After 6 ticks play the sound every 7th

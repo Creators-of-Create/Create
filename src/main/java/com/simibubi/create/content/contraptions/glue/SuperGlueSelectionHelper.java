@@ -11,7 +11,6 @@ import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -75,10 +74,6 @@ public class SuperGlueSelectionHelper {
 			int slot = i == -1 ? player.getInventory().selected : i;
 			ItemStack stack = items.get(slot);
 			if (stack.isEmpty())
-				continue;
-			if (stack.has(DataComponents.UNBREAKABLE))
-				return true;
-			if (!stack.isDamageableItem())
 				continue;
 			if (!(stack.getItem() instanceof SuperGlueItem))
 				continue;

@@ -1,7 +1,10 @@
 package com.simibubi.create.content.kinetics.deployer;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -29,7 +32,6 @@ import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerPlayerGameMode;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -54,7 +56,6 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
-import net.minecraft.world.level.block.BeehiveBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
@@ -68,7 +69,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.extensions.IBaseRailBlockExtension;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.EventHooks;
@@ -76,6 +76,8 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.LeftClickB
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 
 public class DeployerHandler {
+	private static final Map<BlockPos, List<ItemEntity>> CAPTURED_BLOCK_DROPS = new HashMap<>();
+	public static final Map<BlockPos, List<ItemEntity>> CAPTURED_BLOCK_DROPS_VIEW = Collections.unmodifiableMap(CAPTURED_BLOCK_DROPS);
 
 	private static final class ItemUseWorld extends WrappedServerLevel {
 		private final Direction face;
@@ -322,7 +324,7 @@ public class DeployerHandler {
 		// 'Inert' item use behaviour & block placement
 		InteractionResult onItemUse = stack.useOn(itemusecontext);
 		if (onItemUse.consumesAction()) {
-			if (stack.getItem() instanceof BlockItem bi
+			if (item instanceof BlockItem bi
 				&& (bi.getBlock() instanceof IBaseRailBlockExtension || bi.getBlock() instanceof ITrackBlock))
 				player.placedTracks = true;
 			return;
@@ -410,48 +412,16 @@ public class DeployerHandler {
 
 	public static InteractionResult safeOnUse(BlockState state, Level world, BlockPos pos, Player player,
 											  InteractionHand hand, BlockHitResult ray) {
-		if (state.getBlock() instanceof BeehiveBlock)
-			return safeOnBeehiveUse(state, world, pos, player, hand);
-		return BlockHelper.invokeUse(state, world, player, hand, ray);
-	}
-
-	protected static InteractionResult safeOnBeehiveUse(BlockState state, Level world, BlockPos pos, Player player,
-														InteractionHand hand) {
-		// <> BeehiveBlock#onUse
-
-		BeehiveBlock block = (BeehiveBlock) state.getBlock();
-		ItemStack prevHeldItem = player.getItemInHand(hand);
-		int honeyLevel = state.getValue(BeehiveBlock.HONEY_LEVEL);
-		boolean success = false;
-		if (honeyLevel < 5)
-			return InteractionResult.PASS;
-
-		if (prevHeldItem.canPerformAction(ItemAbilities.SHEARS_HARVEST)) {
-			world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BEEHIVE_SHEAR,
-				SoundSource.NEUTRAL, 1.0F, 1.0F);
-			// <> BeehiveBlock#dropHoneycomb
-			player.getInventory().placeItemBackInInventory(new ItemStack(Items.HONEYCOMB, 3));
-			prevHeldItem.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
-			success = true;
+		List<ItemEntity> drops = new ArrayList<>(4);
+		CAPTURED_BLOCK_DROPS.put(pos, drops);
+		try {
+			InteractionResult result = BlockHelper.invokeUse(state, world, player, hand, ray);
+			for (ItemEntity itemEntity : drops)
+				player.getInventory().placeItemBackInInventory(itemEntity.getItem());
+			return result;
+		} finally {
+			CAPTURED_BLOCK_DROPS.remove(pos);
 		}
-
-		if (prevHeldItem.getItem() == Items.GLASS_BOTTLE) {
-			prevHeldItem.shrink(1);
-			world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL,
-				SoundSource.NEUTRAL, 1.0F, 1.0F);
-			ItemStack honeyBottle = new ItemStack(Items.HONEY_BOTTLE);
-			if (prevHeldItem.isEmpty())
-				player.setItemInHand(hand, honeyBottle);
-			else
-				player.getInventory().placeItemBackInInventory(honeyBottle);
-			success = true;
-		}
-
-		if (!success)
-			return InteractionResult.PASS;
-
-		block.resetHoneyLevel(world, state, pos);
-		return InteractionResult.SUCCESS;
 	}
 
 }

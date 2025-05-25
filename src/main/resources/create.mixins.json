@@ -7,7 +7,9 @@
   "refmap": "create.refmap.json",
   "mixins": [
     "ArmorTrimMixin",
+    "BeehiveBlockMixin",
     "BlockItemMixin",
+    "BlockMixin",
     "BuiltInRegistriesMixin",
     "CustomItemUseEffectsMixin",
     "EnchantedCountIncreaseFunctionMixin",

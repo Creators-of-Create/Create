@@ -7,6 +7,7 @@ import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltSlope;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
+import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -85,13 +86,13 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements Sp
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_,
-		CollisionContext p_220053_4_) {
+							   CollisionContext p_220053_4_) {
 		return state.getValue(SHAPE).shaper.get(state.getValue(HORIZONTAL_FACING));
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState p_220071_1_, BlockGetter p_220071_2_, BlockPos p_220071_3_,
-		CollisionContext p_220071_4_) {
+										CollisionContext p_220071_4_) {
 		if (p_220071_4_ instanceof EntityCollisionContext
 			&& ((EntityCollisionContext) p_220071_4_).getEntity() instanceof ItemEntity
 			&& (p_220071_1_.getValue(SHAPE) == Shape.PULLING || p_220071_1_.getValue(SHAPE) == Shape.PUSHING))
@@ -131,7 +132,7 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements Sp
 
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbour, LevelAccessor world,
-		BlockPos pos, BlockPos p_196271_6_) {
+								  BlockPos pos, BlockPos p_196271_6_) {
 		updateWater(world, state, pos);
 		if (!isOnValidBelt(state, world, pos)) {
 			BlockState parentState = ProperWaterloggedBlock.withWater(world, parent.getDefaultState(), pos);
@@ -209,7 +210,7 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements Sp
 
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
-		return ItemRequirement.of(parent.getDefaultState(), be);
+		return new ItemRequirement(ItemUseType.CONSUME, parent.asItem());
 	}
 
 }
