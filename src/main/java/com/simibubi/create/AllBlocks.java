@@ -2110,6 +2110,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::copperMetal)
 		.properties(p -> p.forceSolidOn())
 		.transform(pickaxeOnly())
+		.tag(AllBlockTags.SAFE_NBT.tag)
 		.blockstate((c, p) -> p.horizontalFaceBlock(c.get(), AssetLookup.standardModel(c, p)))
 		.simpleItem()
 		.register();
