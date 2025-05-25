@@ -5,8 +5,8 @@ import java.lang.ref.WeakReference;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.packagePort.PackagePortBlockEntity;
+import com.simibubi.create.content.trains.station.GlobalPackagePort;
 import com.simibubi.create.content.trains.station.GlobalStation;
-import com.simibubi.create.content.trains.station.GlobalStation.GlobalPackagePort;
 
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
@@ -91,23 +91,23 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 	}
 
 	@Override
-	public void onChunkUnloaded() {
+	public void setChanged() {
+		saveOfflineBuffer();
+		super.setChanged();
+	}
+
+	private void saveOfflineBuffer() {
 		if (level == null || level.isClientSide)
 			return;
+
 		GlobalStation station = trackedGlobalStation.get();
 		if (station == null)
 			return;
-		if (!station.connectedPorts.containsKey(worldPosition))
-			return;
+
 		GlobalPackagePort globalPackagePort = station.connectedPorts.get(worldPosition);
-		for (int i = 0; i < inventory.getSlots(); i++) {
-			globalPackagePort.offlineBuffer.setStackInSlot(i, inventory.getStackInSlot(i));
-			inventory.setStackInSlot(i, ItemStack.EMPTY);
-		}
+		if (globalPackagePort == null)
+			return;
 
-		globalPackagePort.primed = true;
-		Create.RAILWAYS.markTracksDirty();
-		super.onChunkUnloaded();
+		globalPackagePort.saveOfflineBuffer(inventory);
 	}
-
 }
