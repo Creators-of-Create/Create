@@ -24,6 +24,7 @@
     "create:pulse_extender",
     "create:pulse_timer",
     "create:clipboard",
+    "create:placard",
     "#minecraft:banners",
     "#minecraft:all_signs"
   ]
