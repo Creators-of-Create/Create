@@ -25,6 +25,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
@@ -135,11 +136,23 @@ public class BeltDeployerCallbacks {
 			recipe instanceof ItemApplicationRecipe && ((ItemApplicationRecipe) recipe).shouldKeepHeldItem();
 
 		if (!keepHeld) {
-			if (heldItem.isDamageableItem())
+			if (heldItem.isDamageableItem()) {
 				heldItem.hurtAndBreak(1, blockEntity.player,
 					s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
-			else
+			} else {
+				Player player = blockEntity.player;
+				ItemStack leftover = heldItem.hasCraftingRemainingItem() ? heldItem.getCraftingRemainingItem() : ItemStack.EMPTY;
+
 				heldItem.shrink(1);
+
+				if (heldItem.isEmpty()) {
+					player.setItemInHand(InteractionHand.MAIN_HAND, leftover);
+				} else {
+					if (!player.getInventory().add(leftover)) {
+						player.drop(leftover, false);
+					}
+				}
+			}
 		}
 
 		if (resultItem != null && !resultItem.isEmpty())

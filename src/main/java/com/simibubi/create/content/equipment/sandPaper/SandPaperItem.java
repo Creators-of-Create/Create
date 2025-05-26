@@ -142,6 +142,14 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 						.placeItemBackInInventory(polished);
 				}
 			}
+			if (!toPolish.isEmpty() && toPolish.hasCraftingRemainingItem()) {
+				if (player instanceof FakePlayer) {
+					player.drop(toPolish.getCraftingRemainingItem(), false, false);
+				} else {
+					player.getInventory()
+						.placeItemBackInInventory(toPolish.getCraftingRemainingItem());
+				}
+			}
 			tag.remove("Polishing");
 			stack.hurtAndBreak(1, entityLiving, p -> p.broadcastBreakEvent(p.getUsedItemHand()));
 		}

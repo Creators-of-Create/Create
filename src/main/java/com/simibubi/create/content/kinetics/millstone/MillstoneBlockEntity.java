@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -140,10 +141,14 @@ public class MillstoneBlockEntity extends KineticBlockEntity {
 		}
 
 		ItemStack stackInSlot = inputInv.getStackInSlot(0);
+		ItemStack craftingRemainingItem = stackInSlot.getCraftingRemainingItem();
 		stackInSlot.shrink(1);
 		inputInv.setStackInSlot(0, stackInSlot);
 		lastRecipe.rollResults()
 			.forEach(stack -> ItemHandlerHelper.insertItemStacked(outputInv, stack, false));
+		if (!craftingRemainingItem.isEmpty()) {
+			ItemHandlerHelper.insertItemStacked(outputInv, craftingRemainingItem, false);
+		}
 		award(AllAdvancements.MILLSTONE);
 
 		sendData();

@@ -126,7 +126,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 
 			float processingSpeed =
 				Mth.clamp((speed) / (!inventory.appliedRecipe ? (float) Math.log(inventory.getStackInSlot(0)
-					.getCount())/(float) Math.log(2) : 1), .25f, 20);
+					.getCount()) / (float) Math.log(2) : 1), .25f, 20);
 			inventory.remainingTime -= processingSpeed;
 			spawnParticles(inventory.getStackInSlot(0));
 
@@ -296,14 +296,17 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 
 		List<ItemStack> list = new ArrayList<>();
 		if (recipe.isPresent()) {
-			int rolls = inventory.getStackInSlot(0)
-				.getCount();
+			ItemStack input = inventory.getStackInSlot(0);
+			int rolls = input.getCount();
 			inventory.clear();
 			for (int roll = 0; roll < rolls; roll++) {
 				List<ItemStack> rolledResults = recipe.get()
 					.rollResults();
 				for (ItemStack stack : rolledResults) {
 					ItemHelper.addToList(stack, list);
+				}
+				if (input.hasCraftingRemainingItem()) {
+					ItemHelper.addToList(input.getCraftingRemainingItem(), list);
 				}
 			}
 			for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
