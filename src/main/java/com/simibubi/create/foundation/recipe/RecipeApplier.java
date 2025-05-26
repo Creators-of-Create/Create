@@ -56,6 +56,10 @@ public class RecipeApplier {
 
 					stacks.add(stack);
 				}
+
+				if (stackIn.hasCraftingRemainingItem()) {
+					ItemHelper.addToList(stackIn.getCraftingRemainingItem(), stacks);
+				}
 			}
 		} else {
 			ItemStack out = recipe.getResultItem(level.registryAccess())
