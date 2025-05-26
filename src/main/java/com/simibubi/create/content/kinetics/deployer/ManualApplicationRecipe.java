@@ -84,10 +84,23 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 		boolean keepHeld = recipe.shouldKeepHeldItem() || creative;
 
 		if (!keepHeld) {
-			if (heldItem.isDamageableItem())
+			if (heldItem.isDamageableItem()) {
 				heldItem.hurtAndBreak(1, event.getEntity(), s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
-			else
+			} else {
+				Player player = event.getEntity();
+				InteractionHand hand = event.getHand();
+				ItemStack leftover = heldItem.hasCraftingRemainingItem() ? heldItem.getCraftingRemainingItem() : ItemStack.EMPTY;
+
 				heldItem.shrink(1);
+
+				if (heldItem.isEmpty()) {
+					player.setItemInHand(hand, leftover);
+				} else {
+					if (!player.getInventory().add(leftover)) {
+						player.drop(leftover, false);
+					}
+				}
+			}
 		}
 
 		awardAdvancements(event.getEntity(), transformedBlock);
