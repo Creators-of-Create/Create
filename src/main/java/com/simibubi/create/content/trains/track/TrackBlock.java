@@ -37,7 +37,7 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUs
 import com.simibubi.create.content.trains.CubeParticleData;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation.DiscoveredLocation;
-import com.simibubi.create.content.trains.station.StationBlockEntity;
+import com.simibubi.create.content.trains.platform.PlatformBlockEntity;
 import com.simibubi.create.content.trains.track.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.IHaveBigOutline;
@@ -444,12 +444,12 @@ public class TrackBlock extends Block
 
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
-		for (Entry<BlockPos, BoundingBox> entry : StationBlockEntity.assemblyAreas.get(world)
+		for (Entry<BlockPos, BoundingBox> entry : PlatformBlockEntity.assemblyAreas.get(world)
 			.entrySet()) {
 			if (!entry.getValue()
 				.isInside(pos))
 				continue;
-			if (world.getBlockEntity(entry.getKey()) instanceof StationBlockEntity station)
+			if (world.getBlockEntity(entry.getKey()) instanceof PlatformBlockEntity station)
 				if (station.trackClicked(player, hand, this, state, pos))
 					return InteractionResult.SUCCESS;
 		}

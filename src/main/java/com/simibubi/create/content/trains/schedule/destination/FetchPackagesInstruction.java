@@ -17,8 +17,8 @@ import com.simibubi.create.content.trains.graph.DiscoveredPath;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime.State;
-import com.simibubi.create.content.trains.station.GlobalStation;
-import com.simibubi.create.content.trains.station.GlobalStation.GlobalPackagePort;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
+import com.simibubi.create.content.trains.platform.GlobalPlatform.GlobalPackagePort;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.data.Glob;
@@ -101,10 +101,10 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 		MinecraftServer server = level.getServer();
 		if (server == null)
 			return null;
-		
+
 		String regex = getFilterForRegex();
 		boolean anyMatch = false;
-		ArrayList<GlobalStation> validStations = new ArrayList<>();
+		ArrayList<GlobalPlatform> validStations = new ArrayList<>();
 		Train train = runtime.train;
 
 		if (!train.hasForwardConductor() && !train.hasBackwardConductor()) {
@@ -113,11 +113,11 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 			return null;
 		}
 
-		for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
+		for (GlobalPlatform globalStation : train.graph.getPoints(EdgePointType.STATION)) {
 			ServerLevel dimLevel = server.getLevel(globalStation.blockEntityDimension);
 			if (dimLevel == null)
 				continue;
-			
+
 			for (Entry<BlockPos, GlobalPackagePort> entry : globalStation.connectedPorts.entrySet()) {
 				GlobalPackagePort port = entry.getValue();
 				BlockPos pos = entry.getKey();

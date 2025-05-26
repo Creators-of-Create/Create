@@ -13,8 +13,8 @@ import com.simibubi.create.content.trains.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.trains.display.FlapDisplayLayout;
 import com.simibubi.create.content.trains.display.FlapDisplaySection;
 import com.simibubi.create.content.trains.display.GlobalTrainDisplayData;
-import com.simibubi.create.content.trains.station.GlobalStation;
-import com.simibubi.create.content.trains.station.StationBlockEntity;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
+import com.simibubi.create.content.trains.platform.PlatformBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -185,9 +185,9 @@ public class StationSummaryDisplaySource extends DisplaySource {
 
 		if (conf.contains("Filter"))
 			return;
-		if (!(context.getSourceBlockEntity() instanceof StationBlockEntity stationBe))
+		if (!(context.getSourceBlockEntity() instanceof PlatformBlockEntity stationBe))
 			return;
-		GlobalStation station = stationBe.getStation();
+		GlobalPlatform station = stationBe.getStation();
 		if (station == null)
 			return;
 		conf.putString("Filter", station.name);

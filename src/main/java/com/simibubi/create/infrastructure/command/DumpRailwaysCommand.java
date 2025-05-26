@@ -13,7 +13,7 @@ import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.signal.SignalBoundary;
-import com.simibubi.create.content.trains.station.GlobalStation;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -89,7 +89,7 @@ public class DumpRailwaysCommand {
 				Collection<SignalBoundary> signals = graph.getPoints(EdgePointType.SIGNAL);
 				if (!signals.isEmpty())
 					chat.accept(" -> " + signals.size() + " Signals", blue);
-				Collection<GlobalStation> stations = graph.getPoints(EdgePointType.STATION);
+				Collection<GlobalPlatform> stations = graph.getPoints(EdgePointType.STATION);
 				if (!stations.isEmpty())
 					chat.accept(" -> " + stations.size() + " Stations", blue);
 			}
@@ -125,7 +125,7 @@ public class DumpRailwaysCommand {
 				if (owner != null)
 					chat.accept("├─Owned by " + owner.getName()
 						.getString(), blue);
-				GlobalStation currentStation = train.getCurrentStation();
+				GlobalPlatform currentStation = train.getCurrentStation();
 				if (currentStation != null) {
 					chat.accept("├─Waiting at: " + currentStation.name, blue);
 				} else if (train.navigation.destination != null)

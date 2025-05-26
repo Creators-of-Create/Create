@@ -23,7 +23,7 @@ import com.simibubi.create.content.trains.schedule.condition.ScheduleWaitConditi
 import com.simibubi.create.content.trains.schedule.condition.ScheduledDelay;
 import com.simibubi.create.content.trains.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
-import com.simibubi.create.content.trains.station.GlobalStation;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ModularGuiLine;
@@ -330,7 +330,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> im
 			Graphs:
 			for (Iterator<TrackGraph> iterator = viableGraphs.iterator(); iterator.hasNext(); ) {
 				TrackGraph trackGraph = iterator.next();
-				for (GlobalStation station : trackGraph.getPoints(EdgePointType.STATION)) {
+				for (GlobalPlatform station : trackGraph.getPoints(EdgePointType.STATION)) {
 					if (station.name.matches(filter))
 						continue Graphs;
 				}

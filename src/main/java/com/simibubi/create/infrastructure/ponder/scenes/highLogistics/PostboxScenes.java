@@ -304,7 +304,7 @@ public class PostboxScenes {
 		animatePostbox(scene, box, false);
 		scene.overlay()
 			.showText(80)
-			.text("..trains stopping at the station will collect it as cargo")
+			.text("..trains stopping at the platform will collect it as cargo")
 			.attachKeyFrame()
 			.pointAt(util.vector()
 				.topOf(5, 2, 4))

@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains.station;
+package com.simibubi.create.content.trains.platform;
 
 import java.util.UUID;
 

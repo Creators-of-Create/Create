@@ -42,8 +42,8 @@ import com.simibubi.create.content.trains.schedule.ScheduleRuntime.State;
 import com.simibubi.create.content.trains.signal.SignalBlock.SignalType;
 import com.simibubi.create.content.trains.signal.SignalBoundary;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
-import com.simibubi.create.content.trains.station.GlobalStation;
-import com.simibubi.create.content.trains.station.StationBlockEntity;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
+import com.simibubi.create.content.trains.platform.PlatformBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -104,6 +104,7 @@ public class Train {
 	public SteerDirection manualSteer;
 	public boolean manualTick;
 
+	public UUID currentPlatform;
 	public UUID currentStation;
 	public boolean currentlyBackwards;
 
@@ -270,7 +271,7 @@ public class Train {
 			return;
 		}
 
-		GlobalStation currentStation = getCurrentStation();
+		GlobalPlatform currentStation = getCurrentStation();
 		if (currentStation != null) {
 			ticksSinceLastMailTransfer++;
 			if (ticksSinceLastMailTransfer > 20) {
@@ -437,7 +438,7 @@ public class Train {
 	public IEdgePointListener frontSignalListener() {
 		return (distance, couple) -> {
 
-			if (couple.getFirst()instanceof GlobalStation station) {
+			if (couple.getFirst()instanceof GlobalPlatform station) {
 				if (!station.canApproachFrom(couple.getSecond()
 					.getSecond()) || navigation.destination != station)
 					return false;
@@ -768,11 +769,11 @@ public class Train {
 				offset += carriageSpacing.get(backwards ? carriageSpacing.size() - i - 1 : i);
 		}
 
-		GlobalStation currentStation = getCurrentStation();
+		GlobalPlatform currentStation = getCurrentStation();
 		if (currentStation != null) {
 			currentStation.cancelReservation(this);
 			BlockPos blockEntityPos = currentStation.getBlockEntityPos();
-			if (level.getBlockEntity(blockEntityPos) instanceof StationBlockEntity sbe) {
+			if (level.getBlockEntity(blockEntityPos) instanceof PlatformBlockEntity sbe) {
 				sbe.lastDisassembledTrainName = name.copy();
 				sbe.lastDisassembledMapColorIndex = mapColorIndex;
 			}
@@ -893,7 +894,7 @@ public class Train {
 			derailed = false;
 			if (runtime.getSchedule() != null && runtime.state == State.IN_TRANSIT)
 				runtime.state = State.PRE_TRANSIT;
-			GlobalStation currentStation = getCurrentStation();
+			GlobalPlatform currentStation = getCurrentStation();
 			if (currentStation != null)
 				currentStation.reserveFor(this);
 			updateSignalBlocks = true;
@@ -919,13 +920,13 @@ public class Train {
 	}
 
 	public void leaveStation() {
-		GlobalStation currentStation = getCurrentStation();
+		GlobalPlatform currentStation = getCurrentStation();
 		if (currentStation != null)
 			currentStation.trainDeparted(this);
 		this.currentStation = null;
 	}
 
-	public void arriveAt(GlobalStation station) {
+	public void arriveAt(GlobalPlatform station) {
 		setCurrentStation(station);
 		reservedSignalBlocks.clear();
 		runtime.destinationReached();
@@ -933,11 +934,11 @@ public class Train {
 		ticksSinceLastMailTransfer = 0;
 	}
 
-	public void setCurrentStation(GlobalStation station) {
+	public void setCurrentStation(GlobalPlatform station) {
 		currentStation = station.id;
 	}
 
-	public GlobalStation getCurrentStation() {
+	public GlobalPlatform getCurrentStation() {
 		if (currentStation == null)
 			return null;
 		if (graph == null)

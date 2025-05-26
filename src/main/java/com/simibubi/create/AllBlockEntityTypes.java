@@ -221,8 +221,9 @@ import com.simibubi.create.content.trains.observer.TrackObserverBlockEntity;
 import com.simibubi.create.content.trains.observer.TrackObserverRenderer;
 import com.simibubi.create.content.trains.signal.SignalBlockEntity;
 import com.simibubi.create.content.trains.signal.SignalRenderer;
+import com.simibubi.create.content.trains.platform.PlatformBlockEntity;
+import com.simibubi.create.content.trains.platform.PlatformRenderer;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
-import com.simibubi.create.content.trains.station.StationRenderer;
 import com.simibubi.create.content.trains.track.FakeTrackBlockEntity;
 import com.simibubi.create.content.trains.track.TrackBlockEntity;
 import com.simibubi.create.content.trains.track.TrackMaterial;
@@ -951,9 +952,14 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.SMALL_BOGEY, AllBlocks.LARGE_BOGEY)
 		.register();
 
+	public static final BlockEntityEntry<PlatformBlockEntity> TRACK_PLATFORM = REGISTRATE
+		.blockEntity("track_platform", PlatformBlockEntity::new)
+		.renderer(() -> PlatformRenderer::new)
+		.validBlocks(AllBlocks.TRACK_PLATFORM)
+		.register();
+
 	public static final BlockEntityEntry<StationBlockEntity> TRACK_STATION = REGISTRATE
 		.blockEntity("track_station", StationBlockEntity::new)
-		.renderer(() -> StationRenderer::new)
 		.validBlocks(AllBlocks.TRACK_STATION)
 		.register();
 

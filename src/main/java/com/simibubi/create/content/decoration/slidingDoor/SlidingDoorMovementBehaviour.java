@@ -11,7 +11,7 @@ import com.simibubi.create.content.contraptions.elevator.ElevatorColumn.ColumnCo
 import com.simibubi.create.content.contraptions.elevator.ElevatorContraption;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
-import com.simibubi.create.content.trains.station.GlobalStation;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
@@ -175,7 +175,7 @@ public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 		Carriage carriage = cce.getCarriage();
 		if (carriage == null || carriage.train == null)
 			return null;
-		GlobalStation currentStation = carriage.train.getCurrentStation();
+		GlobalPlatform currentStation = carriage.train.getCurrentStation();
 		if (currentStation == null)
 			return null;
 

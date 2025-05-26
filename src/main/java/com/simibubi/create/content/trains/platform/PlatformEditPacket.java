@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains.station;
+package com.simibubi.create.content.trains.platform;
 
 import com.simibubi.create.content.decoration.slidingDoor.DoorControl;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
@@ -10,7 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlockEntity> {
+public class PlatformEditPacket extends BlockEntityConfigurationPacket<PlatformBlockEntity> {
 
 	boolean dropSchedule;
 	boolean assemblyMode;
@@ -18,26 +18,26 @@ public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlo
 	DoorControl doorControl;
 	String name;
 
-	public static StationEditPacket dropSchedule(BlockPos pos) {
-		StationEditPacket packet = new StationEditPacket(pos);
+	public static PlatformEditPacket dropSchedule(BlockPos pos) {
+		PlatformEditPacket packet = new PlatformEditPacket(pos);
 		packet.dropSchedule = true;
 		return packet;
 	}
 
-	public static StationEditPacket tryAssemble(BlockPos pos) {
-		StationEditPacket packet = new StationEditPacket(pos);
+	public static PlatformEditPacket tryAssemble(BlockPos pos) {
+		PlatformEditPacket packet = new PlatformEditPacket(pos);
 		packet.tryAssemble = true;
 		return packet;
 	}
 
-	public static StationEditPacket tryDisassemble(BlockPos pos) {
-		StationEditPacket packet = new StationEditPacket(pos);
+	public static PlatformEditPacket tryDisassemble(BlockPos pos) {
+		PlatformEditPacket packet = new PlatformEditPacket(pos);
 		packet.tryAssemble = false;
 		return packet;
 	}
 
-	public static StationEditPacket configure(BlockPos pos, boolean assemble, String name, DoorControl doorControl) {
-		StationEditPacket packet = new StationEditPacket(pos);
+	public static PlatformEditPacket configure(BlockPos pos, boolean assemble, String name, DoorControl doorControl) {
+		PlatformEditPacket packet = new PlatformEditPacket(pos);
 		packet.assemblyMode = assemble;
 		packet.tryAssemble = null;
 		packet.name = name;
@@ -45,11 +45,11 @@ public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlo
 		return packet;
 	}
 
-	public StationEditPacket(FriendlyByteBuf buffer) {
+	public PlatformEditPacket(FriendlyByteBuf buffer) {
 		super(buffer);
 	}
 
-	public StationEditPacket(BlockPos pos) {
+	public PlatformEditPacket(BlockPos pos) {
 		super(pos);
 	}
 
@@ -88,29 +88,29 @@ public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlo
 	}
 
 	@Override
-	protected void applySettings(ServerPlayer player, StationBlockEntity be) {
+	protected void applySettings(ServerPlayer player, PlatformBlockEntity be) {
 		Level level = be.getLevel();
 		BlockPos blockPos = be.getBlockPos();
 		BlockState blockState = level.getBlockState(blockPos);
-		GlobalStation station = be.getStation();
-		
+		GlobalPlatform station = be.getStation();
+
 		if (dropSchedule) {
 			if (station == null)
 				return;
 			be.dropSchedule(player, station.getPresentTrain());
 			return;
 		}
-		
+
 		if (doorControl != null)
 			be.doorControls.set(doorControl);
 
 		if (!name.isBlank())
 			be.updateName(name);
 
-		if (!(blockState.getBlock() instanceof StationBlock))
+		if (!(blockState.getBlock() instanceof PlatformBlock))
 			return;
 
-		Boolean isAssemblyMode = blockState.getValue(StationBlock.ASSEMBLING);
+		Boolean isAssemblyMode = blockState.getValue(PlatformBlock.ASSEMBLING);
 		boolean assemblyComplete = false;
 
 		if (tryAssemble != null) {
@@ -134,6 +134,6 @@ public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlo
 	}
 
 	@Override
-	protected void applySettings(StationBlockEntity be) {}
+	protected void applySettings(PlatformBlockEntity be) {}
 
 }

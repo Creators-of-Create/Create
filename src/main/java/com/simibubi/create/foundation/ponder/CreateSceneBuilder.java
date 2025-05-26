@@ -22,7 +22,7 @@ import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.LinkWithBulbBlockEntity;
 import com.simibubi.create.content.trains.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.trains.signal.SignalBlockEntity;
-import com.simibubi.create.content.trains.station.StationBlockEntity;
+import com.simibubi.create.content.trains.platform.PlatformBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 import com.simibubi.create.foundation.ponder.element.ExpandedParrotElement;
@@ -277,7 +277,7 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 		}
 
 		public void animateTrainStation(BlockPos position, boolean trainPresent) {
-			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select().position(position), StationBlockEntity.class,
+			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select().position(position), PlatformBlockEntity.class,
 				c -> c.putBoolean("ForceFlag", trainPresent));
 		}
 

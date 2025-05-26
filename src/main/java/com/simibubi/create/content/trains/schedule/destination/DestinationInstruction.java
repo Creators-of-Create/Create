@@ -14,7 +14,7 @@ import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.DiscoveredPath;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
-import com.simibubi.create.content.trains.station.GlobalStation;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -81,7 +81,7 @@ public class DestinationInstruction extends TextScheduleInstruction {
 	public DiscoveredPath start(ScheduleRuntime runtime, Level level) {
 		String regex = getFilterForRegex();
 		boolean anyMatch = false;
-		ArrayList<GlobalStation> validStations = new ArrayList<>();
+		ArrayList<GlobalPlatform> validStations = new ArrayList<>();
 		Train train = runtime.train;
 
 		if (!train.hasForwardConductor() && !train.hasBackwardConductor()) {
@@ -91,7 +91,7 @@ public class DestinationInstruction extends TextScheduleInstruction {
 		}
 
 
-		for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
+		for (GlobalPlatform globalStation : train.graph.getPoints(EdgePointType.STATION)) {
 			if (!globalStation.name.matches(regex))
 				continue;
 			anyMatch = true;

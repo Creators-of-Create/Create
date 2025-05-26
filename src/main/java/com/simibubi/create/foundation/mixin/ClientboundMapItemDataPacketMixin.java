@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.trains.platform.PlatformMarker;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -12,8 +14,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import com.simibubi.create.content.trains.station.StationMarker;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -46,7 +46,7 @@ public class ClientboundMapItemDataPacketMixin {
 		IntList indices = new IntArrayList();
 		for (int i = 0; i < decorations.size(); i++) {
 			MapDecoration decoration = decorations.get(i);
-			if (decoration instanceof StationMarker.Decoration) {
+			if (decoration instanceof PlatformMarker.Decoration) {
 				indices.add(i);
 			}
 		}
@@ -61,7 +61,7 @@ public class ClientboundMapItemDataPacketMixin {
 			for (int i : create$stationIndices) {
 				if (i >= 0 && i < decorations.size()) {
 					MapDecoration decoration = decorations.get(i);
-					decorations.set(i, StationMarker.Decoration.from(decoration));
+					decorations.set(i, PlatformMarker.Decoration.from(decoration));
 				}
 			}
 		}

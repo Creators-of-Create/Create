@@ -21,7 +21,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.logistics.AddressEditBox;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.box.PackageStyles;
-import com.simibubi.create.content.trains.station.NoShadowFontWrapper;
+import com.simibubi.create.content.trains.platform.NoShadowFontWrapper;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
@@ -106,7 +106,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 		BigItemStack emptyIngredient = new BigItemStack(ItemStack.EMPTY, 1);
 		NonNullList<Ingredient> ingredients = availableCraftingRecipe.getIngredients();
 		List<BigItemStack> mutableInputs = BigItemStack.duplicateWrappers(inputs);
-		
+
 		int width = Math.min(3, ingredients.size());
 		int height = Math.min(3, ingredients.size() / 3 + 1);
 
@@ -133,7 +133,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 							bigItemStack.count -= 1;
 						break;
 					}
-			
+
 			craftingIngredients.add(craftingIngredient);
 
 			if (width < 3 && (i + 1) % width == 0)

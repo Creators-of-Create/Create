@@ -246,6 +246,7 @@ import com.simibubi.create.content.trains.display.FlapDisplayBlock;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.observer.TrackObserverBlock;
 import com.simibubi.create.content.trains.signal.SignalBlock;
+import com.simibubi.create.content.trains.platform.PlatformBlock;
 import com.simibubi.create.content.trains.station.StationBlock;
 import com.simibubi.create.content.trains.track.FakeTrackBlock;
 import com.simibubi.create.content.trains.track.TrackBlock;
@@ -1637,6 +1638,19 @@ public class AllBlocks {
 		.properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
 			.sound(SoundType.NETHERITE_BLOCK))
 		.lang("Train Casing")
+		.register();
+
+	public static final BlockEntry<PlatformBlock> TRACK_PLATFORM = REGISTRATE.block("track_platform", PlatformBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.mapColor(MapColor.PODZOL)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(pickaxeOnly())
+		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+		.transform(displaySource(AllDisplaySources.STATION_SUMMARY))
+		.transform(displaySource(AllDisplaySources.TRAIN_STATUS))
+		.lang("Train Platform")
+		.item(TrackTargetingBlockItem.ofType(EdgePointType.STATION))
+		.transform(customItemModel())
 		.register();
 
 	public static final BlockEntry<StationBlock> TRACK_STATION = REGISTRATE.block("track_station", StationBlock::new)

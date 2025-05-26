@@ -151,7 +151,7 @@ public class AllPartialModels {
 		GIRDER_SEGMENT_MIDDLE = block("metal_girder/segment_middle"),
 		GIRDER_SEGMENT_BOTTOM = block("metal_girder/segment_bottom"),
 
-		TRACK_STATION_OVERLAY = block("track_overlay/station"), TRACK_SIGNAL_OVERLAY = block("track_overlay/signal"),
+		TRACK_STATION_OVERLAY = block("track_overlay/platform"), TRACK_SIGNAL_OVERLAY = block("track_overlay/signal"),
 		TRACK_ASSEMBLING_OVERLAY = block("track_overlay/assembling"),
 		TRACK_SIGNAL_DUAL_OVERLAY = block("track_overlay/signal_dual"),
 		TRACK_OBSERVER_OVERLAY = block("track_overlay/observer"),

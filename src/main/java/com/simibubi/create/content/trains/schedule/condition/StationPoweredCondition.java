@@ -2,7 +2,7 @@ package com.simibubi.create.content.trains.schedule.condition;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.Train;
-import com.simibubi.create.content.trains.station.GlobalStation;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.data.Pair;
@@ -25,7 +25,7 @@ public class StationPoweredCondition extends ScheduleWaitCondition {
 
 	@Override
 	public boolean tickCompletion(Level level, Train train, CompoundTag context) {
-		GlobalStation currentStation = train.getCurrentStation();
+		GlobalPlatform currentStation = train.getCurrentStation();
 		if (currentStation == null)
 			return false;
 		BlockPos stationPos = currentStation.getBlockEntityPos();

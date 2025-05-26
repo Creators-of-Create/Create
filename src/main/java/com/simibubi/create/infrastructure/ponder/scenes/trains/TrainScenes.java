@@ -2,7 +2,7 @@ package com.simibubi.create.infrastructure.ponder.scenes.trains;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
-import com.simibubi.create.content.trains.station.StationBlock;
+import com.simibubi.create.content.trains.platform.PlatformBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.math.Pointing;
@@ -46,7 +46,7 @@ public class TrainScenes {
 		scene.idle(20);
 
 		ElementLink<WorldSectionElement> trainElement = scene.world().showIndependentSection(train, Direction.DOWN);
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.idle(15);
 
 		BlockPos initialControlsPos = util.grid().at(3, 3, 4);
@@ -61,7 +61,7 @@ public class TrainScenes {
 			.text("Train Controls are required on every train contraption");
 		scene.idle(60);
 
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.effects().indicateSuccess(stationPos);
 		scene.world().animateTrainStation(stationPos, true);
 		scene.world().toggleControls(initialControlsPos);
@@ -128,12 +128,12 @@ public class TrainScenes {
 			.placeNearTarget()
 			.text("Trains can only be disassembled back into blocks at Stations");
 		scene.idle(40);
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.world().toggleControls(initialControlsPos);
 		scene.idle(20);
 		scene.world().showSectionAndMerge(whistle, Direction.DOWN, trainElement);
 		scene.idle(20);
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.effects().indicateSuccess(stationPos);
 		scene.world().toggleControls(initialControlsPos);
 		scene.idle(20);

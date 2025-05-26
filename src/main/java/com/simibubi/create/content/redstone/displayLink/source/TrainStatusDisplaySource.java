@@ -6,8 +6,8 @@ import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.schedule.Schedule;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime.State;
-import com.simibubi.create.content.trains.station.GlobalStation;
-import com.simibubi.create.content.trains.station.StationBlockEntity;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
+import com.simibubi.create.content.trains.platform.PlatformBlockEntity;
 
 import net.minecraft.network.chat.MutableComponent;
 
@@ -15,9 +15,9 @@ public class TrainStatusDisplaySource extends SingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		if (!(context.getSourceBlockEntity() instanceof StationBlockEntity observerBE))
+		if (!(context.getSourceBlockEntity() instanceof PlatformBlockEntity observerBE))
 			return EMPTY_LINE;
-		GlobalStation observer = observerBE.getStation();
+		GlobalPlatform observer = observerBE.getStation();
 		if (observer == null)
 			return EMPTY_LINE;
 		Train currentTrain = observer.getPresentTrain();

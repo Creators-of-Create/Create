@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains.station;
+package com.simibubi.create.content.trains.platform;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -26,17 +26,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity> {
+public class PlatformRenderer extends SafeBlockEntityRenderer<PlatformBlockEntity> {
 
-	public StationRenderer(BlockEntityRendererProvider.Context context) {
+	public PlatformRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
-	protected void renderSafe(StationBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(PlatformBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 							  int light, int overlay) {
 
 		BlockPos pos = be.getBlockPos();
-		TrackTargetingBehaviour<GlobalStation> target = be.edgePoint;
+		TrackTargetingBehaviour<GlobalPlatform> target = be.edgePoint;
 		BlockPos targetPosition = target.getGlobalPosition();
 		Level level = be.getLevel();
 
@@ -47,9 +47,9 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 		if (!(block instanceof ITrackBlock track))
 			return;
 
-		GlobalStation station = be.getStation();
+		GlobalPlatform station = be.getStation();
 		boolean isAssembling = be.getBlockState()
-			.getValue(StationBlock.ASSEMBLING);
+			.getValue(PlatformBlock.ASSEMBLING);
 
 		if (!isAssembling || (station == null || station.getPresentTrain() != null) && !be.isVirtual()) {
 			renderFlag(
@@ -111,7 +111,7 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 		ms.popPose();
 	}
 
-	public static void renderFlag(PartialModel flag, StationBlockEntity be, float partialTicks, PoseStack ms,
+	public static void renderFlag(PartialModel flag, PlatformBlockEntity be, float partialTicks, PoseStack ms,
 								  MultiBufferSource buffer, int light, int overlay) {
 		if (!be.resolveFlagAngle())
 			return;
@@ -124,7 +124,7 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 	}
 
-	public static void transformFlag(Transform<?> flag, StationBlockEntity be, float partialTicks, int yRot,
+	public static void transformFlag(Transform<?> flag, PlatformBlockEntity be, float partialTicks, int yRot,
 									 boolean flipped) {
 		float value = be.flag.getValue(partialTicks);
 		float progress = (float) (Math.pow(Math.min(value * 5, 1), 2));
@@ -142,7 +142,7 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(StationBlockEntity pBlockEntity) {
+	public boolean shouldRenderOffScreen(PlatformBlockEntity pBlockEntity) {
 		return true;
 	}
 

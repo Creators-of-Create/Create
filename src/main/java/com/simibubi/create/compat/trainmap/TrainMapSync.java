@@ -18,7 +18,7 @@ import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.signal.SignalBlock.SignalType;
 import com.simibubi.create.content.trains.signal.SignalBoundary;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
-import com.simibubi.create.content.trains.station.GlobalStation;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
 import com.simibubi.create.foundation.utility.TickBasedCache;
 
 import net.createmod.catnip.data.Pair;
@@ -309,7 +309,7 @@ public class TrainMapSync {
 		if ((runtime.getSchedule() == null || runtime.paused) && train.speed != 0)
 			entry.state = TrainState.RUNNING_MANUALLY;
 
-		GlobalStation currentStation = train.getCurrentStation();
+		GlobalPlatform currentStation = train.getCurrentStation();
 		if (currentStation != null) {
 			entry.targetStationName = currentStation.name;
 			entry.targetStationDistance = 0;

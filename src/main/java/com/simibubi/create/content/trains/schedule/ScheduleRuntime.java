@@ -15,7 +15,7 @@ import com.simibubi.create.content.trains.schedule.condition.ScheduledDelay;
 import com.simibubi.create.content.trains.schedule.destination.ChangeTitleInstruction;
 import com.simibubi.create.content.trains.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
-import com.simibubi.create.content.trains.station.GlobalStation;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
 
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
@@ -238,7 +238,7 @@ public class ScheduleRuntime {
 
 		// Current
 		if (state == State.POST_TRANSIT || current >= entryCount) {
-			GlobalStation currentStation = train.getCurrentStation();
+			GlobalPlatform currentStation = train.getCurrentStation();
 			if (currentStation != null)
 				predictions.add(createPrediction(current, currentStation.name, currentTitle, 0));
 			int departureTime = estimateStayDuration(current);
@@ -248,7 +248,7 @@ public class ScheduleRuntime {
 				accumulatedTime += departureTime;
 
 		} else {
-			GlobalStation destination = train.navigation.destination;
+			GlobalPlatform destination = train.navigation.destination;
 			if (destination != null) {
 				double speed =
 					Math.min(train.throttle * train.maxSpeed(), (train.maxSpeed() + train.maxTurnSpeed()) / 2);

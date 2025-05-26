@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains.station;
+package com.simibubi.create.content.trains.platform;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
-public class StationMarker {
+public class PlatformMarker {
 	// Not MANSION or MONUMENT to allow map extending
 	public static final MapDecoration.Type TYPE = MapDecoration.Type.RED_MARKER;
 
@@ -36,31 +36,31 @@ public class StationMarker {
 	private final Component name;
 	private final String id;
 
-	public StationMarker(BlockPos source, BlockPos target, Component name) {
+	public PlatformMarker(BlockPos source, BlockPos target, Component name) {
 		this.source = source;
 		this.target = target;
 		this.name = name;
-		id = "create:station-" + target.getX() + "," + target.getY() + "," + target.getZ();
+		id = "create:platform-" + target.getX() + "," + target.getY() + "," + target.getZ();
 	}
 
-	public static StationMarker load(CompoundTag tag) {
+	public static PlatformMarker load(CompoundTag tag) {
 		BlockPos source = NbtUtils.readBlockPos(tag.getCompound("source"));
 		BlockPos target = NbtUtils.readBlockPos(tag.getCompound("target"));
 		Component name = Component.Serializer.fromJson(tag.getString("name"));
 		if (name == null) name = CommonComponents.EMPTY;
 
-		return new StationMarker(source, target, name);
+		return new PlatformMarker(source, target, name);
 	}
 
-	public static StationMarker fromWorld(BlockGetter level, BlockPos pos) {
-		Optional<StationBlockEntity> stationOption = AllBlockEntityTypes.TRACK_STATION.get(level, pos);
+	public static PlatformMarker fromWorld(BlockGetter level, BlockPos pos) {
+		Optional<PlatformBlockEntity> stationOption = AllBlockEntityTypes.TRACK_STATION.get(level, pos);
 
 		if (stationOption.isEmpty() || stationOption.get().getStation() == null)
 			return null;
 
 		String name = stationOption.get()
 			.getStation().name;
-		return new StationMarker(pos, BlockEntityBehaviour.get(stationOption.get(), TrackTargetingBehaviour.TYPE)
+		return new PlatformMarker(pos, BlockEntityBehaviour.get(stationOption.get(), TrackTargetingBehaviour.TYPE)
 			.getPositionForMapMarker(), Component.literal(name));
 	}
 
@@ -94,7 +94,7 @@ public class StationMarker {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		StationMarker that = (StationMarker) o;
+		PlatformMarker that = (PlatformMarker) o;
 
 		if (!target.equals(that.target)) return false;
 		return name.equals(that.name);
@@ -113,7 +113,7 @@ public class StationMarker {
 		}
 
 		public static Decoration from(MapDecoration decoration) {
-			return new StationMarker.Decoration(decoration.getX(), decoration.getY(), decoration.getName());
+			return new PlatformMarker.Decoration(decoration.getX(), decoration.getY(), decoration.getName());
 		}
 
 		@Override

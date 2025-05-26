@@ -10,9 +10,9 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.compat.computercraft.implementation.CreateLuaTable;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.schedule.Schedule;
-import com.simibubi.create.content.trains.station.GlobalStation;
-import com.simibubi.create.content.trains.station.StationBlockEntity;
-import com.simibubi.create.content.trains.station.TrainEditPacket;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
+import com.simibubi.create.content.trains.platform.PlatformBlockEntity;
+import com.simibubi.create.content.trains.platform.TrainEditPacket;
 import com.simibubi.create.foundation.utility.StringHelper;
 
 import dan200.computercraft.api.lua.IArguments;
@@ -31,16 +31,16 @@ import net.minecraft.network.chat.Component;
 
 import net.minecraftforge.network.PacketDistributor;
 
-public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
+public class StationPeripheral extends SyncedPeripheral<PlatformBlockEntity> {
 
-	public StationPeripheral(StationBlockEntity blockEntity) {
+	public StationPeripheral(PlatformBlockEntity blockEntity) {
 		super(blockEntity);
 	}
 
 	@LuaFunction(mainThread = true)
 	public final void assemble() throws LuaException {
 		if (!blockEntity.isAssembling())
-			throw new LuaException("station must be in assembly mode");
+			throw new LuaException("platform must be in assembly mode");
 
 		blockEntity.assemble(null);
 
@@ -54,7 +54,7 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 	@LuaFunction(mainThread = true)
 	public final void disassemble() throws LuaException {
 		if (blockEntity.isAssembling())
-			throw new LuaException("station must not be in assembly mode");
+			throw new LuaException("platform must not be in assembly mode");
 
 		getTrainOrThrow();
 
@@ -80,9 +80,9 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 
 	@LuaFunction
 	public final String getStationName() throws LuaException {
-		GlobalStation station = blockEntity.getStation();
+		GlobalPlatform station = blockEntity.getStation();
 		if (station == null)
-			throw new LuaException("station is not connected to a track");
+			throw new LuaException("platform is not connected to a track");
 
 		return station.name;
 	}
@@ -90,32 +90,32 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 	@LuaFunction(mainThread = true)
 	public final void setStationName(String name) throws LuaException {
 		if (!blockEntity.updateName(name))
-			throw new LuaException("could not set station name");
+			throw new LuaException("could not set platform name");
 	}
 
 	@LuaFunction
 	public final boolean isTrainPresent() throws LuaException {
-		GlobalStation station = blockEntity.getStation();
+		GlobalPlatform station = blockEntity.getStation();
 		if (station == null)
-			throw new LuaException("station is not connected to a track");
+			throw new LuaException("platform is not connected to a track");
 
 		return station.getPresentTrain() != null;
 	}
 
 	@LuaFunction
 	public final boolean isTrainImminent() throws LuaException {
-		GlobalStation station = blockEntity.getStation();
+		GlobalPlatform station = blockEntity.getStation();
 		if (station == null)
-			throw new LuaException("station is not connected to a track");
+			throw new LuaException("platform is not connected to a track");
 
 		return station.getImminentTrain() != null;
 	}
 
 	@LuaFunction
 	public final boolean isTrainEnroute() throws LuaException {
-		GlobalStation station = blockEntity.getStation();
+		GlobalPlatform station = blockEntity.getStation();
 		if (station == null)
-			throw new LuaException("station is not connected to a track");
+			throw new LuaException("platform is not connected to a track");
 
 		return station.getNearestTrain() != null;
 	}
@@ -166,9 +166,9 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 	}
 
 	private @NotNull Train getTrainOrThrow() throws LuaException {
-		GlobalStation station = blockEntity.getStation();
+		GlobalPlatform station = blockEntity.getStation();
 		if (station == null)
-			throw new LuaException("station is not connected to a track");
+			throw new LuaException("platform is not connected to a track");
 
 		Train train = station.getPresentTrain();
 		if (train == null)

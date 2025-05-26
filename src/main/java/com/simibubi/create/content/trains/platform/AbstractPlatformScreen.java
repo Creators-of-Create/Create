@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains.station;
+package com.simibubi.create.content.trains.platform;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -21,17 +21,17 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public abstract class AbstractStationScreen extends AbstractSimiScreen {
+public abstract class AbstractPlatformScreen extends AbstractSimiScreen {
 
 	protected AllGuiTextures background;
-	protected StationBlockEntity blockEntity;
-	protected GlobalStation station;
+	protected PlatformBlockEntity blockEntity;
+	protected GlobalPlatform station;
 
 	protected WeakReference<Train> displayedTrain;
 
 	private IconButton confirmButton;
 
-	public AbstractStationScreen(StationBlockEntity be, GlobalStation station) {
+	public AbstractPlatformScreen(PlatformBlockEntity be, GlobalPlatform station) {
 		super(be.getBlockState()
 			.getBlock()
 			.getName());
@@ -113,7 +113,7 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 
 		if (blockEntity.resolveFlagAngle()) {
 			msr.translate(1 / 16f, -19 / 16f, -12 / 16f);
-			StationRenderer.transformFlag(msr, blockEntity, partialTicks, 180, false);
+			PlatformRenderer.transformFlag(msr, blockEntity, partialTicks, 180, false);
 			GuiGameElement.of(getFlag(partialTicks))
 				.render(graphics);
 		}

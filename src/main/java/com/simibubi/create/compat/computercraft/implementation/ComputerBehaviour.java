@@ -12,7 +12,7 @@ import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.speedController.SpeedControllerBlockEntity;
 import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGearshiftBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
-import com.simibubi.create.content.trains.station.StationBlockEntity;
+import com.simibubi.create.content.trains.platform.PlatformBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
@@ -47,7 +47,7 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
 			return () -> new SpeedGaugePeripheral(sgbe);
 		if (be instanceof StressGaugeBlockEntity sgbe)
 			return () -> new StressGaugePeripheral(sgbe);
-		if (be instanceof StationBlockEntity sbe)
+		if (be instanceof PlatformBlockEntity sbe)
 			return () -> new StationPeripheral(sbe);
 
 		throw new IllegalArgumentException(

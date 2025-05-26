@@ -5,8 +5,8 @@ import java.lang.ref.WeakReference;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.packagePort.PackagePortBlockEntity;
-import com.simibubi.create.content.trains.station.GlobalStation;
-import com.simibubi.create.content.trains.station.GlobalStation.GlobalPackagePort;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
+import com.simibubi.create.content.trains.platform.GlobalPlatform.GlobalPackagePort;
 
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class PostboxBlockEntity extends PackagePortBlockEntity {
 
-	public WeakReference<GlobalStation> trackedGlobalStation;
+	public WeakReference<GlobalPlatform> trackedGlobalStation;
 
 	public LerpedFloat flag;
 	public boolean forceFlag;
@@ -94,7 +94,7 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 	public void onChunkUnloaded() {
 		if (level == null || level.isClientSide)
 			return;
-		GlobalStation station = trackedGlobalStation.get();
+		GlobalPlatform station = trackedGlobalStation.get();
 		if (station == null)
 			return;
 		if (!station.connectedPorts.containsKey(worldPosition))

@@ -2,7 +2,7 @@ package com.simibubi.create.infrastructure.ponder.scenes.trains;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.trains.station.StationBlock;
+import com.simibubi.create.content.trains.platform.PlatformBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.math.Pointing;
@@ -97,7 +97,7 @@ public class TrainStationScenes {
 			.text("To create a new Train, open the UI and switch to Assembly Mode");
 		scene.idle(50);
 
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.effects().indicateSuccess(stationPos);
 
 		scene.idle(20);
@@ -110,7 +110,7 @@ public class TrainStationScenes {
 			.pointAt(marker)
 			.placeNearTarget()
 			.colored(PonderPalette.RED)
-			.text("During Assembly no scheduled trains will approach this station");
+			.text("During Assembly no scheduled trains will approach this platform");
 		scene.idle(85);
 
 		ItemStack casing = AllBlocks.RAILWAY_CASING.asStack();
@@ -253,7 +253,7 @@ public class TrainStationScenes {
 
 		scene.world().toggleControls(util.grid().at(10, 3, 6));
 		scene.world().toggleControls(util.grid().at(8, 3, 6));
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.effects().indicateSuccess(stationPos);
 		scene.world().animateTrainStation(stationPos, true);
 		scene.idle(20);
@@ -295,7 +295,7 @@ public class TrainStationScenes {
 			.placeNearTarget()
 			.attachKeyFrame()
 			.colored(PonderPalette.BLUE)
-			.text("When used on a station, maps will add a labeled marker at the location");
+			.text("When used on a platform, maps will add a labeled marker at the location");
 		scene.idle(70);
 
 		for (int i = 8; i >= 3; i--) {
@@ -498,7 +498,7 @@ public class TrainStationScenes {
 			.pointAt(target)
 			.placeNearTarget()
 			.attachKeyFrame()
-			.text("The Schedule placed on a station will automatically copy itself to present trains");
+			.text("The Schedule placed on a platform will automatically copy itself to present trains");
 		scene.idle(90);
 
 		scene.world().moveSection(trainElement, util.vector().of(8, 0, 0), 30);

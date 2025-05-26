@@ -133,7 +133,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		clearBtn.setToolTip(CreateLang.translateDirect("gui.clipboard.erase_checked"));
 		closeBtn = new IconButton(x + 234, y + 175, AllIcons.I_PRIORITY_VERY_LOW)
 			.withCallback(() -> minecraft.setScreen(null));
-		closeBtn.setToolTip(CreateLang.translateDirect("station.close"));
+		closeBtn.setToolTip(CreateLang.translateDirect("platform.close"));
 		addRenderableWidget(closeBtn);
 		addRenderableWidget(clearBtn);
 

@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.packagePort;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTags.AllItemTags;
-import com.simibubi.create.content.trains.station.StationBlockEntity;
+import com.simibubi.create.content.trains.platform.PlatformBlockEntity;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -57,7 +57,7 @@ public class PackagePortTargetSelectionHandler {
 			return false;
 
 		BlockPos pos = bhr.getBlockPos();
-		if (!(mc.level.getBlockEntity(pos) instanceof StationBlockEntity sbe))
+		if (!(mc.level.getBlockEntity(pos) instanceof PlatformBlockEntity sbe))
 			return false;
 		if (sbe.edgePoint == null)
 			return false;

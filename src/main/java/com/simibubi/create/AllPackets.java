@@ -98,9 +98,9 @@ import com.simibubi.create.content.trains.graph.TrackGraphRollCallPacket;
 import com.simibubi.create.content.trains.graph.TrackGraphSyncPacket;
 import com.simibubi.create.content.trains.schedule.ScheduleEditPacket;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroupPacket;
-import com.simibubi.create.content.trains.station.StationEditPacket;
-import com.simibubi.create.content.trains.station.TrainEditPacket;
-import com.simibubi.create.content.trains.station.TrainEditPacket.TrainEditReturnPacket;
+import com.simibubi.create.content.trains.platform.PlatformEditPacket;
+import com.simibubi.create.content.trains.platform.TrainEditPacket;
+import com.simibubi.create.content.trains.platform.TrainEditPacket.TrainEditReturnPacket;
 import com.simibubi.create.content.trains.track.CurvedTrackDestroyPacket;
 import com.simibubi.create.content.trains.track.CurvedTrackSelectionPacket;
 import com.simibubi.create.content.trains.track.PlaceExtendedCurvePacket;
@@ -164,7 +164,7 @@ public enum AllPackets {
 	TOOLBOX_EQUIP(ToolboxEquipPacket.class, ToolboxEquipPacket::new, PLAY_TO_SERVER),
 	TOOLBOX_DISPOSE_ALL(ToolboxDisposeAllPacket.class, ToolboxDisposeAllPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_SCHEDULE(ScheduleEditPacket.class, ScheduleEditPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_STATION(StationEditPacket.class, StationEditPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_STATION(PlatformEditPacket.class, PlatformEditPacket::new, PLAY_TO_SERVER),
 	C_CONFIGURE_TRAIN(TrainEditPacket.class, TrainEditPacket::new, PLAY_TO_SERVER),
 	RELOCATE_TRAIN(TrainRelocationPacket.class, TrainRelocationPacket::new, PLAY_TO_SERVER),
 	CONTROLS_INPUT(ControlsInputPacket.class, ControlsInputPacket::new, PLAY_TO_SERVER),

@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains.station;
+package com.simibubi.create.content.trains.platform;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -35,7 +35,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 
-public class StationScreen extends AbstractStationScreen {
+public class PlatformScreen extends AbstractPlatformScreen {
 
 	private EditBox nameBox;
 	private EditBox trainNameBox;
@@ -52,7 +52,7 @@ public class StationScreen extends AbstractStationScreen {
 
 	private boolean switchingToAssemblyMode;
 
-	public StationScreen(StationBlockEntity be, GlobalStation station) {
+	public PlatformScreen(PlatformBlockEntity be, GlobalPlatform station) {
 		super(be, station);
 		background = AllGuiTextures.STATION;
 		leavingAnimation = 0;
@@ -102,10 +102,10 @@ public class StationScreen extends AbstractStationScreen {
 		dropScheduleButton.active = false;
 		dropScheduleButton.visible = false;
 		dropScheduleButton.withCallback(() -> AllPackets.getChannel()
-			.sendToServer(StationEditPacket.dropSchedule(blockEntity.getBlockPos())));
+			.sendToServer(PlatformEditPacket.dropSchedule(blockEntity.getBlockPos())));
 		addRenderableWidget(dropScheduleButton);
 
-		colorTypeScroll = new ScrollInput(x + 166, y + 17, 22, 14).titled(CreateLang.translateDirect("station.train_map_color"));
+		colorTypeScroll = new ScrollInput(x + 166, y + 17, 22, 14).titled(CreateLang.translateDirect("platform.train_map_color"));
 		colorTypeScroll.withRange(0, 16);
 		colorTypeScroll.withStepFunction(ctx -> colorTypeScroll.standardStep()
 			.apply(ctx));
@@ -244,7 +244,7 @@ public class StationScreen extends AbstractStationScreen {
 
 		if (blockEntity.trainHasSchedule)
 			dropScheduleButton.setToolTip(CreateLang.translateDirect(
-				blockEntity.trainHasAutoSchedule ? "station.remove_auto_schedule" : "station.remove_schedule"));
+				blockEntity.trainHasAutoSchedule ? "platform.remove_auto_schedule" : "platform.remove_schedule"));
 		else
 			dropScheduleButton.getToolTip()
 				.clear();
@@ -259,16 +259,16 @@ public class StationScreen extends AbstractStationScreen {
 
 	private void updateAssemblyTooltip(String key) {
 		if (key == null) {
-			disassembleTrainButton.setToolTip(CreateLang.translateDirect("station.disassemble_train"));
-			newTrainButton.setToolTip(CreateLang.translateDirect("station.create_train"));
+			disassembleTrainButton.setToolTip(CreateLang.translateDirect("platform.disassemble_train"));
+			newTrainButton.setToolTip(CreateLang.translateDirect("platform.create_train"));
 			return;
 		}
 		for (IconButton ib : new IconButton[]{disassembleTrainButton, newTrainButton}) {
 			List<Component> toolTip = ib.getToolTip();
 			toolTip.clear();
-			toolTip.add(CreateLang.translateDirect("station." + key)
+			toolTip.add(CreateLang.translateDirect("platform." + key)
 				.withStyle(ChatFormatting.GRAY));
-			toolTip.add(CreateLang.translateDirect("station." + key + "_1")
+			toolTip.add(CreateLang.translateDirect("platform." + key + "_1")
 				.withStyle(ChatFormatting.GRAY));
 		}
 	}
@@ -288,7 +288,7 @@ public class StationScreen extends AbstractStationScreen {
 
 		Train train = displayedTrain.get();
 		if (train == null) {
-			MutableComponent header = CreateLang.translateDirect("station.idle");
+			MutableComponent header = CreateLang.translateDirect("platform.idle");
 			graphics.drawString(font, header, x + 97 - font.width(header) / 2, y + 47, 0x7A7A7A, false);
 			return;
 		}
@@ -413,7 +413,7 @@ public class StationScreen extends AbstractStationScreen {
 			.equals(station.name))
 			AllPackets.getChannel()
 				.sendToServer(
-					StationEditPacket.configure(blockEntity.getBlockPos(), false, nameBox.getValue(), doorControl));
+					PlatformEditPacket.configure(blockEntity.getBlockPos(), false, nameBox.getValue(), doorControl));
 	}
 
 	@Override
@@ -422,7 +422,7 @@ public class StationScreen extends AbstractStationScreen {
 		if (nameBox == null || trainNameBox == null)
 			return;
 		AllPackets.getChannel()
-			.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), switchingToAssemblyMode,
+			.sendToServer(PlatformEditPacket.configure(blockEntity.getBlockPos(), switchingToAssemblyMode,
 				nameBox.getValue(), doorControl));
 		Train train = displayedTrain.get();
 		if (train == null)

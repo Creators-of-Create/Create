@@ -1,7 +1,7 @@
 package com.simibubi.create.infrastructure.ponder.scenes;
 
 import com.simibubi.create.content.contraptions.actors.roller.RollerBlockEntity;
-import com.simibubi.create.content.trains.station.StationBlock;
+import com.simibubi.create.content.trains.platform.PlatformBlock;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
@@ -59,7 +59,7 @@ public class RollerScenes {
 		scene.idle(5);
 		scene.world().showSectionAndMerge(rollers, Direction.EAST, trainLink);
 		scene.idle(15);
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.world().animateTrainStation(stationPos, true);
 
 		scene.overlay().showText(60)
@@ -69,7 +69,7 @@ public class RollerScenes {
 			.placeNearTarget();
 		scene.idle(70);
 
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.world().animateTrainStation(stationPos, false);
 		scene.world().showSection(someRubble, Direction.DOWN);
 		scene.world().toggleControls(controlsPos);
@@ -139,7 +139,7 @@ public class RollerScenes {
 		scene.idle(5);
 		scene.world().showSectionAndMerge(rollers, Direction.EAST, trainLink);
 		scene.idle(15);
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.world().animateTrainStation(stationPos, true);
 		scene.world().hideSection(someRubble, Direction.DOWN);
 
@@ -168,7 +168,7 @@ public class RollerScenes {
 		scene.idle(60);
 
 		scene.world().restoreBlocks(someRubble);
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.world().animateTrainStation(stationPos, false);
 		scene.world().showSection(someRubble, Direction.DOWN);
 		scene.world().toggleControls(controlsPos);
@@ -368,7 +368,7 @@ public class RollerScenes {
 		scene.idle(7);
 		scene.world().setFilterData(rollers, RollerBlockEntity.class, paveItem);
 		scene.idle(10);
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.world().animateTrainStation(stationPos, false);
 		scene.world().toggleControls(controlsPos);
 		scene.idle(20);
@@ -419,7 +419,7 @@ public class RollerScenes {
 
 		// 2
 
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.world().animateTrainStation(stationPos, true);
 		birbLink = scene.special().createBirb(util.vector().centerOf(8, 7, 4), ParrotPose.FacePointOfInterestPose::new);
 		trainLink = scene.world().showIndependentSection(train, Direction.DOWN);
@@ -430,7 +430,7 @@ public class RollerScenes {
 		scene.overlay().showControls(filterSlot, Pointing.DOWN, 40).showing(AllIcons.I_ROLLER_WIDE_FILL);
 		scene.idle(45);
 
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.world().animateTrainStation(stationPos, false);
 		scene.world().toggleControls(controlsPos);
 		scene.idle(20);
@@ -482,7 +482,7 @@ public class RollerScenes {
 
 		// 3
 
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.world().animateTrainStation(stationPos, true);
 		scene.world().showSection(util.select().fromTo(5, 1, 3, 0, 3, 5), Direction.NORTH);
 		birbLink = scene.special().createBirb(util.vector().centerOf(8, 7, 4), ParrotPose.FacePointOfInterestPose::new);
@@ -491,7 +491,7 @@ public class RollerScenes {
 		scene.world().showSectionAndMerge(rollers, Direction.EAST, trainLink);
 		scene.idle(25);
 
-		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
+		scene.world().cycleBlockProperty(stationPos, PlatformBlock.ASSEMBLING);
 		scene.world().animateTrainStation(stationPos, false);
 		scene.world().toggleControls(controlsPos);
 		scene.idle(20);

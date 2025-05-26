@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.simibubi.create.content.trains.platform.PlatformMarker;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,9 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.google.common.collect.Maps;
-import com.simibubi.create.content.trains.station.StationBlockEntity;
-import com.simibubi.create.content.trains.station.StationMapData;
-import com.simibubi.create.content.trains.station.StationMarker;
+import com.simibubi.create.content.trains.platform.PlatformBlockEntity;
+import com.simibubi.create.content.trains.platform.PlatformMapData;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +30,7 @@ import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 @Mixin(MapItemSavedData.class)
-public class MapItemSavedDataMixin implements StationMapData {
+public class MapItemSavedDataMixin implements PlatformMapData {
 	@Unique
 	private static final String STATION_MARKERS_KEY = "create:stations";
 
@@ -53,7 +54,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 	private int trackedDecorationCount;
 
 	@Unique
-	private final Map<String, StationMarker> create$stationMarkers = Maps.newHashMap();
+	private final Map<String, PlatformMarker> create$stationMarkers = Maps.newHashMap();
 
 	@Inject(
 			method = "load(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;",
@@ -61,11 +62,11 @@ public class MapItemSavedDataMixin implements StationMapData {
 	)
 	private static void create$onLoad(CompoundTag compound, CallbackInfoReturnable<MapItemSavedData> cir) {
 		MapItemSavedData mapData = cir.getReturnValue();
-		StationMapData stationMapData = (StationMapData) mapData;
+		PlatformMapData stationMapData = (PlatformMapData) mapData;
 
 		ListTag listTag = compound.getList(STATION_MARKERS_KEY, Tag.TAG_COMPOUND);
 		for (int i = 0; i < listTag.size(); ++i) {
-			StationMarker stationMarker = StationMarker.load(listTag.getCompound(i));
+			PlatformMarker stationMarker = PlatformMarker.load(listTag.getCompound(i));
 			stationMapData.addStationMarker(stationMarker);
 		}
 	}
@@ -76,14 +77,14 @@ public class MapItemSavedDataMixin implements StationMapData {
 	)
 	public void create$onSave(CompoundTag compound, CallbackInfoReturnable<CompoundTag> cir) {
 		ListTag listTag = new ListTag();
-		for (StationMarker stationMarker : create$stationMarkers.values()) {
+		for (PlatformMarker stationMarker : create$stationMarkers.values()) {
 			listTag.add(stationMarker.save());
 		}
 		compound.put(STATION_MARKERS_KEY, listTag);
 	}
 
 	@Override
-	public void addStationMarker(StationMarker marker) {
+	public void addStationMarker(PlatformMarker marker) {
 		create$stationMarkers.put(marker.getId(), marker);
 
 		int scaleMultiplier = 1 << scale;
@@ -98,7 +99,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 		byte localXByte = (byte) (int) (localX * 2.0F + 0.5F);
 		byte localZByte = (byte) (int) (localZ * 2.0F + 0.5F);
 
-		MapDecoration decoration = new StationMarker.Decoration(localXByte, localZByte, marker.getName());
+		MapDecoration decoration = new PlatformMarker.Decoration(localXByte, localZByte, marker.getName());
 		MapDecoration oldDecoration = decorations.put(marker.getId(), decoration);
 		if (!decoration.equals(oldDecoration)) {
 			if (oldDecoration != null && oldDecoration.getType().shouldTrackCount()) {
@@ -129,7 +130,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 	}
 
 	@Override
-	public boolean toggleStation(LevelAccessor level, BlockPos pos, StationBlockEntity stationBlockEntity) {
+	public boolean toggleStation(LevelAccessor level, BlockPos pos, PlatformBlockEntity stationBlockEntity) {
 		double xCenter = pos.getX() + 0.5D;
 		double zCenter = pos.getZ() + 0.5D;
 		int scaleMultiplier = 1 << scale;
@@ -140,7 +141,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 		if (localX < -63.0D || localX > 63.0D || localZ < -63.0D || localZ > 63.0D)
 			return false;
 
-		StationMarker marker = StationMarker.fromWorld(level, pos);
+		PlatformMarker marker = PlatformMarker.fromWorld(level, pos);
 		if (marker == null)
 			return false;
 
@@ -167,13 +168,13 @@ public class MapItemSavedDataMixin implements StationMapData {
 
 	@Unique
 	private void create$checkStations(BlockGetter blockGetter, int x, int z) {
-		Iterator<StationMarker> iterator = create$stationMarkers.values().iterator();
-		List<StationMarker> newMarkers = new ArrayList<>();
+		Iterator<PlatformMarker> iterator = create$stationMarkers.values().iterator();
+		List<PlatformMarker> newMarkers = new ArrayList<>();
 
 		while (iterator.hasNext()) {
-			StationMarker marker = iterator.next();
+			PlatformMarker marker = iterator.next();
 			if (marker.getTarget().getX() == x && marker.getTarget().getZ() == z) {
-				StationMarker other = StationMarker.fromWorld(blockGetter, marker.getSource());
+				PlatformMarker other = PlatformMarker.fromWorld(blockGetter, marker.getSource());
 				if (!marker.equals(other)) {
 					iterator.remove();
 					removeDecoration(marker.getId());
@@ -185,7 +186,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 			}
 		}
 
-		for (StationMarker marker : newMarkers) {
+		for (PlatformMarker marker : newMarkers) {
 			addStationMarker(marker);
 		}
 	}

@@ -39,7 +39,7 @@ import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlock;
 import com.simibubi.create.content.logistics.vault.ItemVaultBlock;
 import com.simibubi.create.content.redstone.link.RedstoneLinkBlock;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
-import com.simibubi.create.content.trains.station.StationBlock;
+import com.simibubi.create.content.trains.platform.PlatformBlock;
 import com.simibubi.create.content.trains.track.ITrackBlock;
 
 import net.minecraft.core.BlockPos;
@@ -208,7 +208,7 @@ public class BlockMovementChecksImpl {
 			return true;
 		if (state.getBlock() instanceof ITrackBlock)
 			return false;
-		if (state.getBlock() instanceof StationBlock)
+		if (state.getBlock() instanceof PlatformBlock)
 			return false;
 		return state.getPistonPushReaction() != PushReaction.BLOCK;
 	}

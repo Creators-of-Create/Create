@@ -10,7 +10,7 @@ import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEnti
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity.ConnectedPort;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity.ConnectionStats;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorPackage;
-import com.simibubi.create.content.trains.station.StationBlockEntity;
+import com.simibubi.create.content.trains.platform.PlatformBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -228,13 +228,13 @@ public abstract class PackagePortTarget {
 
 		@Override
 		public void register(PackagePortBlockEntity ppbe, LevelAccessor level, BlockPos portPos) {
-			if (be(level, portPos) instanceof StationBlockEntity sbe)
+			if (be(level, portPos) instanceof PlatformBlockEntity sbe)
 				sbe.attachPackagePort(ppbe);
 		}
 
 		@Override
 		public void deregister(PackagePortBlockEntity ppbe, LevelAccessor level, BlockPos portPos) {
-			if (be(level, portPos) instanceof StationBlockEntity sbe)
+			if (be(level, portPos) instanceof PlatformBlockEntity sbe)
 				sbe.removePackagePort(ppbe);
 		}
 

@@ -37,7 +37,7 @@ import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts.
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerRenderer;
-import com.simibubi.create.content.trains.station.NoShadowFontWrapper;
+import com.simibubi.create.content.trains.platform.NoShadowFontWrapper;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.ScreenWithStencils;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
@@ -1362,7 +1362,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		}
 
 		PackageOrderWithCrafts order = PackageOrderWithCrafts.simple(itemsToOrder);
-		
+
 		if (canRequestCraftingPackage && !itemsToOrder.isEmpty() && !recipesToOrder.isEmpty()) {
 			List<CraftingEntry> craftList = new ArrayList<>();
 			for (CraftableBigItemStack cbis : recipesToOrder) {
@@ -1371,13 +1371,13 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 				int craftedCount = 0;
 				int targetCount = cbis.count / cbis.getOutputCount(blockEntity.getLevel());
 				List<BigItemStack> mutableOrder = BigItemStack.duplicateWrappers(itemsToOrder);
-				
+
 				while (craftedCount < targetCount) {
 					// Carefully split the ordered recipes based on what exactly will be used to craft them
 					PackageOrder pattern = new PackageOrder(FactoryPanelScreen.convertRecipeToPackageOrderContext(cr, mutableOrder, true));
 					int maxCrafts = targetCount - craftedCount;
 					int availableCrafts = 0;
-					
+
 					boolean itemsExhausted = false;
 					Outer: while (availableCrafts < maxCrafts && !itemsExhausted) {
 						List<BigItemStack> previousSnapshot = BigItemStack.duplicateWrappers(mutableOrder);
@@ -1399,14 +1399,14 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 						}
 						availableCrafts++;
 					}
-					
+
 					if (availableCrafts == 0)
 						break;
-					
+
 					craftList.add(new CraftingEntry(pattern, availableCrafts));
 					craftedCount += availableCrafts;
 				}
-				
+
 			}
 			order = new PackageOrderWithCrafts(order.orderedStacks(), craftList);
 		}
@@ -1644,12 +1644,12 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		for (List<BigItemStack> list : validIngredients)
 			list.remove(chosen);
 	}
-	
+
 	private List<List<BigItemStack>> resolveIngredientAmounts(List<List<BigItemStack>> validIngredients) {
 		List<List<BigItemStack>> resolvedIngredients = new ArrayList<>();
 		for (int i = 0; i < validIngredients.size(); i++)
 			resolvedIngredients.add(new ArrayList<>());
-		
+
 		boolean everythingTaken = false;
 		while (!everythingTaken) {
 			everythingTaken = true;
@@ -1659,23 +1659,23 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 				for (BigItemStack bigItemStack : list) {
 					if (bigItemStack.count == 0)
 						continue;
-					
+
 					bigItemStack.count -= 1;
 					everythingTaken = false;
-					
+
 					for (BigItemStack resolvedItemStack : resolvedList) {
 						if (resolvedItemStack.stack == bigItemStack.stack) {
 							resolvedItemStack.count++;
 							continue Ingredients;
 						}
 					}
-					
+
 					resolvedList.add(new BigItemStack(bigItemStack.stack, 1));
 					continue Ingredients;
 				}
 			}
 		}
-		
+
 		return resolvedIngredients;
 	}
 

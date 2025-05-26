@@ -24,7 +24,7 @@ import com.simibubi.create.content.trains.TrainHUDUpdatePacket;
 import com.simibubi.create.content.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.content.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.trains.graph.TrackGraph;
-import com.simibubi.create.content.trains.station.GlobalStation;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -594,7 +594,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		boolean slow = inverted ^ targetSpeed < 0;
 		boolean spaceDown = heldControls.contains(4);
-		GlobalStation currentStation = carriage.train.getCurrentStation();
+		GlobalPlatform currentStation = carriage.train.getCurrentStation();
 		if (currentStation != null && spaceDown) {
 			sendPrompt(player, CreateLang.translateDirect("train.arrived_at",
 				Component.literal(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
@@ -640,7 +640,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			}
 
 			double directedSpeed = targetSpeed != 0 ? targetSpeed : carriage.train.speed;
-			GlobalStation lookAhead = nav.findNearestApproachable(
+			GlobalPlatform lookAhead = nav.findNearestApproachable(
 				!carriage.train.doubleEnded || (directedSpeed != 0 ? directedSpeed > 0 : !inverted));
 
 			if (lookAhead != null) {
@@ -687,7 +687,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	boolean stationMessage = false;
 
-	private void displayApproachStationMessage(Player player, GlobalStation station) {
+	private void displayApproachStationMessage(Player player, GlobalPlatform station) {
 		sendPrompt(player, CreateLang.translateDirect("contraption.controls.approach_station",
 			Component.keybind("key.jump"), station.name), false);
 		stationMessage = true;

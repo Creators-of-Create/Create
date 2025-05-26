@@ -21,7 +21,7 @@ import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
-import com.simibubi.create.content.trains.station.GlobalStation;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
 import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -76,7 +76,7 @@ public class TrainMapManager {
 		graphics.bufferSource()
 			.endBatch();
 
-		if (hoveredElement instanceof GlobalStation station) {
+		if (hoveredElement instanceof GlobalPlatform station) {
             return List.of(Component.literal(station.name));
         }
 
@@ -238,7 +238,7 @@ public class TrainMapManager {
 		RenderSystem.enableDepthTest();
 
 		for (TrackGraph graph : CreateClient.RAILWAYS.trackNetworks.values()) {
-			for (GlobalStation station : graph.getPoints(EdgePointType.STATION)) {
+			for (GlobalPlatform station : graph.getPoints(EdgePointType.STATION)) {
 
 				Couple<TrackNodeLocation> edgeLocation = station.edgeLocation;
 				TrackNode node = graph.locateNode(edgeLocation.getFirst());

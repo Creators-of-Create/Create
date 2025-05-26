@@ -16,8 +16,8 @@ import com.simibubi.create.content.trains.graph.DiscoveredPath;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime.State;
-import com.simibubi.create.content.trains.station.GlobalStation;
-import com.simibubi.create.content.trains.station.GlobalStation.GlobalPackagePort;
+import com.simibubi.create.content.trains.platform.GlobalPlatform;
+import com.simibubi.create.content.trains.platform.GlobalPlatform.GlobalPackagePort;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.data.Pair;
@@ -69,7 +69,7 @@ public class DeliverPackagesInstruction extends ScheduleInstruction {
 	public DiscoveredPath start(ScheduleRuntime runtime, Level level) {
 		boolean anyMatch = false;
 		String firstPackage = null;
-		ArrayList<GlobalStation> validStations = new ArrayList<>();
+		ArrayList<GlobalPlatform> validStations = new ArrayList<>();
 		Train train = runtime.train;
 
 		if (!train.hasForwardConductor() && !train.hasBackwardConductor()) {
@@ -83,14 +83,14 @@ public class DeliverPackagesInstruction extends ScheduleInstruction {
 			if (carriageInventory == null)
 				continue;
 
-			// Export to station
+			// Export to platform
 			for (int slot = 0; slot < carriageInventory.getSlots(); slot++) {
 				ItemStack stack = carriageInventory.getStackInSlot(slot);
 				if (!PackageItem.isPackage(stack))
 					continue;
 				if (firstPackage == null)
 					firstPackage = PackageItem.getAddress(stack);
-				for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
+				for (GlobalPlatform globalStation : train.graph.getPoints(EdgePointType.STATION)) {
 					for (Entry<BlockPos, GlobalPackagePort> port : globalStation.connectedPorts.entrySet()) {
 						if (!PackageItem.matchAddress(stack, port.getValue().address))
 							continue;
