@@ -63,7 +63,7 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellBlockEntity
 		if (!AllBlocks.PECULIAR_BELL.has(state))
 			return state;
 
-		if (!new HauntingType().isValidAt(world, pos.below()))
+		if (!AllFanProcessingTypes.HAUNTING.isValidAt(world, pos.below()))
 			return state;
 
 		if (world.isClientSide()) {
