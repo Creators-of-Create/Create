@@ -222,7 +222,7 @@ public class ToolboxInventory extends ItemStackHandler {
 	private static ToolboxInventory deserialize(ItemSlots slots, List<ItemStack> filters) {
 		ToolboxInventory inventory = new ToolboxInventory(null);
 		slots.forEach(inventory::setStackInSlot);
-		inventory.filters = filters;
+		inventory.filters = new ArrayList<>(filters);
 		return inventory;
 	}
 
