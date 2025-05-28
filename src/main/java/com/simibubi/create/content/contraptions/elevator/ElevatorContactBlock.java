@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
 import com.simibubi.create.content.contraptions.elevator.ElevatorColumn.ColumnCoords;
 import com.simibubi.create.content.redstone.contact.RedstoneContactBlock;
@@ -229,7 +229,7 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 		BlockHitResult hit) {
-		if (player != null && AllItems.WRENCH.isIn(player.getItemInHand(handIn)))
+		if (player != null && AllItemTags.CREATE_WRENCH.matches(player.getItemInHand(handIn)))
 			return InteractionResult.PASS;
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 			() -> () -> withBlockEntityDo(worldIn, pos, be -> this.displayScreen(be, player)));

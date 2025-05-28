@@ -6,8 +6,6 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.elevator.ElevatorControlsHandler;
 import com.simibubi.create.content.contraptions.wrench.RadialWrenchHandler;
 import com.simibubi.create.content.equipment.toolbox.ToolboxHandlerClient;
-import com.simibubi.create.content.equipment.wrench.IWrenchable;
-import com.simibubi.create.content.equipment.wrench.WrenchItem;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorConnectionHandler;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorInteractionHandler;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainPackageInteractionHandler;
@@ -115,10 +113,10 @@ public class InputEvents {
 			event.setCanceled(true);
 			return;
 		}
-		
+
 		if (mc.player != null) {
 			ItemStack itemInHand = mc.player.getItemInHand(event.getHand());
-			if (AllItemTags.WRENCH.matches(itemInHand))
+			if (AllItemTags.FORGE_WRENCH.matches(itemInHand))
 				return;
 			if (itemInHand.is(Items.CHAIN) || AllBlocks.PACKAGE_FROGPORT.isIn(itemInHand))
 				return;

@@ -4,8 +4,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.core.BlockPos;
@@ -62,7 +62,7 @@ public class ValveHandleBlock extends HandCrankBlock {
 			return;
 		if (!player.mayBuild())
 			return;
-		if (AllItems.WRENCH.isIn(player.getItemInHand(event.getHand())) && player.isShiftKeyDown())
+		if (AllItemTags.CREATE_WRENCH.matches(player.getItemInHand(event.getHand())) && player.isShiftKeyDown())
 			return;
 
 		if (vhb.clicked(level, pos, blockState, player, event.getHand())) {

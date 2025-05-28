@@ -1,8 +1,8 @@
 package com.simibubi.create.content.trains.track;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.trains.track.TrackBlockOutline.BezierPointSelection;
 import com.simibubi.create.foundation.utility.CreateLang;
 
@@ -126,7 +126,7 @@ public class CurvedTrackInteraction {
 				player.swing(InteractionHand.MAIN_HAND);
 				return true;
 			}
-			if (AllItems.WRENCH.isIn(heldItem) && player.isShiftKeyDown()) {
+			if (AllItemTags.CREATE_WRENCH.matches(heldItem) && player.isShiftKeyDown()) {
 				AllPackets.getChannel()
 					.sendToServer(new CurvedTrackDestroyPacket(result.blockEntity()
 						.getBlockPos(),

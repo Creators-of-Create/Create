@@ -2,8 +2,8 @@ package com.simibubi.create.content.logistics.packager;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
@@ -103,7 +103,7 @@ public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<Pac
 			return InteractionResult.PASS;
 
 		ItemStack itemInHand = player.getItemInHand(handIn);
-		if (AllItems.WRENCH.isIn(itemInHand))
+		if (AllItemTags.CREATE_WRENCH.matches(itemInHand))
 			return InteractionResult.PASS;
 		if (AllBlocks.FACTORY_GAUGE.isIn(itemInHand))
 			return InteractionResult.PASS;

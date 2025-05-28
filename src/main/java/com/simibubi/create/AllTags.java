@@ -181,6 +181,7 @@ public class AllTags {
 		CASING,
 		CONTRAPTION_CONTROLLED,
 		CREATE_INGOTS,
+		CREATE_WRENCH(MOD, "wrench"),
 		CRUSHED_RAW_MATERIALS,
 		INVALID_FOR_TRACK_PAVING,
 		DEPLOYABLE_DRINK,
@@ -208,7 +209,7 @@ public class AllTags {
 		STRIPPED_WOOD(FORGE),
 		PLATES(FORGE),
 		OBSIDIAN_DUST(FORGE, "dusts/obsidian"),
-		WRENCH(FORGE, "tools/wrench"),
+		FORGE_WRENCH(FORGE, "tools/wrench"),
 
 		ALLURITE(MOD, "stone_types/galosphere/allurite"),
 		AMETHYST(MOD, "stone_types/galosphere/amethyst"),

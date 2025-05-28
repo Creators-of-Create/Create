@@ -7,8 +7,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.processing.AssemblyOperatorUseContext;
 import com.simibubi.create.foundation.block.IBE;
@@ -109,7 +109,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 				return InteractionResult.SUCCESS;
 		}
 
-		if (AllItems.WRENCH.isIn(heldByPlayer))
+		if (AllItemTags.CREATE_WRENCH.matches(heldByPlayer))
 			return InteractionResult.PASS;
 
 		Vec3 normal = Vec3.atLowerCornerOf(state.getValue(FACING)

@@ -4,9 +4,9 @@ import java.util.Optional;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.logistics.depot.EjectorBlockEntity.State;
 import com.simibubi.create.foundation.block.IBE;
@@ -147,7 +147,7 @@ public class EjectorBlock extends HorizontalKineticBlock implements IBE<EjectorB
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult ray) {
-		if (AllItems.WRENCH.isIn(player.getItemInHand(hand)))
+		if (AllItemTags.CREATE_WRENCH.matches(player.getItemInHand(hand)))
 			return InteractionResult.PASS;
 		return SharedDepotBlockMethods.onUse(state, world, pos, player, hand, ray);
 	}

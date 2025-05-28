@@ -372,7 +372,7 @@ public class AllItems {
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
 		.properties(p -> p.stacksTo(1))
 		.model(AssetLookup.itemModelWithPartials())
-		.tag(AllItemTags.WRENCH.tag)
+		.tag(AllItemTags.FORGE_WRENCH.tag, AllItemTags.CREATE_WRENCH.tag)
 		.register();
 
 	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =

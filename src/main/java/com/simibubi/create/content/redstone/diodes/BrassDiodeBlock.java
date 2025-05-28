@@ -2,7 +2,7 @@ package com.simibubi.create.content.redstone.diodes;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
@@ -45,7 +45,7 @@ public class BrassDiodeBlock extends AbstractDiodeBlock implements IBE<BrassDiod
 			return InteractionResult.PASS;
 		if (player.isShiftKeyDown())
 			return InteractionResult.PASS;
-		if (AllItems.WRENCH.isIn(player.getItemInHand(pHand)))
+		if (AllItemTags.CREATE_WRENCH.matches(player.getItemInHand(pHand)))
 			return InteractionResult.PASS;
 		if (pLevel.isClientSide)
 			return InteractionResult.SUCCESS;

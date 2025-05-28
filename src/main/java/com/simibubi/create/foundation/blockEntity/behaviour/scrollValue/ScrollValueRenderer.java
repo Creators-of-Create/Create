@@ -3,8 +3,8 @@ package com.simibubi.create.foundation.blockEntity.behaviour.scrollValue;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -54,7 +54,7 @@ public class ScrollValueRenderer {
 
 			ItemStack mainhandItem = mc.player.getItemInHand(InteractionHand.MAIN_HAND);
 			boolean clipboard = behaviour.bypassesInput(mainhandItem);
-			if (behaviour.needsWrench && !AllItems.WRENCH.isIn(mainhandItem) && !clipboard)
+			if (behaviour.needsWrench && !AllItemTags.CREATE_WRENCH.matches(mainhandItem) && !clipboard)
 				continue;
 			boolean highlight = behaviour.testHit(target.getLocation()) && !clipboard && !highlightFound;
 

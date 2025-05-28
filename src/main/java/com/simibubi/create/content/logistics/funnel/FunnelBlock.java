@@ -1,8 +1,8 @@
 package com.simibubi.create.content.logistics.funnel;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
@@ -87,7 +87,7 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 		ItemStack heldItem = player.getItemInHand(handIn);
 		boolean shouldntInsertItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem) || !canInsertIntoFunnel(state);
 
-		if (AllItems.WRENCH.isIn(heldItem))
+		if (AllItemTags.CREATE_WRENCH.matches(heldItem))
 			return InteractionResult.PASS;
 
 		if (hit.getDirection() == getFunnelFacing(state) && !shouldntInsertItem) {

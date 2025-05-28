@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import com.simibubi.create.AllTags.AllItemTags;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlockEntityTypes;
@@ -257,7 +259,7 @@ public class BeltBlock extends HorizontalKineticBlock
 			return InteractionResult.PASS;
 		ItemStack heldItem = player.getItemInHand(handIn);
 
-		boolean isWrench = AllItems.WRENCH.isIn(heldItem);
+		boolean isWrench = AllItemTags.CREATE_WRENCH.matches(heldItem);
 		boolean isConnector = AllItems.BELT_CONNECTOR.isIn(heldItem);
 		boolean isShaft = AllBlocks.SHAFT.isIn(heldItem);
 		boolean isDye = heldItem.is(Tags.Items.DYES);

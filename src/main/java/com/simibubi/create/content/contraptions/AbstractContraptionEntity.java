@@ -10,11 +10,12 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllTags.AllItemTags;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
@@ -289,7 +290,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 										   InteractionHand interactionHand) {
 		int indexOfSeat = contraption.getSeats()
 			.indexOf(localPos);
-		if (indexOfSeat == -1 || AllItems.WRENCH.isIn(player.getItemInHand(interactionHand))) {
+		if (indexOfSeat == -1 || AllItemTags.CREATE_WRENCH.matches(player.getItemInHand(interactionHand))) {
 			if (contraption.interactors.containsKey(localPos))
 				return contraption.interactors.get(localPos)
 					.handlePlayerInteraction(player, interactionHand, localPos, this);

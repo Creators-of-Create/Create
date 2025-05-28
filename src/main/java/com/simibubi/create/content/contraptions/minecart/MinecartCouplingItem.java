@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.minecart;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.minecart.capability.MinecartController;
 
@@ -48,7 +49,7 @@ public class MinecartCouplingItem extends Item {
 		if (AllItems.MINECART_COUPLING.isIn(heldItem)) {
 			if (!onCouplingInteractOnMinecart(event, minecart, player, controller))
 				return;
-		} else if (AllItems.WRENCH.isIn(heldItem)) {
+		} else if (AllItemTags.CREATE_WRENCH.matches(heldItem)) {
 			if (!onWrenchInteractOnMinecart(event, minecart, player, controller))
 				return;
 		} else

@@ -4,9 +4,9 @@ import static net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalB
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.decoration.bracket.BracketBlock;
 import com.simibubi.create.content.decoration.bracket.BracketedBlockEntityBehaviour;
 import com.simibubi.create.content.decoration.placard.PlacardBlock;
@@ -120,7 +120,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 			return InteractionResult.SUCCESS;
 		}
 
-		if (AllItems.WRENCH.isIn(itemInHand) && !pPlayer.isShiftKeyDown()) {
+		if (AllItemTags.CREATE_WRENCH.matches(itemInHand) && !pPlayer.isShiftKeyDown()) {
 			if (GirderWrenchBehavior.handleClick(pLevel, pPos, pState, pHit))
 				return InteractionResult.sidedSuccess(pLevel.isClientSide);
 			return InteractionResult.FAIL;
