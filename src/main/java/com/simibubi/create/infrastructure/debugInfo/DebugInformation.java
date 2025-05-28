@@ -12,15 +12,11 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.GlUtil;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateBuildInfo;
+import com.simibubi.create.compat.pojav.PojavChecker;
 import com.simibubi.create.foundation.mixin.accessor.SystemReportAccessor;
 import com.simibubi.create.infrastructure.debugInfo.element.DebugInfoSection;
 import com.simibubi.create.infrastructure.debugInfo.element.InfoElement;
 import com.simibubi.create.infrastructure.debugInfo.element.InfoEntry;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.forgespi.language.IModInfo;
 
 import dev.engine_room.flywheel.api.Flywheel;
 import dev.engine_room.flywheel.api.backend.Backend;
@@ -30,6 +26,11 @@ import net.minecraft.SystemReport;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.IModInfo;
 
 /**
  * Allows for providing easily accessible debugging information.
@@ -89,6 +90,7 @@ public class DebugInformation {
 				.put("OpenGL Renderer", GlUtil::getRenderer)
 				.put("OpenGL Version", GlUtil::getOpenGLVersion)
 				.put("Graphics Mode", () -> I18n.get(Minecraft.getInstance().options.graphicsMode().get().getKey()))
+				.put("PojavLauncher Detected", () -> String.valueOf(PojavChecker.IS_PRESENT))
 				.buildTo(DebugInformation::registerClientInfo);
 		});
 

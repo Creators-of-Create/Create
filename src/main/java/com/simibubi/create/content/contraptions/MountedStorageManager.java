@@ -73,7 +73,7 @@ public class MountedStorageManager {
 	private ImmutableMap<BlockPos, SyncedMountedStorage> syncedFluids;
 
 	private List<IItemHandlerModifiable> externalHandlers;
-	private CombinedInvWrapper allItems;
+	protected CombinedInvWrapper allItems;
 
 	// ticks until storage can sync again
 	private int syncCooldown;

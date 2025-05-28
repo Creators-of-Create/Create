@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.ftb.FTBIntegration;
+import com.simibubi.create.compat.pojav.PojavChecker;
 import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderInfo;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderInfoManager;
@@ -74,6 +75,7 @@ public class CreateClient {
 		POTATO_CANNON_RENDER_HANDLER.registerListeners(forgeEventBus);
 
 		Mods.FTBLIBRARY.executeIfInstalled(() -> () -> FTBIntegration.init(modEventBus, forgeEventBus));
+		PojavChecker.init();
 	}
 
 	public static void clientInit(final FMLClientSetupEvent event) {

@@ -1056,7 +1056,7 @@
   "create.weighted_ejector.target_set": "標籤所選",
   "death.attack.create.crush": "%1$s爲碾輪所齏",
   "death.attack.create.crush.player": "%1$s爲%2$s推墮碾輪中",
-  "death.attack.create.cuckoo_clock_explosion.player": "%1$s為爆雀鐘所傷",
+  "death.attack.create.cuckoo_surprise.player": "%1$s為爆雀鐘所傷",
   "death.attack.create.potato_cannon": "%1$s爲%2$s以芋砲射殺",
   "death.attack.create.potato_cannon.item": "%1$s爲%2$s以%3$s射殺",
   "enchantment.create.potato_recovery.desc": "芋砲之所射，或得復焉。",

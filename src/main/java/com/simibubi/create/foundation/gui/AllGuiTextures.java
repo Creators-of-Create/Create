@@ -151,7 +151,7 @@ public enum AllGuiTextures implements ScreenElement, TextureSheetSegment {
 	VALUE_SETTINGS_CURSOR("value_settings", 4, 9, 56, 14),
 	VALUE_SETTINGS_CURSOR_RIGHT("value_settings", 61, 9, 3, 14),
 	VALUE_SETTINGS_CURSOR_ICON("value_settings", 0, 44, 22, 20),
-	VALUE_SETTINGS_LABEL_BG("value_settings", 0, 31, 81, 11),
+	VALUE_SETTINGS_LABEL_BG("value_settings", 0, 31, 161, 11),
 
 	// HILO
 	FACTORY_GAUGE_RECIPE("factory_gauge", 32, 0, 192, 96),

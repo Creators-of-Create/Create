@@ -194,10 +194,11 @@ dependencies {
     // modImplementation("curse.maven:druidcraft-340991:3101903")
     // modImplementation("com.railwayteam.railways:railways-1.19.2-1.6.4:all") { transitive = false }
 
-    modRuntimeOnly("dev.architectury:architectury-forge:9.1.12")
-    modImplementation("dev.ftb.mods:ftb-chunks-forge:2001.3.1")
-    modImplementation("dev.ftb.mods:ftb-teams-forge:2001.3.0")
-    modImplementation("dev.ftb.mods:ftb-library-forge:2001.2.4")
+    // Compile only because architectury breaks packets
+    modCompileOnly("dev.architectury:architectury-forge:9.1.12")
+    modCompileOnly("dev.ftb.mods:ftb-chunks-forge:2001.3.1")
+    modCompileOnly("dev.ftb.mods:ftb-teams-forge:2001.3.0")
+    modCompileOnly("dev.ftb.mods:ftb-library-forge:2001.2.4")
 
     modImplementation("curse.maven:journeymap-32274:5457831")
     // modImplementation("ignored:journeymap-1.20.1-5.10.1-forge")
@@ -234,8 +235,8 @@ dependencies {
     // modRuntimeOnly("curse.maven:windsweptmod-636321:4817132")
     // modRuntimeOnly("curse.maven:good-ending-690161:4363719")
     // modRuntimeOnly("curse.maven:inventory-sorter-240633:5979609")
-    // modRuntimeOnly("curse.maven:sophisticated-storage-619320:6217888")
-    // modRuntimeOnly("curse.maven:sophisticated-core-618298:6266807")
+    // modRuntimeOnly("curse.maven:sophisticated-storage-619320:6539224")
+    // modRuntimeOnly("curse.maven:sophisticated-core-618298:6545102")
 
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings

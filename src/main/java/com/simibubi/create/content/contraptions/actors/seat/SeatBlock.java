@@ -42,6 +42,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
 import net.minecraftforge.common.util.FakePlayer;
 
 @ParametersAreNonnullByDefault
@@ -68,7 +69,7 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
-		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+								  LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
 		updateWater(pLevel, pState, pCurrentPos);
 		return pState;
 	}
@@ -114,13 +115,13 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_,
-		CollisionContext p_220053_4_) {
+							   CollisionContext p_220053_4_) {
 		return AllShapes.SEAT;
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState p_220071_1_, BlockGetter p_220071_2_, BlockPos p_220071_3_,
-		CollisionContext ctx) {
+										CollisionContext ctx) {
 		if (ctx instanceof EntityCollisionContext ecc && ecc.getEntity() instanceof Player)
 			return AllShapes.SEAT_COLLISION_PLAYERS;
 		return AllShapes.SEAT_COLLISION;
@@ -128,7 +129,7 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult p_225533_6_) {
+								 BlockHitResult p_225533_6_) {
 		if (player.isShiftKeyDown() || player instanceof FakePlayer)
 			return InteractionResult.PASS;
 
@@ -194,7 +195,7 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 		if (world.isClientSide)
 			return;
 		SeatEntity seat = new SeatEntity(world, pos);
-		seat.setPos(pos.getX() + .5f, pos.getY(), pos.getZ() + .5f);
+		seat.setPos(pos.getX() + .5, pos.getY(), pos.getZ() + .5);
 		world.addFreshEntity(seat);
 		entity.startRiding(seat, true);
 		if (entity instanceof TamableAnimal ta)

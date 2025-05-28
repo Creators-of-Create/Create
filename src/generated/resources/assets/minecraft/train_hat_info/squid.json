@@ -2,7 +2,8 @@
   "model_part": "body",
   "offset": [
     0.0,
-    6.0,
+    7.0,
     0.0
-  ]
+  ],
+  "scale": 0.92
 }

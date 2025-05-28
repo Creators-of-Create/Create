@@ -110,7 +110,7 @@ public class ScheduleRuntime {
 			ticksInTransit++;
 			return;
 		}
-		
+
 		if (checkEndOfScheduleReached())
 			return;
 		if (cooldown-- > 0)
@@ -190,7 +190,7 @@ public class ScheduleRuntime {
 	public DiscoveredPath startCurrentInstruction(Level level) {
 		if (checkEndOfScheduleReached())
 			return null;
-		
+
 		ScheduleEntry entry = schedule.entries.get(currentEntry);
 		ScheduleInstruction instruction = entry.instruction;
 		return instruction.start(this, level);
@@ -398,7 +398,7 @@ public class ScheduleRuntime {
 		paused = tag.getBoolean("Paused");
 		completed = tag.getBoolean("Completed");
 		isAutoSchedule = tag.getBoolean("AutoSchedule");
-		currentEntry = tag.getInt("CurrentEntry");
+		currentEntry = Math.max(0, tag.getInt("CurrentEntry"));
 		if (tag.contains("Schedule"))
 			schedule = Schedule.fromTag(tag.getCompound("Schedule"));
 		state = NBTHelper.readEnum(tag, "State", State.class);
