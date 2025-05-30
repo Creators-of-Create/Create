@@ -2412,26 +2412,23 @@ public class AllBlocks {
 	});
 
 	public static final BlockEntry<SlidingDoorBlock> ANDESITE_DOOR =
-		REGISTRATE.block("andesite_door", p -> SlidingDoorBlock.metal(p, true))
+		REGISTRATE.block("andesite_door", p -> SlidingDoorBlock.stone(p, true))
 			.transform(BuilderTransformers.slidingDoor("andesite"))
 			.properties(p -> p.mapColor(MapColor.STONE)
-				.sound(SoundType.STONE)
 				.noOcclusion())
 			.register();
 
 	public static final BlockEntry<SlidingDoorBlock> BRASS_DOOR =
-		REGISTRATE.block("brass_door", p -> SlidingDoorBlock.metal(p, false))
+		REGISTRATE.block("brass_door", p -> SlidingDoorBlock.stone(p, false))
 			.transform(BuilderTransformers.slidingDoor("brass"))
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW)
-				.sound(SoundType.STONE)
 				.noOcclusion())
 			.register();
 
 	public static final BlockEntry<SlidingDoorBlock> COPPER_DOOR =
-		REGISTRATE.block("copper_door", p -> SlidingDoorBlock.metal(p, true))
+		REGISTRATE.block("copper_door", p -> SlidingDoorBlock.stone(p, true))
 			.transform(BuilderTransformers.slidingDoor("copper"))
 			.properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
-				.sound(SoundType.STONE)
 				.noOcclusion())
 			.register();
 
@@ -2439,15 +2436,13 @@ public class AllBlocks {
 		REGISTRATE.block("train_door", p -> SlidingDoorBlock.metal(p, false))
 			.transform(BuilderTransformers.slidingDoor("train"))
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
-				.sound(SoundType.NETHERITE_BLOCK)
 				.noOcclusion())
 			.register();
 
 	public static final BlockEntry<TrainTrapdoorBlock> TRAIN_TRAPDOOR =
-		REGISTRATE.block("train_trapdoor", TrainTrapdoorBlock::new)
+		REGISTRATE.block("train_trapdoor", TrainTrapdoorBlock::metal)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
-				.sound(SoundType.NETHERITE_BLOCK))
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN))
 			.transform(BuilderTransformers.trapdoor(true))
 			.register();
 
@@ -2455,16 +2450,14 @@ public class AllBlocks {
 		REGISTRATE.block("framed_glass_door", p -> SlidingDoorBlock.glass(p, false))
 			.transform(BuilderTransformers.slidingDoor("glass"))
 			.properties(p -> p.mapColor(MapColor.NONE)
-				.sound(SoundType.GLASS)
 				.noOcclusion())
 			.register();
 
 	public static final BlockEntry<TrainTrapdoorBlock> FRAMED_GLASS_TRAPDOOR =
-		REGISTRATE.block("framed_glass_trapdoor", TrainTrapdoorBlock::new)
+		REGISTRATE.block("framed_glass_trapdoor", TrainTrapdoorBlock::glass)
 			.initialProperties(SharedProperties::softMetal)
 			.transform(BuilderTransformers.trapdoor(false))
 			.properties(p -> p.mapColor(MapColor.NONE)
-				.sound(SoundType.GLASS)
 				.noOcclusion())
 			.onRegister(connectedTextures(TrapdoorCTBehaviour::new))
 			.addLayer(() -> RenderType::cutoutMipped)

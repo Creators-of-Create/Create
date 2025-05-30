@@ -11,14 +11,28 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class TrainTrapdoorBlock extends TrapDoorBlock implements IWrenchable {
 
+	@Deprecated
 	public TrainTrapdoorBlock(Properties p_57526_) {
 		super(p_57526_, SlidingDoorBlock.TRAIN_SET_TYPE.get());
+	}
+
+	public TrainTrapdoorBlock(Properties properties, BlockSetType type) {
+		super(properties, type);
+	}
+
+	public static TrainTrapdoorBlock metal(Properties properties) {
+		return new TrainTrapdoorBlock(properties, SlidingDoorBlock.TRAIN_SET_TYPE.get());
+	}
+
+	public static TrainTrapdoorBlock glass(Properties properties) {
+		return new TrainTrapdoorBlock(properties, SlidingDoorBlock.GLASS_SET_TYPE.get());
 	}
 
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
