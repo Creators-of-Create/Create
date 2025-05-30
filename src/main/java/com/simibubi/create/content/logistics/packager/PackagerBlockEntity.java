@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
@@ -76,7 +78,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 	public PackagerItemHandler inventory;
 	private final LazyOptional<IItemHandler> invProvider;
 
-	public static final int CYCLE = 20;
+	public static final int CYCLE = AllConfigs.server().logistics.packagePackCycle.get();
 	public int animationTicks;
 	public boolean animationInward;
 
@@ -133,11 +135,11 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			if (!level.isClientSide() && !queuedExitingPackages.isEmpty() && heldBox.isEmpty()) {
 				BigItemStack entry = queuedExitingPackages.get(0);
 				heldBox = entry.stack.copy();
-				
+
 				entry.count--;
 				if (entry.count <= 0)
 					queuedExitingPackages.remove(0);
-				
+
 				animationInward = false;
 				animationTicks = CYCLE;
 				notifyUpdate();
