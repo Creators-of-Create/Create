@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.BeehiveBlock;
 
 @Mixin(BeehiveBlock.class)
 public class BeehiveBlockMixin {
-	@ModifyExpressionValue(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/CampfireBlock;isSmokeyPos(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Z"))
+	@ModifyExpressionValue(method = "useItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/CampfireBlock;isSmokeyPos(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Z"))
 	private static boolean create$dontGetAngryAtDeployers(boolean original, @Local(argsOnly = true) Player player) {
 		return original || player instanceof DeployerFakePlayer;
 	}
