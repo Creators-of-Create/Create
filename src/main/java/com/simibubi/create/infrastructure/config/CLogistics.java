@@ -9,7 +9,7 @@ public class CLogistics extends ConfigBase {
 	public final ConfigInt psiTimeout = i(60, 1, "psiTimeout", Comments.psiTimeout);
 	public final ConfigInt mechanicalArmRange = i(5, 1, "mechanicalArmRange", Comments.mechanicalArmRange);
 	public final ConfigInt packagePortRange = i(5, 1, "packagePortRange", Comments.packagePortRange);
-	public final ConfigInt packagePackCycle = i(20, 0, "packagePackCycle", Comments.packagePackCycle);
+	public final ConfigInt packagePackCycle = i(20, 5, "packagePackCycle", Comments.packagePackCycle);
 	public final ConfigInt linkRange = i(256, 1, "linkRange", Comments.linkRange);
 	public final ConfigInt displayLinkRange = i(64, 1, "displayLinkRange", Comments.displayLinkRange);
 	public final ConfigInt vaultCapacity = i(20, 1, 2048, "vaultCapacity", Comments.vaultCapacity);
