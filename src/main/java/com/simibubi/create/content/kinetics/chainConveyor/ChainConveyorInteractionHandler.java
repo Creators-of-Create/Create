@@ -22,6 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
@@ -149,6 +150,12 @@ public class ChainConveyorInteractionHandler {
 			AllPackets.getChannel()
 				.sendToServer(new ChainPackageInteractionPacket(selectedLift, selectedConnection, selectedChainPosition,
 					mainHandItem));
+
+			// force hand to be set as empty while in survival. this will run on the client only
+			// in case the server doesn't reply correctly the package will re-appear in the player's hand
+			if (!mc.player.isCreative()) {
+				mc.player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+			}
 			return true;
 		}
 
