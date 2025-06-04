@@ -95,6 +95,9 @@ public class ChainPackageInteractionPacket extends BlockEntityConfigurationPacke
 			return;
 
 		if (!player.isCreative()) {
+			if(!(ItemStack.matches(player.getMainHandItem(), this.insertedPackage))){
+				return;
+			}
 			player.getMainHandItem()
 				.shrink(1);
 			if (player.getMainHandItem()
