@@ -404,7 +404,7 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
 			ItemStack toInsert = heldItem.copy();
 			ItemStack remainder = armInteractionPoint.insert(toInsert, false);
 			heldItem = remainder;
-			forceSearchInputsTicks = 30; // might need it's own static variable. this should be atleast one frame if you want the arm to jump to another action quickly
+			forceSearchInputsTicks = 5; // might need it's own static variable. this should be atleast one tick if you want the arm to jump to another action quickly (for example when refilling blaze burners)
 
 			if (armInteractionPoint instanceof JukeboxPoint && remainder.isEmpty())
 				award(AllAdvancements.MUSICAL_ARM);
