@@ -283,8 +283,6 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
 	}
 
 	protected void searchForItem() {
-		Create.LOGGER.info("searchForItem");
-
 		if (redstoneLocked)
 			return;
 
