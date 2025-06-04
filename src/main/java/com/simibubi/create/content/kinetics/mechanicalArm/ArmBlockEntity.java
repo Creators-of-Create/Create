@@ -54,10 +54,16 @@ import net.minecraftforge.fml.DistExecutor;
 
 public class ArmBlockEntity extends KineticBlockEntity implements TransformableBlockEntity {
 
+	// Server Statics
+	private static final int SearchInputsRate = 20; // the rate at which the arm will search for targets while in SEARCH_INPUTS phase
+	private static int LastRandomSearchTickOffset = 0;
+
 	// Server
 	List<ArmInteractionPoint> inputs;
 	List<ArmInteractionPoint> outputs;
 	ListTag interactionPointTag;
+	int randomSearchTickOffset;
+	int forceSearchInputsTicks = 1; // ticks for how long the arm will search on every tick instead of every SearchInputsRate ticks (while in SEARCH_INPUTS phase)
 
 	// Both
 	float chasedPointProgress;
@@ -142,12 +148,24 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
 		if (level.isClientSide)
 			return;
 
-		if (phase == Phase.MOVE_TO_INPUT)
-			collectItem();
-		else if (phase == Phase.MOVE_TO_OUTPUT)
-			depositItem();
-		else if (phase == Phase.SEARCH_INPUTS || phase == Phase.DANCING)
-			searchForItem();
+		switch (phase) {
+			case MOVE_TO_INPUT:
+				collectItem();
+				break;
+			case MOVE_TO_OUTPUT:
+				depositItem();
+				break;
+			case SEARCH_INPUTS:
+			case DANCING:
+				boolean forcedSearch = forceSearchInputsTicks > 0;
+				if (forcedSearch || (level.getGameTime() + randomSearchTickOffset) % SearchInputsRate == 0) {
+					if(forcedSearch) {
+						forceSearchInputsTicks--;
+					}
+					searchForItem();
+				}
+				break;
+		}
 
 		if (targetReached)
 			lazyTick();
@@ -161,10 +179,16 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
 			return;
 		if (chasedPointProgress < .5f)
 			return;
-		if (phase == Phase.SEARCH_INPUTS || phase == Phase.DANCING)
-			checkForMusic();
-		if (phase == Phase.SEARCH_OUTPUTS)
-			searchForDestination();
+
+		switch (phase){
+			case SEARCH_INPUTS:
+			case DANCING:
+				checkForMusic();
+				break;
+			case SEARCH_OUTPUTS:
+				searchForDestination();
+				break;
+		}
 	}
 
 	private void checkForMusic() {
@@ -240,14 +264,27 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
 	private ArmInteractionPoint getTargetedInteractionPoint() {
 		if (chasedPointIndex == -1)
 			return null;
-		if (phase == Phase.MOVE_TO_INPUT && chasedPointIndex < inputs.size())
-			return inputs.get(chasedPointIndex);
-		if (phase == Phase.MOVE_TO_OUTPUT && chasedPointIndex < outputs.size())
-			return outputs.get(chasedPointIndex);
+
+		switch (phase){
+			case MOVE_TO_INPUT:
+				if(chasedPointIndex < inputs.size())
+				{
+					return inputs.get(chasedPointIndex);
+				}
+				break;
+			case MOVE_TO_OUTPUT:
+				if(chasedPointIndex < outputs.size())
+				{
+					return outputs.get(chasedPointIndex);
+				}
+				break;
+		}
 		return null;
 	}
 
 	protected void searchForItem() {
+		Create.LOGGER.info("searchForItem");
+
 		if (redstoneLocked)
 			return;
 
@@ -267,7 +304,9 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
 			ArmInteractionPoint armInteractionPoint = inputs.get(i);
 			if (!armInteractionPoint.isValid())
 				continue;
-			for (int j = 0; j < armInteractionPoint.getSlotCount(); j++) {
+
+			int slotCount = armInteractionPoint.getSlotCount();
+			for (int j = 0; j < slotCount; j++) {
 				if (getDistributableAmount(armInteractionPoint, j) == 0)
 					continue;
 
@@ -365,6 +404,7 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
 			ItemStack toInsert = heldItem.copy();
 			ItemStack remainder = armInteractionPoint.insert(toInsert, false);
 			heldItem = remainder;
+			forceSearchInputsTicks = 30; // might need it's own static variable. this should be atleast one frame if you want the arm to jump to another action quickly
 
 			if (armInteractionPoint instanceof JukeboxPoint && remainder.isEmpty())
 				award(AllAdvancements.MUSICAL_ARM);
@@ -382,8 +422,10 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
 
 	protected void collectItem() {
 		ArmInteractionPoint armInteractionPoint = getTargetedInteractionPoint();
-		if (armInteractionPoint != null && armInteractionPoint.isValid())
-			for (int i = 0; i < armInteractionPoint.getSlotCount(); i++) {
+		if (armInteractionPoint != null && armInteractionPoint.isValid()) {
+
+			int slotCount = armInteractionPoint.getSlotCount();
+			for (int i = 0; i < slotCount; i++) {
 				int amountExtracted = getDistributableAmount(armInteractionPoint, i);
 				if (amountExtracted == 0)
 					continue;
@@ -401,6 +443,7 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
 						.5f + Create.RANDOM.nextFloat() * .25f);
 				return;
 			}
+		}
 
 		phase = Phase.SEARCH_INPUTS;
 		chasedPointProgress = 0;
@@ -607,6 +650,12 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
 		}
 		for (ArmInteractionPoint output : outputs) {
 			output.setLevel(level);
+		}
+
+		// ensures that not all mechanical arms search for targets on the same tick while in SEARCH_INPUTS phase
+		// this only needs to be done on the server side
+		if (!level.isClientSide) {
+			randomSearchTickOffset = LastRandomSearchTickOffset++;
 		}
 	}
 
