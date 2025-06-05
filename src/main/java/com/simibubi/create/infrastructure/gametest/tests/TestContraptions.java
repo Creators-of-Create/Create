@@ -274,4 +274,16 @@ public class TestContraptions {
 			helper.assertBlockProperty(vaultLamp, RedstoneLampBlock.LIT, true);
 		});
 	}
+
+	@GameTest(template = "glue")
+	public static void glue(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(2, 5, 1);
+		BlockPos expected = new BlockPos(1,3,1);
+
+		helper.pullLever(lever);
+
+		helper.succeedWhen(() -> {
+			helper.assertBlockPresent(Blocks.STONE, expected);
+		});
+	}
 }

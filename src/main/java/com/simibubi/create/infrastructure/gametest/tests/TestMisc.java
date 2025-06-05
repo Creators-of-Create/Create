@@ -2,6 +2,7 @@ package com.simibubi.create.infrastructure.gametest.tests;
 
 import static com.simibubi.create.infrastructure.gametest.CreateGameTestHelper.FIFTEEN_SECONDS;
 
+import com.mojang.authlib.GameProfile;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.redstone.thresholdSwitch.ThresholdSwitchBlockEntity;
 import com.simibubi.create.content.schematics.SchematicExport;
@@ -18,13 +19,20 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedstoneLampBlock;
+
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
+
+import java.util.UUID;
 
 @GameTestGroup(path = "misc")
 public class TestMisc {
@@ -113,5 +121,43 @@ public class TestMisc {
 			helper.assertSecondsPassed(9);
 			helper.assertEntityPresent(EntityType.ZOMBIE, lava);
 		});
+	}
+
+	@GameTest(template = "platform_3_3")
+	public static void itemUseOnBlock(CreateGameTestHelper helper) {
+
+		ServerLevel level = helper.getLevel();
+		FakePlayer fakePlayer = FakePlayerFactory.get(level, new GameProfile(UUID.randomUUID(), "TestPlayer"));
+		fakePlayer.setGameMode(GameType.CREATIVE);
+
+		ItemStack stone = new ItemStack(Blocks.STONE.asItem(), 1);
+
+		BlockPos pos = new BlockPos(1,1,1);
+		BlockPos absPos = helper.absolutePos(pos);
+
+		helper.playerItemUseOn(fakePlayer,stone,0, absPos);
+
+		helper.succeedIf(() -> {
+			helper.assertBlockPresent(Blocks.STONE, pos.offset(0 , 1 ,0));
+		});
+	}
+
+	@GameTest(template = "cow_platform")
+	public static void itemUseOnEntityInteract (CreateGameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		FakePlayer fakePlayer = FakePlayerFactory.get(level, new GameProfile(UUID.randomUUID(), "TestPlayer"));
+
+		ItemStack bucket = new ItemStack(Items.BUCKET, 1);
+
+		BlockPos pos = new BlockPos(2,1,2);
+		BlockPos absPos = helper.absolutePos(pos);
+
+		Cow cow =  helper.getFirstEntity(EntityType.COW, pos);
+		helper.playerItemUseOn(fakePlayer,bucket,0,cow);
+
+		helper.succeedIf(() -> {
+			helper.assertItemInInventory(fakePlayer,new ItemStack(Items.MILK_BUCKET));
+		});
+
 	}
 }
