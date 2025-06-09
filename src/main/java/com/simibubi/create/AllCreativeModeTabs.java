@@ -193,7 +193,9 @@ public class AllCreativeModeTabs {
 			});
 
 			PackageStyles.STANDARD_BOXES.forEach(item -> {
-				orderings.add(ItemOrdering.after(item, AllBlocks.PACKAGER.asItem()));
+				if(ForgeRegistries.ITEMS.getKey(item).toString().split(":")[0] == Create.ID){
+					orderings.add(ItemOrdering.after(item, AllBlocks.PACKAGER.asItem()));
+				}
 			});
 
 			return orderings;
