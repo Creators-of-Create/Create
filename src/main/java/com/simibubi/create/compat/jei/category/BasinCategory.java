@@ -5,6 +5,10 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.content.processing.recipe.IHeatCondition;
+
+import net.minecraft.network.chat.Component;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.AllBlocks;
@@ -91,24 +95,21 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			i++;
 		}
 
-		HeatCondition requiredHeat = recipe.getRequiredHeat();
-		if (!requiredHeat.testBlazeBurner(HeatLevel.NONE)) {
-			builder
-					.addSlot(RecipeIngredientRole.RENDER_ONLY, 134, 81)
-					.addItemStack(AllBlocks.BLAZE_BURNER.asStack());
-		}
-		if (!requiredHeat.testBlazeBurner(HeatLevel.KINDLED)) {
-			builder
-					.addSlot(RecipeIngredientRole.CATALYST, 153, 81)
-					.addItemStack(AllItems.BLAZE_CAKE.asStack());
+		IHeatCondition heatCondition = recipe.getRequiredHeat();
+		if (heatCondition == null) return;
+
+		List<ItemStack> itemHints = heatCondition.getItemHints();
+		for (int j = 0; j < itemHints.size(); j++) {
+			builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 134 + (j*20), 81)
+				.addItemStack(itemHints.get(j));
 		}
 	}
 
 	@Override
 	public void draw(BasinRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-		HeatCondition requiredHeat = recipe.getRequiredHeat();
+		IHeatCondition heatCondition = recipe.getRequiredHeat();
 
-		boolean noHeat = requiredHeat == HeatCondition.NONE;
+		boolean noHeat = heatCondition == null;
 
 		int vRows = (1 + recipe.getFluidResults().size() + recipe.getRollableResults().size()) / 2;
 
@@ -123,8 +124,8 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
 		heatBar.render(graphics, 4, 80);
-		graphics.drawString(Minecraft.getInstance().font, CreateLang.translateDirect(requiredHeat.getTranslationKey()), 9,
-				86, requiredHeat.getColor(), false);
+		graphics.drawString(Minecraft.getInstance().font, Component.translatable(heatCondition.getTranslationKey()), 9,
+				86, heatCondition.getColor(), false);
 	}
 
 }

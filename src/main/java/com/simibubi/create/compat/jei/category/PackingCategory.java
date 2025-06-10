@@ -4,8 +4,10 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
+import com.simibubi.create.content.processing.recipe.IHeatCondition;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -19,7 +21,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class PackingCategory extends BasinCategory {
 
 	private final AnimatedPress press = new AnimatedPress(true);
-	private final AnimatedBlazeBurner heater = new AnimatedBlazeBurner();
 	private final PackingType type;
 
 	enum PackingType {
@@ -76,10 +77,12 @@ public class PackingCategory extends BasinCategory {
 		}
 
 
-		HeatCondition requiredHeat = recipe.getRequiredHeat();
-		if (requiredHeat != HeatCondition.NONE)
-			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())
-				.draw(graphics, getBackground().getWidth() / 2 + 3, 55);
+		IHeatCondition heatCondition = recipe.getRequiredHeat();
+		if (heatCondition != null) {
+			IDrawable drawable = heatCondition.visualize();
+			if (drawable != null)
+				drawable.draw(graphics, getBackground().getWidth() / 2 + 3, 55);
+		}
 		press.draw(graphics, getBackground().getWidth() / 2 + 3, 34);
 
 

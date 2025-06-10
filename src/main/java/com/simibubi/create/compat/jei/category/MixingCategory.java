@@ -4,6 +4,9 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMixer;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
+import com.simibubi.create.content.processing.recipe.IHeatCondition;
+
+import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import net.minecraft.client.gui.GuiGraphics;
 
@@ -13,7 +16,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class MixingCategory extends BasinCategory {
 
 	private final AnimatedMixer mixer = new AnimatedMixer();
-	private final AnimatedBlazeBurner heater = new AnimatedBlazeBurner();
 	MixingType type;
 
 	enum MixingType {
@@ -41,10 +43,12 @@ public class MixingCategory extends BasinCategory {
 	public void draw(BasinRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		super.draw(recipe, iRecipeSlotsView, graphics, mouseX, mouseY);
 
-		HeatCondition requiredHeat = recipe.getRequiredHeat();
-		if (requiredHeat != HeatCondition.NONE)
-			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())
-				.draw(graphics, getBackground().getWidth() / 2 + 3, 55);
+		IHeatCondition heatCondition = recipe.getRequiredHeat();
+		if (heatCondition != null) {
+			IDrawable drawable = heatCondition.visualize();
+			if (drawable != null)
+				drawable.draw(graphics, getBackground().getWidth() / 2 + 3, 55);
+		}
 		mixer.draw(graphics, getBackground().getWidth() / 2 + 3, 34);
 	}
 

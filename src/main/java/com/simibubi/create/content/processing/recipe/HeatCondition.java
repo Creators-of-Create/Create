@@ -1,29 +1,43 @@
 package com.simibubi.create.content.processing.recipe;
 
-import com.simibubi.create.Create;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 
+import mezz.jei.api.gui.drawable.IDrawable;
 import net.createmod.catnip.lang.Lang;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
-public enum HeatCondition {
+import org.jetbrains.annotations.NotNull;
 
-	NONE(0xffffff), HEATED(0xE88300), SUPERHEATED(0x5C93E8),
+import java.util.List;
 
-	;
+public enum HeatCondition implements IHeatCondition {
+	HEATED(0xE88300, HeatLevel.KINDLED, AllBlocks.BLAZE_BURNER.asStack()),
+	SUPERHEATED(0x5C93E8, HeatLevel.SEETHING, AllBlocks.BLAZE_BURNER.asStack(), AllItems.BLAZE_CAKE.asStack());
 
-	private int color;
+	private static final AnimatedBlazeBurner blaze = new AnimatedBlazeBurner();
 
-	private HeatCondition(int color) {
+	private final int color;
+	private final HeatLevel heatLevel;
+	private final List<ItemStack> itemHints;
+
+	HeatCondition(int color, HeatLevel heatLevel, ItemStack... hints) {
 		this.color = color;
+		this.heatLevel = heatLevel;
+		this.itemHints = List.of(hints);
 	}
 
-	public boolean testBlazeBurner(BlazeBurnerBlock.HeatLevel level) {
-		if (this == SUPERHEATED)
-			return level == HeatLevel.SEETHING;
-		if (this == HEATED)
-			return level != HeatLevel.NONE && level != HeatLevel.SMOULDERING;
-		return true;
+	@Override
+	public boolean test(BlockGetter getter, BlockPos basinPos) {
+		BlockState stateBelow = getter.getBlockState(basinPos.below());
+		HeatLevel basinHeat = stateBelow.getValue(BlazeBurnerBlock.HEAT_LEVEL);
+		return basinHeat.isAtLeast(heatLevel);
 	}
 
 	public BlazeBurnerBlock.HeatLevel visualizeAsBlazeBurner() {
@@ -34,21 +48,23 @@ public enum HeatCondition {
 		return HeatLevel.NONE;
 	}
 
+	@Override
+	public IDrawable visualize() {
+		return blaze.withHeat(this.visualizeAsBlazeBurner());
+	}
+
+	@Override
+	@NotNull
+	public List<ItemStack> getItemHints() {
+		return itemHints;
+	}
+
 	public String serialize() {
 		return Lang.asId(name());
 	}
 
 	public String getTranslationKey() {
 		return "recipe.heat_requirement." + serialize();
-	}
-
-	public static HeatCondition deserialize(String name) {
-		for (HeatCondition heatCondition : values())
-			if (heatCondition.serialize()
-					.equals(name))
-				return heatCondition;
-		Create.LOGGER.warn("Tried to deserialize invalid heat condition: \"" + name + "\"");
-		return NONE;
 	}
 
 	public int getColor() {

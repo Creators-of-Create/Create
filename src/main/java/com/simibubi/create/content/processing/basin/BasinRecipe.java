@@ -8,7 +8,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
+import com.simibubi.create.content.processing.recipe.IHeatCondition;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
@@ -72,12 +72,11 @@ public class BasinRecipe extends ProcessingRecipe<Container> {
 		if (availableItems == null || availableFluids == null)
 			return false;
 
-		HeatLevel heat = BasinBlockEntity.getHeatLevelOf(basin.getLevel()
-			.getBlockState(basin.getBlockPos()
-				.below(1)));
-		if (isBasinRecipe && !((BasinRecipe) recipe).getRequiredHeat()
-			.testBlazeBurner(heat))
-			return false;
+		if (isBasinRecipe) {
+			IHeatCondition heatCondition = ((BasinRecipe) recipe).getRequiredHeat();
+			if (heatCondition == null) return false;
+			return heatCondition.test(basin.getLevel(), basin.getBlockPos());
+		}
 
 		List<ItemStack> recipeOutputItems = new ArrayList<>();
 		List<FluidStack> recipeOutputFluids = new ArrayList<>();

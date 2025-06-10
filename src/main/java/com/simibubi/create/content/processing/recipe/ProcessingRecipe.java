@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public abstract class ProcessingRecipe<T extends Container> implements Recipe<T>
 	protected NonNullList<FluidIngredient> fluidIngredients;
 	protected NonNullList<FluidStack> fluidResults;
 	protected int processingDuration;
-	protected HeatCondition requiredHeat;
+	protected IHeatCondition requiredHeat;
 
 	private RecipeType<?> type;
 	private RecipeSerializer<?> serializer;
@@ -102,7 +103,7 @@ public abstract class ProcessingRecipe<T extends Container> implements Recipe<T>
 		if (processingDuration > 0 && !canSpecifyDuration())
 			logger.warn(messageHeader + " specified a duration. Durations have no impact on this type of recipe.");
 
-		if (requiredHeat != HeatCondition.NONE && !canRequireHeat())
+		if (requiredHeat != null && !canRequireHeat())
 			logger.warn(
 				messageHeader + " specified a heat condition. Heat conditions have no impact on this type of recipe.");
 
@@ -164,7 +165,8 @@ public abstract class ProcessingRecipe<T extends Container> implements Recipe<T>
 		return processingDuration;
 	}
 
-	public HeatCondition getRequiredHeat() {
+	@Nullable
+	public IHeatCondition getRequiredHeat() {
 		return requiredHeat;
 	}
 

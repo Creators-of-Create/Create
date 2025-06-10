@@ -231,7 +231,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		protected NonNullList<FluidIngredient> fluidIngredients;
 		protected NonNullList<FluidStack> fluidResults;
 		protected int processingDuration;
-		protected HeatCondition requiredHeat;
+		protected IHeatCondition requiredHeat;
 
 		public boolean keepHeldItem;
 
@@ -242,7 +242,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 			fluidIngredients = NonNullList.create();
 			fluidResults = NonNullList.create();
 			processingDuration = 0;
-			requiredHeat = HeatCondition.NONE;
+			requiredHeat = null;
 			keepHeldItem = false;
 		}
 

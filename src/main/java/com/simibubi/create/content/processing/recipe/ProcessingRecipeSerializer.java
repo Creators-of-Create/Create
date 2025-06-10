@@ -45,9 +45,9 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 		if (processingDuration > 0)
 			json.addProperty("processingTime", processingDuration);
 
-		HeatCondition requiredHeat = recipe.getRequiredHeat();
-		if (requiredHeat != HeatCondition.NONE)
-			json.addProperty("heatRequirement", requiredHeat.serialize());
+		IHeatCondition heatCondition = recipe.getRequiredHeat();
+		if (heatCondition != null)
+			json.addProperty("heatRequirement", heatCondition.serialize());
 
 		recipe.writeAdditional(json);
 	}
