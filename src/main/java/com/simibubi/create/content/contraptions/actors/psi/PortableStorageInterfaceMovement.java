@@ -86,7 +86,7 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 		}
 
 		if (!context.data.contains(_workingPos_)) {
-			if(context.stall)
+			if (context.stall)
 				cancelStall(context);
 			return;
 		}
