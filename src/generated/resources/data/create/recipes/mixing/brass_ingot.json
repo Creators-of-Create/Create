@@ -1,6 +1,6 @@
 {
   "type": "create:mixing",
-  "heatRequirement": "heated",
+  "heatRequirement": "create:heated",
   "ingredients": [
     {
       "tag": "forge:ingots/copper"

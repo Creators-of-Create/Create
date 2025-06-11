@@ -1,6 +1,6 @@
 {
   "type": "create:mixing",
-  "heatRequirement": "heated",
+  "heatRequirement": "create:heated",
   "ingredients": [
     {
       "item": "create:bar_of_chocolate"

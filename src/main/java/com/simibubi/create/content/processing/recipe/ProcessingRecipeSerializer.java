@@ -49,7 +49,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 
 		HeatCondition heatCondition = recipe.getRequiredHeat();
 		if (heatCondition != null)
-			json.addProperty("heatRequirement", CreateBuiltInRegistries.HEAT_CONDITION.getId(heatCondition));
+			json.addProperty("heatRequirement", CreateBuiltInRegistries.HEAT_CONDITION.getKey(heatCondition).toString());
 
 		recipe.writeAdditional(json);
 	}

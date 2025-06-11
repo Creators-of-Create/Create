@@ -1,6 +1,6 @@
 {
   "type": "create:mixing",
-  "heatRequirement": "superheated",
+  "heatRequirement": "create:superheated",
   "ingredients": [
     {
       "tag": "forge:cobblestone"
