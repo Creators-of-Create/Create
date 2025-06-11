@@ -11,8 +11,8 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,8 +36,8 @@ public enum BlazeBurnerHeatCondition implements HeatCondition {
 	}
 
 	@Override
-	public boolean test(BlockGetter getter, BlockPos basinPos) {
-		BlockState stateBelow = getter.getBlockState(basinPos.below());
+	public boolean test(Level level, BlockPos testPos) {
+		BlockState stateBelow = level.getBlockState(testPos.below());
 		if(!stateBelow.is(AllBlocks.BLAZE_BURNER.get())) return false;
 		HeatLevel basinHeat = stateBelow.getValue(BlazeBurnerBlock.HEAT_LEVEL);
 		return basinHeat.isAtLeast(heatLevel);
