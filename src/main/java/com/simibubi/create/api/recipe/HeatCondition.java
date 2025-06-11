@@ -31,7 +31,7 @@ public interface HeatCondition {
 	boolean test(Level level, BlockPos testPos);
 
 	/**
-	 * @return The heating type's translation key.
+	 * @return The HeatingCondition's translation key.
 	 */
 	String getTranslationKey();
 
