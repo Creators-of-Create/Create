@@ -7,8 +7,15 @@ import com.simibubi.create.foundation.utility.AdventureUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import net.minecraft.world.phys.BlockHitResult;
+
+import net.minecraft.world.phys.Vec3;
+
+import net.neoforged.neoforge.common.CommonHooks;
 
 
 public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntity> implements ServerboundPacketPayload {
@@ -30,6 +37,9 @@ public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntit
 			return;
 		BlockEntity blockEntity = world.getBlockEntity(this.pos);
 		if (blockEntity instanceof SyncedBlockEntity) {
+			var result = CommonHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, this.pos, new BlockHitResult(Vec3.atCenterOf(this.pos), player.getDirection().getOpposite(), this.pos, true));
+			if (result.isCanceled())
+				return;
 			applySettings(player, (BE) blockEntity);
 			if (!causeUpdate())
 				return;
