@@ -38,6 +38,7 @@ public enum BlazeBurnerHeatCondition implements HeatCondition {
 	@Override
 	public boolean test(BlockGetter getter, BlockPos basinPos) {
 		BlockState stateBelow = getter.getBlockState(basinPos.below());
+		if(!stateBelow.is(AllBlocks.BLAZE_BURNER.get())) return false;
 		HeatLevel basinHeat = stateBelow.getValue(BlazeBurnerBlock.HEAT_LEVEL);
 		return basinHeat.isAtLeast(heatLevel);
 	}
