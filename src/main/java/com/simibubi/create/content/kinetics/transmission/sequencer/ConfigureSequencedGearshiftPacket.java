@@ -27,7 +27,7 @@ public class ConfigureSequencedGearshiftPacket extends BlockEntityConfigurationP
 
 	@Override
 	protected void applySettings(ServerPlayer player, SequencedGearshiftBlockEntity be) {
-		if (be.computerBehaviour.hasAttachedComputer())
+		if (be.computerBehaviour.hasAttachedComputer() || this.instructions.size() > 5)
 			return;
 
 		be.run(-1);
