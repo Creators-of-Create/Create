@@ -1,10 +1,8 @@
 package com.simibubi.create.compat.jei.category;
 
-import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
-import com.simibubi.create.content.processing.recipe.HeatCondition;
-import com.simibubi.create.content.processing.recipe.IHeatCondition;
+import com.simibubi.create.api.recipe.HeatCondition;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -77,7 +75,7 @@ public class PackingCategory extends BasinCategory {
 		}
 
 
-		IHeatCondition heatCondition = recipe.getRequiredHeat();
+		HeatCondition heatCondition = recipe.getRequiredHeat();
 		if (heatCondition != null) {
 			IDrawable drawable = heatCondition.visualize();
 			if (drawable != null)

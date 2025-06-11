@@ -1,4 +1,4 @@
-package com.simibubi.create.content.processing.recipe;
+package com.simibubi.create.api.recipe;
 
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.core.BlockPos;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface IHeatCondition {
+public interface HeatCondition {
 	boolean test(BlockGetter getter, BlockPos basinPos);
 
 	String getTranslationKey();

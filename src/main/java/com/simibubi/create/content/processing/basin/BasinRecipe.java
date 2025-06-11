@@ -8,7 +8,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.processing.recipe.IHeatCondition;
+import com.simibubi.create.api.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
@@ -73,7 +73,7 @@ public class BasinRecipe extends ProcessingRecipe<Container> {
 			return false;
 
 		if (isBasinRecipe) {
-			IHeatCondition heatCondition = ((BasinRecipe) recipe).getRequiredHeat();
+			HeatCondition heatCondition = ((BasinRecipe) recipe).getRequiredHeat();
 			if (heatCondition == null) return false;
 			return heatCondition.test(basin.getLevel(), basin.getBlockPos());
 		}

@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.api.recipe.HeatCondition;
+
 import org.slf4j.Logger;
 
 import com.google.gson.JsonObject;
@@ -39,7 +41,7 @@ public abstract class ProcessingRecipe<T extends Container> implements Recipe<T>
 	protected NonNullList<FluidIngredient> fluidIngredients;
 	protected NonNullList<FluidStack> fluidResults;
 	protected int processingDuration;
-	protected IHeatCondition requiredHeat;
+	protected HeatCondition requiredHeat;
 
 	private RecipeType<?> type;
 	private RecipeSerializer<?> serializer;
@@ -166,7 +168,7 @@ public abstract class ProcessingRecipe<T extends Container> implements Recipe<T>
 	}
 
 	@Nullable
-	public IHeatCondition getRequiredHeat() {
+	public HeatCondition getRequiredHeat() {
 		return requiredHeat;
 	}
 

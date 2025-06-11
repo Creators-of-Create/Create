@@ -1,10 +1,8 @@
 package com.simibubi.create.compat.jei.category;
 
-import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMixer;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
-import com.simibubi.create.content.processing.recipe.HeatCondition;
-import com.simibubi.create.content.processing.recipe.IHeatCondition;
+import com.simibubi.create.api.recipe.HeatCondition;
 
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -43,7 +41,7 @@ public class MixingCategory extends BasinCategory {
 	public void draw(BasinRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		super.draw(recipe, iRecipeSlotsView, graphics, mouseX, mouseY);
 
-		IHeatCondition heatCondition = recipe.getRequiredHeat();
+		HeatCondition heatCondition = recipe.getRequiredHeat();
 		if (heatCondition != null) {
 			IDrawable drawable = heatCondition.visualize();
 			if (drawable != null)

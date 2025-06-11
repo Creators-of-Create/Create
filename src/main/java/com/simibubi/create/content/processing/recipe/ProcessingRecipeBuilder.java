@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.simibubi.create.api.recipe.HeatCondition;
 import com.simibubi.create.foundation.data.SimpleDatagenIngredient;
 import com.simibubi.create.foundation.data.recipe.Mods;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -92,7 +93,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return duration(100);
 	}
 
-	public ProcessingRecipeBuilder<T> requiresHeat(HeatCondition condition) {
+	public ProcessingRecipeBuilder<T> requiresHeat(BlazeBurnerHeatCondition condition) {
 		params.requiredHeat = condition;
 		return this;
 	}
@@ -231,7 +232,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		protected NonNullList<FluidIngredient> fluidIngredients;
 		protected NonNullList<FluidStack> fluidResults;
 		protected int processingDuration;
-		protected IHeatCondition requiredHeat;
+		protected HeatCondition requiredHeat;
 
 		public boolean keepHeldItem;
 

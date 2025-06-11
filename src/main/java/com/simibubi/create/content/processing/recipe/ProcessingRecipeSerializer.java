@@ -5,6 +5,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.simibubi.create.api.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
@@ -45,7 +46,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 		if (processingDuration > 0)
 			json.addProperty("processingTime", processingDuration);
 
-		IHeatCondition heatCondition = recipe.getRequiredHeat();
+		HeatCondition heatCondition = recipe.getRequiredHeat();
 		if (heatCondition != null)
 			json.addProperty("heatRequirement", heatCondition.serialize());
 
@@ -82,7 +83,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 		if (GsonHelper.isValidNode(json, "processingTime"))
 			builder.duration(GsonHelper.getAsInt(json, "processingTime"));
 		if (GsonHelper.isValidNode(json, "heatRequirement"))
-			builder.requiresHeat(HeatCondition.deserialize(GsonHelper.getAsString(json, "heatRequirement")));
+			builder.requiresHeat(BlazeBurnerHeatCondition.deserialize(GsonHelper.getAsString(json, "heatRequirement")));
 
 		T recipe = builder.build();
 		recipe.readAdditional(json);
@@ -139,7 +140,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 			.withFluidIngredients(fluidIngredients)
 			.withFluidOutputs(fluidResults)
 			.duration(buffer.readVarInt())
-			.requiresHeat(HeatCondition.values()[buffer.readVarInt()])
+			.requiresHeat(BlazeBurnerHeatCondition.values()[buffer.readVarInt()])
 			.build();
 		recipe.readAdditional(buffer);
 		return recipe;

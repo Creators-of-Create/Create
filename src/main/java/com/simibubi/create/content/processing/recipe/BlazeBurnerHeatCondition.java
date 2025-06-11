@@ -2,6 +2,7 @@ package com.simibubi.create.content.processing.recipe;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.api.recipe.HeatCondition;
 import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public enum HeatCondition implements IHeatCondition {
+public enum BlazeBurnerHeatCondition implements HeatCondition {
 	HEATED(0xE88300, HeatLevel.KINDLED, AllBlocks.BLAZE_BURNER.asStack()),
 	SUPERHEATED(0x5C93E8, HeatLevel.SEETHING, AllBlocks.BLAZE_BURNER.asStack(), AllItems.BLAZE_CAKE.asStack());
 
@@ -27,7 +28,7 @@ public enum HeatCondition implements IHeatCondition {
 	private final HeatLevel heatLevel;
 	private final List<ItemStack> itemHints;
 
-	HeatCondition(int color, HeatLevel heatLevel, ItemStack... hints) {
+	BlazeBurnerHeatCondition(int color, HeatLevel heatLevel, ItemStack... hints) {
 		this.color = color;
 		this.heatLevel = heatLevel;
 		this.itemHints = List.of(hints);
