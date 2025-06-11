@@ -16,6 +16,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 
 public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntity> implements ServerboundPacketPayload {
@@ -37,7 +38,7 @@ public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntit
 			return;
 		BlockEntity blockEntity = world.getBlockEntity(this.pos);
 		if (blockEntity instanceof SyncedBlockEntity) {
-			var result = CommonHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, this.pos, new BlockHitResult(Vec3.atCenterOf(this.pos), player.getDirection().getOpposite(), this.pos, true));
+			PlayerInteractEvent.RightClickBlock result = CommonHooks.onRightClickBlock(player, InteractionHand.MAIN_HAND, this.pos, new BlockHitResult(Vec3.atCenterOf(this.pos), player.getDirection().getOpposite(), this.pos, true));
 			if (result.isCanceled())
 				return;
 			applySettings(player, (BE) blockEntity);
