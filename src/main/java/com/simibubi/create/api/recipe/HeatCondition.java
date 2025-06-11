@@ -1,5 +1,7 @@
 package com.simibubi.create.api.recipe;
 
+import com.simibubi.create.api.registry.CreateBuiltInRegistries;
+
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -27,5 +29,9 @@ public interface HeatCondition {
 
 	default int getColor() {
 		return 0xffffff;
+	}
+
+	default int ordinal() {
+		return CreateBuiltInRegistries.HEAT_CONDITION.getId(this);
 	}
 }

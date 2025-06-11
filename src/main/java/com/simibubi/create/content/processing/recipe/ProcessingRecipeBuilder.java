@@ -93,7 +93,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return duration(100);
 	}
 
-	public ProcessingRecipeBuilder<T> requiresHeat(BlazeBurnerHeatCondition condition) {
+	public ProcessingRecipeBuilder<T> requiresHeat(HeatCondition condition) {
 		params.requiredHeat = condition;
 		return this;
 	}

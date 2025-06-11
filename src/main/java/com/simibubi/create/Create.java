@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.simibubi.create.content.processing.recipe.AllHeatConditions;
+
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -199,6 +201,7 @@ public class Create {
 		AllPotatoProjectileRenderModes.init();
 		AllPotatoProjectileEntityHitActions.init();
 		AllPotatoProjectileBlockHitActions.init();
+		AllHeatConditions.init();
 	}
 
 	public static LangBuilder lang() {

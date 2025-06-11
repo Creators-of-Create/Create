@@ -12,6 +12,7 @@ import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.jetbrains.annotations.NotNull;
@@ -19,16 +20,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public enum BlazeBurnerHeatCondition implements HeatCondition {
-	HEATED(0xE88300, HeatLevel.KINDLED, AllBlocks.BLAZE_BURNER.asStack()),
-	SUPERHEATED(0x5C93E8, HeatLevel.SEETHING, AllBlocks.BLAZE_BURNER.asStack(), AllItems.BLAZE_CAKE.asStack());
+	HEATED(0xE88300, HeatLevel.KINDLED, AllBlocks.BLAZE_BURNER),
+	SUPERHEATED(0x5C93E8, HeatLevel.SEETHING, AllBlocks.BLAZE_BURNER, AllItems.BLAZE_CAKE);
 
 	private static final AnimatedBlazeBurner blaze = new AnimatedBlazeBurner();
 
 	private final int color;
 	private final HeatLevel heatLevel;
-	private final List<ItemStack> itemHints;
+	private final List<ItemLike> itemHints;
 
-	BlazeBurnerHeatCondition(int color, HeatLevel heatLevel, ItemStack... hints) {
+	BlazeBurnerHeatCondition(int color, HeatLevel heatLevel, ItemLike... hints) {
 		this.color = color;
 		this.heatLevel = heatLevel;
 		this.itemHints = List.of(hints);
@@ -57,7 +58,7 @@ public enum BlazeBurnerHeatCondition implements HeatCondition {
 	@Override
 	@NotNull
 	public List<ItemStack> getItemHints() {
-		return itemHints;
+		return itemHints.stream().map(ItemStack::new).toList();
 	}
 
 	public String serialize() {
@@ -65,7 +66,7 @@ public enum BlazeBurnerHeatCondition implements HeatCondition {
 	}
 
 	public String getTranslationKey() {
-		return "recipe.heat_requirement." + serialize();
+		return "create.recipe.heat_requirement." + serialize();
 	}
 
 	public int getColor() {

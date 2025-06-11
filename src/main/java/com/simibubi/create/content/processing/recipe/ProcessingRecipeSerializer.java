@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.simibubi.create.api.recipe.HeatCondition;
+import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
@@ -48,7 +49,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 
 		HeatCondition heatCondition = recipe.getRequiredHeat();
 		if (heatCondition != null)
-			json.addProperty("heatRequirement", heatCondition.serialize());
+			json.addProperty("heatRequirement", CreateBuiltInRegistries.HEAT_CONDITION.getId(heatCondition));
 
 		recipe.writeAdditional(json);
 	}
@@ -82,8 +83,14 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 
 		if (GsonHelper.isValidNode(json, "processingTime"))
 			builder.duration(GsonHelper.getAsInt(json, "processingTime"));
-		if (GsonHelper.isValidNode(json, "heatRequirement"))
-			builder.requiresHeat(BlazeBurnerHeatCondition.deserialize(GsonHelper.getAsString(json, "heatRequirement")));
+		if (GsonHelper.isValidNode(json, "heatRequirement")) {
+			String requirement = GsonHelper.getAsString(json, "heatRequirement");
+			ResourceLocation location;
+			if (requirement.contains(":")) location = new ResourceLocation(requirement);
+			else location = new ResourceLocation("create", requirement);
+
+			builder.requiresHeat(CreateBuiltInRegistries.HEAT_CONDITION.get(location));
+		}
 
 		T recipe = builder.build();
 		recipe.readAdditional(json);
@@ -107,8 +114,8 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 		fluidOutputs.forEach(o -> o.writeToPacket(buffer));
 
 		buffer.writeVarInt(recipe.getProcessingDuration());
-		buffer.writeVarInt(recipe.getRequiredHeat()
-			.ordinal());
+		if(recipe.getRequiredHeat() != null)
+			buffer.writeVarInt(recipe.getRequiredHeat().ordinal());
 
 		recipe.writeAdditional(buffer);
 	}

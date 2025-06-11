@@ -119,8 +119,14 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
 		heatBar.render(graphics, 4, 80);
-		graphics.drawString(Minecraft.getInstance().font, Component.translatable(heatCondition.getTranslationKey()), 9,
+
+		if (noHeat) {
+			graphics.drawString(Minecraft.getInstance().font, Component.translatable("create.recipe.heat_requirement.none"), 9,
+				86, 0xffffff, false);
+		} else {
+			graphics.drawString(Minecraft.getInstance().font, Component.translatable(heatCondition.getTranslationKey()), 9,
 				86, heatCondition.getColor(), false);
+		}
 	}
 
 }
