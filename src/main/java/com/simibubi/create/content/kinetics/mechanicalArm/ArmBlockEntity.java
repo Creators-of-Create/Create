@@ -644,7 +644,7 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
 
 		SelectionMode(AllIcons icon) {
 			this.icon = icon;
-			this.translationKey = "mechanical_arm.selection_mode." + Lang.asId(name());
+			this.translationKey = "create.mechanical_arm.selection_mode." + Lang.asId(name());
 		}
 
 		@Override

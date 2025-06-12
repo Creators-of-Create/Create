@@ -29,12 +29,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BeltDeployerCallbacks {
 
 	public static ProcessingResult onItemReceived(TransportedItemStack s, TransportedItemStackHandlerBehaviour i,
-		DeployerBlockEntity blockEntity) {
+												  DeployerBlockEntity blockEntity) {
 
 		if (blockEntity.getSpeed() == 0)
 			return ProcessingResult.PASS;
@@ -61,7 +62,7 @@ public class BeltDeployerCallbacks {
 	}
 
 	public static ProcessingResult whenItemHeld(TransportedItemStack s, TransportedItemStackHandlerBehaviour i,
-		DeployerBlockEntity blockEntity) {
+												DeployerBlockEntity blockEntity) {
 
 		if (blockEntity.getSpeed() == 0)
 			return ProcessingResult.PASS;
@@ -93,7 +94,7 @@ public class BeltDeployerCallbacks {
 	}
 
 	public static void activate(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler,
-		DeployerBlockEntity blockEntity, Recipe<?> recipe) {
+								DeployerBlockEntity blockEntity, Recipe<?> recipe) {
 
 		List<TransportedItemStack> collect =
 			RecipeApplier.applyRecipeOn(blockEntity.getLevel(), ItemHandlerHelper.copyStackWithSize(transported.stack, 1), recipe)
@@ -113,7 +114,7 @@ public class BeltDeployerCallbacks {
 				.collect(Collectors.toList());
 
 		blockEntity.award(AllAdvancements.DEPLOYER);
-		
+
 		transported.clearFanProcessingData();
 
 		TransportedItemStack left = transported.copy();
@@ -130,13 +131,10 @@ public class BeltDeployerCallbacks {
 		}
 
 		ItemStack heldItem = blockEntity.player.getMainHandItem();
-		boolean unbreakable = heldItem.hasTag() && (
-				heldItem.getTag().getBoolean("Unbreakable") ||
-				heldItem.getTag().getString("Modifier").equals("forbidden_arcanus:eternal")); // Forbidden Arcanus Compat, See Creators-of-Create#6220
 		boolean keepHeld =
 			recipe instanceof ItemApplicationRecipe && ((ItemApplicationRecipe) recipe).shouldKeepHeldItem();
 
-		if (!unbreakable && !keepHeld) {
+		if (!keepHeld) {
 			if (heldItem.isDamageableItem())
 				heldItem.hurtAndBreak(1, blockEntity.player,
 					s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));

@@ -490,6 +490,15 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 		forceFluidLevelUpdate = false;
 	}
 
+	@Override
+	public void writeSafe(CompoundTag compound) {
+		if (isController()) {
+			compound.putBoolean("Window", window);
+			compound.putInt("Size", width);
+			compound.putInt("Height", height);
+		}
+	}
+
 	@Nonnull
 	@Override
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
