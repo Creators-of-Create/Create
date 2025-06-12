@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.blockEntity.behaviour.edgeInteraction;
 
-import java.util.Optional;
 import java.util.function.Predicate;
 
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -14,18 +13,20 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import org.jetbrains.annotations.Nullable;
+
 public class EdgeInteractionBehaviour extends BlockEntityBehaviour {
 
 	public static final BehaviourType<EdgeInteractionBehaviour> TYPE = new BehaviourType<>();
 
 	ConnectionCallback connectionCallback;
 	ConnectivityPredicate connectivityPredicate;
-	Predicate<ItemStack> requiredItem;
+	@Nullable Predicate<ItemStack> requiredItem;
 
 	public EdgeInteractionBehaviour(SmartBlockEntity be, ConnectionCallback callback) {
 		super(be);
 		this.connectionCallback = callback;
-		requiredItem = ItemStack::isEmpty;
+		requiredItem = null;
 		connectivityPredicate = (world, pos, face, face2) -> true;
 	}
 
