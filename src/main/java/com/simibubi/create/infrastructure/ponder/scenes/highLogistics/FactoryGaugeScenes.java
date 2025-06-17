@@ -673,14 +673,14 @@ public class FactoryGaugeScenes {
 
 		scene.overlay()
 			.showText(70)
-			.text("...it will send new ingredients to the specified address")
+			.text("...it will send the required amount of ingredients to the specified address")
 			.colored(PonderPalette.BLUE)
 			.placeNearTarget()
 			.attachKeyFrame()
 			.pointAt(util.vector()
 				.blockSurface(pack, Direction.WEST));
 		scene.idle(80);
-
+		
 		scene.world()
 			.showSection(funnel1, Direction.DOWN);
 		scene.idle(5);
