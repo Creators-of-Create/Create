@@ -673,7 +673,27 @@ public class FactoryGaugeScenes {
 
 		scene.overlay()
 			.showText(70)
-			.text("...it will send the required amount of ingredients to the specified address")
+			.text("...it will send the required ingredients to the specified address")
+			.colored(PonderPalette.BLUE)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.pointAt(util.vector()
+				.blockSurface(pack, Direction.WEST));
+		scene.idle(80);
+		
+		scene.overlay()
+			.showText(70)
+			.text("When multiple sources provide the same ingredients...")
+			.colored(PonderPalette.BLUE)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.pointAt(util.vector()
+				.blockSurface(pack, Direction.WEST));
+		scene.idle(80);
+
+		scene.overlay()
+			.showText(70)
+			.text("...the Factory Gauge will request maximum amount of ingredients each source can provide, until the ingredient requirement is satisfied")
 			.colored(PonderPalette.BLUE)
 			.placeNearTarget()
 			.attachKeyFrame()
