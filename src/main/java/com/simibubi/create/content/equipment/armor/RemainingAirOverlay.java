@@ -5,6 +5,8 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 
+import com.simibubi.create.Create;
+
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Minecraft;
@@ -17,12 +19,19 @@ import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.api.distmarker.Dist;
 
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.event.entity.living.LivingBreatheEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, modid = Create.ID, value = Dist.CLIENT)
 public class RemainingAirOverlay implements IGuiOverlay {
 	public static final RemainingAirOverlay INSTANCE = new RemainingAirOverlay();
+	private static boolean canBreathe = true;
 
 	@Override
 	public void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int width, int height) {
@@ -38,9 +47,7 @@ public class RemainingAirOverlay implements IGuiOverlay {
 		if (!player.getPersistentData()
 			.contains("VisualBacktankAir"))
 			return;
-		boolean isAir = player.getEyeInFluidType().isAir() || player.level().getBlockState(BlockPos.containing(player.getX(), player.getEyeY(), player.getZ())).is(Blocks.BUBBLE_COLUMN);
-		boolean canBreathe = !player.canDrownInFluidType(player.getEyeInFluidType()) || MobEffectUtil.hasWaterBreathing(player) || player.getAbilities().invulnerable;
-		if ((isAir || canBreathe) && !player.isInLava())
+		if (canBreathe && !player.isInLava())
 			return;
 
 		int timeLeft = player.getPersistentData()
@@ -72,5 +79,10 @@ public class RemainingAirOverlay implements IGuiOverlay {
 			return backtanks.get(0);
 		}
 		return AllItems.COPPER_BACKTANK.asStack();
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public static void onLivingBreathe(LivingBreatheEvent event) {
+		canBreathe = event.canBreathe() || event.canRefillAir();
 	}
 }
