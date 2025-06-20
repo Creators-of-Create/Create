@@ -139,66 +139,64 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 			currentMinLevel = observable.getMinValue();
 			currentLevel = observable.getCurrentValue();
 			currentMaxLevel = observable.getMaxValue();
-
-		/*} else if (StorageDrawers.isDrawer(targetBlockEntity) && observedInventory.hasInventory()) {
-			currentMinLevel = 0;
-			currentLevel = StorageDrawers.getItemCount(observedInventory.getInventory(), filtering);
-			currentMaxLevel = StorageDrawers.getTotalStorageSpace(observedInventory.getInventory());
-		*/
-
-		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
+		} else if (observedInventory.hasInventory()) {
 			currentMinLevel = 0;
 			currentLevel = 0;
 			currentMaxLevel = 0;
 
-			if (observedInventory.hasInventory()) {
+			IItemHandler inv = observedInventory.getInventory();
+			if (invVersionTracker.stillWaiting(inv)) {
+				currentLevel = prevLevel;
+				currentMaxLevel = prevMaxLevel;
+			} else {
+				invVersionTracker.awaitNewVersion(inv);
+				for (int slot = 0; slot < inv.getSlots(); slot++) {
+					ItemStack stackInSlot = inv.getStackInSlot(slot);
 
-				// Item inventory
-				IItemHandler inv = observedInventory.getInventory();
-				if (invVersionTracker.stillWaiting(inv)) {
-					currentLevel = prevLevel;
-					currentMaxLevel = prevMaxLevel;
+					int finalSlot = slot;
+					long space = COMPAT.stream().filter(compat -> compat.isFromThisMod(targetBlockEntity)).map(compat -> compat.getSpaceInSlot(inv, finalSlot)).findFirst().orElseGet(() -> (long) Math.min(stackInSlot.getOrDefault(DataComponents.MAX_STACK_SIZE, 64), inv.getSlotLimit(finalSlot)));
 
-				} else {
-					invVersionTracker.awaitNewVersion(inv);
-					for (int slot = 0; slot < inv.getSlots(); slot++) {
-						ItemStack stackInSlot = inv.getStackInSlot(slot);
+					if (space == 0) continue;
 
-						int finalSlot = slot;
-						long space = COMPAT
-							.stream()
-							.filter(compat -> compat.isFromThisMod(targetBlockEntity))
-							.map(compat -> compat.getSpaceInSlot(inv, finalSlot))
-							.findFirst()
-							.orElseGet(() -> (long) Math.min(stackInSlot.getOrDefault(DataComponents.MAX_STACK_SIZE, 64), inv.getSlotLimit(finalSlot)));
+					if (inStacks) {
+						// When counting in stacks, each slot has 1 unit of capacity
+						currentMaxLevel += 1;
 
-						int count = stackInSlot.getCount();
-						if (space == 0)
-							continue;
-
+						if (filtering.test(stackInSlot)) {
+							// only count full stacks as 1, partial stacks as 0
+							if (stackInSlot.getCount() == space) {
+								currentLevel += 1;
+							}
+						}
+					} else {
+						// When counting individual items, use actual item capacity
 						currentMaxLevel += space;
-						if (filtering.test(stackInSlot))
-							currentLevel += count;
+
+						// Count items that pass the filter
+						if (filtering.test(stackInSlot)) {
+							currentLevel += stackInSlot.getCount();
+						}
 					}
 				}
 			}
+		} else if (observedTank.hasInventory()) {
+			currentMinLevel = 0;
+			currentLevel = 0;
+			currentMaxLevel = 0;
 
-			if (observedTank.hasInventory()) {
-				// Fluid inventory
-				IFluidHandler tank = observedTank.getInventory();
-				for (int slot = 0; slot < tank.getTanks(); slot++) {
-					FluidStack stackInSlot = tank.getFluidInTank(slot);
-					int space = tank.getTankCapacity(slot);
-					int count = stackInSlot.getAmount();
-					if (space == 0)
-						continue;
+			// Fluid inventory
+			IFluidHandler tank = observedTank.getInventory();
+			for (int slot = 0; slot < tank.getTanks(); slot++) {
+				FluidStack stackInSlot = tank.getFluidInTank(slot);
+				int space = tank.getTankCapacity(slot);
+				int count = stackInSlot.getAmount();
+				if (space == 0) continue;
 
-					currentMaxLevel += space;
-					if (filtering.test(stackInSlot))
-						currentLevel += count;
+				currentMaxLevel += space;
+				if (filtering.test(stackInSlot)) {
+					currentLevel += count;
 				}
 			}
-
 		} else {
 			// No compatible inventories found
 			currentMinLevel = -1;
@@ -232,6 +230,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 			update ? 3 : 2);
 
 		if (update)
+
 			scheduleBlockTick();
 
 		if (changed || update) {

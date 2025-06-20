@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
-import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
@@ -21,6 +20,7 @@ import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.gui.widget.AbstractSimiWidget;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.ponder.foundation.ui.PonderTagScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -67,6 +67,7 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 			.forOptions(List.of(CreateLang.translateDirect("schedule.condition.threshold.items"),
 				CreateLang.translateDirect("schedule.condition.threshold.stacks")))
 			.titled(CreateLang.translateDirect("schedule.condition.threshold.item_measure"))
+			.calling((state) -> send(!blockEntity.isInverted()))
 			.setState(blockEntity.inStacks ? 1 : 0);
 
 		offBelow = new ScrollInput(x + 48, y + 47, 1, 18)
@@ -78,7 +79,6 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 
 				if (onAbove.getState() / valueStep == 0 && state / valueStep == 0)
 					return;
-				
 				if (onAbove.getState() / valueStep <= state / valueStep) {
 					onAbove.setState((state + valueStep) / valueStep * valueStep);
 					onAbove.onChanged();
@@ -152,19 +152,16 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 		inputBg.render(graphics, x + 44, y + 21);
 		inputBg.render(graphics, x + 44, y + 21 + 24);
 
-		int valueStep = 1;
+		int valueStep = typeOfCurrentTarget == ThresholdType.FLUID ? 1000 : 1;
 		boolean stacks = inStacks.getState() == 1;
-		if (typeOfCurrentTarget == ThresholdType.FLUID)
-			valueStep = 1000;
 
 		if (forItems) {
 			Component suffix =
-				inStacks.getState() == 0 ? CreateLang.translateDirect("schedule.condition.threshold.items")
-					: CreateLang.translateDirect("schedule.condition.threshold.stacks");
-			valueStep = inStacks.getState() == 0 ? 1 : 64;
+				stacks
+					? CreateLang.translateDirect("schedule.condition.threshold.stacks")
+					: CreateLang.translateDirect("schedule.condition.threshold.items");
 			graphics.drawString(font, suffix, x + 105, y + 28, 0xFFFFFFFF, true);
 			graphics.drawString(font, suffix, x + 105, y + 28 + 24, 0xFFFFFFFF, true);
-
 		}
 
 		graphics.drawString(font,
@@ -327,13 +324,9 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 	}
 
 	private int getValueStep() {
-		boolean stacks = inStacks.getState() == 1;
-		int valueStep = 1;
 		if (blockEntity.getTypeOfCurrentTarget() == ThresholdType.FLUID)
-			valueStep = 1000;
-		else if (stacks)
-			valueStep = 64;
-		return valueStep;
+			return 1000;
+		return 1;
 	}
 
 	@Override
