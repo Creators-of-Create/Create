@@ -363,10 +363,10 @@ public class CreateRegistrateTags {
 
 		public void add(Mods mod, String... woodTypes) {
 			for (String type : woodTypes) {
-				String strippedPre = mod.strippedIsSuffix ? "" : "stripped_";
-				String strippedPost = mod.strippedIsSuffix ? "_stripped" : "";
+				String strippedPre = mod.strippedIsSuffix() ? "" : "stripped_";
+				String strippedPost = mod.strippedIsSuffix() ? "_stripped" : "";
 				TagGen.addOptional(logAppender, mod, strippedPre + type + "_log" + strippedPost);
-				TagGen.addOptional(woodAppender, mod, strippedPre + type + (mod.omitWoodSuffix ? "" : "_wood") + strippedPost);
+				TagGen.addOptional(woodAppender, mod, strippedPre + type + (mod.omitWoodSuffix() ? "" : "_wood") + strippedPost);
 			}
 		}
 	}

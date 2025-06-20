@@ -66,11 +66,11 @@ public final class CreateCuttingRecipeGen extends CuttingRecipeGen {
 			if (mod == Mods.ARS_N && type.contains("archwood"))
 				planks = "archwood_planks";
 
-			String strippedPre = mod.strippedIsSuffix ? "" : "stripped_";
-			String strippedPost = mod.strippedIsSuffix ? "_stripped" : "";
+			String strippedPre = mod.strippedIsSuffix() ? "" : "stripped_";
+			String strippedPost = mod.strippedIsSuffix() ? "_stripped" : "";
 			stripAndMakePlanks(mod, type + "_log", strippedPre + type + "_log" + strippedPost, planks);
 
-			String wood = type + (mod.omitWoodSuffix ? "" : "_wood");
+			String wood = type + (mod.omitWoodSuffix() ? "" : "_wood");
 			stripAndMakePlanks(mod, wood, strippedPre + wood + strippedPost, planks);
 		}
 		return null;
@@ -79,8 +79,8 @@ public final class CreateCuttingRecipeGen extends CuttingRecipeGen {
 	GeneratedRecipe cuttingCompatLogOnly(Mods mod, String... woodtypes) {
 		for (String type : woodtypes) {
 			String planks = type + "_planks";
-			String strippedPre = mod.strippedIsSuffix ? "" : "stripped_";
-			String strippedPost = mod.strippedIsSuffix ? "_stripped" : "";
+			String strippedPre = mod.strippedIsSuffix() ? "" : "stripped_";
+			String strippedPost = mod.strippedIsSuffix() ? "_stripped" : "";
 			stripAndMakePlanks(mod, type + "_log", strippedPre + type + "_log" + strippedPost, planks);
 		}
 		return null;
