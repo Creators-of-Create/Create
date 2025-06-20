@@ -66,7 +66,7 @@ public class RuntimeDataGenerator {
 		Create.LOGGER.info("Created {} tags which will be injected into the game", TAGS.size());
 		for (Map.Entry<ResourceLocation, Collection<TagEntry>> tags : TAGS.asMap().entrySet()) {
 			TagFile tagFile = new TagFile(new ArrayList<>(tags.getValue()), false);
-			dynamicPack.put(tags.getKey().withPrefix("tags/items/"), TagFile.CODEC.encodeStart(JsonOps.INSTANCE, tagFile).result().orElseThrow());
+			dynamicPack.put(tags.getKey().withPrefix("tags/item/"), TagFile.CODEC.encodeStart(JsonOps.INSTANCE, tagFile).result().orElseThrow());
 		}
 
 		JSON_FILES.clear();
