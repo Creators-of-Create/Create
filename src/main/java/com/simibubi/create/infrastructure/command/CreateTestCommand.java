@@ -56,17 +56,16 @@ public class CreateTestCommand {
 			source.sendFailure(Component.literal("You must select an area with the Schematic and Quill first."));
 			return 0;
 		}
-		SchematicExportResult result = SchematicExport.saveSchematic(
+		try {
+			SchematicExportResult result = SchematicExport.saveSchematic(
 				gametests, path, true,
 				level, handler.firstPos, handler.secondPos
-		);
-		if (result == null) {
-            source.sendFailure(Component.literal("Failed to export, check logs").withStyle(ChatFormatting.RED));
-        }
-		else {
+			);
 			sendSuccess(source, "Successfully exported test!", ChatFormatting.GREEN);
 			sendSuccess(source, "Overwritten: " + result.overwritten(), ChatFormatting.AQUA);
 			sendSuccess(source, "File: " + result.file(), ChatFormatting.GRAY);
+		} catch (IOException e) {
+			source.sendFailure(Component.literal("Failed to export, check logs").withStyle(ChatFormatting.RED));
 		}
 		return 0;
 	}
