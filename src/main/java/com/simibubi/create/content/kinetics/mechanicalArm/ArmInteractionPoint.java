@@ -195,8 +195,8 @@ public class ArmInteractionPoint {
 	}
 
 	public enum Mode {
-		DEPOSIT("create.mechanical_arm.deposit_to", 0xDDC166),
-		TAKE("create.mechanical_arm.extract_from", 0x7FCDE0);
+		DEPOSIT("mechanical_arm.deposit_to", 0xDDC166),
+		TAKE("mechanical_arm.extract_from", 0x7FCDE0);
 
 		private final String translationKey;
 		private final int color;
