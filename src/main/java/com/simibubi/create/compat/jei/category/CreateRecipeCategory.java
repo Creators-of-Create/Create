@@ -171,7 +171,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 	@SuppressWarnings("removal") // see below
 	public static IRecipeSlotBuilder addFluidSlot(IRecipeLayoutBuilder builder, int x, int y, FluidIngredient ingredient) {
 		int amount = ingredient.getRequiredAmount();
-		return builder.addSlot(RecipeIngredientRole.OUTPUT, x, y)
+		return builder.addSlot(RecipeIngredientRole.INPUT, x, y)
 			.setBackground(getRenderedSlot(), -1, -1)
 			.addIngredients(NeoForgeTypes.FLUID_STACK, ingredient.getMatchingFluidStacks())
 			.setFluidRenderer(amount, false, 16, 16) // make fluid take up the full slot
