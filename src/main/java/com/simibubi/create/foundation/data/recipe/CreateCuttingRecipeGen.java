@@ -32,7 +32,12 @@ public final class CreateCuttingRecipeGen extends CuttingRecipeGen {
 	 */
 
 		// Ars Nouveau (all logs yield the same plank) (blue is covered by RuntimeDataGenerator to handle the planks into other recipes)
-		ARS_N = cuttingCompat(Mods.ARS_N, "purple_archwood", "green_archwood", "red_archwood"),
+		ARS_N_1 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_purple_archwood_log", "archwood_planks"),
+		ARS_N_2 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_green_archwood_log", "archwood_planks"),
+		ARS_N_3 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_red_archwood_log", "archwood_planks"),
+		ARS_N_4 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_purple_archwood_wood", "archwood_planks"),
+		ARS_N_5 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_green_archwood_wood", "archwood_planks"),
+		ARS_N_6 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_red_archwood_wood", "archwood_planks"),
 		ARS_E_1 = stripAndMakePlanksDiffPlanksModId(Mods.ARS_E, null, "stripped_yellow_archwood_log", Mods.ARS_N, "archwood_planks"),
 		ARS_E_2 = stripAndMakePlanksDiffPlanksModId(Mods.ARS_E, null, "stripped_yellow_archwood", Mods.ARS_N, "archwood_planks"),
 
