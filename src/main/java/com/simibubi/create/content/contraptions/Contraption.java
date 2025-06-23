@@ -29,6 +29,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllContraptionTypeTags;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
@@ -57,21 +58,31 @@ import com.simibubi.create.content.contraptions.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlockEntity;
+import com.simibubi.create.content.decoration.bracket.BracketedBlockEntityBehaviour;
+import com.simibubi.create.content.decoration.placard.PlacardBlockEntity;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
+import com.simibubi.create.content.equipment.toolbox.ToolboxBlockEntity;
+import com.simibubi.create.content.fluids.drain.ItemDrainBlockEntity;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
+import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
+import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterBlockEntity;
 import com.simibubi.create.content.kinetics.gantry.GantryShaftBlock;
 import com.simibubi.create.content.kinetics.simpleRelays.ShaftBlock;
 import com.simibubi.create.content.kinetics.steamEngine.PoweredShaftBlockEntity;
 import com.simibubi.create.content.logistics.crate.CreativeCrateBlockEntity;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlockEntity;
+import com.simibubi.create.content.logistics.vault.ItemVaultBlockEntity;
 import com.simibubi.create.content.redstone.contact.RedstoneContactBlock;
+import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -94,6 +105,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.item.ItemStack;
@@ -108,7 +121,9 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
@@ -1168,6 +1183,67 @@ public abstract class Contraption {
 					if (targetPos.getY() == world.getMinBuildHeight())
 						targetPos = targetPos.above();
 					world.levelEvent(2001, targetPos, Block.getId(state));
+					if(state.hasBlockEntity()){
+						CompoundTag tag = block.nbt();
+						if(tag != null) {
+							BlockEntity blockEntity = BlockEntity.loadStatic(targetPos, state, tag);
+							if (blockEntity instanceof ToolboxBlockEntity toolbox){
+								ItemStack itemstack = new ItemStack(state.getBlock().asItem());
+								CompoundTag item_tag = itemstack.getOrCreateTag();
+								item_tag.put("Inventory", toolbox.getInventoryOfBlock().serializeNBT());
+								if(toolbox.isFullyInitialized())
+									item_tag.putUUID("UniqueId", toolbox.getUniqueId());
+								if(toolbox.hasCustomName())
+									itemstack.setHoverName(toolbox.getCustomName());
+								Block.popResource(world, targetPos, itemstack);
+								continue;
+							} else if (blockEntity instanceof ShulkerBoxBlockEntity shulkerBox) {
+								if (state.getBlock() instanceof  ShulkerBoxBlock shulkerblock){
+									ItemStack itemstack = ShulkerBoxBlock.getColoredItemStack(shulkerblock.getColor());
+									shulkerBox.saveToItem(itemstack);
+									if (shulkerBox.hasCustomName())
+										itemstack.setHoverName(shulkerBox.getCustomName());
+									Block.popResource(world, targetPos, itemstack);
+									continue;
+								}
+							}
+							else if (blockEntity instanceof Container container)
+								Containers.dropContents(world, targetPos, container);
+							else if (blockEntity instanceof ItemVaultBlockEntity vault)
+								ItemHelper.dropContents(world, targetPos, vault.getInventoryOfBlock());
+							else if (blockEntity instanceof PlacardBlockEntity placard)
+								Block.popResource(world, targetPos, placard.getHeldItem());
+							else if (blockEntity instanceof SchematicannonBlockEntity schematicannon)
+								ItemHelper.dropContents(world, targetPos, schematicannon.inventory);
+							else if (blockEntity instanceof ItemDrainBlockEntity itemDrain){
+								ItemStack heldItemStack = itemDrain.getHeldItemStack();
+								if (!heldItemStack.isEmpty())
+									Containers.dropItemStack(world, targetPos.getX(), targetPos.getY(), targetPos.getZ(), heldItemStack);
+							}
+							else if (blockEntity instanceof MechanicalCrafterBlockEntity mechanicalCrafter){
+								if (mechanicalCrafter.isCovered())
+									Block.popResource(world, targetPos, AllItems.CRAFTER_SLOT_COVER.asStack());
+								ItemStack itemStack = mechanicalCrafter.getInventory().getItem(0);
+								if (!itemStack.isEmpty())
+									Containers.dropItemStack(world, targetPos.getX(), targetPos.getY(), targetPos.getZ(), itemStack);
+							}
+							else if (blockEntity instanceof SmartBlockEntity sbe){
+								sbe.setLevel(world);
+								sbe.destroy();
+								if (sbe instanceof BeltBlockEntity belt) {
+									if (belt.hasPulley())
+										Block.popResource(world, targetPos, AllBlocks.SHAFT.asStack());
+									continue;
+								}
+								BracketedBlockEntityBehaviour behaviour = sbe.getBehaviour(BracketedBlockEntityBehaviour.TYPE);
+								if (behaviour.isBracketPresent()){
+									BlockState bracket = behaviour.getBracket();
+									if (bracket != null)
+										Block.popResource(world, targetPos, new ItemStack(bracket.getBlock()));
+								}
+							}
+						}
+					}
 					Block.dropResources(state, world, targetPos, null);
 					continue;
 				}

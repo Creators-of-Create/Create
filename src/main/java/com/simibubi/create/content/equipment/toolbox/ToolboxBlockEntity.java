@@ -331,6 +331,8 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 		inventory.deserializeNBT(compound);
 	}
 
+	public ToolboxInventory getInventoryOfBlock() { return inventory; }
+
 	public void setUniqueId(UUID uniqueId) {
 		this.uniqueId = uniqueId;
 	}

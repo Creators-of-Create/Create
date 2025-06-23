@@ -396,6 +396,10 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
 		return BlockEntityBehaviour.get(level, targetPos, DirectBeltInputBehaviour.TYPE);
 	}
 
+	public boolean isCovered(){
+		return covered;
+	}
+
 	public void tryInsert() {
 		if (!inserting.hasInventory() && !isTargetingBelt()) {
 			ejectWholeGrid();
