@@ -1,6 +1,7 @@
 package com.simibubi.create.content.redstone.thresholdSwitch;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.simibubi.create.compat.thresholdSwitch.FunctionalStorage;
 import com.simibubi.create.compat.thresholdSwitch.SophisticatedStorage;
@@ -147,15 +148,19 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 				currentMaxLevel = prevMaxLevel;
 			} else {
 				invVersionTracker.awaitNewVersion(inv);
+				Optional<ThresholdSwitchCompat> compatibilityHandler = COMPAT.stream()
+					.filter(compat -> compat.isFromThisMod(targetBlockEntity))
+					.findFirst();
+
 				for (int slot = 0; slot < inv.getSlots(); slot++) {
 					ItemStack stackInSlot = inv.getStackInSlot(slot);
 
-					final int slotClone = slot;
-					long space = COMPAT.stream()
-						.filter(compat -> compat.isFromThisMod(targetBlockEntity))
-						.map(compat -> compat.getSpaceInSlot(inv, slotClone))
-						.findFirst()
-						.orElseGet(() -> (long) Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(slotClone)));
+					long space;
+					if (compatibilityHandler.isPresent()){
+						space = compatibilityHandler.get().getSpaceInSlot(inv, slot);
+					} else {
+						space = Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(slot));
+					}
 
 					if (space == 0) continue;
 
@@ -349,5 +354,15 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 			return;
 		this.inverted = inverted;
 		updatePowerAfterDelay();
+	}
+
+	public void setInStacks(Boolean value) {
+		// When configuration values such as inStacks are changed from the screen,
+		// ensure that the next tick recalculates the inventory even if its version
+		// has not changed yet.
+		inStacks = value;
+		if (invVersionTracker != null)
+			invVersionTracker.reset();
+		updateCurrentLevel();
 	}
 }

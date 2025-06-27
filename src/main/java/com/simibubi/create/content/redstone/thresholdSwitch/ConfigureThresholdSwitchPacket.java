@@ -19,11 +19,11 @@ public class ConfigureThresholdSwitchPacket extends BlockEntityConfigurationPack
 		this.invert = invert;
 		this.inStacks = inStacks;
 	}
-	
+
 	public ConfigureThresholdSwitchPacket(FriendlyByteBuf buffer) {
 		super(buffer);
 	}
-	
+
 	@Override
 	protected void readSettings(FriendlyByteBuf buffer) {
 		offBelow = buffer.readInt();
@@ -45,7 +45,7 @@ public class ConfigureThresholdSwitchPacket extends BlockEntityConfigurationPack
 		be.offWhenBelow = offBelow;
 		be.onWhenAbove = onAbove;
 		be.setInverted(invert);
-		be.inStacks = inStacks;
+		be.setInStacks(inStacks);
 	}
-	
+
 }
