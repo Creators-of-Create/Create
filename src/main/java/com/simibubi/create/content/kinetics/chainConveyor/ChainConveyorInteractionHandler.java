@@ -150,7 +150,8 @@ public class ChainConveyorInteractionHandler {
 			ItemStack usedItem = PackageItem.isPackage(mainHandItem) ? mainHandItem : offHandItem;
 			AllPackets.getChannel()
 				.sendToServer(new ChainPackageInteractionPacket(selectedLift, selectedConnection, selectedChainPosition,
-					usedItem));
+					false));
+
 			return true;
 		}
 

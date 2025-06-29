@@ -125,7 +125,7 @@ legacyForge {
 
 repositories {
     maven { url = "https://maven.createmod.net" } // Ponder, Flywheel
-    maven { url = "https://maven.tterrag.com" } // Registrate
+    maven { url = "https://maven.ithundxr.dev/mirror" } // Registrate
     maven { url = "https://maven.blamejared.com" } // JEI, Vazkii's Mods
     maven { url = "https://harleyoconnor.com/maven" } // Dynamic Trees
     maven { url = "https://maven.theillusivec4.top/" } // Curios API
@@ -259,7 +259,7 @@ sourceSets.main {
     }
 
     blossom.javaSources {
-        property("version", build_info_mod_version)
+        property("version", mod_version)
         property("gitCommit", gitHash.toString())
     }
 }

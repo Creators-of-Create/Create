@@ -309,7 +309,7 @@ public class ItemHelper {
 		if (entityIn instanceof PackageEntity packageEntity) {
 			return packageEntity.getBox();
 		}
-		return entityIn instanceof ItemEntity ? ((ItemEntity) entityIn).getItem() : ItemStack.EMPTY;
+		return entityIn instanceof ItemEntity itemEntity ? itemEntity.getItem() : ItemStack.EMPTY;
 	}
 
 	public static ItemStack limitCountToMaxStackSize(ItemStack stack, boolean simulate) {

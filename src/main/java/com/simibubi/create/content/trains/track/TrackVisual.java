@@ -21,7 +21,6 @@ import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.instance.FlatLit;
 import dev.engine_room.flywheel.lib.instance.InstanceTypes;
 import dev.engine_room.flywheel.lib.instance.TransformedInstance;
-import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
@@ -30,6 +29,7 @@ import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 
@@ -98,14 +98,15 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> imp
 		int maxY = Integer.MIN_VALUE;
 		int maxZ = Integer.MIN_VALUE;
 		for (BezierConnection connection : blockEntity.connections.values()) {
-			for (BlockPos pos : connection.bePositions) {
-				minX = Math.min(minX, pos.getX());
-				minY = Math.min(minY, pos.getY());
-				minZ = Math.min(minZ, pos.getZ());
-				maxX = Math.max(maxX, pos.getX());
-				maxY = Math.max(maxY, pos.getY());
-				maxZ = Math.max(maxZ, pos.getZ());
-			}
+			// The start and end positions are not enough to enclose the entire curve.
+			// Check the computed bounds but expand by one for safety.
+			var bounds = connection.getBounds();
+			minX = Math.min(minX, Mth.floor(bounds.minX) - 1);
+			minY = Math.min(minY, Mth.floor(bounds.minY) - 1);
+			minZ = Math.min(minZ, Mth.floor(bounds.minZ) - 1);
+			maxX = Math.max(maxX, Mth.ceil(bounds.maxX) + 1);
+			maxY = Math.max(maxY, Mth.ceil(bounds.maxY) + 1);
+			maxZ = Math.max(maxZ, Mth.ceil(bounds.maxZ) + 1);
 		}
 
 		var minSectionX = ContraptionVisual.minLightSection(minX);
@@ -230,9 +231,9 @@ public class TrackVisual extends AbstractBlockEntityVisual<TrackBlockEntity> imp
 				beams = Couple.create(() -> new TransformedInstance[segCount]);
 				beamCaps = Couple.create(() -> Couple.create(() -> new TransformedInstance[segCount]));
 				lightPos = new BlockPos[segCount];
-				beams.forEach(instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GIRDER_SEGMENT_MIDDLE))::createInstances);
+				beams.forEach(instancerProvider().instancer(InstanceTypes.TRANSFORMED, SpecialModels.flatChunk(AllPartialModels.GIRDER_SEGMENT_MIDDLE))::createInstances);
 				beamCaps.forEachWithContext((c, top) -> {
-					var partialModel = Models.partial(top ? AllPartialModels.GIRDER_SEGMENT_TOP : AllPartialModels.GIRDER_SEGMENT_BOTTOM);
+					var partialModel = SpecialModels.flatChunk(top ? AllPartialModels.GIRDER_SEGMENT_TOP : AllPartialModels.GIRDER_SEGMENT_BOTTOM);
 					c.forEach(instancerProvider().instancer(InstanceTypes.TRANSFORMED, partialModel)::createInstances);
 				});
 

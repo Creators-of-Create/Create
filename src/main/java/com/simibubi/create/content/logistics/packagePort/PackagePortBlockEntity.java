@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.equipment.clipboard.ClipboardEntry;
 import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides;
+import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.animatedContainer.AnimatedContainerBehaviour;
@@ -29,6 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.LazyOptional;
@@ -51,7 +53,13 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 		super(type, pos, state);
 		addressFilter = "";
 		acceptsPackages = true;
-		inventory = new SmartInventory(18, this);
+		inventory = new SmartInventory(18, this, (slot, stack) -> {
+			if (PackageItem.isPackage(stack))
+				return false;
+
+			String filterString = getFilterString();
+			return filterString != null && PackageItem.matchAddress(stack, filterString);
+		});
 		itemHandler = LazyOptional.of(() -> new PackagePortAutomationInventoryWrapper(inventory, this));
 	}
 
@@ -163,7 +171,10 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 		return InteractionResult.SUCCESS;
 	}
 
-	protected void onOpenedManually() {};
+	protected void onOpenedManually() {
+	}
+
+	;
 
 	private void addAddressToClipboard(Player player, ItemStack mainHandItem) {
 		if (addressFilter == null || addressFilter.isBlank())
@@ -203,8 +214,8 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 
 	@Override
 	public Component getDisplayName() {
-        return Component.empty();
-    }
+		return Component.empty();
+	}
 
 	@Override
 	public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {

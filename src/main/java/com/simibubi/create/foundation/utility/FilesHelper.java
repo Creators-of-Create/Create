@@ -22,10 +22,15 @@ import net.minecraft.nbt.CompoundTag;
 public class FilesHelper {
 
 	public static void createFolderIfMissing(String name) {
+		createFolderIfMissing(Paths.get(name));
+	}
+
+	public static void createFolderIfMissing(Path path) {
 		try {
-			Files.createDirectories(Paths.get(name));
+			Files.createDirectories(path);
 		} catch (IOException e) {
-			Create.LOGGER.warn("Could not create Folder: {}", name);
+			Path parentPath = path.getParent() == null ? path : path.getParent();
+			Create.LOGGER.warn("Could not create Folder: {}", parentPath);
 		}
 	}
 

@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screens.Screen;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -75,9 +76,10 @@ public enum AllKeys {
 			.toUpperCase();
 	}
 
-	public int getBoundCode() {
-		return keybind.getKey()
-			.getValue();
+	public boolean doesModifierAndCodeMatch(int code) {
+		boolean codeMatches = code == keybind.getKey().getValue();
+		boolean modifierMatches = keybind.getKeyModifier().equals(KeyModifier.getActiveModifier());
+		return codeMatches && modifierMatches;
 	}
 
 	public static boolean isKeyDown(int key) {

@@ -1,4 +1,117 @@
 ------------------------------------------------------
+Create 6.0.6
+------------------------------------------------------
+
+#### Gameplay Changes
+
+- Wardens can now hear trains and train horns
+- Contraption controls with a door as their target now affect all carriages of a train #8289
+
+#### Optimizations
+
+- Fix basins taking up a lot of tick time in certain setups
+- Implement flw visuals for signals and train observers
+- Optimize vault comparator updates
+- Optimize vault inventory access
+
+#### Bug Fixes
+
+- Fix display links not properly being rotated with contraptions #8173
+- Fix belt stack sizes getting reduced to 1 in ponders #8143
+- Fix pipes not checking pipesPlaceFluidSourceBlocks when trying to waterlog blocks #8174
+- Fix chain conveyor animation not respecting player's main hand #7419 #8032
+- Fix crushing wheel efficiency being lower on powers of 2 #8218
+- Fix crushing wheels voiding items due to their internal inventory being too small #3850
+- Fix fluids incorrectly being marked as outputs in JEI #7848
+- Fix requesting recipes with no item outputs causing a crash #8276
+- Fix horizontal crushing wheels processing items twice in specific directions #7809
+- Fix PackageEntity not respecting item invulnerabilities #8162
+- Fix encased chutes not conducting redstone #8064
+- Fix backtanks still being enchantable with mending and unbreaking
+- Fix sequenced assembly input amounts not respecting number of loops #8306
+- Fix crash when certain create blocks are part of worldgen #8268
+- Fix incorrect inputs for buzzies bees compat recipes #8329
+- Fix blaze burners not overriding animateTick #8140
+- Fix being unable to change link mode while holding extendo grip in offhand #7877
+- Fix item duplication on belts
+- Fix incorrect re-packager behaviour when ordering multiple recipes from a stock ticker with non-uniform ingredients
+- Fix train graph sync issues #8425
+- Fix belts being consumed when not having enough shafts to split the belt #7334
+- Fix restocker promises not expiring #7759 #8429
+- Fix fluid pumps not working in ponders #8194 #8316
+- Fix crash when holding shift when setting addresses #8442
+- Fix backtank air depleting when in spectator mode #5927
+- Fix backtank air overlay appearing in all fluids, including those that the player cannot drown in #8408
+- Fix sliding doors not playing sounds when being opened #5488
+- Fix consistency issues in analog lever ponder #8449
+- Fix inability to shift-click items to fill the fourth stack in the last slot of a toolbox #8447
+- Fix bound block of cardboard being unable to be silk touched #7513
+- Fix Cargo idle condition not working as intended #7609
+- Fix computer display source translation key #8373 #8374
+- Switched concrete powder splashing recipes to be created at runtime to improve mod compat
+- Fix all stews not appearing upright on belts
+- Fix toolboxes causing crashes #8343
+- Fix incorrect lang keys #8373 #8374 #8459
+- Fix mob hat offsets for multiple mobs
+- Fix crash when interacting with a trains schedule with cc: tweaked #8504 #8507
+- Improved harvester interaction with blocks that have multiple properties #8187
+- Fix ItemUseWorld not extending ServerLevel #7956
+- Fix SignDisplayTarget not trimming text to the sign's max length #8065
+- Fix self-driving cart advancement being really obtuse to obtain #4058 #8520
+- Fix nbt data not being passed to ItemRequirement's
+- Fix schematics requesting 2 filters for belt funnels #6984
+- Fix train honks subtitle not being repeated #3566
+- Fix 1x1 fluid tanks not connecting to whistles properly when placed with a schematicannon #7137
+- Fix deployer being unable to pickup items dropped by blocks with Block.popResource #5226
+- Fix belt funnels breaking upon contraption disassembly #6985 #8543
+- Fix Redstone links not updating blocks neighbouring hard-powered blocks when broken #8618
+- Fix /create debuginfo translation the graphics mode
+- Fix cardboard not having the plates tag #8589
+- Fix crash with invalid package filter addresses when using the glob syntax #8583
+- Fix funnels on contraptions not picking up package entities #8151
+- Fix new cardboard packages from addons being added to Create's creative tab
+- Fix packages being voided when placed on chains #8649 #8652
+- Fix being unable to pickup packages on chains #8649 #8652
+- Fix unbreakable glue and unbreakable items not working properly in deployers (1.21.1) #8193
+- Fix processing outputs not applying data components (1.21.1) #7945 #8105
+- Fix certain equipment items not being enchantable properly (1.21.1) #7997
+- Fix fluid networks causing crashes when removing blocks (1.21.1) #7604
+- Fix mechanical arms causing crashes (1.21.1) #8060 #8106 #8200
+- Fix redstone torches popping off contraptions (1.21.1) #7815
+- Fixed deployer crashing when using nametag with space on nixie tubes (1.21.1) #8299
+- Fix chromatic compound having a blank/empty texture (1.21.1) #7664
+- Fix chain conveyor riding animation not showing up on chains longer then 20 blocks (1.21.1) #7551 #8233
+- Add #c:teleporting_not_supported to contraption entities (1.21.1) #8407
+- Fix lectern controller not saving the channels of the controller (1.21.1) #7826
+- Fix toolbox not keeping filters when no items are inside the slot (1.21.1) #8438
+- Fix potato cannon not playing the proper shooting animation (1.21.1) #7966 #8368
+- Fix recipe IDs not showing in JEI (1.21.1) #8048 #8351
+- Fix crash with linked controller using enchanted items as their channels (1.21.1) #8089
+- Fix stock links not working properly with large inventories from mods like sophisticated storage (1.21.1) #8346 #8056
+- Adjust hat offsets for armadillo and breeze (1.21.1) #7786
+- Fix some ponder scenes (1.21.1) #8318
+- Fix copycats not properly saving light level when leaving and opening a world (1.21.1) #4889
+- Fix crash when using sandpaper (1.21.1) #8536 #8503
+- Fix crash with spouts (1.21.1) #8531
+
+#### API Changes
+
+- Allow other mods and addons to use ValueSettingsFormatter without needing to use translations prefixed with "create."
+  #8322
+- Refactored datagen so that addons have a clear API to follow. #7861
+- Reworked ProcessingRecipe (Addon developers will need to adjust to these changes for their addon to work with 6.0.6) (
+  1.21.1) #7945
+
+------------------------------------------------------
+Create 6.0.5
+------------------------------------------------------
+
+#### Bug Fixes
+
+- Fixed duplication glitch with chain conveyors
+- Fixed an exploit that could be used to spawn in arbitrary packages
+
+------------------------------------------------------
 Create 6.0.4
 ------------------------------------------------------
 
@@ -25,7 +138,7 @@ Create 6.0.3
 - Fixed crash when using or viewing sandpaper polishing recipes (1.21)
 - Fixed crash with recent versions of ftb library
 - Fixed belts interacting with horizontal crushing wheels inconsistently #7445
-- Allow Re-Packager to split packages with multiple crafting recipes into single packages 
+- Allow Re-Packager to split packages with multiple crafting recipes into single packages
 - Fixed contraptions not able to break ice blocks #4415
 - Increased rope pulley view distance #4836
 - Fixed create datagen running in addon workspaces (#7862)

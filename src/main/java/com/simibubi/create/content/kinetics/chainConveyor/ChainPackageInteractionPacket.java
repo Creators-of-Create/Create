@@ -13,17 +13,15 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 public class ChainPackageInteractionPacket extends BlockEntityConfigurationPacket<ChainConveyorBlockEntity> {
-
 	private BlockPos selectedConnection;
 	private float chainPosition;
-	private ItemStack insertedPackage;
+	private boolean removingPackage;
 
-	public ChainPackageInteractionPacket(BlockPos pos, BlockPos selectedConnection, float chainPosition,
-		ItemStack insertedPackage) {
+	public ChainPackageInteractionPacket(BlockPos pos, BlockPos selectedConnection, float chainPosition, boolean removingPackage) {
 		super(pos);
 		this.selectedConnection = selectedConnection == null ? BlockPos.ZERO : selectedConnection;
 		this.chainPosition = chainPosition;
-		this.insertedPackage = insertedPackage == null ? ItemStack.EMPTY : insertedPackage;
+		this.removingPackage = removingPackage;
 	}
 
 	public ChainPackageInteractionPacket(FriendlyByteBuf buffer) {
@@ -34,14 +32,14 @@ public class ChainPackageInteractionPacket extends BlockEntityConfigurationPacke
 	protected void writeSettings(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(selectedConnection);
 		buffer.writeFloat(chainPosition);
-		buffer.writeItem(insertedPackage);
+		buffer.writeBoolean(removingPackage);
 	}
 
 	@Override
 	protected void readSettings(FriendlyByteBuf buffer) {
 		selectedConnection = buffer.readBlockPos();
 		chainPosition = buffer.readFloat();
-		insertedPackage = buffer.readItem();
+		removingPackage = buffer.readBoolean();
 	}
 
 	@Override
@@ -50,12 +48,12 @@ public class ChainPackageInteractionPacket extends BlockEntityConfigurationPacke
 	}
 
 	@Override
-	protected void applySettings(ChainConveyorBlockEntity be) {}
+	protected void applySettings(ChainConveyorBlockEntity be) {
+	}
 
 	@Override
 	protected void applySettings(ServerPlayer player, ChainConveyorBlockEntity be) {
-		if (insertedPackage.isEmpty()) {
-
+		if (removingPackage) {
 			float bestDiff = Float.POSITIVE_INFINITY;
 			ChainConveyorPackage best = null;
 			List<ChainConveyorPackage> list = selectedConnection.equals(BlockPos.ZERO) ? be.loopingPackages
@@ -90,13 +88,11 @@ public class ChainPackageInteractionPacket extends BlockEntityConfigurationPacke
 
 			list.remove(best);
 			be.sendData();
-
-			return;
-		}
-
-		ChainConveyorPackage chainConveyorPackage = new ChainConveyorPackage(chainPosition, insertedPackage);
-		if (!be.canAcceptPackagesFor(selectedConnection))
-			return;
+		} else {
+			ChainConveyorPackage chainConveyorPackage = new ChainConveyorPackage(chainPosition, player.getMainHandItem().copy());
+			if (!be.canAcceptPackagesFor(selectedConnection)) {
+				return;
+			}
 
 		if (!player.isCreative()) {
 			player.getMainHandItem().shrink(1);
@@ -107,14 +103,12 @@ public class ChainPackageInteractionPacket extends BlockEntityConfigurationPacke
 				} else {
 					player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
 				}
+
+			if (selectedConnection.equals(BlockPos.ZERO)) {
+				be.addLoopingPackage(chainConveyorPackage);
+			} else {
+				be.addTravellingPackage(chainConveyorPackage, selectedConnection);
 			}
 		}
-
-		if (selectedConnection.equals(BlockPos.ZERO))
-			be.addLoopingPackage(chainConveyorPackage);
-		else
-			be.addTravellingPackage(chainConveyorPackage, selectedConnection);
-
 	}
-
 }

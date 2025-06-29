@@ -1,4 +1,4 @@
-// 1.20.1	2025-05-18T12:16:16.454733203	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.20.1	2025-06-10T18:29:31.521314495	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -642,8 +642,8 @@ b0d8f08968763a5f74e5cd5644377a76a9f39753 assets/create/blockstates/yellow_toolbo
 fe8c497aacc641c2f01cec90bba9f19e59cc2ed2 assets/create/blockstates/yellow_valve_handle.json
 e819e93fdcbe9fd9c050a052d2718ff3b3539365 assets/create/blockstates/zinc_block.json
 64121dcb216381c83b4fe28aa361ea07c24c9ad0 assets/create/blockstates/zinc_ore.json
-474cf1316a62de21d48116ab471717b54b8e5438 assets/create/lang/en_ud.json
-785c865cda29da3a52e8e58de1bf4955e66a4a93 assets/create/lang/en_us.json
+53a6843019a9a8f78863687d81dea37cb8ecd24a assets/create/lang/en_ud.json
+4793ab3e91a6ad78ee9415ae817751f7d388583b assets/create/lang/en_us.json
 a97e1060e00ae701a02e39cd4ef8054cf345fac4 assets/create/models/block/acacia_window.json
 103e032c0b1a0a6a27c67da8c91179a564bd281c assets/create/models/block/acacia_window_pane_noside.json
 fb00b627abda76ad4fea867ca57dbfadd24fffa3 assets/create/models/block/acacia_window_pane_noside_alt.json
@@ -4811,7 +4811,7 @@ ccf5b08295f6362a3f6b3b595f1de1bba4b224ec data/forge/tags/items/ingots/zinc.json
 81b107ada9c6ac5679a21f8c6a006bf230f69c39 data/forge/tags/items/ores/zinc.json
 e475ad1c52bffedfc544e5331a87c1f5c45149fd data/forge/tags/items/ores_in_ground/deepslate.json
 2f6068972e364599b6849dc46fcb0724d4219d53 data/forge/tags/items/ores_in_ground/stone.json
-12c3455bbb7edcea84d47ad6ccde9c209a25d811 data/forge/tags/items/plates.json
+0b718fa5d4db0c2f2d34db1096f33a88f12f0ede data/forge/tags/items/plates.json
 23f4874238f7d06e80c699b672d4e9fab6eb464f data/forge/tags/items/plates/brass.json
 7f3f85d0978bc274e4689fbf41f7b80b023b7a05 data/forge/tags/items/plates/cardboard.json
 ef5256892a9d4167bf7371c7138a933a107a123a data/forge/tags/items/plates/copper.json
