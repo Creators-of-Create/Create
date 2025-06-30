@@ -117,6 +117,7 @@ public class TrackBlockItem extends BlockItem {
 		stack = player.getMainHandItem();
 		if (AllTags.AllBlockTags.TRACKS.matches(stack)) {
 			stack.remove(AllDataComponents.TRACK_CONNECTING_FROM);
+			stack.remove(AllDataComponents.TRACK_EXTENDED_CURVE);
 			player.setItemInHand(pContext.getHand(), stack);
 		}
 
