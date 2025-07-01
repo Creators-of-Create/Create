@@ -505,7 +505,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	}
 
 	public static float convertToAngular(float speed) {
-		return speed * 3 / 10f;
+		return speed * 360f / 60f / 20f;
 	}
 
 	public boolean isOverStressed() {
