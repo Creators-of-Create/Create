@@ -336,7 +336,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 	}
 
 	public float getMovementSpeed() {
-		float movementSpeed = Mth.clamp(convertToLinear(getSpeed()), -.49f, .49f) + clientOffsetDiff / 2f;
+		float movementSpeed = Mth.clamp(convertToLinear(getSpeed()), -1, 1) + clientOffsetDiff / 2f;
 		if (level.isClientSide)
 			movementSpeed *= ServerSpeedProvider.get();
 		if (sequencedOffsetLimit >= 0)
