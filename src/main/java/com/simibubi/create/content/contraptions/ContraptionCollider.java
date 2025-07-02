@@ -713,6 +713,8 @@ public class ContraptionCollider {
 		Direction movementDirection = Direction.getNearest(motion.x, motion.y, motion.z);
 
 		// Blocks in the world
+		if (movementDirection.getAxisDirection() == AxisDirection.POSITIVE)
+			gridPos = gridPos.relative(movementDirection);
 		if (isCollidingWithWorld(world, contraption, gridPos, movementDirection))
 			return true;
 
@@ -764,29 +766,32 @@ public class ContraptionCollider {
 			boolean emptyCollider = collidedState.getCollisionShape(world, pos)
 				.isEmpty();
 
+			if (emptyCollider) continue;
+
 			if (collidedState.getBlock() instanceof CocoaBlock)
 				continue;
 
 			MovementBehaviour movementBehaviour = MovementBehaviour.REGISTRY.get(blockInfo.state());
 			if (movementBehaviour != null) {
 				if (movementBehaviour instanceof BlockBreakingMovementBehaviour behaviour) {
-					if (!behaviour.canBreak(world, colliderPos, collidedState) && !emptyCollider)
+					if (!behaviour.canBreak(world, colliderPos, collidedState))
 						return true;
 					continue;
 				}
 				if (movementBehaviour instanceof HarvesterMovementBehaviour harvesterMovementBehaviour) {
 					if (!harvesterMovementBehaviour.isValidCrop(world, colliderPos, collidedState)
-						&& !harvesterMovementBehaviour.isValidOther(world, colliderPos, collidedState)
-						&& !emptyCollider)
+						&& !harvesterMovementBehaviour.isValidOther(world, colliderPos, collidedState))
 						return true;
 					continue;
 				}
 			}
 
-			if (AllBlocks.PULLEY_MAGNET.has(collidedState) && pos.equals(BlockPos.ZERO)
-				&& movementDirection == Direction.UP)
-				continue;
-			if (!collidedState.canBeReplaced() && !emptyCollider) {
+			// This case exists for the mechanical piston, because it intersects with its own contraption
+			if (contraption.entity instanceof ControlledContraptionEntity cce) {
+				if (cce.controllerPos.equals(colliderPos)) continue;
+			}
+
+			if (!collidedState.canBeReplaced()) {
 				return true;
 			}
 

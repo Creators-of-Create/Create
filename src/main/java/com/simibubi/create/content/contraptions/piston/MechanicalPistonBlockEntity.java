@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -52,26 +53,15 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 
 		Direction direction = getBlockState().getValue(BlockStateProperties.FACING);
 
-		// Collect Construct
+		// Assemble contraption first (getMovementSpeed may already exist)
 		PistonContraption contraption = new PistonContraption(direction, getMovementSpeed() < 0);
 		if (!contraption.assemble(level, worldPosition))
 			return;
 
-		Direction positive = Direction.get(AxisDirection.POSITIVE, direction.getAxis());
-		Direction movementDirection =
-			getSpeed() > 0 ^ direction.getAxis() != Axis.Z ? positive : positive.getOpposite();
-
-		BlockPos anchor = contraption.anchor.relative(direction, contraption.initialExtensionProgress);
-		if (ContraptionCollider.isCollidingWithWorld(level, contraption, anchor.relative(movementDirection),
-			movementDirection))
-			return;
-
-		// Check if not at limit already
 		extensionLength = contraption.extensionLength;
-		float resultingOffset = contraption.initialExtensionProgress + Math.signum(getMovementSpeed()) * .5f;
-		if (resultingOffset <= 0 || resultingOffset >= extensionLength) {
-			return;
-		}
+
+		// If piston cannot move, do not assemble
+		if (getMovementSpeed() == 0) return;
 
 		// Run
 		running = true;
@@ -87,7 +77,7 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 		level.addFreshEntity(movedContraption);
 
 		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(level, worldPosition);
-		
+
 		if (contraption.containsBlockBreakers())
 			award(AllAdvancements.CONTRAPTION_ACTORS);
 	}
