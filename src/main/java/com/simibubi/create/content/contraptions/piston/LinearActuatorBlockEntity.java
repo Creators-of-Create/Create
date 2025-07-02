@@ -319,7 +319,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 			waitingForSpeedChange = true;
 			return;
 		}
-		offset = getGridOffset(offset - getMovementSpeed());
+
 		resetContraptionToOffset();
 		tryDisassemble();
 	}
