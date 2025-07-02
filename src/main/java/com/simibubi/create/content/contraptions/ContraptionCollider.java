@@ -713,8 +713,6 @@ public class ContraptionCollider {
 		Direction movementDirection = Direction.getNearest(motion.x, motion.y, motion.z);
 
 		// Blocks in the world
-		if (movementDirection.getAxisDirection() == AxisDirection.POSITIVE)
-			gridPos = gridPos.relative(movementDirection);
 		if (isCollidingWithWorld(world, contraption, gridPos, movementDirection))
 			return true;
 
