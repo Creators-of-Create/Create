@@ -289,7 +289,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 			return;
 		}
 		int initial = getInitialOffset();
-		if ((int) (offset + .5f) != initial && getMovementMode() == MovementMode.MOVE_PLACE_RETURNED) {
+		if (getMovementMode() == MovementMode.MOVE_PLACE_RETURNED && getGridOffset(offset) != initial) {
 			waitingForSpeedChange = true;
 			return;
 		}
