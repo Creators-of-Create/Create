@@ -701,7 +701,6 @@ public class ContraptionCollider {
 		TranslatingContraption contraption = (TranslatingContraption) contraptionEntity.getContraption();
 		AABB bounds = contraptionEntity.getBoundingBox();
 		Vec3 position = contraptionEntity.position();
-		BlockPos gridPos = BlockPos.containing(position);
 
 		if (contraption == null)
 			return false;
@@ -713,8 +712,13 @@ public class ContraptionCollider {
 		Direction movementDirection = Direction.getNearest(motion.x, motion.y, motion.z);
 
 		// Blocks in the world
-		if (movementDirection.getAxisDirection() == AxisDirection.POSITIVE)
-			gridPos = gridPos.relative(movementDirection);
+		if (movementDirection.getAxisDirection() == AxisDirection.POSITIVE) {
+			Axis ax = movementDirection.getAxis();
+			position = position.with(ax, Math.ceil(position.get(ax)));
+		}
+
+		BlockPos gridPos = BlockPos.containing(position);
+
 		if (isCollidingWithWorld(world, contraption, gridPos, movementDirection))
 			return true;
 
