@@ -1,6 +1,7 @@
 package com.simibubi.create.content.redstone.displayLink.target;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
@@ -13,7 +14,11 @@ public abstract class SingleLineDisplayTarget extends DisplayTarget {
 
 	@Override
 	public final void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
-		acceptLine(text.get(0), context);
+		acceptLine(
+			text.size() == 1 ?
+				text.get(0) :
+				Component.literal(text.stream().map(Component::getString).filter(section -> !section.isBlank()).collect(Collectors.joining(" ")))
+			, context);
 	}
 
 	protected abstract void acceptLine(MutableComponent text, DisplayLinkContext context);
