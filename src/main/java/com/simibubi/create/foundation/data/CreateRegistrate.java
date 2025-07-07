@@ -17,6 +17,7 @@ import com.simibubi.create.api.behaviour.display.DisplaySource;
 import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorageType;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
+import com.simibubi.create.api.registrate.CreateRegistrateRegistrationCallback;
 import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.api.registry.registrate.SimpleBuilder;
 import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
@@ -24,8 +25,6 @@ import com.simibubi.create.content.fluids.VirtualFluid;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.item.TooltipModifier;
-import com.simibubi.create.impl.registrate.CreateRegistrateRegistrationCallbackImpl;
-import com.simibubi.create.impl.registrate.CreateRegistrateRegistrationCallbackImpl.CallbackImpl;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.BlockEntityBuilder.BlockEntityFactory;
@@ -74,7 +73,12 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public static CreateRegistrate create(String modid) {
-		return new CreateRegistrate(modid);
+		CreateRegistrate registrate = new CreateRegistrate(modid);
+		// The registrate is registered here instead of in the constructor so that if a subclass
+		// overrides the addRegisterCallback to be dependent on some sort of state initialized in the constructor,
+		// it won't explode. The consequence is that subclasses must manually provide their registrate to the callback API
+		CreateRegistrateRegistrationCallback.provideRegistrate(registrate);
+		return registrate;
 	}
 
 	public static boolean isInCreativeTab(RegistryEntry<?> entry, RegistryObject<CreativeModeTab> tab) {
@@ -121,15 +125,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		}
 		if (currentTab != null)
 			TAB_LOOKUP.put(entry, currentTab);
-
-		for (CallbackImpl<?> callback : CreateRegistrateRegistrationCallbackImpl.CALLBACKS_VIEW) {
-			String modId = callback.id().getNamespace();
-			String entryId = callback.id().getPath();
-			if (callback.registry().equals(type) && getModid().equals(modId) && name.equals(entryId)) {
-				//noinspection unchecked,rawtypes
-				callback.callback().accept((RegistryEntry) entry);
-			}
-		}
 
 		return entry;
 	}
