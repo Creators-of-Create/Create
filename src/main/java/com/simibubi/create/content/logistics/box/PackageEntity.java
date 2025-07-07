@@ -305,35 +305,43 @@ public class PackageEntity extends LivingEntity implements IEntityAdditionalSpaw
 
 	@Override
 	public boolean hurt(DamageSource source, float amount) {
+		if (source.getEntity() != null && this.getRootVehicle() == source.getEntity().getRootVehicle()) {
+			return super.hurt(source, amount * 0.333F);
+		}
+	
+		if (flightTicks < 0) {
+			flightTicks = 0;
+		}
+	
 		if (!ForgeHooks.onLivingAttack(this, source, amount))
 			return false;
-
+	
 		if (level().isClientSide || !this.isAlive())
 			return false;
-
+	
 		if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
 			this.remove(RemovalReason.KILLED);
 			return false;
 		}
-
+	
 		if (!box.getItem().canBeHurtBy(source))
 			return false;
 
 		if (source.equals(damageSources().inWall()) && (isPassenger() || insertionDelay < 20))
 			return false;
-
+	
 		if (source.is(DamageTypeTags.IS_FALL))
 			return false;
-
+	
 		if (this.isInvulnerableTo(source))
 			return false;
-
+	
 		if (source.is(DamageTypeTags.IS_EXPLOSION)) {
 			this.destroy(source);
 			this.remove(RemovalReason.KILLED);
 			return false;
 		}
-
+	
 		if (source.is(DamageTypeTags.IS_FIRE)) {
 			if (this.isOnFire()) {
 				this.takeDamage(source, 0.15F);
@@ -342,6 +350,17 @@ public class PackageEntity extends LivingEntity implements IEntityAdditionalSpaw
 			}
 			return false;
 		}
+	
+		boolean wasShot = source.getDirectEntity() instanceof AbstractArrow;
+		boolean shotCanPierce = wasShot && ((AbstractArrow) source.getDirectEntity()).getPierceLevel() > 0;
+	
+		if (source.getEntity() instanceof Player && !((Player) source.getEntity()).getAbilities().mayBuild)
+			return false;
+	
+		this.destroy(source);
+		this.remove(RemovalReason.KILLED);
+		return shotCanPierce;
+	}
 
 		boolean wasShot = source.getDirectEntity() instanceof AbstractArrow;
 		boolean shotCanPierce = wasShot && ((AbstractArrow) source.getDirectEntity()).getPierceLevel() > 0;
