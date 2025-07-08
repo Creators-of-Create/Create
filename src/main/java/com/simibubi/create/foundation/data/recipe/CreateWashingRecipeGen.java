@@ -16,14 +16,10 @@ import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.WashingRecipeGen;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
-import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 
 import net.minecraftforge.common.Tags;
@@ -121,23 +117,5 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 
 	public CreateWashingRecipeGen(PackOutput output) {
 		super(output, Create.ID);
-	}
-
-	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CompatMetals metal) {
-		for (Mods mod : metal.getMods()) {
-			String metalName = metal.getName(mod);
-			ResourceLocation nugget = mod.nuggetOf(metalName);
-			create(mod.getId() + "/" + crushed.getId()
-					.getPath(),
-				b -> b.withItemIngredients(Ingredient.of(crushed::get))
-					.output(1, nugget, 9)
-					.whenModLoaded(mod.getId()));
-		}
-		return null;
-	}
-
-	public GeneratedRecipe simpleModded(Mods mod, String input, String output) {
-		return create(mod.getId() + "/" + output, b -> b.require(mod, input)
-			.output(mod, output).whenModLoaded(mod.getId()));
 	}
 }

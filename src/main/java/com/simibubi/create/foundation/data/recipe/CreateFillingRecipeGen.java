@@ -6,7 +6,6 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.FillingRecipeGen;
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 
 import net.minecraft.data.PackOutput;
@@ -110,13 +109,5 @@ public final class CreateFillingRecipeGen extends FillingRecipeGen {
 
 	public CreateFillingRecipeGen(PackOutput output) {
 		super(output, Create.ID);
-	}
-
-	public GeneratedRecipe moddedGrass(Mods mod, String name) {
-		String grass = name + "_grass_block";
-		return create(mod.recipeId(grass), b -> b.require(Fluids.WATER, 500)
-				.require(mod, name + "_dirt")
-				.output(mod, grass)
-				.whenModLoaded(mod.getId()));
 	}
 }

@@ -3,10 +3,7 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.PressingRecipeGen;
-
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
@@ -117,24 +114,11 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 		super(output, Create.ID);
 	}
 
-	private GeneratedRecipe moddedPaths(Mods mod, String... blocks) {
-		for(String block : blocks) {
-			moddedCompacting(mod, block, block + "_path");
-		}
-		return null;
-	}
-
 	private GeneratedRecipe iePlates(String... metals) {
 		for (String metal : metals)
 			create(Mods.IE.recipeId("plate_" + metal), b -> b.require(AllTags.forgeItemTag("ingots/" + metal))
 				.output(Mods.IE, "plate_" + metal)
 				.whenModLoaded(Mods.IE.getId()));
 		return null;
-	}
-
-	GeneratedRecipe moddedCompacting(Mods mod, String input, String output) {
-		return create("compat/" + mod.getId() + "/" + output, b -> b.require(mod, input)
-				.output(mod, output)
-				.whenModLoaded(mod.getId()));
 	}
 }

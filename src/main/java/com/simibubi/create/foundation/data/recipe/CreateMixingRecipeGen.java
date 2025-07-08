@@ -4,10 +4,8 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.MixingRecipeGen;
 
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.foundation.recipe.BlockTagIngredient;
 
@@ -100,13 +98,5 @@ public final class CreateMixingRecipeGen extends MixingRecipeGen {
 
 	public CreateMixingRecipeGen(PackOutput output) {
 		super(output, Create.ID);
-	}
-
-	public GeneratedRecipe moddedMud(Mods mod, String name) {
-		String mud = name + "_mud";
-		return create(mod.recipeId(mud), b -> b.require(Fluids.WATER, 250)
-				.require(mod, name + "_dirt")
-				.output(mod, mud)
-				.whenModLoaded(mod.getId()));
 	}
 }

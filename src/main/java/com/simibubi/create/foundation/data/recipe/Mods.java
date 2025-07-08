@@ -4,8 +4,6 @@ import java.util.function.Consumer;
 
 import com.simibubi.create.api.data.recipe.DatagenMod;
 
-import net.minecraft.resources.ResourceLocation;
-
 /**
  * A helper class for mods that Create has built in compatibility for.
  * Not considered part of Create's API, addons wishing to add to this should make

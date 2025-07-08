@@ -6,7 +6,6 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.CrushingRecipeGen;
 
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;

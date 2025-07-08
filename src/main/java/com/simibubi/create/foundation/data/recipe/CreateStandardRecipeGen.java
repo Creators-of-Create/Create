@@ -17,7 +17,6 @@ import java.util.function.UnaryOperator;
 
 import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
 
-import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
 
 import org.jetbrains.annotations.NotNull;
