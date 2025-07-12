@@ -11,6 +11,7 @@ import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -80,8 +81,7 @@ public class SuperGlueSelectionHelper {
 			int charges = Math.min(requiredAmount, stack.getMaxDamage() - stack.getDamageValue());
 
 			if (!simulate)
-				stack.hurtAndBreak(charges, player, i == -1 ? SuperGlueItem::onBroken : $ -> {
-				});
+				stack.hurtAndBreak(charges, player, s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 
 			requiredAmount -= charges;
 			if (requiredAmount <= 0)

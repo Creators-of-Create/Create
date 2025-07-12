@@ -93,7 +93,7 @@ public class ClientSchematicLoader {
 	public static boolean validateSizeLimitation(long size) {
 		if (Minecraft.getInstance().hasSingleplayerServer())
 			return true;
-		Integer maxSize = AllConfigs.server().schematics.maxTotalSchematicSize.get();
+		long maxSize = AllConfigs.server().schematics.maxTotalSchematicSize.get();
 		if (size > maxSize * 1000) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player != null) {

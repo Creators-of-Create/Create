@@ -257,7 +257,7 @@ public class MountedStorageManager {
 				BlockPos pos = NbtUtils.readBlockPos(tag.getCompound("pos"));
 				CompoundTag data = tag.getCompound("storage");
 				MountedItemStorage.CODEC.decode(NbtOps.INSTANCE, data)
-					.result()
+					.resultOrPartial(err -> Create.LOGGER.error("Failed to deserialize mounted item storage: {}", err))
 					.map(Pair::getFirst)
 					.ifPresent(storage -> this.addStorage(storage, pos));
 			});
@@ -266,7 +266,7 @@ public class MountedStorageManager {
 				BlockPos pos = NbtUtils.readBlockPos(tag.getCompound("pos"));
 				CompoundTag data = tag.getCompound("storage");
 				MountedFluidStorage.CODEC.decode(NbtOps.INSTANCE, data)
-					.result()
+					.resultOrPartial(err -> Create.LOGGER.error("Failed to deserialize mounted fluid storage: {}", err))
 					.map(Pair::getFirst)
 					.ifPresent(storage -> this.addStorage(storage, pos));
 			});
@@ -307,12 +307,14 @@ public class MountedStorageManager {
 		ListTag items = new ListTag();
 		this.getAllItemStorages().forEach((pos, storage) -> {
 				if (!clientPacket || storage instanceof SyncedMountedStorage) {
-					MountedItemStorage.CODEC.encodeStart(NbtOps.INSTANCE, storage).result().ifPresent(encoded -> {
-						CompoundTag tag = new CompoundTag();
-						tag.put("pos", NbtUtils.writeBlockPos(pos));
-						tag.put("storage", encoded);
-						items.add(tag);
-					});
+					MountedItemStorage.CODEC.encodeStart(NbtOps.INSTANCE, storage)
+						.resultOrPartial(err -> Create.LOGGER.error("Failed to serialize mounted item storage: {}", err))
+						.ifPresent(encoded -> {
+							CompoundTag tag = new CompoundTag();
+							tag.put("pos", NbtUtils.writeBlockPos(pos));
+							tag.put("storage", encoded);
+							items.add(tag);
+						});
 				}
 			}
 		);
@@ -323,12 +325,14 @@ public class MountedStorageManager {
 		ListTag fluids = new ListTag();
 		this.getFluids().storages.forEach((pos, storage) -> {
 				if (!clientPacket || storage instanceof SyncedMountedStorage) {
-					MountedFluidStorage.CODEC.encodeStart(NbtOps.INSTANCE, storage).result().ifPresent(encoded -> {
-						CompoundTag tag = new CompoundTag();
-						tag.put("pos", NbtUtils.writeBlockPos(pos));
-						tag.put("storage", encoded);
-						fluids.add(tag);
-					});
+					MountedFluidStorage.CODEC.encodeStart(NbtOps.INSTANCE, storage)
+						.resultOrPartial(err -> Create.LOGGER.error("Failed to serialize mounted fluid storage: {}", err))
+						.ifPresent(encoded -> {
+							CompoundTag tag = new CompoundTag();
+							tag.put("pos", NbtUtils.writeBlockPos(pos));
+							tag.put("storage", encoded);
+							fluids.add(tag);
+						});
 				}
 			}
 		);

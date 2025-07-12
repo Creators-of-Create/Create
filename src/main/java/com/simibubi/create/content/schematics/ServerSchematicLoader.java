@@ -156,7 +156,7 @@ public class ServerSchematicLoader {
 	}
 
 	protected boolean validateSchematicSizeOnServer(ServerPlayer player, long size) {
-		Integer maxFileSize = getConfig().maxTotalSchematicSize.get();
+		long maxFileSize = getConfig().maxTotalSchematicSize.get();
 		if (size > maxFileSize * 1000) {
 			player.sendSystemMessage(CreateLang.translateDirect("schematics.uploadTooLarge")
 				.append(Component.literal(" (" + size / 1000 + " KB).")));
@@ -297,11 +297,11 @@ public class ServerSchematicLoader {
 			return;
 
 		// if there's too many schematics, delete oldest
-		if (!tryDeleteOldestSchematic(uploadPath))
+		if (!tryDeleteOldestSchematic(playerPath))
 			return;
 
 		SchematicExportResult result = SchematicExport.saveSchematic(
-			uploadPath, schematic, true,
+			playerPath, schematic, true,
 			world, pos, pos.offset(bounds).offset(-1, -1, -1)
 		);
 		if (result != null)
