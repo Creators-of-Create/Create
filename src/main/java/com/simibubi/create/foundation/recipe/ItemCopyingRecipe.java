@@ -49,11 +49,11 @@ public class ItemCopyingRecipe extends CustomRecipe {
 		IntAttached<ItemStack> copyCheck = copyCheck(container);
 		if (copyCheck == null)
 			return ItemStack.EMPTY;
-		
+
 		ItemStack itemToCopy = copyCheck.getValue();
 		if (!(itemToCopy.getItem() instanceof SupportsItemCopying sic))
 			return ItemStack.EMPTY;
-		
+
 		return sic.createCopy(itemToCopy, copyCheck.getFirst() + 1);
 	}
 
@@ -62,27 +62,37 @@ public class ItemCopyingRecipe extends CustomRecipe {
 		ItemStack itemToCopy = ItemStack.EMPTY;
 		int copyTargets = 0;
 
-		for (int j = 0; j < inv.getContainerSize(); ++j) {
+		for (int j = 0; j < inv.getContainerSize(); ++j){
 			ItemStack itemInSlot = inv.getItem(j);
 			if (itemInSlot.isEmpty())
 				continue;
-			if (!itemToCopy.isEmpty() && itemToCopy.getItem() != itemInSlot.getItem())
+			if(!(itemInSlot.getItem() instanceof SupportsItemCopying sic))
 				return null;
-			if (!(itemInSlot.getItem() instanceof SupportsItemCopying sic))
+			if (!sic.canCopyFromItem(itemInSlot))
 				continue;
-
-			if (sic.canCopyFromItem(itemInSlot)) {
-				if (!itemToCopy.isEmpty())
-					return null;
-				itemToCopy = itemInSlot;
-				continue;
-			}
-
-			if (sic.canCopyToItem(itemInSlot))
-				copyTargets++;
+			itemToCopy = itemInSlot;
+			break;
 		}
 
-		if (itemToCopy.isEmpty() || copyTargets == 0)
+		if(itemToCopy.isEmpty())
+			return null;
+
+		for (int j = 0; j < inv.getContainerSize(); ++j) {
+			ItemStack itemInSlot = inv.getItem(j);
+			if (itemInSlot.isEmpty() || itemInSlot == itemToCopy)
+				continue;
+			if (itemToCopy.getItem() != itemInSlot.getItem())
+				return null;
+			if (!(itemInSlot.getItem() instanceof SupportsItemCopying sic))
+				return null;
+			if (sic.canCopyFromItem(itemInSlot))
+				return null;
+			if (!sic.canCopyToItem(itemInSlot))
+				return null;
+			copyTargets++;
+		}
+		
+		if (copyTargets == 0)
 			return null;
 
 		return IntAttached.with(copyTargets, itemToCopy);
