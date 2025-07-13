@@ -125,7 +125,7 @@ legacyForge {
 
 repositories {
     maven { url = "https://maven.createmod.net" } // Ponder, Flywheel
-    maven { url = "https://maven.tterrag.com" } // Registrate
+    maven { url = "https://maven.ithundxr.dev/mirror" } // Registrate
     maven { url = "https://maven.blamejared.com" } // JEI, Vazkii's Mods
     maven { url = "https://harleyoconnor.com/maven" } // Dynamic Trees
     maven { url = "https://maven.theillusivec4.top/" } // Curios API
@@ -313,7 +313,7 @@ project.publishing {
             artifactId base.archivesName.get()
             from components.java
 
-            artifact(tasks.jar) {
+            artifact(tasks.reobfJar) {
                 classifier = "all"
             }
         }

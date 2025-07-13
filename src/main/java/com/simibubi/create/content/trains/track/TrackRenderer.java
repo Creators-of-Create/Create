@@ -12,10 +12,10 @@ import com.simibubi.create.content.trains.track.BezierConnection.SegmentAngles;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.render.CachedBuffers;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -50,24 +50,23 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 		ms.pushPose();
 		BlockPos bePosition = bc.bePositions.getFirst();
 		BlockState air = Blocks.AIR.defaultBlockState();
-		SegmentAngles[] segments = bc.getBakedSegments();
+		SegmentAngles segment = bc.getBakedSegments();
 
 		renderGirder(level, bc, ms, vb, bePosition);
 
-		for (int i = 1; i < segments.length; i++) {
-			SegmentAngles segment = segments[i];
-			int light = LevelRenderer.getLightColor(level, segment.lightPosition.offset(bePosition));
+		for (int i = 1; i < segment.length; i++) {
+			int light = LevelRenderer.getLightColor(level, segment.lightPosition[i].offset(bePosition));
 
 			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
 
 			CachedBuffers.partial(modelHolder.tie(), air)
-				.mulPose(segment.tieTransform.pose())
-				.mulNormal(segment.tieTransform.normal())
+				.mulPose(segment.tieTransform[i].pose())
+				.mulNormal(segment.tieTransform[i].normal())
 				.light(light)
 				.renderInto(ms, vb);
 
 			for (boolean first : Iterate.trueAndFalse) {
-				Pose transform = segment.railTransforms.get(first);
+				Pose transform = segment.railTransforms[i].get(first);
 				CachedBuffers.partial(first ? modelHolder.leftSegment() : modelHolder.rightSegment(), air)
 					.mulPose(transform.pose())
 					.mulNormal(transform.normal())
@@ -85,14 +84,13 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 			return;
 
 		BlockState air = Blocks.AIR.defaultBlockState();
-		GirderAngles[] girders = bc.getBakedGirders();
+		GirderAngles segment = bc.getBakedGirders();
 
-		for (int i = 1; i < girders.length; i++) {
-			GirderAngles segment = girders[i];
-			int light = LevelRenderer.getLightColor(level, segment.lightPosition.offset(tePosition));
+		for (int i = 1; i < segment.length; i++) {
+			int light = LevelRenderer.getLightColor(level, segment.lightPosition[i].offset(tePosition));
 
 			for (boolean first : Iterate.trueAndFalse) {
-				Pose beamTransform = segment.beams.get(first);
+				Pose beamTransform = segment.beams[i].get(first);
 				CachedBuffers.partial(GIRDER_SEGMENT_MIDDLE, air)
 					.mulPose(beamTransform.pose())
 					.mulNormal(beamTransform.normal())
@@ -100,7 +98,7 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 					.renderInto(ms, vb);
 
 				for (boolean top : Iterate.trueAndFalse) {
-					Pose beamCapTransform = segment.beamCaps.get(top)
+					Pose beamCapTransform = segment.beamCaps[i].get(top)
 						.get(first);
 					CachedBuffers.partial(top ? GIRDER_SEGMENT_TOP : GIRDER_SEGMENT_BOTTOM, air)
 						.mulPose(beamCapTransform.pose())

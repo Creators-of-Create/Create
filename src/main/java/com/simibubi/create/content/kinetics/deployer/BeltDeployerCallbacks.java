@@ -120,7 +120,7 @@ public class BeltDeployerCallbacks {
 		TransportedItemStack left = transported.copy();
 		blockEntity.player.spawnedItemEffects = transported.stack.copy();
 		left.stack.shrink(1);
-		ItemStack resultItem = null;
+		ItemStack resultItem;
 
 		if (collect.isEmpty()) {
 			resultItem = left.stack.copy();
@@ -135,14 +135,15 @@ public class BeltDeployerCallbacks {
 			recipe instanceof ItemApplicationRecipe && ((ItemApplicationRecipe) recipe).shouldKeepHeldItem();
 
 		if (!keepHeld) {
-			if (heldItem.isDamageableItem())
+			if (heldItem.getMaxDamage() > 0) {
 				heldItem.hurtAndBreak(1, blockEntity.player,
 					s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
-			else
+			} else {
 				heldItem.shrink(1);
+			}
 		}
 
-		if (resultItem != null && !resultItem.isEmpty())
+		if (!resultItem.isEmpty())
 			awardAdvancements(blockEntity, resultItem);
 
 		BlockPos pos = blockEntity.getBlockPos();
