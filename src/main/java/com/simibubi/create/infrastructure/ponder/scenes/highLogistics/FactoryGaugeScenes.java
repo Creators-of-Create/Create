@@ -693,7 +693,7 @@ public class FactoryGaugeScenes {
 
 		scene.overlay()
 			.showText(70)
-			.text("...the Factory Gauge will request maximum amount of ingredients each source can provide, until the ingredient requirement is satisfied")
+			.text("...the Factory Gauge will request ingredients from each source until the ingredient requirement is satisfied")
 			.colored(PonderPalette.BLUE)
 			.placeNearTarget()
 			.attachKeyFrame()
