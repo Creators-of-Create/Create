@@ -22,7 +22,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class PojavChecker {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PojavChecker.class);
 
-	private static final Pattern KNOWN_ANDROID_PATH = Pattern.compile("/data/user/[0-9]+/net\\.kdt");
+	private static final Pattern KNOWN_ANDROID_PATH = Pattern.compile("/data/user/[0-9]+/net\\.kdt\\.pojavlaunch");
 
 	public static final boolean IS_PRESENT = Util.make(() -> {
 		if (System.getenv("POJAV_RENDERER") != null) {
