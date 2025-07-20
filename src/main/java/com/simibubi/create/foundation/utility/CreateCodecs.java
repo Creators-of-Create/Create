@@ -40,8 +40,8 @@ public class CreateCodecs {
 		String::valueOf
 	);
 
-	public static final Codec<ItemStackHandler> ITEM_STACK_HANDLER = ItemSlots.CODEC.xmap(
-		slots -> slots.toHandler(ItemStackHandler::new), ItemSlots::fromHandler
+	public static final Codec<ItemStackHandler> ITEM_STACK_HANDLER = ExtraCodecs.lazyInitializedCodec(
+		() -> ItemSlots.CODEC.xmap(slots -> slots.toHandler(ItemStackHandler::new), ItemSlots::fromHandler)
 	);
 
 	public static Codec<Integer> boundedIntStr(int min) {

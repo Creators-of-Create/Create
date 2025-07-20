@@ -36,15 +36,6 @@ import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.registries.RegistryObject;
-
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Registry;
@@ -60,6 +51,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.registries.RegistryObject;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	private static final Map<RegistryEntry<?>, RegistryObject<CreativeModeTab>> TAB_LOOKUP = Collections.synchronizedMap(new IdentityHashMap<>());
@@ -126,8 +126,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			String modId = callback.id().getNamespace();
 			String entryId = callback.id().getPath();
 			if (callback.registry().equals(type) && getModid().equals(modId) && name.equals(entryId)) {
-				//noinspection unchecked
-				((Consumer<T>) callback.callback()).accept(entry.get());
+				//noinspection unchecked,rawtypes
+				callback.callback().accept((RegistryEntry) entry);
 			}
 		}
 

@@ -84,10 +84,12 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 		boolean keepHeld = recipe.shouldKeepHeldItem() || creative;
 
 		if (!keepHeld) {
-			if (heldItem.isDamageableItem())
-				heldItem.hurtAndBreak(1, event.getEntity(), s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
-			else
+			if (heldItem.getMaxDamage() > 0) {
+				heldItem.hurtAndBreak(1, event.getEntity(),
+					s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+			} else {
 				heldItem.shrink(1);
+			}
 		}
 
 		awardAdvancements(event.getEntity(), transformedBlock);

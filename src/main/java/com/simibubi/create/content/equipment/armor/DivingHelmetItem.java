@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
@@ -85,9 +84,7 @@ public class DivingHelmetItem extends BaseArmorItem {
 		if (!helmet.getItem().isFireResistant() && lavaDiving)
 			return;
 
-		if (!entity.canDrownInFluidType(entity.getEyeInFluidType()) && !lavaDiving)
-			return;
-		if (entity instanceof Player player && (player.isSpectator() || player.isCreative()))
+		if (event.canBreathe() && !lavaDiving)
 			return;
 
 		List<ItemStack> backtanks = BacktankUtil.getAllWithAir(entity);

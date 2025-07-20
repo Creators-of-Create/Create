@@ -15,16 +15,17 @@ import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
+
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ToolboxInventory extends ItemStackHandler {
+	public static final int STACKS_PER_COMPARTMENT = 4;
 	public static final Codec<ToolboxInventory> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		ItemSlots.maxSizeCodec(8).fieldOf("items").forGetter(ItemSlots::fromHandler),
+		ItemSlots.maxSizeCodec(8 * STACKS_PER_COMPARTMENT).fieldOf("items").forGetter(ItemSlots::fromHandler),
 		ItemStack.CODEC.listOf().fieldOf("filters").forGetter(toolbox -> toolbox.filters)
 	).apply(instance, ToolboxInventory::deserialize));
 
-	public static final int STACKS_PER_COMPARTMENT = 4;
 	List<ItemStack> filters;
 	boolean settling;
 	private ToolboxBlockEntity blockEntity;
