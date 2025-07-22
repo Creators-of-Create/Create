@@ -125,7 +125,7 @@ legacyForge {
 
 repositories {
     maven { url = "https://maven.createmod.net" } // Ponder, Flywheel
-    maven { url = "https://maven.tterrag.com" } // Registrate
+    maven { url = "https://maven.ithundxr.dev/mirror" } // Registrate
     maven { url = "https://maven.blamejared.com" } // JEI, Vazkii's Mods
     maven { url = "https://harleyoconnor.com/maven" } // Dynamic Trees
     maven { url = "https://maven.theillusivec4.top/" } // Curios API
@@ -201,6 +201,7 @@ dependencies {
     modCompileOnly("dev.ftb.mods:ftb-library-forge:2001.2.4")
 
     modImplementation("curse.maven:journeymap-32274:5457831")
+    modImplementation("curse.maven:xaeros-world-map-317780:6212636")
     // modImplementation("ignored:journeymap-1.20.1-5.10.1-forge")
 
     // modRuntimeOnly("curse.maven:framedblocks-441647:5399211")
@@ -313,7 +314,7 @@ project.publishing {
             artifactId base.archivesName.get()
             from components.java
 
-            artifact(tasks.jar) {
+            artifact(tasks.reobfJar) {
                 classifier = "all"
             }
         }

@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.mixin.compat;
+package com.simibubi.create.foundation.mixin.compat.journeymap;
 
 import java.awt.geom.Point2D;
 
@@ -30,7 +30,7 @@ public abstract class JourneyFullscreenMapMixin {
 
 	@Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", at = @At(target = "Ljourneymap/client/ui/fullscreen/Fullscreen;drawMap(Lnet/minecraft/client/gui/GuiGraphics;II)V", value = "INVOKE", shift = Shift.AFTER))
 	public void create$journeyMapFullscreenRender(GuiGraphics graphics, int mouseX, int mouseY, float pt,
-		CallbackInfo ci) {
+												  CallbackInfo ci) {
 		boolean dragging = isScrolling;
 		Point2D.Double mouseDrag = getMouseDrag();
 		double x = gridRenderer.getCenterBlockX() - (dragging ? mouseDrag.x : 0);

@@ -1,5 +1,9 @@
 package com.simibubi.create.foundation.utility;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+
 import com.simibubi.create.Create;
 
 import net.minecraft.Util;
@@ -7,10 +11,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.saveddata.SavedData;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
 
 public class SavedDataUtil {
 	public static <T extends SavedData> void saveWithDatOld(T savedData, File file) {
