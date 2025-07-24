@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox.IconValueBox;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox.TextValueBox;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.SidedFilteringBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.outliner.Outliner;
@@ -47,6 +48,11 @@ public class ScrollValueRenderer {
 			if (!(blockEntityBehaviour instanceof ScrollValueBehaviour behaviour))
 				continue;
 
+			if (behaviour instanceof ISidedScrollValueBehavior<?> sidedScrollValueBehavior) {
+				behaviour = sidedScrollValueBehavior.get(face);
+				if (behaviour == null)
+					continue;
+			}
 			if (!behaviour.isActive()) {
 				Outliner.getInstance().remove(behaviour);
 				continue;

@@ -21,8 +21,8 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 public class AllIcons implements ScreenElement {
 
-	public static final ResourceLocation ICON_ATLAS = Create.asResource("textures/gui/icons.png");
-	public static final int ICON_ATLAS_SIZE = 256;
+	public final ResourceLocation ICON_ATLAS ;
+	public final int ICON_ATLAS_SIZE;
 
 	private static int x = 0, y = -1;
 	private int iconX;
@@ -170,9 +170,16 @@ public class AllIcons implements ScreenElement {
 		I_MOVE_GAUGE = next();
 	;
 
-	public AllIcons(int x, int y) {
+	private AllIcons(int x, int y) {
+		this(x, y, Create.asResource("textures/gui/icons.png"), 256);
+	}
+
+	public AllIcons(int x, int y, ResourceLocation iconAtlas, int iconAtlasSize) {
 		iconX = x * 16;
 		iconY = y * 16;
+		ICON_ATLAS = iconAtlas;
+		ICON_ATLAS_SIZE = iconAtlasSize;
+
 	}
 
 	private static AllIcons next() {

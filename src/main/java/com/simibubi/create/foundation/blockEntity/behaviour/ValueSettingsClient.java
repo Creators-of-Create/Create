@@ -99,7 +99,7 @@ public class ValueSettingsClient implements LayeredDraw.Layer {
 			return;
 		ScreenOpener.open(new ValueSettingsScreen(interactHeldPos,
 			valueSettingBehaviour.createBoard(player, blockHitResult), valueSettingBehaviour.getValueSettings(),
-			valueSettingBehaviour::newSettingHovered, valueSettingBehaviour.netId()));
+			valueSettingBehaviour::newSettingHovered, valueSettingBehaviour.netId(), interactHeldFace));
 		interactHeldTicks = -1;
 	}
 
