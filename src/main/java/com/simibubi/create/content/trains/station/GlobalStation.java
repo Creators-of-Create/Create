@@ -1,7 +1,9 @@
 package com.simibubi.create.content.trains.station;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -15,6 +17,13 @@ import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackNode;
+import com.simibubi.create.content.trains.schedule.ScheduleEntry;
+import com.simibubi.create.content.trains.schedule.condition.DeliverPackageCondition;
+import com.simibubi.create.content.trains.schedule.condition.RetrievePackageCondition;
+import com.simibubi.create.content.trains.schedule.condition.ScheduleWaitCondition;
+import com.simibubi.create.content.trains.schedule.destination.DeliverPackagesInstruction;
+import com.simibubi.create.content.trains.schedule.destination.DestinationInstruction;
+import com.simibubi.create.content.trains.schedule.destination.FetchPackagesInstruction;
 import com.simibubi.create.content.trains.signal.SingleBlockEntityEdgePoint;
 
 import net.createmod.catnip.nbt.NBTHelper;
@@ -170,11 +179,168 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 		public boolean primed = false;
 	}
 
+	private List<String> getRetrievePackageFilters() {
+		Train train	 = getNearestTrain();
+		if (train == null || train.runtime.schedule == null || train.runtime.schedule.entries.isEmpty()) new ArrayList<String>();
+		ScheduleEntry entry = train.runtime.schedule.entries.get(train.runtime.currentEntry);
+		List<String> filters = new ArrayList<>();
+
+		if (entry.instruction instanceof FetchPackagesInstruction fetchPackagesInstruction) {
+			filters.add(fetchPackagesInstruction.getFilter());
+			return filters;
+		}
+
+		for (var i = 0; i < entry.conditions.size(); i++) {
+			List<ScheduleWaitCondition> entryConditions = entry.conditions.get(i);
+			for (var entryCondition : entryConditions) {
+				if (entryCondition instanceof RetrievePackageCondition retrieveCondition) {
+					filters.add(retrieveCondition.getFilter());
+				}
+			}
+		}
+		return filters;
+	}
+
+	private boolean hasDeliverPackageCondition() {
+		Train train	 = getNearestTrain();
+		if (train == null || train.runtime.schedule == null || train.runtime.schedule.entries.isEmpty()) return false;
+		ScheduleEntry entry = train.runtime.schedule.entries.get(train.runtime.currentEntry);
+		for (var i = 0; i < entry.conditions.size(); i++) {
+			List<ScheduleWaitCondition> entryConditions = entry.conditions.get(i);
+			for (var entryCondition : entryConditions) {
+				if (entryCondition instanceof DeliverPackageCondition) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean isDeliverPackageInstruction() {
+		Train train	 = getNearestTrain();
+		if (train == null || train.runtime.schedule == null || train.runtime.schedule.entries.isEmpty()) return false;
+		ScheduleEntry entry = train.runtime.schedule.entries.get(train.runtime.currentEntry);
+		if (entry.instruction instanceof DeliverPackagesInstruction) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean shouldDeliverPackages() {
+		return hasDeliverPackageCondition() || isDeliverPackageInstruction();
+	}
+
+	public void runMailTransferScheduled() {
+		Train train = getPresentTrain();
+		if (train == null || connectedPorts.isEmpty())
+			return;
+		Level level = null;
+
+		if (train.runtime.schedule == null) return;
+
+
+		for (Carriage carriage : train.carriages) {
+			if (level == null) {
+				CarriageContraptionEntity entity = carriage.anyAvailableEntity();
+				if (entity != null && entity.level() instanceof ServerLevel sl)
+					level = sl.getServer()
+						.getLevel(getBlockEntityDimension());
+			}
+
+			IItemHandlerModifiable carriageInventory = carriage.storage.getAllItems();
+			if (carriageInventory == null)
+				continue;
+
+			// Import from station
+			var retrievePackageFilters = getRetrievePackageFilters();
+			if (retrievePackageFilters != null && !retrievePackageFilters.isEmpty()) {
+				for (Entry<BlockPos, GlobalPackagePort> entry : connectedPorts.entrySet()) {
+					GlobalPackagePort port = entry.getValue();
+					BlockPos pos = entry.getKey();
+					PostboxBlockEntity box = null;
+
+					IItemHandlerModifiable postboxInventory = port.offlineBuffer;
+					if (level != null && level.isLoaded(pos)
+						&& level.getBlockEntity(pos) instanceof PostboxBlockEntity ppbe) {
+						postboxInventory = ppbe.inventory;
+						box = ppbe;
+					}
+
+					for (int slot = 0; slot < postboxInventory.getSlots(); slot++) {
+						ItemStack stack = postboxInventory.getStackInSlot(slot);
+						if (!PackageItem.isPackage(stack))
+							continue;
+						if (PackageItem.matchAddress(stack, port.address))
+							continue;
+
+						// Only import if we have matching conditions
+						for (var filter : retrievePackageFilters) {
+							if (PackageItem.matchAddress(stack, filter)) {
+								ItemStack result = ItemHandlerHelper.insertItemStacked(carriageInventory, stack, false);
+								if (!result.isEmpty())
+									break;
+
+								postboxInventory.setStackInSlot(slot, ItemStack.EMPTY);
+								Create.RAILWAYS.markTracksDirty();
+								if (box != null)
+									box.spawnParticles();
+
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			// Only export if we have the condition to
+			if (!shouldDeliverPackages()) return;
+
+			// Export to station
+			for (int slot = 0; slot < carriageInventory.getSlots(); slot++) {
+				ItemStack stack = carriageInventory.getStackInSlot(slot);
+				if (!PackageItem.isPackage(stack))
+					continue;
+
+				for (Entry<BlockPos, GlobalPackagePort> entry : connectedPorts.entrySet()) {
+					GlobalPackagePort port = entry.getValue();
+					BlockPos pos = entry.getKey();
+					PostboxBlockEntity box = null;
+
+					if (!PackageItem.matchAddress(stack, port.address))
+						continue;
+
+					IItemHandler postboxInventory = port.offlineBuffer;
+					if (level != null && level.isLoaded(pos)
+						&& level.getBlockEntity(pos) instanceof PostboxBlockEntity ppbe) {
+						postboxInventory = ppbe.inventory;
+						box = ppbe;
+					}
+
+					ItemStack result = ItemHandlerHelper.insertItemStacked(postboxInventory, stack, false);
+					if (!result.isEmpty())
+						continue;
+
+					Create.RAILWAYS.markTracksDirty();
+					carriageInventory.setStackInSlot(slot, ItemStack.EMPTY);
+					if (box != null)
+						box.spawnParticles();
+
+					break;
+				}
+			}
+		}
+	}
+
 	public void runMailTransfer() {
 		Train train = getPresentTrain();
 		if (train == null || connectedPorts.isEmpty())
 			return;
 		Level level = null;
+
+		if (train.runtime.schedule != null) {
+			runMailTransferScheduled();
+			return;
+		}
 
 		for (Carriage carriage : train.carriages) {
 			if (level == null) {

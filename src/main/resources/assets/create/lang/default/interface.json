@@ -801,7 +801,7 @@
 	"create.schedule.instruction.address_filter_edit_box_2": "Train may navigate anywhere to collect it",
 	"create.schedule.instruction.address_filter_edit_box_3": "Add another instruction to make it return",
 
-	"create.schedule.condition_type": "Continue if/after:",
+  "create.schedule.condition_type": "Continue if/after:",
 	"create.schedule.condition.editor": "Condition Editor",
 
 	"create.schedule.condition.delay": "Scheduled Delay",
@@ -856,6 +856,14 @@
 	"create.schedule.condition.redstone_link.frequency_state": "Frequency state:",
 	"create.schedule.condition.redstone_link.frequency_powered": "Frequency powered:",
 	"create.schedule.condition.redstone_link.frequency_unpowered": "Frequency not powered:",
+  "create.schedule.condition.retrieve_package": "Retrieve Packages",
+  "create.schedule.condition.retrieve_package.summary": "Retrieve packages",
+  "create.schedule.condition.retrieve_package.status": "Retrieve packages: %1$s",
+  "create.schedule.condition.retrieve_package.addressed": "with address %1$s",
+  "create.schedule.condition.deliver_package": "Deliver Packages",
+  "create.schedule.condition.deliver_package.summary": "Deliver packages",
+  "create.schedule.condition.deliver_package.status": "Delivering packages",
+
 	"create.schedule.condition.player_count": "Players Seated",
 	"create.schedule.condition.player_count.summary": "%1$s Player",
 	"create.schedule.condition.player_count.summary_plural": "%1$s Players",
