@@ -11,6 +11,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.LoadingModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
 /**
@@ -77,8 +78,14 @@ public enum Mods {
 	 * @return a boolean of whether the mod is loaded or not based on mod id
 	 */
 	public boolean isLoaded() {
-		ModList modList = ModList.get();
-		return modList != null && modList.isLoaded(id);
+		return ModList.get().isLoaded(id);
+	}
+
+	/**
+	 * @return a boolean of whether the mod is loaded during early loading phase (e.g., mixin configuration)
+	 */
+	public boolean isLoadingLoaded() {
+		return LoadingModList.get().getModFileById(id) != null;
 	}
 
 	/**
