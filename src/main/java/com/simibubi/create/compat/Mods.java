@@ -77,7 +77,8 @@ public enum Mods {
 	 * @return a boolean of whether the mod is loaded or not based on mod id
 	 */
 	public boolean isLoaded() {
-		return ModList.get().isLoaded(id);
+		ModList modList = ModList.get();
+		return modList != null && modList.isLoaded(id);
 	}
 
 	/**

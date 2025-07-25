@@ -26,9 +26,12 @@ public class ControlsInteractionBehaviour extends MovingInteractionBehaviour {
 			.orElse(null);
 
 		if (currentlyControlling != null) {
-			contraptionEntity.stopControlling(localPos);
+			// If the same player is already controlling, don't stop controlling - just continue
 			if (Objects.equal(currentlyControlling, player.getUUID()))
 				return true;
+
+			// Different player is trying to control, stop current control first
+			contraptionEntity.stopControlling(localPos);
 		}
 
 		if (!contraptionEntity.startControlling(localPos, player))
