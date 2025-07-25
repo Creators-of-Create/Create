@@ -239,6 +239,8 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 		if (train.runtime.schedule == null) return;
 
 
+		var shouldDeliverPackages = shouldDeliverPackages();
+		var retrievePackageFilters = getRetrievePackageFilters();
 		for (Carriage carriage : train.carriages) {
 			if (level == null) {
 				CarriageContraptionEntity entity = carriage.anyAvailableEntity();
@@ -252,7 +254,6 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 				continue;
 
 			// Import from station
-			var retrievePackageFilters = getRetrievePackageFilters();
 			if (retrievePackageFilters != null && !retrievePackageFilters.isEmpty()) {
 				for (Entry<BlockPos, GlobalPackagePort> entry : connectedPorts.entrySet()) {
 					GlobalPackagePort port = entry.getValue();
@@ -293,39 +294,39 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 			}
 
 			// Only export if we have the condition to
-			if (!shouldDeliverPackages()) return;
-
-			// Export to station
-			for (int slot = 0; slot < carriageInventory.getSlots(); slot++) {
-				ItemStack stack = carriageInventory.getStackInSlot(slot);
-				if (!PackageItem.isPackage(stack))
-					continue;
-
-				for (Entry<BlockPos, GlobalPackagePort> entry : connectedPorts.entrySet()) {
-					GlobalPackagePort port = entry.getValue();
-					BlockPos pos = entry.getKey();
-					PostboxBlockEntity box = null;
-
-					if (!PackageItem.matchAddress(stack, port.address))
+			if (shouldDeliverPackages) {
+				// Export to station
+				for (int slot = 0; slot < carriageInventory.getSlots(); slot++) {
+					ItemStack stack = carriageInventory.getStackInSlot(slot);
+					if (!PackageItem.isPackage(stack))
 						continue;
 
-					IItemHandler postboxInventory = port.offlineBuffer;
-					if (level != null && level.isLoaded(pos)
-						&& level.getBlockEntity(pos) instanceof PostboxBlockEntity ppbe) {
-						postboxInventory = ppbe.inventory;
-						box = ppbe;
+					for (Entry<BlockPos, GlobalPackagePort> entry : connectedPorts.entrySet()) {
+						GlobalPackagePort port = entry.getValue();
+						BlockPos pos = entry.getKey();
+						PostboxBlockEntity box = null;
+
+						if (!PackageItem.matchAddress(stack, port.address))
+							continue;
+
+						IItemHandler postboxInventory = port.offlineBuffer;
+						if (level != null && level.isLoaded(pos)
+							&& level.getBlockEntity(pos) instanceof PostboxBlockEntity ppbe) {
+							postboxInventory = ppbe.inventory;
+							box = ppbe;
+						}
+
+						ItemStack result = ItemHandlerHelper.insertItemStacked(postboxInventory, stack, false);
+						if (!result.isEmpty())
+							continue;
+
+						Create.RAILWAYS.markTracksDirty();
+						carriageInventory.setStackInSlot(slot, ItemStack.EMPTY);
+						if (box != null)
+							box.spawnParticles();
+
+						break;
 					}
-
-					ItemStack result = ItemHandlerHelper.insertItemStacked(postboxInventory, stack, false);
-					if (!result.isEmpty())
-						continue;
-
-					Create.RAILWAYS.markTracksDirty();
-					carriageInventory.setStackInSlot(slot, ItemStack.EMPTY);
-					if (box != null)
-						box.spawnParticles();
-
-					break;
 				}
 			}
 		}
