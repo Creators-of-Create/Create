@@ -161,8 +161,7 @@ public class AllFluids {
 	}
 
 	private static final DispenseItemBehavior DEFAULT = new DefaultDispenseItemBehavior();
-	private static void registerFluidDispenseBehavior(BucketItem bucket) {
-		DispenserBlock.registerBehavior(bucket, new DefaultDispenseItemBehavior(){
+	private static final DispenseItemBehavior DISPENSE_FLUID = new DefaultDispenseItemBehavior(){
 			@Override
 			protected ItemStack execute(BlockSource pSource, ItemStack pStack) {
 				DispensibleContainerItem dispensibleContainerItem = (DispensibleContainerItem) pStack.getItem();
@@ -173,7 +172,10 @@ public class AllFluids {
 				}
 				return DEFAULT.dispense(pSource, pStack);
 			}
-		});
+		};
+
+	private static void registerFluidDispenseBehavior(BucketItem bucket) {
+		DispenserBlock.registerBehavior(bucket, DISPENSE_FLUID);
 	}
 
 	public static abstract class TintedFluidType extends FluidType {
