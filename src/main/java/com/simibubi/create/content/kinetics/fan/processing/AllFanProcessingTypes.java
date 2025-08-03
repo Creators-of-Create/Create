@@ -156,7 +156,8 @@ public class AllFanProcessingTypes {
 			if (!smeltingRecipe.isPresent()) {
 				RECIPE_WRAPPER.setItem(0, stack);
 				smeltingRecipe = level.getRecipeManager()
-					.getRecipeFor(RecipeType.BLASTING, RECIPE_WRAPPER, level);
+					.getRecipeFor(RecipeType.BLASTING, RECIPE_WRAPPER, level)
+					.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 			}
 
 			if (smeltingRecipe.isPresent()) {
