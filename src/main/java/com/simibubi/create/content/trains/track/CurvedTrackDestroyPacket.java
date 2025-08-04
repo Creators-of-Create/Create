@@ -67,7 +67,7 @@ public class CurvedTrackDestroyPacket extends BlockEntityConfigurationPacket<Tra
 		if (wrench) {
 			AllSoundEvents.WRENCH_REMOVE.playOnServer(player.level(), soundSource, 1,
 				Create.RANDOM.nextFloat() * .5f + .5f);
-			if (!player.isCreative() && bezierConnection != null) 
+			if (!player.isCreative() && bezierConnection != null)
 				bezierConnection.addItemsToPlayer(player);
 		} else if (!player.isCreative() && bezierConnection != null)
 			bezierConnection.spawnItems(level);
@@ -83,7 +83,7 @@ public class CurvedTrackDestroyPacket extends BlockEntityConfigurationPacket<Tra
 
 	@Override
 	protected int maxRange() {
-		return 64;
+		return AllConfigs.server().trains.maxTrackPlacementLength.get() + 16;
 	}
 
 	@Override
