@@ -1,4 +1,4 @@
-// 1.20.1	2025-07-15T20:09:04.337197893	Create's Processing Recipes
+// 1.20.1	2025-08-06T02:20:16.7273492	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -175,6 +175,8 @@ c2f1bca179d6218aa75526df386106b72eb0dd67 data/create/recipes/cutting/compat/imme
 e9086dc98d03798ded6f3170a5c51528d1f5eba7 data/create/recipes/cutting/compat/immersiveengineering/wire_electrum.json
 ca543d1e95ac73dbf3eaac91e80830fb3a071276 data/create/recipes/cutting/compat/immersiveengineering/wire_lead.json
 bcab848fda66d20cf871f97db3c7c41f7c4b55c9 data/create/recipes/cutting/compat/immersiveengineering/wire_steel.json
+ce9597b133e5e719b6638cd70759be5f879c6a3c data/create/recipes/cutting/compat/netherexp/cerebrage_claret_hyphae.json
+6558e29015ed0ae7d23b68e761029b7e9b3707a5 data/create/recipes/cutting/compat/netherexp/cerebrage_claret_stem.json
 27585fe96d7e211e4469c437c82c89c1268cf0bf data/create/recipes/cutting/compat/regions_unexplored/ashen_log.json
 bf04910ca9246aec3146eff28bc7d5d778c5d6d4 data/create/recipes/cutting/compat/regions_unexplored/ashen_wood.json
 2dcbacc9105ece46b17ff124d7e8a8116e16a811 data/create/recipes/cutting/compat/regions_unexplored/brimwood_log_magma.json

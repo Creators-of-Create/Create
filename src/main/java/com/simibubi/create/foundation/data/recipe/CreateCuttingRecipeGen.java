@@ -57,7 +57,11 @@ public final class CreateCuttingRecipeGen extends CuttingRecipeGen {
 		ENDERGETIC_2 = stripAndMakePlanks(Mods.ENDER, "glowing_poise_wood", "stripped_poise_wood", null),
 
 		// IE
-		IE_WIRES = ieWires("copper", "electrum", "aluminum", "steel", "lead")
+		IE_WIRES = ieWires("copper", "electrum", "aluminum", "steel", "lead"),
+
+		// Jaden's Nether Expansion
+		JNE_1 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_stem", "stripped_claret_stem", null),
+		JNE_2 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_hyphae", "stripped_claret_hyphae", null)
 		;
 
 	public CreateCuttingRecipeGen(PackOutput output) {
