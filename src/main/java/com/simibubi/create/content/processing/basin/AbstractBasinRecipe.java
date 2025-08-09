@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
@@ -47,7 +46,7 @@ public abstract class AbstractBasinRecipe<P extends ProcessingRecipeParams> exte
 				&& !basinRecipe.getFluidResults()
 				.isEmpty())
 				filterTest = filter.test(basinRecipe.getFluidResults()
-					.get(0));
+					.getFirst());
 		}
 
 		if (!filterTest)
@@ -180,9 +179,6 @@ public abstract class AbstractBasinRecipe<P extends ProcessingRecipeParams> exte
 		super(type, params);
 	}
 
-	public AbstractBasinRecipe(P params) {
-		this(AllRecipeTypes.BASIN, params);
-	}
 
 	@Override
 	protected int getMaxInputCount() {

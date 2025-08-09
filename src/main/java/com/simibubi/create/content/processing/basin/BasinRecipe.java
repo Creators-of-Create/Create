@@ -1,6 +1,7 @@
 package com.simibubi.create.content.processing.basin;
 
 import com.mojang.serialization.MapCodec;
+import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
@@ -21,7 +22,7 @@ public class BasinRecipe extends AbstractBasinRecipe<ProcessingRecipeParams> {
 	}
 
 	public BasinRecipe(ProcessingRecipeParams params) {
-		super(params);
+		super(AllRecipeTypes.BASIN, params);
 	}
 
 	public static RecipeHolder<BasinRecipe> convertShapeless(RecipeHolder<?> recipe) {
