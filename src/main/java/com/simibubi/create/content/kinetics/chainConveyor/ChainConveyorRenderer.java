@@ -49,16 +49,27 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 
 	@Override
 	protected void renderSafe(ChainConveyorBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
-		int light, int overlay) {
+							  int light, int overlay) {
+		// Defensive: if the BE has no level or blockstate yet, bail out early.
+		if (be == null)
+			return;
+		Level level = be.getLevel();
+		if (level == null)
+			return;
+		BlockState state = be.getBlockState();
+		if (state == null)
+			return;
+
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 		BlockPos pos = be.getBlockPos();
 
 		renderChains(be, ms, buffer, light, overlay);
 
-		if (VisualizationManager.supportsVisualization(be.getLevel()))
+		if (VisualizationManager.supportsVisualization(level))
 			return;
 
-		CachedBuffers.partial(AllPartialModels.CHAIN_CONVEYOR_WHEEL, be.getBlockState())
+		// use the validated state variable
+		CachedBuffers.partial(AllPartialModels.CHAIN_CONVEYOR_WHEEL, state)
 			.light(light)
 			.overlay(overlay)
 			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
@@ -100,10 +111,22 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 			physicsData.modelKey = key;
 		}
 
+		//More Safety Checks
+		ResourceLocation modelKey = physicsData.modelKey;
+		if (modelKey == null)
+			return;
+
+		var rigModel = AllPartialModels.PACKAGE_RIGGING.get(modelKey);
+		var boxModel = AllPartialModels.PACKAGES.get(modelKey);
+
+		// If either partial model is missing, skip rendering this package to avoid cache loader nulls.
+		if (rigModel == null || boxModel == null)
+			return;
+
 		SuperByteBuffer rigBuffer =
-			CachedBuffers.partial(AllPartialModels.PACKAGE_RIGGING.get(physicsData.modelKey), blockState);
+			CachedBuffers.partial(rigModel, blockState);
 		SuperByteBuffer boxBuffer =
-			CachedBuffers.partial(AllPartialModels.PACKAGES.get(physicsData.modelKey), blockState);
+			CachedBuffers.partial(boxModel, blockState);
 
 		Vec3 dangleDiff = VecHelper.rotate(targetPosition.add(0, 0.5, 0)
 			.subtract(position), -yaw, Axis.Y);
@@ -153,20 +176,25 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 				.length());
 
 			Level level = be.getLevel();
+			if (level == null)
+				continue;
 			BlockPos tilePos = be.getBlockPos();
 			Vec3 startOffset = stats.start()
 				.subtract(Vec3.atCenterOf(tilePos));
 
-			if (!VisualizationManager.supportsVisualization(be.getLevel())) {
-				SuperByteBuffer guard =
-					CachedBuffers.partial(AllPartialModels.CHAIN_CONVEYOR_GUARD, be.getBlockState());
-				guard.center();
-				guard.rotateYDegrees((float) yaw);
+			if (!VisualizationManager.supportsVisualization(level)) {
+				BlockState state = be.getBlockState();
+				if (state != null) {
+					SuperByteBuffer guard =
+						CachedBuffers.partial(AllPartialModels.CHAIN_CONVEYOR_GUARD, state);
+					guard.center();
+					guard.rotateYDegrees((float) yaw);
 
-				guard.uncenter();
-				guard.light(light)
-					.overlay(overlay)
-					.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+					guard.uncenter();
+					guard.light(light)
+						.overlay(overlay)
+						.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+				}
 			}
 
 			ms.pushPose();
