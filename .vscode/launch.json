@@ -1,0 +1,101 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Client",
+      "presentation": {
+        "group": "Mod Development - Create",
+        "order": 0
+      },
+      "projectName": "Create",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\emory\\Create\\build\\moddev\\clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\emory\\Create\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreate%%C:\\Users\\emory\\Create\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {
+        "MOD_CLASSES": "create%%C:\\Users\\emory\\Create\\bin\\main"
+      },
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Data",
+      "presentation": {
+        "group": "Mod Development - Create",
+        "order": 1
+      },
+      "projectName": "Create",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\emory\\Create\\build\\moddev\\dataRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\emory\\Create\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreate%%C:\\Users\\emory\\Create\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {
+        "MOD_CLASSES": "create%%C:\\Users\\emory\\Create\\bin\\main"
+      },
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "GameTestServer",
+      "presentation": {
+        "group": "Mod Development - Create",
+        "order": 2
+      },
+      "projectName": "Create",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\emory\\Create\\build\\moddev\\gameTestServerRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\emory\\Create\\build\\moddev\\gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreate%%C:\\Users\\emory\\Create\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run\\gametest",
+      "env": {
+        "MOD_CLASSES": "create%%C:\\Users\\emory\\Create\\bin\\main"
+      },
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Server",
+      "presentation": {
+        "group": "Mod Development - Create",
+        "order": 3
+      },
+      "projectName": "Create",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\emory\\Create\\build\\moddev\\serverRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\emory\\Create\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreate%%C:\\Users\\emory\\Create\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run\\server",
+      "env": {
+        "MOD_CLASSES": "create%%C:\\Users\\emory\\Create\\bin\\main"
+      },
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    }
+  ]
+}
