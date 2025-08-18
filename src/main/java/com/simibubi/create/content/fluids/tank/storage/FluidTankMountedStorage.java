@@ -11,6 +11,7 @@ import com.simibubi.create.api.contraption.storage.fluid.WrapperMountedFluidStor
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.content.fluids.tank.storage.FluidTankMountedStorage.Handler;
+import com.simibubi.create.foundation.utility.CreateCodecs;
 
 import net.createmod.catnip.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
@@ -26,7 +27,7 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 public class FluidTankMountedStorage extends WrapperMountedFluidStorage<Handler> implements SyncedMountedStorage {
 	public static final Codec<FluidTankMountedStorage> CODEC = RecordCodecBuilder.create(i -> i.group(
 		ExtraCodecs.NON_NEGATIVE_INT.fieldOf("capacity").forGetter(FluidTankMountedStorage::getCapacity),
-		FluidStack.CODEC.fieldOf("fluid").forGetter(FluidTankMountedStorage::getFluid)
+		CreateCodecs.FLUID_STACK_CODEC.fieldOf("fluid").forGetter(FluidTankMountedStorage::getFluid)
 	).apply(i, FluidTankMountedStorage::new));
 
 	private boolean dirty;
@@ -95,7 +96,8 @@ public class FluidTankMountedStorage extends WrapperMountedFluidStorage<Handler>
 	}
 
 	public static final class Handler extends FluidTank {
-		private Runnable onChange = () -> {};
+		private Runnable onChange = () -> {
+		};
 
 		public Handler(int capacity, FluidStack stack) {
 			super(capacity);

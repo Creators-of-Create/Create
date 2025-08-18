@@ -24,6 +24,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
@@ -246,9 +247,9 @@ public class SchematicPrinter {
 
 		BlockPos target = getCurrentTarget();
 		BlockState blockState = BlockHelper.setZeroAge(blockReader.getBlockState(target));
-		BlockEntity blockEntity = blockReader.getBlockEntity(target);
+		BlockEntity blockEntity = ((EntityBlock) blockState.getBlock()).newBlockEntity(target, blockState);
 		CompoundTag data = BlockHelper.prepareBlockEntityData(blockState, blockEntity);
-		if (data != null)
+		if (blockEntity != null && data != null)
 			blockEntity.load(data);
 		return ItemRequirement.of(blockState, blockEntity);
 	}
