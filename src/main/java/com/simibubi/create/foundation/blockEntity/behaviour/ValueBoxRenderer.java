@@ -13,6 +13,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import com.simibubi.create.content.kinetics.simpleRelays.AbstractSimpleShaftBlock;
@@ -50,20 +51,9 @@ public class ValueBoxRenderer {
 		Block block = blockItem.getBlock();
 		if (block instanceof AbstractSimpleShaftBlock) return nudge;
 		// General case : determine offset based on shape thickness
-		BlockState state = block.defaultBlockState();
-		VoxelShape shape = state.getShape(new DummyBlockGetter(state), BlockPos.ZERO);
+		VoxelShape shape = block.defaultBlockState().getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
 		if (shape.isEmpty()) return 0f;
 		double thickness = shape.max(Direction.Axis.Z) - shape.min(Direction.Axis.Z);
 		return thickness <= .25 ? nudge : 0f;
-	}
-	
-	private static class DummyBlockGetter implements BlockGetter {
-		private final BlockState state;
-		public DummyBlockGetter(BlockState state) { this.state = state; }
-		@Override public BlockState getBlockState(BlockPos pos) { return state;	}
-		@Override public FluidState getFluidState(BlockPos pos) { return state.getFluidState(); }
-		@Override public int getHeight() { return 0; }
-		@Override public int getMinBuildHeight() { return 0; }
-		@Override public BlockEntity getBlockEntity(BlockPos pos) { return null; }
 	}
 }
