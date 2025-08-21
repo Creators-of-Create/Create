@@ -13,7 +13,9 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import com.simibubi.create.content.kinetics.simpleRelays.AbstractSimpleShaftBlock;
 
 public class ValueBoxRenderer {
 
@@ -41,12 +43,17 @@ public class ValueBoxRenderer {
 		itemRenderer.renderStatic(filter, ItemDisplayContext.GUI, light, OverlayTexture.NO_OVERLAY, ms, buffer, mc.level, 0);
 	}
 
-   private static float customZOffset(Item item) {
-      if (!(item instanceof BlockItem blockItem)) return 0f;
-      VoxelShape shape = blockItem.getBlock().defaultBlockState().getShape(null, BlockPos.ZERO);
-      if (shape.isEmpty()) return 0f;
-      double thickness = shape.max(Direction.Axis.Z) - shape.min(Direction.Axis.Z);
-      return thickness <= .25 ? -.1f : 0f;
+	private static float customZOffset(Item item) {
+		final float nudge = -.1f;
+		if (!(item instanceof BlockItem blockItem)) return 0f;
+		// Special case : gears are thick enough but need to be offset anyway
+		Block block = blockItem.getBlock();
+		if (block instanceof AbstractSimpleShaftBlock) return nudge;
+		// General case : determine offset based on shape thickness
+		VoxelShape shape = block.defaultBlockState().getShape(null, BlockPos.ZERO);
+		if (shape.isEmpty()) return 0f;
+		double thickness = shape.max(Direction.Axis.Z) - shape.min(Direction.Axis.Z);
+		return thickness <= .25 ? nudge : 0f;
    }
 
 }
