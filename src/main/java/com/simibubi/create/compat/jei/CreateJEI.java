@@ -3,6 +3,7 @@ package com.simibubi.create.compat.jei;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.recipe.HeatCondition;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
@@ -43,6 +45,7 @@ import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
 import com.simibubi.create.compat.jei.category.SawingCategory;
 import com.simibubi.create.compat.jei.category.SequencedAssemblyCategory;
 import com.simibubi.create.compat.jei.category.SpoutCategory;
+import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.content.equipment.blueprint.BlueprintScreen;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
 import com.simibubi.create.content.fluids.potion.PotionFluid;
@@ -63,6 +66,8 @@ import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelSetItemScr
 import com.simibubi.create.content.logistics.filter.AbstractFilterScreen;
 import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterScreen;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
+import com.simibubi.create.content.processing.recipe.BlazeBurnerHeatCondition;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.content.redstone.link.controller.LinkedControllerScreen;
 import com.simibubi.create.content.trains.schedule.ScheduleScreen;
@@ -118,8 +123,10 @@ public class CreateJEI implements IModPlugin {
 
 	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
 	private IIngredientManager ingredientManager;
-	
+
 	public static IJeiRuntime runtime;
+
+	public static Map<HeatCondition, IDrawable> heatConditionDrawables = new HashMap<>();
 
 	private void loadCategories() {
 		allCategories.clear();
@@ -375,16 +382,16 @@ public class CreateJEI implements IModPlugin {
 			// @goshante: Ingame potion fluids always have Bottle tag that specifies
 			// to what bottle type this potion belongs
 			// Potion fluid without this tag wouldn't be recognized by other mods
-			
+
 //			for (PotionFluid.BottleType bottleType : PotionFluid.BottleType.values()) {
 //				FluidStack potionFluid = PotionFluid.of(1000, potion, bottleType);
 //				potionFluids.add(potionFluid);
 //			}
-			
+
 			if (!potion.getEffects().isEmpty())
 				if (!visitedEffects.add(potion.getEffects().stream().map(mei -> mei.getEffect()).collect(Collectors.toSet())))
 					continue;
-			
+
 			potionFluids.add(PotionFluid.of(1000, potion, PotionFluid.BottleType.REGULAR));
 		}
 		registration.addExtraIngredients(ForgeTypes.FLUID_STACK, potionFluids);
@@ -611,10 +618,14 @@ public class CreateJEI implements IModPlugin {
 		RegistryAccess registryAccess = Minecraft.getInstance().level.registryAccess();
 		return ItemHelper.sameItem(recipe1.getResultItem(registryAccess), recipe2.getResultItem(registryAccess));
 	}
-	
+
 	@Override
     public void onRuntimeAvailable(IJeiRuntime runtime) {
         CreateJEI.runtime = runtime;
     }
 
+	static {
+		heatConditionDrawables.put(BlazeBurnerHeatCondition.HEATED, new AnimatedBlazeBurner().withHeat(HeatLevel.KINDLED));
+		heatConditionDrawables.put(BlazeBurnerHeatCondition.SUPERHEATED, new AnimatedBlazeBurner().withHeat(HeatLevel.SEETHING));
+	}
 }

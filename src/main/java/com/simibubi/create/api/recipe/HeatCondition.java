@@ -2,7 +2,6 @@ package com.simibubi.create.api.recipe;
 
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 
-import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 
@@ -10,7 +9,6 @@ import net.minecraft.world.level.Level;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -18,8 +16,8 @@ import java.util.List;
  * A HeatCondition is a recipe condition such as the requirement of being heated or superheated.
  * This is demonstrated with the Blaze Burner.
  * <p></p>
- * This interface provides integration with JEI through {@link #visualize()},
- * {@link #getItemHints()}, and {@link #getColor()}.
+ * This interface provides integration with JEI through {@link #getItemHints()} and {@link #getColor()}.
+ * To make your heat source render within Create's categories, add your IDrawable to {@link com.simibubi.create.compat.jei.CreateJEI#heatConditionDrawables}.
  */
 public interface HeatCondition {
 	/**
@@ -34,16 +32,6 @@ public interface HeatCondition {
 	 * @return The HeatingCondition's translation key.
 	 */
 	String getTranslationKey();
-
-	/**
-	 * Gets the IDrawable responsible for rendering this HeatCondition in JEI.
-	 * If it is null, then it should not be rendered.
-	 * @see IDrawable
-	 */
-	@Nullable
-	default IDrawable visualize() {
-		return null;
-	}
 
 	/**
 	 * Provides items associated with this HeatCondition (e.g. a Blaze Burner)

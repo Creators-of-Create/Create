@@ -1,5 +1,6 @@
 package com.simibubi.create.compat.jei.category;
 
+import com.simibubi.create.compat.jei.CreateJEI;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMixer;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.api.recipe.HeatCondition;
@@ -43,7 +44,7 @@ public class MixingCategory extends BasinCategory {
 
 		HeatCondition heatCondition = recipe.getRequiredHeat();
 		if (heatCondition != null) {
-			IDrawable drawable = heatCondition.visualize();
+			IDrawable drawable = CreateJEI.heatConditionDrawables.get(heatCondition);
 			if (drawable != null)
 				drawable.draw(graphics, getBackground().getWidth() / 2 + 3, 55);
 		}
