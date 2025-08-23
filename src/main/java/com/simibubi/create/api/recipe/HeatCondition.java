@@ -15,9 +15,11 @@ import java.util.List;
 /**
  * A HeatCondition is a recipe condition such as the requirement of being heated or superheated.
  * This is demonstrated with the Blaze Burner.
- * <p></p>
+ * <p>
  * This interface provides integration with JEI through {@link #getItemHints()} and {@link #getColor()}.
  * To make your heat source render within Create's categories, add your IDrawable to {@link com.simibubi.create.compat.jei.CreateJEI#heatConditionDrawables}.
+ * You should do this from your JEI plugin's onRuntimeAvailable method.
+ * </p>
  */
 public interface HeatCondition {
 	/**
