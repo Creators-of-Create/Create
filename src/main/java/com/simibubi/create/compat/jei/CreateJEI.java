@@ -622,10 +622,8 @@ public class CreateJEI implements IModPlugin {
 	@Override
     public void onRuntimeAvailable(IJeiRuntime runtime) {
         CreateJEI.runtime = runtime;
-    }
 
-	static {
 		heatConditionDrawables.put(BlazeBurnerHeatCondition.HEATED, new AnimatedBlazeBurner().withHeat(HeatLevel.KINDLED));
 		heatConditionDrawables.put(BlazeBurnerHeatCondition.SUPERHEATED, new AnimatedBlazeBurner().withHeat(HeatLevel.SEETHING));
-	}
+    }
 }
