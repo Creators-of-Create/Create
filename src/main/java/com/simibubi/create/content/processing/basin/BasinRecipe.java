@@ -74,8 +74,9 @@ public class BasinRecipe extends ProcessingRecipe<Container> {
 
 		if (isBasinRecipe) {
 			HeatCondition heatCondition = ((BasinRecipe) recipe).getRequiredHeat();
-			if (heatCondition == null ||
-				!heatCondition.test(basin.getLevel(), basin.getBlockPos())) return false;
+			if (heatCondition != null) {
+				if (!heatCondition.test(basin.getLevel(), basin.getBlockPos())) return false;
+			}
 		}
 
 		List<ItemStack> recipeOutputItems = new ArrayList<>();
