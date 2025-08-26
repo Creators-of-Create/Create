@@ -118,7 +118,6 @@ public class Create {
 		REGISTRATE.registerEventListeners(modEventBus);
 
 		AllSoundEvents.prepare();
-		AllTags.init();
 		AllCreativeModeTabs.register(modEventBus);
 		AllDisplaySources.register();
 		AllDisplayTargets.register();

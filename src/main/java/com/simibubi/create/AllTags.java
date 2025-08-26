@@ -16,9 +16,6 @@ import com.simibubi.create.api.registry.CreateRegistries;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -33,6 +30,8 @@ import net.minecraft.world.level.material.FluidState;
 
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+
+import org.jetbrains.annotations.Nullable;
 
 public class AllTags {
 	public static <T> TagKey<T> optionalTag(IForgeRegistry<T> registry,
@@ -59,7 +58,7 @@ public class AllTags {
 
 	public enum NameSpace {
 
-		MOD(Create.ID, false, true),
+		MOD(Create.ID),
 		FORGE("forge"),
 		TIC("tconstruct"),
 		QUARK("quark"),
@@ -67,17 +66,14 @@ public class AllTags {
 		CURIOS("curios");
 
 		public final String id;
-		public final boolean optionalDefault;
-		public final boolean alwaysDatagenDefault;
 
 		NameSpace(String id) {
-			this(id, true, false);
+			this.id = id;
 		}
 
-		NameSpace(String id, boolean optionalDefault, boolean alwaysDatagenDefault) {
-			this.id = id;
-			this.optionalDefault = optionalDefault;
-			this.alwaysDatagenDefault = alwaysDatagenDefault;
+		public ResourceLocation id(Enum<?> entry, @Nullable String pathOverride) {
+			String path = pathOverride != null ? pathOverride : Lang.asId(entry.name());
+			return new ResourceLocation(this.id, path);
 		}
 	}
 
@@ -127,32 +123,17 @@ public class AllTags {
 		;
 
 		public final TagKey<Block> tag;
-		public final boolean alwaysDatagen;
 
 		AllBlockTags() {
 			this(MOD);
 		}
 
 		AllBlockTags(NameSpace namespace) {
-			this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+			this(namespace, null);
 		}
 
-		AllBlockTags(NameSpace namespace, String path) {
-			this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
-		}
-
-		AllBlockTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
-			this(namespace, null, optional, alwaysDatagen);
-		}
-
-		AllBlockTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
-			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
-			if (optional) {
-				tag = optionalTag(ForgeRegistries.BLOCKS, id);
-			} else {
-				tag = BlockTags.create(id);
-			}
-			this.alwaysDatagen = alwaysDatagen;
+		AllBlockTags(NameSpace namespace, @Nullable String pathOverride) {
+			this.tag = TagKey.create(Registries.BLOCK, namespace.id(this, pathOverride));
 		}
 
 		@SuppressWarnings("deprecation")
@@ -167,9 +148,6 @@ public class AllTags {
 
 		public boolean matches(BlockState state) {
 			return state.is(tag);
-		}
-
-		private static void init() {
 		}
 
 	}
@@ -219,32 +197,17 @@ public class AllTags {
 		CURIOS_HEAD(CURIOS, "head");
 
 		public final TagKey<Item> tag;
-		public final boolean alwaysDatagen;
 
 		AllItemTags() {
 			this(MOD);
 		}
 
 		AllItemTags(NameSpace namespace) {
-			this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+			this(namespace, null);
 		}
 
-		AllItemTags(NameSpace namespace, String path) {
-			this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
-		}
-
-		AllItemTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
-			this(namespace, null, optional, alwaysDatagen);
-		}
-
-		AllItemTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
-			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
-			if (optional) {
-				tag = optionalTag(ForgeRegistries.ITEMS, id);
-			} else {
-				tag = ItemTags.create(id);
-			}
-			this.alwaysDatagen = alwaysDatagen;
+		AllItemTags(NameSpace namespace, @Nullable String pathOverride) {
+			this.tag = TagKey.create(Registries.ITEM, namespace.id(this, pathOverride));
 		}
 
 		@SuppressWarnings("deprecation")
@@ -255,9 +218,6 @@ public class AllTags {
 
 		public boolean matches(ItemStack stack) {
 			return stack.is(tag);
-		}
-
-		private static void init() {
 		}
 
 	}
@@ -274,32 +234,17 @@ public class AllTags {
 		HONEY(FORGE);
 
 		public final TagKey<Fluid> tag;
-		public final boolean alwaysDatagen;
 
 		AllFluidTags() {
 			this(MOD);
 		}
 
 		AllFluidTags(NameSpace namespace) {
-			this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+			this(namespace, null);
 		}
 
-		AllFluidTags(NameSpace namespace, String path) {
-			this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
-		}
-
-		AllFluidTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
-			this(namespace, null, optional, alwaysDatagen);
-		}
-
-		AllFluidTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
-			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
-			if (optional) {
-				tag = optionalTag(ForgeRegistries.FLUIDS, id);
-			} else {
-				tag = FluidTags.create(id);
-			}
-			this.alwaysDatagen = alwaysDatagen;
+		AllFluidTags(NameSpace namespace, @Nullable String pathOverride) {
+			this.tag = TagKey.create(Registries.FLUID, namespace.id(this, pathOverride));
 		}
 
 		@SuppressWarnings("deprecation")
@@ -309,9 +254,6 @@ public class AllTags {
 
 		public boolean matches(FluidState state) {
 			return state.is(tag);
-		}
-
-		private static void init() {
 		}
 
 	}
@@ -324,32 +266,17 @@ public class AllTags {
 		;
 
 		public final TagKey<EntityType<?>> tag;
-		public final boolean alwaysDatagen;
 
 		AllEntityTags() {
 			this(MOD);
 		}
 
 		AllEntityTags(NameSpace namespace) {
-			this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+			this(namespace, null);
 		}
 
-		AllEntityTags(NameSpace namespace, String path) {
-			this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
-		}
-
-		AllEntityTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
-			this(namespace, null, optional, alwaysDatagen);
-		}
-
-		AllEntityTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
-			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
-			if (optional) {
-				tag = optionalTag(ForgeRegistries.ENTITY_TYPES, id);
-			} else {
-				tag = TagKey.create(Registries.ENTITY_TYPE, id);
-			}
-			this.alwaysDatagen = alwaysDatagen;
+		AllEntityTags(NameSpace namespace, @Nullable String pathOverride) {
+			this.tag = TagKey.create(Registries.ENTITY_TYPE, namespace.id(this, pathOverride));
 		}
 
 		public boolean matches(EntityType<?> type) {
@@ -358,9 +285,6 @@ public class AllTags {
 
 		public boolean matches(Entity entity) {
 			return matches(entity.getType());
-		}
-
-		private static void init() {
 		}
 
 	}
@@ -372,40 +296,23 @@ public class AllTags {
 		;
 
 		public final TagKey<RecipeSerializer<?>> tag;
-		public final boolean alwaysDatagen;
 
 		AllRecipeSerializerTags() {
 			this(MOD);
 		}
 
 		AllRecipeSerializerTags(NameSpace namespace) {
-			this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+			this(namespace, null);
 		}
 
-		AllRecipeSerializerTags(NameSpace namespace, String path) {
-			this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
-		}
-
-		AllRecipeSerializerTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
-			this(namespace, null, optional, alwaysDatagen);
-		}
-
-		AllRecipeSerializerTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
-			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
-			if (optional) {
-				tag = optionalTag(ForgeRegistries.RECIPE_SERIALIZERS, id);
-			} else {
-				tag = TagKey.create(Registries.RECIPE_SERIALIZER, id);
-			}
-			this.alwaysDatagen = alwaysDatagen;
+		AllRecipeSerializerTags(NameSpace namespace, @Nullable String pathOverride) {
+			this.tag = TagKey.create(Registries.RECIPE_SERIALIZER, namespace.id(this, pathOverride));
 		}
 
 		public boolean matches(RecipeSerializer<?> recipeSerializer) {
 			return ForgeRegistries.RECIPE_SERIALIZERS.getHolder(recipeSerializer).orElseThrow().is(tag);
 		}
 
-		private static void init() {
-		}
 	}
 
 	public enum AllContraptionTypeTags {
@@ -413,20 +320,23 @@ public class AllTags {
 		REQUIRES_VEHICLE_FOR_RENDER;
 
 		public final TagKey<ContraptionType> tag;
-		public final boolean alwaysDatagen;
 
 		AllContraptionTypeTags() {
-			ResourceLocation tagId = Create.asResource(Lang.asId(this.name()));
-			this.tag = TagKey.create(CreateRegistries.CONTRAPTION_TYPE, tagId);
-			this.alwaysDatagen = true;
+			this(MOD);
+		}
+
+		AllContraptionTypeTags(NameSpace namespace) {
+			this(namespace, null);
+		}
+
+		AllContraptionTypeTags(NameSpace namespace, @Nullable String pathOverride) {
+			this.tag = TagKey.create(CreateRegistries.CONTRAPTION_TYPE, namespace.id(this, pathOverride));
 		}
 
 		public boolean matches(ContraptionType type) {
 			return type.is(this.tag);
 		}
 
-		private static void init() {
-		}
 	}
 
 	public enum AllMountedItemStorageTypeTags {
@@ -434,12 +344,17 @@ public class AllTags {
 		FUEL_BLACKLIST;
 
 		public final TagKey<MountedItemStorageType<?>> tag;
-		public final boolean alwaysDatagen;
 
 		AllMountedItemStorageTypeTags() {
-			ResourceLocation tagId = Create.asResource(Lang.asId(this.name()));
-			this.tag = TagKey.create(CreateRegistries.MOUNTED_ITEM_STORAGE_TYPE, tagId);
-			this.alwaysDatagen = true;
+			this(MOD);
+		}
+
+		AllMountedItemStorageTypeTags(NameSpace namespace) {
+			this(namespace, null);
+		}
+
+		AllMountedItemStorageTypeTags(NameSpace namespace, @Nullable String pathOverride) {
+			this.tag = TagKey.create(CreateRegistries.MOUNTED_ITEM_STORAGE_TYPE, namespace.id(this, pathOverride));
 		}
 
 		public boolean matches(MountedItemStorage storage) {
@@ -450,17 +365,6 @@ public class AllTags {
 			return type.is(this.tag);
 		}
 
-		private static void init() {
-		}
 	}
 
-	public static void init() {
-		AllBlockTags.init();
-		AllItemTags.init();
-		AllFluidTags.init();
-		AllEntityTags.init();
-		AllRecipeSerializerTags.init();
-		AllContraptionTypeTags.init();
-		AllMountedItemStorageTypeTags.init();
-	}
 }
