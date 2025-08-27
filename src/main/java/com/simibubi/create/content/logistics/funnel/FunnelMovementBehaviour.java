@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.foundation.item.ItemHelper;
 
@@ -11,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -96,13 +98,14 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 
 	private void succ(MovementContext context, BlockPos pos) {
 		Level world = context.world;
-		List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class, new AABB(pos));
+		List<Entity> items = world.getEntities((Entity) null, new AABB(pos),
+			e -> e instanceof ItemEntity || e instanceof PackageEntity);
 		FilterItemStack filter = context.getFilterFromBE();
 
-		for (ItemEntity item : items) {
-			if (!item.isAlive())
+		for (Entity entity : items) {
+			if (!entity.isAlive())
 				continue;
-			ItemStack toInsert = item.getItem();
+			ItemStack toInsert = ItemHelper.fromItemEntity(entity);
 			if (!filter.test(context.world, toInsert))
 				continue;
 			ItemStack remainder =
@@ -110,12 +113,12 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 			if (remainder.getCount() == toInsert.getCount())
 				continue;
 			if (remainder.isEmpty()) {
-				item.setItem(ItemStack.EMPTY);
-				item.discard();
+				entity.discard();
 				continue;
 			}
 
-			item.setItem(remainder);
+			if (entity instanceof ItemEntity item)
+				item.setItem(remainder);
 		}
 	}
 

@@ -302,7 +302,7 @@ public class SchematicHandler implements IGuiOverlay {
 	public void onKeyInput(int key, boolean pressed) {
 		if (!active)
 			return;
-		if (key != AllKeys.TOOL_MENU.getBoundCode())
+		if (!AllKeys.TOOL_MENU.doesModifierAndCodeMatch(key))
 			return;
 
 		if (pressed && !selectionScreen.focused)

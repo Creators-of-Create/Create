@@ -1,27 +1,13 @@
 name: Publish Release
-
 on: workflow_dispatch
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        run: echo "JAVA_HOME=$JAVA_HOME_17_X64" >> "$GITHUB_ENV"
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          cache-disabled: true
-
-      - name: Validate Gradle Wrapper Integrity
-        uses: gradle/actions/wrapper-validation@v4
-
-      - name: Build & Publish
-        env:
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-        run: ./gradlew build publish publishMods
+    uses: ithundxr/workflows/.github/workflows/java-build.yml@main
+    with:
+      java-version: 17
+      is-release: true
+      release-task: publishMods
+    secrets:
+      modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+      curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}

@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
@@ -106,7 +107,7 @@ public class ToolboxHandlerClient {
 		if (mc.gameMode == null || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
 
-		if (key != AllKeys.TOOLBELT.getBoundCode())
+		if (!AllKeys.TOOLBELT.doesModifierAndCodeMatch(key))
 			return;
 		if (COOLDOWN > 0)
 			return;
