@@ -70,6 +70,7 @@ public class CreateDatagen {
 			AllSoundEvents.provideLang(langConsumer);
 			AllKeys.provideLang(langConsumer);
 			providePonderLang(langConsumer);
+			new TagLangGenerator(langConsumer).generate();
 		});
 	}
 

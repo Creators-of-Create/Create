@@ -94,9 +94,6 @@ public class CreateRegistrateTags {
 			.addTag(BlockTags.FENCE_GATES)
 			.addTag(BlockTags.BANNERS);
 
-		prov.tag(AllBlockTags.ORE_OVERRIDE_STONE.tag)
-			.addTag(BlockTags.STONE_ORE_REPLACEABLES);
-
 		prov.tag(AllBlockTags.PASSIVE_BOILER_HEATERS.tag)
 			.add(Blocks.MAGMA_BLOCK, Blocks.LAVA)
 			.addTag(BlockTags.CAMPFIRES)

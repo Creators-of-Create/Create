@@ -1,4 +1,4 @@
-// 1.20.1	2025-08-28T12:50:54.399569626	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.20.1	2025-08-28T14:09:36.021287272	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -642,8 +642,8 @@ b0d8f08968763a5f74e5cd5644377a76a9f39753 assets/create/blockstates/yellow_toolbo
 fe8c497aacc641c2f01cec90bba9f19e59cc2ed2 assets/create/blockstates/yellow_valve_handle.json
 e819e93fdcbe9fd9c050a052d2718ff3b3539365 assets/create/blockstates/zinc_block.json
 64121dcb216381c83b4fe28aa361ea07c24c9ad0 assets/create/blockstates/zinc_ore.json
-6524871dae4e038131793f27a76b724ecad6a9e1 assets/create/lang/en_ud.json
-65d53d631220dfd0496541c02871348d738d867b assets/create/lang/en_us.json
+025d12e4f9165aea4d75cc6afb738cfa5713949b assets/create/lang/en_ud.json
+dc9672cdd13cae9ed7881f6538e12c82227ac14c assets/create/lang/en_us.json
 a97e1060e00ae701a02e39cd4ef8054cf345fac4 assets/create/models/block/acacia_window.json
 103e032c0b1a0a6a27c67da8c91179a564bd281c assets/create/models/block/acacia_window_pane_noside.json
 fb00b627abda76ad4fea867ca57dbfadd24fffa3 assets/create/models/block/acacia_window_pane_noside_alt.json
@@ -4695,7 +4695,6 @@ f675c20350ed60da4878b5d6301f02c8c05624bd data/create/tags/blocks/fan_processing_
 02c0a018f2b8540dc2f1fb420172cc716552f321 data/create/tags/blocks/movable_empty_collider.json
 7f7eb361dcdaa2f081bfed7582c93d6b1b29f8db data/create/tags/blocks/non_harvestable.json
 4970078b49ddac1b1d500ed0469cedf42bdc3d35 data/create/tags/blocks/non_movable.json
-06e13efbb7b0d09ff7ecd1a7dc45a0760b91ad67 data/create/tags/blocks/ore_override_stone.json
 a5874f73c7dc0a3ae12999e6ae8abf45bc7fb9be data/create/tags/blocks/passive_boiler_heaters.json
 f400870b8dbcd14238be3ec99c419093073ba3a6 data/create/tags/blocks/postboxes.json
 9bc8c13fd80bdbe7f767b91ee1a1042e9aff02b0 data/create/tags/blocks/roots.json
