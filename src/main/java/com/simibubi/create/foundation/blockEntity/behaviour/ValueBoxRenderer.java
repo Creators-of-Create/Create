@@ -38,9 +38,10 @@ public class ValueBoxRenderer {
 		TransformStack.of(ms)
 			.translate(0, 0, -1 / 4f + 1 / 32f + .001)
 			.rotateYDegrees(180)
-			.scale(.5f, .5f, 1 / 1024f);
-		Minecraft mc = Minecraft.getInstance();
-		ItemRenderer itemRenderer = mc.getItemRenderer();
+			.scale(.5f, .5f, .5f);
+		// Then, squash it flat, but leave the normals unaffected by this last transform
+		ms.last().pose().scale(1f, 1f, 1 / 512f);
+		ItemRenderer itemRenderer =  Minecraft.getInstance().getItemRenderer();
 		itemRenderer.renderStatic(filter, ItemDisplayContext.GUI, light, OverlayTexture.NO_OVERLAY, ms, buffer, mc.level, 0);
 	}
 
