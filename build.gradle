@@ -198,9 +198,9 @@ dependencies {
 
     // Compile only because architectury breaks packets
     modCompileOnly("dev.architectury:architectury-forge:9.1.12")
-    modCompileOnly("dev.ftb.mods:ftb-chunks-forge:2001.3.1")
-    modCompileOnly("dev.ftb.mods:ftb-teams-forge:2001.3.0")
-    modCompileOnly("dev.ftb.mods:ftb-library-forge:2001.2.4")
+    modCompileOnly("dev.ftb.mods:ftb-chunks-forge:2001.1.4")
+    modCompileOnly("dev.ftb.mods:ftb-teams-forge:2001.1.4")
+    modCompileOnly("dev.ftb.mods:ftb-library-forge:2001.1.4")
 
     modImplementation("curse.maven:journeymap-32274:5457831")
     // Compile only to prevent there from being multiple map mods in the dev env

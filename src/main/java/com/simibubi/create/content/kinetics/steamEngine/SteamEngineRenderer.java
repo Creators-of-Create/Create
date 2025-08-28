@@ -43,14 +43,14 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 			axis = KineticBlockEntityRenderer.getRotationAxisOf(shaft);
 
 		boolean roll90 = facingAxis.isHorizontal() && axis == Axis.Y || facingAxis.isVertical() && axis == Axis.Z;
-		float sine = Mth.sin(angle);
-		float sine2 = Mth.sin(angle - Mth.HALF_PI);
-		float piston = ((1 - sine) / 4) * 24 / 16f;
+		float piston = ((6/16f)*Mth.sin(angle) - Mth.sqrt(Mth.square(14/16f) - Mth.square(6/16f) * Mth.square(Mth.cos(angle))));
+		float distance = Mth.sqrt(Mth.square(piston - 6/16f * Mth.sin(angle)));
+		float angle2 = (float) Math.acos(distance/(14/16f)) * (Mth.cos(angle) >= 0 ? 1f : -1f);
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
 		transformed(AllPartialModels.ENGINE_PISTON, blockState, facing, roll90)
-			.translate(0, piston, 0)
+			.translate(0, piston + 20/16f, 0)
 			.light(light)
 			.renderInto(ms, vb);
 
@@ -58,9 +58,9 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 			.center()
 			.translate(0, 1, 0)
 			.uncenter()
-			.translate(0, piston, 0)
+			.translate(0, piston + 20/16f, 0)
 			.translate(0, 4 / 16f, 8 / 16f)
-			.rotateXDegrees(sine2 * 23f)
+			.rotateX(angle2)
 			.translate(0, -4 / 16f, -8 / 16f)
 			.light(light)
 			.renderInto(ms, vb);
@@ -68,7 +68,7 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 		transformed(AllPartialModels.ENGINE_CONNECTOR, blockState, facing, roll90)
 			.translate(0, 2, 0)
 			.center()
-			.rotateX(-angle + Mth.HALF_PI)
+			.rotateX(-(angle + Mth.HALF_PI))
 			.uncenter()
 			.light(light)
 			.renderInto(ms, vb);
