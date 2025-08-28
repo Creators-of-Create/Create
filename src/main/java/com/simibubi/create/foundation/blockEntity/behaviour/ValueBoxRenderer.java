@@ -41,7 +41,8 @@ public class ValueBoxRenderer {
 			.scale(.5f, .5f, .5f);
 		// Then, squash it flat, but leave the normals unaffected by this last transform
 		ms.last().pose().scale(1f, 1f, 1 / 512f);
-		ItemRenderer itemRenderer =  Minecraft.getInstance().getItemRenderer();
+		Minecraft mc = Minecraft.getInstance();
+		ItemRenderer itemRenderer =  mc.getItemRenderer();
 		itemRenderer.renderStatic(filter, ItemDisplayContext.GUI, light, OverlayTexture.NO_OVERLAY, ms, buffer, mc.level, 0);
 	}
 
