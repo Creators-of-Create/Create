@@ -1,4 +1,4 @@
-// 1.20.1	2025-08-26T14:43:43.119630723	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.20.1	2025-08-28T12:50:54.399569626	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -4777,10 +4777,8 @@ bcd593714f43bc6a0aefbd714c24db3cf9e71250 data/forge/tags/blocks/storage_blocks/r
 0ccc9ff76001cdd7db1b79c1371f59d3283abe64 data/forge/tags/fluids/honey.json
 cca816b34ac2e9b7933df680aa9778ff2cfe9605 data/forge/tags/fluids/tea.json
 1a9ce7d5f5fe92d3b73e269cd5dbf5cd1f1fe5b8 data/forge/tags/items/armors/boots.json
-6749b53c23aefe4baa55c4b2f624bbc6dfe5f423 data/forge/tags/items/armors/chestplate.json
-695d75b352fd190b303c724d1aaee9bb786a903b data/forge/tags/items/armors/chestplates.json
-5b91b107f48b47958db20f13cb3cc0c6f7085fdc data/forge/tags/items/armors/helmet.json
-3580dae058fc75b45fab4c4ebbd1b01573ba9e11 data/forge/tags/items/armors/helmets.json
+056046998d063e7405c267f1ec2923260ef8c109 data/forge/tags/items/armors/chestplates.json
+9eb6474e9336c2c378100b7e2577a6ba9c62e403 data/forge/tags/items/armors/helmets.json
 afdac448376ff5624f49cbf31feedf691ecbc4c5 data/forge/tags/items/armors/leggings.json
 06ebf72e8f6c081862236d4b068b5dfb275a8385 data/forge/tags/items/buckets/honey.json
 801d097b0af7153e0c5c72a924d61f8afb4cf264 data/forge/tags/items/dough.json

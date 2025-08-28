@@ -1,11 +1,13 @@
 package com.simibubi.create.foundation.data;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.data.recipe.CommonMetal;
 import com.simibubi.create.foundation.data.recipe.Mods;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
@@ -20,6 +22,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagBuilder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
 public class TagGen {
@@ -37,13 +40,25 @@ public class TagGen {
 	}
 
 	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
-		String... path) {
+		CommonMetal.ItemLikeTag tag) {
+		return tagBlockAndItem(Map.of(tag.blocks(), tag.items()));
+	}
+
+	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
+		TagKey<Block> blockTag, TagKey<Item> itemTag) {
+		return tagBlockAndItem(Map.of(blockTag, itemTag));
+	}
+
+	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
+		Map<TagKey<Block>, TagKey<Item>> tags) {
 		return b -> {
-			for (String p : path)
-				b.tag(AllTags.forgeBlockTag(p));
+			for (TagKey<Block> blockTag : tags.keySet()) {
+				b.tag(blockTag);
+			}
 			ItemBuilder<BlockItem, BlockBuilder<T, P>> item = b.item();
-			for (String p : path)
-				item.tag(AllTags.forgeItemTag(p));
+			for (TagKey<Item> itemTag : tags.values()) {
+				item.tag(itemTag);
+			}
 			return item;
 		};
 	}

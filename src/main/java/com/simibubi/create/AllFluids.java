@@ -5,6 +5,8 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllTags.AllItemTags;
+
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -67,7 +69,7 @@ public class AllFluids {
 
 	public static final FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
 		.lang("Builder's Tea")
-		.tag(AllTags.forgeFluidTag("tea"))
+		.tag(AllFluidTags.TEA.tag)
 		.register();
 
 	public static final FluidEntry<ForgeFlowingFluid.Flowing> HONEY =
@@ -88,7 +90,7 @@ public class AllFluids {
 			.build()
 			.bucket()
 			.onRegister(AllFluids::registerFluidDispenseBehavior)
-			.tag(AllTags.forgeItemTag("buckets/honey"))
+			.tag(AllItemTags.HONEY_BUCKETS.tag)
 			.build()
 			.register();
 
@@ -97,7 +99,7 @@ public class AllFluids {
 				SolidRenderedPlaceableFluidType.create(0x622020,
 					() -> 1f / 32f * AllConfigs.client().chocolateTransparencyMultiplier.getF()))
 			.lang("Chocolate")
-			.tag(AllTags.forgeFluidTag("chocolate"))
+			.tag(AllFluidTags.CHOCOLATE.tag)
 			.properties(b -> b.viscosity(1500)
 				.density(1400))
 			.fluidProperties(p -> p.levelDecreasePerBlock(2)

@@ -6,12 +6,13 @@ import static com.simibubi.create.AllTags.NameSpace.MOD;
 import static com.simibubi.create.AllTags.NameSpace.QUARK;
 import static com.simibubi.create.AllTags.NameSpace.TIC;
 
-import java.util.Collections;
-
 import com.simibubi.create.api.contraption.ContraptionType;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorage;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
 import com.simibubi.create.api.registry.CreateRegistries;
+
+import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
+import com.simibubi.create.foundation.data.recipe.CommonMetal;
 
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.registries.Registries;
@@ -34,24 +35,28 @@ import net.minecraftforge.registries.IForgeRegistry;
 import org.jetbrains.annotations.Nullable;
 
 public class AllTags {
+	@Deprecated(forRemoval = true)
 	public static <T> TagKey<T> optionalTag(IForgeRegistry<T> registry,
 											ResourceLocation id) {
-		return registry.tags()
-			.createOptionalTagKey(id, Collections.emptySet());
+		return TagKey.create(registry.getRegistryKey(), id);
 	}
 
+	@Deprecated(forRemoval = true)
 	public static <T> TagKey<T> forgeTag(IForgeRegistry<T> registry, String path) {
-		return optionalTag(registry, new ResourceLocation("forge", path));
+		return optionalTag(registry, FORGE.id(path));
 	}
 
+	@Deprecated(forRemoval = true)
 	public static TagKey<Block> forgeBlockTag(String path) {
 		return forgeTag(ForgeRegistries.BLOCKS, path);
 	}
 
+	@Deprecated(forRemoval = true)
 	public static TagKey<Item> forgeItemTag(String path) {
 		return forgeTag(ForgeRegistries.ITEMS, path);
 	}
 
+	@Deprecated(forRemoval = true)
 	public static TagKey<Fluid> forgeFluidTag(String path) {
 		return forgeTag(ForgeRegistries.FLUIDS, path);
 	}
@@ -71,9 +76,12 @@ public class AllTags {
 			this.id = id;
 		}
 
-		public ResourceLocation id(Enum<?> entry, @Nullable String pathOverride) {
-			String path = pathOverride != null ? pathOverride : Lang.asId(entry.name());
+		public ResourceLocation id(String path) {
 			return new ResourceLocation(this.id, path);
+		}
+
+		public ResourceLocation id(Enum<?> entry, @Nullable String pathOverride) {
+			return this.id(pathOverride != null ? pathOverride : Lang.asId(entry.name()));
 		}
 	}
 
@@ -111,6 +119,11 @@ public class AllTags {
 		SUGAR_CANE_VARIANTS,
 		NON_HARVESTABLE,
 		SINGLE_BLOCK_INVENTORIES,
+		CARDBOARD_STORAGE_BLOCKS(FORGE, "storage_blocks/cardboard"),
+		ANDESITE_ALLOY_STORAGE_BLOCKS(FORGE, "storage_blocks/andesite_alloy"),
+
+		STONE_ORES_IN_GROUND(FORGE, "ores_in_ground/stone"),
+		DEEPSLATE_ORES_IN_GROUND(FORGE, "ores_in_ground/deepslate"),
 
 		CORALS,
 
@@ -152,6 +165,11 @@ public class AllTags {
 
 	}
 
+	/**
+	 * Despite the name, not truly all item tags.
+	 * @see CommonMetal
+	 * @see AllPaletteStoneTypes#materialTag
+	 */
 	public enum AllItemTags {
 
 		BLAZE_BURNER_FUEL_REGULAR(MOD, "blaze_burner_fuel/regular"),
@@ -185,13 +203,45 @@ public class AllTags {
 
 		STRIPPED_LOGS(FORGE),
 		STRIPPED_WOOD(FORGE),
-		PLATES(FORGE),
+
 		OBSIDIAN_DUST(FORGE, "dusts/obsidian"),
+
+		PLATES(FORGE),
+		OBSIDIAN_PLATES(FORGE, "plates/obsidian"),
+		CARDBOARD_PLATES(FORGE, "plates/cardboard"),
+
 		WRENCH(FORGE, "tools/wrench"),
 
 		ALLURITE(MOD, "stone_types/galosphere/allurite"),
 		AMETHYST(MOD, "stone_types/galosphere/amethyst"),
 		LUMIERE(MOD, "stone_types/galosphere/lumiere"),
+
+		CERTUS_QUARTZ(FORGE, "gems/certus_quartz"),
+
+		AMETRINE_ORES(FORGE, "ores/ametrine"),
+		ANTHRACITE_ORES(FORGE, "ores/anthracite"),
+		EMERALDITE_ORES(FORGE, "ores/emeraldite"),
+		LIGNITE_ORES(FORGE, "ores/lignite"),
+
+		RAW_MATERIALS(FORGE),
+		CARDBOARD_STORAGE_BLOCKS(FORGE, "storage_blocks/cardboard"),
+		ANDESITE_ALLOY_STORAGE_BLOCKS(FORGE, "storage_blocks/andesite_alloy"),
+
+		STONE_ORES_IN_GROUND(FORGE, "ores_in_ground/stone"),
+		DEEPSLATE_ORES_IN_GROUND(FORGE, "ores_in_ground/deepslate"),
+
+		HONEY_BUCKETS(FORGE, "buckets/honey"),
+
+		FLOUR(FORGE),
+		WHEAT_FLOUR(FORGE, "flour/wheat"),
+
+		DOUGH(FORGE),
+		WHEAT_DOUGH(FORGE, "dough/wheat"),
+
+		HELMET_ARMORS(FORGE, "armors/helmets"),
+		CHESTPLATE_ARMORS(FORGE, "armors/chestplates"),
+		LEGGING_ARMORS(FORGE, "armors/leggings"),
+		BOOT_ARMORS(FORGE, "armors/boots"),
 
 		UA_CORAL(MOD, "upgrade_aquatic/coral"),
 		CURIOS_HEAD(CURIOS, "head");
@@ -231,7 +281,11 @@ public class AllTags {
 		FAN_PROCESSING_CATALYSTS_SMOKING(MOD, "fan_processing_catalysts/smoking"),
 		FAN_PROCESSING_CATALYSTS_SPLASHING(MOD, "fan_processing_catalysts/splashing"),
 
-		HONEY(FORGE);
+		TEA(FORGE),
+		HONEY(FORGE),
+		CHOCOLATE(FORGE),
+
+		CREOSOTE(FORGE);
 
 		public final TagKey<Fluid> tag;
 

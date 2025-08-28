@@ -1,14 +1,14 @@
 package com.simibubi.create.foundation.data.recipe;
 
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.OSMIUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.PLATINUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.QUICKSILVER;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.SILVER;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.ALUMINUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.LEAD;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.NICKEL;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.OSMIUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.PLATINUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.QUICKSILVER;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.SILVER;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.TIN;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.URANIUM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,6 @@ import java.util.function.UnaryOperator;
 
 import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
 
-import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +28,6 @@ import com.google.gson.JsonObject;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
@@ -233,10 +231,10 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 				.pattern("I")
 				.pattern("P")),
 
-		CAKE = create(() -> Items.CAKE).unlockedByTag(() -> AllTags.forgeItemTag("dough"))
+		CAKE = create(() -> Items.CAKE).unlockedByTag(() -> AllItemTags.DOUGH.tag)
 			.viaShaped(b -> b.define('E', Tags.Items.EGGS)
 				.define('S', Items.SUGAR)
-				.define('P', AllTags.forgeItemTag("dough"))
+				.define('P', AllItemTags.DOUGH.tag)
 				.define('M', () -> Items.MILK_BUCKET)
 				.pattern(" M ")
 				.pattern("SES")
@@ -336,7 +334,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 		MECHANICAL_PRESS = create(AllBlocks.MECHANICAL_PRESS).unlockedBy(I::andesiteCasing)
 			.viaShaped(b -> b.define('C', I.andesiteCasing())
 				.define('S', I.shaft())
-				.define('I', AllTags.forgeItemTag("storage_blocks/iron"))
+				.define('I', CommonMetal.IRON.storageBlocks.items())
 				.pattern("S")
 				.pattern("C")
 				.pattern("I")),
@@ -1355,12 +1353,12 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 		CRUSHED_NICKEL = blastModdedCrushedMetal(AllItems.CRUSHED_NICKEL, NICKEL),
 
 		ZINC_ORE = create(AllItems.ZINC_INGOT::get).withSuffix("_from_ore")
-			.viaCookingTag(() -> AllTags.forgeItemTag("ores/zinc"))
+			.viaCookingTag(() -> CommonMetal.ZINC.ores.items())
 			.rewardXP(1)
 			.inBlastFurnace(),
 
 		RAW_ZINC_ORE = create(AllItems.ZINC_INGOT::get).withSuffix("_from_raw_ore")
-			.viaCookingTag(() -> AllTags.forgeItemTag("raw_materials/zinc"))
+			.viaCookingTag(() -> CommonMetal.ZINC.rawOres)
 			.rewardXP(.7f)
 			.inBlastFurnace(),
 
@@ -1415,8 +1413,8 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 			.inBlastFurnace();
 	}
 
-	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, CompatMetals metal) {
-		for (Mods mod : metal.getMods()) {
+	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, CommonMetal metal) {
+		for (Mods mod : metal.mods) {
 			String metalName = metal.getName(mod);
 			ResourceLocation ingot = mod.ingotOf(metalName);
 			String modId = mod.getId();

@@ -19,6 +19,10 @@ import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
  */
 public abstract class MillingRecipeGen extends ProcessingRecipeGen {
 
+	/**
+	 * @deprecated poor API. Requires an ItemEntry, and uses a string to create a tag. Unused by Create.
+	 */
+	@Deprecated(forRemoval = true)
 	protected GeneratedRecipe metalOre(String name, ItemEntry<? extends Item> crushed, int duration) {
 		return create(name + "_ore", b -> b.duration(duration)
 			.withCondition(new NotCondition(new TagEmptyCondition("forge", "ores/" + name)))
