@@ -267,17 +267,13 @@ import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.UncontainableBlockItem;
+import com.simibubi.create.foundation.mixin.accessor.BlockLootSubProviderAccessor;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.infrastructure.config.CStress;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
-
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.ForgeSoundType;
 
 import net.createmod.catnip.data.Couple;
 import net.minecraft.client.renderer.RenderType;
@@ -318,6 +314,11 @@ import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+
+import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.util.ForgeSoundType;
 
 @SuppressWarnings("removal")
 public class AllBlocks {
@@ -806,8 +807,7 @@ public class AllBlocks {
 		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
 			.sound(SoundType.NETHERITE_BLOCK)
 			.noOcclusion()
-			.isSuffocating((level, pos, state) -> false)
-			.isRedstoneConductor((level, pos, state) -> false))
+			.isSuffocating((state, level, pos) -> false))
 		.transform(pickaxeOnly())
 		.addLayer(() -> RenderType::cutoutMipped)
 		.blockstate(new ChuteGenerator()::generate)
@@ -820,8 +820,8 @@ public class AllBlocks {
 		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
 			.sound(SoundType.NETHERITE_BLOCK)
 			.noOcclusion()
-			.isSuffocating((level, pos, state) -> false)
-			.isRedstoneConductor((level, pos, state) -> false))
+			.isSuffocating((state, level, pos) -> false)
+			.isRedstoneConductor((state, level, pos) -> false))
 		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(pickaxeOnly())
 		.blockstate((c, p) -> BlockStateGen.simpleBlock(c, p, AssetLookup.forPowered(c, p)))
@@ -2110,6 +2110,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::copperMetal)
 		.properties(p -> p.forceSolidOn())
 		.transform(pickaxeOnly())
+		.tag(AllBlockTags.SAFE_NBT.tag)
 		.blockstate((c, p) -> p.horizontalFaceBlock(c.get(), AssetLookup.standardModel(c, p)))
 		.simpleItem()
 		.register();
@@ -2412,26 +2413,23 @@ public class AllBlocks {
 	});
 
 	public static final BlockEntry<SlidingDoorBlock> ANDESITE_DOOR =
-		REGISTRATE.block("andesite_door", p -> SlidingDoorBlock.metal(p, true))
+		REGISTRATE.block("andesite_door", p -> SlidingDoorBlock.stone(p, true))
 			.transform(BuilderTransformers.slidingDoor("andesite"))
 			.properties(p -> p.mapColor(MapColor.STONE)
-				.sound(SoundType.STONE)
 				.noOcclusion())
 			.register();
 
 	public static final BlockEntry<SlidingDoorBlock> BRASS_DOOR =
-		REGISTRATE.block("brass_door", p -> SlidingDoorBlock.metal(p, false))
+		REGISTRATE.block("brass_door", p -> SlidingDoorBlock.stone(p, false))
 			.transform(BuilderTransformers.slidingDoor("brass"))
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW)
-				.sound(SoundType.STONE)
 				.noOcclusion())
 			.register();
 
 	public static final BlockEntry<SlidingDoorBlock> COPPER_DOOR =
-		REGISTRATE.block("copper_door", p -> SlidingDoorBlock.metal(p, true))
+		REGISTRATE.block("copper_door", p -> SlidingDoorBlock.stone(p, true))
 			.transform(BuilderTransformers.slidingDoor("copper"))
 			.properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
-				.sound(SoundType.STONE)
 				.noOcclusion())
 			.register();
 
@@ -2439,15 +2437,13 @@ public class AllBlocks {
 		REGISTRATE.block("train_door", p -> SlidingDoorBlock.metal(p, false))
 			.transform(BuilderTransformers.slidingDoor("train"))
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
-				.sound(SoundType.NETHERITE_BLOCK)
 				.noOcclusion())
 			.register();
 
 	public static final BlockEntry<TrainTrapdoorBlock> TRAIN_TRAPDOOR =
-		REGISTRATE.block("train_trapdoor", TrainTrapdoorBlock::new)
+		REGISTRATE.block("train_trapdoor", TrainTrapdoorBlock::metal)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
-				.sound(SoundType.NETHERITE_BLOCK))
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN))
 			.transform(BuilderTransformers.trapdoor(true))
 			.register();
 
@@ -2455,16 +2451,14 @@ public class AllBlocks {
 		REGISTRATE.block("framed_glass_door", p -> SlidingDoorBlock.glass(p, false))
 			.transform(BuilderTransformers.slidingDoor("glass"))
 			.properties(p -> p.mapColor(MapColor.NONE)
-				.sound(SoundType.GLASS)
 				.noOcclusion())
 			.register();
 
 	public static final BlockEntry<TrainTrapdoorBlock> FRAMED_GLASS_TRAPDOOR =
-		REGISTRATE.block("framed_glass_trapdoor", TrainTrapdoorBlock::new)
+		REGISTRATE.block("framed_glass_trapdoor", TrainTrapdoorBlock::glass)
 			.initialProperties(SharedProperties::softMetal)
 			.transform(BuilderTransformers.trapdoor(false))
 			.properties(p -> p.mapColor(MapColor.NONE)
-				.sound(SoundType.GLASS)
 				.noOcclusion())
 			.onRegister(connectedTextures(TrapdoorCTBehaviour::new))
 			.addLayer(() -> RenderType::cutoutMipped)
@@ -2595,12 +2589,15 @@ public class AllBlocks {
 			.transform(axeOnly())
 			.blockstate(BlockStateGen.horizontalAxisBlockProvider(false))
 			.loot((r, b) -> r.add(b, LootTable.lootTable()
+				.withPool(LootPool.lootPool()
+					.setRolls(ConstantValue.exactly(1.0F))
+					.add(LootItem.lootTableItem(b)
+						.when(BlockLootSubProviderAccessor.create$HAS_SILK_TOUCH())
+						.otherwise(r.applyExplosionCondition(b, LootItem.lootTableItem(Items.STRING)))))
 				.withPool(r.applyExplosionCondition(b, LootPool.lootPool()
 					.setRolls(ConstantValue.exactly(1.0F))
-					.add(LootItem.lootTableItem(Items.STRING))))
-				.withPool(r.applyExplosionCondition(b, LootPool.lootPool()
-					.setRolls(ConstantValue.exactly(1.0F))
-					.add(LootItem.lootTableItem(AllBlocks.CARDBOARD_BLOCK.asItem()))))))
+					.add(LootItem.lootTableItem(AllBlocks.CARDBOARD_BLOCK.asItem()))
+					.when(BlockLootSubProviderAccessor.create$HAS_SILK_TOUCH().invert())))))
 			.item(CardboardBlockItem::new)
 			.build()
 			.lang("Bound Block of Cardboard")

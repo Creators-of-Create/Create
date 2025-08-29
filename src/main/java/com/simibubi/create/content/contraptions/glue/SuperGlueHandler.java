@@ -13,6 +13,7 @@ import net.createmod.catnip.placement.IPlacementHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -105,7 +106,7 @@ public class SuperGlueHandler {
 				AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
 					new GlueEffectPacket(gluePos, face, true));
 			}
-			itemstack.hurtAndBreak(1, placer, SuperGlueItem::onBroken);
+			itemstack.hurtAndBreak(1, placer, s -> s.broadcastBreakEvent(InteractionHand.OFF_HAND));
 		}
 	}
 

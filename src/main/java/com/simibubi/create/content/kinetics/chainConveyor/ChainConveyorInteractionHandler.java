@@ -148,7 +148,7 @@ public class ChainConveyorInteractionHandler {
 		if (PackageItem.isPackage(mainHandItem)) {
 			AllPackets.getChannel()
 				.sendToServer(new ChainPackageInteractionPacket(selectedLift, selectedConnection, selectedChainPosition,
-					mainHandItem));
+					false));
 			return true;
 		}
 

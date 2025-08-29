@@ -7,20 +7,20 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.collect.ImmutableMap;
-
-import com.simibubi.create.foundation.data.recipe.Mods;
-
 import org.jetbrains.annotations.ApiStatus;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.kinetics.fan.processing.SplashingRecipe;
 import com.simibubi.create.content.kinetics.saw.CuttingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.foundation.data.recipe.Mods;
+import com.simibubi.create.foundation.mixin.accessor.ConcretePowderBlockAccessor;
 import com.simibubi.create.foundation.pack.DynamicPack;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -31,6 +31,8 @@ import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagFile;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ConcretePowderBlock;
 
 @ApiStatus.Internal
 public class RuntimeDataGenerator {
@@ -49,8 +51,10 @@ public class RuntimeDataGenerator {
 		.build();
 
 	public static void insertIntoPack(DynamicPack dynamicPack) {
-		for (ResourceLocation itemId : BuiltInRegistries.ITEM.keySet())
+		for (ResourceLocation itemId : BuiltInRegistries.ITEM.keySet()) {
 			cuttingRecipes(itemId);
+			washingRecipes(itemId);
+		}
 
 		Create.LOGGER.info("Created {} recipes which will be injected into the game", JSON_FILES.size());
 		JSON_FILES.forEach(dynamicPack::put);
@@ -136,6 +140,14 @@ public class RuntimeDataGenerator {
 		}
 	}
 
+	private static void washingRecipes(ResourceLocation itemId) {
+		Block block = BuiltInRegistries.BLOCK.get(itemId);
+		if (block instanceof ConcretePowderBlock concretePowderBlock) {
+			Block concreteBlock = ((ConcretePowderBlockAccessor) concretePowderBlock).create$getConcrete().getBlock();
+			simpleSplashingRecipe(itemId, BuiltInRegistries.BLOCK.getKey(concreteBlock));
+		}
+	}
+
 	private static void insertIntoTag(ResourceLocation tag, ResourceLocation itemId) {
 		if (BuiltInRegistries.ITEM.containsKey(itemId))
 			TAGS.put(tag, TagEntry.optionalElement(itemId));
@@ -163,6 +175,13 @@ public class RuntimeDataGenerator {
 				.duration(50)
 				.build();
 		}
+	}
+
+	private static void simpleSplashingRecipe(ResourceLocation first, ResourceLocation second) {
+		new Builder<>(first.getNamespace(), SplashingRecipe::new, first.getPath(), second.getPath())
+			.require(BuiltInRegistries.BLOCK.get(first))
+			.output(BuiltInRegistries.BLOCK.get(second))
+			.build();
 	}
 
 	private static class Builder<T extends ProcessingRecipe<?>> extends ProcessingRecipeBuilder<T> {

@@ -274,6 +274,9 @@ public class MinecartController implements INBTSerializable<CompoundTag> {
 			return;
 
 		AbstractMinecart cart = cart();
+		if (cart == null)
+			return;
+		
 		if (stall) {
 			stallData.set(internal, Optional.of(new StallData(cart)));
 			sendData();
