@@ -1,20 +1,32 @@
 package com.simibubi.create.content.processing.basin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 
+import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
+import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
+
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BasinMovementBehaviour implements MovementBehaviour {
+	@OnlyIn(Dist.CLIENT)
+	private Map<Long, BasinBlockEntity> BASINS = new HashMap<>();
+
 	public Map<String, ItemStackHandler> getOrReadInventory(MovementContext context) {
 		Map<String, ItemStackHandler> map = new HashMap<>();
 		map.put("InputItems", new ItemStackHandler(9));
@@ -52,5 +64,30 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 		if (blockEntity instanceof BasinBlockEntity)
 			((BasinBlockEntity) blockEntity).readOnlyItems(context.blockEntityData);
 		context.temporaryData = false; // did already dump, so can't any more
+	}
+
+	@Override
+	public boolean disableBlockEntityRendering() {
+		return true;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private BasinBlockEntity getBasinBlockEntity(Long l, MovementContext context, VirtualRenderWorld renderWorld) {
+		return BASINS.computeIfAbsent(l, u -> {
+			BasinBlockEntity basin = new BasinBlockEntity(AllBlockEntityTypes.BASIN.get(), context.localPos, context.state);
+			basin.setLevel(renderWorld);
+			return basin;
+		});
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
+		BasinBlockEntity basin = getBasinBlockEntity(context.localPos.asLong(), context, renderWorld);
+		basin.read(context.blockEntityData, true);
+		basin.tick();
+
+		BlockEntityRenderHelper.renderBlockEntities(context.world, renderWorld, List.of(basin),
+			matrices.getModelViewProjection(), matrices.getLight(), buffer);
 	}
 }
