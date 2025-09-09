@@ -5,12 +5,11 @@ import java.util.function.UnaryOperator;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 
-import com.simibubi.create.foundation.data.recipe.CompatMetals;
+import com.simibubi.create.foundation.data.recipe.CommonMetal;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
@@ -72,13 +71,12 @@ public abstract class CrushingRecipeGen extends ProcessingRecipeGen {
 		});
 	}
 
-	protected GeneratedRecipe moddedOre(CompatMetals metal, Supplier<ItemLike> result) {
-		String name = metal.getName();
-		return create(name + "_ore", b -> {
-			String prefix = "ores/";
+	protected GeneratedRecipe moddedOre(CommonMetal metal, Supplier<ItemLike> result) {
+		TagKey<Item> tag = metal.ores.items();
+		return create(metal + "_ore", b -> {
 			return b.duration(400)
-				.withCondition(new NotCondition(new TagEmptyCondition("forge", prefix + name)))
-				.require(AllTags.forgeItemTag(prefix + name))
+				.withCondition(new NotCondition(new TagEmptyCondition(tag.location())))
+				.require(tag)
 				.output(result.get(), 1)
 				.output(.75f, result.get(), 1)
 				.output(.75f, AllItems.EXP_NUGGET.get());
@@ -103,22 +101,21 @@ public abstract class CrushingRecipeGen extends ProcessingRecipeGen {
 		});
 	}
 
-	protected GeneratedRecipe moddedRawOre(CompatMetals metal, Supplier<ItemLike> result) {
+	protected GeneratedRecipe moddedRawOre(CommonMetal metal, Supplier<ItemLike> result) {
 		return moddedRawOre(metal, result, false);
 	}
 
-	protected GeneratedRecipe moddedRawOreBlock(CompatMetals metal, Supplier<ItemLike> result) {
+	protected GeneratedRecipe moddedRawOreBlock(CommonMetal metal, Supplier<ItemLike> result) {
 		return moddedRawOre(metal, result, true);
 	}
 
-	protected GeneratedRecipe moddedRawOre(CompatMetals metal, Supplier<ItemLike> result, boolean block) {
-		String name = metal.getName();
-		return create("raw_" + name + (block ? "_block" : ""), b -> {
+	protected GeneratedRecipe moddedRawOre(CommonMetal metal, Supplier<ItemLike> result, boolean block) {
+		return create("raw_" + metal + (block ? "_block" : ""), b -> {
 			int amount = block ? 9 : 1;
-			String tagPath = (block ? "storage_blocks/raw_" : "raw_materials/") + name;
+			TagKey<Item> material = block ? metal.rawStorageBlocks.items() : metal.rawOres;
 			return b.duration(400)
-				.withCondition(new NotCondition(new TagEmptyCondition("forge", tagPath)))
-				.require(AllTags.forgeItemTag(tagPath))
+				.withCondition(new NotCondition(new TagEmptyCondition(material.location())))
+				.require(material)
 				.output(result.get(), amount)
 				.output(.75f, AllItems.EXP_NUGGET.get(), amount);
 		});

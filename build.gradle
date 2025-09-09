@@ -7,7 +7,7 @@ plugins {
     id("net.kyori.blossom") version "2.1.0" // https://github.com/KyoriPowered/blossom
     id("dev.ithundxr.silk") version "0.11.15" // https://github.com/ithundxr/silk
     id("me.modmuss50.mod-publish-plugin") version "0.8.4" // https://github.com/modmuss50/mod-publish-plugin
-    id("net.neoforged.moddev.legacyforge") version "2.0.105" // https://projects.neoforged.net/neoforged/ModDevGradle
+    id("net.neoforged.moddev.legacyforge") version "2.0.107" // https://projects.neoforged.net/neoforged/ModDevGradle
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.8" // https://github.com/JetBrains/gradle-idea-ext-plugin
 }
 
@@ -34,7 +34,7 @@ if (ponderInWorkspace) {
 project.logger.lifecycle("MultiModWorkspace ${inMultiModWorkspace ? "enabled" : "disabled"} for project ${project.name}.")
 project.logger.lifecycle("Dependencies included in Workspace: [Ponder: ${ponderInWorkspace}]")
 
-def refmap
+Provider<RegularFile> refmap
 mixin {
     refmap = add(sourceSets.main, "create.refmap.json")
     config "create.mixins.json"
@@ -111,14 +111,18 @@ legacyForge {
             gameDirectory = project.file("run")
             systemProperty("forge.logging.markers", "REGISTRIES,REGISTRYDUMP")
             systemProperty("forge.logging.console.level", "debug")
-            programArguments.addAll("--mod", mod_id as String, "--all", "--output", file("src/generated/resources/").getAbsolutePath(), "--existing", file("src/main/resources").getAbsolutePath())
+            programArguments.addAll(
+                "--mod", mod_id as String,
+                "--all",
+                "--output", file("src/generated/resources/").getAbsolutePath(),
+                "--existing", file("src/main/resources").getAbsolutePath()
+            )
         }
 
         gameTestServer {
             type = "gameTestServer"
 
             gameDirectory = project.file("run/gametest")
-            // setForceExit false <- FIXME 1.20
         }
     }
 }
@@ -194,9 +198,9 @@ dependencies {
 
     // Compile only because architectury breaks packets
     modCompileOnly("dev.architectury:architectury-forge:9.1.12")
-    modCompileOnly("dev.ftb.mods:ftb-chunks-forge:2001.3.1")
-    modCompileOnly("dev.ftb.mods:ftb-teams-forge:2001.3.0")
-    modCompileOnly("dev.ftb.mods:ftb-library-forge:2001.2.4")
+    modCompileOnly("dev.ftb.mods:ftb-chunks-forge:2001.1.4")
+    modCompileOnly("dev.ftb.mods:ftb-teams-forge:2001.1.4")
+    modCompileOnly("dev.ftb.mods:ftb-library-forge:2001.1.4")
 
     modImplementation("curse.maven:journeymap-32274:5457831")
     // Compile only to prevent there from being multiple map mods in the dev env
@@ -256,6 +260,7 @@ sourceSets.main {
     resources {
         srcDir("src/generated/resources")
         exclude(".cache/")
+        exclude("data/create/.wiki")
     }
 
     blossom.javaSources {
@@ -265,23 +270,27 @@ sourceSets.main {
 }
 
 processResources {
-    def buildProps = project.properties.clone()
+    var replaceProperties = [
+        mod_id         : mod_id,
+        mod_name       : mod_name,
+        mod_author     : mod_author,
+        mod_description: mod_description,
+        mod_license    : mod_license,
+    ]
 
     // Replaces FML's magic file.jarVersion string with the correct version at build time.
-    buildProps.put("file", [jarVersion: project.version])
+    replaceProperties.put("file", [jarVersion: project.version])
 
-    filesMatching(["META-INF/mods.toml", "pack.mcmeta"]) {
-        expand(buildProps)
+    filesMatching(["META-INF/mods.toml"]) {
+        expand(replaceProperties)
     }
 }
 
-compileJava {
-    options.compilerArgs = ["-Xdiags:verbose"]
-}
-
 jar {
+    String name = base.archivesName.get()
+
     from("LICENSE") {
-        rename { "${it}_${archivesBaseName}" }
+        rename { "${it}_${name}" }
     }
 
     manifest.attributes([
@@ -373,7 +382,7 @@ publishMods {
 
 String calculateGitHash() {
     try {
-        def output = providers.exec {
+        ExecOutput output = providers.exec {
             commandLine("git", "rev-parse", "HEAD")
         }
         return output.standardOutput.asText.get().trim()
@@ -384,7 +393,7 @@ String calculateGitHash() {
 
 boolean hasUnstaged() {
     try {
-        def output = providers.exec {
+        ExecOutput output = providers.exec {
             commandLine("git", "status", "--porcelain")
         }
         String result = output.standardOutput.asText.get().replace("/M gradlew(\\.bat)?/", "").trim()

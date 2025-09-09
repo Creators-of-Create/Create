@@ -17,6 +17,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -57,6 +58,7 @@ import com.simibubi.create.content.contraptions.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlockEntity;
+import com.simibubi.create.content.contraptions.render.ContraptionRenderInfo;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import com.simibubi.create.content.kinetics.base.IRotate;
@@ -163,6 +165,8 @@ public abstract class Contraption {
 	public Map<BlockPos, ModelData> modelData;
 	public Map<BlockPos, BlockEntity> presentBlockEntities;
 	public List<BlockEntity> renderedBlockEntities;
+	// Must be atomic as this is accessed from both the render thread and flywheel executors.
+	private final AtomicReference<ContraptionRenderInfo> renderInfo = new AtomicReference<>();
 
 	protected ContraptionWorld world;
 	public boolean deferInvalidate;
@@ -1560,6 +1564,22 @@ public abstract class Contraption {
 				return true;
 		}
 		return false;
+	}
+
+	public ContraptionRenderInfo getRenderInfo() {
+		var out = renderInfo.getAcquire();
+		if (out == null) {
+			// Another thread may hit this block in the same moment.
+			// One thread will win and the ContraptionRenderInfo that
+			// it generated will become canonical. It's important that
+			// we only maintain one RenderInfo instance, specifically
+			// for the VirtualRenderWorld inside.
+			renderInfo.compareAndExchangeRelease(null, new ContraptionRenderInfo(this.entity.level(), this));
+
+			// Must get again to ensure we have the canonical instance.
+			out = renderInfo.getAcquire();
+		}
+		return out;
 	}
 
 	public record RenderedBlocks(Function<BlockPos, BlockState> lookup, Iterable<BlockPos> positions) {

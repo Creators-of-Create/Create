@@ -280,8 +280,9 @@ public class TrackBlock extends Block
 			if (be instanceof TrackBlockEntity tbe)
 				tbe.bind(otherLevel.dimension(), otherTrackPos);
 
-			otherLevel.setBlock(otherTrackPos, state.setValue(SHAPE, TrackShape.asPortal(otherTrack.getFace()))
-				.setValue(HAS_BE, true), 3);
+			BlockState otherState = ProperWaterloggedBlock.withWater(otherLevel, state.setValue(SHAPE,
+					TrackShape.asPortal(otherTrack.getFace())).setValue(HAS_BE, true), otherTrackPos);
+			otherLevel.setBlock(otherTrackPos, otherState, 3);
 			BlockEntity otherBE = otherLevel.getBlockEntity(otherTrackPos);
 			if (otherBE instanceof TrackBlockEntity tbe)
 				tbe.bind(level.dimension(), pos);

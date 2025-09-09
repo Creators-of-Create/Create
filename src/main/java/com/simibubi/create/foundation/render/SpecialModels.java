@@ -12,14 +12,14 @@ import dev.engine_room.flywheel.lib.util.RendererReloadCache;
 
 public class SpecialModels {
 	private static final RendererReloadCache<Key, Model> FLAT = new RendererReloadCache<>(it -> BakedModelBuilder.create(it.partial.get())
-		.materialFunc((renderType, aBoolean) -> {
-			var material = ModelUtil.getMaterial(renderType, aBoolean);
+		.materialFunc((renderType, shaded) -> {
+			var material = ModelUtil.getMaterial(renderType, shaded);
 			if (material == null) {
 				return null;
 			}
 			return SimpleMaterial.builderOf(material)
 				.light(it.light)
-				.cardinalLightingMode(it.cardinalLightingMode)
+				.cardinalLightingMode(shaded ? it.cardinalLightingMode : CardinalLightingMode.OFF)
 				.build();
 		})
 		.build());
