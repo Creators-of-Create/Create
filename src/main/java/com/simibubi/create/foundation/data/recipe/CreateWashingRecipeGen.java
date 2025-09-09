@@ -16,7 +16,6 @@ import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.WashingRecipeGen;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
-
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.data.PackOutput;

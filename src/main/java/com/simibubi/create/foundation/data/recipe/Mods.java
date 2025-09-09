@@ -93,6 +93,7 @@ public enum Mods implements DatagenMod {
 		this.id = id;
 	}
 
+	@Override
 	public String getId() {
 		return id;
 	}

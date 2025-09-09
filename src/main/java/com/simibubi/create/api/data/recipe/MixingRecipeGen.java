@@ -2,7 +2,6 @@ package com.simibubi.create.api.data.recipe;
 
 import com.simibubi.create.AllRecipeTypes;
 
-
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.material.Fluids;
 
