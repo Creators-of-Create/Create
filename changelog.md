@@ -99,8 +99,7 @@ Create 6.0.6
 - Allow other mods and addons to use ValueSettingsFormatter without needing to use translations prefixed with "create."
   #8322
 - Refactored datagen so that addons have a clear API to follow. #7861
-- Reworked ProcessingRecipe (Addon developers will need to adjust to these changes for their addon to work with 6.0.6) (
-  1.21.1) #7945
+- Reworked ProcessingRecipe (Addon developers will need to adjust to these changes for their addon to work with 6.0.6) (1.21.1) #7945
 
 ------------------------------------------------------
 Create 6.0.5

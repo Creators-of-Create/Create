@@ -46,7 +46,7 @@ public class EdgeInteractionRenderer {
 		EdgeInteractionBehaviour behaviour = BlockEntityBehaviour.get(world, pos, EdgeInteractionBehaviour.TYPE);
 		if (behaviour == null)
 			return;
-		if (behaviour.requiredItem.orElse(heldItem.getItem()) != heldItem.getItem())
+		if (!behaviour.requiredItem.test(heldItem.getItem()))
 			return;
 
 		Direction face = result.getDirection();

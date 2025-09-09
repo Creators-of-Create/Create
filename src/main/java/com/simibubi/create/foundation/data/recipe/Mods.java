@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.data.recipe;
 import java.util.function.Consumer;
 
 import com.simibubi.create.api.data.recipe.DatagenMod;
+import com.simibubi.create.Create;
 
 /**
  * A helper class for mods that Create has built in compatibility for.
@@ -10,6 +11,8 @@ import com.simibubi.create.api.data.recipe.DatagenMod;
  * their own instead, with their own helper methods in the generation classes.
  */
 public enum Mods implements DatagenMod {
+	VANILLA("minecraft"),
+	CREATE(Create.ID),
 
 	MEK("mekanism", b -> b.reverseMetalPrefix()),
 	TH("thermal"),
@@ -69,7 +72,8 @@ public enum Mods implements DatagenMod {
 	UUE("unusualend"),
 	UG("undergarden"),
 	DD("deeperdarker"),
-	ARS_E("ars_elemental", b -> b.omitWoodSuffix())
+	ARS_E("ars_elemental", b -> b.omitWoodSuffix()),
+	JNE("netherexp")
 
 	;
 

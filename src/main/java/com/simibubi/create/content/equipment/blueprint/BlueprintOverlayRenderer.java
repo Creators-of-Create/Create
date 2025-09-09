@@ -58,6 +58,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
 import net.minecraftforge.registries.tags.ITagManager;
 
+// TODO - Split up into specific overlays
 public class BlueprintOverlayRenderer {
 
 	public static final IGuiOverlay OVERLAY = BlueprintOverlayRenderer::renderOverlay;

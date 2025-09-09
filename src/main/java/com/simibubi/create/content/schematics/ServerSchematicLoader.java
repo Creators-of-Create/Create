@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,6 +18,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.schematics.SchematicExport.SchematicExportResult;
 import com.simibubi.create.content.schematics.table.SchematicTableBlockEntity;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.CreatePaths;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CSchematics;
@@ -59,10 +59,6 @@ public class ServerSchematicLoader {
 		activeUploads = new HashMap<>();
 	}
 
-	public String getSchematicPath() {
-		return "schematics/uploaded";
-	}
-
 	private final ObjectArrayList<String> deadEntries = ObjectArrayList.of();
 
 	public void tick() {
@@ -92,8 +88,8 @@ public class ServerSchematicLoader {
 	public void handleNewUpload(ServerPlayer player, String schematic, long size, BlockPos pos) {
 		String playerName = player.getGameProfile().getName();
 
-		Path baseDir = Paths.get(getSchematicPath()).toAbsolutePath().normalize();
-		Path playerPath = baseDir.resolve(playerName).toAbsolutePath().normalize();
+		Path baseDir = CreatePaths.UPLOADED_SCHEMATICS_DIR;
+		Path playerPath = baseDir.resolve(playerName).normalize();
 		Path uploadPath = playerPath.resolve(schematic).normalize();
 		String playerSchematicId = playerName + "/" + schematic;
 
@@ -156,7 +152,7 @@ public class ServerSchematicLoader {
 	}
 
 	protected boolean validateSchematicSizeOnServer(ServerPlayer player, long size) {
-		Integer maxFileSize = getConfig().maxTotalSchematicSize.get();
+		long maxFileSize = getConfig().maxTotalSchematicSize.get();
 		if (size > maxFileSize * 1000) {
 			player.sendSystemMessage(CreateLang.translateDirect("schematics.uploadTooLarge")
 				.append(Component.literal(" (" + size / 1000 + " KB).")));
@@ -216,7 +212,7 @@ public class ServerSchematicLoader {
 		SchematicUploadEntry entry = activeUploads.remove(playerSchematicId);
 		try {
 			entry.stream.close();
-			Files.deleteIfExists(Paths.get(getSchematicPath(), playerSchematicId));
+			Files.deleteIfExists(CreatePaths.UPLOADED_SCHEMATICS_DIR.resolve(playerSchematicId));
 			Create.LOGGER.warn("Cancelled Schematic Upload: {}", playerSchematicId);
 		} catch (IOException e) {
 			Create.LOGGER.error("Exception Thrown when cancelling Upload: {}", playerSchematicId, e);
@@ -274,8 +270,8 @@ public class ServerSchematicLoader {
 									   BlockPos bounds) {
 		String playerName = player.getGameProfile().getName();
 
-		Path baseDir = Paths.get(getSchematicPath()).toAbsolutePath().normalize();
-		Path playerPath = baseDir.resolve(playerName).toAbsolutePath().normalize();
+		Path baseDir = CreatePaths.UPLOADED_SCHEMATICS_DIR;
+		Path playerPath = baseDir.resolve(playerName).normalize();
 		Path uploadPath = playerPath.resolve(schematic).normalize();
 		String playerSchematicId = playerName + "/" + schematic;
 
@@ -297,11 +293,11 @@ public class ServerSchematicLoader {
 			return;
 
 		// if there's too many schematics, delete oldest
-		if (!tryDeleteOldestSchematic(uploadPath))
+		if (!tryDeleteOldestSchematic(playerPath))
 			return;
 
 		SchematicExportResult result = SchematicExport.saveSchematic(
-			uploadPath, schematic, true,
+			playerPath, schematic, true,
 			world, pos, pos.offset(bounds).offset(-1, -1, -1)
 		);
 		if (result != null)

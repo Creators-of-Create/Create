@@ -85,8 +85,8 @@ public class StockTickerPeripheral extends SyncedPeripheral<StockTickerBlockEnti
 					int toTake = Math.min(foundItems, itemsRequested);
 					itemsRequested -= toTake;
 					totalItemsSent += toTake;
-					BigItemStack requestedItem = new BigItemStack(entry.stack, toTake);
-					entry.count -= toTake; // we could also probably free the entry but i dont feel like refactoring this
+					BigItemStack requestedItem = new BigItemStack(entry.stack.copy(), toTake);
+					entry.count -= toTake;
 					validItems.add(requestedItem);
 				}
 				if (itemsRequested <= 0)

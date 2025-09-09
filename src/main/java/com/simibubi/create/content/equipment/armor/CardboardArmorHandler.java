@@ -2,7 +2,6 @@ package com.simibubi.create.content.equipment.armor;
 
 import java.util.UUID;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
 import net.minecraft.server.level.ServerLevel;
@@ -15,6 +14,8 @@ import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingVisibilityEvent;
@@ -31,10 +32,10 @@ public class CardboardArmorHandler {
 			return;
 		if (!testForStealth(entity))
 			return;
-		
+
 		event.setNewSize(EntityDimensions.fixed(0.6F, 0.8F));
 		event.setNewEyeHeight(0.6F);
-		
+
 		if (!entity.level()
 			.isClientSide() && entity instanceof Player p)
 			AllAdvancements.CARDBOARD_ARMOR.awardTo(p);
@@ -85,15 +86,19 @@ public class CardboardArmorHandler {
 			return false;
 		if (entity instanceof Player player && player.getAbilities().flying)
 			return false;
-		if (!AllItems.CARDBOARD_HELMET.isIn(entity.getItemBySlot(EquipmentSlot.HEAD)))
+		if (!isCardboardArmor(entity.getItemBySlot(EquipmentSlot.HEAD)))
 			return false;
-		if (!AllItems.CARDBOARD_CHESTPLATE.isIn(entity.getItemBySlot(EquipmentSlot.CHEST)))
+		if (!isCardboardArmor(entity.getItemBySlot(EquipmentSlot.CHEST)))
 			return false;
-		if (!AllItems.CARDBOARD_LEGGINGS.isIn(entity.getItemBySlot(EquipmentSlot.LEGS)))
+		if (!isCardboardArmor(entity.getItemBySlot(EquipmentSlot.LEGS)))
 			return false;
-		if (!AllItems.CARDBOARD_BOOTS.isIn(entity.getItemBySlot(EquipmentSlot.FEET)))
+		if (!isCardboardArmor(entity.getItemBySlot(EquipmentSlot.FEET)))
 			return false;
 		return true;
+	}
+
+	public static boolean isCardboardArmor(ItemStack stack) {
+		return stack.getItem() instanceof CardboardArmorItem;
 	}
 
 }

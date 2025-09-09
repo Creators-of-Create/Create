@@ -15,8 +15,9 @@ import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
-@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, bus = Bus.MOD)
 public enum AllKeys {
 
 	TOOL_MENU("toolmenu", GLFW.GLFW_KEY_LEFT_ALT, "Focus Schematic Overlay"),
@@ -78,7 +79,15 @@ public enum AllKeys {
 
 	public boolean doesModifierAndCodeMatch(int code) {
 		boolean codeMatches = code == keybind.getKey().getValue();
-		boolean modifierMatches = keybind.getKeyModifier().equals(KeyModifier.getActiveModifier());
+
+		boolean modifierMatches;
+		KeyModifier modifier = keybind.getKeyModifier();
+		if (modifier == KeyModifier.NONE) {
+			modifierMatches = true;
+		} else {
+			modifierMatches = modifier.equals(KeyModifier.getActiveModifier());
+		}
+
 		return codeMatches && modifierMatches;
 	}
 

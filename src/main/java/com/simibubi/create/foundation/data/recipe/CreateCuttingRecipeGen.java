@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.data.recipe;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.CuttingRecipeGen;
 
@@ -29,7 +28,12 @@ public final class CreateCuttingRecipeGen extends CuttingRecipeGen {
 	 */
 
 		// Ars Nouveau (all logs yield the same plank) (blue is covered by RuntimeDataGenerator to handle the planks into other recipes)
-		ARS_N = cuttingCompat(Mods.ARS_N, "purple_archwood", "green_archwood", "red_archwood"),
+		ARS_N_1 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_purple_archwood_log", "archwood_planks"),
+		ARS_N_2 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_green_archwood_log", "archwood_planks"),
+		ARS_N_3 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_red_archwood_log", "archwood_planks"),
+		ARS_N_4 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_purple_archwood_wood", "archwood_planks"),
+		ARS_N_5 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_green_archwood_wood", "archwood_planks"),
+		ARS_N_6 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_red_archwood_wood", "archwood_planks"),
 		ARS_E_1 = stripAndMakePlanksDiffPlanksModId(Mods.ARS_E, null, "stripped_yellow_archwood_log", Mods.ARS_N, "archwood_planks"),
 		ARS_E_2 = stripAndMakePlanksDiffPlanksModId(Mods.ARS_E, null, "stripped_yellow_archwood", Mods.ARS_N, "archwood_planks"),
 
@@ -49,17 +53,21 @@ public final class CreateCuttingRecipeGen extends CuttingRecipeGen {
 		ENDERGETIC_2 = stripAndMakePlanks(Mods.ENDER, "glowing_poise_wood", "stripped_poise_wood", null),
 
 		// IE
-		IE_WIRES = ieWires("copper", "electrum", "aluminum", "steel", "lead")
+		IE_WIRES = ieWires(CommonMetal.COPPER, CommonMetal.ELECTRUM, CommonMetal.ALUMINUM, CommonMetal.STEEL, CommonMetal.LEAD),
+
+		// Jaden's Nether Expansion
+		JNE_1 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_stem", "stripped_claret_stem", null),
+		JNE_2 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_hyphae", "stripped_claret_hyphae", null)
 		;
 
 	public CreateCuttingRecipeGen(PackOutput output) {
 		super(output, Create.ID);
 	}
 
-	GeneratedRecipe ieWires(String... metals) {
-		for (String metal : metals)
+	GeneratedRecipe ieWires(CommonMetal... metals) {
+		for (CommonMetal metal : metals)
 			create(Mods.IE.recipeId("wire_" + metal), b -> b.duration(50)
-				.require(AllTags.forgeItemTag("plates/" + metal))
+				.require(metal.plates)
 				.output(1, Mods.IE, "wire_" + metal, 2)
 				.whenModLoaded(Mods.IE.getId()));
 		return null;

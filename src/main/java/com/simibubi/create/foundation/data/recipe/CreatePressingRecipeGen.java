@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.data.recipe;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.PressingRecipeGen;
 
@@ -98,7 +97,7 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 
 	// IE
 
-	IE_PLATES = iePlates("aluminum", "lead", "silver", "nickel", "uranium", "constantan", "electrum", "steel"),
+	IE_PLATES = iePlates(),
 
 	// Vampirism
 
@@ -114,11 +113,12 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 		super(output, Create.ID);
 	}
 
-	private GeneratedRecipe iePlates(String... metals) {
-		for (String metal : metals)
-			create(Mods.IE.recipeId("plate_" + metal), b -> b.require(AllTags.forgeItemTag("ingots/" + metal))
+	private GeneratedRecipe iePlates() {
+		for (CommonMetal metal : CommonMetal.of(Mods.IE)) {
+			create(Mods.IE.recipeId("plate_" + metal), b -> b.require(metal.ingots)
 				.output(Mods.IE, "plate_" + metal)
 				.whenModLoaded(Mods.IE.getId()));
+		}
 		return null;
 	}
 }
