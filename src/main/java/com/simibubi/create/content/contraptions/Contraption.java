@@ -1146,6 +1146,8 @@ public abstract class Contraption {
 			return;
 		disassembled = true;
 
+		boolean shouldDropBlocks = !AllConfigs.server().kinetics.noDropWhenContraptionReplaceBlocks.get();
+
 		translateMultiblockControllers(transform);
 
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
@@ -1172,7 +1174,9 @@ public abstract class Contraption {
 					if (targetPos.getY() == world.getMinBuildHeight())
 						targetPos = targetPos.above();
 					world.levelEvent(2001, targetPos, Block.getId(state));
-					Block.dropResources(state, world, targetPos, null);
+					if (shouldDropBlocks) {
+						Block.dropResources(state, world, targetPos, null);
+					}
 					continue;
 				}
 				if (state.getBlock() instanceof SimpleWaterloggedBlock
@@ -1181,7 +1185,7 @@ public abstract class Contraption {
 					state = state.setValue(BlockStateProperties.WATERLOGGED, FluidState.getType() == Fluids.WATER);
 				}
 
-				world.destroyBlock(targetPos, true);
+				world.destroyBlock(targetPos, shouldDropBlocks);
 
 				if (AllBlocks.SHAFT.has(state))
 					state = ShaftBlock.pickCorrectShaftType(state, world, targetPos);
@@ -1200,7 +1204,7 @@ public abstract class Contraption {
 				if (verticalRotation) {
 					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock
 						|| state.getBlock() instanceof DoorBlock)
-						world.destroyBlock(targetPos, true);
+						world.destroyBlock(targetPos, shouldDropBlocks);
 				}
 
 				BlockEntity blockEntity = world.getBlockEntity(targetPos);

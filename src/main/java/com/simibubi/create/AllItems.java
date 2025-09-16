@@ -47,7 +47,10 @@ import com.simibubi.create.content.legacy.ShadowSteelItem;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.box.PackageStyles;
 import com.simibubi.create.content.logistics.box.PackageStyles.PackageStyle;
+import com.simibubi.create.content.logistics.filter.AttributeFilterItem;
 import com.simibubi.create.content.logistics.filter.FilterItem;
+import com.simibubi.create.content.logistics.filter.ListFilterItem;
+import com.simibubi.create.content.logistics.filter.PackageFilterItem;
 import com.simibubi.create.content.logistics.tableCloth.ShoppingListItem;
 import com.simibubi.create.content.materials.ExperienceNuggetItem;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockItem;
@@ -439,14 +442,14 @@ public class AllItems {
 		}
 	}
 
-	public static final ItemEntry<FilterItem> FILTER = REGISTRATE.item("filter", FilterItem::regular)
+	public static final ItemEntry<ListFilterItem> FILTER = REGISTRATE.item("filter", FilterItem::regular)
 		.lang("List Filter")
-		.register(),
+		.register();
 
-	ATTRIBUTE_FILTER = REGISTRATE.item("attribute_filter", FilterItem::attribute)
-		.register(),
+	public static final ItemEntry<AttributeFilterItem> ATTRIBUTE_FILTER = REGISTRATE.item("attribute_filter", FilterItem::attribute)
+		.register();
 
-	PACKAGE_FILTER = REGISTRATE.item("package_filter", FilterItem::address)
+	public static final ItemEntry<PackageFilterItem> PACKAGE_FILTER = REGISTRATE.item("package_filter", FilterItem::address)
 		.register();
 
 	public static final ItemEntry<ScheduleItem> SCHEDULE = REGISTRATE.item("schedule", ScheduleItem::new)

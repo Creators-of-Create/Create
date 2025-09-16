@@ -77,7 +77,7 @@ public class PackageFilterScreen extends AbstractFilterScreen<PackageFilterMenu>
 	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
 		return super.mouseClicked(pMouseX, pMouseY, pButton);
 	}
-	
+
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
 		if (addressBox.mouseScrolled(mouseX, mouseY, delta))
@@ -108,4 +108,8 @@ public class PackageFilterScreen extends AbstractFilterScreen<PackageFilterMenu>
 		return false;
 	}
 
+	@Override
+	protected int getTitleColor() {
+		return 0x3D3C48;
+	}
 }
