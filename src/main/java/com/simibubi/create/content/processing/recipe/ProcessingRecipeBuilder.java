@@ -6,8 +6,8 @@ import java.util.function.Consumer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.simibubi.create.api.data.recipe.DatagenMod;
 import com.simibubi.create.foundation.data.SimpleDatagenIngredient;
-import com.simibubi.create.foundation.data.recipe.Mods;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
@@ -120,7 +120,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return this;
 	}
 
-	public ProcessingRecipeBuilder<T> require(Mods mod, String id) {
+	public ProcessingRecipeBuilder<T> require(DatagenMod mod, String id) {
 		params.ingredients.add(new SimpleDatagenIngredient(mod, id));
 		return this;
 	}
@@ -167,7 +167,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return output(new ProcessingOutput(output, chance));
 	}
 
-	public ProcessingRecipeBuilder<T> output(float chance, Mods mod, String id, int amount) {
+	public ProcessingRecipeBuilder<T> output(float chance, DatagenMod mod, String id, int amount) {
 		return output(new ProcessingOutput(Pair.of(mod.asResource(id), amount), chance));
 	}
 
@@ -175,7 +175,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return output(1, id, 1);
 	}
 
-	public ProcessingRecipeBuilder<T> output(Mods mod, String id) {
+	public ProcessingRecipeBuilder<T> output(DatagenMod mod, String id) {
 		return output(1, mod.asResource(id), 1);
 	}
 

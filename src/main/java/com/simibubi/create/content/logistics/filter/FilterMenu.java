@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.filter;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllMenuTypes;
 
 import net.minecraft.nbt.CompoundTag;
@@ -48,7 +49,7 @@ public class FilterMenu extends AbstractFilterMenu {
 
 	@Override
 	protected ItemStackHandler createGhostInventory() {
-		return FilterItem.getFilterItems(contentHolder);
+		return AllItems.FILTER.get().getFilterItemHandler(contentHolder);
 	}
 
 	@Override

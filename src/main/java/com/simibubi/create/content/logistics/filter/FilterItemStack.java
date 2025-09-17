@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.filter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
@@ -25,19 +24,9 @@ public class FilterItemStack {
 	private FluidStack filterFluidStack;
 
 	public static FilterItemStack of(ItemStack filter) {
-		if (filter.hasTag()) {
-			if (AllItems.FILTER.isIn(filter)) {
-				trimFilterTag(filter);
-				return new ListFilterItemStack(filter);
-			}
-			if (AllItems.ATTRIBUTE_FILTER.isIn(filter)) {
-				trimFilterTag(filter);
-				return new AttributeFilterItemStack(filter);
-			}
-			if (AllItems.PACKAGE_FILTER.isIn(filter)) {
-				trimFilterTag(filter);
-				return new PackageFilterItemStack(filter);
-			}
+		if (filter.hasTag() && filter.getItem() instanceof FilterItem item) {
+			trimFilterTag(filter);
+			return item.makeStackWrapper(filter);
 		}
 
 		return new FilterItemStack(filter);
@@ -133,12 +122,12 @@ public class FilterItemStack {
 		public boolean shouldRespectNBT;
 		public boolean isBlacklist;
 
-		protected ListFilterItemStack(ItemStack filter) {
+		public ListFilterItemStack(ItemStack filter) {
 			super(filter);
 			boolean defaults = !filter.hasTag();
 
 			containedItems = new ArrayList<>();
-			ItemStackHandler items = FilterItem.getFilterItems(filter);
+			ItemStackHandler items = ((ListFilterItem) filter.getItem()).getFilterItemHandler(filter);
 			for (int i = 0; i < items.getSlots(); i++) {
 				ItemStack stackInSlot = items.getStackInSlot(i);
 				if (!stackInSlot.isEmpty())
@@ -182,7 +171,7 @@ public class FilterItemStack {
 		public WhitelistMode whitelistMode;
 		public List<Pair<ItemAttribute, Boolean>> attributeTests;
 
-		protected AttributeFilterItemStack(ItemStack filter) {
+		public AttributeFilterItemStack(ItemStack filter) {
 			super(filter);
 			boolean defaults = !filter.hasTag();
 
@@ -253,7 +242,7 @@ public class FilterItemStack {
 
 		public String filterString;
 
-		protected PackageFilterItemStack(ItemStack filter) {
+		public PackageFilterItemStack(ItemStack filter) {
 			super(filter);
 			filterString = filter.getOrCreateTag()
 				.getString("Address");

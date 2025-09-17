@@ -3,6 +3,12 @@ package com.simibubi.create.content.trains.track;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import com.simibubi.create.AllItems;
+
+import com.simibubi.create.AllTags.AllItemTags;
+
+import com.simibubi.create.foundation.data.recipe.CommonMetal;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllTags;
@@ -21,7 +27,7 @@ public class TrackMaterialFactory {
 	private String langName;
 	private NonNullSupplier<NonNullSupplier<? extends TrackBlock>> trackBlock;
 	private Ingredient sleeperIngredient = Ingredient.EMPTY;
-	private Ingredient railsIngredient = Ingredient.fromValues(Stream.of(new Ingredient.TagValue(AllTags.forgeItemTag("nuggets/iron")), new Ingredient.TagValue(AllTags.forgeItemTag("nuggets/zinc"))));
+	private Ingredient railsIngredient = Ingredient.fromValues(Stream.of(new Ingredient.TagValue(CommonMetal.IRON.nuggets), new Ingredient.TagValue(CommonMetal.ZINC.nuggets)));
 	private ResourceLocation particle;
 	private TrackMaterial.TrackType trackType = TrackMaterial.TrackType.STANDARD;
 

@@ -1051,6 +1051,7 @@
 	"create.logistically_linked.tuned": "Tuned to this network",
 	"create.logistically_linked.new_network_started": "New link network started",
 	"create.logistically_linked.connected": "Connected to existing network successfully",
+  "create.logistically_linked.cleared": "Cleared connection to network",
 	"create.logistically_linked.tooltip": "Frequency configured",
 	"create.logistically_linked.tooltip_clear": "Place in crafting grid to reset",
 	"create.logistically_linked.protected": "Logistics Network is Protected",

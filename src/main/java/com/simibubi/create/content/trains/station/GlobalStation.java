@@ -11,7 +11,6 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlockEntity;
 import com.simibubi.create.content.trains.entity.Carriage;
-import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackNode;
@@ -24,7 +23,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -33,7 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class GlobalStation extends SingleBlockEntityEdgePoint {
 
@@ -162,27 +161,15 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 		return this.nearestTrain.get();
 	}
 
-	// Package Port integration
-	public static class GlobalPackagePort {
-		public String address = "";
-		public ItemStackHandler offlineBuffer = new ItemStackHandler(18);
-		public boolean primed = false;
-	}
-
 	public void runMailTransfer() {
 		Train train = getPresentTrain();
 		if (train == null || connectedPorts.isEmpty())
 			return;
-		Level level = null;
+
+		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+		Level level = server.getLevel(getBlockEntityDimension());
 
 		for (Carriage carriage : train.carriages) {
-			if (level == null) {
-				CarriageContraptionEntity entity = carriage.anyAvailableEntity();
-				if (entity != null && entity.level() instanceof ServerLevel sl)
-					level = sl.getServer()
-						.getLevel(getBlockEntityDimension());
-			}
-
 			IItemHandlerModifiable carriageInventory = carriage.storage.getAllItems();
 			if (carriageInventory == null)
 				continue;
@@ -212,9 +199,14 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 						continue;
 
 					postboxInventory.setStackInSlot(slot, ItemStack.EMPTY);
-					Create.RAILWAYS.markTracksDirty();
-					if (box != null)
+
+					if (box == null) {
+						port.primed = true;
+					} else {
 						box.spawnParticles();
+					}
+
+					Create.RAILWAYS.markTracksDirty();
 				}
 			}
 
@@ -243,10 +235,15 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 					if (!result.isEmpty())
 						continue;
 
-					Create.RAILWAYS.markTracksDirty();
 					carriageInventory.setStackInSlot(slot, ItemStack.EMPTY);
-					if (box != null)
+
+					if (box == null) {
+						port.primed = true;
+					} else {
 						box.spawnParticles();
+					}
+
+					Create.RAILWAYS.markTracksDirty();
 
 					break;
 				}

@@ -14,8 +14,6 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedBlockAndTintGetter;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
-import net.minecraftforge.client.model.data.ModelData;
-
 import dev.engine_room.flywheel.api.material.CardinalLightingMode;
 import dev.engine_room.flywheel.api.material.Material;
 import dev.engine_room.flywheel.api.model.Model;
@@ -50,6 +48,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+
+import net.minecraftforge.client.model.data.ModelData;
 
 public class ContraptionVisual<E extends AbstractContraptionEntity> extends AbstractEntityVisual<E> implements DynamicVisual, TickableVisual, LightUpdatedVisual, ShaderLightVisual {
 	protected static final int LIGHT_PADDING = 1;
@@ -88,7 +88,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 
 	// Must be called before setup children or setup actors as this creates the render world
 	private void setupModel(Contraption contraption) {
-		virtualRenderWorld = ContraptionRenderInfo.setupRenderWorld(level, contraption);
+		virtualRenderWorld = contraption.getRenderInfo().getRenderWorld();
 
 		RenderedBlocks blocks = contraption.getRenderedBlocks();
 		BlockAndTintGetter modelWorld = new WrappedBlockAndTintGetter(virtualRenderWorld) {
@@ -324,6 +324,8 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		if (structure != null) {
 			structure.delete();
 		}
+
+		embedding.delete();
 	}
 
 	public static int minLight(double aabbPos) {

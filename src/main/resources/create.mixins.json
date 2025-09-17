@@ -34,6 +34,7 @@
     "accessor.FlowingFluidAccessor",
     "accessor.FluidInteractionRegistryAccessor",
     "accessor.GameTestHelperAccessor",
+    "accessor.ItemFrameAccessor",
     "accessor.ItemModelGeneratorsAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MobEffectInstanceAccessor",
