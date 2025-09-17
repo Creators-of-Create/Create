@@ -44,7 +44,7 @@ public class RadialWrenchHandler {
 		Level level = player.level();
 
 		ItemStack heldItem = player.getMainHandItem();
-		if (AllItemTags.CREATE_WRENCH.matches(heldItem))
+		if (!AllItemTags.CREATE_WRENCH.matches(heldItem))
 			return;
 
 		HitResult objectMouseOver = mc.hitResult;
