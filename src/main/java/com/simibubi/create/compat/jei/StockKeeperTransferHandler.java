@@ -25,6 +25,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
+import mezz.jei.common.transfer.RecipeTransferErrorInternal;
 import mezz.jei.common.transfer.RecipeTransferOperationsResult;
 import mezz.jei.common.transfer.RecipeTransferUtil;
 import mezz.jei.library.transfer.RecipeTransferErrorMissingSlots;
@@ -70,7 +71,7 @@ public class StockKeeperTransferHandler implements IRecipeTransferHandler<StockK
 
 	@Override
 	public @Nullable IRecipeTransferError transferRecipe(StockKeeperRequestMenu container, Object object,
-		IRecipeSlotsView recipeSlots, Player player, boolean maxTransfer, boolean doTransfer) {
+														 IRecipeSlotsView recipeSlots, Player player, boolean maxTransfer, boolean doTransfer) {
 		Level level = player.level();
 		if (!(object instanceof Recipe<?> recipe))
 			return null;
@@ -82,9 +83,12 @@ public class StockKeeperTransferHandler implements IRecipeTransferHandler<StockK
 	}
 
 	private @Nullable IRecipeTransferError transferRecipeOnClient(StockKeeperRequestMenu container, Recipe<?> recipe,
-		IRecipeSlotsView recipeSlots, Player player, boolean maxTransfer, boolean doTransfer) {
+																  IRecipeSlotsView recipeSlots, Player player, boolean maxTransfer, boolean doTransfer) {
 		if (!(container.screenReference instanceof StockKeeperRequestScreen screen))
-			return null;
+			return RecipeTransferErrorInternal.INSTANCE;
+
+		if (recipe.getIngredients().size() > 9)
+			return RecipeTransferErrorInternal.INSTANCE;
 
 		for (CraftableBigItemStack cbis : screen.recipesToOrder)
 			if (cbis.recipe == recipe)
@@ -97,7 +101,7 @@ public class StockKeeperTransferHandler implements IRecipeTransferHandler<StockK
 
 		InventorySummary summary = screen.getMenu().contentHolder.getLastClientsideStockSnapshotAsSummary();
 		if (summary == null)
-			return null;
+			return RecipeTransferErrorInternal.INSTANCE;
 
 		Container outputDummy = new RecipeWrapper(new ItemStackHandler(9));
 		List<Slot> craftingSlots = new ArrayList<>();
@@ -124,11 +128,9 @@ public class StockKeeperTransferHandler implements IRecipeTransferHandler<StockK
 		if (!doTransfer)
 			return null;
 
-		ItemStack result = recipe.getResultItem(player.level()
-			.registryAccess());
-
+		ItemStack result = recipe.getResultItem(player.level().registryAccess());
 		if (result.isEmpty())
-			return null;
+			return new RecipeTransferErrorTooltip(CreateLang.translate("gui.stock_keeper.recipe_result_empty").component());
 
 		CraftableBigItemStack cbis = new CraftableBigItemStack(result, recipe);
 

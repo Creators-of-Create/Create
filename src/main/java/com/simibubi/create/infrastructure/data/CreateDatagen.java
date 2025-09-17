@@ -19,13 +19,13 @@ import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.tterrag.registrate.providers.ProviderType;
 
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
-
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 
 public class CreateDatagen {
 	public static void gatherData(GatherDataEvent event) {
@@ -51,6 +51,7 @@ public class CreateDatagen {
 		generator.addProvider(event.includeServer(), new CreateMechanicalCraftingRecipeGen(output));
 		generator.addProvider(event.includeServer(), new CreateSequencedAssemblyRecipeGen(output));
 		generator.addProvider(event.includeServer(), new VanillaHatOffsetGenerator(output));
+		generator.addProvider(event.includeClient(), new CreateWikiBlockInfoProvider(output));
 
 		if (event.includeServer()) {
 			CreateRecipeProvider.registerAllProcessing(generator, output);

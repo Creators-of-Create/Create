@@ -1,22 +1,8 @@
 name: Build
-
-on: [ workflow_dispatch, pull_request ]
+on: [ workflow_dispatch, push, pull_request ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        run: echo "JAVA_HOME=$JAVA_HOME_17_X64" >> "$GITHUB_ENV"
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Validate Gradle Wrapper Integrity
-        uses: gradle/actions/wrapper-validation@v4
-
-      - name: Build
-        run: ./gradlew build
+    uses: ithundxr/workflows/.github/workflows/java-build.yml@main
+    with:
+      java-version: 17

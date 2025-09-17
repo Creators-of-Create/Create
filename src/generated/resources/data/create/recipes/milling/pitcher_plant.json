@@ -1,0 +1,19 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:pitcher_plant"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 4,
+      "item": "minecraft:cyan_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:purple_dye"
+    }
+  ]
+}

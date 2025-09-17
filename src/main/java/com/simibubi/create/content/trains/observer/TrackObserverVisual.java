@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class TrackObserverVisual extends AbstractBlockEntityVisual<TrackObserverBlockEntity> implements SimpleTickableVisual {
 	private final TransformedInstance overlay;
-
+	private BlockPos oldTargetPos;
 
 	public TrackObserverVisual(VisualizationContext ctx, TrackObserverBlockEntity blockEntity, float partialTick) {
 		super(ctx, blockEntity, partialTick);
@@ -31,30 +31,13 @@ public class TrackObserverVisual extends AbstractBlockEntityVisual<TrackObserver
 		overlay = ctx.instancerProvider()
 			.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TRACK_OBSERVER_OVERLAY))
 			.createInstance();
+
+		setupVisual();
 	}
 
 	@Override
 	public void tick(Context context) {
-		TrackTargetingBehaviour<TrackObserver> target = blockEntity.edgePoint;
-		BlockPos targetPosition = target.getGlobalPosition();
-		Level level = blockEntity.getLevel();
-		BlockState trackState = level.getBlockState(targetPosition);
-		Block block = trackState.getBlock();
-
-		if (!(block instanceof ITrackBlock trackBlock)) {
-			overlay.setZeroTransform()
-				.setChanged();
-			return;
-		}
-
-		overlay.setIdentityTransform()
-			.translate(targetPosition);
-
-		RenderedTrackOverlayType type = RenderedTrackOverlayType.OBSERVER;
-		trackBlock.prepareTrackOverlay(overlay, level, targetPosition, trackState, target.getTargetBezier(),
-			target.getTargetDirection(), type);
-
-		overlay.setChanged();
+		setupVisual();
 	}
 
 	@Override
@@ -70,5 +53,32 @@ public class TrackObserverVisual extends AbstractBlockEntityVisual<TrackObserver
 	@Override
 	public void collectCrumblingInstances(Consumer<@Nullable Instance> consumer) {
 		consumer.accept(overlay);
+	}
+
+	private void setupVisual() {
+		TrackTargetingBehaviour<TrackObserver> target = blockEntity.edgePoint;
+		BlockPos targetPosition = target.getGlobalPosition();
+		Level level = blockEntity.getLevel();
+		BlockState trackState = level.getBlockState(targetPosition);
+		Block block = trackState.getBlock();
+
+		if (!(block instanceof ITrackBlock trackBlock)) {
+			overlay.setZeroTransform()
+				.setChanged();
+			return;
+		}
+
+		if (!targetPosition.equals(oldTargetPos)) {
+			oldTargetPos = targetPosition;
+
+			overlay.setIdentityTransform()
+				.translate(targetPosition.subtract(renderOrigin()));
+
+			RenderedTrackOverlayType type = RenderedTrackOverlayType.OBSERVER;
+			trackBlock.prepareTrackOverlay(overlay, level, targetPosition, trackState, target.getTargetBezier(),
+				target.getTargetDirection(), type);
+
+			overlay.setChanged();
+		}
 	}
 }

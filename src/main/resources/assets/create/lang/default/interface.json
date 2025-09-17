@@ -334,6 +334,7 @@
 	"create.gui.stock_keeper.already_ordering_recipe": "Already ordering this recipe",
 	"create.gui.stock_keeper.slots_full": "Order slots already full",
 	"create.gui.stock_keeper.not_in_stock": "Required items are not in Stock",
+  "create.gui.stock_keeper.recipe_result_empty": "This recipe has a empty result, this is not allowed and should be reported to the mod or datapack that adds this recipe.",
 	"create.gui.stock_keeper.schematic_list.no_results": "No items from your checklist are in stock",
 	"create.gui.stock_keeper.schematic_list.requesting": "Click 'Send' to request all available items from your checklist",
 

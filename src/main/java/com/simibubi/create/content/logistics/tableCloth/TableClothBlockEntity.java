@@ -10,6 +10,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.redstoneRequester.AutoRequestData;
@@ -43,7 +45,14 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+
+import org.jetbrains.annotations.NotNull;
+
 public class TableClothBlockEntity extends SmartBlockEntity {
+
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public AutoRequestData requestData;
 	public List<ItemStack> manuallyAddedItems;
@@ -66,6 +75,14 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(priceTag = new TableClothFilteringBehaviour(this));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+	}
+
+	@Override
+	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
+		if (computerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
+		return super.getCapability(cap, side);
 	}
 
 	public List<ItemStack> getItemsForRender() {
@@ -80,6 +97,15 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 		}
 
 		return manuallyAddedItems;
+	}
+
+	public void invalidateItemsForRender() {
+		renderedItemsForShop = null;
+	}
+
+	public void notifyShopUpdate() {
+		AllPackets.getChannel()
+			.send(packetTarget(), new ShopUpdatePacket(worldPosition));
 	}
 
 	@Override
@@ -112,7 +138,7 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 			player.setItemInHand(InteractionHand.MAIN_HAND, manuallyAddedItems.remove(manuallyAddedItems.size() - 1));
 			level.playSound(null, worldPosition, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.5f, 1f);
 
-			if (manuallyAddedItems.isEmpty()) {
+			if (manuallyAddedItems.isEmpty() && !computerBehaviour.hasAttachedComputer()) {
 				level.setBlock(worldPosition, getBlockState().setValue(TableClothBlock.HAS_BE, false), 3);
 				AllPackets.getChannel()
 					.send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));

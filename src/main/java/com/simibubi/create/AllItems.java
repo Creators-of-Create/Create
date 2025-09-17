@@ -69,8 +69,6 @@ import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 
-import net.minecraftforge.common.Tags;
-
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -81,6 +79,8 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+
+import net.minecraftforge.common.Tags;
 
 public class AllItems {
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
@@ -100,7 +100,7 @@ public class AllItems {
 		TRANSMITTER = ingredient("transmitter"), PULP = ingredient("pulp");
 
 	public static final ItemEntry<CombustibleItem> CARDBOARD = REGISTRATE.item("cardboard", CombustibleItem::new)
-		.tag(forgeItemTag("plates/cardboard"))
+		.tag(forgeItemTag("plates/cardboard"), PLATES.tag)
 		.onRegister(i -> i.setBurnTime(1000))
 		.register();
 

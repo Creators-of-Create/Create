@@ -1,7 +1,10 @@
 package com.simibubi.create.content.decoration;
 
+import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
+
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -11,18 +14,35 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class TrainTrapdoorBlock extends TrapDoorBlock implements IWrenchable {
+	/**
+	 * @deprecated <p> Use {@link TrainTrapdoorBlock#TrainTrapdoorBlock(Properties, BlockSetType)} instead.
+	 */
+	@ScheduledForRemoval(inVersion = "1.21.7 Port")
+	@Deprecated(since = "6.0.7", forRemoval = true)
+	public TrainTrapdoorBlock(Properties properties) {
+		super(properties, SlidingDoorBlock.TRAIN_SET_TYPE.get());
+	}
 
-	public TrainTrapdoorBlock(Properties p_57526_) {
-		super(p_57526_, SlidingDoorBlock.TRAIN_SET_TYPE.get());
+	public TrainTrapdoorBlock(Properties properties, BlockSetType type) {
+		super(properties, type);
+	}
+
+	public static TrainTrapdoorBlock metal(Properties properties) {
+		return new TrainTrapdoorBlock(properties, SlidingDoorBlock.TRAIN_SET_TYPE.get());
+	}
+
+	public static TrainTrapdoorBlock glass(Properties properties) {
+		return new TrainTrapdoorBlock(properties, SlidingDoorBlock.GLASS_SET_TYPE.get());
 	}
 
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
+								 BlockHitResult pHit) {
 		pState = pState.cycle(OPEN);
 		pLevel.setBlock(pPos, pState, 2);
 		if (pState.getValue(WATERLOGGED))
@@ -59,5 +79,4 @@ public class TrainTrapdoorBlock extends TrapDoorBlock implements IWrenchable {
 
 		return pDirection.getAxis() != facing.getAxis();
 	}
-
 }

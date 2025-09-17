@@ -1,6 +1,9 @@
 {
   "advancement.create.andesite_alloy": "Stipresni Akmenys",
+  "advancement.create.andesite_alloy.desc": "Gauk kažkiek Andezito Lydinio, „Create“ svarbiausio išteklio",
   "advancement.create.andesite_casing": "Andezito Amžius",
+  "advancement.create.andesite_casing.desc": "Uždėk Andezito Lydinio ant nuluptos medienios, taip sukurdamas pagrindinį korpusą savo mašinoms",
+  "advancement.create.anvil_plough": "Kalvio Artilerija",
   "advancement.create.belt": "Rudadumblių Varymas",
   "advancement.create.brass": "Tikri lydiniai",
   "advancement.create.brass_casing": "Žalvario amžius",
@@ -8,5 +11,11 @@
   "advancement.create.cart_pickup": "Stiprios Rankos",
   "advancement.create.chained_drain": "Ant ritinio",
   "advancement.create.contraption_actors": "Judėjimas su tikslu",
-  "advancement.create.copper_casing": "Vario Amžius"
+  "advancement.create.copper_casing": "Vario Amžius",
+  "block.create.clutch": "Sankaba",
+  "block.create.cogwheel": "Dantratis",
+  "block.create.gearbox": "Pavarų Dėžė",
+  "block.create.gearshift": "Pavarų svirtis",
+  "block.create.large_cogwheel": "Didelis Dantratis",
+  "item.create.vertical_gearbox": "Vertikali Pavarų Dėžė"
 }

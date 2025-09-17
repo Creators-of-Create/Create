@@ -33,7 +33,7 @@ public record PotatoCannonProjectileType(HolderSet<Item> items, int reloadTicks,
 										 Optional<PotatoProjectileEntityHitAction> onEntityHit,
 										 Optional<PotatoProjectileBlockHitAction> onBlockHit) {
 	public static final Codec<PotatoCannonProjectileType> CODEC = RecordCodecBuilder.create(i -> i.group(
-		RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("items").forGetter(PotatoCannonProjectileType::items),
+		RegistryCodecs.homogeneousList(Registries.ITEM).optionalFieldOf("items", HolderSet.direct()).forGetter(PotatoCannonProjectileType::items),
 		Codec.INT.optionalFieldOf("reload_ticks", 10).forGetter(PotatoCannonProjectileType::reloadTicks),
 		Codec.INT.optionalFieldOf("damage", 1).forGetter(PotatoCannonProjectileType::damage),
 		Codec.INT.optionalFieldOf("split", 1).forGetter(PotatoCannonProjectileType::split),

@@ -5,6 +5,8 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.box.PackageStyles;
 import com.simibubi.create.content.logistics.packagePort.PackagePortBlockEntity;
@@ -37,9 +39,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+
+import org.jetbrains.annotations.NotNull;
 
 public class FrogportBlockEntity extends PackagePortBlockEntity implements IHaveHoveringInformation {
 
@@ -62,6 +68,8 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 
 	private AdvancementBehaviour advancements;
 
+	public AbstractComputerBehaviour computerBehaviour;
+
 	public FrogportBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		sounds = new FrogportSounds();
@@ -74,8 +82,16 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 	}
 
 	@Override
+	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
+		if (computerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
+		return super.getCapability(cap, side);
+	}
+
+	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(advancements = new AdvancementBehaviour(this, AllAdvancements.FROGPORT));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 		super.addBehaviours(behaviours);
 	}
 
@@ -375,6 +391,12 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 		}
 		
 		return super.use(player);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 }
