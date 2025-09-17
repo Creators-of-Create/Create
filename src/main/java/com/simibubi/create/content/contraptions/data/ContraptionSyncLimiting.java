@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.data;
 
 import com.simibubi.create.compat.Mods;
 
-import io.netty.buffer.Unpooled;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -34,19 +33,16 @@ public class ContraptionSyncLimiting {
 		return SIZE_LIMIT;
 	}) - BUFFER;
 
-	/**
-	 * @return true if the given NBT is too large for a contraption to be synced to clients.
-	 */
-	public static boolean isTooLargeForSync(CompoundTag data) {
-		return byteSize(data) > LIMIT;
-	}
+	public static void writeSafe(CompoundTag compound, FriendlyByteBuf dst) {
+		// Write the NBT, but take note of where we were before in case we need to roll back.
+		int writerIndexBefore = dst.writerIndex();
+		dst.writeNbt(compound);
 
-	/**
-	 * @return the size of the given NBT when encoded, in bytes
-	 */
-	private static long byteSize(CompoundTag data) {
-		FriendlyByteBuf test = new FriendlyByteBuf(Unpooled.buffer());
-		test.writeNbt(data);
-		return test.writerIndex();
+		if (dst.writerIndex() > ContraptionSyncLimiting.LIMIT) {
+			// Too large to fit in a packet, so roll back to where
+			// we were before and write null so the client can detect it.
+			dst.writerIndex(writerIndexBefore);
+			dst.writeNbt(null);
+		}
 	}
 }

@@ -7,11 +7,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.simibubi.create.AllTags.AllItemTags;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.api.contraption.transformable.TransformableBlockEntity;
+import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.kinetics.crafter.ConnectedInputHandler.ConnectedInput;
@@ -36,6 +39,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -44,7 +48,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 
-public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
+public class MechanicalCrafterBlockEntity extends KineticBlockEntity  implements TransformableBlockEntity {
 
 	enum Phase {
 		IDLE, ACCEPTING, ASSEMBLING, EXPORTING, WAITING, CRAFTING, INSERTING;
@@ -115,7 +119,7 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
 		inserting = new InvManipulationBehaviour(this, this::getTargetFace);
 		connectivity = new EdgeInteractionBehaviour(this, ConnectedInputHandler::toggleConnection)
 			.connectivity(ConnectedInputHandler::shouldConnect)
-			.require(AllItems.WRENCH.get());
+			.require(AllItemTags.WRENCH::matches);
 		behaviours.add(inserting);
 		behaviours.add(connectivity);
 		registerAwardables(behaviours, AllAdvancements.CRAFTER, AllAdvancements.CRAFTER_LAZY);
@@ -547,5 +551,11 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
 
 	public ConnectedInput getInput() {
 		return input;
+	}
+
+	@Override
+	public void transform(BlockEntity be, StructureTransform transform) {
+		input.data.replaceAll(transform::applyWithoutOffset);
+		notifyUpdate();
 	}
 }

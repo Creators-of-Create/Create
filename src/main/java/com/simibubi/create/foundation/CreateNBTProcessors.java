@@ -17,15 +17,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class CreateNBTProcessors {
 	public static void register() {
-
-		NBTProcessors.addProcessor(BlockEntityType.SIGN, data -> {
-			for (int i = 0; i < 4; ++i) {
-				if (NBTProcessors.textComponentHasClickEvent(data.getString("Text" + (i + 1))))
-					return null;
-			}
-			return data;
-		});
-
 		NBTProcessors.addProcessor(BlockEntityType.LECTERN, data -> {
 			if (!data.contains("Book", Tag.TAG_COMPOUND))
 				return data;

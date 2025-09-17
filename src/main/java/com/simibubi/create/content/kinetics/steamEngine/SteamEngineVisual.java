@@ -76,28 +76,28 @@ public class SteamEngineVisual extends AbstractBlockEntityVisual<SteamEngineBloc
 		Axis facingAxis = facing.getAxis();
 
 		boolean roll90 = facingAxis.isHorizontal() && axis == Axis.Y || facingAxis.isVertical() && axis == Axis.Z;
-		float sine = Mth.sin(angle);
-		float sine2 = Mth.sin(angle - Mth.HALF_PI);
-		float piston = ((1 - sine) / 4) * 24 / 16f;
+		float piston = ((6/16f)*Mth.sin(angle) - Mth.sqrt(Mth.square(14/16f) - Mth.square(6/16f) * Mth.square(Mth.cos(angle))));
+		float distance = Mth.sqrt(Mth.square(piston - 6/16f * Mth.sin(angle)));
+		float angle2 = (float) Math.acos(distance/(14/16f)) * (Mth.cos(angle) >= 0 ? 1f : -1f);
 
 		transformed(this.piston, facing, roll90)
-			.translate(0, piston, 0)
+			.translate(0, piston + 20/16f, 0)
 			.setChanged();
 
 		transformed(linkage, facing, roll90)
 			.center()
 			.translate(0, 1, 0)
 			.uncenter()
-			.translate(0, piston, 0)
+			.translate(0, piston + 20/16f, 0)
 			.translate(0, 4 / 16f, 8 / 16f)
-			.rotateXDegrees(sine2 * 23f)
+			.rotateX(angle2)
 			.translate(0, -4 / 16f, -8 / 16f)
 			.setChanged();
 
 		transformed(connector, facing, roll90)
 			.translate(0, 2, 0)
 			.center()
-			.rotateX(-angle + Mth.HALF_PI)
+			.rotateX(-(angle + Mth.HALF_PI))
 			.uncenter()
 			.setChanged();
 	}

@@ -99,8 +99,10 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 			context.stall = true;
 
 		Optional<Direction> currentFacingIfValid = getCurrentFacingIfValid(context);
-		if (!currentFacingIfValid.isPresent())
+		if (!currentFacingIfValid.isPresent()) {
+			reset(context);
 			return;
+		}
 
 		PortableStorageInterfaceBlockEntity stationaryInterface =
 			getStationaryInterfaceAt(context.world, pos, context.state, currentFacingIfValid.get());

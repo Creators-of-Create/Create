@@ -72,10 +72,15 @@ public class ChainPackageInteractionPacket extends BlockEntityConfigurationPacke
 				best = liftPackage;
 			}
 
-			if (player.getMainHandItem().isEmpty()) {
-				player.setItemInHand(InteractionHand.MAIN_HAND, best.item.copy());
+			if (player.isHolding(ItemStack::isEmpty)) {
+				if (player.getMainHandItem().isEmpty()) {
+					player.setItemInHand(InteractionHand.MAIN_HAND, best.item.copy());
+				} else {
+					player.setItemInHand(InteractionHand.OFF_HAND, best.item.copy());
+				}
 			} else {
-				player.getInventory().placeItemBackInInventory(best.item.copy());
+				player.getInventory()
+					.placeItemBackInInventory(best.item.copy());
 			}
 
 			list.remove(best);
@@ -88,16 +93,22 @@ public class ChainPackageInteractionPacket extends BlockEntityConfigurationPacke
 
 			if (!player.isCreative()) {
 				player.getMainHandItem().shrink(1);
-				if (player.getMainHandItem().isEmpty()) {
-					player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+				player.getOffhandItem().shrink(1);
+				if (player.isHolding(ItemStack::isEmpty)) {
+					if (player.getMainHandItem().isEmpty()) {
+						player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+					} else {
+						player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+					}
+
+					if (selectedConnection.equals(BlockPos.ZERO)) {
+						be.addLoopingPackage(chainConveyorPackage);
+					} else {
+						be.addTravellingPackage(chainConveyorPackage, selectedConnection);
+					}
 				}
 			}
-
-			if (selectedConnection.equals(BlockPos.ZERO)) {
-				be.addLoopingPackage(chainConveyorPackage);
-			} else {
-				be.addTravellingPackage(chainConveyorPackage, selectedConnection);
-			}
 		}
+
 	}
 }

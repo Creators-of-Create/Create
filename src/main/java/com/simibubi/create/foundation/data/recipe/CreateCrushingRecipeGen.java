@@ -3,10 +3,10 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.CrushingRecipeGen;
 
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
@@ -14,26 +14,24 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.UnaryOperator;
 
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.OSMIUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.PLATINUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.QUICKSILVER;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.SILVER;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.ALUMINUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.LEAD;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.NICKEL;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.OSMIUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.PLATINUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.QUICKSILVER;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.SILVER;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.TIN;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.URANIUM;
 
 /**
  * Create's own Data Generation for Crushing recipes
@@ -172,7 +170,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 	RAW_IRON_ORE = rawOre("iron", () -> Tags.Items.RAW_MATERIALS_IRON, AllItems.CRUSHED_IRON::get, 1),
 		RAW_COPPER_ORE = rawOre("copper", () -> Tags.Items.RAW_MATERIALS_COPPER, AllItems.CRUSHED_COPPER::get, 1),
 		RAW_GOLD_ORE = rawOre("gold", () -> Tags.Items.RAW_MATERIALS_GOLD, AllItems.CRUSHED_GOLD::get, 2),
-		RAW_ZINC_ORE = rawOre("zinc", () -> AllTags.forgeItemTag("raw_materials/zinc"), AllItems.CRUSHED_ZINC::get, 1),
+		RAW_ZINC_ORE = rawOre("zinc", () -> CommonMetal.ZINC.rawOres, AllItems.CRUSHED_ZINC::get, 1),
 
 	OSMIUM_RAW_ORE = moddedRawOre(OSMIUM, AllItems.CRUSHED_OSMIUM::get),
 		PLATINUM_RAW_ORE = moddedRawOre(PLATINUM, AllItems.CRUSHED_PLATINUM::get),
@@ -187,7 +185,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 	RAW_IRON_BLOCK = rawOreBlock("iron", () -> Tags.Items.STORAGE_BLOCKS_RAW_IRON, AllItems.CRUSHED_IRON::get, 1),
 		RAW_COPPER_BLOCK = rawOreBlock("copper", () -> Tags.Items.STORAGE_BLOCKS_RAW_COPPER, AllItems.CRUSHED_COPPER::get, 1),
 		RAW_GOLD_BLOCK = rawOreBlock("gold", () -> Tags.Items.STORAGE_BLOCKS_RAW_GOLD, AllItems.CRUSHED_GOLD::get, 2),
-		RAW_ZINC_BLOCK = rawOreBlock("zinc", () -> AllTags.forgeItemTag("storage_blocks/raw_zinc"), AllItems.CRUSHED_ZINC::get, 1),
+		RAW_ZINC_BLOCK = rawOreBlock("zinc", () -> CommonMetal.ZINC.rawStorageBlocks.items(), AllItems.CRUSHED_ZINC::get, 1),
 
 	OSMIUM_RAW_BLOCK = moddedRawOreBlock(OSMIUM, AllItems.CRUSHED_OSMIUM::get),
 		PLATINUM_RAW_BLOCK = moddedRawOreBlock(PLATINUM, AllItems.CRUSHED_PLATINUM::get),
@@ -201,8 +199,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 
 	// Oh The Biomes You'll Go
 	BYG_AMETRINE_ORE = create(Mods.BYG.recipeId("ametrine_ore"), b -> b.duration(500)
-		.require(AllTags.optionalTag(ForgeRegistries.ITEMS,
-			new ResourceLocation("forge", "ores/ametrine")))
+		.require(AllItemTags.AMETRINE_ORES.tag)
 		.output(1f, Mods.BYG, "ametrine_gems", 2)
 		.output(.25f, Mods.BYG, "ametrine_gems", 1)
 		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
@@ -210,8 +207,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 		.whenModLoaded(Mods.BYG.getId())),
 
 	BYG_ANTHRACITE_ORE = create(Mods.BYG.recipeId("anthracite_ore"), b -> b.duration(150)
-		.require(AllTags.optionalTag(ForgeRegistries.ITEMS,
-			new ResourceLocation("forge", "ores/anthracite")))
+		.require(AllItemTags.ANTHRACITE_ORES.tag)
 		.output(1f, Mods.BYG, "anthracite", 2)
 		.output(.5f, Mods.BYG, "anthracite", 1)
 		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
@@ -257,7 +253,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 		.whenModLoaded(Mods.BYG.getId())),
 
 	BYG_EMERALDITE_ORE = create(Mods.BYG.recipeId("emeraldite_ore"), b -> b.duration(500)
-		.require(AllTags.forgeItemTag("ores/emeraldite"))
+		.require(AllItemTags.EMERALDITE_ORES.tag)
 		.output(1f,Mods.BYG, "emeraldite_shards", 2)
 		.output(.25f, Mods.BYG, "emeraldite_shards", 1)
 		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
@@ -265,7 +261,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 		.whenModLoaded(Mods.BYG.getId())),
 
 	BYG_LIGNITE_ORE = create(Mods.BYG.recipeId("lignite_ore"), b -> b.duration(300)
-		.require(AllTags.forgeItemTag("ores/lignite"))
+		.require(AllItemTags.LIGNITE_ORES.tag)
 		.output(1f,Mods.BYG, "lignite", 2)
 		.output(.5f, Mods.BYG, "lignite", 2)
 		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
@@ -273,7 +269,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 		.whenModLoaded(Mods.BYG.getId())),
 
 	BYG_NETHERRACK_ORE = create(Mods.BYG.recipeId("pervaded_netherrack"), b -> b.duration(150)
-		.require(AllTags.forgeItemTag("ores/emeraldite"))
+		.require(AllItemTags.EMERALDITE_ORES.tag)
 		.output(1f, Items.GLOWSTONE, 2)
 		.output(.5f, Items.GLOWSTONE, 1)
 		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
