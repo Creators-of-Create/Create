@@ -452,6 +452,8 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		if (!blueprint.has(AllDataComponents.SCHEMATIC_ANCHOR)) {
 			state = State.STOPPED;
 			statusMsg = "schematicInvalid";
+			inventory.setStackInSlot(1, inventory.getStackInSlot(0).copy());
+			inventory.setStackInSlot(0, ItemStack.EMPTY);
 			sendUpdate = true;
 			return;
 		}
@@ -459,6 +461,8 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		if (!blueprint.getOrDefault(AllDataComponents.SCHEMATIC_DEPLOYED, false)) {
 			state = State.STOPPED;
 			statusMsg = "schematicNotPlaced";
+			inventory.setStackInSlot(1, inventory.getStackInSlot(0).copy());
+			inventory.setStackInSlot(0, ItemStack.EMPTY);
 			sendUpdate = true;
 			return;
 		}
@@ -469,8 +473,8 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		if (printer.isErrored()) {
 			state = State.STOPPED;
 			statusMsg = "schematicErrored";
-			inventory.setStackInSlot(0, ItemStack.EMPTY);
 			inventory.setStackInSlot(1, new ItemStack(AllItems.EMPTY_SCHEMATIC.get()));
+			inventory.setStackInSlot(0, ItemStack.EMPTY);
 			printer.resetSchematic();
 			sendUpdate = true;
 			return;
@@ -479,8 +483,8 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		if (printer.isWorldEmpty()) {
 			state = State.STOPPED;
 			statusMsg = "schematicExpired";
-			inventory.setStackInSlot(0, ItemStack.EMPTY);
 			inventory.setStackInSlot(1, new ItemStack(AllItems.EMPTY_SCHEMATIC.get()));
+			inventory.setStackInSlot(0, ItemStack.EMPTY);
 			printer.resetSchematic();
 			sendUpdate = true;
 			return;
@@ -490,6 +494,8 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 			.closerThan(getBlockPos(), MAX_ANCHOR_DISTANCE)) {
 			state = State.STOPPED;
 			statusMsg = "targetOutsideRange";
+			inventory.setStackInSlot(1, inventory.getStackInSlot(0).copy());
+			inventory.setStackInSlot(0, ItemStack.EMPTY);
 			printer.resetSchematic();
 			sendUpdate = true;
 			return;
@@ -585,9 +591,8 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	public void finishedPrinting() {
 		if (replaceMode == ConfigureSchematicannonPacket.Option.REPLACE_EMPTY.ordinal())
 			printer.sendBlockUpdates(level);
+		inventory.setStackInSlot(1, new ItemStack(AllItems.EMPTY_SCHEMATIC.get()));
 		inventory.setStackInSlot(0, ItemStack.EMPTY);
-		inventory.setStackInSlot(1, new ItemStack(AllItems.EMPTY_SCHEMATIC.get(), inventory.getStackInSlot(1)
-			.getCount() + 1));
 		state = State.STOPPED;
 		statusMsg = "finished";
 		resetPrinter();

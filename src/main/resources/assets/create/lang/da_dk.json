@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Vis printerindstillinger",
   "create.gui.schematicannon.slot.gunpowder": "Tilføj krudt til brændstof kanonen",
   "create.gui.schematicannon.slot.listPrinter": "Placer en udklipsholder eller book her for at udskrive en tjekliste til din Skematisk",
-  "create.gui.schematicannon.slot.schematic": "Tilføj din Schematic her. Sørg for at den er implementeret på en bestemt placering.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Tilføj din Schematic her. Sørg for at den er implementeret på en bestemt placering.",
   "create.gui.schematicannon.title": "Skematikanon",
   "create.gui.scrollInput.defaultTitle": "Vælg en indstilling:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Rul for at justere mængde",
