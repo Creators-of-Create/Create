@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
@@ -67,9 +67,7 @@ public abstract class AbstractBasinRecipe<P extends ProcessingRecipeParams> exte
 		if (availableItems == null || availableFluids == null)
 			return false;
 
-		HeatLevel heat = BasinBlockEntity.getHeatLevelOf(basin.getLevel()
-			.getBlockState(basin.getBlockPos()
-				.below(1)));
+		HeatLevel heat = basin.getHeatLevel();
 		if (isBasinRecipe && !((AbstractBasinRecipe<?>) recipe).getRequiredHeat()
 			.testBlazeBurner(heat))
 			return false;
@@ -147,7 +145,7 @@ public abstract class AbstractBasinRecipe<P extends ProcessingRecipeParams> exte
 					.asCraftInput();
 
 				if (recipe instanceof AbstractBasinRecipe<?> basinRecipe) {
-					recipeOutputItems.addAll(basinRecipe.rollResults());
+					recipeOutputItems.addAll(basinRecipe.rollResults(basin.getLevel().random));
 
 					for (FluidStack fluidStack : basinRecipe.getFluidResults())
 						if (!fluidStack.isEmpty())
@@ -211,7 +209,7 @@ public abstract class AbstractBasinRecipe<P extends ProcessingRecipeParams> exte
 	}
 
 	@Override
-	public boolean matches(RecipeInput input, @Nonnull Level worldIn) {
+	public boolean matches(RecipeInput input, @NotNull Level worldIn) {
 		return false;
 	}
 
