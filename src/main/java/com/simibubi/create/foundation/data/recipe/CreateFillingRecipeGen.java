@@ -4,7 +4,7 @@ import java.util.concurrent.CompletableFuture;
 
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
+import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.FillingRecipeGen;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
@@ -103,7 +103,7 @@ public final class CreateFillingRecipeGen extends FillingRecipeGen {
 	// IE
 
 	IE_TREATED_WOOD = create(Mods.IE.recipeId("treated_wood_in_spout"),
-		b -> b.require(AllTags.commonFluidTag("creosote"), 125)
+		b -> b.require(AllFluidTags.CREOSOTE.tag, 125)
 			.require(CreateRecipeProvider.I.planks())
 			.output(Mods.IE, "treated_wood_horizontal")
 			.whenModLoaded(Mods.IE.getId()));

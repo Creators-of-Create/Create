@@ -75,6 +75,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.material.PushReaction;
 
+import net.neoforged.neoforge.common.Tags.Blocks;
+
 public class BlockMovementChecksImpl {
 	private static final List<MovementNecessaryCheck> MOVEMENT_NECESSARY_CHECKS = new ArrayList<>();
 	private static final List<MovementAllowedCheck> MOVEMENT_ALLOWED_CHECKS = new ArrayList<>();
@@ -177,7 +179,7 @@ public class BlockMovementChecksImpl {
 			return true;
 		if (state.getDestroySpeed(world, pos) == -1)
 			return false;
-		if (AllBlockTags.RELOCATION_NOT_SUPPORTED.matches(state))
+		if (state.is(Blocks.RELOCATION_NOT_SUPPORTED))
 			return false;
 		if (AllBlockTags.NON_MOVABLE.matches(state))
 			return false;

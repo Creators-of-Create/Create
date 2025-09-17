@@ -235,10 +235,12 @@ public class TestContraptions {
 
 	@GameTest(template = "dispensers_dont_fight")
 	public static void dispensersDontFight(CreateGameTestHelper helper) {
-		helper.pullLever(2, 3, 1);
+		BlockPos lever = new BlockPos(2, 3, 1);
 		BlockPos bottom = new BlockPos(6, 4, 1);
 		BlockPos top = new BlockPos(6, 6, 1);
 		BlockPos dispenser = new BlockPos(3, 4, 1);
+
+		helper.pullLever(lever);
 
 		helper.succeedWhen(() -> {
 			helper.assertEntitiesPresent(EntityType.ARROW, bottom, 3, 0);

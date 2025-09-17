@@ -5,19 +5,17 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
-
-import com.simibubi.create.foundation.mixin.accessor.ItemStackHandlerAccessor;
+import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.mixin.accessor.ItemStackHandlerAccessor;
 
 import net.createmod.catnip.data.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.Entity;
@@ -53,8 +51,8 @@ public class ItemHelper {
 		ItemStack result = out.copy();
 		result.setCount(in.getCount() * out.getCount());
 
-		while (result.getCount() > result.getOrDefault(DataComponents.MAX_STACK_SIZE, 64)) {
-			stacks.add(result.split(result.getOrDefault(DataComponents.MAX_STACK_SIZE, 64)));
+		while (result.getCount() > result.getMaxStackSize()) {
+			stacks.add(result.split(result.getMaxStackSize()));
 		}
 
 		stacks.add(result);
@@ -65,7 +63,7 @@ public class ItemHelper {
 		for (ItemStack s : stacks) {
 			if (!ItemStack.isSameItemSameComponents(stack, s))
 				continue;
-			int transferred = Math.min(s.getOrDefault(DataComponents.MAX_STACK_SIZE, 64) - s.getCount(), stack.getCount());
+			int transferred = Math.min(s.getMaxStackSize() - s.getCount(), stack.getCount());
 			s.grow(transferred);
 			stack.shrink(transferred);
 		}
@@ -107,7 +105,7 @@ public class ItemHelper {
 			}
 			ItemStack itemstack = inv.getStackInSlot(j);
 			if (!itemstack.isEmpty()) {
-				f += (float) itemstack.getCount() / (float) Math.min(slotLimit, itemstack.getOrDefault(DataComponents.MAX_STACK_SIZE, 64));
+				f += (float) itemstack.getCount() / (float) Math.min(slotLimit, itemstack.getMaxStackSize());
 				++i;
 			}
 		}
@@ -198,7 +196,7 @@ public class ItemHelper {
 			for (int slot = 0; slot < inv.getSlots(); slot++) {
 				int amountToExtractFromThisSlot =
 					Math.min(maxExtractionCount - extracting.getCount(), inv.getStackInSlot(slot)
-						.getOrDefault(DataComponents.MAX_STACK_SIZE, 64));
+						.getMaxStackSize());
 				ItemStack stack = inv.extractItem(slot, amountToExtractFromThisSlot, true);
 
 				if (stack.isEmpty())
@@ -286,7 +284,7 @@ public class ItemHelper {
 	}
 
 	public static boolean canItemStackAmountsStack(ItemStack a, ItemStack b) {
-		return ItemStack.isSameItemSameComponents(a, b) && a.getCount() + b.getCount() <= a.getOrDefault(DataComponents.MAX_STACK_SIZE, 64);
+		return ItemStack.isSameItemSameComponents(a, b) && a.getCount() + b.getCount() <= a.getMaxStackSize();
 	}
 
 	public static ItemStack findFirstMatch(IItemHandler inv, Predicate<ItemStack> test) {
@@ -341,6 +339,10 @@ public class ItemHelper {
 	public static void copyContents(IItemHandler from, IItemHandlerModifiable to) {
 		if (from.getSlots() != to.getSlots()) {
 			throw new IllegalArgumentException("Slot count mismatch");
+		}
+
+		for (int slot = to.getSlots() - 1; slot >= 0; slot--) {
+			to.setStackInSlot(slot, ItemStack.EMPTY);
 		}
 
 		for (int i = 0; i < from.getSlots(); i++) {

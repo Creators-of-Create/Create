@@ -1,7 +1,5 @@
 package com.simibubi.create.content.redstone.nixieTube;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.redstone.nixieTube.DoubleFaceAttachedBlock.DoubleAttachFace;
@@ -11,10 +9,10 @@ import com.simibubi.create.foundation.utility.DyeHelper;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -26,14 +24,12 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEntity> {
-
-	private static Random r = new Random();
-
 	public NixieTubeRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
@@ -65,27 +61,28 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 
 		Couple<String> s = be.getDisplayedStrings();
 		DyeColor color = NixieTubeBlock.colorOf(be.getBlockState());
+		RandomSource random = be.getLevel().getRandom();
 
 		ms.pushPose();
 		ms.translate(-4 / 16f, 0, 0);
 		ms.scale(scale, -scale, scale);
-		drawTube(ms, buffer, s.getFirst(), height, color);
+		drawTube(ms, buffer, s.getFirst(), height, color, random);
 		ms.popPose();
 
 		ms.pushPose();
 		ms.translate(4 / 16f, 0, 0);
 		ms.scale(scale, -scale, scale);
-		drawTube(ms, buffer, s.getSecond(), height, color);
+		drawTube(ms, buffer, s.getSecond(), height, color, random);
 		ms.popPose();
 
 		ms.popPose();
 	}
 
-	public static void drawTube(PoseStack ms, MultiBufferSource buffer, String c, float height, DyeColor color) {
+	public static void drawTube(PoseStack ms, MultiBufferSource buffer, String c, float height, DyeColor color, RandomSource random) {
 		Font fontRenderer = Minecraft.getInstance().font;
 		float charWidth = fontRenderer.width(c);
 		float shadowOffset = .5f;
-		float flicker = r.nextFloat();
+		float flicker = random.nextFloat();
 		Couple<Integer> couple = DyeHelper.getDyeColors(color);
 		int brightColor = couple.getFirst();
 		int darkColor = couple.getSecond();

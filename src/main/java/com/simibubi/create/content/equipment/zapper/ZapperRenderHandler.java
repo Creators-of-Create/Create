@@ -2,7 +2,6 @@ package com.simibubi.create.content.equipment.zapper;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,6 +12,7 @@ import net.createmod.catnip.outliner.Outliner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -64,13 +64,13 @@ public class ZapperRenderHandler extends ShootableGadgetRenderHandler {
 	}
 
 	public void addBeam(LaserBeam beam) {
-		Random r = new Random();
+		RandomSource random = Minecraft.getInstance().level.random;
 		double x = beam.end.x;
 		double y = beam.end.y;
 		double z = beam.end.z;
 		ClientLevel world = Minecraft.getInstance().level;
-		Supplier<Double> randomSpeed = () -> (r.nextDouble() - .5d) * .2f;
-		Supplier<Double> randomOffset = () -> (r.nextDouble() - .5d) * .2f;
+		Supplier<Double> randomSpeed = () -> (random.nextDouble() - .5d) * .2f;
+		Supplier<Double> randomOffset = () -> (random.nextDouble() - .5d) * .2f;
 		for (int i = 0; i < 10; i++) {
 			world.addParticle(ParticleTypes.END_ROD, x, y, z, randomSpeed.get(), randomSpeed.get(), randomSpeed.get());
 			world.addParticle(ParticleTypes.FIREWORK, x + randomOffset.get(), y + randomOffset.get(),

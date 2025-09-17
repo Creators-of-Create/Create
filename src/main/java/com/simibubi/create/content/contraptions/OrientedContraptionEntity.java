@@ -5,7 +5,7 @@ import static net.createmod.catnip.math.AngleHelper.angleLerp;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllAttachmentTypes;

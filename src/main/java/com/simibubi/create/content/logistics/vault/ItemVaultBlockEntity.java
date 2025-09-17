@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -230,7 +231,7 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 		BlockState state = getBlockState();
 		if (ItemVaultBlock.isVault(state)) {
 			state = state.setValue(ItemVaultBlock.LARGE, false);
-			getLevel().setBlock(worldPosition, state, 22);
+			getLevel().setBlock(worldPosition, state, Block.UPDATE_CLIENTS | Block.UPDATE_INVISIBLE | Block.UPDATE_KNOWN_SHAPE);
 		}
 
 		itemCapability = null;
@@ -383,7 +384,7 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 	public void notifyMultiUpdated() {
 		BlockState state = this.getBlockState();
 		if (ItemVaultBlock.isVault(state)) { // safety
-			level.setBlock(getBlockPos(), state.setValue(ItemVaultBlock.LARGE, radius > 2), 6);
+			level.setBlock(getBlockPos(), state.setValue(ItemVaultBlock.LARGE, radius > 2), Block.UPDATE_CLIENTS | Block.UPDATE_INVISIBLE);
 		}
 		itemCapability = null;
 		invalidateCapabilities();

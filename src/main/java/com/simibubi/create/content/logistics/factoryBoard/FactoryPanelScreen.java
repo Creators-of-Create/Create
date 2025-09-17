@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
@@ -105,7 +105,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 		BigItemStack emptyIngredient = new BigItemStack(ItemStack.EMPTY, 1);
 		NonNullList<Ingredient> ingredients = availableCraftingRecipe.getIngredients();
 		List<BigItemStack> mutableInputs = BigItemStack.duplicateWrappers(inputs);
-		
+
 		int width = Math.min(3, ingredients.size());
 		int height = Math.min(3, ingredients.size() / 3 + 1);
 
@@ -132,7 +132,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 							bigItemStack.count -= 1;
 						break;
 					}
-			
+
 			craftingIngredients.add(craftingIngredient);
 
 			if (width < 3 && (i + 1) % width == 0)

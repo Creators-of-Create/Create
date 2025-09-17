@@ -31,35 +31,11 @@ public class ContraptionRenderInfo {
 	public static final SuperByteBufferCache.Compartment<Pair<Contraption, RenderType>> CONTRAPTION = new SuperByteBufferCache.Compartment<>();
 	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
-	private final Contraption contraption;
 	private final VirtualRenderWorld renderWorld;
 	private final ContraptionMatrices matrices = new ContraptionMatrices();
 
-	ContraptionRenderInfo(Level level, Contraption contraption) {
-		this.contraption = contraption;
+	public ContraptionRenderInfo(Level level, Contraption contraption) {
 		this.renderWorld = setupRenderWorld(level, contraption);
-	}
-
-	public static ContraptionRenderInfo get(Contraption contraption) {
-		return ContraptionRenderInfoManager.MANAGERS.get(contraption.entity.level()).getRenderInfo(contraption);
-	}
-
-	/**
-	 * Reset a contraption's renderer.
-	 *
-	 * @param contraption The contraption to invalidate.
-	 * @return true if there was a renderer associated with the given contraption.
-	 */
-	public static boolean invalidate(Contraption contraption) {
-		return ContraptionRenderInfoManager.MANAGERS.get(contraption.entity.level()).invalidate(contraption);
-	}
-
-	public boolean isDead() {
-		return !contraption.entity.isAliveOrStale();
-	}
-
-	public Contraption getContraption() {
-		return contraption;
 	}
 
 	public VirtualRenderWorld getRenderWorld() {
@@ -70,11 +46,11 @@ public class ContraptionRenderInfo {
 		return matrices;
 	}
 
-	public SuperByteBuffer getBuffer(RenderType renderType) {
-		return SuperByteBufferCache.getInstance().get(CONTRAPTION, Pair.of(contraption, renderType), () -> buildStructureBuffer(renderType));
+	public static SuperByteBuffer getBuffer(Contraption contraption, VirtualRenderWorld renderWorld, RenderType renderType) {
+		return SuperByteBufferCache.getInstance().get(CONTRAPTION, Pair.of(contraption, renderType), () -> buildStructureBuffer(contraption, renderWorld, renderType));
 	}
 
-	public void invalidate() {
+	public static void invalidate(Contraption contraption) {
 		for (RenderType renderType : RenderType.chunkBufferLayers()) {
 			SuperByteBufferCache.getInstance().invalidate(CONTRAPTION, Pair.of(contraption, renderType));
 		}
@@ -107,7 +83,7 @@ public class ContraptionRenderInfo {
 		return renderWorld;
 	}
 
-	private SuperByteBuffer buildStructureBuffer(RenderType layer) {
+	private static SuperByteBuffer buildStructureBuffer(Contraption contraption, VirtualRenderWorld renderWorld, RenderType layer) {
 		BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
 		ModelBlockRenderer renderer = dispatcher.getModelRenderer();
 		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();

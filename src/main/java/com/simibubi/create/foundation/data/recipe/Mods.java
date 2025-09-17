@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.data.recipe;
 
 import java.util.function.Consumer;
 
+import com.simibubi.create.Create;
+
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -10,6 +12,8 @@ import net.minecraft.resources.ResourceLocation;
  * their own instead, with their own helper methods in the generation classes.
  */
 public enum Mods {
+	VANILLA("minecraft"),
+	CREATE(Create.ID),
 
 	MEK("mekanism", b -> b.reverseMetalPrefix()),
 	TH("thermal"),
@@ -69,7 +73,8 @@ public enum Mods {
 	UUE("unusualend"),
 	UG("undergarden"),
 	DD("deeperdarker"),
-	ARS_E("ars_elemental", b -> b.omitWoodSuffix())
+	ARS_E("ars_elemental", b -> b.omitWoodSuffix()),
+	JNE("netherexp")
 
 	;
 

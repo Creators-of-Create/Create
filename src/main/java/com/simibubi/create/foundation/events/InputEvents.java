@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.events;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.elevator.ElevatorControlsHandler;
 import com.simibubi.create.content.contraptions.wrench.RadialWrenchHandler;
@@ -26,6 +25,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.common.Tags;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class InputEvents {
@@ -117,7 +117,7 @@ public class InputEvents {
 
 		if (mc.player != null) {
 			ItemStack itemInHand = mc.player.getItemInHand(event.getHand());
-			if (AllItemTags.WRENCH.matches(itemInHand))
+			if (itemInHand.is(Tags.Items.TOOLS_WRENCH))
 				return;
 			if (itemInHand.is(Items.CHAIN) || AllBlocks.PACKAGE_FROGPORT.isIn(itemInHand))
 				return;

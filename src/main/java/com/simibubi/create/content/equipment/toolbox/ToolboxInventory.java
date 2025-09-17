@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +18,6 @@ import com.simibubi.create.foundation.item.ItemSlots;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -43,7 +40,7 @@ public class ToolboxInventory extends ItemStackHandler {
 		ToolboxInventory::deserialize
 	);
 
-	@ScheduledForRemoval(inVersion = "1.21.7 Port")
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
 	@Deprecated(since = "6.0.6", forRemoval = true)
 	public static final Codec<ToolboxInventory> BACKWARDS_COMPAT_CODEC = Codec.withAlternative(
 		CODEC,
@@ -86,7 +83,7 @@ public class ToolboxInventory extends ItemStackHandler {
 			ItemStack stackInSlot = getStackInSlot(compartment * STACKS_PER_COMPARTMENT + i);
 			totalCount += stackInSlot.getCount();
 			if (!shouldBeEmpty)
-				shouldBeEmpty = stackInSlot.isEmpty() || stackInSlot.getCount() != stackInSlot.getOrDefault(DataComponents.MAX_STACK_SIZE, 64);
+				shouldBeEmpty = stackInSlot.isEmpty() || stackInSlot.getCount() != stackInSlot.getMaxStackSize();
 			else if (!stackInSlot.isEmpty()) {
 				valid = false;
 				sample = stackInSlot;
@@ -113,7 +110,7 @@ public class ToolboxInventory extends ItemStackHandler {
 		} else {
 			for (int i = 0; i < STACKS_PER_COMPARTMENT; i++) {
 				ItemStack copy = totalCount <= 0 ? ItemStack.EMPTY
-					: sample.copyWithCount(Math.min(totalCount, sample.getOrDefault(DataComponents.MAX_STACK_SIZE, 64)));
+					: sample.copyWithCount(Math.min(totalCount, sample.getMaxStackSize()));
 				setStackInSlot(compartment * STACKS_PER_COMPARTMENT + i, copy);
 				totalCount -= copy.getCount();
 			}
@@ -189,7 +186,7 @@ public class ToolboxInventory extends ItemStackHandler {
 		super.deserializeNBT(registries, nbt);
 	}
 
-	public ItemStack distributeToCompartment(@Nonnull ItemStack stack, int compartment, boolean simulate) {
+	public ItemStack distributeToCompartment(@NotNull ItemStack stack, int compartment, boolean simulate) {
 		if (stack.isEmpty())
 			return stack;
 		if (filters.get(compartment)

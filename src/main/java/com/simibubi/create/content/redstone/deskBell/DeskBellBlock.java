@@ -1,6 +1,6 @@
 package com.simibubi.create.content.redstone.deskBell;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
@@ -73,7 +73,7 @@ public class DeskBellBlock extends WrenchableDirectionalBlock
 		playSound(player, level, pos);
 		if (level.isClientSide)
 			return InteractionResult.SUCCESS;
-		level.setBlock(pos, state.setValue(POWERED, true), 3);
+		level.setBlock(pos, state.setValue(POWERED, true), Block.UPDATE_ALL);
 		updateNeighbours(state, level, pos);
 		withBlockEntityDo(level, pos, DeskBellBlockEntity::ding);
 		return InteractionResult.SUCCESS;
@@ -108,7 +108,7 @@ public class DeskBellBlock extends WrenchableDirectionalBlock
 	}
 
 	public void unPress(BlockState pState, Level pLevel, BlockPos pPos) {
-		pLevel.setBlock(pPos, pState.setValue(POWERED, false), 3);
+		pLevel.setBlock(pPos, pState.setValue(POWERED, false), Block.UPDATE_ALL);
 		updateNeighbours(pState, pLevel, pPos);
 	}
 

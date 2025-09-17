@@ -11,8 +11,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllBlockTags;
@@ -53,7 +54,7 @@ public class TreeCutter {
 			.orElse(false);
 	}
 
-	@Nonnull
+	@NotNull
 	public static Optional<AbstractBlockBreakQueue> findDynamicTree(Block startBlock, BlockPos pos) {
 		if (canDynamicTreeCutFrom(startBlock))
 			return Mods.DYNAMICTREES.runIfInstalled(() -> () -> new DynamicTree(pos));
@@ -67,7 +68,7 @@ public class TreeCutter {
 	 * @param pos         position that the saw cut at
 	 * @param brokenState block state what was broken by the saw
 	 */
-	@Nonnull
+	@NotNull
 	public static Tree findTree(@Nullable BlockGetter reader, BlockPos pos, BlockState brokenState) {
 		if (reader == null)
 			return NO_TREE;

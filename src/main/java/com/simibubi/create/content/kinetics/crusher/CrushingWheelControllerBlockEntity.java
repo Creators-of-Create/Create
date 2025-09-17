@@ -309,7 +309,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 			inventory.clear();
 			for (int roll = 0; roll < rolls; roll++) {
 				List<ItemStack> rolledResults = recipe.get().value()
-					.rollResults();
+					.rollResults(level.random);
 				for (ItemStack stack : rolledResults) {
 					ItemHelper.addToList(stack, list);
 				}

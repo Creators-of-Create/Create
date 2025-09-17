@@ -1,48 +1,48 @@
-modLoader="javafml"
-# The loader version doesn't matter. Modify the Forge and/or Minecraft version ranges instead.
+modLoader = "javafml"
+# The loader version doesn't matter. Modify the NeoForge and/or Minecraft version ranges instead.
 loaderVersion = "[0,)"
-issueTrackerURL="https://github.com/Creators-of-Create/Create/issues"
-license="${mod_license}"
+issueTrackerURL = "https://github.com/Creators-of-Create/Create/issues"
+license = "${mod_license}"
 
 [[mods]]
-modId="${mod_id}"
-version="${mod_version}"
-displayName="${mod_name}"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/create"
-logoFile="icon.png"
-authors="${mod_author}"
-description='''${mod_description}'''
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/create"
+logoFile = "icon.png"
+authors = "${mod_author}"
+description = '''${mod_description}'''
 
 [[mixins]]
-    config="${mod_id}.mixins.json"
+config = "${mod_id}.mixins.json"
 
 [[dependencies."${mod_id}"]]
-    modId="neoforge"
-    type="required"
-    versionRange="${neo_version_range}"
-    ordering="NONE"
-    side="BOTH"
+modId = "neoforge"
+type = "required"
+versionRange = "[${neo_version},)"
+ordering = "NONE"
+side = "BOTH"
 
 [[dependencies."${mod_id}"]]
-    modId="minecraft"
-    type="required"
-    versionRange="${minecraft_version_range}"
-    ordering="NONE"
-    side="BOTH"
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraft_version}]"
+ordering = "NONE"
+side = "BOTH"
 
 [[dependencies."${mod_id}"]]
-    modId="flywheel"
-    type="required"
-    versionRange="${flywheel_version_range}"
-    ordering="AFTER"
-    side="CLIENT"
+modId = "flywheel"
+type = "required"
+versionRange = "${flywheel_version_range}"
+ordering = "AFTER"
+side = "CLIENT"
 
 [[dependencies."${mod_id}"]]
-    modId="ponder"
-    type="required"
-    versionRange="[0.8,)"
-    ordering="AFTER"
-    side="BOTH"
+modId = "ponder"
+type = "required"
+versionRange = "[${ponder_version},)"
+ordering = "AFTER"
+side = "BOTH"
 
 # Versions before 0.6.9 do not have sprite util under the api package
 [[dependencies."${mod_id}"]]

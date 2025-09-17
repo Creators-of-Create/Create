@@ -2,8 +2,6 @@ package com.simibubi.create.content.decoration.bracket;
 
 import java.util.function.Predicate;
 
-import net.minecraft.core.HolderLookup;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.StructureTransform;
@@ -13,10 +11,12 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.createmod.catnip.nbt.NBTHelper;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
@@ -69,7 +69,7 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
 		BlockState removed = this.bracket;
 		Level world = getWorld();
 		if (!world.isClientSide)
-			world.levelEvent(2001, getPos(), Block.getId(bracket));
+			world.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, getPos(), Block.getId(bracket));
 		this.bracket = null;
 		reRender = true;
 		if (inOnReplacedContext) {

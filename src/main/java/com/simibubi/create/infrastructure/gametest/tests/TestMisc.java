@@ -88,7 +88,7 @@ public class TestMisc {
 		BlockPos lever = new BlockPos(3, 7, 1);
 		BlockPos switchPos = new BlockPos(1, 6, 1);
 		BlockPos finalPos = new BlockPos(2, 2, 1);
-		helper.pullLever(lever);
+		helper.runAfterDelay(10, () -> helper.pullLever(lever));
 		helper.succeedWhen(() -> {
 			ThresholdSwitchBlockEntity switchBe = helper.getBlockEntity(AllBlockEntityTypes.THRESHOLD_SWITCH.get(), switchPos);
 			int level = switchBe.getStockLevel();

@@ -10,8 +10,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import javax.annotation.Nonnull;
-
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -133,7 +132,7 @@ public class SchematicItem extends Item {
 		return t;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		if (context.getPlayer() != null && !onItemUse(context.getPlayer(), context.getHand()))

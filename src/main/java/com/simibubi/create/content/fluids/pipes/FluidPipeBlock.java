@@ -3,7 +3,7 @@ package com.simibubi.create.content.fluids.pipes;
 import java.util.Arrays;
 import java.util.Optional;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.world.ItemInteractionResult;
 

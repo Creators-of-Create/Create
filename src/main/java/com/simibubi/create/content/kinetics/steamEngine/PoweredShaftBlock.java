@@ -22,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -69,7 +70,7 @@ public class PoweredShaftBlock extends AbstractShaftBlock {
 		if (!stillValid(pState, pLevel, pPos))
 			pLevel.setBlock(pPos, AllBlocks.SHAFT.getDefaultState()
 				.setValue(ShaftBlock.AXIS, pState.getValue(AXIS))
-				.setValue(WATERLOGGED, pState.getValue(WATERLOGGED)), 3);
+				.setValue(WATERLOGGED, pState.getValue(WATERLOGGED)), Block.UPDATE_ALL);
 	}
 
 	@Override

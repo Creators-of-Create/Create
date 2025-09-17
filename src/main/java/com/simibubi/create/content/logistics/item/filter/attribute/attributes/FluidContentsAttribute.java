@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.item.filter.attribute.attributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 

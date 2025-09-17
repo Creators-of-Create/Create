@@ -10,7 +10,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.common.base.Joiner;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
-
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
@@ -19,6 +18,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -145,15 +145,15 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 		forcedResult = stack;
 	}
 
-	public List<ItemStack> rollResults() {
-		return rollResults(this.getRollableResults());
+	public List<ItemStack> rollResults(RandomSource randomSource) {
+		return rollResults(this.getRollableResults(), randomSource);
 	}
 
-	public List<ItemStack> rollResults(List<ProcessingOutput> rollableResults) {
+	public List<ItemStack> rollResults(List<ProcessingOutput> rollableResults, RandomSource randomSource) {
 		List<ItemStack> results = new ArrayList<>();
 		for (int i = 0; i < rollableResults.size(); i++) {
 			ProcessingOutput output = rollableResults.get(i);
-			ItemStack stack = i == 0 && forcedResult != null ? forcedResult.get() : output.rollOutput();
+			ItemStack stack = i == 0 && forcedResult != null ? forcedResult.get() : output.rollOutput(randomSource);
 			if (!stack.isEmpty())
 				results.add(stack);
 		}

@@ -1,25 +1,23 @@
 package com.simibubi.create.content.equipment.zapper;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Predicate;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.base.Predicates;
 import com.mojang.serialization.Codec;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.foundation.gui.AllIcons;
 
-import net.createmod.catnip.lang.Lang;
-
+import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
-
-import io.netty.buffer.ByteBuf;
-
-import org.jetbrains.annotations.NotNull;
 
 public enum PlacementPatterns implements StringRepresentable {
 	Solid(AllIcons.I_PATTERN_SOLID),
@@ -40,20 +38,19 @@ public enum PlacementPatterns implements StringRepresentable {
 		this.icon = icon;
 	}
 
-	public static void applyPattern(List<BlockPos> blocksIn, ItemStack stack) {
+	public static void applyPattern(List<BlockPos> blocksIn, ItemStack stack, RandomSource random) {
 		PlacementPatterns pattern = stack.getOrDefault(AllDataComponents.PLACEMENT_PATTERN, Solid);
-		Random r = new Random();
 		Predicate<BlockPos> filter = Predicates.alwaysFalse();
 
 		switch (pattern) {
 		case Chance25:
-			filter = pos -> r.nextBoolean() || r.nextBoolean();
+			filter = pos -> random.nextBoolean() || random.nextBoolean();
 			break;
 		case Chance50:
-			filter = pos -> r.nextBoolean();
+			filter = pos -> random.nextBoolean();
 			break;
 		case Chance75:
-			filter = pos -> r.nextBoolean() && r.nextBoolean();
+			filter = pos -> random.nextBoolean() && random.nextBoolean();
 			break;
 		case Checkered:
 			filter = pos -> (pos.getX() + pos.getY() + pos.getZ()) % 2 == 0;

@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.simibubi.create.api.registry.CreateBuiltInRegistries;
-
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -15,6 +13,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.LitBlazeBurnerBlock;
 import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
@@ -150,7 +149,8 @@ public class AllFanProcessingTypes {
 
 			if (!smeltingRecipe.isPresent()) {
 				smeltingRecipe = level.getRecipeManager()
-					.getRecipeFor(RecipeType.BLASTING, new SingleRecipeInput(stack), level);
+					.getRecipeFor(RecipeType.BLASTING, new SingleRecipeInput(stack), level)
+					.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 			}
 
 			if (smeltingRecipe.isPresent()) {

@@ -366,14 +366,14 @@ public class SchematicHandler implements LayeredDraw.Layer {
 	}
 
 	public void loadSettings(ItemStack blueprint) {
-		BlockPos anchor = BlockPos.ZERO;
 		StructurePlaceSettings settings = SchematicItem.getSettings(blueprint);
 		transformation = new SchematicTransformation();
 
 		deployed = blueprint.getOrDefault(AllDataComponents.SCHEMATIC_DEPLOYED, false);
-		if (deployed)
-			anchor = blueprint.get(AllDataComponents.SCHEMATIC_ANCHOR);
+		BlockPos anchor = blueprint.getOrDefault(AllDataComponents.SCHEMATIC_ANCHOR, BlockPos.ZERO);
 		Vec3i size = blueprint.get(AllDataComponents.SCHEMATIC_BOUNDS);
+		if (size == null)
+			return;
 
 		bounds = new AABB(0, 0, 0, size.getX(), size.getY(), size.getZ());
 		outline = new AABBOutline(bounds);

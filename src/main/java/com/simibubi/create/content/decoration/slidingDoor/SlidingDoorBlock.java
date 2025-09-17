@@ -2,7 +2,7 @@ package com.simibubi.create.content.decoration.slidingDoor;
 
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.ContraptionWorld;
@@ -152,7 +152,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 		BlockState changedState = state.setValue(OPEN, open);
 		if (open)
 			changedState = changedState.setValue(VISIBLE, false);
-		level.setBlock(pos, changedState, 10);
+		level.setBlock(pos, changedState, UPDATE_CLIENTS | UPDATE_IMMEDIATE);
 
 		DoorHingeSide hinge = changedState.getValue(HINGE);
 		Direction facing = changedState.getValue(FACING);
@@ -200,11 +200,11 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 					.setValue(OPEN, isPowered);
 				if (isPowered)
 					otherDoor = otherDoor.setValue(VISIBLE, false);
-				pLevel.setBlock(otherPos, otherDoor, 2);
+				pLevel.setBlock(otherPos, otherDoor, Block.UPDATE_CLIENTS);
 			}
 		}
 
-		pLevel.setBlock(pPos, changedState, 2);
+		pLevel.setBlock(pPos, changedState, Block.UPDATE_CLIENTS);
 	}
 
 	public static boolean isDoorPowered(Level pLevel, BlockPos pPos, BlockState state) {
@@ -229,7 +229,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 		boolean isOpen = state.getValue(OPEN);
 		if (isOpen)
 			state = state.setValue(VISIBLE, false);
-		level.setBlock(pos, state, 10);
+		level.setBlock(pos, state, UPDATE_CLIENTS | UPDATE_IMMEDIATE);
 		level.gameEvent(player, isOpen(state) ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
 
 		DoorHingeSide hinge = state.getValue(HINGE);

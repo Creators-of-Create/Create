@@ -3,7 +3,6 @@ package com.simibubi.create.content.trains.display;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 
 import com.google.common.base.Strings;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -13,11 +12,10 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 
 public class FlapDisplaySection {
-
 	static final Map<String, String[]> LOADED_FLAP_CYCLES = new HashMap<>();
-	static Random r = new Random();
 
 	public static final float MONOSPACE = 7;
 	public static final float WIDE_MONOSPACE = 9;
@@ -85,7 +83,7 @@ public class FlapDisplaySection {
 		spinningTicks = 0;
 	}
 
-	public int tick(boolean instant) {
+	public int tick(boolean instant, RandomSource randomSource) {
 		if (cyclingOptions == null)
 			return 0;
 		int max = Math.max(4, (int) (cyclingOptions.length * 1.75f));
@@ -99,13 +97,13 @@ public class FlapDisplaySection {
 		int spinningFlaps = 0;
 		for (int i = 0; i < spinning.length; i++) {
 			int increasingChance = Mth.clamp(8 - spinningTicks, 1, 10);
-			boolean continueSpin = !instant && r.nextInt(increasingChance * max / 4) != 0;
+			boolean continueSpin = !instant && randomSource.nextInt(increasingChance * max / 4) != 0;
 			continueSpin &= max > 5 || spinningTicks < 2;
 			spinning[i] &= continueSpin;
 
-			if (i > 0 && r.nextInt(3) > 0)
+			if (i > 0 && randomSource.nextInt(3) > 0)
 				spinning[i - 1] &= continueSpin;
-			if (i < spinning.length - 1 && r.nextInt(3) > 0)
+			if (i < spinning.length - 1 && randomSource.nextInt(3) > 0)
 				spinning[i + 1] &= continueSpin;
 			if (spinningTicks > max)
 				spinning[i] = false;
@@ -182,5 +180,4 @@ public class FlapDisplaySection {
 			.getString()
 			.split(";"));
 	}
-
 }

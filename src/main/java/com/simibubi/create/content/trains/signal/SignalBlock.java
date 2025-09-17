@@ -1,6 +1,6 @@
 package com.simibubi.create.content.trains.signal;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -81,14 +81,14 @@ public class SignalBlock extends Block implements IBE<SignalBlockEntity>, IWrenc
 		if (powered) {
 			pLevel.scheduleTick(pPos, this, 4);
 		} else {
-			pLevel.setBlock(pPos, pState.cycle(POWERED), 2);
+			pLevel.setBlock(pPos, pState.cycle(POWERED), Block.UPDATE_CLIENTS);
 		}
 	}
 
 	@Override
 	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRand) {
 		if (pState.getValue(POWERED) && !pLevel.hasNeighborSignal(pPos))
-			pLevel.setBlock(pPos, pState.cycle(POWERED), 2);
+			pLevel.setBlock(pPos, pState.cycle(POWERED), Block.UPDATE_CLIENTS);
 	}
 
 	@Override

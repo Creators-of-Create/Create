@@ -3,15 +3,12 @@ package com.simibubi.create.foundation.item;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.foundation.blockEntity.ItemHandlerContainer;
 import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
@@ -102,8 +99,8 @@ public class SmartInventory extends ItemHandlerContainer
 			return ItemStack.EMPTY;
 		if (stackNonStackables) {
 			ItemStack extractItem = inv.extractItem(slot, amount, true);
-			if (!extractItem.isEmpty() && extractItem.getOrDefault(DataComponents.MAX_STACK_SIZE, 64) < extractItem.getCount())
-				amount = extractItem.getOrDefault(DataComponents.MAX_STACK_SIZE, 64);
+			if (!extractItem.isEmpty() && extractItem.getMaxStackSize() < extractItem.getCount())
+				amount = extractItem.getMaxStackSize();
 		}
 		return inv.extractItem(slot, amount, simulate);
 	}
@@ -128,8 +125,8 @@ public class SmartInventory extends ItemHandlerContainer
 		((SyncedStackHandler) inv).setStackInSlot(slot, stack);
 	}
 
-	public int getStackLimit(int slot, @Nonnull ItemStack stack) {
-		return Math.min(getSlotLimit(slot), stack.getOrDefault(DataComponents.MAX_STACK_SIZE, 64));
+	public int getStackLimit(int slot, @NotNull ItemStack stack) {
+		return Math.min(getSlotLimit(slot), stack.getMaxStackSize());
 	}
 
 	@Override

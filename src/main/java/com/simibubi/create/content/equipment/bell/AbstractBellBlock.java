@@ -1,6 +1,6 @@
 package com.simibubi.create.content.equipment.bell;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.IBE;
@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BellAttachType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public abstract class AbstractBellBlock<BE extends AbstractBellBlockEntity> extends BellBlock implements IBE<BE> {
@@ -48,7 +47,7 @@ public abstract class AbstractBellBlock<BE extends AbstractBellBlockEntity> exte
 		boolean shouldPower = pLevel.hasNeighborSignal(pPos);
 		if (shouldPower == pState.getValue(POWERED))
 			return;
-		pLevel.setBlock(pPos, pState.setValue(POWERED, shouldPower), 3);
+		pLevel.setBlock(pPos, pState.setValue(POWERED, shouldPower), Block.UPDATE_ALL);
 		if (!shouldPower)
 			return;
 		Direction facing = pState.getValue(FACING);

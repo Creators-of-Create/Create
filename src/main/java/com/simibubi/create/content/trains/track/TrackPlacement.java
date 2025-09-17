@@ -539,7 +539,7 @@ public class TrackPlacement {
 				}
 
 				if (canPlace)
-					level.setBlock(offsetPos, ProperWaterloggedBlock.withWater(level, toPlace, offsetPos), 3);
+					level.setBlock(offsetPos, ProperWaterloggedBlock.withWater(level, toPlace, offsetPos), Block.UPDATE_ALL);
 			}
 		}
 
@@ -551,12 +551,12 @@ public class TrackPlacement {
 			BlockState stateAtPos = level.getBlockState(targetPos1);
 			level.setBlock(targetPos1, ProperWaterloggedBlock.withWater(level,
 				(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : BlockHelper.copyProperties(state1, onto))
-					.setValue(TrackBlock.HAS_BE, true), targetPos1), 3);
+					.setValue(TrackBlock.HAS_BE, true), targetPos1), Block.UPDATE_ALL);
 
 			stateAtPos = level.getBlockState(targetPos2);
 			level.setBlock(targetPos2, ProperWaterloggedBlock.withWater(level,
 				(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : BlockHelper.copyProperties(state2, onto))
-					.setValue(TrackBlock.HAS_BE, true), targetPos2), 3);
+					.setValue(TrackBlock.HAS_BE, true), targetPos2), Block.UPDATE_ALL);
 		}
 
 		BlockEntity te1 = level.getBlockEntity(targetPos1);

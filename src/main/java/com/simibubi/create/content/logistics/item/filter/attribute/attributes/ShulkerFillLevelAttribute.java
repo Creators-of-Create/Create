@@ -105,7 +105,7 @@ public record ShulkerFillLevelAttribute(ShulkerLevels levels) implements ItemAtt
 
 				NonNullList<ItemStack> inventory = NonNullList.withSize(27, ItemStack.EMPTY);
 				contents.copyInto(inventory);
-				boolean isFull = inventory.stream().allMatch(itemStack -> !itemStack.isEmpty() && itemStack.getCount() == itemStack.getOrDefault(DataComponents.MAX_STACK_SIZE, 64));
+				boolean isFull = inventory.stream().allMatch(itemStack -> !itemStack.isEmpty() && itemStack.getCount() == itemStack.getMaxStackSize());
 				return requiredSize.test(isFull ? Integer.MAX_VALUE : rawSize);
 			}
 			return requiredSize.test(0);

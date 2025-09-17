@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 

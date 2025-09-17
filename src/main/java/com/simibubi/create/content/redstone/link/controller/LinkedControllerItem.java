@@ -56,7 +56,7 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 				if (AllBlocks.LECTERN_CONTROLLER.has(hitState)) {
 					if (!world.isClientSide)
 						AllBlocks.LECTERN_CONTROLLER.get().withBlockEntityDo(world, pos, be ->
-								be.swapControllers(stack, player, ctx.getHand(), hitState));
+							be.swapControllers(stack, player, ctx.getHand(), hitState));
 					return InteractionResult.SUCCESS;
 				}
 			} else {
@@ -64,7 +64,7 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 					if (world.isClientSide)
 						CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> this.toggleBindMode(ctx.getClickedPos()));
 					player.getCooldowns()
-							.addCooldown(this, 2);
+						.addCooldown(this, 2);
 					return InteractionResult.SUCCESS;
 				}
 

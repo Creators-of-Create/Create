@@ -1,6 +1,6 @@
 package com.simibubi.create.content.redstone;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.api.contraption.transformable.TransformableBlock;

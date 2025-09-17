@@ -15,6 +15,8 @@ import static com.simibubi.create.foundation.data.TagGen.axeOrPickaxe;
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 import static com.simibubi.create.foundation.data.TagGen.tagBlockAndItem;
 
+import java.util.Map;
+
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.api.behaviour.interaction.ConductorBlockInteractionBehavior;
@@ -265,6 +267,7 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.MetalBarsGen;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
+import com.simibubi.create.foundation.data.recipe.CommonMetal;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.UncontainableBlockItem;
 import com.simibubi.create.foundation.mixin.accessor.BlockLootSubProviderAccessor;
@@ -1616,7 +1619,7 @@ public class AllBlocks {
 		.clientExtension(() -> () -> new TrackBlock.RenderProperties())
 		.onRegister(CreateRegistrate.blockModel(() -> TrackModel::new))
 		.blockstate(new TrackBlockStateGenerator()::generate)
-		.tag(AllBlockTags.RELOCATION_NOT_SUPPORTED.tag)
+		.tag(Tags.Blocks.RELOCATION_NOT_SUPPORTED)
 		.tag(AllBlockTags.TRACKS.tag)
 		.tag(AllBlockTags.GIRDABLE_TRACKS.tag)
 		.lang("Train Track")
@@ -2006,7 +2009,7 @@ public class AllBlocks {
 			.transform(BuilderTransformers.tableCloth("brass", SharedProperties::softMetal, false))
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW)
 				.requiresCorrectToolForDrops())
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.commonItemTag("ingots/brass")),
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(CommonMetal.BRASS.ingots),
 				RecipeCategory.DECORATIONS, c::get, 2))
 			.transform(pickaxeOnly())
 			.lang("Brass Table Cover")
@@ -2016,7 +2019,7 @@ public class AllBlocks {
 		REGISTRATE.block("copper_table_cloth", p -> new TableClothBlock(p, "copper"))
 			.transform(BuilderTransformers.tableCloth("copper", SharedProperties::copperMetal, false))
 			.properties(p -> p.requiresCorrectToolForDrops())
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(net.neoforged.neoforge.common.Tags.Items.INGOTS_COPPER),
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(CommonMetal.COPPER.ingots),
 				RecipeCategory.DECORATIONS, c::get, 2))
 			.transform(pickaxeOnly())
 			.lang("Copper Table Cover")
@@ -2286,21 +2289,21 @@ public class AllBlocks {
 	public static final BlockEntry<MetalLadderBlock> BRASS_LADDER =
 		REGISTRATE.block("brass_ladder", MetalLadderBlock::new)
 			.transform(BuilderTransformers.ladder("brass",
-				() -> DataIngredient.tag(AllTags.commonItemTag("ingots/brass")), MapColor.TERRACOTTA_YELLOW))
+				() -> DataIngredient.tag(CommonMetal.BRASS.ingots), MapColor.TERRACOTTA_YELLOW))
 			.register();
 
 	public static final BlockEntry<MetalLadderBlock> COPPER_LADDER =
 		REGISTRATE.block("copper_ladder", MetalLadderBlock::new)
 			.transform(BuilderTransformers.ladder("copper",
-				() -> DataIngredient.tag(net.neoforged.neoforge.common.Tags.Items.INGOTS_COPPER), MapColor.COLOR_ORANGE))
+				() -> DataIngredient.tag(CommonMetal.COPPER.ingots), MapColor.COLOR_ORANGE))
 			.register();
 
 	public static final BlockEntry<IronBarsBlock> ANDESITE_BARS = MetalBarsGen.createBars("andesite", true,
 		() -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()), MapColor.STONE);
 	public static final BlockEntry<IronBarsBlock> BRASS_BARS = MetalBarsGen.createBars("brass", true,
-		() -> DataIngredient.tag(AllTags.commonItemTag("ingots/brass")), MapColor.TERRACOTTA_YELLOW);
+		() -> DataIngredient.tag(CommonMetal.BRASS.ingots), MapColor.TERRACOTTA_YELLOW);
 	public static final BlockEntry<IronBarsBlock> COPPER_BARS = MetalBarsGen.createBars("copper", true,
-		() -> DataIngredient.tag(net.neoforged.neoforge.common.Tags.Items.INGOTS_COPPER), MapColor.COLOR_ORANGE);
+		() -> DataIngredient.tag(CommonMetal.COPPER.ingots), MapColor.COLOR_ORANGE);
 
 	public static final BlockEntry<MetalScaffoldingBlock> ANDESITE_SCAFFOLD = REGISTRATE
 		.block("andesite_scaffolding", MetalScaffoldingBlock::new)
@@ -2312,14 +2315,14 @@ public class AllBlocks {
 	public static final BlockEntry<MetalScaffoldingBlock> BRASS_SCAFFOLD =
 		REGISTRATE.block("brass_scaffolding", MetalScaffoldingBlock::new)
 			.transform(BuilderTransformers.scaffold("brass",
-				() -> DataIngredient.tag(AllTags.commonItemTag("ingots/brass")), MapColor.TERRACOTTA_YELLOW,
+				() -> DataIngredient.tag(CommonMetal.BRASS.ingots), MapColor.TERRACOTTA_YELLOW,
 				AllSpriteShifts.BRASS_SCAFFOLD, AllSpriteShifts.BRASS_SCAFFOLD_INSIDE, AllSpriteShifts.BRASS_CASING))
 			.register();
 
 	public static final BlockEntry<MetalScaffoldingBlock> COPPER_SCAFFOLD =
 		REGISTRATE.block("copper_scaffolding", MetalScaffoldingBlock::new)
 			.transform(BuilderTransformers.scaffold("copper",
-				() -> DataIngredient.tag(net.neoforged.neoforge.common.Tags.Items.INGOTS_COPPER), MapColor.COLOR_ORANGE,
+				() -> DataIngredient.tag(CommonMetal.COPPER.ingots), MapColor.COLOR_ORANGE,
 				AllSpriteShifts.COPPER_SCAFFOLD, AllSpriteShifts.COPPER_SCAFFOLD_INSIDE, AllSpriteShifts.COPPER_CASING))
 			.register();
 
@@ -2363,7 +2366,7 @@ public class AllBlocks {
 			.transform(BuilderTransformers.copycat())
 			.onRegister(CreateRegistrate.blockModel(() -> CopycatStepModel::new))
 			.item()
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.commonItemTag("ingots/zinc")),
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(CommonMetal.ZINC.ingots),
 				RecipeCategory.BUILDING_BLOCKS, c::get, 4))
 			.transform(customItemModel("copycat_base", "step"))
 			.register();
@@ -2373,7 +2376,7 @@ public class AllBlocks {
 			.transform(BuilderTransformers.copycat())
 			.onRegister(CreateRegistrate.blockModel(() -> CopycatPanelModel::new))
 			.item()
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.commonItemTag("ingots/zinc")),
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(CommonMetal.ZINC.ingots),
 				RecipeCategory.BUILDING_BLOCKS, c::get, 4))
 			.transform(customItemModel("copycat_base", "panel"))
 			.register();
@@ -2489,7 +2492,10 @@ public class AllBlocks {
 		})
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.ORES)
-		.transform(tagBlockAndItem("ores/zinc", "ores_in_ground/stone"))
+		.transform(tagBlockAndItem(Map.of(
+			CommonMetal.ZINC.ores.blocks(), CommonMetal.ZINC.ores.items(),
+			Tags.Blocks.ORES_IN_GROUND_STONE, Tags.Items.ORES_IN_GROUND_STONE
+		)))
 		.tag(Tags.Items.ORES)
 		.build()
 		.register();
@@ -2510,7 +2516,10 @@ public class AllBlocks {
 		})
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.ORES)
-		.transform(tagBlockAndItem("ores/zinc", "ores_in_ground/deepslate"))
+		.transform(tagBlockAndItem(Map.of(
+			CommonMetal.ZINC.ores.blocks(), CommonMetal.ZINC.ores.items(),
+			Tags.Blocks.ORES_IN_GROUND_DEEPSLATE, Tags.Items.ORES_IN_GROUND_DEEPSLATE
+		)))
 		.tag(Tags.Items.ORES)
 		.build()
 		.register();
@@ -2523,7 +2532,7 @@ public class AllBlocks {
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.lang("Block of Raw Zinc")
-		.transform(tagBlockAndItem("storage_blocks/raw_zinc"))
+		.transform(tagBlockAndItem(CommonMetal.ZINC.rawStorageBlocks))
 		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.register();
@@ -2536,7 +2545,7 @@ public class AllBlocks {
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.tag(BlockTags.BEACON_BASE_BLOCKS)
-		.transform(tagBlockAndItem("storage_blocks/zinc"))
+		.transform(tagBlockAndItem(CommonMetal.ZINC.storageBlocks))
 		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.lang("Block of Zinc")
@@ -2549,7 +2558,7 @@ public class AllBlocks {
 		.transform(pickaxeOnly())
 		.blockstate(simpleCubeAll("andesite_block"))
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
-		.transform(tagBlockAndItem("storage_blocks/andesite_alloy"))
+		.transform(tagBlockAndItem(AllBlockTags.ANDESITE_ALLOY_STORAGE_BLOCKS.tag, AllItemTags.ANDESITE_ALLOY_STORAGE_BLOCKS.tag))
 		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.lang("Block of Andesite Alloy")
@@ -2574,7 +2583,7 @@ public class AllBlocks {
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.tag(BlockTags.BEACON_BASE_BLOCKS)
-		.transform(tagBlockAndItem("storage_blocks/brass"))
+		.transform(tagBlockAndItem(CommonMetal.BRASS.storageBlocks))
 		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.lang("Block of Brass")
@@ -2589,10 +2598,10 @@ public class AllBlocks {
 			.transform(axeOnly())
 			.blockstate(BlockStateGen.horizontalAxisBlockProvider(false))
 			.tag(Tags.Blocks.STORAGE_BLOCKS)
-			.tag(AllTags.commonBlockTag("storage_blocks/cardboard"))
+			.tag(AllBlockTags.CARDBOARD_STORAGE_BLOCKS.tag)
 			.item()
 			.burnTime(4000)
-			.tag(AllTags.commonItemTag("storage_blocks/cardboard"))
+			.tag(AllItemTags.CARDBOARD_STORAGE_BLOCKS.tag)
 			.tag(Tags.Items.STORAGE_BLOCKS)
 			.build()
 			.lang("Block of Cardboard")
@@ -2682,14 +2691,14 @@ public class AllBlocks {
 
 	public static final CopperBlockSet COPPER_SHINGLES = new CopperBlockSet(REGISTRATE, "copper_shingles",
 		"copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
-		p.stonecutting(DataIngredient.tag(net.neoforged.neoforge.common.Tags.Items.INGOTS_COPPER), RecipeCategory.BUILDING_BLOCKS,
+		p.stonecutting(DataIngredient.tag(CommonMetal.COPPER.ingots), RecipeCategory.BUILDING_BLOCKS,
 			c::get, 2);
 	}, (ws, block) -> connectedTextures(() -> new RoofBlockCTBehaviour(AllSpriteShifts.COPPER_SHINGLES.get(ws)))
 		.accept(block));
 
 	public static final CopperBlockSet COPPER_TILES =
 		new CopperBlockSet(REGISTRATE, "copper_tiles", "copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
-			p.stonecutting(DataIngredient.tag(net.neoforged.neoforge.common.Tags.Items.INGOTS_COPPER), RecipeCategory.BUILDING_BLOCKS,
+			p.stonecutting(DataIngredient.tag(CommonMetal.COPPER.ingots), RecipeCategory.BUILDING_BLOCKS,
 				c::get, 2);
 		}, (ws, block) -> connectedTextures(() -> new RoofBlockCTBehaviour(AllSpriteShifts.COPPER_TILES.get(ws)))
 			.accept(block));

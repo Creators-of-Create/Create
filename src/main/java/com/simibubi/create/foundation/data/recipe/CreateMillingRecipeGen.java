@@ -4,15 +4,15 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.MillingRecipeGen;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -213,7 +213,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	// AE2
 
 	AE2_CERTUS = create(Mods.AE2.recipeId("certus_quartz"), b -> b.duration(200)
-		.require(AllTags.commonItemTag("gems/certus_quartz"))
+		.require(AllItemTags.CERTUS_QUARTZ.tag)
 		.output(Mods.AE2, "certus_quartz_dust")
 		.whenModLoaded(Mods.AE2.getId())),
 
@@ -823,8 +823,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	GeneratedRecipe botaniaPetals(String... colors) {
 		for (String color : colors) {
 			create(Mods.BTN.recipeId(color + "_petal"), b -> b.duration(50)
-				.require(AllTags.optionalTag(BuiltInRegistries.ITEM,
-					ResourceLocation.fromNamespaceAndPath(Mods.BTN.getId(), "petals/" + color)))
+				.require(TagKey.create(Registries.ITEM, Mods.BTN.asResource("petals/" + color)))
 				.output(Mods.MC, color + "_dye")
 				.whenModLoaded(Mods.BTN.getId()));
 		}

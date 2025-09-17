@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.recipe;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllRecipeTypes;
 
@@ -34,7 +34,7 @@ public class ItemCopyingRecipe extends CustomRecipe {
 		public default boolean canCopyToItem(ItemStack item) {
 			return !item.has(getComponentType());
 		}
-		
+
 		public DataComponentType<?> getComponentType();
 
 	}

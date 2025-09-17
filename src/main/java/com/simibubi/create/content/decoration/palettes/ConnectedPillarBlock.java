@@ -95,7 +95,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 			pPos.relative(Direction.fromAxisAndDirection(pState.getValue(AXIS), AxisDirection.NEGATIVE));
 		BlockState belowState = pLevel.getBlockState(belowPos);
 		if (!canConnect(pState, belowState))
-			pLevel.setBlock(pPos, updateColumn(pLevel, pPos, pState, true), 3);
+			pLevel.setBlock(pPos, updateColumn(pLevel, pPos, pState, true), Block.UPDATE_ALL);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 			BlockPos relative = pPos.relative(d);
 			BlockState adjacent = pLevel.getBlockState(relative);
 			if (canConnect(pState, adjacent))
-				pLevel.setBlock(relative, updateColumn(pLevel, relative, adjacent, false), 3);
+				pLevel.setBlock(relative, updateColumn(pLevel, relative, adjacent, false), Block.UPDATE_ALL);
 		}
 	}
 

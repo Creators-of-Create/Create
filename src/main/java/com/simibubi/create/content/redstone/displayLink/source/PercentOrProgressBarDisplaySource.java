@@ -2,7 +2,7 @@ package com.simibubi.create.content.redstone.displayLink.source;
 
 import static com.simibubi.create.content.trains.display.FlapDisplaySection.WIDE_MONOSPACE;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;

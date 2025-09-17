@@ -4,7 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.contraption.BlockMovementChecks;
@@ -31,6 +31,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -181,7 +182,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 			BlockPos offset = worldPosition.below(i);
 			BlockState oldState = level.getBlockState(offset);
 			level.setBlock(offset, oldState.getFluidState()
-				.createLegacyBlock(), 66);
+				.createLegacyBlock(), Block.UPDATE_CLIENTS | Block.UPDATE_MOVE_BY_PISTON);
 		}
 	}
 
@@ -207,7 +208,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 						level.setBlock(magnetPos, AllBlocks.PULLEY_MAGNET.getDefaultState()
 								.setValue(BlockStateProperties.WATERLOGGED,
 									Boolean.valueOf(ifluidstate.getType() == Fluids.WATER)),
-							66);
+							Block.UPDATE_CLIENTS | Block.UPDATE_MOVE_BY_PISTON);
 					}
 				}
 
@@ -230,7 +231,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 						}
 
 						level.setBlock(worldPosition.below(i), AllBlocks.ROPE.getDefaultState()
-							.setValue(BlockStateProperties.WATERLOGGED, waterlog[i]), 66);
+							.setValue(BlockStateProperties.WATERLOGGED, waterlog[i]), Block.UPDATE_CLIENTS | Block.UPDATE_MOVE_BY_PISTON);
 					}
 				}
 

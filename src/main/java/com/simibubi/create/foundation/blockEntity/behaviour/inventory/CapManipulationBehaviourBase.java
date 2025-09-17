@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.blockEntity.behaviour.inventory;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -89,7 +89,7 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 	public BlockFace getTarget() {
 		return this.target.getTarget(this.getWorld(), this.blockEntity.getBlockPos(), this.blockEntity.getBlockState());
 	}
-	
+
 	protected boolean onHandlerInvalidated() {
 		if (targetCapability == null)
 			return false;

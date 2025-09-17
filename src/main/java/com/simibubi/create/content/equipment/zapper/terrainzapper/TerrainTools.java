@@ -2,7 +2,7 @@ package com.simibubi.create.content.equipment.zapper.terrainzapper;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
 import com.simibubi.create.content.equipment.zapper.ZapperItem;

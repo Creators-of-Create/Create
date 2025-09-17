@@ -22,7 +22,7 @@ public class TrainTrapdoorBlock extends TrapDoorBlock implements IWrenchable {
 	/**
 	 * @deprecated <p> Use {@link TrainTrapdoorBlock#TrainTrapdoorBlock(BlockSetType, Properties)} instead.
 	 */
-	@ScheduledForRemoval(inVersion = "1.21.7 Port")
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
 	@Deprecated(since = "6.0.7", forRemoval = true)
 	public TrainTrapdoorBlock(Properties properties) {
 		super(SlidingDoorBlock.TRAIN_SET_TYPE.get(), properties);
@@ -43,7 +43,7 @@ public class TrainTrapdoorBlock extends TrapDoorBlock implements IWrenchable {
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
 		state = state.cycle(OPEN);
-		level.setBlock(pos, state, 2);
+		level.setBlock(pos, state, UPDATE_CLIENTS);
 		if (state.getValue(WATERLOGGED))
 			level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
 		playSound(player, level, pos, state.getValue(OPEN));

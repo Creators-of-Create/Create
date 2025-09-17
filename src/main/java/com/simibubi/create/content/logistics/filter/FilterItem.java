@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllDataComponents;
@@ -66,7 +64,7 @@ public class FilterItem extends Item implements MenuProvider, SupportsItemCopyin
 		this.type = type;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		if (context.getPlayer() == null)

@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Clearable;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -138,11 +139,11 @@ public class CloneCommand {
 		for (StructureTemplate.StructureBlockInfo info : reverse) {
 			BlockEntity be = world.getBlockEntity(info.pos());
 			Clearable.tryClear(be);
-			world.setBlock(info.pos(), Blocks.BARRIER.defaultBlockState(), 2);
+			world.setBlock(info.pos(), Blocks.BARRIER.defaultBlockState(), Block.UPDATE_CLIENTS);
 		}
 
 		for (StructureTemplate.StructureBlockInfo info : allBlocks) {
-			if (world.setBlock(info.pos(), info.state(), 2))
+			if (world.setBlock(info.pos(), info.state(), Block.UPDATE_CLIENTS))
 				blockPastes++;
 		}
 
@@ -158,7 +159,7 @@ public class CloneCommand {
 
 			// idk why the state is set twice for a be, but its done like this in the
 			// original clone command
-			world.setBlock(info.pos(), info.state(), 2);
+			world.setBlock(info.pos(), info.state(), Block.UPDATE_CLIENTS);
 		}
 
 		for (StructureTemplate.StructureBlockInfo info : reverse) {

@@ -38,11 +38,10 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class FilteringRenderer {
-
 	public static void tick() {
 		Minecraft mc = Minecraft.getInstance();
 		HitResult target = mc.hitResult;
-		if (target == null || !(target instanceof BlockHitResult result))
+		if (!(target instanceof BlockHitResult result))
 			return;
 
 		ClientLevel world = mc.level;
@@ -60,8 +59,8 @@ public class FilteringRenderer {
 			if (!(b instanceof FilteringBehaviour behaviour))
 				continue;
 
-			if (behaviour instanceof SidedFilteringBehaviour) {
-				behaviour = ((SidedFilteringBehaviour) behaviour).get(result.getDirection());
+			if (behaviour instanceof SidedFilteringBehaviour sidedFilteringBehaviour) {
+				behaviour = sidedFilteringBehaviour.get(result.getDirection());
 				if (behaviour == null)
 					continue;
 			}
@@ -133,8 +132,7 @@ public class FilteringRenderer {
 
 			if (!behaviour.isActive())
 				continue;
-			if (behaviour.getFilter()
-				.isEmpty() && !(behaviour instanceof SidedFilteringBehaviour))
+			if (behaviour.getFilter().isEmpty() && !(behaviour instanceof SidedFilteringBehaviour))
 				continue;
 
 			ValueBoxTransform slotPositioning = behaviour.slotPositioning;
@@ -160,7 +158,6 @@ public class FilteringRenderer {
 					ms.popPose();
 				}
 				sided.fromSide(side);
-				continue;
 			} else if (slotPositioning.shouldRender(level, blockPos, blockState)) {
 				ms.pushPose();
 				slotPositioning.transform(level, blockPos, blockState, ms);
@@ -169,5 +166,4 @@ public class FilteringRenderer {
 			}
 		}
 	}
-
 }

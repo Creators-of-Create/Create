@@ -1,0 +1,9 @@
+{
+  "blast_resistance": 6.0,
+  "flammable": false,
+  "hardness": 3.0,
+  "ignited_by_lava": false,
+  "luminous": false,
+  "stackable": 1,
+  "waterloggable": false
+}

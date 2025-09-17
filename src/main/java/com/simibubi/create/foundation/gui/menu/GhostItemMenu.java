@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.gui.menu;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -8,6 +7,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 public abstract class GhostItemMenu<T> extends MenuBase<T> implements IClearableMenu {
@@ -64,7 +64,7 @@ public abstract class GhostItemMenu<T> extends MenuBase<T> implements IClearable
 			if (player.isCreative() && held.isEmpty()) {
 				ItemStack stackInSlot = ghostInventory.getStackInSlot(slot)
 						.copy();
-				stackInSlot.setCount(stackInSlot.getOrDefault(DataComponents.MAX_STACK_SIZE, 64));
+				stackInSlot.setCount(stackInSlot.getMaxStackSize());
 				setCarried(stackInSlot);
 				return;
 			}
@@ -81,7 +81,7 @@ public abstract class GhostItemMenu<T> extends MenuBase<T> implements IClearable
 		ghostInventory.setStackInSlot(slot, insert);
 		getSlot(slotId).setChanged();
 	}
-	
+
 	@Override
 	protected boolean moveItemStackTo(ItemStack pStack, int pStartIndex, int pEndIndex, boolean pReverseDirection) {
 		return false;

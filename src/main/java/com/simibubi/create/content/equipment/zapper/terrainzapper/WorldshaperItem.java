@@ -67,7 +67,7 @@ public class WorldshaperItem extends ZapperItem {
 	}
 
 	@Override
-	protected boolean activate(Level world, Player player, ItemStack stack, BlockState stateToUse,
+	protected boolean activate(Level level, Player player, ItemStack stack, BlockState stateToUse,
 		BlockHitResult raytrace, CompoundTag data) {
 
 		BlockPos targetPos = raytrace.getBlockPos();
@@ -80,10 +80,10 @@ public class WorldshaperItem extends ZapperItem {
 
 		brush.set(params.getX(), params.getY(), params.getZ());
 		targetPos = targetPos.offset(brush.getOffset(player.getLookAngle(), raytrace.getDirection(), option));
-		brush.addToGlobalPositions(world, targetPos, raytrace.getDirection(), affectedPositions, tool);
-		PlacementPatterns.applyPattern(affectedPositions, stack);
+		brush.addToGlobalPositions(level, targetPos, raytrace.getDirection(), affectedPositions, tool);
+		PlacementPatterns.applyPattern(affectedPositions, stack, level.random);
 		brush.redirectTool(tool)
-			.run(world, affectedPositions, raytrace.getDirection(), stateToUse, data, player);
+			.run(level, affectedPositions, raytrace.getDirection(), stateToUse, data, player);
 
 		return true;
 	}

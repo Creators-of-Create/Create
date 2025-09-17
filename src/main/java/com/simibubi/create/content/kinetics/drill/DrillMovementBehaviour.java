@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.drill;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;

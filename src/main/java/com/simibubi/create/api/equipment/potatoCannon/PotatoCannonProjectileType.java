@@ -25,7 +25,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 
-// TODO: 1.21.7 - Move into api package
+// TODO: 1.21.1+ - Move into api package
 public record PotatoCannonProjectileType(HolderSet<Item> items, int reloadTicks, int damage, int split, float knockback,
 										 float drag, float velocityMultiplier, float gravityMultiplier,
 										 float soundPitch, boolean sticky, ItemStack dropStack,

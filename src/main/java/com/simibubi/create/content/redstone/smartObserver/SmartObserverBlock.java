@@ -29,9 +29,8 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
 
 public class SmartObserverBlock extends DirectedDirectionalBlock implements IBE<SmartObserverBlockEntity> {
 
@@ -104,7 +103,7 @@ public class SmartObserverBlock extends DirectedDirectionalBlock implements IBE<
 
 	@Override
 	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
-		worldIn.setBlock(pos, state.setValue(POWERED, false), 2);
+		worldIn.setBlock(pos, state.setValue(POWERED, false), Block.UPDATE_CLIENTS);
 		worldIn.updateNeighborsAt(pos, this);
 	}
 

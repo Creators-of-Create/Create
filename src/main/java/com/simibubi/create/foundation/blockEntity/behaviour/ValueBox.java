@@ -8,9 +8,8 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform.Si
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.INamedIconOptions;
 import com.simibubi.create.foundation.gui.AllIcons;
 
-import net.createmod.catnip.lang.Lang;
-import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.createmod.catnip.outliner.ChasingAABBOutline;
+import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
@@ -18,7 +17,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -28,14 +26,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class ValueBox extends ChasingAABBOutline {
-
 	protected Component label;
-	protected Component sublabel = CommonComponents.EMPTY;
-	protected Component scrollTooltip = CommonComponents.EMPTY;
-	protected Vec3 labelOffset = Vec3.ZERO;
 
 	public int overrideColor = -1;
-
 	public boolean isPassive;
 
 	protected ValueBoxTransform transform;
@@ -139,7 +132,7 @@ public class ValueBox extends ChasingAABBOutline {
 				return;
 
 			Font font = Minecraft.getInstance().font;
-			ms.translate(17.5f, -5f, 7f);
+			ms.translate(17.5, -5, 7);
 
 			boolean isFilter = stack.getItem() instanceof FilterItem;
 			boolean isEmpty = stack.isEmpty();
@@ -152,17 +145,17 @@ public class ValueBox extends ChasingAABBOutline {
 			float scale = 1.5f;
 			ms.translate(-font.width(count), 0, 0);
 
-			if (isFilter)
-				ms.translate(-5, 8, 7.25f);
-			else if (isEmpty) {
-				ms.translate(-15, -1f, -2.75f);
+			if (isFilter) {
+				ms.translate(-5, 8, 0);
+			} else if (isEmpty) {
+				ms.translate(-15, -1, -2.75);
 				scale = 1.65f;
-			} else
+			} else {
 				ms.translate(-7, 10, blockItem ? 10 + 1 / 4f : 0);
+			}
 
-			if (count.getString()
-				.equals("*"))
-				ms.translate(-1, 3f, 0);
+			if (count.getString().equals("*"))
+				ms.translate(-1, 3, 0);
 
 			ms.scale(scale, scale, scale);
 			drawString8x(ms, buffer, count, 0, 0, isFilter ? 0xFFFFFF : 0xEDEDED);

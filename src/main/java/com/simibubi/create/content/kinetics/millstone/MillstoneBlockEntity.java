@@ -26,6 +26,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -152,7 +153,7 @@ public class MillstoneBlockEntity extends KineticBlockEntity {
 		ItemStack stackInSlot = inputInv.getStackInSlot(0);
 		stackInSlot.shrink(1);
 		inputInv.setStackInSlot(0, stackInSlot);
-		lastRecipe.rollResults()
+		lastRecipe.rollResults(level.random)
 			.forEach(stack -> ItemHandlerHelper.insertItemStacked(outputInv, stack, false));
 		award(AllAdvancements.MILLSTONE);
 

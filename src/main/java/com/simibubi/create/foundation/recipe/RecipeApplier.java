@@ -8,7 +8,6 @@ import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.item.ItemHelper;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -44,13 +43,13 @@ public class RecipeApplier {
 			for (int i = 0; i < stackIn.getCount(); i++) {
 				List<ProcessingOutput> outputs =
 					pr instanceof ManualApplicationRecipe mar ? mar.getRollableResults() : pr.getRollableResults();
-				for (ItemStack stack : pr.rollResults(outputs)) {
+				for (ItemStack stack : pr.rollResults(outputs, level.random)) {
 					for (ItemStack previouslyRolled : stacks) {
 						if (stack.isEmpty())
 							continue;
 						if (!ItemStack.isSameItemSameComponents(stack, previouslyRolled))
 							continue;
-						int amount = Math.min(previouslyRolled.getOrDefault(DataComponents.MAX_STACK_SIZE, 64) - previouslyRolled.getCount(),
+						int amount = Math.min(previouslyRolled.getMaxStackSize() - previouslyRolled.getCount(),
 							stack.getCount());
 						previouslyRolled.grow(amount);
 						stack.shrink(amount);

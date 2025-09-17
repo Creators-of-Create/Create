@@ -87,7 +87,8 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 
 		if (AllBlocks.CLIPBOARD.isIn(stack)) {
 			List<ClipboardEntry> entries = ClipboardEntry.getLastViewedEntries(stack);
-			component = entries.getFirst().text;
+			if (!entries.isEmpty())
+				component = entries.getFirst().text;
 		}
 
 		if (level.isClientSide)

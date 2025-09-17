@@ -8,11 +8,10 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
@@ -603,10 +602,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		CompoundTag compound = new CompoundTag();
 		writeAdditional(compound, registryFriendlyByteBuf.registryAccess(), true);
 
-		if (!CatnipServices.PLATFORM.getLoader().isNeoForge() && ContraptionSyncLimiting.isTooLargeForSync(compound))
-			compound = null; // don't sync contraption data
-
-		registryFriendlyByteBuf.writeNbt(compound);
+		ContraptionSyncLimiting.writeSafe(compound, registryFriendlyByteBuf);
 	}
 
 	@Override

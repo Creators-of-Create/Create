@@ -15,6 +15,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -74,9 +75,9 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 		ManualApplicationRecipe recipe = (ManualApplicationRecipe) foundRecipe.get().value();
 		level.destroyBlock(pos, false);
 
-		BlockState transformedBlock = recipe.transformBlock(blockState);
-		level.setBlock(pos, transformedBlock, 3);
-		recipe.rollResults()
+		BlockState transformedBlock = recipe.transformBlock(blockState, level.random);
+		level.setBlock(pos, transformedBlock, Block.UPDATE_ALL);
+		recipe.rollResults(level.random)
 			.forEach(stack -> Block.popResource(level, pos, stack));
 
 		boolean creative = event.getEntity() != null && event.getEntity()
@@ -118,7 +119,8 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 
 	public static RecipeHolder<DeployerApplicationRecipe> asDeploying(RecipeHolder<?> recipe) {
 		ManualApplicationRecipe mar = (ManualApplicationRecipe) recipe.value();
-		ResourceLocation id = recipe.id().withSuffix("_using_deployer");
+		ResourceLocation id = AllRecipeTypes.CAN_BE_AUTOMATED.test(recipe) ?
+			recipe.id().withSuffix("_using_deployer") : recipe.id();
 		ItemApplicationRecipe.Builder<DeployerApplicationRecipe> builder =
 			new ItemApplicationRecipe.Builder<>(DeployerApplicationRecipe::new, id)
 					.require(mar.ingredients.get(0))
@@ -136,9 +138,9 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 				.asItem()));
 	}
 
-	public BlockState transformBlock(BlockState in) {
+	public BlockState transformBlock(BlockState in, RandomSource randomSource) {
 		ProcessingOutput mainOutput = results.get(0);
-		ItemStack output = mainOutput.rollOutput();
+		ItemStack output = mainOutput.rollOutput(randomSource);
 		if (output.getItem() instanceof BlockItem bi)
 			return BlockHelper.copyProperties(in, bi.getBlock()
 				.defaultBlockState());
@@ -146,8 +148,8 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 	}
 
 	@Override
-	public List<ItemStack> rollResults() {
-		return rollResults(getRollableResultsExceptBlock());
+	public List<ItemStack> rollResults(RandomSource randomSource) {
+		return rollResults(getRollableResultsExceptBlock(), randomSource);
 	}
 
 	public List<ProcessingOutput> getRollableResultsExceptBlock() {

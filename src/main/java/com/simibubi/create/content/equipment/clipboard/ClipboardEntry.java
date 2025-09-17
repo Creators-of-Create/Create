@@ -119,7 +119,7 @@ public class ClipboardEntry {
 	public int hashCode() {
 		int result = Boolean.hashCode(checked);
 		result = 31 * result + text.hashCode();
-		result = 31 * result + icon.hashCode();
+		result = 31 * result + ItemStack.hashItemAndComponents(icon);
 		return result;
 	}
 }

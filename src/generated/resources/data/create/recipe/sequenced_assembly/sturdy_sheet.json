@@ -3,7 +3,6 @@
   "ingredient": {
     "tag": "c:dusts/obsidian"
   },
-  "loops": 1,
   "results": [
     {
       "id": "create:sturdy_sheet"

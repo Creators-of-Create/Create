@@ -3,7 +3,6 @@
   "ingredient": {
     "tag": "create:sleepers"
   },
-  "loops": 1,
   "results": [
     {
       "id": "create:track"

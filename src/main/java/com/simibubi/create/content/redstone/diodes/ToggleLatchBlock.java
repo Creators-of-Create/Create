@@ -1,5 +1,7 @@
 package com.simibubi.create.content.redstone.diodes;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllItems;
 
@@ -10,7 +12,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,8 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-
-import org.jetbrains.annotations.NotNull;
 
 public class ToggleLatchBlock extends AbstractDiodeBlock {
 
@@ -79,14 +78,14 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 		super.tick(state, worldIn, pos, random);
 		BlockState newState = worldIn.getBlockState(pos);
 		if (newState.getValue(POWERED) && !poweredPreviously)
-			worldIn.setBlock(pos, newState.cycle(POWERING), 2);
+			worldIn.setBlock(pos, newState.cycle(POWERING), Block.UPDATE_CLIENTS);
 	}
 
 	protected ItemInteractionResult activated(Level worldIn, BlockPos pos, BlockState state) {
 		if (!worldIn.isClientSide) {
 			float f = !state.getValue(POWERING) ? 0.6F : 0.5F;
 			worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
-			worldIn.setBlock(pos, state.cycle(POWERING), 2);
+			worldIn.setBlock(pos, state.cycle(POWERING), Block.UPDATE_CLIENTS);
 		}
 		return ItemInteractionResult.SUCCESS;
 	}

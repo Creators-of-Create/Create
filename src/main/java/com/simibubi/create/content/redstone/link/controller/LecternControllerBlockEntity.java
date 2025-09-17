@@ -165,9 +165,9 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 	}
 
 	public void dropController(BlockState state) {
-		Entity playerEntity = ((ServerLevel) level).getEntity(user);
-		if (playerEntity instanceof Player)
-			stopUsing((Player) playerEntity);
+		Entity entity = ((ServerLevel) level).getEntity(user);
+		if (entity instanceof Player player)
+			stopUsing(player);
 
 		Direction dir = state.getValue(LecternControllerBlock.FACING);
 		double x = worldPosition.getX() + 0.5 + 0.25 * dir.getStepX();

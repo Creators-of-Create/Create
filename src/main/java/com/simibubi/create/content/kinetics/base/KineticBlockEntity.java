@@ -6,7 +6,7 @@ import static net.minecraft.ChatFormatting.GRAY;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
@@ -384,7 +384,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 		if (currentState == state)
 			return;
 		if (blockEntity == null || !isKinetic) {
-			world.setBlock(pos, state, 3);
+			world.setBlock(pos, state, Block.UPDATE_ALL);
 			return;
 		}
 
@@ -402,7 +402,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 			generatingBlockEntity.reActivateSource = true;
 		}
 
-		world.setBlock(pos, state, 3);
+		world.setBlock(pos, state, Block.UPDATE_ALL);
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package com.simibubi.create.content.equipment.wrench;
 
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
@@ -40,7 +40,7 @@ public class WrenchItem extends Item {
 		consumer.accept(SimpleCustomRenderer.create(this, new WrenchItemRenderer()));
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		Player player = context.getPlayer();

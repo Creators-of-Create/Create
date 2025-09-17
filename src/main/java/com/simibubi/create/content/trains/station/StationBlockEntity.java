@@ -12,15 +12,15 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
-import com.simibubi.create.compat.Mods;
 import com.simibubi.create.api.contraption.transformable.TransformableBlockEntity;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.AssemblyException;
@@ -33,11 +33,11 @@ import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlockEnt
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity;
+import com.simibubi.create.content.trains.entity.AddTrainPacket;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
 import com.simibubi.create.content.trains.entity.Train;
-import com.simibubi.create.content.trains.entity.AddTrainPacket;
 import com.simibubi.create.content.trains.entity.TravellingPoint;
 import com.simibubi.create.content.trains.graph.DiscoveredPath;
 import com.simibubi.create.content.trains.graph.EdgePointType;
@@ -56,19 +56,17 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-
-import dan200.computercraft.api.peripheral.PeripheralCapability;
-import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.data.WorldAttached;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.data.WorldAttached;
+import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -87,6 +85,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -333,7 +332,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 					if (newBlock.getBlock() == bogey)
 						player.displayClientMessage(CreateLang.translateDirect("bogey.style.no_other_sizes")
 							.withStyle(ChatFormatting.RED), true);
-					level.setBlock(bogeyPos, newBlock, 3);
+					level.setBlock(bogeyPos, newBlock, Block.UPDATE_ALL);
 					BlockEntity newEntity = level.getBlockEntity(bogeyPos);
 					if (!(newEntity instanceof AbstractBogeyBlockEntity newBE))
 						continue;
@@ -369,7 +368,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 			bogeyAnchor = bogey.getVersion(bogeyAnchor, upsideDown);
 		}
 		bogeyAnchor = ProperWaterloggedBlock.withWater(level, bogeyAnchor, pos);
-		level.setBlock(targetPos, bogeyAnchor, 3);
+		level.setBlock(targetPos, bogeyAnchor, Block.UPDATE_ALL);
 		player.displayClientMessage(CreateLang.translateDirect("train_assembly.bogey_created"), true);
 		SoundType soundtype = bogeyAnchor.getBlock()
 			.getSoundType(state, level, pos, player);
@@ -400,7 +399,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 			return true;
 
 		BlockState newState = getBlockState().setValue(StationBlock.ASSEMBLING, true);
-		level.setBlock(getBlockPos(), newState, 3);
+		level.setBlock(getBlockPos(), newState, Block.UPDATE_ALL);
 		refreshBlockState();
 		refreshAssemblyInfo();
 
@@ -426,7 +425,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 
 		cancelAssembly();
 		BlockState newState = getBlockState().setValue(StationBlock.ASSEMBLING, false);
-		level.setBlock(getBlockPos(), newState, 3);
+		level.setBlock(getBlockPos(), newState, Block.UPDATE_ALL);
 		refreshBlockState();
 
 		return updateStationState(station -> station.assembling = false);

@@ -8,8 +8,9 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
@@ -58,6 +59,7 @@ import com.simibubi.create.content.kinetics.saw.CuttingRecipe;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelSetItemScreen;
 import com.simibubi.create.content.logistics.filter.AbstractFilterScreen;
 import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterScreen;
+import com.simibubi.create.content.logistics.stockTicker.StockKeeperRequestScreen;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.content.redstone.link.controller.LinkedControllerScreen;
@@ -324,7 +326,7 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public ResourceLocation getPluginUid() {
 		return ID;
 	}
@@ -388,7 +390,7 @@ public class CreateJEI implements IModPlugin {
 				potionContents.forEachEffect(mei -> effectSet.add(mei.getEffect()));
 				if (!visitedEffects.add(effectSet))
 					continue;
-			}
+}
 
 			potionFluids.add(PotionFluid.of(1000, potionContents, PotionFluid.BottleType.REGULAR));
 		}
@@ -406,6 +408,8 @@ public class CreateJEI implements IModPlugin {
 		registration.addGhostIngredientHandler(ScheduleScreen.class, new GhostIngredientHandler());
 		registration.addGhostIngredientHandler(RedstoneRequesterScreen.class, new GhostIngredientHandler());
 		registration.addGhostIngredientHandler(FactoryPanelSetItemScreen.class, new GhostIngredientHandler());
+
+		registration.addGuiContainerHandler(StockKeeperRequestScreen.class, new StockKeeperGuiContainerHandler(ingredientManager));
 	}
 
 	private class CategoryBuilder<T extends Recipe<?>> extends CreateRecipeCategory.Builder<T> {

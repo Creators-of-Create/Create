@@ -10,6 +10,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
@@ -36,7 +37,7 @@ public class WaterEffectHandler implements OpenPipeEffectHandler {
 		} else if (AbstractCandleBlock.isLit(state)) {
 			AbstractCandleBlock.extinguish(null, state, level, pos);
 		} else if (CampfireBlock.isLitCampfire(state)) {
-			level.levelEvent(null, 1009, pos, 0);
+			level.levelEvent(LevelEvent.SOUND_EXTINGUISH_FIRE, pos, 0);
 			CampfireBlock.dowse(null, level, pos, state);
 			level.setBlockAndUpdate(pos, state.setValue(CampfireBlock.LIT, false));
 		}

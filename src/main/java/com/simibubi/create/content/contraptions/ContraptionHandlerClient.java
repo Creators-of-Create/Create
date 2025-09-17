@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 

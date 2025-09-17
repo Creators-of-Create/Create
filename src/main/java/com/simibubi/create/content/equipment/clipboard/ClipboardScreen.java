@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
@@ -364,7 +364,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	private void send() {
 		ClipboardEntry.saveAll(pages, item);
 		ClipboardOverrides.switchTo(ClipboardType.WRITTEN, item);
-		
+
 		if (pages.isEmpty()) {
 			item.remove(AllDataComponents.CLIPBOARD_PAGES);
 			item.remove(AllDataComponents.CLIPBOARD_PREVIOUSLY_OPENED_PAGE);
@@ -372,7 +372,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			item.remove(AllDataComponents.CLIPBOARD_TYPE);
 			item.remove(AllDataComponents.CLIPBOARD_COPIED_VALUES);
 		}
-		
+
 		CatnipServices.NETWORK.sendToServer(new ClipboardEditPacket(targetSlot, item.getComponentsPatch(), targetedBlock));
 	}
 

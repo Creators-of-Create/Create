@@ -28,14 +28,6 @@ public class CreateContraptionTypeTagsProvider extends TagsProvider<ContraptionT
 			.add(AllContraptionTypes.CARRIAGE.key());
 		tag(AllContraptionTypeTags.REQUIRES_VEHICLE_FOR_RENDER.tag)
 			.add(AllContraptionTypes.MOUNTED.key());
-
-		// VALIDATE
-
-		for (AllContraptionTypeTags tag : AllContraptionTypeTags.values()) {
-			if (tag.alwaysDatagen) {
-				getOrCreateRawBuilder(tag.tag);
-			}
-		}
 	}
 
 	@Override

@@ -30,14 +30,6 @@ public class CreateMountedItemStorageTypeTagsProvider extends IntrinsicHolderTag
 		tag(AllMountedItemStorageTypeTags.FUEL_BLACKLIST.tag).add(
 			AllMountedStorageTypes.VAULT.get()
 		);
-
-		// VALIDATE
-
-		for (AllMountedItemStorageTypeTags tag : AllMountedItemStorageTypeTags.values()) {
-			if (tag.alwaysDatagen) {
-				getOrCreateRawBuilder(tag.tag);
-			}
-		}
 	}
 
 	@Override

@@ -18,11 +18,11 @@ import com.simibubi.create.foundation.blockEntity.IMergeableBE;
 import com.simibubi.create.foundation.blockEntity.RemoveBlockEntityPacket;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import net.createmod.catnip.platform.CatnipServices;
-import com.simibubi.create.foundation.utility.DistExecutor;
+
 import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
 import net.createmod.catnip.data.Pair;
 import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.HolderLookup;
@@ -37,6 +37,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -105,7 +106,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements TransformableB
 				for (Vec3 v : trackBlock.getTrackAxes(level, key, blockState)) {
 					Vec3 bcEndAxis = bc.axes.getSecond();
 					if (v.distanceTo(bcEndAxis) < 1 / 1024f || v.distanceTo(bcEndAxis.scale(-1)) < 1 / 1024f)
-						level.setBlock(key, blockState.setValue(TrackBlock.HAS_BE, true), 3);
+						level.setBlock(key, blockState.setValue(TrackBlock.HAS_BE, true), Block.UPDATE_ALL);
 				}
 
 			BlockEntity blockEntity = level.getBlockEntity(key);
@@ -393,7 +394,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements TransformableB
 
 			if (!present && stateAtPos.canBeReplaced())
 				level.setBlock(targetPos,
-					ProperWaterloggedBlock.withWater(level, AllBlocks.FAKE_TRACK.getDefaultState(), targetPos), 3);
+					ProperWaterloggedBlock.withWater(level, AllBlocks.FAKE_TRACK.getDefaultState(), targetPos), Block.UPDATE_ALL);
 			FakeTrackBlock.keepAlive(level, targetPos);
 		}
 	}

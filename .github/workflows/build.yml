@@ -6,3 +6,4 @@ jobs:
     uses: ithundxr/workflows/.github/workflows/java-build.yml@main
     with:
       java-version: 21
+      run-gametests: true

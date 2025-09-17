@@ -1,4 +1,5 @@
 import dev.ithundxr.silk.ChangelogText
+import org.slf4j.event.Level
 
 plugins {
     id("idea")
@@ -6,7 +7,7 @@ plugins {
     id("maven-publish")
     id("net.kyori.blossom") version "2.1.0" // https://github.com/KyoriPowered/blossom
     id("dev.ithundxr.silk") version "0.11.15" // https://github.com/ithundxr/silk
-    id("net.neoforged.moddev") version "2.0.105" // https://projects.neoforged.net/neoforged/ModDevGradle
+    id("net.neoforged.moddev") version "2.0.107" // https://projects.neoforged.net/neoforged/ModDevGradle
     id("me.modmuss50.mod-publish-plugin") version "0.8.4" // https://github.com/modmuss50/mod-publish-plugin
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.8" // https://github.com/JetBrains/gradle-idea-ext-plugin
 }
@@ -15,7 +16,7 @@ apply(from: "./gradle/java.gradle")
 apply(from: "gradle/property_loader.gradle")
 
 boolean dev = System.getenv("RELEASE") == null || System.getenv("RELEASE") == "false"
-ext.buildNumber = System.getenv("BUILD_NUMBER")
+String buildNumber = System.getenv("BUILD_NUMBER")
 String gitHash = calculateGitHash() + (hasUnstaged() ? "-modified" : "")
 
 base {
@@ -44,13 +45,15 @@ idea {
 }
 
 neoForge {
-    version = project.neo_version
+    version = neo_version
 
-    accessTransformers = project.files("src/main/resources/META-INF/accesstransformer.cfg")
+    accessTransformers = files("src/main/resources/META-INF/accesstransformer.cfg")
 
-    parchment {
-        minecraftVersion = project.parchment_minecraft_version
-        mappingsVersion = project.parchment_version
+    if (parchment_version != "none") {
+        parchment {
+            minecraftVersion = parchment_minecraft_version == "same" ? minecraft_version : parchment_minecraft_version
+            mappingsVersion = parchment_version
+        }
     }
 
     mods {
@@ -70,21 +73,21 @@ neoForge {
     runs {
         configureEach {
             systemProperty("forge.logging.markers", "REGISTRIES")
-            jvmArguments = ["-XX:+IgnoreUnrecognizedVMOptions", "-XX:+AllowEnhancedClassRedefinition"]
-            //jvmArgs("-XX:-OmitStackTraceInFastThrow") // uncomment when you get exceptions with null messages etc
-            //jvmArgs("-XX:+UnlockCommercialFeatures") // uncomment for profiling
+            jvmArgument("-XX:+IgnoreUnrecognizedVMOptions")
+            jvmArgument("-XX:+AllowEnhancedClassRedefinition")
+            //jvmArgument("-XX:-OmitStackTraceInFastThrow") // uncomment when you get exceptions with null messages etc
+            //jvmArgument("-XX:+UnlockCommercialFeatures") // uncomment for profiling
 
             systemProperty("mixin.debug.verbose", "true")
             systemProperty("mixin.debug.export", "true")
 
-            logLevel = org.slf4j.event.Level.DEBUG
+            systemProperty("neoforge.enabledGameTestNamespaces", mod_id as String)
+
+            logLevel = Level.DEBUG
         }
 
         client {
             client()
-
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            systemProperty("neoforge.enabledGameTestNamespaces", project.mod_id)
         }
 
         server {
@@ -93,18 +96,21 @@ neoForge {
             gameDirectory = project.file("run/server")
 
             programArgument("--nogui")
-            systemProperty("neoforge.enabledGameTestNamespaces", project.mod_id)
         }
 
         data {
             data()
 
-            programArguments.addAll("--mod", project.mod_id, "--all", "--output", file("src/generated/resources/").getAbsolutePath(), "--existing", file("src/main/resources/").getAbsolutePath())
+            programArguments.addAll(
+                    "--mod", mod_id as String,
+                "--all",
+                "--output", file("src/generated/resources/").getAbsolutePath(),
+                "--existing", file("src/main/resources/").getAbsolutePath()
+            )
         }
 
         gameTestServer {
             type = "gameTestServer"
-            systemProperty("neoforge.enabledGameTestNamespaces", project.mod_id)
         }
     }
 }
@@ -124,7 +130,8 @@ repositories {
     maven { url = "https://api.modrinth.com/maven" }
     maven { url = "https://maven.ftb.dev/releases" } // FTB Mods
     maven { url = "https://maven.architectury.dev" } // Arch API
-    maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven" } // NeoForge config api port, needed by ponder
+    maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven" }
+    // NeoForge config api port, needed by ponder
     maven {
         url = "https://jm.gserv.me/repository/maven-public" // JourneyMap
         content {
@@ -135,38 +142,37 @@ repositories {
 }
 
 dependencies {
-    jarJar(implementation("com.tterrag.registrate:Registrate:${registrate_version}"))
+    jarJar(implementation("com.tterrag.registrate:Registrate:$registrate_version"))
 
-    compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${flywheel_minecraft_version}:${flywheel_version}")
-    runtimeOnly(jarJar("dev.engine-room.flywheel:flywheel-neoforge-${flywheel_minecraft_version}:${flywheel_version}") {
+    compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-$minecraft_version:$flywheel_version")
+    runtimeOnly(jarJar("dev.engine-room.flywheel:flywheel-neoforge-$minecraft_version:$flywheel_version") {
         version {
             strictly "[1.0,2.0)"
             prefer flywheel_version
         }
     })
-    runtimeOnly("dev.engine-room.vanillin:vanillin-neoforge-${flywheel_minecraft_version}:${vanillin_version}")
+    runtimeOnly("dev.engine-room.vanillin:vanillin-neoforge-$minecraft_version:$vanillin_version")
 
     if (ponderInWorkspace) {
         jarJar(implementation(project(":ponder:Common")))
         jarJar(implementation(project(":ponder:NeoForge")))
     } else {
-        jarJar(implementation("net.createmod.ponder:Ponder-NeoForge-${minecraft_version}:${ponder_version}"))
+        jarJar(implementation("net.createmod.ponder:Ponder-NeoForge-$minecraft_version:$ponder_version"))
     }
 
-    //compileOnly("mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}")
-    //compileOnly("mezz.jei:jei-${jei_minecraft_version}-neoforge-api:${jei_version}")
-    implementation("mezz.jei:jei-${jei_minecraft_version}-neoforge:${jei_version}")
+    //compileOnly("mezz.jei:jei-minecraft_version-common-api:$jei_version")
+    //compileOnly("mezz.jei:jei-minecraft_version-neoforge-api:$jei_version")
+    implementation("mezz.jei:jei-$minecraft_version-neoforge:$jei_version")
 
-    compileOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}:api")
-    runtimeOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}")
+    compileOnly("top.theillusivec4.curios:curios-neoforge:$curios_version+$minecraft_version:api")
+    runtimeOnly("top.theillusivec4.curios:curios-neoforge:$curios_version+$minecraft_version")
 
-    compileOnly("maven.modrinth:sodium:mc${minecraft_version}-${sodium_version}-neoforge")
+    compileOnly("maven.modrinth:sodium:mc$minecraft_version-$sodium_version-neoforge")
 
     if (cc_tweaked_enable.toBoolean()) {
-        compileOnly("cc.tweaked:cc-tweaked-${cc_tweaked_minecraft_version}-core-api:${cc_tweaked_version}")
-        compileOnly("cc.tweaked:cc-tweaked-${cc_tweaked_minecraft_version}-forge-api:${cc_tweaked_version}")
-        // TODO - Uncomment when cc tweaked supports the api refactors
-        //runtimeOnly("cc.tweaked:cc-tweaked-${cc_tweaked_minecraft_version}-forge:${cc_tweaked_version}")
+        compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cc_tweaked_version")
+        compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cc_tweaked_version")
+        runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cc_tweaked_version")
     }
 
     runtimeOnly("dev.architectury:architectury-neoforge:13.0.8")
@@ -192,6 +198,7 @@ sourceSets.main {
     resources {
         srcDir("src/generated/resources")
         exclude(".cache/")
+        exclude("data/create/.wiki")
     }
 
     blossom.javaSources {
@@ -200,24 +207,11 @@ sourceSets.main {
     }
 }
 
-processResources {
-    def buildProps = project.properties.clone()
-
-    // Replaces FML's magic file.jarVersion string with the correct version at build time.
-    buildProps.put("file", [jarVersion: project.version])
-
-    filesMatching(["META-INF/mods.toml", "pack.mcmeta"]) {
-        expand(buildProps)
-    }
-}
-
-compileJava {
-    options.compilerArgs = ["-Xdiags:verbose"]
-}
-
 jar {
+    String name = base.archivesName.get()
+
     from("LICENSE") {
-        rename { "${it}_${archivesBaseName}" }
+        rename { "${it}_$name" }
     }
 
     manifest.attributes([
@@ -226,7 +220,7 @@ jar {
     ])
 }
 
-tasks.named("sourcesJar") {
+tasks.named("sourcesJar", Jar) {
     manifest.attributes([
         "Git-Hash": gitHash
     ])
@@ -243,20 +237,21 @@ final slimJar = tasks.register("slimJar", Jar) {
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
     var replaceProperties = [
-        mod_version            : mod_version,
-        mod_id                 : mod_id,
-        mod_name               : mod_name,
-        mod_author             : mod_author,
-        mod_description        : mod_description,
-        mod_license            : mod_license,
-        minecraft_version_range: minecraft_version_range,
-        neo_version_range      : neo_version_range,
-        flywheel_version_range : flywheel_version_range,
+        "mod_version"           : mod_version,
+        "mod_id"                : mod_id,
+        "mod_name"              : mod_name,
+        "mod_author"            : mod_author,
+        "mod_description"       : mod_description,
+        "mod_license"           : mod_license,
+        "neo_version"           : neo_version,
+        "minecraft_version"     : minecraft_version,
+        "ponder_version"        : ponder_version,
+        "flywheel_version_range": flywheel_version_range,
     ]
-    inputs.properties replaceProperties
-    expand replaceProperties
-    from "src/main/templates"
-    into "build/generated/sources/modMetadata"
+    inputs.properties(replaceProperties)
+    expand(replaceProperties)
+    from("src/main/templates")
+    into("build/generated/sources/modMetadata")
 }
 
 // Include the output of "generateModMetadata" as an input directory for the build
@@ -267,9 +262,9 @@ neoForge.ideSyncTask(generateModMetadata)
 
 publishing {
     publications {
-        register('mavenJava', MavenPublication) {
-            artifactId base.archivesName.get()
-            from components.java
+        register("mavenJava", MavenPublication) {
+            artifactId(base.archivesName.get())
+            from(components.java)
 
             artifact(slimJar) {
                 classifier = "slim"
@@ -277,19 +272,23 @@ publishing {
         }
     }
     repositories {
-        if (project.hasProperty("mavenUsername") && project.hasProperty("mavenPassword") && project.hasProperty("mavenURL")) {
+        String mavenUsername = providers.gradleProperty("mavenUsername").getOrNull()
+        String mavenPassword = providers.gradleProperty("mavenPassword").getOrNull()
+        String mavenURL = providers.gradleProperty("mavenURL").getOrNull()
+        if (mavenUsername != null && mavenPassword != null && mavenURL != null) {
             project.logger.lifecycle("Adding maven from secrets")
 
             maven {
                 credentials {
-                    username = project.property("mavenUsername") as String
-                    password = project.property("mavenPassword") as String
+                    username = mavenUsername
+                    password = mavenPassword
                 }
-                url = URI.create(project.property("mavenURL") as String)
+                url = URI.create(mavenURL)
             }
         }
 
-        if (project.hasProperty("mavendir")) {
+        String mavendir = providers.gradleProperty("mavendir").getOrNull()
+        if (mavendir != null) {
             maven { url = mavendir }
         }
     }
@@ -329,7 +328,7 @@ publishMods {
 
 String calculateGitHash() {
     try {
-        def output = providers.exec {
+        ExecOutput output = providers.exec {
             commandLine("git", "rev-parse", "HEAD")
         }
         return output.standardOutput.asText.get().trim()
@@ -340,7 +339,7 @@ String calculateGitHash() {
 
 boolean hasUnstaged() {
     try {
-        def output = providers.exec {
+        ExecOutput output = providers.exec {
             commandLine("git", "status", "--porcelain")
         }
         String result = output.standardOutput.asText.get().replace("/M gradlew(\\.bat)?/", "").trim()

@@ -2,8 +2,8 @@ pluginManagement {
     repositories {
         mavenLocal()
         gradlePluginPortal()
-        maven { url = 'https://maven.neoforged.net/releases' }
+        maven { url = "https://maven.neoforged.net/releases" }
     }
 }
 
-rootProject.name = 'Create'
+rootProject.name = "Create"

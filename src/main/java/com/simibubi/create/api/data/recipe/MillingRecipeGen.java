@@ -2,6 +2,8 @@ package com.simibubi.create.api.data.recipe;
 
 import java.util.concurrent.CompletableFuture;
 
+import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
+
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.kinetics.millstone.MillingRecipe;
@@ -23,6 +25,11 @@ import net.neoforged.neoforge.common.conditions.TagEmptyCondition;
  */
 public abstract class MillingRecipeGen extends StandardProcessingRecipeGen<MillingRecipe> {
 
+	/**
+	 * @deprecated poor API. Requires an ItemEntry, and uses a string to create a tag. Unused by Create.
+	 */
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
+	@Deprecated(since = "6.0.7", forRemoval = true)
 	protected GeneratedRecipe metalOre(String name, ItemEntry<? extends Item> crushed, int duration) {
 		return create(name + "_ore", b -> b.duration(duration)
 			.withCondition(new NotCondition(new TagEmptyCondition("c", "ores/" + name)))

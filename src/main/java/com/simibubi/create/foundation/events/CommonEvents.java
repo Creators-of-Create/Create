@@ -57,6 +57,7 @@ import com.simibubi.create.foundation.map.StationMapDecorationRenderer;
 import com.simibubi.create.foundation.pack.DynamicPack;
 import com.simibubi.create.foundation.pack.DynamicPackSource;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
+import com.simibubi.create.foundation.recipe.trie.RecipeTrieFinder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.TickBasedCache;
 import com.simibubi.create.infrastructure.command.AllCommands;
@@ -174,6 +175,7 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void addReloadListeners(AddReloadListenerEvent event) {
 		event.addListener(RecipeFinder.LISTENER);
+		event.addListener(RecipeTrieFinder.LISTENER);
 		event.addListener(BeltHelper.LISTENER);
 	}
 
@@ -224,7 +226,7 @@ public class CommonEvents {
 		}
 	}
 
-	@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+	@EventBusSubscriber
 	public static class ModBusEvents {
 		@SubscribeEvent
 		public static void addPackFinders(AddPackFindersEvent event) {

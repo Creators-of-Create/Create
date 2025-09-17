@@ -30,6 +30,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -175,13 +176,13 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 		BlockState newState = state.getToolModifiedState(context, ItemAbilities.AXE_SCRAPE, false);
 		if (newState != null) {
 			AllSoundEvents.SANDING_LONG.play(level, player, pos, 1, 1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
-			level.levelEvent(player, 3005, pos, 0); // Spawn particles
+			level.levelEvent(player, LevelEvent.PARTICLES_SCRAPE, pos, 0); // Spawn particles
 		} else {
 			newState = state.getToolModifiedState(context, ItemAbilities.AXE_WAX_OFF, false);
 			if (newState != null) {
 				AllSoundEvents.SANDING_LONG.play(level, player, pos, 1,
 					1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
-				level.levelEvent(player, 3004, pos, 0); // Spawn particles
+				level.levelEvent(player, LevelEvent.PARTICLES_WAX_OFF, pos, 0); // Spawn particles
 			}
 		}
 

@@ -26,6 +26,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -106,7 +107,7 @@ public class ConnectedInputHandler {
 
 		connectControllers(world, crafter1, crafter2);
 
-		world.setBlock(crafter1.getBlockPos(), crafter1.getBlockState(), 3);
+		world.setBlock(crafter1.getBlockPos(), crafter1.getBlockState(), Block.UPDATE_ALL);
 
 		crafter1.setChanged();
 		crafter1.connectivityChanged();

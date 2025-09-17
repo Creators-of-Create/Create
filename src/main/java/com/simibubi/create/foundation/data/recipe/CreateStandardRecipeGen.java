@@ -1,14 +1,14 @@
 package com.simibubi.create.foundation.data.recipe;
 
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.OSMIUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.PLATINUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.QUICKSILVER;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.SILVER;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.ALUMINUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.LEAD;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.NICKEL;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.OSMIUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.PLATINUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.QUICKSILVER;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.SILVER;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.TIN;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.URANIUM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
@@ -255,10 +254,10 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 				.pattern("I")
 				.pattern("P")),
 
-		CAKE = create(() -> Items.CAKE).unlockedByTag(() -> AllTags.commonItemTag("doughs"))
+	CAKE = create(() -> Items.CAKE).unlockedByTag(() -> AllItemTags.DOUGHS.tag)
 			.viaShaped(b -> b.define('E', Tags.Items.EGGS)
 				.define('S', Items.SUGAR)
-				.define('P', AllTags.commonItemTag("doughs"))
+				.define('P', AllItemTags.DOUGHS.tag)
 				.define('M', () -> Items.MILK_BUCKET)
 				.pattern(" M ")
 				.pattern("SES")
@@ -1377,12 +1376,12 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 		CRUSHED_NICKEL = blastModdedCrushedMetal(AllItems.CRUSHED_NICKEL, NICKEL),
 
 		ZINC_ORE = create(AllItems.ZINC_INGOT::get).withSuffix("_from_ore")
-			.viaCookingTag(() -> AllTags.commonItemTag("ores/zinc"))
+			.viaCookingTag(() -> CommonMetal.ZINC.ores.items())
 			.rewardXP(1)
 			.inBlastFurnace(),
 
 		RAW_ZINC_ORE = create(AllItems.ZINC_INGOT::get).withSuffix("_from_raw_ore")
-			.viaCookingTag(() -> AllTags.commonItemTag("raw_materials/zinc"))
+			.viaCookingTag(() -> CommonMetal.ZINC.rawOres)
 			.rewardXP(.7f)
 			.inBlastFurnace(),
 
@@ -1437,8 +1436,8 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 			.inBlastFurnace();
 	}
 
-	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, CompatMetals metal) {
-		for (Mods mod : metal.getMods()) {
+	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, CommonMetal metal) {
+		for (Mods mod : metal.mods) {
 			String metalName = metal.getName(mod);
 			ResourceLocation ingot = mod.ingotOf(metalName);
 			String modId = mod.getId();

@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
@@ -21,7 +21,6 @@ import com.google.common.collect.Multimap;
 import com.mojang.serialization.Codec;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelSlot;
@@ -78,11 +77,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.Tags.Items;
 
 public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuProvider {
 
@@ -200,7 +201,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		if (isAddedToOtherGauge && existingState != blockEntity.getBlockState())
 			return;
 		if (!isAddedToOtherGauge)
-			level.setBlock(newPos.pos(), blockEntity.getBlockState(), 3);
+			level.setBlock(newPos.pos(), blockEntity.getBlockState(), Block.UPDATE_ALL);
 
 		for (BlockPos blockPos : targetedByLinks.keySet())
 			if (!blockPos.closerThan(newPos.pos(), 24))
@@ -557,7 +558,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		boolean isClientSide = player.level().isClientSide;
 
 		// Wrench cycles through arrow bending
-		if (targeting.size() + targetedByLinks.size() > 0 && AllItemTags.WRENCH.matches(player.getItemInHand(hand))) {
+		if (targeting.size() + targetedByLinks.size() > 0 && player.getItemInHand(hand).is(Items.TOOLS_WRENCH)) {
 			int sharedMode = -1;
 			boolean notifySelf = false;
 

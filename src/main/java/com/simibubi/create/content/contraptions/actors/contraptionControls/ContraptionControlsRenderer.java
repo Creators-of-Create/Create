@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.actors.contraptionControls;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
@@ -35,9 +33,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<ContraptionControlsBlockEntity> {
-
-	private static Random r = new Random();
-
 	public ContraptionControlsRenderer(Context context) {
 		super(context);
 	}
@@ -83,7 +78,7 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 		float playerDistance = (float) (ctx.position == null || cameraEntity == null ? 0
 			: ctx.position.distanceToSqr(cameraEntity.getEyePosition()));
 
-		float flicker = r.nextFloat();
+		float flicker = renderWorld.random.nextFloat();
 		Couple<Integer> couple = DyeHelper.getDyeColors(efs.targetYEqualsSelection ? DyeColor.WHITE : DyeColor.ORANGE);
 		int brightColor = couple.getFirst();
 		int darkColor = couple.getSecond();
@@ -150,5 +145,4 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 		ms.popPose();
 
 	}
-
 }

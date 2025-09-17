@@ -15,9 +15,7 @@ import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -29,7 +27,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.phys.BlockHitResult;
 
 public class RoseQuartzLampBlock extends Block implements IWrenchable {
 
@@ -71,18 +68,18 @@ public class RoseQuartzLampBlock extends Block implements IWrenchable {
 		if (isPowered == pLevel.hasNeighborSignal(pPos))
 			return;
 		if (isPowered) {
-			pLevel.setBlock(pPos, pState.cycle(POWERED), 2);
+			pLevel.setBlock(pPos, pState.cycle(POWERED), Block.UPDATE_CLIENTS);
 			return;
 		}
 
 		forEachInCluster(pLevel, pPos, (currentPos, currentState) -> {
-			pLevel.setBlock(currentPos, currentState.setValue(POWERING, false), 2);
+			pLevel.setBlock(currentPos, currentState.setValue(POWERING, false), Block.UPDATE_CLIENTS);
 			scheduleActivation(pLevel, currentPos);
 		});
 
 		pLevel.setBlock(pPos, pState.setValue(POWERED, true)
 			.setValue(POWERING, true)
-			.setValue(ACTIVATE, true), 2);
+			.setValue(ACTIVATE, true), Block.UPDATE_CLIENTS);
 		pLevel.updateNeighborsAt(pPos, this);
 		scheduleActivation(pLevel, pPos);
 	}
@@ -155,7 +152,7 @@ public class RoseQuartzLampBlock extends Block implements IWrenchable {
 
 		if (wasPowering || shouldBePowering) {
 			pLevel.setBlock(pPos, pState.setValue(ACTIVATE, false)
-				.setValue(POWERING, shouldBePowering), 2);
+				.setValue(POWERING, shouldBePowering), Block.UPDATE_CLIENTS);
 		}
 
 		pLevel.updateNeighborsAt(pPos, this);

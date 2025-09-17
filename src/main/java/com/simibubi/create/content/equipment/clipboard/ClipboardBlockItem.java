@@ -1,9 +1,8 @@
 package com.simibubi.create.content.equipment.clipboard;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllDataComponents;
-
 import com.simibubi.create.foundation.recipe.ItemCopyingRecipe.SupportsItemCopying;
 
 import net.createmod.catnip.gui.ScreenOpener;
@@ -21,6 +20,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -30,7 +30,7 @@ public class ClipboardBlockItem extends BlockItem implements SupportsItemCopying
 		super(pBlock, pProperties);
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		Player player = context.getPlayer();
@@ -77,7 +77,7 @@ public class ClipboardBlockItem extends BlockItem implements SupportsItemCopying
 	public void registerModelOverrides() {
 		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> ClipboardOverrides.registerModelOverridesClient(this));
 	}
-	
+
 	@Override
 	public DataComponentType<?> getComponentType() {
 		return AllDataComponents.CLIPBOARD_PAGES;

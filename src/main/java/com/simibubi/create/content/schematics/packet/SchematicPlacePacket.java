@@ -2,10 +2,10 @@ package com.simibubi.create.content.schematics.packet;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.schematics.SchematicPrinter;
-import net.createmod.catnip.net.base.ServerboundPacketPayload;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -32,9 +32,9 @@ public record SchematicPlacePacket(ItemStack stack) implements ServerboundPacket
 			return;
 		}
 
-		Level world = player.level();
+		Level level = player.level();
 		SchematicPrinter printer = new SchematicPrinter();
-		printer.loadSchematic(this.stack, world, !player.canUseGameMasterBlocks());
+		printer.loadSchematic(this.stack, level, !player.canUseGameMasterBlocks());
 		if (!printer.isLoaded() || printer.isErrored()) {
 			return;
 		}
@@ -42,7 +42,7 @@ public record SchematicPlacePacket(ItemStack stack) implements ServerboundPacket
 		boolean includeAir = AllConfigs.server().schematics.creativePrintIncludesAir.get();
 
 		while (printer.advanceCurrentPos()) {
-			if (!printer.shouldPlaceCurrent(world)) {
+			if (!printer.shouldPlaceCurrent(level)) {
 				continue;
 			}
 
@@ -52,10 +52,10 @@ public record SchematicPlacePacket(ItemStack stack) implements ServerboundPacket
 					return;
 				}
 
-				CompoundTag data = BlockHelper.prepareBlockEntityData(state, blockEntity);
-				BlockHelper.placeSchematicBlock(world, state, pos, null, data);
+				CompoundTag data = BlockHelper.prepareBlockEntityData(level, state, blockEntity);
+				BlockHelper.placeSchematicBlock(level, state, pos, null, data);
 			}, (pos, entity) -> {
-				world.addFreshEntity(entity);
+				level.addFreshEntity(entity);
 			});
 		}
 	}

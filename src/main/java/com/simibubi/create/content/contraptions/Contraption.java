@@ -17,17 +17,13 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
-import net.minecraft.core.HolderLookup;
-
-import net.minecraft.core.Vec3i;
-
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -61,6 +57,7 @@ import com.simibubi.create.content.contraptions.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlockEntity;
+import com.simibubi.create.content.contraptions.render.ContraptionRenderInfo;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import com.simibubi.create.content.kinetics.base.IRotate;
@@ -89,6 +86,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -108,6 +107,7 @@ import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -166,6 +166,8 @@ public abstract class Contraption {
 	public Map<BlockPos, ModelData> modelData;
 	public Map<BlockPos, BlockEntity> presentBlockEntities;
 	public List<BlockEntity> renderedBlockEntities;
+	// Must be atomic as this is accessed from both the render thread and flywheel executors.
+	private final AtomicReference<ContraptionRenderInfo> renderInfo = new AtomicReference<>();
 
 	protected ContraptionWorld world;
 	public boolean deferInvalidate;
@@ -1158,6 +1160,8 @@ public abstract class Contraption {
 			return;
 		disassembled = true;
 
+		boolean shouldDropBlocks = !AllConfigs.server().kinetics.noDropWhenContraptionReplaceBlocks.get();
+
 		translateMultiblockControllers(transform);
 
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
@@ -1183,8 +1187,10 @@ public abstract class Contraption {
 					.isEmpty())) {
 					if (targetPos.getY() == world.getMinBuildHeight())
 						targetPos = targetPos.above();
-					world.levelEvent(2001, targetPos, Block.getId(state));
-					Block.dropResources(state, world, targetPos, null);
+					world.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, targetPos, Block.getId(state));
+					if (shouldDropBlocks) {
+						Block.dropResources(state, world, targetPos, null);
+					}
 					continue;
 				}
 				if (state.getBlock() instanceof SimpleWaterloggedBlock
@@ -1193,7 +1199,7 @@ public abstract class Contraption {
 					state = state.setValue(BlockStateProperties.WATERLOGGED, FluidState.getType() == Fluids.WATER);
 				}
 
-				world.destroyBlock(targetPos, true);
+				world.destroyBlock(targetPos, shouldDropBlocks);
 
 				if (AllBlocks.SHAFT.has(state))
 					state = ShaftBlock.pickCorrectShaftType(state, world, targetPos);
@@ -1212,7 +1218,7 @@ public abstract class Contraption {
 				if (verticalRotation) {
 					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock
 						|| state.getBlock() instanceof DoorBlock)
-						world.destroyBlock(targetPos, true);
+						world.destroyBlock(targetPos, shouldDropBlocks);
 				}
 
 				BlockEntity blockEntity = world.getBlockEntity(targetPos);
@@ -1576,6 +1582,22 @@ public abstract class Contraption {
 				return true;
 		}
 		return false;
+	}
+
+	public ContraptionRenderInfo getRenderInfo() {
+		var out = renderInfo.getAcquire();
+		if (out == null) {
+			// Another thread may hit this block in the same moment.
+			// One thread will win and the ContraptionRenderInfo that
+			// it generated will become canonical. It's important that
+			// we only maintain one RenderInfo instance, specifically
+			// for the VirtualRenderWorld inside.
+			renderInfo.compareAndExchangeRelease(null, new ContraptionRenderInfo(this.entity.level(), this));
+
+			// Must get again to ensure we have the canonical instance.
+			out = renderInfo.getAcquire();
+		}
+		return out;
 	}
 
 	public record RenderedBlocks(Function<BlockPos, BlockState> lookup, Iterable<BlockPos> positions) {

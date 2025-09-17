@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.netty.buffer.ByteBuf;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -76,7 +75,7 @@ public class CurvedTrackDestroyPacket extends BlockEntityConfigurationPacket<Tra
 
 	@Override
 	protected int maxRange() {
-		return 64;
+		return AllConfigs.server().trains.maxTrackPlacementLength.get() + 16;
 	}
 
 	@Override

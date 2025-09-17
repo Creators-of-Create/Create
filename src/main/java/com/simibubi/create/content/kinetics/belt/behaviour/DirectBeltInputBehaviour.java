@@ -2,7 +2,7 @@ package com.simibubi.create.content.kinetics.belt.behaviour;
 
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.funnel.BeltFunnelBlock;
