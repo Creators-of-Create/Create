@@ -9,6 +9,11 @@
     "minecraft:splash_potion",
     "minecraft:lingering_potion",
     "minecraft:honey_bottle",
-    "minecraft:cake"
+    "minecraft:cake",
+    "minecraft:bowl",
+    "minecraft:mushroom_stew",
+    "minecraft:rabbit_stew",
+    "minecraft:beetroot_soup",
+    "minecraft:suspicious_stew"
   ]
 }

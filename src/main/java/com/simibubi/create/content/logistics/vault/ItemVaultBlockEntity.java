@@ -4,22 +4,30 @@ import java.util.List;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
+import com.simibubi.create.api.packager.InventoryIdentifier;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryWrapper;
+import com.simibubi.create.foundation.utility.SameSizeCombinedInvWrapper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -30,6 +38,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBlockEntityContainer.Inventory {
 
 	protected LazyOptional<IItemHandler> itemCapability;
+	protected InventoryIdentifier invId;
 
 	protected ItemStackHandler inventory;
 	protected BlockPos controller;
@@ -37,7 +46,6 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 	protected boolean updateConnectivity;
 	protected int radius;
 	protected int length;
-	protected Axis axis;
 
 	public ItemVaultBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -74,13 +82,84 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 			return;
 
 		level.blockEntityChanged(controllerBE.worldPosition);
-		
+
 		BlockPos pos = controllerBE.getBlockPos();
-		for (int y = 0; y < controllerBE.radius; y++) {
-			for (int z = 0; z < (controllerBE.axis == Axis.X ? controllerBE.radius : controllerBE.length); z++) {
-				for (int x = 0; x < (controllerBE.axis == Axis.Z ? controllerBE.radius : controllerBE.length); x++) {
-					level.updateNeighbourForOutputSignal(pos.offset(x, y, z), getBlockState().getBlock());
+
+		int radius = controllerBE.radius;
+		int length = controllerBE.length;
+
+		Axis axis = controllerBE.getMainConnectionAxis();
+
+		int zMax = (axis == Axis.X ? radius : length);
+		int xMax = (axis == Axis.Z ? radius : length);
+
+		// Mutable position we'll use for the blocks we poke updates at.
+		MutableBlockPos updatePos = new MutableBlockPos();
+		// Mutable position we'll set to be the vault block next to the update position.
+		MutableBlockPos provokingPos = new MutableBlockPos();
+
+		for (int y = 0; y < radius; y++) {
+			for (int z = 0; z < zMax; z++) {
+				for (int x = 0; x < xMax; x++) {
+					// Emulate the effect of this line, but only for blocks along the surface of the vault:
+					// level.updateNeighbourForOutputSignal(pos.offset(x, y, z), getBlockState().getBlock());
+					// That method pokes all 6 directions in order. We want to preserve the update order
+					// but skip the wasted work of checking other blocks that are part of this vault.
+
+					var sectionX = SectionPos.blockToSectionCoord(pos.getX() + x);
+					var sectionZ = SectionPos.blockToSectionCoord(pos.getZ() + z);
+					if (!level.hasChunk(sectionX, sectionZ)) {
+						continue;
+					}
+					provokingPos.setWithOffset(pos, x, y, z);
+
+					// Technically all this work is wasted for the inner blocks of a long 3x3 vault, but
+					// this is fast enough and relatively simple.
+					Block provokingBlock = level.getBlockState(provokingPos).getBlock();
+
+					// The 6 calls below should match the order of Direction.values().
+					if (y == 0) {
+						updateComaratorsInner(level, provokingBlock, provokingPos, updatePos, Direction.DOWN);
+					}
+					if (y == radius - 1) {
+						updateComaratorsInner(level, provokingBlock, provokingPos, updatePos, Direction.UP);
+					}
+					if (z == 0) {
+						updateComaratorsInner(level, provokingBlock, provokingPos, updatePos, Direction.NORTH);
+					}
+					if (z == zMax - 1) {
+						updateComaratorsInner(level, provokingBlock, provokingPos, updatePos, Direction.SOUTH);
+					}
+					if (x == 0) {
+						updateComaratorsInner(level, provokingBlock, provokingPos, updatePos, Direction.WEST);
+					}
+					if (x == xMax - 1) {
+						updateComaratorsInner(level, provokingBlock, provokingPos, updatePos, Direction.EAST);
+					}
 				}
+			}
+		}
+	}
+
+	/**
+	 * See {@link Level#updateNeighbourForOutputSignal(BlockPos, Block)}.
+	 */
+	private static void updateComaratorsInner(Level level, Block provokingBlock, BlockPos provokingPos, MutableBlockPos updatePos, Direction direction) {
+		updatePos.setWithOffset(provokingPos, direction);
+
+		var sectionX = SectionPos.blockToSectionCoord(updatePos.getX());
+		var sectionZ = SectionPos.blockToSectionCoord(updatePos.getZ());
+		if (!level.hasChunk(sectionX, sectionZ)) {
+			return;
+		}
+
+		BlockState blockstate = level.getBlockState(updatePos);
+		blockstate.onNeighborChange(level, updatePos, provokingPos);
+		if (blockstate.isRedstoneConductor(level, updatePos)) {
+			updatePos.move(direction);
+			blockstate = level.getBlockState(updatePos);
+			if (blockstate.getWeakChanges(level, updatePos)) {
+				level.neighborChanged(blockstate, updatePos, provokingBlock, provokingPos, false);
 			}
 		}
 	}
@@ -221,6 +300,12 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 		return inventory;
 	}
 
+	public InventoryIdentifier getInvId() {
+		// ensure capability is up to date first, which sets the ID
+		this.initCapability();
+		return this.invId;
+	}
+
 	public void applyInventoryToBlock(ItemStackHandler handler) {
 		for (int i = 0; i < inventory.getSlots(); i++)
 			inventory.setStackInSlot(i, i < handler.getSlots() ? handler.getStackInSlot(i) : ItemStack.EMPTY);
@@ -244,6 +329,7 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 				return;
 			controllerBE.initCapability();
 			itemCapability = controllerBE.itemCapability;
+			invId = controllerBE.invId;
 			return;
 		}
 
@@ -262,8 +348,15 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 			}
 		}
 
-		IItemHandler itemHandler = new VersionedInventoryWrapper(new CombinedInvWrapper(invs));
+		IItemHandler itemHandler = new VersionedInventoryWrapper(SameSizeCombinedInvWrapper.create(invs));
 		itemCapability = LazyOptional.of(() -> itemHandler);
+
+		// build an identifier encompassing all component vaults
+		BlockPos farCorner = alongZ
+			? worldPosition.offset(radius, radius, length)
+			: worldPosition.offset(length, radius, radius);
+		BoundingBox bounds = BoundingBox.fromCorners(this.worldPosition, farCorner);
+		this.invId = new InventoryIdentifier.Bounds(bounds);
 	}
 
 	public static int getMaxLength(int radius) {

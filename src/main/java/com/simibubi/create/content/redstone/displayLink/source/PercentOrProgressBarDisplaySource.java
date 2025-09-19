@@ -21,10 +21,9 @@ public abstract class PercentOrProgressBarDisplaySource extends NumericSingleLin
 		Float rawProgress = this.getProgress(context);
 		if (rawProgress == null)
 			return EMPTY_LINE;
-		// clamp just in case - #7371
-		float currentLevel = Mth.clamp(rawProgress, 0, 1);
+
 		if (!progressBarActive(context))
-			return formatNumeric(context, currentLevel);
+			return formatNumeric(context, rawProgress);
 
 		String label = context.sourceConfig()
 			.getString("Label");
@@ -37,19 +36,17 @@ public abstract class PercentOrProgressBarDisplaySource extends NumericSingleLin
 		if (context.getTargetBlockEntity() instanceof FlapDisplayBlockEntity)
 			length = sizeForWideChars(length);
 
+		// clamp just in case - #7371
+		float currentLevel = Mth.clamp(rawProgress, 0, 1);
 		int filledLength = (int) (currentLevel * length);
 
 		if (length < 1)
 			return EMPTY_LINE;
 
-		StringBuilder s = new StringBuilder();
 		int emptySpaces = length - filledLength;
-		for (int i = 0; i < filledLength; i++)
-			s.append("\u2588");
-		for (int i = 0; i < emptySpaces; i++)
-			s.append("\u2592");
-
-		return Component.literal(s.toString());
+		String s = "\u2588".repeat(Math.max(0, filledLength)) +
+			"\u2592".repeat(Math.max(0, emptySpaces));
+		return Component.literal(s);
 	}
 
 	protected MutableComponent formatNumeric(DisplayLinkContext context, Float currentLevel) {

@@ -62,11 +62,10 @@ public class ElevatorColumn {
 	}
 
 	public void floorReached(LevelAccessor level, String name) {
-		getContacts().stream()
-			.forEach(p -> {
-				if (level.getBlockEntity(p) instanceof ElevatorContactBlockEntity ecbe)
-					ecbe.updateDisplayedFloor(name);
-			});
+		getContacts().forEach(p -> {
+			if (level.getBlockEntity(p) instanceof ElevatorContactBlockEntity ecbe)
+				ecbe.updateDisplayedFloor(name);
+		});
 	}
 
 	public int namesListVersion;

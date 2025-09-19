@@ -52,13 +52,12 @@ public class ChainConveyorInteractionHandler {
 		}
 
 		Minecraft mc = Minecraft.getInstance();
-		ItemStack mainHandItem = mc.player.getMainHandItem();
-		boolean isWrench = AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem);
+		boolean isWrench = mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches);
 		boolean dismantling = isWrench && mc.player.isShiftKeyDown();
 		double range = mc.player.getAttribute(ForgeMod.BLOCK_REACH.get())
 			.getValue() + 1;
 
-		Vec3 from = RaycastHelper.getTraceOrigin(mc.player);
+		Vec3 from = mc.player.getEyePosition();
 		Vec3 to = RaycastHelper.getTraceTarget(mc.player, range, from);
 		HitResult hitResult = mc.hitResult;
 
@@ -114,9 +113,9 @@ public class ChainConveyorInteractionHandler {
 
 	private static boolean isActive() {
 		Minecraft mc = Minecraft.getInstance();
-		ItemStack mainHandItem = mc.player.getMainHandItem();
-		return AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem) || AllBlocks.PACKAGE_FROGPORT.isIn(mainHandItem)
-			|| PackageItem.isPackage(mainHandItem);
+		return mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches)
+			|| mc.player.isHolding(s->AllBlocks.PACKAGE_FROGPORT.isIn(s))
+			|| mc.player.isHolding(PackageItem::isPackage);
 	}
 
 	public static boolean onUse() {
@@ -125,8 +124,10 @@ public class ChainConveyorInteractionHandler {
 
 		Minecraft mc = Minecraft.getInstance();
 		ItemStack mainHandItem = mc.player.getMainHandItem();
+		ItemStack offHandItem  = mc.player.getOffhandItem();
+		if (mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches)) {
+			ItemStack usedItem = AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem) ? mainHandItem : offHandItem;
 
-		if (AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem)) {
 			if (!mc.player.isShiftKeyDown()) {
 				ChainConveyorRidingHandler.embark(selectedLift, selectedChainPosition, selectedConnection);
 				return true;
@@ -134,21 +135,23 @@ public class ChainConveyorInteractionHandler {
 
 			AllPackets.getChannel()
 				.sendToServer(new ChainConveyorConnectionPacket(selectedLift, selectedLift.offset(selectedConnection),
-					mainHandItem, false));
+					usedItem, false));
 			return true;
 		}
 
-		if (AllBlocks.PACKAGE_FROGPORT.isIn(mainHandItem)) {
+		if (mc.player.isHolding(s->AllBlocks.PACKAGE_FROGPORT.isIn(s))) {
 			PackagePortTargetSelectionHandler.exactPositionOfTarget = selectedBakedPosition;
 			PackagePortTargetSelectionHandler.activePackageTarget =
 				new PackagePortTarget.ChainConveyorFrogportTarget(selectedLift, selectedChainPosition, selectedConnection);
 			return true;
 		}
 
-		if (PackageItem.isPackage(mainHandItem)) {
+		if (mc.player.isHolding(PackageItem::isPackage)) {
+			ItemStack usedItem = PackageItem.isPackage(mainHandItem) ? mainHandItem : offHandItem;
 			AllPackets.getChannel()
 				.sendToServer(new ChainPackageInteractionPacket(selectedLift, selectedConnection, selectedChainPosition,
-					mainHandItem));
+					false));
+
 			return true;
 		}
 

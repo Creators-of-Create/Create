@@ -58,7 +58,7 @@ public class PulleyRenderer extends AbstractPulleyRenderer<PulleyBlockEntity> {
 	protected SpriteShiftEntry getCoilShift() {
 		return AllSpriteShifts.ROPE_PULLEY_COIL;
 	}
-	
+
 	public static float getBlockEntityOffset(float partialTicks, PulleyBlockEntity blockEntity) {
 		float offset = blockEntity.getInterpolatedOffset(partialTicks);
 
@@ -70,11 +70,6 @@ public class PulleyRenderer extends AbstractPulleyRenderer<PulleyBlockEntity> {
 		}
 
 		return offset;
-	}
-
-	@Override
-	public int getViewDistance() {
-		return 128;
 	}
 
 }

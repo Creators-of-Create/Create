@@ -3,13 +3,16 @@ package com.simibubi.create.content.trains.entity;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSoundEvents.SoundEntry;
 import com.simibubi.create.content.trains.entity.Carriage.DimensionalCarriageEntity;
+import com.simibubi.create.foundation.mixin.accessor.GuiAccessor;
 
-import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.data.Couple;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.SubtitleOverlay;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.sounds.WeighedSoundEvents;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -42,8 +45,8 @@ public class CarriageSounds {
 	public CarriageSounds(CarriageContraptionEntity entity) {
 		this.entity = entity;
 		bogeySounds = entity.getCarriage().bogeys.map(bogey ->
-				bogey != null && bogey.getStyle() != null ? bogey.getStyle().soundEvent.get()
-					: AllSoundEvents.TRAIN2.getMainEvent());
+			bogey != null && bogey.getStyle() != null ? bogey.getStyle().soundEvent.get()
+				: AllSoundEvents.TRAIN2.getMainEvent());
 		closestBogeySound = bogeySounds.getFirst();
 		distanceFactor = LerpedFloat.linear();
 		speedFactor = LerpedFloat.linear();
@@ -202,7 +205,7 @@ public class CarriageSounds {
 		if (train.honkTicks == 19)
 			endSound.playAt(mc.level, soundLocation, .5f, honkPitch, false);
 
-		sharedHonkSound = playIfMissing(mc, sharedHonkSound, continuousSound.getMainEvent());
+		sharedHonkSound = playIfMissing(mc, sharedHonkSound, continuousSound.getMainEvent(), true);
 		sharedHonkSound.setLocation(soundLocation);
 		float fadeout = Mth.clamp((3 - train.honkTicks) / 3f, 0, 1);
 		float fadein = Mth.clamp((train.honkTicks - 17) / 3f, 0, 1);
@@ -212,8 +215,12 @@ public class CarriageSounds {
 	}
 
 	private LoopingSound playIfMissing(Minecraft mc, LoopingSound loopingSound, SoundEvent sound) {
+		return playIfMissing(mc, loopingSound, sound, false);
+	}
+
+	private LoopingSound playIfMissing(Minecraft mc, LoopingSound loopingSound, SoundEvent sound, boolean continuouslyShowSubtitle) {
 		if (loopingSound == null) {
-			loopingSound = new LoopingSound(sound, SoundSource.NEUTRAL);
+			loopingSound = new LoopingSound(sound, SoundSource.NEUTRAL, continuouslyShowSubtitle);
 			mc.getSoundManager()
 				.play(loopingSound);
 		}
@@ -263,18 +270,37 @@ public class CarriageSounds {
 			sharedHonkSound.stopSound();
 	}
 
-	class LoopingSound extends AbstractTickableSoundInstance {
+	static class LoopingSound extends AbstractTickableSoundInstance {
+		private static final SubtitleOverlay OVERLAY = ((GuiAccessor) Minecraft.getInstance().gui).create$getSubtitleOverlay();
 
-		protected LoopingSound(SoundEvent p_119606_, SoundSource p_119607_) {
-			super(p_119606_, p_119607_, SoundInstance.createUnseededRandom());
-			attenuation = Attenuation.LINEAR;
-			looping = true;
-			delay = 0;
-			volume = 0.0001f;
+		private final boolean repeatSubtitle;
+		private final WeighedSoundEvents weighedSoundEvents = this.resolve(Minecraft.getInstance().getSoundManager());
+		private byte subtitleTimer = 0;
+
+		protected LoopingSound(SoundEvent soundEvent, SoundSource source) {
+			this(soundEvent, source, false);
+		}
+
+		protected LoopingSound(SoundEvent soundEvent, SoundSource source, boolean repeatSubtitle) {
+			super(soundEvent, source, SoundInstance.createUnseededRandom());
+			this.attenuation = Attenuation.LINEAR;
+			this.looping = true;
+			this.delay = 0;
+			this.volume = 0.0001f;
+			this.repeatSubtitle = repeatSubtitle;
 		}
 
 		@Override
-		public void tick() {}
+		public void tick() {
+			if (repeatSubtitle) {
+				subtitleTimer++;
+
+				if (subtitleTimer == 20) {
+					OVERLAY.onPlaySound(this, weighedSoundEvents);
+					subtitleTimer = 0;
+				}
+			}
+		}
 
 		public void setVolume(float volume) {
 			this.volume = volume;

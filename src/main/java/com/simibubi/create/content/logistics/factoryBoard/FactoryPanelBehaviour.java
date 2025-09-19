@@ -37,6 +37,7 @@ import com.simibubi.create.content.logistics.packagerLink.LogisticsManager;
 import com.simibubi.create.content.logistics.packagerLink.RequestPromise;
 import com.simibubi.create.content.logistics.packagerLink.RequestPromiseQueue;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -46,12 +47,9 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBoard;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatter;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkHooks;
-
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
 import net.createmod.catnip.gui.ScreenOpener;
@@ -73,10 +71,15 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackLinkedSet;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.network.NetworkHooks;
 
 public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuProvider {
 
@@ -84,7 +87,6 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	public static final BehaviourType<FactoryPanelBehaviour> TOP_RIGHT = new BehaviourType<>();
 	public static final BehaviourType<FactoryPanelBehaviour> BOTTOM_LEFT = new BehaviourType<>();
 	public static final BehaviourType<FactoryPanelBehaviour> BOTTOM_RIGHT = new BehaviourType<>();
-	public static final int REQUEST_INTERVAL = 100;
 
 	public Map<FactoryPanelPosition, FactoryPanelConnection> targetedBy;
 	public Map<BlockPos, FactoryPanelConnection> targetedByLinks;
@@ -379,14 +381,25 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 			notifyRedstoneOutputs();
 	}
 
+	public static class ItemStackConnections extends ArrayList<FactoryPanelConnection> {
+		public ItemStack item;
+		public int totalAmount;
+
+		public ItemStackConnections(ItemStack item) {
+			this.item = item;
+		}
+	}
+
 	private void tickRequests() {
 		FactoryPanelBlockEntity panelBE = panelBE();
 		if (targetedBy.isEmpty() && !panelBE.restocker)
 			return;
+		if (panelBE.restocker)
+			restockerPromises.tick();
 		if (satisfied || promisedSatisfied || waitingForNetwork || redstonePowered)
 			return;
 		if (timer > 0) {
-			timer = Math.min(timer, REQUEST_INTERVAL);
+			timer = Math.min(timer, getConfigRequestIntervalInTicks());
 			timer--;
 			return;
 		}
@@ -403,8 +416,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 
 		boolean failed = false;
 
-		Multimap<UUID, BigItemStack> toRequest = HashMultimap.create();
-		List<BigItemStack> toRequestAsList = new ArrayList<>();
+		Map<UUID, Map<ItemStack, ItemStackConnections>> consolidated = new HashMap<>();
 
 		for (FactoryPanelConnection connection : targetedBy.values()) {
 			FactoryPanelBehaviour source = at(getWorld(), connection);
@@ -412,18 +424,35 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 				return;
 
 			ItemStack item = source.getFilter();
-			int amount = connection.amount;
-			InventorySummary summary = LogisticsManager.getSummaryOfNetwork(source.network, true);
-			if (amount == 0 || item.isEmpty() || summary.getCountOf(item) < amount) {
-				sendEffect(connection.from, false);
-				failed = true;
-				continue;
-			}
 
-			BigItemStack stack = new BigItemStack(item, amount);
-			toRequest.put(source.network, stack);
-			toRequestAsList.add(stack);
-			sendEffect(connection.from, true);
+
+
+			Map<ItemStack, ItemStackConnections> networkItemCounts = consolidated.computeIfAbsent(source.network, $ -> new Object2ObjectOpenCustomHashMap<>(ItemStackLinkedSet.TYPE_AND_TAG));
+			networkItemCounts.computeIfAbsent(item, $ -> new ItemStackConnections(item));
+			ItemStackConnections existingConnections = networkItemCounts.get(item);
+			existingConnections.add(connection);
+			existingConnections.totalAmount += connection.amount;
+		}
+
+		Multimap<UUID, BigItemStack> toRequest = HashMultimap.create();
+
+		for (Entry<UUID, Map<ItemStack, ItemStackConnections>> entry : consolidated.entrySet()) {
+			UUID network = entry.getKey();
+			InventorySummary summary = LogisticsManager.getSummaryOfNetwork(network, true);
+
+			for (ItemStackConnections connections : entry.getValue().values()) {
+				if (connections.totalAmount == 0 || connections.item.isEmpty() || summary.getCountOf(connections.item) < connections.totalAmount) {
+					for (FactoryPanelConnection connection : connections)
+						sendEffect(connection.from, false);
+					failed = true;
+					continue;
+				}
+
+				BigItemStack stack = new BigItemStack(connections.item, connections.totalAmount);
+				toRequest.put(network, stack);
+				for (FactoryPanelConnection connection : connections)
+					sendEffect(connection.from, true);
+			}
 		}
 
 		if (failed)
@@ -431,20 +460,21 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 
 		// Input items may come from differing networks
 		Map<UUID, Collection<BigItemStack>> asMap = toRequest.asMap();
-		PackageOrder requestContext = new PackageOrder(toRequestAsList);
+		PackageOrderWithCrafts craftingContext = PackageOrderWithCrafts.empty();
 		List<Multimap<PackagerBlockEntity, PackagingRequest>> requests = new ArrayList<>();
 
 		// Panel may enforce item arrangement
 		if (!activeCraftingArrangement.isEmpty())
-			requestContext = new PackageOrder(activeCraftingArrangement.stream()
-				.map(BigItemStack::new)
+			craftingContext = PackageOrderWithCrafts.singleRecipe(activeCraftingArrangement.stream()
+				.map(stack -> new BigItemStack(stack.copyWithCount(1)))
 				.toList());
 
 		// Collect request distributions
 		for (Entry<UUID, Collection<BigItemStack>> entry : asMap.entrySet()) {
-			PackageOrder order = new PackageOrder(new ArrayList<>(entry.getValue()));
+			PackageOrderWithCrafts order =
+				new PackageOrderWithCrafts(new PackageOrder(new ArrayList<>(entry.getValue())), craftingContext.orderedCrafts());
 			Multimap<PackagerBlockEntity, PackagingRequest> request =
-				LogisticsManager.findPackagersForRequest(entry.getKey(), order, requestContext, null, recipeAddress);
+				LogisticsManager.findPackagersForRequest(entry.getKey(), order, null, recipeAddress);
 			requests.add(request);
 		}
 
@@ -476,7 +506,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		if (packager == null || !packager.targetInventory.hasInventory())
 			return;
 
-		int availableOnNetwork = LogisticsManager.getStockOf(network, item, packager.targetInventory.getInventory());
+		int availableOnNetwork = LogisticsManager.getStockOf(network, item, packager.targetInventory.getIdentifiedInventory());
 		if (availableOnNetwork == 0) {
 			sendEffect(getPanelPosition(), false);
 			return;
@@ -489,12 +519,12 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		int amountToOrder = Math.clamp(demand - promised - inStorage, 0, maxStackSize * 9);
 
 		BigItemStack orderedItem = new BigItemStack(item, Math.min(amountToOrder, availableOnNetwork));
-		PackageOrder order = new PackageOrder(List.of(orderedItem));
+		PackageOrderWithCrafts order = PackageOrderWithCrafts.simple(List.of(orderedItem));
 
 		sendEffect(getPanelPosition(), true);
 
 		if (!LogisticsManager.broadcastPackageRequest(network, RequestType.RESTOCK, order,
-			packager.targetInventory.getInventory(), recipeAddress, null))
+			packager.targetInventory.getIdentifiedInventory(), recipeAddress))
 			return;
 
 		restockerPromises.add(new RequestPromise(orderedItem));
@@ -743,11 +773,15 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	}
 
 	public void resetTimer() {
-		timer = REQUEST_INTERVAL;
+		timer = getConfigRequestIntervalInTicks();
 	}
 
 	public void resetTimerSlightly() {
-		timer = REQUEST_INTERVAL / 2;
+		timer = getConfigRequestIntervalInTicks() / 2;
+	}
+
+	private int getConfigRequestIntervalInTicks() {
+		return AllConfigs.server().logistics.factoryGaugeTimer.get();
 	}
 
 	private int getPromiseExpiryTimeInTicks() {

@@ -12,7 +12,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +40,7 @@ public class LogisticallyLinkedBlockItem extends BlockItem {
 		return pStack.hasTag() && pStack.getTag()
 			.contains(BLOCK_ENTITY_TAG);
 	}
-	
+
 	@Nullable
 	public static UUID networkFromStack(ItemStack pStack) {
 		if (!isTuned(pStack))
@@ -69,11 +73,28 @@ public class LogisticallyLinkedBlockItem extends BlockItem {
 	}
 
 	@Override
+	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+		ItemStack stack = player.getItemInHand(usedHand);
+		if (isTuned(stack)) {
+			if (level.isClientSide) {
+				level.playSound(player, player.blockPosition(), SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.75f, 1.0f);
+			} else {
+				player.displayClientMessage(CreateLang.translateDirect("logistically_linked.cleared"), true);
+				stack.getTag().remove(BLOCK_ENTITY_TAG);
+			}
+			return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+		} else {
+			return super.use(level, player, usedHand);
+		}
+	}
+
+	@Override
 	public InteractionResult useOn(UseOnContext pContext) {
 		ItemStack stack = pContext.getItemInHand();
 		BlockPos pos = pContext.getClickedPos();
 		Level level = pContext.getLevel();
 		Player player = pContext.getPlayer();
+		InteractionHand hand = pContext.getHand();
 
 		if (player == null)
 			return InteractionResult.FAIL;

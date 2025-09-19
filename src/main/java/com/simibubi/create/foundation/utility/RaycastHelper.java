@@ -15,41 +15,29 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class RaycastHelper {
-
-	public static BlockHitResult rayTraceRange(Level worldIn, Player playerIn, double range) {
-		Vec3 origin = getTraceOrigin(playerIn);
-		Vec3 target = getTraceTarget(playerIn, range, origin);
-		ClipContext context = new ClipContext(origin, target, Block.COLLIDER, Fluid.NONE, playerIn);
-		return worldIn.clip(context);
+	public static BlockHitResult rayTraceRange(Level level, Player player, double range) {
+		Vec3 origin = player.getEyePosition();
+		Vec3 target = getTraceTarget(player, range, origin);
+		ClipContext context = new ClipContext(origin, target, Block.COLLIDER, Fluid.NONE, player);
+		return level.clip(context);
 	}
 
-	public static PredicateTraceResult rayTraceUntil(Player playerIn, double range,
-		Predicate<BlockPos> predicate) {
-		Vec3 origin = getTraceOrigin(playerIn);
-		Vec3 target = getTraceTarget(playerIn, range, origin);
+	public static PredicateTraceResult rayTraceUntil(Player player, double range, Predicate<BlockPos> predicate) {
+		Vec3 origin = player.getEyePosition();
+		Vec3 target = getTraceTarget(player, range, origin);
 		return rayTraceUntil(origin, target, predicate);
 	}
 
-	public static Vec3 getTraceTarget(Player playerIn, double range, Vec3 origin) {
-		float f = playerIn.getXRot();
-		float f1 = playerIn.getYRot();
-		float f2 = Mth.cos(-f1 * 0.017453292F - (float) Math.PI);
-		float f3 = Mth.sin(-f1 * 0.017453292F - (float) Math.PI);
-		float f4 = -Mth.cos(-f * 0.017453292F);
-		float f5 = Mth.sin(-f * 0.017453292F);
+	public static Vec3 getTraceTarget(Player player, double range, Vec3 origin) {
+		float f = player.getXRot();
+		float f1 = player.getYRot();
+		float f2 = Mth.cos(-f1 * ((float) Math.PI / 180F) - (float) Math.PI);
+		float f3 = Mth.sin(-f1 * ((float) Math.PI / 180F) - (float) Math.PI);
+		float f4 = -Mth.cos(-f * ((float) Math.PI / 180F));
+		float f5 = Mth.sin(-f * ((float) Math.PI / 180F));
 		float f6 = f3 * f4;
 		float f7 = f2 * f4;
-		double d3 = range;
-		Vec3 Vector3d1 = origin.add((double) f6 * d3, (double) f5 * d3, (double) f7 * d3);
-		return Vector3d1;
-	}
-
-	public static Vec3 getTraceOrigin(Player playerIn) {
-		double d0 = playerIn.getX();
-		double d1 = playerIn.getY() + (double) playerIn.getEyeHeight();
-		double d2 = playerIn.getZ();
-		Vec3 Vector3d = new Vec3(d0, d1, d2);
-		return Vector3d;
+		return origin.add((double) f6 * range, (double) f5 * range, (double) f7 * range);
 	}
 
 	public static PredicateTraceResult rayTraceUntil(Vec3 start, Vec3 end, Predicate<BlockPos> predicate) {
@@ -193,5 +181,4 @@ public class RaycastHelper {
 			return this.pos == null;
 		}
 	}
-
 }

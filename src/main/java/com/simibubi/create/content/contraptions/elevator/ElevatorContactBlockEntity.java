@@ -24,7 +24,7 @@ public class ElevatorContactBlockEntity extends SmartBlockEntity {
 	public String shortName;
 	public String longName;
 
-	public String lastReportedCurrentFloor;
+	public String lastReportedCurrentFloor = "";
 
 	private int yTargetFromNBT = Integer.MIN_VALUE;
 	private boolean deferNameGenerator;

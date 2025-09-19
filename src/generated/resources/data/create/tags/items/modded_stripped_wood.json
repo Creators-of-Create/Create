@@ -409,6 +409,10 @@
       "required": false
     },
     {
+      "id": "ars_elemental:stripped_yellow_archwood",
+      "required": false
+    },
+    {
       "id": "infernalexp:stripped_luminous_hyphae",
       "required": false
     },

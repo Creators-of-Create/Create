@@ -9,6 +9,7 @@ import com.simibubi.create.AllTags.AllEntityTags;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.TagGen;
 import com.simibubi.create.foundation.data.TagGen.CreateTagsProvider;
 import com.simibubi.create.foundation.data.recipe.Mods;
@@ -29,11 +30,21 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
 
 public class CreateRegistrateTags {
+	private static final CreateRegistrate REGISTRATE = Create.registrate();
+
+	private static final Block[] SHULKER_BOXES = {
+		Blocks.SHULKER_BOX,
+		Blocks.WHITE_SHULKER_BOX, Blocks.ORANGE_SHULKER_BOX, Blocks.MAGENTA_SHULKER_BOX, Blocks.LIGHT_BLUE_SHULKER_BOX,
+		Blocks.YELLOW_SHULKER_BOX, Blocks.LIME_SHULKER_BOX, Blocks.PINK_SHULKER_BOX, Blocks.GRAY_SHULKER_BOX,
+		Blocks.LIGHT_GRAY_SHULKER_BOX, Blocks.CYAN_SHULKER_BOX, Blocks.PURPLE_SHULKER_BOX, Blocks.BLUE_SHULKER_BOX,
+		Blocks.BROWN_SHULKER_BOX, Blocks.GREEN_SHULKER_BOX, Blocks.RED_SHULKER_BOX, Blocks.BLACK_SHULKER_BOX
+	};
+
 	public static void addGenerators() {
-		Create.REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, CreateRegistrateTags::genBlockTags);
-		Create.REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, CreateRegistrateTags::genItemTags);
-		Create.REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, CreateRegistrateTags::genFluidTags);
-		Create.REGISTRATE.addDataGenerator(ProviderType.ENTITY_TAGS, CreateRegistrateTags::genEntityTags);
+		REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, CreateRegistrateTags::genBlockTags);
+		REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, CreateRegistrateTags::genItemTags);
+		REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, CreateRegistrateTags::genFluidTags);
+		REGISTRATE.addDataGenerator(ProviderType.ENTITY_TAGS, CreateRegistrateTags::genEntityTags);
 	}
 
 	private static void genBlockTags(RegistrateTagsProvider<Block> provIn) {
@@ -83,9 +94,6 @@ public class CreateRegistrateTags {
 			.addTag(BlockTags.FENCE_GATES)
 			.addTag(BlockTags.BANNERS);
 
-		prov.tag(AllBlockTags.ORE_OVERRIDE_STONE.tag)
-			.addTag(BlockTags.STONE_ORE_REPLACEABLES);
-
 		prov.tag(AllBlockTags.PASSIVE_BOILER_HEATERS.tag)
 			.add(Blocks.MAGMA_BLOCK, Blocks.LAVA)
 			.addTag(BlockTags.CAMPFIRES)
@@ -113,13 +121,14 @@ public class CreateRegistrateTags {
 		prov.tag(AllBlockTags.CHEST_MOUNTED_STORAGE.tag).add(
 			Blocks.CHEST, Blocks.TRAPPED_CHEST
 		);
-		prov.tag(AllBlockTags.SIMPLE_MOUNTED_STORAGE.tag).add(
-			Blocks.BARREL, Blocks.SHULKER_BOX,
-			Blocks.WHITE_SHULKER_BOX, Blocks.ORANGE_SHULKER_BOX, Blocks.MAGENTA_SHULKER_BOX, Blocks.LIGHT_BLUE_SHULKER_BOX,
-			Blocks.YELLOW_SHULKER_BOX, Blocks.LIME_SHULKER_BOX, Blocks.PINK_SHULKER_BOX, Blocks.GRAY_SHULKER_BOX,
-			Blocks.LIGHT_GRAY_SHULKER_BOX, Blocks.CYAN_SHULKER_BOX, Blocks.PURPLE_SHULKER_BOX, Blocks.BLUE_SHULKER_BOX,
-			Blocks.BROWN_SHULKER_BOX, Blocks.GREEN_SHULKER_BOX, Blocks.RED_SHULKER_BOX, Blocks.BLACK_SHULKER_BOX
-		);
+		prov.tag(AllBlockTags.SIMPLE_MOUNTED_STORAGE.tag)
+			.add(Blocks.BARREL)
+			.add(SHULKER_BOXES);
+
+		prov.tag(AllBlockTags.SINGLE_BLOCK_INVENTORIES.tag)
+			.add(SHULKER_BOXES)
+			.add(Blocks.HOPPER, Blocks.DISPENSER, Blocks.DROPPER, Blocks.CHISELED_BOOKSHELF, Blocks.JUKEBOX)
+			.addTag(Tags.Blocks.BARRELS);
 
 		prov.tag(AllBlockTags.ROOTS.tag)
 			.add(Blocks.MANGROVE_ROOTS);
@@ -128,7 +137,7 @@ public class CreateRegistrateTags {
 			.add(Blocks.SUGAR_CANE);
 
 		prov.tag(AllBlockTags.NON_HARVESTABLE.tag)
-				.add(Blocks.FIRE);
+			.add(Blocks.FIRE);
 
 		prov.tag(AllBlockTags.CORALS.tag)
 			.add(Blocks.DEAD_TUBE_CORAL, Blocks.DEAD_BRAIN_CORAL, Blocks.DEAD_BUBBLE_CORAL, Blocks.DEAD_FIRE_CORAL,
@@ -152,14 +161,6 @@ public class CreateRegistrateTags {
 
 		TagGen.addOptional(prov.tag(AllBlockTags.ROOTS.tag), Mods.TF,
 			List.of("root", "liveroot_block", "mangrove_root"));
-
-		// VALIDATE
-
-		for (AllBlockTags tag : AllBlockTags.values()) {
-			if (tag.alwaysDatagen) {
-				prov.getOrCreateRawBuilder(tag.tag);
-			}
-		}
 	}
 
 	private static void genItemTags(RegistrateTagsProvider<Item> provIn) {
@@ -188,7 +189,8 @@ public class CreateRegistrateTags {
 
 		prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
 			.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION,
-				Items.HONEY_BOTTLE, Items.CAKE);
+				Items.HONEY_BOTTLE, Items.CAKE, Items.BOWL, Items.MUSHROOM_STEW, Items.RABBIT_STEW,
+				Items.BEETROOT_SOUP, Items.SUSPICIOUS_STEW);
 
 		prov.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 			.add(Items.BELL, Items.CAMPFIRE, Items.SOUL_CAMPFIRE, Items.DISPENSER, Items.DROPPER);
@@ -227,14 +229,6 @@ public class CreateRegistrateTags {
 		TagGen.addOptional(prov.tag(AllItemTags.UA_CORAL.tag), Mods.UA, List.of("acan_coral",
 			"finger_coral", "star_coral", "moss_coral", "petal_coral", "branch_coral",
 			"rock_coral", "pillow_coral", "chrome_coral", "silk_coral"));
-
-		// VALIDATE
-
-		for (AllItemTags tag : AllItemTags.values()) {
-			if (tag.alwaysDatagen) {
-				prov.getOrCreateRawBuilder(tag.tag);
-			}
-		}
 	}
 
 	private static ArrayList<String> gsPalette(String material) {
@@ -283,6 +277,7 @@ public class CreateRegistrateTags {
 		helper.add(Mods.BMK, "blighted_balsa", "willow", "swamp_cypress", "ancient_oak");
 		helper.add(Mods.RU, "alpha", "ashen", "baobab", "blackwood", "brimwood", "cobalt", "cypress", "dead", "eucalyptus", "joshua",
 			"kapok", "larch", "magnolia", "maple", "mauve", "palm", "pine", "redwood", "socotra", "willow");
+		helper.add(Mods.ARS_E, "yellow_archwood");
 
 
 		TagGen.addOptional(logAppender, Mods.AUTUM, "maple");
@@ -313,14 +308,6 @@ public class CreateRegistrateTags {
 
 		prov.tag(AllFluidTags.FAN_PROCESSING_CATALYSTS_SPLASHING.tag)
 			.add(Fluids.WATER, Fluids.FLOWING_WATER);
-
-		// VALIDATE
-
-		for (AllFluidTags tag : AllFluidTags.values()) {
-			if (tag.alwaysDatagen) {
-				prov.getOrCreateRawBuilder(tag.tag);
-			}
-		}
 	}
 
 	private static void genEntityTags(RegistrateTagsProvider<EntityType<?>> provIn) {
@@ -328,14 +315,6 @@ public class CreateRegistrateTags {
 
 		prov.tag(AllEntityTags.BLAZE_BURNER_CAPTURABLE.tag)
 			.add(EntityType.BLAZE);
-
-		// VALIDATE
-
-		for (AllEntityTags tag : AllEntityTags.values()) {
-			if (tag.alwaysDatagen) {
-				prov.getOrCreateRawBuilder(tag.tag);
-			}
-		}
 	}
 
 	private static class StrippedWoodHelper {
@@ -349,10 +328,10 @@ public class CreateRegistrateTags {
 
 		public void add(Mods mod, String... woodTypes) {
 			for (String type : woodTypes) {
-				String strippedPre = mod.strippedIsSuffix ? "" : "stripped_";
-				String strippedPost = mod.strippedIsSuffix ? "_stripped" : "";
+				String strippedPre = mod.strippedIsSuffix() ? "" : "stripped_";
+				String strippedPost = mod.strippedIsSuffix() ? "_stripped" : "";
 				TagGen.addOptional(logAppender, mod, strippedPre + type + "_log" + strippedPost);
-				TagGen.addOptional(woodAppender, mod, strippedPre + type + (mod.omitWoodSuffix ? "" : "_wood") + strippedPost);
+				TagGen.addOptional(woodAppender, mod, strippedPre + type + (mod.omitWoodSuffix() ? "" : "_wood") + strippedPost);
 			}
 		}
 	}

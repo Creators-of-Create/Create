@@ -12,10 +12,10 @@ import com.simibubi.create.content.schematics.client.SchematicTransformation;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
 
-import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.outliner.AABBOutline;
+import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
@@ -25,6 +25,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
+
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 
 public abstract class SchematicToolBase implements ISchematicTool {
@@ -79,7 +80,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 			SchematicTransformation transformation = schematicHandler.getTransformation();
 			AABB localBounds = schematicHandler.getBounds();
 
-			Vec3 traceOrigin = RaycastHelper.getTraceOrigin(player);
+			Vec3 traceOrigin = player.getEyePosition();
 			Vec3 start = transformation.toLocalSpace(traceOrigin);
 			Vec3 end = transformation.toLocalSpace(RaycastHelper.getTraceTarget(player, 70, traceOrigin));
 			PredicateTraceResult result =
@@ -122,10 +123,12 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	}
 
 	@Override
-	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {}
+	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {
+	}
 
 	@Override
-	public void renderOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {}
+	public void renderOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
+	}
 
 	@Override
 	public void renderOnSchematic(PoseStack ms, SuperRenderTypeBuffer buffer) {

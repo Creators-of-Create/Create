@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -62,10 +63,10 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 
 		if (foundRecipe.isEmpty())
 			return;
-		
+
 		event.setCancellationResult(InteractionResult.SUCCESS);
 		event.setCanceled(true);
-		
+
 		if (level.isClientSide())
 			return;
 
@@ -80,15 +81,15 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 
 		boolean creative = event.getEntity() != null && event.getEntity()
 			.isCreative();
-		boolean unbreakable = heldItem.hasTag() && heldItem.getTag()
-			.getBoolean("Unbreakable");
 		boolean keepHeld = recipe.shouldKeepHeldItem() || creative;
 
-		if (!unbreakable && !keepHeld) {
-			if (heldItem.isDamageableItem())
-				heldItem.hurtAndBreak(1, event.getEntity(), s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
-			else
+		if (!keepHeld) {
+			if (heldItem.getMaxDamage() > 0) {
+				heldItem.hurtAndBreak(1, event.getEntity(),
+					s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+			} else {
 				heldItem.shrink(1);
+			}
 		}
 
 		awardAdvancements(event.getEntity(), transformedBlock);
@@ -117,11 +118,11 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 
 	public static DeployerApplicationRecipe asDeploying(Recipe<?> recipe) {
 		ManualApplicationRecipe mar = (ManualApplicationRecipe) recipe;
+		ResourceLocation id = AllRecipeTypes.CAN_BE_AUTOMATED.test(recipe) ? mar.id.withSuffix("_using_deployer") : mar.id;
 		ProcessingRecipeBuilder<DeployerApplicationRecipe> builder =
-			new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new,
-				new ResourceLocation(mar.id.getNamespace(), mar.id.getPath() + "_using_deployer"))
-					.require(mar.ingredients.get(0))
-					.require(mar.ingredients.get(1));
+			new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new, id)
+				.require(mar.ingredients.get(0))
+				.require(mar.ingredients.get(1));
 		for (ProcessingOutput output : mar.results)
 			builder.output(output);
 		if (mar.shouldKeepHeldItem())

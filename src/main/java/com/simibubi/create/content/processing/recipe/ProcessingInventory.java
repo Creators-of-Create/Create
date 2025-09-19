@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ProcessingInventory extends ItemStackHandler {
@@ -14,15 +15,15 @@ public class ProcessingInventory extends ItemStackHandler {
 	private boolean limit;
 
 	public ProcessingInventory(Consumer<ItemStack> callback) {
-		super(16);
+		super(32);
 		this.callback = callback;
 	}
-	
+
 	public ProcessingInventory withSlotLimit(boolean limit) {
 		this.limit = limit;
 		return this;
 	}
-	
+
 	@Override
 	public int getSlotLimit(int slot) {
 		return !limit ? super.getSlotLimit(slot) : 1;
@@ -66,7 +67,7 @@ public class ProcessingInventory extends ItemStackHandler {
 		recipeDuration = nbt.getFloat("RecipeTime");
 		appliedRecipe = nbt.getBoolean("AppliedRecipe");
 		super.deserializeNBT(nbt);
-		if(isEmpty())
+		if (isEmpty())
 			appliedRecipe = false;
 	}
 
