@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.recipe;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -9,7 +10,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
 import com.simibubi.create.Create;
 
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -49,10 +49,10 @@ public class RecipeFinder {
 	}
 
 	private static List<Recipe<?>> startSearch(Level level, Predicate<? super Recipe<?>> conditions) {
-		return level.getRecipeManager()
-			.getRecipes()
-			.stream()
-			.filter(conditions)
-			.toList();
+		List<Recipe<?>> recipes = new ArrayList<>();
+		for (Recipe<?> r : level.getRecipeManager().getRecipes())
+			if (conditions.test(r))
+				recipes.add(r);
+		return recipes;
 	}
 }

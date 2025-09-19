@@ -7,6 +7,8 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.item.ItemHelper;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -151,7 +153,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IB
 				be.sendData();
 
 				cwbe.award(AllAdvancements.CRUSHING_WHEEL);
-				if (cwbe.getSpeed() > 255)
+				if (Math.abs(cwbe.getSpeed()) > AllConfigs.server().kinetics.maxRotationSpeed.get() - 1)
 					cwbe.award(AllAdvancements.CRUSHER_MAXED);
 
 				break;

@@ -2,8 +2,8 @@
   "model_part": "bone/body/head",
   "offset": [
     0.0,
-    3.5,
+    0.0,
     0.5
   ],
-  "scale": 0.5
+  "scale": 0.9
 }

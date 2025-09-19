@@ -24,20 +24,12 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
-
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
@@ -55,6 +47,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class AllCreativeModeTabs {
@@ -95,16 +95,6 @@ public class AllCreativeModeTabs {
 				});
 			});
 			IS_ITEM_3D_PREDICATE = isItem3d.getValue();
-		}
-
-		@OnlyIn(Dist.CLIENT)
-		private static Predicate<Item> makeClient3dItemPredicate() {
-			return item -> {
-				ItemRenderer itemRenderer = Minecraft.getInstance()
-					.getItemRenderer();
-				BakedModel model = itemRenderer.getModel(new ItemStack(item), null, null, 0);
-				return model.isGui3d();
-			};
 		}
 
 		private final boolean addItems;
@@ -193,7 +183,8 @@ public class AllCreativeModeTabs {
 			});
 
 			PackageStyles.STANDARD_BOXES.forEach(item -> {
-				orderings.add(ItemOrdering.after(item, AllBlocks.PACKAGER.asItem()));
+				if (CatnipServices.REGISTRIES.getKeyOrThrow(item).getNamespace().equals(Create.ID))
+					orderings.add(ItemOrdering.after(item, AllBlocks.PACKAGER.asItem()));
 			});
 
 			return orderings;

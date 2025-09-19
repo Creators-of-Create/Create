@@ -77,7 +77,7 @@ public class SuperGlueSelectionHandler {
 		if (firstPos == null) {
 			double range = player.getAttribute(ForgeMod.BLOCK_REACH.get())
 				.getValue() + 1;
-			Vec3 traceOrigin = RaycastHelper.getTraceOrigin(player);
+			Vec3 traceOrigin = player.getEyePosition();
 			Vec3 traceTarget = RaycastHelper.getTraceTarget(player, range, traceOrigin);
 
 			double bestDistance = Double.MAX_VALUE;

@@ -613,10 +613,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		CompoundTag compound = new CompoundTag();
 		writeAdditional(compound, true);
 
-		if (ContraptionSyncLimiting.isTooLargeForSync(compound))
-			compound = null; // don't sync contraption data
-
-		buffer.writeNbt(compound);
+		ContraptionSyncLimiting.writeSafe(compound, buffer);
 	}
 
 	@Override
