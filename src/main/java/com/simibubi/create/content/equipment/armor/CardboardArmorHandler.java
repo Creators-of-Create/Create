@@ -44,18 +44,17 @@ public class CardboardArmorHandler {
 
 	@SubscribeEvent
 	public static void playerChangesEquipment(LivingEquipmentChangeEvent event) {
-		if (event.getEntity() instanceof Player player && player.getPose() == Pose.CROUCHING) {
-			if (
-				AllItems.CARDBOARD_HELMET.isIn(player.getItemBySlot(EquipmentSlot.HEAD))
-				|| AllItems.CARDBOARD_CHESTPLATE.isIn(player.getItemBySlot(EquipmentSlot.CHEST))
-				|| AllItems.CARDBOARD_LEGGINGS.isIn(player.getItemBySlot(EquipmentSlot.LEGS))
-				|| AllItems.CARDBOARD_BOOTS.isIn(player.getItemBySlot(EquipmentSlot.FEET))
-			) { //assuming player is putting on last piece or took off first piece of cardboard armor
-				if (!player.level().isClientSide()) {
-					Pose pose = player.getPose();
-					player.setPose(pose == Pose.CROUCHING ? Pose.STANDING : Pose.CROUCHING);
-					player.setPose(pose);
-				}
+		if (event.getEntity() instanceof Player player && player.getPose() == Pose.CROUCHING && (
+			isCardboardArmor(player.getItemBySlot(EquipmentSlot.HEAD))
+				|| isCardboardArmor(player.getItemBySlot(EquipmentSlot.CHEST))
+				|| isCardboardArmor(player.getItemBySlot(EquipmentSlot.LEGS))
+				|| isCardboardArmor(player.getItemBySlot(EquipmentSlot.FEET))
+		)) {
+			//assuming player is putting on last piece or took off first piece of cardboard armor
+			if (!player.level().isClientSide()) {
+				Pose pose = player.getPose();
+				player.setPose(pose == Pose.CROUCHING ? Pose.STANDING : Pose.CROUCHING);
+				player.setPose(pose);
 			}
 		}
 	}
