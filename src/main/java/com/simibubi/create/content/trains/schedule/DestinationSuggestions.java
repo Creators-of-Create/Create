@@ -47,6 +47,9 @@ public class DestinationSuggestions extends CommandSuggestions {
 
 	@Override
 	public void updateCommandInfo() {
+		if (textBox.getValue().length() < textBox.getCursorPosition())
+			return;
+		
 		String trimmed = textBox.getValue()
 			.substring(0, textBox.getCursorPosition());
 

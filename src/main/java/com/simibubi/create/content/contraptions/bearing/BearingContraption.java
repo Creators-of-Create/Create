@@ -49,7 +49,7 @@ public class BearingContraption extends Contraption {
 
 	@Override
 	public ContraptionType getType() {
-		return AllContraptionTypes.BEARING.get();
+		return AllContraptionTypes.BEARING.value();
 	}
 
 	@Override

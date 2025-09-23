@@ -145,7 +145,7 @@ public class ContraptionHandlerClient {
 	@OnlyIn(Dist.CLIENT)
 	public static Couple<Vec3> getRayInputs(LocalPlayer player) {
 		Minecraft mc = Minecraft.getInstance();
-		Vec3 origin = RaycastHelper.getTraceOrigin(player);
+		Vec3 origin = player.getEyePosition();
 		double reach = mc.gameMode.getPickRange();
 		if (mc.hitResult != null && mc.hitResult.getLocation() != null)
 			reach = Math.min(mc.hitResult.getLocation()

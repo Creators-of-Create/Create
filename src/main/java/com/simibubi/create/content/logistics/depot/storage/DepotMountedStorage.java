@@ -63,7 +63,7 @@ public class DepotMountedStorage extends WrapperMountedItemStorage<Handler> impl
 
 	@Override
 	public void afterSync(Contraption contraption, BlockPos localPos) {
-		BlockEntity be = contraption.presentBlockEntities.get(localPos);
+		BlockEntity be = contraption.getOrCreateClientContraptionLazy().getBlockEntity(localPos);
 		if (be instanceof DepotBlockEntity depot) {
 			depot.setHeldItem(this.getItem());
 		}

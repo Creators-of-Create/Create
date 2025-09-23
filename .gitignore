@@ -29,6 +29,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
+.factorypath
 
 # External tool builders
 .externalToolBuilders/

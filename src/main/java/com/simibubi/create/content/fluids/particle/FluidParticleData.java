@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.foundation.particle.ICustomParticleData;
+import com.simibubi.create.foundation.utility.CreateCodecs;
 
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.particle.ParticleProvider;
@@ -55,17 +56,17 @@ public class FluidParticleData implements ParticleOptions, ICustomParticleData<F
 	}
 
 	public static final Codec<FluidParticleData> CODEC = RecordCodecBuilder.create(i -> i
-		.group(FluidStack.CODEC.fieldOf("fluid")
+		.group(CreateCodecs.FLUID_STACK_CODEC.fieldOf("fluid")
 			.forGetter(p -> p.fluid))
 		.apply(i, fs -> new FluidParticleData(AllParticleTypes.FLUID_PARTICLE.get(), fs)));
 
 	public static final Codec<FluidParticleData> BASIN_CODEC = RecordCodecBuilder.create(i -> i
-		.group(FluidStack.CODEC.fieldOf("fluid")
+		.group(CreateCodecs.FLUID_STACK_CODEC.fieldOf("fluid")
 			.forGetter(p -> p.fluid))
 		.apply(i, fs -> new FluidParticleData(AllParticleTypes.BASIN_FLUID.get(), fs)));
 
 	public static final Codec<FluidParticleData> DRIP_CODEC = RecordCodecBuilder.create(i -> i
-		.group(FluidStack.CODEC.fieldOf("fluid")
+		.group(CreateCodecs.FLUID_STACK_CODEC.fieldOf("fluid")
 			.forGetter(p -> p.fluid))
 		.apply(i, fs -> new FluidParticleData(AllParticleTypes.FLUID_DRIP.get(), fs)));
 

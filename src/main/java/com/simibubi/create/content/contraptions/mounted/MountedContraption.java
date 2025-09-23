@@ -49,7 +49,7 @@ public class MountedContraption extends Contraption {
 
 	@Override
 	public ContraptionType getType() {
-		return AllContraptionTypes.MOUNTED.get();
+		return AllContraptionTypes.MOUNTED.value();
 	}
 
 	@Override

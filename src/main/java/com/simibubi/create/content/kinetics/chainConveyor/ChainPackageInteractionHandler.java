@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
 import net.minecraftforge.common.ForgeMod;
 
 public class ChainPackageInteractionHandler {
@@ -32,7 +33,7 @@ public class ChainPackageInteractionHandler {
 
 				double range = mc.player.getAttribute(ForgeMod.BLOCK_REACH.get())
 					.getValue() + 1;
-				Vec3 from = RaycastHelper.getTraceOrigin(mc.player);
+				Vec3 from = mc.player.getEyePosition();
 				Vec3 to = RaycastHelper.getTraceTarget(mc.player, range, from);
 
 				if (bounds.clip(from, to)
@@ -47,7 +48,7 @@ public class ChainPackageInteractionHandler {
 					if (pckg.netId == i) {
 						AllPackets.getChannel()
 							.sendToServer(
-								new ChainPackageInteractionPacket(ccbe.getBlockPos(), null, pckg.chainPosition, null));
+								new ChainPackageInteractionPacket(ccbe.getBlockPos(), null, pckg.chainPosition, true));
 						success.setTrue();
 						return;
 					}
@@ -61,7 +62,7 @@ public class ChainPackageInteractionHandler {
 						if (pckg.netId == i) {
 							AllPackets.getChannel()
 								.sendToServer(new ChainPackageInteractionPacket(ccbe.getBlockPos(), connection,
-									pckg.chainPosition, null));
+									pckg.chainPosition, true));
 							success.setTrue();
 							return;
 						}

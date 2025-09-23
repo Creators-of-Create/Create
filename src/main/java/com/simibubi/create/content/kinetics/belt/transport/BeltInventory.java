@@ -42,7 +42,7 @@ public class BeltInventory {
 	final List<TransportedItemStack> toRemove;
 	boolean beltMovementPositive;
 	final float SEGMENT_WINDOW = .75f;
-	
+
 	TransportedItemStack lazyClientItem;
 
 	public BeltInventory(BeltBlockEntity be) {
@@ -68,8 +68,7 @@ public class BeltInventory {
 			toInsert.clear();
 			items.removeAll(toRemove);
 			toRemove.clear();
-			belt.setChanged();
-			belt.sendData();
+			belt.notifyUpdate();
 		}
 
 		if (belt.getSpeed() == 0)
@@ -79,8 +78,7 @@ public class BeltInventory {
 		if (beltMovementPositive != belt.getDirectionAwareBeltMovementSpeed() > 0) {
 			beltMovementPositive = !beltMovementPositive;
 			Collections.reverse(items);
-			belt.setChanged();
-			belt.sendData();
+			belt.notifyUpdate();
 		}
 
 		// Assuming the first entry is furthest on the belt
@@ -154,11 +152,11 @@ public class BeltInventory {
 				ItemStack item = currentItem.stack;
 				if (handleBeltProcessingAndCheckIfRemoved(currentItem, nextOffset, noMovement)) {
 					iterator.remove();
-					belt.sendData();
+					belt.notifyUpdate();
 					continue;
 				}
 				if (item != currentItem.stack)
-					belt.sendData();
+					belt.notifyUpdate();
 				if (currentItem.locked)
 					continue;
 			}
@@ -217,7 +215,7 @@ public class BeltInventory {
 					currentItem.stack = remainder;
 
 				flapTunnel(this, lastOffset, movementFacing, false);
-				belt.sendData();
+				belt.notifyUpdate();
 				continue;
 			}
 
@@ -228,14 +226,14 @@ public class BeltInventory {
 				eject(currentItem);
 				iterator.remove();
 				flapTunnel(this, lastOffset, movementFacing, false);
-				belt.sendData();
+				belt.notifyUpdate();
 				continue;
 			}
 		}
 	}
 
 	protected boolean handleBeltProcessingAndCheckIfRemoved(TransportedItemStack currentItem, float nextOffset,
-		boolean noMovement) {
+															boolean noMovement) {
 		int currentSegment = (int) currentItem.beltPosition;
 
 		// Continue processing if held
@@ -248,7 +246,7 @@ public class BeltInventory {
 				return false;
 			if (processingBehaviour == null) {
 				currentItem.locked = false;
-				belt.sendData();
+				belt.notifyUpdate();
 				return false;
 			}
 
@@ -259,7 +257,7 @@ public class BeltInventory {
 				return false;
 
 			currentItem.locked = false;
-			belt.sendData();
+			belt.notifyUpdate();
 			return false;
 		}
 
@@ -292,7 +290,7 @@ public class BeltInventory {
 				if (result == ProcessingResult.HOLD) {
 					currentItem.beltPosition = segment + .5f + (beltMovementPositive ? 1 / 512f : -1 / 512f);
 					currentItem.locked = true;
-					belt.sendData();
+					belt.notifyUpdate();
 					return false;
 				}
 			}
@@ -449,7 +447,7 @@ public class BeltInventory {
 	}
 
 	public void applyToEachWithin(float position, float maxDistanceToPosition,
-		Function<TransportedItemStack, TransportedResult> processFunction) {
+								  Function<TransportedItemStack, TransportedResult> processFunction) {
 		boolean dirty = false;
 		for (TransportedItemStack transported : items) {
 			if (toRemove.contains(transported))
@@ -471,8 +469,7 @@ public class BeltInventory {
 			toRemove.add(transported);
 		}
 		if (dirty) {
-			belt.setChanged();
-			belt.sendData();
+			belt.notifyUpdate();
 		}
 	}
 

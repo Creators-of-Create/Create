@@ -5,6 +5,7 @@ import com.simibubi.create.AllMenuTypes;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
@@ -61,6 +62,11 @@ public class PackageFilterMenu extends AbstractFilterMenu {
 		super.saveData(filterItem);
 		filterItem.getOrCreateTag()
 			.putString("Address", address);
+	}
+	
+	@Override
+	public ItemStack quickMoveStack(Player playerIn, int index) {
+		return ItemStack.EMPTY;
 	}
 
 }

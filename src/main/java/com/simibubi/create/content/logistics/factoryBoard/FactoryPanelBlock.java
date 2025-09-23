@@ -122,16 +122,16 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 		if (blockState.is(this) && location != null && fpbe != null) {
 			if (!level.isClientSide()) {
 				PanelSlot targetedSlot = getTargetedSlot(pos, blockState, location);
-				UUID networkFromStack = LogisticallyLinkedBlockItem.networkFromStack(pContext.getItemInHand());
+				ItemStack panelItem = FactoryPanelBlockItem.fixCtrlCopiedStack(pContext.getItemInHand());
+				UUID networkFromStack = LogisticallyLinkedBlockItem.networkFromStack(panelItem);
 				Player pPlayer = pContext.getPlayer();
 
 				if (fpbe.addPanel(targetedSlot, networkFromStack) && pPlayer != null) {
 					pPlayer.displayClientMessage(CreateLang.translateDirect("logistically_linked.connected"), true);
 
 					if (!pPlayer.isCreative()) {
-						ItemStack item = pContext.getItemInHand();
-						item.shrink(1);
-						if (item.isEmpty())
+						panelItem.shrink(1);
+						if (panelItem.isEmpty())
 							pPlayer.setItemInHand(pContext.getHand(), ItemStack.EMPTY);
 					}
 				}
@@ -196,7 +196,7 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
+								 BlockHitResult pHit) {
 		if (pPlayer == null)
 			return InteractionResult.PASS;
 		ItemStack item = pPlayer.getItemInHand(pHand);
@@ -217,7 +217,7 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 
 		PanelSlot newSlot = getTargetedSlot(pPos, pState, location);
 		withBlockEntityDo(pLevel, pPos, fpbe -> {
-			if (!fpbe.addPanel(newSlot, LogisticallyLinkedBlockItem.networkFromStack(item)))
+			if (!fpbe.addPanel(newSlot, LogisticallyLinkedBlockItem.networkFromStack(FactoryPanelBlockItem.fixCtrlCopiedStack(item))))
 				return;
 			pPlayer.displayClientMessage(CreateLang.translateDirect("logistically_linked.connected"), true);
 			pLevel.playSound(null, pPos, soundType.getPlaceSound(), SoundSource.BLOCKS);
@@ -232,7 +232,7 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest,
-		FluidState fluid) {
+									   FluidState fluid) {
 		if (tryDestroySubPanelFirst(state, level, pos, player))
 			return false;
 		boolean result = super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
@@ -273,13 +273,9 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
-		if (pUseContext.isSecondaryUseActive())
-			return false;
 		if (!AllBlocks.FACTORY_GAUGE.isIn(pUseContext.getItemInHand()))
 			return false;
 		Vec3 location = pUseContext.getClickLocation();
-		if (location == null)
-			return false;
 
 		BlockPos pos = pUseContext.getClickedPos();
 		PanelSlot slot = getTargetedSlot(pos, pState, location);
@@ -287,15 +283,13 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 
 		if (blockEntity == null)
 			return false;
-		if (blockEntity.panels.get(slot)
-			.isActive())
-			return false;
-		return true;
+		return !blockEntity.panels.get(slot)
+			.isActive();
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
-		CollisionContext pContext) {
+										CollisionContext pContext) {
 		if (pContext instanceof EntityCollisionContext ecc && ecc.getEntity() == null)
 			return getShape(pState, pLevel, pPos, pContext);
 		return Shapes.empty();
@@ -311,7 +305,7 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
-		BlockPos pCurrentPos, BlockPos pFacingPos) {
+								  BlockPos pCurrentPos, BlockPos pFacingPos) {
 		updateWater(pLevel, pState, pCurrentPos);
 		return super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
 	}

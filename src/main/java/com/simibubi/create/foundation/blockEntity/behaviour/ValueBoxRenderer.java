@@ -28,8 +28,7 @@ public class ValueBoxRenderer {
 		Minecraft mc = Minecraft.getInstance();
 		ItemRenderer itemRenderer = mc.getItemRenderer();
 		BakedModel modelWithOverrides = itemRenderer.getModel(filter, null, null, 0);
-		boolean blockItem =
-			modelWithOverrides.isGui3d() && modelWithOverrides.getRenderPasses(filter, false).size() <= 1;
+		boolean blockItem = modelWithOverrides.isGui3d();
 		float scale = (!blockItem ? .5f : 1f) + 1 / 64f;
 		float zOffset = (!blockItem ? -.15f : 0) + customZOffset(filter.getItem());
 		ms.scale(scale, scale, scale);

@@ -1,38 +1,8 @@
 name: Build
-
 on: [ workflow_dispatch, push, pull_request ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: NeoGradle Cache
-        uses: actions/cache@v4
-        with:
-          path: "**/.gradle/repositories/"
-          key: "${{ runner.os }}-gradle-${{ hashFiles('**/libs.versions.*', '**/*.gradle*', '**/gradle-wrapper.properties') }}"
-          restore-keys: "${{ runner.os }}-gradle-"
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-home-cache-cleanup: true
-
-      - name: Validate Gradle Wrapper Integrity
-        uses: gradle/wrapper-validation-action@v2
-
-      - name: Build
-        run: ./gradlew build
-
-      - uses: actions/upload-artifact@v4
-        with:
-          path: build/libs/
+    uses: ithundxr/workflows/.github/workflows/java-build.yml@main
+    with:
+      java-version: 17

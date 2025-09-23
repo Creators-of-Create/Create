@@ -18,6 +18,10 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
+
 import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
@@ -26,15 +30,12 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 
 public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
 
@@ -42,6 +43,8 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 
 	public WeakReference<PoweredShaftBlockEntity> target;
 	public WeakReference<FluidTankBlockEntity> source;
+
+	float prevAngle = 0;
 
 	public SteamEngineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -72,7 +75,7 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 		FluidTankBlockEntity tank = getTank();
 		PoweredShaftBlockEntity shaft = getShaft();
 
-		if (tank == null || shaft == null) {
+		if (tank == null || shaft == null || !isValid()) {
 			if (level.isClientSide())
 				return;
 			if (shaft == null)
@@ -173,7 +176,15 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 		return tank.getControllerBE();
 	}
 
-	float prevAngle = 0;
+	public boolean isValid() {
+		Direction dir = SteamEngineBlock.getConnectedDirection(getBlockState()).getOpposite();
+
+		Level level = getLevel();
+		if (level == null)
+			return false;
+
+		return level.getBlockState(getBlockPos().relative(dir)).is(AllBlocks.FLUID_TANK.get());
+	}
 
 	@OnlyIn(Dist.CLIENT)
 	private void spawnParticles() {

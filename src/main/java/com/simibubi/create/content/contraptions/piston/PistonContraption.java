@@ -48,7 +48,7 @@ public class PistonContraption extends TranslatingContraption {
 
 	@Override
 	public ContraptionType getType() {
-		return AllContraptionTypes.PISTON.get();
+		return AllContraptionTypes.PISTON.value();
 	}
 
 	public PistonContraption() {

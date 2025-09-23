@@ -65,7 +65,7 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
-		BlockPos pCurrentPos, BlockPos pFacingPos) {
+								  BlockPos pCurrentPos, BlockPos pFacingPos) {
 		if (!pState.canSurvive(pLevel, pCurrentPos))
 			return Blocks.AIR.defaultBlockState();
 		return super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
@@ -73,13 +73,14 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 
 	@Override
 	public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
-		return super.canSurvive(pState, pLevel, pPos) || pLevel.getBlockState(pPos.relative(Direction.UP))
-			.is(this);
+		BlockState otherState = pLevel.getBlockState(pPos.relative(Direction.UP));
+		return super.canSurvive(pState, pLevel, pPos) ||
+			(otherState.is(this) && pState.getValue(FACING).equals(otherState.getValue(FACING)));
 	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult ray) {
+								 BlockHitResult ray) {
 		if (player.isShiftKeyDown() || !player.mayBuild())
 			return InteractionResult.PASS;
 		ItemStack heldItem = player.getItemInHand(hand);
@@ -118,7 +119,7 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 
 		@Override
 		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos,
-			BlockHitResult ray) {
+										 BlockHitResult ray) {
 			Direction dir = player.getXRot() < 0 ? Direction.UP : Direction.DOWN;
 
 			int range = AllConfigs.server().equipment.placementAssistRange.get();

@@ -34,9 +34,10 @@ public class FactoryGaugeDisplaySource extends ValueListDisplaySource {
 	@Nullable
 	public IntAttached<MutableComponent> createEntry(Level level, FactoryPanelPosition pos) {
 		FactoryPanelBehaviour panel = FactoryPanelBehaviour.at(level, pos);
-		ItemStack filter = panel.getFilter();
-		if (filter == null)
+		if (panel == null)
 			return null;
+
+		ItemStack filter = panel.getFilter();
 
 		int demand = panel.getAmount() * (panel.upTo ? 1 : filter.getMaxStackSize());
 		String s = " ";

@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
+import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -57,14 +58,14 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 		}
 
 		Level level = entity.level();
-		ContraptionRenderInfo renderInfo = ContraptionRenderInfo.get(contraption);
-		VirtualRenderWorld renderWorld = renderInfo.getRenderWorld();
-		ContraptionMatrices matrices = renderInfo.getMatrices();
+		ClientContraption clientContraption = contraption.getOrCreateClientContraptionLazy();
+		VirtualRenderWorld renderWorld = clientContraption.getRenderLevel();
+		ContraptionMatrices matrices = clientContraption.getMatrices();
 		matrices.setup(poseStack, entity);
 
 		if (!VisualizationManager.supportsVisualization(level)) {
 			for (RenderType renderType : RenderType.chunkBufferLayers()) {
-				SuperByteBuffer sbb = renderInfo.getBuffer(renderType);
+				SuperByteBuffer sbb = ClientContraption.getBuffer(contraption, renderWorld, renderType);
 				if (!sbb.isEmpty()) {
 					VertexConsumer vc = buffers.getBuffer(renderType);
 					sbb.transform(matrices.getModel())
@@ -74,16 +75,16 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 			}
 		}
 
-		renderBlockEntities(level, renderWorld, contraption, matrices, buffers);
+		var adjustRenderedBlockEntities = clientContraption.getAndAdjustShouldRenderBlockEntities();
+
+		clientContraption.scratchErroredBlockEntities.clear();
+
+		BlockEntityRenderHelper.renderBlockEntities(clientContraption.renderedBlockEntityView, adjustRenderedBlockEntities, clientContraption.scratchErroredBlockEntities, renderWorld, level, matrices.getModelViewProjection(), matrices.getLight(), buffers, AnimationTickHolder.getPartialTicks());
+
+		clientContraption.shouldRenderBlockEntities.andNot(clientContraption.scratchErroredBlockEntities);
 		renderActors(level, renderWorld, contraption, matrices, buffers);
 
 		matrices.clear();
-	}
-
-	private static void renderBlockEntities(Level level, VirtualRenderWorld renderWorld, Contraption c,
-		ContraptionMatrices matrices, MultiBufferSource buffer) {
-		BlockEntityRenderHelper.renderBlockEntities(level, renderWorld, c.getRenderedBEs(),
-			matrices.getModelViewProjection(), matrices.getLight(), buffer);
 	}
 
 	private static void renderActors(Level level, VirtualRenderWorld renderWorld, Contraption c,

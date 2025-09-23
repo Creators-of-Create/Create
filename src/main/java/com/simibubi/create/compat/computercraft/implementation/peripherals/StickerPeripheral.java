@@ -2,7 +2,6 @@ package com.simibubi.create.compat.computercraft.implementation.peripherals;
 
 import org.jetbrains.annotations.NotNull;
 
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.chassis.StickerBlockEntity;
@@ -20,6 +19,11 @@ public class StickerPeripheral extends SyncedPeripheral<StickerBlockEntity> {
 	@LuaFunction
 	public boolean isExtended() {
 		return blockEntity.isBlockStateExtended();
+	}
+
+	@LuaFunction
+	public boolean isAttachedToBlock() {
+		return blockEntity.isBlockStateExtended() && blockEntity.isAttachedToBlock();
 	}
 
 	@LuaFunction(mainThread = true)

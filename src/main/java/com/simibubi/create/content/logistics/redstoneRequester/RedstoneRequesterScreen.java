@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
@@ -27,7 +25,6 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -180,7 +177,7 @@ public class RedstoneRequesterScreen extends AbstractSimiContainerScreen<Redston
 
 		if (addressBox.mouseScrolled(mouseX, mouseY, pDelta))
 			return true;
-		
+
 		for (int i = 0; i < amounts.size(); i++) {
 			int inputX = x + 27 + i * 20;
 			int inputY = y + 28;
@@ -195,15 +192,6 @@ public class RedstoneRequesterScreen extends AbstractSimiContainerScreen<Redston
 		}
 
 		return super.mouseScrolled(mouseX, mouseY, pDelta);
-	}
-
-	/*
-	 * Fixes InventorySorter nabbing the scroll event. This screen needs it for
-	 * amount control
-	 */
-	@Override
-	public @Nullable Slot getSlotUnderMouse() {
-		return null;
 	}
 
 	@Override

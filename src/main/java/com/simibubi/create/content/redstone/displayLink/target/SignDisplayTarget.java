@@ -5,7 +5,8 @@ import java.util.List;
 import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.data.Couple;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -20,22 +21,24 @@ public class SignDisplayTarget extends DisplayTarget {
 			return;
 
 		boolean changed = false;
-		SignText signText = new SignText();
+		Couple<SignText> signText = Couple.createWithContext(sign::getText);
 		for (int i = 0; i < text.size() && i + line < 4; i++) {
 			if (i == 0)
 				reserve(i + line, sign, context);
 			if (i > 0 && isReserved(i + line, sign, context))
 				break;
 
-			signText = signText.setMessage(i + line, text.get(i));
+			final int iFinal = i;
+			String content = text.get(iFinal).getString(sign.getMaxTextLineWidth());
+			signText = signText.map(st -> st.setMessage(iFinal + line, Component.literal(content)));
 			changed = true;
 		}
 
-		if (changed)
-			for (boolean side : Iterate.trueAndFalse)
-				sign.setText(signText, side);
-		context.level()
-			.sendBlockUpdated(context.getTargetPos(), sign.getBlockState(), sign.getBlockState(), 2);
+		if (changed) {
+			signText.forEachWithContext(sign::setText);
+			context.level()
+				.sendBlockUpdated(context.getTargetPos(), sign.getBlockState(), sign.getBlockState(), 2);
+		}
 	}
 
 	@Override

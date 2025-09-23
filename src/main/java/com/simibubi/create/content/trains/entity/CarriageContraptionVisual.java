@@ -1,11 +1,14 @@
 package com.simibubi.create.content.trains.entity;
 
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionVisual;
 import com.simibubi.create.content.trains.bogey.BogeyVisual;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
@@ -14,6 +17,8 @@ import dev.engine_room.flywheel.lib.util.RecyclingPoseStack;
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 
 public class CarriageContraptionVisual extends ContraptionVisual<CarriageContraptionEntity> {
 	private final PoseStack poseStack = new RecyclingPoseStack();
@@ -38,6 +43,22 @@ public class CarriageContraptionVisual extends ContraptionVisual<CarriageContrap
 		super.beginFrame(ctx);
 
 		animate(ctx.partialTick());
+	}
+
+	@Override
+	protected <T extends BlockEntity> void setupVisualizer(T be, float partialTicks) {
+		if (entity.getContraption() instanceof CarriageContraption cc && cc.isHiddenInPortal(be.getBlockPos())) {
+			return;
+		}
+		super.setupVisualizer(be, partialTicks);
+	}
+
+	@Override
+	protected void setupActor(MutablePair<StructureBlockInfo, MovementContext> actor, VirtualRenderWorld renderLevel) {
+		if (entity.getContraption() instanceof CarriageContraption cc && cc.isHiddenInPortal(actor.left.pos())) {
+			return;
+		}
+		super.setupActor(actor, renderLevel);
 	}
 
 	/**

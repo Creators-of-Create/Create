@@ -28,6 +28,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
 
 public class ItemHelper {
 
@@ -308,7 +309,7 @@ public class ItemHelper {
 		if (entityIn instanceof PackageEntity packageEntity) {
 			return packageEntity.getBox();
 		}
-		return entityIn instanceof ItemEntity ? ((ItemEntity) entityIn).getItem() : ItemStack.EMPTY;
+		return entityIn instanceof ItemEntity itemEntity ? itemEntity.getItem() : ItemStack.EMPTY;
 	}
 
 	public static ItemStack limitCountToMaxStackSize(ItemStack stack, boolean simulate) {
@@ -327,8 +328,23 @@ public class ItemHelper {
 			throw new IllegalArgumentException("Slot count mismatch");
 		}
 
+		for (int slot = to.getSlots() - 1; slot >= 0; slot--) {
+			to.setStackInSlot(slot, ItemStack.EMPTY);
+		}
+
 		for (int i = 0; i < from.getSlots(); i++) {
 			to.setStackInSlot(i, from.getStackInSlot(i).copy());
 		}
+	}
+
+	public static List<ItemStack> getNonEmptyStacks(ItemStackHandler handler) {
+		List<ItemStack> stacks = new ArrayList<>();
+		for (int i = 0; i < handler.getSlots(); i++) {
+			ItemStack stack = handler.getStackInSlot(i);
+			if (!stack.isEmpty()) {
+				stacks.add(stack);
+			}
+		}
+		return stacks;
 	}
 }

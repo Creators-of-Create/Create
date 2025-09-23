@@ -26,6 +26,8 @@ import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -33,28 +35,27 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityType.EntityFactory;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 
 public class AllEntityTypes {
 
 	public static final EntityEntry<OrientedContraptionEntity> ORIENTED_CONTRAPTION = contraption("contraption",
 		OrientedContraptionEntity::new, () -> OrientedContraptionEntityRenderer::new, 5, 3, true)
-			.visual(() -> ContraptionVisual::new)
-			.register();
+		.visual(() -> ContraptionVisual::new)
+		.register();
 	public static final EntityEntry<ControlledContraptionEntity> CONTROLLED_CONTRAPTION =
 		contraption("stationary_contraption", ControlledContraptionEntity::new, () -> ContraptionEntityRenderer::new,
 			20, 40, false)
-				.visual(() -> ContraptionVisual::new)
-				.register();
-	public static final EntityEntry<GantryContraptionEntity> GANTRY_CONTRAPTION = contraption("gantry_contraption",
-		GantryContraptionEntity::new, () -> ContraptionEntityRenderer::new, 10, 40, false)
 			.visual(() -> ContraptionVisual::new)
 			.register();
+	public static final EntityEntry<GantryContraptionEntity> GANTRY_CONTRAPTION = contraption("gantry_contraption",
+		GantryContraptionEntity::new, () -> ContraptionEntityRenderer::new, 10, 40, false)
+		.visual(() -> ContraptionVisual::new)
+		.register();
 	public static final EntityEntry<CarriageContraptionEntity> CARRIAGE_CONTRAPTION =
 		contraption("carriage_contraption", CarriageContraptionEntity::new,
 			() -> CarriageContraptionEntityRenderer::new, 15, 3, true)
-				.visual(() -> CarriageContraptionVisual::new)
-				.register();
+			.visual(() -> CarriageContraptionVisual::new)
+			.register();
 
 	public static final EntityEntry<SuperGlueEntity> SUPER_GLUE =
 		register("super_glue", SuperGlueEntity::new, () -> SuperGlueRenderer::new, MobCategory.MISC, 10,
@@ -79,18 +80,18 @@ public class AllEntityTypes {
 	//
 
 	private static <T extends Entity> CreateEntityBuilder<T, ?> contraption(String name, EntityFactory<T> factory,
-		NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer, int range,
-		int updateFrequency, boolean sendVelocity) {
+																			NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer, int range,
+																			int updateFrequency, boolean sendVelocity) {
 		return register(name, factory, renderer, MobCategory.MISC, range, updateFrequency, sendVelocity, true,
 			AbstractContraptionEntity::build);
 	}
 
 	private static <T extends Entity> CreateEntityBuilder<T, ?> register(String name, EntityFactory<T> factory,
-		NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer,
-		MobCategory group, int range, int updateFrequency, boolean sendVelocity, boolean immuneToFire,
-		NonNullConsumer<EntityType.Builder<T>> propertyBuilder) {
+																		 NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer,
+																		 MobCategory group, int range, int updateFrequency, boolean sendVelocity, boolean immuneToFire,
+																		 NonNullConsumer<EntityType.Builder<T>> propertyBuilder) {
 		String id = Lang.asId(name);
-		return (CreateEntityBuilder<T, ?>) Create.REGISTRATE
+		return (CreateEntityBuilder<T, ?>) Create.registrate()
 			.entity(id, factory, group)
 			.properties(b -> b.setTrackingRange(range)
 				.setUpdateInterval(updateFrequency)
@@ -108,5 +109,6 @@ public class AllEntityTypes {
 			.build());
 	}
 
-	public static void register() {}
+	public static void register() {
+	}
 }

@@ -11,8 +11,8 @@
         },
 		"fixed": {
             "rotation": [ 90, 0, 0 ],
-            "translation": [ 0, 0, 0],
-            "scale":[ 0.4, 0.4, 0.4 ]
+            "translation": [ 0, 0, -1],
+            "scale":[ 0.375, 0.375, 0.375 ]
         }
     }
 }

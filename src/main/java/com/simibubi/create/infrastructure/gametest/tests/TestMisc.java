@@ -8,6 +8,7 @@ import com.simibubi.create.content.schematics.SchematicExport;
 import com.simibubi.create.content.schematics.SchematicItem;
 import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity;
 import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity.State;
+import com.simibubi.create.foundation.utility.CreatePaths;
 import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
 import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
@@ -35,7 +36,7 @@ public class TestMisc {
 		BlockPos redEndTop = helper.absolutePos(new BlockPos(5, 4, 7));
 		ServerLevel level = helper.getLevel();
 		SchematicExport.saveSchematic(
-			SchematicExport.SCHEMATICS.resolve("uploaded/Deployer"), "schematicannon_gametest", true,
+			CreatePaths.UPLOADED_SCHEMATICS_DIR.resolve("Deployer"), "schematicannon_gametest", true,
 			level, whiteEndBottom, redEndTop
 		);
 		ItemStack schematic =
@@ -86,12 +87,14 @@ public class TestMisc {
 	public static void thresholdSwitchPulley(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(3, 7, 1);
 		BlockPos switchPos = new BlockPos(1, 6, 1);
+		BlockPos finalPos = new BlockPos(2, 2, 1);
 		helper.pullLever(lever);
 		helper.succeedWhen(() -> {
 			ThresholdSwitchBlockEntity switchBe = helper.getBlockEntity(AllBlockEntityTypes.THRESHOLD_SWITCH.get(), switchPos);
 			int level = switchBe.getStockLevel();
-			if (level < 0 || level > 100)
-				helper.fail("Invalid level: " + level);
+			int expectedLevel = helper.absolutePos(finalPos).getY();
+			if (level != expectedLevel)
+				helper.fail("Unexpected level: " + level);
 		});
 	}
 

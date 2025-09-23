@@ -21,6 +21,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
+
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
@@ -52,19 +53,19 @@ public class PotionMixingRecipes {
 		for (Item container : allowedSupportedContainers) {
 			BottleType bottleType = PotionFluidHandler.bottleTypeFromItem(container);
 			for (PotionBrewing.Mix<Potion> mix : PotionBrewing.POTION_MIXES) {
-				FluidStack fromFluid = PotionFluidHandler.getFluidFromPotion(mix.from.get(), bottleType, 1000);
-				FluidStack toFluid = PotionFluidHandler.getFluidFromPotion(mix.to.get(), bottleType, 1000);
+				FluidStack fromFluid = PotionFluidHandler.getFluidFromPotion(mix.from.value(), bottleType, 1000);
+				FluidStack toFluid = PotionFluidHandler.getFluidFromPotion(mix.to.value(), bottleType, 1000);
 
 				mixingRecipes.add(createRecipe("potion_mixing_vanilla_" + recipeIndex++, mix.ingredient, fromFluid, toFluid));
 			}
 		}
 
 		for (PotionBrewing.Mix<Item> mix : PotionBrewing.CONTAINER_MIXES) {
-			Item from = mix.from.get();
+			Item from = mix.from.value();
 			if (!allowedSupportedContainers.contains(from)) {
 				continue;
 			}
-			Item to = mix.to.get();
+			Item to = mix.to.value();
 			if (!allowedSupportedContainers.contains(to)) {
 				continue;
 			}

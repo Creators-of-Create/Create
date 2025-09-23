@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
@@ -38,12 +40,12 @@ public class GlobalLogisticsManager {
 		LogisticsNetwork network = logisticsNetworks.get(networkId);
 		return network == null || network.owner == null || network.owner.equals(player.getUUID());
 	}
-	
+
 	public boolean isLockable(UUID networkId) {
 		LogisticsNetwork network = logisticsNetworks.get(networkId);
 		return network != null;
 	}
-	
+
 	public boolean isLocked(UUID networkId) {
 		LogisticsNetwork network = logisticsNetworks.get(networkId);
 		return network != null && network.locked;
@@ -86,6 +88,7 @@ public class GlobalLogisticsManager {
 		return logisticsNetwork.totalLinks.size() - logisticsNetwork.loadedLinks.size();
 	}
 
+	@Nullable
 	public RequestPromiseQueue getQueuedPromises(UUID networkId) {
 		return !logisticsNetworks.containsKey(networkId) ? null : logisticsNetworks.get(networkId).panelPromises;
 	}

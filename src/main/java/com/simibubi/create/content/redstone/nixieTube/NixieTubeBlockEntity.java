@@ -107,6 +107,8 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 				cachedSignalTE = new WeakReference<>(null);
 			}
 			return;
+		} else {
+			computerSignal = null;
 		}
 
 		SignalBlockEntity signalBlockEntity = cachedSignalTE.get();
@@ -144,7 +146,7 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 
 	public MutableComponent getFullText() {
 		return customText.map(DynamicComponent::get)
-			.orElse(Component.literal("" + redstoneStrength));
+				.orElse(Component.literal("" + redstoneStrength));
 	}
 
 	public void updateRedstoneStrength(int signalStrength) {
@@ -158,7 +160,7 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 		if (tagElement == null)
 			return;
 		if (customText.filter(d -> d.sameAs(tagElement))
-			.isPresent())
+				.isPresent())
 			return;
 
 		DynamicComponent component = customText.orElseGet(DynamicComponent::new);
@@ -177,11 +179,11 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 		if (signalState != null || computerSignal != null)
 			return;
 		customText.map(DynamicComponent::resolve)
-			.ifPresentOrElse(
-				fullText -> displayedStrings =
-					Couple.create(charOrEmpty(fullText, nixieIndex * 2), charOrEmpty(fullText, nixieIndex * 2 + 1)),
-				() -> displayedStrings =
-					Couple.create(redstoneStrength < 10 ? "0" : "1", String.valueOf(redstoneStrength % 10)));
+				.ifPresentOrElse(
+						fullText -> displayedStrings = Couple.create(charOrEmpty(fullText, nixieIndex * 2),
+								charOrEmpty(fullText, nixieIndex * 2 + 1)),
+						() -> displayedStrings = Couple.create(redstoneStrength < 10 ? "0" : "1",
+								String.valueOf(redstoneStrength % 10)));
 	}
 
 	public void clearCustomText() {
@@ -217,7 +219,7 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 
 		if (customText.isEmpty())
 			redstoneStrength = nbt.getInt("RedstoneStrength");
-		if (clientPacket) {
+		if (clientPacket || isVirtual()) {
 			if (nbt.contains("ComputerSignal")) {
 				byte[] encodedComputerSignal = nbt.getByteArray("ComputerSignal");
 				if (computerSignal == null)
@@ -226,7 +228,6 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 			} else {
 				computerSignal = null;
 			}
-
 			updateDisplayedStrings();
 		}
 	}
@@ -238,7 +239,7 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 		if (customText.isPresent()) {
 			nbt.putInt("CustomTextIndex", nixieIndex);
 			customText.get()
-				.write(nbt);
+					.write(nbt);
 		} else
 			nbt.putInt("RedstoneStrength", redstoneStrength);
 		if (clientPacket && computerSignal != null)

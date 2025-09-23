@@ -8,6 +8,7 @@ import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -90,8 +91,7 @@ public class RedstoneRequesterBlock extends Block implements IBE<RedstoneRequest
 		return onBlockEntityUse(pLevel, pPos, be -> be.use(pPlayer));
 	}
 
-	public static void programRequester(ServerPlayer player, StockTickerBlockEntity be, PackageOrder order,
-		String address, PackageOrder orderContext) {
+	public static void programRequester(ServerPlayer player, StockTickerBlockEntity be, PackageOrderWithCrafts order, String address) {
 		ItemStack stack = player.getMainHandItem();
 		boolean isRequester = AllBlocks.REDSTONE_REQUESTER.isIn(stack);
 		boolean isShopCloth = AllItemTags.TABLE_CLOTHS.matches(stack);
@@ -100,7 +100,6 @@ public class RedstoneRequesterBlock extends Block implements IBE<RedstoneRequest
 
 		AutoRequestData autoRequestData = new AutoRequestData();
 		autoRequestData.encodedRequest = order;
-		autoRequestData.encodedRequestContext = orderContext;
 		autoRequestData.encodedTargetAdress = address;
 		autoRequestData.targetOffset = be.getBlockPos();
 		autoRequestData.targetDim = player.level()
@@ -143,15 +142,13 @@ public class RedstoneRequesterBlock extends Block implements IBE<RedstoneRequest
 	}
 
 	@Override
-	public void setPlacedBy(Level pLevel, BlockPos requesterPos, BlockState pState, LivingEntity pPlacer,
-		ItemStack pStack) {
+	public void setPlacedBy(Level pLevel, BlockPos requesterPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		Player player = pPlacer instanceof Player ? (Player) pPlacer : null;
 		withBlockEntityDo(pLevel, requesterPos, rrbe -> {
 			AutoRequestData data = AutoRequestData.readFromItem(pLevel, player, requesterPos, pStack);
 			if (data == null)
 				return;
 			rrbe.encodedRequest = data.encodedRequest;
-			rrbe.encodedRequestContext = data.encodedRequestContext;
 			rrbe.encodedTargetAdress = data.encodedTargetAdress;
 		});
 	}

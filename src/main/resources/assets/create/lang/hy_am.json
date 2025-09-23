@@ -1,1 +1,6 @@
-{}
+{
+  "advancement.create.belt": "",
+  "advancement.create.brass": "True Alloys",
+  "create.ponder.mod_name": "Create",
+  "itemGroup.create.base": "Create"
+}

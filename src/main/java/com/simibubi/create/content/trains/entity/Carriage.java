@@ -804,8 +804,12 @@ public class Carriage {
 
 		@OnlyIn(Dist.CLIENT)
 		private void invalidate(CarriageContraptionEntity entity) {
-			entity.getContraption().deferInvalidate = true;
+			// Update the portal cutoff first to ensure it's reflected in the updated mesh.
 			entity.updateRenderedPortalCutoff();
+			entity.getContraption()
+				.invalidateClientContraptionStructure();
+			entity.getContraption()
+				.invalidateClientContraptionChildren();
 		}
 
 		private void createEntity(Level level, boolean loadPassengers) {

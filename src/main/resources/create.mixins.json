@@ -8,7 +8,9 @@
   "plugin": "com.simibubi.create.foundation.mixin.CreateMixinPlugin",
   "mixins": [
     "ArmorTrimMixin",
+    "BeehiveBlockMixin",
     "BlockItemMixin",
+    "BlockMixin",
     "BuiltInRegistriesMixin",
     "ClientboundMapItemDataPacketMixin",
     "CustomItemUseEffectsMixin",
@@ -23,12 +25,16 @@
     "TestCommandMixin",
     "WaterWheelFluidSpreadMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
+    "accessor.BlockLootSubProviderAccessor",
     "accessor.BuiltInRegistriesAccessor",
+    "accessor.ConcretePowderBlockAccessor",
+    "accessor.CropBlockAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
     "accessor.FlowingFluidAccessor",
     "accessor.FluidInteractionRegistryAccessor",
     "accessor.GameTestHelperAccessor",
+    "accessor.ItemFrameAccessor",
     "accessor.ItemModelGeneratorsAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MobEffectInstanceAccessor",
@@ -42,6 +48,7 @@
   "client": [
     "accessor.AgeableListModelAccessor",
     "accessor.FontAccessor",
+    "accessor.GuiAccessor",
     "accessor.HumanoidArmorLayerAccessor",
     "accessor.LevelRendererAccessor",
     "accessor.MouseHandlerAccessor",
@@ -55,7 +62,10 @@
     "client.LevelRendererMixin",
     "client.MapRendererMapInstanceMixin",
     "client.PlayerRendererMixin",
-    "compat.JourneyFullscreenMapMixin"
+    "compat.journeymap.JourneyFullscreenMapMixin",
+    "compat.xaeros.XaeroFullscreenMapAccessor",
+    "compat.xaeros.XaeroFullscreenMapMixin",
+    "compat.xaeros.XaeroPauseScreenOverrideMixin"
   ],
   "injectors": {
     "defaultRequire": 1

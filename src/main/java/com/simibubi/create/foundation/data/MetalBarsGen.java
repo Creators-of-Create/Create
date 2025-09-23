@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.data;
 
-import static com.simibubi.create.Create.REGISTRATE;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.EAST;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.NORTH;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.SOUTH;
@@ -9,11 +8,14 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.Create;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
+
+import net.minecraftforge.client.model.generators.ModelFile;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -23,8 +25,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
-
-import net.minecraftforge.client.model.generators.ModelFile;
 
 public class MetalBarsGen {
 
@@ -124,7 +124,7 @@ public class MetalBarsGen {
 
 	public static BlockEntry<IronBarsBlock> createBars(String name, boolean specialEdge,
 													   Supplier<DataIngredient> ingredient, MapColor color) {
-		return REGISTRATE.block(name + "_bars", IronBarsBlock::new)
+		return Create.registrate().block(name + "_bars", IronBarsBlock::new)
 			.addLayer(() -> RenderType::cutoutMipped)
 			.initialProperties(() -> Blocks.IRON_BARS)
 			.properties(p -> p.sound(SoundType.COPPER)
