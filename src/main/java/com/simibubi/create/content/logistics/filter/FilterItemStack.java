@@ -144,8 +144,6 @@ public class FilterItemStack {
 
 		@Override
 		public boolean test(Level world, ItemStack stack, boolean matchNBT) {
-			if (containedItems.isEmpty())
-				return super.test(world, stack, matchNBT);
 			for (FilterItemStack filterItemStack : containedItems)
 				if (filterItemStack.test(world, stack, shouldRespectNBT))
 					return !isBlacklist;
