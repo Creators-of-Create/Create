@@ -351,7 +351,9 @@ public class TableClothBlockEntity extends SmartBlockEntity implements Transform
 	}
 
 	public void transform(BlockEntity blockEntity, StructureTransform transform){
-		facing = transform.rotateFacing(facing);
+		facing = transform.mirrorFacing(facing);
+		if (transform.rotationAxis == Direction.Axis.Y)
+			facing = transform.rotateFacing(facing);
 		notifyUpdate();
 	}
 
