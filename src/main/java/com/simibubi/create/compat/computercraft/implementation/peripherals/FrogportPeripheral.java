@@ -8,6 +8,9 @@ import com.simibubi.create.content.logistics.packagePort.PackagePortConfiguratio
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 
+import com.simibubi.create.compat.computercraft.events.ComputerEvent;
+import com.simibubi.create.compat.computercraft.events.PackageEvent;
+import com.simibubi.create.compat.computercraft.implementation.luaObjects.PackageLuaObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -68,6 +71,13 @@ public class FrogportPeripheral extends SyncedPeripheral<FrogportBlockEntity> {
 	@LuaFunction(mainThread = true)
 	public Map<String, ?> getItemDetail(int slot) throws LuaException {
 		return ComputerUtil.getItemDetail(blockEntity.inventory, slot);
+	}
+
+	@Override
+	public void prepareComputerEvent(@NotNull ComputerEvent event) {
+		if (event instanceof PackageEvent pe) {
+			queueEvent(pe.status, new PackageLuaObject(null, pe.box));
+		}
 	}
 
 	@NotNull

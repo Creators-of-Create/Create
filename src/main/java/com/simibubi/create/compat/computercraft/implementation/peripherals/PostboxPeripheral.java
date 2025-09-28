@@ -10,6 +10,9 @@ import dan200.computercraft.api.lua.LuaFunction;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.simibubi.create.compat.computercraft.events.ComputerEvent;
+import com.simibubi.create.compat.computercraft.events.PackageEvent;
+import com.simibubi.create.compat.computercraft.implementation.luaObjects.PackageLuaObject;
 import java.util.Map;
 
 public class PostboxPeripheral extends SyncedPeripheral<PostboxBlockEntity> {
@@ -68,6 +71,13 @@ public class PostboxPeripheral extends SyncedPeripheral<PostboxBlockEntity> {
 		}
 		throw new LuaException("Unknown configuration: \"" + config
 				+ "\" Possible configurations are: \"send_recieve\" and \"send\".");
+	}
+
+	@Override
+	public void prepareComputerEvent(@NotNull ComputerEvent event) {
+		if (event instanceof PackageEvent pe) {
+			queueEvent(pe.status, new PackageLuaObject(null, pe.box));
+		}
 	}
 
 	@NotNull

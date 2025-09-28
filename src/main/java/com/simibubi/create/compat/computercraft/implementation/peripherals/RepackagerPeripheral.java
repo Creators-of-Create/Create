@@ -9,6 +9,9 @@ import com.simibubi.create.compat.computercraft.implementation.ComputerUtil;
 
 import dan200.computercraft.api.peripheral.IComputerAccess;
 
+import com.simibubi.create.compat.computercraft.events.ComputerEvent;
+import com.simibubi.create.compat.computercraft.events.RepackageEvent;
+import com.simibubi.create.compat.computercraft.events.PackageEvent;
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.world.item.ItemStack;
@@ -82,6 +85,15 @@ public class RepackagerPeripheral extends SyncedPeripheral<RepackagerBlockEntity
 			return null;
 
 		return new PackageLuaObject(blockEntity, box);
+	}
+
+	@Override
+	public void prepareComputerEvent(@NotNull ComputerEvent event) {
+		if (event instanceof RepackageEvent pe) {
+			queueEvent("package_repackaged", new PackageLuaObject(blockEntity, pe.box), pe.count);
+		} else if (event instanceof PackageEvent pe) {
+			queueEvent(pe.status, new PackageLuaObject(blockEntity, pe.box));
+		}
 	}
 
 	@NotNull
