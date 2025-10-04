@@ -99,12 +99,12 @@ public class PumpBlock extends DirectionalKineticBlock
 		BlockState toPlace = super.getStateForPlacement(context);
 		Level level = context.getLevel();
 		BlockPos pos = context.getClickedPos();
-		Player player = context.getPlayer();
+
+		boolean isShiftKeyDown = context.getPlayer() != null && context.getPlayer().isShiftKeyDown();
 		toPlace = ProperWaterloggedBlock.withWater(level, toPlace, pos);
 
 		Direction nearestLookingDirection = context.getNearestLookingDirection();
-		Direction targetDirection = context.getPlayer() != null && context.getPlayer()
-			.isShiftKeyDown() ? nearestLookingDirection : nearestLookingDirection.getOpposite();
+		Direction targetDirection = isShiftKeyDown ? nearestLookingDirection : nearestLookingDirection.getOpposite();
 		Direction bestConnectedDirection = null;
 		double bestDistance = Double.MAX_VALUE;
 
@@ -121,14 +121,10 @@ public class PumpBlock extends DirectionalKineticBlock
 			bestConnectedDirection = d;
 		}
 
-		if (bestConnectedDirection == null)
-			return toPlace;
-		if (bestConnectedDirection.getAxis() == targetDirection.getAxis())
-			return toPlace;
-		if (player.isShiftKeyDown() && bestConnectedDirection.getAxis() != targetDirection.getAxis())
-			return toPlace;
+		if (bestConnectedDirection != null && bestConnectedDirection.getAxis() != targetDirection.getAxis() && !isShiftKeyDown)
+			return toPlace.setValue(FACING, bestConnectedDirection);
 
-		return toPlace.setValue(FACING, bestConnectedDirection);
+		return toPlace;
 	}
 
 	public static boolean isPump(BlockState state) {

@@ -27,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
+
 import net.minecraftforge.network.PacketDistributor;
 
 public class ContraptionControlsMovingInteraction extends MovingInteractionBehaviour {
@@ -45,7 +46,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 		if (contraption instanceof ElevatorContraption ec)
 			return elevatorInteraction(localPos, contraptionEntity, ec, ctx);
 		if (contraptionEntity.level().isClientSide()) {
-			if (contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
+			if (contraption.getBlockEntityClientSide(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
 				cbe.pressButton();
 			return true;
 		}
@@ -105,7 +106,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 			return true;
 		if (!filter.is(ItemTags.DOORS))
 			return true;
-		
+
 		// Special case: Doors are toggled on all carriages of a train
 		Carriage carriage = cce.getCarriage();
 		Train train = carriage.train;
@@ -142,7 +143,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 			return true;
 
 		AllPackets.getChannel().sendToServer(new ElevatorTargetFloorPacket(contraptionEntity, efs.currentTargetY));
-		if (contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
+		if (contraption.getBlockEntityClientSide(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
 			cbe.pressButton();
 		return true;
 	}

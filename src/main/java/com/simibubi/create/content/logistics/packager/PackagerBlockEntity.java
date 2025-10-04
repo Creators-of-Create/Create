@@ -142,11 +142,11 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			if (!level.isClientSide() && !queuedExitingPackages.isEmpty() && heldBox.isEmpty()) {
 				BigItemStack entry = queuedExitingPackages.get(0);
 				heldBox = entry.stack.copy();
-				
+
 				entry.count--;
 				if (entry.count <= 0)
 					queuedExitingPackages.remove(0);
-				
+
 				animationInward = false;
 				animationTicks = CYCLE;
 				notifyUpdate();
@@ -335,7 +335,9 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		attemptToSend(null);
 
 		// dont send multiple packages when a button signal length is received
-		buttonCooldown = 40;
+		if (buttonCooldown <= 0) { // still on button cooldown, don't prolong it
+			buttonCooldown = 40;
+		}
 	}
 
 	public boolean unwrapBox(ItemStack box, boolean simulate) {

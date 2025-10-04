@@ -53,13 +53,7 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 		super(type, pos, state);
 		addressFilter = "";
 		acceptsPackages = true;
-		inventory = new SmartInventory(18, this, (slot, stack) -> {
-			if (!PackageItem.isPackage(stack))
-				return false;
-
-			String filterString = getFilterString();
-			return filterString != null && PackageItem.matchAddress(stack, filterString);
-		});
+		inventory = new SmartInventory(18, this, (slot, stack) -> PackageItem.isPackage(stack));
 		itemHandler = LazyOptional.of(() -> new PackagePortAutomationInventoryWrapper(inventory, this));
 	}
 

@@ -1,7 +1,6 @@
 package com.simibubi.create.content.schematics.client;
 
 import java.util.List;
-import java.util.Vector;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -68,15 +67,11 @@ public class SchematicHandler implements IGuiOverlay {
 	private ItemStack activeSchematicItem;
 	private AABBOutline outline;
 
-	private Vector<SchematicRenderer> renderers;
-	private SchematicHotbarSlotOverlay overlay;
+	private final SchematicRenderer[] renderers = new SchematicRenderer[3];
+	private final SchematicHotbarSlotOverlay overlay;
 	private ToolSelectionScreen selectionScreen;
 
 	public SchematicHandler() {
-		renderers = new Vector<>(3);
-		for (int i = 0; i < renderers.capacity(); i++)
-			renderers.add(new SchematicRenderer());
-
 		overlay = new SchematicHotbarSlotOverlay();
 		currentTool = ToolType.DEPLOY;
 		selectionScreen = new ToolSelectionScreen(ImmutableList.of(ToolType.DEPLOY), this::equip);
@@ -91,7 +86,6 @@ public class SchematicHandler implements IGuiOverlay {
 				syncCooldown = 0;
 				activeHotbarSlot = 0;
 				activeSchematicItem = null;
-				renderers.forEach(r -> r.setActive(false));
 			}
 			return;
 		}
@@ -107,7 +101,6 @@ public class SchematicHandler implements IGuiOverlay {
 			if (activeSchematicItem != null && itemLost(player)) {
 				activeHotbarSlot = 0;
 				activeSchematicItem = null;
-				renderers.forEach(r -> r.setActive(false));
 			}
 			return;
 		}
@@ -115,7 +108,6 @@ public class SchematicHandler implements IGuiOverlay {
 		if (!active || !stack.getTag()
 			.getString("File")
 			.equals(displayedSchematic)) {
-			renderers.forEach(r -> r.setActive(false));
 			init(player, stack);
 		}
 		if (!active)
@@ -195,12 +187,9 @@ public class SchematicHandler implements IGuiOverlay {
 			transform.apply(be);
 		fixControllerBlockEntities(wMirroredLR);
 
-		renderers.get(0)
-			.display(w);
-		renderers.get(1)
-			.display(wMirroredFB);
-		renderers.get(2)
-			.display(wMirroredLR);
+		renderers[0] = new SchematicRenderer(w);
+		renderers[1] = new SchematicRenderer(wMirroredFB);
+		renderers[2] = new SchematicRenderer(wMirroredLR);
 	}
 
 	private void fixControllerBlockEntities(SchematicLevel level) {
@@ -224,48 +213,46 @@ public class SchematicHandler implements IGuiOverlay {
 	}
 
 	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {
-		boolean present = activeSchematicItem != null;
-		if (!active && !present)
+		if (!active) {
 			return;
-
-		if (active) {
-			ms.pushPose();
-			currentTool.getTool()
-				.renderTool(ms, buffer, camera);
-			ms.popPose();
 		}
+		boolean present = activeSchematicItem != null;
+		if (!present) {
+			return;
+		}
+
+		ms.pushPose();
+		currentTool.getTool()
+			.renderTool(ms, buffer, camera);
+		ms.popPose();
 
 		ms.pushPose();
 		transformation.applyTransformations(ms, camera);
 
-		if (!renderers.isEmpty()) {
-			float pt = AnimationTickHolder.getPartialTicks();
-			boolean lr = transformation.getScaleLR()
-				.getValue(pt) < 0;
-			boolean fb = transformation.getScaleFB()
-				.getValue(pt) < 0;
-			if (lr && !fb)
-				renderers.get(2)
-					.render(ms, buffer);
-			else if (fb && !lr)
-				renderers.get(1)
-					.render(ms, buffer);
-			else
-				renderers.get(0)
-					.render(ms, buffer);
+		float pt = AnimationTickHolder.getPartialTicks();
+		boolean lr = transformation.getScaleLR()
+			.getValue(pt) < 0;
+		boolean fb = transformation.getScaleFB()
+			.getValue(pt) < 0;
+		if (lr && !fb && renderers[2] != null) {
+			renderers[2].render(ms, buffer);
+		} else if (fb && !lr && renderers[1] != null) {
+			renderers[1].render(ms, buffer);
+		} else if (renderers[0] != null) {
+			renderers[0].render(ms, buffer);
 		}
 
-		if (active)
-			currentTool.getTool()
-				.renderOnSchematic(ms, buffer);
+		currentTool.getTool()
+			.renderOnSchematic(ms, buffer);
 
 		ms.popPose();
-
 	}
 
 	public void updateRenderers() {
 		for (SchematicRenderer renderer : renderers) {
-			renderer.update();
+			if (renderer != null) {
+				renderer.update();
+			}
 		}
 	}
 
@@ -408,7 +395,6 @@ public class SchematicHandler implements IGuiOverlay {
 		nbt.putBoolean("Deployed", false);
 		activeSchematicItem.setTag(nbt);
 		SchematicInstances.clearHash(activeSchematicItem);
-		renderers.forEach(r -> r.setActive(false));
 		active = false;
 		markDirty();
 	}

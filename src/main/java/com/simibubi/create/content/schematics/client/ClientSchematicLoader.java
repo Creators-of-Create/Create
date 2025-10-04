@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +20,7 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.CreatePaths;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -59,7 +59,7 @@ public class ClientSchematicLoader {
 	}
 
 	public void startNewUpload(String schematic) {
-		Path path = Paths.get("schematics", schematic);
+		Path path = CreatePaths.SCHEMATICS_DIR.resolve(schematic);
 
 		if (!Files.exists(path)) {
 			Create.LOGGER.error("Missing Schematic file: {}", path);
@@ -93,7 +93,7 @@ public class ClientSchematicLoader {
 	public static boolean validateSizeLimitation(long size) {
 		if (Minecraft.getInstance().hasSingleplayerServer())
 			return true;
-		Integer maxSize = AllConfigs.server().schematics.maxTotalSchematicSize.get();
+		long maxSize = AllConfigs.server().schematics.maxTotalSchematicSize.get();
 		if (size > maxSize * 1000) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player != null) {
@@ -160,10 +160,10 @@ public class ClientSchematicLoader {
 	}
 
 	public void refresh() {
-		FilesHelper.createFolderIfMissing("schematics");
+		FilesHelper.createFolderIfMissing(CreatePaths.SCHEMATICS_DIR);
 		availableSchematics.clear();
 
-		try (Stream<Path> paths = Files.list(Paths.get("schematics/"))) {
+		try (Stream<Path> paths = Files.list(CreatePaths.SCHEMATICS_DIR)) {
 			paths.filter(f -> !Files.isDirectory(f) && f.getFileName().toString().endsWith(".nbt"))
 				.forEach(path -> {
 					if (Files.isDirectory(path))
@@ -233,10 +233,6 @@ public class ClientSchematicLoader {
 
 	public List<Component> getAvailableSchematics() {
 		return availableSchematics;
-	}
-
-	public Path getPath(String name) {
-		return Paths.get("schematics", name + ".nbt");
 	}
 
 }

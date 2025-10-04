@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
 import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -93,7 +91,8 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 	private final BlockState state;
 	private final BlockPos pos;
 	private final BlockEntity blockEntity;
-	@Nullable private final Level level;
+	private final Level level;
+	private final NonVisualizationLevel nonVisualizationLevel;
 	private final List<Map.Entry<Property<?>, String>> propertiesForState;
 	private final int innerRadius = 50;
 	private final int outerRadius = 110;
@@ -108,7 +107,7 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 	private final RenderElement iconUp = RenderElement.of(AllIcons.I_PRIORITY_HIGH);
 	private final RenderElement iconDown = RenderElement.of(AllIcons.I_PRIORITY_LOW);
 
-	public static Optional<RadialWrenchMenu> tryCreateFor(BlockState state, BlockPos pos, @Nullable Level level) {
+	public static Optional<RadialWrenchMenu> tryCreateFor(BlockState state, BlockPos pos, Level level) {
 		if (BLOCK_BLACKLIST.contains(CatnipServices.REGISTRIES.getKeyOrThrow(state.getBlock())))
 			return Optional.empty();
 
@@ -117,13 +116,14 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 		if (propertiesForState.isEmpty())
 			return Optional.empty();
 
-        return Optional.of(new RadialWrenchMenu(state, pos, level, propertiesForState));
+		return Optional.of(new RadialWrenchMenu(state, pos, level, propertiesForState));
 	}
 
-	private RadialWrenchMenu(BlockState state, BlockPos pos, @Nullable Level level, List<Map.Entry<Property<?>, String>> properties) {
+	private RadialWrenchMenu(BlockState state, BlockPos pos, Level level, List<Map.Entry<Property<?>, String>> properties) {
 		this.state = state;
 		this.pos = pos;
 		this.level = level;
+		this.nonVisualizationLevel = new NonVisualizationLevel(level);
 		this.blockEntity = level.getBlockEntity(pos);
 		this.propertiesForState = properties;
 
@@ -200,7 +200,7 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 			float sectorSize = 360f / allStates.size();
 
 			selectedStateIndex = (int) Math.floor(
-					((-AngleHelper.deg(Mth.atan2(mouseOffsetX, mouseOffsetY)) + 180 + sectorSize / 2) % 360)
+				((-AngleHelper.deg(Mth.atan2(mouseOffsetX, mouseOffsetY)) + 180 + sectorSize / 2) % 360)
 					/ sectorSize
 			);
 
@@ -267,17 +267,20 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 			UIRenderHelper.drawRadialSector(graphics, innerRadius - 3, innerRadius - 2, -(sectorAngle / 2 + 90), sectorAngle, c, c);
 
 			TransformStack.of(poseStack)
-					.translateY(-(sectorWidth / 2f + innerRadius))
-					.rotateZDegrees(-i * sectorAngle);
+				.translateY(-(sectorWidth / 2f + innerRadius))
+				.rotateZDegrees(-i * sectorAngle);
 
 			poseStack.translate(0, 0, 100);
-			
+
 			try {
+				Level previousLevel = blockEntity.getLevel();
+				blockEntity.setLevel(nonVisualizationLevel);
 				GuiGameElement.of(blockState, blockEntity)
-						.rotateBlock(player.getXRot(), player.getYRot() + 180, 0f)
-						.scale(24)
-						.at(-12, 12)
-						.render(graphics);
+					.rotateBlock(player.getXRot(), player.getYRot() + 180, 0f)
+					.scale(24)
+					.at(-12, 12)
+					.render(graphics);
+				blockEntity.setLevel(previousLevel);
 			} catch (Exception e) {
 				Create.LOGGER.warn("Failed to render blockstate in RadialWrenchMenu", e);
 				allStates.remove(i);
@@ -296,16 +299,16 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 			poseStack.pushPose();
 
 			TransformStack.of(poseStack)
-					.rotateZDegrees(sectorAngle / 2);
+				.rotateZDegrees(sectorAngle / 2);
 
 			poseStack.translate(0, -innerRadius - 20, 10);
 
 			UIRenderHelper.angledGradient(graphics, -90, 0, 0, 0.5f, sectorWidth - 10, Color.WHITE.setAlpha(0.5f), Color.WHITE.setAlpha(0.15f));
-			UIRenderHelper.angledGradient(graphics,  90, 0, 0, 0.5f, 25              , Color.WHITE.setAlpha(0.5f), Color.WHITE.setAlpha(0.15f));
+			UIRenderHelper.angledGradient(graphics, 90, 0, 0, 0.5f, 25, Color.WHITE.setAlpha(0.5f), Color.WHITE.setAlpha(0.15f));
 			poseStack.popPose();
 
 			TransformStack.of(poseStack)
-					.rotateZDegrees(sectorAngle);
+				.rotateZDegrees(sectorAngle);
 		}
 
 		poseStack.popPose();
@@ -348,17 +351,17 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 
 	private void submitChange() {
 		BlockState selectedState = allStates.get(selectedStateIndex);
-        if (selectedState != state) {
-            AllPackets.getChannel().sendToServer(new RadialWrenchMenuSubmitPacket(pos, selectedState));
-        }
+		if (selectedState != state) {
+			AllPackets.getChannel().sendToServer(new RadialWrenchMenuSubmitPacket(pos, selectedState));
+		}
 
 		onClose();
-    }
+	}
 
 	@Override
 	public void renderBackground(GuiGraphics graphics) {
 		Color color = BACKGROUND_COLOR
-				.scaleAlpha(Math.min(1, (ticksOpen + AnimationTickHolder.getPartialTicks()) / 20f));
+			.scaleAlpha(Math.min(1, (ticksOpen + AnimationTickHolder.getPartialTicks()) / 20f));
 
 		graphics.fillGradient(0, 0, this.width, this.height, color.getRGB(), color.getRGB());
 	}

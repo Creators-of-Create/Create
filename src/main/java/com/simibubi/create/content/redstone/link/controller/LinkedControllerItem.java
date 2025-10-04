@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.state.BlockState;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -54,7 +55,7 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 				if (AllBlocks.LECTERN_CONTROLLER.has(hitState)) {
 					if (!world.isClientSide)
 						AllBlocks.LECTERN_CONTROLLER.get().withBlockEntityDo(world, pos, be ->
-								be.swapControllers(stack, player, ctx.getHand(), hitState));
+							be.swapControllers(stack, player, ctx.getHand(), hitState));
 					return InteractionResult.SUCCESS;
 				}
 			} else {
@@ -62,7 +63,7 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 					if (world.isClientSide)
 						DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.toggleBindMode(ctx.getClickedPos()));
 					player.getCooldowns()
-							.addCooldown(this, 2);
+						.addCooldown(this, 2);
 					return InteractionResult.SUCCESS;
 				}
 
@@ -115,10 +116,13 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 	}
 
 	public static ItemStackHandler getFrequencyItems(ItemStack stack) {
-		ItemStackHandler newInv = new ItemStackHandler(12);
 		if (AllItems.LINKED_CONTROLLER.get() != stack.getItem())
 			throw new IllegalArgumentException("Cannot get frequency items from non-controller: " + stack);
-		CompoundTag invNBT = stack.getOrCreateTagElement("Items");
+		return getFrequencyItems(stack.getOrCreateTagElement("Items"));
+	}
+
+	public static ItemStackHandler getFrequencyItems(CompoundTag invNBT) {
+		ItemStackHandler newInv = new ItemStackHandler(12);
 		if (!invNBT.isEmpty())
 			newInv.deserializeNBT(invNBT);
 		return newInv;

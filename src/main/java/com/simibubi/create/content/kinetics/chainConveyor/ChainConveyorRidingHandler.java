@@ -46,7 +46,7 @@ public class ChainConveyorRidingHandler {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.isPaused())
 			return;
-		if (!AllItemTags.CHAIN_RIDEABLE.matches(mc.player.getMainHandItem())) {
+		if (!mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches)) {
 			stopRiding();
 			return;
 		}
@@ -82,7 +82,7 @@ public class ChainConveyorRidingHandler {
 			targetPosition = stats.start()
 				.add((stats.end()
 					.subtract(stats.start())).normalize()
-						.scale(Math.min(stats.chainLength(), chainPosition)));
+					.scale(Math.min(stats.chainLength(), chainPosition)));
 		} else {
 			targetPosition = Vec3.atBottomCenterOf(ridingChainConveyor)
 				.add(VecHelper.rotate(new Vec3(0, 0.25, 1), chainPosition, Axis.Y));

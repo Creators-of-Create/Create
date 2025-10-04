@@ -96,4 +96,8 @@ public class FilterScreen extends AbstractFilterScreen<FilterMenu> {
 		return true;
 	}
 
+	@Override
+	protected int getTitleColor() {
+		return 0x303030;
+	}
 }

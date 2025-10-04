@@ -602,7 +602,7 @@ public class Train {
 		TravellingPoint trailingPoint = carriage.getTrailingPoint();
 		TravellingPoint leadingPoint = carriage.getLeadingPoint();
 
-		if (leadingPoint.node1 == null || trailingPoint.node1 == null)
+		if (leadingPoint.node1 == null || trailingPoint.node1 == null || leadingPoint.edge == null || trailingPoint.edge == null)
 			return;
 		ResourceKey<Level> dimension = leadingPoint.node1.getLocation().dimension;
 		if (!dimension.equals(trailingPoint.node1.getLocation().dimension))

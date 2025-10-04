@@ -84,10 +84,12 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 		boolean keepHeld = recipe.shouldKeepHeldItem() || creative;
 
 		if (!keepHeld) {
-			if (heldItem.isDamageableItem())
-				heldItem.hurtAndBreak(1, event.getEntity(), s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
-			else
+			if (heldItem.getMaxDamage() > 0) {
+				heldItem.hurtAndBreak(1, event.getEntity(),
+					s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+			} else {
 				heldItem.shrink(1);
+			}
 		}
 
 		awardAdvancements(event.getEntity(), transformedBlock);
@@ -116,9 +118,9 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 
 	public static DeployerApplicationRecipe asDeploying(Recipe<?> recipe) {
 		ManualApplicationRecipe mar = (ManualApplicationRecipe) recipe;
+		ResourceLocation id = AllRecipeTypes.CAN_BE_AUTOMATED.test(recipe) ? mar.id.withSuffix("_using_deployer") : mar.id;
 		ProcessingRecipeBuilder<DeployerApplicationRecipe> builder =
-			new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new,
-				new ResourceLocation(mar.id.getNamespace(), mar.id.getPath() + "_using_deployer"))
+			new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new, id)
 				.require(mar.ingredients.get(0))
 				.require(mar.ingredients.get(1));
 		for (ProcessingOutput output : mar.results)

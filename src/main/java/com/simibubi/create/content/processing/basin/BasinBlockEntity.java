@@ -8,6 +8,9 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.AllTags;
@@ -100,6 +103,8 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	public static final int OUTPUT_ANIMATION_TIME = 10;
 	List<IntAttached<ItemStack>> visualizedOutputItems;
 	List<IntAttached<FluidStack>> visualizedOutputFluids;
+
+	private @Nullable HeatLevel cachedHeatLevel;
 
 	public BasinBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -334,6 +339,8 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 	@Override
 	public void tick() {
+		cachedHeatLevel = null;
+
 		super.tick();
 		if (level.isClientSide) {
 			createFluidParticles();
@@ -781,6 +788,16 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			tooltip.remove(0);
 
 		return true;
+	}
+
+	@NotNull HeatLevel getHeatLevel() {
+		if (cachedHeatLevel == null) {
+			if (level == null)
+				return HeatLevel.NONE;
+
+			cachedHeatLevel = getHeatLevelOf(level.getBlockState(getBlockPos().below(1)));
+		}
+		return cachedHeatLevel;
 	}
 
 	class BasinValueBox extends ValueBoxTransform.Sided {

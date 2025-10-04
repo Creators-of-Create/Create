@@ -202,6 +202,7 @@ public class FluidNetwork {
 					continue;
 				FluidStack toExtract = FluidHelper.copyStackWithAmount(contained, flowSpeed);
 				transfer = handler.drain(toExtract, action);
+				break;
 			}
 
 			if (transfer.isEmpty()) {

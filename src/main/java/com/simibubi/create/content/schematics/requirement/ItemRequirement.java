@@ -14,6 +14,7 @@ import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement
 import com.simibubi.create.api.schematic.requirement.SpecialEntityItemRequirement;
 import com.simibubi.create.compat.framedblocks.FramedBlocksInSchematics;
 import com.simibubi.create.foundation.data.recipe.Mods;
+import com.simibubi.create.foundation.mixin.accessor.ItemFrameAccessor;
 
 import net.createmod.catnip.nbt.NBTProcessors;
 import net.minecraft.world.entity.Entity;
@@ -141,10 +142,10 @@ public class ItemRequirement {
 		}
 
 		if (entity instanceof ItemFrame itemFrame) {
-			ItemStack frame = new ItemStack(Items.ITEM_FRAME);
+			ItemStack frame = ((ItemFrameAccessor) itemFrame).create$getFrameItemStack();
 			ItemStack displayedItem = NBTProcessors.withUnsafeNBTDiscarded(itemFrame.getItem());
 			if (displayedItem.isEmpty())
-				return new ItemRequirement(ItemUseType.CONSUME, Items.ITEM_FRAME);
+				return new ItemRequirement(ItemUseType.CONSUME, frame);
 			return new ItemRequirement(List.of(new ItemRequirement.StackRequirement(frame, ItemUseType.CONSUME),
 				new ItemRequirement.StrictNbtStackRequirement(displayedItem, ItemUseType.CONSUME)));
 		}

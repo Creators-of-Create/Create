@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.logistics.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -73,14 +72,16 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 
 		background.render(graphics, x, y);
 		graphics.drawString(font, title, x + (background.getWidth() - 8) / 2 - font.width(title) / 2, y + 4,
-			AllItems.PACKAGE_FILTER.isIn(menu.contentHolder) ? 0x3D3C48
-				: AllItems.FILTER.isIn(menu.contentHolder) ? 0x303030 : 0x592424,
-			false);
+			getTitleColor(), false);
 
 		GuiGameElement.of(menu.contentHolder).<GuiGameElement
 			.GuiRenderBuilder>at(x + background.getWidth() + 8, y + background.getHeight() - 52, -200)
 			.scale(4)
 			.render(graphics);
+	}
+
+	protected int getTitleColor() {
+		return 0x592424;
 	}
 
 	@Override
