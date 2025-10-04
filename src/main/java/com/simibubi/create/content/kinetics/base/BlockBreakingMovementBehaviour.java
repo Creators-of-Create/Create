@@ -218,7 +218,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 	}
 
 	protected void destroyBlock(MovementContext context, BlockPos breakingPos) {
-		BlockHelper.destroyBlock(context.world, breakingPos, 1f, stack -> this.dropItem(context, stack));
+		BlockHelper.destroyBlock(context.world, breakingPos, 1f, stack -> this.collectOrDropItem(context, stack));
 	}
 
 	protected float getBlockBreakingSpeed(MovementContext context) {

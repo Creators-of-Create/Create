@@ -125,7 +125,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 					.withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
 					.withParameter(LootContextParams.THIS_ENTITY, getPlayer(context))
 					.withParameter(LootContextParams.TOOL, new ItemStack(Items.IRON_SHOVEL)))
-				.forEach(s -> dropItem(context, s));
+				.forEach(s -> collectOrDropItem(context, s));
 		}
 	}
 

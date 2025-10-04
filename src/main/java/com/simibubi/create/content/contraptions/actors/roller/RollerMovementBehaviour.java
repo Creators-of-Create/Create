@@ -178,7 +178,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		BlockHelper.destroyBlock(context.world, breakingPos, 1f, stack -> {
 			if (noHarvest || context.world.random.nextBoolean())
 				return;
-			this.dropItem(context, stack);
+			this.collectOrDropItem(context, stack);
 		});
 
 		super.destroyBlock(context, breakingPos);

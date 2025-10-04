@@ -90,7 +90,7 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 				stack.shrink(1);
 				seedSubtracted.setTrue();
 			}
-			dropItem(context, stack);
+			collectOrDropItem(context, stack);
 		});
 
 		BlockState cutCrop = cutCrop(world, pos, stateVisited);

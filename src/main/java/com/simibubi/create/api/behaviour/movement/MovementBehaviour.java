@@ -66,7 +66,17 @@ public interface MovementBehaviour {
 		return false;
 	}
 
+	/**
+	 * @deprecated since 6.0.9 - use {@link #collectOrDropItem(context, stack)} instead.
+	 * No behaviours altered, simply a rename to reflect that we do collect items when
+	 * applicable before considering dropping the remainder into the world.
+	 */
+	@Deprecated(since = "6.0.9", forRemoval = true)
 	default void dropItem(MovementContext context, ItemStack stack) {
+		collectOrDropItem(context, stack);
+	}
+
+	default void collectOrDropItem(MovementContext context, ItemStack stack) {
 		ItemStack remainder;
 		if (AllConfigs.server().kinetics.moveItemsToStorage.get())
 			remainder = ItemHandlerHelper.insertItem(context.contraption.getStorage().getAllItems(), stack, false);
