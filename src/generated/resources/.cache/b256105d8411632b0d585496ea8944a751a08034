@@ -1,4 +1,4 @@
-// 1.20.1	2025-08-06T02:20:16.7273492	Create's Processing Recipes
+// 1.20.1	2025-10-07T16:15:06.1314969	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -15,6 +15,7 @@ c444abdd432670f6a2b508c513302e119cb07186 data/create/recipes/crushing/asurine_re
 29e7e74108755e0a07b1d3d1e8d4dcaf2b401572 data/create/recipes/crushing/coal_ore.json
 d9a48b3aa36cfe4f792a31fd3ee50b442c1177f9 data/create/recipes/crushing/compat/aether/ambrosium_ore.json
 81bdb03461bec6f8ca1201caa93805a751d7cda6 data/create/recipes/crushing/compat/aether/zanite_ore.json
+05b252d366ac786ba9de27d0a6197e645911e554 data/create/recipes/crushing/compat/biomesoplenty/rose_quartz.json
 73914b149bbd72251c1bd9a54cf6d087f6b2ba0b data/create/recipes/crushing/compat/byg/ametrine_ore.json
 d468d9fbd206bd78dc3cc37ce6fcccbc3a89bc5c data/create/recipes/crushing/compat/byg/anthracite_ore.json
 3481a8838049addc6d3514615fccab01a7eda830 data/create/recipes/crushing/compat/byg/blue_nether_gold_ore.json
@@ -166,6 +167,10 @@ cdb26cd91feeda5901f31f57c16517dda5287810 data/create/recipes/cutting/andesite_al
 1a66e7e6dfba9531bbb5a1d0bf014e16d6cbb6be data/create/recipes/cutting/compat/ars_nouveau/stripped_purple_archwood_wood.json
 5c1c8275b2e30fdf387dcf358fd41e995e817c86 data/create/recipes/cutting/compat/ars_nouveau/stripped_red_archwood_log.json
 9dc5bd8a1002b9d299d60a405720950eb0b4e9ab data/create/recipes/cutting/compat/ars_nouveau/stripped_red_archwood_wood.json
+8577c9792ea9fbf0c2f48db6a77aab4bdd3ab1bd data/create/recipes/cutting/compat/atmospheric/crustose_log.json
+9cafa415dabc41170b4d4808247ae08431589ddc data/create/recipes/cutting/compat/atmospheric/crustose_wood.json
+6f53ab01fd1f69fa55fea4f2796c7cc64c5eb925 data/create/recipes/cutting/compat/atmospheric/watchful_aspen_log.json
+caed7abab1ac9360ec457650e15d4b06769bd31c data/create/recipes/cutting/compat/atmospheric/watchful_aspen_wood.json
 b66953dee0ea9804e22aa6f296c49e81f34d2d18 data/create/recipes/cutting/compat/autumnity/sappy_maple_log.json
 a663ac9e710bc05e30eecddd527c843616b5faf1 data/create/recipes/cutting/compat/autumnity/sappy_maple_wood.json
 0a6040818c3076341e97072fd7f2c649da7cf020 data/create/recipes/cutting/compat/endergetic/glowing_poise_stem.json
@@ -366,21 +371,40 @@ de5a7460348c3301381dd2635ac433a473bec04a data/create/recipes/milling/compat/ae2/
 42151b6f50df8e05a7399eaa386369474a5a618c data/create/recipes/milling/compat/ae2/ender_pearl.json
 b383c64d2559cd757b84fd5651f77c9ea95ebb00 data/create/recipes/milling/compat/ae2/fluix_crystal.json
 880cfc22f510351e54a82242d6bc86acab4c3c92 data/create/recipes/milling/compat/ae2/sky_stone_block.json
+d2b1c2bc5a0ff05930408c99ada24cdd52368b18 data/create/recipes/milling/compat/atmospheric/arid_sandstone.json
+fb2ecc7bbf1c724b18e586224cff7062019ba542 data/create/recipes/milling/compat/atmospheric/barrel_cactus.json
+97797aeb4ec732079c44d57a9de8ca9766b6ffbb data/create/recipes/milling/compat/atmospheric/firethorn.json
+0afee150ffdf585ff922f497e2a4c1cc8ab3bd41 data/create/recipes/milling/compat/atmospheric/forsythia.json
 d6c091225197381abae8bdba35318aa3a8bde1ad data/create/recipes/milling/compat/atmospheric/gilia.json
 9dce11179bf92dc0519fad4b41c944a25226abff data/create/recipes/milling/compat/atmospheric/hot_monkey_brush.json
+3ef5decf04e8dc363c5774406d00b7d743d01948 data/create/recipes/milling/compat/atmospheric/red_arid_sandstone.json
 fd427a15577f3ea5612667e6b148ff253d2fd021 data/create/recipes/milling/compat/atmospheric/scalding_monkey_brush.json
-80277c7f81e217740643c284f6c23b22373d5877 data/create/recipes/milling/compat/atmospheric/warm_monkey_brush.json
+ba012334a7b7bbe8c9a8af59b21e1154378dab28 data/create/recipes/milling/compat/atmospheric/tall_yucca_flower.json
+bcbc5c545210c8326c883a0dae8596c93a37e65a data/create/recipes/milling/compat/atmospheric/warm_monkey_brush.json
 dd37341d15d8a6fdee096470a1eed7686bb40773 data/create/recipes/milling/compat/atmospheric/yucca_flower.json
 5b05e3713b0e1e3bbf66cf87fcd8705c9b471ded data/create/recipes/milling/compat/autumnity/autumn_crocus.json
+a84081147ad026161e680b5040a0a99db34c073a data/create/recipes/milling/compat/biomesoplenty/black_sandstone.json
 155b38f5087cadd93f268c272ad40ff5ae146a42 data/create/recipes/milling/compat/biomesoplenty/blue_hydrangea.json
 b23f8cd24c43a995d11fe7eb8e639baf27556ca2 data/create/recipes/milling/compat/biomesoplenty/burning_blossom.json
+8afc3b78cb5197ecdcd99d0e2d885fbbc39c4aa0 data/create/recipes/milling/compat/biomesoplenty/cattail.json
+d612cf7bf8f0d73136a24c6d0b681a4f3d463952 data/create/recipes/milling/compat/biomesoplenty/endbloom.json
 8c6d77df0f70a7e46f4f1c8071dadc6388cc5798 data/create/recipes/milling/compat/biomesoplenty/glowflower.json
+5c3826e97d5569731a88a678a1d7dd93cd0bc3ee data/create/recipes/milling/compat/biomesoplenty/goldenrod.json
+fc8be117d50870bd316ce84b7eb9408b8cb08726 data/create/recipes/milling/compat/biomesoplenty/icy_iris.json
 3eee4227b1ba4d5a27801a1cd7172698d5c9b9d2 data/create/recipes/milling/compat/biomesoplenty/lavender.json
 ae27a8d0a76d911164a1dc23124a6b404b37b546 data/create/recipes/milling/compat/biomesoplenty/orange_cosmos.json
+6f03733b503c7df720814e6889065dc25ac72f39 data/create/recipes/milling/compat/biomesoplenty/orange_sandstone.json
 e383106ff8f877b5995e20c03af5e41e3db541d9 data/create/recipes/milling/compat/biomesoplenty/pink_daffodil.json
 0de05838a8d236803379ea3766ef75883b3f1467 data/create/recipes/milling/compat/biomesoplenty/pink_hibiscus.json
 7e69f8ff3f816e176670df7b4eb3340f5e7bc855 data/create/recipes/milling/compat/biomesoplenty/rose.json
+b70b71d50a9bb7d7a4c2030f2eec24d86a445333 data/create/recipes/milling/compat/biomesoplenty/tall_lavender.json
+ba6fcbc8986e44bcd70a6eddc9a40694ab2a88e8 data/create/recipes/milling/compat/biomesoplenty/tall_white_lavender.json
+ee3711afd4078a34bc112e8383f597d4e61f5d15 data/create/recipes/milling/compat/biomesoplenty/tiny_cactus.json
 213e079f32baa2879702b72bdf08f146877a0bb9 data/create/recipes/milling/compat/biomesoplenty/violet.json
+0ccab0136a7f02db56e421ce967a59238aa9d61f data/create/recipes/milling/compat/biomesoplenty/waterlily.json
+22c0dca243a6e2ecf4705845c592581f818466fe data/create/recipes/milling/compat/biomesoplenty/white_lavender.json
+ebb3158337e32dfbbb72872b946f0930711fe06d data/create/recipes/milling/compat/biomesoplenty/white_petals.json
+832ebb53470a0af3b0efe6072c61fcc5c0de6d07 data/create/recipes/milling/compat/biomesoplenty/white_sandstone.json
 b3f041e005491582f055da15871891357908d998 data/create/recipes/milling/compat/biomesoplenty/wildflower.json
 d08c4fcebb79e2e02ac9cb4623124332a05ed661 data/create/recipes/milling/compat/biomesoplenty/wilted_lily.json
 4994095300eabfe98a86036e7fbba6c12cddb078 data/create/recipes/milling/compat/botania/black_petal.json

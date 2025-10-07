@@ -257,7 +257,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		.whenModLoaded(Mods.ATM.getId())),
 
 	ATMO_WARM_BRUSH = create(Mods.ATM.recipeId("warm_monkey_brush"), b -> b.duration(50)
-		.require(Mods.ATM, "scalding_monkey_brush")
+		.require(Mods.ATM, "warm_monkey_brush")
 		.output(Items.YELLOW_DYE, 2)
 		.output(.1f, Items.YELLOW_DYE, 2)
 		.output(.1f, Items.ORANGE_DYE)
@@ -268,6 +268,36 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		.output(Items.LIGHT_GRAY_DYE, 2)
 		.output(.05f, Items.WHITE_DYE)
 		.whenModLoaded(Mods.ATM.getId())),
+
+	ATMO_TALL_YUCCA_FLOWER = create(Mods.ATM.recipeId("tall_yucca_flower"), b -> b.duration(50)
+		.require(Mods.ATM, "tall_yucca_flower")
+		.output(Items.LIGHT_GRAY_DYE, 3)
+		.output(0.25f, Items.LIGHT_GRAY_DYE, 2)
+		.output(.05f, Items.WHITE_DYE, 2)
+		.whenModLoaded(Mods.ATM.getId())),
+
+	ATMO_FIRETHORN = create(Mods.ATM.recipeId("firethorn"), b -> b.duration(50)
+		.require(Mods.ATM, "firethorn")
+		.output(Items.RED_DYE, 2)
+		.output(.1f, Items.ORANGE_DYE, 2)
+		.output(.1f, Items.GREEN_DYE)
+		.whenModLoaded(Mods.ATM.getId())),
+
+	ATMO_FORSYTHIA = create(Mods.ATM.recipeId("forsythia"), b -> b.duration(50)
+		.require(Mods.ATM, "forsythia")
+		.output(Items.YELLOW_DYE, 2)
+		.output(.1f, Items.LIME_DYE, 2)
+		.output(.1f, Items.YELLOW_DYE)
+		.whenModLoaded(Mods.ATM.getId())),
+
+	ATMO_CACTUS = create(Mods.ATM.recipeId("barrel_cactus"), b -> b.duration(50)
+		.require(Mods.ATM, "barrel_cactus")
+		.output(Items.ORANGE_DYE, 2)
+		.output(.1f, Items.GREEN_DYE, 3)
+		.whenModLoaded(Mods.ATM.getId())),
+
+	ATMO_SAND_1 = moddedSandstone(Mods.ATM, "arid"),
+	ATMO_SAND_2 = moddedSandstone(Mods.ATM, "red_arid"),
 
 	// Autumnity
 
@@ -282,6 +312,9 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	BOP_HYDRANGEA = bopFlower("blue_hydrangea", List.of(1f, .05f, .25f),
 		List.of(Items.LIGHT_BLUE_DYE, Items.GREEN_DYE, Items.LIGHT_BLUE_DYE), List.of(3, 2, 2)),
 
+	BOP_GOLDENROD = bopFlower("goldenrod", List.of(1f, .05f, .25f),
+		List.of(Items.YELLOW_DYE, Items.YELLOW_DYE, Items.GREEN_DYE), List.of(3, 2, 2)),
+
 	BOP_BLOSSOM = bopFlower("burning_blossom", List.of(1f, .1f),
 		List.of(Items.ORANGE_DYE, Items.LIME_DYE), List.of(2, 1)),
 
@@ -290,6 +323,15 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 
 	BOP_LAVENDER = bopFlower("lavender", List.of(1f, .05f),
 		List.of(Items.PURPLE_DYE, Items.GREEN_DYE), List.of(2, 1)),
+
+	BOP_TALL_LAVENDER = bopFlower("tall_lavender", List.of(1f, 0.25f, .05f),
+		List.of(Items.PURPLE_DYE, Items.PURPLE_DYE, Items.GREEN_DYE), List.of(3, 2, 2)),
+
+	BOP_WHITE_LAVENDER = bopFlower("white_lavender", List.of(1f, .05f),
+		List.of(Items.WHITE_DYE, Items.GREEN_DYE), List.of(2, 1)),
+
+	BOP_TALL_WHITE_LAVENDER = bopFlower("tall_white_lavender", List.of(1f, 0.25f, .05f),
+		List.of(Items.WHITE_DYE, Items.LIGHT_BLUE_DYE, Items.GREEN_DYE), List.of(3, 2, 2)),
 
 	BOP_COSMOS = bopFlower("orange_cosmos", List.of(1f, .1f),
 		List.of(Items.ORANGE_DYE, Items.LIME_DYE), List.of(2, 1)),
@@ -308,7 +350,27 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	BOP_WILDFLOWER = bopFlower("wildflower", List.of(1f, .1f),
 		List.of(Items.MAGENTA_DYE, Items.LIME_DYE), List.of(2, 1)),
 
+	BOP_PETALS = bopFlower("white_petals", 1f, Items.WHITE_DYE, 2),
+
+	BOP_IRIS = bopFlower("icy_iris", List.of(1f, .05f, .25f),
+		List.of(Items.LIGHT_BLUE_DYE, Items.LIGHT_GRAY_DYE, Items.LIGHT_BLUE_DYE), List.of(3, 2, 2)),
+
 	BOP_LILY = bopFlower("wilted_lily", 1f, Items.GRAY_DYE, 2),
+
+	BOP_ENDBLOOM = bopFlower("endbloom", 1f, Items.LIGHT_GRAY_DYE, 2),
+
+	BOP_WATERLILY = bopFlower("waterlily", List.of(1f, .05f),
+		List.of(Items.RED_DYE, Items.PINK_DYE), List.of(2, 1)),
+
+	BOP_CACTUS = bopFlower("tiny_cactus", List.of(1f, 0.1f),
+		List.of(Items.GREEN_DYE, Items.GREEN_DYE), List.of(2, 1)),
+
+	BOP_CATTAIL = bopFlower("cattail", List.of(1f, .05f, .25f),
+		List.of(Items.BROWN_DYE, Items.GREEN_DYE, Items.BROWN_DYE), List.of(3, 2, 2)),
+
+	BOP_SAND_1 = moddedSandstone(Mods.BOP, "white"),
+	BOP_SAND_2 = moddedSandstone(Mods.BOP, "orange"),
+	BOP_SAND_3 = moddedSandstone(Mods.BOP, "black"),
 
 	// Botania
 	BTN_PETALS = botaniaPetals("black", "blue", "brown", "cyan", "gray", "green", "light_blue",

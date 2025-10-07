@@ -249,6 +249,18 @@
       "required": false
     },
     {
+      "id": "biomesoplenty:stripped_pine_log",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_maple_log",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_empyreal_log",
+      "required": false
+    },
+    {
       "id": "blue_skies:stripped_bluebright_log",
       "required": false
     },
@@ -294,6 +306,10 @@
     },
     {
       "id": "atmospheric:stripped_morado_log",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_laurel_log",
       "required": false
     },
     {

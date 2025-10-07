@@ -249,6 +249,18 @@
       "required": false
     },
     {
+      "id": "biomesoplenty:stripped_pine_wood",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_maple_wood",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:stripped_empyreal_wood",
+      "required": false
+    },
+    {
       "id": "blue_skies:stripped_bluebright_wood",
       "required": false
     },
@@ -294,6 +306,10 @@
     },
     {
       "id": "atmospheric:stripped_morado_wood",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_laurel_wood",
       "required": false
     },
     {

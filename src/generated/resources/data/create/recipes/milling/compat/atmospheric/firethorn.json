@@ -8,23 +8,23 @@
   ],
   "ingredients": [
     {
-      "item": "atmospheric:warm_monkey_brush"
+      "item": "atmospheric:firethorn"
     }
   ],
   "processingTime": 50,
   "results": [
     {
       "count": 2,
-      "item": "minecraft:yellow_dye"
+      "item": "minecraft:red_dye"
     },
     {
       "chance": 0.1,
       "count": 2,
-      "item": "minecraft:yellow_dye"
+      "item": "minecraft:orange_dye"
     },
     {
       "chance": 0.1,
-      "item": "minecraft:orange_dye"
+      "item": "minecraft:green_dye"
     }
   ]
 }

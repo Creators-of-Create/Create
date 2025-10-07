@@ -8,23 +8,24 @@
   ],
   "ingredients": [
     {
-      "item": "atmospheric:warm_monkey_brush"
+      "item": "atmospheric:tall_yucca_flower"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "count": 2,
-      "item": "minecraft:yellow_dye"
+      "count": 3,
+      "item": "minecraft:light_gray_dye"
     },
     {
-      "chance": 0.1,
+      "chance": 0.25,
       "count": 2,
-      "item": "minecraft:yellow_dye"
+      "item": "minecraft:light_gray_dye"
     },
     {
-      "chance": 0.1,
-      "item": "minecraft:orange_dye"
+      "chance": 0.05,
+      "count": 2,
+      "item": "minecraft:white_dye"
     }
   ]
 }

@@ -229,6 +229,9 @@ public class CreateRegistrateTags {
 		TagGen.addOptional(prov.tag(AllItemTags.UA_CORAL.tag), Mods.UA, List.of("acan_coral",
 			"finger_coral", "star_coral", "moss_coral", "petal_coral", "branch_coral",
 			"rock_coral", "pillow_coral", "chrome_coral", "silk_coral"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag), Mods.ATM, List.of(
+			"orange_pudding", "orange_sorbet", "passion_fruit_sorbet", "aloe_gel_bottle"));
 	}
 
 	private static ArrayList<String> gsPalette(String material) {
@@ -268,10 +271,10 @@ public class CreateRegistrateTags {
 		helper.add(Mods.Q, "azalea", "blossom");
 		helper.add(Mods.ECO, "coconut", "walnut", "azalea");
 		helper.add(Mods.BOP, "fir", "redwood", "mahogany", "jacaranda", "palm", "willow", "dead",
-			"magic", "umbran", "hellbark");
+			"magic", "umbran", "hellbark", "pine", "maple", "empyreal");
 		helper.add(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple");
 		helper.add(Mods.ENV, "willow", "wisteria");
-		helper.add(Mods.ATM, "aspen", "kousa", "yucca", "morado");
+		helper.add(Mods.ATM, "aspen", "kousa", "yucca", "morado", "laurel");
 		helper.add(Mods.ATM_2, "rosewood", "grimwood");
 		helper.add(Mods.GOOD, "muddy_oak", "cypress");
 		helper.add(Mods.BMK, "blighted_balsa", "willow", "swamp_cypress", "ancient_oak");

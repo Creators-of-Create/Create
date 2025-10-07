@@ -8,23 +8,19 @@
   ],
   "ingredients": [
     {
-      "item": "atmospheric:warm_monkey_brush"
+      "item": "atmospheric:barrel_cactus"
     }
   ],
   "processingTime": 50,
   "results": [
     {
       "count": 2,
-      "item": "minecraft:yellow_dye"
-    },
-    {
-      "chance": 0.1,
-      "count": 2,
-      "item": "minecraft:yellow_dye"
-    },
-    {
-      "chance": 0.1,
       "item": "minecraft:orange_dye"
+    },
+    {
+      "chance": 0.1,
+      "count": 3,
+      "item": "minecraft:green_dye"
     }
   ]
 }
