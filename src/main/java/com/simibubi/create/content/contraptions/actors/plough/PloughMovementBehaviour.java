@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.NetherPortalBlock;
+import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -112,6 +113,8 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 			return true;
 		if (state.getBlock() instanceof FakeTrackBlock)
 			return false;
+		if (state.getBlock() instanceof SnowLayerBlock)
+			return true;
 		return state.getCollisionShape(world, breakingPos)
 			.isEmpty();
 	}
