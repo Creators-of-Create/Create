@@ -296,6 +296,13 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		.output(.1f, Items.GREEN_DYE, 3)
 		.whenModLoaded(Mods.ATM.getId())),
 
+	ATMO_HYACINTH = create(Mods.ATM.recipeId("water_hyacinth"), b -> b.duration(50)
+		.require(Mods.ATM, "water_hyacinth")
+		.output(Items.PURPLE_DYE, 3)
+		.output(0.25f, Items.LIME_DYE, 2)
+		.output(.05f, Items.BROWN_DYE, 2)
+		.whenModLoaded(Mods.ATM.getId())),
+
 	ATMO_SAND_1 = moddedSandstone(Mods.ATM, "arid"),
 	ATMO_SAND_2 = moddedSandstone(Mods.ATM, "red_arid"),
 

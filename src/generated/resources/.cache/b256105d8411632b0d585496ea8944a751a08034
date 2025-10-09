@@ -1,4 +1,4 @@
-// 1.20.1	2025-10-07T16:15:06.1314969	Create's Processing Recipes
+// 1.20.1	2025-10-09T17:09:57.0825995	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -381,6 +381,7 @@ d6c091225197381abae8bdba35318aa3a8bde1ad data/create/recipes/milling/compat/atmo
 fd427a15577f3ea5612667e6b148ff253d2fd021 data/create/recipes/milling/compat/atmospheric/scalding_monkey_brush.json
 ba012334a7b7bbe8c9a8af59b21e1154378dab28 data/create/recipes/milling/compat/atmospheric/tall_yucca_flower.json
 bcbc5c545210c8326c883a0dae8596c93a37e65a data/create/recipes/milling/compat/atmospheric/warm_monkey_brush.json
+65ae395b08d895648c2917981cdc7a06f63407de data/create/recipes/milling/compat/atmospheric/water_hyacinth.json
 dd37341d15d8a6fdee096470a1eed7686bb40773 data/create/recipes/milling/compat/atmospheric/yucca_flower.json
 5b05e3713b0e1e3bbf66cf87fcd8705c9b471ded data/create/recipes/milling/compat/autumnity/autumn_crocus.json
 a84081147ad026161e680b5040a0a99db34c073a data/create/recipes/milling/compat/biomesoplenty/black_sandstone.json
