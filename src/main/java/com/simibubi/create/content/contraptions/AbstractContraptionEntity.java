@@ -17,6 +17,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
+import com.simibubi.create.api.event.ContraptionEvent;
 import com.simibubi.create.content.contraptions.actors.psi.PortableStorageInterfaceMovement;
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
@@ -73,9 +74,9 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 
 public abstract class AbstractContraptionEntity extends Entity implements IEntityWithComplexSpawn {
@@ -281,7 +282,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	public void stopControlling(BlockPos controlsLocalPos) {
 		getControllingPlayer().map(level()::getPlayerByUUID)
-			.map(p -> (p instanceof ServerPlayer) ? ((ServerPlayer) p) : null)
+			.map(p -> (p instanceof ServerPlayer s) ? s : null)
 			.ifPresent(p -> CatnipServices.NETWORK.sendToClient(p, ControlsStopControllingPacket.INSTANCE));
 		setControllingPlayer(null);
 	}
@@ -651,6 +652,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	public void disassemble() {
+
 		if (!isAlive())
 			return;
 		if (contraption == null)
@@ -681,6 +683,10 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 		ejectPassengers();
 		moveCollidedEntitiesOnDisassembly(transform);
+
+		contraption.consumeHandoffContainers(this, false);
+		NeoForge.EVENT_BUS.post(new ContraptionEvent.Disassemble(this));
+
 		AllSoundEvents.CONTRAPTION_DISASSEMBLE.playOnServer(level(), blockPosition());
 	}
 
@@ -830,6 +836,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		return contraptionLocalMovement.add(contraptionAnchorMovement);
 	}
 
+	@Override
 	public boolean canCollideWith(Entity e) {
 		if (e instanceof Player && e.isSpectator())
 			return false;
