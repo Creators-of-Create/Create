@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.trains.schedule.condition.DeliverPackageCondition;
 import com.simibubi.create.content.trains.schedule.condition.FluidThresholdCondition;
 import com.simibubi.create.content.trains.schedule.condition.IdleCargoCondition;
 import com.simibubi.create.content.trains.schedule.condition.ItemThresholdCondition;
+import com.simibubi.create.content.trains.schedule.condition.RetrievePackageCondition;
 import com.simibubi.create.content.trains.schedule.condition.PlayerPassengerCondition;
 import com.simibubi.create.content.trains.schedule.condition.RedstoneLinkCondition;
 import com.simibubi.create.content.trains.schedule.condition.ScheduleWaitCondition;
@@ -63,6 +65,8 @@ public class Schedule {
 		registerCondition("idle", IdleCargoCondition::new);
 		registerCondition("unloaded", StationUnloadedCondition::new);
 		registerCondition("powered", StationPoweredCondition::new);
+		registerCondition("retrieve_package", RetrievePackageCondition::new);
+		registerCondition("deliver_package", DeliverPackageCondition::new);
 	}
 
 	private static void registerInstruction(String name, Supplier<? extends ScheduleInstruction> factory) {
