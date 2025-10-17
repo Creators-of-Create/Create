@@ -15,8 +15,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class RecipeApplier {
-	public static void applyRecipeOn(ItemEntity entity, Recipe<?> recipe) {
-		List<ItemStack> stacks = applyRecipeOn(entity.level(), entity.getItem(), recipe);
+	public static void applyRecipeOn(ItemEntity entity, Recipe<?> recipe, boolean returnProcessingRemainder) {
+		List<ItemStack> stacks = applyRecipeOn(entity.level(), entity.getItem(), recipe, returnProcessingRemainder);
 		if (stacks == null)
 			return;
 		if (stacks.isEmpty()) {
@@ -31,7 +31,7 @@ public class RecipeApplier {
 		}
 	}
 
-	public static List<ItemStack> applyRecipeOn(Level level, ItemStack stackIn, Recipe<?> recipe) {
+	public static List<ItemStack> applyRecipeOn(Level level, ItemStack stackIn, Recipe<?> recipe, boolean returnProcessingRemainder) { {
 		List<ItemStack> stacks;
 
 		if (recipe instanceof ProcessingRecipe<?> pr) {
@@ -56,6 +56,10 @@ public class RecipeApplier {
 
 					stacks.add(stack);
 				}
+				if (returnProcessingRemainder && stackIn.hasCraftingRemainingItem()) {
+					ItemHelper.addToList(stackIn.getCraftingRemainingItem(), stacks);
+				}
+
 			}
 		} else {
 			ItemStack out = recipe.getResultItem(level.registryAccess())
