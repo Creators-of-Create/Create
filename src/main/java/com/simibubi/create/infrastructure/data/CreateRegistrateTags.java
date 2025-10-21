@@ -161,6 +161,15 @@ public class CreateRegistrateTags {
 
 		TagGen.addOptional(prov.tag(AllBlockTags.ROOTS.tag), Mods.TF,
 			List.of("root", "liveroot_block", "mangrove_root"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.FAN_TRANSPARENT.tag), Mods.Q,
+			List.of("gold_bars", "grate"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.FAN_TRANSPARENT.tag), Mods.UG,
+			List.of("cloggrum_bars"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.TREE_ATTACHMENTS.tag), Mods.UG,
+			List.of("hanging_grongle_leaves", "gronglet"));
 	}
 
 	private static void genItemTags(RegistrateTagsProvider<Item> provIn) {
@@ -229,6 +238,15 @@ public class CreateRegistrateTags {
 		TagGen.addOptional(prov.tag(AllItemTags.UA_CORAL.tag), Mods.UA, List.of("acan_coral",
 			"finger_coral", "star_coral", "moss_coral", "petal_coral", "branch_coral",
 			"rock_coral", "pillow_coral", "chrome_coral", "silk_coral"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag), Mods.UG, List.of("virulent_mix_bucket",
+			"bloody_stew", "inky_stew", "indigo_stew", "veilew_stew", "slop_bowl"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag), Mods.UUE, List.of(
+			"warped_potion", "warped_infusion", "chorus_juice", "chorus_tea", "ender_stew", "blob_stew"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag), Mods.Q, List.of(
+			"bottled_cloud"));
 	}
 
 	private static ArrayList<String> gsPalette(String material) {
@@ -278,6 +296,7 @@ public class CreateRegistrateTags {
 		helper.add(Mods.RU, "alpha", "ashen", "baobab", "blackwood", "brimwood", "cobalt", "cypress", "dead", "eucalyptus", "joshua",
 			"kapok", "larch", "magnolia", "maple", "mauve", "palm", "pine", "redwood", "socotra", "willow");
 		helper.add(Mods.ARS_E, "yellow_archwood");
+		helper.add(Mods.UG, "smogstem", "wigglewood", "grongle");
 
 
 		TagGen.addOptional(logAppender, Mods.AUTUM, "maple");
@@ -295,6 +314,10 @@ public class CreateRegistrateTags {
 		TagGen.addOptional(logAppender, Mods.RU, "stripped_yellow_bioshroom_stem");
 		TagGen.addOptional(woodAppender, Mods.RU, "stripped_yellow_bioshroom_hyphae");
 		TagGen.addOptional(logAppender, Mods.RU, "brimwood_log_magma");
+
+		TagGen.addOptional(logAppender, Mods.GOTD, "stripped_soulblight_stem");
+		TagGen.addOptional(woodAppender, Mods.GOTD, "stripped_soulblight_hyphae");
+		TagGen.addOptional(logAppender, Mods.UUE, "stripped_chorus_cane_block");
 	}
 
 	private static void genFluidTags(RegistrateTagsProvider<Fluid> provIn) {

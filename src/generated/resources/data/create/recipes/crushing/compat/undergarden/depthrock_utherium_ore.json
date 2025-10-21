@@ -1,0 +1,33 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "undergarden"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "undergarden:depthrock_utherium_ore"
+    }
+  ],
+  "processingTime": 450,
+  "results": [
+    {
+      "count": 2,
+      "item": "undergarden:utherium_crystal"
+    },
+    {
+      "chance": 0.25,
+      "item": "undergarden:utherium_crystal"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "item": "undergarden:depthrock"
+    }
+  ]
+}

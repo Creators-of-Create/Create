@@ -11,6 +11,18 @@
     "minecraft:mangrove_roots",
     "#minecraft:campfires",
     "#minecraft:fences",
-    "#minecraft:leaves"
+    "#minecraft:leaves",
+    {
+      "id": "quark:gold_bars",
+      "required": false
+    },
+    {
+      "id": "quark:grate",
+      "required": false
+    },
+    {
+      "id": "undergarden:cloggrum_bars",
+      "required": false
+    }
   ]
 }

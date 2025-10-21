@@ -418,7 +418,132 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 
 	IE_SLAG_GRAVEL = create(Mods.IE.recipeId("slag"), b -> b.duration(200)
 		.require(Mods.IE, "slag").output(Mods.IE, "slag_gravel")
-		.whenModLoaded(Mods.IE.getId()));
+		.whenModLoaded(Mods.IE.getId())),
+
+	// Unusual End
+
+	UUE_HORSE_ARMOR = create(Mods.UUE.recipeId("scale_horse_armor"), b -> b.duration(200)
+		.require(Mods.UUE, "scale_horse_armor")
+		.output(1f, Mods.UUE, "bolok_scale", 2)
+		.output(0.5f, Mods.UUE, "warped_moss", 2)
+		.output(0.5f, Mods.UUE, "bolok_scale", 2)
+		.output(0.25f, Items.STRING, 2)
+		.whenModLoaded(Mods.UUE.getId())),
+
+	// Undergarden
+
+	UG_COAL_D = create(Mods.UG.recipeId("depthrock_coal_ore"), b -> b.duration(300)
+		.require(Mods.UG, "depthrock_coal_ore")
+		.output(1f, Items.COAL, 2)
+		.output(0.25f, Items.COAL)
+		.output(0.75f, AllItems.EXP_NUGGET.get())
+		.output(0.125f, Mods.UG, "depthrock", 1)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_COAL_S = create(Mods.UG.recipeId("shiverstone_coal_ore"), b -> b.duration(300)
+		.require(Mods.UG, "shiverstone_coal_ore")
+		.output(1f, AllItems.CRUSHED_IRON.get(), 2)
+		.output(0.25f, AllItems.CRUSHED_IRON.get())
+		.output(0.75f, AllItems.EXP_NUGGET.get())
+		.output(0.125f, Mods.UG, "shiverstone", 1)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_IRON_D = create(Mods.UG.recipeId("depthrock_iron_ore"), b -> b.duration(350)
+		.require(Mods.UG, "depthrock_iron_ore")
+		.output(1f, AllItems.CRUSHED_IRON.get(), 2)
+		.output(0.25f, AllItems.CRUSHED_IRON.get())
+		.output(0.75f, AllItems.EXP_NUGGET.get())
+		.output(0.125f, Mods.UG, "depthrock", 1)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_IRON_S = create(Mods.UG.recipeId("shiverstone_iron_ore"), b -> b.duration(350)
+		.require(Mods.UG, "shiverstone_iron_ore")
+		.output(1f, AllItems.CRUSHED_IRON.get(), 2)
+		.output(0.25f, AllItems.CRUSHED_IRON.get())
+		.output(0.75f, AllItems.EXP_NUGGET.get())
+		.output(0.125f, Mods.UG, "shiverstone", 1)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_GOLD = create(Mods.UG.recipeId("depthrock_gold_ore"), b -> b.duration(350)
+		.require(Mods.UG, "depthrock_gold_ore")
+		.output(1f, AllItems.CRUSHED_GOLD.get(), 2)
+		.output(0.25f, AllItems.CRUSHED_GOLD.get())
+		.output(0.75f, AllItems.EXP_NUGGET.get(), 2)
+		.output(0.125f, Mods.UG, "depthrock", 1)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_DIAMOND_D = create(Mods.UG.recipeId("depthrock_diamond_ore"), b -> b.duration(450)
+		.require(Mods.UG, "depthrock_diamond_ore")
+		.output(1f, Items.DIAMOND, 2)
+		.output(0.25f, Items.DIAMOND)
+		.output(0.75f, AllItems.EXP_NUGGET.get())
+		.output(0.125f, Mods.UG, "depthrock", 1)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_DIAMOND_S = create(Mods.UG.recipeId("shiverstone_diamond_ore"), b -> b.duration(450)
+		.require(Mods.UG, "shiverstone_diamond_ore")
+		.output(1f, Items.DIAMOND, 2)
+		.output(0.25f, Items.DIAMOND)
+		.output(0.75f, AllItems.EXP_NUGGET.get())
+		.output(0.125f, Mods.UG, "shiverstone", 1)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_CLOGGRUM_D = create(Mods.UG.recipeId("depthrock_cloggrum_ore"), b -> b.duration(350)
+		.require(Mods.UG, "depthrock_cloggrum_ore")
+		.output(1f, Mods.UG, "raw_cloggrum", 2)
+		.output(0.25f, Mods.UG, "raw_cloggrum", 1)
+		.output(0.75f, AllItems.EXP_NUGGET.get())
+		.output(0.125f, Mods.UG, "depthrock", 1)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_CLOGGRUM_S = create(Mods.UG.recipeId("shiverstone_cloggrum_ore"), b -> b.duration(350)
+		.require(Mods.UG, "shiverstone_cloggrum_ore")
+		.output(1f, Mods.UG, "raw_cloggrum", 2)
+		.output(0.25f, Mods.UG, "raw_cloggrum", 1)
+		.output(0.75f, AllItems.EXP_NUGGET.get())
+		.output(0.125f, Mods.UG, "shiverstone", 1)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_FROSTSTEEL = create(Mods.UG.recipeId("shiverstone_froststeel_ore"), b -> b.duration(350)
+		.require(Mods.UG, "shiverstone_froststeel_ore")
+		.output(1f, Mods.UG, "raw_froststeel", 2)
+		.output(0.25f, Mods.UG, "raw_froststeel", 1)
+		.output(0.75f, AllItems.EXP_NUGGET.get())
+		.output(0.125f, Mods.UG, "shiverstone", 1)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_UTHERIUM_D = create(Mods.UG.recipeId("depthrock_utherium_ore"), b -> b.duration(450)
+		.require(Mods.UG, "depthrock_utherium_ore")
+		.output(1f, Mods.UG, "utherium_crystal", 2)
+		.output(0.25f, Mods.UG, "utherium_crystal", 1)
+		.output(0.75f, AllItems.EXP_NUGGET.get())
+		.output(0.125f, Mods.UG, "depthrock", 1)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_UTHERIUM_S = create(Mods.UG.recipeId("shiverstone_utherium_ore"), b -> b.duration(450)
+		.require(Mods.UG, "shiverstone_utherium_ore")
+		.output(1f, Mods.UG, "utherium_crystal", 2)
+		.output(0.25f, Mods.UG, "utherium_crystal", 1)
+		.output(0.75f, AllItems.EXP_NUGGET.get())
+		.output(0.125f, Mods.UG, "shiverstone", 1)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_REGALIUM_D = create(Mods.UG.recipeId("depthrock_regalium_ore"), b -> b.duration(450)
+		.require(Mods.UG, "depthrock_regalium_ore")
+		.output(1f, Mods.UG, "regalium_crystal", 2)
+		.output(0.25f, Mods.UG, "regalium_crystal", 1)
+		.output(0.75f, AllItems.EXP_NUGGET.get(), 2)
+		.output(0.125f, Mods.UG, "depthrock", 1)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_REGALIUM_S = create(Mods.UG.recipeId("shiverstone_regalium_ore"), b -> b.duration(450)
+		.require(Mods.UG, "shiverstone_regalium_ore")
+		.output(1f, Mods.UG, "regalium_crystal", 2)
+		.output(0.25f, Mods.UG, "regalium_crystal", 1)
+		.output(0.75f, AllItems.EXP_NUGGET.get(), 2)
+		.output(0.125f, Mods.UG, "shiverstone", 1)
+		.whenModLoaded(Mods.UG.getId()))
+		;
 
 	GeneratedRecipe sgStoneOres(String... types) {
 		for (String type : types) {

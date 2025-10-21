@@ -1,0 +1,34 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "undergarden"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "undergarden:shiverstone_regalium_ore"
+    }
+  ],
+  "processingTime": 450,
+  "results": [
+    {
+      "count": 2,
+      "item": "undergarden:regalium_crystal"
+    },
+    {
+      "chance": 0.25,
+      "item": "undergarden:regalium_crystal"
+    },
+    {
+      "chance": 0.75,
+      "count": 2,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "item": "undergarden:shiverstone"
+    }
+  ]
+}

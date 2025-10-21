@@ -14,6 +14,58 @@
     "minecraft:mushroom_stew",
     "minecraft:rabbit_stew",
     "minecraft:beetroot_soup",
-    "minecraft:suspicious_stew"
+    "minecraft:suspicious_stew",
+    {
+      "id": "undergarden:virulent_mix_bucket",
+      "required": false
+    },
+    {
+      "id": "undergarden:bloody_stew",
+      "required": false
+    },
+    {
+      "id": "undergarden:inky_stew",
+      "required": false
+    },
+    {
+      "id": "undergarden:indigo_stew",
+      "required": false
+    },
+    {
+      "id": "undergarden:veilew_stew",
+      "required": false
+    },
+    {
+      "id": "undergarden:slop_bowl",
+      "required": false
+    },
+    {
+      "id": "unusualend:warped_potion",
+      "required": false
+    },
+    {
+      "id": "unusualend:warped_infusion",
+      "required": false
+    },
+    {
+      "id": "unusualend:chorus_juice",
+      "required": false
+    },
+    {
+      "id": "unusualend:chorus_tea",
+      "required": false
+    },
+    {
+      "id": "unusualend:ender_stew",
+      "required": false
+    },
+    {
+      "id": "unusualend:blob_stew",
+      "required": false
+    },
+    {
+      "id": "quark:bottled_cloud",
+      "required": false
+    }
   ]
 }

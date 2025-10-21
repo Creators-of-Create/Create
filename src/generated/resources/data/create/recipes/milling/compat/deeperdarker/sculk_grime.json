@@ -1,0 +1,19 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "deeperdarker:sculk_grime"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 3,
+      "item": "deeperdarker:grime_ball"
+    },
+    {
+      "chance": 0.5,
+      "item": "deeperdarker:grime_ball"
+    }
+  ]
+}

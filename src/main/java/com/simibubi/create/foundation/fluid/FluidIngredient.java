@@ -26,6 +26,8 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import org.jetbrains.annotations.ApiStatus;
+
 public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 	public static final FluidIngredient EMPTY = new FluidStackIngredient();
@@ -254,6 +256,57 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 				.collect(Collectors.toList());
 		}
 
+	}
+
+	/**
+	 * Used to represent fluid inputs in recipe datagen without needing the fluid to exist at runtime.
+	 */
+	@ApiStatus.Internal
+	public static final class DatagenFluidIngredient extends FluidIngredient{
+
+		private final ResourceLocation fluid;
+
+        public DatagenFluidIngredient(ResourceLocation fluid, int amountRequired) {
+            this.fluid = fluid;
+			this.amountRequired = amountRequired;
+        }
+
+        @Override
+		protected boolean testInternal(FluidStack t) {
+			return false;
+		}
+
+		@Override
+		protected void readInternal(FriendlyByteBuf buffer) {
+
+		}
+
+		@Override
+		protected void writeInternal(FriendlyByteBuf buffer) {
+
+		}
+
+		@Override
+		protected void readInternal(JsonObject json) {
+
+		}
+
+		@Override
+		protected void writeInternal(JsonObject json) {
+
+		}
+
+		@Override
+		protected List<FluidStack> determineMatchingFluidStacks() {
+			return null;
+		}
+
+		@Override
+		public JsonObject serialize() {
+			JsonObject json = super.serialize();
+			json.addProperty("fluid", fluid.toString());
+			return json;
+		}
 	}
 
 }

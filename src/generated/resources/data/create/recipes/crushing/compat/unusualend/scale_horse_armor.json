@@ -1,0 +1,36 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "unusualend"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "unusualend:scale_horse_armor"
+    }
+  ],
+  "processingTime": 200,
+  "results": [
+    {
+      "count": 2,
+      "item": "unusualend:bolok_scale"
+    },
+    {
+      "chance": 0.5,
+      "count": 2,
+      "item": "unusualend:warped_moss"
+    },
+    {
+      "chance": 0.5,
+      "count": 2,
+      "item": "unusualend:bolok_scale"
+    },
+    {
+      "chance": 0.25,
+      "count": 2,
+      "item": "minecraft:string"
+    }
+  ]
+}

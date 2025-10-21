@@ -1,0 +1,21 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "unusualend"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "unusualend:endstone_sprouts"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:pink_dye"
+    }
+  ]
+}

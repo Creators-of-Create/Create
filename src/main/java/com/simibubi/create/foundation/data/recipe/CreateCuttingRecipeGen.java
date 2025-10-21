@@ -57,7 +57,13 @@ public final class CreateCuttingRecipeGen extends CuttingRecipeGen {
 
 		// Jaden's Nether Expansion
 		JNE_1 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_stem", "stripped_claret_stem", null),
-		JNE_2 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_hyphae", "stripped_claret_hyphae", null)
+		JNE_2 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_hyphae", "stripped_claret_hyphae", null),
+
+		// Gardens of the Dead
+		GOTD = create("compat/gardens_of_the_dead/whistlecane_planks", b -> b.duration(50)
+			.require(Mods.GOTD, "whistlecane_planks")
+			.output(1, Mods.GOTD, "whistlecane_mosaic", 1)
+			.whenModLoaded(Mods.GOTD.getId()))
 		;
 
 	public CreateCuttingRecipeGen(PackOutput output) {

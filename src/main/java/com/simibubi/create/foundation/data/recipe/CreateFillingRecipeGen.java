@@ -69,6 +69,7 @@ public final class CreateFillingRecipeGen extends FillingRecipeGen {
 		.require(AllItems.CINDER_FLOUR.get())
 		.output(Items.GLOWSTONE_DUST)),
 
+	// Compat
 
 	AM_LAVA = create(Mods.AM.recipeId("lava_bottle"), b -> b.require(Fluids.LAVA, 250)
 		.require(Items.GLASS_BOTTLE)
@@ -104,7 +105,14 @@ public final class CreateFillingRecipeGen extends FillingRecipeGen {
 		b -> b.require(AllFluidTags.CREOSOTE.tag, 125)
 			.require(CreateRecipeProvider.I.planks())
 			.output(Mods.IE, "treated_wood_horizontal")
-			.whenModLoaded(Mods.IE.getId()));
+			.whenModLoaded(Mods.IE.getId())),
+
+	// Undergarden
+	UG_DEEPTURF = create(Mods.UG.recipeId("deepturf"), b -> b.require(Fluids.WATER, 500)
+		.require(Mods.UG, "deepsoil")
+		.output(Mods.UG, "deepturf_block")
+		.whenModLoaded(Mods.UG.getId()))
+		;
 
 
 	public CreateFillingRecipeGen(PackOutput output) {

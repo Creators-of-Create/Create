@@ -1,0 +1,33 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "undergarden"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "undergarden:depthrock_iron_ore"
+    }
+  ],
+  "processingTime": 350,
+  "results": [
+    {
+      "count": 2,
+      "item": "create:crushed_raw_iron"
+    },
+    {
+      "chance": 0.25,
+      "item": "create:crushed_raw_iron"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "item": "undergarden:depthrock"
+    }
+  ]
+}

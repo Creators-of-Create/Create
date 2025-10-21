@@ -3,14 +3,12 @@ package com.simibubi.create.foundation.data.recipe;
 import java.util.List;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.MillingRecipeGen;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -18,7 +16,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Create's own Data Generation for Milling recipes
@@ -737,7 +734,71 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		List.of(Items.YELLOW_DYE), List.of(2)),
 
 	RU_YELLOW_SNOWBELLE = ruFlower("yellow_snowbelle", List.of(1f),
-		List.of(Items.YELLOW_DYE), List.of(2));
+		List.of(Items.YELLOW_DYE), List.of(2)),
+
+	// Gardens of the Dead
+	GOTD_BLISTERCROWN = modFlower(Mods.GOTD, "blistercrown", List.of(1f, 0.1f), List.of(Items.ORANGE_DYE, Items.RED_DYE), List.of(2, 1)),
+
+	GOTD_TALL_BLISTERCROWN = modFlower(Mods.GOTD, "tall_blistercrown", List.of(1f, 0.25f, 0.1f),
+		List.of(Items.ORANGE_DYE, Items.RED_DYE, Items.ORANGE_DYE), List.of(3, 2, 2)),
+
+	GOTD_GLOWING_SOUL_SPORE = modFlower(Mods.GOTD, "glowing_soul_spore", List.of(1f, 0.1f), List.of(Items.LIGHT_BLUE_DYE, Items.BROWN_DYE), List.of(2, 1)),
+
+	// Unusual End
+	UUE_WARPED_SPROUTS = modFlower(Mods.UUE, "warped_sprouts", List.of(1f), List.of(Items.CYAN_DYE), List.of(2)),
+
+	UUE_SMALL_WARPED_ALGAE = modFlower(Mods.UUE, "small_warped_algae", List.of(1f), List.of(Items.BLUE_DYE), List.of(2)),
+
+	UUE_WARPED_ALGAE = modFlower(Mods.UUE, "warped_algae", List.of(1f, 0.1f), List.of(Items.BLUE_DYE, Items.BLUE_DYE), List.of(2, 1)),
+
+	UUE_CHORUS_ROOTS = modFlower(Mods.UUE, "chorus_roots", List.of(1f, 0.1f), List.of(Items.MAGENTA_DYE, Items.PURPLE_DYE), List.of(2, 1)),
+
+	UUE_ENDSTONE_SPROUTS = modFlower(Mods.UUE, "endstone_sprouts", List.of(1f), List.of(Items.PINK_DYE), List.of(2)),
+
+	UUE_CHORUS_GRASS = modFlower(Mods.UUE, "purper_grass", List.of(1f, 0.1f), List.of(Items.PINK_DYE, Items.PINK_DYE), List.of(2, 1)),
+
+	UUE_FLOWERING_CHORUS_ROOTS = modFlower(Mods.UUE, "flowering_purpr_grass", List.of(1f, 0.1f), List.of(Items.PINK_DYE, Items.PINK_DYE), List.of(2, 1)),
+
+	UUE_GLOOPY_TENDRILS = modFlower(Mods.UUE, "gloopy_tendrils", List.of(1f), List.of(Items.MAGENTA_DYE), List.of(2)),
+
+	UUE_GLOOPY_BUSH = modFlower(Mods.UUE, "gloopy_bush", List.of(1f, 0.1f), List.of(Items.PURPLE_DYE, Items.PURPLE_DYE), List.of(2, 1)),
+
+	UUE_FLOWERING_GLOOPY_PILE = modFlower(Mods.UUE, "flowering_gloopy_pile", List.of(1f, 0.25f, 0.1f), List.of(Items.PURPLE_DYE, Items.MAGENTA_DYE, Items.PURPLE_DYE), List.of(3, 2, 2)),
+
+	UUE_SHINY_SPIREA = modFlower(Mods.UUE, "shiny_spirea", List.of(1f, 0.1f), List.of(Items.MAGENTA_DYE, Items.PURPLE_DYE), List.of(2, 1)),
+
+	// Undergarden
+	UG_DEPTHROCK = create(Mods.UG.recipeId("depthrock"), b -> b.duration(200)
+		.require(Mods.UG, "depthrock")
+		.output(1f, Mods.UG, "depthrock_pebble", 3)
+		.output(0.5f, Mods.UG, "depthrock_pebble", 3)
+		.output(0.25f, Mods.UG, "depthrock_pebble", 3)
+		.whenModLoaded(Mods.UG.getId())),
+
+	UG_AMOROUS_BRISTLE = modFlower(Mods.UG, "amorous_bristle", List.of(1f, 0.5f), List.of(Items.PINK_DYE, Items.PINK_DYE), List.of(2, 1)),
+
+	UG_MISERABELL = modFlower(Mods.UG, "miserabell", List.of(1f, 0.1f), List.of(Items.LIGHT_BLUE_DYE, Items.LIGHT_BLUE_DYE), List.of(2, 1)),
+
+	UG_BUTTERBUNCH = modFlower(Mods.UG, "butterbunch", List.of(1f, 0.1f), List.of(Items.YELLOW_DYE, Items.YELLOW_DYE), List.of(2, 1)),
+
+	UG_SHIMMERWEED = modFlower(Mods.UG, "shimmerweed", List.of(1f, 0.1f), List.of(Items.WHITE_DYE, Items.WHITE_DYE), List.of(2, 1)),
+
+	UG_TALL_SHIMMERWEED = modFlower(Mods.UG, "tall_shimmerweed", List.of(1f, 0.25f, 0.1f), List.of(
+		Items.WHITE_DYE, Items.GREEN_DYE, Items.WHITE_DYE), List.of(3, 2, 1)),
+
+	// Deeper and Darker
+	DD_SCULK_GRIME = create(Mods.DD.recipeId("sculk_grime"), b -> b.duration(50)
+		.require(Mods.DD, "sculk_grime")
+		.output(1, Mods.DD, "grime_ball", 3)
+		.output(.5f, Mods.DD, "grime_ball", 1)),
+
+	DD_GLOOMY_CACTUS = modFlower(Mods.DD, "gloomy_cactus", List.of(1f, 0.1f), List.of(Items.ORANGE_DYE, Items.ORANGE_DYE), List.of(2, 1)),
+
+	DD_GLOWING_FLOWERS = modFlower(Mods.DD, "glowing_flowers", List.of(1f, 0.1f), List.of(Items.LIGHT_BLUE_DYE, Items.ORANGE_DYE), List.of(2, 1)),
+
+	DD_LILY_FLOWER = modFlower(Mods.DD, "lily_flower", List.of(1f, 0.1f), List.of(Items.LIGHT_BLUE_DYE, Items.ORANGE_DYE), List.of(2, 1))
+
+		;
 
 	GeneratedRecipe bopFlower(String input, List<Float> chances,
 							  List<Item> dyes, List<Integer> amounts) {

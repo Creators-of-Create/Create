@@ -5,6 +5,14 @@
     "minecraft:mangrove_propagule",
     "minecraft:moss_carpet",
     "minecraft:shroomlight",
-    "minecraft:vine"
+    "minecraft:vine",
+    {
+      "id": "undergarden:hanging_grongle_leaves",
+      "required": false
+    },
+    {
+      "id": "undergarden:gronglet",
+      "required": false
+    }
   ]
 }
