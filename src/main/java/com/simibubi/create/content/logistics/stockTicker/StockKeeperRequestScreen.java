@@ -40,7 +40,6 @@ import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerRenderer;
 import com.simibubi.create.content.trains.station.NoShadowFontWrapper;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.ScreenWithStencils;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -85,8 +84,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockKeeperRequestMenu>
-	implements ScreenWithStencils {
+public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockKeeperRequestMenu> {
 	public static class CategoryEntry {
 		boolean hidden;
 		String name;
@@ -608,9 +606,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		int itemWindowY = y + 17;
 		int itemWindowY2 = y + windowHeight - 80;
 
-		UIRenderHelper.swapAndBlitColor(minecraft.getMainRenderTarget(), UIRenderHelper.framebuffer);
-		startStencil(graphics, itemWindowX - 5, itemWindowY, itemWindowX2 - itemWindowX + 10,
-			itemWindowY2 - itemWindowY);
+		graphics.enableScissor(itemWindowX - 5, itemWindowY, itemWindowX2 + 10, itemWindowY2);
 
 		ms.pushPose();
 		ms.translate(0, -currentScroll * rowHeight, 0);
@@ -699,7 +695,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 				.render(graphics, lockX, lockY);
 
 		ms.popPose();
-		endStencil();
+		graphics.disableScissor();
 
 		// Scroll bar
 		int windowH = windowHeight - 92;
@@ -746,8 +742,6 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 
 			ms.popPose();
 		}
-
-		UIRenderHelper.swapAndBlitColor(UIRenderHelper.framebuffer, minecraft.getMainRenderTarget());
 	}
 
 	@Override
