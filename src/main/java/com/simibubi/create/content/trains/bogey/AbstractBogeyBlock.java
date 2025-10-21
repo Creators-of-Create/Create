@@ -8,6 +8,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllTags.AllItemTags;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -166,7 +168,7 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 			return InteractionResult.PASS;
 		ItemStack stack = player.getItemInHand(hand);
 
-		if (!player.isShiftKeyDown() && stack.is(AllItems.WRENCH.get()) && !player.getCooldowns().isOnCooldown(stack.getItem())
+		if (!player.isShiftKeyDown() && AllItemTags.CREATE_WRENCH.matches(stack) && !player.getCooldowns().isOnCooldown(stack.getItem())
 				&& AllBogeyStyles.BOGEY_STYLES.size() > 1) {
 
 			BlockEntity be = level.getBlockEntity(pos);

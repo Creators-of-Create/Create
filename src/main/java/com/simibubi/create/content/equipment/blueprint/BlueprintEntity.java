@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllTags.AllItemTags;
+
 import org.apache.commons.lang3.Validate;
 
 import com.simibubi.create.AllEntityTypes;
@@ -352,7 +354,7 @@ public class BlueprintEntity extends HangingEntity
 		if (player instanceof FakePlayer)
 			return InteractionResult.PASS;
 
-		boolean holdingWrench = AllItems.WRENCH.isIn(player.getItemInHand(hand));
+		boolean holdingWrench = AllItemTags.CREATE_WRENCH.matches(player.getItemInHand(hand));
 		BlueprintSection section = getSectionAt(vec);
 		ItemStackHandler items = section.getItems();
 

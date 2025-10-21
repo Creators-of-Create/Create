@@ -5,8 +5,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.logistics.filter.FilterItem;
 import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
@@ -317,7 +317,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 	}
 
 	public boolean canShortInteract(ItemStack toApply) {
-		if (AllItems.WRENCH.isIn(toApply))
+		if (AllItemTags.CREATE_WRENCH.matches(toApply))
 			return false;
 		if (AllBlocks.MECHANICAL_ARM.isIn(toApply))
 			return false;

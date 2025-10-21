@@ -3,6 +3,7 @@ package com.simibubi.create.content.redstone.link;
 import java.util.Arrays;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
@@ -46,7 +47,7 @@ public class LinkHandler {
 			return;
 		if (AllItems.LINKED_CONTROLLER.isIn(heldItem))
 			return;
-		if (AllItems.WRENCH.isIn(heldItem))
+		if (AllItemTags.CREATE_WRENCH.matches(heldItem))
 			return;
 
 		boolean fakePlayer = player instanceof FakePlayer;

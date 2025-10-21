@@ -114,7 +114,7 @@ public class ItemHatchBlock extends HorizontalDirectionalBlock
 		boolean anyInserted = false;
 		boolean depositItemInHand = !pPlayer.isShiftKeyDown();
 
-		if (!depositItemInHand && AllItemTags.WRENCH.matches(pPlayer.getItemInHand(pHand)))
+		if (!depositItemInHand && AllItemTags.FORGE_WRENCH.matches(pPlayer.getItemInHand(pHand)))
 			return InteractionResult.PASS;
 
 		for (int i = 0; i < inventory.items.size(); i++) {

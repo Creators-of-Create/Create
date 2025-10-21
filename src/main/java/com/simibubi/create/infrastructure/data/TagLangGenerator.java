@@ -135,7 +135,8 @@ public class TagLangGenerator {
 		translate(AllItemTags.PLATES, "Plates");
 		translate(AllItemTags.OBSIDIAN_PLATES, "Obsidian Plates");
 		translate(AllItemTags.CARDBOARD_PLATES, "Cardboard Plates");
-		translate(AllItemTags.WRENCH, "Wrenches");
+		translate(AllItemTags.CREATE_WRENCH, "Create's Wrenches");
+		translate(AllItemTags.FORGE_WRENCH, "Wrenches");
 		translate(AllItemTags.CERTUS_QUARTZ, "Certus Quartz");
 		translate(AllItemTags.AMETRINE_ORES, "Ametrine Ores");
 		translate(AllItemTags.ANTHRACITE_ORES, "Anthracite Ores");

@@ -3,6 +3,7 @@ package com.simibubi.create.content.kinetics.crafter;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.crafter.ConnectedInputHandler.ConnectedInput;
@@ -166,7 +167,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 			return InteractionResult.PASS;
 
 		boolean isHand = heldItem.isEmpty() && handIn == InteractionHand.MAIN_HAND;
-		boolean wrenched = AllItems.WRENCH.isIn(heldItem);
+		boolean wrenched = AllItemTags.CREATE_WRENCH.matches(heldItem);
 
 		if (hit.getDirection() == state.getValue(HORIZONTAL_FACING)) {
 

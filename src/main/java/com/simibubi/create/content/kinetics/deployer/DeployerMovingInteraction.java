@@ -2,9 +2,10 @@ package com.simibubi.create.content.kinetics.deployer;
 
 import java.util.UUID;
 
+import com.simibubi.create.AllTags.AllItemTags;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -31,8 +32,7 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 
 		MovementContext ctx = actor.right;
 		ItemStack heldStack = player.getItemInHand(activeHand);
-		if (heldStack.getItem()
-			.equals(AllItems.WRENCH.get())) {
+		if (AllItemTags.CREATE_WRENCH.matches(heldStack)) {
 			DeployerBlockEntity.Mode mode = NBTHelper.readEnum(ctx.blockEntityData, "Mode", DeployerBlockEntity.Mode.class);
 			NBTHelper.writeEnum(ctx.blockEntityData, "Mode",
 				mode == DeployerBlockEntity.Mode.PUNCH ? DeployerBlockEntity.Mode.USE : DeployerBlockEntity.Mode.PUNCH);

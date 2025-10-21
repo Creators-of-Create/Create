@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.actors.trainControls;
 import java.util.UUID;
 
 import com.google.common.base.Objects;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 
@@ -19,7 +19,7 @@ public class ControlsInteractionBehaviour extends MovingInteractionBehaviour {
 	@Override
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
-		if (AllItems.WRENCH.isIn(player.getItemInHand(activeHand)))
+		if (AllItemTags.CREATE_WRENCH.matches(player.getItemInHand(activeHand)))
 			return false;
 
 		UUID currentlyControlling = contraptionEntity.getControllingPlayer()

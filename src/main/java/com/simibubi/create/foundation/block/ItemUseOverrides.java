@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.block;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllItemTags;
 
 import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.math.VecHelper;
@@ -27,7 +27,7 @@ public class ItemUseOverrides {
 
 	@SubscribeEvent
 	public static void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
-		if (AllItems.WRENCH.isIn(event.getItemStack()))
+		if (AllItemTags.CREATE_WRENCH.matches(event.getItemStack()))
 			return;
 
 		BlockState state = event.getLevel()

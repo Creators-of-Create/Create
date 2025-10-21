@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.api.contraption.BlockMovementChecks;
 
 import net.createmod.catnip.data.Iterate;
@@ -65,7 +66,7 @@ public class SuperGlueHandler {
 		AttributeInstance reachAttribute = placer.getAttribute(ForgeMod.BLOCK_REACH.get());
 		if (!AllItems.SUPER_GLUE.isIn(itemstack) || reachAttribute == null)
 			return;
-		if (AllItems.WRENCH.isIn(placer.getMainHandItem()))
+		if (AllItemTags.CREATE_WRENCH.matches(placer.getMainHandItem()))
 			return;
 		if (event.getPlacedAgainst() == IPlacementHelper.ID)
 			return;

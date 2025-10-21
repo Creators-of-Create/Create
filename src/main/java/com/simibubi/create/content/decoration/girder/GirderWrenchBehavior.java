@@ -4,10 +4,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.simibubi.create.AllTags.AllItemTags;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.data.Pair;
@@ -51,7 +52,7 @@ public class GirderWrenchBehavior {
 		if (!AllBlocks.METAL_GIRDER.has(world.getBlockState(pos)))
 			return;
 
-		if (!AllItems.WRENCH.isIn(heldItem))
+		if (!AllItemTags.CREATE_WRENCH.matches(heldItem))
 			return;
 
 		Pair<Direction, Action> dirPair = getDirectionAndAction(result, world, pos);

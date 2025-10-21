@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllTags.AllItemTags;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllItems;
@@ -208,7 +210,7 @@ public class MinecartContraptionItem extends Item {
 			return;
 
 		ItemStack wrench = player.getItemInHand(event.getHand());
-		if (!AllItems.WRENCH.isIn(wrench))
+		if (!AllItemTags.CREATE_WRENCH.matches(wrench))
 			return;
 		if (entity instanceof AbstractContraptionEntity)
 			entity = entity.getVehicle();

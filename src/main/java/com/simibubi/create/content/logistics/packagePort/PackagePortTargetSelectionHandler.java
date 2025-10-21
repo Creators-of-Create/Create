@@ -74,7 +74,7 @@ public class PackagePortTargetSelectionHandler {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 		boolean isPostbox = AllItemTags.POSTBOXES.matches(player.getMainHandItem());
-		boolean isWrench = AllItemTags.WRENCH.matches(player.getMainHandItem());
+		boolean isWrench = AllItemTags.FORGE_WRENCH.matches(player.getMainHandItem());
 
 		if (!isWrench) {
 			if (activePackageTarget == null)

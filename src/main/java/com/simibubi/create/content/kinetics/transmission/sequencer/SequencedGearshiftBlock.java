@@ -1,7 +1,7 @@
 package com.simibubi.create.content.kinetics.transmission.sequencer;
 
 import com.simibubi.create.AllBlockEntityTypes;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.api.contraption.transformable.TransformableBlock;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.kinetics.base.HorizontalAxisKineticBlock;
@@ -91,7 +91,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 								 BlockHitResult hit) {
 		ItemStack held = player.getMainHandItem();
-		if (AllItems.WRENCH.isIn(held))
+		if (AllItemTags.CREATE_WRENCH.matches(held))
 			return InteractionResult.PASS;
 		if (held.getItem() instanceof BlockItem blockItem) {
 			if (blockItem.getBlock() instanceof KineticBlock && hasShaftTowards(worldIn, pos, state, hit.getDirection()))

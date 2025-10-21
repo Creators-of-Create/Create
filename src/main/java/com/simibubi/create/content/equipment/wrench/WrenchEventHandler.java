@@ -32,9 +32,9 @@ public class WrenchEventHandler {
 			return;
 		if (itemStack.isEmpty())
 			return;
-		if (AllItems.WRENCH.isIn(itemStack))
+		if (AllItemTags.CREATE_WRENCH.matches(itemStack))
 			return;
-		if (!AllItemTags.WRENCH.matches(itemStack.getItem()))
+		if (!AllItemTags.FORGE_WRENCH.matches(itemStack.getItem()))
 			return;
 
 		BlockState state = event.getLevel()

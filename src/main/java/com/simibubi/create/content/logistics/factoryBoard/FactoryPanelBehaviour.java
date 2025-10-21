@@ -579,7 +579,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		boolean isClientSide = player.level().isClientSide;
 
 		// Wrench cycles through arrow bending
-		if (targeting.size() + targetedByLinks.size() > 0 && AllItemTags.WRENCH.matches(player.getItemInHand(hand))) {
+		if (targeting.size() + targetedByLinks.size() > 0 && AllItemTags.FORGE_WRENCH.matches(player.getItemInHand(hand))) {
 			int sharedMode = -1;
 			boolean notifySelf = false;
 

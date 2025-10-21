@@ -4,9 +4,9 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 
@@ -82,7 +82,7 @@ public class WrenchItem extends Item {
 			return;
 		Player player = event.getEntity();
 		ItemStack heldItem = player.getMainHandItem();
-		if (!AllItems.WRENCH.isIn(heldItem))
+		if (!AllItemTags.CREATE_WRENCH.matches(heldItem))
 			return;
 		if (player.isCreative())
 			return;

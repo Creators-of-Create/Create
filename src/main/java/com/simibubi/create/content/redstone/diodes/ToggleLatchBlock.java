@@ -1,6 +1,6 @@
 package com.simibubi.create.content.redstone.diodes;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllItemTags;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -51,7 +51,7 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 			return InteractionResult.PASS;
 		if (player.isShiftKeyDown())
 			return InteractionResult.PASS;
-		if (AllItems.WRENCH.isIn(player.getItemInHand(handIn)))
+		if (AllItemTags.CREATE_WRENCH.matches(player.getItemInHand(handIn)))
 			return InteractionResult.PASS;
 		return activated(worldIn, pos, state);
 	}

@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.kinetics.mechanicalArm.ArmInteractionPoint.Mode;
 import com.simibubi.create.foundation.utility.CreateLang;
 
@@ -152,7 +152,7 @@ public class ArmInteractionPointHandler {
 	}
 
 	private static void checkForWrench(ItemStack heldItem) {
-		if (!AllItems.WRENCH.isIn(heldItem)) {
+		if (!AllItemTags.CREATE_WRENCH.matches(heldItem)) {
 			return;
 		}
 

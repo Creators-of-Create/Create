@@ -1,7 +1,8 @@
 package com.simibubi.create.content.contraptions.wrench;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+
+import com.simibubi.create.AllTags.AllItemTags;
 
 import net.createmod.catnip.gui.ScreenOpener;
 import net.minecraft.client.Minecraft;
@@ -43,7 +44,7 @@ public class RadialWrenchHandler {
 		Level level = player.level();
 
 		ItemStack heldItem = player.getMainHandItem();
-		if (heldItem.getItem() != AllItems.WRENCH.get())
+		if (!AllItemTags.CREATE_WRENCH.matches(heldItem))
 			return;
 
 		HitResult objectMouseOver = mc.hitResult;

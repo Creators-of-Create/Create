@@ -9,10 +9,11 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllTags.AllItemTags;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -306,7 +307,7 @@ public class TrainRelocator {
 				return;
 			}
 
-			if (!AllItems.WRENCH.isIn(player.getMainHandItem())) {
+			if (!AllItemTags.CREATE_WRENCH.matches(player.getMainHandItem())) {
 				player.displayClientMessage(CreateLang.translateDirect("train.relocate.abort")
 					.withStyle(ChatFormatting.RED), true);
 				relocatingTrain = null;

@@ -1,9 +1,9 @@
 package com.simibubi.create.content.trains.station;
 
 import com.simibubi.create.AllBlockEntityTypes;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.depot.SharedDepotBlockMethods;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
@@ -108,7 +108,7 @@ public class StationBlock extends Block implements IBE<StationBlockEntity>, IWre
 		if (pPlayer == null || pPlayer.isShiftKeyDown())
 			return InteractionResult.PASS;
 		ItemStack itemInHand = pPlayer.getItemInHand(pHand);
-		if (AllItems.WRENCH.isIn(itemInHand))
+		if (AllItemTags.CREATE_WRENCH.matches(itemInHand))
 			return InteractionResult.PASS;
 
 		if (itemInHand.getItem() == Items.FILLED_MAP) {

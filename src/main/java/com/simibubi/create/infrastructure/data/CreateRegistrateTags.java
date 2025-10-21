@@ -167,7 +167,7 @@ public class CreateRegistrateTags {
 		CreateTagsProvider<Item> prov = new CreateTagsProvider<>(provIn, Item::builtInRegistryHolder);
 
 		prov.tag(AllItemTags.CHAIN_RIDEABLE.tag)
-			.addTag(AllItemTags.WRENCH.tag);
+			.addTag(AllItemTags.FORGE_WRENCH.tag);
 
 		prov.tag(AllItemTags.PULPIFIABLE.tag)
 			.add(Items.BAMBOO, Items.SUGAR_CANE)

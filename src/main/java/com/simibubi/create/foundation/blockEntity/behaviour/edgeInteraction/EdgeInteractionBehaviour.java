@@ -8,8 +8,12 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
+import org.jetbrains.annotations.Nullable;
 
 public class EdgeInteractionBehaviour extends BlockEntityBehaviour {
 
@@ -30,7 +34,7 @@ public class EdgeInteractionBehaviour extends BlockEntityBehaviour {
 		this.connectivityPredicate = pred;
 		return this;
 	}
-
+  
 	public EdgeInteractionBehaviour require(Item required) {
 		return this.require(item -> item == required);
 	}

@@ -5,9 +5,10 @@ import java.util.Collection;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllTags.AllItemTags;
+
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.sync.ContraptionInteractionPacket;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
@@ -136,7 +137,7 @@ public class ContraptionHandlerClient {
 
 	private static boolean handleSpecialInteractions(AbstractContraptionEntity contraptionEntity, Player player,
 													 BlockPos localPos, Direction side, InteractionHand interactionHand) {
-		if (AllItems.WRENCH.isIn(player.getItemInHand(interactionHand))
+		if (AllItemTags.CREATE_WRENCH.matches(player.getItemInHand(interactionHand))
 			&& contraptionEntity instanceof CarriageContraptionEntity car)
 			return TrainRelocator.carriageWrenched(car.toGlobalVector(VecHelper.getCenterOf(localPos), 1), car);
 		return false;

@@ -119,7 +119,7 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity  implements
 		inserting = new InvManipulationBehaviour(this, this::getTargetFace);
 		connectivity = new EdgeInteractionBehaviour(this, ConnectedInputHandler::toggleConnection)
 			.connectivity(ConnectedInputHandler::shouldConnect)
-			.require(AllItemTags.WRENCH::matches);
+			.require(AllItemTags.FORGE_WRENCH::matches);
 		behaviours.add(inserting);
 		behaviours.add(connectivity);
 		registerAwardables(behaviours, AllAdvancements.CRAFTER, AllAdvancements.CRAFTER_LAZY);

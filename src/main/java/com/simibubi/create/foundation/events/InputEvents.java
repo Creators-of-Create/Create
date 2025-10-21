@@ -117,7 +117,7 @@ public class InputEvents {
 
 		if (mc.player != null) {
 			ItemStack itemInHand = mc.player.getItemInHand(event.getHand());
-			if (AllItemTags.WRENCH.matches(itemInHand))
+			if (AllItemTags.FORGE_WRENCH.matches(itemInHand))
 				return;
 			if (itemInHand.is(Items.CHAIN) || AllBlocks.PACKAGE_FROGPORT.isIn(itemInHand))
 				return;
