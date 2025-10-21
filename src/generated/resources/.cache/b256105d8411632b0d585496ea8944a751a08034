@@ -1,4 +1,4 @@
-// 1.20.1	2025-08-06T02:20:16.7273492	Create's Processing Recipes
+// 1.20.1	2025-09-18T18:05:04.8835584	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -15,6 +15,7 @@ c444abdd432670f6a2b508c513302e119cb07186 data/create/recipes/crushing/asurine_re
 29e7e74108755e0a07b1d3d1e8d4dcaf2b401572 data/create/recipes/crushing/coal_ore.json
 d9a48b3aa36cfe4f792a31fd3ee50b442c1177f9 data/create/recipes/crushing/compat/aether/ambrosium_ore.json
 81bdb03461bec6f8ca1201caa93805a751d7cda6 data/create/recipes/crushing/compat/aether/zanite_ore.json
+6cccceaa8bd26d39e730d91e216a256ef48f49cd data/create/recipes/crushing/compat/ancient_aether/quartz_ore.json
 73914b149bbd72251c1bd9a54cf6d087f6b2ba0b data/create/recipes/crushing/compat/byg/ametrine_ore.json
 d468d9fbd206bd78dc3cc37ce6fcccbc3a89bc5c data/create/recipes/crushing/compat/byg/anthracite_ore.json
 3481a8838049addc6d3514615fccab01a7eda830 data/create/recipes/crushing/compat/byg/blue_nether_gold_ore.json
@@ -26,6 +27,7 @@ b4e8eed87747da8dfdfe2ad3ffd8534b900b38ad data/create/recipes/crushing/compat/byg
 9c6b0c1f78c5027b4e781f3126a734b65cb40f46 data/create/recipes/crushing/compat/byg/lignite_ore.json
 06bae2f87dfe431c1f5df9675de5ce2a6aac7802 data/create/recipes/crushing/compat/byg/pervaded_netherrack.json
 a7177964fe7921dbca27197c6271d6d8c5264665 data/create/recipes/crushing/compat/byg/red_rock.json
+834bb7ff61aa3ca7a8c5062fae993c4e3cd27136 data/create/recipes/crushing/compat/deep_aether/skyjade_ore.json
 808305f43b6a4d3fe2030ba55a86c510346ff164 data/create/recipes/crushing/compat/druidcraft/amber_ore.json
 ae0691d4885a8b67c1ba1f7f3b4f8fc6db9de403 data/create/recipes/crushing/compat/druidcraft/fiery_glass_ore.json
 375daf4d1a5d847a253ce817b8fe99d47526cbb5 data/create/recipes/crushing/compat/druidcraft/moonstone_ore.json
@@ -158,6 +160,10 @@ b135e3faf6afef4b6a5f00197997b47ff8e90568 data/create/recipes/crushing/wool.json
 931a66992ccb5accdb435dca6fe6532e86250c0d data/create/recipes/crushing/zinc_ore.json
 cdb26cd91feeda5901f31f57c16517dda5287810 data/create/recipes/cutting/andesite_alloy.json
 4ac4bb94de7b25a3eec85e8290ab5f2f6b2b4167 data/create/recipes/cutting/bamboo_planks.json
+cc8b3de42fc5236db9eb51ab4f81cdc2186bb9af data/create/recipes/cutting/compat/aether/golden_oak_log.json
+2857293080dabab340d0b18b36d9299d7e8cad06 data/create/recipes/cutting/compat/aether/golden_oak_wood.json
+263d8bdf83a310f83ec76ec95b5177d550d842ac data/create/recipes/cutting/compat/aether_redux/sporing_blightwillow_log.json
+75e4569b22ab71e45d2289451c9ef8093a7d2062 data/create/recipes/cutting/compat/aether_redux/sporing_blightwillow_wood.json
 1c2e2e992a9cee466c4303d6ea57167276563a95 data/create/recipes/cutting/compat/ars_elemental/stripped_yellow_archwood.json
 7c9563a2b9c1512f6356faa13d4aceb42831e1ba data/create/recipes/cutting/compat/ars_elemental/stripped_yellow_archwood_log.json
 6f51d9c5490e7249b19ea98b8b995e6efcc5f83f data/create/recipes/cutting/compat/ars_nouveau/stripped_green_archwood_log.json
@@ -296,6 +302,8 @@ b19f74374347bb123ad32b9d1bb680763467fe1d data/create/recipes/deploying/weathered
 0e05f35e930aa74cc64c91f5a69615aaa0e52565 data/create/recipes/deploying/weathered_cut_copper_stairs_from_removing_wax.json
 6a9fa669a5cbdc2406ecc5eaf6992e0e8fa83b88 data/create/recipes/emptying/builders_tea.json
 0b20bddac967edea53442c05c59ccf3306e9eb76 data/create/recipes/emptying/compat/alexsmobs/lava_bottle.json
+0a0c27d12da11be6b77973cbf9ed0bf4a2a4427e data/create/recipes/emptying/compat/deep_aether/poison_bucket.json
+d497d99fda84724250e57184de361b522b9bc7c1 data/create/recipes/emptying/compat/deep_aether/skyroot_poison_bucket.json
 5fb7e705b53ed84b607858be1db6a6d2765bea9c data/create/recipes/emptying/compat/farmersdelight/milk_bottle.json
 054bd7804a710c498f605b82fd7d5055a4762829 data/create/recipes/emptying/compat/neapolitan/milk_bottle.json
 ab35f7d885d8f2c8ccf562938ac804f6cb4c38ad data/create/recipes/emptying/honey_bottle.json
@@ -305,6 +313,7 @@ aea7837e33bfcbdd1e0b4386372b6595fd00ad1d data/create/recipes/filling/builders_te
 2d3b2d7c28fc0ea9f18be73d9523456b5c5946da data/create/recipes/filling/compat/aether/aether_grass_block.json
 f158f5e509b43746871722edf802984e2b9cc024 data/create/recipes/filling/compat/alexsmobs/lava_bottle.json
 5770b60bd7e89f2cac74df71b463a1101601d86f data/create/recipes/filling/compat/byg/lush_grass_block.json
+fa4050b344207da164d551b644c4a1198997a797 data/create/recipes/filling/compat/deep_aether/skyroot_poison_bucket.json
 1280689ba81877c6583c6941ed307ca35d4f00e4 data/create/recipes/filling/compat/farmersdelight/milk_bottle.json
 a48a8862847dab2a75f8e2710203ed5f7d00533e data/create/recipes/filling/compat/immersiveengineering/treated_wood_in_spout.json
 fd578bb1e05901d0b959b1f445273619b55cde57 data/create/recipes/filling/compat/neapolitan/milk_bottle.json
@@ -366,6 +375,29 @@ de5a7460348c3301381dd2635ac433a473bec04a data/create/recipes/milling/compat/ae2/
 42151b6f50df8e05a7399eaa386369474a5a618c data/create/recipes/milling/compat/ae2/ender_pearl.json
 b383c64d2559cd757b84fd5651f77c9ea95ebb00 data/create/recipes/milling/compat/ae2/fluix_crystal.json
 880cfc22f510351e54a82242d6bc86acab4c3c92 data/create/recipes/milling/compat/ae2/sky_stone_block.json
+f0001aeeb8169fb68337b845f484ef420ac1c0b2 data/create/recipes/milling/compat/aether/purple_flower.json
+4a65fbbfbcbdac443993b5aeee270a12213f1083 data/create/recipes/milling/compat/aether/white_flower.json
+b254a24f0035a2077675e3de2865b686eb72c63a data/create/recipes/milling/compat/aether_redux/aurum.json
+6849b110f5825de0db95cae3deabeacc35493233 data/create/recipes/milling/compat/aether_redux/blightshade.json
+70379b33059bfa90f8c0fc99a546790826295efd data/create/recipes/milling/compat/aether_redux/daggerbloom.json
+761109c6215f030e329c8ea7988b35f85506319c data/create/recipes/milling/compat/aether_redux/fieldsproot_petals.json
+93ae3043af9edd3133ffe18c785ee559b00d4e59 data/create/recipes/milling/compat/aether_redux/flareblossom.json
+9019c715b053181a9e82c900a883822f6b61da68 data/create/recipes/milling/compat/aether_redux/golden_clover.json
+0f058dee62fdc3b63ccee61b2df72cc46c14d8d7 data/create/recipes/milling/compat/aether_redux/infernia.json
+18cb040a863d5d20320739b9fb838814d189837e data/create/recipes/milling/compat/aether_redux/iridia.json
+639d5ef20c8b0b0fe60fdd2dd7e4dca1fcdac593 data/create/recipes/milling/compat/aether_redux/lumina.json
+1cdc9a0be783221dacf03c6e7d7604bec1093b79 data/create/recipes/milling/compat/aether_redux/luxweed.json
+2588b7c095a5483320545a9f39837aa4c028d353 data/create/recipes/milling/compat/aether_redux/skysprouts.json
+645e91c1c27d0019aeb7025ddefe4c5b999d4c52 data/create/recipes/milling/compat/aether_redux/spirolyctil.json
+f5d706d9031b64091e648adfa58ae523ca795cf2 data/create/recipes/milling/compat/aether_redux/theratip.json
+bddb3a7e2d3cc6f1b6d3dca64e5fd3865cb20e8f data/create/recipes/milling/compat/aether_redux/wyndsprouts.json
+7dd16c7ac7f0168e94b0c0d6f8a7631b3f1432ab data/create/recipes/milling/compat/aether_redux/xaelia_patch.json
+e954a31a50ce79c61b2c56fdfddb15e02f97511d data/create/recipes/milling/compat/aether_redux/zyatrix.json
+9dfa3f5925ed86c44c7d15794701e8952aed3646 data/create/recipes/milling/compat/ancient_aether/elevetia.json
+8464d55a2c378e846988bf1286b6fa85695164f2 data/create/recipes/milling/compat/ancient_aether/sky_blues.json
+1ab1aede8c571d0711aa040f143c8d71caa38ab0 data/create/recipes/milling/compat/ancient_aether/sunset_rose.json
+474616f5d930ddf8c11dcf7a4c2e567c50a30e90 data/create/recipes/milling/compat/ancient_aether/valkyrie_clay.json
+2518f6143501374cd7c2ac1a7b978f31f699625f data/create/recipes/milling/compat/ancient_aether/wynd_thistle.json
 d6c091225197381abae8bdba35318aa3a8bde1ad data/create/recipes/milling/compat/atmospheric/gilia.json
 9dce11179bf92dc0519fad4b41c944a25226abff data/create/recipes/milling/compat/atmospheric/hot_monkey_brush.json
 fd427a15577f3ea5612667e6b148ff253d2fd021 data/create/recipes/milling/compat/atmospheric/scalding_monkey_brush.json
@@ -459,6 +491,21 @@ eb9606bbb2e4c6fb82b6607c8d5c23834d9e44a8 data/create/recipes/milling/compat/byg/
 1732969a11d677b825758f6c4af2cdbcdc365898 data/create/recipes/milling/compat/byg/winter_scilla.json
 9266eaf6e2259fccb6e2aa57a9e19fc1faeb53fe data/create/recipes/milling/compat/byg/yellow_daffodil.json
 fda00f49b9a5758ee7d24f2aeab81a3cc690544a data/create/recipes/milling/compat/byg/yellow_tulip.json
+de7e32322d85317ba0701164cc4060c9d47d252d data/create/recipes/milling/compat/deep_aether/aerlavender.json
+7e370e6e977cb08cb6f0cee7823eb815155d7169 data/create/recipes/milling/compat/deep_aether/aether_cattails.json
+f63fe4c4d47daf39f6097e9b0325fde0aee77f8a data/create/recipes/milling/compat/deep_aether/echaisy.json
+3692a1676806c5ced1e62989343aef37013f9da1 data/create/recipes/milling/compat/deep_aether/enchanted_blossom.json
+9c19cada7ee65801eabe578cd9eec9255c227c71 data/create/recipes/milling/compat/deep_aether/golden_aspess.json
+bb5bfece9fadfd95d42fab5ff21df745cb82fb83 data/create/recipes/milling/compat/deep_aether/golden_flower.json
+0a9e4d848d18badd38749a7b6bf38f81196987aa data/create/recipes/milling/compat/deep_aether/iaspove.json
+a1762f0c988ffb9c4060fdbc43e9bd1ed05ac0cd data/create/recipes/milling/compat/deep_aether/medium_grass.json
+9900930dea690e2521f093ed20d6f8d667e1e250 data/create/recipes/milling/compat/deep_aether/mini_grass.json
+d1b1439701e35b0910e070b9528a7536134af1e0 data/create/recipes/milling/compat/deep_aether/radiant_orchid.json
+fc04fb70250c4309f2b932ae5f59595afd040c17 data/create/recipes/milling/compat/deep_aether/short_grass.json
+30081ff2e3a7a66e1796580fc99625fe729f8362 data/create/recipes/milling/compat/deep_aether/sky_tulips.json
+cddc00587741bcf98c921d4fd1e4586531f0c1a6 data/create/recipes/milling/compat/deep_aether/tall_aerlavender.json
+ea9cf26f3d537bf8dd6fd1f8819ecceba6939211 data/create/recipes/milling/compat/deep_aether/tall_aether_cattails.json
+ed1c8fccf084d5697a7d095aef58bd304b322848 data/create/recipes/milling/compat/deep_aether/tall_grass.json
 2e6a7a1b0e8ab1d6e514a30a21d47b404cfdcd45 data/create/recipes/milling/compat/druidcraft/lavender.json
 5be32cdd48cf7d9e3f8273fc3479d559070b9872 data/create/recipes/milling/compat/environmental/bird_of_paradise.json
 102130e75ea8f2b8c99ad9641d293a4e588912cf data/create/recipes/milling/compat/environmental/bluebell.json
@@ -566,6 +613,7 @@ d06c1d0362dccc4e5f8b22f851dc8316b35c06b0 data/create/recipes/mixing/brass_ingot.
 840a9008d4531425beadfcf224d21e938acc4502 data/create/recipes/mixing/chocolate.json
 e7b86d4ca5de2df474794424d93b447e5f9dcdc3 data/create/recipes/mixing/chocolate_melting.json
 39e832016fa5e360434271505d09ced17a40e7eb data/create/recipes/mixing/compat/ae2/fluix_crystal.json
+193e890056528264d70ce7c5fc2981e224bf0271 data/create/recipes/mixing/compat/deep_aether/aether_mud.json
 f0648e6b963e1ac1c1756f769988e779963eb1a1 data/create/recipes/mixing/compat/regions_unexplored/peat_mud.json
 a2cf143f409a26709ad119f151c611331dca960c data/create/recipes/mixing/compat/regions_unexplored/silt_mud.json
 4cf9a0979fb6401c51c763d71f0bb53ea2c8c32b data/create/recipes/mixing/dough_by_mixing.json
@@ -588,6 +636,7 @@ fb6d54e0ee3c8831060a8573d16814217888ae0e data/create/recipes/pressing/compat/bet
 77dbbdd01f36f1ede5018bc1feb3dff960988129 data/create/recipes/pressing/compat/betterendforge/pink_moss_path.json
 200b0a7f459b4c5f5bd7d6fe46ad1959923b9cb0 data/create/recipes/pressing/compat/betterendforge/shadow_grass_path.json
 8a53f6ea8dab59477d462eb929f7815f52b34095 data/create/recipes/pressing/compat/byg/lush_grass_path.json
+bfed988091701a749d337c2d78e9fb820b8d9aa0 data/create/recipes/pressing/compat/deep_aether/golden_heights_dirt_path.json
 4454d7dda6c2b5555227c5c147373df195adedb4 data/create/recipes/pressing/compat/environmental/mycelium_path.json
 ed3edcf493402051fcff435a5840295b218a078c data/create/recipes/pressing/compat/environmental/podzol_path.json
 39fc8e85aad2f06ca042905b2398fde9fec13a74 data/create/recipes/pressing/compat/immersiveengineering/plate_aluminum.json

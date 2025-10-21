@@ -1,0 +1,23 @@
+{
+  "type": "create:emptying",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "deep_aether"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "aether:skyroot_poison_bucket"
+    }
+  ],
+  "results": [
+    {
+      "item": "aether:skyroot_bucket"
+    },
+    {
+      "amount": 1000,
+      "fluid": "deep_aether:poison_fluid"
+    }
+  ]
+}

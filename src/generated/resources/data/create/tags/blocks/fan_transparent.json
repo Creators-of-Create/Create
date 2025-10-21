@@ -11,6 +11,10 @@
     "minecraft:mangrove_roots",
     "#minecraft:campfires",
     "#minecraft:fences",
-    "#minecraft:leaves"
+    "#minecraft:leaves",
+    {
+      "id": "deep_aether:yagroot_roots",
+      "required": false
+    }
   ]
 }

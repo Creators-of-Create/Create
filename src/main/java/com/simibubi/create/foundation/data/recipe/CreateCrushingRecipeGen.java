@@ -418,7 +418,26 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 
 	IE_SLAG_GRAVEL = create(Mods.IE.recipeId("slag"), b -> b.duration(200)
 		.require(Mods.IE, "slag").output(Mods.IE, "slag_gravel")
-		.whenModLoaded(Mods.IE.getId()));
+		.whenModLoaded(Mods.IE.getId())),
+
+	// Deep Aether
+	D_AET_SKYJADE = create(Mods.D_AET.recipeId("skyjade_ore"), b -> b.duration(150)
+		.require(Mods.D_AET, "skyjade_ore")
+		.output(Mods.D_AET, "skyjade")
+		.output(0.75f, Mods.D_AET, "skyjade", 1)
+		.output(0.125f, Mods.AET, "holystone", 1)
+		.output(0.75f, AllItems.EXP_NUGGET.get())
+		.whenModLoaded(Mods.D_AET.getId())),
+
+	// Ancient Aether
+	A_AET_QUARTZ = create(Mods.A_AET.recipeId("quartz_ore"), b -> b.duration(150)
+		.require(Mods.A_AET, "aether_quartz_ore")
+		.output(Items.QUARTZ)
+		.output(0.75f, Items.QUARTZ, 1)
+		.output(0.125f, Mods.AET, "holystone", 1)
+		.output(0.75f, AllItems.EXP_NUGGET.get())
+		.whenModLoaded(Mods.A_AET.getId()))
+		;
 
 	GeneratedRecipe sgStoneOres(String... types) {
 		for (String type : types) {

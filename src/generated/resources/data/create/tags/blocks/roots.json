@@ -12,6 +12,10 @@
     {
       "id": "twilightforest:mangrove_root",
       "required": false
+    },
+    {
+      "id": "deep_aether:yagroot_roots",
+      "required": false
     }
   ]
 }

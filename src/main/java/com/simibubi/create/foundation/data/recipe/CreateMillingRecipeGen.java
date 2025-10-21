@@ -3,14 +3,12 @@ package com.simibubi.create.foundation.data.recipe;
 import java.util.List;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.MillingRecipeGen;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -18,7 +16,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Create's own Data Generation for Milling recipes
@@ -737,7 +734,144 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		List.of(Items.YELLOW_DYE), List.of(2)),
 
 	RU_YELLOW_SNOWBELLE = ruFlower("yellow_snowbelle", List.of(1f),
-		List.of(Items.YELLOW_DYE), List.of(2));
+		List.of(Items.YELLOW_DYE), List.of(2)),
+
+	// Aether
+	AET_PURPLE_FLOWER = modFlower(Mods.AET, "purple_flower", List.of(1f),
+		List.of(Items.PURPLE_DYE), List.of(2)),
+
+	AET_WHITE_FLOWER = modFlower(Mods.AET, "white_flower", List.of(1f),
+		List.of(Items.WHITE_DYE), List.of(2)),
+
+	// Deep Aether
+	D_AET_MINI_GRASS = create(Mods.D_AET.recipeId("mini_grass"), b -> b.duration(50)
+		.require(Mods.D_AET, "mini_golden_grass")
+		.output(0.25f, Items.WHEAT_SEEDS)
+		.output(0.2f, Mods.D_AET, "golden_grass_seeds", 1)
+		.output(0.02f, Mods.AET, "ambrosium_shard", 1)
+		.whenModLoaded(Mods.D_AET.getId())),
+
+	D_AET_SHORT_GRASS = create(Mods.D_AET.recipeId("short_grass"), b -> b.duration(50)
+		.require(Mods.D_AET, "short_golden_grass")
+		.output(0.25f, Items.WHEAT_SEEDS)
+		.output(0.2f, Mods.D_AET, "golden_grass_seeds", 1)
+		.output(0.02f, Mods.AET, "ambrosium_shard", 1)
+		.whenModLoaded(Mods.D_AET.getId())),
+
+	D_AET_MEDIUM_GRASS = create(Mods.D_AET.recipeId("medium_grass"), b -> b.duration(50)
+		.require(Mods.D_AET, "medium_golden_grass")
+		.output(0.25f, Items.WHEAT_SEEDS)
+		.output(0.2f, Mods.D_AET, "golden_grass_seeds", 1)
+		.output(0.02f, Mods.AET, "ambrosium_shard", 1)
+		.whenModLoaded(Mods.D_AET.getId())),
+
+	D_AET_TALL_GRASS = create(Mods.D_AET.recipeId("tall_grass"), b -> b.duration(50)
+		.require(Mods.D_AET, "tall_golden_grass")
+		.output(0.5f, Items.WHEAT_SEEDS)
+		.output(0.4f, Mods.D_AET, "golden_grass_seeds", 1)
+		.output(0.04f, Mods.AET, "ambrosium_shard", 1)
+		.whenModLoaded(Mods.D_AET.getId())),
+
+	D_AET_RADIANT_ORCHID = modFlower(Mods.D_AET, "radiant_orchid", List.of(1f),
+		List.of(Items.PURPLE_DYE), List.of(2)),
+
+	D_AET_AERLAVENDER = modFlower(Mods.D_AET, "aerlavender", List.of(1f),
+		List.of(Items.PINK_DYE), List.of(2)),
+
+	D_AET_TALL_AERLAVENDER = modFlower(Mods.D_AET, "tall_aerlavender", List.of(1f, 0.25f),
+		List.of(Items.PINK_DYE, Items.PINK_DYE), List.of(3, 2)),
+
+	D_AET_CATTAILS = modFlower(Mods.D_AET, "aether_cattails", List.of(1f),
+		List.of(Items.CYAN_DYE), List.of(2)),
+
+	D_AET_TALL_CATTAILS = modFlower(Mods.D_AET, "tall_aether_cattails", List.of(1f, 0.25f),
+		List.of(Items.CYAN_DYE, Items.CYAN_DYE), List.of(3, 2)),
+
+	D_AET_GOLDEN_FLOWER = modFlower(Mods.D_AET, "golden_flower", List.of(1f, 0.25f),
+		List.of(Items.ORANGE_DYE, Items.PINK_DYE), List.of(2, 1)),
+
+	D_AET_ENCHANTED_BLOSSOM = modFlower(Mods.D_AET, "enchanted_blossom", List.of(1f, 0.25f),
+		List.of(Items.WHITE_DYE, Items.YELLOW_DYE), List.of(2, 1)),
+
+	D_AET_SKY_TULIPS = modFlower(Mods.D_AET, "sky_tulips", List.of(1f),
+		List.of(Items.RED_DYE), List.of(2)),
+
+	D_AET_IASPOVE = modFlower(Mods.D_AET, "iaspove", List.of(1f),
+		List.of(Items.BLUE_DYE), List.of(2)),
+
+	D_AET_GOLDEN_ASPESS = modFlower(Mods.D_AET, "golden_aspess", List.of(1f),
+		List.of(Items.ORANGE_DYE), List.of(2)),
+
+	D_AET_ECHAISY = modFlower(Mods.D_AET, "echaisy", List.of(1f),
+		List.of(Items.PURPLE_DYE), List.of(2)),
+
+	// Ancient Aether
+	A_AET_CLAY = create(Mods.A_AET.recipeId("valkyrie_clay"), b -> b.duration(50)
+		.require(Mods.A_AET, "valkyrie_clay")
+		.output(1, Mods.A_AET, "valkyrie_clay_ball", 3)
+		.output(.5f, Mods.A_AET, "valkyrie_clay_ball", 1)),
+
+	A_AET_SUNSET_ROSE = modFlower(Mods.A_AET, "sunset_rose", List.of(1f),
+		List.of(Items.RED_DYE), List.of(2)),
+
+	A_AET_SKY_BLUES = modFlower(Mods.A_AET, "sky_blues", List.of(1f),
+		List.of(Items.CYAN_DYE), List.of(2)),
+
+	A_AET_WYND_THISTLE = modFlower(Mods.A_AET, "wynd_thistle", List.of(1f),
+		List.of(Items.LIGHT_BLUE_DYE), List.of(2)),
+
+	A_AET_ELEVETIA = modFlower(Mods.A_AET, "elevetia", List.of(1f, 0.25f),
+		List.of(Items.PURPLE_DYE, Items.BLACK_DYE), List.of(2, 1)),
+
+	// Aether Redux
+	AET_R_WYNDSPROUTS = modFlower(Mods.AET_R, "wyndsprouts", List.of(1f),
+		List.of(Items.LIGHT_GRAY_DYE), List.of(2)),
+
+	AET_R_SKYSPROUTS = modFlower(Mods.AET_R, "skysprouts", List.of(1f),
+		List.of(Items.LIGHT_BLUE_DYE), List.of(2)),
+
+	AET_R_FIELDSPROOT_PETALS = modFlower(Mods.AET_R, "fieldsproot_petals", List.of(0.25f, 0.25f, 0.25f, 0.25f),
+		List.of(Items.LIGHT_BLUE_DYE, Items.PINK_DYE, Items.MAGENTA_DYE, Items.BLACK_DYE), List.of(1, 1, 1, 1)),
+
+	AET_R_IRIDIA = modFlower(Mods.AET_R, "iridia", List.of(1f),
+		List.of(Items.MAGENTA_DYE), List.of(2)),
+
+	AET_R_XAELIA_PATCH = modFlower(Mods.AET_R, "xaelia_patch", List.of(1f),
+		List.of(Items.LIGHT_GRAY_DYE), List.of(2)),
+
+	AET_R_AURUM = modFlower(Mods.AET_R, "aurum", List.of(1f),
+		List.of(Items.YELLOW_DYE), List.of(2)),
+
+	AET_R_GOLDEN_CLOVER = modFlower(Mods.AET_R, "golden_clover", List.of(1f),
+		List.of(Items.YELLOW_DYE), List.of(2)),
+
+	AET_R_ZYATRIX = modFlower(Mods.AET_R, "zyatrix", List.of(1f, 0.25f),
+		List.of(Items.PURPLE_DYE, Items.YELLOW_DYE), List.of(2, 1)),
+
+	AET_R_LUXWEED = modFlower(Mods.AET_R, "luxweed", List.of(1f, 0.5f),
+		List.of(Items.LIGHT_BLUE_DYE, Items.PURPLE_DYE), List.of(1, 1)),
+
+	AET_R_SPIROLYCTIL = modFlower(Mods.AET_R, "spirolyctil", List.of(1f, 0.25f),
+		List.of(Items.LIGHT_BLUE_DYE, Items.PURPLE_DYE), List.of(2, 1)),
+
+	AET_R_BLIGHTSHADE = modFlower(Mods.AET_R, "blightshade", List.of(1f, 0.25f),
+		List.of(Items.PURPLE_DYE, Items.BLACK_DYE), List.of(2, 1)),
+
+	AET_R_LUMINA = modFlower(Mods.AET_R, "lumina", List.of(1f),
+		List.of(Items.BLACK_DYE), List.of(2)),
+
+	AET_R_DAGGERBLOOM = modFlower(Mods.AET_R, "daggerbloom", List.of(1f, 0.25f),
+		List.of(Items.WHITE_DYE, Items.LIGHT_BLUE_DYE), List.of(2, 1)),
+
+	AET_R_THERATIP = modFlower(Mods.AET_R, "theratip", List.of(1f),
+		List.of(Items.PINK_DYE), List.of(2)),
+
+	AET_R_INFERNIA = modFlower(Mods.AET_R, "infernia", List.of(1f, 0.25f),
+		List.of(Items.ORANGE_DYE, Items.ORANGE_DYE), List.of(2, 2)),
+
+	AET_R_FLAREBLOSSOM = modFlower(Mods.AET_R, "flareblossom", List.of(1f, 0.5f, 0.25f),
+		List.of(Items.BLAZE_POWDER, Items.BLAZE_POWDER, Items.RED_DYE), List.of(1, 1, 2))
+		;
 
 	GeneratedRecipe bopFlower(String input, List<Float> chances,
 							  List<Item> dyes, List<Integer> amounts) {

@@ -1,0 +1,19 @@
+{
+  "type": "create:pressing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "deep_aether"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "deep_aether:golden_heights_grass_block"
+    }
+  ],
+  "results": [
+    {
+      "item": "deep_aether:golden_heights_dirt_path"
+    }
+  ]
+}

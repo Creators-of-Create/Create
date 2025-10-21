@@ -45,7 +45,17 @@ public final class CreateEmptyingRecipeGen extends EmptyingRecipeGen {
 	NEO_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Mods.FD, "milk_bottle")
 		.output(ForgeMod.MILK.get(), 250)
 		.output(Items.GLASS_BOTTLE)
-		.whenModLoaded(Mods.NEA.getId()))
+		.whenModLoaded(Mods.NEA.getId())),
+
+	D_AET_POISON_1 = create(Mods.D_AET.recipeId("poison_bucket"), b -> b.require(Mods.D_AET, "poison_bucket")
+		.output(Mods.D_AET, "poison_fluid", 1000)
+		.output(Items.BUCKET)
+		.whenModLoaded(Mods.D_AET.getId())),
+
+	D_AET_POISON_2 = create(Mods.D_AET.recipeId("skyroot_poison_bucket"), b -> b.require(Mods.AET, "skyroot_poison_bucket")
+		.output(Mods.D_AET, "poison_fluid", 1000)
+		.output(Mods.AET, "skyroot_bucket")
+		.whenModLoaded(Mods.D_AET.getId()))
 
 	;
 

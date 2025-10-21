@@ -104,7 +104,16 @@ public final class CreateFillingRecipeGen extends FillingRecipeGen {
 		b -> b.require(AllFluidTags.CREOSOTE.tag, 125)
 			.require(CreateRecipeProvider.I.planks())
 			.output(Mods.IE, "treated_wood_horizontal")
-			.whenModLoaded(Mods.IE.getId()));
+			.whenModLoaded(Mods.IE.getId())),
+
+	// Deep Aether
+	// Filling a normal bucket with Poison is already provided via Item Capabilities.
+	D_AET_POISON_BUCKET = create(Mods.D_AET.recipeId("skyroot_poison_bucket"), b -> b
+		.require(Mods.D_AET, "poison_fluid", 1000)
+		.require(Mods.AET, "skyroot_bucket")
+		.output(Mods.AET, "skyroot_poison_bucket")
+		.whenModLoaded(Mods.D_AET.getId()))
+		;
 
 
 	public CreateFillingRecipeGen(PackOutput output) {

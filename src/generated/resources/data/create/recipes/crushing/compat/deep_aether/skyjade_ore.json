@@ -1,0 +1,32 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "deep_aether"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "deep_aether:skyjade_ore"
+    }
+  ],
+  "processingTime": 150,
+  "results": [
+    {
+      "item": "deep_aether:skyjade"
+    },
+    {
+      "chance": 0.75,
+      "item": "deep_aether:skyjade"
+    },
+    {
+      "chance": 0.125,
+      "item": "aether:holystone"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    }
+  ]
+}

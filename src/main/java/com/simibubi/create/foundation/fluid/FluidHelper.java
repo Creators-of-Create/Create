@@ -11,7 +11,7 @@ import com.simibubi.create.content.fluids.tank.CreativeFluidTankBlockEntity;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
-
+import com.simibubi.create.foundation.data.recipe.DatagenFluidStack;
 import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.nbt.TagParser;
@@ -133,7 +133,8 @@ public class FluidHelper {
 
 	public static JsonElement serializeFluidStack(FluidStack stack) {
 		JsonObject json = new JsonObject();
-		json.addProperty("fluid", CatnipServices.REGISTRIES.getKeyOrThrow(stack.getFluid())
+		json.addProperty("fluid", stack instanceof DatagenFluidStack datagenFluidStack ?
+				datagenFluidStack.getActualFluid() : CatnipServices.REGISTRIES.getKeyOrThrow(stack.getFluid())
 			.toString());
 		json.addProperty("amount", stack.getAmount());
 		if (stack.hasTag())

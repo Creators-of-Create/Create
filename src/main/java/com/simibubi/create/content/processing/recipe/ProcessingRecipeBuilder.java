@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.simibubi.create.api.data.recipe.DatagenMod;
 import com.simibubi.create.foundation.data.SimpleDatagenIngredient;
+import com.simibubi.create.foundation.data.recipe.DatagenFluidStack;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
@@ -130,6 +131,10 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return this;
 	}
 
+	public ProcessingRecipeBuilder<T> require(DatagenMod mod, String fluid, int amount) {
+		return require(new FluidIngredient.DatagenFluidIngredient(mod.asResource(fluid), amount));
+	}
+
 	public ProcessingRecipeBuilder<T> require(Fluid fluid, int amount) {
 		return require(FluidIngredient.fromFluid(fluid, amount));
 	}
@@ -186,6 +191,10 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 	public ProcessingRecipeBuilder<T> output(ProcessingOutput output) {
 		params.results.add(output);
 		return this;
+	}
+
+	public ProcessingRecipeBuilder<T> output(DatagenMod mod, String fluid, int amount) {
+		return output(new DatagenFluidStack(mod.asResource(fluid), amount));
 	}
 
 	public ProcessingRecipeBuilder<T> output(Fluid fluid, int amount) {

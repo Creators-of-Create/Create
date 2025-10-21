@@ -57,7 +57,15 @@ public final class CreateCuttingRecipeGen extends CuttingRecipeGen {
 
 		// Jaden's Nether Expansion
 		JNE_1 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_stem", "stripped_claret_stem", null),
-		JNE_2 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_hyphae", "stripped_claret_hyphae", null)
+		JNE_2 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_hyphae", "stripped_claret_hyphae", null),
+
+		// Aether
+		AET_1 = stripAndMakePlanks(Mods.AET,"golden_oak_log", "stripped_skyroot_log", null),
+		AET_2 = stripAndMakePlanks(Mods.AET, "golden_oak_wood", "stripped_skyroot_wood", null),
+
+		// Aether Redux
+		AET_R_1 = stripAndMakePlanks(Mods.AET_R, "sporing_blightwillow_log", "stripped_blightwillow_log", null),
+		AET_R_2 = stripAndMakePlanks(Mods.AET_R, "sporing_blightwillow_wood", "stripped_blightwillow_wood", null)
 		;
 
 	public CreateCuttingRecipeGen(PackOutput output) {

@@ -14,6 +14,22 @@
     "minecraft:mushroom_stew",
     "minecraft:rabbit_stew",
     "minecraft:beetroot_soup",
-    "minecraft:suspicious_stew"
+    "minecraft:suspicious_stew",
+    {
+      "id": "aether:skyroot_remedy_bucket",
+      "required": false
+    },
+    {
+      "id": "aether:skyroot_poison_bucket",
+      "required": false
+    },
+    {
+      "id": "deep_aether:poison_bucket",
+      "required": false
+    },
+    {
+      "id": "aether_redux:oatmeal",
+      "required": false
+    }
   ]
 }
