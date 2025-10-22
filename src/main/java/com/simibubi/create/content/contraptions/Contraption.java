@@ -31,9 +31,12 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllContraptionTypeTags;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
+import com.simibubi.create.api.behaviour.movement.ContraptionHandoffContainer;
+import com.simibubi.create.api.behaviour.movement.ListeningMovementBehaviour;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.api.contraption.BlockMovementChecks;
 import com.simibubi.create.api.contraption.ContraptionType;
+import com.simibubi.create.api.event.ContraptionEvent;
 import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsMovement;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterMovementBehaviour;
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
@@ -76,6 +79,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.data.UniqueLinkedList;
 import net.createmod.catnip.math.BBHelper;
@@ -128,8 +132,8 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.GameData;
 
 public abstract class Contraption {
@@ -161,6 +165,8 @@ public abstract class Contraption {
 	private List<BlockFace> pendingSubContraptions;
 
 	private CompletableFuture<Void> simplifiedEntityColliderProvider;
+
+	private @Nullable List<ContraptionHandoffContainer> handoffers;
 
 	// Client
 	public Map<BlockPos, ModelData> modelData;
@@ -303,6 +309,9 @@ public abstract class Contraption {
 				continue;
 			contraptionEntity.addSittingPassenger(passenger, seatIndex);
 		}
+
+		NeoForge.EVENT_BUS.post(new ContraptionEvent.Assemble(contraptionEntity));
+		consumeHandoffContainers(contraptionEntity, true);
 	}
 
 	/**
@@ -1103,7 +1112,16 @@ public abstract class Contraption {
 				blockMismatch &= !AllBlocks.POWERED_SHAFT.is(blockIn) || !AllBlocks.SHAFT.has(block.state());
 				if (blockMismatch)
 					iterator.remove();
+
+				MovementBehaviour actor = MovementBehaviour.REGISTRY.get(block.state());
+				if (actor instanceof ListeningMovementBehaviour lmb) {
+					if (handoffers == null) handoffers = new ObjectArrayList<>(11);
+					BlockEntity be = world.getBlockEntity(add);
+					handoffers.add(ContraptionHandoffContainer.of(lmb, block.state(), be, block.pos(), add));
+				}
+
 				world.removeBlockEntity(add);
+
 				int flags = Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_SUPPRESS_DROPS | Block.UPDATE_KNOWN_SHAPE
 					| Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE;
 				if (blockIn instanceof SimpleWaterloggedBlock && oldState.hasProperty(BlockStateProperties.WATERLOGGED)
@@ -1253,8 +1271,13 @@ public abstract class Contraption {
 
 				storage.unmount(world, block, targetPos, blockEntity);
 
-				if (blockEntity != null) {
+				if (blockEntity != null)
 					transform.apply(blockEntity);
+
+				MovementBehaviour actor = MovementBehaviour.REGISTRY.get(block.state());
+				if (actor instanceof ListeningMovementBehaviour lmb) {
+					if (handoffers == null) handoffers = new ObjectArrayList<>(11);
+					handoffers.add(ContraptionHandoffContainer.of(lmb, blockState, blockEntity, block.pos(), targetPos));
 				}
 			}
 		}
@@ -1273,6 +1296,15 @@ public abstract class Contraption {
 			if (!world.isClientSide)
 				world.addFreshEntity(new SuperGlueEntity(world, box));
 		}
+	}
+
+	protected void consumeHandoffContainers(AbstractContraptionEntity entity, boolean add) {
+		if (handoffers == null) return;
+		for(ContraptionHandoffContainer container : handoffers) {
+			if (add) container.behaviour().onAddedToContraption(world, entity, this, container.context());
+			else container.behaviour().onRemovedFromContraption(world, entity, this, container.context());
+		}
+		handoffers = null;
 	}
 
 	protected void translateMultiblockControllers(StructureTransform transform) {
