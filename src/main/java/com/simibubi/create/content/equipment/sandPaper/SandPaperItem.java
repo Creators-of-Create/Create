@@ -117,44 +117,42 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 	}
 
 	@Override
-	public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+	public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entityLiving) {
 		if (!(entityLiving instanceof Player player))
 			return stack;
 		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
 			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
 			ItemStack polished =
-				SandPaperPolishingRecipe.applyPolish(worldIn, entityLiving.position(), toPolish, stack);
+				SandPaperPolishingRecipe.applyPolish(level, entityLiving.position(), toPolish, stack);
 
-			if (worldIn.isClientSide) {
+			if (level.isClientSide) {
 				spawnParticles(entityLiving.getEyePosition(1)
-						.add(entityLiving.getLookAngle()
-							.scale(.5f)),
-					toPolish, worldIn);
+					.add(entityLiving.getLookAngle().scale(.5f)), toPolish, level);
 				return stack;
 			}
 
 			if (!polished.isEmpty()) {
-				if (player instanceof FakePlayer) {
-					player.drop(polished, false, false);
-				} else {
-					player.getInventory()
-						.placeItemBackInInventory(polished);
-				}
+				dropOrPlaceInInventory(player, polished);
 			}
-			if (!toPolish.isEmpty() && toPolish.hasCraftingRemainingItem()) {
-				if (player instanceof FakePlayer) {
-					player.drop(toPolish.getCraftingRemainingItem(), false, false);
-				} else {
-					player.getInventory()
-						.placeItemBackInInventory(toPolish.getCraftingRemainingItem());
-				}
+
+			if (toPolish.hasCraftingRemainingItem()) {
+				dropOrPlaceInInventory(player, toPolish.getCraftingRemainingItem());
 			}
+
 			tag.remove("Polishing");
 			stack.hurtAndBreak(1, entityLiving, p -> p.broadcastBreakEvent(p.getUsedItemHand()));
 		}
 
 		return stack;
+	}
+
+	private void dropOrPlaceInInventory(Player player, ItemStack stack) {
+		if (player instanceof FakePlayer) {
+			player.drop(stack, false, false);
+		} else {
+			player.getInventory().placeItemBackInInventory(stack);
+		}
 	}
 
 	public static void spawnParticles(Vec3 location, ItemStack polishedStack, Level world) {
