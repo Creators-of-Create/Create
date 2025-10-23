@@ -46,7 +46,7 @@ public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 		if (!context.world.isClientSide())
 			tickOpen(context, open);
 
-		if (!(context.contraption.getOrCreateClientContraptionLazy().getBlockEntity(context.localPos) instanceof SlidingDoorBlockEntity sdbe))
+		if (!(context.contraption.getBlockEntityClientSide(context.localPos) instanceof SlidingDoorBlockEntity sdbe))
 			return;
 		boolean wasSettled = sdbe.animation.settled();
 		sdbe.animation.chase(open ? 1 : 0, .15f, Chaser.LINEAR);

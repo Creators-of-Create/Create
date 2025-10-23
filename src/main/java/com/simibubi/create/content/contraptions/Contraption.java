@@ -20,11 +20,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -162,9 +161,21 @@ public abstract class Contraption {
 
 	private CompletableFuture<Void> simplifiedEntityColliderProvider;
 
-	// Client
-	// All client-only data should be encapsulated here.
-	// This field must be atomic as it is lazily constructed from both the render thread and flywheel executors.
+	/**
+	 * All client-only data should be encapsulated here.
+	 *
+	 * <p>This field must be atomic as it is lazily accessed from both
+	 * the render thread and flywheel executors.
+	 *
+	 * <h2>Client/Server Safety</h2>
+	 * <p>Wrapping in an AtomicReference also makes this field server-safe,
+	 * as type erasure means ClientContraption will not be class loaded when
+	 * Contraption is class loaded.
+	 * Even still, care must be taken to not call {@link #getOrCreateClientContraptionLazy()}
+	 * from the server. The only references to that method should be in rendering code.
+	 * Additional utilities are provided to safely access and send signals to the ClientContraption,
+	 * without initializing it.
+	 */
 	private final AtomicReference<ClientContraption> clientContraption = new AtomicReference<>();
 
 	// Thin server and client side level used for generating optimized collision shapes.
@@ -1504,6 +1515,9 @@ public abstract class Contraption {
 		return false;
 	}
 
+	/**
+	 * See the docs on {@link #clientContraption}.
+	 */
 	public final ClientContraption getOrCreateClientContraptionLazy() {
 		var out = clientContraption.getAcquire();
 		if (out == null) {
@@ -1567,5 +1581,16 @@ public abstract class Contraption {
 		if (maybeNullClientContraption != null) {
 			maybeNullClientContraption.invalidateChildren();
 		}
+	}
+
+	@Nullable
+	public BlockEntity getBlockEntityClientSide(BlockPos localPos) {
+		var maybeNullClientContraption = this.clientContraption.getAcquire();
+
+		if (maybeNullClientContraption == null) {
+			return null;
+		}
+
+		return maybeNullClientContraption.getBlockEntity(localPos);
 	}
 }

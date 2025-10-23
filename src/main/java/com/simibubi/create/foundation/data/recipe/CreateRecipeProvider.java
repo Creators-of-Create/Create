@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.api.data.recipe.ProcessingRecipeGen;
 
@@ -22,12 +21,14 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.fluids.FluidType;
 
 /**
  * The class that handles gathering Create's generated recipes for most types.
- * Data here is only generated when running server dategen
+ * Data here is only generated when running server datagen
+ *
  * @see com.simibubi.create.infrastructure.data.CreateDatagen
  */
 public final class CreateRecipeProvider extends RecipeProvider {
@@ -41,7 +42,8 @@ public final class CreateRecipeProvider extends RecipeProvider {
 	}
 
 	@Override
-	protected void buildRecipes(Consumer<FinishedRecipe> writer) {}
+	protected void buildRecipes(Consumer<FinishedRecipe> writer) {
+	}
 
 	public static void registerAllProcessing(DataGenerator gen, PackOutput output) {
 		GENERATORS.add(new CreateCrushingRecipeGen(output));

@@ -46,7 +46,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 		if (contraption instanceof ElevatorContraption ec)
 			return elevatorInteraction(localPos, contraptionEntity, ec, ctx);
 		if (contraptionEntity.level().isClientSide()) {
-			if (contraption.getOrCreateClientContraptionLazy().getBlockEntity(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
+			if (contraption.getBlockEntityClientSide(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
 				cbe.pressButton();
 			return true;
 		}
@@ -143,7 +143,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 			return true;
 
 		AllPackets.getChannel().sendToServer(new ElevatorTargetFloorPacket(contraptionEntity, efs.currentTargetY));
-		if (contraption.getOrCreateClientContraptionLazy().getBlockEntity(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
+		if (contraption.getBlockEntityClientSide(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
 			cbe.pressButton();
 		return true;
 	}

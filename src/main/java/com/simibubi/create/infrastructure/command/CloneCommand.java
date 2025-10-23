@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Clearable;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -63,11 +64,12 @@ public class CloneCommand {
 		BlockPos destinationEnd = destination.offset(sourceArea.getLength());
 		BoundingBox destinationArea = BoundingBox.fromCorners(destination, destinationEnd);
 
-		int i = sourceArea.getXSpan() * sourceArea.getYSpan() * sourceArea.getZSpan();
-		if (i > 32768)
-			throw CLONE_TOO_BIG_EXCEPTION.create(32768, i);
-
 		ServerLevel world = source.getLevel();
+
+		int i = sourceArea.getXSpan() * sourceArea.getYSpan() * sourceArea.getZSpan();
+		int limit = world.getGameRules().getInt(GameRules.RULE_COMMAND_MODIFICATION_BLOCK_LIMIT);
+		if (i > limit)
+			throw CLONE_TOO_BIG_EXCEPTION.create(limit, i);
 
 		if (!world.hasChunksAt(begin, end) || !world.hasChunksAt(destination, destinationEnd))
 			throw BlockPosArgument.ERROR_NOT_LOADED.create();

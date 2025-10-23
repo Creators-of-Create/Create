@@ -28,6 +28,10 @@ public class SpecialModels {
 		return FLAT.get(new Key(partial, LightShaders.FLAT, CardinalLightingMode.ENTITY));
 	}
 
+	public static Model smoothLit(PartialModel partial) {
+		return FLAT.get(new Key(partial, LightShaders.SMOOTH, CardinalLightingMode.ENTITY));
+	}
+
 	public static Model flatChunk(PartialModel partial) {
 		return FLAT.get(new Key(partial, LightShaders.FLAT, CardinalLightingMode.CHUNK));
 	}

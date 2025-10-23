@@ -40,7 +40,6 @@ import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerRenderer;
 import com.simibubi.create.content.trains.station.NoShadowFontWrapper;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.ScreenWithStencils;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -85,9 +84,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockKeeperRequestMenu>
-	implements ScreenWithStencils {
-
+public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockKeeperRequestMenu> {
 	public static class CategoryEntry {
 		boolean hidden;
 		String name;
@@ -108,7 +105,8 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 	private static final AllGuiTextures FOOTER = AllGuiTextures.STOCK_KEEPER_REQUEST_FOOTER;
 
 	StockTickerBlockEntity blockEntity;
-	public LerpedFloat itemScroll;
+	public LerpedFloat itemScroll = LerpedFloat.linear()
+		.startWithValue(0);
 
 	final int rows = 9;
 	final int cols = 9;
@@ -130,56 +128,40 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 	int successTicks = 0;
 
 	public List<List<BigItemStack>> currentItemSource;
-	public List<List<BigItemStack>> displayedItems;
-	public List<CategoryEntry> categories;
+	public List<List<BigItemStack>> displayedItems = new ArrayList<>();
+	public List<CategoryEntry> categories = new ArrayList<>();
 
-	public List<BigItemStack> itemsToOrder;
-	public List<CraftableBigItemStack> recipesToOrder;
+	public List<BigItemStack> itemsToOrder = new ArrayList<>();
+	public List<CraftableBigItemStack> recipesToOrder = new ArrayList<>();
 
-	WeakReference<LivingEntity> stockKeeper;
-	WeakReference<BlazeBurnerBlockEntity> blaze;
+	WeakReference<LivingEntity> stockKeeper = new WeakReference<>(null);
+	WeakReference<BlazeBurnerBlockEntity> blaze = new WeakReference<>(null);
 
 	boolean encodeRequester; // Redstone requesters
 	ItemStack itemToProgram;
 	List<List<ClipboardEntry>> clipboardItem;
 
-	private boolean isAdmin;
-	private boolean isLocked;
+	private final boolean isAdmin = menu.isAdmin;
+	private boolean isLocked = menu.isLocked;
 	private boolean scrollHandleActive;
+	private boolean ignoreTextInput;
 
-	public boolean refreshSearchNextTick;
-	public boolean moveToTopNextTick;
+	public boolean refreshSearchNextTick = false;
+	public boolean moveToTopNextTick = false;
 	private List<Rect2i> extraAreas = Collections.emptyList();
 
-	private Set<Integer> hiddenCategories;
-	private InventorySummary forcedEntries;
-	private boolean canRequestCraftingPackage;
+	private final Set<Integer> hiddenCategories;
+	private InventorySummary forcedEntries = new InventorySummary();
+	private boolean canRequestCraftingPackage = false;
 
 	public StockKeeperRequestScreen(StockKeeperRequestMenu container, Inventory inv, Component title) {
 		super(container, inv, title);
-		displayedItems = new ArrayList<>();
-		itemsToOrder = new ArrayList<>();
-		recipesToOrder = new ArrayList<>();
-		categories = new ArrayList<>();
-		isAdmin = menu.isAdmin;
-		isLocked = menu.isLocked;
 		blockEntity = container.contentHolder;
 		blockEntity.lastClientsideStockSnapshot = null;
 		blockEntity.ticksSinceLastUpdate = 15;
-		emptyTicks = 0;
-		successTicks = 0;
-		itemScroll = LerpedFloat.linear()
-			.startWithValue(0);
-		stockKeeper = new WeakReference<>(null);
-		blaze = new WeakReference<>(null);
-		refreshSearchNextTick = false;
-		moveToTopNextTick = false;
 		menu.screenReference = this;
-		canRequestCraftingPackage = false;
 		hiddenCategories =
 			new HashSet<>(blockEntity.hiddenCategoriesByPlayer.getOrDefault(menu.player.getUUID(), List.of()));
-
-		forcedEntries = new InventorySummary();
 
 		itemToProgram = menu.player.getMainHandItem();
 		encodeRequester =
@@ -199,16 +181,13 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		// Find the keeper for rendering
 		for (int yOffset : Iterate.zeroAndOne) {
 			for (Direction side : Iterate.horizontalDirections) {
-				BlockPos seatPos = blockEntity.getBlockPos()
-					.below(yOffset)
-					.relative(side);
-				for (SeatEntity seatEntity : blockEntity.getLevel()
-					.getEntitiesOfClass(SeatEntity.class, new AABB(seatPos)))
-					if (!seatEntity.getPassengers()
-						.isEmpty()
-						&& seatEntity.getPassengers()
-						.get(0) instanceof LivingEntity keeper)
+				BlockPos seatPos = blockEntity.getBlockPos().below(yOffset).relative(side);
+				for (SeatEntity seatEntity : blockEntity.getLevel().getEntitiesOfClass(SeatEntity.class, new AABB(seatPos))) {
+					if (!seatEntity.getPassengers().isEmpty() &&
+						seatEntity.getPassengers().get(0) instanceof LivingEntity keeper) {
 						stockKeeper = new WeakReference<>(keeper);
+					}
+				}
 				if (yOffset == 0 && blockEntity.getLevel()
 					.getBlockEntity(seatPos) instanceof BlazeBurnerBlockEntity bbbe) {
 					blaze = new WeakReference<>(bbbe);
@@ -627,9 +606,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		int itemWindowY = y + 17;
 		int itemWindowY2 = y + windowHeight - 80;
 
-		UIRenderHelper.swapAndBlitColor(minecraft.getMainRenderTarget(), UIRenderHelper.framebuffer);
-		startStencil(graphics, itemWindowX - 5, itemWindowY, itemWindowX2 - itemWindowX + 10,
-			itemWindowY2 - itemWindowY);
+		graphics.enableScissor(itemWindowX - 5, itemWindowY, itemWindowX2 + 10, itemWindowY2);
 
 		ms.pushPose();
 		ms.translate(0, -currentScroll * rowHeight, 0);
@@ -718,7 +695,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 				.render(graphics, lockX, lockY);
 
 		ms.popPose();
-		endStencil();
+		graphics.disableScissor();
 
 		// Scroll bar
 		int windowH = windowHeight - 92;
@@ -765,8 +742,6 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 
 			ms.popPose();
 		}
-
-		UIRenderHelper.swapAndBlitColor(UIRenderHelper.framebuffer, minecraft.getMainRenderTarget());
 	}
 
 	@Override
@@ -1337,6 +1312,8 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 
 	@Override
 	public boolean charTyped(char pCodePoint, int pModifiers) {
+		if (ignoreTextInput)
+			return false;
 		if (addressBox.isFocused() && addressBox.charTyped(pCodePoint, pModifiers))
 			return true;
 		String s = searchBox.getValue();
@@ -1352,6 +1329,13 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 
 	@Override
 	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+		ignoreTextInput = false;
+		if (!searchBox.isFocused() && minecraft.options.keyChat.matches(pKeyCode, pScanCode)) {
+			ignoreTextInput = true;
+			searchBox.setFocused(true);
+			return true;
+		}
+
 		if (pKeyCode == GLFW.GLFW_KEY_ENTER && searchBox.isFocused()) {
 			searchBox.setFocused(false);
 			return true;
@@ -1366,9 +1350,10 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			return true;
 
 		String s = searchBox.getValue();
-		if (!searchBox.keyPressed(pKeyCode, pScanCode, pModifiers))
-			return searchBox.isFocused() && searchBox.isVisible() && pKeyCode != 256 ? true
-				: super.keyPressed(pKeyCode, pScanCode, pModifiers);
+		if (!searchBox.keyPressed(pKeyCode, pScanCode, pModifiers)) {
+			return searchBox.isFocused() && searchBox.isVisible() && pKeyCode != 256
+				|| super.keyPressed(pKeyCode, pScanCode, pModifiers);
+		}
 		if (!Objects.equals(s, searchBox.getValue())) {
 			refreshSearchNextTick = true;
 			moveToTopNextTick = true;
@@ -1469,6 +1454,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 
 	@Override
 	public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers) {
+		ignoreTextInput = false;
 		return super.keyReleased(pKeyCode, pScanCode, pModifiers);
 	}
 

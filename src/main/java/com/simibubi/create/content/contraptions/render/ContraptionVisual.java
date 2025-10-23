@@ -19,7 +19,6 @@ import dev.engine_room.flywheel.api.material.Material;
 import dev.engine_room.flywheel.api.task.Plan;
 import dev.engine_room.flywheel.api.visual.BlockEntityVisual;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
-import dev.engine_room.flywheel.api.visual.LightUpdatedVisual;
 import dev.engine_room.flywheel.api.visual.ShaderLightVisual;
 import dev.engine_room.flywheel.api.visual.TickableVisual;
 import dev.engine_room.flywheel.api.visualization.BlockEntityVisualizer;
@@ -47,8 +46,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-public class ContraptionVisual<E extends AbstractContraptionEntity> extends AbstractEntityVisual<E> implements DynamicVisual, TickableVisual, LightUpdatedVisual, ShaderLightVisual {
-	protected static final int LIGHT_PADDING = 1;
+public class ContraptionVisual<E extends AbstractContraptionEntity> extends AbstractEntityVisual<E> implements DynamicVisual, TickableVisual, ShaderLightVisual {
+	protected static final int DEFAULT_LIGHT_PADDING = 1;
 
 	protected final VisualEmbedding embedding;
 	protected final List<BlockEntityVisual<?>> children = new ArrayList<>();
@@ -59,7 +58,8 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 	protected TransformedInstance structure;
 	protected SectionCollector sectionCollector;
 	protected long minSection, maxSection;
-	protected long minBlock, maxBlock;
+	/// The number of blocks around the contraption's bounding box to include when capturing sections for shader light.
+	protected int lightPaddingBlocks = DEFAULT_LIGHT_PADDING;
 
 	protected int lastStructureVersion;
 	protected int lastVersionChildren;
@@ -213,13 +213,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		var partialTick = context.partialTick();
 		setEmbeddingMatrices(partialTick);
 
-		if (hasMovedSections()) {
-			sectionCollector.sections(collectLightSections());
-		}
-
-		if (hasMovedBlocks()) {
-			updateLight(partialTick);
-		}
+		checkAndUpdateLightSections();
 
 		var contraption = entity.getContraption();
 		var clientContraption = contraption.getOrCreateClientContraptionLazy();
@@ -258,64 +252,39 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 	}
 
 	@Override
-	public void updateLight(float partialTick) {
+	public void setSectionCollector(SectionCollector collector) {
+		this.sectionCollector = collector;
+		checkAndUpdateLightSections();
 	}
 
-	public LongSet collectLightSections() {
+	private void checkAndUpdateLightSections() {
 		var boundingBox = entity.getBoundingBox();
 
-		var minSectionX = minLightSection(boundingBox.minX);
-		var minSectionY = minLightSection(boundingBox.minY);
-		var minSectionZ = minLightSection(boundingBox.minZ);
-		int maxSectionX = maxLightSection(boundingBox.maxX);
-		int maxSectionY = maxLightSection(boundingBox.maxY);
-		int maxSectionZ = maxLightSection(boundingBox.maxZ);
+		var minSectionX = SectionPos.blockToSectionCoord(Mth.floor(boundingBox.minX) - lightPaddingBlocks);
+		var minSectionY = SectionPos.blockToSectionCoord(Mth.floor(boundingBox.minY) - lightPaddingBlocks);
+		var minSectionZ = SectionPos.blockToSectionCoord(Mth.floor(boundingBox.minZ) - lightPaddingBlocks);
+		int maxSectionX = SectionPos.blockToSectionCoord(Mth.ceil(boundingBox.maxX) + lightPaddingBlocks);
+		int maxSectionY = SectionPos.blockToSectionCoord(Mth.ceil(boundingBox.maxY) + lightPaddingBlocks);
+		int maxSectionZ = SectionPos.blockToSectionCoord(Mth.ceil(boundingBox.maxZ) + lightPaddingBlocks);
+
+		if (minSection == SectionPos.asLong(minSectionX, minSectionY, minSectionZ) && maxSection == SectionPos.asLong(maxSectionX, maxSectionY, maxSectionZ)) {
+			return;
+		}
 
 		minSection = SectionPos.asLong(minSectionX, minSectionY, minSectionZ);
 		maxSection = SectionPos.asLong(maxSectionX, maxSectionY, maxSectionZ);
 
 		LongSet longSet = new LongArraySet();
 
-		for (int x = 0; x <= maxSectionX - minSectionX; x++) {
-			for (int y = 0; y <= maxSectionY - minSectionY; y++) {
-				for (int z = 0; z <= maxSectionZ - minSectionZ; z++) {
-					longSet.add(SectionPos.offset(minSection, x, y, z));
+		for (int x = minSectionX; x <= maxSectionX; x++) {
+			for (int y = minSectionY; y <= maxSectionY; y++) {
+				for (int z = minSectionZ; z <= maxSectionZ; z++) {
+					longSet.add(SectionPos.asLong(x, y, z));
 				}
 			}
 		}
 
-		return longSet;
-	}
-
-	protected boolean hasMovedBlocks() {
-		var boundingBox = entity.getBoundingBox();
-
-		int minX = minLight(boundingBox.minX);
-		int minY = minLight(boundingBox.minY);
-		int minZ = minLight(boundingBox.minZ);
-		int maxX = maxLight(boundingBox.maxX);
-		int maxY = maxLight(boundingBox.maxY);
-		int maxZ = maxLight(boundingBox.maxZ);
-
-		return minBlock != BlockPos.asLong(minX, minY, minZ) || maxBlock != BlockPos.asLong(maxX, maxY, maxZ);
-	}
-
-	protected boolean hasMovedSections() {
-		var boundingBox = entity.getBoundingBox();
-
-		var minSectionX = minLightSection(boundingBox.minX);
-		var minSectionY = minLightSection(boundingBox.minY);
-		var minSectionZ = minLightSection(boundingBox.minZ);
-		int maxSectionX = maxLightSection(boundingBox.maxX);
-		int maxSectionY = maxLightSection(boundingBox.maxY);
-		int maxSectionZ = maxLightSection(boundingBox.maxZ);
-
-		return minSection != SectionPos.asLong(minSectionX, minSectionY, minSectionZ) || maxSection != SectionPos.asLong(maxSectionX, maxSectionY, maxSectionZ);
-	}
-
-	@Override
-	public void setSectionCollector(SectionCollector collector) {
-		this.sectionCollector = collector;
+		sectionCollector.sections(longSet);
 	}
 
 	@Override
@@ -329,21 +298,5 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		}
 
 		embedding.delete();
-	}
-
-	public static int minLight(double aabbPos) {
-		return Mth.floor(aabbPos) - LIGHT_PADDING;
-	}
-
-	public static int maxLight(double aabbPos) {
-		return Mth.ceil(aabbPos) + LIGHT_PADDING;
-	}
-
-	public static int minLightSection(double aabbPos) {
-		return SectionPos.blockToSectionCoord(minLight(aabbPos));
-	}
-
-	public static int maxLightSection(double aabbPos) {
-		return SectionPos.blockToSectionCoord(maxLight(aabbPos));
 	}
 }

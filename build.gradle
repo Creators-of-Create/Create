@@ -207,6 +207,7 @@ dependencies {
     modCompileOnly("curse.maven:xaeros-world-map-317780:6212636")
     // modImplementation("ignored:journeymap-1.20.1-5.10.1-forge")
 
+    // modRuntimeOnly("curse.maven:spark-361579:4738952")
     // modRuntimeOnly("curse.maven:framedblocks-441647:5399211")
     // modRuntimeOnly("curse.maven:galosphere-631098:4574834")
     // modRuntimeOnly("curse.maven:elementary-ores-332609:4514276") 1.19.4 only

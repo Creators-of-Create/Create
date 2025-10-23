@@ -41,6 +41,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -107,7 +108,7 @@ public class PackageItem extends Item {
 	}
 
 	public static void setOrder(ItemStack box, int orderId, int linkIndex, boolean isFinalLink, int fragmentIndex,
-		boolean isFinal, @Nullable PackageOrderWithCrafts orderContext) {
+								boolean isFinal, @Nullable PackageOrderWithCrafts orderContext) {
 		CompoundTag tag = new CompoundTag();
 		tag.putInt("OrderId", orderId);
 		tag.putInt("LinkIndex", linkIndex);
@@ -120,10 +121,10 @@ public class PackageItem extends Item {
 			.put("Fragment", tag);
 	}
 
-  public static boolean hasFragmentData(ItemStack box) {
-    CompoundTag tag = box.getTag();
-    return tag != null && tag.contains("Fragment");
-  }
+	public static boolean hasFragmentData(ItemStack box) {
+		CompoundTag tag = box.getTag();
+		return tag != null && tag.contains("Fragment");
+	}
 
 	public static int getOrderId(ItemStack box) {
 		CompoundTag tag = box.getTag();
@@ -133,37 +134,37 @@ public class PackageItem extends Item {
 			.getInt("OrderId");
 	}
 
-  public static int getIndex(ItemStack box) {
-    CompoundTag tag = box.getTag();
-    if (tag == null || !tag.contains("Fragment"))
-      return -1;
-    return tag.getCompound("Fragment")
-        .getInt("Index");
-  }
+	public static int getIndex(ItemStack box) {
+		CompoundTag tag = box.getTag();
+		if (tag == null || !tag.contains("Fragment"))
+			return -1;
+		return tag.getCompound("Fragment")
+			.getInt("Index");
+	}
 
-  public static boolean isFinal(ItemStack box) {
-    CompoundTag tag = box.getTag();
-    if (tag == null || !tag.contains("Fragment"))
-      return false;
-    return tag.getCompound("Fragment")
-        .getBoolean("IsFinal");
-  }
+	public static boolean isFinal(ItemStack box) {
+		CompoundTag tag = box.getTag();
+		if (tag == null || !tag.contains("Fragment"))
+			return false;
+		return tag.getCompound("Fragment")
+			.getBoolean("IsFinal");
+	}
 
-  public static int getLinkIndex(ItemStack box) {
-    CompoundTag tag = box.getTag();
-    if (tag == null || !tag.contains("Fragment"))
-      return -1;
-    return tag.getCompound("Fragment")
-        .getInt("LinkIndex");
-  }
+	public static int getLinkIndex(ItemStack box) {
+		CompoundTag tag = box.getTag();
+		if (tag == null || !tag.contains("Fragment"))
+			return -1;
+		return tag.getCompound("Fragment")
+			.getInt("LinkIndex");
+	}
 
-  public static boolean isFinalLink(ItemStack box) {
-    CompoundTag tag = box.getTag();
-    if (tag == null || !tag.contains("Fragment"))
-      return false;
-    return tag.getCompound("Fragment")
-        .getBoolean("IsFinalLink");
-  }
+	public static boolean isFinalLink(ItemStack box) {
+		CompoundTag tag = box.getTag();
+		if (tag == null || !tag.contains("Fragment"))
+			return false;
+		return tag.getCompound("Fragment")
+			.getBoolean("IsFinalLink");
+	}
 
 	@Nullable
 	/**
@@ -197,16 +198,16 @@ public class PackageItem extends Item {
 			return boxAddress.isBlank();
 		if (address.equals("*") || boxAddress.equals("*"))
 			return true;
-		String matcher = Glob.toRegexPattern(address, "");
-		String boxMatcher = Glob.toRegexPattern(boxAddress, "");
-		return address.matches(boxMatcher) || boxAddress.matches(matcher);
+		if (address.equals(boxAddress))
+			return true;
+		return address.matches(Glob.toRegexPattern(boxAddress, "")) ||
+			boxAddress.matches(Glob.toRegexPattern(address, ""));
 	}
 
 	public static String getAddress(ItemStack box) {
-		String boxAddress = !box.hasTag() ? ""
+		return !box.hasTag() ? ""
 			: box.getTag()
 			.getString("Address");
-		return boxAddress;
 	}
 
 	public static float getWidth(ItemStack box) {
@@ -239,17 +240,17 @@ public class PackageItem extends Item {
 	public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents,
 								TooltipFlag pIsAdvanced) {
 		super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-		CompoundTag compoundnbt = pStack.getOrCreateTag();
+		CompoundTag tag = pStack.getOrCreateTag();
 
-		if (compoundnbt.contains("Address", Tag.TAG_STRING) && !compoundnbt.getString("Address")
+		if (tag.contains("Address", Tag.TAG_STRING) && !tag.getString("Address")
 			.isBlank()) {
-			pTooltipComponents.add(Component.literal("\u2192 " + compoundnbt.getString("Address"))
+			pTooltipComponents.add(Component.literal("\u2192 " + tag.getString("Address"))
 				.withStyle(ChatFormatting.GOLD));
 		}
 
 		/*
-		 * Debug Fragmentation Data if (compoundnbt.contains("Fragment")) { CompoundTag
-		 * fragTag = compoundnbt.getCompound("Fragment");
+		 * Debug Fragmentation Data if (tag.contains("Fragment")) { CompoundTag
+		 * fragTag = tag.getCompound("Fragment");
 		 * pTooltipComponents.add(Component.literal("Order Information (Temporary)")
 		 * .withStyle(ChatFormatting.GREEN)); pTooltipComponents.add(Components
 		 * .literal(" Link " + fragTag.getInt("LinkIndex") +
@@ -260,7 +261,7 @@ public class PackageItem extends Item {
 		 * .withStyle(ChatFormatting.DARK_GREEN)); }
 		 */
 
-		if (!compoundnbt.contains("Items", Tag.TAG_COMPOUND))
+		if (!tag.contains("Items", Tag.TAG_COMPOUND))
 			return;
 
 		int visibleNames = 0;
@@ -351,8 +352,7 @@ public class PackageItem extends Item {
 
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
-		if (context.getPlayer()
-			.isShiftKeyDown()) {
+		if (context.getPlayer().isShiftKeyDown()) {
 			return open(context.getLevel(), context.getPlayer(), context.getHand()).getResult();
 		}
 

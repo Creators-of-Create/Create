@@ -1,24 +1,20 @@
 package com.simibubi.create.infrastructure.data;
 
-import com.simibubi.create.AllTags.AllBlockTags;
+import java.util.Locale;
+import java.util.function.BiConsumer;
 
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllContraptionTypeTags;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.AllTags.AllItemTags;
-
 import com.simibubi.create.AllTags.AllMountedItemStorageTypeTags;
 import com.simibubi.create.AllTags.AllRecipeSerializerTags;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
-
 import com.simibubi.create.foundation.data.recipe.CommonMetal;
-
 import com.simibubi.create.foundation.data.recipe.CommonMetal.ItemLikeTag;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-
-import java.util.Locale;
-import java.util.function.BiConsumer;
 
 /**
  * Generate lang for tags.
@@ -110,6 +106,7 @@ public class TagLangGenerator {
 		// items
 		translate(AllItemTags.BLAZE_BURNER_FUEL_REGULAR, "Regular Blaze Burner Fuel");
 		translate(AllItemTags.BLAZE_BURNER_FUEL_SPECIAL, "Special Blaze Burner Fuel");
+		translate(AllItemTags.CASING, "Casings");
 		translate(AllItemTags.CONTRAPTION_CONTROLLED, "Contraption-controllable");
 		translate(AllItemTags.CREATE_INGOTS, "Create's Ingots");
 		translate(AllItemTags.CRUSHED_RAW_MATERIALS, "Crushed Raw Materials");

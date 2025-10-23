@@ -10,8 +10,10 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.api.contraption.transformable.TransformableBlockEntity;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
+import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.redstoneRequester.AutoRequestData;
@@ -39,6 +41,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -50,7 +53,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import org.jetbrains.annotations.NotNull;
 
-public class TableClothBlockEntity extends SmartBlockEntity {
+public class TableClothBlockEntity extends SmartBlockEntity implements TransformableBlockEntity {
 
 	public AbstractComputerBehaviour computerBehaviour;
 
@@ -345,6 +348,13 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 	public int getPaymentAmount() {
 		return priceTag.getFilter()
 			.isEmpty() ? 1 : priceTag.count;
+	}
+
+	public void transform(BlockEntity blockEntity, StructureTransform transform){
+		facing = transform.mirrorFacing(facing);
+		if (transform.rotationAxis == Direction.Axis.Y)
+			facing = transform.rotateFacing(facing);
+		notifyUpdate();
 	}
 
 }

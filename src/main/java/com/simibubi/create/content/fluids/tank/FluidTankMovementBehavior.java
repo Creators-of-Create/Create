@@ -15,7 +15,7 @@ public class FluidTankMovementBehavior implements MovementBehaviour {
 	@Override
 	public void tick(MovementContext context) {
 		if (context.world.isClientSide) {
-			BlockEntity be = context.contraption.getOrCreateClientContraptionLazy().getBlockEntity(context.localPos);
+			BlockEntity be = context.contraption.getBlockEntityClientSide(context.localPos);
 			if (be instanceof FluidTankBlockEntity tank) {
 				tank.getFluidLevel().tickChaser();
 			}

@@ -65,8 +65,7 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 			return;
 
 		Contraption contraption = ctx.contraption;
-		var blockEntity = contraption.getOrCreateClientContraptionLazy()
-			.getBlockEntity(ctx.localPos);
+		var blockEntity = contraption.getBlockEntityClientSide(ctx.localPos);
 
 		if (!(contraption instanceof ElevatorContraption ec)) {
 			if (!(blockEntity instanceof ContraptionControlsBlockEntity cbe))
