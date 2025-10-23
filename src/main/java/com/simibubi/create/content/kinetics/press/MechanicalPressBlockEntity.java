@@ -3,8 +3,6 @@ package com.simibubi.create.content.kinetics.press;
 import java.util.List;
 import java.util.Optional;
 
-import org.checkerframework.checker.units.qual.C;
-
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;

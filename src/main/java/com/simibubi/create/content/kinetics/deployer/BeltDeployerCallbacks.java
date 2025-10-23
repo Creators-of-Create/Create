@@ -141,7 +141,7 @@ public class BeltDeployerCallbacks {
 					s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 			} else {
 				Player player = blockEntity.player;
-				ItemStack leftover = heldItem.hasCraftingRemainingItem() ? heldItem.getCraftingRemainingItem() : ItemStack.EMPTY;
+				ItemStack leftover = heldItem.getCraftingRemainingItem();
 				heldItem.shrink(1);
 				if (heldItem.isEmpty()) {
 					player.setItemInHand(InteractionHand.MAIN_HAND, leftover);

@@ -90,7 +90,7 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 			} else {
 				Player player = event.getEntity();
 				InteractionHand hand = event.getHand();
-				ItemStack leftover = heldItem.hasCraftingRemainingItem() ? heldItem.getCraftingRemainingItem() : ItemStack.EMPTY;
+				ItemStack leftover = heldItem.getCraftingRemainingItem();
 				heldItem.shrink(1);
 				if (heldItem.isEmpty()) {
 					player.setItemInHand(hand, leftover);
