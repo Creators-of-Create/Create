@@ -5,9 +5,11 @@ import static com.simibubi.create.content.contraptions.piston.MechanicalPistonBl
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -181,7 +183,7 @@ public abstract class Contraption {
 	protected ContraptionWorld collisionLevel;
 
 	public Contraption() {
-		blocks = new HashMap<>();
+		blocks = new LinkedHashMap<>();
 		updateTags = new HashMap<>();
 		isLegacy = new Object2BooleanArrayMap<>();
 		seats = new ArrayList<>();
@@ -1009,6 +1011,12 @@ public abstract class Contraption {
 	}
 
 	public void removeBlocksFromWorld(Level world, BlockPos offset) {
+		// Invert order of the blocks LinkedHashMap, so all posterior iterations are inverted
+		List<Map.Entry<BlockPos, StructureBlockInfo>> entries = new ArrayList<>(blocks.entrySet());
+		Collections.reverse(entries);
+		blocks.clear();
+		entries.forEach(e -> blocks.put(e.getKey(), e.getValue()));
+
 		glueToRemove.forEach(glue -> {
 			superglue.add(glue.getBoundingBox()
 				.move(Vec3.atLowerCornerOf(offset.offset(anchor))
