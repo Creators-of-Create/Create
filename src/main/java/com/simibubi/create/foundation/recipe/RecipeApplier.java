@@ -12,6 +12,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
+
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class RecipeApplier {
@@ -31,7 +32,7 @@ public class RecipeApplier {
 		}
 	}
 
-	public static List<ItemStack> applyRecipeOn(Level level, ItemStack stackIn, Recipe<?> recipe, boolean returnProcessingRemainder) { {
+	public static List<ItemStack> applyRecipeOn(Level level, ItemStack stackIn, Recipe<?> recipe, boolean returnProcessingRemainder) {
 		List<ItemStack> stacks;
 
 		if (recipe instanceof ProcessingRecipe<?> pr) {
