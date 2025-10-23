@@ -23,6 +23,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -41,7 +42,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
-import net.minecraftforge.common.util.FakePlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -132,12 +132,13 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 				return stack;
 			}
 
+			Inventory playerInv = player.getInventory();
 			if (!polished.isEmpty()) {
-				dropOrPlaceInInventory(player, polished);
+				playerInv.placeItemBackInInventory(polished);
 			}
 
 			if (toPolish.hasCraftingRemainingItem()) {
-				dropOrPlaceInInventory(player, toPolish.getCraftingRemainingItem());
+				playerInv.placeItemBackInInventory(toPolish.getCraftingRemainingItem());
 			}
 
 			tag.remove("Polishing");
@@ -145,14 +146,6 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 		}
 
 		return stack;
-	}
-
-	private void dropOrPlaceInInventory(Player player, ItemStack stack) {
-		if (player instanceof FakePlayer) {
-			player.drop(stack, false, false);
-		} else {
-			player.getInventory().placeItemBackInInventory(stack);
-		}
 	}
 
 	public static void spawnParticles(Vec3 location, ItemStack polishedStack, Level world) {
