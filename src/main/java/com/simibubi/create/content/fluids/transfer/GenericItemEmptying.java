@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
+import com.simibubi.create.api.fluids.transfer.ItemEmptying;
 
 import net.createmod.catnip.data.Pair;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
+
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,8 +25,11 @@ public class GenericItemEmptying {
 	private static final RecipeWrapper WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 
 	public static boolean canItemBeEmptied(Level world, ItemStack stack) {
-		if (PotionFluidHandler.isPotionItem(stack))
+		Item item = stack.getItem();
+		List<ItemEmptying> allEmptying = ItemEmptying.REGISTRY.get(item);
+		if (!allEmptying.isEmpty() && allEmptying.stream().anyMatch(emptying -> emptying.canItemBeEmptied(world, stack))) {
 			return true;
+		}
 
 		WRAPPER.setItem(0, stack);
 		if (AllRecipeTypes.EMPTYING.find(WRAPPER, world)
@@ -33,7 +38,7 @@ public class GenericItemEmptying {
 
 		LazyOptional<IFluidHandlerItem> capability =
 			stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
-		IFluidHandlerItem tank = capability.orElse(null);
+		IFluidHandlerItem tank = capability.resolve().orElse(null);
 		if (tank == null)
 			return false;
 		for (int i = 0; i < tank.getTanks(); i++) {
@@ -48,8 +53,15 @@ public class GenericItemEmptying {
 		FluidStack resultingFluid = FluidStack.EMPTY;
 		ItemStack resultingItem = ItemStack.EMPTY;
 
-		if (PotionFluidHandler.isPotionItem(stack))
-			return PotionFluidHandler.emptyPotion(stack, simulate);
+		Item item = stack.getItem();
+		List<ItemEmptying> allEmptying = ItemEmptying.REGISTRY.get(item);
+		if (!allEmptying.isEmpty()) {
+			for (ItemEmptying emptying : allEmptying) {
+				if (!emptying.canItemBeEmptied(world, stack))
+					continue;
+				return emptying.emptyItem(world, stack, simulate);
+			}
+		}
 
 		WRAPPER.setItem(0, stack);
 		Optional<Recipe<RecipeWrapper>> recipe = AllRecipeTypes.EMPTYING.find(WRAPPER, world);
@@ -67,7 +79,7 @@ public class GenericItemEmptying {
 		split.setCount(1);
 		LazyOptional<IFluidHandlerItem> capability =
 			split.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
-		IFluidHandlerItem tank = capability.orElse(null);
+		IFluidHandlerItem tank = capability.resolve().orElse(null);
 		if (tank == null)
 			return Pair.of(resultingFluid, resultingItem);
 		resultingFluid = tank.drain(1000, simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE);
