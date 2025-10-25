@@ -309,7 +309,7 @@ public class ItemHelper {
 		if (entityIn instanceof PackageEntity packageEntity) {
 			return packageEntity.getBox();
 		}
-		return entityIn instanceof ItemEntity ? ((ItemEntity) entityIn).getItem() : ItemStack.EMPTY;
+		return entityIn instanceof ItemEntity itemEntity ? itemEntity.getItem() : ItemStack.EMPTY;
 	}
 
 	public static ItemStack limitCountToMaxStackSize(ItemStack stack, boolean simulate) {
@@ -326,6 +326,10 @@ public class ItemHelper {
 	public static void copyContents(IItemHandler from, IItemHandlerModifiable to) {
 		if (from.getSlots() != to.getSlots()) {
 			throw new IllegalArgumentException("Slot count mismatch");
+		}
+
+		for (int slot = to.getSlots() - 1; slot >= 0; slot--) {
+			to.setStackInSlot(slot, ItemStack.EMPTY);
 		}
 
 		for (int i = 0; i < from.getSlots(); i++) {

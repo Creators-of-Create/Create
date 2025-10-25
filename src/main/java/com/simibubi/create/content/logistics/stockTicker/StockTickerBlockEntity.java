@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
@@ -26,6 +28,7 @@ import com.simibubi.create.content.logistics.packagerLink.WiFiParticle;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.nbt.NBTHelper;
@@ -55,6 +58,14 @@ import net.minecraftforge.items.IItemHandler;
 
 public class StockTickerBlockEntity extends StockCheckingBlockEntity implements IHaveHoveringInformation {
 
+	public AbstractComputerBehaviour computerBehaviour;
+
+	@Override
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+	}
+
 	// Player-interface Feature
 	protected List<List<BigItemStack>> lastClientsideStockSnapshot;
 	protected InventorySummary lastClientsideStockSnapshotAsSummary;
@@ -82,6 +93,10 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 		ticksSinceLastUpdate = 0;
 		AllPackets.getChannel()
 			.sendToServer(new LogisticalStockRequestPacket(worldPosition));
+	}
+
+	public IItemHandler getReceivedPaymentsHandler() {
+		return receivedPayments;
 	}
 
 	public List<List<BigItemStack>> getClientStockSnapshot() {
@@ -241,6 +256,9 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
 		if (isItemHandlerCap(cap))
 			return capability.cast();
+		if (computerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
+
 		return super.getCapability(cap, side);
 	}
 

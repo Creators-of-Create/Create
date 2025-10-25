@@ -18,8 +18,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 
 public class GogglesItem extends Item implements Equipable {
-
 	private static final List<Predicate<Player>> IS_WEARING_PREDICATES = new ArrayList<>();
+
 	static {
 		addIsWearingPredicate(player -> AllItems.GOGGLES.isIn(player.getItemBySlot(EquipmentSlot.HEAD)));
 	}
@@ -51,8 +51,7 @@ public class GogglesItem extends Item implements Equipable {
 	 * Use this method to add custom entry points to the goggles overlay, e.g. custom
 	 * armor, handheld alternatives, etc.
 	 */
-	public static void addIsWearingPredicate(Predicate<Player> predicate) {
+	public static synchronized void addIsWearingPredicate(Predicate<Player> predicate) {
 		IS_WEARING_PREDICATES.add(predicate);
 	}
-
 }

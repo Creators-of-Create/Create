@@ -19,6 +19,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -42,6 +43,16 @@ public class TrackBlockItem extends BlockItem {
 
 	public TrackBlockItem(Block pBlock, Properties pProperties) {
 		super(pBlock, pProperties);
+	}
+
+	@Override
+	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+		ItemStack stack = player.getItemInHand(usedHand);
+		if (player.isShiftKeyDown() && isFoil(stack)) {
+			return clearSelection(stack, level, player);
+		} else {
+			return super.use(level, player, usedHand);
+		}
 	}
 
 	@Override
@@ -80,14 +91,8 @@ public class TrackBlockItem extends BlockItem {
 				return InteractionResult.SUCCESS;
 			}
 			return super.useOn(pContext);
-
 		} else if (player.isShiftKeyDown()) {
-			if (!level.isClientSide) {
-				player.displayClientMessage(CreateLang.translateDirect("track.selection_cleared"), true);
-				stack.setTag(null);
-			} else
-				level.playSound(player, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.75f, 1);
-			return InteractionResult.SUCCESS;
+			return clearSelection(stack, level, player).getResult();
 		}
 
 		boolean placing = !(state.getBlock() instanceof ITrackBlock);
@@ -129,6 +134,16 @@ public class TrackBlockItem extends BlockItem {
 				(soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
 		return InteractionResult.SUCCESS;
+	}
+
+	public static InteractionResultHolder<ItemStack> clearSelection(ItemStack stack, Level level, Player player) {
+		if (level.isClientSide) {
+			level.playSound(player, player.blockPosition(), SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.75f, 1.0f);
+		} else {
+			player.displayClientMessage(CreateLang.translateDirect("track.selection_cleared"), true);
+			stack.setTag(null);
+		}
+		return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
 	}
 
 	public BlockState getPlacementState(UseOnContext pContext) {

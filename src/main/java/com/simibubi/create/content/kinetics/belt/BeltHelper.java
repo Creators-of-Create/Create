@@ -25,9 +25,16 @@ public class BeltHelper {
 	public static final ResourceManagerReloadListener LISTENER = resourceManager -> uprightCache.clear();
 
 	public static boolean isItemUpright(ItemStack stack) {
-		return uprightCache.computeIfAbsent(stack.getItem(),
-			item -> stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM)
-				.isPresent() || AllItemTags.UPRIGHT_ON_BELT.matches(stack));
+		return uprightCache.computeIfAbsent(
+			stack.getItem(),
+			item -> {
+				boolean isFluidHandler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
+				boolean useUpright = AllItemTags.UPRIGHT_ON_BELT.matches(stack);
+				boolean forceDisableUpright = !AllItemTags.NOT_UPRIGHT_ON_BELT.matches(stack);
+
+				return (isFluidHandler || useUpright) && forceDisableUpright;
+			}
+		);
 	}
 
 	public static BeltBlockEntity getSegmentBE(LevelAccessor world, BlockPos pos) {

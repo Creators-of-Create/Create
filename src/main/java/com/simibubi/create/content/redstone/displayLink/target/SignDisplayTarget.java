@@ -6,6 +6,7 @@ import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 
 import net.createmod.catnip.data.Couple;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -20,7 +21,7 @@ public class SignDisplayTarget extends DisplayTarget {
 			return;
 
 		boolean changed = false;
-		Couple<SignText> signText = Couple.createWithContext(b -> sign.getText(b));
+		Couple<SignText> signText = Couple.createWithContext(sign::getText);
 		for (int i = 0; i < text.size() && i + line < 4; i++) {
 			if (i == 0)
 				reserve(i + line, sign, context);
@@ -28,12 +29,13 @@ public class SignDisplayTarget extends DisplayTarget {
 				break;
 
 			final int iFinal = i;
-			signText = signText.map(st -> st.setMessage(iFinal + line, text.get(iFinal)));
+			String content = text.get(iFinal).getString(sign.getMaxTextLineWidth());
+			signText = signText.map(st -> st.setMessage(iFinal + line, Component.literal(content)));
 			changed = true;
 		}
 
 		if (changed) {
-			signText.forEachWithContext((st, side) -> sign.setText(st, side));
+			signText.forEachWithContext(sign::setText);
 			context.level()
 				.sendBlockUpdated(context.getTargetPos(), sign.getBlockState(), sign.getBlockState(), 2);
 		}

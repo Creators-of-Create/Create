@@ -32,7 +32,7 @@ public class SuperGlueItem extends Item {
 			BlockState blockState = event.getLevel()
 				.getBlockState(event.getHitVec()
 					.getBlockPos());
-			if (blockState.getBlock()instanceof AbstractChassisBlock cb)
+			if (blockState.getBlock() instanceof AbstractChassisBlock cb)
 				if (cb.getGlueableSide(blockState, event.getFace()) != null)
 					return;
 		}
@@ -55,8 +55,6 @@ public class SuperGlueItem extends Item {
 	public boolean canBeDepleted() {
 		return true;
 	}
-
-	public static void onBroken(Player player) {}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void spawnParticles(Level world, BlockPos pos, Direction direction, boolean fullBlock) {

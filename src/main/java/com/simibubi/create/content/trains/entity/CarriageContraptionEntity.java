@@ -48,6 +48,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
 
@@ -259,6 +260,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 			entityData.set(TRACK_GRAPH, Optional.ofNullable(carriage.train.graph)
 				.map(g -> g.id));
+
+			level().gameEvent(this, GameEvent.RESONATE_8, this.position());
 
 			return;
 		}
@@ -738,16 +741,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		dimensional.updateRenderedCutoff();
 	}
 
-	// FIXME: entities should not reference their visual in any way
-	@OnlyIn(Dist.CLIENT)
-	private WeakReference<CarriageContraptionVisual> instanceHolder;
-
-	@OnlyIn(Dist.CLIENT)
-	public void bindInstance(CarriageContraptionVisual instance) {
-		this.instanceHolder = new WeakReference<>(instance);
-		updateRenderedPortalCutoff();
-	}
-
 	@OnlyIn(Dist.CLIENT)
 	public void updateRenderedPortalCutoff() {
 		if (carriage == null)
@@ -779,24 +772,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		}
 		if (particleSlice.size() > 0)
 			particleAvgY /= particleSlice.size();
-
-		// update hidden bogeys (if instanced)
-		if (instanceHolder == null)
-			return;
-		CarriageContraptionVisual instance = instanceHolder.get();
-		if (instance == null)
-			return;
-
-		int bogeySpacing = carriage.bogeySpacing;
-
-		carriage.bogeys.forEachWithContext((bogey, first) -> {
-			if (bogey == null)
-				return;
-
-			BlockPos bogeyPos = bogey.isLeading ? BlockPos.ZERO
-				: BlockPos.ZERO.relative(getInitialOrientation().getCounterClockWise(), bogeySpacing);
-			instance.setBogeyVisibility(first, !contraption.isHiddenInPortal(bogeyPos));
-		});
 	}
 
 }

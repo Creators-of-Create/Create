@@ -1,7 +1,12 @@
 package com.simibubi.create.content.equipment.armor;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.List;
 import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
@@ -10,7 +15,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
@@ -26,6 +30,25 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class DivingHelmetItem extends BaseArmorItem {
 	public static final EquipmentSlot SLOT = EquipmentSlot.HEAD;
 	public static final ArmorItem.Type TYPE = ArmorItem.Type.HELMET;
+
+	// TODO - 1.21.1 - Remove
+	@Nullable
+	private static final MethodHandle setCanRefillAirHandle;
+
+	// TODO - 1.21.1 - Remove
+	static {
+		MethodHandle handle = null;
+
+		MethodHandles.Lookup lookup = MethodHandles.lookup();
+
+		MethodType type = MethodType.methodType(void.class, boolean.class);
+		try {
+			handle = lookup.findVirtual(LivingBreatheEvent.class, "setCanRefillAir", type);
+		} catch (Exception ignored) {
+		}
+
+		setCanRefillAirHandle = handle;
+	}
 
 	public DivingHelmetItem(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
 		super(material, TYPE, properties, textureLoc);
@@ -85,9 +108,7 @@ public class DivingHelmetItem extends BaseArmorItem {
 		if (!helmet.getItem().isFireResistant() && lavaDiving)
 			return;
 
-		if (!entity.canDrownInFluidType(entity.getEyeInFluidType()) && !lavaDiving)
-			return;
-		if (entity instanceof Player player && (player.isSpectator() || player.isCreative()))
+		if (event.canBreathe() && !lavaDiving)
 			return;
 
 		List<ItemStack> backtanks = BacktankUtil.getAllWithAir(entity);
@@ -121,6 +142,12 @@ public class DivingHelmetItem extends BaseArmorItem {
 			AllAdvancements.DIVING_SUIT.awardTo(sp);
 
 		event.setCanBreathe(true);
-		event.setCanRefillAir(true);
+
+		// TODO - 1.21.1 - Remove
+		try {
+			if (setCanRefillAirHandle != null)
+				setCanRefillAirHandle.invokeExact(event, true);
+		} catch (Throwable ignored) {
+		}
 	}
 }

@@ -1,0 +1,20 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "atmospheric:red_arid_sandstone"
+    }
+  ],
+  "processingTime": 150,
+  "results": [
+    {
+      "item": "atmospheric:red_arid_sand"
+    }
+  ]
+}

@@ -13,6 +13,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
 import net.minecraftforge.items.SlotItemHandler;
 
 public class SchematicTableMenu extends MenuBase<SchematicTableBlockEntity> {
@@ -44,7 +45,7 @@ public class SchematicTableMenu extends MenuBase<SchematicTableBlockEntity> {
 
 		ItemStack stack = clickedSlot.getItem();
 		if (index < 2)
-			moveItemStackTo(stack, 2, slots.size(), false);
+			moveItemStackTo(stack, 2, slots.size(), true);
 		else
 			moveItemStackTo(stack, 0, 1, false);
 

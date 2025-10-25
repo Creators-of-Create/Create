@@ -1,0 +1,31 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "atmospheric:tall_yucca_flower"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 3,
+      "item": "minecraft:light_gray_dye"
+    },
+    {
+      "chance": 0.25,
+      "count": 2,
+      "item": "minecraft:light_gray_dye"
+    },
+    {
+      "chance": 0.05,
+      "count": 2,
+      "item": "minecraft:white_dye"
+    }
+  ]
+}
