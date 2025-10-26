@@ -509,8 +509,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 		physicsData.yaw = AngleHelper.angleLerp(.25, physicsData.yaw, box.yaw);
 	}
 
-	private void calculateConnectionStats(BlockPos connection) {
-		boolean reversed = getSpeed() < 0;
+	public static ConnectionStats calculateConnectionStats(BlockPos connection, BlockPos worldPosition, boolean reversed) {
 		float offBranchDistance = 35f;
 		float direction = Mth.RAD_TO_DEG * (float) Mth.atan2(connection.getX(), connection.getZ());
 		float angle = wrapAngle(direction - offBranchDistance * (reversed ? -1 : 1));
@@ -525,7 +524,12 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 			.add(0, 6 / 16f, 0);
 
 		float length = (float) start.distanceTo(end);
-		connectionStats.put(connection, new ConnectionStats(angle, length, start, end));
+		return new ConnectionStats(angle, length, start, end);
+	}
+
+	private void calculateConnectionStats(BlockPos connection) {
+		boolean reversed = getSpeed() < 0;
+		connectionStats.put(connection, calculateConnectionStats(connection, worldPosition, reversed));
 	}
 
 	public boolean addConnectionTo(BlockPos target) {
@@ -737,7 +741,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 			invalidateRenderBoundingBox();
 	}
 
-	public float wrapAngle(float angle) {
+	public static float wrapAngle(float angle) {
 		angle %= 360;
 		if (angle < 0)
 			angle += 360;

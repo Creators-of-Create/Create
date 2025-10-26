@@ -3,6 +3,13 @@ package com.simibubi.create.content.kinetics.chainConveyor;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.SectionPos;
+import net.minecraft.world.level.chunk.ChunkAccess;
+
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
+
 import org.joml.FrustumIntersection;
 import org.joml.Matrix4f;
 
@@ -93,7 +100,10 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 
 		Vec3 position = physicsData.prevPos.lerp(physicsData.pos, partialTicks);
 		Vec3 targetPosition = physicsData.prevTargetPos.lerp(physicsData.targetPos, partialTicks);
-		if (frustum != null && !frustum.testSphere((float) (targetPosition.x - camPos.x), (float) (targetPosition.y - camPos.y), (float) (targetPosition.z - camPos.z), 1))
+		if (frustum != null && !frustum.testSphere(
+			(float) (targetPosition.x - camPos.x),
+			(float) (targetPosition.y - camPos.y),
+			(float) (targetPosition.z - camPos.z), 1))
 			return;
 
 		float yaw = AngleHelper.angleLerp(partialTicks, physicsData.prevYaw, physicsData.yaw);
@@ -222,6 +232,11 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 
 	private void renderChains(ChainConveyorBlockEntity be, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay, FrustumIntersection frustum, Vec3 camPos, boolean renderCentre) {
+		if (frustum != null) {
+			float renderDistance = Minecraft.getInstance().gameRenderer.getRenderDistance();
+			if (camPos.distanceToSqr(be.getBlockPos().getCenter()) > renderDistance * renderDistance)
+				return;
+		}
 		float time = AnimationTickHolder.getRenderTime(be.getLevel()) / (360f / Math.abs(be.getSpeed()));
 		time %= 1;
 		if (time < 0)
@@ -234,8 +249,15 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 			if (stats == null)
 				continue;
 
-			Vec3 diff = stats.end()
-				.subtract(stats.start());
+			Level level = be.getLevel();
+			BlockPos tilePos = be.getBlockPos();
+			BlockPos targetPos = tilePos.offset(blockPos);
+
+			Vec3 start = stats.start();
+			Vec3 end = stats.end();
+
+			Vec3 diff = end
+				.subtract(start);
 			double yaw = (float) Mth.RAD_TO_DEG * Mth.atan2(diff.x, diff.z);
 			if (!VisualizationManager.supportsVisualization(be.getLevel()) && renderCentre) {
 				SuperByteBuffer guard =
@@ -248,54 +270,95 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 					.overlay(overlay)
 					.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 			}
-			if (frustum != null && !frustum.testLineSegment((float) (stats.start().x - camPos.x), (float) (stats.start().y - camPos.y), (float) (stats.start().z - camPos.z),
-				(float) (stats.end().x - camPos.x), (float) (stats.end().y - camPos.y), (float) (stats.end().z - camPos.z))) {
+			if (frustum == null || frustum.testLineSegment((float) (start.x - camPos.x), (float) (start.y - camPos.y), (float) (start.z - camPos.z),
+				(float) (end.x - camPos.x), (float) (end.y - camPos.y), (float) (end.z - camPos.z))) {
+				double pitch = (float) Mth.RAD_TO_DEG * Mth.atan2(diff.y, diff.multiply(1, 0, 1)
+					.length());
+
+				int light1 = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, tilePos),
+					level.getBrightness(LightLayer.SKY, tilePos));
+				int light2 = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, targetPos),
+					level.getBrightness(LightLayer.SKY, targetPos));
+
+				Vec3 startOffset = start.subtract(Vec3.atCenterOf(tilePos));
+
+				ms.pushPose();
+				var chain = TransformStack.of(ms);
+				chain.center();
+				chain.translate(startOffset);
+				chain.rotateYDegrees((float) yaw);
+				chain.rotateXDegrees(90 - (float) pitch);
+				chain.rotateYDegrees(45);
+				chain.translate(0, 8 / 16f, 0);
+				chain.uncenter();
+
+				if (frustum != null) {
+					renderChainWithLod(ms, buffer, animation, light1, light2, camPos, start, end, chain);
+				} else {
+					renderChain(ms, buffer, animation, 0, stats.chainLength(), light1, light2, false);
+				}
+				ms.popPose();
+			}
+
+			if (frustum == null)
 				continue;
+
+			float renderDistance = Minecraft.getInstance().gameRenderer.getRenderDistance();
+			if (camPos.distanceToSqr(targetPos.getCenter()) <= renderDistance * renderDistance)
+				continue;
+
+			boolean reversed = be.getSpeed() < 0;
+			ConnectionStats virtualStats = ChainConveyorBlockEntity.calculateConnectionStats(
+				blockPos.multiply(-1),
+				targetPos,
+				reversed
+			);
+
+			start = virtualStats.start();
+			end = virtualStats.end();
+
+			if (frustum.testLineSegment((float) (start.x - camPos.x), (float) (start.y - camPos.y), (float) (start.z - camPos.z),
+				(float) (end.x - camPos.x), (float) (end.y - camPos.y), (float) (end.z - camPos.z))) {
+				diff = end.subtract(start);
+				yaw = (float) Mth.RAD_TO_DEG * Mth.atan2(diff.x, diff.z);
+				double pitch = (float) Mth.RAD_TO_DEG * Mth.atan2(diff.y, diff.multiply(1, 0, 1).length());
+				Vec3 startOffset = start.subtract(Vec3.atCenterOf(tilePos));
+
+				ms.pushPose();
+				var chain = TransformStack.of(ms);
+				chain.center();
+				chain.translate(startOffset);
+				chain.rotateYDegrees((float) yaw);
+				chain.rotateXDegrees(90 - (float) pitch);
+				chain.rotateYDegrees(45);
+				chain.translate(0, 8 / 16f, 0);
+				chain.uncenter();
+
+				int light1 = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, tilePos),
+					level.getBrightness(LightLayer.SKY, tilePos));
+
+				renderChainWithLod(ms, buffer, animation, light1, light1, camPos, start, end, chain);
+				ms.popPose();
 			}
 
-			double pitch = (float) Mth.RAD_TO_DEG * Mth.atan2(diff.y, diff.multiply(1, 0, 1)
-				.length());
+		}
+	}
 
-			Level level = be.getLevel();
-			BlockPos tilePos = be.getBlockPos();
+	public static void renderChainWithLod(PoseStack ms, MultiBufferSource buffer, float animation, int light1,
+		int light2, Vec3 camPos, Vec3 chainStart, Vec3 chainEnd, TransformStack chain) {
+		Vector3f length = calculateLODCut(chainStart, chainEnd, camPos);
+		if (length.x > 1e-6f) {
+			renderChain(ms, buffer, animation, 0, length.x, light1, light2, true);
+		}
 
-			int light1 = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, tilePos),
-				level.getBrightness(LightLayer.SKY, tilePos));
-			int light2 = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, tilePos.offset(blockPos)),
-				level.getBrightness(LightLayer.SKY, tilePos.offset(blockPos)));
+		if (length.y > 1e-6f) {
+			chain.translate(0, length.x, 0);
+			renderChain(ms, buffer, animation, length.x, length.y, light1, light2, false);
+		}
 
-			Vec3 startOffset = stats.start().subtract(Vec3.atCenterOf(tilePos));
-
-			ms.pushPose();
-			var chain = TransformStack.of(ms);
-			chain.center();
-			chain.translate(startOffset);
-			chain.rotateYDegrees((float) yaw);
-			chain.rotateXDegrees(90 - (float) pitch);
-			chain.rotateYDegrees(45);
-			chain.translate(0, 8 / 16f, 0);
-			chain.uncenter();
-
-			if (frustum != null) {
-				Vector3f length = calculateLODCut(stats.start(), stats.end(), camPos);
-				if (length.x > 1e-6f) {
-					renderChain(ms, buffer, animation, 0, length.x, light1, light2, true);
-				}
-
-				if (length.y > 1e-6f) {
-					chain.translate(0, length.x, 0);
-					renderChain(ms, buffer, animation, length.x, length.y, light1, light2, false);
-				}
-
-				if (length.z > 1e-6f) {
-					chain.translate(0, length.y, 0);
-					renderChain(ms, buffer, animation, 0, length.z, light1, light2, true);
-				}
-			} else {
-				renderChain(ms, buffer, animation, 0, stats.chainLength(), light1, light2, false);
-			}
-
-			ms.popPose();
+		if (length.z > 1e-6f) {
+			chain.translate(0, length.y, 0);
+			renderChain(ms, buffer, animation, 0, length.z, light1, light2, true);
 		}
 	}
 
