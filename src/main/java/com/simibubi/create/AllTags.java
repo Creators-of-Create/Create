@@ -96,7 +96,6 @@ public class AllTags {
 		CASING,
 		COPYCAT_ALLOW,
 		COPYCAT_DENY,
-		FAKE_SEATS,
 		FAN_PROCESSING_CATALYSTS_BLASTING(MOD, "fan_processing_catalysts/blasting"),
 		FAN_PROCESSING_CATALYSTS_HAUNTING(MOD, "fan_processing_catalysts/haunting"),
 		FAN_PROCESSING_CATALYSTS_SMOKING(MOD, "fan_processing_catalysts/smoking"),
