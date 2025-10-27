@@ -83,14 +83,14 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 
 	// Atmospheric
 	ATMO_SAND = create(Mods.ATM.recipeId("arid_sand"), b -> b.require(Mods.ATM, "arid_sand")
-			.output(.25f, Items.CLAY_BALL, 1)
-			.output(0.05f, Mods.ATM, "aloe_kernels", 1)
-			.whenModLoaded(Mods.ATM.getId())),
+		.output(.25f, Items.CLAY_BALL, 1)
+		.output(0.05f, Mods.ATM, "aloe_kernels", 1)
+		.whenModLoaded(Mods.ATM.getId())),
 
 	ATMO_RED_SAND = create(Mods.ATM.recipeId("red_arid_sand"), b -> b.require(Mods.ATM, "red_arid_sand")
-			.output(.125f, Items.CLAY_BALL, 4)
-			.output(0.05f, Mods.ATM, "aloe_kernels", 1)
-			.whenModLoaded(Mods.ATM.getId())),
+		.output(.125f, Items.CLAY_BALL, 4)
+		.output(0.05f, Mods.ATM, "aloe_kernels", 1)
+		.whenModLoaded(Mods.ATM.getId())),
 
 		// Endergetic
 

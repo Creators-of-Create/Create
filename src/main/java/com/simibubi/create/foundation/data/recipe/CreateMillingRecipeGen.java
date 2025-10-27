@@ -845,7 +845,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 				.output(chances.get(0), dyes.get(0), amounts.get(0))
 				.output(chances.get(1), dyes.get(1), amounts.get(1))
 				.output(chances.get(2), dyes.get(2), amounts.get(2))
-					.whenModLoaded(Mods.BWG.getId()));
+				.whenModLoaded(Mods.BWG.getId()));
 		} else if (chances.size() == 1) {
 			return create(Mods.BWG.recipeId(input), b -> b.duration(50)
 				.require(Mods.BWG, input)
@@ -870,7 +870,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 				.output(chances.get(0), dyes.get(0), amounts.get(0))
 				.output(chances.get(1), dyes.get(1), amounts.get(1))
 				.output(chances.get(2), dyes.get(2), amounts.get(2))
-					.whenModLoaded(Mods.ENV.getId()));
+				.whenModLoaded(Mods.ENV.getId()));
 		} else if (chances.size() == 1) {
 			return create(Mods.ENV.recipeId(input), b -> b.duration(50)
 				.require(Mods.ENV, input)
