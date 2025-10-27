@@ -1,4 +1,4 @@
-// 1.20.1	2025-10-27T16:48:57.6311631	Create's Processing Recipes
+// 1.20.1	2025-10-27T17:07:52.7186493	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -15,6 +15,7 @@ c444abdd432670f6a2b508c513302e119cb07186 data/create/recipes/crushing/asurine_re
 29e7e74108755e0a07b1d3d1e8d4dcaf2b401572 data/create/recipes/crushing/coal_ore.json
 d9a48b3aa36cfe4f792a31fd3ee50b442c1177f9 data/create/recipes/crushing/compat/aether/ambrosium_ore.json
 81bdb03461bec6f8ca1201caa93805a751d7cda6 data/create/recipes/crushing/compat/aether/zanite_ore.json
+05b252d366ac786ba9de27d0a6197e645911e554 data/create/recipes/crushing/compat/biomesoplenty/rose_quartz.json
 b0af3dbcd3d61fb2b88addd15a9968e0497f5ea9 data/create/recipes/crushing/compat/biomeswevegone/ametrine_ore.json
 3f79e936545d9a628da98ff3408dfd89fbc0c58c data/create/recipes/crushing/compat/biomeswevegone/anthracite_ore.json
 5bccd946b8cb854a0e11d6e7cfadfff29f5ead98 data/create/recipes/crushing/compat/biomeswevegone/blue_nether_gold_ore.json

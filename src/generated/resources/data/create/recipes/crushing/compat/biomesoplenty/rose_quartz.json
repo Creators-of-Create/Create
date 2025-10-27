@@ -1,0 +1,25 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "biomesoplenty"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "biomesoplenty:rose_quartz_cluster"
+    }
+  ],
+  "processingTime": 150,
+  "results": [
+    {
+      "count": 7,
+      "item": "biomesoplenty:rose_quartz_chunk"
+    },
+    {
+      "chance": 0.5,
+      "item": "biomesoplenty:rose_quartz_chunk"
+    }
+  ]
+}

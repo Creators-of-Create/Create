@@ -42,7 +42,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 
 	GeneratedRecipe
 
-	BLAZE_ROD = create(() -> Items.BLAZE_ROD, b -> b.duration(100)
+		BLAZE_ROD = create(() -> Items.BLAZE_ROD, b -> b.duration(100)
 		.output(Items.BLAZE_POWDER, 3)
 		.output(.25f, Items.BLAZE_POWDER, 3)),
 
@@ -415,7 +415,15 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 
 	IE_SLAG_GRAVEL = create(Mods.IE.recipeId("slag"), b -> b.duration(200)
 		.require(Mods.IE, "slag").output(Mods.IE, "slag_gravel")
-		.whenModLoaded(Mods.IE.getId()));
+		.whenModLoaded(Mods.IE.getId())),
+
+	// Biomes O Plenty
+	BOP_ROSE_QUARTZ = create(Mods.BOP.recipeId("rose_quartz"), b -> b.duration(150)
+		.require(Mods.BOP, "rose_quartz_cluster")
+		.output(1, Mods.BOP, "rose_quartz_chunk", 7)
+		.output(.5f, Mods.BOP, "rose_quartz_chunk", 1)
+		.whenModLoaded(Mods.BOP.getId()))
+	;
 
 	GeneratedRecipe sgOres(String... types) {
 		for (String type : types) {
