@@ -1,14 +1,14 @@
 package com.simibubi.create.foundation.data.recipe;
 
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.OSMIUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.PLATINUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.QUICKSILVER;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.SILVER;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.ALUMINUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.LEAD;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.NICKEL;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.OSMIUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.PLATINUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.QUICKSILVER;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.SILVER;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.TIN;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.URANIUM;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -77,8 +77,8 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 
 	ICE = convert(Blocks.ICE, Blocks.PACKED_ICE), MAGMA_BLOCK = convert(Blocks.MAGMA_BLOCK, Blocks.OBSIDIAN),
 
-		FLOUR = create("wheat_flour", b -> b.require(I.wheatFlour())
-			.output(AllItems.DOUGH.get())),
+	FLOUR = create("wheat_flour", b -> b.require(I.wheatFlour())
+		.output(AllItems.DOUGH.get())),
 
 		// Atmospheric
 		ATMO_SAND = create(Mods.ATM.recipeId("arid_sand"), b -> b.require(Mods.ATM, "arid_sand")
@@ -117,8 +117,8 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 		super(output, Create.ID);
 	}
 
-	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CompatMetals metal) {
-		for (Mods mod : metal.getMods()) {
+	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CommonMetal metal) {
+		for (Mods mod : metal.mods) {
 			String metalName = metal.getName(mod);
 			ResourceLocation nugget = mod.nuggetOf(metalName);
 			create(mod.recipeId(crushed.getId().getPath()),

@@ -7,6 +7,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -81,7 +82,7 @@ public abstract class GhostItemMenu<T> extends MenuBase<T> implements IClearable
 		ghostInventory.setStackInSlot(slot, insert);
 		getSlot(slotId).setChanged();
 	}
-	
+
 	@Override
 	protected boolean moveItemStackTo(ItemStack pStack, int pStartIndex, int pEndIndex, boolean pReverseDirection) {
 		return false;
@@ -90,7 +91,8 @@ public abstract class GhostItemMenu<T> extends MenuBase<T> implements IClearable
 	@Override
 	public ItemStack quickMoveStack(Player playerIn, int index) {
 		if (index < 36) {
-			ItemStack stackToInsert = playerInventory.getItem(index);
+			Slot slot = this.slots.get(index);
+			ItemStack stackToInsert = slot.getItem();
 			for (int i = 0; i < ghostInventory.getSlots(); i++) {
 				ItemStack stack = ghostInventory.getStackInSlot(i);
 				if (!allowRepeats() && ItemHandlerHelper.canItemStacksStack(stack, stackToInsert))

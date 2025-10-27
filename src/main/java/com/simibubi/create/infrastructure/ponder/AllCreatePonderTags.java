@@ -389,6 +389,7 @@ public class AllCreatePonderTags {
 
 		HELPER.addToTag(DISPLAY_SOURCES)
 				.add(AllBlocks.SEATS.get(DyeColor.WHITE))
+				.add(AllBlocks.DEPOT)
 				.add(AllBlocks.ORANGE_NIXIE_TUBE)
 				.add(AllBlocks.THRESHOLD_SWITCH)
 				.add(AllBlocks.SMART_OBSERVER)

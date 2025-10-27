@@ -297,7 +297,7 @@ public class ContraptionCollider {
 						movingInteractionBehaviour.handleEntityCollision(entity, pos, contraptionEntity);
 
 					bounce = BlockHelper.getBounceMultiplier(blockState.getBlock());
-					slide = Math.max(0, blockState.getFriction(contraption.world, pos, entity) - .6f);
+					slide = Math.max(0, blockState.getFriction(contraption.collisionLevel, pos, entity) - .6f);
 				}
 			}
 

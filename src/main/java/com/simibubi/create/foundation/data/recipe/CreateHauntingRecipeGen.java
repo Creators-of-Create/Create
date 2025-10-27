@@ -2,10 +2,7 @@ package com.simibubi.create.foundation.data.recipe;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.HauntingRecipeGen;
-
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
@@ -64,11 +61,5 @@ public final class CreateHauntingRecipeGen extends HauntingRecipeGen {
 
 	public CreateHauntingRecipeGen(PackOutput output) {
 		super(output, Create.ID);
-	}
-
-	public GeneratedRecipe moddedConversion(Mods mod, String input, String output) {
-		return create("compat/" + mod.getId() + "/" + output, p -> p.require(mod, input)
-				.output(mod, output)
-				.whenModLoaded(mod.getId()));
 	}
 }

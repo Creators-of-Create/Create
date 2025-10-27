@@ -23,6 +23,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -41,7 +42,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
-import net.minecraftforge.common.util.FakePlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -117,31 +117,30 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 	}
 
 	@Override
-	public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+	public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entityLiving) {
 		if (!(entityLiving instanceof Player player))
 			return stack;
 		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
 			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
 			ItemStack polished =
-				SandPaperPolishingRecipe.applyPolish(worldIn, entityLiving.position(), toPolish, stack);
+				SandPaperPolishingRecipe.applyPolish(level, entityLiving.position(), toPolish, stack);
 
-			if (worldIn.isClientSide) {
+			if (level.isClientSide) {
 				spawnParticles(entityLiving.getEyePosition(1)
-						.add(entityLiving.getLookAngle()
-							.scale(.5f)),
-					toPolish, worldIn);
+					.add(entityLiving.getLookAngle().scale(.5f)), toPolish, level);
 				return stack;
 			}
 
+			Inventory playerInv = player.getInventory();
 			if (!polished.isEmpty()) {
-				if (player instanceof FakePlayer) {
-					player.drop(polished, false, false);
-				} else {
-					player.getInventory()
-						.placeItemBackInInventory(polished);
-				}
+				playerInv.placeItemBackInInventory(polished);
 			}
+
+			if (toPolish.hasCraftingRemainingItem()) {
+				playerInv.placeItemBackInInventory(toPolish.getCraftingRemainingItem());
+			}
+
 			tag.remove("Polishing");
 			stack.hurtAndBreak(1, entityLiving, p -> p.broadcastBreakEvent(p.getUsedItemHand()));
 		}

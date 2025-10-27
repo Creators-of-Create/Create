@@ -156,7 +156,8 @@ public class AllFanProcessingTypes {
 			if (!smeltingRecipe.isPresent()) {
 				RECIPE_WRAPPER.setItem(0, stack);
 				smeltingRecipe = level.getRecipeManager()
-					.getRecipeFor(RecipeType.BLASTING, RECIPE_WRAPPER, level);
+					.getRecipeFor(RecipeType.BLASTING, RECIPE_WRAPPER, level)
+					.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 			}
 
 			if (smeltingRecipe.isPresent()) {
@@ -165,7 +166,7 @@ public class AllFanProcessingTypes {
 						.getResultItem(registryAccess),
 					smeltingRecipe.get()
 						.getResultItem(registryAccess))) {
-					return RecipeApplier.applyRecipeOn(level, stack, smeltingRecipe.get());
+					return RecipeApplier.applyRecipeOn(level, stack, smeltingRecipe.get(),false);
 				}
 			}
 
@@ -238,7 +239,7 @@ public class AllFanProcessingTypes {
 			HAUNTING_WRAPPER.setItem(0, stack);
 			Optional<HauntingRecipe> recipe = AllRecipeTypes.HAUNTING.find(HAUNTING_WRAPPER, level);
 			if (recipe.isPresent())
-				return RecipeApplier.applyRecipeOn(level, stack, recipe.get());
+				return RecipeApplier.applyRecipeOn(level, stack, recipe.get(),true);
 			return null;
 		}
 
@@ -364,7 +365,7 @@ public class AllFanProcessingTypes {
 				.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 
 			if (smokingRecipe.isPresent())
-				return RecipeApplier.applyRecipeOn(level, stack, smokingRecipe.get());
+				return RecipeApplier.applyRecipeOn(level, stack, smokingRecipe.get(),false);
 
 			return null;
 		}
@@ -429,7 +430,7 @@ public class AllFanProcessingTypes {
 			SPLASHING_WRAPPER.setItem(0, stack);
 			Optional<SplashingRecipe> recipe = AllRecipeTypes.SPLASHING.find(SPLASHING_WRAPPER, level);
 			if (recipe.isPresent())
-				return RecipeApplier.applyRecipeOn(level, stack, recipe.get());
+				return RecipeApplier.applyRecipeOn(level, stack, recipe.get(),true);
 			return null;
 		}
 

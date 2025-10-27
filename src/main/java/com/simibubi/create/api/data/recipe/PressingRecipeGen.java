@@ -13,6 +13,19 @@ import net.minecraft.data.PackOutput;
  */
 public abstract class PressingRecipeGen extends ProcessingRecipeGen {
 
+	protected GeneratedRecipe moddedCompacting(DatagenMod mod, String input, String output) {
+		return create("compat/" + mod.getId() + "/" + output, b -> b.require(mod, input)
+			.output(mod, output)
+			.whenModLoaded(mod.getId()));
+	}
+
+	protected GeneratedRecipe moddedPaths(DatagenMod mod, String... blocks) {
+		for(String block : blocks) {
+			moddedCompacting(mod, block, block + "_path");
+		}
+		return null;
+	}
+
 	public PressingRecipeGen(PackOutput output, String defaultNamespace) {
 		super(output, defaultNamespace);
 	}

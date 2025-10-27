@@ -3,7 +3,6 @@ package com.simibubi.create.content.schematics.table;
 import static com.simibubi.create.foundation.gui.AllGuiTextures.PLAYER_INVENTORY;
 import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE_PROGRESS;
 
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +18,7 @@ import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.CreatePaths;
 
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.Util;
@@ -97,9 +97,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 
 		folderButton = new IconButton(x + 20, y + 21, AllIcons.I_OPEN_FOLDER);
 		folderButton.withCallback(() -> {
-			Util.getPlatform()
-				.openFile(Paths.get("schematics/")
-					.toFile());
+			Util.getPlatform().openFile(CreatePaths.SCHEMATICS_DIR.toFile());
 		});
 		folderButton.setToolTip(folder);
 		refreshButton = new IconButton(x + 206, y + 21, AllIcons.I_REFRESH);

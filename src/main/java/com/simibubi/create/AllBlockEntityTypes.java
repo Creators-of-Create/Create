@@ -219,8 +219,10 @@ import com.simibubi.create.content.trains.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.trains.display.FlapDisplayRenderer;
 import com.simibubi.create.content.trains.observer.TrackObserverBlockEntity;
 import com.simibubi.create.content.trains.observer.TrackObserverRenderer;
+import com.simibubi.create.content.trains.observer.TrackObserverVisual;
 import com.simibubi.create.content.trains.signal.SignalBlockEntity;
 import com.simibubi.create.content.trains.signal.SignalRenderer;
+import com.simibubi.create.content.trains.signal.SignalVisual;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.content.trains.station.StationRenderer;
 import com.simibubi.create.content.trains.track.FakeTrackBlockEntity;
@@ -978,12 +980,14 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<SignalBlockEntity> TRACK_SIGNAL = REGISTRATE
 		.blockEntity("track_signal", SignalBlockEntity::new)
+		.visual(() -> SignalVisual::new)
 		.renderer(() -> SignalRenderer::new)
 		.validBlocks(AllBlocks.TRACK_SIGNAL)
 		.register();
 
 	public static final BlockEntityEntry<TrackObserverBlockEntity> TRACK_OBSERVER = REGISTRATE
 		.blockEntity("track_observer", TrackObserverBlockEntity::new)
+		.visual(() -> TrackObserverVisual::new)
 		.renderer(() -> TrackObserverRenderer::new)
 		.validBlocks(AllBlocks.TRACK_OBSERVER)
 		.register();

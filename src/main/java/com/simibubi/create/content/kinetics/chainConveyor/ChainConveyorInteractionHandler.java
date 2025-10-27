@@ -52,13 +52,12 @@ public class ChainConveyorInteractionHandler {
 		}
 
 		Minecraft mc = Minecraft.getInstance();
-		ItemStack mainHandItem = mc.player.getMainHandItem();
-		boolean isWrench = AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem);
+		boolean isWrench = mc.player.isHolding(AllItemTags.WRENCH::matches);
 		boolean dismantling = isWrench && mc.player.isShiftKeyDown();
 		double range = mc.player.getAttribute(ForgeMod.BLOCK_REACH.get())
 			.getValue() + 1;
 
-		Vec3 from = RaycastHelper.getTraceOrigin(mc.player);
+		Vec3 from = mc.player.getEyePosition();
 		Vec3 to = RaycastHelper.getTraceTarget(mc.player, range, from);
 		HitResult hitResult = mc.hitResult;
 
@@ -115,7 +114,7 @@ public class ChainConveyorInteractionHandler {
 	private static boolean isActive() {
 		Minecraft mc = Minecraft.getInstance();
 		ItemStack mainHandItem = mc.player.getMainHandItem();
-		return AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem) || AllBlocks.PACKAGE_FROGPORT.isIn(mainHandItem)
+		return mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches) || AllBlocks.PACKAGE_FROGPORT.isIn(mainHandItem)
 			|| PackageItem.isPackage(mainHandItem);
 	}
 
@@ -126,7 +125,10 @@ public class ChainConveyorInteractionHandler {
 		Minecraft mc = Minecraft.getInstance();
 		ItemStack mainHandItem = mc.player.getMainHandItem();
 
-		if (AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem)) {
+		if (mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches)) {
+			ItemStack offHandItem = mc.player.getOffhandItem();
+			ItemStack usedItem = AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem) ? mainHandItem : offHandItem;
+
 			if (!mc.player.isShiftKeyDown()) {
 				ChainConveyorRidingHandler.embark(selectedLift, selectedChainPosition, selectedConnection);
 				return true;
@@ -134,7 +136,7 @@ public class ChainConveyorInteractionHandler {
 
 			AllPackets.getChannel()
 				.sendToServer(new ChainConveyorConnectionPacket(selectedLift, selectedLift.offset(selectedConnection),
-					mainHandItem, false));
+					usedItem, false));
 			return true;
 		}
 
@@ -148,7 +150,7 @@ public class ChainConveyorInteractionHandler {
 		if (PackageItem.isPackage(mainHandItem)) {
 			AllPackets.getChannel()
 				.sendToServer(new ChainPackageInteractionPacket(selectedLift, selectedConnection, selectedChainPosition,
-					mainHandItem));
+					false));
 			return true;
 		}
 

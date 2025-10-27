@@ -63,7 +63,7 @@ public class BeltCrusherInteractionHandler {
 				remainder = ItemHandlerHelper.copyStackWithSize(currentItem.stack, notFilled);
 
 			currentItem.stack = remainder;
-			beltInventory.belt.sendData();
+			beltInventory.belt.notifyUpdate();
 			return true;
 		}
 

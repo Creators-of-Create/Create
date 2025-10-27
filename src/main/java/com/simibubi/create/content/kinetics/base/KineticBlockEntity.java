@@ -11,6 +11,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
 import com.simibubi.create.api.stress.BlockStressValues;
+import com.simibubi.create.compat.computercraft.events.KineticsChangeEvent;
 import com.simibubi.create.content.kinetics.KineticNetwork;
 import com.simibubi.create.content.kinetics.RotationPropagator;
 import com.simibubi.create.content.kinetics.base.IRotate.SpeedLevel;
@@ -162,6 +163,10 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 			onSpeedChanged(prevSpeed);
 			sendData();
 		}
+	}
+
+	protected KineticsChangeEvent makeComputerKineticsChangeEvent() {
+		return new KineticsChangeEvent(speed, capacity, stress, overStressed);
 	}
 
 	protected Block getStressConfigKey() {

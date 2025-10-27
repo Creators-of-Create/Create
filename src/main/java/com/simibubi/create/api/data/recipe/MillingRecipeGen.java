@@ -1,5 +1,7 @@
 package com.simibubi.create.api.data.recipe;
 
+import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
+
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -19,11 +21,24 @@ import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
  */
 public abstract class MillingRecipeGen extends ProcessingRecipeGen {
 
+	/**
+	 * @deprecated poor API. Requires an ItemEntry, and uses a string to create a tag. Unused by Create.
+	 */
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
+	@Deprecated(since = "6.0.7", forRemoval = true)
 	protected GeneratedRecipe metalOre(String name, ItemEntry<? extends Item> crushed, int duration) {
 		return create(name + "_ore", b -> b.duration(duration)
 			.withCondition(new NotCondition(new TagEmptyCondition("forge", "ores/" + name)))
 			.require(AllTags.forgeItemTag("ores/" + name))
 			.output(crushed.get()));
+	}
+
+	protected GeneratedRecipe moddedSandstone(DatagenMod mod, String name) {
+		String sandstone = name + "_sandstone";
+		return create(mod.recipeId(sandstone), b -> b.duration(150)
+			.require(mod, sandstone)
+			.output(mod, name + "_sand")
+			.whenModLoaded(mod.getId()));
 	}
 
 	public MillingRecipeGen(PackOutput output, String defaultNamespace) {

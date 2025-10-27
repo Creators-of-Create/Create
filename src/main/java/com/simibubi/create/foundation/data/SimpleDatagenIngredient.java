@@ -4,16 +4,16 @@ import java.util.stream.Stream;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.simibubi.create.foundation.data.recipe.Mods;
+import com.simibubi.create.api.data.recipe.DatagenMod;
 
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class SimpleDatagenIngredient extends Ingredient {
 
-	private Mods mod;
+	private DatagenMod mod;
 	private String id;
 
-	public SimpleDatagenIngredient(Mods mod, String id) {
+	public SimpleDatagenIngredient(DatagenMod mod, String id) {
 		super(Stream.empty());
 		this.mod = mod;
 		this.id = id;

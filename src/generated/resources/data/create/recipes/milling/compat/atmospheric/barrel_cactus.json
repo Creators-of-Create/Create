@@ -1,0 +1,26 @@
+{
+  "type": "create:milling",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "atmospheric:barrel_cactus"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:orange_dye"
+    },
+    {
+      "chance": 0.1,
+      "count": 3,
+      "item": "minecraft:green_dye"
+    }
+  ]
+}
