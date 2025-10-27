@@ -25,6 +25,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
+
 import net.minecraftforge.common.Tags;
 
 /**
@@ -80,16 +81,16 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 	FLOUR = create("wheat_flour", b -> b.require(I.wheatFlour())
 		.output(AllItems.DOUGH.get())),
 
-		// Atmospheric
-		ATMO_SAND = create(Mods.ATM.recipeId("arid_sand"), b -> b.require(Mods.ATM, "arid_sand")
-				.output(.25f, Items.CLAY_BALL, 1)
-				.output(0.05f, Mods.ATM, "aloe_kernels", 1)
-				.whenModLoaded(Mods.ATM.getId())),
+	// Atmospheric
+	ATMO_SAND = create(Mods.ATM.recipeId("arid_sand"), b -> b.require(Mods.ATM, "arid_sand")
+			.output(.25f, Items.CLAY_BALL, 1)
+			.output(0.05f, Mods.ATM, "aloe_kernels", 1)
+			.whenModLoaded(Mods.ATM.getId())),
 
-		ATMO_RED_SAND = create(Mods.ATM.recipeId("red_arid_sand"), b -> b.require(Mods.ATM, "red_arid_sand")
-				.output(.125f, Items.CLAY_BALL, 4)
-				.output(0.05f, Mods.ATM, "aloe_kernels", 1)
-				.whenModLoaded(Mods.ATM.getId())),
+	ATMO_RED_SAND = create(Mods.ATM.recipeId("red_arid_sand"), b -> b.require(Mods.ATM, "red_arid_sand")
+			.output(.125f, Items.CLAY_BALL, 4)
+			.output(0.05f, Mods.ATM, "aloe_kernels", 1)
+			.whenModLoaded(Mods.ATM.getId())),
 
 		// Endergetic
 
