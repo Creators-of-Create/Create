@@ -1,4 +1,4 @@
-// 1.20.1	2025-05-14T20:10:03.4222186	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.20.1	2025-10-27T16:48:57.6371704	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -642,8 +642,8 @@ b0d8f08968763a5f74e5cd5644377a76a9f39753 assets/create/blockstates/yellow_toolbo
 fe8c497aacc641c2f01cec90bba9f19e59cc2ed2 assets/create/blockstates/yellow_valve_handle.json
 e819e93fdcbe9fd9c050a052d2718ff3b3539365 assets/create/blockstates/zinc_block.json
 64121dcb216381c83b4fe28aa361ea07c24c9ad0 assets/create/blockstates/zinc_ore.json
-097c6e8d1a8d7c68193adbb66d2b88d0635efa8e assets/create/lang/en_ud.json
-7d5d7749a5a953fad2972647d34affe3467323fe assets/create/lang/en_us.json
+d27f9179224cd2e01c8a1b9ded0b0344a9668f28 assets/create/lang/en_ud.json
+487b47815ef3c08e38fedae79daa9fd691f6b55f assets/create/lang/en_us.json
 a97e1060e00ae701a02e39cd4ef8054cf345fac4 assets/create/models/block/acacia_window.json
 103e032c0b1a0a6a27c67da8c91179a564bd281c assets/create/models/block/acacia_window_pane_noside.json
 fb00b627abda76ad4fea867ca57dbfadd24fffa3 assets/create/models/block/acacia_window_pane_noside_alt.json
@@ -4687,22 +4687,18 @@ c603fae95069714ac3d256dfa31f8d2639efafa7 data/create/tags/blocks/chest_mounted_s
 c7ec0dbc18e9c1b58e568ed925287b89df11a136 data/create/tags/blocks/copycat_allow.json
 876eb9210f4a14898a2fe6d225699c66b5bdfeef data/create/tags/blocks/copycat_deny.json
 7296238b4c6b81251870addce1de8ecda63381dc data/create/tags/blocks/corals.json
-35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/blocks/fallback_mounted_storage_blacklist.json
 f675c20350ed60da4878b5d6301f02c8c05624bd data/create/tags/blocks/fan_processing_catalysts/blasting.json
 0592b99f657415f6546564ed8efa1fcbef07ba15 data/create/tags/blocks/fan_processing_catalysts/haunting.json
 9386dd9a1d234813f9b8ae4ec88866d396aa1d37 data/create/tags/blocks/fan_processing_catalysts/smoking.json
-35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/blocks/fan_processing_catalysts/splashing.json
 6858173c670bb593664ac3c62ded726d57d581f1 data/create/tags/blocks/fan_transparent.json
 2589b135c0e96ad29076569e144528fe32ea5b39 data/create/tags/blocks/girdable_tracks.json
 02c0a018f2b8540dc2f1fb420172cc716552f321 data/create/tags/blocks/movable_empty_collider.json
-35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/blocks/non_breakable.json
 7f7eb361dcdaa2f081bfed7582c93d6b1b29f8db data/create/tags/blocks/non_harvestable.json
 4970078b49ddac1b1d500ed0469cedf42bdc3d35 data/create/tags/blocks/non_movable.json
-06e13efbb7b0d09ff7ecd1a7dc45a0760b91ad67 data/create/tags/blocks/ore_override_stone.json
 a5874f73c7dc0a3ae12999e6ae8abf45bc7fb9be data/create/tags/blocks/passive_boiler_heaters.json
 f400870b8dbcd14238be3ec99c419093073ba3a6 data/create/tags/blocks/postboxes.json
 9bc8c13fd80bdbe7f767b91ee1a1042e9aff02b0 data/create/tags/blocks/roots.json
-55dccb895bbdacfbd6ee9005486cd3fe9df01249 data/create/tags/blocks/safe_nbt.json
+575c7b20bcd6d698c5961aa3db0ac7d206b3dbd2 data/create/tags/blocks/safe_nbt.json
 79418bd729cef417b322cef9b491e7ae83317d61 data/create/tags/blocks/seats.json
 7d783d948cc49503fb645045fe9ef48906b74341 data/create/tags/blocks/simple_mounted_storage.json
 da544bd0281138617f5cd6b2a04920ccf7034d4b data/create/tags/blocks/single_block_inventories.json
@@ -4715,14 +4711,9 @@ da739ad2160e7df4e0e5cc89587670ce5e9450c3 data/create/tags/blocks/valve_handles.j
 72143286fb5cb372a0696550e2eac76ca50e6fbc data/create/tags/blocks/windmill_sails.json
 a109dab3eeeae64b2eb909ae1b5027716c5dd271 data/create/tags/blocks/wrench_pickup.json
 76c0522664726c09461ad4565b6fba80b4f816b2 data/create/tags/entity_types/blaze_burner_capturable.json
-35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/entity_types/ignore_seat.json
 894e1e4fd1e32712abdda18ec64ab13750d3c039 data/create/tags/fluids/bottomless/allow.json
-35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/fluids/bottomless/deny.json
 e191d5f912e05091b3a0b1df17f4c4181e04d96f data/create/tags/fluids/fan_processing_catalysts/blasting.json
-35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/fluids/fan_processing_catalysts/haunting.json
-35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/fluids/fan_processing_catalysts/smoking.json
 c9ae54a7510073b17edf82f7591e14bdb2c51837 data/create/tags/fluids/fan_processing_catalysts/splashing.json
-35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/items/blaze_burner_fuel/regular.json
 8ba98bf390a326abeebfd5d84be5f740c935a8b6 data/create/tags/items/blaze_burner_fuel/special.json
 8b6c0b444b15f7fb2d55b9cbcb68537c1269f877 data/create/tags/items/casing.json
 3e65a1f943cae7927da2f45388efe248474e5397 data/create/tags/items/chain_rideable.json
@@ -4730,11 +4721,10 @@ f43cac8216e2a9347e48cf93a43de95dd810ca20 data/create/tags/items/contraption_cont
 d371dfd35e49a7bef19f59c03e7f4ae20992f03d data/create/tags/items/create_ingots.json
 910d0f5ccbc4c84b224eca1f1588b1695f41447b data/create/tags/items/crushed_raw_materials.json
 0fa526e7e742573b603ad26b09526cf724efa1dc data/create/tags/items/deployable_drink.json
-35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/items/dispense_behavior_wrap_blacklist.json
 ebd7b09daf2f64c0c04d821696b0e145683d8693 data/create/tags/items/dyed_table_cloths.json
 d2bb65d893d71d2d9871f81f430c233a93adb4bb data/create/tags/items/invalid_for_track_paving.json
-dd4a5afe4817113a9abd80b20a4d0d887c0d672f data/create/tags/items/modded_stripped_logs.json
-f7e3da0d35dfedbdafbc8bc6b7635223d16f25db data/create/tags/items/modded_stripped_wood.json
+9d941b2bc9d8a44b86e61daa26b381042424538b data/create/tags/items/modded_stripped_logs.json
+9459579e9a2c6bb067f9b5c85e5b9cd3a9a3b8b4 data/create/tags/items/modded_stripped_wood.json
 cebf5fd98eddf5c14befdd47052be678eea79542 data/create/tags/items/packages.json
 f400870b8dbcd14238be3ec99c419093073ba3a6 data/create/tags/items/postboxes.json
 695d75b352fd190b303c724d1aaee9bb786a903b data/create/tags/items/pressurized_air_sources.json
@@ -4763,7 +4753,7 @@ e22493305e0cebfb7ededae122e19ee9dd24fc9d data/create/tags/items/stone_types/scor
 5def5088f7fd31b80e6f28c1c4ea146aa9d7d15b data/create/tags/items/toolboxes.json
 2589b135c0e96ad29076569e144528fe32ea5b39 data/create/tags/items/tracks.json
 a5b5711d1798473a9b25db5b7f749570ed0a2769 data/create/tags/items/upgrade_aquatic/coral.json
-c27e162cf1c428d426ff3116bf383ca4c27a54f9 data/create/tags/items/upright_on_belt.json
+022126716005edbe39ac8b52f40f5ab931a7a849 data/create/tags/items/upright_on_belt.json
 da739ad2160e7df4e0e5cc89587670ce5e9450c3 data/create/tags/items/valve_handles.json
 c59c9fc0cdd45de659aa8023d36f9decb90f708c data/create/tags/items/vanilla_stripped_logs.json
 64441ac1daa64c81601b94b82b21c0ee862b6344 data/create/tags/items/vanilla_stripped_wood.json
@@ -4786,10 +4776,8 @@ bcd593714f43bc6a0aefbd714c24db3cf9e71250 data/forge/tags/blocks/storage_blocks/r
 0ccc9ff76001cdd7db1b79c1371f59d3283abe64 data/forge/tags/fluids/honey.json
 cca816b34ac2e9b7933df680aa9778ff2cfe9605 data/forge/tags/fluids/tea.json
 1a9ce7d5f5fe92d3b73e269cd5dbf5cd1f1fe5b8 data/forge/tags/items/armors/boots.json
-6749b53c23aefe4baa55c4b2f624bbc6dfe5f423 data/forge/tags/items/armors/chestplate.json
-695d75b352fd190b303c724d1aaee9bb786a903b data/forge/tags/items/armors/chestplates.json
-5b91b107f48b47958db20f13cb3cc0c6f7085fdc data/forge/tags/items/armors/helmet.json
-3580dae058fc75b45fab4c4ebbd1b01573ba9e11 data/forge/tags/items/armors/helmets.json
+056046998d063e7405c267f1ec2923260ef8c109 data/forge/tags/items/armors/chestplates.json
+9eb6474e9336c2c378100b7e2577a6ba9c62e403 data/forge/tags/items/armors/helmets.json
 afdac448376ff5624f49cbf31feedf691ecbc4c5 data/forge/tags/items/armors/leggings.json
 06ebf72e8f6c081862236d4b068b5dfb275a8385 data/forge/tags/items/buckets/honey.json
 801d097b0af7153e0c5c72a924d61f8afb4cf264 data/forge/tags/items/dough.json
@@ -4811,7 +4799,7 @@ ccf5b08295f6362a3f6b3b595f1de1bba4b224ec data/forge/tags/items/ingots/zinc.json
 81b107ada9c6ac5679a21f8c6a006bf230f69c39 data/forge/tags/items/ores/zinc.json
 e475ad1c52bffedfc544e5331a87c1f5c45149fd data/forge/tags/items/ores_in_ground/deepslate.json
 2f6068972e364599b6849dc46fcb0724d4219d53 data/forge/tags/items/ores_in_ground/stone.json
-12c3455bbb7edcea84d47ad6ccde9c209a25d811 data/forge/tags/items/plates.json
+0b718fa5d4db0c2f2d34db1096f33a88f12f0ede data/forge/tags/items/plates.json
 23f4874238f7d06e80c699b672d4e9fab6eb464f data/forge/tags/items/plates/brass.json
 7f3f85d0978bc274e4689fbf41f7b80b023b7a05 data/forge/tags/items/plates/cardboard.json
 ef5256892a9d4167bf7371c7138a933a107a123a data/forge/tags/items/plates/copper.json
