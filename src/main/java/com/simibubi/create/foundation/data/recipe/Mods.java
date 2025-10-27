@@ -73,7 +73,8 @@ public enum Mods implements DatagenMod {
 	UG("undergarden"),
 	DD("deeperdarker"),
 	ARS_E("ars_elemental", b -> b.omitWoodSuffix()),
-	JNE("netherexp")
+	JNE("netherexp"),
+	OC("occultism")
 
 	;
 
