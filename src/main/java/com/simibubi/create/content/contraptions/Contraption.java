@@ -385,7 +385,7 @@ public abstract class Contraption {
 			moveWindmillBearing(pos, frontier, visited, state);
 
 		// Seats transfer their passenger to the contraption
-		if (state.getBlock() instanceof SeatBlock || AllBlockTags.FAKE_SEATS.matches(state))
+		if (AllBlockTags.SEATS.matches(state))
 			moveSeat(world, pos);
 
 		// Pulleys drag their rope and their attached structure
