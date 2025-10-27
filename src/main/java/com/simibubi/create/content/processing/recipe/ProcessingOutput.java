@@ -1,110 +1,145 @@
 package com.simibubi.create.content.processing.recipe;
 
-import java.util.Random;
+import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.simibubi.create.Create;
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.data.Pair;
-import net.minecraft.nbt.TagParser;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.item.Items;
 
 public class ProcessingOutput {
 
 	public static final ProcessingOutput EMPTY = new ProcessingOutput(ItemStack.EMPTY, 1);
 
-	private static final Random r = new Random();
-	private final ItemStack stack;
+	public static final StreamCodec<RegistryFriendlyByteBuf, ProcessingOutput> STREAM_CODEC = StreamCodec.composite(
+		ByteBufCodecs.registry(Registries.ITEM), i -> i.item,
+		ByteBufCodecs.INT, i -> i.count,
+		DataComponentPatch.STREAM_CODEC, i -> i.patch,
+		ByteBufCodecs.FLOAT, i -> i.chance,
+		ProcessingOutput::new
+	);
+
+	private final Item item;
+	private final int count;
+	private final DataComponentPatch patch;
 	private final float chance;
 
-	private Pair<ResourceLocation, Integer> compatDatagenOutput;
+	private ResourceLocation datagenOutput;
 
 	public ProcessingOutput(ItemStack stack, float chance) {
-		this.stack = stack;
+		this(stack.getItem(), stack.getCount(), stack.getComponentsPatch(), chance);
+	}
+
+	public ProcessingOutput(Item item, int count, float chance) {
+		this(item, count, DataComponentPatch.EMPTY, chance);
+	}
+
+	public ProcessingOutput(Item item, int count, DataComponentPatch patch, float chance) {
+		this.item = item;
+		this.count = count;
+		this.patch = patch;
 		this.chance = chance;
 	}
 
-	public ProcessingOutput(Pair<ResourceLocation, Integer> item, float chance) {
-		this.stack = ItemStack.EMPTY;
-		this.compatDatagenOutput = item;
+	public ProcessingOutput(ResourceLocation item, int count, float chance) {
+		this(item, count, DataComponentPatch.EMPTY, chance);
+	}
+
+	public ProcessingOutput(ResourceLocation item, int count, DataComponentPatch patch, float chance) {
+		this.item = Items.AIR;
+		this.datagenOutput = item;
+		this.count = count;
+		this.patch = patch;
 		this.chance = chance;
+	}
+
+	private ItemStack getStack(int count) {
+		// Should only be used outside datagen,
+		// no need to check datagenOutput here
+		var stack = new ItemStack(item, count);
+		if (!patch.isEmpty())
+			stack.applyComponents(patch);
+		return stack;
 	}
 
 	public ItemStack getStack() {
-		return stack;
+		return getStack(count);
 	}
 
 	public float getChance() {
 		return chance;
 	}
 
-	public ItemStack rollOutput() {
-		int outputAmount = stack.getCount();
-		for (int roll = 0; roll < stack.getCount(); roll++)
-			if (r.nextFloat() > chance)
-				outputAmount--;
-		if (outputAmount == 0)
-			return ItemStack.EMPTY;
-		ItemStack out = stack.copy();
-		out.setCount(outputAmount);
-		return out;
-	}
-
-	public JsonElement serialize() {
-		JsonObject json = new JsonObject();
-		ResourceLocation resourceLocation = compatDatagenOutput == null ? CatnipServices.REGISTRIES.getKeyOrThrow(stack
-			.getItem()) : compatDatagenOutput.getFirst();
-		json.addProperty("item", resourceLocation.toString());
-		int count = compatDatagenOutput == null ? stack.getCount() : compatDatagenOutput.getSecond();
-		if (count != 1)
-			json.addProperty("count", count);
-		if (stack.hasTag())
-			json.add("nbt", JsonParser.parseString(stack.getTag()
-				.toString()));
-		if (chance != 1)
-			json.addProperty("chance", chance);
-		return json;
-	}
-
-	public static ProcessingOutput deserialize(JsonElement je) {
-		if (!je.isJsonObject())
-			throw new JsonSyntaxException("ProcessingOutput must be a json object");
-
-		JsonObject json = je.getAsJsonObject();
-		String itemId = GsonHelper.getAsString(json, "item");
-		int count = GsonHelper.getAsInt(json, "count", 1);
-		float chance = GsonHelper.isValidNode(json, "chance") ? GsonHelper.getAsFloat(json, "chance") : 1;
-		ItemStack itemstack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)), count);
-
-		if (GsonHelper.isValidNode(json, "nbt")) {
-			try {
-				JsonElement element = json.get("nbt");
-				itemstack.setTag(TagParser.parseTag(
-					element.isJsonObject() ? Create.GSON.toJson(element) : GsonHelper.convertToString(element, "nbt")));
-			} catch (CommandSyntaxException e) {
-				e.printStackTrace();
-			}
+	public ItemStack rollOutput(RandomSource randomSource) {
+		if (chance < 1F) {
+			int count = this.count;
+			for (int roll = 0; roll < this.count; roll++)
+				if (randomSource.nextFloat() > chance)
+					count--;
+			if (count == 0)
+				return ItemStack.EMPTY;
+			return getStack(count);
+		} else {
+			return getStack();
 		}
-
-		return new ProcessingOutput(itemstack, chance);
 	}
 
-	public void write(FriendlyByteBuf buf) {
-		buf.writeItem(getStack());
-		buf.writeFloat(getChance());
-	}
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
+	@Deprecated(since = "6.0.3", forRemoval = true)
+	private static final Codec<Either<ItemStack, Pair<ResourceLocation, Integer>>> ITEM_CODEC_OLD = Codec.either(
+		ItemStack.SINGLE_ITEM_CODEC,
+		ResourceLocation.CODEC.comapFlatMap(
+			loc -> DataResult.error(() -> "Compat cannot be deserialized"),
+			Pair::getFirst
+		)
+	);
 
-	public static ProcessingOutput read(FriendlyByteBuf buf) {
-		return new ProcessingOutput(buf.readItem(), buf.readFloat());
-	}
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
+	@Deprecated(since = "6.0.3", forRemoval = true)
+	public static final Codec<ProcessingOutput> CODEC_OLD = RecordCodecBuilder.create(i -> i.group(
+		ITEM_CODEC_OLD.fieldOf("item").forGetter(s -> s.datagenOutput != null ? Either.right(Pair.of(s.datagenOutput, s.count)) : Either.left(s.item.getDefaultInstance())),
+		ExtraCodecs.intRange(1, 99).optionalFieldOf("count", 1).forGetter(s -> s.count),
+		ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("chance", 1F).forGetter(s -> s.chance)
+	).apply(i, (item, count, chance) -> item.map(
+		stack -> new ProcessingOutput(stack.getItem(), count, stack.getComponentsPatch(), chance),
+		compat -> new ProcessingOutput(compat.getFirst(), compat.getSecond(), chance)
+	)));
+
+	private static final Codec<Either<Item, ResourceLocation>> ITEM_CODEC = Codec.either(
+		BuiltInRegistries.ITEM.byNameCodec(),
+		ResourceLocation.CODEC
+	);
+
+	public static final Codec<ProcessingOutput> CODEC_NEW = RecordCodecBuilder.create(i -> i.group(
+		ITEM_CODEC.fieldOf("id").forGetter(s -> {
+			if (s.datagenOutput != null)
+				return Either.right(s.datagenOutput);
+			return Either.left(s.item);
+		}),
+		ExtraCodecs.intRange(1, 99).optionalFieldOf("count", 1).forGetter(s -> s.count),
+		DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(s -> s.patch),
+		ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("chance", 1F).forGetter(s -> s.chance)
+	).apply(i, (item, count, components, chance) -> item.map(
+		stack -> new ProcessingOutput(stack, count, components, chance),
+		compat -> new ProcessingOutput(compat, count, chance)
+	)));
+
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
+	@Deprecated(since = "6.0.3", forRemoval = true)
+	public static final Codec<ProcessingOutput> CODEC = Codec.withAlternative(CODEC_NEW, CODEC_OLD);
 
 }

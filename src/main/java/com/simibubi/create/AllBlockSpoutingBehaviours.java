@@ -9,6 +9,7 @@ import com.simibubi.create.api.behaviour.spouting.StateChangingBehavior;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.tconstruct.SpoutCasting;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -18,9 +19,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class AllBlockSpoutingBehaviours {
+	
 	static void registerDefaults() {
 		Predicate<Fluid> isWater = fluid -> fluid.isSame(Fluids.WATER);
 		BlockSpoutingBehaviour toMud = StateChangingBehavior.setTo(250, isWater, Blocks.MUD);
@@ -38,8 +39,8 @@ public class AllBlockSpoutingBehaviours {
 
 		for (String name : List.of("table", "basin")) {
 			ResourceLocation id = Mods.TCONSTRUCT.rl(name);
-			if (ForgeRegistries.BLOCK_ENTITY_TYPES.containsKey(id)) {
-				BlockEntityType<?> table = ForgeRegistries.BLOCK_ENTITY_TYPES.getValue(id);
+			if (BuiltInRegistries.BLOCK_ENTITY_TYPE.containsKey(id)) {
+				BlockEntityType<?> table = BuiltInRegistries.BLOCK_ENTITY_TYPE.get(id);
 				BlockSpoutingBehaviour.BY_BLOCK_ENTITY.register(table, SpoutCasting.INSTANCE);
 			} else {
 				Create.LOGGER.warn("Block entity {} wasn't found. Outdated compat?", id);

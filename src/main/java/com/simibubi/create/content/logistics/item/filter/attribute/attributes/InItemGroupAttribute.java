@@ -2,26 +2,41 @@ package com.simibubi.create.content.logistics.item.filter.attribute.attributes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.item.filter.attribute.AllItemAttributeTypes;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 
-import net.minecraft.nbt.CompoundTag;
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.CreativeModeTabRegistry;
 
 public class InItemGroupAttribute implements ItemAttribute {
+	public static final MapCodec<InItemGroupAttribute> CODEC = BuiltInRegistries.CREATIVE_MODE_TAB.byNameCodec()
+			.xmap(InItemGroupAttribute::new, i -> i.group)
+			.fieldOf("value");
+
+	public static final StreamCodec<ByteBuf, InItemGroupAttribute> STREAM_CODEC = CatnipStreamCodecBuilders.nullable(ResourceLocation.STREAM_CODEC)
+		.map(i -> new InItemGroupAttribute(BuiltInRegistries.CREATIVE_MODE_TAB.get(i)),
+			i -> i.group == null ? null : BuiltInRegistries.CREATIVE_MODE_TAB.getKey(i.group));
+
+	@Nullable
 	private CreativeModeTab group;
 
-	public InItemGroupAttribute(CreativeModeTab group) {
+	public InItemGroupAttribute(@Nullable CreativeModeTab group) {
 		this.group = group;
 	}
 
@@ -70,21 +85,16 @@ public class InItemGroupAttribute implements ItemAttribute {
 	}
 
 	@Override
-	public void save(CompoundTag nbt) {
-		if (group != null) {
-			ResourceLocation groupId = CreativeModeTabRegistry.getName(group);
+	public final boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof InItemGroupAttribute that)) return false;
 
-			if (groupId != null) {
-				nbt.putString("group", groupId.toString());
-			}
-		}
+		return Objects.equals(group, that.group);
 	}
 
 	@Override
-	public void load(CompoundTag nbt) {
-		if (nbt.contains("group")) {
-			group = CreativeModeTabRegistry.getTab(new ResourceLocation(nbt.getString("group")));
-		}
+	public int hashCode() {
+		return Objects.hashCode(group);
 	}
 
 	public static class Type implements ItemAttributeType {
@@ -104,6 +114,16 @@ public class InItemGroupAttribute implements ItemAttribute {
 			}
 
 			return list;
+		}
+
+		@Override
+		public MapCodec<? extends ItemAttribute> codec() {
+			return CODEC;
+		}
+
+		@Override
+		public StreamCodec<? super RegistryFriendlyByteBuf, ? extends ItemAttribute> streamCodec() {
+			return STREAM_CODEC;
 		}
 	}
 }

@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "endergetic"
+    }
+  ],
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "endergetic:end_corrock"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "endergetic:petrified_end_corrock"
+    }
+  ]
+}

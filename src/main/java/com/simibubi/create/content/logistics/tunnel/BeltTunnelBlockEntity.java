@@ -7,16 +7,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.tuple.Pair;
-
+import com.mojang.datafixers.util.Pair;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.logistics.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
@@ -24,27 +24,27 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class BeltTunnelBlockEntity extends SmartBlockEntity {
 
 	public Map<Direction, LerpedFloat> flaps;
 	public Set<Direction> sides;
 
-	protected LazyOptional<IItemHandler> cap = LazyOptional.empty();
+	protected IItemHandler cap = null;
 	protected List<Pair<Direction, Boolean>> flapsToSend;
 
 	public BeltTunnelBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -54,10 +54,31 @@ public class BeltTunnelBlockEntity extends SmartBlockEntity {
 		flapsToSend = new LinkedList<>();
 	}
 
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+				Capabilities.ItemHandler.BLOCK,
+				AllBlockEntityTypes.ANDESITE_TUNNEL.get(),
+				(be, context) ->  {
+					if (be.cap == null) {
+						if (AllBlocks.BELT.has(be.level.getBlockState(be.worldPosition.below()))) {
+							BlockEntity beBelow = be.level.getBlockEntity(be.worldPosition.below());
+							if (beBelow != null) {
+								IItemHandler capBelow = be.level.getCapability(Capabilities.ItemHandler.BLOCK, be.worldPosition.below(), Direction.UP);
+								if (capBelow != null) {
+									be.cap = capBelow;
+								}
+							}
+						}
+					}
+					return be.cap;
+				}
+		);
+	}
+
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		cap.invalidate();
+		invalidateCapabilities();
 	}
 
 	protected void writeFlapsAndSides(CompoundTag compound) {
@@ -73,19 +94,19 @@ public class BeltTunnelBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	public void writeSafe(CompoundTag tag) {
+	public void writeSafe(CompoundTag tag, HolderLookup.Provider registries) {
 		writeFlapsAndSides(tag);
-		super.writeSafe(tag);
+		super.writeSafe(tag, registries);
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		writeFlapsAndSides(compound);
-		super.write(compound, clientPacket);
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		Set<Direction> newFlaps = new HashSet<>(6);
 		ListTag flapsNBT = compound.getList("Flaps", Tag.TAG_INT);
 		for (Tag inbt : flapsNBT)
@@ -107,9 +128,9 @@ public class BeltTunnelBlockEntity extends SmartBlockEntity {
 		// Backwards compat
 		if (!compound.contains("Sides") && compound.contains("Flaps"))
 			sides.addAll(flaps.keySet());
-		super.read(compound, clientPacket);
+		super.read(compound, registries, clientPacket);
 		if (clientPacket)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> VisualizationHelper.queueUpdate(this));
+			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> VisualizationHelper.queueUpdate(this));
 	}
 
 	private LerpedFloat createChasingFlap() {
@@ -138,6 +159,8 @@ public class BeltTunnelBlockEntity extends SmartBlockEntity {
 			sides.add(direction);
 
 			// Flap might be occluded
+			if (level == null)
+				continue;
 			BlockState nextState = level.getBlockState(worldPosition.relative(direction));
 			if (nextState.getBlock() instanceof BeltTunnelBlock)
 				continue;
@@ -180,32 +203,12 @@ public class BeltTunnelBlockEntity extends SmartBlockEntity {
 	}
 
 	private void sendFlaps() {
-		AllPackets.getChannel().send(packetTarget(), new TunnelFlapPacket(this, flapsToSend));
+		if (level instanceof ServerLevel serverLevel)
+			CatnipServices.NETWORK.sendToClientsTrackingChunk(serverLevel, new ChunkPos(worldPosition), new TunnelFlapPacket(this, flapsToSend));
 
 		flapsToSend.clear();
 	}
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {}
-
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
-		if (capability != ForgeCapabilities.ITEM_HANDLER)
-			return super.getCapability(capability, side);
-
-		if (!this.cap.isPresent()) {
-			if (AllBlocks.BELT.has(level.getBlockState(worldPosition.below()))) {
-				BlockEntity teBelow = level.getBlockEntity(worldPosition.below());
-				if (teBelow != null) {
-					T capBelow = teBelow.getCapability(capability, Direction.UP)
-						.orElse(null);
-					if (capBelow != null) {
-						cap = LazyOptional.of(() -> capBelow)
-							.cast();
-					}
-				}
-			}
-		}
-		return this.cap.cast();
-	}
 }

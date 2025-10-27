@@ -12,7 +12,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class TurntableHandler {
 
-	public static void gameRenderTick() {
+	public static void gameRenderFrame() {
 		Minecraft mc = Minecraft.getInstance();
 		BlockPos pos = mc.player.blockPosition();
 

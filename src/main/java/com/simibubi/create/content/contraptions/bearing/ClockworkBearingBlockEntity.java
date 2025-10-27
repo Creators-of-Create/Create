@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.bearing;
 
 import java.util.List;
 
+import net.minecraft.core.HolderLookup;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -311,24 +313,24 @@ public class ClockworkBearingBlockEntity extends KineticBlockEntity
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putFloat("HourAngle", hourAngle);
 		compound.putFloat("MinuteAngle", minuteAngle);
-		AssemblyException.write(compound, lastException);
-		super.write(compound, clientPacket);
+		AssemblyException.write(compound, registries, lastException);
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		float hourAngleBefore = hourAngle;
 		float minuteAngleBefore = minuteAngle;
 
 		running = compound.getBoolean("Running");
 		hourAngle = compound.getFloat("HourAngle");
 		minuteAngle = compound.getFloat("MinuteAngle");
-		lastException = AssemblyException.read(compound);
-		super.read(compound, clientPacket);
+		lastException = AssemblyException.read(compound, registries);
+		super.read(compound, registries, clientPacket);
 
 		if (!clientPacket)
 			return;

@@ -23,6 +23,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -120,34 +121,31 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-		BlockHitResult hit) {
-		ItemStack heldItem = player.getItemInHand(handIn);
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
 		if (!player.isShiftKeyDown() && player.mayBuild()) {
-			if (placementHelper.matchesItem(heldItem) && placementHelper.getOffset(player, worldIn, state, pos, hit)
-				.placeInWorld(worldIn, (BlockItem) heldItem.getItem(), player, handIn, hit)
+			if (placementHelper.matchesItem(stack) && placementHelper.getOffset(player, level, state, pos, hitResult)
+				.placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult)
 				.consumesAction())
-				return InteractionResult.SUCCESS;
+				return ItemInteractionResult.SUCCESS;
 		}
 
-		if (player.isSpectator() || !player.getItemInHand(handIn)
-			.isEmpty())
-			return InteractionResult.PASS;
+		if (player.isSpectator() || !stack.isEmpty())
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (state.getOptionalValue(FACING)
 			.orElse(Direction.WEST) != Direction.UP)
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		return onBlockEntityUse(worldIn, pos, be -> {
+		return onBlockEntityUseItemOn(level, pos, be -> {
 			for (int i = 0; i < be.inventory.getSlots(); i++) {
 				ItemStack heldItemStack = be.inventory.getStackInSlot(i);
-				if (!worldIn.isClientSide && !heldItemStack.isEmpty())
+				if (!level.isClientSide && !heldItemStack.isEmpty())
 					player.getInventory()
 						.placeItemBackInInventory(heldItemStack);
 			}
 			be.inventory.clear();
 			be.notifyUpdate();
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		});
 	}
 
@@ -215,7 +213,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

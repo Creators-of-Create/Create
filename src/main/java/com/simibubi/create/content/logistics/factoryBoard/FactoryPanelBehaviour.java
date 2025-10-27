@@ -11,16 +11,15 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.mojang.serialization.Codec;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelSlot;
@@ -49,18 +48,24 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.codecs.CatnipCodecUtils;
+import net.createmod.catnip.codecs.CatnipCodecs;
 import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -70,14 +75,16 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackLinkedSet;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkHooks;
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.Tags.Items;
 
 public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuProvider {
 
@@ -195,7 +202,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		if (isAddedToOtherGauge && existingState != blockEntity.getBlockState())
 			return;
 		if (!isAddedToOtherGauge)
-			level.setBlock(newPos.pos(), blockEntity.getBlockState(), 3);
+			level.setBlock(newPos.pos(), blockEntity.getBlockState(), Block.UPDATE_ALL);
 
 		for (BlockPos blockPos : targetedByLinks.keySet())
 			if (!blockPos.closerThan(newPos.pos(), 24))
@@ -379,6 +386,15 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 			notifyRedstoneOutputs();
 	}
 
+	public static class ItemStackConnections extends ArrayList<FactoryPanelConnection> {
+		public ItemStack item;
+		public int totalAmount;
+
+		public ItemStackConnections(ItemStack item) {
+			this.item = item;
+		}
+	}
+
 	private void tickRequests() {
 		FactoryPanelBlockEntity panelBE = panelBE();
 		if (targetedBy.isEmpty() && !panelBE.restocker)
@@ -405,8 +421,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 
 		boolean failed = false;
 
-		Multimap<UUID, BigItemStack> toRequest = HashMultimap.create();
-		List<BigItemStack> toRequestAsList = new ArrayList<>();
+		Map<UUID, Map<ItemStack, ItemStackConnections>> consolidated = new HashMap<>();
 
 		for (FactoryPanelConnection connection : targetedBy.values()) {
 			FactoryPanelBehaviour source = at(getWorld(), connection);
@@ -414,18 +429,34 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 				return;
 
 			ItemStack item = source.getFilter();
-			int amount = connection.amount;
-			InventorySummary summary = LogisticsManager.getSummaryOfNetwork(source.network, true);
-			if (amount == 0 || item.isEmpty() || summary.getCountOf(item) < amount) {
-				sendEffect(connection.from, false);
-				failed = true;
-				continue;
-			}
 
-			BigItemStack stack = new BigItemStack(item, amount);
-			toRequest.put(source.network, stack);
-			toRequestAsList.add(stack);
-			sendEffect(connection.from, true);
+
+			Map<ItemStack, ItemStackConnections> networkItemCounts = consolidated.computeIfAbsent(source.network, $ -> new Object2ObjectOpenCustomHashMap<>(ItemStackLinkedSet.TYPE_AND_TAG));
+			networkItemCounts.computeIfAbsent(item, $ -> new ItemStackConnections(item));
+			ItemStackConnections existingConnections = networkItemCounts.get(item);
+			existingConnections.add(connection);
+			existingConnections.totalAmount += connection.amount;
+		}
+
+		Multimap<UUID, BigItemStack> toRequest = HashMultimap.create();
+
+		for (Entry<UUID, Map<ItemStack, ItemStackConnections>> entry : consolidated.entrySet()) {
+			UUID network = entry.getKey();
+			InventorySummary summary = LogisticsManager.getSummaryOfNetwork(network, true);
+
+			for (ItemStackConnections connections : entry.getValue().values()) {
+				if (connections.totalAmount == 0 || connections.item.isEmpty() || summary.getCountOf(connections.item) < connections.totalAmount) {
+					for (FactoryPanelConnection connection : connections)
+						sendEffect(connection.from, false);
+					failed = true;
+					continue;
+				}
+
+				BigItemStack stack = new BigItemStack(connections.item, connections.totalAmount);
+				toRequest.put(network, stack);
+				for (FactoryPanelConnection connection : connections)
+					sendEffect(connection.from, true);
+			}
 		}
 
 		if (failed)
@@ -504,8 +535,8 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	}
 
 	private void sendEffect(FactoryPanelPosition fromPos, boolean success) {
-		AllPackets.sendToNear(getWorld(), getPos(), 64,
-			new FactoryPanelEffectPacket(fromPos, getPanelPosition(), success));
+		if (getWorld() instanceof ServerLevel serverLevel)
+			CatnipServices.NETWORK.sendToClientsAround(serverLevel, getPos(), 64, new FactoryPanelEffectPacket(fromPos, getPanelPosition(), success));
 	}
 
 	public void addConnection(FactoryPanelPosition fromPos) {
@@ -552,7 +583,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		boolean isClientSide = player.level().isClientSide;
 
 		// Wrench cycles through arrow bending
-		if (targeting.size() + targetedByLinks.size() > 0 && AllItemTags.WRENCH.matches(player.getItemInHand(hand))) {
+		if (targeting.size() + targetedByLinks.size() > 0 && player.getItemInHand(hand).is(Items.TOOLS_WRENCH)) {
 			int sharedMode = -1;
 			boolean notifySelf = false;
 
@@ -601,7 +632,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 			// Open screen for setting an item through JEI
 			if (heldItem.isEmpty()) {
 				if (!isClientSide && player instanceof ServerPlayer sp)
-					NetworkHooks.openScreen(sp, this, buf -> getPanelPosition().send(buf));
+					sp.openMenu(this, buf -> FactoryPanelPosition.STREAM_CODEC.encode(buf, getPanelPosition()));
 				return;
 			}
 
@@ -619,7 +650,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 
 		// Open configuration screen
 		if (isClientSide)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> displayScreen(player));
+			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> displayScreen(player));
 	}
 
 	public void enable() {
@@ -713,7 +744,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		PackagerBlockEntity packager = panelBE.getRestockedPackager();
 		if (packager == null)
 			return InventorySummary.EMPTY;
-		return packager.getAvailableItems(true);
+		return packager.getAvailableItems();
 	}
 
 	public int getPromised() {
@@ -767,27 +798,32 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	}
 
 	@Override
-	public void writeSafe(CompoundTag nbt) {
+	public void writeSafe(CompoundTag nbt, HolderLookup.Provider registries) {
 		if (!active)
 			return;
 
 		CompoundTag panelTag = new CompoundTag();
-		panelTag.put("Filter", getFilter().serializeNBT());
+		panelTag.put("Filter", getFilter().saveOptional(registries));
+		panelTag.putBoolean("UpTo", upTo);
 		panelTag.putInt("FilterAmount", count);
 		panelTag.putUUID("Freq", network);
 		panelTag.putString("RecipeAddress", recipeAddress);
 		panelTag.putInt("PromiseClearingInterval", -1);
 		panelTag.putInt("RecipeOutput", 1);
+
+		if (panelBE().restocker)
+			panelTag.put("Promises", restockerPromises.write(registries));
+
 		nbt.put(CreateLang.asId(slot.name()), panelTag);
 	}
 
 	@Override
-	public void write(CompoundTag nbt, boolean clientPacket) {
+	public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		if (!active)
 			return;
 
 		CompoundTag panelTag = new CompoundTag();
-		super.write(panelTag, clientPacket);
+		super.write(panelTag, registries, clientPacket);
 
 		panelTag.putInt("Timer", timer);
 		panelTag.putInt("LastLevel", lastReportedLevelInStorage);
@@ -797,24 +833,23 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		panelTag.putBoolean("PromisedSatisfied", promisedSatisfied);
 		panelTag.putBoolean("Waiting", waitingForNetwork);
 		panelTag.putBoolean("RedstonePowered", redstonePowered);
-		panelTag.put("Targeting", NBTHelper.writeCompoundList(targeting, FactoryPanelPosition::write));
-		panelTag.put("TargetedBy", NBTHelper.writeCompoundList(targetedBy.values(), FactoryPanelConnection::write));
-		panelTag.put("TargetedByLinks",
-			NBTHelper.writeCompoundList(targetedByLinks.values(), FactoryPanelConnection::write));
+		panelTag.put("Targeting", CatnipCodecUtils.encode(CatnipCodecs.set(FactoryPanelPosition.CODEC), registries, targeting).orElseThrow());
+		panelTag.put("TargetedBy", CatnipCodecUtils.encode(Codec.list(FactoryPanelConnection.CODEC), registries, new ArrayList<>(targetedBy.values())).orElseThrow());
+		panelTag.put("TargetedByLinks", CatnipCodecUtils.encode(Codec.list(FactoryPanelConnection.CODEC), registries, new ArrayList<>(targetedByLinks.values())).orElseThrow());
 		panelTag.putString("RecipeAddress", recipeAddress);
 		panelTag.putInt("RecipeOutput", recipeOutput);
 		panelTag.putInt("PromiseClearingInterval", promiseClearingInterval);
 		panelTag.putUUID("Freq", network);
-		panelTag.put("Craft", NBTHelper.writeItemList(activeCraftingArrangement));
+		panelTag.put("Craft", NBTHelper.writeItemList(activeCraftingArrangement, registries));
 
 		if (panelBE().restocker && !clientPacket)
-			panelTag.put("Promises", restockerPromises.write());
+			panelTag.put("Promises", restockerPromises.write(registries));
 
 		nbt.put(CreateLang.asId(slot.name()), panelTag);
 	}
 
 	@Override
-	public void read(CompoundTag nbt, boolean clientPacket) {
+	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		CompoundTag panelTag = nbt.getCompound(CreateLang.asId(slot.name()));
 		if (panelTag.isEmpty()) {
 			active = false;
@@ -822,7 +857,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		}
 
 		active = true;
-		filter = FilterItemStack.of(panelTag.getCompound("Filter"));
+		filter = FilterItemStack.of(registries, panelTag.getCompound("Filter"));
 		count = panelTag.getInt("FilterAmount");
 		upTo = panelTag.getBoolean("UpTo");
 		timer = panelTag.getInt("Timer");
@@ -838,24 +873,22 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 			network = panelTag.getUUID("Freq");
 
 		targeting.clear();
-		NBTHelper.iterateCompoundList(panelTag.getList("Targeting", Tag.TAG_COMPOUND),
-			c -> targeting.add(FactoryPanelPosition.read(c)));
+		targeting.addAll(CatnipCodecUtils.decode(CatnipCodecs.set(FactoryPanelPosition.CODEC), registries, panelTag.get("Targeting")).orElse(Set.of()));
 
 		targetedBy.clear();
-		NBTHelper.iterateCompoundList(panelTag.getList("TargetedBy", Tag.TAG_COMPOUND),
-			c -> targetedBy.put(FactoryPanelPosition.read(c), FactoryPanelConnection.read(c)));
+		CatnipCodecUtils.decode(Codec.list(FactoryPanelConnection.CODEC), registries, panelTag.get("TargetedBy")).orElse(List.of())
+			.forEach(c -> targetedBy.put(c.from, c));
 
 		targetedByLinks.clear();
-		NBTHelper.iterateCompoundList(panelTag.getList("TargetedByLinks", Tag.TAG_COMPOUND),
-			c -> targetedByLinks.put(FactoryPanelPosition.read(c)
-				.pos(), FactoryPanelConnection.read(c)));
+		CatnipCodecUtils.decode(Codec.list(FactoryPanelConnection.CODEC), registries, panelTag.get("TargetedByLinks")).orElse(List.of())
+			.forEach(c -> targetedByLinks.put(c.from.pos(), c));
 
-		activeCraftingArrangement = NBTHelper.readItemList(panelTag.getList("Craft", Tag.TAG_COMPOUND));
+		activeCraftingArrangement = NBTHelper.readItemList(panelTag.getList("Craft", Tag.TAG_COMPOUND), registries);
 		recipeAddress = panelTag.getString("RecipeAddress");
 		recipeOutput = panelTag.getInt("RecipeOutput");
 
 		if (nbt.getBoolean("Restocker") && !clientPacket) {
-			restockerPromises = RequestPromiseQueue.read(panelTag.getCompound("Promises"), () -> {
+			restockerPromises = RequestPromiseQueue.read(panelTag.getCompound("Promises"), registries, () -> {
 			});
 			promisePrimedForMarkDirty = false;
 		}
@@ -1043,17 +1076,17 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	}
 
 	@Override
-	public boolean readFromClipboard(CompoundTag tag, Player player, Direction side, boolean simulate) {
+	public boolean readFromClipboard(@NotNull HolderLookup.Provider registries, CompoundTag tag, Player player, Direction side, boolean simulate) {
 		return false;
 	}
 
 	@Override
-	public boolean writeToClipboard(CompoundTag tag, Direction side) {
+	public boolean writeToClipboard(@NotNull HolderLookup.Provider registries, CompoundTag tag, Direction side) {
 		return false;
 	}
 
 	private void tickOutline() {
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> LogisticallyLinkedClientHandler.tickPanel(this));
+		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> LogisticallyLinkedClientHandler.tickPanel(this));
 	}
 
 	@Override

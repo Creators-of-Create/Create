@@ -1,31 +1,28 @@
 package com.simibubi.create.foundation.gui.menu;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
-import net.minecraft.network.FriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent.Context;
 
-public class ClearMenuPacket extends SimplePacketBase {
+public enum ClearMenuPacket implements ServerboundPacketPayload {
+	INSTANCE;
 
-	public ClearMenuPacket() {}
-
-	public ClearMenuPacket(FriendlyByteBuf buffer) {}
+	public static final StreamCodec<ByteBuf, ClearMenuPacket> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer player = context.getSender();
-			if (player == null)
-				return;
-			if (!(player.containerMenu instanceof IClearableMenu))
-				return;
-			((IClearableMenu) player.containerMenu).clearContents();
-		});
-		return true;
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CLEAR_CONTAINER;
 	}
 
+	@Override
+	public void handle(ServerPlayer player) {
+		if (player == null)
+			return;
+		if (!(player.containerMenu instanceof IClearableMenu))
+			return;
+		((IClearableMenu) player.containerMenu).clearContents();
+	}
 }

@@ -1,46 +1,34 @@
 package com.simibubi.create.content.contraptions;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
+
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent.Context;
+import io.netty.buffer.ByteBuf;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-public class ContraptionBlockChangedPacket extends SimplePacketBase {
+public record ContraptionBlockChangedPacket(int entityId, BlockPos localPos, BlockState newState) implements ClientboundPacketPayload {
+	public static final StreamCodec<ByteBuf, ContraptionBlockChangedPacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.INT, ContraptionBlockChangedPacket::entityId,
+			BlockPos.STREAM_CODEC, ContraptionBlockChangedPacket::localPos,
+			CatnipStreamCodecs.BLOCK_STATE, ContraptionBlockChangedPacket::newState,
+			ContraptionBlockChangedPacket::new
+	);
 
-	int entityID;
-	BlockPos localPos;
-	BlockState newState;
-
-	public ContraptionBlockChangedPacket(int id, BlockPos pos, BlockState state) {
-		entityID = id;
-		localPos = pos;
-		newState = state;
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		AbstractContraptionEntity.handleBlockChangedPacket(this);
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeInt(entityID);
-		buffer.writeBlockPos(localPos);
-		buffer.writeNbt(NbtUtils.writeBlockState(newState));
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONTRAPTION_BLOCK_CHANGED;
 	}
-
-	@SuppressWarnings("deprecation")
-	public ContraptionBlockChangedPacket(FriendlyByteBuf buffer) {
-		entityID = buffer.readInt();
-		localPos = buffer.readBlockPos();
-		newState = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), buffer.readNbt());
-	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-			() -> () -> AbstractContraptionEntity.handleBlockChangedPacket(this)));
-		return true;
-	}
-
 }

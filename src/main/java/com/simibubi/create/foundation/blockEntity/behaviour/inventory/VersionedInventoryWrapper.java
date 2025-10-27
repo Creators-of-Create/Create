@@ -3,13 +3,13 @@ package com.simibubi.create.foundation.blockEntity.behaviour.inventory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class VersionedInventoryWrapper implements IItemHandlerModifiable {
 
 	public static final AtomicInteger idGenerator = new AtomicInteger();
-	
+
 	private IItemHandlerModifiable inventory;
 	private int version;
 	private int id;
@@ -27,7 +27,7 @@ public class VersionedInventoryWrapper implements IItemHandlerModifiable {
 	public int getVersion() {
 		return version;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -81,7 +81,7 @@ public class VersionedInventoryWrapper implements IItemHandlerModifiable {
 		if (stack.isEmpty() == previousItem.isEmpty()) {
 			if (stack.isEmpty())
 				return;
-			if (ItemHandlerHelper.canItemStacksStack(stack, previousItem)
+			if (ItemStack.isSameItemSameComponents(stack, previousItem)
 				&& stack.getCount() == previousItem.getCount())
 				return;
 		}

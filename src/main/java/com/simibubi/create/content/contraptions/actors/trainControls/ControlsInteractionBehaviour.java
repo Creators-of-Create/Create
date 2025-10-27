@@ -11,8 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
+import net.neoforged.api.distmarker.Dist;
 
 public class ControlsInteractionBehaviour extends MovingInteractionBehaviour {
 
@@ -36,8 +35,7 @@ public class ControlsInteractionBehaviour extends MovingInteractionBehaviour {
 
 		contraptionEntity.setControllingPlayer(player.getUUID());
 		if (player.level().isClientSide)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-				() -> () -> ControlsHandler.startControlling(contraptionEntity, localPos));
+			ControlsHandler.startControlling(contraptionEntity, localPos);
 		return true;
 	}
 

@@ -15,12 +15,6 @@ import com.simibubi.create.content.logistics.tableCloth.ShoppingListItem;
 import com.simibubi.create.content.logistics.tableCloth.ShoppingListItem.ShoppingList;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteractSpecific;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.network.NetworkHooks;
-
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.ChatFormatting;
@@ -35,12 +29,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 @EventBusSubscriber
 public class StockTickerInteractionHandler {
 
 	@SubscribeEvent
-	public static void interactWithLogisticsManager(EntityInteractSpecific event) {
+	public static void interactWithLogisticsManager(PlayerInteractEvent.EntityInteractSpecific event) {
 		Entity entity = event.getTarget();
 		Player player = event.getEntity();
 		if (player == null || entity == null)
@@ -84,7 +82,7 @@ public class StockTickerInteractionHandler {
 				stbe.behaviour.mayAdministrate(player) && Create.LOGISTICS.isLockable(stbe.behaviour.freqId);
 			boolean isCurrentlyLocked = Create.LOGISTICS.isLocked(stbe.behaviour.freqId);
 
-			NetworkHooks.openScreen(sp, stbe.new RequestMenuProvider(), buf -> {
+			sp.openMenu(stbe.new RequestMenuProvider(), buf -> {
 				buf.writeBoolean(showLockOption);
 				buf.writeBoolean(isCurrentlyLocked);
 				buf.writeBlockPos(targetPos);

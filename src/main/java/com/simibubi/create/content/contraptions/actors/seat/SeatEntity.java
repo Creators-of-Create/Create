@@ -8,9 +8,8 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -20,17 +19,17 @@ import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.frog.Frog;
-import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-import net.minecraftforge.network.NetworkHooks;
 
-public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
+
+public class SeatEntity extends Entity implements IEntityWithComplexSpawn {
 
 	public SeatEntity(EntityType<?> p_i48580_1_, Level p_i48580_2_) {
 		super(p_i48580_1_, p_i48580_2_);
@@ -59,27 +58,28 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 	protected void positionRider(Entity pEntity, Entity.MoveFunction pCallback) {
 		if (!this.hasPassenger(pEntity))
 			return;
-		double d0 = this.getY() + this.getPassengersRidingOffset() + pEntity.getMyRidingOffset();
-		pCallback.accept(pEntity, this.getX(), d0 + getCustomEntitySeatOffset(pEntity), this.getZ());
+		double heightOffset = this.getPassengerRidingPosition(pEntity).y - pEntity.getVehicleAttachmentPoint(this).y;
+
+		pCallback.accept(pEntity, this.getX(), 1.0 / 16.0 + heightOffset + getCustomEntitySeatOffset(pEntity), this.getZ());
 	}
 
 	public static double getCustomEntitySeatOffset(Entity entity) {
 		if (entity instanceof Slime)
-			return 0.25f;
+			return 0.0f;
 		if (entity instanceof Parrot)
-			return 1 / 16f;
+			return 1 / 12f;
 		if (entity instanceof Skeleton)
 			return 1 / 8f;
-		if (entity instanceof Creeper)
-			return 1 / 8f;
 		if (entity instanceof Cat)
-			return 1 / 8f;
+			return 1 / 12f;
 		if (entity instanceof Wolf)
 			return 1 / 16f;
 		if (entity instanceof Frog)
-			return 1 / 8f + 1 / 64f;
+			return 1.5 / 16f;
+		if (entity instanceof Spider)
+			return 1 / 8.0;
 		if (entity instanceof PackageEntity)
-			return 1 / 4f;
+			return 3 / 32f;
 		return 0;
 	}
 
@@ -117,18 +117,13 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 	}
 
 	@Override
-	protected void defineSynchedData() {}
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {}
 
 	@Override
 	protected void readAdditionalSaveData(CompoundTag p_70037_1_) {}
 
 	@Override
 	protected void addAdditionalSaveData(CompoundTag p_213281_1_) {}
-
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
-	}
 
 	public static class Render extends EntityRenderer<SeatEntity> {
 
@@ -149,8 +144,8 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 	}
 
 	@Override
-	public void writeSpawnData(FriendlyByteBuf buffer) {}
+	public void writeSpawnData(RegistryFriendlyByteBuf buffer) {}
 
 	@Override
-	public void readSpawnData(FriendlyByteBuf additionalData) {}
+	public void readSpawnData(RegistryFriendlyByteBuf additionalData) {}
 }

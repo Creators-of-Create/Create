@@ -1,19 +1,19 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
-
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 /**
  * Create's own Data Generation for Compacting recipes
@@ -21,8 +21,8 @@ import net.minecraftforge.common.Tags;
  */
 @SuppressWarnings("unused")
 public final class CreateCompactingRecipeGen extends CompactingRecipeGen {
-	public CreateCompactingRecipeGen(PackOutput output) {
-		super(output, Create.ID);
+	public CreateCompactingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+		super(output, registries, Create.ID);
 	}
 
 	GeneratedRecipe
@@ -53,7 +53,7 @@ public final class CreateCompactingRecipeGen extends CompactingRecipeGen {
 		.require(AllItems.CINDER_FLOUR.get())
 		.output(AllItems.BLAZE_CAKE_BASE.get(), 1)),
 
-	HONEY = create("honey", b -> b.require(AllFluidTags.HONEY.tag, 1000)
+	HONEY = create("honey", b -> b.require(Tags.Fluids.HONEY, 1000)
 		.output(Items.HONEY_BLOCK, 1)),
 
 	ICE = create("ice", b -> b

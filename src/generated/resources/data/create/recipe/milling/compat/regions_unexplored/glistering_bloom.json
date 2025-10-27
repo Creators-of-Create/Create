@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "regions_unexplored:glistering_bloom"
+        }
+      ]
+    }
+  ],
+  "processing_time": 50,
+  "results": [
+    {
+      "count": 2,
+      "id": "minecraft:pink_dye"
+    },
+    {
+      "chance": 0.25,
+      "id": "minecraft:magenta_dye"
+    },
+    {
+      "chance": 0.25,
+      "id": "minecraft:light_blue_dye"
+    }
+  ]
+}

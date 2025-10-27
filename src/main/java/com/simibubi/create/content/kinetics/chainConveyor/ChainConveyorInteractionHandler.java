@@ -7,7 +7,6 @@ import com.google.common.cache.Cache;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.packagePort.PackagePortTarget;
@@ -17,21 +16,23 @@ import com.simibubi.create.foundation.utility.TickBasedCache;
 
 import net.createmod.catnip.data.WorldAttached;
 import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderHighlightEvent;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderHighlightEvent;
+import net.neoforged.neoforge.common.Tags;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ChainConveyorInteractionHandler {
@@ -52,13 +53,11 @@ public class ChainConveyorInteractionHandler {
 		}
 
 		Minecraft mc = Minecraft.getInstance();
-		ItemStack mainHandItem = mc.player.getMainHandItem();
-		boolean isWrench = AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem);
+		boolean isWrench = mc.player.isHolding(i -> i.is(Tags.Items.TOOLS_WRENCH));
 		boolean dismantling = isWrench && mc.player.isShiftKeyDown();
-		double range = mc.player.getAttribute(ForgeMod.BLOCK_REACH.get())
-			.getValue() + 1;
+		double range = mc.player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE) + 1;
 
-		Vec3 from = RaycastHelper.getTraceOrigin(mc.player);
+		Vec3 from = mc.player.getEyePosition();
 		Vec3 to = RaycastHelper.getTraceTarget(mc.player, range, from);
 		HitResult hitResult = mc.hitResult;
 
@@ -115,7 +114,7 @@ public class ChainConveyorInteractionHandler {
 	private static boolean isActive() {
 		Minecraft mc = Minecraft.getInstance();
 		ItemStack mainHandItem = mc.player.getMainHandItem();
-		return AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem) || AllBlocks.PACKAGE_FROGPORT.isIn(mainHandItem)
+		return mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches) || AllBlocks.PACKAGE_FROGPORT.isIn(mainHandItem)
 			|| PackageItem.isPackage(mainHandItem);
 	}
 
@@ -126,29 +125,30 @@ public class ChainConveyorInteractionHandler {
 		Minecraft mc = Minecraft.getInstance();
 		ItemStack mainHandItem = mc.player.getMainHandItem();
 
-		if (AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem)) {
+		if (mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches)) {
+			ItemStack offHandItem = mc.player.getOffhandItem();
+			ItemStack usedItem = AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem) ? mainHandItem : offHandItem;
+
 			if (!mc.player.isShiftKeyDown()) {
 				ChainConveyorRidingHandler.embark(selectedLift, selectedChainPosition, selectedConnection);
 				return true;
 			}
 
-			AllPackets.getChannel()
-				.sendToServer(new ChainConveyorConnectionPacket(selectedLift, selectedLift.offset(selectedConnection),
-					mainHandItem, false));
+			CatnipServices.NETWORK.sendToServer(new ChainConveyorConnectionPacket(selectedLift, selectedLift.offset(selectedConnection),
+				usedItem, false));
 			return true;
 		}
 
 		if (AllBlocks.PACKAGE_FROGPORT.isIn(mainHandItem)) {
 			PackagePortTargetSelectionHandler.exactPositionOfTarget = selectedBakedPosition;
 			PackagePortTargetSelectionHandler.activePackageTarget =
-				new PackagePortTarget.ChainConveyorFrogportTarget(selectedLift, selectedChainPosition, selectedConnection);
+				new PackagePortTarget.ChainConveyorFrogportTarget(selectedLift, selectedChainPosition, selectedConnection, false);
 			return true;
 		}
 
 		if (PackageItem.isPackage(mainHandItem)) {
-			AllPackets.getChannel()
-				.sendToServer(new ChainPackageInteractionPacket(selectedLift, selectedConnection, selectedChainPosition,
-					mainHandItem));
+			CatnipServices.NETWORK.sendToServer(new ChainPackageInteractionPacket(selectedLift, selectedConnection, selectedChainPosition,
+				false));
 			return true;
 		}
 

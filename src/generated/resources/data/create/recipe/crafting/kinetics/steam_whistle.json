@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "c:ingots/copper"
+    },
+    "P": {
+      "tag": "c:plates/gold"
+    }
+  },
+  "pattern": [
+    "P",
+    "C"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:steam_whistle"
+  }
+}

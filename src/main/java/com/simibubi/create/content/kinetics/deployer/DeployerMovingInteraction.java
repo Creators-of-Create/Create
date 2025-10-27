@@ -2,6 +2,8 @@ package com.simibubi.create.content.kinetics.deployer;
 
 import java.util.UUID;
 
+import net.minecraft.nbt.CompoundTag;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllItems;
@@ -59,8 +61,8 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 			ItemStack deployerItem = fake.getMainHandItem();
 			player.setItemInHand(activeHand, deployerItem.copy());
 			fake.setItemInHand(InteractionHand.MAIN_HAND, heldStack.copy());
-			ctx.blockEntityData.put("HeldItem", heldStack.serializeNBT());
-			ctx.data.put("HeldItem", heldStack.serializeNBT());
+			ctx.blockEntityData.put("HeldItem", heldStack.saveOptional(player.registryAccess()));
+			ctx.data.put("HeldItem", heldStack.saveOptional(player.registryAccess()));
 		}
 //		if (index >= 0)
 //			setContraptionActorData(contraptionEntity, index, info, ctx);

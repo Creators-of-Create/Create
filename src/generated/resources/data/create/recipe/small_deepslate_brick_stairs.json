@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "small_deepslate_brick_stairs",
+  "key": {
+    "X": {
+      "item": "create:small_deepslate_bricks"
+    }
+  },
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "result": {
+    "count": 4,
+    "id": "create:small_deepslate_brick_stairs"
+  }
+}

@@ -2,12 +2,12 @@ package com.simibubi.create.foundation.blockEntity.behaviour;
 
 import java.util.function.Consumer;
 
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBehaviour.ValueSettings;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatter.ScrollOptionSettingsFormatter;
@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.UIRenderHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -273,7 +274,7 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	public void renderBackground(GuiGraphics graphics) {
+	public void renderBackground(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
 		int a = ((int) (0x50 * Math.min(1, (ticksOpen + AnimationTickHolder.getPartialTicks()) / 20f))) << 24;
 		graphics.fillGradient(0, 0, this.width, this.height, 0x101010 | a, 0x101010 | a);
 	}
@@ -287,9 +288,9 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
+	public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
 		ValueSettings closest = getClosestCoordinate((int) pMouseX, (int) pMouseY);
-		int column = closest.value() + ((int) Math.signum(pDelta)) * (hasShiftDown() ? board.milestoneInterval() : 1);
+		int column = closest.value() + ((int) Math.signum(pScrollY)) * (hasShiftDown() ? board.milestoneInterval() : 1);
 		column = Mth.clamp(column, 0, board.maxValue());
 		if (column == closest.value())
 			return false;
@@ -321,8 +322,7 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 	protected void saveAndClose(double pMouseX, double pMouseY) {
 		ValueSettings closest = getClosestCoordinate((int) pMouseX, (int) pMouseY);
 		// FIXME: value settings may be face-sensitive on future components
-		AllPackets.getChannel()
-			.sendToServer(new ValueSettingsPacket(pos, closest.row(), closest.value(), null, null, Direction.UP,
+		CatnipServices.NETWORK.sendToServer(new ValueSettingsPacket(pos, closest.row(), closest.value(), null, null, Direction.UP,
 				AllKeys.ctrlDown(), netId));
 		onClose();
 	}

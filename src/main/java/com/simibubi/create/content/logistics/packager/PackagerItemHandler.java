@@ -3,8 +3,7 @@ package com.simibubi.create.content.logistics.packager;
 import com.simibubi.create.content.logistics.box.PackageItem;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 public class PackagerItemHandler implements IItemHandlerModifiable {
 
@@ -44,7 +43,7 @@ public class PackagerItemHandler implements IItemHandlerModifiable {
 			blockEntity.unwrapBox(stack, false);
 			blockEntity.triggerStockCheck();
 		}
-		return ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1);
+		return stack.copyWithCount(stack.getCount() - 1);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.simibubi.create.content.trains.track;
 
 import com.google.common.base.Objects;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.graph.TrackGraphLocation;
@@ -17,8 +18,6 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -54,20 +53,16 @@ public class TrackTargetingClient {
 			Create.RAILWAYS.sided(null)
 				.tickSignalOverlay();
 
-		boolean alreadySelected = stack.hasTag() && stack.getTag()
-			.contains("SelectedPos");
+		boolean alreadySelected = stack.has(AllDataComponents.TRACK_TARGETING_ITEM_SELECTED_POS);
 
 		if (type != null) {
 			BezierPointSelection bezierSelection = TrackBlockOutline.result;
 
 			if (alreadySelected) {
-				CompoundTag tag = stack.getTag();
-				hovered = NbtUtils.readBlockPos(tag.getCompound("SelectedPos"));
-				direction = tag.getBoolean("SelectedDirection");
-				if (tag.contains("Bezier")) {
-					CompoundTag bezierNbt = tag.getCompound("Bezier");
-					BlockPos key = NbtUtils.readBlockPos(bezierNbt.getCompound("Key"));
-					hoveredBezier = new BezierTrackPointLocation(key, bezierNbt.getInt("Segment"));
+				hovered = stack.get(AllDataComponents.TRACK_TARGETING_ITEM_SELECTED_POS);
+				direction = stack.getOrDefault(AllDataComponents.TRACK_TARGETING_ITEM_SELECTED_DIRECTION, false);
+				if (stack.has(AllDataComponents.TRACK_TARGETING_ITEM_BEZIER)) {
+					hoveredBezier = stack.get(AllDataComponents.TRACK_TARGETING_ITEM_BEZIER);
 				}
 
 			} else if (bezierSelection != null) {

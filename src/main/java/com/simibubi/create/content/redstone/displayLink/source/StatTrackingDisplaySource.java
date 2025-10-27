@@ -12,11 +12,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.Objective;
+import net.minecraft.world.scores.ScoreHolder;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria.RenderType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public abstract class StatTrackingDisplaySource extends ScoreboardDisplaySource {
 
@@ -29,13 +31,13 @@ public abstract class StatTrackingDisplaySource extends ScoreboardDisplaySource 
 
 		String name = "create_auto_" + getObjectiveName();
 		Scoreboard scoreboard = level.getScoreboard();
-		if (!scoreboard.hasObjective(name))
-			scoreboard.addObjective(name, ObjectiveCriteria.DUMMY, getObjectiveDisplayName(), RenderType.INTEGER);
+		if (scoreboard.getObjective(name) == null)
+			scoreboard.addObjective(name, ObjectiveCriteria.DUMMY, getObjectiveDisplayName(), RenderType.INTEGER, false, null);
 		Objective objective = scoreboard.getObjective(name);
 
 		sLevel.getServer().getPlayerList().getPlayers()
-			.forEach(s -> scoreboard.getOrCreatePlayerScore(s.getScoreboardName(), objective)
-				.setScore(updatedScoreOf(s)));
+			.forEach(s -> scoreboard.getOrCreatePlayerScore(ScoreHolder.forNameOnly(s.getScoreboardName()), objective)
+				.set(updatedScoreOf(s)));
 
 		return showScoreboard(sLevel, name, maxRows);
 	}

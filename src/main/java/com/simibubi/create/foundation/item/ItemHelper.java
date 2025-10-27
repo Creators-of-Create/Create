@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.mixin.accessor.ItemStackHandlerAccessor;
 
 import net.createmod.catnip.data.Pair;
 import net.minecraft.core.BlockPos;
@@ -20,15 +21,15 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class ItemHelper {
 
@@ -60,7 +61,7 @@ public class ItemHelper {
 
 	public static void addToList(ItemStack stack, List<ItemStack> stacks) {
 		for (ItemStack s : stacks) {
-			if (!ItemHandlerHelper.canItemStacksStack(stack, s))
+			if (!ItemStack.isSameItemSameComponents(stack, s))
 				continue;
 			int transferred = Math.min(s.getMaxStackSize() - s.getCount(), stack.getCount());
 			s.grow(transferred);
@@ -84,8 +85,8 @@ public class ItemHelper {
 
 	public static <T extends IBE<? extends BlockEntity>> int calcRedstoneFromBlockEntity(T ibe, Level level, BlockPos pos) {
 		return ibe.getBlockEntityOptional(level, pos)
-			.map(be -> be.getCapability(ForgeCapabilities.ITEM_HANDLER))
-			.map(lo -> lo.map(ItemHelper::calcRedstoneFromInventory).orElse(0))
+			.map(be -> level.getCapability(ItemHandler.BLOCK, pos, null))
+			.map(ItemHelper::calcRedstoneFromInventory)
 			.orElse(0);
 	}
 
@@ -228,7 +229,7 @@ public class ItemHelper {
 
 			if (!extracting.isEmpty() && !hasEnoughItems && potentialOtherMatch) {
 				ItemStack blackListed = extracting.copy();
-				test = test.and(i -> !ItemHandlerHelper.canItemStacksStack(i, blackListed));
+				test = test.and(i -> !ItemStack.isSameItemSameComponents(i, blackListed));
 				continue;
 			}
 
@@ -283,7 +284,7 @@ public class ItemHelper {
 	}
 
 	public static boolean canItemStackAmountsStack(ItemStack a, ItemStack b) {
-		return ItemHandlerHelper.canItemStacksStack(a, b) && a.getCount() + b.getCount() <= a.getMaxStackSize();
+		return ItemStack.isSameItemSameComponents(a, b) && a.getCount() + b.getCount() <= a.getMaxStackSize();
 	}
 
 	public static ItemStack findFirstMatch(IItemHandler inv, Predicate<ItemStack> test) {
@@ -309,7 +310,19 @@ public class ItemHelper {
 		if (entityIn instanceof PackageEntity packageEntity) {
 			return packageEntity.getBox();
 		}
-		return entityIn instanceof ItemEntity ? ((ItemEntity) entityIn).getItem() : ItemStack.EMPTY;
+		return entityIn instanceof ItemEntity itemEntity ? itemEntity.getItem() : ItemStack.EMPTY;
+	}
+
+	public static void fillItemStackHandler(ItemContainerContents contents, ItemStackHandler inv) {
+		List<ItemStack> itemStacks = contents.stream().toList();
+
+		for (int i = 0; i < itemStacks.size(); i++) {
+			inv.setStackInSlot(i, itemStacks.get(i));
+		}
+	}
+
+	public static ItemContainerContents containerContentsFromHandler(ItemStackHandler handler) {
+		return ItemContainerContents.fromItems(((ItemStackHandlerAccessor) handler).create$getStacks());
 	}
 
 	public static ItemStack limitCountToMaxStackSize(ItemStack stack, boolean simulate) {
@@ -317,7 +330,7 @@ public class ItemHelper {
 		int max = stack.getMaxStackSize();
 		if (count <= max)
 			return ItemStack.EMPTY;
-		ItemStack remainder = ItemHandlerHelper.copyStackWithSize(stack, count - max);
+		ItemStack remainder = stack.copyWithCount(count - max);
 		if (!simulate)
 			stack.setCount(max);
 		return remainder;
@@ -326,6 +339,10 @@ public class ItemHelper {
 	public static void copyContents(IItemHandler from, IItemHandlerModifiable to) {
 		if (from.getSlots() != to.getSlots()) {
 			throw new IllegalArgumentException("Slot count mismatch");
+		}
+
+		for (int slot = to.getSlots() - 1; slot >= 0; slot--) {
+			to.setStackInSlot(slot, ItemStack.EMPTY);
 		}
 
 		for (int i = 0; i < from.getSlots(); i++) {

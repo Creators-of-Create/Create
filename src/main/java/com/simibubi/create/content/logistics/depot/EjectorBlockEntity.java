@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
@@ -22,6 +22,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.data.IntAttached;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.nbt.NBTHelper;
@@ -33,6 +34,7 @@ import net.createmod.catnip.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
@@ -60,11 +62,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.ItemStackHandler;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class EjectorBlockEntity extends KineticBlockEntity {
 
@@ -97,6 +100,14 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 		this.state = State.RETRACTING;
 		launchedItems = new ArrayList<>();
 		powered = false;
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+				Capabilities.ItemHandler.BLOCK,
+				AllBlockEntityTypes.WEIGHTED_EJECTOR.get(),
+				(be, context) -> be.depotBehaviour.itemHandler
+		);
 	}
 
 	@Override
@@ -171,8 +182,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 
 			if (launcher.getHorizontalDistance() * launcher.getHorizontalDistance()
 				+ launcher.getVerticalDistance() * launcher.getVerticalDistance() >= 25 * 25)
-				AllPackets.getChannel()
-					.sendToServer(new EjectorAwardPacket(worldPosition));
+				CatnipServices.NETWORK.sendToServer(new EjectorAwardPacket(worldPosition));
 
 			if (!(playerEntity.getItemBySlot(EquipmentSlot.CHEST)
 				.getItem() instanceof ElytraItem))
@@ -183,8 +193,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 			playerEntity.setDeltaMovement(playerEntity.getDeltaMovement()
 				.scale(.75f));
 			deployElytra(playerEntity);
-			AllPackets.getChannel()
-				.sendToServer(new EjectorElytraPacket(worldPosition));
+			CatnipServices.NETWORK.sendToServer(new EjectorElytraPacket(worldPosition));
 		}
 
 		if (doLogic) {
@@ -363,7 +372,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 		Vec3 source = getLaunchedItemLocation(time);
 		Vec3 target = getLaunchedItemLocation(time + 1);
 
-		BlockHitResult rayTraceBlocks = level.clip(new ClipContext(source, target, Block.COLLIDER, Fluid.NONE, null));
+		BlockHitResult rayTraceBlocks = level.clip(new ClipContext(source, target, Block.COLLIDER, Fluid.NONE, CollisionContext.empty()));
 		boolean miss = rayTraceBlocks.getType() == Type.MISS;
 
 		if (!miss && rayTraceBlocks.getType() == Type.BLOCK) {
@@ -509,15 +518,15 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 	}
 
 	@Override
-	protected void write(CompoundTag compound, boolean clientPacket) {
-		super.write(compound, clientPacket);
+	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(compound, registries, clientPacket);
 		compound.putInt("HorizontalDistance", launcher.getHorizontalDistance());
 		compound.putInt("VerticalDistance", launcher.getVerticalDistance());
 		compound.putBoolean("Powered", powered);
 		NBTHelper.writeEnum(compound, "State", state);
 		compound.put("Lid", lidProgress.writeNBT());
 		compound.put("LaunchedItems",
-			NBTHelper.writeCompoundList(launchedItems, ia -> ia.serializeNBT(ItemStack::serializeNBT)));
+			NBTHelper.writeCompoundList(launchedItems, ia -> ia.serializeNBT(s -> (CompoundTag) s.saveOptional(registries))));
 
 		if (earlyTarget != null) {
 			compound.put("EarlyTarget", VecHelper.writeNBT(earlyTarget.getFirst()));
@@ -527,15 +536,15 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 	}
 
 	@Override
-	public void writeSafe(CompoundTag compound) {
-		super.writeSafe(compound);
+	public void writeSafe(CompoundTag compound, HolderLookup.Provider registries) {
+		super.writeSafe(compound, registries);
 		compound.putInt("HorizontalDistance", launcher.getHorizontalDistance());
 		compound.putInt("VerticalDistance", launcher.getVerticalDistance());
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(compound, registries, clientPacket);
 		int horizontalDistance = compound.getInt("HorizontalDistance");
 		int verticalDistance = compound.getInt("VerticalDistance");
 
@@ -549,13 +558,13 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 		state = NBTHelper.readEnum(compound, "State", State.class);
 		lidProgress.readNBT(compound.getCompound("Lid"), false);
 		launchedItems = NBTHelper.readCompoundList(compound.getList("LaunchedItems", Tag.TAG_COMPOUND),
-			nbt -> IntAttached.read(nbt, ItemStack::of));
+			nbt -> IntAttached.read(nbt, t -> ItemStack.parseOptional(registries, t)));
 
 		earlyTarget = null;
 		earlyTargetTime = 0;
 		if (compound.contains("EarlyTarget")) {
 			earlyTarget = Pair.of(VecHelper.readNBT(compound.getList("EarlyTarget", Tag.TAG_DOUBLE)),
-				NbtUtils.readBlockPos(compound.getCompound("EarlyTargetPos")));
+					NBTHelper.readBlockPos(compound, "EarlyTargetPos"));
 			earlyTargetTime = compound.getFloat("EarlyTargetTime");
 		}
 
@@ -585,13 +594,6 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 			.above(launcher.getVerticalDistance());
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap))
-			return depotBehaviour.getItemCapability(cap, side);
-		return super.getCapability(cap, side);
-	}
-
 	public float getLidProgress(float pt) {
 		return lidProgress.getValue(pt);
 	}
@@ -603,7 +605,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AABB getRenderBoundingBox() {
-		return INFINITE_EXTENT_AABB;
+		return AABB.INFINITE;
 	}
 
 	private static abstract class EntityHack extends Entity {

@@ -1,6 +1,6 @@
 {
 	"parent": "create:block/large_water_wheel/textures",
-	"loader": "forge:obj",
+	"loader": "neoforge:obj",
 	"flip_v": true,
 	"model": "create:models/block/large_water_wheel/waterwheel_large.obj",
 	"textures": {

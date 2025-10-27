@@ -1,47 +1,30 @@
 package com.simibubi.create.content.schematics.packet;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent.Context;
 
-public class InstantSchematicPacket extends SimplePacketBase {
+public record InstantSchematicPacket(String name, BlockPos origin, BlockPos bounds) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, InstantSchematicPacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.STRING_UTF8, InstantSchematicPacket::name,
+			BlockPos.STREAM_CODEC, InstantSchematicPacket::origin,
+			BlockPos.STREAM_CODEC, InstantSchematicPacket::bounds,
+	        InstantSchematicPacket::new
+	);
 
-	private String name;
-	private BlockPos origin;
-	private BlockPos bounds;
-
-	public InstantSchematicPacket(String name, BlockPos origin, BlockPos bounds) {
-		this.name = name;
-		this.origin = origin;
-		this.bounds = bounds;
-	}
-
-	public InstantSchematicPacket(FriendlyByteBuf buffer) {
-		name = buffer.readUtf(32767);
-		origin = buffer.readBlockPos();
-		bounds = buffer.readBlockPos();
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.INSTANT_SCHEMATIC;
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeUtf(name);
-		buffer.writeBlockPos(origin);
-		buffer.writeBlockPos(bounds);
+	public void handle(ServerPlayer player) {
+		Create.SCHEMATIC_RECEIVER.handleInstantSchematic(player, name, player.level(), origin, bounds);
 	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer player = context.getSender();
-			if (player == null)
-				return;
-			Create.SCHEMATIC_RECEIVER.handleInstantSchematic(player, name, player.level(), origin, bounds);
-		});
-		return true;
-	}
-
 }

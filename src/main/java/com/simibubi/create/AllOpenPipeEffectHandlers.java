@@ -10,7 +10,7 @@ import com.simibubi.create.impl.effect.WaterEffectHandler;
 
 import net.minecraft.tags.FluidTags;
 
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 public class AllOpenPipeEffectHandlers {
 	public static void registerDefaults() {

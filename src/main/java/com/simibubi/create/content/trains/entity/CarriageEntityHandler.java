@@ -5,7 +5,7 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityEvent;
 
 /**
  * Removes all Carriage entities in chunks that aren't ticking

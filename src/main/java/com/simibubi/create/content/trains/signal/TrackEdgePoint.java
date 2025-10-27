@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 
 import net.createmod.catnip.data.Couple;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -57,7 +58,7 @@ public abstract class TrackEdgePoint {
 			return;
 		CompoundTag migrationData = new CompoundTag();
 		DimensionPalette dimensions = new DimensionPalette();
-		write(migrationData, dimensions);
+		write(migrationData, level.registryAccess(), dimensions);
 		dimensions.write(migrationData);
 		behaviour.invalidateEdgePoint(migrationData);
 	}
@@ -86,7 +87,7 @@ public abstract class TrackEdgePoint {
 			.equals(node1.getLocation());
 	}
 
-	public void read(CompoundTag nbt, boolean migration, DimensionPalette dimensions) {
+	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean migration, DimensionPalette dimensions) {
 		if (migration)
 			return;
 
@@ -102,7 +103,7 @@ public abstract class TrackEdgePoint {
 		position = buffer.readDouble();
 	}
 
-	public void write(CompoundTag nbt, DimensionPalette dimensions) {
+	public void write(CompoundTag nbt, HolderLookup.Provider registries, DimensionPalette dimensions) {
 		nbt.putUUID("Id", id);
 		nbt.putDouble("Position", position);
 		nbt.put("Edge", edgeLocation.serializeEach(loc -> loc.write(dimensions)));

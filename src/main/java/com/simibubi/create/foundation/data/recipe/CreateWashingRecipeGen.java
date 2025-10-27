@@ -1,14 +1,16 @@
 package com.simibubi.create.foundation.data.recipe;
 
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.OSMIUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.PLATINUM;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.QUICKSILVER;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.SILVER;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.ALUMINUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.LEAD;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.NICKEL;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.OSMIUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.PLATINUM;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.QUICKSILVER;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.SILVER;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.TIN;
+import static com.simibubi.create.foundation.data.recipe.CommonMetal.URANIUM;
+
+import java.util.concurrent.CompletableFuture;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -18,6 +20,7 @@ import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -26,7 +29,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 /**
  * Create's own Data Generation for Washing recipes
@@ -41,9 +44,9 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 		WOOL = create("wool", b -> b.require(ItemTags.WOOL)
 		.output(Items.WHITE_WOOL)),
 
-	STAINED_GLASS = create("stained_glass", b -> b.require(Tags.Items.STAINED_GLASS)
+	STAINED_GLASS = create("stained_glass", b -> b.require(Tags.Items.GLASS_BLOCKS)
 		.output(Items.GLASS)),
-		STAINED_GLASS_PANE = create("stained_glass_pane", b -> b.require(Tags.Items.STAINED_GLASS_PANES)
+		STAINED_GLASS_PANE = create("stained_glass_pane", b -> b.require(Tags.Items.GLASS_PANES)
 			.output(Items.GLASS_PANE)),
 
 	GRAVEL = create(() -> Blocks.GRAVEL, b -> b.output(.25f, Items.FLINT)
@@ -92,11 +95,6 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 		.output(0.05f, Mods.ATM, "aloe_kernels", 1)
 		.whenModLoaded(Mods.ATM.getId())),
 
-	// Oh The Biomes You'll Go
-
-	BYG = create("byg/cryptic_magma_block", b -> b.require(Mods.BYG, "cryptic_magma_block")
-		.output(Blocks.OBSIDIAN).whenModLoaded(Mods.BYG.getId())),
-
 	// Endergetic
 
 	ENDER_END = simpleModded(Mods.ENDER, "end_corrock", "petrified_end_corrock"),
@@ -119,12 +117,12 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 	VH = simpleModded(Mods.VH, "ornate_chain", "ornate_chain_rusty");
 
 
-	public CreateWashingRecipeGen(PackOutput output) {
-		super(output, Create.ID);
+	public CreateWashingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+		super(output, registries, Create.ID);
 	}
 
-	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CompatMetals metal) {
-		for (Mods mod : metal.getMods()) {
+	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CommonMetal metal) {
+		for (Mods mod : metal.mods) {
 			String metalName = metal.getName(mod);
 			ResourceLocation nugget = mod.nuggetOf(metalName);
 			create(mod.getId() + "/" + crushed.getId()
@@ -134,10 +132,5 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 					.whenModLoaded(mod.getId()));
 		}
 		return null;
-	}
-
-	public GeneratedRecipe simpleModded(Mods mod, String input, String output) {
-		return create(mod.getId() + "/" + output, b -> b.require(mod, input)
-			.output(mod, output).whenModLoaded(mod.getId()));
 	}
 }

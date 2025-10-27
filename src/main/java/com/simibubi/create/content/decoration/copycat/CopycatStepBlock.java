@@ -17,7 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -53,18 +53,15 @@ public class CopycatStepBlock extends WaterloggedCopycatBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-								 BlockHitResult ray) {
-
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!player.isShiftKeyDown() && player.mayBuild()) {
-			ItemStack heldItem = player.getItemInHand(hand);
 			IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
-			if (helper.matchesItem(heldItem))
-				return helper.getOffset(player, world, state, pos, ray)
-					.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
+			if (helper.matchesItem(stack))
+				return helper.getOffset(player, level, state, pos, hitResult)
+					.placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
 		}
 
-		return super.use(state, world, pos, player, hand, ray);
+		return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
 	}
 
 	@Override
@@ -135,7 +132,7 @@ public class CopycatStepBlock extends WaterloggedCopycatBlock {
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

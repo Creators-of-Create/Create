@@ -3,30 +3,32 @@ package com.simibubi.create.content.equipment.clipboard;
 import java.util.List;
 import java.util.UUID;
 
+import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.content.logistics.AddressEditBoxHelper;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class ClipboardBlockEntity extends SmartBlockEntity {
-
-	public ItemStack dataContainer;
 	private UUID lastEdit;
 
 	public ClipboardBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		dataContainer = AllBlocks.CLIPBOARD.asStack();
 	}
 
 	@Override
@@ -40,12 +42,12 @@ public class ClipboardBlockEntity extends SmartBlockEntity {
 		notifyUpdate();
 		updateWrittenState();
 	}
-	
+
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
 		if (level.isClientSide())
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::advertiseToAddressHelper);
+			CatnipServices.PLATFORM.executeOnClientOnly(() -> this::advertiseToAddressHelper);
 	}
 
 	public void updateWrittenState() {
@@ -55,7 +57,7 @@ public class ClipboardBlockEntity extends SmartBlockEntity {
 		if (level.isClientSide())
 			return;
 		boolean isWritten = blockState.getValue(ClipboardBlock.WRITTEN);
-		boolean shouldBeWritten = dataContainer.getTag() != null;
+		boolean shouldBeWritten = components().has(AllDataComponents.CLIPBOARD_CONTENT);
 		if (isWritten == shouldBeWritten)
 			return;
 		level.setBlockAndUpdate(worldPosition, blockState.setValue(ClipboardBlock.WRITTEN, shouldBeWritten));
@@ -65,22 +67,32 @@ public class ClipboardBlockEntity extends SmartBlockEntity {
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {}
 
 	@Override
-	protected void write(CompoundTag tag, boolean clientPacket) {
-		super.write(tag, clientPacket);
-		tag.put("Item", dataContainer.serializeNBT());
-		if (clientPacket && lastEdit != null)
-			tag.putUUID("LastEdit", lastEdit);
+	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(tag, registries, clientPacket);
+
+		if (clientPacket) {
+			DataComponentMap.CODEC.encodeStart(NbtOps.INSTANCE, components())
+				.result()
+				.ifPresent(encoded -> tag.put("components", encoded));
+
+			if (lastEdit != null)
+				tag.putUUID("LastEdit", lastEdit);
+		}
 	}
 
 	@Override
-	protected void read(CompoundTag tag, boolean clientPacket) {
-		super.read(tag, clientPacket);
-		dataContainer = ItemStack.of(tag.getCompound("Item"));
-		if (!AllBlocks.CLIPBOARD.isIn(dataContainer))
-			dataContainer = AllBlocks.CLIPBOARD.asStack();
+	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(tag, registries, clientPacket);
 
-		if (clientPacket)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> readClientSide(tag));
+		if (clientPacket) {
+			if (tag.contains("components"))
+				DataComponentMap.CODEC.decode(NbtOps.INSTANCE, tag.getCompound("components"))
+					.result()
+					.map(Pair::getFirst)
+					.ifPresent(this::setComponents);
+
+			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> readClientSide(tag));
+		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -93,12 +105,16 @@ public class ClipboardBlockEntity extends SmartBlockEntity {
 			return;
 		if (!worldPosition.equals(cs.targetedBlock))
 			return;
-		cs.reopenWith(dataContainer);
+		cs.reopenWith(components().getOrDefault(AllDataComponents.CLIPBOARD_CONTENT, ClipboardContent.EMPTY));
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	private void advertiseToAddressHelper() {
 		AddressEditBoxHelper.advertiseClipboard(this);
 	}
 
+	@Override
+	public void setComponents(DataComponentMap components) {
+		super.setComponents(components);
+	}
 }

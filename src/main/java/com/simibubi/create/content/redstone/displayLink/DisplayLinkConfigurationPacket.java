@@ -1,17 +1,28 @@
 package com.simibubi.create.content.redstone.displayLink;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.api.behaviour.display.DisplaySource;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
+import io.netty.buffer.ByteBuf;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
 public class DisplayLinkConfigurationPacket extends BlockEntityConfigurationPacket<DisplayLinkBlockEntity> {
+	public static final StreamCodec<ByteBuf, DisplayLinkConfigurationPacket> STREAM_CODEC = StreamCodec.composite(
+			BlockPos.STREAM_CODEC, packet -> packet.pos,
+			ByteBufCodecs.COMPOUND_TAG, packet -> packet.configData,
+			ByteBufCodecs.VAR_INT, packet -> packet.targetLine,
+			DisplayLinkConfigurationPacket::new
+	);
 
-	private CompoundTag configData;
-	private int targetLine;
+	private final CompoundTag configData;
+	private final int targetLine;
 
 	public DisplayLinkConfigurationPacket(BlockPos pos, CompoundTag configData, int targetLine) {
 		super(pos);
@@ -19,24 +30,8 @@ public class DisplayLinkConfigurationPacket extends BlockEntityConfigurationPack
 		this.targetLine = targetLine;
 	}
 
-	public DisplayLinkConfigurationPacket(FriendlyByteBuf buffer) {
-		super(buffer);
-	}
-
 	@Override
-	protected void writeSettings(FriendlyByteBuf buffer) {
-		buffer.writeNbt(configData);
-		buffer.writeInt(targetLine);
-	}
-
-	@Override
-	protected void readSettings(FriendlyByteBuf buffer) {
-		configData = buffer.readNbt();
-		targetLine = buffer.readInt();
-	}
-
-	@Override
-	protected void applySettings(DisplayLinkBlockEntity be) {
+	protected void applySettings(ServerPlayer player, DisplayLinkBlockEntity be) {
 		be.targetLine = targetLine;
 
 		if (!configData.contains("Id")) {
@@ -63,4 +58,8 @@ public class DisplayLinkConfigurationPacket extends BlockEntityConfigurationPack
 		be.notifyUpdate();
 	}
 
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONFIGURE_DATA_GATHERER;
+	}
 }

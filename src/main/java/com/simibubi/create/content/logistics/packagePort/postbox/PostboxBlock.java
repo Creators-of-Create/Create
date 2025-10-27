@@ -1,5 +1,9 @@
 package com.simibubi.create.content.logistics.packagePort.postbox;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -8,7 +12,6 @@ import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -19,6 +22,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -31,6 +35,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class PostboxBlock extends HorizontalDirectionalBlock
 	implements IBE<PostboxBlockEntity>, IWrenchable, ProperWaterloggedBlock {
+	public static MapCodec<PostboxBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		BlockBehaviour.propertiesCodec(),
+		DyeColor.CODEC.fieldOf("color").forGetter(PostboxBlock::getColor)
+	).apply(instance, PostboxBlock::new));
 
 	public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
 
@@ -77,9 +85,8 @@ public class PostboxBlock extends HorizontalDirectionalBlock
 	}
 
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
-		return onBlockEntityUse(pLevel, pPos, be -> be.use(pPlayer));
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+		return onBlockEntityUse(level, pos, be -> be.use(player).result());
 	}
 
 	@Override
@@ -93,7 +100,7 @@ public class PostboxBlock extends HorizontalDirectionalBlock
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 
@@ -113,4 +120,8 @@ public class PostboxBlock extends HorizontalDirectionalBlock
 		IBE.onRemove(pState, pLevel, pPos, pNewState);
 	}
 
+	@Override
+	protected @NotNull MapCodec<? extends HorizontalDirectionalBlock> codec() {
+		return CODEC;
+	}
 }

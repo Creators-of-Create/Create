@@ -5,12 +5,12 @@ import java.util.Optional;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.logistics.depot.EjectorBlockEntity.State;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.createmod.catnip.math.VecHelper;
@@ -18,9 +18,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -141,15 +142,14 @@ public class EjectorBlock extends HorizontalKineticBlock implements IBE<EjectorB
 		ejectorBlockEntity.activate();
 		ejectorBlockEntity.notifyUpdate();
 		if (entityIn.level().isClientSide)
-			AllPackets.getChannel().sendToServer(new EjectorTriggerPacket(ejectorBlockEntity.getBlockPos()));
+			CatnipServices.NETWORK.sendToServer(new EjectorTriggerPacket(ejectorBlockEntity.getBlockPos()));
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult ray) {
-		if (AllItems.WRENCH.isIn(player.getItemInHand(hand)))
-			return InteractionResult.PASS;
-		return SharedDepotBlockMethods.onUse(state, world, pos, player, hand, ray);
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (AllItems.WRENCH.isIn(stack))
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return SharedDepotBlockMethods.onUse(stack, state, level, pos, player, hand, hitResult);
 	}
 
 	@Override
@@ -185,7 +185,7 @@ public class EjectorBlock extends HorizontalKineticBlock implements IBE<EjectorB
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

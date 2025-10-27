@@ -3,18 +3,22 @@ package com.simibubi.create.content.equipment.symmetryWand.mirror;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.FloatTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -23,15 +27,30 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public abstract class SymmetryMirror {
-
 	public static final String EMPTY = "empty";
 	public static final String PLANE = "plane";
 	public static final String CROSS_PLANE = "cross_plane";
 	public static final String TRIPLE_PLANE = "triple_plane";
+
+	public static final Codec<SymmetryMirror> CODEC = RecordCodecBuilder.create(i -> i.group(
+		Codec.INT.fieldOf("orientation_index").forGetter(SymmetryMirror::getOrientationIndex),
+			Vec3.CODEC.fieldOf("position").forGetter(SymmetryMirror::getPosition),
+			Codec.STRING.fieldOf("type").forGetter(SymmetryMirror::typeName),
+			Codec.BOOL.fieldOf("enable").forGetter(m -> m.enable)
+	).apply(i, SymmetryMirror::create));
+
+	public static final StreamCodec<ByteBuf, SymmetryMirror> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.INT, SymmetryMirror::getOrientationIndex,
+			CatnipStreamCodecs.VEC3, SymmetryMirror::getPosition,
+			ByteBufCodecs.STRING_UTF8, SymmetryMirror::typeName,
+			ByteBufCodecs.BOOL, m -> m.enable,
+			SymmetryMirror::create
+	);
 
 	protected Vec3 position;
 	protected StringRepresentable orientation;
@@ -47,6 +66,20 @@ public abstract class SymmetryMirror {
 	public static List<Component> getMirrors() {
 		return ImmutableList.of(CreateLang.translateDirect("symmetry.mirror.plane"), CreateLang.translateDirect("symmetry.mirror.doublePlane"),
 			CreateLang.translateDirect("symmetry.mirror.triplePlane"));
+	}
+
+	private static SymmetryMirror create(Integer orientationIndex, Vec3 position, String type, Boolean enable) {
+		SymmetryMirror element = switch (type) {
+			case PLANE -> new PlaneMirror(position);
+			case CROSS_PLANE -> new CrossPlaneMirror(position);
+			case TRIPLE_PLANE -> new TriplePlaneMirror(position);
+			default -> new EmptyMirror(position);
+		};
+
+		element.setOrientation(orientationIndex);
+		element.enable = enable;
+
+		return element;
 	}
 
 	public StringRepresentable getOrientation() {
@@ -86,52 +119,6 @@ public abstract class SymmetryMirror {
 	public abstract PartialModel getModel();
 
 	public void applyModelTransform(PoseStack ms) {}
-
-	private static final String $ORIENTATION = "direction";
-	private static final String $POSITION = "pos";
-	private static final String $TYPE = "type";
-	private static final String $ENABLE = "enable";
-
-	public CompoundTag writeToNbt() {
-		CompoundTag nbt = new CompoundTag();
-		nbt.putInt($ORIENTATION, orientationIndex);
-
-		ListTag floatList = new ListTag();
-		floatList.add(FloatTag.valueOf((float) position.x));
-		floatList.add(FloatTag.valueOf((float) position.y));
-		floatList.add(FloatTag.valueOf((float) position.z));
-		nbt.put($POSITION, floatList);
-		nbt.putString($TYPE, typeName());
-		nbt.putBoolean($ENABLE, enable);
-
-		return nbt;
-	}
-
-	public static SymmetryMirror fromNBT(CompoundTag nbt) {
-		ListTag floatList = nbt.getList($POSITION, 5);
-		Vec3 pos = new Vec3(floatList.getFloat(0), floatList.getFloat(1), floatList.getFloat(2));
-		SymmetryMirror element;
-
-		switch (nbt.getString($TYPE)) {
-		case PLANE:
-			element = new PlaneMirror(pos);
-			break;
-		case CROSS_PLANE:
-			element = new CrossPlaneMirror(pos);
-			break;
-		case TRIPLE_PLANE:
-			element = new TriplePlaneMirror(pos);
-			break;
-		default:
-			element = new EmptyMirror(pos);
-			break;
-		}
-
-		element.setOrientation(nbt.getInt($ORIENTATION));
-		element.enable = nbt.getBoolean($ENABLE);
-
-		return element;
-	}
 
 	protected Vec3 getDiff(BlockPos position) {
 		return this.position.scale(-1)
@@ -213,4 +200,20 @@ public abstract class SymmetryMirror {
 
 	public abstract List<Component> getAlignToolTips();
 
+	@Override
+	public final boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SymmetryMirror that)) return false;
+
+		return getOrientationIndex() == that.getOrientationIndex() && enable == that.enable && Objects.equals(getPosition(), that.getPosition()) && Objects.equals(getOrientation(), that.getOrientation());
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Objects.hashCode(getPosition());
+		result = 31 * result + Objects.hashCode(getOrientation());
+		result = 31 * result + getOrientationIndex();
+		result = 31 * result + Boolean.hashCode(enable);
+		return result;
+	}
 }

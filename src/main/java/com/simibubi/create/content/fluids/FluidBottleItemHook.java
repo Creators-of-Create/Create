@@ -2,7 +2,7 @@ package com.simibubi.create.content.fluids;
 
 import com.simibubi.create.Create;
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionResult;
@@ -15,9 +15,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 @EventBusSubscriber
 public class FluidBottleItemHook extends Item {
@@ -44,7 +44,7 @@ public class FluidBottleItemHook extends Item {
 			return;
 
 		FluidState fluidState = world.getFluidState(blockpos);
-		if (fluidState.is(FluidTags.WATER) && CatnipServices.REGISTRIES.getKeyOrThrow(fluidState.getType())
+		if (fluidState.is(FluidTags.WATER) && RegisteredObjectsHelper.getKeyOrThrow(fluidState.getType())
 			.getNamespace()
 			.equals(Create.ID)) {
 			event.setCancellationResult(InteractionResult.PASS);

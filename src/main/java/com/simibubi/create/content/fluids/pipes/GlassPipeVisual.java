@@ -2,6 +2,11 @@ package com.simibubi.create.content.fluids.pipes;
 
 import java.util.function.Consumer;
 
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
+
+import net.neoforged.neoforge.fluids.FluidType;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.fluids.FluidInstance;
@@ -27,10 +32,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
-
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
 
 public class GlassPipeVisual extends AbstractBlockEntityVisual<StraightPipeBlockEntity> implements SimpleDynamicVisual {
 

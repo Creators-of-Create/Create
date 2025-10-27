@@ -1,27 +1,23 @@
 package com.simibubi.create.content.logistics.depot;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
+import io.netty.buffer.ByteBuf;
+
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 
 public class EjectorAwardPacket extends BlockEntityConfigurationPacket<EjectorBlockEntity> {
-
-	public EjectorAwardPacket(FriendlyByteBuf buffer) {
-		super(buffer);
-	}
+	public static final StreamCodec<ByteBuf, EjectorAwardPacket> STREAM_CODEC = BlockPos.STREAM_CODEC.map(
+			EjectorAwardPacket::new, packet -> packet.pos
+	);
 
 	public EjectorAwardPacket(BlockPos pos) {
 		super(pos);
 	}
-
-	@Override
-	protected void writeSettings(FriendlyByteBuf buffer) {}
-
-	@Override
-	protected void readSettings(FriendlyByteBuf buffer) {}
 
 	@Override
 	protected void applySettings(ServerPlayer player, EjectorBlockEntity be) {
@@ -29,6 +25,7 @@ public class EjectorAwardPacket extends BlockEntityConfigurationPacket<EjectorBl
 	}
 
 	@Override
-	protected void applySettings(EjectorBlockEntity be) {}
-
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.EJECTOR_AWARD;
+	}
 }

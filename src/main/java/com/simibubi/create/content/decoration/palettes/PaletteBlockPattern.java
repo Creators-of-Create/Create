@@ -33,9 +33,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 
 public class PaletteBlockPattern {
 
@@ -228,7 +228,7 @@ public class PaletteBlockPattern {
 		ResourceLocation resLoc = texture.srcFactory.apply(variant);
 		ResourceLocation resLocTarget = texture.targetFactory.apply(variant);
 		return CTSpriteShifter.getCT(texture.type, resLoc,
-			new ResourceLocation(resLocTarget.getNamespace(), resLocTarget.getPath() + "_connected"));
+			ResourceLocation.fromNamespaceAndPath(resLocTarget.getNamespace(), resLocTarget.getPath() + "_connected"));
 	}
 
 	@FunctionalInterface

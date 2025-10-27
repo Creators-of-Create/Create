@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "cut_deepslate_stairs",
+  "key": {
+    "X": {
+      "item": "create:cut_deepslate"
+    }
+  },
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "result": {
+    "count": 4,
+    "id": "create:cut_deepslate_stairs"
+  }
+}

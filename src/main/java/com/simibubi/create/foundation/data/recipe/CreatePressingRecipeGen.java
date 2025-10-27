@@ -1,13 +1,12 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.PressingRecipeGen;
 
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
-
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -55,9 +54,9 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 		.output(Mods.ENV, "podzol_path")
 		.whenModLoaded(Mods.ENV.getId())),
 
-	// Oh The Biomes You'll Go
+	// Oh The Biomes We've Gone
 
-	BYG = moddedPaths(Mods.BYG, "lush_grass"),
+	BWG = moddedPaths(Mods.BWG, "lush_grass"),
 
 	//Infernal Expansion
 	IX_CRIMSON_PATH = create(Mods.IX.recipeId("crimson_nylium_path"), b -> b.require(Blocks.CRIMSON_NYLIUM)
@@ -101,7 +100,7 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 
 	// IE
 
-	IE_PLATES = iePlates("aluminum", "lead", "silver", "nickel", "uranium", "constantan", "electrum", "steel"),
+	IE_PLATES = iePlates(),
 
 	// Vampirism
 
@@ -113,28 +112,16 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 
 	;
 
-	public CreatePressingRecipeGen(PackOutput output) {
-		super(output, Create.ID);
+	public CreatePressingRecipeGen(PackOutput output, CompletableFuture<Provider> registries) {
+		super(output, registries, Create.ID);
 	}
 
-	private GeneratedRecipe moddedPaths(Mods mod, String... blocks) {
-		for(String block : blocks) {
-			moddedCompacting(mod, block, block + "_path");
-		}
-		return null;
-	}
-
-	private GeneratedRecipe iePlates(String... metals) {
-		for (String metal : metals)
-			create(Mods.IE.recipeId("plate_" + metal), b -> b.require(AllTags.forgeItemTag("ingots/" + metal))
+	private GeneratedRecipe iePlates() {
+		for (CommonMetal metal : CommonMetal.of(Mods.IE)) {
+			create(Mods.IE.recipeId("plate_" + metal), b -> b.require(metal.ingots)
 				.output(Mods.IE, "plate_" + metal)
 				.whenModLoaded(Mods.IE.getId()));
+		}
 		return null;
-	}
-
-	GeneratedRecipe moddedCompacting(Mods mod, String input, String output) {
-		return create("compat/" + mod.getId() + "/" + output, b -> b.require(mod, input)
-				.output(mod, output)
-				.whenModLoaded(mod.getId()));
 	}
 }

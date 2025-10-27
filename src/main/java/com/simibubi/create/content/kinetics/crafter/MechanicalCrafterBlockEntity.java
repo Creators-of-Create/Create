@@ -8,10 +8,13 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.api.contraption.transformable.TransformableBlockEntity;
+import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.kinetics.crafter.ConnectedInputHandler.ConnectedInput;
@@ -27,6 +30,7 @@ import net.createmod.catnip.math.Pointing;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -36,15 +40,17 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.Tags.Items;
+import net.neoforged.neoforge.items.IItemHandler;
 
-public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
+public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements TransformableBlockEntity {
 
 	enum Phase {
 		IDLE, ACCEPTING, ASSEMBLING, EXPORTING, WAITING, CRAFTING, INSERTING;
@@ -84,8 +90,8 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
 	protected Inventory inventory;
 	protected GroupedItems groupedItems = new GroupedItems();
 	protected ConnectedInput input = new ConnectedInput();
-	protected LazyOptional<IItemHandler> invSupplier =
-		LazyOptional.of(() -> input.getItemHandler(level, worldPosition));
+	@Nullable
+	protected IItemHandler invCap;
 	protected boolean reRender;
 	protected Phase phase;
 	protected int countDown;
@@ -109,13 +115,29 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
 		wasPoweredBefore = true;
 	}
 
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+				Capabilities.ItemHandler.BLOCK,
+				AllBlockEntityTypes.MECHANICAL_CRAFTER.get(),
+				(be, context) -> be.getInvCapability()
+		);
+	}
+
+	protected IItemHandler getInvCapability() {
+		if (invCap == null) {
+			invCap = input.getItemHandler(getLevel(), getBlockPos());
+		}
+		return invCap;
+	}
+
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		inserting = new InvManipulationBehaviour(this, this::getTargetFace);
+		//noinspection deprecation
 		connectivity = new EdgeInteractionBehaviour(this, ConnectedInputHandler::toggleConnection)
 			.connectivity(ConnectedInputHandler::shouldConnect)
-			.require(AllItems.WRENCH.get());
+			.require(item -> item.builtInRegistryHolder().is(Items.TOOLS_WRENCH));
 		behaviours.add(inserting);
 		behaviours.add(connectivity);
 		registerAwardables(behaviours, AllAdvancements.CRAFTER, AllAdvancements.CRAFTER_LAZY);
@@ -146,33 +168,33 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
 	}
 
 	@Override
-	public void writeSafe(CompoundTag compound) {
-		super.writeSafe(compound);
+	public void writeSafe(CompoundTag tag, HolderLookup.Provider registries) {
+		super.writeSafe(tag, registries);
 		if (input == null)
 			return;
 
 		CompoundTag inputNBT = new CompoundTag();
 		input.write(inputNBT);
-		compound.put("ConnectedInput", inputNBT);
+		tag.put("ConnectedInput", inputNBT);
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
-		compound.put("Inventory", inventory.serializeNBT());
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		compound.put("Inventory", inventory.serializeNBT(registries));
 
 		CompoundTag inputNBT = new CompoundTag();
 		input.write(inputNBT);
 		compound.put("ConnectedInput", inputNBT);
 
 		CompoundTag groupedItemsNBT = new CompoundTag();
-		groupedItems.write(groupedItemsNBT);
+		groupedItems.write(groupedItemsNBT, registries);
 		compound.put("GroupedItems", groupedItemsNBT);
 
 		compound.putString("Phase", phase.name());
 		compound.putInt("CountDown", countDown);
 		compound.putBoolean("Cover", covered);
 
-		super.write(compound, clientPacket);
+		super.write(compound, registries, clientPacket);
 
 		if (clientPacket && reRender) {
 			compound.putBoolean("Redraw", true);
@@ -181,13 +203,13 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		Phase phaseBefore = phase;
 		GroupedItems before = this.groupedItems;
 
-		inventory.deserializeNBT(compound.getCompound("Inventory"));
+		inventory.deserializeNBT(registries, compound.getCompound("Inventory"));
 		input.read(compound.getCompound("ConnectedInput"));
-		groupedItems = GroupedItems.read(compound.getCompound("GroupedItems"));
+		groupedItems = GroupedItems.read(compound.getCompound("GroupedItems"), registries);
 		phase = Phase.IDLE;
 		String name = compound.getString("Phase");
 		for (Phase phase : Phase.values())
@@ -196,7 +218,7 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
 				this.phase = phase;
 		countDown = compound.getInt("CountDown");
 		covered = compound.getBoolean("Cover");
-		super.read(compound, clientPacket);
+		super.read(compound, registries, clientPacket);
 		if (!clientPacket)
 			return;
 		if (compound.contains("Redraw"))
@@ -220,7 +242,7 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		invSupplier.invalidate();
+		invalidateCapabilities();
 	}
 
 	public int getCountDownSpeed() {
@@ -523,18 +545,11 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
 		countDown = 1;
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap))
-			return invSupplier.cast();
-		return super.getCapability(cap, side);
-	}
-
 	public void connectivityChanged() {
 		reRender = true;
 		sendData();
-		invSupplier.invalidate();
-		invSupplier = LazyOptional.of(() -> input.getItemHandler(level, worldPosition));
+		invCap = null;
+		invalidateCapabilities();
 	}
 
 	public Inventory getInventory() {
@@ -547,5 +562,11 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity {
 
 	public ConnectedInput getInput() {
 		return input;
+	}
+
+	@Override
+	public void transform(BlockEntity be, StructureTransform transform) {
+		input.data.replaceAll(transform::applyWithoutOffset);
+		notifyUpdate();
 	}
 }

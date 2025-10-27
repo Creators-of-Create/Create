@@ -107,8 +107,7 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 
 				Vec3 location = VecHelper.getCenterOf(displayPos);
 				RotationIndicatorParticleData particleData = new RotationIndicatorParticleData(color, particleSpeed,
-					kb.getParticleInitialRadius(), kb.getParticleTargetRadius(), 20, rotationAxis.name()
-					.charAt(0));
+					kb.getParticleInitialRadius(), kb.getParticleTargetRadius(), 20, rotationAxis);
 
 				for (int i = 0; i < 20; i++)
 					scene.getWorld()
@@ -242,7 +241,7 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 
 		public void setFilterData(Selection selection, Class<? extends BlockEntity> teType, ItemStack filter) {
 			modifyBlockEntityNBT(selection, teType, nbt -> {
-				nbt.put("Filter", filter.serializeNBT());
+				nbt.put("Filter", filter.saveOptional(world().getHolderLookupProvider()));
 			});
 		}
 
@@ -251,7 +250,7 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 			modifyBlockEntityNBT(scene.getSceneBuildingUtil().select().position(armLocation), ArmBlockEntity.class,
 				compound -> {
 					NBTHelper.writeEnum(compound, "Phase", phase);
-					compound.put("HeldItem", heldItem.serializeNBT());
+					compound.put("HeldItem", heldItem.saveOptional(world().getHolderLookupProvider()));
 					compound.putInt("TargetPointIndex", targetedPoint);
 					compound.putFloat("MovementProgress", 0);
 				});
@@ -293,7 +292,7 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 
 		public void setDisplayBoardText(BlockPos position, int line, Component text) {
 			modifyBlockEntity(position, FlapDisplayBlockEntity.class,
-				t -> t.applyTextManually(line, Component.Serializer.toJson(text)));
+				t -> t.applyTextManually(line, text));
 		}
 
 		public void dyeDisplayBoard(BlockPos position, int line, DyeColor color) {

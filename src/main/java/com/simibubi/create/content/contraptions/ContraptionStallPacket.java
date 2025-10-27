@@ -1,53 +1,33 @@
 package com.simibubi.create.content.contraptions;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent.Context;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-public class ContraptionStallPacket extends SimplePacketBase {
+public record ContraptionStallPacket(int entityId, double x, double y, double z, float angle) implements ClientboundPacketPayload {
+	public static final StreamCodec<ByteBuf, ContraptionStallPacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.INT, ContraptionStallPacket::entityId,
+			ByteBufCodecs.DOUBLE, ContraptionStallPacket::x,
+			ByteBufCodecs.DOUBLE, ContraptionStallPacket::y,
+			ByteBufCodecs.DOUBLE, ContraptionStallPacket::z,
+			ByteBufCodecs.FLOAT, ContraptionStallPacket::angle,
+			ContraptionStallPacket::new
+	);
 
-	int entityID;
-	double x;
-	double y;
-	double z;
-	float angle;
-
-	public ContraptionStallPacket(int entityID, double posX, double posY, double posZ, float angle) {
-		this.entityID = entityID;
-		this.x = posX;
-		this.y = posY;
-		this.z = posZ;
-		this.angle = angle;
-	}
-
-	public ContraptionStallPacket(FriendlyByteBuf buffer) {
-		entityID = buffer.readInt();
-		x = buffer.readDouble();
-		y = buffer.readDouble();
-		z = buffer.readDouble();
-		angle = buffer.readFloat();
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		AbstractContraptionEntity.handleStallPacket(this);
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeInt(entityID);
-		writeAll(buffer, x, y, z);
-		buffer.writeFloat(angle);
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONTRAPTION_STALL;
 	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(
-			() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> AbstractContraptionEntity.handleStallPacket(this)));
-		return true;
-	}
-
-	private void writeAll(FriendlyByteBuf buffer, double... doubles) {
-		for (double d : doubles)
-			buffer.writeDouble(d);
-	}
-
 }

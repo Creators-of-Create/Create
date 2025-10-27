@@ -1,13 +1,13 @@
 package com.simibubi.create.api.contraption.dispenser;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.foundation.mixin.accessor.AbstractProjectileDispenseBehaviorAccessor;
+import com.simibubi.create.foundation.mixin.accessor.ProjectileDispenseBehaviorAccessor;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.PositionImpl;
-import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * A parallel to {@link AbstractProjectileDispenseBehavior}, providing a base implementation for projectile-shooting behaviors.
+ * A parallel to {@link ProjectileDispenseBehavior}, providing a base implementation for projectile-shooting behaviors.
  */
 public abstract class MountedProjectileDispenseBehavior extends DefaultMountedDispenseBehavior {
 	@Override
@@ -24,7 +24,7 @@ public abstract class MountedProjectileDispenseBehavior extends DefaultMountedDi
 		double x = pos.getX() + facing.x * .7 + .5;
 		double y = pos.getY() + facing.y * .7 + .5;
 		double z = pos.getZ() + facing.z * .7 + .5;
-		Projectile projectile = this.getProjectile(context.world, x, y, z, stack.copy());
+		Projectile projectile = this.getProjectile(context.world, x, y, z, stack.copy(), MountedDispenseBehavior.getClosestFacingDirection(facing));
 		if (projectile == null)
 			return stack;
 
@@ -41,7 +41,7 @@ public abstract class MountedProjectileDispenseBehavior extends DefaultMountedDi
 	}
 
 	@Nullable
-	protected abstract Projectile getProjectile(Level level, double x, double y, double z, ItemStack stack);
+	protected abstract Projectile getProjectile(Level level, double x, double y, double z, ItemStack stack, Direction facing);
 
 	protected float getUncertainty() {
 		return 6;
@@ -54,22 +54,22 @@ public abstract class MountedProjectileDispenseBehavior extends DefaultMountedDi
 	/**
 	 * Create a mounted behavior wrapper from a vanilla projectile dispense behavior.
 	 */
-	public static MountedDispenseBehavior of(AbstractProjectileDispenseBehavior vanillaBehaviour) {
-		AbstractProjectileDispenseBehaviorAccessor accessor = (AbstractProjectileDispenseBehaviorAccessor) vanillaBehaviour;
+	public static MountedDispenseBehavior of(ProjectileDispenseBehavior vanillaBehaviour) {
+		ProjectileDispenseBehaviorAccessor accessor = (ProjectileDispenseBehaviorAccessor) vanillaBehaviour;
 		return new MountedProjectileDispenseBehavior() {
 			@Override
-			protected Projectile getProjectile(Level level, double x, double y, double z, ItemStack stack) {
-				return accessor.create$callGetProjectile(level, new PositionImpl(x, y, z), stack);
+			protected Projectile getProjectile(Level level, double x, double y, double z, ItemStack stack, Direction facing) {
+				return accessor.create$getProjectileItem().asProjectile(level, new Vec3(x, y, z), stack, facing);
 			}
 
 			@Override
 			protected float getUncertainty() {
-				return accessor.create$callGetUncertainty();
+				return accessor.create$getDispenseConfig().uncertainty();
 			}
 
 			@Override
 			protected float getPower() {
-				return accessor.create$callGetPower();
+				return accessor.create$getDispenseConfig().power();
 			}
 		};
 	}

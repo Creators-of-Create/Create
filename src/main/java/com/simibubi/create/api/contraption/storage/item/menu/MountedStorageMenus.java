@@ -16,7 +16,7 @@ import net.minecraft.world.inventory.DispenserMenu;
 import net.minecraft.world.inventory.MenuConstructor;
 import net.minecraft.world.inventory.MenuType;
 
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 /**
  * Methods for creating generic menus usable by mounted storages.

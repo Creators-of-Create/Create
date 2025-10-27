@@ -1,0 +1,29 @@
+{
+  "parent": "create:mechanical_crafter",
+  "criteria": {
+    "0": {
+      "trigger": "create:crafter_lazy_000_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.crafter_lazy_000.desc"
+    },
+    "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "create:mechanical_crafter"
+    },
+    "title": {
+      "translate": "advancement.create.crafter_lazy_000"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

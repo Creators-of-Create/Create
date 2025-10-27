@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "A": {
+      "item": "create:andesite_alloy"
+    },
+    "B": {
+      "item": "minecraft:barrel"
+    },
+    "D": {
+      "tag": "c:dyes/black"
+    }
+  },
+  "pattern": [
+    "D",
+    "B",
+    "A"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:black_postbox"
+  }
+}

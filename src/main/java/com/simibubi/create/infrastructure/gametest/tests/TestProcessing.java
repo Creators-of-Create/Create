@@ -17,9 +17,9 @@ import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 @GameTestGroup(path = "processing")
 public class TestProcessing {
@@ -63,7 +63,7 @@ public class TestProcessing {
 
 		SequencedAssemblyRecipe recipe = (SequencedAssemblyRecipe) helper.getLevel().getRecipeManager()
 				.byKey(Create.asResource("sequenced_assembly/precision_mechanism"))
-				.orElseThrow(() -> new GameTestAssertException("Precision Mechanism recipe not found"));
+				.orElseThrow(() -> new GameTestAssertException("Precision Mechanism recipe not found")).value();
 		Item result = recipe.getResultItem(helper.getLevel().registryAccess()).getItem();
 		Item[] possibleResults = recipe.resultPool.stream()
 				.map(ProcessingOutput::getStack)
@@ -112,7 +112,7 @@ public class TestProcessing {
 	public static void waterFillingBottle(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(3, 3, 3);
 		BlockPos output = new BlockPos(2, 2, 4);
-		ItemStack expected = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+		ItemStack expected = PotionContents.createItemStack(Items.POTION, Potions.WATER);
 		helper.pullLever(lever);
 		helper.succeedWhen(() -> helper.assertContainerContains(output, expected));
 	}

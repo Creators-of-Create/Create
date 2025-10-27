@@ -1,0 +1,27 @@
+{
+  "parent": "create:stock_ticker",
+  "criteria": {
+    "0": {
+      "trigger": "create:frogport_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.frogport.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:package_frogport"
+    },
+    "title": {
+      "translate": "advancement.create.frogport"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

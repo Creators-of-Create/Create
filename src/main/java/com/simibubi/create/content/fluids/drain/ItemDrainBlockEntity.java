@@ -4,6 +4,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
@@ -19,6 +20,7 @@ import net.createmod.catnip.data.Pair;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -27,12 +29,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class ItemDrainBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
 
@@ -41,15 +42,36 @@ public class ItemDrainBlockEntity extends SmartBlockEntity implements IHaveGoggl
 	SmartFluidTankBehaviour internalTank;
 	TransportedItemStack heldItem;
 	protected int processingTicks;
-	Map<Direction, LazyOptional<ItemDrainItemHandler>> itemHandlers;
+	Map<Direction, ItemDrainItemHandler> itemHandlers;
 
 	public ItemDrainBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		itemHandlers = new IdentityHashMap<>();
 		for (Direction d : Iterate.horizontalDirections) {
-			ItemDrainItemHandler itemDrainItemHandler = new ItemDrainItemHandler(this, d);
-			itemHandlers.put(d, LazyOptional.of(() -> itemDrainItemHandler));
+			itemHandlers.put(d, new ItemDrainItemHandler(this, d));
 		}
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+				Capabilities.ItemHandler.BLOCK,
+				AllBlockEntityTypes.ITEM_DRAIN.get(),
+				(be, context) -> {
+					if (context != null && context.getAxis().isHorizontal())
+						return be.itemHandlers.get(context);
+					return null;
+				}
+		);
+
+		event.registerBlockEntity(
+				Capabilities.FluidHandler.BLOCK,
+				AllBlockEntityTypes.ITEM_DRAIN.get(),
+				(be, context) -> {
+					if (context != Direction.UP)
+						return be.internalTank.getCapability();
+					return null;
+				}
+		);
 	}
 
 	@Override
@@ -70,8 +92,8 @@ public class ItemDrainBlockEntity extends SmartBlockEntity implements IHaveGoggl
 			return inserted;
 
 		if (inserted.getCount() > 1 && GenericItemEmptying.canItemBeEmptied(level, inserted)) {
-			returned = ItemHandlerHelper.copyStackWithSize(inserted, inserted.getCount() - 1);
-			inserted = ItemHandlerHelper.copyStackWithSize(inserted, 1);
+			returned = inserted.copyWithCount(inserted.getCount() - 1);
+			inserted = inserted.copyWithCount(1);
 		}
 
 		if (simulate)
@@ -255,8 +277,7 @@ public class ItemDrainBlockEntity extends SmartBlockEntity implements IHaveGoggl
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		for (LazyOptional<ItemDrainItemHandler> lazyOptional : itemHandlers.values())
-			lazyOptional.invalidate();
+		invalidateCapabilities();
 	}
 
 	public void setHeldItem(TransportedItemStack heldItem, Direction insertedFrom) {
@@ -265,39 +286,25 @@ public class ItemDrainBlockEntity extends SmartBlockEntity implements IHaveGoggl
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putInt("ProcessingTicks", processingTicks);
 		if (heldItem != null)
-			compound.put("HeldItem", heldItem.serializeNBT());
-		super.write(compound, clientPacket);
+			compound.put("HeldItem", heldItem.serializeNBT(registries));
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		heldItem = null;
 		processingTicks = compound.getInt("ProcessingTicks");
 		if (compound.contains("HeldItem"))
-			heldItem = TransportedItemStack.read(compound.getCompound("HeldItem"));
-		super.read(compound, clientPacket);
-	}
-
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (side != null && side.getAxis()
-			.isHorizontal() && isItemHandlerCap(cap))
-			return itemHandlers.get(side)
-				.cast();
-
-		if (side != Direction.UP && isFluidHandlerCap(cap))
-			return internalTank.getCapability()
-				.cast();
-
-		return super.getCapability(cap, side);
+			heldItem = TransportedItemStack.read(compound.getCompound("HeldItem"), registries);
+		super.read(compound, registries, clientPacket);
 	}
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		return containedFluidTooltip(tooltip, isPlayerSneaking, getCapability(ForgeCapabilities.FLUID_HANDLER));
+		return containedFluidTooltip(tooltip, isPlayerSneaking, level.getCapability(Capabilities.FluidHandler.BLOCK, worldPosition, null));
 	}
 
 }

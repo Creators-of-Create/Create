@@ -1,37 +1,55 @@
 package com.simibubi.create.content.logistics.factoryBoard;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelSlot;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.createmod.catnip.codecs.stream.CatnipLargerStreamCodecs;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
 public class FactoryPanelConfigurationPacket extends BlockEntityConfigurationPacket<FactoryPanelBlockEntity> {
+	public static final StreamCodec<RegistryFriendlyByteBuf, FactoryPanelConfigurationPacket> STREAM_CODEC = CatnipLargerStreamCodecs.composite(
+		FactoryPanelPosition.STREAM_CODEC, packet -> packet.position,
+		ByteBufCodecs.STRING_UTF8, packet -> packet.address,
+	    ByteBufCodecs.map(HashMap::new, FactoryPanelPosition.STREAM_CODEC, ByteBufCodecs.INT), packet -> packet.inputAmounts,
+		ItemStack.OPTIONAL_LIST_STREAM_CODEC, packet -> packet.craftingArrangement,
+		ByteBufCodecs.VAR_INT, packet -> packet.outputAmount,
+		ByteBufCodecs.VAR_INT, packet -> packet.promiseClearingInterval,
+		CatnipStreamCodecBuilders.nullable(FactoryPanelPosition.STREAM_CODEC), packet -> packet.removeConnection,
+		ByteBufCodecs.BOOL, packet -> packet.clearPromises,
+		ByteBufCodecs.BOOL, packet -> packet.reset,
+		ByteBufCodecs.BOOL, packet -> packet.redstoneReset,
+		FactoryPanelConfigurationPacket::new
+	);
 
-	private PanelSlot slot;
-	private String address;
-	private Map<FactoryPanelPosition, Integer> inputAmounts;
-	private List<ItemStack> craftingArrangement;
-	private int outputAmount;
-	private int promiseClearingInterval;
-	private FactoryPanelPosition removeConnection;
-	private boolean clearPromises;
-	private boolean reset;
-	private boolean redstoneReset;
+	private final FactoryPanelPosition position;
+	private final String address;
+	private final Map<FactoryPanelPosition, Integer> inputAmounts;
+	private final List<ItemStack> craftingArrangement;
+	private final int outputAmount;
+	private final int promiseClearingInterval;
+	private final FactoryPanelPosition removeConnection;
+	private final boolean clearPromises;
+	private final boolean reset;
+	private final boolean redstoneReset;
 
 	public FactoryPanelConfigurationPacket(FactoryPanelPosition position, String address,
 		Map<FactoryPanelPosition, Integer> inputAmounts, List<ItemStack> craftingArrangement, int outputAmount,
 		int promiseClearingInterval, @Nullable FactoryPanelPosition removeConnection, boolean clearPromises,
 		boolean reset, boolean sendRedstoneReset) {
 		super(position.pos());
+		this.position = position;
 		this.address = address;
 		this.inputAmounts = inputAmounts;
 		this.craftingArrangement = craftingArrangement;
@@ -41,59 +59,16 @@ public class FactoryPanelConfigurationPacket extends BlockEntityConfigurationPac
 		this.clearPromises = clearPromises;
 		this.reset = reset;
 		this.redstoneReset = sendRedstoneReset;
-		this.slot = position.slot();
-	}
-
-	public FactoryPanelConfigurationPacket(FriendlyByteBuf buffer) {
-		super(buffer);
 	}
 
 	@Override
-	protected void writeSettings(FriendlyByteBuf buffer) {
-		buffer.writeVarInt(slot.ordinal());
-		buffer.writeUtf(address);
-		buffer.writeVarInt(inputAmounts.size());
-		for (Entry<FactoryPanelPosition, Integer> entry : inputAmounts.entrySet()) {
-			entry.getKey()
-				.send(buffer);
-			buffer.writeVarInt(entry.getValue());
-		}
-		buffer.writeVarInt(craftingArrangement.size());
-		craftingArrangement.forEach(buffer::writeItem);
-		buffer.writeVarInt(outputAmount);
-		buffer.writeVarInt(promiseClearingInterval);
-		buffer.writeBoolean(removeConnection != null);
-		if (removeConnection != null)
-			removeConnection.send(buffer);
-		buffer.writeBoolean(clearPromises);
-		buffer.writeBoolean(reset);
-		buffer.writeBoolean(redstoneReset);
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONFIGURE_FACTORY_PANEL;
 	}
 
 	@Override
-	protected void readSettings(FriendlyByteBuf buffer) {
-		slot = PanelSlot.values()[buffer.readVarInt()];
-		address = buffer.readUtf();
-		inputAmounts = new HashMap<>();
-		int entries = buffer.readVarInt();
-		for (int i = 0; i < entries; i++)
-			inputAmounts.put(FactoryPanelPosition.receive(buffer), buffer.readVarInt());
-		int craftEntries = buffer.readVarInt();
-		craftingArrangement = new ArrayList<>();
-		for (int i = 0; i < craftEntries; i++)
-			craftingArrangement.add(buffer.readItem());
-		outputAmount = buffer.readVarInt();
-		promiseClearingInterval = buffer.readVarInt();
-		if (buffer.readBoolean())
-			removeConnection = FactoryPanelPosition.receive(buffer);
-		clearPromises = buffer.readBoolean();
-		reset = buffer.readBoolean();
-		redstoneReset = buffer.readBoolean();
-	}
-
-	@Override
-	protected void applySettings(FactoryPanelBlockEntity be) {
-		FactoryPanelBehaviour behaviour = be.panels.get(slot);
+	protected void applySettings(ServerPlayer player, FactoryPanelBlockEntity be) {
+		FactoryPanelBehaviour behaviour = be.panels.get(position.slot());
 		if (behaviour == null)
 			return;
 
@@ -111,13 +86,13 @@ public class FactoryPanelConfigurationPacket extends BlockEntityConfigurationPac
 			be.notifyUpdate();
 			return;
 		}
-		
+
 		if (redstoneReset) {
 			behaviour.disconnectAllLinks();
 			be.notifyUpdate();
 			return;
 		}
-		
+
 		for (Entry<FactoryPanelPosition, Integer> entry : inputAmounts.entrySet()) {
 			FactoryPanelPosition key = entry.getKey();
 			FactoryPanelConnection connection = behaviour.targetedBy.get(key);
@@ -139,5 +114,4 @@ public class FactoryPanelConfigurationPacket extends BlockEntityConfigurationPac
 
 		be.notifyUpdate();
 	}
-
 }

@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
+
+import org.jetbrains.annotations.NotNull;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllItems;
@@ -25,9 +29,8 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -49,17 +52,13 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-import net.minecraftforge.network.NetworkHooks;
-
-public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData, SpecialEntityItemRequirement {
+public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, SpecialEntityItemRequirement {
 
 	public static AABB span(BlockPos startPos, BlockPos endPos) {
-		return new AABB(startPos, endPos).expandTowards(1, 1, 1);
+		return new AABB(Vec3.atLowerCornerOf(startPos), Vec3.atLowerCornerOf(endPos)).expandTowards(1, 1, 1);
 	}
 
 	public static boolean isGlued(LevelAccessor level, BlockPos blockPos, Direction direction,
@@ -110,7 +109,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	protected void defineSynchedData() {}
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {}
 
 	public static boolean isValidFace(Level world, BlockPos pos, Direction direction) {
 		BlockState state = world.getBlockState(pos);
@@ -196,8 +195,8 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	protected float getEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
-		return 0.0F;
+	public @NotNull EntityDimensions getDimensions(@NotNull Pose pose) {
+		return super.getDimensions(pose).withEyeHeight(0.0F);
 	}
 
 	public void playPlaceSound() {
@@ -268,19 +267,14 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
-	}
-
-	@Override
-	public void writeSpawnData(FriendlyByteBuf buffer) {
+	public void writeSpawnData(RegistryFriendlyByteBuf buffer) {
 		CompoundTag compound = new CompoundTag();
 		addAdditionalSaveData(compound);
 		buffer.writeNbt(compound);
 	}
 
 	@Override
-	public void readSpawnData(FriendlyByteBuf additionalData) {
+	public void readSpawnData(RegistryFriendlyByteBuf additionalData) {
 		readAdditionalSaveData(additionalData.readNbt());
 	}
 
@@ -301,15 +295,6 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	@Override
 	public PushReaction getPistonPushReaction() {
 		return PushReaction.IGNORE;
-	}
-
-	public void setPortalEntrancePos() {
-		portalEntrancePos = blockPosition();
-	}
-
-	@Override
-	public PortalInfo findDimensionEntryPoint(ServerLevel pDestination) {
-		return super.findDimensionEntryPoint(pDestination);
 	}
 
 	public void spawnParticles() {

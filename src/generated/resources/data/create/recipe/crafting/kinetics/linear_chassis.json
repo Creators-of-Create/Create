@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "tag": "minecraft:logs"
+    },
+    "P": {
+      "item": "create:andesite_alloy"
+    }
+  },
+  "pattern": [
+    " P ",
+    "LLL",
+    " P "
+  ],
+  "result": {
+    "count": 3,
+    "id": "create:linear_chassis"
+  }
+}

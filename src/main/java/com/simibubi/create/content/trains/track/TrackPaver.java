@@ -183,7 +183,7 @@ public class TrackPaver {
 		BlockState stateAtPos = level.getBlockState(pos);
 		if (stateAtPos.getBlock() != state.getBlock() && stateAtPos.canBeReplaced()) {
 			if (!simulate)
-				level.setBlock(pos, ProperWaterloggedBlock.withWater(level, state, pos), 3);
+				level.setBlock(pos, ProperWaterloggedBlock.withWater(level, state, pos), Block.UPDATE_ALL);
 			return true;
 		}
 		return false;

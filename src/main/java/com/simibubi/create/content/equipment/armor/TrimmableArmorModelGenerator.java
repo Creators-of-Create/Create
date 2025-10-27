@@ -16,8 +16,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.client.model.generators.ModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ModelBuilder;
 
 public class TrimmableArmorModelGenerator {
 	public static final VarHandle TEXTURES_HANDLE;
@@ -40,7 +40,7 @@ public class TrimmableArmorModelGenerator {
 			String trimId = data.name(item.getMaterial());
 			ResourceLocation trimModelLoc = modelLoc.withSuffix("_" + trimId + "_trim");
 			ResourceLocation trimLoc =
-				new ResourceLocation("trims/items/" + item.getType().getName() + "_trim_" + trimId);
+				ResourceLocation.withDefaultNamespace("trims/items/" + item.getType().getName() + "_trim_" + trimId);
 			String parent = "item/generated";
 			if (item.getMaterial() == AllArmorMaterials.CARDBOARD) {
 				trimLoc = Create.asResource("trims/items/card_" + item.getType().getName() + "_trim_" + trimId);

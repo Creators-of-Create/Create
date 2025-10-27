@@ -31,22 +31,22 @@ public class NozzleBlock extends WrenchableDirectionalBlock implements IBE<Nozzl
 	public NozzleBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
 	}
-	
+
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		return InteractionResult.FAIL;
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return defaultBlockState().setValue(FACING, context.getClickedFace());
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return AllShapes.NOZZLE.get(state.getValue(FACING));
 	}
-	
+
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
@@ -67,9 +67,9 @@ public class NozzleBlock extends WrenchableDirectionalBlock implements IBE<Nozzl
 		return be instanceof IAirCurrentSource
 				&& ((IAirCurrentSource) be).getAirflowOriginSide() == towardsFan.getOpposite();
 	}
-	
+
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

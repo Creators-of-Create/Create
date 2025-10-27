@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "elementaryores"
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "elementaryores:ore_lapis_end"
+        }
+      ]
+    }
+  ],
+  "processing_time": 350,
+  "results": [
+    {
+      "count": 10,
+      "id": "minecraft:lapis_lazuli"
+    },
+    {
+      "chance": 0.25,
+      "id": "minecraft:lapis_lazuli"
+    },
+    {
+      "chance": 0.75,
+      "id": "create:experience_nugget"
+    },
+    {
+      "chance": 0.12,
+      "id": "minecraft:end_stone"
+    }
+  ]
+}

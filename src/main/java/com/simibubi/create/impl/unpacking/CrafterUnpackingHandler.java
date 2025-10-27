@@ -17,7 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public enum CrafterUnpackingHandler implements UnpackingHandler {
 	INSTANCE;
@@ -53,7 +52,7 @@ public enum CrafterUnpackingHandler implements UnpackingHandler {
 
 			// go through each item in the box and try insert if it matches the target
 			for (ItemStack stack : items) {
-				if (ItemHandlerHelper.canItemStacksStack(stack, targetStack.stack)) {
+				if (ItemStack.isSameItemSameComponents(stack, targetStack.stack)) {
 					ItemStack toInsert = stack.copyWithCount(1);
 					if (inventory.insertItem(0, toInsert, simulate).isEmpty()) {
 						stack.shrink(1);

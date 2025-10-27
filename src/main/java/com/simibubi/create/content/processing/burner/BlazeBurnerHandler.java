@@ -6,6 +6,7 @@ import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity.Fuel
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -14,7 +15,7 @@ import net.minecraft.world.entity.projectile.ThrownEgg;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -23,11 +24,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class BlazeBurnerHandler {
 
 	@SubscribeEvent
@@ -85,9 +86,8 @@ public class BlazeBurnerHandler {
 			return;
 
 		ItemStack stack = entity.getItem();
-		Potion potion = PotionUtils.getPotion(stack);
-		if (potion == Potions.WATER && PotionUtils.getMobEffects(stack)
-			.isEmpty()) {
+		PotionContents potionContents = stack.get(DataComponents.POTION_CONTENTS);
+		if (potionContents != null && potionContents.is(Potions.WATER) && !potionContents.hasEffects()) {
 			BlockHitResult result = (BlockHitResult) event.getRayTraceResult();
 			Level world = entity.level();
 			Direction face = result.getDirection();

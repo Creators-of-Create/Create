@@ -3,7 +3,7 @@ package com.simibubi.create.content.trains.entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
@@ -101,7 +101,7 @@ public class ArrivalSoundQueue {
 		CompoundTag tag = tagIn.getCompound("SoundQueue");
 		offset = tag.getInt("Offset");
 		NBTHelper.iterateCompoundList(tag.getList("Sources", Tag.TAG_COMPOUND),
-			c -> add(c.getInt("Tick"), NbtUtils.readBlockPos(c.getCompound("Pos"))));
+			c -> add(c.getInt("Tick"), NBTHelper.readBlockPos(c, "Pos")));
 	}
 
 	public void add(int offset, BlockPos localPos) {

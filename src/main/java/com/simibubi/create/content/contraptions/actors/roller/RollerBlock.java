@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.actors.roller;
 
 import java.util.function.Predicate;
 
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.actors.AttachedActorBlock;
@@ -14,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -22,6 +24,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -29,8 +32,12 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import org.jetbrains.annotations.NotNull;
+
 public class RollerBlock extends AttachedActorBlock implements IBE<RollerBlockEntity> {
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
+
+	public static final MapCodec<RollerBlock> CODEC = simpleCodec(RollerBlock::new);
 
 	public RollerBlock(Properties p_i48377_1_) {
 		super(p_i48377_1_);
@@ -69,20 +76,17 @@ public class RollerBlock extends AttachedActorBlock implements IBE<RollerBlockEn
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult ray) {
-		ItemStack heldItem = player.getItemInHand(hand);
-
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
 		if (!player.isShiftKeyDown() && player.mayBuild()) {
-			if (placementHelper.matchesItem(heldItem)) {
-				placementHelper.getOffset(player, world, state, pos, ray)
-					.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
-				return InteractionResult.SUCCESS;
+			if (placementHelper.matchesItem(stack)) {
+				placementHelper.getOffset(player, level, state, pos, hitResult)
+					.placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
+				return ItemInteractionResult.SUCCESS;
 			}
 		}
 
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	private static class PlacementHelper extends PoleHelper<Direction> {
@@ -98,6 +102,11 @@ public class RollerBlock extends AttachedActorBlock implements IBE<RollerBlockEn
 			return AllBlocks.MECHANICAL_ROLLER::isIn;
 		}
 
+	}
+
+	@Override
+	protected @NotNull MapCodec<? extends HorizontalDirectionalBlock> codec() {
+		return CODEC;
 	}
 
 }

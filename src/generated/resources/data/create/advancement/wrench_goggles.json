@@ -1,0 +1,48 @@
+{
+  "parent": "create:portable_storage_interface",
+  "criteria": {
+    "0": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create:wrench"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create:goggles"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.wrench_goggles.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:wrench"
+    },
+    "title": {
+      "translate": "advancement.create.wrench_goggles"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ],
+    [
+      "1"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

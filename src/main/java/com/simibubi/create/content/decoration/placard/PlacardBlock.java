@@ -2,6 +2,9 @@ package com.simibubi.create.content.decoration.placard;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
@@ -20,7 +23,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -42,12 +45,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.minecraftforge.items.ItemHandlerHelper;
-
 public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 	implements ProperWaterloggedBlock, IBE<PlacardBlockEntity>, SpecialBlockItemRequirement, IWrenchable {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+
+	public static final MapCodec<PlacardBlock> CODEC = simpleCodec(PlacardBlock::new);
 
 	public PlacardBlock(Properties p_53182_) {
 		super(p_53182_);
@@ -116,50 +119,49 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player player, InteractionHand pHand,
-		BlockHitResult pHit) {
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (player.isShiftKeyDown())
-			return InteractionResult.PASS;
-		if (pLevel.isClientSide)
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		if (level.isClientSide)
+			return ItemInteractionResult.SUCCESS;
 
-		ItemStack inHand = player.getItemInHand(pHand);
-		return onBlockEntityUse(pLevel, pPos, pte -> {
+		ItemStack inHand = player.getItemInHand(hand);
+		return onBlockEntityUseItemOn(level, pos, pte -> {
 			ItemStack inBlock = pte.getHeldItem();
 
 			if (!player.mayBuild() || inHand.isEmpty() || !inBlock.isEmpty()) {
 				if (inBlock.isEmpty())
-					return InteractionResult.FAIL;
+					return ItemInteractionResult.FAIL;
 				if (inHand.isEmpty())
-					return InteractionResult.FAIL;
-				if (pState.getValue(POWERED))
-					return InteractionResult.FAIL;
+					return ItemInteractionResult.FAIL;
+				if (state.getValue(POWERED))
+					return ItemInteractionResult.FAIL;
 
 				boolean test = inBlock.getItem() instanceof FilterItem ? FilterItemStack.of(inBlock)
-					.test(pLevel, inHand) : ItemHandlerHelper.canItemStacksStack(inHand, inBlock);
+					.test(level, inHand) : ItemStack.isSameItemSameComponents(inHand, inBlock);
 				if (!test) {
-					AllSoundEvents.DENY.play(pLevel, null, pPos, 1, 1);
-					return InteractionResult.SUCCESS;
+					AllSoundEvents.DENY.play(level, null, pos, 1, 1);
+					return ItemInteractionResult.SUCCESS;
 				}
 
-				AllSoundEvents.CONFIRM.play(pLevel, null, pPos, 1, 1);
-				pLevel.setBlock(pPos, pState.setValue(POWERED, true), 3);
-				updateNeighbours(pState, pLevel, pPos);
+				AllSoundEvents.CONFIRM.play(level, null, pos, 1, 1);
+				level.setBlock(pos, state.setValue(POWERED, true), Block.UPDATE_ALL);
+				updateNeighbours(state, level, pos);
 				pte.poweredTicks = 19;
 				pte.notifyUpdate();
-				return InteractionResult.SUCCESS;
+				return ItemInteractionResult.SUCCESS;
 			}
 
-			pLevel.playSound(null, pPos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1, 1);
-			pte.setHeldItem(ItemHandlerHelper.copyStackWithSize(inHand, 1));
+			level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1, 1);
+			pte.setHeldItem(inHand.copyWithCount(1));
 
 			if (!player.isCreative()) {
 				inHand.shrink(1);
 				if (inHand.isEmpty())
-					player.setItemInHand(pHand, ItemStack.EMPTY);
+					player.setItemInHand(hand, ItemStack.EMPTY);
 			}
 
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		});
 	}
 
@@ -224,6 +226,11 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 	@Override
 	public BlockEntityType<? extends PlacardBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.PLACARD.get();
+	}
+
+	@Override
+	protected @NotNull MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
+		return CODEC;
 	}
 
 }

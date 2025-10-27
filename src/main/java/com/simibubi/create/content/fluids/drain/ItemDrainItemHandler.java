@@ -6,8 +6,8 @@ import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class ItemDrainItemHandler implements IItemHandler {
 
@@ -34,21 +34,20 @@ public class ItemDrainItemHandler implements IItemHandler {
 		if (!blockEntity.getHeldItemStack()
 			.isEmpty())
 			return stack;
-		
+
 		ItemStack returned = ItemStack.EMPTY;
 		if (stack.getCount() > 1 && GenericItemEmptying.canItemBeEmptied(blockEntity.getLevel(), stack)) {
-			returned = ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1);
-			stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
+			returned = stack.copyWithCount(stack.getCount() - 1);
+			stack = stack.copyWithCount(1);
 		} else
 			returned = ItemHelper.limitCountToMaxStackSize(stack, simulate);
-		
 		if (!simulate) {
 			TransportedItemStack heldItem = new TransportedItemStack(stack);
 			heldItem.prevBeltPosition = 0;
 			blockEntity.setHeldItem(heldItem, side.getOpposite());
 			blockEntity.notifyUpdate();
 		}
-		
+
 		return returned;
 	}
 

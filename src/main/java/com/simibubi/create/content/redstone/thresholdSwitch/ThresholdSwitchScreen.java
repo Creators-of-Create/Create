@@ -5,12 +5,12 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.redstone.thresholdSwitch.ThresholdSwitchBlockEntity.ThresholdType;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
+import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
@@ -342,8 +342,7 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 	}
 
 	protected void send(boolean invert) {
-		AllPackets.getChannel()
-			.sendToServer(new ConfigureThresholdSwitchPacket(blockEntity.getBlockPos(), offBelow.getState(),
+		CatnipServices.NETWORK.sendToServer(new ConfigureThresholdSwitchPacket(blockEntity.getBlockPos(), offBelow.getState(),
 				onAbove.getState(), invert, inStacks.getState() == 1));
 	}
 

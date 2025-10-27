@@ -42,4 +42,8 @@ public class SchematicRequirementRegistries {
 	public interface EntityRequirement {
 		ItemRequirement getRequiredItems(Entity entity);
 	}
+
+	private SchematicRequirementRegistries() {
+		throw new AssertionError("This class should not be instantiated");
+	}
 }

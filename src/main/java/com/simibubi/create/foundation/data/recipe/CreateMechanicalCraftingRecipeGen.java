@@ -1,20 +1,20 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeGen;
-
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
-
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
 
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.Tags.Items;
 
 /**
  * Create's own Data Generation for Mechanical Crafting recipes
@@ -38,9 +38,9 @@ public final class CreateMechanicalCraftingRecipeGen extends MechanicalCraftingR
 
 	WAND_OF_SYMMETRY =
 		create(AllItems.WAND_OF_SYMMETRY::get).recipe(b -> b.key('E', Ingredient.of(Tags.Items.ENDER_PEARLS))
-			.key('G', Ingredient.of(Tags.Items.GLASS))
+			.key('G', Ingredient.of(Items.GLASS_BLOCKS))
 			.key('P', I.precisionMechanism())
-			.key('O', Ingredient.of(Tags.Items.OBSIDIAN))
+			.key('O', Ingredient.of(Items.OBSIDIANS))
 			.key('B', Ingredient.of(I.brass()))
 			.patternLine(" G ")
 			.patternLine("GEG")
@@ -71,7 +71,7 @@ public final class CreateMechanicalCraftingRecipeGen extends MechanicalCraftingR
 	;
 
 
-	public CreateMechanicalCraftingRecipeGen(PackOutput output) {
-		super(output, Create.ID);
+	public CreateMechanicalCraftingRecipeGen(PackOutput output, CompletableFuture<Provider> registries) {
+		super(output, registries, Create.ID);
 	}
 }

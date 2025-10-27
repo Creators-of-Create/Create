@@ -14,15 +14,15 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class NixieTubeDisplayTarget extends SingleLineDisplayTarget {
 
 	@Override
 	protected void acceptLine(MutableComponent text, DisplayLinkContext context) {
-		String tagElement = Component.Serializer.toJson(text);
-		NixieTubeBlock.walkNixies(context.level(), context.getTargetPos(), (currentPos, rowPosition) -> {
+		String tagElement = Component.Serializer.toJson(text, context.level().registryAccess());
+		NixieTubeBlock.walkNixies(context.level(), context.getTargetPos(), false, (currentPos, rowPosition) -> {
 			BlockEntity blockEntity = context.level()
 				.getBlockEntity(currentPos);
 			if (blockEntity instanceof NixieTubeBlockEntity nixie)
@@ -33,7 +33,8 @@ public class NixieTubeDisplayTarget extends SingleLineDisplayTarget {
 	@Override
 	protected int getWidth(DisplayLinkContext context) {
 		MutableInt count = new MutableInt(0);
-		NixieTubeBlock.walkNixies(context.level(), context.getTargetPos(), (currentPos, rowPosition) -> count.add(2));
+		NixieTubeBlock.walkNixies(context.level(), context.getTargetPos(), false,
+				(currentPos, rowPosition) -> count.add(2));
 		return count.intValue();
 	}
 
@@ -42,7 +43,7 @@ public class NixieTubeDisplayTarget extends SingleLineDisplayTarget {
 	public AABB getMultiblockBounds(LevelAccessor level, BlockPos pos) {
 		MutableObject<BlockPos> start = new MutableObject<>(null);
 		MutableObject<BlockPos> end = new MutableObject<>(null);
-		NixieTubeBlock.walkNixies(level, pos, (currentPos, rowPosition) -> {
+		NixieTubeBlock.walkNixies(level, pos, true, (currentPos, rowPosition) -> {
 			end.setValue(currentPos);
 			if (start.getValue() == null)
 				start.setValue(currentPos);

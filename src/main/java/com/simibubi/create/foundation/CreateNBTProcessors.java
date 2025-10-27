@@ -1,11 +1,9 @@
 package com.simibubi.create.foundation;
 
-import java.util.List;
-
 import com.simibubi.create.AllBlockEntityTypes;
 
-import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.nbt.NBTProcessors;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -13,27 +11,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-import net.minecraftforge.registries.ForgeRegistries;
-
 public class CreateNBTProcessors {
 	public static void register() {
-
-		NBTProcessors.addProcessor(BlockEntityType.SIGN, data -> {
-			for (int i = 0; i < 4; ++i) {
-				if (NBTProcessors.textComponentHasClickEvent(data.getString("Text" + (i + 1))))
-					return null;
-			}
-			return data;
-		});
-
 		NBTProcessors.addProcessor(BlockEntityType.LECTERN, data -> {
 			if (!data.contains("Book", Tag.TAG_COMPOUND))
 				return data;
 			CompoundTag book = data.getCompound("Book");
 
 			// Writable books can't have click events, so they're safe to keep
-			ResourceLocation writableBookResource = ForgeRegistries.ITEMS.getKey(Items.WRITABLE_BOOK);
-			if (writableBookResource != null && book.getString("id").equals(writableBookResource.toString()))
+			ResourceLocation writableBookResource = BuiltInRegistries.ITEM.getKey(Items.WRITABLE_BOOK);
+			if (writableBookResource != BuiltInRegistries.ITEM.getDefaultKey() && book.getString("id").equals(writableBookResource.toString()))
 				return data;
 
 			if (!book.contains("tag", Tag.TAG_COMPOUND))
@@ -54,25 +41,33 @@ public class CreateNBTProcessors {
 		NBTProcessors.addProcessor(AllBlockEntityTypes.CLIPBOARD.get(), CreateNBTProcessors::clipboardProcessor);
 
 		NBTProcessors.addProcessor(AllBlockEntityTypes.CREATIVE_CRATE.get(), NBTProcessors.itemProcessor("Filter"));
-		NBTProcessors.addProcessor(AllBlockEntityTypes.PLACARD.get(), NBTProcessors.itemProcessor("Item"));
 	}
 
 	public static CompoundTag clipboardProcessor(CompoundTag data) {
 		if (!data.contains("Item", Tag.TAG_COMPOUND))
 			return data;
-		CompoundTag book = data.getCompound("Item");
+		CompoundTag item = data.getCompound("Item");
 
-		if (!book.contains("tag", Tag.TAG_COMPOUND))
+		if (!item.contains("components", Tag.TAG_COMPOUND))
 			return data;
-		CompoundTag itemData = book.getCompound("tag");
+		CompoundTag itemComponents = item.getCompound("components");
 
-		for (List<String> entries : NBTHelper.readCompoundList(itemData.getList("Pages", Tag.TAG_COMPOUND),
-			pageTag -> NBTHelper.readCompoundList(pageTag.getList("Entries", Tag.TAG_COMPOUND),
-				tag -> tag.getString("Text")))) {
-			for (String entry : entries)
-				if (NBTProcessors.textComponentHasClickEvent(entry))
+		if (!itemComponents.contains("create:clipboard_pages", Tag.TAG_LIST))
+			return data;
+		ListTag pages = itemComponents.getList("create:clipboard_pages", Tag.TAG_LIST);
+
+		for (Tag page : pages) {
+			if (!(page instanceof ListTag entries))
+				return data;
+
+			for (int i = 0; i < entries.size(); i++) {
+				CompoundTag entry = entries.getCompound(i);
+
+				if (NBTProcessors.textComponentHasClickEvent(entry.getCompound("text").getAsString()))
 					return null;
+			}
 		}
+
 		return data;
 	}
 }

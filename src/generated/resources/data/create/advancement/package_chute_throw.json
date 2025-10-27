@@ -1,0 +1,29 @@
+{
+  "parent": "create:cardboard_armor",
+  "criteria": {
+    "0": {
+      "trigger": "create:package_chute_throw_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.package_chute_throw.desc"
+    },
+    "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "create:cardboard_package_12x12"
+    },
+    "title": {
+      "translate": "advancement.create.package_chute_throw"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

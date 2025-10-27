@@ -13,7 +13,7 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.levelWrappers.WorldHelper;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
@@ -35,7 +35,7 @@ public class RedstoneLinkNetworkHandler {
 		public static Frequency of(ItemStack stack) {
 			if (stack.isEmpty())
 				return EMPTY;
-			if (!stack.hasTag())
+			if (stack.getComponents().isEmpty())
 				return simpleFrequencies.computeIfAbsent(stack.getItem(), $ -> new Frequency(stack));
 			return new Frequency(stack);
 		}
@@ -43,8 +43,7 @@ public class RedstoneLinkNetworkHandler {
 		private Frequency(ItemStack stack) {
 			this.stack = stack;
 			item = stack.getItem();
-			CompoundTag displayTag = stack.getTagElement("display");
-			color = displayTag != null && displayTag.contains("color") ? displayTag.getInt("color") : -1;
+			color = stack.has(DataComponents.DYED_COLOR) ? stack.get(DataComponents.DYED_COLOR).rgb() : -1;
 		}
 
 		public ItemStack getStack() {

@@ -1,0 +1,28 @@
+{
+  "parent": "create:train",
+  "criteria": {
+    "0": {
+      "trigger": "create:conductor_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.conductor.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:schedule"
+    },
+    "title": {
+      "translate": "advancement.create.conductor"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

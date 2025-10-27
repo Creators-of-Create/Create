@@ -1,99 +1,80 @@
 package com.simibubi.create.content.contraptions.elevator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
+
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import io.netty.buffer.ByteBuf;
 
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.IntAttached;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-import net.minecraftforge.network.NetworkEvent.Context;
-import net.minecraftforge.network.PacketDistributor;
+public record ElevatorFloorListPacket(int entityId, List<IntAttached<Couple<String>>> floors) implements ClientboundPacketPayload {
+	public static final StreamCodec<ByteBuf, com.simibubi.create.content.contraptions.elevator.ElevatorFloorListPacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.INT, com.simibubi.create.content.contraptions.elevator.ElevatorFloorListPacket::entityId,
+			CatnipStreamCodecBuilders.list(IntAttached.streamCodec(Couple.streamCodec(ByteBufCodecs.STRING_UTF8))), com.simibubi.create.content.contraptions.elevator.ElevatorFloorListPacket::floors,
+			com.simibubi.create.content.contraptions.elevator.ElevatorFloorListPacket::new
+	);
 
-public class ElevatorFloorListPacket extends SimplePacketBase {
-
-	private int entityId;
-	private List<IntAttached<Couple<String>>> floorsList;
-
-	public ElevatorFloorListPacket(AbstractContraptionEntity entity, List<IntAttached<Couple<String>>> floorsList) {
-		this.entityId = entity.getId();
-		this.floorsList = floorsList;
-	}
-
-	public ElevatorFloorListPacket(FriendlyByteBuf buffer) {
-		entityId = buffer.readInt();
-		int size = buffer.readInt();
-		floorsList = new ArrayList<>();
-		for (int i = 0; i < size; i++)
-			floorsList.add(IntAttached.with(buffer.readInt(), Couple.create(buffer.readUtf(), buffer.readUtf())));
+	public ElevatorFloorListPacket(AbstractContraptionEntity entity, List<IntAttached<Couple<String>>> floors) {
+		this(entity.getId(), floors);
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeInt(entityId);
-		buffer.writeInt(floorsList.size());
-		for (IntAttached<Couple<String>> entry : floorsList) {
-			buffer.writeInt(entry.getFirst());
-			entry.getSecond()
-				.forEach(buffer::writeUtf);
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		Entity entityByID = player.clientLevel.getEntity(entityId);
+		if (!(entityByID instanceof AbstractContraptionEntity ace))
+			return;
+		if (!(ace.getContraption() instanceof ElevatorContraption ec))
+			return;
+
+		ec.namesList = this.floors;
+		ec.syncControlDisplays();
+	}
+
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.UPDATE_ELEVATOR_FLOORS;
+	}
+
+	public record RequestFloorList(int entityId) implements ServerboundPacketPayload {
+		public static final StreamCodec<ByteBuf, RequestFloorList> STREAM_CODEC = ByteBufCodecs.INT.map(
+				RequestFloorList::new, RequestFloorList::entityId
+		);
+
+		public RequestFloorList(AbstractContraptionEntity entity) {
+			this(entity.getId());
 		}
-	}
 
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
+		@Override
+		public void handle(ServerPlayer sender) {
+			Entity entityByID = sender.level()
+					.getEntity(entityId);
 			if (!(entityByID instanceof AbstractContraptionEntity ace))
 				return;
 			if (!(ace.getContraption()instanceof ElevatorContraption ec))
 				return;
-
-			ec.namesList = floorsList;
-			ec.syncControlDisplays();
-		});
-		return true;
-	}
-
-	public static class RequestFloorList extends SimplePacketBase {
-
-		private int entityId;
-
-		public RequestFloorList(AbstractContraptionEntity entity) {
-			this.entityId = entity.getId();
-		}
-
-		public RequestFloorList(FriendlyByteBuf buffer) {
-			entityId = buffer.readInt();
-		}
-
-		@Override
-		public void write(FriendlyByteBuf buffer) {
-			buffer.writeInt(entityId);
-		}
-
-		@Override
-		public boolean handle(Context context) {
-			context.enqueueWork(() -> {
-				ServerPlayer sender = context.getSender();
-				Entity entityByID = sender.level()
-					.getEntity(entityId);
-				if (!(entityByID instanceof AbstractContraptionEntity ace))
-					return;
-				if (!(ace.getContraption()instanceof ElevatorContraption ec))
-					return;
-				AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> sender),
+			CatnipServices.NETWORK.sendToClient(sender,
 					new ElevatorFloorListPacket(ace, ec.namesList));
-			});
-			return true;
 		}
 
+		@Override
+		public PacketTypeProvider getTypeProvider() {
+			return AllPackets.REQUEST_FLOOR_LIST;
+		}
 	}
 
 }

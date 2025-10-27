@@ -1,58 +1,43 @@
 package com.simibubi.create.content.contraptions.sync;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkEvent.Context;
 
-public class LimbSwingUpdatePacket extends SimplePacketBase {
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-	private int entityId;
-	private Vec3 position;
-	private float limbSwing;
+public record LimbSwingUpdatePacket(int entityId, Vec3 position, float limbSwing) implements ClientboundPacketPayload {
+	public static final StreamCodec<ByteBuf, LimbSwingUpdatePacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.INT, LimbSwingUpdatePacket::entityId,
+			CatnipStreamCodecs.VEC3, LimbSwingUpdatePacket::position,
+			ByteBufCodecs.FLOAT, LimbSwingUpdatePacket::limbSwing,
+	        LimbSwingUpdatePacket::new
+	);
 
-	public LimbSwingUpdatePacket(int entityId, Vec3 position, float limbSwing) {
-		this.entityId = entityId;
-		this.position = position;
-		this.limbSwing = limbSwing;
-	}
-
-	public LimbSwingUpdatePacket(FriendlyByteBuf buffer) {
-		entityId = buffer.readInt();
-		position = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-		limbSwing = buffer.readFloat();
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		Entity entity = player.clientLevel.getEntity(entityId);
+		if (entity == null)
+			return;
+		CompoundTag data = entity.getPersistentData();
+		data.putInt("LastOverrideLimbSwingUpdate", 0);
+		data.putFloat("OverrideLimbSwing", limbSwing);
+		entity.lerpTo(position.x, position.y, position.z, entity.getYRot(),
+				entity.getXRot(), 2);
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeInt(entityId);
-		buffer.writeDouble(position.x);
-		buffer.writeDouble(position.y);
-		buffer.writeDouble(position.z);
-		buffer.writeFloat(limbSwing);
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.LIMBSWING_UPDATE;
 	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ClientLevel world = Minecraft.getInstance().level;
-			if (world == null)
-				return;
-			Entity entity = world.getEntity(entityId);
-			if (entity == null)
-				return;
-			CompoundTag data = entity.getPersistentData();
-			data.putInt("LastOverrideLimbSwingUpdate", 0);
-			data.putFloat("OverrideLimbSwing", limbSwing);
-			entity.lerpTo(position.x, position.y, position.z, entity.getYRot(),
-				entity.getXRot(), 2, false);
-		});
-		return true;
-	}
-
 }

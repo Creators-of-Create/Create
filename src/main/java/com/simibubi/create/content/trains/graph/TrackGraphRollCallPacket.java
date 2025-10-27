@@ -11,69 +11,70 @@ import java.util.UUID;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.GlobalRailwayManager;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent.Context;
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import net.createmod.catnip.platform.CatnipServices;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
-public class TrackGraphRollCallPacket extends SimplePacketBase {
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-	int[] ints;
+public record TrackGraphRollCallPacket(List<Entry> entries) implements ClientboundPacketPayload {
+	public static final StreamCodec<ByteBuf, TrackGraphRollCallPacket> STREAM_CODEC = CatnipStreamCodecBuilders.list(Entry.STREAM_CODEC).map(
+					TrackGraphRollCallPacket::new, TrackGraphRollCallPacket::entries
+			);
 
-	public TrackGraphRollCallPacket() {
-		GlobalRailwayManager manager = Create.RAILWAYS;
-		ints = new int[manager.trackNetworks.size() * 2];
-		int i = 0;
-		for (TrackGraph trackGraph : manager.trackNetworks.values()) {
-			ints[i] = trackGraph.netId;
-			ints[i + 1] = trackGraph.getChecksum();
-			i += 2;
+	public static TrackGraphRollCallPacket ofServer() {
+		List<Entry> entries = new ArrayList<>();
+		for (TrackGraph graph : Create.RAILWAYS.trackNetworks.values()) {
+			entries.add(new Entry(graph.netId, graph.getChecksum()));
 		}
-	}
-
-	public TrackGraphRollCallPacket(FriendlyByteBuf buffer) {
-		ints = new int[buffer.readVarInt()];
-		for (int i = 0; i < ints.length; i++)
-			ints[i] = buffer.readInt();
+		return new TrackGraphRollCallPacket(entries);
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeVarInt(ints.length);
-		for (int i : ints)
-			buffer.writeInt(i);
-	}
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		GlobalRailwayManager manager = Create.RAILWAYS.sided(null);
+		Set<UUID> unusedIds = new HashSet<>(manager.trackNetworks.keySet());
+		List<Integer> failedIds = new ArrayList<>();
+		Map<Integer, UUID> idByNetId = new HashMap<>();
+		manager.trackNetworks.forEach((uuid, g) -> idByNetId.put(g.netId, uuid));
 
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			GlobalRailwayManager manager = Create.RAILWAYS.sided(null);
-			Set<UUID> unusedIds = new HashSet<>(manager.trackNetworks.keySet());
-			List<Integer> failedIds = new ArrayList<>();
-			Map<Integer, UUID> idByNetId = new HashMap<>();
-			manager.trackNetworks.forEach((uuid, g) -> idByNetId.put(g.netId, uuid));
-
-			for (int i = 0; i < ints.length; i += 2) {
-				UUID uuid = idByNetId.get(ints[i]);
-				if (uuid == null) {
-					failedIds.add(ints[i]);
-					continue;
-				}
-				unusedIds.remove(uuid);
-				TrackGraph trackGraph = manager.trackNetworks.get(uuid);
-				if (trackGraph.getChecksum() == ints[i + 1])
-					continue;
-				Create.LOGGER.warn("Track network: " + uuid.toString()
-					.substring(0, 6) + " failed its checksum; Requesting refresh");
-				failedIds.add(ints[i]);
+		for (Entry entry : this.entries) {
+			UUID uuid = idByNetId.get(entry.netId);
+			if (uuid == null) {
+				failedIds.add(entry.netId);
+				continue;
 			}
+			unusedIds.remove(uuid);
+			TrackGraph trackGraph = manager.trackNetworks.get(uuid);
+			if (trackGraph.getChecksum() == entry.checksum)
+				continue;
+			Create.LOGGER.warn("Track network: {} failed its checksum; Requesting refresh", uuid.toString().substring(0, 6));
+			failedIds.add(entry.netId);
+		}
 
-			for (Integer failed : failedIds)
-				AllPackets.getChannel().sendToServer(new TrackGraphRequestPacket(failed));
-			for (UUID unused : unusedIds)
-				manager.trackNetworks.remove(unused);
-		});
-		return true;
+		for (Integer failed : failedIds)
+			CatnipServices.NETWORK.sendToServer(new TrackGraphRequestPacket(failed));
+		for (UUID unused : unusedIds)
+			manager.trackNetworks.remove(unused);
 	}
 
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.TRACK_GRAPH_ROLL_CALL;
+	}
+
+	public record Entry(int netId, int checksum) {
+		public static final StreamCodec<ByteBuf, Entry> STREAM_CODEC = StreamCodec.composite(
+				ByteBufCodecs.VAR_INT, Entry::netId,
+				ByteBufCodecs.INT, Entry::checksum,
+				Entry::new
+		);
+	}
 }

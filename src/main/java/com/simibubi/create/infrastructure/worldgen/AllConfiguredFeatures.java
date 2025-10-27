@@ -8,7 +8,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -28,7 +28,7 @@ public class AllConfiguredFeatures {
 		return ResourceKey.create(Registries.CONFIGURED_FEATURE, Create.asResource(name));
 	}
 
-	public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> ctx) {
+	public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> ctx) {
 		RuleTest stoneOreReplaceables = new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES);
 		RuleTest deepslateOreReplaceables = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
 

@@ -2,6 +2,7 @@ package com.simibubi.create.content.equipment.potatoCannon;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.equipment.potatoCannon.PotatoProjectileRenderMode;
@@ -15,8 +16,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class AllPotatoProjectileRenderModes {
 	
@@ -30,14 +31,14 @@ public class AllPotatoProjectileRenderModes {
 	public static void init() {
 	}
 
-	private static void register(String name, Codec<? extends PotatoProjectileRenderMode> codec) {
+	private static void register(String name, MapCodec<? extends PotatoProjectileRenderMode> codec) {
 		Registry.register(CreateBuiltInRegistries.POTATO_PROJECTILE_RENDER_MODE, Create.asResource(name), codec);
 	}
 
 	public enum Billboard implements PotatoProjectileRenderMode {
 		INSTANCE;
 
-		public static final Codec<Billboard> CODEC = Codec.unit(INSTANCE);
+		public static final MapCodec<Billboard> CODEC = MapCodec.unit(INSTANCE);
 
 		@Override
 		@OnlyIn(Dist.CLIENT)
@@ -55,7 +56,7 @@ public class AllPotatoProjectileRenderModes {
 		}
 
 		@Override
-		public Codec<? extends PotatoProjectileRenderMode> codec() {
+		public MapCodec<? extends PotatoProjectileRenderMode> codec() {
 			return CODEC;
 		}
 	}
@@ -63,7 +64,7 @@ public class AllPotatoProjectileRenderModes {
 	public enum Tumble implements PotatoProjectileRenderMode {
 		INSTANCE;
 
-		public static final Codec<Tumble> CODEC = Codec.unit(INSTANCE);
+		public static final MapCodec<Tumble> CODEC = MapCodec.unit(INSTANCE);
 
 		@Override
 		@OnlyIn(Dist.CLIENT)
@@ -75,13 +76,13 @@ public class AllPotatoProjectileRenderModes {
 		}
 
 		@Override
-		public Codec<? extends PotatoProjectileRenderMode> codec() {
+		public MapCodec<? extends PotatoProjectileRenderMode> codec() {
 			return CODEC;
 		}
 	}
 
 	public record TowardMotion(int spriteAngleOffset, float spin) implements PotatoProjectileRenderMode {
-		public static final Codec<TowardMotion> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		public static final MapCodec<TowardMotion> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			Codec.INT.fieldOf("sprite_angle_offset").forGetter(i -> i.spriteAngleOffset),
 			Codec.FLOAT.fieldOf("spin").forGetter(i -> i.spin)
 		).apply(instance, TowardMotion::new));
@@ -100,13 +101,13 @@ public class AllPotatoProjectileRenderModes {
 		}
 
 		@Override
-		public Codec<? extends PotatoProjectileRenderMode> codec() {
+		public MapCodec<? extends PotatoProjectileRenderMode> codec() {
 			return CODEC;
 		}
 	}
 
 	public record StuckToEntity(Vec3 offset) implements PotatoProjectileRenderMode {
-		public static final Codec<StuckToEntity> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		public static final MapCodec<StuckToEntity> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			Vec3.CODEC.fieldOf("offset").forGetter(i -> i.offset)
 		).apply(instance, StuckToEntity::new));
 
@@ -117,7 +118,7 @@ public class AllPotatoProjectileRenderModes {
 		}
 
 		@Override
-		public Codec<? extends PotatoProjectileRenderMode> codec() {
+		public MapCodec<? extends PotatoProjectileRenderMode> codec() {
 			return CODEC;
 		}
 	}

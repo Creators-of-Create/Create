@@ -1,39 +1,31 @@
 package com.simibubi.create.content.trains.graph;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent.Context;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 
-public class TrackGraphRequestPacket extends SimplePacketBase {
-
-	private int netId;
-
-	public TrackGraphRequestPacket(int netId) {
-		this.netId = netId;
-	}
-
-	public TrackGraphRequestPacket(FriendlyByteBuf buffer) {
-		netId = buffer.readInt();
-	}
+public record TrackGraphRequestPacket(int netId) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, TrackGraphRequestPacket> STREAM_CODEC = ByteBufCodecs.INT.map(
+			TrackGraphRequestPacket::new, TrackGraphRequestPacket::netId
+	);
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeInt(netId);
-	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-				for (TrackGraph trackGraph : Create.RAILWAYS.trackNetworks.values()) {
-				if (trackGraph.netId == netId) {
-					Create.RAILWAYS.sync.sendFullGraphTo(trackGraph, context.getSender());
-					break;
-				}
+	public void handle(ServerPlayer player) {
+		for (TrackGraph trackGraph : Create.RAILWAYS.trackNetworks.values()) {
+			if (trackGraph.netId == netId) {
+				Create.RAILWAYS.sync.sendFullGraphTo(trackGraph, player);
+				break;
 			}
-		});
-		return true;
+		}
 	}
 
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.TRACK_GRAPH_REQUEST;
+	}
 }

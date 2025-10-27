@@ -1,0 +1,90 @@
+modLoader = "javafml"
+# The loader version doesn't matter. Modify the NeoForge and/or Minecraft version ranges instead.
+loaderVersion = "[0,)"
+issueTrackerURL = "https://github.com/Creators-of-Create/Create/issues"
+license = "${mod_license}"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/create"
+logoFile = "icon.png"
+authors = "${mod_author}"
+description = '''${mod_description}'''
+
+[[mixins]]
+config = "${mod_id}.mixins.json"
+
+[[dependencies."${mod_id}"]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neo_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraft_version}]"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "flywheel"
+type = "required"
+versionRange = "${flywheel_version_range}"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies."${mod_id}"]]
+modId = "ponder"
+type = "required"
+versionRange = "[${ponder_version},)"
+ordering = "AFTER"
+side = "BOTH"
+
+# Versions before 0.6.9 do not have sprite util under the api package
+[[dependencies."${mod_id}"]]
+modId = "sodium"
+type = "optional"
+reason = "Versions before 0.6.9 do not include the neccesary APIs Create needs to work properly with Sodium."
+versionRange = "[0.6.9,)"
+ordering = "NONE"
+side = "CLIENT"
+
+# Versions before 0.14.7 crash with level wrappers
+[[dependencies."${mod_id}"]]
+modId = "lithium"
+type = "optional"
+reason = "Versions before 0.14.7 crash when paired with Create, Update Lithium."
+versionRange = "[0.14.7,)"
+ordering = "NONE"
+side = "BOTH"
+
+# Versions before 1.21.1-6.0.0-beta.46 do not contain the fullscreen render event we use
+[[dependencies."${mod_id}"]]
+modId = "journeymap"
+type = "optional"
+reason = "Versions before 1.21.1-6.0.0-beta.46 do not contain the APIs Create requires to work with JourneyMap."
+versionRange = "[1.21.1-6.0.0-beta.46,)"
+ordering = "NONE"
+side = "CLIENT"
+
+# Incompatible Mods
+
+# Users should use lithium instead, it's up to date and does not crash with level wrappers (anymore)
+[[dependencies."${mod_id}"]]
+modId = "radium"
+type = "incompatible"
+reason = "Radium is a unofficial port of Lithium, Lithium is now natively available for NeoForge and does not suffer from the same issues radium does, use Lithium instead."
+ordering = "NONE"
+side = "BOTH"
+
+# Does not improve memory usage, results in connected textures not working as intended.
+[[dependencies."${mod_id}"]]
+modId = "palladium"
+type = "incompatible"
+reason = "Palladium does not improve memory usage by anything meaningful, and results in broken visuals for Create's blocks with connected textures."
+ordering = "NONE"
+side = "BOTH"

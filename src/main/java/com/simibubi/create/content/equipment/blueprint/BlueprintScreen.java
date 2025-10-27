@@ -1,7 +1,6 @@
 package com.simibubi.create.content.equipment.blueprint;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.filter.FilterScreenPacket.Option;
@@ -9,6 +8,7 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
+import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.ChatFormatting;
@@ -160,7 +160,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintMenu> 
 	protected void contentsCleared() {}
 
 	protected void sendOptionUpdate(Option option) {
-		AllPackets.getChannel().sendToServer(new FilterScreenPacket(option));
+		CatnipServices.NETWORK.sendToServer(new FilterScreenPacket(option));
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.simibubi.create.content.equipment.sandPaper;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
@@ -11,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -21,19 +21,19 @@ public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer {
 	@Override
 	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer,
 		ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-		LocalPlayer player = Minecraft.getInstance().player;
+		Minecraft mc = Minecraft.getInstance();
+		ItemRenderer itemRenderer = mc.getItemRenderer();
+		LocalPlayer player = mc.player;
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
 		boolean leftHand = transformType == ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
 		boolean firstPerson = leftHand || transformType == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
 
-		CompoundTag tag = stack.getOrCreateTag();
-		boolean jeiMode = tag.contains("JEI");
+		boolean jeiMode = stack.has(AllDataComponents.SAND_PAPER_JEI);
 
 		ms.pushPose();
 
-		if (tag.contains("Polishing")) {
+		if (stack.has(AllDataComponents.SAND_PAPER_POLISHING)) {
 			ms.pushPose();
 
 			if (transformType == ItemDisplayContext.GUI) {
@@ -46,8 +46,8 @@ public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer {
 
 			// Reverse bobbing
 			float time = (float) (!jeiMode ? player.getUseItemRemainingTicks()
-					: (-AnimationTickHolder.getTicks()) % stack.getUseDuration()) - partialTicks + 1.0F;
-			if (time / (float) stack.getUseDuration() < 0.8F) {
+					: (-AnimationTickHolder.getTicks()) % stack.getUseDuration(player)) - partialTicks + 1.0F;
+			if (time / (float) stack.getUseDuration(player) < 0.8F) {
 				float bobbing = -Mth.abs(Mth.cos(time / 4.0F * (float) Math.PI) * 0.1F);
 
 				if (transformType == ItemDisplayContext.GUI)
@@ -56,7 +56,8 @@ public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer {
 					ms.translate(0.0f, bobbing, 0.0F);
 			}
 
-			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
+			ItemStack toPolish = stack.get(AllDataComponents.SAND_PAPER_POLISHING).item();
+			//noinspection DataFlowIssue - We call .has, toPolish won't be null
 			itemRenderer.renderStatic(toPolish, ItemDisplayContext.GUI, light, overlay, ms, buffer, player.level(), 0);
 
 			ms.popPose();

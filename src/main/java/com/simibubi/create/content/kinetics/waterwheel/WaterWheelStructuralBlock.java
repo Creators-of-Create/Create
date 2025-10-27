@@ -2,10 +2,11 @@ package com.simibubi.create.content.kinetics.waterwheel;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Consumer;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.equipment.goggles.IProxyHoveringInformation;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -19,6 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,6 +28,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
@@ -36,11 +39,12 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
+
+import net.neoforged.neoforge.client.extensions.common.IClientBlockExtensions;
 
 public class WaterWheelStructuralBlock extends DirectionalBlock implements IWrenchable, IProxyHoveringInformation {
+
+	public static final MapCodec<WaterWheelStructuralBlock> CODEC = simpleCodec(WaterWheelStructuralBlock::new);
 
 	public WaterWheelStructuralBlock(Properties p_52591_) {
 		super(p_52591_);
@@ -67,7 +71,7 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
 		return AllBlocks.LARGE_WATER_WHEEL.asStack();
 	}
 
@@ -88,13 +92,12 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 	}
 
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-								 BlockHitResult pHit) {
-		if (!stillValid(pLevel, pPos, pState, false))
-			return InteractionResult.FAIL;
-		if (!(pLevel.getBlockEntity(getMaster(pLevel, pPos, pState)) instanceof WaterWheelBlockEntity wwt))
-			return InteractionResult.FAIL;
-		return wwt.applyMaterialIfValid(pPlayer.getItemInHand(pHand));
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (!stillValid(level, pos, state, false))
+			return ItemInteractionResult.FAIL;
+		if (!(level.getBlockEntity(getMaster(level, pos, state)) instanceof WaterWheelBlockEntity wwt))
+			return ItemInteractionResult.FAIL;
+		return wwt.applyMaterialIfValid(stack);
 	}
 
 	@Override
@@ -103,14 +106,14 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 			pLevel.destroyBlock(getMaster(pLevel, pPos, pState), true);
 	}
 
-	public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
+	public BlockState playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
 		if (stillValid(pLevel, pPos, pState, false)) {
 			BlockPos masterPos = getMaster(pLevel, pPos, pState);
 			pLevel.destroyBlockProgress(masterPos.hashCode(), masterPos, -1);
 			if (!pLevel.isClientSide() && pPlayer.isCreative())
 				pLevel.destroyBlock(masterPos, false);
 		}
-		super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
+		return super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
 	}
 
 	@Override
@@ -160,11 +163,6 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 			pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public void initializeClient(Consumer<IClientBlockExtensions> consumer) {
-		consumer.accept(new RenderProperties());
-	}
-
 	@Override
 	public boolean addLandingEffects(BlockState state1, ServerLevel level, BlockPos pos, BlockState state2,
 									 LivingEntity entity, int numberOfParticles) {
@@ -210,5 +208,9 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 	@Override
 	public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
 		return false;
+	}
+	@Override
+	protected @NotNull MapCodec<? extends DirectionalBlock> codec() {
+		return CODEC;
 	}
 }

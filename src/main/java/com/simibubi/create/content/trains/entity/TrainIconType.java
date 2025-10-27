@@ -6,11 +6,16 @@ import java.util.Map;
 import com.simibubi.create.Create;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import io.netty.buffer.ByteBuf;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TrainIconType {
+	public static final StreamCodec<ByteBuf, TrainIconType> STREAM_CODEC = ResourceLocation.STREAM_CODEC.map(
+			TrainIconType::byId, TrainIconType::getId
+	);
 
 	public static Map<ResourceLocation, TrainIconType> REGISTRY = new HashMap<>();
 

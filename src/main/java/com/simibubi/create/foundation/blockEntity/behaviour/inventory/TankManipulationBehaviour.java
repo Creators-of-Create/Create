@@ -2,16 +2,16 @@ package com.simibubi.create.foundation.blockEntity.behaviour.inventory;
 
 import java.util.function.Predicate;
 
+import net.minecraft.core.Direction;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import com.google.common.base.Predicates;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
-
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFluidHandler, TankManipulationBehaviour> {
 
@@ -57,8 +57,8 @@ public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFlu
 	}
 
 	@Override
-	protected Capability<IFluidHandler> capability() {
-		return ForgeCapabilities.FLUID_HANDLER;
+	protected BlockCapability<IFluidHandler, Direction> capability() {
+		return Capabilities.FluidHandler.BLOCK;
 	}
 
 	@Override

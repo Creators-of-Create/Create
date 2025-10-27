@@ -1,11 +1,18 @@
 package com.simibubi.create.content.trains.observer;
 
 import java.util.List;
+import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.Create;
 import com.simibubi.create.api.contraption.transformable.TransformableBlockEntity;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
+import com.simibubi.create.compat.computercraft.events.TrainPassEvent;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
 import com.simibubi.create.content.trains.graph.EdgePointType;
@@ -16,15 +23,19 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import dan200.computercraft.api.peripheral.PeripheralCapability;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class TrackObserverBlockEntity extends SmartBlockEntity implements TransformableBlockEntity {
 
@@ -32,14 +43,28 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements Transf
 
 	private FilteringBehaviour filtering;
 
+	public AbstractComputerBehaviour computerBehaviour;
+	public @org.jetbrains.annotations.Nullable UUID passingTrainUUID;
+
 	public TrackObserverBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		if (Mods.COMPUTERCRAFT.isLoaded()) {
+			event.registerBlockEntity(
+				PeripheralCapability.get(),
+				AllBlockEntityTypes.TRACK_OBSERVER.get(),
+				(be, context) -> be.computerBehaviour.getPeripheralCapability()
+			);
+		}
 	}
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(edgePoint = new TrackTargetingBehaviour<>(this, EdgePointType.OBSERVER));
 		behaviours.add(filtering = createFilter().withCallback(this::onFilterChanged));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 		filtering.setLabel(CreateLang.translateDirect("logistics.train_observer.cargo_filter"));
 	}
 
@@ -65,9 +90,20 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements Transf
 		if (isBlockPowered() == shouldBePowered)
 			return;
 
+		if (observer != null && computerBehaviour.hasAttachedComputer()) {
+			if (shouldBePowered)
+				passingTrainUUID = observer.getCurrentTrain();
+			if (passingTrainUUID != null) {
+				computerBehaviour.prepareComputerEvent(
+						new TrainPassEvent(Create.RAILWAYS.trains.get(passingTrainUUID), shouldBePowered));
+				if (!shouldBePowered)
+					passingTrainUUID = null;
+			}
+		}
+
 		BlockState blockState = getBlockState();
 		if (blockState.hasProperty(TrackObserverBlock.POWERED))
-			level.setBlock(worldPosition, blockState.setValue(TrackObserverBlock.POWERED, shouldBePowered), 3);
+			level.setBlock(worldPosition, blockState.setValue(TrackObserverBlock.POWERED, shouldBePowered), Block.UPDATE_ALL);
 		DisplayLinkBlock.notifyGatherers(level, worldPosition);
 	}
 
@@ -87,7 +123,7 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements Transf
 
 	@Override
 	protected AABB createRenderBoundingBox() {
-		return new AABB(worldPosition, edgePoint.getGlobalPosition()).inflate(2);
+		return new AABB(Vec3.atLowerCornerOf(worldPosition), Vec3.atLowerCornerOf(edgePoint.getGlobalPosition())).inflate(2);
 	}
 
 	@Override
@@ -110,6 +146,12 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements Transf
 			}
 
 		});
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 }

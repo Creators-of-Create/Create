@@ -10,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -111,7 +110,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 
 		boolean previouslyPowered = state.getValue(POWERED);
 		if (previouslyPowered != power > 0)
-			worldIn.setBlock(pos, state.cycle(POWERED), 2);
+			worldIn.setBlock(pos, state.cycle(POWERED), Block.UPDATE_CLIENTS);
 
 		int transmit = power;
 		withBlockEntityDo(worldIn, pos, be -> be.transmit(transmit));
@@ -153,8 +152,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult hit) {
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
 		if (player.isShiftKeyDown() && toggleMode(state, level, pos) == InteractionResult.SUCCESS) {
 			level.scheduleTick(pos, this, 1);
 			return InteractionResult.SUCCESS;
@@ -170,7 +168,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 			Boolean wasReceiver = state.getValue(RECEIVER);
 			boolean blockPowered = worldIn.hasNeighborSignal(pos);
 			worldIn.setBlock(pos, state.cycle(RECEIVER)
-				.setValue(POWERED, blockPowered), 3);
+				.setValue(POWERED, blockPowered), Block.UPDATE_ALL);
 			be.transmit(wasReceiver ? 0 : getPower(worldIn, pos));
 			return InteractionResult.SUCCESS;
 		});
@@ -217,7 +215,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

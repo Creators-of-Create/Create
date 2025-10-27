@@ -1,10 +1,11 @@
 package com.simibubi.create.content.contraptions.minecart;
 
+import com.simibubi.create.AllAttachmentTypes;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.minecart.capability.MinecartController;
 
 import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -13,15 +14,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 
 @EventBusSubscriber
 public class MinecartCouplingItem extends Item {
@@ -38,11 +37,10 @@ public class MinecartCouplingItem extends Item {
 		Player player = event.getEntity();
 		if (player == null)
 			return;
-		LazyOptional<MinecartController> capability =
-			minecart.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
-		if (!capability.isPresent())
+		MinecartController controller =
+			minecart.getData(AllAttachmentTypes.MINECART_CONTROLLER);
+		if (controller == MinecartController.EMPTY || !controller.isPresent())
 			return;
-		MinecartController controller = capability.orElse(null);
 
 		ItemStack heldItem = player.getItemInHand(event.getHand());
 		if (AllItems.MINECART_COUPLING.isIn(heldItem)) {
@@ -67,7 +65,7 @@ public class MinecartCouplingItem extends Item {
 			return true;
 		}
 		if (world != null && world.isClientSide)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> cartClicked(player, minecart));
+			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> cartClicked(player, minecart));
 		return true;
 	}
 
@@ -94,7 +92,7 @@ public class MinecartCouplingItem extends Item {
 
 	@OnlyIn(Dist.CLIENT)
 	private static void cartClicked(Player player, AbstractMinecart interacted) {
-		CouplingHandlerClient.onCartClicked(player, (AbstractMinecart) interacted);
+		CouplingHandlerClient.onCartClicked(player, interacted);
 	}
 
 }

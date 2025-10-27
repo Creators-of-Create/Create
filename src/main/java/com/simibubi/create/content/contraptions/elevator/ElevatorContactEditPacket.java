@@ -1,17 +1,28 @@
 package com.simibubi.create.content.contraptions.elevator;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.decoration.slidingDoor.DoorControl;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 
 public class ElevatorContactEditPacket extends BlockEntityConfigurationPacket<ElevatorContactBlockEntity> {
+	public static final StreamCodec<FriendlyByteBuf, ElevatorContactEditPacket> STREAM_CODEC = StreamCodec.composite(
+			BlockPos.STREAM_CODEC, packet -> packet.pos,
+			ByteBufCodecs.stringUtf8(4), packet -> packet.shortName,
+			ByteBufCodecs.stringUtf8(90), packet -> packet.longName,
+			DoorControl.STREAM_CODEC, packet -> packet.doorControl,
+			ElevatorContactEditPacket::new
+	);
 
-	private String shortName;
-	private String longName;
-	private DoorControl doorControl;
+	private final String shortName;
+	private final String longName;
+	private final DoorControl doorControl;
 
 	public ElevatorContactEditPacket(BlockPos pos, String shortName, String longName, DoorControl doorControl) {
 		super(pos);
@@ -20,28 +31,14 @@ public class ElevatorContactEditPacket extends BlockEntityConfigurationPacket<El
 		this.doorControl = doorControl;
 	}
 
-	public ElevatorContactEditPacket(FriendlyByteBuf buffer) {
-		super(buffer);
-	}
-
 	@Override
-	protected void writeSettings(FriendlyByteBuf buffer) {
-		buffer.writeUtf(shortName, 4);
-		buffer.writeUtf(longName, 90);
-		buffer.writeVarInt(doorControl.ordinal());
-	}
-
-	@Override
-	protected void readSettings(FriendlyByteBuf buffer) {
-		shortName = buffer.readUtf(4);
-		longName = buffer.readUtf(90);
-		doorControl = DoorControl.values()[Mth.clamp(buffer.readVarInt(), 0, DoorControl.values().length)];
-	}
-
-	@Override
-	protected void applySettings(ElevatorContactBlockEntity be) {
+	protected void applySettings(ServerPlayer player, ElevatorContactBlockEntity be) {
 		be.updateName(shortName, longName);
 		be.doorControls.set(doorControl);
 	}
 
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONFIGURE_ELEVATOR_CONTACT;
+	}
 }

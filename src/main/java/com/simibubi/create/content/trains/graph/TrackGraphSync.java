@@ -2,23 +2,24 @@ package com.simibubi.create.content.trains.graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.Map.Entry;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.signal.EdgeGroupColor;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroupPacket;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;
+import net.createmod.catnip.platform.CatnipServices;
 
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.PacketDistributor;
 
 public class TrackGraphSync {
 
@@ -32,7 +33,7 @@ public class TrackGraphSync {
 			for (TrackGraphPacket packet : queuedPackets) {
 				if (!packet.packetDeletesGraph && !Create.RAILWAYS.trackNetworks.containsKey(packet.graphId))
 					continue;
-				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), packet);
+				CatnipServices.NETWORK.sendToAllClients(packet);
 				rollCallIn = 3;
 			}
 
@@ -105,17 +106,16 @@ public class TrackGraphSync {
 	//
 
 	public void sendEdgeGroups(List<UUID> ids, List<EdgeGroupColor> colors, ServerPlayer player) {
-		AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> player),
+		CatnipServices.NETWORK.sendToClient(player,
 			new SignalEdgeGroupPacket(ids, colors, true));
 	}
 
 	public void edgeGroupCreated(UUID id, EdgeGroupColor color) {
-		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new SignalEdgeGroupPacket(id, color));
+		CatnipServices.NETWORK.sendToAllClients(new SignalEdgeGroupPacket(id, color));
 	}
 
 	public void edgeGroupRemoved(UUID id) {
-		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(),
-			new SignalEdgeGroupPacket(ImmutableList.of(id), Collections.emptyList(), false));
+		CatnipServices.NETWORK.sendToAllClients(new SignalEdgeGroupPacket(ImmutableList.of(id), Collections.emptyList(), false));
 	}
 
 	//
@@ -138,6 +138,8 @@ public class TrackGraphSync {
 		packet.fullWipe = true;
 		int sent = 0;
 
+		Set<TrackEdgePoint> sentPoints = new HashSet<>();
+
 		for (TrackNode node : graph.nodes.values()) {
 			TrackGraphSyncPacket currentPacket = packet;
 			currentPacket.addedNodes.put(node.getNetId(), Pair.of(node.getLocation(), node.getNormal()));
@@ -152,12 +154,24 @@ public class TrackGraphSync {
 			TrackGraphSyncPacket currentPacket = packet;
 			if (!graph.connectionsByNode.containsKey(node))
 				continue;
-			graph.connectionsByNode.get(node)
-				.forEach((node2, edge) -> {
-					Couple<Integer> key = Couple.create(node.getNetId(), node2.getNetId());
-					currentPacket.addedEdges.add(Pair.of(Pair.of(key, edge.getTrackMaterial()), edge.getTurn()));
-					currentPacket.syncEdgeData(node, node2, edge);
-				});
+
+			for (Entry<TrackNode,TrackEdge> entry : graph.connectionsByNode.get(node).entrySet()) {
+				TrackNode node2 = entry.getKey();
+				TrackEdge edge = entry.getValue();
+
+				Couple<Integer> key = Couple.create(node.getNetId(), node2.getNetId());
+				currentPacket.addedEdges.add(Pair.of(Pair.of(key, edge.getTrackMaterial()), edge.getTurn()));
+				currentPacket.syncEdgeData(node, node2, edge);
+
+				for (TrackEdgePoint point : edge.edgeData.getPoints()) {
+					if (sentPoints.contains(point))
+						continue;
+
+					sentPoints.add(point);
+					currentPacket.addedEdgePoints.add(point);
+					sent++;
+				}
+			}
 
 			if (sent++ < 1000)
 				continue;
@@ -168,6 +182,10 @@ public class TrackGraphSync {
 
 		for (EdgePointType<?> type : EdgePointType.TYPES.values()) {
 			for (TrackEdgePoint point : graph.getPoints(type)) {
+				if (sentPoints.contains(point))
+					continue;
+
+				sentPoints.add(point);
 				packet.addedEdgePoints.add(point);
 
 				if (sent++ < 1000)
@@ -183,11 +201,11 @@ public class TrackGraphSync {
 	}
 
 	private void sendRollCall() {
-		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrackGraphRollCallPacket());
+		CatnipServices.NETWORK.sendToAllClients(TrackGraphRollCallPacket.ofServer());
 	}
 
 	private TrackGraphSyncPacket flushAndCreateNew(TrackGraph graph, ServerPlayer player, TrackGraphSyncPacket packet) {
-		AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> player), packet);
+		CatnipServices.NETWORK.sendToClient(player, packet);
 		packet = new TrackGraphSyncPacket(graph.id, graph.netId);
 		return packet;
 	}

@@ -3,7 +3,7 @@ package com.simibubi.create.api.contraption;
 import java.util.Collection;
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.api.registry.SimpleRegistry;
 
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-import net.minecraftforge.common.extensions.IForgeBlock;
+import net.neoforged.neoforge.common.extensions.IBlockExtension;
 
 /**
  * Defines whether a block is movable by contraptions.
@@ -72,7 +72,7 @@ public enum ContraptionMovementSetting {
 	/**
 	 * Interface that may optionally be implemented on a Block implementation which will be queried instead of the registry.
 	 */
-	public interface MovementSettingProvider extends IForgeBlock {
+	public interface MovementSettingProvider extends IBlockExtension {
 		ContraptionMovementSetting getContraptionMovementSetting();
 	}
 }

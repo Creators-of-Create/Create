@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.Vector;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
@@ -30,7 +29,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class CarriageSyncData {
 
-	public Vector<Pair<Couple<Integer>, Float>> wheelLocations;
+	public List<Pair<Couple<Integer>, Float>> wheelLocations;
 	public Pair<Vec3, Couple<Vec3>> fallbackLocations;
 	public float distanceToDestination;
 	public boolean leadingCarriage;
@@ -43,7 +42,7 @@ public class CarriageSyncData {
 	private int ticksSince;
 
 	public CarriageSyncData() {
-		wheelLocations = new Vector<>(4);
+		wheelLocations = new ArrayList<>(4);
 		fallbackLocations = null;
 		pointDistanceSnapshot = new float[4];
 		pointsToApproach = new TravellingPoint[4];
@@ -55,6 +54,11 @@ public class CarriageSyncData {
 			wheelLocations.add(null);
 			pointsToApproach[i] = new TravellingPoint();
 		}
+	}
+
+	public CarriageSyncData(FriendlyByteBuf buf) {
+		this();
+		read(buf);
 	}
 
 	public CarriageSyncData copy() {

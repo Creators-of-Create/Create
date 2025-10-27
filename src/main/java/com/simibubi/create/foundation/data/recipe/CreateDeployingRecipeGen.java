@@ -1,18 +1,16 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.DeployingRecipeGen;
-
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
-
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
 
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Blocks;
-
-import java.util.List;
 
 /**
  * Create's own Data Generation for Deploying recipes
@@ -36,34 +34,43 @@ public final class CreateDeployingRecipeGen extends DeployingRecipeGen {
 
 	GeneratedRecipe
 
-	CB1 = addWax(() -> Blocks.WAXED_COPPER_BLOCK, () -> Blocks.COPPER_BLOCK),
-	CB2 = addWax(() -> Blocks.WAXED_EXPOSED_COPPER, () -> Blocks.EXPOSED_COPPER),
-	CB3 = addWax(() -> Blocks.WAXED_WEATHERED_COPPER, () -> Blocks.WEATHERED_COPPER),
-	CB4 = addWax(() -> Blocks.WAXED_OXIDIZED_COPPER, () -> Blocks.OXIDIZED_COPPER),
+		COPPER_BLOCK = oxidizationChain(
+		List.of(() -> Blocks.COPPER_BLOCK, () -> Blocks.EXPOSED_COPPER, () -> Blocks.WEATHERED_COPPER, () -> Blocks.OXIDIZED_COPPER),
+		List.of(() -> Blocks.WAXED_COPPER_BLOCK, () -> Blocks.WAXED_EXPOSED_COPPER, () -> Blocks.WAXED_WEATHERED_COPPER, () -> Blocks.WAXED_OXIDIZED_COPPER)),
 
-	CCB1 = addWax(() -> Blocks.WAXED_CUT_COPPER, () -> Blocks.CUT_COPPER),
-	CCB2 = addWax(() -> Blocks.WAXED_EXPOSED_CUT_COPPER, () -> Blocks.EXPOSED_CUT_COPPER),
-	CCB3 = addWax(() -> Blocks.WAXED_WEATHERED_CUT_COPPER, () -> Blocks.WEATHERED_CUT_COPPER),
-	CCB4 = addWax(() -> Blocks.WAXED_OXIDIZED_CUT_COPPER, () -> Blocks.OXIDIZED_CUT_COPPER),
+	COPPER_BULB = oxidizationChain(
+		List.of(() -> Blocks.COPPER_BULB, () -> Blocks.EXPOSED_COPPER_BULB, () -> Blocks.WEATHERED_COPPER_BULB, () -> Blocks.OXIDIZED_COPPER_BULB),
+		List.of(() -> Blocks.WAXED_COPPER_BULB, () -> Blocks.WAXED_EXPOSED_COPPER_BULB, () -> Blocks.WAXED_WEATHERED_COPPER_BULB, () -> Blocks.WAXED_OXIDIZED_COPPER_BULB)),
 
-	CCST1 = addWax(() -> Blocks.WAXED_CUT_COPPER_STAIRS, () -> Blocks.CUT_COPPER_STAIRS),
-	CCST2 = addWax(() -> Blocks.WAXED_EXPOSED_CUT_COPPER_STAIRS, () -> Blocks.EXPOSED_CUT_COPPER_STAIRS),
-	CCST3 = addWax(() -> Blocks.WAXED_WEATHERED_CUT_COPPER_STAIRS, () -> Blocks.WEATHERED_CUT_COPPER_STAIRS),
-	CCST4 = addWax(() -> Blocks.WAXED_OXIDIZED_CUT_COPPER_STAIRS, () -> Blocks.OXIDIZED_CUT_COPPER_STAIRS),
+	CHISELED_COPPER = oxidizationChain(
+		List.of(() -> Blocks.CHISELED_COPPER, () -> Blocks.EXPOSED_CHISELED_COPPER, () -> Blocks.WEATHERED_CHISELED_COPPER, () -> Blocks.OXIDIZED_CHISELED_COPPER),
+		List.of(() -> Blocks.WAXED_CHISELED_COPPER, () -> Blocks.WAXED_EXPOSED_CHISELED_COPPER, () -> Blocks.WAXED_WEATHERED_CHISELED_COPPER, () -> Blocks.WAXED_OXIDIZED_CHISELED_COPPER)),
 
-	CCS1 = addWax(() -> Blocks.WAXED_CUT_COPPER_SLAB, () -> Blocks.CUT_COPPER_SLAB),
-	CCS2 = addWax(() -> Blocks.WAXED_EXPOSED_CUT_COPPER_SLAB, () -> Blocks.EXPOSED_CUT_COPPER_SLAB),
-	CCS3 = addWax(() -> Blocks.WAXED_WEATHERED_CUT_COPPER_SLAB, () -> Blocks.WEATHERED_CUT_COPPER_SLAB),
-	CCS4 = addWax(() -> Blocks.WAXED_OXIDIZED_CUT_COPPER_SLAB, () -> Blocks.OXIDIZED_CUT_COPPER_SLAB);
+	COPPER_GRATE = oxidizationChain(
+		List.of(() -> Blocks.COPPER_GRATE, () -> Blocks.EXPOSED_COPPER_GRATE, () -> Blocks.WEATHERED_COPPER_GRATE, () -> Blocks.OXIDIZED_COPPER_GRATE),
+		List.of(() -> Blocks.WAXED_COPPER_GRATE, () -> Blocks.WAXED_EXPOSED_COPPER_GRATE, () -> Blocks.WAXED_WEATHERED_COPPER_GRATE, () -> Blocks.WAXED_OXIDIZED_COPPER_GRATE)),
 
-	GeneratedRecipe
+	COPPER_DOOR = oxidizationChain(
+		List.of(() -> Blocks.COPPER_DOOR, () -> Blocks.EXPOSED_COPPER_DOOR, () -> Blocks.WEATHERED_COPPER_DOOR, () -> Blocks.OXIDIZED_COPPER_DOOR),
+		List.of(() -> Blocks.WAXED_COPPER_DOOR, () -> Blocks.WAXED_EXPOSED_COPPER_DOOR, () -> Blocks.WAXED_WEATHERED_COPPER_DOOR, () -> Blocks.WAXED_OXIDIZED_COPPER_DOOR)),
 
-	CB_OX = oxidizationChain(List.of(() -> Blocks.COPPER_BLOCK, () -> Blocks.EXPOSED_COPPER, () -> Blocks.WEATHERED_COPPER, () -> Blocks.OXIDIZED_COPPER)),
-	CCB_OX = oxidizationChain(List.of(() -> Blocks.CUT_COPPER, () -> Blocks.EXPOSED_CUT_COPPER, () -> Blocks.WEATHERED_CUT_COPPER, () -> Blocks.OXIDIZED_CUT_COPPER)),
-	CCST_OX = oxidizationChain(List.of(() -> Blocks.CUT_COPPER_STAIRS, () -> Blocks.EXPOSED_CUT_COPPER_STAIRS, () -> Blocks.WEATHERED_CUT_COPPER_STAIRS, () -> Blocks.OXIDIZED_CUT_COPPER_STAIRS)),
-	CCS_OX = oxidizationChain(List.of(() -> Blocks.CUT_COPPER_SLAB, () -> Blocks.EXPOSED_CUT_COPPER_SLAB, () -> Blocks.WEATHERED_CUT_COPPER_SLAB, () -> Blocks.OXIDIZED_CUT_COPPER_SLAB));
+	COPPER_TRAPDOOR = oxidizationChain(
+		List.of(() -> Blocks.COPPER_TRAPDOOR, () -> Blocks.EXPOSED_COPPER_TRAPDOOR, () -> Blocks.WEATHERED_COPPER_TRAPDOOR, () -> Blocks.OXIDIZED_COPPER_TRAPDOOR),
+		List.of(() -> Blocks.WAXED_COPPER_TRAPDOOR, () -> Blocks.WAXED_EXPOSED_COPPER_TRAPDOOR, () -> Blocks.WAXED_WEATHERED_COPPER_TRAPDOOR, () -> Blocks.WAXED_OXIDIZED_COPPER_TRAPDOOR)),
 
-	public CreateDeployingRecipeGen(PackOutput output) {
-		super(output, Create.ID);
+	CUT_COPPER = oxidizationChain(
+		List.of(() -> Blocks.CUT_COPPER, () -> Blocks.EXPOSED_CUT_COPPER, () -> Blocks.WEATHERED_CUT_COPPER, () -> Blocks.OXIDIZED_CUT_COPPER),
+		List.of(() -> Blocks.WAXED_CUT_COPPER, () -> Blocks.WAXED_EXPOSED_CUT_COPPER, () -> Blocks.WAXED_WEATHERED_CUT_COPPER, () -> Blocks.WAXED_OXIDIZED_CUT_COPPER)),
+
+	CUT_COPPER_STAIRS = oxidizationChain(
+		List.of(() -> Blocks.CUT_COPPER_STAIRS, () -> Blocks.EXPOSED_CUT_COPPER_STAIRS, () -> Blocks.WEATHERED_CUT_COPPER_STAIRS, () -> Blocks.OXIDIZED_CUT_COPPER_STAIRS),
+		List.of(() -> Blocks.WAXED_CUT_COPPER_STAIRS, () -> Blocks.WAXED_EXPOSED_CUT_COPPER_STAIRS, () -> Blocks.WAXED_WEATHERED_CUT_COPPER_STAIRS, () -> Blocks.WAXED_OXIDIZED_CUT_COPPER_STAIRS)),
+
+	CUT_COPPER_SLAB = oxidizationChain(
+		List.of(() -> Blocks.CUT_COPPER_SLAB, () -> Blocks.EXPOSED_CUT_COPPER_SLAB, () -> Blocks.WEATHERED_CUT_COPPER_SLAB, () -> Blocks.OXIDIZED_CUT_COPPER_SLAB),
+		List.of(() -> Blocks.WAXED_CUT_COPPER_SLAB, () -> Blocks.WAXED_EXPOSED_CUT_COPPER_SLAB, () -> Blocks.WAXED_WEATHERED_CUT_COPPER_SLAB, () -> Blocks.WAXED_OXIDIZED_CUT_COPPER_SLAB));
+
+	public CreateDeployingRecipeGen(PackOutput output, CompletableFuture<Provider> registries) {
+		super(output, registries, Create.ID);
 	}
 }

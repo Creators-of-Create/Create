@@ -1,6 +1,6 @@
 {
 	"parent": "create:block/flywheel/flywheel",
-	"loader": "forge:obj",
+	"loader": "neoforge:obj",
 	"flip_v": true,
 	"model": "create:models/block/flywheel/flywheel.obj",
 	"display": {

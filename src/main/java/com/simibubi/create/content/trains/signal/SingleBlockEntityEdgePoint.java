@@ -2,7 +2,9 @@ package com.simibubi.create.content.trains.signal;
 
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 
+import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
@@ -18,7 +20,7 @@ public abstract class SingleBlockEntityEdgePoint extends TrackEdgePoint {
 	public BlockPos getBlockEntityPos() {
 		return blockEntityPos;
 	}
-	
+
 	public ResourceKey<Level> getBlockEntityDimension() {
 		return blockEntityDimension;
 	}
@@ -46,19 +48,19 @@ public abstract class SingleBlockEntityEdgePoint extends TrackEdgePoint {
 	}
 
 	@Override
-	public void read(CompoundTag nbt, boolean migration, DimensionPalette dimensions) {
-		super.read(nbt, migration, dimensions);
+	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean migration, DimensionPalette dimensions) {
+		super.read(nbt, registries, migration, dimensions);
 		if (migration)
 			return;
-		blockEntityPos = NbtUtils.readBlockPos(nbt.getCompound("TilePos"));
-		blockEntityDimension = dimensions.decode(nbt.contains("TileDimension") ? nbt.getInt("TileDimension") : -1);
+		blockEntityPos = NBTHelper.readBlockPos(nbt, "BlockEntityPos");
+		blockEntityDimension = dimensions.decode(nbt.contains("BlockEntityDimension") ? nbt.getInt("BlockEntityDimension") : -1);
 	}
 
 	@Override
-	public void write(CompoundTag nbt, DimensionPalette dimensions) {
-		super.write(nbt, dimensions);
-		nbt.put("TilePos", NbtUtils.writeBlockPos(blockEntityPos));
-		nbt.putInt("TileDimension", dimensions.encode(blockEntityDimension));
+	public void write(CompoundTag nbt, HolderLookup.Provider registries, DimensionPalette dimensions) {
+		super.write(nbt, registries, dimensions);
+		nbt.put("BlockEntityPos", NbtUtils.writeBlockPos(blockEntityPos));
+		nbt.putInt("BlockEntityDimension", dimensions.encode(blockEntityDimension));
 	}
 
 }

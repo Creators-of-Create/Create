@@ -1,5 +1,7 @@
 package com.simibubi.create.content.kinetics.chainConveyor;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
@@ -12,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -20,6 +23,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -49,24 +53,28 @@ public class ChainConveyorBlock extends KineticBlock implements IBE<ChainConveyo
 	}
 
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
-		if (!pLevel.isClientSide() && pPlayer != null && pPlayer.getItemInHand(pHand)
-			.is(Items.CHAIN))
-			return InteractionResult.SUCCESS;
-		if (pPlayer != null && AllBlocks.PACKAGE_FROGPORT.isIn(pPlayer.getItemInHand(pHand)))
-			return InteractionResult.SUCCESS;
-		return InteractionResult.PASS;
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (!level.isClientSide() && stack.is(Items.CHAIN))
+			return ItemInteractionResult.SUCCESS;
+		if (AllBlocks.PACKAGE_FROGPORT.isIn(stack))
+			return ItemInteractionResult.SUCCESS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override
-	public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
+	public BlockState playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
 		super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
 		if (pLevel.isClientSide())
-			return;
+			return pState;
 		if (!pPlayer.isCreative())
-			return;
+			return pState;
 		withBlockEntityDo(pLevel, pPos, be -> be.cancelDrops = true);
+		return pState;
+	}
+
+	@Override
+	public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
+		super.playerDestroy(level, player, pos, state, blockEntity, tool);
 	}
 
 	@Override

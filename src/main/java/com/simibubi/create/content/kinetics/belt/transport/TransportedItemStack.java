@@ -9,6 +9,7 @@ import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.content.logistics.box.PackageItem;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -70,9 +71,9 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 		return copy;
 	}
 
-	public CompoundTag serializeNBT() {
+	public CompoundTag serializeNBT(HolderLookup.Provider registries) {
 		CompoundTag nbt = new CompoundTag();
-		nbt.put("Item", stack.serializeNBT());
+		nbt.put("Item", stack.saveOptional(registries));
 		nbt.putFloat("Pos", beltPosition);
 		nbt.putFloat("PrevPos", prevBeltPosition);
 		nbt.putFloat("Offset", sideOffset);
@@ -97,8 +98,8 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 		return nbt;
 	}
 
-	public static TransportedItemStack read(CompoundTag nbt) {
-		TransportedItemStack stack = new TransportedItemStack(ItemStack.of(nbt.getCompound("Item")));
+	public static TransportedItemStack read(CompoundTag nbt, HolderLookup.Provider registries) {
+		TransportedItemStack stack = new TransportedItemStack(ItemStack.parseOptional(registries, nbt.getCompound("Item")));
 		stack.beltPosition = nbt.getFloat("Pos");
 		stack.prevBeltPosition = nbt.getFloat("PrevPos");
 		stack.sideOffset = nbt.getFloat("Offset");

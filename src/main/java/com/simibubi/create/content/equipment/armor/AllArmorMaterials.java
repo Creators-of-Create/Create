@@ -1,90 +1,85 @@
 package com.simibubi.create.content.equipment.armor;
 
+import java.util.EnumMap;
+import java.util.List;
 import java.util.function.Supplier;
 
-import com.google.common.base.Suppliers;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.ArmorItem.Type;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
-public enum AllArmorMaterials implements ArmorMaterial {
+import org.jetbrains.annotations.ApiStatus.Internal;
 
-	COPPER(Create.asResource("copper").toString(), 7, new int[] { 2, 4, 3, 1 }, 25, () -> AllSoundEvents.COPPER_ARMOR_EQUIP.getMainEvent(), 0.0F, 0.0F,
-		() -> Ingredient.of(Items.COPPER_INGOT)),
+public class AllArmorMaterials {
+	private static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, Create.ID);
 
-	CARDBOARD(Create.asResource("cardboard")
-		.toString(), 4, new int[] { 1, 1, 1, 1 }, 25, () -> SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F,
-		() -> Ingredient.of(AllItems.CARDBOARD))
+	public static final Holder<ArmorMaterial> COPPER = register(
+				"copper",
+				new int[] { 2, 4, 3, 1, 4 },
+				7,
+				AllSoundEvents.COPPER_ARMOR_EQUIP.getMainEventHolder(),
+				0.0F,
+				0.0F,
+				() -> Ingredient.of(Items.COPPER_INGOT)
+			);
 
-	;
+	public static final Holder<ArmorMaterial> CARDBOARD = register(
+				"cardboard",
+				new int[] { 1, 1, 1, 1, 2 },
+				4,
+				SoundEvents.ARMOR_EQUIP_LEATHER,
+				0.0F,
+				0.0F,
+				() -> Ingredient.of(AllItems.CARDBOARD)
+	);
 
-	private static final int[] MAX_DAMAGE_ARRAY = new int[] { 11, 16, 15, 13 };
-	private final String name;
-	private final int maxDamageFactor;
-	private final int[] damageReductionAmountArray;
-	private final int enchantability;
-	private final Supplier<SoundEvent> soundEvent;
-	private final float toughness;
-	private final float knockbackResistance;
-	private final Supplier<Ingredient> repairMaterial;
-
-	private AllArmorMaterials(String name, int maxDamageFactor, int[] damageReductionAmountArray, int enchantability,
-		Supplier<SoundEvent> soundEvent, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterial) {
-		this.name = name;
-		this.maxDamageFactor = maxDamageFactor;
-		this.damageReductionAmountArray = damageReductionAmountArray;
-		this.enchantability = enchantability;
-		this.soundEvent = soundEvent;
-		this.toughness = toughness;
-		this.knockbackResistance = knockbackResistance;
-		this.repairMaterial = Suppliers.memoize(repairMaterial::get);
+	private static Holder<ArmorMaterial> register(
+			String name,
+			int[] defense,
+			int enchantmentValue,
+			Holder<SoundEvent> equipSound,
+			float toughness,
+			float knockbackResistance,
+			Supplier<Ingredient> repairIngredient
+	) {
+		List<ArmorMaterial.Layer> list = List.of(new ArmorMaterial.Layer(Create.asResource(name)));
+		return register(name, defense, enchantmentValue, equipSound, toughness, knockbackResistance, repairIngredient, list);
 	}
 
-	@Override
-	public int getEnchantmentValue() {
-		return this.enchantability;
+	private static Holder<ArmorMaterial> register(
+			String name,
+			int[] defense,
+			int enchantmentValue,
+			Holder<SoundEvent> equipSound,
+			float toughness,
+			float knockbackResistance,
+			Supplier<Ingredient> repairIngridient,
+			List<ArmorMaterial.Layer> layers
+	) {
+		EnumMap<ArmorItem.Type, Integer> enummap = new EnumMap<>(ArmorItem.Type.class);
+
+		for (ArmorItem.Type armoritem$type : ArmorItem.Type.values()) {
+			enummap.put(armoritem$type, defense[armoritem$type.ordinal()]);
+		}
+
+		return ARMOR_MATERIALS.register(name,
+				() -> new ArmorMaterial(enummap, enchantmentValue, equipSound, repairIngridient, layers, toughness, knockbackResistance)
+		);
 	}
 
-	@Override
-	public SoundEvent getEquipSound() {
-		return this.soundEvent.get();
+	@Internal
+	public static void register(IEventBus eventBus) {
+		ARMOR_MATERIALS.register(eventBus);
 	}
-
-	@Override
-	public Ingredient getRepairIngredient() {
-		return this.repairMaterial.get();
-	}
-
-	@Override
-	public String getName() {
-		return this.name;
-	}
-
-	@Override
-	public float getToughness() {
-		return this.toughness;
-	}
-
-	@Override
-	public float getKnockbackResistance() {
-		return this.knockbackResistance;
-	}
-
-	@Override
-	public int getDurabilityForType(Type pType) {
-		return MAX_DAMAGE_ARRAY[pType.ordinal()] * this.maxDamageFactor;
-	}
-
-	@Override
-	public int getDefenseForType(Type pType) {
-		return this.damageReductionAmountArray[pType.ordinal()];
-	}
-
 }

@@ -34,8 +34,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public abstract class DisplaySource {
 	public static final SimpleRegistry.Multi<Block, DisplaySource> BY_BLOCK = SimpleRegistry.Multi.create();
@@ -118,7 +118,7 @@ public abstract class DisplaySource {
 	 * Utility for use with Registrate builders. Creates a builder transformer
 	 * that will register the given DisplaySource to a block when ready.
 	 */
-	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> displaySource(RegistryEntry<? extends DisplaySource> source) {
+	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> displaySource(RegistryEntry<DisplaySource, ? extends DisplaySource> source) {
 		return builder -> builder.onRegisterAfter(CreateRegistries.DISPLAY_SOURCE, block -> BY_BLOCK.add(block, source.get()));
 	}
 

@@ -1,12 +1,12 @@
 package com.simibubi.create.content.kinetics.chainConveyor;
 
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity.ConnectionStats;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
@@ -46,7 +46,7 @@ public class ChainConveyorRidingHandler {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.isPaused())
 			return;
-		if (!AllItemTags.CHAIN_RIDEABLE.matches(mc.player.getMainHandItem())) {
+		if (!mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches)) {
 			stopRiding();
 			return;
 		}
@@ -62,9 +62,10 @@ public class ChainConveyorRidingHandler {
 
 		clbe.prepareStats();
 
+		float chainYOffset = 0.5f * mc.player.getScale();
 		Vec3 playerPosition = mc.player.position()
 			.add(0, mc.player.getBoundingBox()
-				.getYsize() + 0.5, 0);
+				.getYsize() + chainYOffset, 0);
 
 		updateTargetPosition(mc, clbe);
 
@@ -82,7 +83,7 @@ public class ChainConveyorRidingHandler {
 			targetPosition = stats.start()
 				.add((stats.end()
 					.subtract(stats.start())).normalize()
-						.scale(Math.min(stats.chainLength(), chainPosition)));
+					.scale(Math.min(stats.chainLength(), chainPosition)));
 		} else {
 			targetPosition = Vec3.atBottomCenterOf(ridingChainConveyor)
 				.add(VecHelper.rotate(new Vec3(0, 0.25, 1), chainPosition, Axis.Y));
@@ -101,14 +102,12 @@ public class ChainConveyorRidingHandler {
 			.scale(0.75)
 			.add(diff.scale(0.25)));
 		if (AnimationTickHolder.getTicks() % 10 == 0)
-			AllPackets.getChannel()
-				.sendToServer(new ServerboundChainConveyorRidingPacket(ridingChainConveyor, false));
+			CatnipServices.NETWORK.sendToServer(new ServerboundChainConveyorRidingPacket(ridingChainConveyor, false));
 	}
 
 	private static void stopRiding() {
 		if (ridingChainConveyor != null)
-			AllPackets.getChannel()
-				.sendToServer(new ServerboundChainConveyorRidingPacket(ridingChainConveyor, true));
+			CatnipServices.NETWORK.sendToServer(new ServerboundChainConveyorRidingPacket(ridingChainConveyor, true));
 		ridingChainConveyor = null;
 		ridingConnection = null;
 		Minecraft.getInstance()

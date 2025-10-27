@@ -26,10 +26,6 @@ import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.Tags;
-
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -46,6 +42,10 @@ import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
+
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.Tags;
 
 public class WindowGen {
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
@@ -108,7 +108,7 @@ public class WindowGen {
 		String woodName = woodType.name();
 		String name = woodName + "_window";
 		NonNullFunction<String, ResourceLocation> end_texture =
-			$ -> new ResourceLocation("block/" + woodName + "_planks");
+			$ -> ResourceLocation.withDefaultNamespace("block/" + woodName + "_planks");
 		NonNullFunction<String, ResourceLocation> side_texture = n -> Create.asResource(palettesDir() + n);
 		return windowBlock(name, () -> planksBlock, () -> AllSpriteShifts.getWoodenWindow(woodType), renderType,
 			translucent, end_texture, side_texture, planksBlock::defaultMapColor).register();
@@ -127,9 +127,9 @@ public class WindowGen {
 				.pattern(" # ")
 				.pattern("#X#")
 				.define('#', ingredient.get())
-				.define('X', DataIngredient.tag(Tags.Items.GLASS_COLORLESS))
+					.define('X', DataIngredient.tag(Tags.Items.GLASS_BLOCKS_COLORLESS).toVanilla())
 				.unlockedBy("has_ingredient", RegistrateRecipeProvider.has(ingredient.get()))
-				.save(p::accept))
+				.save(p))
 			.initialProperties(() -> Blocks.GLASS)
 			.properties(WindowGen::glassProperties)
 			.properties(p -> p.mapColor(color.get()))
@@ -148,12 +148,12 @@ public class WindowGen {
 			.initialProperties(() -> Blocks.GLASS)
 			.properties(WindowGen::glassProperties)
 			.loot((t, g) -> t.dropWhenSilkTouch(g))
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS),
+				.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_BLOCKS_COLORLESS),
 				RecipeCategory.BUILDING_BLOCKS, c::get))
 			.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/", "framed_glass"))
-			.tag(Tags.Blocks.GLASS_COLORLESS, BlockTags.IMPERMEABLE)
+				.tag(Tags.Blocks.GLASS_BLOCKS_COLORLESS, BlockTags.IMPERMEABLE)
 			.item()
-			.tag(Tags.Items.GLASS_COLORLESS)
+				.tag(Tags.Items.GLASS_BLOCKS_COLORLESS)
 			.model((c, p) -> p.cubeColumn(c.getName(), p.modLoc(palettesDir() + c.getName()),
 				p.modLoc("block/palettes/framed_glass")))
 			.build()
@@ -187,7 +187,7 @@ public class WindowGen {
 																	   Supplier<? extends Block> parent, Supplier<Supplier<RenderType>> renderType) {
 		String woodName = woodType.name();
 		String name = woodName + "_window";
-		ResourceLocation topTexture = new ResourceLocation("block/" + woodName + "_planks");
+		ResourceLocation topTexture = ResourceLocation.withDefaultNamespace("block/" + woodName + "_planks");
 		ResourceLocation sideTexture = Create.asResource(palettesDir() + name);
 		return connectedGlassPane(name, parent, () -> AllSpriteShifts.getWoodenWindow(woodType), sideTexture,
 			sideTexture, topTexture, renderType, false).register();
@@ -253,7 +253,7 @@ public class WindowGen {
 					.pattern("###")
 					.define('#', parent.get())
 					.unlockedBy("has_ingredient", RegistrateRecipeProvider.has(parent.get()))
-					.save(p::accept);
+					.save(p);
 				if (colorless)
 					p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_PANES_COLORLESS), RecipeCategory.BUILDING_BLOCKS,
 						c::get);

@@ -1,23 +1,27 @@
 package com.simibubi.create.content.contraptions.actors.trainControls;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent.Context;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-public class ControlsStopControllingPacket extends SimplePacketBase {
+public enum ControlsStopControllingPacket implements ClientboundPacketPayload {
+	INSTANCE;
 
-	public ControlsStopControllingPacket() {}
-
-	public ControlsStopControllingPacket(FriendlyByteBuf buffer) {}
+	public static final StreamCodec<ByteBuf, ControlsStopControllingPacket> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(ControlsHandler::stopControlling);
-		return true;
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		ControlsHandler.stopControlling();
 	}
 
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONTROLS_ABORT;
+	}
 }

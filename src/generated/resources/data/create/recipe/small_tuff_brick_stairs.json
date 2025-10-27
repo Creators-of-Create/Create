@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "small_tuff_brick_stairs",
+  "key": {
+    "X": {
+      "item": "create:small_tuff_bricks"
+    }
+  },
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "result": {
+    "count": 4,
+    "id": "create:small_tuff_brick_stairs"
+  }
+}

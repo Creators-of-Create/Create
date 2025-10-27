@@ -2,7 +2,7 @@ package com.simibubi.create.content.trains.schedule;
 
 import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -10,18 +10,19 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
+
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class ScheduleMenu extends GhostItemMenu<ItemStack> {
 
 	public boolean slotsActive = true;
 	public int targetSlotsActive = 1;
-	
+
 	static final int slots = 2;
 
-	public ScheduleMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public ScheduleMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
@@ -35,9 +36,10 @@ public class ScheduleMenu extends GhostItemMenu<ItemStack> {
 	}
 
 	@Override
-	public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
-		if (slotId != playerInventory.selected || clickTypeIn == ClickType.THROW)
-			super.clicked(slotId, dragType, clickTypeIn, player);
+	public void clicked(int index, int dragType, ClickType clickType, Player player) {
+		if (!this.isInSlot(index) || clickType == ClickType.THROW || clickType == ClickType.CLONE) {
+			super.clicked(index, dragType, clickType, player);
+		}
 	}
 
 	@Override
@@ -46,8 +48,8 @@ public class ScheduleMenu extends GhostItemMenu<ItemStack> {
 	}
 
 	@Override
-	protected ItemStack createOnClient(FriendlyByteBuf extraData) {
-		return extraData.readItem();
+	protected ItemStack createOnClient(RegistryFriendlyByteBuf extraData) {
+		return ItemStack.STREAM_CODEC.decode(extraData);
 	}
 
 	@Override
@@ -58,12 +60,8 @@ public class ScheduleMenu extends GhostItemMenu<ItemStack> {
 	}
 
 	@Override
-	protected void addPlayerSlots(int x, int y) {
-		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
-			this.addSlot(new InactiveSlot(playerInventory, hotbarSlot, x + hotbarSlot * 18, y + 58));
-		for (int row = 0; row < 3; ++row)
-			for (int col = 0; col < 9; ++col)
-				this.addSlot(new InactiveSlot(playerInventory, col + row * 9 + 9, x + col * 18, y + row * 18));
+	protected Slot createPlayerSlot(Inventory inventory, int index, int x, int y) {
+		return new InactiveSlot(inventory, index, x, y);
 	}
 
 	@Override
@@ -72,6 +70,17 @@ public class ScheduleMenu extends GhostItemMenu<ItemStack> {
 	@Override
 	public boolean stillValid(Player player) {
 		return playerInventory.getSelected() == contentHolder;
+	}
+
+	@Override
+	public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) {
+		// prevent pick-all from taking this schedule out of its slot
+		return super.canTakeItemForPickAll(stack, slot) && !this.isInSlot(slot.index);
+	}
+
+	protected boolean isInSlot(int index) {
+		// Inventory has the hotbar as 0-8, but menus put the hotbar at 27-35
+		return index >= 27 && index - 27 == playerInventory.selected;
 	}
 
 	class InactiveSlot extends Slot {

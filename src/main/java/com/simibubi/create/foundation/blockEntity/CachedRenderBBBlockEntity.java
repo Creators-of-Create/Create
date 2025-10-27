@@ -4,8 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public abstract class CachedRenderBBBlockEntity extends SyncedBlockEntity {
 
@@ -15,7 +15,6 @@ public abstract class CachedRenderBBBlockEntity extends SyncedBlockEntity {
 		super(type, pos, state);
 	}
 
-	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AABB getRenderBoundingBox() {
 		if (renderBoundingBox == null) {
@@ -29,7 +28,7 @@ public abstract class CachedRenderBBBlockEntity extends SyncedBlockEntity {
 	}
 
 	protected AABB createRenderBoundingBox() {
-		return super.getRenderBoundingBox();
+		return new AABB(getBlockPos());
 	}
 
 }

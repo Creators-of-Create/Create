@@ -1,44 +1,30 @@
 package com.simibubi.create.content.equipment.blueprint;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
+import io.netty.buffer.ByteBuf;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
-import net.minecraftforge.network.NetworkEvent.Context;
-
-public class BlueprintAssignCompleteRecipePacket extends SimplePacketBase {
-
-	private ResourceLocation recipeID;
-
-	public BlueprintAssignCompleteRecipePacket(ResourceLocation recipeID) {
-		this.recipeID = recipeID;
-	}
-
-	public BlueprintAssignCompleteRecipePacket(FriendlyByteBuf buffer) {
-		recipeID = buffer.readResourceLocation();
-	}
+public record BlueprintAssignCompleteRecipePacket(ResourceLocation recipeId) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, com.simibubi.create.content.equipment.blueprint.BlueprintAssignCompleteRecipePacket> STREAM_CODEC = ResourceLocation.STREAM_CODEC.map(
+			com.simibubi.create.content.equipment.blueprint.BlueprintAssignCompleteRecipePacket::new, com.simibubi.create.content.equipment.blueprint.BlueprintAssignCompleteRecipePacket::recipeId
+	);
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeResourceLocation(recipeID);
-	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer player = context.getSender();
-			if (player == null)
-				return;
-			if (player.containerMenu instanceof BlueprintMenu c) {
-				player.level()
+	public void handle(ServerPlayer player) {
+		if (player.containerMenu instanceof BlueprintMenu c) {
+			player.level()
 					.getRecipeManager()
-					.byKey(recipeID)
-					.ifPresent(r -> BlueprintItem.assignCompleteRecipe(c.player.level(), c.ghostInventory, r));
-			}
-		});
-		return true;
+					.byKey(recipeId)
+					.ifPresent(r -> BlueprintItem.assignCompleteRecipe(c.player.level(), c.ghostInventory, r.value()));
+		}
 	}
 
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.BLUEPRINT_COMPLETE_RECIPE;
+	}
 }

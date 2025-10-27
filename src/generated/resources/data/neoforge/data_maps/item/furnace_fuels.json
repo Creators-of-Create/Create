@@ -1,0 +1,34 @@
+{
+  "values": {
+    "create:blaze_cake": {
+      "burn_time": 6400
+    },
+    "create:bound_cardboard_block": {
+      "burn_time": 4000
+    },
+    "create:cardboard": {
+      "burn_time": 1000
+    },
+    "create:cardboard_block": {
+      "burn_time": 4000
+    },
+    "create:cardboard_boots": {
+      "burn_time": 1000
+    },
+    "create:cardboard_chestplate": {
+      "burn_time": 1000
+    },
+    "create:cardboard_helmet": {
+      "burn_time": 1000
+    },
+    "create:cardboard_leggings": {
+      "burn_time": 1000
+    },
+    "create:cardboard_sword": {
+      "burn_time": 1000
+    },
+    "create:creative_blaze_cake": {
+      "burn_time": 2147483647
+    }
+  }
+}

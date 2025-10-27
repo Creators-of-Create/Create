@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.simibubi.create.api.event.BlockEntityBehaviourEvent;
 import com.simibubi.create.api.schematic.nbt.PartialSafeNBT;
 import com.simibubi.create.api.schematic.requirement.SpecialBlockEntityItemRequirement;
@@ -19,15 +21,14 @@ import com.simibubi.create.foundation.utility.IInteractionChecker;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import net.createmod.ponder.api.VirtualBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.NeoForge;
 
 public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
 	implements PartialSafeNBT, IInteractionChecker, SpecialBlockEntityItemRequirement, VirtualBlockEntity {
@@ -63,7 +64,7 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
 	public void initialize() {
 		if (firstNbtRead) {
 			firstNbtRead = false;
-			MinecraftForge.EVENT_BUS.post(new BlockEntityBehaviourEvent<>(this, behaviours));
+			NeoForge.EVENT_BUS.post(new BlockEntityBehaviourEvent(this, behaviours));
 		}
 
 		forEachBehaviour(BlockEntityBehaviour::initialize);
@@ -89,38 +90,38 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
 	/**
 	 * Hook only these in future subclasses of STE
 	 */
-	protected void write(CompoundTag tag, boolean clientPacket) {
-		super.saveAdditional(tag);
-		forEachBehaviour(tb -> tb.write(tag, clientPacket));
+	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.saveAdditional(tag, registries);
+		forEachBehaviour(tb -> tb.write(tag, registries, clientPacket));
 	}
 
 	@Override
-	public void writeSafe(CompoundTag tag) {
-		super.saveAdditional(tag);
+	public void writeSafe(CompoundTag tag, HolderLookup.Provider registries) {
+		super.saveAdditional(tag, registries);
 		forEachBehaviour(tb -> {
 			if (tb.isSafeNBT())
-				tb.writeSafe(tag);
+				tb.writeSafe(tag, registries);
 		});
 	}
 
 	/**
 	 * Hook only these in future subclasses of STE
 	 */
-	protected void read(CompoundTag tag, boolean clientPacket) {
+	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		if (firstNbtRead) {
 			firstNbtRead = false;
 			ArrayList<BlockEntityBehaviour> list = new ArrayList<>();
 			addBehavioursDeferred(list);
 			list.forEach(b -> behaviours.put(b.getType(), b));
-			MinecraftForge.EVENT_BUS.post(new BlockEntityBehaviourEvent<>(this, behaviours));
+			NeoForge.EVENT_BUS.post(new BlockEntityBehaviourEvent(this, behaviours));
 		}
-		super.load(tag);
-		forEachBehaviour(tb -> tb.read(tag, clientPacket));
+		super.loadAdditional(tag, registries);
+		forEachBehaviour(tb -> tb.read(tag, registries, clientPacket));
 	}
 
 	@Override
-	public final void load(CompoundTag tag) {
-		read(tag, false);
+	protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+		read(tag, registries, false);
 	}
 
 	@Override
@@ -157,18 +158,18 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
 	}
 
 	@Override
-	public final void saveAdditional(CompoundTag tag) {
-		write(tag, false);
+	public final void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+		write(tag, registries, false);
 	}
 
 	@Override
-	public final void readClient(CompoundTag tag) {
-		read(tag, true);
+	public final void readClient(CompoundTag tag, HolderLookup.Provider registries) {
+		read(tag, registries, true);
 	}
 
 	@Override
-	public final CompoundTag writeClient(CompoundTag tag) {
-		write(tag, true);
+	public final CompoundTag writeClient(CompoundTag tag, HolderLookup.Provider registries) {
+		write(tag, registries, true);
 		return tag;
 	}
 
@@ -193,7 +194,7 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
 
 	public ItemRequirement getRequiredItems(BlockState state) {
 		return getAllBehaviours().stream()
-			.reduce(ItemRequirement.NONE, (r, b) -> r.union(b.getRequiredItems()), (r, r1) -> r.union(r1));
+			.reduce(ItemRequirement.NONE, (r, b) -> r.union(b.getRequiredItems()), ItemRequirement::union);
 	}
 
 	public void removeBehaviour(BehaviourType<?> type) {
@@ -228,22 +229,14 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
 			worldPosition.getZ() + 0.5D) <= 64.0D;
 	}
 
-	public void sendToMenu(FriendlyByteBuf buffer) {
+	public void sendToMenu(RegistryFriendlyByteBuf buffer) {
 		buffer.writeBlockPos(getBlockPos());
-		buffer.writeNbt(getUpdateTag());
+		buffer.writeNbt(getUpdateTag(buffer.registryAccess()));
 	}
 
 	@SuppressWarnings("deprecation")
 	public void refreshBlockState() {
 		setBlockState(getLevel().getBlockState(getBlockPos()));
-	}
-
-	protected boolean isItemHandlerCap(Capability<?> cap) {
-		return cap == ForgeCapabilities.ITEM_HANDLER;
-	}
-
-	protected boolean isFluidHandlerCap(Capability<?> cap) {
-		return cap == ForgeCapabilities.FLUID_HANDLER;
 	}
 
 	public void registerAwardables(List<BlockEntityBehaviour> behaviours, CreateAdvancement... advancements) {

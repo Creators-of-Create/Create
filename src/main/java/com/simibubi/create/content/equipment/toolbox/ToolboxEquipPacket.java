@@ -1,104 +1,87 @@
 package com.simibubi.create.content.equipment.toolbox;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
-public class ToolboxEquipPacket extends SimplePacketBase {
+public record ToolboxEquipPacket(BlockPos toolboxPos, int slot, int hotbarSlot) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, ToolboxEquipPacket> STREAM_CODEC = StreamCodec.composite(
+			CatnipStreamCodecBuilders.nullable(BlockPos.STREAM_CODEC), ToolboxEquipPacket::toolboxPos,
+			ByteBufCodecs.VAR_INT, ToolboxEquipPacket::slot,
+			ByteBufCodecs.VAR_INT, ToolboxEquipPacket::hotbarSlot,
+	        ToolboxEquipPacket::new
+	);
 
-	private BlockPos toolboxPos;
-	private int slot;
-	private int hotbarSlot;
-
-	public ToolboxEquipPacket(BlockPos toolboxPos, int slot, int hotbarSlot) {
-		this.toolboxPos = toolboxPos;
-		this.slot = slot;
-		this.hotbarSlot = hotbarSlot;
-	}
-
-	public ToolboxEquipPacket(FriendlyByteBuf buffer) {
-		if (buffer.readBoolean())
-			toolboxPos = buffer.readBlockPos();
-		slot = buffer.readVarInt();
-		hotbarSlot = buffer.readVarInt();
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.TOOLBOX_EQUIP;
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeBoolean(toolboxPos != null);
-		if (toolboxPos != null)
-			buffer.writeBlockPos(toolboxPos);
-		buffer.writeVarInt(slot);
-		buffer.writeVarInt(hotbarSlot);
-	}
+	public void handle(ServerPlayer player) {
+		Level world = player.level();
 
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer player = context.getSender();
-			Level world = player.level();
-
-			if (toolboxPos == null) {
-				ToolboxHandler.unequip(player, hotbarSlot, false);
-				ToolboxHandler.syncData(player);
-				return;
-			}
-
-			BlockEntity blockEntity = world.getBlockEntity(toolboxPos);
-
-			double maxRange = ToolboxHandler.getMaxRange(player);
-			if (player.distanceToSqr(toolboxPos.getX() + 0.5, toolboxPos.getY(), toolboxPos.getZ() + 0.5) > maxRange
-				* maxRange)
-				return;
-			if (!(blockEntity instanceof ToolboxBlockEntity toolboxBlockEntity))
-				return;
-
+		if (toolboxPos == null) {
 			ToolboxHandler.unequip(player, hotbarSlot, false);
+			ToolboxHandler.syncData(player);
+			return;
+		}
 
-			if (slot < 0 || slot >= 8) {
-				ToolboxHandler.syncData(player);
-				return;
-			}
+		BlockEntity blockEntity = world.getBlockEntity(toolboxPos);
 
-			ItemStack playerStack = player.getInventory().getItem(hotbarSlot);
-			if (!playerStack.isEmpty() && !ToolboxInventory.canItemsShareCompartment(playerStack,
+		double maxRange = ToolboxHandler.getMaxRange(player);
+		if (player.distanceToSqr(toolboxPos.getX() + 0.5, toolboxPos.getY(), toolboxPos.getZ() + 0.5) > maxRange
+				* maxRange)
+			return;
+		if (!(blockEntity instanceof ToolboxBlockEntity toolboxBlockEntity))
+			return;
+
+		ToolboxHandler.unequip(player, hotbarSlot, false);
+
+		if (slot < 0 || slot >= 8) {
+			ToolboxHandler.syncData(player);
+			return;
+		}
+
+		ItemStack playerStack = player.getInventory().getItem(hotbarSlot);
+		if (!playerStack.isEmpty() && !ToolboxInventory.canItemsShareCompartment(playerStack,
 				toolboxBlockEntity.inventory.filters.get(slot))) {
-				toolboxBlockEntity.inventory.inLimitedMode(inventory -> {
-					ItemStack remainder = ItemHandlerHelper.insertItemStacked(inventory, playerStack, false);
-					if (!remainder.isEmpty())
-						remainder = ItemHandlerHelper.insertItemStacked(new ItemReturnInvWrapper(player.getInventory()),
+			toolboxBlockEntity.inventory.inLimitedMode(inventory -> {
+				ItemStack remainder = ItemHandlerHelper.insertItemStacked(inventory, playerStack, false);
+				if (!remainder.isEmpty())
+					remainder = ItemHandlerHelper.insertItemStacked(new ItemReturnInvWrapper(player.getInventory()),
 							remainder, false);
-					if (remainder.getCount() != playerStack.getCount())
-						player.getInventory().setItem(hotbarSlot, remainder);
-				});
-			}
+				if (remainder.getCount() != playerStack.getCount())
+					player.getInventory().setItem(hotbarSlot, remainder);
+			});
+		}
 
-			CompoundTag compound = player.getPersistentData()
+		CompoundTag compound = player.getPersistentData()
 				.getCompound("CreateToolboxData");
-			String key = String.valueOf(hotbarSlot);
+		String key = String.valueOf(hotbarSlot);
 
-			CompoundTag data = new CompoundTag();
-			data.putInt("Slot", slot);
-			data.put("Pos", NbtUtils.writeBlockPos(toolboxPos));
-			compound.put(key, data);
+		CompoundTag data = new CompoundTag();
+		data.putInt("Slot", slot);
+		data.put("Pos", NbtUtils.writeBlockPos(toolboxPos));
+		compound.put(key, data);
 
-			player.getPersistentData()
+		player.getPersistentData()
 				.put("CreateToolboxData", compound);
 
-			toolboxBlockEntity.connectPlayer(slot, player, hotbarSlot);
-			ToolboxHandler.syncData(player);
-		});
-		return true;
+		toolboxBlockEntity.connectPlayer(slot, player, hotbarSlot);
+		ToolboxHandler.syncData(player);
 	}
-
 }

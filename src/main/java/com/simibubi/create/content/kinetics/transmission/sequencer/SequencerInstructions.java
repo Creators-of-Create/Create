@@ -6,11 +6,13 @@ import java.util.List;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 
 public enum SequencerInstructions {
-
 	TURN_ANGLE("angle", AllGuiTextures.SEQUENCER_INSTRUCTION, true, true, 360, 45, 90),
 	TURN_DISTANCE("distance", AllGuiTextures.SEQUENCER_INSTRUCTION, true, true, 128, 5, 5),
 	DELAY("duration", AllGuiTextures.SEQUENCER_DELAY, true, false, 600, 20, 10),
@@ -19,21 +21,23 @@ public enum SequencerInstructions {
 
 	;
 
-	String translationKey;
-	String descriptiveTranslationKey;
-	String parameterKey;
-	boolean hasValueParameter;
-	boolean hasSpeedParameter;
-	AllGuiTextures background;
-	int maxValue;
-	int shiftStep;
-	int defaultValue;
+	public static final StreamCodec<ByteBuf, SequencerInstructions> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(SequencerInstructions.class);
 
-	private SequencerInstructions(String parameterName, AllGuiTextures background) {
+	public final String translationKey;
+	public final String descriptiveTranslationKey;
+	public final String parameterKey;
+	public final boolean hasValueParameter;
+	public final boolean hasSpeedParameter;
+	public final AllGuiTextures background;
+	public final int maxValue;
+	public final int shiftStep;
+	public final int defaultValue;
+
+	SequencerInstructions(String parameterName, AllGuiTextures background) {
 		this(parameterName, background, false, false, -1, -1, -1);
 	}
 
-	private SequencerInstructions(String parameterName, AllGuiTextures background, boolean hasValueParameter,
+	SequencerInstructions(String parameterName, AllGuiTextures background, boolean hasValueParameter,
 			boolean hasSpeedParameter, int maxValue, int shiftStep, int defaultValue) {
 		this.hasValueParameter = hasValueParameter;
 		this.hasSpeedParameter = hasSpeedParameter;

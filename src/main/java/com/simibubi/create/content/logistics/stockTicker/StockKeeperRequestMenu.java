@@ -6,7 +6,7 @@ import com.simibubi.create.AllMenuTypes;
 import com.simibubi.create.foundation.gui.menu.MenuBase;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -20,7 +20,7 @@ public class StockKeeperRequestMenu extends MenuBase<StockTickerBlockEntity> {
 
 	public Object screenReference;
 
-	public StockKeeperRequestMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public StockKeeperRequestMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
@@ -35,7 +35,7 @@ public class StockKeeperRequestMenu extends MenuBase<StockTickerBlockEntity> {
 	}
 
 	@Override
-	protected StockTickerBlockEntity createOnClient(FriendlyByteBuf extraData) {
+	protected StockTickerBlockEntity createOnClient(RegistryFriendlyByteBuf extraData) {
 		isAdmin = extraData.readBoolean();
 		isLocked = extraData.readBoolean();
 		if (Minecraft.getInstance().level

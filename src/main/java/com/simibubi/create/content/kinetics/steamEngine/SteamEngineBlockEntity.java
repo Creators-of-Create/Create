@@ -3,7 +3,7 @@ package com.simibubi.create.content.kinetics.steamEngine;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
@@ -18,12 +18,9 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
-
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -36,6 +33,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
 
@@ -131,7 +131,7 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 		if (!level.isClientSide)
 			return;
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::spawnParticles);
+		CatnipServices.PLATFORM.executeOnClientOnly(() -> this::spawnParticles);
 	}
 
 	@Override

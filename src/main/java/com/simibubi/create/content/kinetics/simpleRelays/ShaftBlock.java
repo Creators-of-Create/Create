@@ -20,6 +20,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -71,34 +72,32 @@ public class ShaftBlock extends AbstractSimpleShaftBlock implements EncasableBlo
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult ray) {
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (player.isShiftKeyDown() || !player.mayBuild())
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		ItemStack heldItem = player.getItemInHand(hand);
-		InteractionResult result = tryEncase(state, world, pos, heldItem, player, hand, ray);
+		ItemInteractionResult result = tryEncase(state, level, pos, stack, player, hand, hitResult);
 		if (result.consumesAction())
 			return result;
 
-		if (AllBlocks.METAL_GIRDER.isIn(heldItem) && state.getValue(AXIS) != Axis.Y) {
-			KineticBlockEntity.switchToBlockState(world, pos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()
+		if (AllBlocks.METAL_GIRDER.isIn(stack) && state.getValue(AXIS) != Axis.Y) {
+			KineticBlockEntity.switchToBlockState(level, pos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()
 				.setValue(WATERLOGGED, state.getValue(WATERLOGGED))
 				.setValue(GirderEncasedShaftBlock.HORIZONTAL_AXIS, state.getValue(AXIS) == Axis.Z ? Axis.Z : Axis.X));
-			if (!world.isClientSide && !player.isCreative()) {
-				heldItem.shrink(1);
-				if (heldItem.isEmpty())
+			if (!level.isClientSide && !player.isCreative()) {
+				stack.shrink(1);
+				if (stack.isEmpty())
 					player.setItemInHand(hand, ItemStack.EMPTY);
 			}
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
 
 		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
-		if (helper.matchesItem(heldItem))
-			return helper.getOffset(player, world, state, pos, ray)
-				.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
+		if (helper.matchesItem(stack))
+			return helper.getOffset(player, level, state, pos, hitResult)
+				.placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
 
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@MethodsReturnNonnullByDefault

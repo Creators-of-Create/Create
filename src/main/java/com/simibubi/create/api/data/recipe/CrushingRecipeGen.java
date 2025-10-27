@@ -1,17 +1,18 @@
 package com.simibubi.create.api.data.recipe;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.content.kinetics.crusher.CrushingRecipe;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+import com.simibubi.create.foundation.data.recipe.CommonMetal;
 
-import com.simibubi.create.foundation.data.recipe.CompatMetals;
 import net.createmod.catnip.lang.Lang;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
@@ -19,8 +20,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 
-import net.minecraftforge.common.crafting.conditions.NotCondition;
-import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
+import net.neoforged.neoforge.common.conditions.NotCondition;
+import net.neoforged.neoforge.common.conditions.TagEmptyCondition;
 
 /**
  * The base class for Crushing recipe generation.
@@ -29,33 +30,31 @@ import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
  * For an example of how you might do this, see Create's implementation: {@link com.simibubi.create.foundation.data.recipe.CreateCrushingRecipeGen}.
  * Needs to be added to a registered recipe provider to do anything, see {@link com.simibubi.create.foundation.data.recipe.CreateRecipeProvider}
  */
-public abstract class CrushingRecipeGen extends ProcessingRecipeGen {
-
+public abstract class CrushingRecipeGen extends StandardProcessingRecipeGen<CrushingRecipe> {
 	protected GeneratedRecipe mineralRecycling(AllPaletteStoneTypes type, Supplier<ItemLike> crushed,
-																		  Supplier<ItemLike> nugget, float chance) {
+											   Supplier<ItemLike> nugget, float chance) {
 		return mineralRecycling(type, b -> b.duration(250)
 			.output(chance, crushed.get(), 1)
 			.output(chance, nugget.get(), 1));
 	}
 
-	protected GeneratedRecipe mineralRecycling(AllPaletteStoneTypes type,
-																		  UnaryOperator<ProcessingRecipeBuilder<ProcessingRecipe<?>>> transform) {
+	protected GeneratedRecipe mineralRecycling(AllPaletteStoneTypes type, UnaryOperator<StandardProcessingRecipe.Builder<CrushingRecipe>> transform) {
 		create(Lang.asId(type.name()) + "_recycling", b -> transform.apply(b.require(type.materialTag)));
 		return create(type.getBaseBlock()::get, transform);
 	}
 
 	protected GeneratedRecipe stoneOre(Supplier<ItemLike> ore, Supplier<ItemLike> raw, float expectedAmount,
-																  int duration) {
+									   int duration) {
 		return ore(Blocks.COBBLESTONE, ore, raw, expectedAmount, duration);
 	}
 
 	protected GeneratedRecipe deepslateOre(Supplier<ItemLike> ore, Supplier<ItemLike> raw, float expectedAmount,
-																	  int duration) {
+										   int duration) {
 		return ore(Blocks.COBBLED_DEEPSLATE, ore, raw, expectedAmount, duration);
 	}
 
 	protected GeneratedRecipe netherOre(Supplier<ItemLike> ore, Supplier<ItemLike> raw, float expectedAmount,
-																   int duration) {
+										int duration) {
 		return ore(Blocks.NETHERRACK, ore, raw, expectedAmount, duration);
 	}
 
@@ -72,13 +71,12 @@ public abstract class CrushingRecipeGen extends ProcessingRecipeGen {
 		});
 	}
 
-	protected GeneratedRecipe moddedOre(CompatMetals metal, Supplier<ItemLike> result) {
-		String name = metal.getName();
-		return create(name + "_ore", b -> {
-			String prefix = "ores/";
+	protected GeneratedRecipe moddedOre(CommonMetal metal, Supplier<ItemLike> result) {
+		TagKey<Item> tag = metal.ores.items();
+		return create(metal + "_ore", b -> {
 			return b.duration(400)
-				.withCondition(new NotCondition(new TagEmptyCondition("forge", prefix + name)))
-				.require(AllTags.forgeItemTag(prefix + name))
+				.withCondition(new NotCondition(new TagEmptyCondition(tag.location())))
+				.require(tag)
 				.output(result.get(), 1)
 				.output(.75f, result.get(), 1)
 				.output(.75f, AllItems.EXP_NUGGET.get());
@@ -103,34 +101,32 @@ public abstract class CrushingRecipeGen extends ProcessingRecipeGen {
 		});
 	}
 
-	protected GeneratedRecipe moddedRawOre(CompatMetals metal, Supplier<ItemLike> result) {
+	protected GeneratedRecipe moddedRawOre(CommonMetal metal, Supplier<ItemLike> result) {
 		return moddedRawOre(metal, result, false);
 	}
 
-	protected GeneratedRecipe moddedRawOreBlock(CompatMetals metal, Supplier<ItemLike> result) {
+	protected GeneratedRecipe moddedRawOreBlock(CommonMetal metal, Supplier<ItemLike> result) {
 		return moddedRawOre(metal, result, true);
 	}
 
-	protected GeneratedRecipe moddedRawOre(CompatMetals metal, Supplier<ItemLike> result, boolean block) {
-		String name = metal.getName();
-		return create("raw_" + name + (block ? "_block" : ""), b -> {
+	protected GeneratedRecipe moddedRawOre(CommonMetal metal, Supplier<ItemLike> result, boolean block) {
+		return create("raw_" + metal + (block ? "_block" : ""), b -> {
 			int amount = block ? 9 : 1;
-			String tagPath = (block ? "storage_blocks/raw_" : "raw_materials/") + name;
+			TagKey<Item> material = block ? metal.rawStorageBlocks.items() : metal.rawOres;
 			return b.duration(400)
-				.withCondition(new NotCondition(new TagEmptyCondition("forge", tagPath)))
-				.require(AllTags.forgeItemTag(tagPath))
+				.withCondition(new NotCondition(new TagEmptyCondition(material.location())))
+				.require(material)
 				.output(result.get(), amount)
 				.output(.75f, AllItems.EXP_NUGGET.get(), amount);
 		});
 	}
 
-	public CrushingRecipeGen(PackOutput generator, String defaultNamespace) {
-		super(generator, defaultNamespace);
+	public CrushingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, String defaultNamespace) {
+		super(output, registries, defaultNamespace);
 	}
 
 	@Override
 	protected AllRecipeTypes getRecipeType() {
 		return AllRecipeTypes.CRUSHING;
 	}
-
 }

@@ -4,11 +4,13 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,6 +18,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class FactoryPanelConnection {
+	public static final Codec<FactoryPanelConnection> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		FactoryPanelPosition.CODEC.fieldOf("position").forGetter(i -> i.from),
+		Codec.INT.fieldOf("amount").forGetter(i -> i.amount),
+		Codec.INT.fieldOf("arrow_bending").forGetter(i -> i.arrowBendMode)
+	).apply(instance, FactoryPanelConnection::new));
 
 	public FactoryPanelPosition from;
 	public int amount;
@@ -28,27 +35,17 @@ public class FactoryPanelConnection {
 	private int arrowBendModeCurrentPathUses;
 
 	public FactoryPanelConnection(FactoryPanelPosition from, int amount) {
+		this(from, amount, -1);
+	}
+
+	public FactoryPanelConnection(FactoryPanelPosition from, int amount, int arrowBendMode) {
 		this.from = from;
 		this.amount = amount;
+		this.arrowBendMode = arrowBendMode;
 		path = new ArrayList<>();
 		success = true;
-		arrowBendMode = -1;
 		arrowBendModeCurrentPathUses = 0;
 		cachedSource = new WeakReference<>(null);
-	}
-
-	public static FactoryPanelConnection read(CompoundTag nbt) {
-		FactoryPanelConnection connection =
-			new FactoryPanelConnection(FactoryPanelPosition.read(nbt), nbt.getInt("Amount"));
-		connection.arrowBendMode = nbt.getInt("ArrowBending");
-		return connection;
-	}
-
-	public CompoundTag write() {
-		CompoundTag nbt = from.write();
-		nbt.putInt("Amount", amount);
-		nbt.putInt("ArrowBending", arrowBendMode);
-		return nbt;
 	}
 
 	public List<Direction> getPath(Level level, BlockState state, FactoryPanelPosition to) {

@@ -14,7 +14,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -59,21 +61,19 @@ public class HandCrankBlock extends DirectionalKineticBlock
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-		BlockHitResult hit) {
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (player.isSpectator())
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		withBlockEntityDo(worldIn, pos, be -> be.turn(player.isShiftKeyDown()));
-		if (!player.getItemInHand(handIn)
-			.is(AllItems.EXTENDO_GRIP.get()))
+		withBlockEntityDo(level, pos, be -> be.turn(player.isShiftKeyDown()));
+		if (!stack.is(AllItems.EXTENDO_GRIP.get()))
 			player.causeFoodExhaustion(getRotationSpeed() * AllConfigs.server().kinetics.crankHungerMultiplier.getF());
 
 		if (player.getFoodData()
 			.getFoodLevel() == 0)
 			AllAdvancements.HAND_CRANK.awardTo(player);
 
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -106,7 +106,6 @@ public class HandCrankBlock extends DirectionalKineticBlock
 		if (fromPos.equals(pos.relative(blockFacing.getOpposite()))) {
 			if (!canSurvive(state, worldIn, pos)) {
 				worldIn.destroyBlock(pos, true);
-				return;
 			}
 		}
 	}
@@ -146,7 +145,7 @@ public class HandCrankBlock extends DirectionalKineticBlock
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 }

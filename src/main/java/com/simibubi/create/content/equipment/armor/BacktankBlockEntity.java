@@ -2,9 +2,8 @@ package com.simibubi.create.content.equipment.armor;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -13,9 +12,13 @@ import com.simibubi.create.foundation.blockEntity.ComparatorUtil;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.particle.AirParticleData;
 
+import net.createmod.catnip.codecs.CatnipCodecUtils;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap.Builder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -36,14 +39,12 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 
 	private int capacityEnchantLevel;
 
-	private CompoundTag vanillaTag;
-	private CompoundTag forgeCapsTag;
+	private DataComponentPatch componentPatch;
 
 	public BacktankBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		defaultName = getDefaultName(state);
-		vanillaTag = new CompoundTag();
-		forgeCapsTag = null;
+		componentPatch = DataComponentPatch.EMPTY;
 	}
 
 	public static Component getDefaultName(BlockState state) {
@@ -115,36 +116,43 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 	}
 
 	@Override
-	protected void write(CompoundTag compound, boolean clientPacket) {
-		super.write(compound, clientPacket);
+	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(compound, registries, clientPacket);
 		compound.putInt("Air", airLevel);
 		compound.putInt("Timer", airLevelTimer);
 		compound.putInt("CapacityEnchantment", capacityEnchantLevel);
 
 		if (this.customName != null)
-			compound.putString("CustomName", Component.Serializer.toJson(this.customName));
+			compound.putString("CustomName", Component.Serializer.toJson(this.customName, registries));
 
-		compound.put("VanillaTag", vanillaTag);
-		if (forgeCapsTag != null)
-			compound.put("ForgeCapsTag", forgeCapsTag);
+		compound.put("Components", CatnipCodecUtils.encode(DataComponentPatch.CODEC, registries, componentPatch)
+			.orElse(new CompoundTag()));
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(compound, registries, clientPacket);
 		int prev = airLevel;
 		airLevel = compound.getInt("Air");
 		airLevelTimer = compound.getInt("Timer");
 		capacityEnchantLevel = compound.getInt("CapacityEnchantment");
 
 		if (compound.contains("CustomName", 8))
-			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
+			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"), registries);
 
-		vanillaTag = compound.getCompound("VanillaTag");
-		forgeCapsTag = compound.contains("ForgeCapsTag") ? compound.getCompound("ForgeCapsTag") : null;
-
+		componentPatch = CatnipCodecUtils.decode(DataComponentPatch.CODEC, registries, compound.getCompound("Components")).orElse(DataComponentPatch.EMPTY);
 		if (prev != 0 && prev != airLevel && airLevel == BacktankUtil.maxAir(capacityEnchantLevel) && clientPacket)
 			playFilledEffect();
+	}
+
+	@Override
+	protected void applyImplicitComponents(DataComponentInput componentInput) {
+		setAirLevel(componentInput.getOrDefault(AllDataComponents.BACKTANK_AIR, 0));
+	}
+
+	@Override
+	protected void collectImplicitComponents(Builder components) {
+		components.set(AllDataComponents.BACKTANK_AIR, airLevel);
 	}
 
 	protected void playFilledEffect() {
@@ -182,19 +190,12 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 		this.capacityEnchantLevel = capacityEnchantLevel;
 	}
 
-	public void setTags(CompoundTag vanillaTag, @Nullable CompoundTag forgeCapsTag) {
-		this.vanillaTag = vanillaTag.copy();
-		this.forgeCapsTag = forgeCapsTag == null ? null : forgeCapsTag.copy();
-		// Prevent nesting of the ctrl+pick block added tag
-		vanillaTag.remove("BlockEntityTag");
+	public void setComponentPatch(DataComponentPatch componentPatch) {
+		this.componentPatch = componentPatch;
 	}
 
-	public CompoundTag getVanillaTag() {
-		return vanillaTag;
-	}
-
-	public CompoundTag getForgeCapsTag() {
-		return forgeCapsTag;
+	public DataComponentPatch getComponentPatch() {
+		return componentPatch;
 	}
 
 }

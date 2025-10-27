@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "polished_cut_calcite_stairs",
+  "key": {
+    "X": {
+      "item": "create:polished_cut_calcite"
+    }
+  },
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "result": {
+    "count": 4,
+    "id": "create:polished_cut_calcite_stairs"
+  }
+}

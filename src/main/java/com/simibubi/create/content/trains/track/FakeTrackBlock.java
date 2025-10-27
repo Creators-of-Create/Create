@@ -1,5 +1,7 @@
 package com.simibubi.create.content.trains.track;
 
+import net.minecraft.world.level.pathfinder.PathType;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
@@ -23,7 +25,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -48,33 +49,33 @@ public class FakeTrackBlock extends Block implements EntityBlock, ProperWaterlog
 	}
 
 	@Override
-	public @Nullable BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos,
-		@Nullable Mob mob) {
-		return BlockPathTypes.DAMAGE_OTHER;
+	public @Nullable PathType getBlockPathType(BlockState state, BlockGetter level, BlockPos pos,
+											   @Nullable Mob mob) {
+		return PathType.DAMAGE_OTHER;
 	}
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
 		super.createBlockStateDefinition(pBuilder.add(WATERLOGGED));
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
 		return withWater(super.getStateForPlacement(pContext), pContext);
 	}
-	
+
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
 		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
 		updateWater(pLevel, pState, pCurrentPos);
 		return pState;
 	}
-	
+
 	@Override
 	public FluidState getFluidState(BlockState pState) {
 		return fluidState(pState);
 	}
-	
+
 	@Override
 	public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
 		if (pLevel.getBlockEntity(pPos) instanceof FakeTrackBlockEntity be)
@@ -90,13 +91,13 @@ public class FakeTrackBlock extends Block implements EntityBlock, ProperWaterlog
 	public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
 		return AllBlockEntityTypes.FAKE_TRACK.create(pPos, pState);
 	}
-	
+
 	@Override
 	public boolean addLandingEffects(BlockState state1, ServerLevel level, BlockPos pos, BlockState state2,
 		LivingEntity entity, int numberOfParticles) {
 		return true;
 	}
-	
+
 	@Override
 	public boolean addRunningEffects(BlockState state, Level level, BlockPos pos, Entity entity) {
 		return true;

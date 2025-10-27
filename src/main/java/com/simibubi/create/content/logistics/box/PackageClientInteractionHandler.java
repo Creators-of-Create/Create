@@ -1,13 +1,14 @@
 package com.simibubi.create.content.logistics.box;
 
+import com.simibubi.create.foundation.mixin.accessor.MinecraftAccessor;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class PackageClientInteractionHandler {
@@ -28,7 +29,7 @@ public class PackageClientInteractionHandler {
 			return;
 		if (!(event.getTarget() instanceof PackageEntity))
 			return;
-		ObfuscationReflectionHelper.setPrivateValue(Minecraft.class, mc, 10, "f_91078_");
+		((MinecraftAccessor) mc).create$setMissTime(10);
 	}
 
 }

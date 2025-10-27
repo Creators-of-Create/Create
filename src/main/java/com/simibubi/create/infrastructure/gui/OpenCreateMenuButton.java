@@ -24,10 +24,10 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.world.item.ItemStack;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 
 public class OpenCreateMenuButton extends Button {
 
@@ -85,7 +85,7 @@ public class OpenCreateMenuButton extends Button {
 	public static class OpenConfigButtonHandler {
 
 		@SubscribeEvent
-		public static void onGuiInit(ScreenEvent.Init event) {
+		public static void onGuiInit(ScreenEvent.Init.Post event) {
 			Screen screen = event.getScreen();
 
 			MenuRows menu;

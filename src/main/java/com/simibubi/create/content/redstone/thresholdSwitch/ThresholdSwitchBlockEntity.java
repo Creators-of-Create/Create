@@ -22,6 +22,8 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.math.BlockFace;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
@@ -31,10 +33,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.ticks.TickPriority;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 
@@ -73,7 +76,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		onWhenAbove = compound.getInt("OnAboveAmount");
 		offWhenBelow = compound.getInt("OffBelowAmount");
 		currentLevel = compound.getInt("CurrentAmount");
@@ -83,7 +86,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 		redstoneState = compound.getBoolean("Powered");
 		inverted = compound.getBoolean("Inverted");
 		poweredAfterDelay = compound.getBoolean("PoweredAfterDelay");
-		super.read(compound, clientPacket);
+		super.read(compound, registries, clientPacket);
 	}
 
 	protected void writeCommon(CompoundTag compound) {
@@ -93,7 +96,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		writeCommon(compound);
 		compound.putInt("CurrentAmount", currentLevel);
 		compound.putInt("CurrentMinAmount", currentMinLevel);
@@ -101,13 +104,13 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 		compound.putBoolean("InStacks", inStacks);
 		compound.putBoolean("Powered", redstoneState);
 		compound.putBoolean("PoweredAfterDelay", poweredAfterDelay);
-		super.write(compound, clientPacket);
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
-	public void writeSafe(CompoundTag compound) {
+	public void writeSafe(CompoundTag compound, HolderLookup.Provider registries) {
 		writeCommon(compound);
-		super.writeSafe(compound);
+		super.writeSafe(compound, registries);
 	}
 
 	public int getMinLevel() {
@@ -168,7 +171,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 							.filter(compat -> compat.isFromThisMod(targetBlockEntity))
 							.map(compat -> compat.getSpaceInSlot(inv, finalSlot))
 							.findFirst()
-							.orElseGet(() -> (long) Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(finalSlot)));
+							.orElseGet(() -> (long) Math.min(stackInSlot.getOrDefault(DataComponents.MAX_STACK_SIZE, 64), inv.getSlotLimit(finalSlot)));
 
 						int count = stackInSlot.getCount();
 						if (space == 0)
@@ -204,7 +207,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 			if (currentLevel == -1)
 				return;
 
-			level.setBlock(worldPosition, getBlockState().setValue(ThresholdSwitchBlock.LEVEL, 0), 3);
+			level.setBlock(worldPosition, getBlockState().setValue(ThresholdSwitchBlock.LEVEL, 0), Block.UPDATE_ALL);
 			currentLevel = -1;
 			redstoneState = false;
 			sendData();
@@ -239,9 +242,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 	}
 
 	private boolean isSuitableInventory(BlockEntity be) {
-		return be != null && !(be instanceof StockTickerBlockEntity || be.getCapability(ForgeCapabilities.ITEM_HANDLER)
-			.filter(ProcessingInventory.class::isInstance)
-			.isPresent());
+		return be != null && !(be instanceof StockTickerBlockEntity || level.getCapability(Capabilities.ItemHandler.BLOCK, be.getBlockPos(), null, be, null) instanceof ProcessingInventory);
 	}
 
 	private BlockPos getTargetPos() {

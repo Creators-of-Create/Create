@@ -1,34 +1,53 @@
 package com.simibubi.create.content.decoration;
 
+import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
+
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class TrainTrapdoorBlock extends TrapDoorBlock implements IWrenchable {
-
-	public TrainTrapdoorBlock(Properties p_57526_) {
-		super(p_57526_, SlidingDoorBlock.TRAIN_SET_TYPE.get());
+	/**
+	 * @deprecated <p> Use {@link TrainTrapdoorBlock#TrainTrapdoorBlock(BlockSetType, Properties)} instead.
+	 */
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
+	@Deprecated(since = "6.0.7", forRemoval = true)
+	public TrainTrapdoorBlock(Properties properties) {
+		super(SlidingDoorBlock.TRAIN_SET_TYPE.get(), properties);
 	}
 
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
-		pState = pState.cycle(OPEN);
-		pLevel.setBlock(pPos, pState, 2);
-		if (pState.getValue(WATERLOGGED))
-			pLevel.scheduleTick(pPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
-		playSound(pPlayer, pLevel, pPos, pState.getValue(OPEN));
-		return InteractionResult.sidedSuccess(pLevel.isClientSide);
+	public TrainTrapdoorBlock(BlockSetType type, Properties properties) {
+		super(type, properties);
+	}
+
+	public static TrainTrapdoorBlock metal(Properties properties) {
+		return new TrainTrapdoorBlock(SlidingDoorBlock.TRAIN_SET_TYPE.get(), properties);
+	}
+
+	public static TrainTrapdoorBlock glass(Properties properties) {
+		return new TrainTrapdoorBlock(SlidingDoorBlock.GLASS_SET_TYPE.get(), properties);
+	}
+
+	@Override
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+		state = state.cycle(OPEN);
+		level.setBlock(pos, state, UPDATE_CLIENTS);
+		if (state.getValue(WATERLOGGED))
+			level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+		playSound(player, level, pos, state.getValue(OPEN));
+		return InteractionResult.sidedSuccess(level.isClientSide);
 	}
 
 	@Override
@@ -59,5 +78,4 @@ public class TrainTrapdoorBlock extends TrapDoorBlock implements IWrenchable {
 
 		return pDirection.getAxis() != facing.getAxis();
 	}
-
 }

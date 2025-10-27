@@ -1,0 +1,37 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "elementaryores"
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "elementaryores:ore_emerald_end"
+        }
+      ]
+    }
+  ],
+  "processing_time": 350,
+  "results": [
+    {
+      "id": "minecraft:emerald"
+    },
+    {
+      "chance": 0.25,
+      "id": "minecraft:emerald"
+    },
+    {
+      "chance": 0.75,
+      "id": "create:experience_nugget"
+    },
+    {
+      "chance": 0.12,
+      "id": "minecraft:end_stone"
+    }
+  ]
+}

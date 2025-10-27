@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.data.Pair;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -40,10 +41,10 @@ public class StationPoweredCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	protected void writeAdditional(CompoundTag tag) {}
+	protected void writeAdditional(HolderLookup.Provider registries, CompoundTag tag) {}
 
 	@Override
-	protected void readAdditional(CompoundTag tag) {}
+	protected void readAdditional(HolderLookup.Provider registries, CompoundTag tag) {}
 
 	@Override
 	public ResourceLocation getId() {

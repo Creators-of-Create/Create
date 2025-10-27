@@ -15,7 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.Train;
@@ -30,6 +30,7 @@ import net.createmod.catnip.data.Pair;
 import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.theme.Color;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -517,7 +518,7 @@ public class TrackGraph {
 		Create.RAILWAYS.markTracksDirty();
 	}
 
-	public CompoundTag write(DimensionPalette dimensions) {
+	public CompoundTag write(HolderLookup.Provider registries, DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
 		tag.putUUID("Id", id);
 		tag.putInt("Color", color.getRGB());
@@ -555,14 +556,14 @@ public class TrackGraph {
 		});
 
 		tag.put("Nodes", nodesList);
-		tag.put("Points", edgePoints.write(dimensions));
+		tag.put("Points", edgePoints.write(registries, dimensions));
 		return tag;
 	}
 
-	public static TrackGraph read(CompoundTag tag, DimensionPalette dimensions) {
+	public static TrackGraph read(CompoundTag tag, HolderLookup.Provider registries, DimensionPalette dimensions) {
 		TrackGraph graph = new TrackGraph(tag.getUUID("Id"));
 		graph.color = new Color(tag.getInt("Color"));
-		graph.edgePoints.read(tag.getCompound("Points"), dimensions);
+		graph.edgePoints.read(tag.getCompound("Points"), registries, dimensions);
 
 		Map<Integer, TrackNode> indexTracker = new HashMap<>();
 		ListTag nodesList = tag.getList("Nodes", Tag.TAG_COMPOUND);

@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.box.PackageItem;
+import com.simibubi.create.content.logistics.box.PackageItem.PackageOrderData;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts.CraftingEntry;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class PackageRepackageHelper {
 
@@ -27,8 +27,7 @@ public class PackageRepackageHelper {
 	}
 
 	public boolean isFragmented(ItemStack box) {
-		return box.hasTag() && box.getTag()
-			.contains("Fragment");
+		return box.has(AllDataComponents.PACKAGE_ORDER_DATA);
 	}
 
 	public int addPackageFragment(ItemStack box) {
@@ -53,10 +52,10 @@ public class PackageRepackageHelper {
 
 		for (ItemStack box : collectedPackages.get(orderId)) {
 			address = PackageItem.getAddress(box);
-			if (box.hasTag()) {
-				CompoundTag tag = box.getTag().getCompound("Fragment");
-				if (tag.contains("OrderContext"))
-					orderContext = PackageItem.getOrderContext(box);
+			if (box.has(AllDataComponents.PACKAGE_ORDER_DATA)) {
+				PackageOrderWithCrafts context = box.get(AllDataComponents.PACKAGE_ORDER_DATA).orderContext();
+				if (context != null && !context.isEmpty())
+					orderContext = context;
 			}
 
 			ItemStackHandler contents = PackageItem.getContents(box);
@@ -94,7 +93,7 @@ public class PackageRepackageHelper {
 					continue;
 				if (targetedEntry != null) {
 					targetAmount = targetedEntry.count;
-					if (!ItemHandlerHelper.canItemStacksStack(entry.stack, targetedEntry.stack))
+					if (!ItemStack.isSameItemSameComponents(entry.stack, targetedEntry.stack))
 						continue;
 				}
 
@@ -103,7 +102,7 @@ public class PackageRepackageHelper {
 					if (removedAmount == 0)
 						continue ItemSearch;
 
-					ItemStack output = ItemHandlerHelper.copyStackWithSize(entry.stack, removedAmount);
+					ItemStack output = entry.stack.copyWithCount(removedAmount);
 					targetAmount -= removedAmount;
 					if (targetedEntry != null)
 						targetedEntry.count = targetAmount;
@@ -157,14 +156,13 @@ public class PackageRepackageHelper {
 			Packages:
 			for (int packageCounter = 0; packageCounter < 1000; packageCounter++) {
 				for (ItemStack box : collectedPackages.get(orderId)) {
-					CompoundTag tag = box.getOrCreateTag()
-						.getCompound("Fragment");
-					if (linkCounter != tag.getInt("LinkIndex"))
+					PackageOrderData data = box.get(AllDataComponents.PACKAGE_ORDER_DATA);
+					if (linkCounter != data.linkIndex())
 						continue;
-					if (packageCounter != tag.getInt("Index"))
+					if (packageCounter != data.fragmentIndex())
 						continue;
-					finalLinkReached = tag.getBoolean("IsFinalLink");
-					if (tag.getBoolean("IsFinal"))
+					finalLinkReached = data.isFinalLink();
+					if (data.isFinal())
 						continue Links;
 					continue Packages;
 				}

@@ -5,8 +5,8 @@ import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
+
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 public class DeployerItemHandler implements IItemHandlerModifiable {
 
@@ -59,7 +59,7 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 			return remainder;
 		}
 
-		if (!ItemHandlerHelper.canItemStacksStack(held, stack))
+		if (!ItemStack.isSameItemSameComponents(held, stack))
 			return stack;
 
 		int space = held.getMaxStackSize() - held.getCount();

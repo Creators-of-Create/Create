@@ -1,6 +1,8 @@
 package com.simibubi.create.content.redstone.nixieTube;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+
+import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -11,7 +13,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.Vec3;
 
+import org.jetbrains.annotations.NotNull;
+
 public class DoubleFaceAttachedBlock extends HorizontalDirectionalBlock {
+
+	public static final MapCodec<DoubleFaceAttachedBlock> CODEC = simpleCodec(DoubleFaceAttachedBlock::new);
 
 	public enum DoubleAttachFace implements StringRepresentable {
 		FLOOR("floor"), WALL("wall"), WALL_REVERSED("wall_reversed"), CEILING("ceiling");
@@ -78,5 +84,10 @@ public class DoubleFaceAttachedBlock extends HorizontalDirectionalBlock {
 		default:
 			return pState.getValue(FACING);
 		}
+	}
+
+	@Override
+	protected @NotNull MapCodec<? extends HorizontalDirectionalBlock> codec() {
+		return CODEC;
 	}
 }

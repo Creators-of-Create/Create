@@ -32,6 +32,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -96,42 +97,40 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 	}
 
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
-		if (pPlayer == null)
-			return InteractionResult.PASS;
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (player == null)
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		ItemStack itemInHand = pPlayer.getItemInHand(pHand);
-		if (AllBlocks.SHAFT.isIn(itemInHand)) {
-			KineticBlockEntity.switchToBlockState(pLevel, pPos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()
-				.setValue(WATERLOGGED, pState.getValue(WATERLOGGED))
-				.setValue(TOP, pState.getValue(TOP))
-				.setValue(BOTTOM, pState.getValue(BOTTOM))
-				.setValue(GirderEncasedShaftBlock.HORIZONTAL_AXIS, pState.getValue(X) || pHit.getDirection()
+		if (AllBlocks.SHAFT.isIn(stack)) {
+			KineticBlockEntity.switchToBlockState(level, pos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()
+				.setValue(WATERLOGGED, state.getValue(WATERLOGGED))
+				.setValue(TOP, state.getValue(TOP))
+				.setValue(BOTTOM, state.getValue(BOTTOM))
+				.setValue(GirderEncasedShaftBlock.HORIZONTAL_AXIS, state.getValue(X) || hitResult.getDirection()
 					.getAxis() == Axis.Z ? Axis.Z : Axis.X));
 
-			pLevel.playSound(null, pPos, SoundEvents.NETHERITE_BLOCK_HIT, SoundSource.BLOCKS, 0.5f, 1.25f);
-			if (!pLevel.isClientSide && !pPlayer.isCreative()) {
-				itemInHand.shrink(1);
-				if (itemInHand.isEmpty())
-					pPlayer.setItemInHand(pHand, ItemStack.EMPTY);
+			level.playSound(null, pos, SoundEvents.NETHERITE_BLOCK_HIT, SoundSource.BLOCKS, 0.5f, 1.25f);
+			if (!level.isClientSide && !player.isCreative()) {
+				stack.shrink(1);
+				if (stack.isEmpty())
+					player.setItemInHand(hand, ItemStack.EMPTY);
 			}
 
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
 
-		if (AllItems.WRENCH.isIn(itemInHand) && !pPlayer.isShiftKeyDown()) {
-			if (GirderWrenchBehavior.handleClick(pLevel, pPos, pState, pHit))
-				return InteractionResult.sidedSuccess(pLevel.isClientSide);
-			return InteractionResult.FAIL;
+		if (AllItems.WRENCH.isIn(stack) && !player.isShiftKeyDown()) {
+			if (GirderWrenchBehavior.handleClick(level, pos, state, hitResult))
+				return ItemInteractionResult.sidedSuccess(level.isClientSide);
+			return ItemInteractionResult.FAIL;
 		}
 
 		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
-		if (helper.matchesItem(itemInHand))
-			return helper.getOffset(pPlayer, pLevel, pState, pPos, pHit)
-				.placeInWorld(pLevel, (BlockItem) itemInHand.getItem(), pPlayer, pHand, pHit);
+		if (helper.matchesItem(stack))
+			return helper.getOffset(player, level, state, pos, hitResult)
+				.placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
 
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override
@@ -196,7 +195,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		for (Direction d : Iterate.directions)
 			state = updateState(level, pos, state, d);
 
-		return state.setValue(WATERLOGGED, Boolean.valueOf(ifluidstate.getType() == Fluids.WATER));
+		return state.setValue(WATERLOGGED, ifluidstate.getType() == Fluids.WATER);
 	}
 
 	public static BlockState updateState(LevelAccessor level, BlockPos pos, BlockState state, Direction d) {
@@ -308,7 +307,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

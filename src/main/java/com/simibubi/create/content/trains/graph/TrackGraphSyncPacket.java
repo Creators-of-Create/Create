@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.GlobalRailwayManager;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;
@@ -18,9 +19,12 @@ import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Pair;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.phys.Vec3;
 
 public class TrackGraphSyncPacket extends TrackGraphPacket {
+
+	public static final StreamCodec<FriendlyByteBuf, TrackGraphSyncPacket> STREAM_CODEC = StreamCodec.of((b, v) -> v.write(b), TrackGraphSyncPacket::new);
 
 	Map<Integer, Pair<TrackNodeLocation, Vec3>> addedNodes;
 	List<Pair<Pair<Couple<Integer>, TrackMaterial>, BezierConnection>> addedEdges;
@@ -106,7 +110,6 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 			splitSubGraphs.put(buffer.readVarInt(), Pair.of(buffer.readInt(), buffer.readUUID()));
 	}
 
-	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeUUID(graphId);
 		buffer.writeInt(netId);
@@ -272,4 +275,8 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 		updatedEdgeData.put(key, Pair.of(groupType, list));
 	}
 
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.SYNC_RAIL_GRAPH;
+	}
 }

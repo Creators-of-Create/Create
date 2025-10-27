@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.depot.storage;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllMountedStorageTypes;
 import com.simibubi.create.api.contraption.storage.SyncedMountedStorage;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
@@ -12,6 +12,7 @@ import com.simibubi.create.content.logistics.depot.DepotBlockEntity;
 import com.simibubi.create.content.logistics.depot.storage.DepotMountedStorage.Handler;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -20,12 +21,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class DepotMountedStorage extends WrapperMountedItemStorage<Handler> implements SyncedMountedStorage {
-	public static final Codec<DepotMountedStorage> CODEC = ItemStack.CODEC.xmap(
+	public static final MapCodec<DepotMountedStorage> CODEC = ItemStack.OPTIONAL_CODEC.xmap(
 		DepotMountedStorage::new, DepotMountedStorage::getItem
-	);
+	).fieldOf("value");
 
 	private boolean dirty;
 
@@ -63,7 +64,7 @@ public class DepotMountedStorage extends WrapperMountedItemStorage<Handler> impl
 
 	@Override
 	public void afterSync(Contraption contraption, BlockPos localPos) {
-		BlockEntity be = contraption.presentBlockEntities.get(localPos);
+		BlockEntity be = contraption.getBlockEntityClientSide(localPos);
 		if (be instanceof DepotBlockEntity depot) {
 			depot.setHeldItem(this.getItem());
 		}
@@ -82,9 +83,9 @@ public class DepotMountedStorage extends WrapperMountedItemStorage<Handler> impl
 		return new DepotMountedStorage(held.copy());
 	}
 
-	public static DepotMountedStorage fromLegacy(CompoundTag nbt) {
+	public static DepotMountedStorage fromLegacy(HolderLookup.Provider registries, CompoundTag nbt) {
 		ItemStackHandler handler = new ItemStackHandler();
-		handler.deserializeNBT(nbt);
+		handler.deserializeNBT(registries, nbt);
 		if (handler.getSlots() == 1) {
 			ItemStack stack = handler.getStackInSlot(0);
 			return new DepotMountedStorage(stack);

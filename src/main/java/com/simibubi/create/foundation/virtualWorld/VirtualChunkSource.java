@@ -10,8 +10,8 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkSource;
-import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 
 public class VirtualChunkSource extends ChunkSource {
@@ -28,8 +28,7 @@ public class VirtualChunkSource extends ChunkSource {
 	}
 
 	public ChunkAccess getChunk(int x, int z) {
-		long pos = ChunkPos.asLong(x, z);
-		return chunks.computeIfAbsent(pos, $ -> new VirtualChunk(world, x, z));
+		return chunks.computeIfAbsent(ChunkPos.asLong(x, z), packedPos -> new VirtualChunk(world, ChunkPos.getX(packedPos), ChunkPos.getZ(packedPos)));
 	}
 
 	@Override

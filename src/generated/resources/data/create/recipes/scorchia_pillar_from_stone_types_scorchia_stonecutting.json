@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "tag": "create:stone_types/scorchia"
-  },
-  "result": "create:scorchia_pillar"
-}

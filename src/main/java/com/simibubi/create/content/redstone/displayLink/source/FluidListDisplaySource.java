@@ -23,8 +23,8 @@ import net.createmod.catnip.data.IntAttached;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 public class FluidListDisplaySource extends ValueListDisplaySource {
 
@@ -63,7 +63,7 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 				.limit(maxRows)
 				.map(entry -> IntAttached.with(
 						entry.getValue(),
-                        Component.translatable(fluidNames.get(entry.getKey()).getTranslationKey()))
+						fluidNames.get(entry.getKey()).getHoverName().copy())
 				);
 	}
 

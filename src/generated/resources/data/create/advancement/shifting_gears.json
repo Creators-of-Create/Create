@@ -1,0 +1,28 @@
+{
+  "parent": "create:windmill",
+  "criteria": {
+    "0": {
+      "trigger": "create:shifting_gears_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.shifting_gears.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:cogwheel"
+    },
+    "title": {
+      "translate": "advancement.create.shifting_gears"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

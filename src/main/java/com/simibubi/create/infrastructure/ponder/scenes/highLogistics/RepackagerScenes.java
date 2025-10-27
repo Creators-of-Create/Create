@@ -19,9 +19,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class RepackagerScenes {
 
@@ -384,8 +384,7 @@ public class RepackagerScenes {
 		scene.world()
 			.modifyBlockEntity(util.grid()
 				.at(3, 2, 5), BlockEntity.class, be -> {
-					IItemHandler handler = be.getCapability(ForgeCapabilities.ITEM_HANDLER)
-						.orElse(null);
+					IItemHandler handler = be.getLevel().getCapability(ItemHandler.BLOCK, be.getBlockPos(), null);
 					if (handler == null)
 						return;
 					ItemHandlerHelper.insertItemStacked(handler, stack, false);

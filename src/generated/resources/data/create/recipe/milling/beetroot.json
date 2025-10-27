@@ -1,0 +1,19 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:beetroot"
+    }
+  ],
+  "processing_time": 70,
+  "results": [
+    {
+      "count": 2,
+      "id": "minecraft:red_dye"
+    },
+    {
+      "chance": 0.1,
+      "id": "minecraft:beetroot_seeds"
+    }
+  ]
+}

@@ -6,14 +6,13 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import java.util.Vector;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
@@ -105,8 +104,8 @@ public class TravellingPoint {
 					return entry;
 				}
 
-			Vector<List<Entry<TrackNode, TrackEdge>>> frontiers = new Vector<>(validTargets.size());
-			Vector<Set<TrackEdge>> visiteds = new Vector<>(validTargets.size());
+			List<List<Entry<TrackNode, TrackEdge>>> frontiers = new ArrayList<>(validTargets.size());
+			List<Set<TrackEdge>> visiteds = new ArrayList<>(validTargets.size());
 
             for (Entry<TrackNode, TrackEdge> validTarget : validTargets) {
                 ArrayList<Entry<TrackNode, TrackEdge>> e = new ArrayList<>();

@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "atmospheric:crustose"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "atmospheric:crustose_path"
+    }
+  ]
+}

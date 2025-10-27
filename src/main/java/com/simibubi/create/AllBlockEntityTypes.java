@@ -219,8 +219,10 @@ import com.simibubi.create.content.trains.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.trains.display.FlapDisplayRenderer;
 import com.simibubi.create.content.trains.observer.TrackObserverBlockEntity;
 import com.simibubi.create.content.trains.observer.TrackObserverRenderer;
+import com.simibubi.create.content.trains.observer.TrackObserverVisual;
 import com.simibubi.create.content.trains.signal.SignalBlockEntity;
 import com.simibubi.create.content.trains.signal.SignalRenderer;
+import com.simibubi.create.content.trains.signal.SignalVisual;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.content.trains.station.StationRenderer;
 import com.simibubi.create.content.trains.track.FakeTrackBlockEntity;
@@ -339,7 +341,7 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.HAND_CRANK)
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
-
+	
 	public static final BlockEntityEntry<ValveHandleBlockEntity> VALVE_HANDLE = REGISTRATE
 		.blockEntity("valve_handle", ValveHandleBlockEntity::new)
 		.visual(() -> ValveHandleVisual::new)
@@ -792,7 +794,7 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.ANALOG_LEVER)
 		.renderer(() -> AnalogLeverRenderer::new)
 		.register();
-
+	
 	public static final BlockEntityEntry<PlacardBlockEntity> PLACARD = REGISTRATE
 		.blockEntity("placard", PlacardBlockEntity::new)
 		.validBlocks(AllBlocks.PLACARD)
@@ -938,7 +940,7 @@ public class AllBlockEntityTypes {
 		.validBlocksDeferred(TrackMaterial::allBlocks)
 		.renderer(() -> TrackRenderer::new)
 		.register();
-
+	
 	public static final BlockEntityEntry<FakeTrackBlockEntity> FAKE_TRACK = REGISTRATE
 		.blockEntity("fake_track", FakeTrackBlockEntity::new)
 		.validBlocks(AllBlocks.FAKE_TRACK)
@@ -978,16 +980,18 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<SignalBlockEntity> TRACK_SIGNAL = REGISTRATE
 		.blockEntity("track_signal", SignalBlockEntity::new)
+		.visual(() -> SignalVisual::new)
 		.renderer(() -> SignalRenderer::new)
 		.validBlocks(AllBlocks.TRACK_SIGNAL)
 		.register();
 
 	public static final BlockEntityEntry<TrackObserverBlockEntity> TRACK_OBSERVER = REGISTRATE
 		.blockEntity("track_observer", TrackObserverBlockEntity::new)
+		.visual(() -> TrackObserverVisual::new)
 		.renderer(() -> TrackObserverRenderer::new)
 		.validBlocks(AllBlocks.TRACK_OBSERVER)
 		.register();
-
+	
 	public static final BlockEntityEntry<ClipboardBlockEntity> CLIPBOARD = REGISTRATE
 		.blockEntity("clipboard", ClipboardBlockEntity::new)
 		.validBlocks(AllBlocks.CLIPBOARD)

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.drill;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -19,8 +19,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 

@@ -5,50 +5,38 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
+import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.codecs.CatnipCodecUtils;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public interface ItemAttribute {
-	static CompoundTag saveStatic(ItemAttribute attribute) {
+	Codec<ItemAttribute> CODEC = CreateBuiltInRegistries.ITEM_ATTRIBUTE_TYPE.byNameCodec().dispatch(ItemAttribute::getType, ItemAttributeType::codec);
+	StreamCodec<RegistryFriendlyByteBuf, ItemAttribute> STREAM_CODEC = ByteBufCodecs.registry(CreateRegistries.ITEM_ATTRIBUTE_TYPE).dispatch(ItemAttribute::getType, ItemAttributeType::streamCodec);
+
+	static CompoundTag saveStatic(ItemAttribute attribute, HolderLookup.Provider registries) {
 		CompoundTag nbt = new CompoundTag();
-		ResourceLocation id = CreateBuiltInRegistries.ITEM_ATTRIBUTE_TYPE.getKey(attribute.getType());
-
-		if (id == null)
-			throw new IllegalArgumentException("Cannot get " + attribute.getType() + " as it does not exist in AllRegistries.ITEM_ATTRIBUTE_TYPES");
-
-		nbt.putString("attributeId", id.toString());
-		attribute.save(nbt);
+		nbt.put("attribute", CatnipCodecUtils.encode(CODEC, registries, attribute).orElseThrow());
 		return nbt;
 	}
 
 	@Nullable
-	static ItemAttribute loadStatic(CompoundTag nbt) {
-		for (LegacyDeserializer deserializer : LegacyDeserializer.ALL) {
-			if (deserializer.canRead(nbt)) {
-				return deserializer.readNBT(nbt.getCompound(deserializer.getNBTKey()));
-			}
-		}
-
-		ResourceLocation id = ResourceLocation.tryParse(nbt.getString("attributeId"));
-		if (id == null)
-			return null;
-
-		ItemAttributeType type = CreateBuiltInRegistries.ITEM_ATTRIBUTE_TYPE.get(id);
-		if (type == null)
-			return null;
-
-		ItemAttribute attribute = type.createAttribute();
-		attribute.load(nbt);
-		return attribute;
+	static ItemAttribute loadStatic(CompoundTag nbt, HolderLookup.Provider registries) {
+		return CatnipCodecUtils.decode(CODEC, registries, nbt.get("attribute")).orElse(null);
 	}
 
 	static List<ItemAttribute> getAllAttributes(ItemStack stack, Level level) {
@@ -63,10 +51,6 @@ public interface ItemAttribute {
 
 	ItemAttributeType getType();
 
-	void save(CompoundTag nbt);
-
-	void load(CompoundTag nbt);
-
 	@OnlyIn(value = Dist.CLIENT)
 	default MutableComponent format(boolean inverted) {
 		return CreateLang.translateDirect("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
@@ -79,16 +63,16 @@ public interface ItemAttribute {
 		return new String[0];
 	}
 
-	@Deprecated
-	interface LegacyDeserializer {
-		List<LegacyDeserializer> ALL = new ArrayList<>();
+	record ItemAttributeEntry(ItemAttribute attribute, boolean inverted) {
+		public static final Codec<ItemAttributeEntry> CODEC = RecordCodecBuilder.create(i -> i.group(
+			ItemAttribute.CODEC.fieldOf("attribute").forGetter(ItemAttributeEntry::attribute),
+			Codec.BOOL.fieldOf("inverted").forGetter(ItemAttributeEntry::inverted)
+		).apply(i, ItemAttributeEntry::new));
 
-		default boolean canRead(CompoundTag nbt) {
-			return nbt.contains(getNBTKey());
-		}
-
-		String getNBTKey();
-
-		ItemAttribute readNBT(CompoundTag nbt);
+		public static final StreamCodec<RegistryFriendlyByteBuf, ItemAttributeEntry> STREAM_CODEC = StreamCodec.composite(
+			ItemAttribute.STREAM_CODEC, ItemAttributeEntry::attribute,
+			ByteBufCodecs.BOOL, ItemAttributeEntry::inverted,
+			ItemAttributeEntry::new
+		);
 	}
 }

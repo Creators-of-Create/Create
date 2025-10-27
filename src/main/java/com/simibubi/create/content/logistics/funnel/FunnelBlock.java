@@ -6,6 +6,8 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.createmod.catnip.math.VecHelper;
@@ -14,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -81,27 +84,24 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-		BlockHitResult hit) {
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		boolean shouldntInsertItem = AllBlocks.MECHANICAL_ARM.isIn(stack) || !canInsertIntoFunnel(state);
 
-		ItemStack heldItem = player.getItemInHand(handIn);
-		boolean shouldntInsertItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem) || !canInsertIntoFunnel(state);
+		if (AllItems.WRENCH.isIn(stack))
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		if (AllItems.WRENCH.isIn(heldItem))
-			return InteractionResult.PASS;
-
-		if (hit.getDirection() == getFunnelFacing(state) && !shouldntInsertItem) {
-			if (!worldIn.isClientSide)
-				withBlockEntityDo(worldIn, pos, be -> {
-					ItemStack toInsert = heldItem.copy();
-					ItemStack remainder = tryInsert(worldIn, pos, toInsert, false);
-					if (!ItemStack.matches(remainder, toInsert) || remainder.getCount() != heldItem.getCount())
-						player.setItemInHand(handIn, remainder);
+		if (hitResult.getDirection() == getFunnelFacing(state) && !shouldntInsertItem) {
+			if (!level.isClientSide)
+				withBlockEntityDo(level, pos, be -> {
+					ItemStack toInsert = stack.copy();
+					ItemStack remainder = tryInsert(level, pos, toInsert, false);
+					if (!ItemStack.matches(remainder, toInsert) || remainder.getCount() != stack.getCount())
+						player.setItemInHand(hand, remainder);
 				});
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
 
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override
@@ -133,7 +133,8 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 		if (projectedDiff < 0 == (direction.getAxisDirection() == AxisDirection.POSITIVE))
 			return;
 		float yOffset = direction == Direction.UP ? 0.25f : direction == Direction.DOWN ? -0.5f : -0.5f;
-		if (!PackageEntity.centerPackage(entityIn, openPos.add(0, yOffset, 0)))
+		FilteringBehaviour filter = BlockEntityBehaviour.get(worldIn, pos, FilteringBehaviour.TYPE);
+		if (filter.test(stack) && !PackageEntity.centerPackage(entityIn, openPos.add(0, yOffset, 0)))
 			return;
 
 		ItemStack remainder = tryInsert(worldIn, pos, stack, false);

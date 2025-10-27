@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create:crafting/logistics/white_table_cloth_clear"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_white_table_cloth": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create:white_table_cloth"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_white_table_cloth"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:crafting/logistics/white_table_cloth_clear"
+    ]
+  }
+}

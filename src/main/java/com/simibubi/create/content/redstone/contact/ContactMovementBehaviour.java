@@ -5,6 +5,7 @@ import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.elevator.ElevatorContraption;
 
+import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.NbtUtils;
@@ -69,7 +70,7 @@ public class ContactMovementBehaviour implements MovementBehaviour {
 		if (!context.data.contains("lastContact"))
 			return;
 
-		BlockPos last = NbtUtils.readBlockPos(context.data.getCompound("lastContact"));
+		BlockPos last = NBTHelper.readBlockPos(context.data, "lastContact");
 		context.data.remove("lastContact");
 		BlockState blockState = context.world.getBlockState(last);
 

@@ -1,0 +1,28 @@
+{
+  "parent": "create:track_0",
+  "criteria": {
+    "0": {
+      "trigger": "create:train_whistle_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.train_whistle.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:steam_whistle"
+    },
+    "title": {
+      "translate": "advancement.create.train_whistle"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

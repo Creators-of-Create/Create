@@ -2,8 +2,9 @@ package com.simibubi.create.infrastructure.worldgen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
@@ -20,7 +21,8 @@ import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguratio
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
-import net.minecraftforge.common.util.NonNullConsumer;
+
+import org.jetbrains.annotations.NotNull;
 
 public class LayerPattern {
 	public static final Codec<LayerPattern> CODEC = Codec.list(Layer.CODEC)
@@ -62,7 +64,7 @@ public class LayerPattern {
 			return this;
 		}
 
-		public Builder layer(NonNullConsumer<Layer.Builder> builder) {
+		public Builder layer(Consumer<Layer.@NotNull Builder> builder) {
 			Layer.Builder layerBuilder = new Layer.Builder();
 			layerBuilder.netherMode = netherMode;
 			builder.accept(layerBuilder);
@@ -122,15 +124,15 @@ public class LayerPattern {
 			private int weight = 1;
 			private boolean netherMode;
 
-			public Builder block(NonNullSupplier<? extends Block> block) {
+			public com.simibubi.create.infrastructure.worldgen.LayerPattern.Layer.Builder block(NonNullSupplier<? extends Block> block) {
 				return block(block.get());
 			}
 
-			public Builder passiveBlock() {
+			public com.simibubi.create.infrastructure.worldgen.LayerPattern.Layer.Builder passiveBlock() {
 				return blocks(Blocks.STONE.defaultBlockState(), Blocks.DEEPSLATE.defaultBlockState());
 			}
 
-			public Builder block(Block block) {
+			public com.simibubi.create.infrastructure.worldgen.LayerPattern.Layer.Builder block(Block block) {
 				if (netherMode) {
 					this.targets.add(ImmutableList.of(OreConfiguration
 						.target(NETHER_ORE_REPLACEABLES, block.defaultBlockState())));
@@ -139,11 +141,11 @@ public class LayerPattern {
 				return blocks(block.defaultBlockState(), block.defaultBlockState());
 			}
 
-			public Builder blocks(Block block, Block deepblock) {
+			public com.simibubi.create.infrastructure.worldgen.LayerPattern.Layer.Builder blocks(Block block, Block deepblock) {
 				return blocks(block.defaultBlockState(), deepblock.defaultBlockState());
 			}
 
-			public Builder blocks(Couple<NonNullSupplier<? extends Block>> blocksByDepth) {
+			public com.simibubi.create.infrastructure.worldgen.LayerPattern.Layer.Builder blocks(Couple<NonNullSupplier<? extends Block>> blocksByDepth) {
 				return blocks(blocksByDepth.getFirst()
 					.get()
 					.defaultBlockState(),
@@ -152,19 +154,19 @@ public class LayerPattern {
 						.defaultBlockState());
 			}
 
-			private Builder blocks(BlockState stone, BlockState deepslate) {
+			private com.simibubi.create.infrastructure.worldgen.LayerPattern.Layer.Builder blocks(BlockState stone, BlockState deepslate) {
 				this.targets.add(
 					ImmutableList.of(OreConfiguration.target(STONE_ORE_REPLACEABLES, stone),
 						OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLES, deepslate)));
 				return this;
 			}
 
-			public Builder weight(int weight) {
+			public com.simibubi.create.infrastructure.worldgen.LayerPattern.Layer.Builder weight(int weight) {
 				this.weight = weight;
 				return this;
 			}
 
-			public Builder size(int min, int max) {
+			public com.simibubi.create.infrastructure.worldgen.LayerPattern.Layer.Builder size(int min, int max) {
 				this.minSize = min;
 				this.maxSize = max;
 				return this;

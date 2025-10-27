@@ -1,69 +1,47 @@
 package com.simibubi.create.content.redstone.link.controller;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkEvent.Context;
 
-public abstract class LinkedControllerPacketBase extends SimplePacketBase {
 
-	private BlockPos lecternPos;
+public abstract class LinkedControllerPacketBase implements ServerboundPacketPayload {
+	@Nullable
+	private final BlockPos lecternPos;
 
-	public LinkedControllerPacketBase(BlockPos lecternPos) {
+	public LinkedControllerPacketBase(@Nullable BlockPos lecternPos) {
 		this.lecternPos = lecternPos;
 	}
 
-	public LinkedControllerPacketBase(FriendlyByteBuf buffer) {
-		if (buffer.readBoolean()) {
-			lecternPos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
-		}
-	}
-
-	protected boolean inLectern() {
-		return lecternPos != null;
+	@Nullable
+	public BlockPos getLecternPos() {
+		return lecternPos;
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeBoolean(inLectern());
-		if (inLectern()) {
-			buffer.writeInt(lecternPos.getX());
-			buffer.writeInt(lecternPos.getY());
-			buffer.writeInt(lecternPos.getZ());
-		}
-	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer player = context.getSender();
-			if (player == null)
+	public void handle(ServerPlayer player) {
+		if (this.lecternPos != null) {
+			BlockEntity be = player.level().getBlockEntity(lecternPos);
+			if (!(be instanceof LecternControllerBlockEntity))
 				return;
-
-			if (inLectern()) {
-				BlockEntity be = player.level().getBlockEntity(lecternPos);
-				if (!(be instanceof LecternControllerBlockEntity))
+			handleLectern(player, (LecternControllerBlockEntity) be);
+		} else {
+			ItemStack controller = player.getMainHandItem();
+			if (!AllItems.LINKED_CONTROLLER.isIn(controller)) {
+				controller = player.getOffhandItem();
+				if (!AllItems.LINKED_CONTROLLER.isIn(controller))
 					return;
-				handleLectern(player, (LecternControllerBlockEntity) be);
-			} else {
-				ItemStack controller = player.getMainHandItem();
-				if (!AllItems.LINKED_CONTROLLER.isIn(controller)) {
-					controller = player.getOffhandItem();
-					if (!AllItems.LINKED_CONTROLLER.isIn(controller))
-						return;
-				}
-				handleItem(player, controller);
 			}
-		});
-		return true;
+			handleItem(player, controller);
+		}
 	}
 
 	protected abstract void handleItem(ServerPlayer player, ItemStack heldItem);
 	protected abstract void handleLectern(ServerPlayer player, LecternControllerBlockEntity lectern);
-
 }

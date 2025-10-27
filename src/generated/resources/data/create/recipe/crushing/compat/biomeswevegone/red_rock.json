@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "biomeswevegone"
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "biomeswevegone:red_rock"
+        }
+      ]
+    }
+  ],
+  "processing_time": 150,
+  "results": [
+    {
+      "id": "minecraft:red_sand"
+    }
+  ]
+}

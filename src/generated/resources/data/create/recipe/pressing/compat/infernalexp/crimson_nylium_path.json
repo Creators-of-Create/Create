@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "infernalexp"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "minecraft:crimson_nylium"
+    }
+  ],
+  "results": [
+    {
+      "id": "infernalexp:crimson_nylium_path"
+    }
+  ]
+}

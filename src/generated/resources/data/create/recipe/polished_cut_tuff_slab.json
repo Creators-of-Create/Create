@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "polished_cut_tuff_slab",
+  "key": {
+    "X": {
+      "item": "create:polished_cut_tuff"
+    }
+  },
+  "pattern": [
+    "XXX"
+  ],
+  "result": {
+    "count": 6,
+    "id": "create:polished_cut_tuff_slab"
+  }
+}

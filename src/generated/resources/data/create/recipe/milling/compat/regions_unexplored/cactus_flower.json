@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "regions_unexplored:cactus_flower"
+        }
+      ]
+    }
+  ],
+  "processing_time": 50,
+  "results": [
+    {
+      "count": 2,
+      "id": "minecraft:magenta_dye"
+    },
+    {
+      "chance": 0.2,
+      "id": "minecraft:purple_dye"
+    },
+    {
+      "chance": 0.1,
+      "id": "minecraft:green_dye"
+    }
+  ]
+}

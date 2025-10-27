@@ -4,6 +4,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
@@ -14,12 +15,12 @@ public class AssemblyException extends Exception {
 	public final Component component;
 	private BlockPos position = null;
 
-	public static void write(CompoundTag compound, AssemblyException exception) {
+	public static void write(CompoundTag compound, HolderLookup.Provider registries, AssemblyException exception) {
 		if (exception == null)
 			return;
 
 		CompoundTag nbt = new CompoundTag();
-		nbt.putString("Component", Component.Serializer.toJson(exception.component));
+		nbt.putString("Component", Component.Serializer.toJson(exception.component, registries));
 		if (exception.hasPosition())
 			nbt.putLong("Position", exception.getPosition()
 				.asLong());
@@ -27,13 +28,13 @@ public class AssemblyException extends Exception {
 		compound.put("LastException", nbt);
 	}
 
-	public static AssemblyException read(CompoundTag compound) {
+	public static AssemblyException read(CompoundTag compound, HolderLookup.Provider registries) {
 		if (!compound.contains("LastException"))
 			return null;
 
 		CompoundTag nbt = compound.getCompound("LastException");
 		String string = nbt.getString("Component");
-		AssemblyException exception = new AssemblyException(Component.Serializer.fromJson(string));
+		AssemblyException exception = new AssemblyException(Component.Serializer.fromJson(string, registries));
 		if (nbt.contains("Position"))
 			exception.position = BlockPos.of(nbt.getLong("Position"));
 

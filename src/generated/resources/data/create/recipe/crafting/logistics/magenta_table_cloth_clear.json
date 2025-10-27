@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "create:magenta_table_cloth"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:magenta_table_cloth"
+  }
+}

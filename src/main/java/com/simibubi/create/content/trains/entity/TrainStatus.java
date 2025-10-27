@@ -124,7 +124,7 @@ public class TrainStatus {
                         .append(
                             CreateLang.translateDirect(
                                 "train.status.collision.where",
-                                    key.location(),
+								key.location().toString(),
                                     train.getPositionInDimension(key).get().toShortString()
                                 ).withStyle(style -> style.withColor(0xFFD3B4))
                         );

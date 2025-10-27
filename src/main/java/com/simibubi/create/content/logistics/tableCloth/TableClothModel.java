@@ -27,9 +27,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.data.ModelData.Builder;
-import net.minecraftforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelData.Builder;
+import net.neoforged.neoforge.client.model.data.ModelProperty;
 
 public class TableClothModel extends BakedModelWrapperWithData {
 
@@ -90,7 +90,7 @@ public class TableClothModel extends BakedModelWrapperWithData {
 
 	@Override
 	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
-		ModelData blockEntityData) {
+									  ModelData blockEntityData) {
 		List<Direction> culledSides = new ArrayList<>();
 		for (Direction side : Iterate.horizontalDirections)
 			if (!Block.shouldRenderFace(state, world, pos, side, pos.relative(side)))
@@ -102,7 +102,7 @@ public class TableClothModel extends BakedModelWrapperWithData {
 
 	@Override
 	public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side,
-		@NotNull RandomSource rand, @NotNull ModelData extraData, @Nullable RenderType renderType) {
+											 @NotNull RandomSource rand, @NotNull ModelData extraData, @Nullable RenderType renderType) {
 		@NotNull
 		List<BakedQuad> mainQuads = super.getQuads(state, side, rand, extraData, renderType);
 		if (side == null || side.getAxis() == Axis.Y)

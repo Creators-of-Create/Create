@@ -13,7 +13,7 @@ import com.simibubi.create.content.equipment.potatoCannon.AllPotatoProjectileEnt
 import com.simibubi.create.content.equipment.potatoCannon.AllPotatoProjectileEntityHitActions.SetOnFire;
 import com.simibubi.create.content.equipment.potatoCannon.AllPotatoProjectileEntityHitActions.SuspiciousStew;
 
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.Foods;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.Blocks;
 public class AllPotatoProjectileTypes {
 	public static final ResourceKey<PotatoCannonProjectileType> FALLBACK = ResourceKey.create(CreateRegistries.POTATO_PROJECTILE_TYPE, Create.asResource("fallback"));
 
-	public static void bootstrap(BootstapContext<PotatoCannonProjectileType> ctx) {
+	public static void bootstrap(BootstrapContext<PotatoCannonProjectileType> ctx) {
 		register(ctx, "fallback", new PotatoCannonProjectileType.Builder()
 			.damage(0)
 			.build());
@@ -284,7 +284,7 @@ public class AllPotatoProjectileTypes {
 			.build());
 	}
 
-	private static void register(BootstapContext<PotatoCannonProjectileType> ctx, String name, PotatoCannonProjectileType type) {
+	private static void register(BootstrapContext<PotatoCannonProjectileType> ctx, String name, PotatoCannonProjectileType type) {
 		ctx.register(ResourceKey.create(CreateRegistries.POTATO_PROJECTILE_TYPE, Create.asResource(name)), type);
 	}
 }

@@ -1,0 +1,28 @@
+{
+  "parent": "create:steam_whistle",
+  "criteria": {
+    "0": {
+      "trigger": "create:backtank_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.backtank.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:copper_backtank"
+    },
+    "title": {
+      "translate": "advancement.create.backtank"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
@@ -23,9 +23,9 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.data.ModelData.Builder;
-import net.minecraftforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelData.Builder;
+import net.neoforged.neoforge.client.model.data.ModelProperty;
 
 public abstract class CopycatModel extends BakedModelWrapperWithData {
 
@@ -81,7 +81,7 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 				occlusionData.occlude(face);
 		}
 	}
-	
+
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand) {
 		return getCroppedQuads(state, side, rand, getMaterial(ModelData.EMPTY), ModelData.EMPTY,
@@ -153,7 +153,7 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 		return getModelOf(material).getParticleIcon(wrappedData);
 	}
 
-	@Nullable
+	@NotNull
 	public static BlockState getMaterial(ModelData data) {
 		BlockState material = data == null ? null : data.get(MATERIAL_PROPERTY);
 		return material == null ? AllBlocks.COPYCAT_BASE.getDefaultState() : material;
@@ -177,7 +177,7 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 		}
 
 		public boolean isOccluded(Direction face) {
-			return face == null ? false : occluded[face.get3DDataValue()];
+			return face != null && occluded[face.get3DDataValue()];
 		}
 	}
 

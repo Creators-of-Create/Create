@@ -38,10 +38,10 @@ public class ScoreboardDisplaySource extends ValueListDisplaySource {
 			return notFound(objectiveName).stream();
 
 		return sLevel.getScoreboard()
-			.getPlayerScores(objective)
+			.listPlayerScores(objective)
 			.stream()
 			.map(score -> {
-                return IntAttached.with(score.getScore(), Component.literal(score.getOwner())
+                return IntAttached.with(score.value(), Component.literal(score.owner())
                     .copy());
             })
 			.sorted(IntAttached.comparator())

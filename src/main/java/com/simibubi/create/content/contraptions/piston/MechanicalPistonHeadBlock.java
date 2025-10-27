@@ -15,6 +15,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -51,13 +52,13 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
-                                  Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos,
+									   Player player) {
         return AllBlocks.PISTON_EXTENSION_POLE.asStack();
     }
 
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         Direction direction = state.getValue(FACING);
         BlockPos pistonHead = pos;
         BlockPos pistonBase = null;
@@ -85,7 +86,7 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
                     .setValue(MechanicalPistonBlock.STATE, PistonState.RETRACTED));
         }
 
-        super.playerWillDestroy(worldIn, pos, state, player);
+        return super.playerWillDestroy(worldIn, pos, state, player);
     }
 
     @Override
@@ -101,7 +102,7 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
                                           LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
-        if (state.getValue(BlockStateProperties.WATERLOGGED)) 
+        if (state.getValue(BlockStateProperties.WATERLOGGED))
             world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         return state;
     }
@@ -111,9 +112,9 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
         FluidState FluidState = context.getLevel().getFluidState(context.getClickedPos());
         return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getType() == Fluids.WATER));
     }
-    
+
     @Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 }

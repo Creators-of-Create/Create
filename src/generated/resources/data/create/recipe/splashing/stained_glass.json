@@ -1,0 +1,13 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "tag": "c:glass_blocks"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:glass"
+    }
+  ]
+}

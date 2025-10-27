@@ -2,27 +2,32 @@ package com.simibubi.create.content.equipment.tool;
 
 import java.util.function.Supplier;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 
 public enum AllToolMaterials implements Tier {
-
 	CARDBOARD(Create.asResource("cardboard")
-		.toString(), 0, 1, 2, 1, () -> Ingredient.of(AllItems.CARDBOARD.asItem()));
+		.toString(), 0, 1, 2, 1, () -> Ingredient.of(AllItems.CARDBOARD.asItem()))
+	;
 
-	public String name;
+	public final String name;
 
-	private int uses;
-	private float speed;
-	private float damageBonus;
-	private int enchantValue;
-	private Supplier<Ingredient> repairMaterial;
+	private final int uses;
+	private final float speed;
+	private final float damageBonus;
+	private final int enchantValue;
+	private final Supplier<Ingredient> repairMaterial;
 
 	private AllToolMaterials(String name, int uses, float speed, float damageBonus, int enchantValue,
-							 Supplier<Ingredient> repairMaterial) {
+		Supplier<Ingredient> repairMaterial) {
 		this.name = name;
 		this.uses = uses;
 		this.speed = speed;
@@ -47,8 +52,8 @@ public enum AllToolMaterials implements Tier {
 	}
 
 	@Override
-	public int getLevel() {
-		return 0;
+	public @NotNull TagKey<Block> getIncorrectBlocksForDrops() {
+		return BlockTags.INCORRECT_FOR_WOODEN_TOOL;
 	}
 
 	@Override
@@ -57,8 +62,7 @@ public enum AllToolMaterials implements Tier {
 	}
 
 	@Override
-	public Ingredient getRepairIngredient() {
+	public @NotNull Ingredient getRepairIngredient() {
 		return repairMaterial.get();
 	}
-
 }

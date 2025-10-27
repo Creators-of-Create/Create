@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "c:glass_panes/colorless"
+  },
+  "result": {
+    "count": 1,
+    "id": "create:tiled_glass_pane"
+  }
+}

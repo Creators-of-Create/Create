@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import net.createmod.catnip.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -73,19 +74,19 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putFloat("Angle", angle);
 		if (sequencedAngleLimit >= 0)
 			compound.putDouble("SequencedAngleLimit", sequencedAngleLimit);
-		AssemblyException.write(compound, lastException);
-		super.write(compound, clientPacket);
+		AssemblyException.write(compound, registries, lastException);
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		if (wasMoved) {
-			super.read(compound, clientPacket);
+			super.read(compound, registries, clientPacket);
 			return;
 		}
 
@@ -93,8 +94,8 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 		running = compound.getBoolean("Running");
 		angle = compound.getFloat("Angle");
 		sequencedAngleLimit = compound.contains("SequencedAngleLimit") ? compound.getDouble("SequencedAngleLimit") : -1;
-		lastException = AssemblyException.read(compound);
-		super.read(compound, clientPacket);
+		lastException = AssemblyException.read(compound, registries);
+		super.read(compound, registries, clientPacket);
 		if (!clientPacket)
 			return;
 		if (running) {

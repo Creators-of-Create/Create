@@ -1,5 +1,5 @@
 {
-	"loader": "forge:obj",
+	"loader": "neoforge:obj",
 	"ambientocclusion": false,
 	"flip_v": true,
 	"model": "create:models/block/track/ascending.obj",

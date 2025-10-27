@@ -23,15 +23,23 @@ import com.simibubi.create.content.logistics.box.PackageStyles;
 import com.simibubi.create.foundation.advancement.CreateAdvancement.Builder;
 
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.PackOutput.PathProvider;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.armortrim.ArmorTrim;
+import net.minecraft.world.item.armortrim.TrimMaterial;
+import net.minecraft.world.item.armortrim.TrimMaterials;
+import net.minecraft.world.item.armortrim.TrimPattern;
+import net.minecraft.world.item.armortrim.TrimPatterns;
 import net.minecraft.world.level.block.Blocks;
 
 public class AllAdvancements implements DataProvider {
@@ -281,7 +289,7 @@ public class AllAdvancements implements DataProvider {
 		.special(SECRET)),
 
 	CARDBOARD_ARMOR_TRIM = create("cardboard_armor_trim",
-		b -> b.icon(createArmorTrimmedCardboardChestplate())
+		b -> b.icon(AllAdvancements::createArmorTrimmedCardboardChestplate)
 			.title("Arts and Crafts")
 			.description("Decorate your cardboard equipment with armor trims")
 			.after(CARDBOARD_ARMOR)
@@ -660,14 +668,17 @@ public class AllAdvancements implements DataProvider {
 	//
 	END = null;
 
-	private static ItemStack createArmorTrimmedCardboardChestplate() {
+	private static ItemStack createArmorTrimmedCardboardChestplate(HolderLookup.Provider registries) {
+		HolderLookup.RegistryLookup<TrimMaterial> materialLookup = registries.lookupOrThrow(Registries.TRIM_MATERIAL);
+		HolderLookup.RegistryLookup<TrimPattern> patternLookup = registries.lookupOrThrow(Registries.TRIM_PATTERN);
+
+		ArmorTrim trim = new ArmorTrim(
+			materialLookup.getOrThrow(TrimMaterials.DIAMOND),
+			patternLookup.getOrThrow(TrimPatterns.SENTRY)
+		);
+
 		ItemStack asStack = AllItems.CARDBOARD_CHESTPLATE.asStack();
-		CompoundTag tag = new CompoundTag();
-		CompoundTag trimTag = new CompoundTag();
-		trimTag.putString("material", "minecraft:diamond");
-		trimTag.putString("pattern", "minecraft:sentry");
-		tag.put("Trim", trimTag);
-		asStack.setTag(tag);
+		asStack.set(DataComponents.TRIM, trim);
 		return asStack;
 	}
 
@@ -678,30 +689,34 @@ public class AllAdvancements implements DataProvider {
 	// Datagen
 
 	private final PackOutput output;
+	private final CompletableFuture<HolderLookup.Provider> registries;
 
-	public AllAdvancements(PackOutput output) {
+	public AllAdvancements(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		this.output = output;
+		this.registries = registries;
 	}
 
 	@Override
 	public CompletableFuture<?> run(CachedOutput cache) {
-		PathProvider pathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, "advancements");
-		List<CompletableFuture<?>> futures = new ArrayList<>();
+		return this.registries.thenCompose(provider -> {
+			PathProvider pathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, "advancement");
+			List<CompletableFuture<?>> futures = new ArrayList<>();
 
-		Set<ResourceLocation> set = Sets.newHashSet();
-		Consumer<Advancement> consumer = (advancement) -> {
-			ResourceLocation id = advancement.getId();
-			if (!set.add(id))
-				throw new IllegalStateException("Duplicate advancement " + id);
-			Path path = pathProvider.json(id);
-			futures.add(DataProvider.saveStable(cache, advancement.deconstruct()
-				.serializeToJson(), path));
-		};
+			Set<ResourceLocation> set = Sets.newHashSet();
+			Consumer<AdvancementHolder> consumer = (advancement) -> {
+				ResourceLocation id = advancement.id();
+				if (!set.add(id))
+					throw new IllegalStateException("Duplicate advancement " + id);
+				Path path = pathProvider.json(id);
+				LOGGER.info("Saving advancement {}", id);
+				futures.add(DataProvider.saveStable(cache, provider, Advancement.CODEC, advancement.value(), path));
+			};
 
-		for (CreateAdvancement advancement : ENTRIES)
-			advancement.save(consumer);
+			for (CreateAdvancement advancement : ENTRIES)
+				advancement.save(consumer, provider);
 
-		return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
+			return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
+		});
 	}
 
 	@Override

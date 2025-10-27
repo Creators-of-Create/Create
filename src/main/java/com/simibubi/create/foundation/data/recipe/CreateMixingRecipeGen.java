@@ -1,16 +1,15 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.MixingRecipeGen;
-
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
-import com.simibubi.create.foundation.recipe.BlockTagIngredient;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -18,7 +17,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.crafting.BlockTagIngredient;
 
 /**
  * Create's own Data Generation for Mixing recipes
@@ -29,7 +29,7 @@ public final class CreateMixingRecipeGen extends MixingRecipeGen {
 
 	GeneratedRecipe
 
-	TEMP_LAVA = create("lava_from_cobble", b -> b.require(Tags.Items.COBBLESTONE)
+		TEMP_LAVA = create("lava_from_cobble", b -> b.require(Tags.Items.COBBLESTONES)
 		.output(Fluids.LAVA, 50)
 		.requiresHeat(HeatCondition.SUPERHEATED)),
 
@@ -70,7 +70,7 @@ public final class CreateMixingRecipeGen extends MixingRecipeGen {
 		.require(CreateRecipeProvider.I.zincNugget())
 		.output(CreateRecipeProvider.I.andesiteAlloy(), 1)),
 
-	MUD = create("mud_by_mixing", b -> b.require(BlockTagIngredient.create(BlockTags.CONVERTABLE_TO_MUD))
+	MUD = create("mud_by_mixing", b -> b.require(new BlockTagIngredient(BlockTags.CONVERTABLE_TO_MUD))
 		.require(Fluids.WATER, 250)
 		.output(Blocks.MUD, 1)),
 
@@ -98,15 +98,7 @@ public final class CreateMixingRecipeGen extends MixingRecipeGen {
 
 	;
 
-	public CreateMixingRecipeGen(PackOutput output) {
-		super(output, Create.ID);
-	}
-
-	public GeneratedRecipe moddedMud(Mods mod, String name) {
-		String mud = name + "_mud";
-		return create(mod.recipeId(mud), b -> b.require(Fluids.WATER, 250)
-				.require(mod, name + "_dirt")
-				.output(mod, mud)
-				.whenModLoaded(mod.getId()));
+	public CreateMixingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+		super(output, registries, Create.ID);
 	}
 }

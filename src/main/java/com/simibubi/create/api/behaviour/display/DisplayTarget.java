@@ -93,7 +93,7 @@ public abstract class DisplayTarget {
 	 * Utility for use with Registrate builders. Creates a builder transformer
 	 * that will register the given DisplayTarget to a block when ready.
 	 */
-	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> displayTarget(RegistryEntry<? extends DisplayTarget> target) {
+	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> displayTarget(RegistryEntry<DisplayTarget, ? extends DisplayTarget> target) {
 		return builder -> builder.onRegisterAfter(CreateRegistries.DISPLAY_TARGET, block -> BY_BLOCK.register(block, target.get()));
 	}
 

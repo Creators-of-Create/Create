@@ -1,0 +1,29 @@
+{
+  "parent": "create:track_signal",
+  "criteria": {
+    "0": {
+      "trigger": "create:train_roadkill_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.train_roadkill.desc"
+    },
+    "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "minecraft:diamond_sword"
+    },
+    "title": {
+      "translate": "advancement.create.train_roadkill"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

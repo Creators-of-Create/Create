@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "infernalexp"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "minecraft:warped_nylium"
+    }
+  ],
+  "results": [
+    {
+      "id": "infernalexp:warped_nylium_path"
+    }
+  ]
+}

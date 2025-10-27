@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.elevator;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.ControlledContraptionEntity;
@@ -11,10 +10,12 @@ import com.simibubi.create.content.contraptions.elevator.ElevatorColumn.ColumnCo
 import com.simibubi.create.content.contraptions.pulley.PulleyBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -53,7 +54,7 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 		if (offset >= 0)
 			resetContraptionToOffset();
 		if (level.isClientSide) {
-			AllPackets.getChannel().sendToServer(new ElevatorFloorListPacket.RequestFloorList(contraption));
+			CatnipServices.NETWORK.sendToServer(new ElevatorFloorListPacket.RequestFloorList(contraption));
 			return;
 		}
 
@@ -138,15 +139,15 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
-		super.write(compound, clientPacket);
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(compound, registries, clientPacket);
 		if (clientPacket)
 			compound.putInt("ClientTarget", clientOffsetTarget);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(compound, registries, clientPacket);
 		if (!clientPacket)
 			return;
 

@@ -1,8 +1,9 @@
 package com.simibubi.create.content.equipment.zapper.terrainzapper;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.content.equipment.zapper.ConfigureZapperPacket;
 import com.simibubi.create.content.equipment.zapper.ZapperScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -15,12 +16,8 @@ import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -33,13 +30,13 @@ public class WorldshaperScreen extends ZapperScreen {
 	protected final List<Component> brushOptions =
 		CreateLang.translatedOptions("gui.terrainzapper.brush", "cuboid", "sphere", "cylinder", "surface", "cluster");
 
-	protected Vector<IconButton> toolButtons;
-	protected Vector<IconButton> placementButtons;
+	protected List<IconButton> toolButtons;
+	protected List<IconButton> placementButtons;
 
 	protected ScrollInput brushInput;
 	protected Label brushLabel;
-	protected Vector<ScrollInput> brushParams = new Vector<>(3);
-	protected Vector<Label> brushParamLabels = new Vector<>(3);
+	protected List<ScrollInput> brushParams = new ArrayList<>(3);
+	protected List<Label> brushParamLabels = new ArrayList<>(3);
 	protected IconButton followDiagonals;
 	protected IconButton acrossMaterials;
 	protected Indicator followDiagonalsIndicator;
@@ -57,10 +54,9 @@ public class WorldshaperScreen extends ZapperScreen {
 		fontColor = 0x767676;
 		title = zapper.getHoverName();
 
-		CompoundTag nbt = zapper.getOrCreateTag();
-		currentBrush = NBTHelper.readEnum(nbt, "Brush", TerrainBrushes.class);
-		if (nbt.contains("BrushParams", Tag.TAG_COMPOUND)) {
-			BlockPos paramsData = NbtUtils.readBlockPos(nbt.getCompound("BrushParams"));
+		currentBrush = zapper.getOrDefault(AllDataComponents.SHAPER_BRUSH, TerrainBrushes.Cuboid);
+		if (zapper.has(AllDataComponents.SHAPER_BRUSH_PARAMS)) {
+			BlockPos paramsData = zapper.get(AllDataComponents.SHAPER_BRUSH_PARAMS);
 			currentBrushParams[0] = paramsData.getX();
 			currentBrushParams[1] = paramsData.getY();
 			currentBrushParams[2] = paramsData.getZ();
@@ -71,8 +67,8 @@ public class WorldshaperScreen extends ZapperScreen {
 				currentAcrossMaterials = true;
 			}
 		}
-		currentTool = NBTHelper.readEnum(nbt, "Tool", TerrainTools.class);
-		currentPlacement = NBTHelper.readEnum(nbt, "Placement", PlacementOptions.class);
+		currentTool = zapper.getOrDefault(AllDataComponents.SHAPER_TOOL, TerrainTools.Fill);
+		currentPlacement = zapper.getOrDefault(AllDataComponents.SHAPER_PLACEMENT_OPTIONS, PlacementOptions.Merged);
 	}
 
 	@Override
@@ -187,7 +183,7 @@ public class WorldshaperScreen extends ZapperScreen {
 			removeWidgets(toolButtons);
 
 		TerrainTools[] toolValues = currentBrush.getSupportedTools();
-		toolButtons = new Vector<>(toolValues.length);
+		toolButtons = new ArrayList<>(toolValues.length);
 		for (int id = 0; id < toolValues.length; id++) {
 			TerrainTools tool = toolValues[id];
 			IconButton toolButton = new IconButton(x + 7 + id * 18, y + 79, tool.icon);
@@ -219,7 +215,7 @@ public class WorldshaperScreen extends ZapperScreen {
 
 		if (currentBrush.hasPlacementOptions()) {
 			PlacementOptions[] placementValues = PlacementOptions.values();
-			placementButtons = new Vector<>(placementValues.length);
+			placementButtons = new ArrayList<>(placementValues.length);
 			for (int id = 0; id < placementValues.length; id++) {
 				PlacementOptions option = placementValues[id];
 				IconButton placementButton = new IconButton(x + 136 + id * 18, y + 79, option.icon);

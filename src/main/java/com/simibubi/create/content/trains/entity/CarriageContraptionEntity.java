@@ -11,7 +11,6 @@ import java.util.UUID;
 import com.google.common.base.Strings;
 import com.simibubi.create.AllEntityDataSerializers;
 import com.simibubi.create.AllEntityTypes;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
@@ -30,10 +29,12 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
@@ -48,12 +49,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
@@ -100,11 +101,11 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		entityData.define(CARRIAGE_DATA, new CarriageSyncData());
-		entityData.define(TRACK_GRAPH, Optional.empty());
-		entityData.define(SCHEDULED, false);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(CARRIAGE_DATA, new CarriageSyncData());
+		builder.define(TRACK_GRAPH, Optional.empty());
+		builder.define(SCHEDULED, false);
 	}
 
 	public void syncCarriage() {
@@ -202,7 +203,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		carriage.forEachPresentEntity(cce -> {
 			cce.contraption.getBlocks()
 				.put(localPos, newInfo);
-			AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> cce),
+			CatnipServices.NETWORK.sendToClientsTrackingEntity(cce,
 				new ContraptionBlockChangedPacket(cce.getId(), localPos, newInfo.state()));
 		});
 	}
@@ -259,6 +260,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 			entityData.set(TRACK_GRAPH, Optional.ofNullable(carriage.train.graph)
 				.map(g -> g.id));
+
+			level().gameEvent(this, GameEvent.RESONATE_8, this.position());
 
 			return;
 		}
@@ -463,8 +466,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	}
 
 	@Override
-	protected void writeAdditional(CompoundTag compound, boolean spawnPacket) {
-		super.writeAdditional(compound, spawnPacket);
+	protected void writeAdditional(CompoundTag compound, HolderLookup.Provider registries, boolean spawnPacket) {
+		super.writeAdditional(compound, registries, spawnPacket);
 		compound.putUUID("TrainId", trainId);
 		compound.putInt("CarriageIndex", carriageIndex);
 	}
@@ -565,7 +568,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 				.equals(initialOrientation);
 
 		if (hudPacketCooldown-- <= 0 && player instanceof ServerPlayer sp) {
-			AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> sp), new TrainHUDUpdatePacket(carriage.train));
+			CatnipServices.NETWORK.sendToClient(sp, new TrainHUDUpdatePacket.Clientbound(carriage.train));
 			hudPacketCooldown = 5;
 		}
 
@@ -679,7 +682,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	private void sendPrompt(Player player, MutableComponent component, boolean shadow) {
 		if (player instanceof ServerPlayer sp)
-			AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> sp), new TrainPromptPacket(component, shadow));
+			CatnipServices.NETWORK.sendToClient(sp, new TrainPromptPacket(component, shadow));
 	}
 
 	boolean stationMessage = false;
@@ -738,16 +741,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		dimensional.updateRenderedCutoff();
 	}
 
-	// FIXME: entities should not reference their visual in any way
-	@OnlyIn(Dist.CLIENT)
-	private WeakReference<CarriageContraptionVisual> instanceHolder;
-
-	@OnlyIn(Dist.CLIENT)
-	public void bindInstance(CarriageContraptionVisual instance) {
-		this.instanceHolder = new WeakReference<>(instance);
-		updateRenderedPortalCutoff();
-	}
-
 	@OnlyIn(Dist.CLIENT)
 	public void updateRenderedPortalCutoff() {
 		if (carriage == null)
@@ -779,24 +772,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		}
 		if (particleSlice.size() > 0)
 			particleAvgY /= particleSlice.size();
-
-		// update hidden bogeys (if instanced)
-		if (instanceHolder == null)
-			return;
-		CarriageContraptionVisual instance = instanceHolder.get();
-		if (instance == null)
-			return;
-
-		int bogeySpacing = carriage.bogeySpacing;
-
-		carriage.bogeys.forEachWithContext((bogey, first) -> {
-			if (bogey == null)
-				return;
-
-			BlockPos bogeyPos = bogey.isLeading ? BlockPos.ZERO
-				: BlockPos.ZERO.relative(getInitialOrientation().getCounterClockWise(), bogeySpacing);
-			instance.setBogeyVisibility(first, !contraption.isHiddenInPortal(bogeyPos));
-		});
 	}
 
 }

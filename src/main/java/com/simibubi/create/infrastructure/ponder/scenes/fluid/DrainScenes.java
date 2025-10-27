@@ -15,9 +15,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class DrainScenes {
 
@@ -56,8 +57,9 @@ public class DrainScenes {
 		scene.world().modifyBlockEntity(drainPos, ItemDrainBlockEntity.class, be -> {
 			be.getBehaviour(SmartFluidTankBehaviour.TYPE)
 				.allowInsertion();
-			be.getCapability(ForgeCapabilities.FLUID_HANDLER)
-				.ifPresent(fh -> fh.fill(new FluidStack(Fluids.LAVA, 1000), FluidAction.EXECUTE));
+			IFluidHandler fh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			if (fh != null)
+				fh.fill(new FluidStack(Fluids.LAVA, 1000), FluidAction.EXECUTE);
 		});
 		scene.idle(10);
 
@@ -69,8 +71,11 @@ public class DrainScenes {
 		scene.idle(60);
 
 		scene.world().modifyBlockEntity(drainPos, ItemDrainBlockEntity.class,
-			be -> be.getCapability(ForgeCapabilities.FLUID_HANDLER)
-				.ifPresent(fh -> fh.drain(500, FluidAction.EXECUTE)));
+			be -> {
+				IFluidHandler fh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				if (fh != null)
+					fh.drain(500, FluidAction.EXECUTE);
+			});
 
 		scene.world().moveSection(drainLink, util.vector().of(1, 0, 0), 7);
 		scene.world().showSection(largeCog, Direction.UP);

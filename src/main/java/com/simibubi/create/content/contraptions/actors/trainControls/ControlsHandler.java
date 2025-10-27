@@ -3,14 +3,14 @@ package com.simibubi.create.content.contraptions.actors.trainControls;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Vector;
+import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.CreateLang;
 
@@ -50,7 +50,7 @@ public class ControlsHandler {
 		AbstractContraptionEntity abstractContraptionEntity = entityRef.get();
 
 		if (!currentlyPressed.isEmpty() && abstractContraptionEntity != null)
-			AllPackets.getChannel().sendToServer(new ControlsInputPacket(currentlyPressed, false,
+			CatnipServices.NETWORK.sendToServer(new ControlsInputPacket(currentlyPressed, false,
 				abstractContraptionEntity.getId(), controlsPos, false));
 
 		packetCooldown = 0;
@@ -74,12 +74,11 @@ public class ControlsHandler {
 			.getWindow(), GLFW.GLFW_KEY_ESCAPE)) {
 			BlockPos pos = controlsPos;
 			stopControlling();
-			AllPackets.getChannel()
-				.sendToServer(new ControlsInputPacket(currentlyPressed, false, entity.getId(), pos, true));
+			CatnipServices.NETWORK.sendToServer(new ControlsInputPacket(currentlyPressed, false, entity.getId(), pos, true));
 			return;
 		}
 
-		Vector<KeyMapping> controls = ControlsUtil.getControls();
+		List<KeyMapping> controls = ControlsUtil.getControls();
 		Collection<Integer> pressedKeys = new HashSet<>();
 		for (int i = 0; i < controls.size(); i++) {
 			if (ControlsUtil.isActuallyPressed(controls.get(i)))
@@ -93,14 +92,13 @@ public class ControlsHandler {
 
 		// Released Keys
 		if (!releasedKeys.isEmpty()) {
-			AllPackets.getChannel()
-				.sendToServer(new ControlsInputPacket(releasedKeys, false, entity.getId(), controlsPos, false));
+			CatnipServices.NETWORK.sendToServer(new ControlsInputPacket(releasedKeys, false, entity.getId(), controlsPos, false));
 //			AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .5f, true);
 		}
 
 		// Newly Pressed Keys
 		if (!newKeys.isEmpty()) {
-			AllPackets.getChannel().sendToServer(new ControlsInputPacket(newKeys, true, entity.getId(), controlsPos, false));
+			CatnipServices.NETWORK.sendToServer(new ControlsInputPacket(newKeys, true, entity.getId(), controlsPos, false));
 			packetCooldown = PACKET_RATE;
 //			AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .75f, true);
 		}
@@ -108,9 +106,8 @@ public class ControlsHandler {
 		// Keepalive Pressed Keys
 		if (packetCooldown == 0) {
 //			if (!pressedKeys.isEmpty()) {
-			AllPackets.getChannel()
-				.sendToServer(new ControlsInputPacket(pressedKeys, true, entity.getId(), controlsPos, false));
-			packetCooldown = PACKET_RATE;
+			CatnipServices.NETWORK.sendToServer(new ControlsInputPacket(pressedKeys, true, entity.getId(), controlsPos, false));
+				packetCooldown = PACKET_RATE;
 //			}
 		}
 

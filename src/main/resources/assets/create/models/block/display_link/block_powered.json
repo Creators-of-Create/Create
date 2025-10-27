@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"loader": "forge:composite",
+	"loader": "neoforge:composite",
 	"parent": "block/block",
 	"textures": {
 		"particle": "create:block/brass_casing"

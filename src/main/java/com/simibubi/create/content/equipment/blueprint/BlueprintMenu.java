@@ -1,13 +1,12 @@
 package com.simibubi.create.content.equipment.blueprint;
 
-import java.util.Optional;
-
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllMenuTypes;
 import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.BlueprintSection;
 import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -19,18 +18,21 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
+
+import java.util.Optional;
 
 public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 
-	public BlueprintMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public BlueprintMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
@@ -69,9 +71,9 @@ public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 
 		ServerPlayer serverplayerentity = (ServerPlayer) player;
 		CraftingContainer craftingInventory = new BlueprintCraftingInventory(this, ghostInventory);
-		Optional<CraftingRecipe> optional = player.getServer()
+		Optional<RecipeHolder<CraftingRecipe>> optional = player.getServer()
 			.getRecipeManager()
-			.getRecipeFor(RecipeType.CRAFTING, craftingInventory, player.getCommandSenderWorld());
+			.getRecipeFor(RecipeType.CRAFTING, craftingInventory.asCraftInput(), player.getCommandSenderWorld());
 
 		if (!optional.isPresent()) {
 			if (ghostInventory.getStackInSlot(9)
@@ -86,26 +88,20 @@ public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 			return;
 		}
 
-		CraftingRecipe icraftingrecipe = optional.get();
-		ItemStack itemstack = icraftingrecipe.assemble(craftingInventory, level.registryAccess());
+		CraftingRecipe icraftingrecipe = optional.get().value();
+		ItemStack itemstack = icraftingrecipe.assemble(craftingInventory.asCraftInput(), level.registryAccess());
 		ghostInventory.setStackInSlot(9, itemstack);
 		contentHolder.inferredIcon = true;
 		ItemStack toSend = itemstack.copy();
-		toSend.getOrCreateTag()
-			.putBoolean("InferredFromRecipe", true);
+		toSend.set(AllDataComponents.INFERRED_FROM_RECIPE, true);
 		serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 36 + 9, toSend));
 	}
 
 	@Override
 	public void setItem(int slotId, int stateId, ItemStack stack) {
 		if (slotId == 36 + 9) {
-			if (stack.hasTag()) {
-				contentHolder.inferredIcon = stack.getTag()
-					.getBoolean("InferredFromRecipe");
-				stack.getTag()
-					.remove("InferredFromRecipe");
-			} else
-				contentHolder.inferredIcon = false;
+			contentHolder.inferredIcon = stack.getOrDefault(AllDataComponents.INFERRED_FROM_RECIPE, false);
+			stack.remove(AllDataComponents.INFERRED_FROM_RECIPE);
 		}
 		super.setItem(slotId, stateId, stack);
 	}
@@ -127,7 +123,7 @@ public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected BlueprintSection createOnClient(FriendlyByteBuf extraData) {
+	protected BlueprintSection createOnClient(RegistryFriendlyByteBuf extraData) {
 		int entityID = extraData.readVarInt();
 		int section = extraData.readVarInt();
 		Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);

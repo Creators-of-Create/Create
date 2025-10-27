@@ -1,13 +1,12 @@
 package com.simibubi.create.content.logistics.crate;
 
-import com.mojang.serialization.Codec;
-import com.simibubi.create.AllMountedStorageTypes;
-import com.simibubi.create.api.contraption.storage.item.MountedItemStorage;
-
-import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.mojang.serialization.MapCodec;
+import com.simibubi.create.AllMountedStorageTypes;
+import com.simibubi.create.api.contraption.storage.item.MountedItemStorage;
+import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -16,9 +15,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class CreativeCrateMountedStorage extends MountedItemStorage {
-	public static final Codec<CreativeCrateMountedStorage> CODEC = ItemStack.CODEC.xmap(
+	public static final MapCodec<CreativeCrateMountedStorage> CODEC = ItemStack.OPTIONAL_CODEC.xmap(
 		CreativeCrateMountedStorage::new, storage -> storage.suppliedStack
-	);
+	).fieldOf("value");
 
 	private final ItemStack suppliedStack;
 	private final ItemStack cachedStackInSlot;

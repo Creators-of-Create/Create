@@ -12,7 +12,7 @@ import net.minecraft.world.phys.Vec3;
 public final class BakedQuadHelper {
 
 	public static final VertexFormat FORMAT = DefaultVertexFormat.BLOCK;
-	public static final int VERTEX_STRIDE = FORMAT.getIntegerSize();
+	public static final int VERTEX_STRIDE = FORMAT.getVertexSize() / 4;
 
 	public static final int X_OFFSET = 0;
 	public static final int Y_OFFSET = 1;

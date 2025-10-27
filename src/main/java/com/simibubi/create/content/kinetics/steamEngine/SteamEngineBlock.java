@@ -4,6 +4,9 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 import java.util.function.Predicate;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
@@ -23,7 +26,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -51,6 +54,8 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 	implements SimpleWaterloggedBlock, IWrenchable, IBE<SteamEngineBlockEntity> {
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
+
+	public static final MapCodec<SteamEngineBlock> CODEC = simpleCodec(SteamEngineBlock::new);
 
 	public SteamEngineBlock(Properties properties) {
 		super(properties);
@@ -85,15 +90,12 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-								 BlockHitResult ray) {
-		ItemStack heldItem = player.getItemInHand(hand);
-
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
-		if (placementHelper.matchesItem(heldItem))
-			return placementHelper.getOffset(player, world, state, pos, ray)
-				.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
-		return InteractionResult.PASS;
+		if (placementHelper.matchesItem(stack))
+			return placementHelper.getOffset(player, level, state, pos, hitResult)
+				.placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override
@@ -110,7 +112,7 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 		BlockPos shaftPos = getShaftPos(pState, pPos);
 		BlockState shaftState = pLevel.getBlockState(shaftPos);
 		if (isShaftValid(pState, shaftState))
-			pLevel.setBlock(shaftPos, PoweredShaftBlock.getEquivalent(shaftState), 3);
+			pLevel.setBlock(shaftPos, PoweredShaftBlock.getEquivalent(shaftState), Block.UPDATE_ALL);
 	}
 
 	@Override
@@ -145,7 +147,7 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 
@@ -215,4 +217,10 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 	public static Direction getConnectedDirection(BlockState state) {
 		return FaceAttachedHorizontalDirectionalBlock.getConnectedDirection(state);
 	}
+
+	@Override
+	protected @NotNull MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
+		return CODEC;
+	}
+
 }

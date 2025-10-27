@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
-import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
+import com.simibubi.create.AllAttachmentTypes;
 import com.simibubi.create.content.contraptions.minecart.capability.MinecartController;
 
 import net.createmod.catnip.math.VecHelper;
@@ -19,8 +19,6 @@ import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.phys.Vec3;
-
-import net.minecraftforge.common.util.LazyOptional;
 
 /**
  * Useful methods for dealing with Minecarts
@@ -52,14 +50,13 @@ public class MinecartSim2020 {
 	}
 
 	public static boolean canAddMotion(AbstractMinecart c) {
-		if (c instanceof MinecartFurnace)
-			return Mth.equal(((MinecartFurnace) c).xPush, 0)
-				&& Mth.equal(((MinecartFurnace) c).zPush, 0);
-		LazyOptional<MinecartController> capability =
-			c.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
-		if (capability.isPresent() && capability.orElse(null)
-			.isStalled())
-			return false;
+		if (c instanceof MinecartFurnace furnace)
+			return Mth.equal(furnace.xPush, 0)
+				&& Mth.equal(furnace.zPush, 0);
+
+		MinecartController controller = c.getData(AllAttachmentTypes.MINECART_CONTROLLER);
+		if (controller != MinecartController.EMPTY)
+			return !controller.isStalled();
 		return true;
 	}
 

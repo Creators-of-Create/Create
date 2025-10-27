@@ -12,16 +12,18 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.platform.CatnipServices;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -32,12 +34,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 public class ToolboxHandlerClient {
 
-	public static final IGuiOverlay OVERLAY = ToolboxHandlerClient::renderOverlay;
+	public static final LayeredDraw.Layer OVERLAY = ToolboxHandlerClient::renderOverlay;
 
 	static int COOLDOWN = 0;
 
@@ -91,7 +91,7 @@ public class ToolboxHandlerClient {
 				if (!ItemStack.matches(inSlot, result))
 					continue;
 
-				AllPackets.getChannel().sendToServer(
+				CatnipServices.NETWORK.sendToServer(
 					new ToolboxEquipPacket(toolboxBlockEntity.getBlockPos(), comp, player.getInventory().selected));
 				return true;
 			}
@@ -106,7 +106,7 @@ public class ToolboxHandlerClient {
 		if (mc.gameMode == null || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
 
-		if (key != AllKeys.TOOLBELT.getBoundCode())
+		if (!AllKeys.TOOLBELT.doesModifierAndCodeMatch(key))
 			return;
 		if (COOLDOWN > 0)
 			return;
@@ -125,8 +125,7 @@ public class ToolboxHandlerClient {
 		boolean equipped = compound.contains(slotKey);
 
 		if (equipped) {
-			BlockPos pos = NbtUtils.readBlockPos(compound.getCompound(slotKey)
-				.getCompound("Pos"));
+			BlockPos pos = NBTHelper.readBlockPos(compound.getCompound(slotKey), "Pos");
 			double max = ToolboxHandler.getMaxRange(player);
 			boolean canReachToolbox = ToolboxHandler.distance(player.position(), pos) < max * max;
 
@@ -155,7 +154,9 @@ public class ToolboxHandlerClient {
 			ScreenOpener.open(new RadialToolboxMenu(toolboxes, RadialToolboxMenu.State.SELECT_BOX, null));
 	}
 
-	public static void renderOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
+	public static void renderOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+		int width = guiGraphics.guiWidth();
+		int height = guiGraphics.guiHeight();
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
@@ -175,21 +176,20 @@ public class ToolboxHandlerClient {
 		if (compound.isEmpty())
 			return;
 
-		PoseStack poseStack = graphics.pose();
+		PoseStack poseStack = guiGraphics.pose();
 		poseStack.pushPose();
 		for (int slot = 0; slot < 9; slot++) {
 			String key = String.valueOf(slot);
 			if (!compound.contains(key))
 				continue;
-			BlockPos pos = NbtUtils.readBlockPos(compound.getCompound(key)
-				.getCompound("Pos"));
+			BlockPos pos = NBTHelper.readBlockPos(compound.getCompound(key), "Pos");
 			double max = ToolboxHandler.getMaxRange(player);
 			boolean selected = player.getInventory().selected == slot;
 			int offset = selected ? 1 : 0;
 			AllGuiTextures texture = ToolboxHandler.distance(player.position(), pos) < max * max
 				? selected ? TOOLBELT_SELECTED_ON : TOOLBELT_HOTBAR_ON
 				: selected ? TOOLBELT_SELECTED_OFF : TOOLBELT_HOTBAR_OFF;
-			texture.render(graphics, x + 20 * slot - offset, y + offset);
+			texture.render(guiGraphics, x + 20 * slot - offset, y + offset);
 		}
 		poseStack.popPose();
 	}

@@ -3,6 +3,8 @@
     {
       "type": "paletted_permutations",
       "textures": [
+        "create:trims/models/armor/card_bolt",
+        "create:trims/models/armor/card_bolt_leggings",
         "create:trims/models/armor/card_coast",
         "create:trims/models/armor/card_coast_leggings",
         "create:trims/models/armor/card_sentry",
@@ -34,7 +36,9 @@
         "create:trims/models/armor/card_raiser",
         "create:trims/models/armor/card_raiser_leggings",
         "create:trims/models/armor/card_host",
-        "create:trims/models/armor/card_host_leggings"
+        "create:trims/models/armor/card_host_leggings",
+        "create:trims/models/armor/card_flow",
+        "create:trims/models/armor/card_flow_leggings"
       ],
       "palette_key": "minecraft:trims/color_palettes/trim_palette",
       "permutations": {

@@ -3,6 +3,7 @@ package com.simibubi.create.content.kinetics.millstone;
 import java.util.List;
 import java.util.Optional;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
@@ -14,31 +15,33 @@ import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
+import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
 public class MillstoneBlockEntity extends KineticBlockEntity {
 
 	public ItemStackHandler inputInv;
 	public ItemStackHandler outputInv;
-	public LazyOptional<IItemHandler> capability;
+	public IItemHandler capability;
 	public int timer;
 	private MillingRecipe lastRecipe;
 
@@ -46,7 +49,15 @@ public class MillstoneBlockEntity extends KineticBlockEntity {
 		super(type, pos, state);
 		inputInv = new ItemStackHandler(1);
 		outputInv = new ItemStackHandler(9);
-		capability = LazyOptional.of(MillstoneInventoryHandler::new);
+		capability = new MillstoneInventoryHandler();
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+				Capabilities.ItemHandler.BLOCK,
+				AllBlockEntityTypes.MILLSTONE.get(),
+				(be, context) -> be.capability
+		);
 	}
 
 	@Override
@@ -100,12 +111,12 @@ public class MillstoneBlockEntity extends KineticBlockEntity {
 
 		RecipeWrapper inventoryIn = new RecipeWrapper(inputInv);
 		if (lastRecipe == null || !lastRecipe.matches(inventoryIn, level)) {
-			Optional<MillingRecipe> recipe = AllRecipeTypes.MILLING.find(inventoryIn, level);
+			Optional<RecipeHolder<MillingRecipe>> recipe = AllRecipeTypes.MILLING.find(inventoryIn, level);
 			if (!recipe.isPresent()) {
 				timer = 100;
 				sendData();
 			} else {
-				lastRecipe = recipe.get();
+				lastRecipe = recipe.get().value();
 				timer = lastRecipe.getProcessingDuration();
 				sendData();
 			}
@@ -119,7 +130,7 @@ public class MillstoneBlockEntity extends KineticBlockEntity {
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		capability.invalidate();
+		invalidateCapabilities();
 	}
 
 	@Override
@@ -133,17 +144,21 @@ public class MillstoneBlockEntity extends KineticBlockEntity {
 		RecipeWrapper inventoryIn = new RecipeWrapper(inputInv);
 
 		if (lastRecipe == null || !lastRecipe.matches(inventoryIn, level)) {
-			Optional<MillingRecipe> recipe = AllRecipeTypes.MILLING.find(inventoryIn, level);
+			Optional<RecipeHolder<MillingRecipe>> recipe = AllRecipeTypes.MILLING.find(inventoryIn, level);
 			if (!recipe.isPresent())
 				return;
-			lastRecipe = recipe.get();
+			lastRecipe = recipe.get().value();
 		}
 
 		ItemStack stackInSlot = inputInv.getStackInSlot(0);
+		ItemStack craftingRemainingItem = stackInSlot.getCraftingRemainingItem();
 		stackInSlot.shrink(1);
 		inputInv.setStackInSlot(0, stackInSlot);
-		lastRecipe.rollResults()
+		lastRecipe.rollResults(level.random)
 			.forEach(stack -> ItemHandlerHelper.insertItemStacked(outputInv, stack, false));
+		if (!craftingRemainingItem.isEmpty()) {
+			ItemHandlerHelper.insertItemStacked(outputInv, craftingRemainingItem, false);
+		}
 		award(AllAdvancements.MILLSTONE);
 
 		sendData();
@@ -167,30 +182,23 @@ public class MillstoneBlockEntity extends KineticBlockEntity {
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putInt("Timer", timer);
-		compound.put("InputInventory", inputInv.serializeNBT());
-		compound.put("OutputInventory", outputInv.serializeNBT());
-		super.write(compound, clientPacket);
+		compound.put("InputInventory", inputInv.serializeNBT(registries));
+		compound.put("OutputInventory", outputInv.serializeNBT(registries));
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		timer = compound.getInt("Timer");
-		inputInv.deserializeNBT(compound.getCompound("InputInventory"));
-		outputInv.deserializeNBT(compound.getCompound("OutputInventory"));
-		super.read(compound, clientPacket);
+		inputInv.deserializeNBT(registries, compound.getCompound("InputInventory"));
+		outputInv.deserializeNBT(registries, compound.getCompound("OutputInventory"));
+		super.read(compound, registries, clientPacket);
 	}
 
 	public int getProcessingSpeed() {
 		return Mth.clamp((int) Math.abs(getSpeed() / 16f), 1, 512);
-	}
-
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap))
-			return capability.cast();
-		return super.getCapability(cap, side);
 	}
 
 	private boolean canProcess(ItemStack stack) {

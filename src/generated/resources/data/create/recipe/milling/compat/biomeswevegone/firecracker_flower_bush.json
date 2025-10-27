@@ -1,0 +1,36 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "biomeswevegone"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "biomeswevegone:firecracker_flower_bush"
+        }
+      ]
+    }
+  ],
+  "processing_time": 50,
+  "results": [
+    {
+      "count": 3,
+      "id": "minecraft:pink_dye"
+    },
+    {
+      "chance": 0.05,
+      "count": 2,
+      "id": "minecraft:green_dye"
+    },
+    {
+      "chance": 0.25,
+      "count": 2,
+      "id": "minecraft:red_dye"
+    }
+  ]
+}

@@ -1,44 +1,35 @@
 package com.simibubi.create.foundation.particle;
 
-import java.util.Locale;
-
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 
 import net.minecraft.client.particle.ParticleEngine.SpriteParticleRegistration;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+
+import org.jetbrains.annotations.NotNull;
 
 public class AirParticleData implements ParticleOptions, ICustomParticleDataWithSprite<AirParticleData> {
 
-	public static final Codec<AirParticleData> CODEC = RecordCodecBuilder.create(i ->
+	public static final MapCodec<AirParticleData> CODEC = RecordCodecBuilder.mapCodec(i ->
 		i.group(
-				Codec.FLOAT.fieldOf("drag").forGetter(p -> p.drag),
-				Codec.FLOAT.fieldOf("speed").forGetter(p -> p.speed))
-			.apply(i, AirParticleData::new));
+			Codec.FLOAT.fieldOf("drag").forGetter(p -> p.drag),
+			Codec.FLOAT.fieldOf("speed").forGetter(p -> p.speed))
+		.apply(i, AirParticleData::new));
 
-	public static final ParticleOptions.Deserializer<AirParticleData> DESERIALIZER =
-		new ParticleOptions.Deserializer<>() {
-			public AirParticleData fromCommand(ParticleType<AirParticleData> particleTypeIn, StringReader reader)
-				throws CommandSyntaxException {
-				reader.expect(' ');
-				float drag = reader.readFloat();
-				reader.expect(' ');
-				float speed = reader.readFloat();
-				return new AirParticleData(drag, speed);
-			}
-
-			public AirParticleData fromNetwork(ParticleType<AirParticleData> particleTypeIn, FriendlyByteBuf buffer) {
-				return new AirParticleData(buffer.readFloat(), buffer.readFloat());
-			}
-		};
+	public static final StreamCodec<RegistryFriendlyByteBuf, AirParticleData> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.FLOAT, p -> p.drag,
+			ByteBufCodecs.FLOAT, p -> p.speed,
+			AirParticleData::new
+	);
 
 	float drag;
 	float speed;
@@ -53,28 +44,17 @@ public class AirParticleData implements ParticleOptions, ICustomParticleDataWith
 	}
 
 	@Override
-	public ParticleType<?> getType() {
+	public @NotNull ParticleType<?> getType() {
 		return AllParticleTypes.AIR.get();
 	}
 
 	@Override
-	public void writeToNetwork(FriendlyByteBuf buffer) {
-		buffer.writeFloat(drag);
-		buffer.writeFloat(speed);
+	public StreamCodec<? super RegistryFriendlyByteBuf, AirParticleData> getStreamCodec() {
+		return STREAM_CODEC;
 	}
 
 	@Override
-	public String writeToString() {
-		return String.format(Locale.ROOT, "%s %f %f", AllParticleTypes.AIR.parameter(), drag, speed);
-	}
-
-	@Override
-	public Deserializer<AirParticleData> getDeserializer() {
-		return DESERIALIZER;
-	}
-
-	@Override
-	public Codec<AirParticleData> getCodec(ParticleType<AirParticleData> type) {
+	public MapCodec<AirParticleData> getCodec(ParticleType<AirParticleData> type) {
 		return CODEC;
 	}
 

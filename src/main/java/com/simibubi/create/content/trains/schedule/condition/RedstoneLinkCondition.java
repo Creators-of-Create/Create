@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -20,8 +21,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class RedstoneLinkCondition extends ScheduleWaitCondition {
 
@@ -95,9 +96,8 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	protected void writeAdditional(CompoundTag tag) {
-		tag.put("Frequency", freq.serializeEach(f -> f.getStack()
-			.serializeNBT()));
+	protected void writeAdditional(HolderLookup.Provider registries, CompoundTag tag) {
+		tag.put("Frequency", freq.serializeEach(f -> (CompoundTag) f.getStack().saveOptional(registries)));
 	}
 
 	public boolean lowActivation() {
@@ -105,9 +105,9 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	protected void readAdditional(CompoundTag tag) {
+	protected void readAdditional(HolderLookup.Provider registries, CompoundTag tag) {
 		if (tag.contains("Frequency"))
-			freq = Couple.deserializeEach(tag.getList("Frequency", Tag.TAG_COMPOUND), c -> Frequency.of(ItemStack.of(c)));
+			freq = Couple.deserializeEach(tag.getList("Frequency", Tag.TAG_COMPOUND), c -> Frequency.of(ItemStack.parseOptional(registries, c)));
 	}
 
 	@Override

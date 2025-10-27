@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ae2"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "ae2:fluix_crystal"
+        }
+      ]
+    }
+  ],
+  "processing_time": 200,
+  "results": [
+    {
+      "id": "ae2:fluix_dust"
+    }
+  ]
+}

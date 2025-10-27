@@ -1,0 +1,8 @@
+{
+  "values": [
+    "create:contraption",
+    "create:stationary_contraption",
+    "create:gantry_contraption",
+    "create:carriage_contraption"
+  ]
+}

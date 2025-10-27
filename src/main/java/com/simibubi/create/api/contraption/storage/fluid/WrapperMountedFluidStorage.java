@@ -2,8 +2,8 @@ package com.simibubi.create.api.contraption.storage.fluid;
 
 import org.jetbrains.annotations.NotNull;
 
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 /**
  * Partial implementation of a MountedFluidStorage that wraps a fluid handler.

@@ -9,37 +9,29 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.AllAttachmentTypes;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.minecart.CouplingHandler;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.data.WorldAttached;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.ChunkEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.common.util.NonNullConsumer;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.level.ChunkEvent;
-
-public class CapabilityMinecartController implements ICapabilitySerializable<CompoundTag> {
+public class CapabilityMinecartController {
 
 	/* Global map of loaded carts */
 
@@ -47,37 +39,6 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 	public static WorldAttached<Set<UUID>> loadedMinecartsWithCoupling;
 	static WorldAttached<List<AbstractMinecart>> queuedAdditions;
 	static WorldAttached<List<UUID>> queuedUnloads;
-
-	/**
-	 * This callback wrapper ensures that the listeners map in the controller
-	 * capability only ever contains one instance
-	 */
-	public static class MinecartRemovalListener implements NonNullConsumer<LazyOptional<MinecartController>> {
-
-		private Level world;
-		private AbstractMinecart cart;
-
-		public MinecartRemovalListener(Level world, AbstractMinecart cart) {
-			this.world = world;
-			this.cart = cart;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			return obj instanceof MinecartRemovalListener;
-		}
-
-		@Override
-		public int hashCode() {
-			return 100;
-		}
-
-		@Override
-		public void accept(LazyOptional<MinecartController> t) {
-			onCartRemoved(world, cart);
-		}
-
-	}
 
 	static {
 		loadedMinecartsByUUID = new WorldAttached<>($ -> new HashMap<>());
@@ -112,19 +73,14 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 
 			cartsWithCoupling.remove(uniqueID);
 
-			LazyOptional<MinecartController> capability = cart.getCapability(MINECART_CONTROLLER_CAPABILITY);
-			MinecartController controller = capability.orElse(null);
-			capability.addListener(new MinecartRemovalListener(world, cart));
-			carts.put(uniqueID, controller);
-
-			if (capability.isPresent()) {
-				MinecartController mc = capability.orElse(null);
-				if (mc.isLeadingCoupling()) {
+			MinecartController controller = cart.getData(AllAttachmentTypes.MINECART_CONTROLLER);
+			if (controller != MinecartController.EMPTY) {
+				carts.put(uniqueID, controller);
+				if (controller.isLeadingCoupling())
 					cartsWithCoupling.add(uniqueID);
-				}
+				if (!world.isClientSide && controller != null)
+					controller.sendData();
 			}
-			if (!world.isClientSide && controller != null)
-				controller.sendData();
 		}
 
 		queuedRemovals.clear();
@@ -134,12 +90,8 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 
 		for (Entry<UUID, MinecartController> entry : carts.entrySet()) {
 			MinecartController controller = entry.getValue();
-			if (controller != null) {
-				if (controller.isPresent()) {
-					controller.tick();
-					continue;
-				}
-			}
+			if (controller != null && controller.isPresent())
+				continue;
 			toRemove.add(entry.getKey());
 		}
 
@@ -147,6 +99,15 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			keySet.remove(uuid);
 			cartsWithCoupling.remove(uuid);
 		}
+	}
+
+	public static void entityTick(EntityTickEvent event) {
+		Entity entity = event.getEntity();
+		if (!(entity instanceof AbstractMinecart))
+			return;
+		MinecartController data = entity.getData(AllAttachmentTypes.MINECART_CONTROLLER);
+		if (data != MinecartController.EMPTY)
+			data.tick();
 	}
 
 	public static void onChunkUnloaded(ChunkEvent.Unload event) {
@@ -167,6 +128,8 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 	}
 
 	protected static void onCartRemoved(Level world, AbstractMinecart entity) {
+		entity.removeData(AllAttachmentTypes.MINECART_CONTROLLER);
+
 		Map<UUID, MinecartController> carts = loadedMinecartsByUUID.get(world);
 		List<UUID> unloads = queuedUnloads.get(world);
 		UUID uniqueID = entity.getUUID();
@@ -214,59 +177,31 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 
 	/* Capability management */
 
-	public static Capability<MinecartController> MINECART_CONTROLLER_CAPABILITY =
-		CapabilityManager.get(new CapabilityToken<>() {
-		});
-
-	public static void attach(AttachCapabilitiesEvent<Entity> event) {
-		Entity entity = event.getObject();
-		if (!(entity instanceof AbstractMinecart))
+	public static void attach(EntityJoinLevelEvent event) {
+		Entity entity = event.getEntity();
+		if (!(entity instanceof AbstractMinecart abstractMinecart))
+			return;
+		if (event.loadedFromDisk())
 			return;
 
-		CapabilityMinecartController capability = new CapabilityMinecartController((AbstractMinecart) entity);
-		ResourceLocation id = Create.asResource("minecart_controller");
-		event.addCapability(id, capability);
-		event.addListener(() -> {
-			if (capability.cap.isPresent())
-				capability.cap.invalidate();
-		});
-		queuedAdditions.get(entity.getCommandSenderWorld())
-			.add((AbstractMinecart) entity);
+		MinecartController controller = new MinecartController(abstractMinecart);
+		abstractMinecart.setData(AllAttachmentTypes.MINECART_CONTROLLER, controller);
+		queuedAdditions.get(entity.level())
+			.add(abstractMinecart);
+	}
+
+	public static void onEntityDeath(EntityLeaveLevelEvent event) {
+		if (event.getEntity() instanceof AbstractMinecart abstractMinecart)
+			onCartRemoved(event.getLevel(), abstractMinecart);
 	}
 
 	public static void startTracking(PlayerEvent.StartTracking event) {
 		Entity entity = event.getTarget();
-		if (!(entity instanceof AbstractMinecart))
+		if (!(entity instanceof AbstractMinecart abstractMinecart))
 			return;
-		entity.getCapability(MINECART_CONTROLLER_CAPABILITY)
-			.ifPresent(MinecartController::sendData);
+
+		MinecartController controller = entity.getData(AllAttachmentTypes.MINECART_CONTROLLER);
+		if (controller != MinecartController.EMPTY)
+			controller.sendData(abstractMinecart);
 	}
-
-	/* Capability provider */
-
-	private final LazyOptional<MinecartController> cap;
-	private MinecartController handler;
-
-	public CapabilityMinecartController(AbstractMinecart minecart) {
-		handler = new MinecartController(minecart);
-		cap = LazyOptional.of(() -> handler);
-	}
-
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == MINECART_CONTROLLER_CAPABILITY)
-			return this.cap.cast();
-		return LazyOptional.empty();
-	}
-
-	@Override
-	public CompoundTag serializeNBT() {
-		return handler.serializeNBT();
-	}
-
-	@Override
-	public void deserializeNBT(CompoundTag nbt) {
-		handler.deserializeNBT(nbt);
-	}
-
 }

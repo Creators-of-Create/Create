@@ -2,7 +2,7 @@ package com.simibubi.create.content.kinetics.belt.behaviour;
 
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.funnel.BeltFunnelBlock;
@@ -19,10 +19,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 /**
  * Behaviour for BlockEntities to which belts can transfer items directly in a
@@ -59,7 +58,7 @@ public class DirectBeltInputBehaviour extends BlockEntityBehaviour {
 		canInsert = pred;
 		return this;
 	}
-	
+
 	public DirectBeltInputBehaviour considerOccupiedWhen(OccupiedPredicate pred) {
 		isOccupied = pred;
 		return this;
@@ -71,10 +70,10 @@ public class DirectBeltInputBehaviour extends BlockEntityBehaviour {
 	}
 
 	private ItemStack defaultInsertionCallback(TransportedItemStack inserted, Direction side, boolean simulate) {
-		LazyOptional<IItemHandler> lazy = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, side);
-		if (!lazy.isPresent())
+		IItemHandler lazy = blockEntity.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, blockEntity.getBlockPos(), side);
+		if (lazy == null)
 			return inserted.stack;
-		return ItemHandlerHelper.insertItemStacked(lazy.orElse(null), inserted.stack.copy(), simulate);
+		return ItemHandlerHelper.insertItemStacked(lazy, inserted.stack.copy(), simulate);
 	}
 
 	// TODO: verify that this side is consistent across all calls
@@ -85,7 +84,7 @@ public class DirectBeltInputBehaviour extends BlockEntityBehaviour {
 	public boolean isOccupied(Direction side) {
 		return isOccupied.test(side);
 	}
-	
+
 	public ItemStack handleInsertion(ItemStack stack, Direction side, boolean simulate) {
 		return handleInsertion(new TransportedItemStack(stack), side, simulate);
 	}
@@ -108,7 +107,7 @@ public class DirectBeltInputBehaviour extends BlockEntityBehaviour {
 	public interface OccupiedPredicate {
 		public boolean test(Direction side);
 	}
-	
+
 	@FunctionalInterface
 	public interface AvailabilityPredicate {
 		public boolean test(Direction side);

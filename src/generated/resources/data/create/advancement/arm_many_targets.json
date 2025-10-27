@@ -1,0 +1,28 @@
+{
+  "parent": "create:crusher_maxed_0000",
+  "criteria": {
+    "0": {
+      "trigger": "create:arm_many_targets_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.arm_many_targets.desc"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "create:mechanical_arm"
+    },
+    "title": {
+      "translate": "advancement.create.arm_many_targets"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

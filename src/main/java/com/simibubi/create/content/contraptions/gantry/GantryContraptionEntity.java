@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.gantry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllEntityTypes;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.ContraptionCollider;
@@ -12,11 +11,13 @@ import com.simibubi.create.content.kinetics.gantry.GantryShaftBlock;
 import com.simibubi.create.content.kinetics.gantry.GantryShaftBlockEntity;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -26,9 +27,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class GantryContraptionEntity extends AbstractContraptionEntity {
 
@@ -149,13 +149,14 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	protected void writeAdditional(CompoundTag compound, boolean spawnPacket) {
+	protected void writeAdditional(CompoundTag compound, HolderLookup.Provider registries, boolean spawnPacket) {
 		NBTHelper.writeEnum(compound, "GantryAxis", movementAxis);
 		if (sequencedOffsetLimit >= 0)
 			compound.putDouble("SequencedOffsetLimit", sequencedOffsetLimit);
-		super.writeAdditional(compound, spawnPacket);
+		super.writeAdditional(compound, registries, spawnPacket);
 	}
 
+	@Override
 	protected void readAdditional(CompoundTag compound, boolean spawnData) {
 		movementAxis = NBTHelper.readEnum(compound, "GantryAxis", Direction.class);
 		sequencedOffsetLimit =
@@ -189,7 +190,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void lerpTo(double x, double y, double z, float yw, float pt, int inc, boolean t) {
+	public void lerpTo(double pX, double pY, double pZ, float pYRot, float pXRot, int pSteps) {
 	}
 
 	@Override
@@ -225,19 +226,18 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	public void sendPacket() {
-		AllPackets.getChannel()
-			.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+		CatnipServices.NETWORK.sendToClientsTrackingEntity(this,
 				new GantryContraptionUpdatePacket(getId(), getAxisCoord(), axisMotion, sequencedOffsetLimit));
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void handlePacket(GantryContraptionUpdatePacket packet) {
-		Entity entity = Minecraft.getInstance().level.getEntity(packet.entityID);
+		Entity entity = Minecraft.getInstance().level.getEntity(packet.entityID());
 		if (!(entity instanceof GantryContraptionEntity ce))
 			return;
-		ce.axisMotion = packet.motion;
-		ce.clientOffsetDiff = packet.coord - ce.getAxisCoord();
-		ce.sequencedOffsetLimit = packet.sequenceLimit;
+		ce.axisMotion = packet.motion();
+		ce.clientOffsetDiff = packet.coord() - ce.getAxisCoord();
+		ce.sequencedOffsetLimit = packet.sequenceLimit();
 	}
 
 }

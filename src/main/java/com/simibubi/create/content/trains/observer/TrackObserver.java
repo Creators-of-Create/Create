@@ -13,6 +13,7 @@ import com.simibubi.create.content.trains.signal.SingleBlockEntityEdgePoint;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
@@ -67,7 +68,7 @@ public class TrackObserver extends SingleBlockEntityEdgePoint {
 	public FilterItemStack getFilter() {
 		return filter;
 	}
-	
+
 	public UUID getCurrentTrain() {
 		return currentTrain;
 	}
@@ -82,10 +83,10 @@ public class TrackObserver extends SingleBlockEntityEdgePoint {
 	}
 
 	@Override
-	public void read(CompoundTag nbt, boolean migration, DimensionPalette dimensions) {
-		super.read(nbt, migration, dimensions);
+	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean migration, DimensionPalette dimensions) {
+		super.read(nbt, registries, migration, dimensions);
 		activated = nbt.getInt("Activated");
-		filter = FilterItemStack.of(nbt.getCompound("Filter"));
+		filter = FilterItemStack.of(registries, nbt.getCompound("Filter"));
 		if (nbt.contains("TrainId"))
 			currentTrain = nbt.getUUID("TrainId");
 	}
@@ -96,10 +97,10 @@ public class TrackObserver extends SingleBlockEntityEdgePoint {
 	}
 
 	@Override
-	public void write(CompoundTag nbt, DimensionPalette dimensions) {
-		super.write(nbt, dimensions);
+	public void write(CompoundTag nbt, HolderLookup.Provider registries, DimensionPalette dimensions) {
+		super.write(nbt, registries, dimensions);
 		nbt.putInt("Activated", activated);
-		nbt.put("Filter", filter.serializeNBT());
+		nbt.put("Filter", filter.serializeNBT(registries));
 		if (currentTrain != null)
 			nbt.putUUID("TrainId", currentTrain);
 	}

@@ -1,5 +1,6 @@
 package com.simibubi.create.content.equipment.toolbox;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,7 +11,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.animatedContainer.AnimatedContainerBehaviour;
@@ -20,7 +23,8 @@ import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap.Builder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,10 +41,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider, Nameable {
 
@@ -52,7 +54,6 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 
 	UUID uniqueId;
 	ToolboxInventory inventory;
-	LazyOptional<IItemHandler> inventoryProvider;
 	ResetableLazy<DyeColor> colorProvider;
 
 	Map<Integer, WeakHashMap<Player, Integer>> connectedPlayers;
@@ -65,7 +66,6 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 		super(type, pos, state);
 		connectedPlayers = new HashMap<>();
 		inventory = new ToolboxInventory(this);
-		inventoryProvider = LazyOptional.of(() -> inventory);
 		colorProvider = ResetableLazy.of(() -> {
 			BlockState blockState = getBlockState();
 			if (blockState != null && blockState.getBlock() instanceof ToolboxBlock)
@@ -73,6 +73,14 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 			return DyeColor.BROWN;
 		});
 		setLazyTickRate(10);
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+				Capabilities.ItemHandler.BLOCK,
+				AllBlockEntityTypes.TOOLBOX.get(),
+				(be, context) -> be.inventory
+		);
 	}
 
 	public DyeColor getColor() {
@@ -168,13 +176,13 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 						update = true;
 						ItemStack template = playerStack.isEmpty() ? extracted : playerStack;
 						playerInv.setItem(hotbarSlot,
-							ItemHandlerHelper.copyStackWithSize(template, count + extracted.getCount()));
+							template.copyWithCount(count + extracted.getCount()));
 					}
 				}
 
 				if (count > targetAmount) {
 					int amountToDeposit = count - targetAmount;
-					ItemStack toDistribute = ItemHandlerHelper.copyStackWithSize(playerStack, amountToDeposit);
+					ItemStack toDistribute = playerStack.copyWithCount(amountToDeposit);
 
 					if (isOpenInContainer(player)) {
 						int deposited = amountToDeposit - inventory.distributeToCompartment(toDistribute, slot, true)
@@ -191,7 +199,7 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 					if (deposited > 0) {
 						update = true;
 						playerInv.setItem(hotbarSlot,
-							ItemHandlerHelper.copyStackWithSize(playerStack, count - deposited));
+							playerStack.copyWithCount(count - deposited));
 					}
 				}
 			}
@@ -273,33 +281,26 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 	}
 
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap))
-			return inventoryProvider.cast();
-		return super.getCapability(cap, side);
-	}
-
-	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		inventory.deserializeNBT(compound.getCompound("Inventory"));
-		super.read(compound, clientPacket);
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		inventory.deserializeNBT(registries, compound.getCompound("Inventory"));
+		super.read(compound, registries, clientPacket);
 		if (compound.contains("UniqueId", 11))
 			this.uniqueId = compound.getUUID("UniqueId");
 		if (compound.contains("CustomName", 8))
-			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
+			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"), registries);
 	}
 
 	@Override
-	protected void write(CompoundTag compound, boolean clientPacket) {
+	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		if (uniqueId == null)
 			uniqueId = UUID.randomUUID();
 
-		compound.put("Inventory", inventory.serializeNBT());
+		compound.put("Inventory", inventory.serializeNBT(registries));
 		compound.putUUID("UniqueId", uniqueId);
 
 		if (customName != null)
-			compound.putString("CustomName", Component.Serializer.toJson(customName));
-		super.write(compound, clientPacket);
+			compound.putString("CustomName", Component.Serializer.toJson(customName, registries));
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
@@ -327,8 +328,12 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 		map.put(player, hotbarSlot);
 	}
 
-	public void readInventory(CompoundTag compound) {
-		inventory.deserializeNBT(compound);
+	public void readInventory(ToolboxInventory inv) {
+		if (inv != null) {
+			this.inventory.filters = new ArrayList<>(inv.filters);
+			for (int i = 0; i < inv.getSlots(); i++)
+				this.inventory.setStackInSlot(i, inv.getStackInSlot(i));
+		}
 	}
 
 	public void setUniqueId(UUID uniqueId) {
@@ -378,4 +383,15 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 		colorProvider.reset();
 	}
 
+	@Override
+	protected void applyImplicitComponents(DataComponentInput componentInput) {
+		setUniqueId(componentInput.get(AllDataComponents.TOOLBOX_UUID));
+		readInventory(componentInput.get(AllDataComponents.TOOLBOX_INVENTORY));
+	}
+
+	@Override
+	protected void collectImplicitComponents(Builder components) {
+		components.set(AllDataComponents.TOOLBOX_UUID, uniqueId);
+		components.set(AllDataComponents.TOOLBOX_INVENTORY, inventory);
+	}
 }

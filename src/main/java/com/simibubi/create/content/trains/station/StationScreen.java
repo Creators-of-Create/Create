@@ -8,7 +8,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.content.decoration.slidingDoor.DoorControl;
@@ -20,6 +19,7 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
+import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
@@ -101,8 +101,8 @@ public class StationScreen extends AbstractStationScreen {
 		dropScheduleButton = new IconButton(x + 73, y + 65, AllIcons.I_VIEW_SCHEDULE);
 		dropScheduleButton.active = false;
 		dropScheduleButton.visible = false;
-		dropScheduleButton.withCallback(() -> AllPackets.getChannel()
-			.sendToServer(StationEditPacket.dropSchedule(blockEntity.getBlockPos())));
+		dropScheduleButton.withCallback(() ->
+				CatnipServices.NETWORK.sendToServer(StationEditPacket.dropSchedule(blockEntity.getBlockPos())));
 		addRenderableWidget(dropScheduleButton);
 
 		colorTypeScroll = new ScrollInput(x + 166, y + 17, 22, 14).titled(CreateLang.translateDirect("station.train_map_color"));
@@ -358,7 +358,7 @@ public class StationScreen extends AbstractStationScreen {
 	}
 
 	public boolean mapModsPresent() {
-		return Mods.FTBCHUNKS.isLoaded() || Mods.JOURNEYMAP.isLoaded();
+		return Mods.FTBCHUNKS.isLoaded() || Mods.JOURNEYMAP.isLoaded() || Mods.XAEROWORLDMAP.isLoaded();
 	}
 
 	@Override
@@ -404,15 +404,13 @@ public class StationScreen extends AbstractStationScreen {
 		Train train = displayedTrain.get();
 		if (train != null && !trainNameBox.getValue()
 			.equals(train.name.getString()))
-			AllPackets.getChannel()
-				.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId(), train.mapColorIndex));
+			CatnipServices.NETWORK.sendToServer(new TrainEditPacket.Serverbound(train.id, trainNameBox.getValue(), train.icon.getId(), train.mapColorIndex));
 	}
 
 	private void syncStationName() {
 		if (!nameBox.getValue()
 			.equals(station.name))
-			AllPackets.getChannel()
-				.sendToServer(
+			CatnipServices.NETWORK.sendToServer(
 					StationEditPacket.configure(blockEntity.getBlockPos(), false, nameBox.getValue(), doorControl));
 	}
 
@@ -421,16 +419,14 @@ public class StationScreen extends AbstractStationScreen {
 		super.removed();
 		if (nameBox == null || trainNameBox == null)
 			return;
-		AllPackets.getChannel()
-			.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), switchingToAssemblyMode,
+		CatnipServices.NETWORK.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), switchingToAssemblyMode,
 				nameBox.getValue(), doorControl));
 		Train train = displayedTrain.get();
 		if (train == null)
 			return;
 		if (!switchingToAssemblyMode)
-			AllPackets.getChannel()
-				.sendToServer(
-					new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId(), train.mapColorIndex));
+			CatnipServices.NETWORK.sendToServer(
+					new TrainEditPacket.Serverbound(train.id, trainNameBox.getValue(), train.icon.getId(), train.mapColorIndex));
 		else
 			blockEntity.imminentTrain = null;
 	}

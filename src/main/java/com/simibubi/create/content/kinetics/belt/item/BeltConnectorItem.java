@@ -3,9 +3,10 @@ package com.simibubi.create.content.kinetics.belt.item;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltPart;
@@ -21,13 +22,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -45,13 +45,14 @@ public class BeltConnectorItem extends BlockItem {
 		return getOrCreateDescriptionId();
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		Player playerEntity = context.getPlayer();
+		ItemStack heldStack = context.getItemInHand();
+
 		if (playerEntity != null && playerEntity.isShiftKeyDown()) {
-			context.getItemInHand()
-				.setTag(null);
+			heldStack.remove(AllDataComponents.BELT_FIRST_SHAFT);
 			return InteractionResult.SUCCESS;
 		}
 
@@ -62,24 +63,20 @@ public class BeltConnectorItem extends BlockItem {
 		if (world.isClientSide)
 			return validAxis ? InteractionResult.SUCCESS : InteractionResult.FAIL;
 
-		CompoundTag tag = context.getItemInHand()
-			.getOrCreateTag();
 		BlockPos firstPulley = null;
 
 		// Remove first if no longer existant or valid
-		if (tag.contains("FirstPulley")) {
-			firstPulley = NbtUtils.readBlockPos(tag.getCompound("FirstPulley"));
+		if (heldStack.has(AllDataComponents.BELT_FIRST_SHAFT)) {
+			firstPulley = heldStack.get(AllDataComponents.BELT_FIRST_SHAFT);
 			if (!validateAxis(world, firstPulley) || !firstPulley.closerThan(pos, maxLength() * 2)) {
-				tag.remove("FirstPulley");
-				context.getItemInHand()
-					.setTag(tag);
+				heldStack.remove(AllDataComponents.BELT_FIRST_SHAFT);
 			}
 		}
 
 		if (!validAxis || playerEntity == null)
 			return InteractionResult.FAIL;
 
-		if (tag.contains("FirstPulley")) {
+		if (heldStack.has(AllDataComponents.BELT_FIRST_SHAFT)) {
 
 			if (!canConnect(world, firstPulley, pos))
 				return InteractionResult.FAIL;
@@ -94,17 +91,14 @@ public class BeltConnectorItem extends BlockItem {
 
 			if (!context.getItemInHand()
 				.isEmpty()) {
-				context.getItemInHand()
-					.setTag(null);
+				heldStack.remove(AllDataComponents.BELT_FIRST_SHAFT);
 				playerEntity.getCooldowns()
 					.addCooldown(this, 5);
 			}
 			return InteractionResult.SUCCESS;
 		}
 
-		tag.put("FirstPulley", NbtUtils.writeBlockPos(pos));
-		context.getItemInHand()
-			.setTag(tag);
+		heldStack.set(AllDataComponents.BELT_FIRST_SHAFT, pos);
 		playerEntity.getCooldowns()
 			.addCooldown(this, 5);
 		return InteractionResult.SUCCESS;

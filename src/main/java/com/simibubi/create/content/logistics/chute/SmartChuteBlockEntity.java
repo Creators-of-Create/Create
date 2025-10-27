@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.chute;
 
 import java.util.List;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
@@ -11,6 +12,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class SmartChuteBlockEntity extends ChuteBlockEntity {
 
@@ -18,6 +21,14 @@ public class SmartChuteBlockEntity extends ChuteBlockEntity {
 
 	public SmartChuteBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+				Capabilities.ItemHandler.BLOCK,
+				AllBlockEntityTypes.SMART_CHUTE.get(),
+				(be, context) -> be.itemHandler
+		);
 	}
 
 	@Override
@@ -41,7 +52,7 @@ public class SmartChuteBlockEntity extends ChuteBlockEntity {
 		BlockState blockState = getBlockState();
 		return blockState.hasProperty(SmartChuteBlock.POWERED) && !blockState.getValue(SmartChuteBlock.POWERED);
 	}
-	
+
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(filtering =

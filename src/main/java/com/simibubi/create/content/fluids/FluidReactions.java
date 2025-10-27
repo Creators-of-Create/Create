@@ -15,11 +15,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 @EventBusSubscriber
 public class FluidReactions {
@@ -32,11 +32,11 @@ public class FluidReactions {
 		BlockHelper.destroyBlock(level, pos, 1);
 
 		PipeCollisionEvent.Flow event = new PipeCollisionEvent.Flow(level, pos, f1, f2, null);
-		MinecraftForge.EVENT_BUS.post(event);
+		NeoForge.EVENT_BUS.post(event);
 		if (event.getState() != null)
 			level.setBlockAndUpdate(pos, event.getState());
 	}
-	
+
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void handlePipeFlowCollisionFallback(PipeCollisionEvent.Flow event) {
 		Fluid f1 = event.getFirstFluid();
@@ -62,12 +62,12 @@ public class FluidReactions {
 		Fluid wf = worldFluid.getType();
 
 		PipeCollisionEvent.Spill event = new PipeCollisionEvent.Spill(level, pos, wf, pf, null);
-		MinecraftForge.EVENT_BUS.post(event);
+		NeoForge.EVENT_BUS.post(event);
 		if (event.getState() != null) {
 			level.setBlockAndUpdate(pos, event.getState());
 		}
 	}
-	
+
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void handlePipeSpillCollisionFallback(PipeCollisionEvent.Spill event) {
 		Fluid pf = event.getPipeFluid();

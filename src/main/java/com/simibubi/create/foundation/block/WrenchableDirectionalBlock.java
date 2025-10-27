@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.block;
 
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 
 import net.minecraft.core.Direction;
@@ -11,7 +12,11 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 
+import org.jetbrains.annotations.NotNull;
+
 public class WrenchableDirectionalBlock extends DirectionalBlock implements IWrenchable {
+
+	public static final MapCodec<WrenchableDirectionalBlock> CODEC = simpleCodec(WrenchableDirectionalBlock::new);
 
 	public WrenchableDirectionalBlock(Properties properties) {
 		super(properties);
@@ -49,6 +54,11 @@ public class WrenchableDirectionalBlock extends DirectionalBlock implements IWre
 	@SuppressWarnings("deprecation")
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
 		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+	}
+
+	@Override
+	protected @NotNull MapCodec<? extends DirectionalBlock> codec() {
+		return CODEC;
 	}
 
 }

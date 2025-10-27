@@ -1,0 +1,35 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "druidcraft"
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "druidcraft:fiery_glass_ore"
+        }
+      ]
+    }
+  ],
+  "processing_time": 300,
+  "results": [
+    {
+      "count": 8,
+      "id": "druidcraft:fiery_glass"
+    },
+    {
+      "chance": 0.25,
+      "count": 6,
+      "id": "druidcraft:fiery_glass"
+    },
+    {
+      "chance": 0.125,
+      "id": "minecraft:cobblestone"
+    }
+  ]
+}

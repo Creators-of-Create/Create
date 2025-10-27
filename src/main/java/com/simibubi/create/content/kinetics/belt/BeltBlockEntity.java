@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -32,6 +33,7 @@ import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -39,6 +41,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,10 +49,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class BeltBlockEntity extends KineticBlockEntity {
 	public Map<Entity, TransportedEntityInfo> passengers;
@@ -62,7 +65,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 
 	protected BlockPos controller;
 	protected BeltInventory inventory;
-	protected LazyOptional<IItemHandler> itemHandler;
+	protected IItemHandler itemHandler;
 	public VersionedInventoryTrackerBehaviour invVersionTracker;
 
 	public CompoundTag trackerUpdateTag;
@@ -74,9 +77,23 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	public BeltBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		controller = BlockPos.ZERO;
-		itemHandler = LazyOptional.empty();
+		itemHandler = null;
 		casing = CasingType.NONE;
 		color = Optional.empty();
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+				Capabilities.ItemHandler.BLOCK,
+				AllBlockEntityTypes.BELT.get(),
+				(be, context) -> {
+						if (!BeltBlock.canTransportObjects(be.getBlockState()))
+							return null;
+						if (!be.isRemoved() && be.itemHandler == null)
+							be.initializeItemHandler();
+						return be.itemHandler;
+				}
+		);
 	}
 
 	@Override
@@ -149,7 +166,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	}
 
 	protected void initializeItemHandler() {
-		if (level.isClientSide || itemHandler.isPresent())
+		if (level.isClientSide || itemHandler != null)
 			return;
 		if (beltLength == 0 || controller == null)
 			return;
@@ -161,19 +178,8 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		BeltInventory inventory = ((BeltBlockEntity) be).getInventory();
 		if (inventory == null)
 			return;
-		IItemHandler handler = new ItemHandlerBeltSegment(inventory, index);
-		itemHandler = LazyOptional.of(() -> handler);
-	}
-
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (!isItemHandlerCap(cap))
-			return super.getCapability(cap, side);
-		if (!BeltBlock.canTransportObjects(getBlockState()))
-			return super.getCapability(cap, side);
-		if (!isRemoved() && !itemHandler.isPresent())
-			initializeItemHandler();
-		return itemHandler.cast();
+		itemHandler = new ItemHandlerBeltSegment(inventory, index);
+		invalidateCapabilities();
 	}
 
 	@Override
@@ -186,11 +192,11 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		itemHandler.invalidate();
+		invalidateCapabilities();
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		if (controller != null)
 			compound.put("Controller", NbtUtils.writeBlockPos(controller));
 		compound.putBoolean("IsController", isController());
@@ -199,17 +205,16 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		NBTHelper.writeEnum(compound, "Casing", casing);
 		compound.putBoolean("Covered", covered);
 
-		if (color.isPresent())
-			NBTHelper.writeEnum(compound, "Dye", color.get());
+		color.ifPresent(dyeColor -> NBTHelper.writeEnum(compound, "Dye", dyeColor));
 
 		if (isController())
-			compound.put("Inventory", getInventory().write());
-		super.write(compound, clientPacket);
+			compound.put("Inventory", getInventory().write(registries));
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(compound, registries, clientPacket);
 
 		if (compound.getBoolean("IsController"))
 			controller = worldPosition;
@@ -219,14 +224,14 @@ public class BeltBlockEntity extends KineticBlockEntity {
 
 		if (!wasMoved) {
 			if (!isController())
-				controller = NbtUtils.readBlockPos(compound.getCompound("Controller"));
+				controller = NBTHelper.readBlockPos(compound, "Controller");
 			trackerUpdateTag = compound;
 			index = compound.getInt("Index");
 			beltLength = compound.getInt("Length");
 		}
 
 		if (isController())
-			getInventory().read(compound.getCompound("Inventory"));
+			getInventory().read(compound.getCompound("Inventory"), registries);
 
 		CasingType casingBefore = casing;
 		boolean coverBefore = covered;
@@ -422,7 +427,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		}
 
 		if (casing != CasingType.NONE)
-			level.levelEvent(2001, worldPosition,
+			level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, worldPosition,
 				Block.getId(casing == CasingType.ANDESITE ? AllBlocks.ANDESITE_CASING.getDefaultState()
 					: AllBlocks.BRASS_CASING.getDefaultState()));
 		if (blockState.getValue(BeltBlock.CASING) != shouldBlockHaveCasing)
@@ -551,7 +556,8 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	}
 
 	public void invalidateItemHandler() {
-		itemHandler.invalidate();
+		invalidateCapabilities();
+		itemHandler = null;
 	}
 
 	public boolean shouldRenderNormally() {

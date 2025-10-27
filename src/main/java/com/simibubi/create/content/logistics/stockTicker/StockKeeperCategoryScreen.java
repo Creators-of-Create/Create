@@ -5,36 +5,33 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.Nullable;
-
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.ScreenWithStencils;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.minecraftforge.items.SlotItemHandler;
-
+import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.gui.UIRenderHelper;
 import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
@@ -42,18 +39,19 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<StockKeeperCategoryMenu>
-	implements ScreenWithStencils {
+import net.neoforged.neoforge.items.SlotItemHandler;
+
+public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<StockKeeperCategoryMenu> {
 
 	private static final int CARD_HEADER = 20;
 	private static final int CARD_WIDTH = 160;
 
 	private List<Rect2i> extraAreas = Collections.emptyList();
 
-	private LerpedFloat scroll = LerpedFloat.linear()
+	private final LerpedFloat scroll = LerpedFloat.linear()
 		.startWithValue(0);
 
-	private List<ItemStack> schedule;
+	private final List<ItemStack> schedule;
 	private IconButton confirmButton;
 	private ItemStack editingItem;
 	private int editingIndex;
@@ -107,8 +105,7 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 		editingIndex = index;
 		editingItem = index == -1 ? ItemStack.EMPTY : schedule.get(index);
 		menu.proxyInventory.setStackInSlot(0, editingItem);
-		AllPackets.getChannel()
-			.sendToServer(new GhostItemSubmitPacket(editingItem, 0));
+		CatnipServices.NETWORK.sendToServer(new GhostItemSubmitPacket(editingItem, 0));
 
 		addRenderableWidget(editorConfirm);
 		addRenderableWidget(editorEditBox);
@@ -120,7 +117,6 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 			return;
 
 		playUiSound(SoundEvents.UI_BUTTON_CLICK.value(), 1, 1);
-
 		removeWidget(editorConfirm);
 		removeWidget(editorEditBox);
 
@@ -133,16 +129,14 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 
 		if (!empty) {
 			String value = editorEditBox.getValue();
-			stackInSlot.setHoverName(value.isBlank() ? null : Component.literal(value));
-
+			stackInSlot.set(DataComponents.CUSTOM_NAME, value.isBlank() ? null : Component.literal(value));
 			if (editingIndex == -1)
 				schedule.add(stackInSlot);
 			else
 				schedule.set(editingIndex, stackInSlot);
 		}
 
-		AllPackets.getChannel()
-			.sendToServer(new GhostItemSubmitPacket(ItemStack.EMPTY, 0));
+		CatnipServices.NETWORK.sendToServer(new GhostItemSubmitPacket(ItemStack.EMPTY, 0));
 
 		editingItem = null;
 		editorConfirm = null;
@@ -161,8 +155,7 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 			.equals(CreateLang.translate("gui.stock_ticker.new_category")
 				.string()))
 			return;
-		if (menu.proxyInventory.getStackInSlot(0)
-			.hasCustomHoverName())
+		if (menu.proxyInventory.getStackInSlot(0).has(DataComponents.CUSTOM_NAME))
 			editorEditBox.setValue(menu.proxyInventory.getStackInSlot(0)
 				.getHoverName()
 				.getString());
@@ -170,12 +163,12 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		partialTicks = minecraft.getFrameTime();
+		partialTicks = AnimationTickHolder.getPartialTicksUI();
 
 		if (menu.slotsActive)
 			super.render(graphics, mouseX, mouseY, partialTicks);
 		else {
-			renderBackground(graphics);
+			renderBackground(graphics, mouseX, mouseY, partialTicks);
 			renderBg(graphics, partialTicks, mouseX, mouseY);
 			for (Renderable widget : this.renderables)
 				widget.render(graphics, mouseX, mouseY, partialTicks);
@@ -185,22 +178,23 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 
 	protected void renderCategories(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		PoseStack matrixStack = graphics.pose();
-		UIRenderHelper.swapAndBlitColor(minecraft.getMainRenderTarget(), UIRenderHelper.framebuffer);
 
 		int yOffset = 25;
 		List<ItemStack> entries = schedule;
 		float scrollOffset = -scroll.getValue(partialTicks);
 
+		graphics.enableScissor(
+			leftPos + 3, topPos + 16,
+			leftPos + 187, topPos + 19 + (AllGuiTextures.STOCK_KEEPER_CATEGORY.getHeight() * slices)
+		);
+
 		for (int i = 0; i <= entries.size(); i++) {
-			startStencil(graphics, leftPos + 3, topPos + 16, 184,
-				3 + AllGuiTextures.STOCK_KEEPER_CATEGORY.getHeight() * slices);
 			matrixStack.pushPose();
 			matrixStack.translate(0, scrollOffset, 0);
 
 			if (i == entries.size()) {
 				AllGuiTextures.STOCK_KEEPER_CATEGORY_NEW.render(graphics, leftPos + 7, topPos + yOffset);
 				matrixStack.popPose();
-				endStencil();
 				break;
 			}
 
@@ -210,10 +204,9 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 			yOffset += cardHeight;
 
 			matrixStack.popPose();
-			endStencil();
 		}
 
-		UIRenderHelper.swapAndBlitColor(UIRenderHelper.framebuffer, minecraft.getMainRenderTarget());
+		graphics.disableScissor();
 	}
 
 	public int renderScheduleEntry(GuiGraphics graphics, int i, ItemStack entry, int yOffset, int mouseX, int mouseY,
@@ -300,8 +293,7 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 					.component()), mx, my);
 				if (click == 0) {
 					if (!entry.isEmpty())
-						AllPackets.getChannel()
-							.sendToServer(new StockKeeperCategoryRefundPacket(menu.contentHolder.getBlockPos(), entry));
+						CatnipServices.NETWORK.sendToServer(new StockKeeperCategoryRefundPacket(menu.contentHolder.getBlockPos(), entry));
 					entries.remove(entry);
 					init();
 				}
@@ -380,7 +372,7 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 		boolean mouseClicked = super.mouseClicked(pMouseX, pMouseY, pButton);
 
 		if (editorEditBox != null && editorEditBox.isMouseOver(pMouseX, pMouseY) && wasNotFocused) {
-			editorEditBox.moveCursorToEnd();
+			editorEditBox.moveCursorToEnd(false);
 			editorEditBox.setHighlightPos(0);
 		}
 
@@ -405,21 +397,21 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 	}
 
 	@Override
-	public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
+	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
 		if (editingItem != null)
-			return super.mouseScrolled(pMouseX, pMouseY, pDelta);
+			return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
 
 		float chaseTarget = scroll.getChaseTarget();
 		float max = 40 - (3 + AllGuiTextures.STOCK_KEEPER_CATEGORY.getHeight() * slices);
 		max += schedule.size() * CARD_HEADER + 24;
 		if (max > 0) {
-			chaseTarget -= pDelta * 12;
+			chaseTarget -= (float) (scrollY * 12);
 			chaseTarget = Mth.clamp(chaseTarget, 0, max);
 			scroll.chase((int) chaseTarget, 0.7f, Chaser.EXP);
 		} else
 			scroll.chase(0, 0.7f, Chaser.EXP);
 
-		return super.mouseScrolled(pMouseX, pMouseY, pDelta);
+		return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
 	}
 
 	@Override
@@ -479,10 +471,11 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 		int center = leftPos + (AllGuiTextures.STOCK_KEEPER_CATEGORY.getWidth()) / 2;
 		graphics.drawString(font, formattedcharsequence, (float) (center - font.width(formattedcharsequence) / 2),
 			(float) topPos + 4, 0x3D3C48, false);
-		renderCategories(graphics, pMouseX, pMouseY, pPartialTick);
 
-		if (editingItem == null)
+		if (editingItem == null) {
+			renderCategories(graphics, pMouseX, pMouseY, pPartialTick);
 			return;
+		}
 
 		graphics.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
 
@@ -505,8 +498,7 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 	@Override
 	public void removed() {
 		super.removed();
-		AllPackets.getChannel()
-			.sendToServer(new StockKeeperCategoryEditPacket(menu.contentHolder.getBlockPos(), schedule));
+		CatnipServices.NETWORK.sendToServer(new StockKeeperCategoryEditPacket(menu.contentHolder.getBlockPos(), schedule));
 	}
 
 	@Override

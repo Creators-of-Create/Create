@@ -9,10 +9,15 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.packager.unpacking.UnpackingHandler;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
+import com.simibubi.create.compat.computercraft.events.PackageEvent;
 import com.simibubi.create.content.contraptions.actors.psi.PortableStorageInterfaceBlockEntity;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.box.PackageItem;
@@ -36,11 +41,14 @@ import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipul
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryTrackerBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 
+import dan200.computercraft.api.peripheral.PeripheralCapability;
+import net.createmod.catnip.codecs.CatnipCodecUtils;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.math.BlockFace;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -54,12 +62,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
+
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class PackagerBlockEntity extends SmartBlockEntity {
 
@@ -73,12 +81,15 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 
 	public List<BigItemStack> queuedExitingPackages;
 
-	public PackagerItemHandler inventory;
-	private final LazyOptional<IItemHandler> invProvider;
+	public final PackagerItemHandler inventory;
 
 	public static final int CYCLE = 20;
 	public int animationTicks;
 	public boolean animationInward;
+
+	public AbstractComputerBehaviour computerBehaviour;
+	public Boolean hasCustomComputerAddress;
+	public String customComputerAddress;
 
 	private InventorySummary availableItems;
 	private VersionedInventoryTrackerBehaviour invVersionTracker;
@@ -94,12 +105,29 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		heldBox = ItemStack.EMPTY;
 		previouslyUnwrapped = ItemStack.EMPTY;
 		inventory = new PackagerItemHandler(this);
-		invProvider = LazyOptional.of(() -> inventory);
 		animationTicks = 0;
 		animationInward = true;
 		queuedExitingPackages = new LinkedList<>();
 		signBasedAddress = "";
+		customComputerAddress = "";
+		hasCustomComputerAddress = false;
 		buttonCooldown = 0;
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+			Capabilities.ItemHandler.BLOCK,
+			AllBlockEntityTypes.PACKAGER.get(),
+			(be, context) -> be.inventory
+		);
+
+		if (Mods.COMPUTERCRAFT.isLoaded()) {
+			event.registerBlockEntity(
+				PeripheralCapability.get(),
+				AllBlockEntityTypes.PACKAGER.get(),
+				(be, context) -> be.computerBehaviour.getPeripheralCapability()
+			);
+		}
 	}
 
 	@Override
@@ -108,6 +136,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			.withFilter(this::supportsBlockEntity));
 		behaviours.add(invVersionTracker = new VersionedInventoryTrackerBehaviour(this));
 		behaviours.add(advancements = new AdvancementBehaviour(this, AllAdvancements.PACKAGER));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	private boolean supportsBlockEntity(BlockEntity target) {
@@ -118,6 +147,12 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 	public void initialize() {
 		super.initialize();
 		recheckIfLinksPresent();
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 	@Override
@@ -133,11 +168,11 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			if (!level.isClientSide() && !queuedExitingPackages.isEmpty() && heldBox.isEmpty()) {
 				BigItemStack entry = queuedExitingPackages.get(0);
 				heldBox = entry.stack.copy();
-				
+
 				entry.count--;
 				if (entry.count <= 0)
 					queuedExitingPackages.remove(0);
-				
+
 				animationInward = false;
 				animationTicks = CYCLE;
 				notifyUpdate();
@@ -167,10 +202,6 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 	}
 
 	public InventorySummary getAvailableItems() {
-		return getAvailableItems(false);
-	}
-
-	public InventorySummary getAvailableItems(boolean scanInputSlots) {
 		if (availableItems != null && invVersionTracker.stillWaiting(targetInventory.getInventory()))
 			return availableItems;
 
@@ -189,8 +220,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		}
 
 		for (int slot = 0; slot < targetInv.getSlots(); slot++) {
-			int slotLimit = targetInv.getSlotLimit(slot);
-			availableItems.add(scanInputSlots ? targetInv.getStackInSlot(slot) : targetInv.extractItem(slot, slotLimit, true));
+			availableItems.add(targetInv.getStackInSlot(slot));
 		}
 
 		invVersionTracker.awaitNewVersion(targetInventory.getInventory());
@@ -326,7 +356,9 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		attemptToSend(null);
 
 		// dont send multiple packages when a button signal length is received
-		buttonCooldown = 40;
+		if (buttonCooldown <= 0) { // still on button cooldown, don't prolong it
+			buttonCooldown = 40;
+		}
 	}
 
 	public boolean unwrapBox(ItemStack box, boolean simulate) {
@@ -351,6 +383,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		boolean unpacked = toUse.unpack(level, target, targetState, facing, items, orderContext, simulate);
 
 		if (unpacked && !simulate) {
+			computerBehaviour.prepareComputerEvent(new PackageEvent(box, "package_received"));
 			previouslyUnwrapped = box;
 			animationInward = true;
 			animationTicks = CYCLE;
@@ -407,7 +440,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 					ItemStack extracted = targetInv.extractItem(slot, initialCount, true);
 					if (extracted.isEmpty())
 						continue;
-					if (requestQueue && !ItemHandlerHelper.canItemStacksStack(extracted, nextRequest.item()))
+					if (requestQueue && !ItemStack.isSameItemSameComponents(extracted, nextRequest.item()))
 						continue;
 
 					boolean bulky = !extracted.getItem()
@@ -472,6 +505,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 
 		ItemStack createdBox =
 			extractedPackageItem.isEmpty() ? PackageItem.containing(extractedItems) : extractedPackageItem.copy();
+		computerBehaviour.prepareComputerEvent(new PackageEvent(createdBox, "package_created"));
 		PackageItem.clearAddress(createdBox);
 
 		if (fixedAddress != null)
@@ -501,13 +535,18 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 		notifyUpdate();
 	}
 
-	protected void updateSignAddress() {
+	public void updateSignAddress() {
 		signBasedAddress = "";
 		for (Direction side : Iterate.directions) {
 			String address = getSign(side);
 			if (address == null || address.isBlank())
 				continue;
 			signBasedAddress = address;
+		}
+		if (computerBehaviour.hasAttachedComputer() && hasCustomComputerAddress) {
+			signBasedAddress = customComputerAddress;
+		} else {
+			hasCustomComputerAddress = false;
 		}
 	}
 
@@ -535,41 +574,48 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(compound, registries, clientPacket);
 		redstonePowered = compound.getBoolean("Active");
 		animationInward = compound.getBoolean("AnimationInward");
 		animationTicks = compound.getInt("AnimationTicks");
 		signBasedAddress = compound.getString("SignAddress");
-		heldBox = ItemStack.of(compound.getCompound("HeldBox"));
-		previouslyUnwrapped = ItemStack.of(compound.getCompound("InsertedBox"));
+		customComputerAddress = compound.getString("ComputerAddress");
+		hasCustomComputerAddress = compound.getBoolean("HasComputerAddress");
+		heldBox = ItemStack.parseOptional(registries, compound.getCompound("HeldBox"));
+		previouslyUnwrapped = ItemStack.parseOptional(registries, compound.getCompound("InsertedBox"));
 		if (clientPacket)
 			return;
-		queuedExitingPackages = NBTHelper.readCompoundList(compound.getList("QueuedExitingPackages", Tag.TAG_COMPOUND), BigItemStack::read);
+		queuedExitingPackages = NBTHelper.readCompoundList(compound.getList("QueuedExitingPackages", Tag.TAG_COMPOUND),
+			c -> CatnipCodecUtils.decode(BigItemStack.CODEC, registries, c)
+				.orElseThrow());
 		if (compound.contains("LastSummary"))
-			availableItems = InventorySummary.read(compound.getCompound("LastSummary"));
+			availableItems = CatnipCodecUtils.decode(InventorySummary.CODEC, registries, compound.getCompound("LastSummary"))
+				.orElse(null);
 	}
 
 	@Override
-	protected void write(CompoundTag compound, boolean clientPacket) {
-		super.write(compound, clientPacket);
+	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(compound, registries, clientPacket);
 		compound.putBoolean("Active", redstonePowered);
 		compound.putBoolean("AnimationInward", animationInward);
 		compound.putInt("AnimationTicks", animationTicks);
 		compound.putString("SignAddress", signBasedAddress);
-		compound.put("HeldBox", heldBox.serializeNBT());
-		compound.put("InsertedBox", previouslyUnwrapped.serializeNBT());
+		compound.putString("ComputerAddress", customComputerAddress);
+		compound.putBoolean("HasComputerAddress", hasCustomComputerAddress);
+		compound.put("HeldBox", heldBox.saveOptional(registries));
+		compound.put("InsertedBox", previouslyUnwrapped.saveOptional(registries));
 		if (clientPacket)
 			return;
-		compound.put("QueuedExitingPackages", NBTHelper.writeCompoundList(queuedExitingPackages, BigItemStack::write));
+		compound.put("QueuedExitingPackages", NBTHelper.writeCompoundList(queuedExitingPackages, bis -> {
+			if (CatnipCodecUtils.encode(BigItemStack.CODEC, registries, bis)
+				.orElse(new CompoundTag()) instanceof CompoundTag ct)
+				return ct;
+			return new CompoundTag();
+		}));
 		if (availableItems != null)
-			compound.put("LastSummary", availableItems.write());
-	}
-
-	@Override
-	public void invalidate() {
-		super.invalidate();
-		invProvider.invalidate();
+			compound.put("LastSummary", CatnipCodecUtils.encode(InventorySummary.CODEC, registries, availableItems)
+				.orElseThrow());
 	}
 
 	@Override
@@ -582,13 +628,6 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 					bigStack.stack.copy());
 		});
 		queuedExitingPackages.clear();
-	}
-
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == ForgeCapabilities.ITEM_HANDLER)
-			return invProvider.cast();
-		return super.getCapability(cap, side);
 	}
 
 	public float getTrayOffset(float partialTicks) {
@@ -638,5 +677,4 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 
 		return false;
 	}
-
 }

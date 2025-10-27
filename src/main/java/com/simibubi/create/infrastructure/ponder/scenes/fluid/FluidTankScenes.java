@@ -30,9 +30,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class FluidTankScenes {
 
@@ -167,8 +168,11 @@ public class FluidTankScenes {
 			.pointAt(util.vector().blockSurface(util.grid().at(2, 2, 2), Direction.WEST));
 		scene.idle(80);
 		scene.world().modifyBlockEntity(util.grid().at(4, 3, 0), SpoutBlockEntity.class,
-			be -> be.getCapability(ForgeCapabilities.FLUID_HANDLER)
-				.ifPresent(ifh -> ifh.fill(content, FluidAction.EXECUTE)));
+			be -> {
+				IFluidHandler handler = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				if (handler != null)
+					handler.fill(content, FluidAction.EXECUTE);
+			});
 
 		scene.world().moveSection(tankLink, util.vector().of(0, 0, 1), 7);
 		scene.world().multiplyKineticSpeed(spoutstuff, -1);

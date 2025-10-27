@@ -1,6 +1,7 @@
 package com.simibubi.create.content.equipment.armor;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.mixin.accessor.GuiAccessor;
 
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
@@ -12,13 +13,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 public class CardboardArmorStealthOverlay extends Gui implements IClientItemExtensions {
 
 	public CardboardArmorStealthOverlay() {
-		super(Minecraft.getInstance(), Minecraft.getInstance()
-			.getItemRenderer());
+		super(Minecraft.getInstance());
 	}
 
 	private static final ResourceLocation PACKAGE_BLUR_LOCATION = Create.asResource("textures/misc/package_blur.png");
@@ -42,9 +42,7 @@ public class CardboardArmorStealthOverlay extends Gui implements IClientItemExte
 		float value = opacity.getValue(partialTick);
 		if (value == 0)
 			return;
-		screenWidth = width;
-		screenHeight = height;
-		renderTextureOverlay(new GuiGraphics(mc, mc.renderBuffers()
+		((GuiAccessor) this).create$renderTextureOverlay(new GuiGraphics(mc, mc.renderBuffers()
 			.bufferSource()), PACKAGE_BLUR_LOCATION, value);
 	}
 

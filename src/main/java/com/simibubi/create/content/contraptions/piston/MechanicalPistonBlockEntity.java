@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -24,8 +25,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
 public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
-
-	protected boolean hadCollisionWithOtherPiston;
 	protected int extensionLength;
 
 	public MechanicalPistonBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -33,15 +32,15 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		extensionLength = compound.getInt("ExtensionLength");
-		super.read(compound, clientPacket);
+		super.read(compound, registries, clientPacket);
 	}
 
 	@Override
-	protected void write(CompoundTag tag, boolean clientPacket) {
+	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		tag.putInt("ExtensionLength", extensionLength);
-		super.write(tag, clientPacket);
+		super.write(tag, registries, clientPacket);
 	}
 
 	@Override
@@ -87,7 +86,7 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 		level.addFreshEntity(movedContraption);
 
 		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(level, worldPosition);
-		
+
 		if (contraption.containsBlockBreakers())
 			award(AllAdvancements.CONTRAPTION_ACTORS);
 	}
@@ -143,7 +142,8 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 	}
 
 	@Override
-	protected void visitNewPosition() {}
+	protected void visitNewPosition() {
+	}
 
 	@Override
 	protected Vec3 toMotionVector(float speed) {
@@ -155,7 +155,7 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 	@Override
 	protected Vec3 toPosition(float offset) {
 		Vec3 position = Vec3.atLowerCornerOf(getBlockState().getValue(BlockStateProperties.FACING)
-			.getNormal())
+				.getNormal())
 			.scale(offset);
 		return position.add(Vec3.atLowerCornerOf(movedContraption.getContraption().anchor));
 	}
@@ -176,5 +176,4 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 		return movedContraption == null ? 0
 			: ((PistonContraption) movedContraption.getContraption()).initialExtensionProgress;
 	}
-
 }

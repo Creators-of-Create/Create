@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -218,14 +219,14 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 	}
 
 	@Override
-	protected void write(CompoundTag compound, boolean clientPacket) {
+	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putBoolean("Waiting", waitingForSpeedChange);
 		compound.putFloat("Offset", offset);
 		if (sequencedOffsetLimit >= 0)
 			compound.putDouble("SequencedOffsetLimit", sequencedOffsetLimit);
-		AssemblyException.write(compound, lastException);
-		super.write(compound, clientPacket);
+		AssemblyException.write(compound, registries, lastException);
+		super.write(compound, registries, clientPacket);
 
 		if (clientPacket && forceMove) {
 			compound.putBoolean("ForceMovement", forceMove);
@@ -234,7 +235,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		boolean forceMovement = compound.contains("ForceMovement");
 		float offsetBefore = offset;
 
@@ -243,8 +244,8 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 		offset = compound.getFloat("Offset");
 		sequencedOffsetLimit =
 			compound.contains("SequencedOffsetLimit") ? compound.getDouble("SequencedOffsetLimit") : -1;
-		lastException = AssemblyException.read(compound);
-		super.read(compound, clientPacket);
+		lastException = AssemblyException.read(compound, registries);
+		super.read(compound, registries, clientPacket);
 
 		if (!clientPacket)
 			return;

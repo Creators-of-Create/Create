@@ -7,14 +7,18 @@ import java.util.function.IntFunction;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.simibubi.create.foundation.utility.CreateCodecs;
+import com.simibubi.create.foundation.codec.CreateCodecs;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
+
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 /**
  * Utility class representing non-empty slots in an item inventory.
@@ -24,6 +28,12 @@ public class ItemSlots {
 		Codec.unboundedMap(CreateCodecs.boundedIntStr(0), ItemStack.CODEC).fieldOf("items").forGetter(ItemSlots::toBoxedMap),
 		ExtraCodecs.NON_NEGATIVE_INT.fieldOf("size").forGetter(ItemSlots::getSize)
 	).apply(instance, ItemSlots::deserialize));
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, ItemSlots> STREAM_CODEC = StreamCodec.composite(
+		ByteBufCodecs.map(HashMap::new, ByteBufCodecs.INT, ItemStack.STREAM_CODEC), ItemSlots::toBoxedMap,
+		ByteBufCodecs.INT, ItemSlots::getSize,
+		ItemSlots::deserialize
+	);
 
 	private final Int2ObjectMap<ItemStack> map;
 	private int size;
@@ -94,12 +104,9 @@ public class ItemSlots {
 	}
 
 	public static Codec<ItemSlots> maxSizeCodec(int maxSize) {
-		return ExtraCodecs.validate(
-			CODEC,
-			slots -> slots.size <= maxSize
-				? DataResult.success(slots)
-				: DataResult.error(() -> "Slots above maximum of " + maxSize)
-		);
+		return CODEC.validate(slots -> slots.size <= maxSize
+			? DataResult.success(slots)
+			: DataResult.error(() -> "Slots above maximum of " + maxSize));
 	}
 
 	private static ItemSlots deserialize(Map<Integer, ItemStack> map, int size) {

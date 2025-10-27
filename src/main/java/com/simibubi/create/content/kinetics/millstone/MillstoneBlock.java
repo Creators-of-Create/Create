@@ -12,6 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,11 +27,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEntity>, ICogWheel {
 
@@ -49,15 +49,13 @@ public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEn
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-								 BlockHitResult hit) {
-		if (!player.getItemInHand(handIn)
-			.isEmpty())
-			return InteractionResult.PASS;
-		if (worldIn.isClientSide)
-			return InteractionResult.SUCCESS;
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (!stack.isEmpty())
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		if (level.isClientSide)
+			return ItemInteractionResult.SUCCESS;
 
-		withBlockEntityDo(worldIn, pos, millstone -> {
+		withBlockEntityDo(level, pos, millstone -> {
 			boolean emptyOutput = true;
 			IItemHandlerModifiable inv = millstone.outputInv;
 			for (int slot = 0; slot < inv.getSlots(); slot++) {
@@ -82,7 +80,7 @@ public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEn
 			millstone.sendData();
 		});
 
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -104,11 +102,11 @@ public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEn
 		if (millstone == null)
 			return;
 
-		LazyOptional<IItemHandler> capability = millstone.getCapability(ForgeCapabilities.ITEM_HANDLER);
-		if (!capability.isPresent())
+		IItemHandler capability = millstone.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, millstone.getBlockPos(), null);
+		if (capability == null)
 			return;
 
-		ItemStack remainder = capability.orElse(new ItemStackHandler())
+		ItemStack remainder = capability
 			.insertItem(0, itemEntity.getItem(), false);
 		if (remainder.isEmpty())
 			itemEntity.discard();
@@ -133,7 +131,7 @@ public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEn
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

@@ -1,12 +1,12 @@
 package com.simibubi.create.content.kinetics.crusher;
 
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import net.minecraft.world.item.crafting.RecipeInput;
 
-public abstract class AbstractCrushingRecipe extends ProcessingRecipe<RecipeWrapper> {
+public abstract class AbstractCrushingRecipe extends StandardProcessingRecipe<RecipeInput> {
 
 	public AbstractCrushingRecipe(IRecipeTypeInfo recipeType, ProcessingRecipeParams params) {
 		super(recipeType, params);

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.redstone.deskBell;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
@@ -11,7 +11,6 @@ import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -70,14 +69,13 @@ public class DeskBellBlock extends WrenchableDirectionalBlock
 	}
 
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
-		playSound(pPlayer, pLevel, pPos);
-		if (pLevel.isClientSide)
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+		playSound(player, level, pos);
+		if (level.isClientSide)
 			return InteractionResult.SUCCESS;
-		pLevel.setBlock(pPos, pState.setValue(POWERED, true), 3);
-		updateNeighbours(pState, pLevel, pPos);
-		withBlockEntityDo(pLevel, pPos, DeskBellBlockEntity::ding);
+		level.setBlock(pos, state.setValue(POWERED, true), Block.UPDATE_ALL);
+		updateNeighbours(state, level, pos);
+		withBlockEntityDo(level, pos, DeskBellBlockEntity::ding);
 		return InteractionResult.SUCCESS;
 	}
 
@@ -110,7 +108,7 @@ public class DeskBellBlock extends WrenchableDirectionalBlock
 	}
 
 	public void unPress(BlockState pState, Level pLevel, BlockPos pPos) {
-		pLevel.setBlock(pPos, pState.setValue(POWERED, false), 3);
+		pLevel.setBlock(pPos, pState.setValue(POWERED, false), Block.UPDATE_ALL);
 		updateNeighbours(pState, pLevel, pPos);
 	}
 
@@ -133,9 +131,9 @@ public class DeskBellBlock extends WrenchableDirectionalBlock
 	public BlockEntityType<? extends DeskBellBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.DESK_BELL.get();
 	}
-	
+
 	@Override
-	public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

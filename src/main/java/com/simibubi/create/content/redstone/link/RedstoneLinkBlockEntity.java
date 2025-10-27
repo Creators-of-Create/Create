@@ -2,6 +2,8 @@ package com.simibubi.create.content.redstone.link;
 
 import java.util.List;
 
+import net.minecraft.core.HolderLookup;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -67,18 +69,18 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putBoolean("Transmitter", transmitter);
 		compound.putInt("Receive", getReceivedSignal());
 		compound.putBoolean("ReceivedChanged", receivedSignalChanged);
 		compound.putInt("Transmit", transmittedSignal);
-		super.write(compound, clientPacket);
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		transmitter = compound.getBoolean("Transmitter");
-		super.read(compound, clientPacket);
+		super.read(compound, registries, clientPacket);
 
 		receivedSignal = compound.getInt("Receive");
 		receivedSignalChanged = compound.getBoolean("ReceivedChanged");
@@ -114,16 +116,27 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 		}
 
 		if (receivedSignalChanged) {
-			Direction attachedFace = blockState.getValue(RedstoneLinkBlock.FACING)
-				.getOpposite();
-			BlockPos attachedPos = worldPosition.relative(attachedFace);
-			level.blockUpdated(worldPosition, level.getBlockState(worldPosition)
-				.getBlock());
-			level.blockUpdated(attachedPos, level.getBlockState(attachedPos)
-				.getBlock());
-			receivedSignalChanged = false;
-			panelSupport.notifyPanels();
+			updateSelfAndAttached(blockState);
 		}
+	}
+
+	@Override
+	public void remove() {
+		super.remove();
+
+		updateSelfAndAttached(getBlockState());
+	}
+
+	public void updateSelfAndAttached(BlockState blockState) {
+		Direction attachedFace = blockState.getValue(RedstoneLinkBlock.FACING)
+			.getOpposite();
+		BlockPos attachedPos = worldPosition.relative(attachedFace);
+		level.blockUpdated(worldPosition, level.getBlockState(worldPosition)
+			.getBlock());
+		level.blockUpdated(attachedPos, level.getBlockState(attachedPos)
+			.getBlock());
+		receivedSignalChanged = false;
+		panelSupport.notifyPanels();
 	}
 
 	protected Boolean isTransmitterBlock() {

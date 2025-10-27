@@ -23,7 +23,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class ShadowRenderHelper {
 
 	private static final RenderType SHADOW_LAYER =
-		RenderType.entityNoOutline(new ResourceLocation("textures/misc/shadow.png"));
+		RenderType.entityNoOutline(ResourceLocation.withDefaultNamespace("textures/misc/shadow.png"));
 
 	public static void renderShadow(PoseStack matrixStack, MultiBufferSource buffer, float opacity, float radius) {
 		PoseStack.Pose entry = matrixStack.last();
@@ -101,13 +101,12 @@ public class ShadowRenderHelper {
 
 	private static void shadowVertex(PoseStack.Pose entry, VertexConsumer builder, float alpha,
 		float x, float y, float z, float u, float v) {
-		builder.vertex(entry.pose(), x, y, z)
-			.color(1.0F, 1.0F, 1.0F, alpha)
-			.uv(u, v)
-			.overlayCoords(OverlayTexture.NO_OVERLAY)
-			.uv2(LightTexture.FULL_BRIGHT)
-			.normal(entry.normal(), 0.0F, 1.0F, 0.0F)
-			.endVertex();
+		builder.addVertex(entry.pose(), x, y, z)
+			.setColor(1.0F, 1.0F, 1.0F, alpha)
+			.setUv(u, v)
+			.setOverlay(OverlayTexture.NO_OVERLAY)
+			.setLight(LightTexture.FULL_BRIGHT)
+			.setNormal(entry.copy(), 0.0F, 1.0F, 0.0F);
 	}
 
 }

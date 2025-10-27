@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class FunnelScenes {
 
@@ -395,7 +395,7 @@ public class FunnelScenes {
 			.placeNearTarget();
 		scene.idle(10);
 		scene.world().createItemOnBeltLike(brassFunnel.below()
-			.north(), Direction.SOUTH, ItemHandlerHelper.copyStackWithSize(itemStack, 64));
+			.north(), Direction.SOUTH, itemStack.copyWithCount(64));
 		scene.world().flapFunnel(brassFunnel, true);
 		scene.idle(60);
 

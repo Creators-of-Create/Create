@@ -12,13 +12,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+
+import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class DrillBlockEntity extends BlockBreakingKineticBlockEntity {
 
@@ -50,7 +52,7 @@ public class DrillBlockEntity extends BlockBreakingKineticBlockEntity {
 		if (inv == null && !(blockEntityBelow instanceof HopperBlockEntity)
 			&& !(blockEntityAbove instanceof ChuteBlockEntity chute && chute.getItemMotion() > 0))
 			return false;
-		
+
 		CobbleGenBlockConfiguration config =
 			CobbleGenOptimisation.getConfig(level, worldPosition, getBlockState().getValue(DrillBlock.FACING));
 		if (config == null)
@@ -71,8 +73,7 @@ public class DrillBlockEntity extends BlockBreakingKineticBlockEntity {
 			for (ItemStack stack : Block.getDrops(stateToBreak, sl, breakingPos, null))
 				inv.handleInsertion(stack, Direction.UP, false);
 		else if (blockEntityBelow instanceof HopperBlockEntity hbe) {
-			IItemHandler handler = hbe.getCapability(ForgeCapabilities.ITEM_HANDLER)
-				.orElse(null);
+			IItemHandler handler = level.getCapability(ItemHandler.BLOCK, hbe.getBlockPos(), null);
 			if (handler != null)
 				for (ItemStack stack : Block.getDrops(stateToBreak, sl, breakingPos, null))
 					ItemHandlerHelper.insertItemStacked(handler, stack, false);
@@ -83,7 +84,7 @@ public class DrillBlockEntity extends BlockBreakingKineticBlockEntity {
 					chute.setItem(stack, 0);
 		}
 
-		level.levelEvent(2001, breakingPos, Block.getId(stateToBreak));
+		level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, breakingPos, Block.getId(stateToBreak));
 		return true;
 	}
 

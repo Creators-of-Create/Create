@@ -6,15 +6,16 @@ import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class FactoryPanelSetItemMenu extends GhostItemMenu<FactoryPanelBehaviour> {
 
@@ -22,7 +23,7 @@ public class FactoryPanelSetItemMenu extends GhostItemMenu<FactoryPanelBehaviour
 		super(type, id, inv, contentHolder);
 	}
 
-	public FactoryPanelSetItemMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public FactoryPanelSetItemMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
@@ -42,8 +43,8 @@ public class FactoryPanelSetItemMenu extends GhostItemMenu<FactoryPanelBehaviour
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected FactoryPanelBehaviour createOnClient(FriendlyByteBuf extraData) {
-		FactoryPanelPosition pos = FactoryPanelPosition.receive(extraData);
+	protected FactoryPanelBehaviour createOnClient(RegistryFriendlyByteBuf extraData) {
+		FactoryPanelPosition pos = FactoryPanelPosition.STREAM_CODEC.decode(extraData);
 		return FactoryPanelBehaviour.at(Minecraft.getInstance().level, pos);
 	}
 

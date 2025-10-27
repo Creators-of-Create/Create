@@ -1,6 +1,5 @@
 package com.simibubi.create.content.equipment.extendoGrip;
 
-import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -8,23 +7,26 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllPackets;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.Holder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -37,52 +39,51 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
-import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.level.BlockEvent.BreakEvent;
-import net.minecraftforge.event.level.BlockEvent.EntityPlaceEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockEvent.BreakEvent;
+import net.neoforged.neoforge.event.level.BlockEvent.EntityPlaceEvent;
 
 @EventBusSubscriber
 public class ExtendoGripItem extends Item {
 	public static final int MAX_DAMAGE = 200;
 
 	public static final AttributeModifier singleRangeAttributeModifier =
-		new AttributeModifier(UUID.fromString("7f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 3,
-			AttributeModifier.Operation.ADDITION);
+		new AttributeModifier(Create.asResource("single_range_attribute_modifier"), 3,
+			AttributeModifier.Operation.ADD_VALUE);
 	public static final AttributeModifier doubleRangeAttributeModifier =
-		new AttributeModifier(UUID.fromString("8f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 5,
-			AttributeModifier.Operation.ADDITION);
+		new AttributeModifier(Create.asResource("double_range_attribute_modifier"), 5,
+			AttributeModifier.Operation.ADD_VALUE);
 
-	private static final Supplier<Multimap<Attribute, AttributeModifier>> rangeModifier = Suppliers.memoize(() ->
+	private static final Supplier<Multimap<Holder<Attribute>, AttributeModifier>> rangeModifier = Suppliers.memoize(() ->
 		// Holding an ExtendoGrip
-		ImmutableMultimap.of(ForgeMod.BLOCK_REACH.get(), singleRangeAttributeModifier));
-	private static final Supplier<Multimap<Attribute, AttributeModifier>> doubleRangeModifier = Suppliers.memoize(() ->
+		ImmutableMultimap.of(Attributes.BLOCK_INTERACTION_RANGE, singleRangeAttributeModifier));
+	private static final Supplier<Multimap<Holder<Attribute>, AttributeModifier>> doubleRangeModifier = Suppliers.memoize(() ->
 		// Holding two ExtendoGrips o.O
-		ImmutableMultimap.of(ForgeMod.BLOCK_REACH.get(), doubleRangeAttributeModifier));
+		ImmutableMultimap.of(Attributes.BLOCK_INTERACTION_RANGE, doubleRangeAttributeModifier));
 
 	private static DamageSource lastActiveDamageSource;
 
 	public ExtendoGripItem(Properties properties) {
-		super(properties.defaultDurability(MAX_DAMAGE));
+		super(properties.durability(MAX_DAMAGE));
 	}
 
 	public static final String EXTENDO_MARKER = "createExtendo";
 	public static final String DUAL_EXTENDO_MARKER = "createDualExtendo";
 
 	@SubscribeEvent
-	public static void holdingExtendoGripIncreasesRange(LivingTickEvent event) {
+	public static void holdingExtendoGripIncreasesRange(EntityTickEvent.Pre event) {
 		if (!(event.getEntity() instanceof Player player))
 			return;
 
@@ -149,8 +150,7 @@ public class ExtendoGripItem extends Item {
 			return;
 
 		// Modified version of GameRenderer#getMouseOver
-		double d0 = player.getAttribute(ForgeMod.BLOCK_REACH.get())
-			.getValue();
+		double d0 = player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE);
 		if (!player.isCreative())
 			d0 -= 0.5f;
 		Vec3 Vector3d = player.getEyePosition(AnimationTickHolder.getPartialTicks());
@@ -197,17 +197,16 @@ public class ExtendoGripItem extends Item {
 			return;
 		if (player.level().isClientSide)
 			return;
-		InteractionHand hand = InteractionHand.MAIN_HAND;
+		EquipmentSlot equipmentSlot = EquipmentSlot.MAINHAND;
 		ItemStack extendo = player.getMainHandItem();
 		if (!AllItems.EXTENDO_GRIP.isIn(extendo)) {
 			extendo = player.getOffhandItem();
-			hand = InteractionHand.OFF_HAND;
+			equipmentSlot = EquipmentSlot.OFFHAND;
 		}
 		if (!AllItems.EXTENDO_GRIP.isIn(extendo))
 			return;
-		final InteractionHand h = hand;
 		if (!BacktankUtil.canAbsorbDamage(player, maxUses()))
-			extendo.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(h));
+			extendo.hurtAndBreak(1, player, equipmentSlot);
 	}
 
 	@Override
@@ -235,7 +234,7 @@ public class ExtendoGripItem extends Item {
 	}
 
 	@SubscribeEvent
-	public static void bufferLivingAttackEvent(LivingAttackEvent event) {
+	public static void bufferLivingAttackEvent(LivingIncomingDamageEvent event) {
 		// Workaround for removed patch to get the attacking entity.
 		lastActiveDamageSource = event.getSource();
 
@@ -280,7 +279,7 @@ public class ExtendoGripItem extends Item {
 			return;
 		Player player = (Player) entity;
 		if (isHoldingExtendoGrip(player))
-			AllPackets.getChannel().sendToServer(new ExtendoGripInteractionPacket(target));
+			CatnipServices.NETWORK.sendToServer(new ExtendoGripInteractionPacket(target));
 	}
 
 	@SubscribeEvent
@@ -292,20 +291,18 @@ public class ExtendoGripItem extends Item {
 			return;
 		Player player = (Player) entity;
 		if (isHoldingExtendoGrip(player))
-			AllPackets.getChannel().sendToServer(new ExtendoGripInteractionPacket(target, event.getHand()));
+			CatnipServices.NETWORK.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand()));
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void notifyServerOfLongRangeSpecificInteractions(PlayerInteractEvent.EntityInteractSpecific event) {
-		Entity entity = event.getEntity();
+		Player entity = event.getEntity();
 		Entity target = event.getTarget();
 		if (!isUncaughtClientInteraction(entity, target))
 			return;
-		Player player = (Player) entity;
-		if (isHoldingExtendoGrip(player))
-			AllPackets.getChannel()
-				.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand(), event.getLocalPos()));
+		if (isHoldingExtendoGrip(entity))
+			CatnipServices.NETWORK.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand(), event.getLocalPos()));
 	}
 
 	public static boolean isHoldingExtendoGrip(Player player) {

@@ -1,5 +1,8 @@
 package com.simibubi.create.content.redstone.diodes;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -10,11 +13,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -26,6 +31,8 @@ public class BrassDiodeBlock extends AbstractDiodeBlock implements IBE<BrassDiod
 	public static final BooleanProperty POWERING = BooleanProperty.create("powering");
 	public static final BooleanProperty INVERTED = BooleanProperty.create("inverted");
 
+	public static final MapCodec<BrassDiodeBlock> CODEC = simpleCodec(BrassDiodeBlock::new);
+
 	public BrassDiodeBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(POWERED, false)
@@ -34,25 +41,24 @@ public class BrassDiodeBlock extends AbstractDiodeBlock implements IBE<BrassDiod
 	}
 
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player player, InteractionHand pHand,
-		BlockHitResult pHit) {
-		return toggle(pLevel, pPos, pState, player, pHand);
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		return toggle(level, pos, state, player, hand);
 	}
 
-	public InteractionResult toggle(Level pLevel, BlockPos pPos, BlockState pState, Player player,
-		InteractionHand pHand) {
+	public ItemInteractionResult toggle(Level pLevel, BlockPos pPos, BlockState pState, Player player,
+									InteractionHand pHand) {
 		if (!player.mayBuild())
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (player.isShiftKeyDown())
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (AllItems.WRENCH.isIn(player.getItemInHand(pHand)))
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (pLevel.isClientSide)
-			return InteractionResult.SUCCESS;
-		pLevel.setBlock(pPos, pState.cycle(INVERTED), 3);
+			return ItemInteractionResult.SUCCESS;
+		pLevel.setBlock(pPos, pState.cycle(INVERTED), Block.UPDATE_ALL);
 		float f = !pState.getValue(INVERTED) ? 0.6F : 0.5F;
 		pLevel.playSound(null, pPos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -72,7 +78,7 @@ public class BrassDiodeBlock extends AbstractDiodeBlock implements IBE<BrassDiod
 	}
 
 	@Override
-	protected int getDelay(BlockState p_196346_1_) {
+	protected int getDelay(BlockState state) {
 		return 2;
 	}
 
@@ -96,4 +102,8 @@ public class BrassDiodeBlock extends AbstractDiodeBlock implements IBE<BrassDiod
 				: AllBlockEntityTypes.PULSE_REPEATER.get();
 	}
 
+	@Override
+	protected @NotNull MapCodec<? extends DiodeBlock> codec() {
+		return CODEC;
+	}
 }

@@ -16,8 +16,8 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.RenderHandEvent;
 
 public abstract class ShootableGadgetRenderHandler {
 
@@ -97,7 +97,7 @@ public abstract class ShootableGadgetRenderHandler {
 
 		// Render arm
 		ms.pushPose();
-		RenderSystem.setShaderTexture(0, player.getSkinTextureLocation());
+		RenderSystem.setShaderTexture(0, player.getSkin().texture());
 
 		float flip = rightHand ? 1.0F : -1.0F;
 		float f1 = Mth.sqrt(event.getSwingProgress());

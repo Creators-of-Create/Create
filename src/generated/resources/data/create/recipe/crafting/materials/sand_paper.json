@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "tag": "c:sands/colorless"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:sand_paper"
+  }
+}

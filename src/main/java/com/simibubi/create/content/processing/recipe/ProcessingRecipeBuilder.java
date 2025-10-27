@@ -2,305 +2,229 @@ package com.simibubi.create.content.processing.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.common.base.Joiner;
+import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.DatagenMod;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe.Factory;
 import com.simibubi.create.foundation.data.SimpleDatagenIngredient;
-import com.simibubi.create.foundation.data.recipe.Mods;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
-import com.tterrag.registrate.util.DataIngredient;
 
-import net.createmod.catnip.data.Pair;
 import net.minecraft.core.NonNullList;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
-import net.minecraftforge.common.crafting.conditions.NotCondition;
-import net.minecraftforge.fluids.FluidStack;
 
-public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.common.conditions.NotCondition;
+import net.neoforged.neoforge.common.crafting.ICustomIngredient;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+
+public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, R extends ProcessingRecipe<?, P>, S extends ProcessingRecipeBuilder<P, R, S>> {
 	protected ResourceLocation recipeId;
-	protected ProcessingRecipeFactory<T> factory;
-	protected ProcessingRecipeParams params;
+	protected Factory<P, R> factory;
+	protected P params;
 	protected List<ICondition> recipeConditions;
 
-	public ProcessingRecipeBuilder(ProcessingRecipeFactory<T> factory, ResourceLocation recipeId) {
+	public ProcessingRecipeBuilder(Factory<P, R> factory, ResourceLocation recipeId) {
 		this.recipeId = recipeId;
-		params = new ProcessingRecipeParams(recipeId);
-		recipeConditions = new ArrayList<>();
 		this.factory = factory;
+		this.params = createParams();
+		this.recipeConditions = new ArrayList<>();
 	}
 
-	public ProcessingRecipeBuilder<T> withItemIngredients(Ingredient... ingredients) {
+	protected abstract P createParams();
+
+	public abstract S self();
+
+	public S withItemIngredients(Ingredient... ingredients) {
 		return withItemIngredients(NonNullList.of(Ingredient.EMPTY, ingredients));
 	}
 
-	public ProcessingRecipeBuilder<T> withItemIngredients(NonNullList<Ingredient> ingredients) {
+	public S withItemIngredients(NonNullList<Ingredient> ingredients) {
 		params.ingredients = ingredients;
-		return this;
+		return self();
 	}
 
-	public ProcessingRecipeBuilder<T> withSingleItemOutput(ItemStack output) {
+	public S withSingleItemOutput(ItemStack output) {
 		return withItemOutputs(new ProcessingOutput(output, 1));
 	}
 
-	public ProcessingRecipeBuilder<T> withItemOutputs(ProcessingOutput... outputs) {
+	public S withItemOutputs(ProcessingOutput... outputs) {
 		return withItemOutputs(NonNullList.of(ProcessingOutput.EMPTY, outputs));
 	}
 
-	public ProcessingRecipeBuilder<T> withItemOutputs(NonNullList<ProcessingOutput> outputs) {
+	public S withItemOutputs(NonNullList<ProcessingOutput> outputs) {
 		params.results = outputs;
-		return this;
+		return self();
 	}
 
-	public ProcessingRecipeBuilder<T> withFluidIngredients(FluidIngredient... ingredients) {
-		return withFluidIngredients(NonNullList.of(FluidIngredient.EMPTY, ingredients));
+	public S withFluidIngredients(SizedFluidIngredient... ingredients) {
+		return withFluidIngredients(NonNullList.of(new SizedFluidIngredient(FluidIngredient.empty(), 1000), ingredients));
 	}
 
-	public ProcessingRecipeBuilder<T> withFluidIngredients(NonNullList<FluidIngredient> ingredients) {
+	public S withFluidIngredients(NonNullList<SizedFluidIngredient> ingredients) {
 		params.fluidIngredients = ingredients;
-		return this;
+		return self();
 	}
 
-	public ProcessingRecipeBuilder<T> withFluidOutputs(FluidStack... outputs) {
+	public S withFluidOutputs(FluidStack... outputs) {
 		return withFluidOutputs(NonNullList.of(FluidStack.EMPTY, outputs));
 	}
 
-	public ProcessingRecipeBuilder<T> withFluidOutputs(NonNullList<FluidStack> outputs) {
+	public S withFluidOutputs(NonNullList<FluidStack> outputs) {
 		params.fluidResults = outputs;
-		return this;
+		return self();
 	}
 
-	public ProcessingRecipeBuilder<T> duration(int ticks) {
+	public S duration(int ticks) {
 		params.processingDuration = ticks;
-		return this;
+		return self();
 	}
 
-	public ProcessingRecipeBuilder<T> averageProcessingDuration() {
+	public S averageProcessingDuration() {
 		return duration(100);
 	}
 
-	public ProcessingRecipeBuilder<T> requiresHeat(HeatCondition condition) {
+	public S requiresHeat(HeatCondition condition) {
 		params.requiredHeat = condition;
-		return this;
+		return self();
 	}
 
-	public T build() {
+	public R build() {
 		return factory.create(params);
 	}
 
-	public void build(Consumer<FinishedRecipe> consumer) {
-		consumer.accept(new DataGenResult<>(build(), recipeConditions));
+	public void build(RecipeOutput consumer) {
+		R recipe = build();
+		IRecipeTypeInfo recipeType = recipe.getTypeInfo();
+		ResourceLocation typeId = recipeType.getId();
+		ResourceLocation id = recipeId.withPrefix(typeId.getPath() + "/");
+		var errors = recipe.validate();
+		if (!errors.isEmpty()) {
+			errors.add(recipe.getClass().getSimpleName() + "with id " + id + " failed validation:");
+			Create.LOGGER.warn(Joiner.on('\n').join(errors));
+		}
+		consumer.accept(id, recipe, null, recipeConditions.toArray(new ICondition[0]));
 	}
 
 	// Datagen shortcuts
 
-	public ProcessingRecipeBuilder<T> require(TagKey<Item> tag) {
+	public S require(TagKey<Item> tag) {
 		return require(Ingredient.of(tag));
 	}
 
-	public ProcessingRecipeBuilder<T> require(ItemLike item) {
+	public S require(ItemLike item) {
 		return require(Ingredient.of(item));
 	}
 
-	public ProcessingRecipeBuilder<T> require(Ingredient ingredient) {
+	public S require(Ingredient ingredient) {
 		params.ingredients.add(ingredient);
-		return this;
+		return self();
 	}
 
-	public ProcessingRecipeBuilder<T> require(Mods mod, String id) {
-		params.ingredients.add(new SimpleDatagenIngredient(mod, id));
-		return this;
+	// TODO
+	public S require(ICustomIngredient ingredient) {
+		params.ingredients.add(ingredient.toVanilla());
+		return self();
 	}
 
-	public ProcessingRecipeBuilder<T> require(ResourceLocation ingredient) {
-		params.ingredients.add(DataIngredient.ingredient(null, ingredient));
-		return this;
+	public S require(DatagenMod mod, String id) {
+		params.ingredients.add(new SimpleDatagenIngredient(mod, id).toVanilla());
+		return self();
 	}
 
-	public ProcessingRecipeBuilder<T> require(Fluid fluid, int amount) {
-		return require(FluidIngredient.fromFluid(fluid, amount));
+	public S require(FlowingFluid fluid, int amount) {
+		return require(SizedFluidIngredient.of(fluid.getSource(), amount));
 	}
 
-	public ProcessingRecipeBuilder<T> require(TagKey<Fluid> fluidTag, int amount) {
-		return require(FluidIngredient.fromTag(fluidTag, amount));
+	public S require(TagKey<Fluid> fluidTag, int amount) {
+		return require(SizedFluidIngredient.of(fluidTag, amount));
 	}
 
-	public ProcessingRecipeBuilder<T> require(FluidIngredient ingredient) {
+	public S require(SizedFluidIngredient ingredient) {
 		params.fluidIngredients.add(ingredient);
-		return this;
+		return self();
 	}
 
-	public ProcessingRecipeBuilder<T> output(ItemLike item) {
+	public S output(ItemLike item) {
 		return output(item, 1);
 	}
 
-	public ProcessingRecipeBuilder<T> output(float chance, ItemLike item) {
+	public S output(float chance, ItemLike item) {
 		return output(chance, item, 1);
 	}
 
-	public ProcessingRecipeBuilder<T> output(ItemLike item, int amount) {
+	public S output(ItemLike item, int amount) {
 		return output(1, item, amount);
 	}
 
-	public ProcessingRecipeBuilder<T> output(float chance, ItemLike item, int amount) {
+	public S output(float chance, ItemLike item, int amount) {
 		return output(chance, new ItemStack(item, amount));
 	}
 
-	public ProcessingRecipeBuilder<T> output(ItemStack output) {
+	public S output(ItemStack output) {
 		return output(1, output);
 	}
 
-	public ProcessingRecipeBuilder<T> output(float chance, ItemStack output) {
+	public S output(float chance, ItemStack output) {
 		return output(new ProcessingOutput(output, chance));
 	}
 
-	public ProcessingRecipeBuilder<T> output(float chance, Mods mod, String id, int amount) {
-		return output(new ProcessingOutput(Pair.of(mod.asResource(id), amount), chance));
+	public S output(float chance, DatagenMod mod, String id, int amount) {
+		return output(new ProcessingOutput(mod.asResource(id), amount, chance));
 	}
 
-	public ProcessingRecipeBuilder<T> output(ResourceLocation id) {
+	public S output(ResourceLocation id) {
 		return output(1, id, 1);
 	}
 
-	public ProcessingRecipeBuilder<T> output(Mods mod, String id) {
+	public S output(DatagenMod mod, String id) {
 		return output(1, mod.asResource(id), 1);
 	}
 
-	public ProcessingRecipeBuilder<T> output(float chance, ResourceLocation registryName, int amount) {
-		return output(new ProcessingOutput(Pair.of(registryName, amount), chance));
+	public S output(float chance, ResourceLocation registryName, int amount) {
+		return output(new ProcessingOutput(registryName, amount, chance));
 	}
 
-	public ProcessingRecipeBuilder<T> output(ProcessingOutput output) {
+	public S output(ProcessingOutput output) {
 		params.results.add(output);
-		return this;
+		return self();
 	}
 
-	public ProcessingRecipeBuilder<T> output(Fluid fluid, int amount) {
+	public S output(Fluid fluid, int amount) {
 		fluid = FluidHelper.convertToStill(fluid);
 		return output(new FluidStack(fluid, amount));
 	}
 
-	public ProcessingRecipeBuilder<T> output(FluidStack fluidStack) {
+	public S output(FluidStack fluidStack) {
 		params.fluidResults.add(fluidStack);
-		return this;
-	}
-
-	public ProcessingRecipeBuilder<T> toolNotConsumed() {
-		params.keepHeldItem = true;
-		return this;
+		return self();
 	}
 
 	//
 
-	public ProcessingRecipeBuilder<T> whenModLoaded(String modid) {
+	public S whenModLoaded(String modid) {
 		return withCondition(new ModLoadedCondition(modid));
 	}
 
-	public ProcessingRecipeBuilder<T> whenModMissing(String modid) {
+	public S whenModMissing(String modid) {
 		return withCondition(new NotCondition(new ModLoadedCondition(modid)));
 	}
 
-	public ProcessingRecipeBuilder<T> withCondition(ICondition condition) {
+	public S withCondition(ICondition condition) {
 		recipeConditions.add(condition);
-		return this;
-	}
-
-	@FunctionalInterface
-	public interface ProcessingRecipeFactory<T extends ProcessingRecipe<?>> {
-		T create(ProcessingRecipeParams params);
-	}
-
-	public static class ProcessingRecipeParams {
-
-		protected ResourceLocation id;
-		protected NonNullList<Ingredient> ingredients;
-		protected NonNullList<ProcessingOutput> results;
-		protected NonNullList<FluidIngredient> fluidIngredients;
-		protected NonNullList<FluidStack> fluidResults;
-		protected int processingDuration;
-		protected HeatCondition requiredHeat;
-
-		public boolean keepHeldItem;
-
-		protected ProcessingRecipeParams(ResourceLocation id) {
-			this.id = id;
-			ingredients = NonNullList.create();
-			results = NonNullList.create();
-			fluidIngredients = NonNullList.create();
-			fluidResults = NonNullList.create();
-			processingDuration = 0;
-			requiredHeat = HeatCondition.NONE;
-			keepHeldItem = false;
-		}
-
-	}
-
-	public static class DataGenResult<S extends ProcessingRecipe<?>> implements FinishedRecipe {
-
-		private List<ICondition> recipeConditions;
-		private ProcessingRecipeSerializer<S> serializer;
-		private ResourceLocation id;
-		private S recipe;
-
-		@SuppressWarnings("unchecked")
-		public DataGenResult(S recipe, List<ICondition> recipeConditions) {
-			this.recipe = recipe;
-			this.recipeConditions = recipeConditions;
-			IRecipeTypeInfo recipeType = this.recipe.getTypeInfo();
-			ResourceLocation typeId = recipeType.getId();
-
-			if (!(recipeType.getSerializer() instanceof ProcessingRecipeSerializer))
-				throw new IllegalStateException("Cannot datagen ProcessingRecipe of type: " + typeId);
-
-			this.id = new ResourceLocation(recipe.getId().getNamespace(),
-					typeId.getPath() + "/" + recipe.getId().getPath());
-			this.serializer = (ProcessingRecipeSerializer<S>) recipe.getSerializer();
-		}
-
-		@Override
-		public void serializeRecipeData(JsonObject json) {
-			serializer.write(json, recipe);
-			if (recipeConditions.isEmpty())
-				return;
-
-			JsonArray conds = new JsonArray();
-			recipeConditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
-			json.add("conditions", conds);
-		}
-
-		@Override
-		public ResourceLocation getId() {
-			return id;
-		}
-
-		@Override
-		public RecipeSerializer<?> getType() {
-			return serializer;
-		}
-
-		@Override
-		public JsonObject serializeAdvancement() {
-			return null;
-		}
-
-		@Override
-		public ResourceLocation getAdvancementId() {
-			return null;
-		}
-
+		return self();
 	}
 
 }

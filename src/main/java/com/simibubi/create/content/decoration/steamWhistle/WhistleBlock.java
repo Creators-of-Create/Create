@@ -20,7 +20,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -113,18 +113,16 @@ public class WhistleBlock extends Block implements IBE<WhistleBlockEntity>, IWre
 	}
 
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
-		if (pPlayer == null)
-			return InteractionResult.PASS;
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (player == null)
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		ItemStack heldItem = pPlayer.getItemInHand(pHand);
-		if (AllBlocks.STEAM_WHISTLE.isIn(heldItem)) {
-			incrementSize(pLevel, pPos);
-			return InteractionResult.SUCCESS;
+		if (AllBlocks.STEAM_WHISTLE.isIn(stack)) {
+			incrementSize(level, pos);
+			return ItemInteractionResult.SUCCESS;
 		}
 
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	public static void incrementSize(LevelAccessor pLevel, BlockPos pPos) {
@@ -202,7 +200,7 @@ public class WhistleBlock extends Block implements IBE<WhistleBlockEntity>, IWre
 			return;
 		boolean previouslyPowered = state.getValue(POWERED);
 		if (previouslyPowered != worldIn.hasNeighborSignal(pos))
-			worldIn.setBlock(pos, state.cycle(POWERED), 2);
+			worldIn.setBlock(pos, state.cycle(POWERED), Block.UPDATE_CLIENTS);
 	}
 
 	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
@@ -224,7 +222,7 @@ public class WhistleBlock extends Block implements IBE<WhistleBlockEntity>, IWre
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

@@ -36,10 +36,11 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class PipeScenes {
 
@@ -258,7 +259,7 @@ public class PipeScenes {
 		scene.world().setBlock(util.grid().at(3, 1, 3), AllBlocks.GLASS_FLUID_PIPE.getDefaultState()
 			.setValue(AxisPipeBlock.AXIS, Axis.Z), false);
 		scene.idle(10);
-//		scene.world.multiplyKineticSpeed(util.select.everywhere(), 2);
+//		scene.world().multiplyKineticSpeed(util.select.everywhere(), 2);
 		scene.world().propagatePipeChange(pumpPos);
 		ElementLink<WorldSectionElement> water = scene.world().showIndependentSection(waterSourceS, Direction.DOWN);
 		scene.world().moveSection(water, util.vector().of(0, 0, 1), 0);
@@ -493,9 +494,11 @@ public class PipeScenes {
 		Selection basin = util.select().position(basinPos);
 		BlockPos smartPos = util.grid().at(3, 1, 1);
 
-		scene.world().modifyBlockEntity(basinPos, BasinBlockEntity.class,
-			be -> be.getCapability(ForgeCapabilities.FLUID_HANDLER)
-				.ifPresent(fh -> fh.fill(new FluidStack(ForgeMod.MILK.get(), 1000), FluidAction.EXECUTE)));
+		scene.world().modifyBlockEntity(basinPos, BasinBlockEntity.class, be -> {
+			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			if (ifh != null)
+				ifh.fill(new FluidStack(NeoForgeMod.MILK.get(), 1000), FluidAction.EXECUTE);
+		});
 
 		scene.world().setBlock(util.grid().at(3, 1, 3), AllBlocks.FLUID_PIPE.get()
 			.getAxisState(Axis.X), false);
@@ -575,9 +578,11 @@ public class PipeScenes {
 			scene.idle(2);
 		}
 		scene.idle(15);
-		scene.world().modifyBlockEntity(basinPos, BasinBlockEntity.class,
-			be -> be.getCapability(ForgeCapabilities.FLUID_HANDLER)
-				.ifPresent(fh -> fh.fill(chocolate, FluidAction.EXECUTE)));
+		scene.world().modifyBlockEntity(basinPos, BasinBlockEntity.class, be -> {
+			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			if (ifh != null)
+				ifh.fill(chocolate, FluidAction.EXECUTE);
+		});
 		scene.idle(10);
 
 		scene.overlay().showText(80)

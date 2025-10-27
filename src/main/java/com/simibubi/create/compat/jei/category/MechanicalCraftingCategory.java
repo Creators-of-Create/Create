@@ -5,6 +5,10 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.minecraft.world.item.Item;
+
+import net.minecraft.world.item.crafting.ShapedRecipe;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -30,7 +34,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import net.minecraftforge.common.crafting.IShapedRecipe;
+import org.joml.Matrix4fStack;
 
 @ParametersAreNonnullByDefault
 public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRecipe> {
@@ -84,11 +88,11 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	}
 
 	private static int getWidth(CraftingRecipe recipe) {
-		return recipe instanceof IShapedRecipe<?> ? ((IShapedRecipe<?>) recipe).getRecipeWidth() : 1;
+		return recipe instanceof ShapedRecipe ? ((ShapedRecipe) recipe).getWidth() : 1;
 	}
 
 	private static int getHeight(CraftingRecipe recipe) {
-		return recipe instanceof IShapedRecipe<?> ? ((IShapedRecipe<?>) recipe).getRecipeHeight() : 1;
+		return recipe instanceof ShapedRecipe ? ((ShapedRecipe) recipe).getHeight() : 1;
 	}
 
 	@Override
@@ -154,8 +158,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 			matrixStack.scale(scale, scale, scale);
 
 			if (ingredient != null) {
-				PoseStack modelViewStack = RenderSystem.getModelViewStack();
-				modelViewStack.pushPose();
+				Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
+				modelViewStack.pushMatrix();
 				RenderSystem.applyModelViewMatrix();
 				RenderSystem.enableDepthTest();
 				Minecraft minecraft = Minecraft.getInstance();
@@ -163,7 +167,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 				graphics.renderItem(ingredient, 0, 0);
 				graphics.renderItemDecorations(font, ingredient, 0, 0, null);
 				RenderSystem.disableBlend();
-				modelViewStack.popPose();
+				modelViewStack.popMatrix();
 				RenderSystem.applyModelViewMatrix();
 			}
 
@@ -185,7 +189,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 			Minecraft minecraft = Minecraft.getInstance();
 			Player player = minecraft.player;
 			try {
-				return ingredient.getTooltipLines(player, tooltipFlag);
+				return ingredient.getTooltipLines(Item.TooltipContext.of(minecraft.level), player, tooltipFlag);
 			} catch (RuntimeException | LinkageError e) {
 				List<Component> list = new ArrayList<>();
                 MutableComponent crash = Component.translatable("jei.tooltip.error.crash");

@@ -17,11 +17,10 @@ import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class FluidMovementActorScenes {
 
@@ -44,7 +43,6 @@ public class FluidMovementActorScenes {
 		BlockPos ct1 = util.grid().at(5, 3, 2);
 		BlockPos ct2 = util.grid().at(6, 3, 2);
 		BlockPos st = util.grid().at(0, 1, 5);
-		Capability<IFluidHandler> fhc = ForgeCapabilities.FLUID_HANDLER;
 		Class<FluidTankBlockEntity> type = FluidTankBlockEntity.class;
 		ItemStack bucket = AllFluids.CHOCOLATE.get()
 			.getFluidType()
@@ -52,8 +50,11 @@ public class FluidMovementActorScenes {
 
 		scene.world().modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.NORTH), false);
 
-		scene.world().modifyBlockEntity(st, type, be -> be.getCapability(fhc)
-			.ifPresent(ifh -> ifh.fill(FluidHelper.copyStackWithAmount(chocolate, 10000), FluidAction.EXECUTE)));
+		scene.world().modifyBlockEntity(st, type, be -> {
+			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			if (ifh != null)
+				ifh.fill(FluidHelper.copyStackWithAmount(chocolate, 10000), FluidAction.EXECUTE);
+		});
 
 		BlockPos bearing = util.grid().at(5, 1, 2);
 		scene.world().showSection(util.select().position(bearing), Direction.DOWN);
@@ -146,17 +147,29 @@ public class FluidMovementActorScenes {
 								.add(0, 0.5, 0), Pointing.LEFT, 30)
 						.withItem(bucket);
 
-			scene.world().modifyBlockEntity(st, type, be -> be.getCapability(fhc)
-				.ifPresent(ifh -> ifh.drain(1000, FluidAction.EXECUTE)));
-			scene.world().modifyBlockEntity(ct1, type, be -> be.getCapability(fhc)
-				.ifPresent(ifh -> ifh.fill(chocolate, FluidAction.EXECUTE)));
+			scene.world().modifyBlockEntity(st, type, be -> {
+				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				if (ifh != null)
+					ifh.drain(1000, FluidAction.EXECUTE);
+			});
+			scene.world().modifyBlockEntity(ct1, type, be -> {
+				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				if (ifh != null)
+					ifh.fill(chocolate, FluidAction.EXECUTE);
+			});
 			scene.idle(2);
 		}
 		for (int i = 0; i < 8; i++) {
-			scene.world().modifyBlockEntity(st, type, be -> be.getCapability(fhc)
-				.ifPresent(ifh -> ifh.drain(1000, FluidAction.EXECUTE)));
-			scene.world().modifyBlockEntity(ct2, type, be -> be.getCapability(fhc)
-				.ifPresent(ifh -> ifh.fill(chocolate, FluidAction.EXECUTE)));
+			scene.world().modifyBlockEntity(st, type, be -> {
+				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				if (ifh != null)
+					ifh.drain(1000, FluidAction.EXECUTE);
+			});
+			scene.world().modifyBlockEntity(ct2, type, be -> {
+				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				if (ifh != null)
+					ifh.fill(chocolate, FluidAction.EXECUTE);
+			});
 			scene.idle(2);
 		}
 
@@ -171,22 +184,37 @@ public class FluidMovementActorScenes {
 		scene.idle(30);
 
 		for (int i = 0; i < 8; i++) {
-			scene.world().modifyBlockEntity(ct2, type, be -> be.getCapability(fhc)
-				.ifPresent(ifh -> ifh.drain(1000, FluidAction.EXECUTE)));
-			scene.world().modifyBlockEntity(st, type, be -> be.getCapability(fhc)
-				.ifPresent(ifh -> ifh.fill(chocolate, FluidAction.EXECUTE)));
+			scene.world().modifyBlockEntity(ct2, type, be -> {
+				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				if (ifh != null)
+					ifh.drain(1000, FluidAction.EXECUTE);
+			});
+			scene.world().modifyBlockEntity(st, type, be -> {
+				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				if (ifh != null)
+					ifh.fill(chocolate, FluidAction.EXECUTE);
+			});
 			scene.idle(2);
 		}
 		for (int i = 0; i < 16; i++) {
-			scene.world().modifyBlockEntity(ct1, type, be -> be.getCapability(fhc)
-				.ifPresent(ifh -> ifh.drain(1000, FluidAction.EXECUTE)));
-			scene.world().modifyBlockEntity(st, type, be -> be.getCapability(fhc)
-				.ifPresent(ifh -> ifh.fill(chocolate, FluidAction.EXECUTE)));
+			scene.world().modifyBlockEntity(ct1, type, be -> {
+				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				if (ifh != null)
+					ifh.drain(1000, FluidAction.EXECUTE);
+			});
+			scene.world().modifyBlockEntity(st, type, be -> {
+				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				if (ifh != null)
+					ifh.fill(chocolate, FluidAction.EXECUTE);
+			});
 			scene.idle(2);
 		}
 
-		scene.world().modifyBlockEntity(util.grid().at(2, 2, 3), type, be -> be.getCapability(fhc)
-			.ifPresent(ifh -> ifh.drain(8000, FluidAction.EXECUTE)));
+		scene.world().modifyBlockEntity(util.grid().at(2, 2, 3), type, be -> {
+			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			if (ifh != null)
+				ifh.drain(8000, FluidAction.EXECUTE);
+		});
 		scene.idle(50);
 
 		scene.overlay().showText(120)
@@ -199,7 +227,6 @@ public class FluidMovementActorScenes {
 		scene.idle(15);
 		scene.world().rotateBearing(bearing, 270, 120);
 		scene.world().rotateSection(contraption, 0, 270, 0, 120);
-
 		scene.idle(100);
 		scene.markAsFinished();
 	}

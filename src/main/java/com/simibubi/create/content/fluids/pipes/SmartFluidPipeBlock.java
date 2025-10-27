@@ -1,5 +1,8 @@
 package com.simibubi.create.content.fluids.pipes;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -37,6 +40,8 @@ import net.minecraft.world.ticks.TickPriority;
 
 public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 	implements IBE<SmartFluidPipeBlockEntity>, IAxisPipe, IWrenchable, ProperWaterloggedBlock {
+
+	public static final MapCodec<SmartFluidPipeBlock> CODEC = simpleCodec(SmartFluidPipeBlock::new);
 
 	public SmartFluidPipeBlock(Properties p_i48339_1_) {
 		super(p_i48339_1_);
@@ -156,7 +161,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 
@@ -180,6 +185,11 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 	@Override
 	public BlockEntityType<? extends SmartFluidPipeBlockEntity> getBlockEntityType() {
 		return  AllBlockEntityTypes.SMART_FLUID_PIPE.get();
+	}
+
+	@Override
+	protected @NotNull MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
+		return CODEC;
 	}
 
 }

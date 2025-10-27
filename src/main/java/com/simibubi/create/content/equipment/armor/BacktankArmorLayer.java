@@ -2,6 +2,7 @@ package com.simibubi.create.content.equipment.armor;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.simibubi.create.foundation.mixin.accessor.EntityRenderDispatcherAccessor;
 
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.math.AngleHelper;
@@ -81,7 +82,7 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 	public static void registerOnAll(EntityRenderDispatcher renderManager) {
 		for (EntityRenderer<? extends Player> renderer : renderManager.getSkinMap().values())
 			registerOn(renderer);
-		for (EntityRenderer<?> renderer : renderManager.renderers.values())
+		for (EntityRenderer<?> renderer : ((EntityRenderDispatcherAccessor) renderManager).create$getRenderers().values())
 			registerOn(renderer);
 	}
 

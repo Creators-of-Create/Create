@@ -28,7 +28,7 @@ public class FramedBlocksInSchematics {
 		if (blockEntity == null)
 			return data;
 
-		data = blockEntity.saveWithFullMetadata();
+		data = blockEntity.saveWithFullMetadata(blockEntity.getLevel().registryAccess());
 
 		List<String> keysToRemove = new ArrayList<>();
 		for (String key : data.getAllKeys())
@@ -36,11 +36,11 @@ public class FramedBlocksInSchematics {
 				keysToRemove.add(key);
 		for (String key : keysToRemove)
 			data.remove(key);
-		
+
 		if (data.getCompound("camo")
 			.contains("fluid"))
 			data.remove("camo");
-		
+
 		if (data.getCompound("camo_two")
 			.contains("fluid"))
 			data.remove("camo_two");
@@ -52,7 +52,7 @@ public class FramedBlocksInSchematics {
 		if (blockEntity == null)
 			return ItemRequirement.NONE;
 
-		CompoundTag data = blockEntity.saveWithFullMetadata();
+		CompoundTag data = blockEntity.saveWithFullMetadata(blockEntity.getLevel().registryAccess());
 		List<StackRequirement> list = new ArrayList<>();
 
 		if (data.getBoolean("intangible"))

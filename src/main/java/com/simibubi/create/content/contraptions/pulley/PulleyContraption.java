@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.TranslatingContraption;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
@@ -43,8 +44,8 @@ public class PulleyContraption extends TranslatingContraption {
 	}
 
 	@Override
-	public CompoundTag writeNBT(boolean spawnPacket) {
-		CompoundTag tag = super.writeNBT(spawnPacket);
+	public CompoundTag writeNBT(HolderLookup.Provider registries, boolean spawnPacket) {
+		CompoundTag tag = super.writeNBT(registries, spawnPacket);
 		tag.putInt("InitialOffset", initialOffset);
 		return tag;
 	}

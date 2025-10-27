@@ -2,92 +2,71 @@ package com.simibubi.create.content.kinetics.mechanicalArm;
 
 import java.util.Collection;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-public class ArmPlacementPacket extends SimplePacketBase {
-
-	private Collection<ArmInteractionPoint> points;
-	private ListTag receivedTag;
-	private BlockPos pos;
+public record ArmPlacementPacket(ListTag tag, BlockPos pos) implements ServerboundPacketPayload {
+	public static final StreamCodec<FriendlyByteBuf, ArmPlacementPacket> STREAM_CODEC = StreamCodec.composite(
+			CatnipStreamCodecs.COMPOUND_LIST_TAG, ArmPlacementPacket::tag,
+			BlockPos.STREAM_CODEC, ArmPlacementPacket::pos,
+			ArmPlacementPacket::new
+	);
 
 	public ArmPlacementPacket(Collection<ArmInteractionPoint> points, BlockPos pos) {
-		this.points = points;
-		this.pos = pos;
-	}
+		this(new ListTag(), pos);
 
-	public ArmPlacementPacket(FriendlyByteBuf buffer) {
-		CompoundTag nbt = buffer.readNbt();
-		receivedTag = nbt.getList("Points", Tag.TAG_COMPOUND);
-		pos = buffer.readBlockPos();
+		for (ArmInteractionPoint point : points) {
+			this.tag.add(point.serialize(pos));
+		}
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		CompoundTag nbt = new CompoundTag();
-		ListTag pointsNBT = new ListTag();
-		points.stream()
-			.map(aip -> aip.serialize(pos))
-			.forEach(pointsNBT::add);
-		nbt.put("Points", pointsNBT);
-		buffer.writeNbt(nbt);
-		buffer.writeBlockPos(pos);
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.PLACE_ARM;
 	}
 
 	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer player = context.getSender();
-			if (player == null)
-				return;
-			Level world = player.level();
-			if (world == null || !world.isLoaded(pos))
-				return;
-			BlockEntity blockEntity = world.getBlockEntity(pos);
-			if (!(blockEntity instanceof ArmBlockEntity arm))
-				return;
+	public void handle(ServerPlayer player) {
+		Level world = player.level();
+		if (!world.isLoaded(pos))
+			return;
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (!(blockEntity instanceof ArmBlockEntity arm))
+			return;
 
-			arm.interactionPointTag = receivedTag;
-		});
-		return true;
+		arm.interactionPointTag = this.tag;
 	}
 
-	public static class ClientBoundRequest extends SimplePacketBase {
+	public record ClientBoundRequest(BlockPos pos) implements ClientboundPacketPayload {
+		public static final StreamCodec<ByteBuf, ClientBoundRequest> STREAM_CODEC = BlockPos.STREAM_CODEC.map(
+				ClientBoundRequest::new, ClientBoundRequest::pos
+		);
 
-		BlockPos pos;
-
-		public ClientBoundRequest(BlockPos pos) {
-			this.pos = pos;
-		}
-
-		public ClientBoundRequest(FriendlyByteBuf buffer) {
-			this.pos = buffer.readBlockPos();
+		@Override
+		public PacketTypeProvider getTypeProvider() {
+			return AllPackets.S_PLACE_ARM;
 		}
 
 		@Override
-		public void write(FriendlyByteBuf buffer) {
-			buffer.writeBlockPos(pos);
+		@OnlyIn(Dist.CLIENT)
+		public void handle(LocalPlayer player) {
+			ArmInteractionPointHandler.flushSettings(pos);
 		}
-
-		@Override
-		public boolean handle(Context context) {
-			context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-				() -> () -> ArmInteractionPointHandler.flushSettings(pos)));
-			return true;
-		}
-
 	}
 
 }

@@ -2,19 +2,20 @@ package com.simibubi.create.content.trains.schedule;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 
 import net.createmod.catnip.data.Pair;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public interface IScheduleInput {
 
@@ -24,7 +25,7 @@ public interface IScheduleInput {
 
 	public abstract CompoundTag getData();
 
-	public abstract void setData(CompoundTag data);
+	public abstract void setData(HolderLookup.Provider registries, CompoundTag data);
 
 	public default int slotsTargeted() {
 		return 0;

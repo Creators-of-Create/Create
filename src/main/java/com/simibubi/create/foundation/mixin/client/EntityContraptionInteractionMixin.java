@@ -33,14 +33,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.common.capabilities.CapabilityProvider;
-
 @Mixin(Entity.class)
-public abstract class EntityContraptionInteractionMixin extends CapabilityProvider<Entity> {
-	private EntityContraptionInteractionMixin(Class<Entity> baseClass) {
-		super(baseClass);
-	}
-
+public abstract class EntityContraptionInteractionMixin {
 	@Shadow
 	private Level level;
 
@@ -162,9 +156,9 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 				Vec3 speed = self.getDeltaMovement();
 				level.addParticle(
 					new BlockParticleOption(ParticleTypes.BLOCK, state).setPos(particlePos),
-					self.getX() + ((double) random.nextFloat() - 0.5D) * (double) dimensions.width,
+					self.getX() + ((double) random.nextFloat() - 0.5D) * (double) dimensions.width(),
 					self.getY() + 0.1D,
-					self.getZ() + ((double) random.nextFloat() - 0.5D) * (double) dimensions.height,
+					self.getZ() + ((double) random.nextFloat() - 0.5D) * (double) dimensions.height(),
 					speed.x * -4.0D, 1.5D, speed.z * -4.0D
 				);
 			}

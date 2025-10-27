@@ -11,14 +11,15 @@ import com.simibubi.create.api.stress.BlockStressValues;
 
 import net.createmod.catnip.config.ConfigBase;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public class AllConfigs {
 
 	private static final Map<ModConfig.Type, ConfigBase> CONFIGS = new EnumMap<>(ModConfig.Type.class);
@@ -44,7 +45,7 @@ public class AllConfigs {
 	}
 
 	private static <T extends ConfigBase> T register(Supplier<T> factory, ModConfig.Type side) {
-		Pair<T, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(builder -> {
+		Pair<T, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(builder -> {
 			T config = factory.get();
 			config.registerAll(builder);
 			return config;
@@ -56,13 +57,13 @@ public class AllConfigs {
 		return config;
 	}
 
-	public static void register(ModLoadingContext context) {
+	public static void register(ModLoadingContext context, ModContainer container) {
 		client = register(CClient::new, ModConfig.Type.CLIENT);
 		common = register(CCommon::new, ModConfig.Type.COMMON);
 		server = register(CServer::new, ModConfig.Type.SERVER);
 
 		for (Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())
-			context.registerConfig(pair.getKey(), pair.getValue().specification);
+			container.registerConfig(pair.getKey(), pair.getValue().specification);
 
 		CStress stress = server().kinetics.stressValues;
 		BlockStressValues.IMPACTS.registerProvider(stress::getImpact);

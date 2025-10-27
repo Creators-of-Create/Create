@@ -6,6 +6,7 @@ import static com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessing
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.spouting.BlockSpoutingBehaviour;
@@ -27,6 +28,7 @@ import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -36,10 +38,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
 
@@ -57,6 +58,18 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	public SpoutBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		processingTicks = -1;
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+				Capabilities.FluidHandler.BLOCK,
+				AllBlockEntityTypes.SPOUT.get(),
+				(be, context) -> {
+					if (context != Direction.DOWN)
+						return be.tank.getCapability();
+					return null;
+				}
+		);
 	}
 
 	@Override
@@ -147,8 +160,8 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	}
 
 	@Override
-	protected void write(CompoundTag compound, boolean clientPacket) {
-		super.write(compound, clientPacket);
+	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(compound, registries, clientPacket);
 
 		compound.putInt("ProcessingTicks", processingTicks);
 		if (sendSplash && clientPacket) {
@@ -171,8 +184,8 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(compound, registries, clientPacket);
 		processingTicks = compound.getInt("ProcessingTicks");
 
 		createdChocolateBerries = compound.contains("ChocolateBerries");
@@ -184,14 +197,6 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		if (compound.contains("Splash"))
 			spawnSplash(tank.getPrimaryTank()
 				.getRenderedFluid());
-	}
-
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == ForgeCapabilities.FLUID_HANDLER && side != Direction.DOWN)
-			return tank.getCapability()
-				.cast();
-		return super.getCapability(cap, side);
 	}
 
 	public void tick() {
@@ -230,9 +235,7 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	}
 
 	protected void spawnProcessingParticles(FluidStack fluid) {
-		if (isVirtual())
-			return;
-		if (fluid.isEmpty())
+		if (isVirtual() || fluid.isEmpty())
 			return;
 		Vec3 vec = VecHelper.getCenterOf(worldPosition);
 		vec = vec.subtract(0, 8 / 16f, 0);
@@ -243,7 +246,7 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	protected static int SPLASH_PARTICLE_COUNT = 20;
 
 	protected void spawnSplash(FluidStack fluid) {
-		if (isVirtual())
+		if (isVirtual() || fluid.isEmpty())
 			return;
 		Vec3 vec = VecHelper.getCenterOf(worldPosition);
 		vec = vec.subtract(0, 2 - 5 / 16f, 0);
@@ -258,6 +261,6 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
-			getCapability(ForgeCapabilities.FLUID_HANDLER));
+			level.getCapability(Capabilities.FluidHandler.BLOCK, worldPosition, null));
 	}
 }

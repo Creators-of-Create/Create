@@ -1,0 +1,19 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:charcoal"
+    }
+  ],
+  "processing_time": 100,
+  "results": [
+    {
+      "id": "minecraft:black_dye"
+    },
+    {
+      "chance": 0.1,
+      "count": 2,
+      "id": "minecraft:gray_dye"
+    }
+  ]
+}

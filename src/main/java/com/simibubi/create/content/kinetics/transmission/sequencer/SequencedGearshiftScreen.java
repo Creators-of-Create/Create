@@ -3,19 +3,18 @@ package com.simibubi.create.content.kinetics.transmission.sequencer;
 import java.util.Vector;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.compat.computercraft.ComputerScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
+import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -26,7 +25,6 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	private IconButton confirmButton;
 	private SequencedGearshiftBlockEntity be;
 
-	private ListTag compareTag;
 	private Vector<Instruction> instructions;
 
 	private Vector<Vector<ScrollInput>> inputs;
@@ -35,7 +33,6 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		super(CreateLang.translateDirect("gui.sequenced_gearshift.title"));
 		this.instructions = be.instructions;
 		this.be = be;
-		compareTag = Instruction.serializeAll(instructions);
 	}
 
 	@Override
@@ -191,11 +188,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	}
 
 	public void sendPacket() {
-		ListTag serialized = Instruction.serializeAll(instructions);
-		if (serialized.equals(compareTag))
-			return;
-		AllPackets.getChannel()
-			.sendToServer(new ConfigureSequencedGearshiftPacket(be.getBlockPos(), serialized));
+		CatnipServices.NETWORK.sendToServer(new ConfigureSequencedGearshiftPacket(be.getBlockPos(), instructions));
 	}
 
 	@Override

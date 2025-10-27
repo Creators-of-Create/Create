@@ -10,6 +10,7 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -43,8 +44,8 @@ public class NozzleBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	protected void write(CompoundTag compound, boolean clientPacket) {
-		super.write(compound, clientPacket);
+	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(compound, registries, clientPacket);
 		if (!clientPacket)
 			return;
 		compound.putFloat("Range", range);
@@ -52,8 +53,8 @@ public class NozzleBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(compound, registries, clientPacket);
 		if (!clientPacket)
 			return;
 		range = compound.getFloat("Range");

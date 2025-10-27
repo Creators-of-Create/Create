@@ -7,16 +7,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Maps;
 import com.simibubi.create.Create;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
@@ -55,7 +55,6 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 		this.listeners.remove(playerAdvancementsIn);
 	}
 
-	@Override
 	public ResourceLocation getId() {
 		return id;
 	}
@@ -67,8 +66,7 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 			List<Listener<T>> list = new LinkedList<>();
 
 			for (Listener<T> listener : playerListeners) {
-				if (listener.getTriggerInstance()
-					.test(suppliers)) {
+				if (listener.trigger().test(suppliers)) {
 					list.add(listener);
 				}
 			}
@@ -78,12 +76,7 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 		}
 	}
 
-	public abstract static class Instance extends AbstractCriterionTriggerInstance {
-
-		public Instance(ResourceLocation idIn, ContextAwarePredicate predicate) {
-			super(idIn, predicate);
-		}
-
+	public abstract static class Instance implements SimpleCriterionTrigger.SimpleInstance {
 		protected abstract boolean test(@Nullable List<Supplier<Object>> suppliers);
 	}
 

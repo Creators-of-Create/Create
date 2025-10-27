@@ -7,14 +7,13 @@ import com.simibubi.create.content.trains.CameraDistanceModifier;
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.minecraftforge.common.ForgeConfig;
-
 import net.createmod.catnip.gui.ScreenOpener;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.neoforged.neoforge.common.NeoForgeConfig;
 
 public class SimpleCreateActions {
 
@@ -46,7 +45,7 @@ public class SimpleCreateActions {
 	}
 
 	public static void experimentalLighting(String value) {
-		ForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.set(true);
+		NeoForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.set(true);
 		Minecraft.getInstance().levelRenderer.allChanged();
 	}
 

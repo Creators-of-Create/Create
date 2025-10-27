@@ -1,0 +1,28 @@
+{
+  "parent": "create:sturdy_sheet",
+  "criteria": {
+    "0": {
+      "trigger": "create:track_crafting_factory_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.track_crafting_factory.desc"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "create:mechanical_press"
+    },
+    "title": {
+      "translate": "advancement.create.track_crafting_factory"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

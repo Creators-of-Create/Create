@@ -7,11 +7,9 @@ import static net.minecraft.ChatFormatting.GRAY;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.schematics.cannon.ConfigureSchematicannonPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -20,6 +18,7 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Indicator;
 import com.simibubi.create.foundation.gui.widget.Indicator.State;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.gui.element.GuiGameElement;
@@ -51,8 +50,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	private final Component optionEnabled = CreateLang.translateDirect("gui.schematicannon.optionEnabled");
 	private final Component optionDisabled = CreateLang.translateDirect("gui.schematicannon.optionDisabled");
 
-	protected Vector<Indicator> replaceLevelIndicators;
-	protected Vector<IconButton> replaceLevelButtons;
+	protected List<Indicator> replaceLevelIndicators;
+	protected List<IconButton> replaceLevelButtons;
 
 	protected IconButton skipMissingButton;
 	protected Indicator skipMissingIndicator;
@@ -141,8 +140,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		int y = topPos;
 
 		// Replace settings
-		replaceLevelButtons = new Vector<>(4);
-		replaceLevelIndicators = new Vector<>(4);
+		replaceLevelButtons = new ArrayList<>(4);
+		replaceLevelIndicators = new ArrayList<>(4);
 		List<AllIcons> icons = ImmutableList.of(AllIcons.I_DONT_REPLACE, AllIcons.I_REPLACE_SOLID,
 			AllIcons.I_REPLACE_ANY, AllIcons.I_REPLACE_EMPTY);
 		List<Component> toolTips = ImmutableList.of(CreateLang.translateDirect("gui.schematicannon.option.dontReplaceSolid"),
@@ -416,7 +415,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	}
 
 	protected void sendOptionUpdate(Option option, boolean set) {
-		AllPackets.getChannel().sendToServer(new ConfigureSchematicannonPacket(option, set));
+		CatnipServices.NETWORK.sendToServer(new ConfigureSchematicannonPacket(option, set));
 	}
 
 	@Override

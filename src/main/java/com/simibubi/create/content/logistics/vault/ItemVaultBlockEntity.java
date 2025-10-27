@@ -5,34 +5,41 @@ import java.util.List;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.api.packager.InventoryIdentifier;
+import com.simibubi.create.foundation.ICapabilityProvider;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryWrapper;
+import com.simibubi.create.foundation.utility.SameSizeCombinedInvWrapper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBlockEntityContainer.Inventory {
 
-	protected LazyOptional<IItemHandler> itemCapability;
+	protected ICapabilityProvider<IItemHandler> itemCapability = null;
 	protected InventoryIdentifier invId;
 
 	protected ItemStackHandler inventory;
@@ -41,7 +48,6 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 	protected boolean updateConnectivity;
 	protected int radius;
 	protected int length;
-	protected Axis axis;
 
 	public ItemVaultBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -55,9 +61,21 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 			}
 		};
 
-		itemCapability = LazyOptional.empty();
 		radius = 1;
 		length = 1;
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+				Capabilities.ItemHandler.BLOCK,
+				AllBlockEntityTypes.ITEM_VAULT.get(),
+				(be, context) -> {
+					be.initCapability();
+					if (be.itemCapability == null)
+						return null;
+					return be.itemCapability.getCapability();
+				}
+		);
 	}
 
 	@Override
@@ -80,11 +98,82 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 		level.blockEntityChanged(controllerBE.worldPosition);
 
 		BlockPos pos = controllerBE.getBlockPos();
-		for (int y = 0; y < controllerBE.radius; y++) {
-			for (int z = 0; z < (controllerBE.axis == Axis.X ? controllerBE.radius : controllerBE.length); z++) {
-				for (int x = 0; x < (controllerBE.axis == Axis.Z ? controllerBE.radius : controllerBE.length); x++) {
-					level.updateNeighbourForOutputSignal(pos.offset(x, y, z), getBlockState().getBlock());
+
+		int radius = controllerBE.radius;
+		int length = controllerBE.length;
+
+		Axis axis = controllerBE.getMainConnectionAxis();
+
+		int zMax = (axis == Axis.X ? radius : length);
+		int xMax = (axis == Axis.Z ? radius : length);
+
+		// Mutable position we'll use for the blocks we poke updates at.
+		MutableBlockPos updatePos = new MutableBlockPos();
+		// Mutable position we'll set to be the vault block next to the update position.
+		MutableBlockPos provokingPos = new MutableBlockPos();
+
+		for (int y = 0; y < radius; y++) {
+			for (int z = 0; z < zMax; z++) {
+				for (int x = 0; x < xMax; x++) {
+					// Emulate the effect of this line, but only for blocks along the surface of the vault:
+					// level.updateNeighbourForOutputSignal(pos.offset(x, y, z), getBlockState().getBlock());
+					// That method pokes all 6 directions in order. We want to preserve the update order
+					// but skip the wasted work of checking other blocks that are part of this vault.
+
+					var sectionX = SectionPos.blockToSectionCoord(pos.getX() + x);
+					var sectionZ = SectionPos.blockToSectionCoord(pos.getZ() + z);
+					if (!level.hasChunk(sectionX, sectionZ)) {
+						continue;
+					}
+					provokingPos.setWithOffset(pos, x, y, z);
+
+					// Technically all this work is wasted for the inner blocks of a long 3x3 vault, but
+					// this is fast enough and relatively simple.
+					Block provokingBlock = level.getBlockState(provokingPos).getBlock();
+
+					// The 6 calls below should match the order of Direction.values().
+					if (y == 0) {
+						updateComaratorsInner(level, provokingBlock, provokingPos, updatePos, Direction.DOWN);
+					}
+					if (y == radius - 1) {
+						updateComaratorsInner(level, provokingBlock, provokingPos, updatePos, Direction.UP);
+					}
+					if (z == 0) {
+						updateComaratorsInner(level, provokingBlock, provokingPos, updatePos, Direction.NORTH);
+					}
+					if (z == zMax - 1) {
+						updateComaratorsInner(level, provokingBlock, provokingPos, updatePos, Direction.SOUTH);
+					}
+					if (x == 0) {
+						updateComaratorsInner(level, provokingBlock, provokingPos, updatePos, Direction.WEST);
+					}
+					if (x == xMax - 1) {
+						updateComaratorsInner(level, provokingBlock, provokingPos, updatePos, Direction.EAST);
+					}
 				}
+			}
+		}
+	}
+
+	/**
+	 * See {@link Level#updateNeighbourForOutputSignal(BlockPos, Block)}.
+	 */
+	private static void updateComaratorsInner(Level level, Block provokingBlock, BlockPos provokingPos, MutableBlockPos updatePos, Direction direction) {
+		updatePos.setWithOffset(provokingPos, direction);
+
+		var sectionX = SectionPos.blockToSectionCoord(updatePos.getX());
+		var sectionZ = SectionPos.blockToSectionCoord(updatePos.getZ());
+		if (!level.hasChunk(sectionX, sectionZ)) {
+			return;
+		}
+
+		BlockState blockstate = level.getBlockState(updatePos);
+		blockstate.onNeighborChange(level, updatePos, provokingPos);
+		if (blockstate.isRedstoneConductor(level, updatePos)) {
+			updatePos.move(direction);
+			blockstate = level.getBlockState(updatePos);
+			if (blockstate.getWeakChanges(level, updatePos)) {
+				level.neighborChanged(blockstate, updatePos, provokingBlock, provokingPos, false);
 			}
 		}
 	}
@@ -142,10 +231,11 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 		BlockState state = getBlockState();
 		if (ItemVaultBlock.isVault(state)) {
 			state = state.setValue(ItemVaultBlock.LARGE, false);
-			getLevel().setBlock(worldPosition, state, 22);
+			getLevel().setBlock(worldPosition, state, Block.UPDATE_CLIENTS | Block.UPDATE_INVISIBLE | Block.UPDATE_KNOWN_SHAPE);
 		}
 
-		itemCapability.invalidate();
+		itemCapability = null;
+		invalidateCapabilities();
 		setChanged();
 		sendData();
 	}
@@ -157,7 +247,8 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 		if (controller.equals(this.controller))
 			return;
 		this.controller = controller;
-		itemCapability.invalidate();
+		itemCapability = null;
+		invalidateCapabilities();
 		setChanged();
 		sendData();
 	}
@@ -168,21 +259,22 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(compound, registries, clientPacket);
 
 		BlockPos controllerBefore = controller;
 		int prevSize = radius;
 		int prevLength = length;
 
 		updateConnectivity = compound.contains("Uninitialized");
-		controller = null;
-		lastKnownPos = null;
 
+		lastKnownPos = null;
 		if (compound.contains("LastKnownPos"))
-			lastKnownPos = NbtUtils.readBlockPos(compound.getCompound("LastKnownPos"));
+			lastKnownPos = NBTHelper.readBlockPos(compound, "LastKnownPos");
+
+		controller = null;
 		if (compound.contains("Controller"))
-			controller = NbtUtils.readBlockPos(compound.getCompound("Controller"));
+			controller = NBTHelper.readBlockPos(compound, "Controller");
 
 		if (isController()) {
 			radius = compound.getInt("Size");
@@ -190,7 +282,7 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 		}
 
 		if (!clientPacket) {
-			inventory.deserializeNBT(compound.getCompound("Inventory"));
+			inventory.deserializeNBT(registries, compound.getCompound("Inventory"));
 			return;
 		}
 
@@ -201,9 +293,10 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 	}
 
 	@Override
-	protected void write(CompoundTag compound, boolean clientPacket) {
+	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		if (updateConnectivity)
 			compound.putBoolean("Uninitialized", true);
+
 		if (lastKnownPos != null)
 			compound.put("LastKnownPos", NbtUtils.writeBlockPos(lastKnownPos));
 		if (!isController())
@@ -213,11 +306,11 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 			compound.putInt("Length", length);
 		}
 
-		super.write(compound, clientPacket);
+		super.write(compound, registries, clientPacket);
 
 		if (!clientPacket) {
 			compound.putString("StorageType", "CombinedInv");
-			compound.put("Inventory", inventory.serializeNBT());
+			compound.put("Inventory", inventory.serializeNBT(registries));
 		}
 	}
 
@@ -236,24 +329,21 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 			inventory.setStackInSlot(i, i < handler.getSlots() ? handler.getStackInSlot(i) : ItemStack.EMPTY);
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap)) {
-			initCapability();
-			return itemCapability.cast();
-		}
-		return super.getCapability(cap, side);
-	}
-
 	private void initCapability() {
-		if (itemCapability.isPresent())
+		if (itemCapability != null && itemCapability.getCapability() != null)
 			return;
 		if (!isController()) {
 			ItemVaultBlockEntity controllerBE = getControllerBE();
 			if (controllerBE == null)
 				return;
 			controllerBE.initCapability();
-			itemCapability = controllerBE.itemCapability;
+			itemCapability = ICapabilityProvider.of(() -> {
+				if (controllerBE.isRemoved())
+					return null;
+				if (controllerBE.itemCapability == null)
+					return null;
+				return controllerBE.itemCapability.getCapability();
+			});
 			invId = controllerBE.invId;
 			return;
 		}
@@ -273,8 +363,7 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 			}
 		}
 
-		IItemHandler itemHandler = new VersionedInventoryWrapper(new CombinedInvWrapper(invs));
-		itemCapability = LazyOptional.of(() -> itemHandler);
+		itemCapability = ICapabilityProvider.of(new VersionedInventoryWrapper(SameSizeCombinedInvWrapper.create(invs)));
 
 		// build an identifier encompassing all component vaults
 		BlockPos farCorner = alongZ
@@ -295,9 +384,10 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 	public void notifyMultiUpdated() {
 		BlockState state = this.getBlockState();
 		if (ItemVaultBlock.isVault(state)) { // safety
-			level.setBlock(getBlockPos(), state.setValue(ItemVaultBlock.LARGE, radius > 2), 6);
+			level.setBlock(getBlockPos(), state.setValue(ItemVaultBlock.LARGE, radius > 2), Block.UPDATE_CLIENTS | Block.UPDATE_INVISIBLE);
 		}
-		itemCapability.invalidate();
+		itemCapability = null;
+		invalidateCapabilities();
 		setChanged();
 	}
 

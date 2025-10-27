@@ -2,20 +2,23 @@ package com.simibubi.create.content.logistics.packagerLink;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.cache.Cache;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.simibubi.create.api.packager.InventoryIdentifier;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.packager.IdentifiedInventory;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
@@ -37,21 +40,33 @@ public class LogisticsManager {
 
 	public static InventorySummary getSummaryOfNetwork(UUID freqId, boolean accurate) {
 		try {
-			return (accurate ? LogisticsManager.ACCURATE_SUMMARIES : LogisticsManager.SUMMARIES).get(freqId, () -> {
-				InventorySummary summaryOfLinks = new InventorySummary();
-				LogisticallyLinkedBehaviour.getAllPresent(freqId, false)
-					.forEach(link -> {
-						InventorySummary summary = link.getSummary(null);
-						if (summary != InventorySummary.EMPTY)
-							summaryOfLinks.contributingLinks++;
-						summaryOfLinks.add(summary);
-					});
-				return summaryOfLinks;
-			});
+			Cache<UUID, InventorySummary> cacheToUse = accurate ? LogisticsManager.ACCURATE_SUMMARIES
+				: LogisticsManager.SUMMARIES;
+			return cacheToUse.get(freqId, () -> createSummaryOfNetwork(freqId));
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
 		return InventorySummary.EMPTY;
+	}
+
+	private static InventorySummary createSummaryOfNetwork(UUID freqId) {
+		InventorySummary summaryOfLinks = new InventorySummary();
+		Set<InventoryIdentifier> processedInventories = new HashSet<>();
+		for (LogisticallyLinkedBehaviour link : LogisticallyLinkedBehaviour.getAllPresent(freqId, false)) {
+
+			// Skip inventories already presented by other links
+			InventoryIdentifier currentInventoryId = getInventoryIdentifierFromLink(link);
+			if (currentInventoryId != null && !processedInventories.add(currentInventoryId))
+				continue;
+
+			InventorySummary summary = link.getSummary(null);
+			if (summary != InventorySummary.EMPTY) {
+				summaryOfLinks.contributingLinks++;
+				summaryOfLinks.add(summary);
+			}
+		}
+
+		return summaryOfLinks;
 	}
 
 	public static int getStockOf(UUID freqId, ItemStack stack, @Nullable IdentifiedInventory ignoredHandler) {
@@ -62,11 +77,13 @@ public class LogisticsManager {
 		return sum;
 	}
 
-	public static boolean broadcastPackageRequest(UUID freqId, RequestType type, PackageOrderWithCrafts order, @Nullable IdentifiedInventory ignoredHandler, String address) {
+	public static boolean broadcastPackageRequest(UUID freqId, RequestType type, PackageOrderWithCrafts order,
+												  @Nullable IdentifiedInventory ignoredHandler, String address) {
 		if (order.isEmpty())
 			return false;
 
-		Multimap<PackagerBlockEntity, PackagingRequest> requests = findPackagersForRequest(freqId, order, ignoredHandler, address);
+		Multimap<PackagerBlockEntity, PackagingRequest> requests = findPackagersForRequest(freqId, order,
+			ignoredHandler, address);
 
 		// Check if packagers have accumulated too many packages already
 		for (PackagerBlockEntity packager : requests.keySet())
@@ -79,7 +96,7 @@ public class LogisticsManager {
 	}
 
 	public static Multimap<PackagerBlockEntity, PackagingRequest> findPackagersForRequest(UUID freqId,
-		PackageOrderWithCrafts order, @Nullable IdentifiedInventory ignoredHandler, String address) {
+																						  PackageOrderWithCrafts order, @Nullable IdentifiedInventory ignoredHandler, String address) {
 		List<BigItemStack> stacks = new ArrayList<>();
 
 		for (BigItemStack stack : order.stacks())
@@ -89,7 +106,32 @@ public class LogisticsManager {
 		Multimap<PackagerBlockEntity, PackagingRequest> requests = HashMultimap.create();
 
 		// Packages need to track their index and successors for successful defrag
-		Iterable<LogisticallyLinkedBehaviour> availableLinks = LogisticallyLinkedBehaviour.getAllPresent(freqId, true);
+		Iterable<LogisticallyLinkedBehaviour> allAvailableLinks = LogisticallyLinkedBehaviour.getAllPresent(freqId,
+			true);
+
+		// Group links by InventoryIdentifier and randomly select one from each group
+		Map<InventoryIdentifier, List<LogisticallyLinkedBehaviour>> linksByInventory = new HashMap<>();
+		List<LogisticallyLinkedBehaviour> availableLinks = new ArrayList<>();
+
+		// Group links by their inventory identifier
+		for (LogisticallyLinkedBehaviour link : allAvailableLinks) {
+			InventoryIdentifier inventoryId = getInventoryIdentifierFromLink(link);
+			if (inventoryId != null) {
+				linksByInventory.computeIfAbsent(inventoryId, k -> new ArrayList<>()).add(link);
+			} else {
+				// Links without inventory identifier are added directly
+				availableLinks.add(link);
+			}
+		}
+
+		// Randomly select one link from each inventory group
+		for (List<LogisticallyLinkedBehaviour> linkGroup : linksByInventory.values()) {
+			if (!linkGroup.isEmpty()) {
+				LogisticallyLinkedBehaviour selectedLink = linkGroup.get(r.nextInt(linkGroup.size()));
+				availableLinks.add(selectedLink);
+			}
+		}
+
 		List<LogisticallyLinkedBehaviour> usedLinks = new ArrayList<>();
 		MutableBoolean finalLinkTracker = new MutableBoolean(false);
 
@@ -137,6 +179,23 @@ public class LogisticsManager {
 			}
 		}
 		return requests;
+	}
+
+	@Nullable
+	private static InventoryIdentifier getInventoryIdentifierFromLink(LogisticallyLinkedBehaviour link) {
+
+		if (!(link.blockEntity instanceof PackagerLinkBlockEntity plbe)) {
+			return null;
+		}
+
+		PackagerBlockEntity packager = plbe.getPackager();
+		if (packager == null || !packager.targetInventory.hasInventory()) {
+			return null;
+		}
+
+		IdentifiedInventory identifiedInventory = packager.targetInventory.getIdentifiedInventory();
+		InventoryIdentifier result = identifiedInventory != null ? identifiedInventory.identifier() : null;
+		return result;
 	}
 
 	public static void performPackageRequests(Multimap<PackagerBlockEntity, PackagingRequest> requests) {

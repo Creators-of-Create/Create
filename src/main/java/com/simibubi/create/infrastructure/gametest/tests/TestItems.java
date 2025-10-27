@@ -3,6 +3,7 @@ package com.simibubi.create.infrastructure.gametest.tests;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import com.simibubi.create.AllBlockEntityTypes;
@@ -10,6 +11,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.depot.DepotBlockEntity;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity.SelectionMode;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.content.trains.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.trains.display.FlapDisplayLayout;
@@ -20,6 +23,9 @@ import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,14 +33,14 @@ import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedstoneLampBlock;
 
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 @GameTestGroup(path = "items")
 public class TestItems {
@@ -48,6 +54,25 @@ public class TestItems {
 				new BlockPos(4, 2, 2), new ItemStack(AllItems.BRASS_INGOT.get(), 3)
 		);
 		helper.succeedWhen(() -> outputs.forEach(helper::assertContainerContains));
+	}
+
+	@GameTest(template = "arm_multi_output", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
+	public static void armMultiOutput(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(2, 3, 1);
+		BlockPos[] blazeBurners = IntStream.rangeClosed(6, 8)
+			.boxed()
+			.flatMap(x -> IntStream.rangeClosed(1, 3)
+				.mapToObj(z -> new BlockPos(x, 2, z)))
+			.toArray(BlockPos[]::new);
+		helper.pullLever(lever);
+		helper.succeedWhen(() -> {
+			for (BlockPos pos : blazeBurners)
+				helper.assertBlockState(
+					pos,
+					state -> state.getValue(BlazeBurnerBlock.HEAT_LEVEL) == HeatLevel.KINDLED,
+					() -> "Blaze burner isn't lit!"
+				);
+		});
 	}
 
 	@GameTest(template = "arm_purgatory", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
@@ -79,12 +104,15 @@ public class TestItems {
 	public static void attributeFilters(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(2, 3, 1);
 		BlockPos end = new BlockPos(11, 2, 2);
+		Holder<Enchantment> PROTECTION_ENCHANT = helper.getLevel().registryAccess()
+				.registryOrThrow(Registries.ENCHANTMENT)
+				.getHolderOrThrow(Enchantments.PROTECTION);
 		Map<BlockPos, ItemStack> outputs = Map.of(
 				new BlockPos(3, 2, 1), new ItemStack(AllBlocks.BRASS_BLOCK.get()),
 				new BlockPos(4, 2, 1), new ItemStack(Items.APPLE),
 				new BlockPos(5, 2, 1), new ItemStack(Items.WATER_BUCKET),
 				new BlockPos(6, 2, 1), EnchantedBookItem.createForEnchantment(
-						new EnchantmentInstance(Enchantments.ALL_DAMAGE_PROTECTION, 1)
+						new EnchantmentInstance(PROTECTION_ENCHANT, 1)
 				),
 				new BlockPos(7, 2, 1), Util.make(
 						new ItemStack(Items.NETHERITE_SWORD),
@@ -323,7 +351,7 @@ public class TestItems {
 
 				DepotBlockEntity depot = depots.get(i);
 				ItemStack item = depot.getHeldItem();
-				String name = ForgeRegistries.ITEMS.getKey(item.getItem()).getPath();
+				String name = BuiltInRegistries.ITEM.getKey(item.getItem()).getPath();
 
 				if (!name.equals(text))
 					helper.fail("Text mismatch: wanted [" + name + "], got: " + text);

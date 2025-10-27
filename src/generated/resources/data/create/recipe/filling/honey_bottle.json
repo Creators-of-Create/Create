@@ -1,0 +1,18 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "minecraft:glass_bottle"
+    },
+    {
+      "type": "neoforge:tag",
+      "amount": 250,
+      "tag": "c:honey"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:honey_bottle"
+    }
+  ]
+}

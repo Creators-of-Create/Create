@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.stockTicker;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour.RequestType;
 import com.simibubi.create.content.logistics.packagerLink.WiFiEffectPacket;
@@ -8,14 +9,23 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 
 public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<StockTickerBlockEntity> {
+	public static final StreamCodec<RegistryFriendlyByteBuf, PackageOrderRequestPacket> STREAM_CODEC = StreamCodec.composite(
+	    BlockPos.STREAM_CODEC, packet -> packet.pos,
+		PackageOrderWithCrafts.STREAM_CODEC, packet -> packet.order,
+		ByteBufCodecs.STRING_UTF8, packet -> packet.address,
+		ByteBufCodecs.BOOL, packet -> packet.encodeRequester,
+	    PackageOrderRequestPacket::new
+	);
 
-	private PackageOrderWithCrafts order;
-	private String address;
-	private boolean encodeRequester;
+	private final PackageOrderWithCrafts order;
+	private final String address;
+	private final boolean encodeRequester;
 
 	public PackageOrderRequestPacket(BlockPos pos, PackageOrderWithCrafts order, String address, boolean encodeRequester) {
 		super(pos);
@@ -24,26 +34,9 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 		this.encodeRequester = encodeRequester;
 	}
 
-	public PackageOrderRequestPacket(FriendlyByteBuf buffer) {
-		super(buffer);
-	}
-
 	@Override
-	protected void writeSettings(FriendlyByteBuf buffer) {
-		buffer.writeUtf(address);
-		order.write(buffer);
-		buffer.writeBoolean(encodeRequester);
-	}
-
-	@Override
-	protected void readSettings(FriendlyByteBuf buffer) {
-		address = buffer.readUtf();
-		order = PackageOrderWithCrafts.read(buffer);
-		encodeRequester = buffer.readBoolean();
-	}
-
-	@Override
-	protected void applySettings(StockTickerBlockEntity be) {
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.LOGISTICS_PACKAGE_REQUEST;
 	}
 
 	@Override
@@ -65,5 +58,4 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 		be.broadcastPackageRequest(RequestType.PLAYER, order, null, address);
 		return;
 	}
-
 }

@@ -2,14 +2,15 @@ package com.simibubi.create.content.equipment.armor;
 
 import com.simibubi.create.AllTags.AllItemTags;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 
 @EventBusSubscriber
 public final class NetheriteDivingHandler {
@@ -19,7 +20,7 @@ public final class NetheriteDivingHandler {
 	@SubscribeEvent
 	public static void onLivingEquipmentChange(LivingEquipmentChangeEvent event) {
 		EquipmentSlot slot = event.getSlot();
-		if (slot.getType() != EquipmentSlot.Type.ARMOR) {
+		if (slot.getType() != EquipmentSlot.Type.HUMANOID_ARMOR) {
 			return;
 		}
 
@@ -56,7 +57,7 @@ public final class NetheriteDivingHandler {
 	}
 
 	public static boolean isNetheriteArmor(ItemStack stack) {
-		return stack.getItem() instanceof ArmorItem armorItem && armorItem.isFireResistant();
+		return stack.getItem() instanceof ArmorItem && stack.has(DataComponents.FIRE_RESISTANT);
 	}
 
 	public static void setBit(LivingEntity entity, EquipmentSlot slot) {

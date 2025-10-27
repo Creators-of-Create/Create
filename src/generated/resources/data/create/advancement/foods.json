@@ -1,0 +1,28 @@
+{
+  "parent": "create:steam_engine_maxed",
+  "criteria": {
+    "0": {
+      "trigger": "create:foods_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.foods.desc"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "create:chocolate_glazed_berries"
+    },
+    "title": {
+      "translate": "advancement.create.foods"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

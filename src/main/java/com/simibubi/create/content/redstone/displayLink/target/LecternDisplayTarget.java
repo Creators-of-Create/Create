@@ -1,19 +1,20 @@
 package com.simibubi.create.content.redstone.displayLink.target;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.network.Filterable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.WritableBookContent;
+import net.minecraft.world.item.component.WrittenBookContent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 
@@ -33,13 +34,13 @@ public class LecternDisplayTarget extends DisplayTarget {
 		if (!book.is(Items.WRITTEN_BOOK))
 			return;
 
-		ListTag tag = book.getTag()
-			.getList("pages", Tag.TAG_STRING);
+		WrittenBookContent writtenBookContent = book.getOrDefault(DataComponents.WRITTEN_BOOK_CONTENT, WrittenBookContent.EMPTY);
+		List<Filterable<Component>> pages = new ArrayList<>(writtenBookContent.pages());
 
 		boolean changed = false;
 		for (int i = 0; i - line < text.size() && i < 50; i++) {
-			if (tag.size() <= i)
-				tag.add(StringTag.valueOf(i < line ? "" : Component.Serializer.toJson(text.get(i - line))));
+			if (pages.size() <= i)
+				pages.add(Filterable.passThrough(i < line ? Component.empty() : text.get(i - line)));
 
 			else if (i >= line) {
 				if (i - line == 0)
@@ -47,13 +48,12 @@ public class LecternDisplayTarget extends DisplayTarget {
 				if (i - line > 0 && isReserved(i - line, lectern, context))
 					break;
 
-				tag.set(i, StringTag.valueOf(Component.Serializer.toJson(text.get(i - line))));
+				pages.set(i, Filterable.passThrough(text.get(i - line)));
 			}
 			changed = true;
 		}
 
-		book.getTag()
-			.put("pages", tag);
+		book.set(DataComponents.WRITTEN_BOOK_CONTENT, writtenBookContent.withReplacedPages(pages));
 		lectern.setBook(book);
 
 		if (changed)
@@ -71,13 +71,17 @@ public class LecternDisplayTarget extends DisplayTarget {
 
 	private ItemStack signBook(ItemStack book) {
 		ItemStack written = new ItemStack(Items.WRITTEN_BOOK);
-		CompoundTag compoundtag = book.getTag();
-		if (compoundtag != null)
-			written.setTag(compoundtag.copy());
+		WritableBookContent bookContents = book.get(DataComponents.WRITABLE_BOOK_CONTENT);
 
-		written.addTagElement("author", StringTag.valueOf("Data Gatherer"));
-		written.addTagElement("filtered_title", StringTag.valueOf("Printed Book"));
-		written.addTagElement("title", StringTag.valueOf("Printed Book"));
+		List<Filterable<Component>> list = bookContents.pages().stream().map(filterable -> filterable.<Component>map(Component::literal)).toList();
+		WrittenBookContent writtenContent = new WrittenBookContent(
+				Filterable.passThrough("Printed Book"),
+				"Data Gatherer",
+				0,
+				list,
+				true
+		);
+		written.set(DataComponents.WRITTEN_BOOK_CONTENT, writtenContent);
 
 		return written;
 	}

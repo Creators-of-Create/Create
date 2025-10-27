@@ -31,9 +31,11 @@ import net.createmod.catnip.outliner.Outline;
 import net.createmod.catnip.outliner.Outliner;
 import net.createmod.catnip.outliner.Outliner.OutlineEntry;
 import net.createmod.catnip.theme.Color;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,20 +51,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-
 public class GoggleOverlayRenderer {
 
-	public static final IGuiOverlay OVERLAY = GoggleOverlayRenderer::renderOverlay;
+	public static final LayeredDraw.Layer OVERLAY = GoggleOverlayRenderer::renderOverlay;
 
 	private static final Map<Object, OutlineEntry> outlines = Outliner.getInstance().getOutlines();
 
 	public static int hoverTicks = 0;
 	public static BlockPos lastHovered = null;
 
-	public static void renderOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width,
-									 int height) {
+	public static void renderOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
@@ -174,7 +172,7 @@ public class GoggleOverlayRenderer {
 			return;
 		}
 
-		PoseStack poseStack = graphics.pose();
+		PoseStack poseStack = guiGraphics.pose();
 		poseStack.pushPose();
 
 		int tooltipTextWidth = 0;
@@ -190,6 +188,9 @@ public class GoggleOverlayRenderer {
 			tooltipHeight += (tooltip.size() - 1) * 10;
 		}
 
+		int width = guiGraphics.guiWidth();
+		int height = guiGraphics.guiHeight();
+
 		CClient cfg = AllConfigs.client();
 		int posX = width / 2 + cfg.overlayOffsetX.get();
 		int posY = height / 2 + cfg.overlayOffsetY.get();
@@ -197,7 +198,7 @@ public class GoggleOverlayRenderer {
 		posX = Math.min(posX, width - tooltipTextWidth - 20);
 		posY = Math.min(posY, height - tooltipHeight - 20);
 
-		float fade = Mth.clamp((hoverTicks + partialTicks) / 24f, 0, 1);
+		float fade = Mth.clamp((hoverTicks + deltaTracker.getGameTimeDeltaPartialTick(false)) / 24f, 0, 1);
 		Boolean useCustom = cfg.overlayCustomColor.get();
 		Color colorBackground = useCustom ? new Color(cfg.overlayBackgroundColor.get())
 			: BoxElement.COLOR_VANILLA_BACKGROUND.scaleAlpha(.75f);
@@ -215,11 +216,11 @@ public class GoggleOverlayRenderer {
 
 		GuiGameElement.of(item)
 			.at(posX + 10, posY - 16, 450)
-			.render(graphics);
+			.render(guiGraphics);
 
 		if (!Mods.MODERNUI.isLoaded()) {
 			// default tooltip rendering when modernUI is not loaded
-			RemovedGuiUtils.drawHoveringText(graphics, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
+			RemovedGuiUtils.drawHoveringText(guiGraphics, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
 				colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 			poseStack.popPose();
@@ -243,12 +244,11 @@ public class GoggleOverlayRenderer {
 		((MouseHandlerAccessor) mouseHandler).create$setXPos(Math.round(cursorX / guiScale) * guiScale);
 		((MouseHandlerAccessor) mouseHandler).create$setYPos(Math.round(cursorY / guiScale) * guiScale);
 
-		RemovedGuiUtils.drawHoveringText(graphics, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
+		RemovedGuiUtils.drawHoveringText(guiGraphics, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
 			colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 		((MouseHandlerAccessor) mouseHandler).create$setXPos(cursorX);
 		((MouseHandlerAccessor) mouseHandler).create$setYPos(cursorY);
-
 		poseStack.popPose();
 
 	}

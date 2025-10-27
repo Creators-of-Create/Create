@@ -17,6 +17,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class SharedDepotBlockMethods {
 
@@ -34,30 +35,29 @@ public class SharedDepotBlockMethods {
 		return BlockEntityBehaviour.get(worldIn, pos, DepotBehaviour.TYPE);
 	}
 
-	public static InteractionResult onUse(BlockState state, Level world, BlockPos pos, Player player,
-		InteractionHand hand, BlockHitResult ray) {
+	public static ItemInteractionResult onUse(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+											  InteractionHand hand, BlockHitResult ray) {
 		if (ray.getDirection() != Direction.UP)
-			return InteractionResult.PASS;
-		if (world.isClientSide)
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		if (level.isClientSide)
+			return ItemInteractionResult.SUCCESS;
 
-		DepotBehaviour behaviour = get(world, pos);
+		DepotBehaviour behaviour = get(level, pos);
 		if (behaviour == null)
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (!behaviour.canAcceptItems.get())
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 
-		ItemStack heldItem = player.getItemInHand(hand);
-		boolean wasEmptyHanded = heldItem.isEmpty();
-		boolean shouldntPlaceItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem);
+		boolean wasEmptyHanded = stack.isEmpty();
+		boolean shouldntPlaceItem = AllBlocks.MECHANICAL_ARM.isIn(stack);
 
 		ItemStack mainItemStack = behaviour.getHeldItemStack();
 		if (!mainItemStack.isEmpty()) {
 			player.getInventory()
 				.placeItemBackInInventory(mainItemStack);
 			behaviour.removeHeldItem();
-			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
-				1f + Create.RANDOM.nextFloat());
+			level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
+				1f + level.getRandom().nextFloat());
 		}
 		ItemStackHandler outputs = behaviour.processingOutputBuffer;
 		for (int i = 0; i < outputs.getSlots(); i++)
@@ -65,17 +65,17 @@ public class SharedDepotBlockMethods {
 				.placeItemBackInInventory(outputs.extractItem(i, 64, false));
 
 		if (!wasEmptyHanded && !shouldntPlaceItem) {
-			TransportedItemStack transported = new TransportedItemStack(heldItem);
+			TransportedItemStack transported = new TransportedItemStack(stack);
 			transported.insertedFrom = player.getDirection();
 			transported.prevBeltPosition = .25f;
 			transported.beltPosition = .25f;
 			behaviour.setHeldItem(transported);
 			player.setItemInHand(hand, ItemStack.EMPTY);
-			AllSoundEvents.DEPOT_SLIDE.playOnServer(world, pos);
+			AllSoundEvents.DEPOT_SLIDE.playOnServer(level, pos);
 		}
 
 		behaviour.blockEntity.notifyUpdate();
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	public static void onLanded(BlockGetter worldIn, Entity entityIn) {

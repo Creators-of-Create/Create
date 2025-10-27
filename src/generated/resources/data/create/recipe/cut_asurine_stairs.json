@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "cut_asurine_stairs",
+  "key": {
+    "X": {
+      "item": "create:cut_asurine"
+    }
+  },
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "result": {
+    "count": 4,
+    "id": "create:cut_asurine_stairs"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "create:andesite_alloy"
+    },
+    "K": {
+      "item": "minecraft:dried_kelp"
+    }
+  },
+  "pattern": [
+    "AA",
+    "KK"
+  ],
+  "result": {
+    "count": 2,
+    "id": "create:andesite_tunnel"
+  }
+}

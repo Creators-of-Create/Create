@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "create:andesite_alloy"
+    },
+    "C": {
+      "tag": "c:storage_blocks/copper"
+    },
+    "P": {
+      "tag": "c:plates/gold"
+    }
+  },
+  "pattern": [
+    "P",
+    "A",
+    "C"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:steam_engine"
+  }
+}

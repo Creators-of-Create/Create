@@ -1,34 +1,28 @@
 package com.simibubi.create.content.contraptions;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent.Context;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-public class ContraptionRelocationPacket extends SimplePacketBase {
+public record ContraptionRelocationPacket(int entityId) implements ClientboundPacketPayload {
+	public static final StreamCodec<ByteBuf, ContraptionRelocationPacket> STREAM_CODEC = ByteBufCodecs.INT.map(
+			ContraptionRelocationPacket::new, ContraptionRelocationPacket::entityId
+	);
 
-	int entityID;
-
-	public ContraptionRelocationPacket(int entityID) {
-		this.entityID = entityID;
-	}
-
-	public ContraptionRelocationPacket(FriendlyByteBuf buffer) {
-		entityID = buffer.readInt();
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		OrientedContraptionEntity.handleRelocationPacket(this);
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeInt(entityID);
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONTRAPTION_RELOCATION;
 	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-			() -> () -> OrientedContraptionEntity.handleRelocationPacket(this)));
-		return true;
-	}
-
 }

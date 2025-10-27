@@ -19,7 +19,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.LevelEvent;
 
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class DropperMovementBehaviour implements MovementBehaviour {
 	@Override
@@ -80,7 +80,7 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 
 	@Nullable
 	private static ItemStack tryTopOff(ItemStack stack, IItemHandler from) {
-		Predicate<ItemStack> test = otherStack -> ItemStack.isSameItemSameTags(stack, otherStack);
+		Predicate<ItemStack> test = otherStack -> ItemStack.isSameItemSameComponents(stack, otherStack);
 		int needed = stack.getMaxStackSize() - stack.getCount();
 
 		ItemStack extracted = ItemHelper.extract(from, test, ItemHelper.ExtractionCountMode.UPTO, needed, false);

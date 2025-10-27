@@ -15,6 +15,7 @@ import com.simibubi.create.content.trains.bogey.BogeySizes.BogeySize;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -22,9 +23,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class BogeyStyle {
 	public final ResourceLocation id;
@@ -53,7 +53,7 @@ public class BogeyStyle {
 		this.defaultData = defaultData;
 		this.sizes = sizes;
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> {
 			this.sizeRenderers = new HashMap<>();
 			sizeRenderers.forEach((k, v) -> this.sizeRenderers.put(k, v.get()
 				.get()));
@@ -155,7 +155,7 @@ public class BogeyStyle {
 		public Builder size(BogeySizes.BogeySize size, Supplier<? extends AbstractBogeyBlock<?>> block,
 			 Supplier<Supplier<? extends SizeRenderer>> renderer) {
 			this.sizes.put(size, block);
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> {
 				this.sizeRenderers.put(size, renderer);
 			});
 			return this;

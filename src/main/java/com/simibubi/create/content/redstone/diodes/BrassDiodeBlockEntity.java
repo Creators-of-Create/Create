@@ -4,6 +4,8 @@ import static com.simibubi.create.content.redstone.diodes.BrassDiodeBlock.POWERI
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -12,6 +14,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -69,15 +72,15 @@ public abstract class BrassDiodeBlockEntity extends SmartBlockEntity implements 
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		state = compound.getInt("State");
-		super.read(compound, clientPacket);
+		super.read(compound, registries, clientPacket);
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putInt("State", state);
-		super.write(compound, clientPacket);
+		super.write(compound, registries, clientPacket);
 	}
 
 	private String format(int value) {
@@ -94,7 +97,7 @@ public abstract class BrassDiodeBlockEntity extends SmartBlockEntity implements 
 	}
 
 	@Override
-	public boolean readFromClipboard(CompoundTag tag, Player player, Direction side, boolean simulate) {
+	public boolean readFromClipboard(@NotNull HolderLookup.Provider registries, CompoundTag tag, Player player, Direction side, boolean simulate) {
 		if (!tag.contains("Inverted"))
 			return false;
 		if (simulate)
@@ -106,7 +109,7 @@ public abstract class BrassDiodeBlockEntity extends SmartBlockEntity implements 
 	}
 
 	@Override
-	public boolean writeToClipboard(CompoundTag tag, Direction side) {
+	public boolean writeToClipboard(@NotNull HolderLookup.Provider registries, CompoundTag tag, Direction side) {
 		tag.putBoolean("Inverted", getBlockState().getOptionalValue(BrassDiodeBlock.INVERTED)
 			.orElse(false));
 		return true;

@@ -2,9 +2,10 @@ package com.simibubi.create.content.schematics;
 
 import java.util.Optional;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllStructureProcessorTypes;
 
 import net.createmod.catnip.nbt.NBTProcessors;
@@ -24,9 +25,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 public class SchematicProcessor extends StructureProcessor {
 
 	public static final SchematicProcessor INSTANCE = new SchematicProcessor();
-	public static final Codec<SchematicProcessor> CODEC = Codec.unit(() -> {
-		return INSTANCE;
-	});
+	public static final MapCodec<SchematicProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
 
 	@Nullable
 	@Override

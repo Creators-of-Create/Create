@@ -1,90 +1,59 @@
 package com.simibubi.create.content.trains.station;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.decoration.slidingDoor.DoorControl;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import io.netty.buffer.ByteBuf;
+
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlockEntity> {
+	public static final StreamCodec<ByteBuf, StationEditPacket> STREAM_CODEC = StreamCodec.composite(
+			BlockPos.STREAM_CODEC, packet -> packet.pos,
+			ByteBufCodecs.BOOL, packet -> packet.dropSchedule,
+			ByteBufCodecs.BOOL, packet -> packet.assemblyMode,
+			CatnipStreamCodecBuilders.nullable(ByteBufCodecs.BOOL), packet -> packet.tryAssemble,
+			CatnipStreamCodecBuilders.nullable(DoorControl.STREAM_CODEC), packet -> packet.doorControl,
+			CatnipStreamCodecBuilders.nullable(ByteBufCodecs.stringUtf8(256)), packet -> packet.name,
+			StationEditPacket::new
+	);
 
-	boolean dropSchedule;
-	boolean assemblyMode;
-	Boolean tryAssemble;
-	DoorControl doorControl;
-	String name;
+	private final boolean dropSchedule;
+	private final boolean assemblyMode;
+	private final Boolean tryAssemble;
+	private final DoorControl doorControl;
+	private final String name;
 
 	public static StationEditPacket dropSchedule(BlockPos pos) {
-		StationEditPacket packet = new StationEditPacket(pos);
-		packet.dropSchedule = true;
-		return packet;
+		return new StationEditPacket(pos, true, false, false, null, null);
 	}
 
 	public static StationEditPacket tryAssemble(BlockPos pos) {
-		StationEditPacket packet = new StationEditPacket(pos);
-		packet.tryAssemble = true;
-		return packet;
+		return new StationEditPacket(pos, false, false, true, null, null);
 	}
 
 	public static StationEditPacket tryDisassemble(BlockPos pos) {
-		StationEditPacket packet = new StationEditPacket(pos);
-		packet.tryAssemble = false;
-		return packet;
+		return new StationEditPacket(pos, false, false, false, null, null);
 	}
 
 	public static StationEditPacket configure(BlockPos pos, boolean assemble, String name, DoorControl doorControl) {
-		StationEditPacket packet = new StationEditPacket(pos);
-		packet.assemblyMode = assemble;
-		packet.tryAssemble = null;
-		packet.name = name;
-		packet.doorControl = doorControl;
-		return packet;
+		return new StationEditPacket(pos, false, assemble, null, doorControl, name);
 	}
 
-	public StationEditPacket(FriendlyByteBuf buffer) {
-		super(buffer);
-	}
-
-	public StationEditPacket(BlockPos pos) {
+	private StationEditPacket(BlockPos pos, boolean dropSchedule, boolean assemblyMode, Boolean tryAssemble, DoorControl doorControl, String name) {
 		super(pos);
-	}
-
-	@Override
-	protected void writeSettings(FriendlyByteBuf buffer) {
-		buffer.writeBoolean(dropSchedule);
-		if (dropSchedule)
-			return;
-		buffer.writeBoolean(doorControl != null);
-		if (doorControl != null)
-			buffer.writeVarInt(doorControl.ordinal());
-		buffer.writeBoolean(tryAssemble != null);
-		if (tryAssemble != null) {
-			buffer.writeBoolean(tryAssemble);
-			return;
-		}
-		buffer.writeBoolean(assemblyMode);
-		buffer.writeUtf(name);
-	}
-
-	@Override
-	protected void readSettings(FriendlyByteBuf buffer) {
-		if (buffer.readBoolean()) {
-			dropSchedule = true;
-			return;
-		}
-		if (buffer.readBoolean())
-			doorControl = DoorControl.values()[Mth.clamp(buffer.readVarInt(), 0, DoorControl.values().length)];
-		name = "";
-		if (buffer.readBoolean()) {
-			tryAssemble = buffer.readBoolean();
-			return;
-		}
-		assemblyMode = buffer.readBoolean();
-		name = buffer.readUtf(256);
+		this.dropSchedule = dropSchedule;
+		this.assemblyMode = assemblyMode;
+		this.tryAssemble = tryAssemble;
+		this.doorControl = doorControl;
+		this.name = name;
 	}
 
 	@Override
@@ -100,11 +69,11 @@ public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlo
 			be.dropSchedule(player, station.getPresentTrain());
 			return;
 		}
-		
+
 		if (doorControl != null)
 			be.doorControls.set(doorControl);
 
-		if (!name.isBlank())
+		if (name != null && !name.isBlank())
 			be.updateName(name);
 
 		if (!(blockState.getBlock() instanceof StationBlock))
@@ -134,6 +103,7 @@ public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlo
 	}
 
 	@Override
-	protected void applySettings(StationBlockEntity be) {}
-
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONFIGURE_STATION;
+	}
 }

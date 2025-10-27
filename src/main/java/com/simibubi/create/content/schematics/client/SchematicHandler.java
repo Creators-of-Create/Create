@@ -1,14 +1,13 @@
 package com.simibubi.create.content.schematics.client;
 
 import java.util.List;
-import java.util.Vector;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.schematics.SchematicInstances;
@@ -22,18 +21,17 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.levelWrappers.SchematicLevel;
-import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.outliner.AABBOutline;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -50,10 +48,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-
-public class SchematicHandler implements IGuiOverlay {
+public class SchematicHandler implements LayeredDraw.Layer {
 
 	private String displayedSchematic;
 	private SchematicTransformation transformation;
@@ -68,15 +63,11 @@ public class SchematicHandler implements IGuiOverlay {
 	private ItemStack activeSchematicItem;
 	private AABBOutline outline;
 
-	private Vector<SchematicRenderer> renderers;
-	private SchematicHotbarSlotOverlay overlay;
+	private final SchematicRenderer[] renderers = new SchematicRenderer[3];
+	private final SchematicHotbarSlotOverlay overlay;
 	private ToolSelectionScreen selectionScreen;
 
 	public SchematicHandler() {
-		renderers = new Vector<>(3);
-		for (int i = 0; i < renderers.capacity(); i++)
-			renderers.add(new SchematicRenderer());
-
 		overlay = new SchematicHotbarSlotOverlay();
 		currentTool = ToolType.DEPLOY;
 		selectionScreen = new ToolSelectionScreen(ImmutableList.of(ToolType.DEPLOY), this::equip);
@@ -91,7 +82,6 @@ public class SchematicHandler implements IGuiOverlay {
 				syncCooldown = 0;
 				activeHotbarSlot = 0;
 				activeSchematicItem = null;
-				renderers.forEach(r -> r.setActive(false));
 			}
 			return;
 		}
@@ -107,15 +97,12 @@ public class SchematicHandler implements IGuiOverlay {
 			if (activeSchematicItem != null && itemLost(player)) {
 				activeHotbarSlot = 0;
 				activeSchematicItem = null;
-				renderers.forEach(r -> r.setActive(false));
 			}
 			return;
 		}
 
-		if (!active || !stack.getTag()
-			.getString("File")
+		if (!active || !stack.get(AllDataComponents.SCHEMATIC_FILE)
 			.equals(displayedSchematic)) {
-			renderers.forEach(r -> r.setActive(false));
 			init(player, stack);
 		}
 		if (!active)
@@ -133,8 +120,7 @@ public class SchematicHandler implements IGuiOverlay {
 
 	private void init(LocalPlayer player, ItemStack stack) {
 		loadSettings(stack);
-		displayedSchematic = stack.getTag()
-			.getString("File");
+		displayedSchematic = stack.get(AllDataComponents.SCHEMATIC_FILE);
 		active = true;
 		if (deployed) {
 			setupRenderer();
@@ -195,12 +181,9 @@ public class SchematicHandler implements IGuiOverlay {
 			transform.apply(be);
 		fixControllerBlockEntities(wMirroredLR);
 
-		renderers.get(0)
-			.display(w);
-		renderers.get(1)
-			.display(wMirroredFB);
-		renderers.get(2)
-			.display(wMirroredLR);
+		renderers[0] = new SchematicRenderer(w);
+		renderers[1] = new SchematicRenderer(wMirroredFB);
+		renderers[2] = new SchematicRenderer(wMirroredLR);
 	}
 
 	private void fixControllerBlockEntities(SchematicLevel level) {
@@ -224,60 +207,59 @@ public class SchematicHandler implements IGuiOverlay {
 	}
 
 	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {
-		boolean present = activeSchematicItem != null;
-		if (!active && !present)
+		if (!active) {
 			return;
-
-		if (active) {
-			ms.pushPose();
-			currentTool.getTool()
-				.renderTool(ms, buffer, camera);
-			ms.popPose();
 		}
+		boolean present = activeSchematicItem != null;
+		if (!present) {
+			return;
+		}
+
+		ms.pushPose();
+		currentTool.getTool()
+			.renderTool(ms, buffer, camera);
+		ms.popPose();
 
 		ms.pushPose();
 		transformation.applyTransformations(ms, camera);
 
-		if (!renderers.isEmpty()) {
-			float pt = AnimationTickHolder.getPartialTicks();
-			boolean lr = transformation.getScaleLR()
-				.getValue(pt) < 0;
-			boolean fb = transformation.getScaleFB()
-				.getValue(pt) < 0;
-			if (lr && !fb)
-				renderers.get(2)
-					.render(ms, buffer);
-			else if (fb && !lr)
-				renderers.get(1)
-					.render(ms, buffer);
-			else
-				renderers.get(0)
-					.render(ms, buffer);
+		float pt = AnimationTickHolder.getPartialTicks();
+		boolean lr = transformation.getScaleLR()
+			.getValue(pt) < 0;
+		boolean fb = transformation.getScaleFB()
+			.getValue(pt) < 0;
+		if (lr && !fb && renderers[2] != null) {
+			renderers[2].render(ms, buffer);
+		} else if (fb && !lr && renderers[1] != null) {
+			renderers[1].render(ms, buffer);
+		} else if (renderers[0] != null) {
+			renderers[0].render(ms, buffer);
 		}
 
-		if (active)
-			currentTool.getTool()
-				.renderOnSchematic(ms, buffer);
+		currentTool.getTool()
+			.renderOnSchematic(ms, buffer);
 
 		ms.popPose();
-
 	}
 
 	public void updateRenderers() {
 		for (SchematicRenderer renderer : renderers) {
-			renderer.update();
+			if (renderer != null) {
+				renderer.update();
+			}
 		}
 	}
 
 	@Override
-	public void render(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
-		if (Minecraft.getInstance().options.hideGui || !active)
+	public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.options.hideGui || !active)
 			return;
 		if (activeSchematicItem != null)
-			this.overlay.renderOn(graphics, activeHotbarSlot);
+			this.overlay.renderOn(guiGraphics, activeHotbarSlot);
 		currentTool.getTool()
-			.renderOverlay(gui, graphics, partialTicks, width, height);
-		selectionScreen.renderPassive(graphics, partialTicks);
+			.renderOverlay(mc.gui, guiGraphics, deltaTracker.getGameTimeDeltaPartialTick(false), guiGraphics.guiWidth(), guiGraphics.guiHeight());
+		selectionScreen.renderPassive(guiGraphics, deltaTracker.getGameTimeDeltaPartialTick(false));
 	}
 
 	public boolean onMouseInput(int button, boolean pressed) {
@@ -302,7 +284,7 @@ public class SchematicHandler implements IGuiOverlay {
 	public void onKeyInput(int key, boolean pressed) {
 		if (!active)
 			return;
-		if (key != AllKeys.TOOL_MENU.getBoundCode())
+		if (!AllKeys.TOOL_MENU.doesModifierAndCodeMatch(key))
 			return;
 
 		if (pressed && !selectionScreen.focused)
@@ -331,7 +313,7 @@ public class SchematicHandler implements IGuiOverlay {
 		ItemStack stack = player.getMainHandItem();
 		if (!AllItems.SCHEMATIC.isIn(stack))
 			return null;
-		if (!stack.hasTag())
+		if (!stack.has(AllDataComponents.SCHEMATIC_FILE))
 			return null;
 
 		activeSchematicItem = stack;
@@ -360,7 +342,7 @@ public class SchematicHandler implements IGuiOverlay {
 	public void sync() {
 		if (activeSchematicItem == null)
 			return;
-		AllPackets.getChannel().sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(),
+		CatnipServices.NETWORK.sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(),
 			transformation.getAnchor(), deployed));
 	}
 
@@ -371,15 +353,14 @@ public class SchematicHandler implements IGuiOverlay {
 	}
 
 	public void loadSettings(ItemStack blueprint) {
-		CompoundTag tag = blueprint.getTag();
-		BlockPos anchor = BlockPos.ZERO;
 		StructurePlaceSettings settings = SchematicItem.getSettings(blueprint);
 		transformation = new SchematicTransformation();
 
-		deployed = tag.getBoolean("Deployed");
-		if (deployed)
-			anchor = NbtUtils.readBlockPos(tag.getCompound("Anchor"));
-		Vec3i size = NBTHelper.readVec3i(tag.getList("Bounds", Tag.TAG_INT));
+		deployed = blueprint.getOrDefault(AllDataComponents.SCHEMATIC_DEPLOYED, false);
+		BlockPos anchor = blueprint.getOrDefault(AllDataComponents.SCHEMATIC_ANCHOR, BlockPos.ZERO);
+		Vec3i size = blueprint.get(AllDataComponents.SCHEMATIC_BOUNDS);
+		if (size == null)
+			return;
 
 		bounds = new AABB(0, 0, 0, size.getX(), size.getY(), size.getZ());
 		outline = new AABBOutline(bounds);
@@ -403,12 +384,9 @@ public class SchematicHandler implements IGuiOverlay {
 	}
 
 	public void printInstantly() {
-		AllPackets.getChannel().sendToServer(new SchematicPlacePacket(activeSchematicItem.copy()));
-		CompoundTag nbt = activeSchematicItem.getTag();
-		nbt.putBoolean("Deployed", false);
-		activeSchematicItem.setTag(nbt);
+		CatnipServices.NETWORK.sendToServer(new SchematicPlacePacket(activeSchematicItem.copy()));
+		activeSchematicItem.set(AllDataComponents.SCHEMATIC_DEPLOYED, false);
 		SchematicInstances.clearHash(activeSchematicItem);
-		renderers.forEach(r -> r.setActive(false));
 		active = false;
 		markDirty();
 	}

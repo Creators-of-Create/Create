@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -69,30 +70,30 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 	}
 
 	@Override
-	public void read(CompoundTag compound, boolean clientPacket) {
+	public void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		running = compound.getBoolean("Running");
 		mode = Mode.values()[compound.getInt("Mode")];
 		finished = compound.getBoolean("Finished");
 		prevRunningTicks = runningTicks = compound.getInt("Ticks");
-		super.read(compound, clientPacket);
+		super.read(compound, registries, clientPacket);
 
 		if (clientPacket) {
 			NBTHelper.iterateCompoundList(compound.getList("ParticleItems", Tag.TAG_COMPOUND),
-				c -> particleItems.add(ItemStack.of(c)));
+				c -> particleItems.add(ItemStack.parseOptional(registries, c)));
 			spawnParticles();
 		}
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putInt("Mode", mode.ordinal());
 		compound.putBoolean("Finished", finished);
 		compound.putInt("Ticks", runningTicks);
-		super.write(compound, clientPacket);
+		super.write(compound, registries, clientPacket);
 
 		if (clientPacket) {
-			compound.put("ParticleItems", NBTHelper.writeCompoundList(particleItems, ItemStack::serializeNBT));
+			compound.put("ParticleItems", NBTHelper.writeCompoundList(particleItems, s -> (CompoundTag) s.saveOptional(registries)));
 			particleItems.clear();
 		}
 	}

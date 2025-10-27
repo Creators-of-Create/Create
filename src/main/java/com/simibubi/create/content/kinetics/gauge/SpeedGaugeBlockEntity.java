@@ -2,9 +2,8 @@ package com.simibubi.create.content.kinetics.gauge;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.kinetics.base.IRotate.SpeedLevel;
@@ -12,16 +11,15 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import dan200.computercraft.api.peripheral.PeripheralCapability;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class SpeedGaugeBlockEntity extends GaugeBlockEntity {
 
@@ -37,9 +35,21 @@ public class SpeedGaugeBlockEntity extends GaugeBlockEntity {
 		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		if (Mods.COMPUTERCRAFT.isLoaded()) {
+			event.registerBlockEntity(
+					PeripheralCapability.get(),
+					AllBlockEntityTypes.SPEEDOMETER.get(),
+					(be, context) -> be.computerBehaviour.getPeripheralCapability()
+			);
+		}
+	}
+
 	@Override
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
+		if (computerBehaviour.hasAttachedComputer())
+			computerBehaviour.prepareComputerEvent(makeComputerKineticsChangeEvent());
 		float speed = Math.abs(getSpeed());
 
 		dialTarget = getDialTarget(speed);
@@ -80,18 +90,9 @@ public class SpeedGaugeBlockEntity extends GaugeBlockEntity {
 		return true;
 	}
 
-	@NotNull
 	@Override
-	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (computerBehaviour.isPeripheralCap(cap))
-			return computerBehaviour.getPeripheralCapability();
-		return super.getCapability(cap, side);
-	}
-
-	@Override
-	public void invalidateCaps() {
-		super.invalidateCaps();
+	public void invalidate() {
+		super.invalidate();
 		computerBehaviour.removePeripheral();
 	}
-
 }

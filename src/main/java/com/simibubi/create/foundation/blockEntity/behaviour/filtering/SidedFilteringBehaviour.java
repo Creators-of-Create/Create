@@ -16,6 +16,7 @@ import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
@@ -62,27 +63,27 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 	}
 
 	@Override
-	public void write(CompoundTag nbt, boolean clientPacket) {
+	public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		nbt.put("Filters", NBTHelper.writeCompoundList(sidedFilters.entrySet(), entry -> {
 			CompoundTag compound = new CompoundTag();
 			compound.putInt("Side", entry.getKey()
 				.get3DDataValue());
 			entry.getValue()
-				.write(compound, clientPacket);
+				.write(compound, registries, clientPacket);
 			return compound;
 		}));
-		super.write(nbt, clientPacket);
+		super.write(nbt, registries, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundTag nbt, boolean clientPacket) {
+	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		NBTHelper.iterateCompoundList(nbt.getList("Filters", Tag.TAG_COMPOUND), compound -> {
 			Direction face = Direction.from3DDataValue(compound.getInt("Side"));
 			if (sidedFilters.containsKey(face))
 				sidedFilters.get(face)
-					.read(compound, clientPacket);
+					.read(compound, registries, clientPacket);
 		});
-		super.read(nbt, clientPacket);
+		super.read(nbt, registries, clientPacket);
 	}
 
 	@Override

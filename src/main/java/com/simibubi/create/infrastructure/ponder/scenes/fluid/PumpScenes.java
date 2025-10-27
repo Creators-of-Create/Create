@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class PumpScenes {
 
@@ -56,6 +56,7 @@ public class PumpScenes {
 
 		scene.world().destroyBlock(pumpPos);
 		scene.world().restoreBlocks(pump);
+		scene.world().modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, s.getValue(PumpBlock.FACING).getOpposite()), false);
 		scene.world().setKineticSpeed(pump, 0);
 
 		scene.idle(15);
@@ -168,7 +169,7 @@ public class PumpScenes {
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
 		scene.idle(5);
-//		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
+//		scene.world().showSection(util.select.layersFrom(1), Direction.DOWN);
 
 		Selection largeCog = util.select().position(5, 0, 3);
 		Selection cogs = util.select().fromTo(5, 1, 4, 2, 1, 4)

@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
@@ -21,6 +21,9 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.core.BlockPos;
@@ -35,9 +38,6 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class FluidPropagator {
 
@@ -201,11 +201,11 @@ public class FluidPropagator {
 
 	public static boolean hasFluidCapability(BlockGetter world, BlockPos pos, Direction side) {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (blockEntity == null)
+		if (blockEntity == null || blockEntity.getLevel() == null)
 			return false;
-		LazyOptional<IFluidHandler> capability =
-			blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, side);
-		return capability.isPresent();
+		IFluidHandler capability =
+			blockEntity.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, blockEntity.getBlockPos(), side);
+		return capability != null;
 	}
 
 	@Nullable

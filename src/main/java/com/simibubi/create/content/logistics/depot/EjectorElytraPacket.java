@@ -1,45 +1,32 @@
 package com.simibubi.create.content.logistics.depot;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkEvent.Context;
 
-public class EjectorElytraPacket extends SimplePacketBase {
+public record EjectorElytraPacket(BlockPos pos) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, EjectorElytraPacket> STREAM_CODEC = BlockPos.STREAM_CODEC.map(
+			EjectorElytraPacket::new, EjectorElytraPacket::pos
+	);
 
-	private BlockPos pos;
-
-	public EjectorElytraPacket(BlockPos pos) {
-		this.pos = pos;
-	}
-
-	public EjectorElytraPacket(FriendlyByteBuf buffer) {
-		pos = buffer.readBlockPos();
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.EJECTOR_ELYTRA;
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeBlockPos(pos);
+	public void handle(ServerPlayer player) {
+		Level world = player.level();
+		if (!world.isLoaded(pos))
+			return;
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (blockEntity instanceof EjectorBlockEntity)
+			((EjectorBlockEntity) blockEntity).deployElytra(player);
 	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer player = context.getSender();
-			if (player == null)
-				return;
-			Level world = player.level();
-			if (world == null || !world.isLoaded(pos))
-				return;
-			BlockEntity blockEntity = world.getBlockEntity(pos);
-			if (blockEntity instanceof EjectorBlockEntity)
-				((EjectorBlockEntity) blockEntity).deployElytra(player);
-		});
-		return true;
-	}
-
 }

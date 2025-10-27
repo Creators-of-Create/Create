@@ -1,6 +1,6 @@
 package com.simibubi.create.content.redstone.diodes;
 
-import java.util.Vector;
+import java.util.List;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
@@ -13,14 +13,14 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.generators.BlockModelProvider;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.ModelFile.ExistingModelFile;
+import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.ModelFile.ExistingModelFile;
 
 public abstract class AbstractDiodeGenerator extends SpecialBlockStateGen {
 
-	private Vector<ModelFile> models;
+	private List<ModelFile> models;
 
 	public static <I extends BlockItem> void diodeItemModel(DataGenContext<Item, I> c, RegistrateItemModelProvider p) {
 		String name = c.getName();
@@ -39,8 +39,8 @@ public abstract class AbstractDiodeGenerator extends SpecialBlockStateGen {
 		return horizontalAngle(state.getValue(AbstractDiodeBlock.FACING));
 	}
 
-	protected abstract <T extends Block> Vector<ModelFile> createModels(DataGenContext<Block, T> ctx,
-		BlockModelProvider prov);
+	protected abstract <T extends Block> List<ModelFile> createModels(DataGenContext<Block, T> ctx,
+																	  BlockModelProvider prov);
 
 	protected abstract int getModelIndex(BlockState state);
 
@@ -50,10 +50,6 @@ public abstract class AbstractDiodeGenerator extends SpecialBlockStateGen {
 		if (models == null)
 			models = createModels(ctx, prov.models());
 		return models.get(getModelIndex(state));
-	}
-
-	protected Vector<ModelFile> makeVector(int size) {
-		return new Vector<>(size);
 	}
 
 	protected ExistingModelFile existingModel(BlockModelProvider prov, String name) {
@@ -69,7 +65,7 @@ public abstract class AbstractDiodeGenerator extends SpecialBlockStateGen {
 	}
 
 	protected ResourceLocation poweredTorch() {
-		return new ResourceLocation("block/redstone_torch");
+		return ResourceLocation.withDefaultNamespace("block/redstone_torch");
 	}
 
 }

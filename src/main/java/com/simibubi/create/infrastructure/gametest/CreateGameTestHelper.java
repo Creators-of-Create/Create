@@ -2,7 +2,6 @@ package com.simibubi.create.infrastructure.gametest;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -28,9 +27,10 @@ import com.simibubi.create.foundation.mixin.accessor.GameTestHelperAccessor;
 
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.server.level.ServerLevel;
@@ -40,6 +40,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeverBlock;
@@ -50,13 +51,11 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.items.IItemHandler;
 
 /**
  * A helper class expanding the functionality of {@link GameTestHelper}.
@@ -89,7 +88,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 	public void flipBlock(BlockPos pos) {
 		BlockState original = getBlockState(pos);
 		if (!original.hasProperty(BlockStateProperties.FACING))
-			fail("FACING property not in block: " + ForgeRegistries.BLOCKS.getKey(original.getBlock()));
+			fail("FACING property not in block: " + BuiltInRegistries.BLOCK.getKey(original.getBlock()));
 		Direction facing = original.getValue(BlockStateProperties.FACING);
 		BlockState reversed = original.setValue(BlockStateProperties.FACING, facing.getOpposite());
 		setBlock(pos, reversed);
@@ -153,7 +152,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 			ItemStack filter = ContraptionControlsMovement.getFilter(actor.right);
 			if (filter != null && filter.is(item.asItem())) {
 				controls.handlePlayerInteraction(
-						makeMockPlayer(), InteractionHand.MAIN_HAND, localPos, contraption.entity
+						makeMockPlayer(GameType.CREATIVE), InteractionHand.MAIN_HAND, localPos, contraption.entity
 				);
 				toggled.set(true);
 			}
@@ -169,9 +168,9 @@ public class CreateGameTestHelper extends GameTestHelper {
 		BlockEntity be = getBlockEntity(pos);
 		BlockEntityType<?> actualType = be == null ? null : be.getType();
 		if (actualType != type) {
-			String actualId = actualType == null ? "null" : CatnipServices.REGISTRIES.getKeyOrThrow(actualType).toString();
+			String actualId = actualType == null ? "null" : RegisteredObjectsHelper.getKeyOrThrow(actualType).toString();
 			String error = "Expected block entity at pos [%s] with type [%s], got [%s]".formatted(
-					pos, CatnipServices.REGISTRIES.getKeyOrThrow(type), actualId
+					pos, RegisteredObjectsHelper.getKeyOrThrow(type), actualId
 			);
 			fail(error);
 		}
@@ -184,7 +183,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 	public <T extends BlockEntity & IMultiBlockEntityContainer> T getControllerBlockEntity(BlockEntityType<T> type, BlockPos anySegment) {
 		T be = getBlockEntity(type, anySegment).getControllerBE();
 		if (be == null)
-			fail("Could not get block entity controller with type [%s] from pos [%s]".formatted(CatnipServices.REGISTRIES.getKeyOrThrow(type), anySegment));
+			fail("Could not get block entity controller with type [%s] from pos [%s]".formatted(RegisteredObjectsHelper.getKeyOrThrow(type), anySegment));
 		return be;
 	}
 
@@ -217,7 +216,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 	 */
 	public void spawnItems(BlockPos pos, Item item, int amount) {
 		while (amount > 0) {
-			int toSpawn = Math.min(amount, item.getMaxStackSize());
+			int toSpawn = Math.min(amount, item.getMaxStackSize(new ItemStack(item)));
 			amount -= toSpawn;
 			ItemStack stack = new ItemStack(item, toSpawn);
 			spawnItem(pos, stack);
@@ -250,10 +249,10 @@ public class CreateGameTestHelper extends GameTestHelper {
 		BlockEntity be = getBlockEntity(pos);
 		if (be == null)
 			fail("BlockEntity not present");
-		Optional<IFluidHandler> handler = be.getCapability(ForgeCapabilities.FLUID_HANDLER).resolve();
-		if (handler.isEmpty())
+		IFluidHandler handler = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+		if (handler == null)
 			fail("handler not present");
-		return handler.get();
+		return handler;
 	}
 
 	/**
@@ -293,7 +292,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 	 */
 	public void assertFluidPresent(FluidStack fluid, BlockPos pos) {
 		FluidStack contained = getTankContents(pos);
-		if (!fluid.isFluidEqual(contained))
+		if (!FluidStack.isSameFluidSameComponents(fluid, contained))
 			fail("Different fluids");
 		if (fluid.getAmount() != contained.getAmount())
 			fail("Different amounts");
@@ -318,10 +317,10 @@ public class CreateGameTestHelper extends GameTestHelper {
 		BlockEntity be = getBlockEntity(pos);
 		if (be == null)
 			fail("BlockEntity not present");
-		Optional<IItemHandler> handler = be.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
-		if (handler.isEmpty())
+		IItemHandler handler = be.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, be.getBlockPos(), null);
+		if (handler == null)
 			fail("handler not present");
-		return handler.get();
+		return handler;
 	}
 
 	/**
@@ -430,7 +429,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 	 */
 	public void assertContainerContains(BlockPos pos, ItemStack item) {
 		IItemHandler storage = itemStorageAt(pos);
-		ItemStack extracted = ItemHelper.extract(storage, stack -> ItemHandlerHelper.canItemStacksStack(stack, item), item.getCount(), true);
+		ItemStack extracted = ItemHelper.extract(storage, stack -> ItemStack.isSameItemSameComponents(stack, item), item.getCount(), true);
 		if (extracted.isEmpty())
 			fail("item not present: " + item);
 	}

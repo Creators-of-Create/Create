@@ -1,37 +1,32 @@
 package com.simibubi.create.content.equipment.zapper;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.equipment.zapper.ZapperRenderHandler.LaserBeam;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class ZapperBeamPacket extends ShootGadgetPacket {
+	public static final StreamCodec<ByteBuf, ZapperBeamPacket> STREAM_CODEC = StreamCodec.composite(
+			CatnipStreamCodecs.VEC3, packet -> packet.location,
+			CatnipStreamCodecs.HAND, packet -> packet.hand,
+			ByteBufCodecs.BOOL, packet -> packet.self,
+			CatnipStreamCodecs.VEC3, packet -> packet.target,
+			ZapperBeamPacket::new
+	);
 
-	public Vec3 target;
+	private final Vec3 target;
 
-	public ZapperBeamPacket(Vec3 start, Vec3 target, InteractionHand hand, boolean self) {
+	public ZapperBeamPacket(Vec3 start, InteractionHand hand, boolean self, Vec3 target) {
 		super(start, hand, self);
 		this.target = target;
-	}
-
-	public ZapperBeamPacket(FriendlyByteBuf buffer) {
-		super(buffer);
-	}
-
-	@Override
-	protected void readAdditional(FriendlyByteBuf buffer) {
-		target = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-	}
-
-	@Override
-	protected void writeAdditional(FriendlyByteBuf buffer) {
-		buffer.writeDouble(target.x);
-		buffer.writeDouble(target.y);
-		buffer.writeDouble(target.z);
 	}
 
 	@Override
@@ -46,4 +41,8 @@ public class ZapperBeamPacket extends ShootGadgetPacket {
 		CreateClient.ZAPPER_RENDER_HANDLER.addBeam(new LaserBeam(location, target));
 	}
 
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.BEAM_EFFECT;
+	}
 }

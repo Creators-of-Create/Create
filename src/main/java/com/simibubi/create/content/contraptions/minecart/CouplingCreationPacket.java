@@ -1,39 +1,31 @@
 package com.simibubi.create.content.contraptions.minecart;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
-import net.minecraft.network.FriendlyByteBuf;
+import com.simibubi.create.AllPackets;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
-import net.minecraftforge.network.NetworkEvent.Context;
 
-public class CouplingCreationPacket extends SimplePacketBase {
-
-	int id1, id2;
+public record CouplingCreationPacket(int id1, int id2) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, CouplingCreationPacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.VAR_INT, CouplingCreationPacket::id1,
+			ByteBufCodecs.VAR_INT, CouplingCreationPacket::id2,
+			CouplingCreationPacket::new
+	);
 
 	public CouplingCreationPacket(AbstractMinecart cart1, AbstractMinecart cart2) {
-		id1 = cart1.getId();
-		id2 = cart2.getId();
-	}
-
-	public CouplingCreationPacket(FriendlyByteBuf buffer) {
-		id1 = buffer.readInt();
-		id2 = buffer.readInt();
+		this(cart1.getId(), cart2.getId());
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeInt(id1);
-		buffer.writeInt(id2);
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.MINECART_COUPLING_CREATION;
 	}
 
 	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer sender = context.getSender();
-			if (sender != null)
-				CouplingHandler.tryToCoupleCarts(sender, sender.level(), id1, id2);
-		});
-		return true;
+	public void handle(ServerPlayer player) {
+		CouplingHandler.tryToCoupleCarts(player, player.level(), id1, id2);
 	}
-
 }

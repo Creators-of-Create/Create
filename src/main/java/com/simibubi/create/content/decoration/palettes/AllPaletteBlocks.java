@@ -19,17 +19,17 @@ import com.simibubi.create.foundation.data.WindowGen;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
-import net.minecraftforge.common.Tags;
-
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.GlassBlock;
+import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
+
+import net.neoforged.neoforge.common.Tags;
 
 public class AllPaletteBlocks {
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
@@ -40,16 +40,15 @@ public class AllPaletteBlocks {
 
 	// Windows and Glass
 
-	public static final BlockEntry<GlassBlock> TILED_GLASS = REGISTRATE.block("tiled_glass", GlassBlock::new)
+	public static final BlockEntry<TransparentBlock> TILED_GLASS = REGISTRATE.block("tiled_glass", TransparentBlock::new)
 		.initialProperties(() -> Blocks.GLASS)
 		.addLayer(() -> RenderType::cutout)
-		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), RecipeCategory.BUILDING_BLOCKS,
-			c::get))
+		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_BLOCKS_COLORLESS), RecipeCategory.BUILDING_BLOCKS, c))
 		.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/"))
 		.loot((t, g) -> t.dropWhenSilkTouch(g))
-		.tag(Tags.Blocks.GLASS_COLORLESS, BlockTags.IMPERMEABLE)
+		.tag(Tags.Blocks.GLASS_BLOCKS_COLORLESS, BlockTags.IMPERMEABLE)
 		.item()
-		.tag(Tags.Items.GLASS_COLORLESS)
+		.tag(Tags.Items.GLASS_BLOCKS_COLORLESS)
 		.build()
 		.register();
 
@@ -62,7 +61,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<GlassPaneBlock> TILED_GLASS_PANE =
 		WindowGen.standardGlassPane("tiled_glass", TILED_GLASS, Create.asResource("block/palettes/tiled_glass"),
-			new ResourceLocation("block/glass_pane_top"), () -> RenderType::cutoutMipped);
+			ResourceLocation.withDefaultNamespace("block/glass_pane_top"), () -> RenderType::cutoutMipped);
 
 	public static final BlockEntry<ConnectedGlassPaneBlock> FRAMED_GLASS_PANE =
 		framedGlassPane("framed_glass", FRAMED_GLASS, () -> AllSpriteShifts.FRAMED_GLASS),

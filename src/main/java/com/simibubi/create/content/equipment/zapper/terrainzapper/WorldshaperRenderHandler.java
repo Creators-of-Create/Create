@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Supplier;
 
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSpecialTextures;
 
@@ -46,33 +47,30 @@ public class WorldshaperRenderHandler {
 		boolean zapperInOff = AllItems.WORLDSHAPER.isIn(heldOff);
 
 		if (zapperInMain) {
-			CompoundTag tag = heldMain.getOrCreateTag();
-			if (!tag.contains("_Swap") || !zapperInOff) {
-				createBrushOutline(tag, player, heldMain);
+			if (!heldMain.has(AllDataComponents.SHAPER_SWAP) || !zapperInOff) {
+				createBrushOutline(player, heldMain);
 				return;
 			}
 		}
 
 		if (zapperInOff) {
-			CompoundTag tag = heldOff.getOrCreateTag();
-			createBrushOutline(tag, player, heldOff);
+			createBrushOutline(player, heldOff);
 			return;
 		}
 
 		renderedPositions = null;
 	}
 
-	public static void createBrushOutline(CompoundTag tag, LocalPlayer player, ItemStack zapper) {
-		if (!tag.contains("BrushParams")) {
+	public static void createBrushOutline(LocalPlayer player, ItemStack zapper) {
+		if (!zapper.has(AllDataComponents.SHAPER_BRUSH_PARAMS)) {
 			renderedPositions = null;
 			return;
 		}
 
-		Brush brush = NBTHelper.readEnum(tag, "Brush", TerrainBrushes.class)
-			.get();
-		PlacementOptions placement = NBTHelper.readEnum(tag, "Placement", PlacementOptions.class);
-		TerrainTools tool = NBTHelper.readEnum(tag, "Tool", TerrainTools.class);
-		BlockPos params = NbtUtils.readBlockPos(tag.getCompound("BrushParams"));
+		Brush brush = zapper.getOrDefault(AllDataComponents.SHAPER_BRUSH, TerrainBrushes.Cuboid).get();
+		PlacementOptions placement = zapper.getOrDefault(AllDataComponents.SHAPER_PLACEMENT_OPTIONS, PlacementOptions.Merged);
+		TerrainTools tool = zapper.getOrDefault(AllDataComponents.SHAPER_TOOL, TerrainTools.Fill);
+		BlockPos params = zapper.get(AllDataComponents.SHAPER_BRUSH_PARAMS);
 		brush.set(params.getX(), params.getY(), params.getZ());
 
 		Vec3 start = player.position()

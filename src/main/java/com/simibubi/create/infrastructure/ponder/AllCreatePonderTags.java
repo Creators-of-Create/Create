@@ -6,15 +6,15 @@ import com.simibubi.create.Create;
 import com.simibubi.create.compat.Mods;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class AllCreatePonderTags {
 
@@ -46,10 +46,10 @@ public class AllCreatePonderTags {
 
 	public static void register(PonderTagRegistrationHelper<ResourceLocation> helper) {
 
-		PonderTagRegistrationHelper<RegistryEntry<?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
+		PonderTagRegistrationHelper<RegistryEntry<?, ?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
 		PonderTagRegistrationHelper<ItemLike> itemHelper = helper.withKeyFunction(
-				CatnipServices.REGISTRIES::getKeyOrThrow);
+				RegisteredObjectsHelper::getKeyOrThrow);
 
 		helper.registerTag(KINETIC_RELAYS)
 				.addToIndex()
@@ -85,7 +85,7 @@ public class AllCreatePonderTags {
 				.title("Item Transportation")
 				.description("Components which help moving items around")
 				.register();
-		
+
 		helper.registerTag(HIGH_LOGISTICS)
 				.addToIndex()
 				.item(AllBlocks.STOCK_TICKER.get(), true, false)
@@ -365,7 +365,7 @@ public class AllCreatePonderTags {
 				.add(AllBlocks.FACTORY_GAUGE)
 				.add(AllBlocks.REPACKAGER)
 				.add(AllItems.PACKAGE_FILTER);
-		
+
 		HELPER.addToTag(CONTRAPTION_ACTOR)
 				.add(AllBlocks.MECHANICAL_HARVESTER)
 				.add(AllBlocks.MECHANICAL_PLOUGH)
@@ -389,6 +389,7 @@ public class AllCreatePonderTags {
 
 		HELPER.addToTag(DISPLAY_SOURCES)
 				.add(AllBlocks.SEATS.get(DyeColor.WHITE))
+				.add(AllBlocks.DEPOT)
 				.add(AllBlocks.ORANGE_NIXIE_TUBE)
 				.add(AllBlocks.THRESHOLD_SWITCH)
 				.add(AllBlocks.SMART_OBSERVER)
@@ -420,8 +421,8 @@ public class AllCreatePonderTags {
 			.add(Blocks.BARREL);
 
 		Mods.COMPUTERCRAFT.executeIfInstalled(() -> () -> {
-			Block computer = ForgeRegistries.BLOCKS.getValue(Mods.COMPUTERCRAFT.rl("computer_advanced"));
-			if (computer != null)
+			Block computer = BuiltInRegistries.BLOCK.get(Mods.COMPUTERCRAFT.rl("computer_advanced"));
+			if (computer != Blocks.AIR)
 				itemHelper.addToTag(DISPLAY_SOURCES).add(computer);
 		});
 

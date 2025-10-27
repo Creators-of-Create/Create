@@ -38,19 +38,20 @@ public class DyeHelper {
 	private static final Map<DyeColor, Supplier<ItemLike>> WOOL_TABLE = new HashMap<>();
 
 	private static final Map<DyeColor, Couple<Integer>> DYE_TABLE = new HashMap<>();
-static {
+
+	static {
 		// DyeColor, ( Front RGB, Back RGB )
 		addDye(DyeColor.BLACK, 0x45403B, 0x21201F, Blocks.BLACK_WOOL);
 		addDye(DyeColor.RED, 0xB13937, 0x632737, Blocks.RED_WOOL);
 		addDye(DyeColor.GREEN, 0x208A46, 0x1D6045, Blocks.GREEN_WOOL);
 		addDye(DyeColor.BROWN, 0xAC855C, 0x68533E, Blocks.BROWN_WOOL);
 
-	addDye(DyeColor.BLUE, 0x5391E1, 0x504B90, Blocks.BLUE_WOOL);
+		addDye(DyeColor.BLUE, 0x5391E1, 0x504B90, Blocks.BLUE_WOOL);
 		addDye(DyeColor.GRAY, 0x5D666F, 0x313538, Blocks.GRAY_WOOL);
 		addDye(DyeColor.LIGHT_GRAY, 0x95969B, 0x707070, Blocks.LIGHT_GRAY_WOOL);
 		addDye(DyeColor.PURPLE, 0x9F54AE, 0x63366C, Blocks.PURPLE_WOOL);
 
-	addDye(DyeColor.CYAN, 0x3EABB4, 0x3C7872, Blocks.CYAN_WOOL);
+		addDye(DyeColor.CYAN, 0x3EABB4, 0x3C7872, Blocks.CYAN_WOOL);
 		addDye(DyeColor.PINK, 0xD5A8CB, 0xB86B95, Blocks.PINK_WOOL);
 		addDye(DyeColor.LIME, 0xA3DF55, 0x4FB16F, Blocks.LIME_WOOL);
 		addDye(DyeColor.YELLOW, 0xE6D756, 0xE9AC29, Blocks.YELLOW_WOOL);

@@ -1,14 +1,15 @@
 package com.simibubi.create.api.data.recipe;
 
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.UnaryOperator;
 
 import com.google.common.base.Supplier;
 import com.simibubi.create.Create;
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
@@ -21,8 +22,8 @@ import net.minecraft.world.level.ItemLike;
  */
 public abstract class MechanicalCraftingRecipeGen extends BaseRecipeProvider {
 
-	public MechanicalCraftingRecipeGen(PackOutput output, String defaultNamespace) {
-		super(output, defaultNamespace);
+	public MechanicalCraftingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, String defaultNamespace) {
+		super(output, registries, defaultNamespace);
 	}
 
 	protected GeneratedRecipeBuilder create(Supplier<ItemLike> result) {
@@ -30,15 +31,15 @@ public abstract class MechanicalCraftingRecipeGen extends BaseRecipeProvider {
 	}
 
 	@Override
-	protected void buildRecipes(Consumer<FinishedRecipe> p_200404_1_) {
-		all.forEach(c -> c.register(p_200404_1_));
-		Create.LOGGER.info(getName() + " registered " + all.size() + " recipe" + (all.size() == 1 ? "" : "s"));
+	public void buildRecipes(RecipeOutput output) {
+		all.forEach(c -> c.register(output));
+		Create.LOGGER.info("{} registered {} recipe{}", getName(), all.size(), all.size() == 1 ? "" : "s");
 	}
 
 	protected class GeneratedRecipeBuilder {
 
 		private String suffix;
-		private Supplier<ItemLike> result;
+		private final Supplier<ItemLike> result;
 		private int amount;
 
 		public GeneratedRecipeBuilder(Supplier<ItemLike> result) {
@@ -61,7 +62,7 @@ public abstract class MechanicalCraftingRecipeGen extends BaseRecipeProvider {
 			return register(consumer -> {
 				MechanicalCraftingRecipeBuilder b =
 					builder.apply(MechanicalCraftingRecipeBuilder.shapedRecipe(result.get(), amount));
-				ResourceLocation location = asResource("mechanical_crafting/" + CatnipServices.REGISTRIES.getKeyOrThrow(result.get()
+				ResourceLocation location = asResource("mechanical_crafting/" + RegisteredObjectsHelper.getKeyOrThrow(result.get()
 								.asItem())
 					.getPath() + suffix);
 				b.build(consumer, location);

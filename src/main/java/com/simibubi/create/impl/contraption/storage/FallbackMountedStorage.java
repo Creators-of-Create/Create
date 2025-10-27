@@ -2,13 +2,13 @@ package com.simibubi.create.impl.contraption.storage;
 
 import java.util.Optional;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllMountedStorageTypes;
 import com.simibubi.create.api.contraption.storage.item.simple.SimpleMountedStorage;
 
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 /**
  * A fallback mounted storage impl that will try to be used when no type is
@@ -16,7 +16,7 @@ import net.minecraftforge.items.ItemStackHandler;
  * whose class is exactly {@link ItemStackHandler}.
  */
 public class FallbackMountedStorage extends SimpleMountedStorage {
-	public static final Codec<FallbackMountedStorage> CODEC = SimpleMountedStorage.codec(FallbackMountedStorage::new);
+	public static final MapCodec<FallbackMountedStorage> CODEC = SimpleMountedStorage.codec(FallbackMountedStorage::new);
 
 	public FallbackMountedStorage(IItemHandler handler) {
 		super(AllMountedStorageTypes.FALLBACK.get(), handler);

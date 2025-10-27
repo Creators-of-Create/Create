@@ -1,0 +1,28 @@
+{
+  "parent": "create:pulley_maxed",
+  "criteria": {
+    "0": {
+      "trigger": "create:cart_pickup_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.cart_pickup.desc"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "create:chest_minecart_contraption"
+    },
+    "title": {
+      "translate": "advancement.create.cart_pickup"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

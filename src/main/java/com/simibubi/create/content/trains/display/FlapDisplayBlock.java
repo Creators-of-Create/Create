@@ -25,15 +25,14 @@ import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
@@ -116,85 +115,80 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-								 BlockHitResult ray) {
-
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (player.isShiftKeyDown())
-			return InteractionResult.PASS;
-
-		ItemStack heldItem = player.getItemInHand(hand);
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
-		if (placementHelper.matchesItem(heldItem))
-			return placementHelper.getOffset(player, world, state, pos, ray)
-				.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
+		if (placementHelper.matchesItem(stack))
+			return placementHelper.getOffset(player, level, state, pos, hitResult)
+				.placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
 
-		FlapDisplayBlockEntity flapBE = getBlockEntity(world, pos);
+		FlapDisplayBlockEntity flapBE = getBlockEntity(level, pos);
 
 		if (flapBE == null)
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		flapBE = flapBE.getController();
 		if (flapBE == null)
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		double yCoord = ray.getLocation()
-			.add(Vec3.atLowerCornerOf(ray.getDirection()
+		double yCoord = hitResult.getLocation()
+			.add(Vec3.atLowerCornerOf(hitResult.getDirection()
 					.getOpposite()
 					.getNormal())
 				.scale(.125f)).y;
 
 		int lineIndex = flapBE.getLineIndexAt(yCoord);
 
-		if (heldItem.isEmpty()) {
+		if (stack.isEmpty()) {
 			if (!flapBE.isSpeedRequirementFulfilled())
-				return InteractionResult.PASS;
+				return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 			flapBE.applyTextManually(lineIndex, null);
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
 
-		if (heldItem.getItem() == Items.GLOW_INK_SAC) {
-			if (!world.isClientSide) {
-				world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+		if (stack.getItem() == Items.GLOW_INK_SAC) {
+			if (!level.isClientSide) {
+				level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
 				flapBE.setGlowing(lineIndex);
 			}
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
 
 		boolean display =
-			heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName() || AllBlocks.CLIPBOARD.isIn(heldItem);
-		DyeColor dye = DyeColor.getColor(heldItem);
+			stack.getItem() == Items.NAME_TAG && stack.has(DataComponents.CUSTOM_NAME) || AllBlocks.CLIPBOARD.isIn(stack);
+		DyeColor dye = DyeColor.getColor(stack);
 
 		if (!display && dye == null)
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (dye == null && !flapBE.isSpeedRequirementFulfilled())
-			return InteractionResult.PASS;
-		if (world.isClientSide)
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		if (level.isClientSide)
+			return ItemInteractionResult.SUCCESS;
 
-		CompoundTag tag = heldItem.getTagElement("display");
-		String tagElement = tag != null && tag.contains("Name", Tag.TAG_STRING) ? tag.getString("Name") : null;
+		Component customName = stack.get(DataComponents.CUSTOM_NAME);
 
 		if (display) {
-			if (AllBlocks.CLIPBOARD.isIn(heldItem)) {
-				List<ClipboardEntry> entries = ClipboardEntry.getLastViewedEntries(heldItem);
+			if (AllBlocks.CLIPBOARD.isIn(stack)) {
+				List<ClipboardEntry> entries = ClipboardEntry.getLastViewedEntries(stack);
 				int line = lineIndex;
 				for (ClipboardEntry entry : entries) {
 					for (String string : entry.text.getString()
 						.split("\n")) {
-						flapBE.applyTextManually(line++, Component.Serializer.toJson(Component.literal(string)));
+						flapBE.applyTextManually(line++, Component.literal(string));
 					}
 				}
-				return InteractionResult.SUCCESS;
+				return ItemInteractionResult.SUCCESS;
 			}
 
-			flapBE.applyTextManually(lineIndex, tagElement);
+			flapBE.applyTextManually(lineIndex, customName);
 		}
 		if (dye != null) {
-			world.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+			level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
 			flapBE.setColour(lineIndex, dye);
 		}
 
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@Override

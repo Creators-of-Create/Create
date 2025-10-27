@@ -11,6 +11,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.trainmap.TrainMapSync.SignalState;
 import com.simibubi.create.compat.trainmap.TrainMapSync.TrainMapSyncEntry;
 import com.simibubi.create.compat.trainmap.TrainMapSync.TrainState;
@@ -48,7 +49,14 @@ import net.minecraft.world.phys.Vec3;
 public class TrainMapManager {
 
 	public static void tick() {
-		tick(Minecraft.getInstance().level.dimension());
+		ResourceKey<Level> playerDimension = Minecraft.getInstance().level.dimension();
+
+		if (Mods.XAEROWORLDMAP.isLoaded() && XaeroTrainMap.isMapOpen(Minecraft.getInstance().screen)) {
+			ResourceKey<Level> renderedDimension = XaeroTrainMap.getRenderedDimension();
+			tick(renderedDimension != null ? renderedDimension : playerDimension);
+		} else {
+			tick(playerDimension);
+		}
 	}
 
 	public static void tick(ResourceKey<Level> dimension) {
@@ -59,7 +67,7 @@ public class TrainMapManager {
 		}
 	}
 
-	public static List<FormattedText> renderAndPick(GuiGraphics graphics, int mouseX, int mouseY, float pt,
+	public static List<FormattedText> renderAndPick(GuiGraphics graphics, int mouseX, int mouseY,
 		boolean linearFiltering, Rect2i bounds) {
 		Object hoveredElement = null;
 
@@ -69,9 +77,9 @@ public class TrainMapManager {
 		bounds.setWidth(bounds.getWidth() + 2 * offScreenMargin);
 		bounds.setHeight(bounds.getHeight() + 2 * offScreenMargin);
 
-		TrainMapRenderer.INSTANCE.render(graphics, mouseX, mouseY, pt, linearFiltering, bounds);
-		hoveredElement = drawTrains(graphics, mouseX, mouseY, pt, hoveredElement, bounds);
-		hoveredElement = drawPoints(graphics, mouseX, mouseY, pt, hoveredElement, bounds);
+		TrainMapRenderer.INSTANCE.render(graphics, linearFiltering, bounds);
+		hoveredElement = drawTrains(graphics, mouseX, mouseY, hoveredElement, bounds);
+		hoveredElement = drawPoints(graphics, mouseX, mouseY, hoveredElement, bounds);
 
 		graphics.bufferSource()
 			.endBatch();
@@ -137,8 +145,8 @@ public class TrainMapManager {
 
 		if (!trainEntry.ownerName.isBlank())
 			CreateLang.translate("train_map.train_owned_by", trainEntry.ownerName)
-				.color(blue)
-				.addTo(output);
+					.color(blue)
+					.addTo(output);
 
 		switch (state) {
 
@@ -179,12 +187,12 @@ public class TrainMapManager {
 		if (!currentStation.isBlank()) {
 			if (targetStationDistance == 0)
 				CreateLang.translate("train_map.train_at_station", currentStation)
-					.color(darkBlue)
-					.addTo(output);
+						.color(darkBlue)
+						.addTo(output);
 			else
 				CreateLang.translate("train_map.train_moving_to_station", currentStation, targetStationDistance)
-					.color(darkBlue)
-					.addTo(output);
+						.color(darkBlue)
+						.addTo(output);
 		}
 
 		if (signalState != SignalState.NOT_WAITING) {
@@ -205,11 +213,12 @@ public class TrainMapManager {
 					Train trainWaitingFor = CreateClient.RAILWAYS.trains.get(waitingFor);
 					if (trainWaitingFor != null) {
 						CreateLang.translate("train_map.for_other_train", trainWaitingFor.name.getString())
-							.color(blue)
-							.addTo(output);
+								.color(blue)
+								.addTo(output);
 						trainFound = true;
 					}
 				}
+
 
 				if (!trainFound) {
 					if (chainSignal)
@@ -232,7 +241,7 @@ public class TrainMapManager {
 		return output;
 	}
 
-	private static Object drawPoints(GuiGraphics graphics, int mouseX, int mouseY, float pt, Object hoveredElement,
+	private static Object drawPoints(GuiGraphics graphics, int mouseX, int mouseY, Object hoveredElement,
 		Rect2i bounds) {
 		PoseStack pose = graphics.pose();
 		RenderSystem.enableDepthTest();
@@ -300,7 +309,7 @@ public class TrainMapManager {
 		return hoveredElement;
 	}
 
-	private static Object drawTrains(GuiGraphics graphics, int mouseX, int mouseY, float pt, Object hoveredElement,
+	private static Object drawTrains(GuiGraphics graphics, int mouseX, int mouseY, Object hoveredElement,
 		Rect2i bounds) {
 		PoseStack pose = graphics.pose();
 		RenderSystem.enableDepthTest();

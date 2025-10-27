@@ -2,17 +2,16 @@ package com.simibubi.create.compat.trainmap;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import com.google.common.cache.Cache;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.entity.TravellingPoint;
-import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.signal.SignalBlock.SignalType;
@@ -21,17 +20,23 @@ import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.utility.TickBasedCache;
 
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.codecs.stream.CatnipLargerStreamCodecs;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.platform.CatnipServices;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-
-import net.minecraftforge.event.TickEvent.ServerTickEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 public class TrainMapSync {
 
@@ -41,21 +46,38 @@ public class TrainMapSync {
 	public static int ticks;
 
 	public enum TrainState {
-		RUNNING, RUNNING_MANUALLY, DERAILED, SCHEDULE_INTERRUPTED, CONDUCTOR_MISSING, NAVIGATION_FAILED
+		RUNNING, RUNNING_MANUALLY, DERAILED, SCHEDULE_INTERRUPTED, CONDUCTOR_MISSING, NAVIGATION_FAILED;
+
+		public static final StreamCodec<ByteBuf, TrainState> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(TrainState.class);
 	}
 
 	public enum SignalState {
-		NOT_WAITING, WAITING_FOR_REDSTONE, BLOCK_SIGNAL, CHAIN_SIGNAL
+		NOT_WAITING, WAITING_FOR_REDSTONE, BLOCK_SIGNAL, CHAIN_SIGNAL;
+
+		public static final StreamCodec<ByteBuf, SignalState> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(SignalState.class);
 	}
 
 	public static class TrainMapSyncEntry {
+		public static final StreamCodec<FriendlyByteBuf, TrainMapSyncEntry> STREAM_CODEC = CatnipLargerStreamCodecs.composite(
+				CatnipStreamCodecBuilders.array(ByteBufCodecs.FLOAT, Float.class), packet -> packet.positions,
+				CatnipStreamCodecBuilders.list(CatnipStreamCodecBuilders.nullable(ResourceKey.streamCodec(Registries.DIMENSION))), packet -> packet.dimensions,
+				TrainState.STREAM_CODEC, packet -> packet.state,
+				SignalState.STREAM_CODEC, packet -> packet.signalState,
+				ByteBufCodecs.BOOL, packet -> packet.fueled,
+				ByteBufCodecs.BOOL, packet -> packet.backwards,
+				ByteBufCodecs.VAR_INT, packet -> packet.targetStationDistance,
+				ByteBufCodecs.STRING_UTF8, packet -> packet.ownerName,
+				ByteBufCodecs.STRING_UTF8, packet -> packet.targetStationName,
+				CatnipStreamCodecBuilders.nullable(UUIDUtil.STREAM_CODEC), packet -> packet.waitingForTrain,
+				TrainMapSyncEntry::new
+		);
 
 		// Clientside
-		public float[] prevPositions;
+		public Float[] prevPositions;
 		public List<ResourceKey<Level>> prevDims;
 
 		// Updated every 5 ticks
-		public float[] positions;
+		public Float[] positions;
 		public List<ResourceKey<Level>> dimensions;
 		public TrainState state = TrainState.RUNNING;
 		public SignalState signalState = SignalState.NOT_WAITING;
@@ -68,65 +90,22 @@ public class TrainMapSync {
 		public String targetStationName = "";
 		public UUID waitingForTrain = null;
 
-		public void gatherDimensions(DimensionPalette dimensionPalette) {
-			for (ResourceKey<Level> resourceKey : dimensions)
-				if (resourceKey != null)
-					dimensionPalette.encode(resourceKey);
-		}
+		public TrainMapSyncEntry() {}
 
-		public void send(FriendlyByteBuf buffer, DimensionPalette dimensionPalette, boolean light) {
-			buffer.writeVarInt(positions.length);
-			for (float f : positions)
-				buffer.writeFloat(f);
-
-			buffer.writeVarInt(dimensions.size());
-			for (ResourceKey<Level> resourceKey : dimensions)
-				buffer.writeVarInt(resourceKey == null ? -1 : dimensionPalette.encode(resourceKey));
-
-			buffer.writeVarInt(state.ordinal());
-			buffer.writeVarInt(signalState.ordinal());
-			buffer.writeBoolean(fueled);
-			buffer.writeBoolean(backwards);
-			buffer.writeVarInt(targetStationDistance);
-
-			if (light)
-				return;
-
-			buffer.writeUtf(ownerName);
-			buffer.writeUtf(targetStationName);
-
-			buffer.writeBoolean(waitingForTrain != null);
-			if (waitingForTrain != null)
-				buffer.writeUUID(waitingForTrain);
-		}
-
-		public void receive(FriendlyByteBuf buffer, DimensionPalette dimensionPalette, boolean light) {
-			positions = new float[buffer.readVarInt()];
-			for (int i = 0; i < positions.length; i++)
-				positions[i] = buffer.readFloat();
-
-			dimensions = new ArrayList<>();
-			int dimensionsSize = buffer.readVarInt();
-			for (int i = 0; i < dimensionsSize; i++) {
-				int index = buffer.readVarInt();
-				dimensions.add(index == -1 ? null : dimensionPalette.decode(index));
-			}
-
-			state = TrainState.values()[buffer.readVarInt()];
-			signalState = SignalState.values()[buffer.readVarInt()];
-			fueled = buffer.readBoolean();
-			backwards = buffer.readBoolean();
-			targetStationDistance = buffer.readVarInt();
-
-			if (light)
-				return;
-
-			ownerName = buffer.readUtf();
-			targetStationName = buffer.readUtf();
-
-			waitingForTrain = null;
-			if (buffer.readBoolean())
-				waitingForTrain = buffer.readUUID();
+		public TrainMapSyncEntry(Float[] positions, List<ResourceKey<Level>> dimensions, TrainState state,
+								 SignalState signalState, boolean fueled, boolean backwards, int targetStationDistance,
+								 String ownerName, String targetStationName,
+								 UUID waitingForTrain) {
+			this.positions = positions;
+			this.dimensions = dimensions;
+			this.state = state;
+			this.signalState = signalState;
+			this.fueled = fueled;
+			this.backwards = backwards;
+			this.targetStationDistance = targetStationDistance;
+			this.ownerName = ownerName;
+			this.targetStationName = targetStationName;
+			this.waitingForTrain = waitingForTrain;
 		}
 
 		public void updateFrom(TrainMapSyncEntry other, boolean light) {
@@ -144,8 +123,7 @@ public class TrainMapSync {
 			if (prevDims != null)
 				for (int i = 0; i < Math.min(prevDims.size(), dimensions.size()); i++)
 					if (prevDims.get(i) != dimensions.get(i))
-						for (int j = 0; j < 6; j++)
-							prevPositions[i * 6 + j] = positions[i * 6 + j];
+						System.arraycopy(positions, i * 6, prevPositions, i * 6, 6);
 
 			if (light)
 				return;
@@ -199,8 +177,7 @@ public class TrainMapSync {
 			ServerPlayer player = weakReference.get();
 			if (player == null)
 				continue;
-			AllPackets.getChannel()
-				.send(PacketDistributor.PLAYER.with(() -> player), packet);
+			CatnipServices.NETWORK.sendToClient(player, packet);
 		}
 	}
 
@@ -208,8 +185,10 @@ public class TrainMapSync {
 		TrainMapSyncEntry entry = new TrainMapSyncEntry();
 		boolean stopped = Math.abs(train.speed) < 0.05;
 
-		entry.positions = new float[train.carriages.size() * 6];
+		entry.positions = new Float[train.carriages.size() * 6];
 		entry.dimensions = new ArrayList<>();
+		
+		Arrays.fill(entry.positions, Float.valueOf(0));
 
 		List<Carriage> carriages = train.carriages;
 		for (int i = 0; i < carriages.size(); i++) {
@@ -280,7 +259,7 @@ public class TrainMapSync {
 				.getPlayer(train.owner);
 			if (owner != null)
 				entry.ownerName = owner.getName()
-					.getString();
+						.getString();
 		}
 
 		if (train.derailed) {

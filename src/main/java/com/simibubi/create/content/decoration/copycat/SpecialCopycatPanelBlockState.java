@@ -9,8 +9,8 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.generators.BlockModelProvider;
-import net.minecraftforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 
 public class SpecialCopycatPanelBlockState extends SpecialBlockStateGen {
 
@@ -19,7 +19,7 @@ public class SpecialCopycatPanelBlockState extends SpecialBlockStateGen {
 	public SpecialCopycatPanelBlockState(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
 	protected int getXRotation(BlockState state) {
 		return facing(state) == Direction.UP ? 0 : facing(state) == Direction.DOWN ? 180 : 0;

@@ -3,12 +3,10 @@ package com.simibubi.create.content.contraptions;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.sync.ContraptionInteractionPacket;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.entity.TrainRelocator;
@@ -18,6 +16,7 @@ import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
@@ -33,24 +32,22 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.TickEvent.PlayerTickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-@EventBusSubscriber
+@EventBusSubscriber(Dist.CLIENT)
 public class ContraptionHandlerClient {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public static void preventRemotePlayersWalkingAnimations(PlayerTickEvent event) {
-		if (event.phase == Phase.START)
+	public static void preventRemotePlayersWalkingAnimations(PlayerTickEvent.Post event) {
+		if (!(event.getEntity() instanceof RemotePlayer remotePlayer))
 			return;
-		if (!(event.player instanceof RemotePlayer remotePlayer))
-			return;
+
 		CompoundTag data = remotePlayer.getPersistentData();
 		if (!data.contains("LastOverrideLimbSwingUpdate"))
 			return;
@@ -125,8 +122,7 @@ public class ContraptionHandlerClient {
 		BlockPos pos = bestResult.getBlockPos();
 
 		if (bestEntity.handlePlayerInteraction(player, pos, face, hand)) {
-			AllPackets.getChannel()
-				.sendToServer(new ContraptionInteractionPacket(bestEntity, hand, pos, face));
+			CatnipServices.NETWORK.sendToServer(new ContraptionInteractionPacket(bestEntity, hand, pos, face));
 		} else
 			handleSpecialInteractions(bestEntity, player, pos, face, hand);
 
@@ -145,8 +141,8 @@ public class ContraptionHandlerClient {
 	@OnlyIn(Dist.CLIENT)
 	public static Couple<Vec3> getRayInputs(LocalPlayer player) {
 		Minecraft mc = Minecraft.getInstance();
-		Vec3 origin = RaycastHelper.getTraceOrigin(player);
-		double reach = mc.gameMode.getPickRange();
+		Vec3 origin = player.getEyePosition();
+		double reach = player.blockInteractionRange();
 		if (mc.hitResult != null && mc.hitResult.getLocation() != null)
 			reach = Math.min(mc.hitResult.getLocation()
 				.distanceTo(origin), reach);

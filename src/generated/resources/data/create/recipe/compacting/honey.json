@@ -1,0 +1,15 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "type": "neoforge:tag",
+      "amount": 1000,
+      "tag": "c:honey"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:honey_block"
+    }
+  ]
+}

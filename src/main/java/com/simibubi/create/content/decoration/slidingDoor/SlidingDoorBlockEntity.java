@@ -10,6 +10,7 @@ import net.createmod.catnip.animation.LerpedFloat.Chaser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -33,7 +34,7 @@ public class SlidingDoorBlockEntity extends SmartBlockEntity {
 		if (deferUpdate && !level.isClientSide()) {
 			deferUpdate = false;
 			BlockState blockState = getBlockState();
-			blockState.neighborChanged(level, worldPosition, Blocks.AIR, worldPosition, false);
+			blockState.handleNeighborChanged(level, worldPosition, Blocks.AIR, worldPosition, false);
 		}
 
 		super.tick();
@@ -69,7 +70,7 @@ public class SlidingDoorBlockEntity extends SmartBlockEntity {
 	}
 
 	protected void showBlockModel() {
-		level.setBlock(worldPosition, getBlockState().setValue(SlidingDoorBlock.VISIBLE, true), 3);
+		level.setBlock(worldPosition, getBlockState().setValue(SlidingDoorBlock.VISIBLE, true), Block.UPDATE_ALL);
 		level.playSound(null, worldPosition, SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .5f, 1);
 	}
 

@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.Contraption;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
@@ -42,8 +43,8 @@ public class StabilizedContraption extends Contraption {
 	}
 
 	@Override
-	public CompoundTag writeNBT(boolean spawnPacket) {
-		CompoundTag tag = super.writeNBT(spawnPacket);
+	public CompoundTag writeNBT(HolderLookup.Provider registries, boolean spawnPacket) {
+		CompoundTag tag = super.writeNBT(registries, spawnPacket);
 		tag.putInt("Facing", facing.get3DDataValue());
 		return tag;
 	}

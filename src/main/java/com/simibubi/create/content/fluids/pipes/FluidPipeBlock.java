@@ -3,8 +3,13 @@ package com.simibubi.create.content.fluids.pipes;
 import java.util.Arrays;
 import java.util.Optional;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.world.ItemInteractionResult;
+
+import org.jetbrains.annotations.NotNull;
+
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.contraption.transformable.TransformableBlock;
@@ -58,6 +63,8 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 	IBE<FluidPipeBlockEntity>, EncasableBlock, TransformableBlock {
 
 	private static final VoxelShape OCCLUSION_BOX = Block.box(4, 4, 4, 12, 12, 12);
+
+	public static final MapCodec<FluidPipeBlock> CODEC = simpleCodec(FluidPipeBlock::new);
 
 	public FluidPipeBlock(Properties properties) {
 		super(4 / 16f, properties);
@@ -117,14 +124,12 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult ray) {
-		ItemStack heldItem = player.getItemInHand(hand);
-		InteractionResult result = tryEncase(state, world, pos, heldItem, player, hand, ray);
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		ItemInteractionResult result = tryEncase(state, level, pos, stack, player, hand, hitResult);
 		if (result.consumesAction())
 			return result;
 
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	public BlockState getAxisState(Axis axis) {
@@ -318,7 +323,7 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 
@@ -357,4 +362,8 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 		return FluidPipeBlockRotation.transform(state, transform);
 	}
 
+	@Override
+	protected @NotNull MapCodec<? extends PipeBlock> codec() {
+		return CODEC;
+	}
 }

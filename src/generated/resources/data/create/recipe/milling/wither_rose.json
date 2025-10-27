@@ -1,0 +1,19 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:wither_rose"
+    }
+  ],
+  "processing_time": 50,
+  "results": [
+    {
+      "count": 2,
+      "id": "minecraft:black_dye"
+    },
+    {
+      "chance": 0.1,
+      "id": "minecraft:black_dye"
+    }
+  ]
+}

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+
+import net.createmod.catnip.platform.CatnipServices;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,10 +38,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 
 public class AirCurrent {
 
@@ -100,8 +99,9 @@ public class AirCurrent {
 
 			entity.setDeltaMovement(previousMotion.add(new Vec3(xIn, yIn, zIn).scale(1 / 8f)));
 			entity.fallDistance = 0;
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-				() -> () -> enableClientPlayerSound(entity, Mth.clamp(speed / 128f * .4f, 0.01f, .4f)));
+			if (CatnipServices.PLATFORM.getEnv().isClient()) {
+				Client.enableClientPlayerSound(entity, Mth.clamp(speed / 128f * .4f, 0.01f, .4f));
+			}
 
 			if (entity instanceof ServerPlayer)
 				((ServerPlayer) entity).connection.aboveGroundTickCount = 0;
@@ -366,40 +366,38 @@ public class AirCurrent {
 		private int endOffset;
 	}
 
-	private static boolean isClientPlayerInAirCurrent;
+	public static class Client {
+		private static boolean isClientPlayerInAirCurrent;
 
-	@OnlyIn(Dist.CLIENT)
-	private static AirCurrentSound flyingSound;
+		private static AirCurrentSound flyingSound;
 
-	@OnlyIn(Dist.CLIENT)
-	private static void enableClientPlayerSound(Entity e, float maxVolume) {
-		if (e != Minecraft.getInstance()
-			.getCameraEntity())
-			return;
+		private static void enableClientPlayerSound(Entity e, float maxVolume) {
+			if (e != Minecraft.getInstance()
+					.getCameraEntity())
+				return;
 
-		isClientPlayerInAirCurrent = true;
+			isClientPlayerInAirCurrent = true;
 
-		float pitch = (float) Mth.clamp(e.getDeltaMovement()
-			.length() * .5f, .5f, 2f);
+			float pitch = (float) Mth.clamp(e.getDeltaMovement()
+					.length() * .5f, .5f, 2f);
 
-		if (flyingSound == null || flyingSound.isStopped()) {
-			flyingSound = new AirCurrentSound(SoundEvents.ELYTRA_FLYING, pitch);
-			Minecraft.getInstance()
-				.getSoundManager()
-				.play(flyingSound);
+			if (flyingSound == null || flyingSound.isStopped()) {
+				flyingSound = new AirCurrentSound(SoundEvents.ELYTRA_FLYING, pitch);
+				Minecraft.getInstance()
+						.getSoundManager()
+						.play(flyingSound);
+			}
+			flyingSound.setPitch(pitch);
+			flyingSound.fadeIn(maxVolume);
 		}
-		flyingSound.setPitch(pitch);
-		flyingSound.fadeIn(maxVolume);
-	}
 
-	@OnlyIn(Dist.CLIENT)
-	public static void tickClientPlayerSounds() {
-		if (!isClientPlayerInAirCurrent && flyingSound != null)
-			if (flyingSound.isFaded())
-				flyingSound.stopSound();
-			else
-				flyingSound.fadeOut();
-		isClientPlayerInAirCurrent = false;
+		public static void tickClientPlayerSounds() {
+			if (!isClientPlayerInAirCurrent && flyingSound != null)
+				if (flyingSound.isFaded())
+					flyingSound.stopSound();
+				else
+					flyingSound.fadeOut();
+			isClientPlayerInAirCurrent = false;
+		}
 	}
-
 }

@@ -1,11 +1,6 @@
 package com.simibubi.create;
 
-import static net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT;
-import static net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER;
-
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.Locale;
 
 import com.simibubi.create.compat.computercraft.AttachedComputerPacket;
 import com.simibubi.create.compat.trainmap.TrainMapSyncPacket;
@@ -77,6 +72,7 @@ import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryEdit
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryHidingPacket;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryRefundPacket;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperLockPacket;
+import com.simibubi.create.content.logistics.tableCloth.ShopUpdatePacket;
 import com.simibubi.create.content.logistics.tunnel.TunnelFlapPacket;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkConfigurationPacket;
 import com.simibubi.create.content.redstone.link.controller.LinkedControllerBindPacket;
@@ -90,7 +86,8 @@ import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
 import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
 import com.simibubi.create.content.trains.HonkPacket;
 import com.simibubi.create.content.trains.TrainHUDUpdatePacket;
-import com.simibubi.create.content.trains.entity.TrainPacket;
+import com.simibubi.create.content.trains.entity.AddTrainPacket;
+import com.simibubi.create.content.trains.entity.RemoveTrainPacket;
 import com.simibubi.create.content.trains.entity.TrainPromptPacket;
 import com.simibubi.create.content.trains.entity.TrainRelocationPacket;
 import com.simibubi.create.content.trains.graph.TrackGraphRequestPacket;
@@ -110,152 +107,137 @@ import com.simibubi.create.foundation.gui.menu.ClearMenuPacket;
 import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.networking.ISyncPersistentData;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.infrastructure.command.HighlightPacket;
 import com.simibubi.create.infrastructure.command.SimpleCreateActions;
 import com.simibubi.create.infrastructure.debugInfo.ServerDebugInfoPacket;
 
-import net.createmod.catnip.net.ClientboundSimpleActionPacket;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
+import net.createmod.catnip.net.base.BasePacketPayload;
+import net.createmod.catnip.net.base.CatnipPacketRegistry;
+import net.createmod.catnip.net.packets.ClientboundSimpleActionPacket;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent.Context;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.PacketDistributor.TargetPoint;
-import net.minecraftforge.network.simple.SimpleChannel;
-
-public enum AllPackets {
-
+public enum AllPackets implements BasePacketPayload.PacketTypeProvider {
 	// Client to Server
-	CONFIGURE_SCHEMATICANNON(ConfigureSchematicannonPacket.class, ConfigureSchematicannonPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_STOCKSWITCH(ConfigureThresholdSwitchPacket.class, ConfigureThresholdSwitchPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_SEQUENCER(ConfigureSequencedGearshiftPacket.class, ConfigureSequencedGearshiftPacket::new,
-		PLAY_TO_SERVER),
-	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new, PLAY_TO_SERVER),
-	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new, PLAY_TO_SERVER),
-	CLEAR_CONTAINER(ClearMenuPacket.class, ClearMenuPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new, PLAY_TO_SERVER),
-	EXTENDO_INTERACT(ExtendoGripInteractionPacket.class, ExtendoGripInteractionPacket::new, PLAY_TO_SERVER),
-	CONTRAPTION_INTERACT(ContraptionInteractionPacket.class, ContraptionInteractionPacket::new, PLAY_TO_SERVER),
-	CLIENT_MOTION(ClientMotionPacket.class, ClientMotionPacket::new, PLAY_TO_SERVER),
-	PLACE_ARM(ArmPlacementPacket.class, ArmPlacementPacket::new, PLAY_TO_SERVER),
-	PLACE_PACKAGE_PORT(PackagePortPlacementPacket.class, PackagePortPlacementPacket::new, PLAY_TO_SERVER),
-	MINECART_COUPLING_CREATION(CouplingCreationPacket.class, CouplingCreationPacket::new, PLAY_TO_SERVER),
-	INSTANT_SCHEMATIC(InstantSchematicPacket.class, InstantSchematicPacket::new, PLAY_TO_SERVER),
-	SYNC_SCHEMATIC(SchematicSyncPacket.class, SchematicSyncPacket::new, PLAY_TO_SERVER),
-	LEFT_CLICK(LeftClickPacket.class, LeftClickPacket::new, PLAY_TO_SERVER),
-	PLACE_EJECTOR(EjectorPlacementPacket.class, EjectorPlacementPacket::new, PLAY_TO_SERVER),
-	TRIGGER_EJECTOR(EjectorTriggerPacket.class, EjectorTriggerPacket::new, PLAY_TO_SERVER),
-	EJECTOR_ELYTRA(EjectorElytraPacket.class, EjectorElytraPacket::new, PLAY_TO_SERVER),
-	LINKED_CONTROLLER_INPUT(LinkedControllerInputPacket.class, LinkedControllerInputPacket::new, PLAY_TO_SERVER),
-	LINKED_CONTROLLER_BIND(LinkedControllerBindPacket.class, LinkedControllerBindPacket::new, PLAY_TO_SERVER),
-	LINKED_CONTROLLER_USE_LECTERN(LinkedControllerStopLecternPacket.class, LinkedControllerStopLecternPacket::new,
-		PLAY_TO_SERVER),
-	SUBMIT_GHOST_ITEM(GhostItemSubmitPacket.class, GhostItemSubmitPacket::new, PLAY_TO_SERVER),
-	BLUEPRINT_COMPLETE_RECIPE(BlueprintAssignCompleteRecipePacket.class, BlueprintAssignCompleteRecipePacket::new,
-		PLAY_TO_SERVER),
-	CONFIGURE_SYMMETRY_WAND(ConfigureSymmetryWandPacket.class, ConfigureSymmetryWandPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_WORLDSHAPER(ConfigureWorldshaperPacket.class, ConfigureWorldshaperPacket::new, PLAY_TO_SERVER),
-	TOOLBOX_EQUIP(ToolboxEquipPacket.class, ToolboxEquipPacket::new, PLAY_TO_SERVER),
-	TOOLBOX_DISPOSE_ALL(ToolboxDisposeAllPacket.class, ToolboxDisposeAllPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_SCHEDULE(ScheduleEditPacket.class, ScheduleEditPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_STATION(StationEditPacket.class, StationEditPacket::new, PLAY_TO_SERVER),
-	C_CONFIGURE_TRAIN(TrainEditPacket.class, TrainEditPacket::new, PLAY_TO_SERVER),
-	RELOCATE_TRAIN(TrainRelocationPacket.class, TrainRelocationPacket::new, PLAY_TO_SERVER),
-	CONTROLS_INPUT(ControlsInputPacket.class, ControlsInputPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_DATA_GATHERER(DisplayLinkConfigurationPacket.class, DisplayLinkConfigurationPacket::new, PLAY_TO_SERVER),
-	DESTROY_CURVED_TRACK(CurvedTrackDestroyPacket.class, CurvedTrackDestroyPacket::new, PLAY_TO_SERVER),
-	SELECT_CURVED_TRACK(CurvedTrackSelectionPacket.class, CurvedTrackSelectionPacket::new, PLAY_TO_SERVER),
-	PLACE_CURVED_TRACK(PlaceExtendedCurvePacket.class, PlaceExtendedCurvePacket::new, PLAY_TO_SERVER),
-	GLUE_IN_AREA(SuperGlueSelectionPacket.class, SuperGlueSelectionPacket::new, PLAY_TO_SERVER),
-	GLUE_REMOVED(SuperGlueRemovalPacket.class, SuperGlueRemovalPacket::new, PLAY_TO_SERVER),
-	TRAIN_COLLISION(TrainCollisionPacket.class, TrainCollisionPacket::new, PLAY_TO_SERVER),
-	C_TRAIN_HUD(TrainHUDUpdatePacket.Serverbound.class, TrainHUDUpdatePacket.Serverbound::new, PLAY_TO_SERVER),
-	C_TRAIN_HONK(HonkPacket.Serverbound.class, HonkPacket.Serverbound::new, PLAY_TO_SERVER),
-	OBSERVER_STRESSOMETER(GaugeObservedPacket.class, GaugeObservedPacket::new, PLAY_TO_SERVER),
-	EJECTOR_AWARD(EjectorAwardPacket.class, EjectorAwardPacket::new, PLAY_TO_SERVER),
-	TRACK_GRAPH_REQUEST(TrackGraphRequestPacket.class, TrackGraphRequestPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_ELEVATOR_CONTACT(ElevatorContactEditPacket.class, ElevatorContactEditPacket::new, PLAY_TO_SERVER),
-	REQUEST_FLOOR_LIST(ElevatorFloorListPacket.RequestFloorList.class, ElevatorFloorListPacket.RequestFloorList::new,
-		PLAY_TO_SERVER),
-	ELEVATOR_SET_FLOOR(ElevatorTargetFloorPacket.class, ElevatorTargetFloorPacket::new, PLAY_TO_SERVER),
-	VALUE_SETTINGS(ValueSettingsPacket.class, ValueSettingsPacket::new, PLAY_TO_SERVER),
-	CLIPBOARD_EDIT(ClipboardEditPacket.class, ClipboardEditPacket::new, PLAY_TO_SERVER),
-	CONTRAPTION_COLLIDER_LOCK_REQUEST(ContraptionColliderLockPacketRequest.class,
-		ContraptionColliderLockPacketRequest::new, PLAY_TO_SERVER),
-	RADIAL_WRENCH_MENU_SUBMIT(RadialWrenchMenuSubmitPacket.class, RadialWrenchMenuSubmitPacket::new,
-		PLAY_TO_SERVER),
-	LOGISTICS_STOCK_REQUEST(LogisticalStockRequestPacket.class, LogisticalStockRequestPacket::new, PLAY_TO_SERVER),
-	LOGISTICS_PACKAGE_REQUEST(PackageOrderRequestPacket.class, PackageOrderRequestPacket::new, PLAY_TO_SERVER),
-	CHAIN_CONVEYOR_CONNECT(ChainConveyorConnectionPacket.class, ChainConveyorConnectionPacket::new, PLAY_TO_SERVER),
-	CHAIN_CONVEYOR_RIDING(ServerboundChainConveyorRidingPacket.class, ServerboundChainConveyorRidingPacket::new, PLAY_TO_SERVER),
-	CHAIN_PACKAGE_INTERACTION(ChainPackageInteractionPacket.class, ChainPackageInteractionPacket::new, PLAY_TO_SERVER),
-	PACKAGE_PORT_CONFIGURATION(PackagePortConfigurationPacket.class, PackagePortConfigurationPacket::new, PLAY_TO_SERVER),
-	TRAIN_MAP_REQUEST(TrainMapSyncRequestPacket.class, TrainMapSyncRequestPacket::new, PLAY_TO_SERVER),
-	CONNECT_FACTORY_PANEL(FactoryPanelConnectionPacket.class, FactoryPanelConnectionPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_FACTORY_PANEL(FactoryPanelConfigurationPacket.class, FactoryPanelConfigurationPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_REDSTONE_REQUESTER(RedstoneRequesterConfigurationPacket.class, RedstoneRequesterConfigurationPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_STOCK_KEEPER_CATEGORIES(StockKeeperCategoryEditPacket.class, StockKeeperCategoryEditPacket::new, PLAY_TO_SERVER),
-	REFUND_STOCK_KEEPER_CATEGORY(StockKeeperCategoryRefundPacket.class, StockKeeperCategoryRefundPacket::new, PLAY_TO_SERVER),
-	LOCK_STOCK_KEEPER(StockKeeperLockPacket.class, StockKeeperLockPacket::new, PLAY_TO_SERVER),
-	STOCK_KEEPER_HIDE_CATEGORY(StockKeeperCategoryHidingPacket.class, StockKeeperCategoryHidingPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_SCHEMATICANNON(ConfigureSchematicannonPacket.class, ConfigureSchematicannonPacket.STREAM_CODEC),
+	CONFIGURE_STOCKSWITCH(ConfigureThresholdSwitchPacket.class, ConfigureThresholdSwitchPacket.STREAM_CODEC),
+	CONFIGURE_SEQUENCER(ConfigureSequencedGearshiftPacket.class, ConfigureSequencedGearshiftPacket.STREAM_CODEC),
+	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket.STREAM_CODEC),
+	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket.STREAM_CODEC),
+	CLEAR_CONTAINER(ClearMenuPacket.class, ClearMenuPacket.STREAM_CODEC),
+	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket.STREAM_CODEC),
+	EXTENDO_INTERACT(ExtendoGripInteractionPacket.class, ExtendoGripInteractionPacket.STREAM_CODEC),
+	CONTRAPTION_INTERACT(ContraptionInteractionPacket.class, ContraptionInteractionPacket.STREAM_CODEC),
+	CLIENT_MOTION(ClientMotionPacket.class, ClientMotionPacket.STREAM_CODEC),
+	PLACE_ARM(ArmPlacementPacket.class, ArmPlacementPacket.STREAM_CODEC),
+	PLACE_PACKAGE_PORT(PackagePortPlacementPacket.class, PackagePortPlacementPacket.STREAM_CODEC),
+	MINECART_COUPLING_CREATION(CouplingCreationPacket.class, CouplingCreationPacket.STREAM_CODEC),
+	INSTANT_SCHEMATIC(InstantSchematicPacket.class, InstantSchematicPacket.STREAM_CODEC),
+	SYNC_SCHEMATIC(SchematicSyncPacket.class, SchematicSyncPacket.STREAM_CODEC),
+	LEFT_CLICK(LeftClickPacket.class, LeftClickPacket.STREAM_CODEC),
+	PLACE_EJECTOR(EjectorPlacementPacket.class, EjectorPlacementPacket.STREAM_CODEC),
+	TRIGGER_EJECTOR(EjectorTriggerPacket.class, EjectorTriggerPacket.STREAM_CODEC),
+	EJECTOR_ELYTRA(EjectorElytraPacket.class, EjectorElytraPacket.STREAM_CODEC),
+	LINKED_CONTROLLER_INPUT(LinkedControllerInputPacket.class, LinkedControllerInputPacket.STREAM_CODEC),
+	LINKED_CONTROLLER_BIND(LinkedControllerBindPacket.class, LinkedControllerBindPacket.STREAM_CODEC),
+	LINKED_CONTROLLER_USE_LECTERN(LinkedControllerStopLecternPacket.class, LinkedControllerStopLecternPacket.STREAM_CODEC),
+	SUBMIT_GHOST_ITEM(GhostItemSubmitPacket.class, GhostItemSubmitPacket.STREAM_CODEC),
+	BLUEPRINT_COMPLETE_RECIPE(BlueprintAssignCompleteRecipePacket.class, BlueprintAssignCompleteRecipePacket.STREAM_CODEC),
+	CONFIGURE_SYMMETRY_WAND(ConfigureSymmetryWandPacket.class, ConfigureSymmetryWandPacket.STREAM_CODEC),
+	CONFIGURE_WORLDSHAPER(ConfigureWorldshaperPacket.class, ConfigureWorldshaperPacket.STREAM_CODEC),
+	TOOLBOX_EQUIP(ToolboxEquipPacket.class, ToolboxEquipPacket.STREAM_CODEC),
+	TOOLBOX_DISPOSE_ALL(ToolboxDisposeAllPacket.class, ToolboxDisposeAllPacket.STREAM_CODEC),
+	CONFIGURE_SCHEDULE(ScheduleEditPacket.class, ScheduleEditPacket.STREAM_CODEC),
+	CONFIGURE_STATION(StationEditPacket.class, StationEditPacket.STREAM_CODEC),
+	C_CONFIGURE_TRAIN(TrainEditPacket.Serverbound.class, TrainEditPacket.Serverbound.STREAM_CODEC),
+	RELOCATE_TRAIN(TrainRelocationPacket.class, TrainRelocationPacket.STREAM_CODEC),
+	CONTROLS_INPUT(ControlsInputPacket.class, ControlsInputPacket.STREAM_CODEC),
+	CONFIGURE_DATA_GATHERER(DisplayLinkConfigurationPacket.class, DisplayLinkConfigurationPacket.STREAM_CODEC),
+	DESTROY_CURVED_TRACK(CurvedTrackDestroyPacket.class, CurvedTrackDestroyPacket.STREAM_CODEC),
+	SELECT_CURVED_TRACK(CurvedTrackSelectionPacket.class, CurvedTrackSelectionPacket.STREAM_CODEC),
+	PLACE_CURVED_TRACK(PlaceExtendedCurvePacket.class, PlaceExtendedCurvePacket.STREAM_CODEC),
+	GLUE_IN_AREA(SuperGlueSelectionPacket.class, SuperGlueSelectionPacket.STREAM_CODEC),
+	GLUE_REMOVED(SuperGlueRemovalPacket.class, SuperGlueRemovalPacket.STREAM_CODEC),
+	TRAIN_COLLISION(TrainCollisionPacket.class, TrainCollisionPacket.STREAM_CODEC),
+	C_TRAIN_HUD(TrainHUDUpdatePacket.Serverbound.class, TrainHUDUpdatePacket.Serverbound.STREAM_CODEC),
+	C_TRAIN_HONK(HonkPacket.Serverbound.class, HonkPacket.Serverbound.STREAM_CODEC),
+	OBSERVER_STRESSOMETER(GaugeObservedPacket.class, GaugeObservedPacket.STREAM_CODEC),
+	EJECTOR_AWARD(EjectorAwardPacket.class, EjectorAwardPacket.STREAM_CODEC),
+	TRACK_GRAPH_REQUEST(TrackGraphRequestPacket.class, TrackGraphRequestPacket.STREAM_CODEC),
+	CONFIGURE_ELEVATOR_CONTACT(ElevatorContactEditPacket.class, ElevatorContactEditPacket.STREAM_CODEC),
+	REQUEST_FLOOR_LIST(ElevatorFloorListPacket.RequestFloorList.class, ElevatorFloorListPacket.RequestFloorList.STREAM_CODEC),
+	ELEVATOR_SET_FLOOR(ElevatorTargetFloorPacket.class, ElevatorTargetFloorPacket.STREAM_CODEC),
+	VALUE_SETTINGS(ValueSettingsPacket.class, ValueSettingsPacket.STREAM_CODEC),
+	CLIPBOARD_EDIT(ClipboardEditPacket.class, ClipboardEditPacket.STREAM_CODEC),
+	CONTRAPTION_COLLIDER_LOCK_REQUEST(ContraptionColliderLockPacketRequest.class, ContraptionColliderLockPacketRequest.STREAM_CODEC),
+	RADIAL_WRENCH_MENU_SUBMIT(RadialWrenchMenuSubmitPacket.class, RadialWrenchMenuSubmitPacket.STREAM_CODEC),
+	LOGISTICS_STOCK_REQUEST(LogisticalStockRequestPacket.class, LogisticalStockRequestPacket.STREAM_CODEC),
+	LOGISTICS_PACKAGE_REQUEST(PackageOrderRequestPacket.class, PackageOrderRequestPacket.STREAM_CODEC),
+	CHAIN_CONVEYOR_CONNECT(ChainConveyorConnectionPacket.class, ChainConveyorConnectionPacket.STREAM_CODEC),
+	CHAIN_CONVEYOR_RIDING(ServerboundChainConveyorRidingPacket.class, ServerboundChainConveyorRidingPacket.STREAM_CODEC),
+	CHAIN_PACKAGE_INTERACTION(ChainPackageInteractionPacket.class, ChainPackageInteractionPacket.STREAM_CODEC),
+	PACKAGE_PORT_CONFIGURATION(PackagePortConfigurationPacket.class, PackagePortConfigurationPacket.STREAM_CODEC),
+	TRAIN_MAP_REQUEST(TrainMapSyncRequestPacket.class, TrainMapSyncRequestPacket.STREAM_CODEC),
+	CONNECT_FACTORY_PANEL(FactoryPanelConnectionPacket.class, FactoryPanelConnectionPacket.STREAM_CODEC),
+	CONFIGURE_FACTORY_PANEL(FactoryPanelConfigurationPacket.class, FactoryPanelConfigurationPacket.STREAM_CODEC),
+	CONFIGURE_REDSTONE_REQUESTER(RedstoneRequesterConfigurationPacket.class, RedstoneRequesterConfigurationPacket.STREAM_CODEC),
+	CONFIGURE_STOCK_KEEPER_CATEGORIES(StockKeeperCategoryEditPacket.class, StockKeeperCategoryEditPacket.STREAM_CODEC),
+	REFUND_STOCK_KEEPER_CATEGORY(StockKeeperCategoryRefundPacket.class, StockKeeperCategoryRefundPacket.STREAM_CODEC),
+	LOCK_STOCK_KEEPER(StockKeeperLockPacket.class, StockKeeperLockPacket.STREAM_CODEC),
+	STOCK_KEEPER_HIDE_CATEGORY(StockKeeperCategoryHidingPacket.class, StockKeeperCategoryHidingPacket.STREAM_CODEC),
 
 	// Server to Client
-	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),
-	SERVER_SPEED(ServerSpeedProvider.Packet.class, ServerSpeedProvider.Packet::new, PLAY_TO_CLIENT),
-	BEAM_EFFECT(ZapperBeamPacket.class, ZapperBeamPacket::new, PLAY_TO_CLIENT),
-	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket::new, PLAY_TO_CLIENT),
-	CONTRAPTION_DISASSEMBLE(ContraptionDisassemblyPacket.class, ContraptionDisassemblyPacket::new, PLAY_TO_CLIENT),
-	CONTRAPTION_BLOCK_CHANGED(ContraptionBlockChangedPacket.class, ContraptionBlockChangedPacket::new, PLAY_TO_CLIENT),
-	GLUE_EFFECT(GlueEffectPacket.class, GlueEffectPacket::new, PLAY_TO_CLIENT),
-	CONTRAPTION_SEAT_MAPPING(ContraptionSeatMappingPacket.class, ContraptionSeatMappingPacket::new, PLAY_TO_CLIENT),
-	LIMBSWING_UPDATE(LimbSwingUpdatePacket.class, LimbSwingUpdatePacket::new, PLAY_TO_CLIENT),
-	MINECART_CONTROLLER(MinecartControllerUpdatePacket.class, MinecartControllerUpdatePacket::new, PLAY_TO_CLIENT),
-	FLUID_SPLASH(FluidSplashPacket.class, FluidSplashPacket::new, PLAY_TO_CLIENT),
-	MOUNTED_STORAGE_SYNC(MountedStorageSyncPacket.class, MountedStorageSyncPacket::new, PLAY_TO_CLIENT),
-	GANTRY_UPDATE(GantryContraptionUpdatePacket.class, GantryContraptionUpdatePacket::new, PLAY_TO_CLIENT),
-	BLOCK_HIGHLIGHT(HighlightPacket.class, HighlightPacket::new, PLAY_TO_CLIENT),
-	TUNNEL_FLAP(TunnelFlapPacket.class, TunnelFlapPacket::new, PLAY_TO_CLIENT),
-	FUNNEL_FLAP(FunnelFlapPacket.class, FunnelFlapPacket::new, PLAY_TO_CLIENT),
-	POTATO_CANNON(PotatoCannonPacket.class, PotatoCannonPacket::new, PLAY_TO_CLIENT),
-	SOUL_PULSE(SoulPulseEffectPacket.class, SoulPulseEffectPacket::new, PLAY_TO_CLIENT),
-	PERSISTENT_DATA(ISyncPersistentData.PersistentDataPacket.class, ISyncPersistentData.PersistentDataPacket::new,
-		PLAY_TO_CLIENT),
-	SYNC_RAIL_GRAPH(TrackGraphSyncPacket.class, TrackGraphSyncPacket::new, PLAY_TO_CLIENT),
-	SYNC_EDGE_GROUP(SignalEdgeGroupPacket.class, SignalEdgeGroupPacket::new, PLAY_TO_CLIENT),
-	SYNC_TRAIN(TrainPacket.class, TrainPacket::new, PLAY_TO_CLIENT),
-	REMOVE_TE(RemoveBlockEntityPacket.class, RemoveBlockEntityPacket::new, PLAY_TO_CLIENT),
-	S_CONFIGURE_TRAIN(TrainEditReturnPacket.class, TrainEditReturnPacket::new, PLAY_TO_CLIENT),
-	CONTROLS_ABORT(ControlsStopControllingPacket.class, ControlsStopControllingPacket::new, PLAY_TO_CLIENT),
-	S_TRAIN_HUD(TrainHUDUpdatePacket.class, TrainHUDUpdatePacket::new, PLAY_TO_CLIENT),
-	S_TRAIN_HONK(HonkPacket.class, HonkPacket::new, PLAY_TO_CLIENT),
-	S_TRAIN_PROMPT(TrainPromptPacket.class, TrainPromptPacket::new, PLAY_TO_CLIENT),
-	CONTRAPTION_RELOCATION(ContraptionRelocationPacket.class, ContraptionRelocationPacket::new, PLAY_TO_CLIENT),
-	TRACK_GRAPH_ROLL_CALL(TrackGraphRollCallPacket.class, TrackGraphRollCallPacket::new, PLAY_TO_CLIENT),
-	S_PLACE_EJECTOR(ArmPlacementPacket.ClientBoundRequest.class, ArmPlacementPacket.ClientBoundRequest::new,
-		PLAY_TO_CLIENT),
-	S_PLACE_ARM(EjectorPlacementPacket.ClientBoundRequest.class, EjectorPlacementPacket.ClientBoundRequest::new,
-		PLAY_TO_CLIENT),
-	S_PLACE_PACKAGE_PORT(PackagePortPlacementPacket.ClientBoundRequest.class, PackagePortPlacementPacket.ClientBoundRequest::new,
-		PLAY_TO_CLIENT),
-	UPDATE_ELEVATOR_FLOORS(ElevatorFloorListPacket.class, ElevatorFloorListPacket::new, PLAY_TO_CLIENT),
-	CONTRAPTION_ACTOR_TOGGLE(ContraptionDisableActorPacket.class, ContraptionDisableActorPacket::new, PLAY_TO_CLIENT),
-	CONTRAPTION_COLLIDER_LOCK(ContraptionColliderLockPacket.class, ContraptionColliderLockPacket::new, PLAY_TO_CLIENT),
-	ATTACHED_COMPUTER(AttachedComputerPacket.class, AttachedComputerPacket::new, PLAY_TO_CLIENT),
-	SERVER_DEBUG_INFO(ServerDebugInfoPacket.class, ServerDebugInfoPacket::new, PLAY_TO_CLIENT),
-	PACKAGE_DESTROYED(PackageDestroyPacket.class, PackageDestroyPacket::new, PLAY_TO_CLIENT),
-	LOGISTICS_STOCK_RESPONSE(LogisticalStockResponsePacket.class, LogisticalStockResponsePacket::new, PLAY_TO_CLIENT),
-	FACTORY_PANEL_EFFECT(FactoryPanelEffectPacket.class, FactoryPanelEffectPacket::new, PLAY_TO_CLIENT),
-	PACKAGER_LINK_EFFECT(WiFiEffectPacket.class, WiFiEffectPacket::new, PLAY_TO_CLIENT),
-	REDSTONE_REQUESTER_EFFECT(RedstoneRequesterEffectPacket.class, RedstoneRequesterEffectPacket::new, PLAY_TO_CLIENT),
-	KNOCKBACK(KnockbackPacket.class, KnockbackPacket::new, PLAY_TO_CLIENT),
-	TRAIN_MAP_SYNC(TrainMapSyncPacket.class, TrainMapSyncPacket::new, PLAY_TO_CLIENT),
-	CLIENTBOUND_CHAIN_CONVEYOR(ClientboundChainConveyorRidingPacket.class, ClientboundChainConveyorRidingPacket::new, PLAY_TO_CLIENT);
+	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket.STREAM_CODEC),
+	SERVER_SPEED(ServerSpeedProvider.Packet.class, ServerSpeedProvider.Packet.STREAM_CODEC),
+	BEAM_EFFECT(ZapperBeamPacket.class, ZapperBeamPacket.STREAM_CODEC),
+	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket.STREAM_CODEC),
+	CONTRAPTION_DISASSEMBLE(ContraptionDisassemblyPacket.class, ContraptionDisassemblyPacket.STREAM_CODEC),
+	CONTRAPTION_BLOCK_CHANGED(ContraptionBlockChangedPacket.class, ContraptionBlockChangedPacket.STREAM_CODEC),
+	GLUE_EFFECT(GlueEffectPacket.class, GlueEffectPacket.STREAM_CODEC),
+	CONTRAPTION_SEAT_MAPPING(ContraptionSeatMappingPacket.class, ContraptionSeatMappingPacket.STREAM_CODEC),
+	LIMBSWING_UPDATE(LimbSwingUpdatePacket.class, LimbSwingUpdatePacket.STREAM_CODEC),
+	MINECART_CONTROLLER(MinecartControllerUpdatePacket.class, MinecartControllerUpdatePacket.STREAM_CODEC),
+	FLUID_SPLASH(FluidSplashPacket.class, FluidSplashPacket.STREAM_CODEC),
+	MOUNTED_STORAGE_SYNC(MountedStorageSyncPacket.class, MountedStorageSyncPacket.STREAM_CODEC),
+	GANTRY_UPDATE(GantryContraptionUpdatePacket.class, GantryContraptionUpdatePacket.STREAM_CODEC),
+	BLOCK_HIGHLIGHT(HighlightPacket.class, HighlightPacket.STREAM_CODEC),
+	TUNNEL_FLAP(TunnelFlapPacket.class, TunnelFlapPacket.STREAM_CODEC),
+	FUNNEL_FLAP(FunnelFlapPacket.class, FunnelFlapPacket.STREAM_CODEC),
+	POTATO_CANNON(PotatoCannonPacket.class, PotatoCannonPacket.STREAM_CODEC),
+	SOUL_PULSE(SoulPulseEffectPacket.class, SoulPulseEffectPacket.STREAM_CODEC),
+	PERSISTENT_DATA(ISyncPersistentData.PersistentDataPacket.class, ISyncPersistentData.PersistentDataPacket.STREAM_CODEC),
+	SYNC_RAIL_GRAPH(TrackGraphSyncPacket.class, TrackGraphSyncPacket.STREAM_CODEC),
+	SYNC_EDGE_GROUP(SignalEdgeGroupPacket.class, SignalEdgeGroupPacket.STREAM_CODEC),
+	ADD_TRAIN(AddTrainPacket.class, AddTrainPacket.STREAM_CODEC),
+	REMOVE_TRAIN(RemoveTrainPacket.class, RemoveTrainPacket.STREAM_CODEC),
+	REMOVE_TE(RemoveBlockEntityPacket.class, RemoveBlockEntityPacket.STREAM_CODEC),
+	S_CONFIGURE_TRAIN(TrainEditReturnPacket.class, TrainEditReturnPacket.STREAM_CODEC),
+	CONTROLS_ABORT(ControlsStopControllingPacket.class, ControlsStopControllingPacket.STREAM_CODEC),
+	S_TRAIN_HUD(TrainHUDUpdatePacket.Clientbound.class, TrainHUDUpdatePacket.Clientbound.STREAM_CODEC),
+	S_TRAIN_HONK(HonkPacket.Clientbound.class, HonkPacket.Clientbound.STREAM_CODEC),
+	S_TRAIN_PROMPT(TrainPromptPacket.class, TrainPromptPacket.STREAM_CODEC),
+	CONTRAPTION_RELOCATION(ContraptionRelocationPacket.class, ContraptionRelocationPacket.STREAM_CODEC),
+	TRACK_GRAPH_ROLL_CALL(TrackGraphRollCallPacket.class, TrackGraphRollCallPacket.STREAM_CODEC),
+	S_PLACE_ARM(ArmPlacementPacket.ClientBoundRequest.class, ArmPlacementPacket.ClientBoundRequest.STREAM_CODEC),
+	S_PLACE_EJECTOR(EjectorPlacementPacket.ClientBoundRequest.class, EjectorPlacementPacket.ClientBoundRequest.STREAM_CODEC),
+	S_PLACE_PACKAGE_PORT(PackagePortPlacementPacket.ClientBoundRequest.class, PackagePortPlacementPacket.ClientBoundRequest.STREAM_CODEC),
+	UPDATE_ELEVATOR_FLOORS(ElevatorFloorListPacket.class, ElevatorFloorListPacket.STREAM_CODEC),
+	CONTRAPTION_ACTOR_TOGGLE(ContraptionDisableActorPacket.class, ContraptionDisableActorPacket.STREAM_CODEC),
+	CONTRAPTION_COLLIDER_LOCK(ContraptionColliderLockPacket.class, ContraptionColliderLockPacket.STREAM_CODEC),
+	ATTACHED_COMPUTER(AttachedComputerPacket.class, AttachedComputerPacket.STREAM_CODEC),
+	SERVER_DEBUG_INFO(ServerDebugInfoPacket.class, ServerDebugInfoPacket.STREAM_CODEC),
+	PACKAGE_DESTROYED(PackageDestroyPacket.class, PackageDestroyPacket.STREAM_CODEC),
+	LOGISTICS_STOCK_RESPONSE(LogisticalStockResponsePacket.class, LogisticalStockResponsePacket.STREAM_CODEC),
+	FACTORY_PANEL_EFFECT(FactoryPanelEffectPacket.class, FactoryPanelEffectPacket.STREAM_CODEC),
+	PACKAGER_LINK_EFFECT(WiFiEffectPacket.class, WiFiEffectPacket.STREAM_CODEC),
+	REDSTONE_REQUESTER_EFFECT(RedstoneRequesterEffectPacket.class, RedstoneRequesterEffectPacket.STREAM_CODEC),
+	KNOCKBACK(KnockbackPacket.class, KnockbackPacket.STREAM_CODEC),
+	TRAIN_MAP_SYNC(TrainMapSyncPacket.class, TrainMapSyncPacket.STREAM_CODEC),
+	CLIENTBOUND_CHAIN_CONVEYOR(ClientboundChainConveyorRidingPacket.class, ClientboundChainConveyorRidingPacket.STREAM_CODEC),
+	SHOP_UPDATE(ShopUpdatePacket.class, ShopUpdatePacket.STREAM_CODEC);
+	;
 
 	static {
 		ClientboundSimpleActionPacket.addAction("rainbowDebug", () -> SimpleCreateActions::rainbowDebug);
@@ -269,68 +251,27 @@ public enum AllPackets {
 		ClientboundSimpleActionPacket.addAction("camAngleFunction", () -> SimpleCreateActions::camAngleFunction);
 	}
 
-	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");
-	public static final int NETWORK_VERSION = 3;
-	public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
-	private static SimpleChannel channel;
+	private final CatnipPacketRegistry.PacketType<?> type;
 
-	private PacketType<?> packetType;
-
-	<T extends SimplePacketBase> AllPackets(Class<T> type, Function<FriendlyByteBuf, T> factory,
-											NetworkDirection direction) {
-		packetType = new PacketType<>(type, factory, direction);
+	<T extends BasePacketPayload> AllPackets(Class<T> clazz, StreamCodec<? super RegistryFriendlyByteBuf, T> codec) {
+		String name = this.name().toLowerCase(Locale.ROOT);
+		this.type = new CatnipPacketRegistry.PacketType<>(
+				new CustomPacketPayload.Type<>(Create.asResource(name)),
+				clazz, codec
+		);
 	}
 
-	public static void registerPackets() {
-		channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME)
-			.serverAcceptedVersions(NETWORK_VERSION_STR::equals)
-			.clientAcceptedVersions(NETWORK_VERSION_STR::equals)
-			.networkProtocolVersion(() -> NETWORK_VERSION_STR)
-			.simpleChannel();
-
-		for (AllPackets packet : values())
-			packet.packetType.register();
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T extends CustomPacketPayload> CustomPacketPayload.Type<T> getType() {
+		return (CustomPacketPayload.Type<T>) this.type.type();
 	}
 
-	public static SimpleChannel getChannel() {
-		return channel;
-	}
-
-	public static void sendToNear(Level world, BlockPos pos, int range, Object message) {
-		getChannel().send(
-			PacketDistributor.NEAR.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())),
-			message);
-	}
-
-	private static class PacketType<T extends SimplePacketBase> {
-		private static int index = 0;
-
-		private BiConsumer<T, FriendlyByteBuf> encoder;
-		private Function<FriendlyByteBuf, T> decoder;
-		private BiConsumer<T, Supplier<Context>> handler;
-		private Class<T> type;
-		private NetworkDirection direction;
-
-		private PacketType(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
-			encoder = T::write;
-			decoder = factory;
-			handler = (packet, contextSupplier) -> {
-				Context context = contextSupplier.get();
-				if (packet.handle(context)) {
-					context.setPacketHandled(true);
-				}
-			};
-			this.type = type;
-			this.direction = direction;
+	public static void register() {
+		CatnipPacketRegistry packetRegistry = new CatnipPacketRegistry(Create.ID, CreateBuildInfo.VERSION);
+		for (AllPackets packet : AllPackets.values()) {
+			packetRegistry.registerPacket(packet.type);
 		}
-
-		private void register() {
-			getChannel().messageBuilder(type, index++, direction)
-				.encoder(encoder)
-				.decoder(decoder)
-				.consumerNetworkThread(handler)
-				.add();
-		}
+		packetRegistry.registerAllPackets();
 	}
-
 }

@@ -1,9 +1,9 @@
 package com.simibubi.create.content.trains.track;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.trains.track.TrackBlockOutline.BezierPointSelection;
+import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.math.VecHelper;
@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.InputEvent;
 
 public class CurvedTrackInteraction {
 
@@ -73,7 +73,7 @@ public class CurvedTrackInteraction {
 			player.swing(InteractionHand.MAIN_HAND);
 
 			if (breakProgress >= 1) {
-				AllPackets.getChannel().sendToServer(new CurvedTrackDestroyPacket(breakPos, result.loc()
+				CatnipServices.NETWORK.sendToServer(new CurvedTrackDestroyPacket(breakPos, result.loc()
 					.curveTarget(), BlockPos.containing(result.vec()), false));
 				resetBreakProgress();
 			}
@@ -127,8 +127,7 @@ public class CurvedTrackInteraction {
 				return true;
 			}
 			if (AllItems.WRENCH.isIn(heldItem) && player.isShiftKeyDown()) {
-				AllPackets.getChannel()
-					.sendToServer(new CurvedTrackDestroyPacket(result.blockEntity()
+				CatnipServices.NETWORK.sendToServer(new CurvedTrackDestroyPacket(result.blockEntity()
 						.getBlockPos(),
 						result.loc()
 							.curveTarget(),

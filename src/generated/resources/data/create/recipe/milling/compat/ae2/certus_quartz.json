@@ -1,0 +1,20 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ae2"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "c:gems/certus_quartz"
+    }
+  ],
+  "processing_time": 200,
+  "results": [
+    {
+      "id": "ae2:certus_quartz_dust"
+    }
+  ]
+}

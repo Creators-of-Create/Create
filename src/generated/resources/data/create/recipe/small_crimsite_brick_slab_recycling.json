@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "create:small_crimsite_brick_slab"
+    },
+    {
+      "item": "create:small_crimsite_brick_slab"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:small_crimsite_bricks"
+  }
+}

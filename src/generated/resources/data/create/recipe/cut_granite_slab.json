@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "cut_granite_slab",
+  "key": {
+    "X": {
+      "item": "create:cut_granite"
+    }
+  },
+  "pattern": [
+    "XXX"
+  ],
+  "result": {
+    "count": 6,
+    "id": "create:cut_granite_slab"
+  }
+}

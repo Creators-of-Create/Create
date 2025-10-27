@@ -55,25 +55,20 @@ import java.util.Map;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.data.recipe.CompatMetals;
+import com.simibubi.create.foundation.data.recipe.CommonMetal;
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.material.Fluid;
 
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.MissingMappingsEvent;
-import net.minecraftforge.registries.MissingMappingsEvent.Mapping;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class RemapHelper {
 	private static final Map<String, ResourceLocation> reMap = new HashMap<>();
 
@@ -104,8 +99,8 @@ public class RemapHelper {
 		reMap.put("adjustable_pulse_repeater", PULSE_REPEATER.getId());
 		reMap.put("adjustable_repeater", PULSE_REPEATER.getId());
 
-		reMap.put("copper_block", CatnipServices.REGISTRIES.getKeyOrThrow(Blocks.COPPER_BLOCK));
-		reMap.put("copper_ore", CatnipServices.REGISTRIES.getKeyOrThrow(Blocks.COPPER_ORE));
+		reMap.put("copper_block", RegisteredObjectsHelper.getKeyOrThrow(Blocks.COPPER_BLOCK));
+		reMap.put("copper_ore", RegisteredObjectsHelper.getKeyOrThrow(Blocks.COPPER_ORE));
 
 		reMap.put("acacia_glass", ACACIA_WINDOW.getId());
 		reMap.put("acacia_glass_pane", ACACIA_WINDOW_PANE.getId());
@@ -155,13 +150,13 @@ public class RemapHelper {
 		reMap.put("gabbro_stairs", asResource("polished_cut_dripstone_stairs"));
 		reMap.put("limestone_layers", asResource("layered_limestone"));
 
-		reMap.put("gabbro", new ResourceLocation("minecraft:dripstone_block"));
-		reMap.put("dolomite", new ResourceLocation("minecraft:calcite"));
-		reMap.put("weathered_limestone", new ResourceLocation("minecraft:tuff"));
-		reMap.put("gabbro_cobblestone", new ResourceLocation("minecraft:dripstone_block"));
-		reMap.put("andesite_cobblestone", new ResourceLocation("minecraft:andesite"));
-		reMap.put("diorite_cobblestone", new ResourceLocation("minecraft:diorite"));
-		reMap.put("granite_cobblestone", new ResourceLocation("minecraft:granite"));
+		reMap.put("gabbro", ResourceLocation.withDefaultNamespace("dripstone_block"));
+		reMap.put("dolomite", ResourceLocation.withDefaultNamespace("calcite"));
+		reMap.put("weathered_limestone", ResourceLocation.withDefaultNamespace("tuff"));
+		reMap.put("gabbro_cobblestone", ResourceLocation.withDefaultNamespace("dripstone_block"));
+		reMap.put("andesite_cobblestone", ResourceLocation.withDefaultNamespace("andesite"));
+		reMap.put("diorite_cobblestone", ResourceLocation.withDefaultNamespace("diorite"));
+		reMap.put("granite_cobblestone", ResourceLocation.withDefaultNamespace("granite"));
 		reMap.put("dark_scoria", asResource("scorchia"));
 
 		// 1.15 palettes
@@ -193,9 +188,9 @@ public class RemapHelper {
 		// 1.18 crushed ores
 		for (String metal : new String[] { "iron", "gold", "copper", "zinc" })
 			reMap.put("crushed_" + metal + "_ore", Create.asResource("crushed_raw_" + metal));
-		for (CompatMetals compatMetal : CompatMetals.values())
-			reMap.put("crushed_" + compatMetal.getName() + "_ore",
-				Create.asResource("crushed_raw_" + compatMetal.getName()));
+		for (CommonMetal compatMetal : CommonMetal.values())
+			reMap.put("crushed_" + compatMetal.name + "_ore",
+				Create.asResource("crushed_raw_" + compatMetal.name));
 	}
 
 	private static void remapPaletteBlock(String type, String newType, boolean vanilla) {
@@ -240,69 +235,21 @@ public class RemapHelper {
 	}
 
 	@SubscribeEvent
-	public static void remapBlocks(MissingMappingsEvent event) {
-		for (Mapping<Block> mapping : event.getMappings(Registries.BLOCK, Create.ID)) {
-			ResourceLocation key = mapping.getKey();
-			String path = key.getPath();
-			ResourceLocation remappedId = reMap.get(path);
-			if (remappedId != null) {
-				Block remapped = ForgeRegistries.BLOCKS.getValue(remappedId);
-				if (remapped != null) {
-					Create.LOGGER.warn("Remapping block '{}' to '{}'", key, remappedId);
-					try {
-						mapping.remap(remapped);
-					} catch (Throwable t) {
-						Create.LOGGER.warn("Remapping block '{}' to '{}' failed: {}", key, remappedId, t);
-					}
-				}
-			}
+	public static void remap(RegisterEvent event) {
+		Registry<?> registry = event.getRegistry();
+
+		if (registry == Registries.BLOCK || registry == Registries.ITEM) {
+			reMap.forEach((string, resourceLocation) -> registry.addAlias(asResource(string), resourceLocation));
+		}
+
+		if (registry == Registries.FLUID) {
+			registry.addAlias(asResource("milk"), NeoForgeMod.MILK.getId());
+			registry.addAlias(asResource("flowing_milk"), NeoForgeMod.FLOWING_MILK.getId());
+		}
+
+		if (registry == Registries.BLOCK_ENTITY_TYPE) {
+			registry.addAlias(asResource("copper_backtank"), AllBlockEntityTypes.BACKTANK.getId());
+			registry.addAlias(asResource("adjustable_pulley"), AllBlockEntityTypes.ADJUSTABLE_CHAIN_GEARSHIFT.getId());
 		}
 	}
-
-	@SubscribeEvent
-	public static void remapItems(MissingMappingsEvent event) {
-		for (Mapping<Item> mapping : event.getMappings(Registries.ITEM, Create.ID)) {
-			ResourceLocation key = mapping.getKey();
-			String path = key.getPath();
-			ResourceLocation remappedId = reMap.get(path);
-			if (remappedId != null) {
-				Item remapped = ForgeRegistries.ITEMS.getValue(remappedId);
-				if (remapped != null) {
-					Create.LOGGER.warn("Remapping item '{}' to '{}'", key, remappedId);
-					try {
-						mapping.remap(remapped);
-					} catch (Throwable t) {
-						Create.LOGGER.warn("Remapping item '{}' to '{}' failed: {}", key, remappedId, t);
-					}
-				}
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void remapFluids(MissingMappingsEvent event) {
-		for (Mapping<Fluid> mapping : event.getMappings(Registries.FLUID, Create.ID)) {
-			ResourceLocation key = mapping.getKey();
-			String path = key.getPath();
-			if (path.equals("milk"))
-				mapping.remap(ForgeMod.MILK.get());
-			else if (path.equals("flowing_milk"))
-				mapping.remap(ForgeMod.FLOWING_MILK.get());
-		}
-	}
-
-	@SubscribeEvent
-	public static void remapBlockEntities(MissingMappingsEvent event) {
-		for (Mapping<BlockEntityType<?>> mapping : event.getMappings(Registries.BLOCK_ENTITY_TYPE, Create.ID)) {
-			ResourceLocation key = mapping.getKey();
-			String path = key.getPath();
-
-			if (path.equals("copper_backtank")) {
-				mapping.remap(AllBlockEntityTypes.BACKTANK.get());
-			} else if (path.equals("adjustable_pulley")) {
-				mapping.remap(AllBlockEntityTypes.ADJUSTABLE_CHAIN_GEARSHIFT.get());
-			}
-		}
-	}
-
 }

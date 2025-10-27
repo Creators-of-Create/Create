@@ -1,0 +1,27 @@
+{
+  "parent": "create:train_casing_00",
+  "criteria": {
+    "0": {
+      "trigger": "create:train_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.train.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:track_station"
+    },
+    "title": {
+      "translate": "advancement.create.train"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

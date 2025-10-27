@@ -9,8 +9,8 @@ import com.simibubi.create.api.registry.SimpleRegistry;
 
 import net.minecraft.world.level.block.Block;
 
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TagsUpdatedEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.TagsUpdatedEvent;
 
 public enum MountedItemStorageFallbackProvider implements SimpleRegistry.Provider<Block, MountedItemStorageType<?>> {
 	INSTANCE;
@@ -25,7 +25,7 @@ public enum MountedItemStorageFallbackProvider implements SimpleRegistry.Provide
 
 	@Override
 	public void onRegister(Runnable invalidate) {
-		MinecraftForge.EVENT_BUS.addListener((TagsUpdatedEvent event) -> {
+		NeoForge.EVENT_BUS.addListener((TagsUpdatedEvent event) -> {
 			if (event.shouldUpdateStaticData()) {
 				invalidate.run();
 			}

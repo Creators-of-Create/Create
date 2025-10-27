@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "biomeswevegone"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "biomeswevegone:lush_grass"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "biomeswevegone:lush_grass_path"
+    }
+  ]
+}

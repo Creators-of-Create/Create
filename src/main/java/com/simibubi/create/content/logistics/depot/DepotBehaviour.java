@@ -22,10 +22,11 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 
-import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -35,10 +36,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
+
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class DepotBehaviour extends BlockEntityBehaviour {
 
@@ -47,8 +47,7 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 	TransportedItemStack heldItem;
 	List<TransportedItemStack> incoming;
 	ItemStackHandler processingOutputBuffer;
-	DepotItemHandler itemHandler;
-	LazyOptional<DepotItemHandler> lazyItemHandler;
+	public DepotItemHandler itemHandler;
 	TransportedItemStackHandlerBehaviour transportedHandler;
 	Supplier<Integer> maxStackSize;
 	Supplier<Boolean> canAcceptItems;
@@ -67,11 +66,10 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 		};
 		incoming = new ArrayList<>();
 		itemHandler = new DepotItemHandler(this);
-		lazyItemHandler = LazyOptional.of(() -> itemHandler);
 		processingOutputBuffer = new ItemStackHandler(8) {
 			protected void onContentsChanged(int slot) {
 				be.notifyUpdate();
-			};
+			}
 		};
 	}
 
@@ -95,7 +93,7 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 
 		Level world = blockEntity.getLevel();
 
-		for (Iterator<TransportedItemStack> iterator = incoming.iterator(); iterator.hasNext();) {
+		for (Iterator<TransportedItemStack> iterator = incoming.iterator(); iterator.hasNext(); ) {
 			TransportedItemStack ts = iterator.next();
 			if (!tick(ts))
 				continue;
@@ -138,14 +136,14 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 		boolean wasLocked = heldItem.locked;
 		ProcessingResult result = wasLocked ? processingBehaviour.handleHeldItem(heldItem, transportedHandler)
 			: processingBehaviour.handleReceivedItem(heldItem, transportedHandler);
-		if (result == ProcessingResult.REMOVE) {
+		if (heldItem == null || result == ProcessingResult.REMOVE) {
 			heldItem = null;
 			blockEntity.sendData();
 			return;
 		}
 
 		heldItem.locked = result == ProcessingResult.HOLD;
-		if (heldItem.locked != wasLocked || !previousItem.equals(heldItem.stack, false))
+		if (heldItem.locked != wasLocked || !ItemStack.matches(previousItem, heldItem.stack))
 			blockEntity.sendData();
 	}
 
@@ -213,28 +211,28 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 
 	@Override
 	public void unload() {
-		if (lazyItemHandler != null)
-			lazyItemHandler.invalidate();
+		if (itemHandler != null)
+			blockEntity.invalidateCapabilities();
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		if (heldItem != null)
-			compound.put("HeldItem", heldItem.serializeNBT());
-		compound.put("OutputBuffer", processingOutputBuffer.serializeNBT());
+			compound.put("HeldItem", heldItem.serializeNBT(registries));
+		compound.put("OutputBuffer", processingOutputBuffer.serializeNBT(registries));
 		if (canMergeItems() && !incoming.isEmpty())
-			compound.put("Incoming", NBTHelper.writeCompoundList(incoming, TransportedItemStack::serializeNBT));
+			compound.put("Incoming", NBTHelper.writeCompoundList(incoming, stack -> stack.serializeNBT(registries)));
 	}
 
 	@Override
-	public void read(CompoundTag compound, boolean clientPacket) {
+	public void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		heldItem = null;
 		if (compound.contains("HeldItem"))
-			heldItem = TransportedItemStack.read(compound.getCompound("HeldItem"));
-		processingOutputBuffer.deserializeNBT(compound.getCompound("OutputBuffer"));
+			heldItem = TransportedItemStack.read(compound.getCompound("HeldItem"), registries);
+		processingOutputBuffer.deserializeNBT(registries, compound.getCompound("OutputBuffer"));
 		if (canMergeItems()) {
 			ListTag list = compound.getList("Incoming", Tag.TAG_COMPOUND);
-			incoming = NBTHelper.readCompoundList(list, TransportedItemStack::read);
+			incoming = NBTHelper.readCompoundList(list, c -> TransportedItemStack.read(c, registries));
 		}
 	}
 
@@ -288,7 +286,7 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 
 			ItemStack returned = ItemStack.EMPTY;
 			if (remainingSpace < inserted.getCount()) {
-				returned = ItemHandlerHelper.copyStackWithSize(heldItem.stack, inserted.getCount() - remainingSpace);
+				returned = heldItem.stack.copyWithCount(inserted.getCount() - remainingSpace);
 				if (!simulate) {
 					TransportedItemStack copy = heldItem.copy();
 					copy.stack.setCount(remainingSpace);
@@ -312,14 +310,13 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 		int maxCount = heldItem.stack.getMaxStackSize();
 		boolean stackTooLarge = maxCount < heldItem.stack.getCount();
 		if (stackTooLarge)
-			returned = ItemHandlerHelper.copyStackWithSize(heldItem.stack, heldItem.stack.getCount() - maxCount);
+			returned = heldItem.stack.copyWithCount(heldItem.stack.getCount() - maxCount);
 
 		if (simulate)
 			return returned;
 
 		if (this.isEmpty()) {
-			if (heldItem.insertedFrom.getAxis()
-				.isHorizontal())
+			if (heldItem.insertedFrom.getAxis().isHorizontal())
 				AllSoundEvents.DEPOT_SLIDE.playOnServer(getWorld(), getPos());
 			else
 				AllSoundEvents.DEPOT_PLOP.playOnServer(getWorld(), getPos());
@@ -347,10 +344,6 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 		this.heldItem = heldItem;
 		this.heldItem.beltPosition = 0.5f;
 		this.heldItem.prevBeltPosition = 0.5f;
-	}
-
-	public <T> LazyOptional<T> getItemCapability(Capability<T> cap, Direction side) {
-		return lazyItemHandler.cast();
 	}
 
 	private boolean isOccupied(Direction side) {
@@ -384,7 +377,7 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 	}
 
 	private void applyToAllItems(float maxDistanceFromCentre,
-		Function<TransportedItemStack, TransportedResult> processFunction) {
+								 Function<TransportedItemStack, TransportedResult> processFunction) {
 		if (heldItem == null)
 			return;
 		if (.5f - heldItem.beltPosition > maxDistanceFromCentre)

@@ -1,56 +1,55 @@
 package com.simibubi.create.content.contraptions.actors.psi;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.Contraption;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class PortableFluidInterfaceBlockEntity extends PortableStorageInterfaceBlockEntity {
 
-	protected LazyOptional<IFluidHandler> capability;
+	protected IFluidHandler capability;
 
 	public PortableFluidInterfaceBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		capability = createEmptyHandler();
 	}
 
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+				Capabilities.FluidHandler.BLOCK,
+				AllBlockEntityTypes.PORTABLE_FLUID_INTERFACE.get(),
+				(be, context) -> be.capability
+		);
+	}
+
 	@Override
-	public void startTransferringTo(Contraption contraption, float distance) {
-		LazyOptional<IFluidHandler> oldcap = capability;
-		capability = LazyOptional.of(() -> new InterfaceFluidHandler(contraption.getStorage().getFluids()));
-		oldcap.invalidate();
+	public void startTransferringTo(Contraption contraption, float distance) {;
+		capability = new InterfaceFluidHandler(contraption.getStorage().getFluids());
+		invalidateCapability();
 		super.startTransferringTo(contraption, distance);
 	}
 
 	@Override
 	protected void invalidateCapability() {
-		capability.invalidate();
+		invalidateCapabilities();
 	}
 
 	@Override
 	protected void stopTransferring() {
-		LazyOptional<IFluidHandler> oldcap = capability;
 		capability = createEmptyHandler();
-		oldcap.invalidate();
+		invalidateCapability();
 		super.stopTransferring();
 	}
 
-	private LazyOptional<IFluidHandler> createEmptyHandler() {
-		return LazyOptional.of(() -> new InterfaceFluidHandler(new FluidTank(0)));
-	}
-
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isFluidHandlerCap(cap))
-			return capability.cast();
-		return super.getCapability(cap, side);
+	private IFluidHandler createEmptyHandler() {
+		return new InterfaceFluidHandler(new FluidTank(0));
 	}
 
 	public class InterfaceFluidHandler implements IFluidHandler {

@@ -75,7 +75,7 @@ public class WaterWheelVisual<T extends WaterWheelBlockEntity> extends KineticBl
 
 	private static Model createModel(ModelKey key) {
 		BakedModel model = WaterWheelRenderer.generateModel(key.variant(), key.material());
-		return BakedModelBuilder.create(model)
+		return new BakedModelBuilder(model)
 				.build();
 	}
 

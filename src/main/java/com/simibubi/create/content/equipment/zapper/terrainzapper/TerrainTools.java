@@ -2,37 +2,50 @@ package com.simibubi.create.content.equipment.zapper.terrainzapper;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
+import com.mojang.serialization.Codec;
 import com.simibubi.create.content.equipment.zapper.ZapperItem;
 import com.simibubi.create.foundation.gui.AllIcons;
 
 import net.createmod.catnip.lang.Lang;
+
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-public enum TerrainTools {
+import io.netty.buffer.ByteBuf;
 
+import org.jetbrains.annotations.NotNull;
+
+public enum TerrainTools implements StringRepresentable {
 	Fill(AllIcons.I_FILL),
 	Place(AllIcons.I_PLACE),
 	Replace(AllIcons.I_REPLACE),
 	Clear(AllIcons.I_CLEAR),
 	Overlay(AllIcons.I_OVERLAY),
-	Flatten(AllIcons.I_FLATTEN),
+	Flatten(AllIcons.I_FLATTEN);
 
-	;
-
+	public static final Codec<TerrainTools> CODEC = StringRepresentable.fromValues(TerrainTools::values);
+	public static final StreamCodec<ByteBuf, TerrainTools> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(TerrainTools.class);
 	public String translationKey;
 	public AllIcons icon;
 
-	private TerrainTools(AllIcons icon) {
+	TerrainTools(AllIcons icon) {
 		this.translationKey = Lang.asId(name());
 		this.icon = icon;
+	}
+
+	@Override
+	public @NotNull String getSerializedName() {
+		return Lang.asId(name());
 	}
 
 	public boolean requiresSelectedBlock() {
@@ -94,5 +107,4 @@ public enum TerrainTools {
 	public static boolean isReplaceable(BlockState toReplace) {
 		return toReplace.canBeReplaced();
 	}
-
 }

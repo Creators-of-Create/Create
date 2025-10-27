@@ -12,18 +12,15 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class RecipeApplier {
-	public static void applyRecipeOn(ItemEntity entity, Recipe<?> recipe) {
-		List<ItemStack> stacks = applyRecipeOn(entity.level(), entity.getItem(), recipe);
-		if (stacks == null)
-			return;
+	public static void applyRecipeOn(ItemEntity entity, Recipe<?> recipe, boolean returnProcessingRemainder) {
+		List<ItemStack> stacks = applyRecipeOn(entity.level(), entity.getItem(), recipe, returnProcessingRemainder);
 		if (stacks.isEmpty()) {
 			entity.discard();
 			return;
 		}
-		entity.setItem(stacks.remove(0));
+		entity.setItem(stacks.removeFirst());
 		for (ItemStack additional : stacks) {
 			ItemEntity entityIn = new ItemEntity(entity.level(), entity.getX(), entity.getY(), entity.getZ(), additional);
 			entityIn.setDeltaMovement(entity.getDeltaMovement());
@@ -31,19 +28,19 @@ public class RecipeApplier {
 		}
 	}
 
-	public static List<ItemStack> applyRecipeOn(Level level, ItemStack stackIn, Recipe<?> recipe) {
+	public static List<ItemStack> applyRecipeOn(Level level, ItemStack stackIn, Recipe<?> recipe, boolean returnProcessingRemainder) {
 		List<ItemStack> stacks;
 
-		if (recipe instanceof ProcessingRecipe<?> pr) {
+		if (recipe instanceof ProcessingRecipe<?, ?> pr) {
 			stacks = new ArrayList<>();
 			for (int i = 0; i < stackIn.getCount(); i++) {
 				List<ProcessingOutput> outputs =
 					pr instanceof ManualApplicationRecipe mar ? mar.getRollableResults() : pr.getRollableResults();
-				for (ItemStack stack : pr.rollResults(outputs)) {
+				for (ItemStack stack : pr.rollResults(outputs, level.random)) {
 					for (ItemStack previouslyRolled : stacks) {
 						if (stack.isEmpty())
 							continue;
-						if (!ItemHandlerHelper.canItemStacksStack(stack, previouslyRolled))
+						if (!ItemStack.isSameItemSameComponents(stack, previouslyRolled))
 							continue;
 						int amount = Math.min(previouslyRolled.getMaxStackSize() - previouslyRolled.getCount(),
 							stack.getCount());
@@ -56,6 +53,10 @@ public class RecipeApplier {
 
 					stacks.add(stack);
 				}
+				if (returnProcessingRemainder && stackIn.hasCraftingRemainingItem()) {
+					ItemHelper.addToList(stackIn.getCraftingRemainingItem(), stacks);
+				}
+
 			}
 		} else {
 			ItemStack out = recipe.getResultItem(level.registryAccess())

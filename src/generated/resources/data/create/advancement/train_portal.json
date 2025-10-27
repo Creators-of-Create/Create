@@ -1,0 +1,27 @@
+{
+  "parent": "create:train_whistle",
+  "criteria": {
+    "0": {
+      "trigger": "create:train_portal_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.train_portal.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:amethyst_block"
+    },
+    "title": {
+      "translate": "advancement.create.train_portal"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -6,14 +6,21 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.schedule.Schedule;
 import com.simibubi.create.content.trains.schedule.ScheduleDataEntry;
+import com.simibubi.create.foundation.codec.CreateStreamCodecs;
 
 import net.createmod.catnip.data.Pair;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 public abstract class ScheduleWaitCondition extends ScheduleDataEntry {
+	public static final StreamCodec<RegistryFriendlyByteBuf, ScheduleWaitCondition> STREAM_CODEC = CreateStreamCodecs.ofLegacyNbtWithRegistries(
+			ScheduleWaitCondition::write, ScheduleWaitCondition::fromTag
+	);
 
 	public abstract boolean tickCompletion(Level level, Train train, CompoundTag context);
 
@@ -21,17 +28,17 @@ public abstract class ScheduleWaitCondition extends ScheduleDataEntry {
 		context.putInt("StatusVersion", context.getInt("StatusVersion") + 1);
 	}
 
-	public final CompoundTag write() {
+	public final CompoundTag write(HolderLookup.Provider registries) {
 		CompoundTag tag = new CompoundTag();
 		CompoundTag dataCopy = data.copy();
-		writeAdditional(dataCopy);
+		writeAdditional(registries, dataCopy);
 		tag.putString("Id", getId().toString());
 		tag.put("Data", dataCopy);
 		return tag;
 	}
 
-	public static ScheduleWaitCondition fromTag(CompoundTag tag) {
-		ResourceLocation location = new ResourceLocation(tag.getString("Id"));
+	public static ScheduleWaitCondition fromTag(HolderLookup.Provider registries, CompoundTag tag) {
+		ResourceLocation location = ResourceLocation.parse(tag.getString("Id"));
 		Supplier<? extends ScheduleWaitCondition> supplier = null;
 		for (Pair<ResourceLocation, Supplier<? extends ScheduleWaitCondition>> pair : Schedule.CONDITION_TYPES)
 			if (pair.getFirst()
@@ -45,9 +52,9 @@ public abstract class ScheduleWaitCondition extends ScheduleDataEntry {
 
 		ScheduleWaitCondition condition = supplier.get();
 		// Left around for migration purposes. Data added in writeAdditional has moved into the "Data" tag
-		condition.readAdditional(tag);
+		condition.readAdditional(registries, tag);
 		CompoundTag data = tag.getCompound("Data");
-		condition.readAdditional(data);
+		condition.readAdditional(registries, data);
 		condition.data = data;
 		return condition;
 	}

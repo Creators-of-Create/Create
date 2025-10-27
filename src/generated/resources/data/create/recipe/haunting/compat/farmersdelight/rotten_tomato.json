@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "type": "create:haunting",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "farmersdelight:tomato"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "farmersdelight:rotten_tomato"
+    }
+  ]
+}

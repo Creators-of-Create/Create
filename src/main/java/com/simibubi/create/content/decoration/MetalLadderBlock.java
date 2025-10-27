@@ -15,8 +15,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -30,9 +31,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ForgeMod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 
@@ -79,16 +79,14 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-								 BlockHitResult ray) {
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (player.isShiftKeyDown() || !player.mayBuild())
-			return InteractionResult.PASS;
-		ItemStack heldItem = player.getItemInHand(hand);
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
-		if (helper.matchesItem(heldItem))
-			return helper.getOffset(player, world, state, pos, ray)
-				.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
-		return InteractionResult.PASS;
+		if (helper.matchesItem(stack))
+			return helper.getOffset(player, level, state, pos, hitResult)
+				.placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@MethodsReturnNonnullByDefault
@@ -124,8 +122,8 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 
 			int range = AllConfigs.server().equipment.placementAssistRange.get();
 			if (player != null) {
-				AttributeInstance reach = player.getAttribute(ForgeMod.BLOCK_REACH.get());
-				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier))
+				AttributeInstance reach = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE);
+				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier.id()))
 					range += 4;
 			}
 

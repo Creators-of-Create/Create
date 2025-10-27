@@ -36,7 +36,7 @@ public class SpoutBlock extends Block implements IWrenchable, IBE<SpoutBlockEnti
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
 		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
-	
+
 	@Override
 	public boolean hasAnalogOutputSignal(BlockState state) {
 		return true;
@@ -46,9 +46,9 @@ public class SpoutBlock extends Block implements IWrenchable, IBE<SpoutBlockEnti
 	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
 		return ComparatorUtil.levelOfSmartFluidTank(worldIn, pos);
 	}
-	
+
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 
@@ -62,4 +62,8 @@ public class SpoutBlock extends Block implements IWrenchable, IBE<SpoutBlockEnti
 		return AllBlockEntityTypes.SPOUT.get();
 	}
 
+	@Override
+	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+		IBE.onRemove(state, level, pos, newState);
+	}
 }

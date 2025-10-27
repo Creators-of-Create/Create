@@ -5,8 +5,8 @@ import java.util.Iterator;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 
-import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
@@ -27,9 +27,9 @@ public class SchematicAndQuillItem extends Item {
 	}
 
 	public static void replaceStructureVoidWithAir(CompoundTag nbt) {
-		String air = CatnipServices.REGISTRIES.getKeyOrThrow(Blocks.AIR)
+		String air = RegisteredObjectsHelper.getKeyOrThrow(Blocks.AIR)
 			.toString();
-		String structureVoid = CatnipServices.REGISTRIES.getKeyOrThrow(Blocks.STRUCTURE_VOID)
+		String structureVoid = RegisteredObjectsHelper.getKeyOrThrow(Blocks.STRUCTURE_VOID)
 			.toString();
 
 		NBTHelper.iterateCompoundList(nbt.getList("palette", 10), c -> {
@@ -48,7 +48,7 @@ public class SchematicAndQuillItem extends Item {
 			Tag tag = iterator.next();
 			if (!(tag instanceof CompoundTag compoundtag))
 				continue;
-			if (compoundtag.contains("nbt") && new ResourceLocation(compoundtag.getCompound("nbt")
+			if (compoundtag.contains("nbt") && ResourceLocation.parse(compoundtag.getCompound("nbt")
 				.getString("id")).equals(AllEntityTypes.SUPER_GLUE.getId())) {
 				iterator.remove();
 			}

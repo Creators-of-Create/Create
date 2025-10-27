@@ -20,6 +20,7 @@ import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
@@ -259,8 +260,8 @@ public class SignalBoundary extends TrackEdgePoint {
 	}
 
 	@Override
-	public void read(CompoundTag nbt, boolean migration, DimensionPalette dimensions) {
-		super.read(nbt, migration, dimensions);
+	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean migration, DimensionPalette dimensions) {
+		super.read(nbt, registries, migration, dimensions);
 
 		if (migration)
 			return;
@@ -272,7 +273,7 @@ public class SignalBoundary extends TrackEdgePoint {
 			if (nbt.contains("Tiles" + i)) {
 				boolean first = i == 1;
 				NBTHelper.iterateCompoundList(nbt.getList("Tiles" + i, Tag.TAG_COMPOUND), c -> blockEntities.get(first)
-					.put(NbtUtils.readBlockPos(c), c.getBoolean("Power")));
+					.put(NBTHelper.readBlockPos(c, "Pos"), c.getBoolean("Power")));
 			}
 
 		for (int i = 1; i <= 2; i++)
@@ -296,14 +297,15 @@ public class SignalBoundary extends TrackEdgePoint {
 	}
 
 	@Override
-	public void write(CompoundTag nbt, DimensionPalette dimensions) {
-		super.write(nbt, dimensions);
+	public void write(CompoundTag nbt, HolderLookup.Provider registries, DimensionPalette dimensions) {
+		super.write(nbt, registries, dimensions);
 		for (int i = 1; i <= 2; i++)
 			if (!blockEntities.get(i == 1)
 				.isEmpty())
 				nbt.put("Tiles" + i, NBTHelper.writeCompoundList(blockEntities.get(i == 1)
 					.entrySet(), e -> {
-						CompoundTag c = NbtUtils.writeBlockPos(e.getKey());
+						CompoundTag c = new CompoundTag();
+						c.put("Pos", NbtUtils.writeBlockPos(e.getKey()));
 						c.putBoolean("Power", e.getValue());
 						return c;
 					}));

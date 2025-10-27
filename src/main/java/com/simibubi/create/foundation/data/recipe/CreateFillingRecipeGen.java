@@ -1,20 +1,21 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.FillingRecipeGen;
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.material.Fluids;
 
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 /**
  * Create's own Data Generation for Filling recipes
@@ -25,7 +26,7 @@ public final class CreateFillingRecipeGen extends FillingRecipeGen {
 
 	GeneratedRecipe
 
-	HONEY_BOTTLE = create("honey_bottle", b -> b.require(AllFluidTags.HONEY.tag, 250)
+		HONEY_BOTTLE = create("honey_bottle", b -> b.require(Tags.Fluids.HONEY, 250)
 		.require(Items.GLASS_BOTTLE)
 		.output(Items.HONEY_BOTTLE)),
 
@@ -42,7 +43,7 @@ public final class CreateFillingRecipeGen extends FillingRecipeGen {
 		.require(AllItems.BLAZE_CAKE_BASE.get())
 		.output(AllItems.BLAZE_CAKE.get())),
 
-	HONEYED_APPLE = create("honeyed_apple", b -> b.require(AllFluidTags.HONEY.tag, 250)
+	HONEYED_APPLE = create("honeyed_apple", b -> b.require(Tags.Fluids.HONEY, 250)
 		.require(Items.APPLE)
 		.output(AllItems.HONEYED_APPLE.get())),
 
@@ -76,10 +77,10 @@ public final class CreateFillingRecipeGen extends FillingRecipeGen {
 		.output(1, Mods.AM, "lava_bottle", 1)
 		.whenModLoaded(Mods.AM.getId())),
 
-	BYG_LUSH_GRASS = create(Mods.BYG.recipeId("lush_grass_block"), b -> b.require(Mods.BYG, "lush_dirt")
+	BWG_LUSH_GRASS = create(Mods.BWG.recipeId("lush_grass_block"), b -> b.require(Mods.BWG, "lush_dirt")
 		.require(Fluids.WATER, 500)
-		.output(Mods.BYG, "lush_grass_block")
-		.whenModLoaded(Mods.BYG.getId())),
+		.output(Mods.BWG, "lush_grass_block")
+		.whenModLoaded(Mods.BWG.getId())),
 
 	NEA_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Tags.Fluids.MILK, 250)
 		.require(Items.GLASS_BOTTLE)
@@ -102,21 +103,13 @@ public final class CreateFillingRecipeGen extends FillingRecipeGen {
 	// IE
 
 	IE_TREATED_WOOD = create(Mods.IE.recipeId("treated_wood_in_spout"),
-		b -> b.require(AllTags.forgeFluidTag("creosote"), 125)
+		b -> b.require(AllFluidTags.CREOSOTE.tag, 125)
 			.require(CreateRecipeProvider.I.planks())
 			.output(Mods.IE, "treated_wood_horizontal")
 			.whenModLoaded(Mods.IE.getId()));
 
 
-	public CreateFillingRecipeGen(PackOutput output) {
-		super(output, Create.ID);
-	}
-
-	public GeneratedRecipe moddedGrass(Mods mod, String name) {
-		String grass = name + "_grass_block";
-		return create(mod.recipeId(grass), b -> b.require(Fluids.WATER, 500)
-				.require(mod, name + "_dirt")
-				.output(mod, grass)
-				.whenModLoaded(mod.getId()));
+	public CreateFillingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+		super(output, registries, Create.ID);
 	}
 }

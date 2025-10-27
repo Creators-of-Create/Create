@@ -144,4 +144,7 @@ public class BlockMovementChecks {
 		}
 	}
 
+	private BlockMovementChecks() {
+		throw new AssertionError("This class should not be instantiated");
+	}
 }

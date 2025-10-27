@@ -1,0 +1,27 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "tag": "create:pulpifiable"
+    },
+    {
+      "tag": "create:pulpifiable"
+    },
+    {
+      "tag": "create:pulpifiable"
+    },
+    {
+      "tag": "create:pulpifiable"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 250,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "results": [
+    {
+      "id": "create:pulp"
+    }
+  ]
+}

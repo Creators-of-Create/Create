@@ -1,56 +1,45 @@
 package com.simibubi.create.content.schematics.cannon;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity.State;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.network.FriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent.Context;
 
-public class ConfigureSchematicannonPacket extends SimplePacketBase {
+public record ConfigureSchematicannonPacket(Option option, boolean set) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, ConfigureSchematicannonPacket> STREAM_CODEC = StreamCodec.composite(
+			Option.STREAM_CODEC, ConfigureSchematicannonPacket::option,
+			ByteBufCodecs.BOOL, ConfigureSchematicannonPacket::set,
+			ConfigureSchematicannonPacket::new
+	);
 
-	public static enum Option {
-		DONT_REPLACE, REPLACE_SOLID, REPLACE_ANY, REPLACE_EMPTY, SKIP_MISSING, SKIP_BLOCK_ENTITIES, PLAY, PAUSE, STOP;
-	}
-
-	private Option option;
-	private boolean set;
-
-	public ConfigureSchematicannonPacket(Option option, boolean set) {
-		this.option = option;
-		this.set = set;
-	}
-
-	public ConfigureSchematicannonPacket(FriendlyByteBuf buffer) {
-		this(buffer.readEnum(Option.class), buffer.readBoolean());
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONFIGURE_SCHEMATICANNON;
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeEnum(option);
-		buffer.writeBoolean(set);
-	}
+	public void handle(ServerPlayer player) {
+		if (player == null || !(player.containerMenu instanceof SchematicannonMenu))
+			return;
 
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer player = context.getSender();
-			if (player == null || !(player.containerMenu instanceof SchematicannonMenu))
-				return;
-
-			SchematicannonBlockEntity be = ((SchematicannonMenu) player.containerMenu).contentHolder;
-			switch (option) {
+		SchematicannonBlockEntity be = ((SchematicannonMenu) player.containerMenu).contentHolder;
+		switch (this.option) {
 			case DONT_REPLACE:
 			case REPLACE_ANY:
 			case REPLACE_EMPTY:
 			case REPLACE_SOLID:
-				be.replaceMode = option.ordinal();
+				be.replaceMode = this.option.ordinal();
 				break;
 			case SKIP_MISSING:
-				be.skipMissing = set;
+				be.skipMissing = this.set;
 				break;
 			case SKIP_BLOCK_ENTITIES:
-				be.replaceBlockEntities = set;
+				be.replaceBlockEntities = this.set;
 				break;
 
 			case PLAY:
@@ -67,11 +56,14 @@ public class ConfigureSchematicannonPacket extends SimplePacketBase {
 				break;
 			default:
 				break;
-			}
+		}
 
-			be.sendUpdate = true;
-		});
-		return true;
+		be.sendUpdate = true;
 	}
 
+	public enum Option {
+		DONT_REPLACE, REPLACE_SOLID, REPLACE_ANY, REPLACE_EMPTY, SKIP_MISSING, SKIP_BLOCK_ENTITIES, PLAY, PAUSE, STOP;
+
+		public static final StreamCodec<ByteBuf, Option> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(Option.class);
+	}
 }

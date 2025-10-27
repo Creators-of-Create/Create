@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:nuggets/iron"
+    },
+    "S": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "ASA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:filter"
+  }
+}

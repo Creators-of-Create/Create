@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.filter;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.logistics.AddressEditBox;
 import com.simibubi.create.content.logistics.box.PackageStyles;
 import com.simibubi.create.content.logistics.filter.FilterScreenPacket.Option;
@@ -11,15 +10,15 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 
 import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 public class PackageFilterScreen extends AbstractFilterScreen<PackageFilterMenu> {
 
-	private EditBox addressBox;
+	private AddressEditBox addressBox;
 	private boolean deferFocus;
 
 	public PackageFilterScreen(PackageFilterMenu menu, Inventory inv, Component title) {
@@ -69,20 +68,19 @@ public class PackageFilterScreen extends AbstractFilterScreen<PackageFilterMenu>
 		menu.address = s;
 		CompoundTag tag = new CompoundTag();
 		tag.putString("Address", s);
-		AllPackets.getChannel()
-			.sendToServer(new FilterScreenPacket(Option.UPDATE_ADDRESS, tag));
+		CatnipServices.NETWORK.sendToServer(new FilterScreenPacket(Option.UPDATE_ADDRESS, tag));
 	}
 
 	@Override
 	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
 		return super.mouseClicked(pMouseX, pMouseY, pButton);
 	}
-	
+
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		if (addressBox.mouseScrolled(mouseX, mouseY, delta))
+	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+		if (addressBox.mouseScrolled(mouseX, mouseY, scrollX, scrollY))
 			return true;
-		return super.mouseScrolled(mouseX, mouseY, delta);
+		return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
 	}
 
 	@Override
@@ -108,4 +106,8 @@ public class PackageFilterScreen extends AbstractFilterScreen<PackageFilterMenu>
 		return false;
 	}
 
+	@Override
+	protected int getTitleColor() {
+		return 0x3D3C48;
+	}
 }

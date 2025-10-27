@@ -1,78 +1,53 @@
 package com.simibubi.create.content.contraptions;
 
 import com.simibubi.create.AllPackets;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent.Context;
-import net.minecraftforge.network.PacketDistributor;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-public class ContraptionColliderLockPacket extends SimplePacketBase {
+public record ContraptionColliderLockPacket(int contraption, double offset, int sender) implements ClientboundPacketPayload {
+	public static final StreamCodec<ByteBuf, ContraptionColliderLockPacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.VAR_INT, ContraptionColliderLockPacket::contraption,
+			ByteBufCodecs.DOUBLE, ContraptionColliderLockPacket::offset,
+			ByteBufCodecs.VAR_INT, ContraptionColliderLockPacket::sender,
+	        ContraptionColliderLockPacket::new
+	);
 
-	protected int contraption;
-	protected double offset;
-	private int sender;
-
-	public ContraptionColliderLockPacket(int contraption, double offset, int sender) {
-		this.contraption = contraption;
-		this.offset = offset;
-		this.sender = sender;
-	}
-
-	public ContraptionColliderLockPacket(FriendlyByteBuf buffer) {
-		contraption = buffer.readVarInt();
-		offset = buffer.readDouble();
-		sender = buffer.readVarInt();
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		ContraptionCollider.lockPacketReceived(contraption, sender, offset);
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeVarInt(contraption);
-		buffer.writeDouble(offset);
-		buffer.writeVarInt(sender);
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONTRAPTION_COLLIDER_LOCK;
 	}
 
-	@Override
-	public boolean handle(Context context) {
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-			() -> () -> ContraptionCollider.lockPacketReceived(contraption, sender, offset));
-		return true;
-	}
+	public record ContraptionColliderLockPacketRequest(int contraption, double offset) implements ServerboundPacketPayload {
+		public static final StreamCodec<ByteBuf, ContraptionColliderLockPacketRequest> STREAM_CODEC = StreamCodec.composite(
+		        ByteBufCodecs.VAR_INT, ContraptionColliderLockPacketRequest::contraption,
+				ByteBufCodecs.DOUBLE, ContraptionColliderLockPacketRequest::offset,
+		        ContraptionColliderLockPacketRequest::new
+		);
 
-	public static class ContraptionColliderLockPacketRequest extends SimplePacketBase {
-
-		protected int contraption;
-		protected double offset;
-		
-		public ContraptionColliderLockPacketRequest(int contraption, double offset) {
-			this.contraption = contraption;
-			this.offset = offset;
-		}
-
-		public ContraptionColliderLockPacketRequest(FriendlyByteBuf buffer) {
-			contraption = buffer.readVarInt();
-			offset = buffer.readDouble();
+		@Override
+		public void handle(ServerPlayer player) {
+			CatnipServices.NETWORK.sendToClientsTrackingEntity(player, new ContraptionColliderLockPacket(contraption, offset, player.getId()));
 		}
 
 		@Override
-		public void write(FriendlyByteBuf buffer) {
-			buffer.writeVarInt(contraption);
-			buffer.writeDouble(offset);
+		public PacketTypeProvider getTypeProvider() {
+			return AllPackets.CONTRAPTION_COLLIDER_LOCK_REQUEST;
 		}
-
-		@Override
-		public boolean handle(Context context) {
-			context.enqueueWork(() -> {
-				AllPackets.getChannel()
-					.send(PacketDistributor.TRACKING_ENTITY.with(context::getSender),
-						new ContraptionColliderLockPacket(contraption, offset, context.getSender()
-							.getId()));
-			});
-			return true;
-		}
-
 	}
 
 }

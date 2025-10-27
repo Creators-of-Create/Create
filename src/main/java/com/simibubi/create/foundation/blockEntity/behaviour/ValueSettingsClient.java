@@ -3,12 +3,14 @@ package com.simibubi.create.foundation.blockEntity.behaviour;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 
 import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.theme.Color;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,12 +19,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-public class ValueSettingsClient implements IGuiOverlay {
-
+public class ValueSettingsClient implements LayeredDraw.Layer {
 	private Minecraft mc;
 
 	public int interactHeldTicks = -1;
@@ -87,8 +86,7 @@ public class ValueSettingsClient implements IGuiOverlay {
 			return;
 		}
 		if (!mc.options.keyUse.isDown()) {
-			AllPackets.getChannel()
-				.sendToServer(new ValueSettingsPacket(interactHeldPos, 0, 0, interactHeldHand, blockHitResult,
+			CatnipServices.NETWORK.sendToServer(new ValueSettingsPacket(interactHeldPos, 0, 0, interactHeldHand, blockHitResult,
 					interactHeldFace, false, valueSettingBehaviour.netId()));
 			valueSettingBehaviour.onShortInteract(player, interactHeldHand, interactHeldFace, blockHitResult);
 			cancelInteraction();
@@ -118,15 +116,15 @@ public class ValueSettingsClient implements IGuiOverlay {
 	}
 
 	@Override
-	public void render(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
+	public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || !ValueSettingsInputHandler.canInteract(mc.player))
 			return;
 		if (hoverTicks == 0 || lastHoverTip == null)
 			return;
 
-		int x = width / 2;
-		int y = height - 75 - lastHoverTip.size() * 12;
+		int x = guiGraphics.guiWidth() / 2;
+		int y = guiGraphics.guiHeight() - 75 - lastHoverTip.size() * 12;
 		float alpha = hoverTicks > 5 ? (11 - hoverTicks) / 5f : Math.min(1, hoverTicks / 5f);
 
 		Color color = new Color(0xffffff);
@@ -136,7 +134,7 @@ public class ValueSettingsClient implements IGuiOverlay {
 
 		for (int i = 0; i < lastHoverTip.size(); i++) {
 			MutableComponent mutableComponent = lastHoverTip.get(i);
-			graphics.drawString(mc.font, mutableComponent, x - mc.font.width(mutableComponent) / 2, y,
+			guiGraphics.drawString(mc.font, mutableComponent, x - mc.font.width(mutableComponent) / 2, y,
 				(i == 0 ? titleColor : color).getRGB());
 			y += 12;
 		}

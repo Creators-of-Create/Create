@@ -1,9 +1,10 @@
 package com.simibubi.create.foundation.events;
 
+import java.util.function.Supplier;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
@@ -14,7 +15,6 @@ import com.simibubi.create.content.contraptions.minecart.CouplingHandlerClient;
 import com.simibubi.create.content.contraptions.minecart.CouplingPhysics;
 import com.simibubi.create.content.contraptions.minecart.CouplingRenderer;
 import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderInfoManager;
 import com.simibubi.create.content.contraptions.wrench.RadialWrenchHandler;
 import com.simibubi.create.content.decoration.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.equipment.armor.BacktankArmorLayer;
@@ -76,9 +76,9 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.config.ui.BaseConfigScreen;
 import net.createmod.catnip.levelWrappers.WrappedClientLevel;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.render.DefaultSuperRenderTypeBuffer;
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
-import net.createmod.ponder.foundation.PonderTooltipHandler;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -93,43 +93,49 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent.Stage;
-import net.minecraftforge.client.event.ViewportEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.TickEvent.RenderTickEvent;
-import net.minecraftforge.event.entity.EntityMountEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
+import net.neoforged.neoforge.client.event.ViewportEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.event.entity.EntityMountEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ClientEvents {
+	@SubscribeEvent
+	public static void onTickPre(ClientTickEvent.Pre event) {
+		onTick( true);
+	}
 
 	@SubscribeEvent
-	public static void onTick(ClientTickEvent event) {
+	public static void onTickPost(ClientTickEvent.Post event) {
+		onTick(false);
+	}
+
+	public static void onTick(boolean isPreEvent) {
 		if (!isGameActive())
 			return;
 
 		Level world = Minecraft.getInstance().level;
-		if (event.phase == Phase.START) {
+		if (isPreEvent) {
 			LinkedControllerClientHandler.tick();
 			ControlsHandler.tick();
-			AirCurrent.tickClientPlayerSounds();
+			AirCurrent.Client.tickClientPlayerSounds();
 			return;
 		}
 
@@ -148,7 +154,6 @@ public class ClientEvents {
 		CapabilityMinecartController.tick(world);
 		CouplingPhysics.tick(world);
 
-		PonderTooltipHandler.tick();
 		// ScreenOpener.tick();
 		ServerSpeedProvider.clientTick();
 		BeltConnectorHandler.tick();
@@ -167,7 +172,6 @@ public class ClientEvents {
 		// CollisionDebugger.tick();
 		ArmInteractionPointHandler.tick();
 		EjectorTargetHandler.tick();
-		ContraptionRenderInfoManager.tickFor(world);
 		BlueprintOverlayRenderer.tick();
 		ToolboxHandlerClient.clientTick();
 		RadialWrenchHandler.clientTick();
@@ -278,10 +282,19 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onRenderTick(RenderTickEvent event) {
+	public static void onRenderFramePre(ClientTickEvent.Pre event) {
+		onRenderFrame(true);
+	}
+
+	@SubscribeEvent
+	public static void onRenderFramePost(ClientTickEvent.Post event) {
+		onRenderFrame(false);
+	}
+
+	public static void onRenderFrame(boolean isPreEvent) {
 		if (!isGameActive())
 			return;
-		TurntableHandler.gameRenderTick();
+		TurntableHandler.gameRenderFrame();
 	}
 
 	@SubscribeEvent
@@ -339,11 +352,11 @@ public class ClientEvents {
 	public static void leftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
 		ItemStack stack = event.getItemStack();
 		if (stack.getItem() instanceof ZapperItem) {
-			AllPackets.getChannel().sendToServer(new LeftClickPacket());
+			CatnipServices.NETWORK.sendToServer(LeftClickPacket.INSTANCE);
 		}
 	}
 
-	@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+	@EventBusSubscriber(Dist.CLIENT)
 	public static class ModBusEvents {
 
 		@SubscribeEvent
@@ -361,17 +374,17 @@ public class ClientEvents {
 		}
 
 		@SubscribeEvent
-		public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
+		public static void registerGuiOverlays(RegisterGuiLayersEvent event) {
 			// Register overlays in reverse order
-			event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), "remaining_air", RemainingAirOverlay.INSTANCE);
-			event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "train_hud", TrainHUD.OVERLAY);
-			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "value_settings", CreateClient.VALUE_SETTINGS_HANDLER);
-			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "track_placement", TrackPlacementOverlay.INSTANCE);
-			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "goggle_info", GoggleOverlayRenderer.OVERLAY);
-			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "blueprint", BlueprintOverlayRenderer.OVERLAY);
-			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "linked_controller", LinkedControllerClientHandler.OVERLAY);
-			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "schematic", CreateClient.SCHEMATIC_HANDLER);
-			event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "toolbox", ToolboxHandlerClient.OVERLAY);
+			event.registerAbove(VanillaGuiLayers.AIR_LEVEL, Create.asResource("remaining_air"), RemainingAirOverlay.INSTANCE);
+			event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR, Create.asResource("train_hud"), TrainHUD.OVERLAY);
+			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("value_settings"), CreateClient.VALUE_SETTINGS_HANDLER);
+			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("track_placement"), TrackPlacementOverlay.INSTANCE);
+			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("goggle_info"), GoggleOverlayRenderer.OVERLAY);
+			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("blueprint"), BlueprintOverlayRenderer.OVERLAY);
+			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("linked_controller"), LinkedControllerClientHandler.OVERLAY);
+			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("schematic"), CreateClient.SCHEMATIC_HANDLER);
+			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("toolbox"), ToolboxHandlerClient.OVERLAY);
 		}
 
 		@SubscribeEvent
@@ -384,11 +397,9 @@ public class ClientEvents {
 			ModContainer createContainer = ModList.get()
 				.getModContainerById(Create.ID)
 				.orElseThrow(() -> new IllegalStateException("Create mod container missing on LoadComplete"));
-			createContainer.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
-				() -> new ConfigScreenHandler.ConfigScreenFactory(
-					(mc, previousScreen) -> new BaseConfigScreen(previousScreen, Create.ID)));
+			Supplier<IConfigScreenFactory> configScreen = () -> (mc, previousScreen) -> new BaseConfigScreen(previousScreen, Create.ID);
+			createContainer.registerExtensionPoint(IConfigScreenFactory.class, configScreen);
 		}
 
 	}
-
 }

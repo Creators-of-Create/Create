@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:slimeballs"
+    },
+    "N": {
+      "tag": "c:nuggets/iron"
+    },
+    "S": {
+      "tag": "c:plates/iron"
+    }
+  },
+  "pattern": [
+    "AS",
+    "NA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:super_glue"
+  }
+}

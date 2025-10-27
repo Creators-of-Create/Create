@@ -3,14 +3,14 @@ package com.simibubi.create;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllTags.AllFluidTags;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.content.fluids.VirtualFluid;
 import com.simibubi.create.content.fluids.potion.PotionFluid;
@@ -20,26 +20,36 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;
 import com.tterrag.registrate.util.entry.FluidEntry;
 
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.fluids.FluidInteractionRegistry;
-import net.minecraftforge.fluids.FluidInteractionRegistry.InteractionInformation;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
-
 import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer.FogMode;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.DispensibleContainerItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
+
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
+import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
 
 public class AllFluids {
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
@@ -55,10 +65,10 @@ public class AllFluids {
 
 	public static final FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
 		.lang("Builder's Tea")
-		.tag(AllTags.forgeFluidTag("tea"))
+		.tag(AllFluidTags.TEA.tag)
 		.register();
 
-	public static final FluidEntry<ForgeFlowingFluid.Flowing> HONEY =
+	public static final FluidEntry<BaseFlowingFluid.Flowing> HONEY =
 		REGISTRATE.standardFluid("honey",
 				SolidRenderedPlaceableFluidType.create(0xEAAE2F,
 					() -> 1f / 8f * AllConfigs.client().honeyTransparencyMultiplier.getF()))
@@ -69,30 +79,36 @@ public class AllFluids {
 				.tickRate(25)
 				.slopeFindDistance(3)
 				.explosionResistance(100f))
-			.tag(AllFluidTags.HONEY.tag)
-			.source(ForgeFlowingFluid.Source::new) // TODO: remove when Registrate fixes FluidBuilder
+			.tag(Tags.Fluids.HONEY)
+			.source(BaseFlowingFluid.Source::new) // TODO: remove when Registrate fixes FluidBuilder
 			.block()
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW))
 			.build()
 			.bucket()
-			.tag(AllTags.forgeItemTag("buckets/honey"))
+			.onRegister(AllFluids::registerFluidDispenseBehavior)
+			.tag(Tags.Items.BUCKETS, AllItemTags.HONEY_BUCKETS.tag)
 			.build()
 			.register();
 
-	public static final FluidEntry<ForgeFlowingFluid.Flowing> CHOCOLATE =
+	public static final FluidEntry<BaseFlowingFluid.Flowing> CHOCOLATE =
 		REGISTRATE.standardFluid("chocolate",
 				SolidRenderedPlaceableFluidType.create(0x622020,
 					() -> 1f / 32f * AllConfigs.client().chocolateTransparencyMultiplier.getF()))
 			.lang("Chocolate")
-			.tag(AllTags.forgeFluidTag("chocolate"))
+			.tag(AllFluidTags.CHOCOLATE.tag)
 			.properties(b -> b.viscosity(1500)
 				.density(1400))
 			.fluidProperties(p -> p.levelDecreasePerBlock(2)
 				.tickRate(25)
 				.slopeFindDistance(3)
 				.explosionResistance(100f))
+			.source(BaseFlowingFluid.Source::new)
 			.block()
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_BROWN))
+			.build()
+			.bucket()
+			.onRegister(AllFluids::registerFluidDispenseBehavior)
+			.tag(Tags.Items.BUCKETS, AllItemTags.CHOCOLATE_BUCKETS.tag)
 			.build()
 			.register();
 
@@ -102,7 +118,7 @@ public class AllFluids {
 	}
 
 	public static void registerFluidInteractions() {
-		FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new InteractionInformation(
+		FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), new InteractionInformation(
 			HONEY.get().getFluidType(),
 			fluidState -> {
 				if (fluidState.isSource()) {
@@ -115,7 +131,7 @@ public class AllFluids {
 			}
 		));
 
-		FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new InteractionInformation(
+		FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), new InteractionInformation(
 			CHOCOLATE.get().getFluidType(),
 			fluidState -> {
 				if (fluidState.isSource()) {
@@ -143,11 +159,29 @@ public class AllFluids {
 		return null;
 	}
 
+	private static final DispenseItemBehavior DEFAULT = new DefaultDispenseItemBehavior();
+	private static final DispenseItemBehavior DISPENSE_FLUID = new DefaultDispenseItemBehavior(){
+			@Override
+			protected ItemStack execute(BlockSource pSource, ItemStack pStack) {
+				DispensibleContainerItem dispensibleContainerItem = (DispensibleContainerItem) pStack.getItem();
+				BlockPos pos = pSource.pos().relative(pSource.state().getValue(DispenserBlock.FACING));
+				Level level = pSource.level();
+				if (dispensibleContainerItem.emptyContents(null, level, pos, null, pStack)) {
+					return new ItemStack(Items.BUCKET);
+				}
+				return DEFAULT.dispense(pSource, pStack);
+			}
+		};
+
+	private static void registerFluidDispenseBehavior(BucketItem bucket) {
+		DispenserBlock.registerBehavior(bucket, DISPENSE_FLUID);
+	}
+
 	public static abstract class TintedFluidType extends FluidType {
 
 		protected static final int NO_TINT = 0xffffffff;
-		private ResourceLocation stillTexture;
-		private ResourceLocation flowingTexture;
+		private final ResourceLocation stillTexture;
+		private final ResourceLocation flowingTexture;
 
 		public TintedFluidType(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture) {
 			super(properties);

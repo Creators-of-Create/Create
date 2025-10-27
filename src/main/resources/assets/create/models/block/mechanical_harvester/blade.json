@@ -11,7 +11,7 @@
             "name": "Wheel",
             "from": [ 1, 0, 3 ],
             "to": [ 1.0625, 12, 15 ],
-            "forge_data": {"calculate_normals": true},
+            "neoforge_data": {"calculate_normals": true},
             "rotation": { "origin": [ 8, 6, 9 ], "axis": "x", "angle": -22.5 },
             "faces": {
                 "east": { "texture": "#harvester", "uv": [ 0, 0, 12, 12 ] },
@@ -83,7 +83,7 @@
             "name": "Wheel",
             "from": [ 15, 0, 3 ],
             "to": [ 15.0625, 12, 15 ],
-            "forge_data": {"calculate_normals": true},
+            "neoforge_data": {"calculate_normals": true},
             "rotation": { "origin": [ 8, 6, 9 ], "axis": "x", "angle": -22.5 },
             "faces": {
                 "east": { "texture": "#harvester", "uv": [ 0, 0, 12, 12 ] },

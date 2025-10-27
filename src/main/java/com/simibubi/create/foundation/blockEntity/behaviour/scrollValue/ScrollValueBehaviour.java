@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.blockEntity.behaviour.scrollValue;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
@@ -14,6 +13,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBoard;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatter;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayer;
 
 public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueSettingsBehaviour {
 
@@ -61,15 +61,15 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueS
 	}
 
 	@Override
-	public void write(CompoundTag nbt, boolean clientPacket) {
+	public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		nbt.putInt("ScrollValue", value);
-		super.write(nbt, clientPacket);
+		super.write(nbt, registries, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundTag nbt, boolean clientPacket) {
+	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		value = nbt.getInt("ScrollValue");
-		super.read(nbt, clientPacket);
+		super.read(nbt, registries, clientPacket);
 	}
 
 	public ScrollValueBehaviour withClientCallback(Consumer<Integer> valueCallback) {
@@ -182,7 +182,7 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueS
 	public void onShortInteract(Player player, InteractionHand hand, Direction side, BlockHitResult hitResult) {
 		if (player instanceof FakePlayer)
 			blockEntity.getBlockState()
-				.use(getWorld(), player, hand, hitResult);
+				.useItemOn(player.getItemInHand(hand), getWorld(), player, hand, hitResult);
 	}
 
 }

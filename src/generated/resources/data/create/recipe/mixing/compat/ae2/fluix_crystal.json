@@ -1,0 +1,36 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ae2"
+    }
+  ],
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "tag": "c:dusts/redstone"
+    },
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "ae2:charged_certus_quartz_crystal"
+        }
+      ]
+    },
+    {
+      "tag": "c:gems/quartz"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 250,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "results": [
+    {
+      "count": 2,
+      "id": "ae2:fluix_crystal"
+    }
+  ]
+}

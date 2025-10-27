@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.blockEntity.behaviour.inventory;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -11,19 +11,18 @@ import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 
 import net.createmod.catnip.math.BlockFace;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 
 public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationBehaviourBase<?, ?>>
 	extends BlockEntityBehaviour {
 
 	protected InterfaceProvider target;
-	protected LazyOptional<T> targetCapability;
+	protected T targetCapability;
 	protected Predicate<BlockEntity> filter;
 	protected boolean simulateNext;
 	protected boolean bypassSided;
@@ -33,13 +32,13 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		super(be);
 		setLazyTickRate(5);
 		this.target = target;
-		targetCapability = LazyOptional.empty();
+		targetCapability = null;
 		simulateNext = false;
 		bypassSided = false;
 		filter = Predicates.alwaysTrue();
 	}
 
-	protected abstract Capability<T> capability();
+	protected abstract BlockCapability<T, Direction> capability();
 
 	@Override
 	public void initialize() {
@@ -50,7 +49,7 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 	@Override
 	public void onNeighborChanged(BlockPos neighborPos) {
 		if (this.getTarget().getConnectedPos().equals(neighborPos))
-			onHandlerInvalidated(targetCapability);
+			onHandlerInvalidated();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -75,12 +74,12 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 	}
 
 	public boolean hasInventory() {
-		return targetCapability.isPresent();
+		return targetCapability != null;
 	}
 
 	@Nullable
 	public T getInventory() {
-		return targetCapability.orElse(null);
+		return targetCapability;
 	}
 
 	/**
@@ -91,15 +90,19 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		return this.target.getTarget(this.getWorld(), this.blockEntity.getBlockPos(), this.blockEntity.getBlockState());
 	}
 
-	protected void onHandlerInvalidated(LazyOptional<T> handler) {
+	protected boolean onHandlerInvalidated() {
+		if (targetCapability == null)
+			return false;
 		findNewNextTick = true;
-		targetCapability = LazyOptional.empty();
+		targetCapability = null;
+
+		return true;
 	}
 
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		if (!targetCapability.isPresent())
+		if (targetCapability == null)
 			findNewCapability();
 	}
 
@@ -133,16 +136,15 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		BlockFace targetBlockFace = this.getTarget().getOpposite();
 		BlockPos pos = targetBlockFace.getPos();
 
-		targetCapability = LazyOptional.empty();
+		targetCapability = null;
 
 		if (!world.isLoaded(pos))
 			return;
 		BlockEntity invBE = world.getBlockEntity(pos);
-		if (invBE == null || !filter.test(invBE))
+		if (!filter.test(invBE))
 			return;
-		Capability<T> capability = capability();
-		targetCapability =
-			bypassSided ? invBE.getCapability(capability) : invBE.getCapability(capability, targetBlockFace.getFace());
+		BlockCapability<T, Direction> capability = capability();
+		targetCapability = world.getCapability(capability, pos, bypassSided ? null : targetBlockFace.getFace());
 	}
 
 	@FunctionalInterface

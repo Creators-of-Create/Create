@@ -1,0 +1,20 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "thermal"
+    }
+  ],
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_raw_tin"
+    }
+  ],
+  "results": [
+    {
+      "count": 9,
+      "id": "thermal:tin_nugget"
+    }
+  ]
+}

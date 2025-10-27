@@ -10,6 +10,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.gui.TickableGuiEventListener;
 import net.createmod.catnip.gui.widget.AbstractSimiWidget;
 import net.minecraft.client.Minecraft;
@@ -27,8 +28,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 @ParametersAreNonnullByDefault
@@ -97,11 +99,15 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 		}
 	}
 
+	/*@Override
+	public void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+		NeoForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Background(this, pGuiGraphics, pMouseX, pMouseY));
+		renderBg(pGuiGraphics, pPartialTick, pMouseX, pMouseY);
+	}*/
+
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		partialTicks = minecraft.getFrameTime();
-
-		renderBackground(graphics);
+		partialTicks = AnimationTickHolder.getPartialTicksUI();
 
 		super.render(graphics, mouseX, mouseY, partialTicks);
 

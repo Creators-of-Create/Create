@@ -1,15 +1,16 @@
 package com.simibubi.create.content.schematics.client.tools;
 
+import com.simibubi.create.AllDataComponents;
+
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
 
-import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.outliner.AABBOutline;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -92,10 +93,8 @@ public class DeployTool extends PlacementToolBase {
 
 		ItemStack item = schematicHandler.getActiveSchematicItem();
 		if (item != null) {
-			item.getTag()
-				.putBoolean("Deployed", true);
-			item.getTag()
-				.put("Anchor", NbtUtils.writeBlockPos(target));
+			item.set(AllDataComponents.SCHEMATIC_DEPLOYED, true);
+			item.set(AllDataComponents.SCHEMATIC_ANCHOR, target);
 			schematicHandler.getTransformation()
 				.startAt(target);
 		}

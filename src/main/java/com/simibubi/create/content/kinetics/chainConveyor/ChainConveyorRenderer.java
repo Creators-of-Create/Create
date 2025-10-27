@@ -3,7 +3,6 @@ package com.simibubi.create.content.kinetics.chainConveyor;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -30,17 +29,17 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Con
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConveyorBlockEntity> {
 
-	public static final ResourceLocation CHAIN_LOCATION = new ResourceLocation("textures/block/chain.png");
+	public static final ResourceLocation CHAIN_LOCATION = ResourceLocation.withDefaultNamespace("textures/block/chain.png");
 	public static final int MIP_DISTANCE = 48;
 
 	public ChainConveyorRenderer(Context context) {
@@ -94,8 +93,8 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 			level.getBrightness(LightLayer.SKY, containingPos));
 
 		if (physicsData.modelKey == null) {
-			ResourceLocation key = ForgeRegistries.ITEMS.getKey(box.item.getItem());
-			if (key == null)
+			ResourceLocation key = BuiltInRegistries.ITEM.getKey(box.item.getItem());
+			if (key == BuiltInRegistries.ITEM.getDefaultKey())
 				return;
 			physicsData.modelKey = key;
 		}
@@ -218,20 +217,19 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 		float pMaxV, int light1, int light2, boolean far) {
 		PoseStack.Pose posestack$pose = pPoseStack.last();
 		Matrix4f matrix4f = posestack$pose.pose();
-		Matrix3f matrix3f = posestack$pose.normal();
 
 		float uO = far ? 0f : 3 / 16f;
-		renderQuad(matrix4f, matrix3f, pConsumer, 0, pMaxY, pX0, pZ0, pX3, pZ3, pMinU, pMaxU, pMinV, pMaxV, light1,
+		renderQuad(matrix4f, posestack$pose, pConsumer, 0, pMaxY, pX0, pZ0, pX3, pZ3, pMinU, pMaxU, pMinV, pMaxV, light1,
 			light2);
-		renderQuad(matrix4f, matrix3f, pConsumer, 0, pMaxY, pX3, pZ3, pX0, pZ0, pMinU, pMaxU, pMinV, pMaxV, light1,
+		renderQuad(matrix4f, posestack$pose, pConsumer, 0, pMaxY, pX3, pZ3, pX0, pZ0, pMinU, pMaxU, pMinV, pMaxV, light1,
 			light2);
-		renderQuad(matrix4f, matrix3f, pConsumer, 0, pMaxY, pX1, pZ1, pX2, pZ2, pMinU + uO, pMaxU + uO, pMinV, pMaxV,
+		renderQuad(matrix4f, posestack$pose, pConsumer, 0, pMaxY, pX1, pZ1, pX2, pZ2, pMinU + uO, pMaxU + uO, pMinV, pMaxV,
 			light1, light2);
-		renderQuad(matrix4f, matrix3f, pConsumer, 0, pMaxY, pX2, pZ2, pX1, pZ1, pMinU + uO, pMaxU + uO, pMinV, pMaxV,
+		renderQuad(matrix4f, posestack$pose, pConsumer, 0, pMaxY, pX2, pZ2, pX1, pZ1, pMinU + uO, pMaxU + uO, pMinV, pMaxV,
 			light1, light2);
 	}
 
-	private static void renderQuad(Matrix4f pPose, Matrix3f pNormal, VertexConsumer pConsumer, float pMinY, float pMaxY,
+	private static void renderQuad(Matrix4f pPose, PoseStack.Pose pNormal, VertexConsumer pConsumer, float pMinY, float pMaxY,
 		float pMinX, float pMinZ, float pMaxX, float pMaxZ, float pMinU, float pMaxU, float pMinV, float pMaxV,
 		int light1, int light2) {
 		addVertex(pPose, pNormal, pConsumer, pMaxY, pMinX, pMinZ, pMaxU, pMinV, light2);
@@ -240,15 +238,14 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 		addVertex(pPose, pNormal, pConsumer, pMaxY, pMaxX, pMaxZ, pMinU, pMinV, light2);
 	}
 
-	private static void addVertex(Matrix4f pPose, Matrix3f pNormal, VertexConsumer pConsumer, float pY, float pX,
+	private static void addVertex(Matrix4f pPose, PoseStack.Pose pNormal, VertexConsumer pConsumer, float pY, float pX,
 		float pZ, float pU, float pV, int light) {
-		pConsumer.vertex(pPose, pX, pY, pZ)
-			.color(1.0f, 1.0f, 1.0f, 1.0f)
-			.uv(pU, pV)
-			.overlayCoords(OverlayTexture.NO_OVERLAY)
-			.uv2(light)
-			.normal(pNormal, 0.0F, 1.0F, 0.0F)
-			.endVertex();
+		pConsumer.addVertex(pPose, pX, pY, pZ)
+			.setColor(1.0f, 1.0f, 1.0f, 1.0f)
+			.setUv(pU, pV)
+			.setOverlay(OverlayTexture.NO_OVERLAY)
+			.setLight(light)
+			.setNormal(pNormal, 0.0F, 1.0F, 0.0F);
 	}
 
 	@Override

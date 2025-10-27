@@ -1,49 +1,63 @@
 package com.simibubi.create.infrastructure.debugInfo;
 
 import java.util.List;
-import java.util.Objects;
 
-import com.simibubi.create.Create;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.infrastructure.debugInfo.element.DebugInfoSection;
 
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-public class ServerDebugInfoPacket extends SimplePacketBase {
+public record ServerDebugInfoPacket(String serverInfo) implements ClientboundPacketPayload {
+	public static final StreamCodec<ByteBuf, ServerDebugInfoPacket> STREAM_CODEC = ByteBufCodecs.STRING_UTF8.map(
+			ServerDebugInfoPacket::new, ServerDebugInfoPacket::serverInfo
+	);
 
-	private final List<DebugInfoSection> serverInfo;
-	private final Player player;
-
-	public ServerDebugInfoPacket(Player player) {
-		this.serverInfo = DebugInformation.getServerInfo();
-		this.player = player;
-	}
-
-	public ServerDebugInfoPacket(FriendlyByteBuf buffer) {
-		this.serverInfo = buffer.readList(DebugInfoSection::readDirect);
-		this.player = null;
+	public ServerDebugInfoPacket(Player target) {
+		this(printServerInfo(target));
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeCollection(this.serverInfo, (buf, section) -> section.write(player, buf));
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		StringBuilder output = new StringBuilder();
+		List<DebugInfoSection> clientInfo = DebugInformation.getClientInfo();
+
+		printInfo("Client", player, clientInfo, output);
+		output.append("\n\n");
+		output.append(this.serverInfo);
+
+		String text = output.toString();
+		Minecraft.getInstance().keyboardHandler.setClipboard(text);
+		CreateLang.translate("command.debuginfo.saved_to_clipboard")
+				.color(DyeHelper.getDyeColors(DyeColor.LIME)
+						.getFirst())
+				.sendChat(player);
 	}
 
 	@Override
-	public boolean handle(NetworkEvent.Context context) {
-		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::handleOnClient));
-		return true;
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.SERVER_DEBUG_INFO;
 	}
 
-	private void printInfo(String side, Player player, List<DebugInfoSection> sections, StringBuilder output) {
+	private static String printServerInfo(Player player) {
+		List<DebugInfoSection> sections = DebugInformation.getServerInfo();
+		StringBuilder output = new StringBuilder();
+		printInfo("Server", player, sections, output);
+		return output.toString();
+	}
+
+	private static void printInfo(String side, Player player, List<DebugInfoSection> sections, StringBuilder output) {
 		output.append("<details>");
 		output.append('\n');
 		output.append("<summary>")
@@ -69,23 +83,5 @@ public class ServerDebugInfoPacket extends SimplePacketBase {
 			.append('\n');
 		output.append("</details>");
 		output.append('\n');
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private void handleOnClient() {
-		Player player = Objects.requireNonNull(Minecraft.getInstance().player);
-		StringBuilder output = new StringBuilder();
-		List<DebugInfoSection> clientInfo = DebugInformation.getClientInfo();
-
-		printInfo("Client", player, clientInfo, output);
-		output.append("\n\n");
-		printInfo("Server", player, serverInfo, output);
-
-		String text = output.toString();
-		Minecraft.getInstance().keyboardHandler.setClipboard(text);
-		Create.lang().translate("command.debuginfo.saved_to_clipboard")
-			.color(DyeHelper.getDyeColors(DyeColor.LIME)
-				.getFirst())
-			.sendChat(player);
 	}
 }

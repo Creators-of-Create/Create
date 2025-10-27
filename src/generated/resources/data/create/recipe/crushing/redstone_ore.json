@@ -1,0 +1,27 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:redstone_ore"
+    }
+  ],
+  "processing_time": 250,
+  "results": [
+    {
+      "count": 6,
+      "id": "minecraft:redstone"
+    },
+    {
+      "chance": 0.5,
+      "id": "minecraft:redstone"
+    },
+    {
+      "chance": 0.75,
+      "id": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "id": "minecraft:cobblestone"
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -14,44 +14,38 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CKinetics;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.Connection;
-import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.PacketFlow;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.UsernameCache;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.UsernameCache;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
 
 @EventBusSubscriber
 public class DeployerFakePlayer extends FakePlayer {
 
-	private static final Connection NETWORK_MANAGER = new Connection(PacketFlow.CLIENTBOUND);
 	public static final UUID fallbackID = UUID.fromString("9e2faded-cafe-4ec2-c314-dad129ae971d");
 	Pair<BlockPos, Float> blockBreakingProgress;
 	ItemStack spawnedItemEffects;
@@ -61,7 +55,6 @@ public class DeployerFakePlayer extends FakePlayer {
 
 	public DeployerFakePlayer(ServerLevel world, @Nullable UUID owner) {
 		super(world, new DeployerGameProfile(fallbackID, "Deployer", owner));
-		connection = new FakePlayNetHandler(world.getServer(), this);
 		this.owner = owner;
 	}
 
@@ -77,8 +70,8 @@ public class DeployerFakePlayer extends FakePlayer {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public float getEyeHeight(Pose poseIn) {
-		return 0;
+	public EntityDimensions getDefaultDimensions(Pose pose) {
+		return super.getDefaultDimensions(pose).withEyeHeight(0);
 	}
 
 	@Override
@@ -97,9 +90,9 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	public ItemStack eat(Level world, ItemStack stack) {
-		stack.shrink(1);
-		return stack;
+	public ItemStack eat(Level level, ItemStack food, FoodProperties foodProperties) {
+		food.shrink(1);
+		return food;
 	}
 
 	@Override
@@ -115,7 +108,7 @@ public class DeployerFakePlayer extends FakePlayer {
 	@SubscribeEvent
 	public static void deployerHasEyesOnHisFeet(EntityEvent.Size event) {
 		if (event.getEntity() instanceof DeployerFakePlayer)
-			event.setNewEyeHeight(0);
+			event.setNewSize(event.getNewSize().withEyeHeight(0));
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -150,7 +143,7 @@ public class DeployerFakePlayer extends FakePlayer {
 
 	@SubscribeEvent
 	public static void entitiesDontRetaliate(LivingChangeTargetEvent event) {
-		if (!(event.getOriginalTarget() instanceof DeployerFakePlayer))
+		if (!(event.getOriginalAboutToBeSetTarget() instanceof DeployerFakePlayer))
 			return;
 		LivingEntity entityLiving = event.getEntity();
 		if (!(entityLiving instanceof Mob mob))
@@ -209,19 +202,4 @@ public class DeployerFakePlayer extends FakePlayer {
 			return result;
 		}
 	}
-
-	private static class FakePlayNetHandler extends ServerGamePacketListenerImpl {
-		public FakePlayNetHandler(MinecraftServer server, ServerPlayer playerIn) {
-			super(server, NETWORK_MANAGER, playerIn);
-		}
-
-		@Override
-		public void send(Packet<?> packetIn) {
-		}
-
-		@Override
-		public void send(Packet<?> p_243227_, @Nullable PacketSendListener p_243273_) {
-		}
-	}
-
 }

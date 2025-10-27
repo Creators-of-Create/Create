@@ -2,7 +2,7 @@ package com.simibubi.create.content.equipment.wrench;
 
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
@@ -23,10 +23,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 
 public class WrenchItem extends Item {
 
@@ -34,7 +34,13 @@ public class WrenchItem extends Item {
 		super(properties);
 	}
 
-	@Nonnull
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+		consumer.accept(SimpleCustomRenderer.create(this, new WrenchItemRenderer()));
+	}
+
+	@NotNull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		Player player = context.getPlayer();
@@ -88,11 +94,4 @@ public class WrenchItem extends Item {
 			return;
 		minecart.hurt(minecart.damageSources().playerAttack(player), 100);
 	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-		consumer.accept(SimpleCustomRenderer.create(this, new WrenchItemRenderer()));
-	}
-
 }

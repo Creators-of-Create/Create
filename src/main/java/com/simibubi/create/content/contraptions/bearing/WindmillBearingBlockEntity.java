@@ -12,6 +12,7 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -83,18 +84,18 @@ public class WindmillBearingBlockEntity extends MechanicalBearingBlockEntity {
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putFloat("LastGenerated", lastGeneratedSpeed);
 		compound.putBoolean("QueueAssembly", queuedReassembly);
-		super.write(compound, clientPacket);
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		if (!wasMoved)
 			lastGeneratedSpeed = compound.getFloat("LastGenerated");
 		queuedReassembly = compound.getBoolean("QueueAssembly");
-		super.read(compound, clientPacket);
+		super.read(compound, registries, clientPacket);
 	}
 
 	@Override

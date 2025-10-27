@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "aether"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "aether:aether_dirt"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "aether:aether_dirt_path"
+    }
+  ]
+}

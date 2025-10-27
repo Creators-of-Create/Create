@@ -1,0 +1,31 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ores/uranium"
+      }
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "tag": "c:ores/uranium"
+    }
+  ],
+  "processing_time": 400,
+  "results": [
+    {
+      "id": "create:crushed_raw_uranium"
+    },
+    {
+      "chance": 0.75,
+      "id": "create:crushed_raw_uranium"
+    },
+    {
+      "chance": 0.75,
+      "id": "create:experience_nugget"
+    }
+  ]
+}

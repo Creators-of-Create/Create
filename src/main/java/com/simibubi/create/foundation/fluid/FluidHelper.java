@@ -1,26 +1,17 @@
 package com.simibubi.create.foundation.fluid;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.fluids.tank.CreativeFluidTankBlockEntity;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
-import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.data.Pair;
-import net.minecraft.nbt.TagParser;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -30,15 +21,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.SoundActions;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.SoundActions;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 public class FluidHelper {
 
@@ -116,8 +105,8 @@ public class FluidHelper {
 			return Fluids.FLOWING_WATER;
 		if (fluid == Fluids.LAVA)
 			return Fluids.FLOWING_LAVA;
-		if (fluid instanceof ForgeFlowingFluid)
-			return ((ForgeFlowingFluid) fluid).getFlowing();
+		if (fluid instanceof BaseFlowingFluid)
+			return ((BaseFlowingFluid) fluid).getFlowing();
 		return fluid;
 	}
 
@@ -126,45 +115,9 @@ public class FluidHelper {
 			return Fluids.WATER;
 		if (fluid == Fluids.FLOWING_LAVA)
 			return Fluids.LAVA;
-		if (fluid instanceof ForgeFlowingFluid)
-			return ((ForgeFlowingFluid) fluid).getSource();
+		if (fluid instanceof BaseFlowingFluid)
+			return ((BaseFlowingFluid) fluid).getSource();
 		return fluid;
-	}
-
-	public static JsonElement serializeFluidStack(FluidStack stack) {
-		JsonObject json = new JsonObject();
-		json.addProperty("fluid", CatnipServices.REGISTRIES.getKeyOrThrow(stack.getFluid())
-			.toString());
-		json.addProperty("amount", stack.getAmount());
-		if (stack.hasTag())
-			json.addProperty("nbt", stack.getTag()
-				.toString());
-		return json;
-	}
-
-	public static FluidStack deserializeFluidStack(JsonObject json) {
-		ResourceLocation id = new ResourceLocation(GsonHelper.getAsString(json, "fluid"));
-		Fluid fluid = ForgeRegistries.FLUIDS.getValue(id);
-		if (fluid == null)
-			throw new JsonSyntaxException("Unknown fluid '" + id + "'");
-		if (fluid == Fluids.EMPTY)
-			throw new JsonSyntaxException("Invalid empty fluid '" + id + "'");
-		int amount = GsonHelper.getAsInt(json, "amount");
-		FluidStack stack = new FluidStack(fluid, amount);
-
-		if (!json.has("nbt"))
-			return stack;
-
-		try {
-			JsonElement element = json.get("nbt");
-			stack.setTag(TagParser.parseTag(
-				element.isJsonObject() ? Create.GSON.toJson(element) : GsonHelper.convertToString(element, "nbt")));
-
-		} catch (CommandSyntaxException e) {
-			e.printStackTrace();
-		}
-
-		return stack;
 	}
 
 	public static boolean tryEmptyItemIntoBE(Level worldIn, Player player, InteractionHand handIn, ItemStack heldItem,
@@ -173,18 +126,17 @@ public class FluidHelper {
 			return false;
 
 		Pair<FluidStack, ItemStack> emptyingResult = GenericItemEmptying.emptyItem(worldIn, heldItem, true);
-		LazyOptional<IFluidHandler> capability = be.getCapability(ForgeCapabilities.FLUID_HANDLER);
-		IFluidHandler tank = capability.orElse(null);
+		IFluidHandler capability = worldIn.getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
 		FluidStack fluidStack = emptyingResult.getFirst();
 
-		if (tank == null || fluidStack.getAmount() != tank.fill(fluidStack, FluidAction.SIMULATE))
+		if (capability == null || fluidStack.getAmount() != capability.fill(fluidStack, FluidAction.SIMULATE))
 			return false;
 		if (worldIn.isClientSide)
 			return true;
 
 		ItemStack copyOfHeld = heldItem.copy();
 		emptyingResult = GenericItemEmptying.emptyItem(worldIn, copyOfHeld, false);
-		tank.fill(fluidStack, FluidAction.EXECUTE);
+		capability.fill(fluidStack, FluidAction.EXECUTE);
 
 		if (!player.isCreative() && !(be instanceof CreativeFluidTankBlockEntity)) {
 			if (copyOfHeld.isEmpty())
@@ -203,14 +155,13 @@ public class FluidHelper {
 		if (!GenericItemFilling.canItemBeFilled(world, heldItem))
 			return false;
 
-		LazyOptional<IFluidHandler> capability = be.getCapability(ForgeCapabilities.FLUID_HANDLER);
-		IFluidHandler tank = capability.orElse(null);
+		IFluidHandler capability = world.getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
 
-		if (tank == null)
+		if (capability == null)
 			return false;
 
-		for (int i = 0; i < tank.getTanks(); i++) {
-			FluidStack fluid = tank.getFluidInTank(i);
+		for (int i = 0; i < capability.getTanks(); i++) {
+			FluidStack fluid = capability.getFluidInTank(i);
 			if (fluid.isEmpty())
 				continue;
 			int requiredAmountForItem = GenericItemFilling.getRequiredAmountForItem(world, heldItem, fluid.copy());
@@ -228,7 +179,7 @@ public class FluidHelper {
 
 			FluidStack copy = fluid.copy();
 			copy.setAmount(requiredAmountForItem);
-			tank.drain(copy, FluidAction.EXECUTE);
+			capability.drain(copy, FluidAction.EXECUTE);
 
 			if (!player.isCreative())
 				player.getInventory()
@@ -275,7 +226,7 @@ public class FluidHelper {
 				boolean canMoveToItem = (undecided || lockedExchange == FluidExchange.TANK_TO_ITEM) && itemCapacity > 0;
 
 				// Incompatible Liquids
-				if (!tankEmpty && !itemEmpty && !fluidInItem.isFluidEqual(fluidInTank))
+				if (!tankEmpty && !itemEmpty && !FluidStack.isSameFluidSameComponents(fluidInItem, fluidInTank))
 					continue;
 
 				// Transfer liquid to tank

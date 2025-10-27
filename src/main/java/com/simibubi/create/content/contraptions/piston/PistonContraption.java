@@ -25,6 +25,7 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -36,6 +37,7 @@ import net.minecraft.world.level.block.state.properties.PistonType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class PistonContraption extends TranslatingContraption {
 
@@ -128,9 +130,9 @@ public class PistonContraption extends TranslatingContraption {
 		extensionLength = extensionsInBack + extensionsInFront;
 		initialExtensionProgress = extensionsInFront;
 		pistonExtensionCollisionBox = new AABB(
-			BlockPos.ZERO.relative(direction, -1),
-			BlockPos.ZERO.relative(direction, -extensionLength - 1)).expandTowards(1,
-			1, 1);
+			Vec3.atLowerCornerOf(BlockPos.ZERO.relative(direction, -1)),
+			Vec3.atLowerCornerOf(BlockPos.ZERO.relative(direction, -extensionLength - 1))
+		).expandTowards(1, 1, 1);
 
 		if (extensionLength == 0)
 			throw AssemblyException.noPistonPoles();
@@ -235,8 +237,8 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	public CompoundTag writeNBT(boolean spawnPacket) {
-		CompoundTag tag = super.writeNBT(spawnPacket);
+	public CompoundTag writeNBT(HolderLookup.Provider registries, boolean spawnPacket) {
+		CompoundTag tag = super.writeNBT(registries, spawnPacket);
 		tag.putInt("InitialLength", initialExtensionProgress);
 		tag.putInt("ExtensionLength", extensionLength);
 		tag.putInt("Orientation", orientation.get3DDataValue());

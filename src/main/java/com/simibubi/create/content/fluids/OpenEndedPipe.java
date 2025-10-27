@@ -2,11 +2,12 @@ package com.simibubi.create.content.fluids;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.api.effect.OpenPipeEffectHandler;
 import com.simibubi.create.content.fluids.pipes.VanillaFluidTargets;
+import com.simibubi.create.foundation.ICapabilityProvider;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -16,12 +17,15 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.createmod.catnip.math.BlockFace;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -29,10 +33,9 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class OpenEndedPipe extends FlowSource {
 
@@ -43,6 +46,8 @@ public class OpenEndedPipe extends FlowSource {
 	private OpenEndFluidHandler fluidHandler;
 	private BlockPos outputPos;
 	private boolean wasPulling;
+
+	private final ICapabilityProvider<IFluidHandler> fluidHandlerProvider = ICapabilityProvider.of(() -> fluidHandler);
 
 	public OpenEndedPipe(BlockFace face) {
 		super(face);
@@ -71,13 +76,14 @@ public class OpenEndedPipe extends FlowSource {
 	}
 
 	@Override
-	public void manageSource(Level world) {
+	public void manageSource(Level world, BlockEntity networkBE) {
 		this.world = world;
 	}
 
 	@Override
-	public LazyOptional<IFluidHandler> provideHandler() {
-		return LazyOptional.of(() -> fluidHandler);
+	@Nullable
+	public ICapabilityProvider<IFluidHandler> provideHandler() {
+		return fluidHandlerProvider;
 	}
 
 	@Override
@@ -85,18 +91,19 @@ public class OpenEndedPipe extends FlowSource {
 		return true;
 	}
 
-	public CompoundTag serializeNBT() {
+	public CompoundTag serializeNBT(HolderLookup.Provider registries) {
 		CompoundTag compound = new CompoundTag();
-		fluidHandler.writeToNBT(compound);
+		fluidHandler.writeToNBT(registries, compound);
 		compound.putBoolean("Pulling", wasPulling);
 		compound.put("Location", location.serializeNBT());
 		return compound;
 	}
 
-	public static OpenEndedPipe fromNBT(CompoundTag compound, BlockPos blockEntityPos) {
+	public static OpenEndedPipe fromNBT(CompoundTag compound, HolderLookup.Provider registries, BlockPos blockEntityPos) {
 		BlockFace fromNBT = BlockFace.fromNBT(compound.getCompound("Location"));
 		OpenEndedPipe oep = new OpenEndedPipe(new BlockFace(blockEntityPos, fromNBT.getFace()));
-		oep.fluidHandler.readFromNBT(compound);
+
+		oep.fluidHandler.readFromNBT(registries, compound);
 		oep.wasPulling = compound.getBoolean("Pulling");
 		return oep;
 	}
@@ -134,7 +141,7 @@ public class OpenEndedPipe extends FlowSource {
 			AdvancementBehaviour.tryAward(world, pos, AllAdvancements.WATER_SUPPLY);
 
 		if (waterlog) {
-			world.setBlock(outputPos, state.setValue(WATERLOGGED, false), 3);
+			world.setBlock(outputPos, state.setValue(WATERLOGGED, false), Block.UPDATE_ALL);
 			world.scheduleTick(outputPos, Fluids.WATER, 1);
 		} else {
 			var newState = fluidState.createLegacyBlock()
@@ -152,7 +159,7 @@ public class OpenEndedPipe extends FlowSource {
 				}
 			}
 
-			world.setBlock(outputPos, newState, 3);
+			world.setBlock(outputPos, newState, Block.UPDATE_ALL);
 		}
 
 		return stack;
@@ -203,14 +210,14 @@ public class OpenEndedPipe extends FlowSource {
 		}
 
 		if (waterlog) {
-			world.setBlock(outputPos, state.setValue(WATERLOGGED, true), 3);
+			world.setBlock(outputPos, state.setValue(WATERLOGGED, true), Block.UPDATE_ALL);
 			world.scheduleTick(outputPos, Fluids.WATER, 1);
 			return true;
 		}
 
 		world.setBlock(outputPos, fluid.getFluid()
 			.defaultFluidState()
-			.createLegacyBlock(), 3);
+			.createLegacyBlock(), Block.UPDATE_ALL);
 		return true;
 	}
 
@@ -235,7 +242,7 @@ public class OpenEndedPipe extends FlowSource {
 			FluidStack containedFluidStack = getFluid();
 			boolean hasBlockState = FluidHelper.hasBlockState(containedFluidStack.getFluid());
 
-			if (!containedFluidStack.isEmpty() && !containedFluidStack.isFluidEqual(resource))
+			if (!containedFluidStack.isEmpty() && !FluidStack.isSameFluidSameComponents(containedFluidStack, resource))
 				setFluid(FluidStack.EMPTY);
 			if (wasPulling)
 				wasPulling = false;
@@ -297,14 +304,14 @@ public class OpenEndedPipe extends FlowSource {
 			FluidStack drainedFromWorld = removeFluidFromSpace(action.simulate());
 			if (drainedFromWorld.isEmpty())
 				return FluidStack.EMPTY;
-			if (filterPresent && !drainedFromWorld.isFluidEqual(filter))
+			if (filterPresent && !FluidStack.isSameFluidSameComponents(drainedFromWorld, filter))
 				return FluidStack.EMPTY;
 
 			int remainder = drainedFromWorld.getAmount() - amount;
 			drainedFromWorld.setAmount(amount);
 
 			if (!action.simulate() && remainder > 0) {
-				if (!getFluid().isEmpty() && !getFluid().isFluidEqual(drainedFromWorld))
+				if (!getFluid().isEmpty() && !FluidStack.isSameFluidSameComponents(getFluid(), drainedFromWorld))
 					setFluid(FluidStack.EMPTY);
 				super.fill(FluidHelper.copyStackWithAmount(drainedFromWorld, remainder), FluidAction.EXECUTE);
 			}

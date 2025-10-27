@@ -27,9 +27,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.data.ModelData.Builder;
-import net.minecraftforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelProperty;
 
 public class FactoryPanelModel extends BakedModelWrapperWithData {
 
@@ -40,7 +39,7 @@ public class FactoryPanelModel extends BakedModelWrapperWithData {
 	}
 
 	@Override
-	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
+	protected ModelData.Builder gatherModelData(ModelData.Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
 		ModelData blockEntityData) {
 		FactoryPanelModelData data = new FactoryPanelModelData();
 		for (PanelSlot slot : PanelSlot.values()) {

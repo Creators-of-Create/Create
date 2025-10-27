@@ -12,14 +12,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class BasinMovementBehaviour implements MovementBehaviour {
 	public Map<String, ItemStackHandler> getOrReadInventory(MovementContext context) {
 		Map<String, ItemStackHandler> map = new HashMap<>();
 		map.put("InputItems", new ItemStackHandler(9));
 		map.put("OutputItems", new ItemStackHandler(8));
-		map.forEach((s, h) -> h.deserializeNBT(context.blockEntityData.getCompound(s)));
+		map.forEach((s, h) -> h.deserializeNBT(context.world.registryAccess(), context.blockEntityData.getCompound(s)));
 		return map;
 	}
 
@@ -46,11 +46,14 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 				context.world.addFreshEntity(itemEntity);
 				itemStackHandler.setStackInSlot(i, ItemStack.EMPTY);
 			}
-			context.blockEntityData.put(key, itemStackHandler.serializeNBT());
+			context.blockEntityData.put(key, itemStackHandler.serializeNBT(context.world.registryAccess()));
 		});
-		BlockEntity blockEntity = context.contraption.presentBlockEntities.get(context.localPos);
-		if (blockEntity instanceof BasinBlockEntity)
-			((BasinBlockEntity) blockEntity).readOnlyItems(context.blockEntityData);
-		context.temporaryData = false; // did already dump, so can't any more
+		// FIXME: Why are we setting client-side data here?
+		if (context.contraption.entity.level().isClientSide) {
+			BlockEntity blockEntity = context.contraption.getBlockEntityClientSide(context.localPos);
+			if (blockEntity instanceof BasinBlockEntity)
+				((BasinBlockEntity) blockEntity).readOnlyItems(context.blockEntityData, context.world.registryAccess());
+		}
+		context.temporaryData = false; // did already dump, so can't anymore
 	}
 }

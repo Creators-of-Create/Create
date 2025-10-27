@@ -30,6 +30,7 @@ import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -734,8 +735,7 @@ public class FactoryGaugeScenes {
 			.modifyBlockEntityNBT(basin, BasinBlockEntity.class, nbt -> {
 				nbt.put("VisualizedItems",
 					NBTHelper.writeCompoundList(
-						ImmutableList.of(IntAttached.with(1, AllItems.ANDESITE_ALLOY.asStack())), ia -> ia.getValue()
-							.serializeNBT()));
+						ImmutableList.of(IntAttached.with(1, AllItems.ANDESITE_ALLOY.asStack())), ia -> (CompoundTag) ia.getValue().saveOptional(builder.world().getHolderLookupProvider())));
 			});
 		scene.idle(4);
 		scene.rotateCameraY(90);

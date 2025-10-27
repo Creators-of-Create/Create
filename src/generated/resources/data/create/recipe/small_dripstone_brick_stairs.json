@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "small_dripstone_brick_stairs",
+  "key": {
+    "X": {
+      "item": "create:small_dripstone_bricks"
+    }
+  },
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "result": {
+    "count": 4,
+    "id": "create:small_dripstone_brick_stairs"
+  }
+}

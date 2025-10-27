@@ -25,4 +25,8 @@ public class SchematicStateFilterRegistry {
 		 */
 		BlockState filterStates(@Nullable BlockEntity be, BlockState state);
 	}
+
+	private SchematicStateFilterRegistry() {
+		throw new AssertionError("This class should not be instantiated");
+	}
 }

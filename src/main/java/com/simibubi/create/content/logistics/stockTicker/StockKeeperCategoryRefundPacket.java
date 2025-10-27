@@ -1,38 +1,33 @@
 package com.simibubi.create.content.logistics.stockTicker;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.logistics.filter.FilterItem;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
 public class StockKeeperCategoryRefundPacket extends BlockEntityConfigurationPacket<StockTickerBlockEntity> {
+	public static final StreamCodec<RegistryFriendlyByteBuf, StockKeeperCategoryRefundPacket> STREAM_CODEC = StreamCodec.composite(
+	    BlockPos.STREAM_CODEC, p -> p.pos,
+	    ItemStack.STREAM_CODEC, p -> p.filter,
+	    StockKeeperCategoryRefundPacket::new
+	);
 
-	private ItemStack filter;
+	private final ItemStack filter;
 
 	public StockKeeperCategoryRefundPacket(BlockPos pos, ItemStack filter) {
 		super(pos);
 		this.filter = filter;
 	}
 
-	public StockKeeperCategoryRefundPacket(FriendlyByteBuf buffer) {
-		super(buffer);
-	}
-
 	@Override
-	protected void readSettings(FriendlyByteBuf buffer) {
-		filter = buffer.readItem();
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.REFUND_STOCK_KEEPER_CATEGORY;
 	}
-
-	@Override
-	protected void writeSettings(FriendlyByteBuf buffer) {
-		buffer.writeItem(filter);
-	}
-
-	@Override
-	protected void applySettings(StockTickerBlockEntity be) {}
 
 	@Override
 	protected void applySettings(ServerPlayer player, StockTickerBlockEntity be) {

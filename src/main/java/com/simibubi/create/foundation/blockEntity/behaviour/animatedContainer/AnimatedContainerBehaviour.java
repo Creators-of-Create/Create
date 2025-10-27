@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.gui.menu.MenuBase;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -32,15 +33,15 @@ public class AnimatedContainerBehaviour<M extends MenuBase<? extends SmartBlockE
 	}
 
 	@Override
-	public void read(CompoundTag compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	public void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(compound, registries, clientPacket);
 		if (clientPacket)
 			openCount = compound.getInt("OpenCount");
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
-		super.write(compound, clientPacket);
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(compound, registries, clientPacket);
 		if (clientPacket)
 			compound.putInt("OpenCount", openCount);
 	}

@@ -1,0 +1,35 @@
+{
+  "parent": "create:sturdy_sheet",
+  "criteria": {
+    "0": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#create:tracks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.track_0.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:track"
+    },
+    "title": {
+      "translate": "advancement.create.track_0"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -19,6 +19,7 @@ import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +33,7 @@ import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.AABB;
 
-import net.minecraftforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
 public class MountedContraption extends Contraption {
 
@@ -126,8 +127,8 @@ public class MountedContraption extends Contraption {
 	}
 
 	@Override
-	public CompoundTag writeNBT(boolean spawnPacket) {
-		CompoundTag tag = super.writeNBT(spawnPacket);
+	public CompoundTag writeNBT(HolderLookup.Provider registries, boolean spawnPacket) {
+		CompoundTag tag = super.writeNBT(registries, spawnPacket);
 		NBTHelper.writeEnum(tag, "RotationMode", rotationMode);
 		return tag;
 	}
@@ -157,5 +158,6 @@ public class MountedContraption extends Contraption {
 		if (cart instanceof Container container)
 			storage.attachExternal(new InvWrapper(container));
 	}
+
 
 }

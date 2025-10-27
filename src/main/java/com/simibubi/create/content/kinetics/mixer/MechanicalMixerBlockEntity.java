@@ -10,7 +10,7 @@ import com.simibubi.create.content.fluids.potion.PotionMixingRecipes;
 import com.simibubi.create.content.kinetics.press.MechanicalPressBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinOperatingBlockEntity;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -24,6 +24,7 @@ import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -31,19 +32,20 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.crafting.IShapedRecipe;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 
@@ -104,20 +106,20 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		running = compound.getBoolean("Running");
 		runningTicks = compound.getInt("Ticks");
-		super.read(compound, clientPacket);
+		super.read(compound, registries, clientPacket);
 
 		if (clientPacket && hasLevel())
 			getBasin().ifPresent(bte -> bte.setAreFluidsMoving(running && runningTicks <= 20));
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putInt("Ticks", runningTicks);
-		super.write(compound, clientPacket);
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
@@ -139,8 +141,8 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 			if ((!level.isClientSide || isVirtual()) && runningTicks == 20) {
 				if (processingTicks < 0) {
 					float recipeSpeed = 1;
-					if (currentRecipe instanceof ProcessingRecipe) {
-						int t = ((ProcessingRecipe<?>) currentRecipe).getProcessingDuration();
+					if (currentRecipe instanceof StandardProcessingRecipe) {
+						int t = ((StandardProcessingRecipe<?>) currentRecipe).getProcessingDuration();
 						if (t != 0)
 							recipeSpeed = t / 100f;
 					}
@@ -229,9 +231,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 		if (basin.isEmpty())
 			return matchingRecipes;
 
-		IItemHandler availableItems = basinBlockEntity
-			.getCapability(ForgeCapabilities.ITEM_HANDLER)
-			.orElse(null);
+		IItemHandler availableItems = level.getCapability(Capabilities.ItemHandler.BLOCK, basinBlockEntity.getBlockPos(), null);
 		if (availableItems == null)
 			return matchingRecipes;
 
@@ -240,7 +240,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 			if (stack.isEmpty())
 				continue;
 
-			List<MixingRecipe> list = PotionMixingRecipes.BY_ITEM.get(stack.getItem());
+			List<MixingRecipe> list = PotionMixingRecipes.sortRecipesByItem(level).get(stack.getItem());
 			if (list == null)
 				continue;
 			for (MixingRecipe mixingRecipe : list)
@@ -252,11 +252,12 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 	}
 
 	@Override
-	protected <C extends Container> boolean matchStaticFilters(Recipe<C> r) {
-		return ((r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>)
+	protected boolean matchStaticFilters(RecipeHolder<? extends Recipe<?>> recipe) {
+		Recipe<?> r = recipe.value();
+		return ((r instanceof CraftingRecipe && !(r instanceof ShapedRecipe)
 				 && AllConfigs.server().recipes.allowShapelessInMixer.get() && r.getIngredients()
 				.size() > 1
-				 && !MechanicalPressBlockEntity.canCompress(r)) && !AllRecipeTypes.shouldIgnoreInAutomation(r)
+				 && !MechanicalPressBlockEntity.canCompress(r)) && !AllRecipeTypes.shouldIgnoreInAutomation(recipe)
 			|| r.getType() == AllRecipeTypes.MIXING.getType());
 	}
 

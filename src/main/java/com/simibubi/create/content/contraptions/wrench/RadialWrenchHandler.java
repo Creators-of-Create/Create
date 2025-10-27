@@ -26,7 +26,7 @@ public class RadialWrenchHandler {
 		if (!pressed)
 			return;
 
-		if (key != AllKeys.ROTATE_MENU.getBoundCode())
+		if (!AllKeys.ROTATE_MENU.doesModifierAndCodeMatch(key))
 			return;
 
 		if (COOLDOWN > 0)
@@ -52,7 +52,7 @@ public class RadialWrenchHandler {
 
 		BlockState state = level.getBlockState(blockHitResult.getBlockPos());
 
-        RadialWrenchMenu.tryCreateFor(state, blockHitResult.getBlockPos(), level).ifPresent(ScreenOpener::open);
+		RadialWrenchMenu.tryCreateFor(state, blockHitResult.getBlockPos(), level).ifPresent(ScreenOpener::open);
 	}
 
 }

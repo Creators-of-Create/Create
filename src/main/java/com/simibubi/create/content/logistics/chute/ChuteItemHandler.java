@@ -3,7 +3,8 @@ package com.simibubi.create.content.logistics.chute;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class ChuteItemHandler implements IItemHandler {
 
@@ -12,7 +13,7 @@ public class ChuteItemHandler implements IItemHandler {
 	public ChuteItemHandler(ChuteBlockEntity be) {
 		this.blockEntity = be;
 	}
-	
+
 	@Override
 	public int getSlots() {
 		return 1;
@@ -28,7 +29,7 @@ public class ChuteItemHandler implements IItemHandler {
 		if (!blockEntity.canAcceptItem(stack))
 			return stack;
 		ItemStack remainder = ItemHelper.limitCountToMaxStackSize(stack, simulate);
-		if (!simulate) 
+		if (!simulate)
 			blockEntity.setItem(stack);
 		return remainder;
 	}
@@ -37,14 +38,14 @@ public class ChuteItemHandler implements IItemHandler {
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		ItemStack remainder = blockEntity.item.copy();
 		ItemStack split = remainder.split(amount);
-		if (!simulate) 
+		if (!simulate)
 			blockEntity.setItem(remainder);
 		return split;
 	}
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return Math.min(64, getStackInSlot(slot).getMaxStackSize());
+		return Math.min(getStackInSlot(slot).getMaxStackSize(), 64);
 	}
 
 	@Override

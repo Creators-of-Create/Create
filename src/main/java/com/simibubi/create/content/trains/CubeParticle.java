@@ -1,5 +1,7 @@
 package com.simibubi.create.content.trains;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -42,8 +44,9 @@ public class CubeParticle extends Particle {
 		new Vec3(1, -1, 1), new Vec3(1, 1, 1), new Vec3(1, 1, -1), new Vec3(1, -1, -1) };
 
 	private static final ParticleRenderType RENDER_TYPE = new ParticleRenderType() {
+
 		@Override
-		public void begin(BufferBuilder builder, TextureManager textureManager) {
+		public @NotNull BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
 			PonderSpecialTextures.BLANK.bind();
 
 			// transparent, additive blending
@@ -56,14 +59,11 @@ public class CubeParticle extends Particle {
 //			RenderSystem.disableBlend();
 //			RenderSystem.enableLighting();
 
-			builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-		}
+			BufferBuilder builder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
 
-		@Override
-		public void end(Tesselator tessellator) {
-			tessellator.end();
-			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
-				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
+			return builder;
 		}
 	};
 
@@ -137,11 +137,10 @@ public class CubeParticle extends Particle {
 					.scale(scale * ageMultiplier)
 					.add(lerpedX, lerpedY, lerpedZ);
 
-				builder.vertex(vec.x, vec.y, vec.z)
-					.uv(j / 2, j % 2)
-					.color(rCol, gCol, bCol, alpha)
-					.uv2(light)
-					.endVertex();
+				builder.addVertex((float) vec.x, (float) vec.y, (float) vec.z)
+					.setUv((float) j / 2, j % 2)
+					.setColor(rCol, gCol, bCol, alpha)
+					.setLight(light);
 			}
 		}
 	}

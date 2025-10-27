@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "simplefarming"
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "simplefarming:rye"
+        }
+      ]
+    }
+  ],
+  "processing_time": 150,
+  "results": [
+    {
+      "id": "create:wheat_flour"
+    },
+    {
+      "chance": 0.25,
+      "count": 2,
+      "id": "create:wheat_flour"
+    },
+    {
+      "chance": 0.25,
+      "id": "simplefarming:rye_seeds"
+    }
+  ]
+}

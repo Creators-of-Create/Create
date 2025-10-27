@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "druidcraft"
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "druidcraft:moonstone_ore"
+        }
+      ]
+    }
+  ],
+  "processing_time": 300,
+  "results": [
+    {
+      "count": 2,
+      "id": "druidcraft:moonstone"
+    },
+    {
+      "chance": 0.5,
+      "id": "druidcraft:moonstone"
+    },
+    {
+      "chance": 0.125,
+      "id": "minecraft:cobblestone"
+    }
+  ]
+}

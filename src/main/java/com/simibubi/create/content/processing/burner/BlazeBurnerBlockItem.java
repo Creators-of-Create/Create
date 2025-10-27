@@ -10,8 +10,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllEntityTags;
 
-import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -63,7 +63,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 
 	@Override
 	public String getDescriptionId() {
-		return hasCapturedBlaze() ? super.getDescriptionId() : "item.create." + CatnipServices.REGISTRIES.getKeyOrThrow(this).getPath();
+		return hasCapturedBlaze() ? super.getDescriptionId() : "item.create." + RegisteredObjectsHelper.getKeyOrThrow(this).getPath();
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 
 		List<SpawnData> possibleSpawns = spawner.spawnPotentials.unwrap()
 			.stream()
-			.map(Wrapper::getData)
+			.map(Wrapper::data)
 			.toList();
 
 		if (possibleSpawns.isEmpty()) {

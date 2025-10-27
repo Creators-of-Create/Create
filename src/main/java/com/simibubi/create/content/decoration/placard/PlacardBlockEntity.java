@@ -10,9 +10,11 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -41,7 +43,7 @@ public class PlacardBlockEntity extends SmartBlockEntity {
 			return;
 
 		BlockState blockState = getBlockState();
-		level.setBlock(worldPosition, blockState.setValue(PlacardBlock.POWERED, false), 3);
+		level.setBlock(worldPosition, blockState.setValue(PlacardBlock.POWERED, false), Block.UPDATE_ALL);
 		PlacardBlock.updateNeighbours(blockState, level, worldPosition);
 	}
 
@@ -55,18 +57,18 @@ public class PlacardBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	protected void write(CompoundTag tag, boolean clientPacket) {
+	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		tag.putInt("PoweredTicks", poweredTicks);
-		tag.put("Item", heldItem.serializeNBT());
-		super.write(tag, clientPacket);
+		tag.put("Item", heldItem.saveOptional(registries));
+		super.write(tag, registries, clientPacket);
 	}
 
 	@Override
-	protected void read(CompoundTag tag, boolean clientPacket) {
+	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		int prevTicks = poweredTicks;
 		poweredTicks = tag.getInt("PoweredTicks");
-		heldItem = ItemStack.of(tag.getCompound("Item"));
-		super.read(tag, clientPacket);
+		heldItem = ItemStack.parseOptional(registries, tag.getCompound("Item"));
+		super.read(tag, registries, clientPacket);
 
 		if (clientPacket && prevTicks < poweredTicks)
 			spawnParticles();
@@ -95,6 +97,7 @@ public class PlacardBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {}
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+	}
 
 }

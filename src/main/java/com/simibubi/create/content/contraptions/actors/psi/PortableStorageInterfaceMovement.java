@@ -16,6 +16,7 @@ import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,8 +26,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class PortableStorageInterfaceMovement implements MovementBehaviour {
 
@@ -85,10 +86,13 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 			return;
 		}
 
-		if (!context.data.contains(_workingPos_))
+		if (!context.data.contains(_workingPos_)) {
+			if (context.stall)
+				cancelStall(context);
 			return;
+		}
 
-		BlockPos pos = NbtUtils.readBlockPos(context.data.getCompound(_workingPos_));
+		BlockPos pos = NBTHelper.readBlockPos(context.data, _workingPos_);
 		Vec3 target = VecHelper.getCenterOf(pos);
 
 		if (!context.stall && !onCarriage
@@ -96,8 +100,10 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 			context.stall = true;
 
 		Optional<Direction> currentFacingIfValid = getCurrentFacingIfValid(context);
-		if (!currentFacingIfValid.isPresent())
+		if (!currentFacingIfValid.isPresent()) {
+			reset(context);
 			return;
+		}
 
 		PortableStorageInterfaceBlockEntity stationaryInterface =
 			getStationaryInterfaceAt(context.world, pos, context.state, currentFacingIfValid.get());

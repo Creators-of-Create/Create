@@ -1,0 +1,28 @@
+{
+  "parent": "create:copper",
+  "criteria": {
+    "0": {
+      "trigger": "create:mechanical_pump_0_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.mechanical_pump_0.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:mechanical_pump"
+    },
+    "title": {
+      "translate": "advancement.create.mechanical_pump_0"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

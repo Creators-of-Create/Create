@@ -1,6 +1,7 @@
 package com.simibubi.create.content.redstone.link.controller;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
@@ -29,12 +30,12 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 	protected static final PartialModel BUTTON = PartialModel.of(Create.asResource("item/linked_controller/button"));
 
 	static LerpedFloat equipProgress;
-	static Vector<LerpedFloat> buttons;
+	static List<LerpedFloat> buttons;
 
 	static {
 		equipProgress = LerpedFloat.linear()
 			.startWithValue(0);
-		buttons = new Vector<>(6);
+		buttons = new ArrayList<>(6);
 		for (int i = 0; i < 6; i++)
 			buttons.add(LerpedFloat.linear()
 				.startWithValue(0));

@@ -20,6 +20,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 
 public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedControllerMenu> {
 
@@ -79,8 +80,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 
 	@Override
 	protected void containerTick() {
-		if (!menu.player.getMainHandItem()
-			.equals(menu.contentHolder, false))
+		if (!ItemStack.matches(menu.player.getMainHandItem(), menu.contentHolder))
 			menu.player.closeContainer();
 
 		super.containerTick();

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.gson.JsonElement;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -15,6 +14,7 @@ import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
@@ -114,7 +114,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 		boolean instant = Math.abs(getSpeed()) > 128;
 		for (FlapDisplayLayout line : lines)
 			for (FlapDisplaySection section : line.getSections())
-				activeFlaps += section.tick(instant);
+				activeFlaps += section.tick(instant, level.random);
 		if (activeFlaps == 0)
 			return;
 
@@ -137,7 +137,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 		return isRunning;
 	}
 
-	public void applyTextManually(int lineIndex, String rawComponentText) {
+	public void applyTextManually(int lineIndex, Component componentText) {
 		List<FlapDisplayLayout> lines = getLines();
 		if (lineIndex >= lines.size())
 			return;
@@ -148,20 +148,16 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 		List<FlapDisplaySection> sections = layout.getSections();
 
 		FlapDisplaySection flapDisplaySection = sections.get(0);
-		if (rawComponentText == null) {
+		if (componentText == null) {
 			manualLines[lineIndex] = false;
 			flapDisplaySection.setText(CommonComponents.EMPTY);
 			notifyUpdate();
 			return;
 		}
 
-		JsonElement json = DynamicComponent.getJsonFromString(rawComponentText);
-		if (json == null)
-			return;
-
 		manualLines[lineIndex] = true;
-		Component text = isVirtual() ? Component.Serializer.fromJson(rawComponentText)
-			: DynamicComponent.parseCustomText(level, worldPosition, json);
+		Component text = isVirtual() ? componentText
+			: DynamicComponent.parseCustomText(level, worldPosition, componentText);
 		flapDisplaySection.setText(text);
 		if (isVirtual())
 			flapDisplaySection.refresh(true);
@@ -200,8 +196,8 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 	}
 
 	@Override
-	protected void write(CompoundTag tag, boolean clientPacket) {
-		super.write(tag, clientPacket);
+	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(tag, registries, clientPacket);
 
 		tag.putBoolean("Controller", isController);
 		tag.putInt("XSize", xSize);
@@ -221,13 +217,12 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 
 		List<FlapDisplayLayout> lines = getLines();
 		for (int i = 0; i < lines.size(); i++)
-			tag.put("Display" + i, lines.get(i)
-				.write());
+			tag.put("Display" + i, lines.get(i).write(registries));
 	}
 
 	@Override
-	protected void read(CompoundTag tag, boolean clientPacket) {
-		super.read(tag, clientPacket);
+	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(tag, registries, clientPacket);
 		boolean wasActive = isController;
 		int prevX = xSize;
 		int prevY = ySize;

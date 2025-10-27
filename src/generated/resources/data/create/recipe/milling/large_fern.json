@@ -1,0 +1,23 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:large_fern"
+    }
+  ],
+  "processing_time": 50,
+  "results": [
+    {
+      "count": 2,
+      "id": "minecraft:green_dye"
+    },
+    {
+      "chance": 0.5,
+      "id": "minecraft:green_dye"
+    },
+    {
+      "chance": 0.1,
+      "id": "minecraft:wheat_seeds"
+    }
+  ]
+}

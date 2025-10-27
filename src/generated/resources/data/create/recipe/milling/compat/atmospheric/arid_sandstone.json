@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "atmospheric:arid_sandstone"
+        }
+      ]
+    }
+  ],
+  "processing_time": 150,
+  "results": [
+    {
+      "id": "atmospheric:arid_sand"
+    }
+  ]
+}

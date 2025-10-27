@@ -5,10 +5,14 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.content.equipment.clipboard.ClipboardEntry;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
@@ -18,13 +22,12 @@ import com.simibubi.create.foundation.block.IBE;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -33,6 +36,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -60,91 +64,149 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult ray) {
-
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (player.isShiftKeyDown())
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		ItemStack heldItem = player.getItemInHand(hand);
-		NixieTubeBlockEntity nixie = getBlockEntity(world, pos);
+		NixieTubeBlockEntity nixie = getBlockEntity(level, pos);
 
 		if (nixie == null)
-			return InteractionResult.PASS;
-		if (heldItem.isEmpty()) {
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+
+		// Refuse interaction if nixie tube is in a computer-controlled row
+		if (isInComputerControlledRow(level, pos))
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+
+		if (stack.isEmpty()) {
 			if (nixie.reactsToRedstone())
-				return InteractionResult.PASS;
+				return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 			nixie.clearCustomText();
-			updateDisplayedRedstoneValue(state, world, pos);
-			return InteractionResult.SUCCESS;
+			updateDisplayedRedstoneValue(state, level, pos);
+			return ItemInteractionResult.SUCCESS;
 		}
 
 		boolean display =
-			heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName() || AllBlocks.CLIPBOARD.isIn(heldItem);
-		DyeColor dye = DyeColor.getColor(heldItem);
+			stack.getItem() == Items.NAME_TAG && stack.has(DataComponents.CUSTOM_NAME) || AllBlocks.CLIPBOARD.isIn(stack);
+		DyeColor dye = DyeColor.getColor(stack);
 
 		if (!display && dye == null)
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		CompoundTag tag = heldItem.getTagElement("display");
-		String tagElement = tag != null && tag.contains("Name", Tag.TAG_STRING) ? tag.getString("Name") : null;
+		Component component = stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty());
 
-		if (AllBlocks.CLIPBOARD.isIn(heldItem)) {
-			List<ClipboardEntry> entries = ClipboardEntry.getLastViewedEntries(heldItem);
-			for (int i = 0; i < entries.size();) {
-				tagElement = Component.Serializer.toJson(entries.get(i).text);
-				break;
-			}
+		if (AllBlocks.CLIPBOARD.isIn(stack)) {
+			List<ClipboardEntry> entries = ClipboardEntry.getLastViewedEntries(stack);
+			if (!entries.isEmpty())
+				component = entries.getFirst().text;
 		}
 
-		if (world.isClientSide)
-			return InteractionResult.SUCCESS;
+		if (level.isClientSide)
+			return ItemInteractionResult.SUCCESS;
 
-		String tagUsed = tagElement;
-		walkNixies(world, pos, (currentPos, rowPosition) -> {
+		String tagUsed = Component.Serializer.toJson(component, level.registryAccess());
+		// Skip computer check in this walk since it was already performed at the start.
+		walkNixies(level, pos, true, (currentPos, rowPosition) -> {
 			if (display)
-				withBlockEntityDo(world, currentPos, be -> be.displayCustomText(tagUsed, rowPosition));
+				withBlockEntityDo(level, currentPos, be -> be.displayCustomText(tagUsed, rowPosition));
 			if (dye != null)
-				world.setBlockAndUpdate(currentPos, withColor(state, dye));
+				level.setBlockAndUpdate(currentPos, withColor(state, dye));
 		});
 
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
-	public static void walkNixies(LevelAccessor world, BlockPos start, BiConsumer<BlockPos, Integer> callback) {
-		BlockState state = world.getBlockState(start);
-		if (!(state.getBlock() instanceof NixieTubeBlock))
-			return;
-
-		BlockPos currentPos = start;
-		Direction left = state.getValue(FACING)
-			.getOpposite();
-
+	public static Direction getLeftNixieDirection(@NotNull BlockState state) {
+		Direction left = state.getValue(FACING).getOpposite();
 		if (state.getValue(FACE) == DoubleAttachFace.WALL)
 			left = Direction.UP;
 		if (state.getValue(FACE) == DoubleAttachFace.WALL_REVERSED)
 			left = Direction.DOWN;
+		return left;
+	}
 
+	public static Direction getRightNixieDirection(@NotNull BlockState state) {
+		return getLeftNixieDirection(state).getOpposite();
+	}
+
+	public static boolean isInComputerControlledRow(@NotNull LevelAccessor world, @NotNull BlockPos pos) {
+		return Mods.COMPUTERCRAFT.isLoaded() && !walkNixies(world, pos, false, null);
+	}
+
+	/**
+	 * Walk down a nixie tube row and execute a callback on each tube in said row.
+	 * @param world The world the tubes are in.
+	 * @param start Start position for the walk.
+	 * @param allowComputerControlled Allow or disallow running callbacks if the row is computer-controlled.
+	 * @param callback Callback to run for each tube.
+	 * @return True if the row was walked, false if the walk was aborted because it is computer-controlled.
+	 */
+	public static boolean walkNixies(@NotNull LevelAccessor world, @NotNull BlockPos start,
+									 boolean allowComputerControlled,
+									 @Nullable BiConsumer<BlockPos, Integer> callback) {
+		BlockState state = world.getBlockState(start);
+		if (!(state.getBlock() instanceof NixieTubeBlock))
+			return false;
+
+		// If ComputerCraft is not installed, ignore allowComputerControlled since
+		// nixies can't be computer-controlled
+		if (!Mods.COMPUTERCRAFT.isLoaded())
+			allowComputerControlled = true;
+
+		BlockPos currentPos = start;
+		Direction left = getLeftNixieDirection(state);
 		Direction right = left.getOpposite();
 
 		while (true) {
 			BlockPos nextPos = currentPos.relative(left);
 			if (!areNixieBlocksEqual(world.getBlockState(nextPos), state))
 				break;
+			// If computer-controlled nixie walking is disallowed, presence of any (same-color)
+			// controlled nixies aborts the entire nixie walk.
+			if (!allowComputerControlled && world.getBlockEntity(nextPos) instanceof NixieTubeBlockEntity ntbe &&
+					ntbe.computerBehaviour.hasAttachedComputer()) {
+				return false;
+			}
 			currentPos = nextPos;
+		}
+
+		// As explained above, a controlled nixie in the row aborts the walk if they are disallowed,
+		// and that includes those down the chain too.
+		if (!allowComputerControlled) {
+			// Check the start block itself
+			if (world.getBlockEntity(start) instanceof NixieTubeBlockEntity ntbe &&
+					ntbe.computerBehaviour.hasAttachedComputer()) {
+				return false;
+			}
+			BlockPos leftmostPos = currentPos;
+			// No need to iterate over the nixies to the left again
+			currentPos = start;
+			while (true) {
+				BlockPos nextPos = currentPos.relative(right);
+				if (!areNixieBlocksEqual(world.getBlockState(nextPos), state))
+					break;
+				if (world.getBlockEntity(nextPos) instanceof NixieTubeBlockEntity ntbe &&
+						ntbe.computerBehaviour.hasAttachedComputer()) {
+					return false;
+				}
+				currentPos = nextPos;
+			}
+			currentPos = leftmostPos;
 		}
 
 		int index = 0;
 
 		while (true) {
 			final int rowPosition = index;
-			callback.accept(currentPos, rowPosition);
+			if (callback != null)
+				callback.accept(currentPos, rowPosition);
 			BlockPos nextPos = currentPos.relative(right);
 			if (!areNixieBlocksEqual(world.getBlockState(nextPos), state))
 				break;
 			currentPos = nextPos;
 			index++;
 		}
+
+		return true;
 	}
 
 	@Override
@@ -153,14 +215,45 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 	}
 
 	@Override
-	public void onRemove(BlockState p_196243_1_, Level p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
-		boolean p_196243_5_) {
-		if (!(p_196243_4_.getBlock() instanceof NixieTubeBlock))
-			p_196243_2_.removeBlockEntity(p_196243_3_);
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (newState.getBlock() instanceof NixieTubeBlock)
+			return;
+		world.removeBlockEntity(pos);
+		if (Mods.COMPUTERCRAFT.isLoaded()) {
+			// A computer-controlled nixie tube row may have been broken in the middle.
+			Direction left = getLeftNixieDirection(state);
+			BlockPos leftPos = pos.relative(left);
+			if (areNixieBlocksEqual(world.getBlockState(leftPos), state)) {
+				boolean leftRowComputerControlled = isInComputerControlledRow(world, leftPos);
+				walkNixies(world, leftPos, true, leftRowComputerControlled ?
+						(currentPos, rowPosition) -> {
+							if (world.getBlockEntity(currentPos) instanceof NixieTubeBlockEntity ntbe)
+								ntbe.displayEmptyText(rowPosition);
+						} :
+						(currentPos, rowPosition) -> {
+							if (world.getBlockEntity(currentPos) instanceof NixieTubeBlockEntity ntbe)
+								NixieTubeBlock.updateDisplayedRedstoneValue(ntbe, true);
+						});
+			}
+			Direction right = left.getOpposite();
+			BlockPos rightPos = pos.relative(right);
+			if (areNixieBlocksEqual(world.getBlockState(rightPos), state)) {
+				boolean rightRowComputerControlled = isInComputerControlledRow(world, rightPos);
+				walkNixies(world, rightPos, true, rightRowComputerControlled ?
+						(currentPos, rowPosition) -> {
+							if (world.getBlockEntity(currentPos) instanceof NixieTubeBlockEntity ntbe)
+								ntbe.displayEmptyText(rowPosition);
+						} :
+						(currentPos, rowPosition) -> {
+							if (world.getBlockEntity(currentPos) instanceof NixieTubeBlockEntity ntbe)
+								NixieTubeBlock.updateDisplayedRedstoneValue(ntbe, true);
+						});
+			}
+		}
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockGetter p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
+	public ItemStack getCloneItemStack(LevelReader pLevel, BlockPos pPos, BlockState pState) {
 		return AllBlocks.ORANGE_NIXIE_TUBE.asStack();
 	}
 
@@ -186,12 +279,12 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
-		Player player) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos,
+									   Player player) {
 		if (color != DyeColor.ORANGE)
 			return AllBlocks.ORANGE_NIXIE_TUBE.get()
-				.getCloneItemStack(state, target, world, pos, player);
-		return super.getCloneItemStack(state, target, world, pos, player);
+				.getCloneItemStack(state, target, level, pos, player);
+		return super.getCloneItemStack(state, target, level, pos, player);
 	}
 
 	@Override
@@ -237,18 +330,30 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 
 	@Override
 	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (state.getBlock() == oldState.getBlock() || isMoving)
+		if (state.getBlock() == oldState.getBlock() || isMoving || oldState.getBlock() instanceof NixieTubeBlock)
 			return;
+		if (Mods.COMPUTERCRAFT.isLoaded() && isInComputerControlledRow(worldIn, pos)) {
+			// The nixie tube has been placed in a computer-controlled row.
+			walkNixies(worldIn, pos, true, (currentPos, rowPosition) -> {
+				if (worldIn.getBlockEntity(currentPos) instanceof NixieTubeBlockEntity ntbe)
+					ntbe.displayEmptyText(rowPosition);
+			});
+			return;
+		}
 		updateDisplayedRedstoneValue(state, worldIn, pos);
+	}
+
+	public static void updateDisplayedRedstoneValue(NixieTubeBlockEntity be, boolean force) {
+		if (be.getLevel() == null || be.getLevel().isClientSide)
+			return;
+		if (be.reactsToRedstone() || force)
+			be.updateRedstoneStrength(getPower(be.getLevel(), be.getBlockPos()));
 	}
 
 	private void updateDisplayedRedstoneValue(BlockState state, Level worldIn, BlockPos pos) {
 		if (worldIn.isClientSide)
 			return;
-		withBlockEntityDo(worldIn, pos, be -> {
-			if (be.reactsToRedstone())
-				be.updateRedstoneStrength(getPower(worldIn, pos));
-		});
+		withBlockEntityDo(worldIn, pos, be -> NixieTubeBlock.updateDisplayedRedstoneValue(be, false));
 	}
 
 	static boolean isValidBlock(BlockGetter world, BlockPos pos, boolean above) {
@@ -257,7 +362,7 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 			.isEmpty();
 	}
 
-	private int getPower(Level worldIn, BlockPos pos) {
+	private static int getPower(Level worldIn, BlockPos pos) {
 		int power = 0;
 		for (Direction direction : Iterate.directions)
 			power = Math.max(worldIn.getSignal(pos.relative(direction), direction), power);
@@ -267,7 +372,7 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

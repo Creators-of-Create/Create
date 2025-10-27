@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Objects;
 import com.simibubi.create.Create;
@@ -205,7 +205,7 @@ public class EdgeData {
 
 		if (nbt.contains("Points"))
 			NBTHelper.iterateCompoundList(nbt.getList("Points", Tag.TAG_COMPOUND), tag -> {
-				ResourceLocation location = new ResourceLocation(tag.getString("Type"));
+				ResourceLocation location = ResourceLocation.parse(tag.getString("Type"));
 				EdgePointType<?> type = EdgePointType.TYPES.get(location);
 				if (type == null || !tag.contains("Id"))
 					return;

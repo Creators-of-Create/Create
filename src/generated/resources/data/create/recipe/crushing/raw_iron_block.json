@@ -1,0 +1,20 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "tag": "c:storage_blocks/raw_iron"
+    }
+  ],
+  "processing_time": 400,
+  "results": [
+    {
+      "count": 9,
+      "id": "create:crushed_raw_iron"
+    },
+    {
+      "chance": 0.75,
+      "count": 9,
+      "id": "create:experience_nugget"
+    }
+  ]
+}

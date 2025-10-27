@@ -1,57 +1,57 @@
 package com.simibubi.create.content.equipment.armor;
 
 import java.util.List;
-import java.util.Map;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup.RegistryLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 
-import net.minecraftforge.event.entity.living.LivingBreatheEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 
 @EventBusSubscriber
 public class DivingHelmetItem extends BaseArmorItem {
 	public static final EquipmentSlot SLOT = EquipmentSlot.HEAD;
 	public static final ArmorItem.Type TYPE = ArmorItem.Type.HELMET;
 
-	public DivingHelmetItem(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
+	public DivingHelmetItem(Holder<ArmorMaterial> material, Properties properties, ResourceLocation textureLoc) {
 		super(material, TYPE, properties, textureLoc);
 	}
 
 	@Override
-	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		if (enchantment == Enchantments.AQUA_AFFINITY) {
+	public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+		if (enchantment.is(Enchantments.AQUA_AFFINITY))
 			return false;
-		}
-		return super.canApplyAtEnchantingTable(stack, enchantment);
+		return super.supportsEnchantment(stack, enchantment);
 	}
 
 	@Override
-	public int getEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
-		if (enchantment == Enchantments.AQUA_AFFINITY) {
+	public int getEnchantmentLevel(ItemStack stack, Holder<Enchantment> enchantment) {
+		if (enchantment.is(Enchantments.AQUA_AFFINITY))
 			return 1;
-		}
 		return super.getEnchantmentLevel(stack, enchantment);
 	}
 
 	@Override
-	public Map<Enchantment, Integer> getAllEnchantments(ItemStack stack) {
-		Map<Enchantment, Integer> map = super.getAllEnchantments(stack);
-		map.put(Enchantments.AQUA_AFFINITY, 1);
-		return map;
+	public ItemEnchantments getAllEnchantments(ItemStack stack, RegistryLookup<Enchantment> lookup) {
+		ItemEnchantments.Mutable enchants = new ItemEnchantments.Mutable(super.getAllEnchantments(stack, lookup));
+		enchants.set(lookup.getOrThrow(Enchantments.AQUA_AFFINITY), 1);
+		return enchants.toImmutable();
 	}
 
 	public static boolean isWornBy(Entity entity) {
@@ -82,12 +82,10 @@ public class DivingHelmetItem extends BaseArmorItem {
 			return;
 
 		boolean lavaDiving = entity.isInLava();
-		if (!helmet.getItem().isFireResistant() && lavaDiving)
+		if (!helmet.has(DataComponents.FIRE_RESISTANT) && lavaDiving)
 			return;
 
-		if (!entity.canDrownInFluidType(entity.getEyeInFluidType()) && !lavaDiving)
-			return;
-		if (entity instanceof Player player && (player.isSpectator() || player.isCreative()))
+		if (event.canBreathe() && !lavaDiving)
 			return;
 
 		List<ItemStack> backtanks = BacktankUtil.getAllWithAir(entity);
@@ -98,8 +96,7 @@ public class DivingHelmetItem extends BaseArmorItem {
 			if (entity instanceof ServerPlayer sp)
 				AllAdvancements.DIVING_SUIT_LAVA.awardTo(sp);
 			if (backtanks.stream()
-				.noneMatch(backtank -> backtank.getItem()
-					.isFireResistant()))
+				.noneMatch(backtank -> backtank.has(DataComponents.FIRE_RESISTANT)))
 				return;
 		}
 
@@ -121,6 +118,6 @@ public class DivingHelmetItem extends BaseArmorItem {
 			AllAdvancements.DIVING_SUIT.awardTo(sp);
 
 		event.setCanBreathe(true);
-		event.setCanRefillAir(true);
+		event.setRefillAirAmount(entity.getMaxAirSupply());
 	}
 }

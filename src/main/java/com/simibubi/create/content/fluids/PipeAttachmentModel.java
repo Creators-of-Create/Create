@@ -25,10 +25,11 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.minecraftforge.client.ChunkRenderTypeSet;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.data.ModelData.Builder;
-import net.minecraftforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.client.ChunkRenderTypeSet;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelData.Builder;
+import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.common.util.TriState;
 
 public class PipeAttachmentModel extends BakedModelWrapperWithData {
 
@@ -99,13 +100,12 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 	}
 
 	@Override
-	public boolean useAmbientOcclusion(BlockState state, RenderType renderType) {
-		return ao;
-	}
-
-	@Override
-	public boolean useAmbientOcclusion(BlockState state) {
-		return ao;
+	public TriState useAmbientOcclusion(BlockState state, ModelData data, RenderType renderType) {
+		if (ao) {
+			return TriState.TRUE;
+		} else {
+			return TriState.FALSE;
+		}
 	}
 
 	@Override

@@ -2,6 +2,10 @@ package com.simibubi.create.content.logistics.factoryBoard;
 
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
@@ -15,17 +19,24 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.lang.Lang;
 import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -52,24 +63,35 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.level.BlockEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
 public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 	implements ProperWaterloggedBlock, IBE<FactoryPanelBlockEntity>, IWrenchable, SpecialBlockItemRequirement {
+    public static final MapCodec<FactoryPanelBlock> CODEC = simpleCodec(FactoryPanelBlock::new);
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-	public static enum PanelSlot {
-		TOP_LEFT(1, 1), TOP_RIGHT(0, 1), BOTTOM_LEFT(1, 0), BOTTOM_RIGHT(0, 0);
+	public enum PanelSlot implements StringRepresentable {
+		TOP_LEFT(1, 1),
+		TOP_RIGHT(0, 1),
+		BOTTOM_LEFT(1, 0),
+		BOTTOM_RIGHT(0, 0);
 
-		public int xOffset;
-		public int yOffset;
+		public static final Codec<PanelSlot> CODEC = StringRepresentable.fromValues(PanelSlot::values);
+		public static final StreamCodec<ByteBuf, PanelSlot> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(PanelSlot.class);
 
-		private PanelSlot(int xOffset, int yOffset) {
+		public final int xOffset;
+		public final int yOffset;
+
+		PanelSlot(int xOffset, int yOffset) {
 			this.xOffset = xOffset;
 			this.yOffset = yOffset;
+		}
+
+		@Override
+		public @NotNull String getSerializedName() {
+			return Lang.asId(name());
 		}
 	}
 
@@ -158,7 +180,7 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 				return InteractionResult.SUCCESS;
 
 			BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), player);
-			MinecraftForge.EVENT_BUS.post(event);
+			NeoForge.EVENT_BUS.post(event);
 			if (event.isCanceled())
 				return InteractionResult.SUCCESS;
 
@@ -183,8 +205,7 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 		if (pPlacer == null)
 			return;
 		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
-		double range = pPlacer.getAttribute(ForgeMod.BLOCK_REACH.get())
-			.getValue() + 1;
+		double range = pPlacer.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE) + 1;
 		HitResult hitResult = pPlacer.pick(range, 1, false);
 		Vec3 location = hitResult.getLocation();
 		if (location == null)
@@ -195,44 +216,42 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
-		if (pPlayer == null)
-			return InteractionResult.PASS;
-		ItemStack item = pPlayer.getItemInHand(pHand);
-		if (pLevel.isClientSide)
-			return InteractionResult.SUCCESS;
-		if (!AllBlocks.FACTORY_GAUGE.isIn(item))
-			return InteractionResult.SUCCESS;
-		Vec3 location = pHit.getLocation();
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (player == null)
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		if (level.isClientSide)
+			return ItemInteractionResult.SUCCESS;
+		if (!AllBlocks.FACTORY_GAUGE.isIn(stack))
+			return ItemInteractionResult.SUCCESS;
+		Vec3 location = hitResult.getLocation();
 		if (location == null)
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 
-		if (!FactoryPanelBlockItem.isTuned(item)) {
-			AllSoundEvents.DENY.playOnServer(pLevel, pPos);
-			pPlayer.displayClientMessage(CreateLang.translate("factory_panel.tune_before_placing")
+		if (!FactoryPanelBlockItem.isTuned(stack)) {
+			AllSoundEvents.DENY.playOnServer(level, pos);
+			player.displayClientMessage(CreateLang.translate("factory_panel.tune_before_placing")
 				.component(), true);
-			return InteractionResult.FAIL;
+			return ItemInteractionResult.FAIL;
 		}
 
-		PanelSlot newSlot = getTargetedSlot(pPos, pState, location);
-		withBlockEntityDo(pLevel, pPos, fpbe -> {
-			if (!fpbe.addPanel(newSlot, LogisticallyLinkedBlockItem.networkFromStack(FactoryPanelBlockItem.fixCtrlCopiedStack(item))))
+		PanelSlot newSlot = getTargetedSlot(pos, state, location);
+		withBlockEntityDo(level, pos, fpbe -> {
+			if (!fpbe.addPanel(newSlot, LogisticallyLinkedBlockItem.networkFromStack(FactoryPanelBlockItem.fixCtrlCopiedStack(stack))))
 				return;
-			pPlayer.displayClientMessage(CreateLang.translateDirect("logistically_linked.connected"), true);
-			pLevel.playSound(null, pPos, soundType.getPlaceSound(), SoundSource.BLOCKS);
-			if (pPlayer.isCreative())
+			player.displayClientMessage(CreateLang.translateDirect("logistically_linked.connected"), true);
+			level.playSound(null, pos, soundType.getPlaceSound(), SoundSource.BLOCKS);
+			if (player.isCreative())
 				return;
-			item.shrink(1);
-			if (item.isEmpty())
-				pPlayer.setItemInHand(pHand, ItemStack.EMPTY);
+			stack.shrink(1);
+			if (stack.isEmpty())
+				player.setItemInHand(hand, ItemStack.EMPTY);
 		});
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@Override
 	public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest,
-		FluidState fluid) {
+									   FluidState fluid) {
 		if (tryDestroySubPanelFirst(state, level, pos, player))
 			return false;
 		boolean result = super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
@@ -240,8 +259,7 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	private boolean tryDestroySubPanelFirst(BlockState state, Level level, BlockPos pos, Player player) {
-		double range = player.getAttribute(ForgeMod.BLOCK_REACH.get())
-			.getValue() + 1;
+		double range = player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE) + 1;
 		HitResult hitResult = player.pick(range, 1, false);
 		Vec3 location = hitResult.getLocation();
 		PanelSlot destroyedSlot = getTargetedSlot(pos, state, location);
@@ -273,13 +291,9 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
-		if (pUseContext.isSecondaryUseActive())
-			return false;
 		if (!AllBlocks.FACTORY_GAUGE.isIn(pUseContext.getItemInHand()))
 			return false;
 		Vec3 location = pUseContext.getClickLocation();
-		if (location == null)
-			return false;
 
 		BlockPos pos = pUseContext.getClickedPos();
 		PanelSlot slot = getTargetedSlot(pos, pState, location);
@@ -287,15 +301,13 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 
 		if (blockEntity == null)
 			return false;
-		if (blockEntity.panels.get(slot)
-			.isActive())
-			return false;
-		return true;
+		return !blockEntity.panels.get(slot)
+			.isActive();
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
-		CollisionContext pContext) {
+										CollisionContext pContext) {
 		if (pContext instanceof EntityCollisionContext ecc && ecc.getEntity() == null)
 			return getShape(pState, pLevel, pPos, pContext);
 		return Shapes.empty();
@@ -311,7 +323,7 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
-		BlockPos pCurrentPos, BlockPos pFacingPos) {
+								  BlockPos pCurrentPos, BlockPos pFacingPos) {
 		updateWater(pLevel, pState, pCurrentPos);
 		return super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
 	}
@@ -382,4 +394,8 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 		return ItemRequirement.NONE;
 	}
 
+	@Override
+	protected @NotNull MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
+		return CODEC;
+	}
 }

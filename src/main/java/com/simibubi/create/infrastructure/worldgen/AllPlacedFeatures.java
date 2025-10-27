@@ -9,7 +9,7 @@ import com.simibubi.create.Create;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -25,12 +25,12 @@ public class AllPlacedFeatures {
 				ZINC_ORE = key("zinc_ore"),
 				STRIATED_ORES_OVERWORLD = key("striated_ores_overworld"),
 				STRIATED_ORES_NETHER = key("striated_ores_nether");
-	
+
 	private static ResourceKey<PlacedFeature> key(String name) {
 		return ResourceKey.create(Registries.PLACED_FEATURE, Create.asResource(name));
 	}
 
-	public static void bootstrap(BootstapContext<PlacedFeature> ctx) {
+	public static void bootstrap(BootstrapContext<PlacedFeature> ctx) {
 		HolderGetter<ConfiguredFeature<?, ?>> featureLookup = ctx.lookup(Registries.CONFIGURED_FEATURE);
 		Holder<ConfiguredFeature<?, ?>> zincOre = featureLookup.getOrThrow(AllConfiguredFeatures.ZINC_ORE);
 		Holder<ConfiguredFeature<?, ?>> striatedOresOverworld = featureLookup.getOrThrow(AllConfiguredFeatures.STRIATED_ORES_OVERWORLD);

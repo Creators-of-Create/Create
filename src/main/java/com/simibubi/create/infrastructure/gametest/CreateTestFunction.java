@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,25 +28,21 @@ import net.minecraft.world.level.block.entity.StructureBlockEntity;
  * An extension to game tests implementing functionality for {@link CreateGameTestHelper} and {@link GameTestGroup}.
  * To use, create a {@link GameTestGenerator} that provides tests using {@link #getTestsFrom(Class[])}.
  */
-public class CreateTestFunction extends TestFunction {
+public class CreateTestFunction {
 	// for structure blocks and /test runthis
 	public static final Map<String, CreateTestFunction> NAMES_TO_FUNCTIONS = new HashMap<>();
 
 	public final String fullName;
 	public final String simpleName;
+	public final TestFunction testFunction;
 
-	protected CreateTestFunction(String fullName, String simpleName, String pBatchName, String pTestName,
+	protected CreateTestFunction(String fullName, String simpleName, String pBatchName,
 								 String pStructureName, Rotation pRotation, int pMaxTicks, long pSetupTicks,
-								 boolean pRequired, int pRequiredSuccesses, int pMaxAttempts, Consumer<GameTestHelper> pFunction) {
-		super(pBatchName, pTestName, pStructureName, pRotation, pMaxTicks, pSetupTicks, pRequired, pRequiredSuccesses, pMaxAttempts, pFunction);
+								 boolean pRequired, int pMaxAttempts, int pRequiredSuccesses, Consumer<GameTestHelper> pFunction) {
+		testFunction = new TestFunction(pBatchName, simpleName, pStructureName, pRotation, pMaxTicks, pSetupTicks, pRequired, false, pMaxAttempts, pRequiredSuccesses, true, pFunction);
 		this.fullName = fullName;
 		this.simpleName = simpleName;
 		NAMES_TO_FUNCTIONS.put(fullName, this);
-	}
-
-	@Override
-	public String getTestName() {
-		return simpleName;
 	}
 
 	/**
@@ -59,7 +55,7 @@ public class CreateTestFunction extends TestFunction {
 				.flatMap(Stream::of)
 				.map(CreateTestFunction::of)
 				.filter(Objects::nonNull)
-				.sorted(Comparator.comparing(TestFunction::getTestName))
+				.sorted(Comparator.comparing(TestFunction::testName))
 				.toList();
 	}
 
@@ -77,11 +73,17 @@ public class CreateTestFunction extends TestFunction {
 		Rotation rotation = StructureUtils.getRotationForRotationSteps(gt.rotationSteps());
 
 		String fullName = owner.getName() + "." + method.getName();
+
+		// 		// give structure block test info
+		//		StructureBlockEntity be = (StructureBlockEntity) helper.getBlockEntity(BlockPos.ZERO);
+		//		be.getPersistentData().putString("CreateTestFunction", fullName);
+		//		super.run(CreateGameTestHelper.of(helper));
+
 		return new CreateTestFunction(
 				// use structure for test name since that's what MC fills structure blocks with for some reason
-				fullName, simpleName, gt.batch(), structure, structure, rotation, gt.timeoutTicks(), gt.setupTicks(),
-				gt.required(), gt.requiredSuccesses(), gt.attempts(), asConsumer(method)
-		);
+				fullName, simpleName, gt.batch(), structure, rotation, gt.timeoutTicks(), gt.setupTicks(),
+				gt.required(), gt.attempts(), gt.requiredSuccesses(), run(fullName, asConsumer(method))
+		).testFunction;
 	}
 
 	private static void validateTestMethod(Method method, GameTest gt, Class<?> owner, GameTestGroup group, String simpleName) {
@@ -111,11 +113,13 @@ public class CreateTestFunction extends TestFunction {
 		};
 	}
 
-	@Override
-	public void run(@NotNull GameTestHelper helper) {
-		// give structure block test info
-		StructureBlockEntity be = (StructureBlockEntity) helper.getBlockEntity(BlockPos.ZERO);
-		be.getPersistentData().putString("CreateTestFunction", fullName);
-		super.run(CreateGameTestHelper.of(helper));
+	public static Consumer<GameTestHelper> run(String fullName, @NotNull Consumer<GameTestHelper> helper) {
+		return consumer -> {
+			helper.andThen(gameTestHelper -> {
+				// give structure block test info
+				StructureBlockEntity be = gameTestHelper.getBlockEntity(BlockPos.ZERO);
+				be.getPersistentData().putString("CreateTestFunction", fullName);
+			}).accept(CreateGameTestHelper.of(consumer));
+		};
 	}
 }

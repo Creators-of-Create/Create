@@ -25,4 +25,8 @@ public class MovedBlockTransformerRegistries {
 	public interface BlockEntityTransformer {
 		void transform(BlockEntity be, StructureTransform transform);
 	}
+
+	private MovedBlockTransformerRegistries() {
+		throw new AssertionError("This class should not be instantiated");
+	}
 }

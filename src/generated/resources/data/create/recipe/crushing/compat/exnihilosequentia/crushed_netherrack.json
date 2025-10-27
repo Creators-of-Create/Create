@@ -1,0 +1,29 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "exnihilosequentia"
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "exnihilosequentia:crushed_netherrack"
+        }
+      ]
+    }
+  ],
+  "processing_time": 100,
+  "results": [
+    {
+      "id": "create:cinder_flour"
+    },
+    {
+      "chance": 0.5,
+      "id": "create:cinder_flour"
+    }
+  ]
+}

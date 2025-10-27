@@ -5,36 +5,36 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.recipe.DummyCraftingContainer;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.Container;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import net.neoforged.neoforge.items.IItemHandler;
 
-public class BasinRecipe extends ProcessingRecipe<Container> {
+public class BasinRecipe extends StandardProcessingRecipe<RecipeInput> {
 
 	public static boolean match(BasinBlockEntity basin, Recipe<?> recipe) {
 		FilteringBehaviour filter = basin.getFilter();
@@ -64,17 +64,13 @@ public class BasinRecipe extends ProcessingRecipe<Container> {
 
 	private static boolean apply(BasinBlockEntity basin, Recipe<?> recipe, boolean test) {
 		boolean isBasinRecipe = recipe instanceof BasinRecipe;
-		IItemHandler availableItems = basin.getCapability(ForgeCapabilities.ITEM_HANDLER)
-			.orElse(null);
-		IFluidHandler availableFluids = basin.getCapability(ForgeCapabilities.FLUID_HANDLER)
-			.orElse(null);
+		IItemHandler availableItems = basin.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, basin.getBlockPos(), null);
+		IFluidHandler availableFluids = basin.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, basin.getBlockPos(), null);
 
 		if (availableItems == null || availableFluids == null)
 			return false;
 
-		HeatLevel heat = BasinBlockEntity.getHeatLevelOf(basin.getLevel()
-			.getBlockState(basin.getBlockPos()
-				.below(1)));
+		HeatLevel heat = basin.getHeatLevel();
 		if (isBasinRecipe && !((BasinRecipe) recipe).getRequiredHeat()
 			.testBlazeBurner(heat))
 			return false;
@@ -83,7 +79,7 @@ public class BasinRecipe extends ProcessingRecipe<Container> {
 		List<FluidStack> recipeOutputFluids = new ArrayList<>();
 
 		List<Ingredient> ingredients = new LinkedList<>(recipe.getIngredients());
-		List<FluidIngredient> fluidIngredients =
+		List<SizedFluidIngredient> fluidIngredients =
 			isBasinRecipe ? ((BasinRecipe) recipe).getFluidIngredients() : Collections.emptyList();
 
 		for (boolean simulate : Iterate.trueAndFalse) {
@@ -115,8 +111,8 @@ public class BasinRecipe extends ProcessingRecipe<Container> {
 
 			boolean fluidsAffected = false;
 			FluidIngredients:
-			for (FluidIngredient fluidIngredient : fluidIngredients) {
-				int amountRequired = fluidIngredient.getRequiredAmount();
+			for (SizedFluidIngredient fluidIngredient : fluidIngredients) {
+				int amountRequired = fluidIngredient.amount();
 
 				for (int tank = 0; tank < availableFluids.getTanks(); tank++) {
 					FluidStack fluidStack = availableFluids.getFluidInTank(tank);
@@ -148,15 +144,16 @@ public class BasinRecipe extends ProcessingRecipe<Container> {
 			}
 
 			if (simulate) {
-				CraftingContainer remainderContainer = new DummyCraftingContainer(availableItems, extractedItemsFromSlot);
+				CraftingInput remainderInput = new DummyCraftingContainer(availableItems, extractedItemsFromSlot)
+					.asCraftInput();
 
 				if (recipe instanceof BasinRecipe basinRecipe) {
-					recipeOutputItems.addAll(basinRecipe.rollResults());
+					recipeOutputItems.addAll(basinRecipe.rollResults(basin.getLevel().random));
 
 					for (FluidStack fluidStack : basinRecipe.getFluidResults())
 						if (!fluidStack.isEmpty())
 							recipeOutputFluids.add(fluidStack);
-					for (ItemStack stack : basinRecipe.getRemainingItems(remainderContainer))
+					for (ItemStack stack : basinRecipe.getRemainingItems(remainderInput))
 						if (!stack.isEmpty())
 							recipeOutputItems.add(stack);
 
@@ -165,7 +162,7 @@ public class BasinRecipe extends ProcessingRecipe<Container> {
 						.registryAccess()));
 
 					if (recipe instanceof CraftingRecipe craftingRecipe) {
-						for (ItemStack stack : craftingRecipe.getRemainingItems(remainderContainer))
+						for (ItemStack stack : craftingRecipe.getRemainingItems(remainderInput))
 							if (!stack.isEmpty())
 								recipeOutputItems.add(stack);
 					}
@@ -179,12 +176,12 @@ public class BasinRecipe extends ProcessingRecipe<Container> {
 		return true;
 	}
 
-	public static BasinRecipe convertShapeless(Recipe<?> recipe) {
+	public static RecipeHolder<BasinRecipe> convertShapeless(RecipeHolder<?> recipe) {
 		BasinRecipe basinRecipe =
-			new ProcessingRecipeBuilder<>(BasinRecipe::new, recipe.getId()).withItemIngredients(recipe.getIngredients())
-				.withSingleItemOutput(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()))
+			new Builder<>(BasinRecipe::new, recipe.id()).withItemIngredients(recipe.value().getIngredients())
+				.withSingleItemOutput(recipe.value().getResultItem(Minecraft.getInstance().level.registryAccess()))
 				.build();
-		return basinRecipe;
+		return new RecipeHolder<>(recipe.id(), basinRecipe);
 	}
 
 	protected BasinRecipe(IRecipeTypeInfo type, ProcessingRecipeParams params) {
@@ -197,7 +194,7 @@ public class BasinRecipe extends ProcessingRecipe<Container> {
 
 	@Override
 	protected int getMaxInputCount() {
-		return 9;
+		return 64;
 	}
 
 	@Override
@@ -226,7 +223,7 @@ public class BasinRecipe extends ProcessingRecipe<Container> {
 	}
 
 	@Override
-	public boolean matches(Container inv, @Nonnull Level worldIn) {
+	public boolean matches(RecipeInput input, @NotNull Level worldIn) {
 		return false;
 	}
 

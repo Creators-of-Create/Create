@@ -11,10 +11,12 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.createmod.catnip.nbt.NBTHelper;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
@@ -67,7 +69,7 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
 		BlockState removed = this.bracket;
 		Level world = getWorld();
 		if (!world.isClientSide)
-			world.levelEvent(2001, getPos(), Block.getId(bracket));
+			world.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, getPos(), Block.getId(bracket));
 		this.bracket = null;
 		reRender = true;
 		if (inOnReplacedContext) {
@@ -113,7 +115,7 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
 	}
 
 	@Override
-	public void write(CompoundTag nbt, boolean clientPacket) {
+	public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		if (isBracketPresent() && isBracketValid(bracket)) {
 			nbt.put("Bracket", NbtUtils.writeBlockState(bracket));
 		}
@@ -121,11 +123,11 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
 			NBTHelper.putMarker(nbt, "Redraw");
 			reRender = false;
 		}
-		super.write(nbt, clientPacket);
+		super.write(nbt, registries, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundTag nbt, boolean clientPacket) {
+	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		if (nbt.contains("Bracket")) {
 			bracket = null;
 			BlockState readBlockState = NbtUtils.readBlockState(blockEntity.blockHolderGetter(), nbt.getCompound("Bracket"));
@@ -134,7 +136,7 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
 		}
 		if (clientPacket && nbt.contains("Redraw"))
 			getWorld().sendBlockUpdated(getPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), 16);
-		super.read(nbt, clientPacket);
+		super.read(nbt, registries, clientPacket);
 	}
 
 }

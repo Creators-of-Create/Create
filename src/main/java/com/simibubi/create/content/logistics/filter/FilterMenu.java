@@ -1,21 +1,23 @@
 package com.simibubi.create.content.logistics.filter;
 
+import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllMenuTypes;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
+
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class FilterMenu extends AbstractFilterMenu {
 
 	boolean respectNBT;
 	boolean blacklist;
 
-	public FilterMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public FilterMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
@@ -48,23 +50,21 @@ public class FilterMenu extends AbstractFilterMenu {
 
 	@Override
 	protected ItemStackHandler createGhostInventory() {
-		return FilterItem.getFilterItems(contentHolder);
+		return AllItems.FILTER.get().getFilterItemHandler(contentHolder);
 	}
 
 	@Override
 	protected void initAndReadInventory(ItemStack filterItem) {
 		super.initAndReadInventory(filterItem);
-		CompoundTag tag = filterItem.getOrCreateTag();
-		respectNBT = tag.getBoolean("RespectNBT");
-		blacklist = tag.getBoolean("Blacklist");
+		respectNBT = filterItem.getOrDefault(AllDataComponents.FILTER_ITEMS_RESPECT_NBT, false);
+		blacklist = filterItem.getOrDefault(AllDataComponents.FILTER_ITEMS_BLACKLIST, false);
 	}
 
 	@Override
 	protected void saveData(ItemStack filterItem) {
 		super.saveData(filterItem);
-		CompoundTag tag = filterItem.getOrCreateTag();
-		tag.putBoolean("RespectNBT", respectNBT);
-		tag.putBoolean("Blacklist", blacklist);
+		filterItem.set(AllDataComponents.FILTER_ITEMS_RESPECT_NBT, respectNBT);
+		filterItem.set(AllDataComponents.FILTER_ITEMS_BLACKLIST, blacklist);
 
 		if (respectNBT || blacklist)
 			return;
@@ -72,7 +72,8 @@ public class FilterMenu extends AbstractFilterMenu {
 			if (!ghostInventory.getStackInSlot(i)
 				.isEmpty())
 				return;
-		filterItem.setTag(null);
+		filterItem.remove(AllDataComponents.FILTER_ITEMS_RESPECT_NBT);
+		filterItem.remove(AllDataComponents.FILTER_ITEMS_BLACKLIST);
 	}
 
 }

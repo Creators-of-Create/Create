@@ -1,0 +1,28 @@
+{
+  "parent": "create:shifting_gears",
+  "criteria": {
+    "0": {
+      "trigger": "create:millstone_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.millstone.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:millstone"
+    },
+    "title": {
+      "translate": "advancement.create.millstone"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

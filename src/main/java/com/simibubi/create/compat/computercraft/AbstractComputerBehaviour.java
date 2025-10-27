@@ -1,12 +1,16 @@
 package com.simibubi.create.compat.computercraft;
 
+import org.jetbrains.annotations.NotNull;
+
+
+import com.simibubi.create.compat.computercraft.events.ComputerEvent;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
+import dan200.computercraft.api.peripheral.IPeripheral;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class AbstractComputerBehaviour extends BlockEntityBehaviour {
 
@@ -20,23 +24,19 @@ public class AbstractComputerBehaviour extends BlockEntityBehaviour {
 	}
 
 	@Override
-	public void read(CompoundTag nbt, boolean clientPacket) {
+	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		hasAttachedComputer = nbt.getBoolean("HasAttachedComputer");
-		super.read(nbt, clientPacket);
+		super.read(nbt, registries, clientPacket);
 	}
 
 	@Override
-	public void write(CompoundTag nbt, boolean clientPacket) {
+	public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		nbt.putBoolean("HasAttachedComputer", hasAttachedComputer);
-		super.write(nbt, clientPacket);
+		super.write(nbt, registries, clientPacket);
 	}
 
-	public <T> boolean isPeripheralCap(Capability<T> cap) {
-		return false;
-	}
-
-	public <T> LazyOptional<T> getPeripheralCapability() {
-		return LazyOptional.empty();
+	public IPeripheral getPeripheralCapability() {
+		return null;
 	}
 
 	public void removePeripheral() {}
@@ -48,6 +48,8 @@ public class AbstractComputerBehaviour extends BlockEntityBehaviour {
 	public boolean hasAttachedComputer() {
 		return hasAttachedComputer;
 	}
+
+	public void prepareComputerEvent(@NotNull ComputerEvent event) {}
 
 	@Override
 	public BehaviourType<?> getType() {

@@ -6,12 +6,14 @@ import com.simibubi.create.AllFluids;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
+
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class VanillaFluidTargets {
 
@@ -30,25 +32,25 @@ public class VanillaFluidTargets {
 	public static FluidStack drainBlock(Level level, BlockPos pos, BlockState state, boolean simulate) {
 		if (state.hasProperty(BlockStateProperties.LEVEL_HONEY) && state.getValue(LEVEL_HONEY) >= 5) {
 			if (!simulate)
-				level.setBlock(pos, state.setValue(LEVEL_HONEY, 0), 3);
+				level.setBlock(pos, state.setValue(LEVEL_HONEY, 0), Block.UPDATE_ALL);
 			return new FluidStack(AllFluids.HONEY.get()
 				.getSource(), 250);
 		}
-		
+
 		if (state.is(Blocks.LAVA_CAULDRON)) {
 			if (!simulate)
-				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
+				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), Block.UPDATE_ALL);
 			return new FluidStack(Fluids.LAVA, 1000);
 		}
-		
+
 		if (state.is(Blocks.WATER_CAULDRON) && state.getBlock() instanceof LayeredCauldronBlock lcb) {
 			if (!lcb.isFull(state))
 				return FluidStack.EMPTY;
 			if (!simulate)
-				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
+				level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), Block.UPDATE_ALL);
 			return new FluidStack(Fluids.WATER, 1000);
 		}
-		
+
 		return FluidStack.EMPTY;
 	}
 

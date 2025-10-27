@@ -1,0 +1,27 @@
+{
+  "parent": "create:haunted_bell",
+  "criteria": {
+    "0": {
+      "trigger": "create:clockwork_bearing_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.clockwork_bearing.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:clockwork_bearing"
+    },
+    "title": {
+      "translate": "advancement.create.clockwork_bearing"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

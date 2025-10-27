@@ -1,7 +1,7 @@
 package com.simibubi.create.compat.thresholdSwitch;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public interface ThresholdSwitchCompat {
 

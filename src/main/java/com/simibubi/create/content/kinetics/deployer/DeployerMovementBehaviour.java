@@ -4,11 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -23,6 +24,7 @@ import com.simibubi.create.content.schematics.SchematicInstances;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.content.trains.track.ITrackBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
@@ -46,12 +48,14 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.common.util.BlockSnapshot;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.common.extensions.IBaseRailBlockExtension;
+import net.neoforged.neoforge.common.util.BlockSnapshot;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class DeployerMovementBehaviour implements MovementBehaviour {
 
@@ -118,17 +122,16 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	}
 
 	protected void activateAsSchematicPrinter(MovementContext context, BlockPos pos, DeployerFakePlayer player,
-		Level world, ItemStack filter) {
-		if (!filter.hasTag())
+											  Level level, ItemStack filter) {
+		if (!filter.has(AllDataComponents.SCHEMATIC_ANCHOR))
 			return;
-		if (!world.getBlockState(pos)
+		if (!level.getBlockState(pos)
 			.canBeReplaced())
 			return;
 
-		CompoundTag tag = filter.getTag();
-		if (!tag.getBoolean("Deployed"))
+		if (!filter.getOrDefault(AllDataComponents.SCHEMATIC_DEPLOYED, false))
 			return;
-		SchematicLevel schematicWorld = SchematicInstances.get(world, filter);
+		SchematicLevel schematicWorld = SchematicInstances.get(level, filter);
 		if (schematicWorld == null)
 			return;
 		if (!schematicWorld.getBounds()
@@ -158,13 +161,13 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 					ExtractionCountMode.EXACTLY, required.stack.getCount(), false);
 		}
 
-		CompoundTag data = BlockHelper.prepareBlockEntityData(blockState, schematicWorld.getBlockEntity(pos));
-		BlockSnapshot blocksnapshot = BlockSnapshot.create(world.dimension(), world, pos);
-		BlockHelper.placeSchematicBlock(world, blockState, pos, contextStack, data);
+		CompoundTag data = BlockHelper.prepareBlockEntityData(level, blockState, schematicWorld.getBlockEntity(pos));
+		BlockSnapshot blocksnapshot = BlockSnapshot.create(level.dimension(), level, pos);
+		BlockHelper.placeSchematicBlock(level, blockState, pos, contextStack, data);
 
-		if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP))
-			blocksnapshot.restore(true, false);
-		else if (AllBlocks.TRACK.has(blockState))
+		if (EventHooks.onBlockPlace(player, blocksnapshot, Direction.UP))
+			blocksnapshot.restore(Block.UPDATE_CLIENTS);
+		else if (blockState.getBlock() instanceof IBaseRailBlockExtension || blockState.getBlock() instanceof ITrackBlock)
 			player.placedTracks = true;
 	}
 
@@ -267,8 +270,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		DeployerFakePlayer player = getPlayer(context);
 		if (player == null)
 			return;
-		context.data.put("HeldItem", player.getMainHandItem()
-			.serializeNBT());
+		context.data.put("HeldItem", player.getMainHandItem().saveOptional(context.world.registryAccess()));
 	}
 
 	private DeployerFakePlayer getPlayer(MovementContext context) {
@@ -280,7 +282,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 				.load(context.blockEntityData.getList("Inventory", Tag.TAG_COMPOUND));
 			if (context.data.contains("HeldItem"))
 				deployerFakePlayer.setItemInHand(InteractionHand.MAIN_HAND,
-					ItemStack.of(context.data.getCompound("HeldItem")));
+					ItemStack.parseOptional(context.world.registryAccess(), context.data.getCompound("HeldItem")));
 			context.blockEntityData.remove("Inventory");
 			context.temporaryData = deployerFakePlayer;
 		}

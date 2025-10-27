@@ -1,0 +1,34 @@
+{
+  "parent": "create:deployer",
+  "criteria": {
+    "0": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create:precision_mechanism"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.precision_mechanism.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:precision_mechanism"
+    },
+    "title": {
+      "translate": "advancement.create.precision_mechanism"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

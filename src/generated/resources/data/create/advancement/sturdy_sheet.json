@@ -1,0 +1,35 @@
+{
+  "parent": "create:crushing_wheel",
+  "criteria": {
+    "0": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create:sturdy_sheet"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.sturdy_sheet.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:sturdy_sheet"
+    },
+    "title": {
+      "translate": "advancement.create.sturdy_sheet"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

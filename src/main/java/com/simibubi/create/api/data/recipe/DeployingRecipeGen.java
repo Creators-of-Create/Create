@@ -2,13 +2,20 @@ package com.simibubi.create.api.data.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
+import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe;
+import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe.Builder;
+import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipeParams;
 import com.simibubi.create.foundation.block.CopperBlockSet;
 import com.simibubi.create.foundation.block.CopperBlockSet.Variant;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -21,18 +28,19 @@ import net.minecraft.world.level.block.WeatheringCopper.WeatherState;
  * For an example of how you might do this, see Create's implementation: {@link com.simibubi.create.foundation.data.recipe.CreateDeployingRecipeGen}.
  * Needs to be added to a registered recipe provider to do anything, see {@link com.simibubi.create.foundation.data.recipe.CreateRecipeProvider}
  */
-public abstract class DeployingRecipeGen extends ProcessingRecipeGen {
+public abstract class DeployingRecipeGen extends ProcessingRecipeGen<ItemApplicationRecipeParams, DeployerApplicationRecipe, ItemApplicationRecipe.Builder<DeployerApplicationRecipe>> {
 
 	public GeneratedRecipe copperChain(CopperBlockSet set) {
 		for (Variant<?> variant : set.getVariants()) {
 			List<Supplier<ItemLike>> chain = new ArrayList<>(4);
+			List<Supplier<ItemLike>> waxedChain = new ArrayList<>(4);
 
 			for (WeatherState state : WeatherState.values()) {
-				addWax(set.get(variant, state, true)::get, set.get(variant, state, false)::get);
+				waxedChain.add(set.get(variant, state, true)::get);
 				chain.add(set.get(variant, state, false)::get);
 			}
 
-			oxidizationChain(chain);
+			oxidizationChain(chain, waxedChain);
 		}
 		return null;
 	}
@@ -49,7 +57,7 @@ public abstract class DeployingRecipeGen extends ProcessingRecipeGen {
 			.output(waxed.get()));
 	}
 
-	public GeneratedRecipe oxidizationChain(List<Supplier<ItemLike>> chain) {
+	public GeneratedRecipe oxidizationChain(List<Supplier<ItemLike>> chain, List<Supplier<ItemLike>> waxedChain) {
 		for (int i = 0; i < chain.size() - 1; i++) {
 			Supplier<ItemLike> to = chain.get(i);
 			Supplier<ItemLike> from = chain.get(i + 1);
@@ -58,11 +66,15 @@ public abstract class DeployingRecipeGen extends ProcessingRecipeGen {
 				.toolNotConsumed()
 				.output(to.get()));
 		}
+
+		for (int i = 0; i < chain.size(); i++)
+			addWax(waxedChain.get(i), chain.get(i));
+
 		return null;
 	}
 
-	public DeployingRecipeGen(PackOutput output, String defaultNamespace) {
-		super(output, defaultNamespace);
+	public DeployingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, String defaultNamespace) {
+		super(output, registries, defaultNamespace);
 	}
 
 	@Override
@@ -70,4 +82,8 @@ public abstract class DeployingRecipeGen extends ProcessingRecipeGen {
 		return AllRecipeTypes.DEPLOYING;
 	}
 
+	@Override
+	protected Builder<DeployerApplicationRecipe> getBuilder(ResourceLocation id) {
+		return new Builder<>(DeployerApplicationRecipe::new, id);
+	}
 }

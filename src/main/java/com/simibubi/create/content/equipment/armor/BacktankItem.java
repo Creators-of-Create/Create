@@ -1,8 +1,14 @@
 package com.simibubi.create.content.equipment.armor;
 
-import com.simibubi.create.content.equipment.armor.CapacityEnchantment.ICapacityEnchantable;
+import java.util.Locale;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
+
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.foundation.item.LayeredArmorItem;
-import net.minecraft.nbt.CompoundTag;
+
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
@@ -15,20 +21,18 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Locale;
-import java.util.function.Supplier;
-
-public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable {
+public class BacktankItem extends BaseArmorItem {
 	public static final EquipmentSlot SLOT = EquipmentSlot.CHEST;
 	public static final ArmorItem.Type TYPE = ArmorItem.Type.CHESTPLATE;
 	public static final int BAR_COLOR = 0xEFEFEF;
 
 	private final Supplier<BacktankBlockItem> blockItem;
 
-	public BacktankItem(ArmorMaterial material, Properties properties, ResourceLocation textureLoc, Supplier<BacktankBlockItem> placeable) {
+	public BacktankItem(Holder<ArmorMaterial> material, Properties properties, ResourceLocation textureLoc, Supplier<BacktankBlockItem> placeable) {
 		super(material, TYPE, properties, textureLoc);
 		this.blockItem = placeable;
 	}
@@ -51,13 +55,15 @@ public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable 
 	}
 
 	@Override
-	public boolean canBeDepleted() {
-		return false;
+	public boolean isEnchantable(ItemStack p_77616_1_) {
+		return true;
 	}
 
 	@Override
-	public boolean isEnchantable(ItemStack p_77616_1_) {
-		return true;
+	public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+		if (enchantment.is(Enchantments.MENDING) || enchantment.is(Enchantments.UNBREAKING))
+			return false;
+		return super.supportsEnchantment(stack, enchantment);
 	}
 
 	@Override
@@ -80,8 +86,7 @@ public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable 
 	}
 
 	public static int getRemainingAir(ItemStack stack) {
-		CompoundTag orCreateTag = stack.getOrCreateTag();
-		return orCreateTag.getInt("Air");
+		return stack.getOrDefault(AllDataComponents.BACKTANK_AIR, 0);
 	}
 
 	public static class BacktankBlockItem extends BlockItem {
@@ -103,7 +108,7 @@ public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable 
 	}
 
 	public static class Layered extends BacktankItem implements LayeredArmorItem {
-		public Layered(ArmorMaterial material, Properties properties, ResourceLocation textureLoc, Supplier<BacktankBlockItem> placeable) {
+		public Layered(Holder<ArmorMaterial> material, Properties properties, ResourceLocation textureLoc, Supplier<BacktankBlockItem> placeable) {
 			super(material, properties, textureLoc, placeable);
 		}
 

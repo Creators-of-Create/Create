@@ -1,18 +1,14 @@
 package com.simibubi.create.impl.registry;
 
-import org.jetbrains.annotations.ApiStatus.Internal;
-
 import com.simibubi.create.api.equipment.potatoCannon.PotatoCannonProjectileType;
 import com.simibubi.create.api.registry.CreateRegistries;
 
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.registries.DataPackRegistryEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 
-@EventBusSubscriber(bus = Bus.MOD)
+@EventBusSubscriber
 public class CreateRegistriesImpl {
-	@Internal
 	@SubscribeEvent
 	public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
 		event.dataPackRegistry(

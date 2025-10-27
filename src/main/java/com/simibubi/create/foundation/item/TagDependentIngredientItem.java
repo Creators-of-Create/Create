@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.item;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.ITagManager;
 
 public class TagDependentIngredientItem extends Item {
 
@@ -15,8 +15,10 @@ public class TagDependentIngredientItem extends Item {
 	}
 
 	public boolean shouldHide() {
-		ITagManager<Item> tagManager = ForgeRegistries.ITEMS.tags();
-		return !tagManager.isKnownTagName(tag) || tagManager.getTag(tag).isEmpty();
+		for (Holder<Item> ignored : BuiltInRegistries.ITEM.getTagOrEmpty(this.tag)) {
+			return false; // at least 1 present
+		}
+		return true; // none present
 	}
 
 }

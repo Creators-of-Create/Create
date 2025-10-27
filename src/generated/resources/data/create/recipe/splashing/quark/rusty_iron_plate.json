@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "quark"
+    }
+  ],
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "quark:iron_plate"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "quark:rusty_iron_plate"
+    }
+  ]
+}

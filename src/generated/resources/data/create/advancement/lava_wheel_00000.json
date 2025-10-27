@@ -1,0 +1,29 @@
+{
+  "parent": "create:mechanical_mixer",
+  "criteria": {
+    "0": {
+      "trigger": "create:lava_wheel_00000_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.lava_wheel_00000.desc"
+    },
+    "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "create:water_wheel"
+    },
+    "title": {
+      "translate": "advancement.create.lava_wheel_00000"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

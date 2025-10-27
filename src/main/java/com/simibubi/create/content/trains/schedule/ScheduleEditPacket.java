@@ -1,51 +1,37 @@
 package com.simibubi.create.content.trains.schedule;
 
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent.Context;
 
-public class ScheduleEditPacket extends SimplePacketBase {
-
-	private Schedule schedule;
-
-	public ScheduleEditPacket(Schedule schedule) {
-		this.schedule = schedule;
-	}
-
-	public ScheduleEditPacket(FriendlyByteBuf buffer) {
-		schedule = Schedule.fromTag(buffer.readNbt());
-	}
+public record ScheduleEditPacket(Schedule schedule) implements ServerboundPacketPayload {
+	public static final StreamCodec<RegistryFriendlyByteBuf, ScheduleEditPacket> STREAM_CODEC = Schedule.STREAM_CODEC.map(
+			ScheduleEditPacket::new, ScheduleEditPacket::schedule
+	);
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeNbt(schedule.write());
-	}
+	public void handle(ServerPlayer sender) {
+		ItemStack mainHandItem = sender.getMainHandItem();
+		if (!AllItems.SCHEDULE.isIn(mainHandItem))
+			return;
 
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer sender = context.getSender();
-			ItemStack mainHandItem = sender.getMainHandItem();
-			if (!AllItems.SCHEDULE.isIn(mainHandItem))
-				return;
-			
-			CompoundTag tag = mainHandItem.getOrCreateTag();
-			if (schedule.entries.isEmpty()) {
-				tag.remove("Schedule");
-				if (tag.isEmpty())
-					mainHandItem.setTag(null);
-			} else
-				tag.put("Schedule", schedule.write());
-			
-			sender.getCooldowns()
+		if (schedule.entries.isEmpty()) {
+			mainHandItem.remove(AllDataComponents.TRAIN_SCHEDULE);
+		} else
+			mainHandItem.set(AllDataComponents.TRAIN_SCHEDULE, schedule.write(sender.registryAccess()));
+
+		sender.getCooldowns()
 				.addCooldown(mainHandItem.getItem(), 5);
-		});
-		return true;
 	}
 
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONFIGURE_SCHEDULE;
+	}
 }

@@ -2,6 +2,7 @@ package com.simibubi.create.api.schematic.nbt;
 
 import com.simibubi.create.api.registry.SimpleRegistry;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,6 +23,10 @@ public class SafeNbtWriterRegistry {
 		 * Write filtered, safe NBT to the given tag. This is always called on the logical server.
 		 * @param tag the NBT tag to write to
 		 */
-		void writeSafe(BlockEntity be, CompoundTag tag);
+		void writeSafe(BlockEntity be, CompoundTag tag, HolderLookup.Provider registries);
+	}
+
+	private SafeNbtWriterRegistry() {
+		throw new AssertionError("This class should not be instantiated");
 	}
 }

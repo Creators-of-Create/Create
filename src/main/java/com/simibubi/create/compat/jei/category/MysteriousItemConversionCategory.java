@@ -9,6 +9,7 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.List;
 @ParametersAreNonnullByDefault
 public class MysteriousItemConversionCategory extends CreateRecipeCategory<ConversionRecipe> {
 
-	public static final List<ConversionRecipe> RECIPES = new ArrayList<>();
+	public static final List<RecipeHolder<ConversionRecipe>> RECIPES = new ArrayList<>();
 
 	static {
 		RECIPES.add(ConversionRecipe.create(AllItems.EMPTY_BLAZE_BURNER.asStack(), AllBlocks.BLAZE_BURNER.asStack()));

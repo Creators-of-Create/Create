@@ -16,7 +16,8 @@ public class CTSpriteShifter {
 			return ENTRY_CACHE.get(key);
 
 		CTSpriteShiftEntry entry = new CTSpriteShiftEntry(type);
-		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> entry.set(blockTexture, connectedTexture));
+		if (CatnipServices.PLATFORM.getEnv().isClient())
+			entry.set(blockTexture, connectedTexture);
 		ENTRY_CACHE.put(key, entry);
 		return entry;
 	}

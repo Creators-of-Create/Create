@@ -21,6 +21,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -97,7 +98,7 @@ public class BeltMovementHandler {
 
 		// Lock entities in place
 		boolean isPlayer = entityIn instanceof Player;
-		if (entityIn instanceof LivingEntity && !isPlayer) 
+		if (entityIn instanceof LivingEntity && !isPlayer)
 			((LivingEntity) entityIn).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 1, false, false));
 
 		final Direction beltFacing = blockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
@@ -145,8 +146,11 @@ public class BeltMovementHandler {
 			movement = movement.add(centering);
 
 		float step = entityIn.maxUpStep();
-		if (!isPlayer) 
-			entityIn.setMaxUpStep(1);
+		if (!isPlayer && entityIn instanceof LivingEntity livingEntity) {
+			step = (float) livingEntity.getAttributeBaseValue(Attributes.STEP_HEIGHT);
+			//noinspection DataFlowIssue
+			livingEntity.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(1.0f);
+		}
 
 		// Entity Collisions
 		if (Math.abs(movementSpeed) < .5f) {
@@ -178,11 +182,12 @@ public class BeltMovementHandler {
 		} else {
 			entityIn.move(SELF, movement);
 		}
-		
+
 		entityIn.setOnGround(true);
 
-		if (!isPlayer)
-			entityIn.setMaxUpStep(step);
+		if (!isPlayer && entityIn instanceof LivingEntity livingEntity) {
+			livingEntity.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(step);
+		}
 
 		boolean movedPastEndingSlope = onSlope && (AllBlocks.BELT.has(world.getBlockState(entityIn.blockPosition()))
 			|| AllBlocks.BELT.has(world.getBlockState(entityIn.blockPosition()
@@ -194,7 +199,7 @@ public class BeltMovementHandler {
 			entityIn.setDeltaMovement(movement);
 			entityIn.hurtMarked = true;
 		}
-		
+
 	}
 
 	public static boolean shouldIgnoreBlocking(Entity me, Entity other) {

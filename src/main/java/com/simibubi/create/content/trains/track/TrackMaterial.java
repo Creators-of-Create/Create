@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+
+import net.createmod.catnip.platform.CatnipServices;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
@@ -23,9 +26,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TrackMaterial {
 	public static final Map<ResourceLocation, TrackMaterial> ALL = new HashMap<>();
@@ -74,7 +76,8 @@ public class TrackMaterial {
 		this.particle = particle;
 		this.trackType = trackType;
 		this.customFactory = customFactory;
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.modelHolder = modelHolder.get().get());
+		if (CatnipServices.PLATFORM.getEnv().isClient())
+			this.modelHolder = modelHolder.get().get();
 		ALL.put(this.id, this);
 	}
 

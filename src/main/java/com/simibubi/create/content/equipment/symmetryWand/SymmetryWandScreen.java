@@ -1,10 +1,11 @@
 package com.simibubi.create.content.equipment.symmetryWand;
 
+import net.createmod.catnip.platform.CatnipServices;
+
 import org.joml.Vector3f;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.CrossPlaneMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.EmptyMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.PlaneMirror;
@@ -154,7 +155,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	@Override
 	public void removed() {
 		SymmetryWandItem.configureSettings(wand, currentElement);
-		AllPackets.getChannel().sendToServer(new ConfigureSymmetryWandPacket(hand, currentElement));
+		CatnipServices.NETWORK.sendToServer(new ConfigureSymmetryWandPacket(hand, currentElement));
 	}
 
 }

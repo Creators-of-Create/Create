@@ -8,7 +8,7 @@ import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.Block;
 
-import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
+import net.neoforged.neoforge.client.model.generators.MultiPartBlockStateBuilder;
 
 public class GirderBlockStateGenerator {
 

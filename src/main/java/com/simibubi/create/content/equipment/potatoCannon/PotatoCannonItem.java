@@ -7,7 +7,6 @@ import java.util.function.Predicate;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.api.equipment.potatoCannon.PotatoCannonProjectileType;
@@ -28,15 +27,19 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.TooltipFlag;
@@ -48,16 +51,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 public class PotatoCannonItem extends ProjectileWeaponItem implements CustomArmPoseItem {
-
-	public static final int MAX_DAMAGE = 100;
-
 	public PotatoCannonItem(Properties properties) {
-		super(properties.defaultDurability(MAX_DAMAGE));
+		super(properties);
 	}
 
 	@Nullable
@@ -74,6 +74,12 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomArmP
 
 		return new Ammo(ammoStack, optionalType.get().value());
 	}
+
+	@Override
+	protected void shootProjectile(LivingEntity shooter, Projectile projectile, int index, float velocity, float inaccuracy, float angle, @Nullable LivingEntity target) {}
+
+	@Override
+	protected void shoot(ServerLevel level, LivingEntity shooter, InteractionHand hand, ItemStack weapon, List<ItemStack> projectileItems, float velocity, float inaccuracy, boolean isCrit, @Nullable LivingEntity target) {}
 
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
@@ -148,7 +154,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomArmP
 		}
 
 		if (!BacktankUtil.canAbsorbDamage(player, maxUses()))
-			heldStack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+			heldStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
 
 		ShootableGadgetItemMethods.applyCooldown(player, heldStack, hand, s -> s.getItem() instanceof PotatoCannonItem, projectileType.reloadTicks());
 		ShootableGadgetItemMethods.sendPackets(player,
@@ -158,23 +164,28 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomArmP
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
 		LocalPlayer player = Minecraft.getInstance().player;
 		if (player == null) {
-			super.appendHoverText(stack, level, tooltip, flag);
+			super.appendHoverText(stack, context, tooltip, flag);
 			return;
 		}
 
 		Ammo ammo = getAmmo(player, stack);
 		if (ammo == null) {
-			super.appendHoverText(stack, level, tooltip, flag);
+			super.appendHoverText(stack, context, tooltip, flag);
 			return;
 		}
 		ItemStack ammoStack = ammo.stack();
 		PotatoCannonProjectileType type = ammo.type();
 
-		int power = stack.getEnchantmentLevel(Enchantments.POWER_ARROWS);
-		int punch = stack.getEnchantmentLevel(Enchantments.PUNCH_ARROWS);
+		HolderLookup.Provider registries = context.registries();
+		if (registries == null)
+			return;
+
+		HolderLookup<Enchantment> lookup = registries.lookupOrThrow(Registries.ENCHANTMENT);
+		int power = stack.getEnchantmentLevel(lookup.getOrThrow(Enchantments.POWER));
+		int punch = stack.getEnchantmentLevel(lookup.getOrThrow(Enchantments.PUNCH));
 		final float additionalDamageMult = 1 + power * .2f;
 		final float additionalKnockback = punch * .5f;
 
@@ -208,8 +219,6 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomArmP
 		tooltip.add(spacing.plainCopy()
 			.append(CreateLang.translateDirect(_knockback, knockback)
 				.withStyle(darkGreen)));
-
-		super.appendHoverText(stack, level, tooltip, flag);
 	}
 
 	@Override
@@ -234,18 +243,12 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomArmP
 	}
 
 	@Override
-	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		if (enchantment == Enchantments.POWER_ARROWS)
+	public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+		if (enchantment.is(Enchantments.INFINITY))
+			return false;
+		if (enchantment.is(Enchantments.LOOTING))
 			return true;
-		if (enchantment == Enchantments.PUNCH_ARROWS)
-			return true;
-		if (enchantment == Enchantments.FLAMING_ARROWS)
-			return true;
-		if (enchantment == Enchantments.MOB_LOOTING)
-			return true;
-		if (enchantment == AllEnchantments.POTATO_RECOVERY.get())
-			return true;
-		return super.canApplyAtEnchantingTable(stack, enchantment);
+		return super.supportsEnchantment(stack, enchantment);
 	}
 
 	@Override
@@ -268,7 +271,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomArmP
 	}
 
 	@Override
-	public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+	public boolean onEntitySwing(ItemStack stack, LivingEntity entity, InteractionHand hand) {
 		return true;
 	}
 

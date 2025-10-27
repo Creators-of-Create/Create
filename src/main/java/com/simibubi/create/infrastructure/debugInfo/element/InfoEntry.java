@@ -18,13 +18,6 @@ public record InfoEntry(String name, InfoProvider provider) implements InfoEleme
 	}
 
 	@Override
-	public void write(Player player, FriendlyByteBuf buffer) {
-		buffer.writeBoolean(false);
-		buffer.writeUtf(name);
-		buffer.writeUtf(provider.getInfoSafe(player));
-	}
-
-	@Override
 	public void print(int depth, @Nullable Player player, Consumer<String> lineConsumer) {
 		String value = provider.getInfoSafe(player);
 		String indent = DebugInformation.getIndent(depth);
@@ -42,11 +35,5 @@ public record InfoEntry(String name, InfoProvider provider) implements InfoEleme
 			lineConsumer.accept(indent + name + ": " + value);
 		}
 
-	}
-
-	public static InfoEntry read(FriendlyByteBuf buffer) {
-		String name = buffer.readUtf();
-		String value = buffer.readUtf();
-		return new InfoEntry(name, value);
 	}
 }

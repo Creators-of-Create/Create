@@ -2,10 +2,11 @@ package com.simibubi.create.content.contraptions.mounted;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.api.contraption.ContraptionMovementSetting;
@@ -23,12 +24,14 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -41,13 +44,15 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 @EventBusSubscriber
 public class MinecartContraptionItem extends Item {
@@ -80,16 +85,16 @@ public class MinecartContraptionItem extends Item {
 	// Taken and adjusted from MinecartItem
 	private static final DispenseItemBehavior DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior() {
 		private final DefaultDispenseItemBehavior behaviourDefaultDispenseItem = new DefaultDispenseItemBehavior();
-
 		@Override
 		public ItemStack execute(BlockSource source, ItemStack stack) {
-			Direction direction = source.getBlockState()
+			Direction direction = source.state()
 				.getValue(DispenserBlock.FACING);
-			Level world = source.getLevel();
-			double d0 = source.x() + (double) direction.getStepX() * 1.125D;
-			double d1 = Math.floor(source.y()) + (double) direction.getStepY();
-			double d2 = source.z() + (double) direction.getStepZ() * 1.125D;
-			BlockPos blockpos = source.getPos()
+			ServerLevel world = source.level();
+			Vec3 vec3 = source.center();
+			double d0 = vec3.x() + (double) direction.getStepX() * 1.125D;
+			double d1 = Math.floor(vec3.y()) + (double) direction.getStepY();
+			double d2 = vec3.z() + (double) direction.getStepZ() * 1.125D;
+			BlockPos blockpos = source.pos()
 				.relative(direction);
 			BlockState blockstate = world.getBlockState(blockpos);
 			RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock
@@ -121,8 +126,8 @@ public class MinecartContraptionItem extends Item {
 			}
 
 			AbstractMinecart abstractminecartentity = AbstractMinecart.createMinecart(world, d0, d1 + d3, d2,
-				((MinecartContraptionItem) stack.getItem()).minecartType);
-			if (stack.hasCustomHoverName())
+				((MinecartContraptionItem) stack.getItem()).minecartType, stack, null);
+			if (stack.has(DataComponents.CUSTOM_NAME))
 				abstractminecartentity.setCustomName(stack.getHoverName());
 			world.addFreshEntity(abstractminecartentity);
 			addContraptionToMinecart(world, stack, abstractminecartentity, direction);
@@ -133,8 +138,8 @@ public class MinecartContraptionItem extends Item {
 
 		@Override
 		protected void playSound(BlockSource source) {
-			source.getLevel()
-				.levelEvent(1000, source.getPos(), 0);
+			source.level()
+				.levelEvent(LevelEvent.SOUND_DISPENSER_DISPENSE, source.pos(), 0);
 		}
 	};
 
@@ -148,7 +153,7 @@ public class MinecartContraptionItem extends Item {
 			return InteractionResult.FAIL;
 		} else {
 			ItemStack itemstack = context.getItemInHand();
-			if (!world.isClientSide) {
+			if (world instanceof ServerLevel serverlevel) {
 				RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock
 					? ((BaseRailBlock) blockstate.getBlock()).getRailDirection(blockstate, world, blockpos, null)
 					: RailShape.NORTH_SOUTH;
@@ -158,9 +163,9 @@ public class MinecartContraptionItem extends Item {
 				}
 
 				AbstractMinecart abstractminecartentity =
-					AbstractMinecart.createMinecart(world, (double) blockpos.getX() + 0.5D,
-						(double) blockpos.getY() + 0.0625D + d0, (double) blockpos.getZ() + 0.5D, this.minecartType);
-				if (itemstack.hasCustomHoverName())
+					AbstractMinecart.createMinecart(serverlevel, (double) blockpos.getX() + 0.5D,
+						(double) blockpos.getY() + 0.0625D + d0, (double) blockpos.getZ() + 0.5D, this.minecartType, itemstack, null);
+				if (itemstack.has(DataComponents.CUSTOM_NAME))
 					abstractminecartentity.setCustomName(itemstack.getHoverName());
 				Player player = context.getPlayer();
 				world.addFreshEntity(abstractminecartentity);
@@ -175,9 +180,8 @@ public class MinecartContraptionItem extends Item {
 
 	public static void addContraptionToMinecart(Level world, ItemStack itemstack, AbstractMinecart cart,
 												@Nullable Direction newFacing) {
-		CompoundTag tag = itemstack.getOrCreateTag();
-		if (tag.contains("Contraption")) {
-			CompoundTag contraptionTag = tag.getCompound("Contraption");
+		if (itemstack.has(AllDataComponents.MINECRAFT_CONTRAPTION_DATA)) {
+			CompoundTag contraptionTag = itemstack.get(AllDataComponents.MINECRAFT_CONTRAPTION_DATA);
 
 			Direction intialOrientation = NBTHelper.readEnum(contraptionTag, "InitialOrientation", Direction.class);
 
@@ -245,9 +249,10 @@ public class MinecartContraptionItem extends Item {
 			if (MovementBehaviour.REGISTRY.get(pair.left.state()) instanceof PortableStorageInterfaceMovement psim)
 				psim.reset(pair.right);
 
-		ItemStack generatedStack = create(type, oce).setHoverName(entity.getCustomName());
+		ItemStack generatedStack = create(type, oce);
+		generatedStack.set(DataComponents.CUSTOM_NAME, entity.getCustomName());
 
-		if (ContraptionPickupLimiting.isTooLargeForPickup(generatedStack.serializeNBT())) {
+		if (ContraptionPickupLimiting.isTooLargeForPickup(generatedStack.saveOptional(event.getLevel().registryAccess()))) {
 			MutableComponent message = CreateLang.translateDirect("contraption.minecart_contraption_too_big")
 				.withStyle(ChatFormatting.RED);
 			player.displayClientMessage(message, true);
@@ -287,15 +292,14 @@ public class MinecartContraptionItem extends Item {
 			return stack;
 
 		CompoundTag tag = entity.getContraption()
-			.writeNBT(false);
+			.writeNBT(entity.registryAccess(), false);
 		tag.remove("UUID");
 		tag.remove("Pos");
 		tag.remove("Motion");
 
 		NBTHelper.writeEnum(tag, "InitialOrientation", entity.getInitialOrientation());
 
-		stack.getOrCreateTag()
-			.put("Contraption", tag);
+		stack.set(AllDataComponents.MINECRAFT_CONTRAPTION_DATA, tag);
 		return stack;
 	}
 }

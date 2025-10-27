@@ -3,7 +3,7 @@ package com.simibubi.create.content.kinetics.belt.behaviour;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
@@ -61,7 +61,7 @@ public class TransportedItemStackHandlerBehaviour extends BlockEntityBehaviour {
 
 		public boolean didntChangeFrom(ItemStack stackBefore) {
 			return doesNothing()
-				|| outputs.size() == 1 && outputs.get(0).stack.equals(stackBefore, false) && !hasHeldOutput();
+				|| outputs.size() == 1 && ItemStack.matches(outputs.get(0).stack, stackBefore) && !hasHeldOutput();
 		}
 
 		public List<TransportedItemStack> getOutputs() {

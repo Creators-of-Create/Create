@@ -1,0 +1,13 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:industrial_iron_window"
+    }
+  ],
+  "results": [
+    {
+      "id": "create:weathered_iron_window"
+    }
+  ]
+}

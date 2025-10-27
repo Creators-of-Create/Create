@@ -2,6 +2,7 @@ package com.simibubi.create.content.kinetics.fan.processing;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.UnmodifiableView;

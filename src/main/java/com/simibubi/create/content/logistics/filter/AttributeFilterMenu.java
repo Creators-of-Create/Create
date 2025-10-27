@@ -3,16 +3,13 @@ package com.simibubi.create.content.logistics.filter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllMenuTypes;
-
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
 
-import net.createmod.catnip.data.Pair;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,19 +18,16 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
+
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class AttributeFilterMenu extends AbstractFilterMenu {
 
-	public enum WhitelistMode {
-		WHITELIST_DISJ, WHITELIST_CONJ, BLACKLIST;
-	}
+	AttributeFilterWhitelistMode whitelistMode;
+	List<ItemAttribute.ItemAttributeEntry> selectedAttributes;
 
-	WhitelistMode whitelistMode;
-	List<Pair<ItemAttribute, Boolean>> selectedAttributes;
-
-	public AttributeFilterMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public AttributeFilterMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
@@ -46,15 +40,14 @@ public class AttributeFilterMenu extends AbstractFilterMenu {
 	}
 
 	public void appendSelectedAttribute(ItemAttribute itemAttribute, boolean inverted) {
-		selectedAttributes.add(Pair.of(itemAttribute, inverted));
+		selectedAttributes.add(new ItemAttribute.ItemAttributeEntry(itemAttribute, inverted));
 	}
 
 	@Override
 	protected void init(Inventory inv, ItemStack contentHolder) {
 		super.init(inv, contentHolder);
 		ItemStack stack = new ItemStack(Items.NAME_TAG);
-		stack.setHoverName(
-				Component.literal("Selected Tags").withStyle(ChatFormatting.RESET, ChatFormatting.BLUE));
+		stack.set(DataComponents.CUSTOM_NAME, Component.literal("Selected Tags").withStyle(ChatFormatting.RESET, ChatFormatting.BLUE));
 		ghostInventory.setStackInSlot(1, stack);
 	}
 
@@ -131,36 +124,26 @@ public class AttributeFilterMenu extends AbstractFilterMenu {
 	protected void initAndReadInventory(ItemStack filterItem) {
 		super.initAndReadInventory(filterItem);
 		selectedAttributes = new ArrayList<>();
-		whitelistMode = WhitelistMode.values()[filterItem.getOrCreateTag()
-			.getInt("WhitelistMode")];
-		ListTag attributes = filterItem.getOrCreateTag()
-			.getList("MatchedAttributes", Tag.TAG_COMPOUND);
-		attributes.forEach(inbt -> {
-			CompoundTag compound = (CompoundTag) inbt;
-			ItemAttribute attribute = ItemAttribute.loadStatic(compound);
-			if (attribute != null)
-				selectedAttributes.add(Pair.of(attribute, compound.getBoolean("Inverted")));
-		});
+		whitelistMode = filterItem.getOrDefault(AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE, AttributeFilterWhitelistMode.WHITELIST_DISJ);
+		List<ItemAttribute.ItemAttributeEntry> attributes = filterItem.getOrDefault(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, List.of());
+		selectedAttributes.addAll(attributes);
 	}
 
 	@Override
 	protected void saveData(ItemStack filterItem) {
-		filterItem.getOrCreateTag()
-				.putInt("WhitelistMode", whitelistMode.ordinal());
-		ListTag attributes = new ListTag();
+		filterItem.set(AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE, whitelistMode);
+		List<ItemAttribute.ItemAttributeEntry> attributes = new ArrayList<>();
 		selectedAttributes.forEach(at -> {
 			if (at == null)
 				return;
-
-			CompoundTag compoundNBT = ItemAttribute.saveStatic(at.getFirst());
-			compoundNBT.putBoolean("Inverted", at.getSecond());
-			attributes.add(compoundNBT);
+			attributes.add(new ItemAttribute.ItemAttributeEntry(at.attribute(), at.inverted()));
 		});
-		filterItem.getOrCreateTag()
-			.put("MatchedAttributes", attributes);
+		filterItem.set(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, attributes);
 
-		if (attributes.isEmpty() && whitelistMode == WhitelistMode.WHITELIST_DISJ)
-			filterItem.setTag(null);
+		if (attributes.isEmpty() && whitelistMode == AttributeFilterWhitelistMode.WHITELIST_DISJ) {
+			filterItem.remove(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES);
+			filterItem.remove(AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE);
+		}
 	}
 
 }

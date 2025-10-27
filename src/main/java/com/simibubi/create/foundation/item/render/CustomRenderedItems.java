@@ -5,9 +5,9 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 public class CustomRenderedItems {
 
@@ -31,7 +31,7 @@ public class CustomRenderedItems {
 			Iterator<Item> iterator = ITEMS.iterator();
 			while (iterator.hasNext()) {
 				Item item = iterator.next();
-				if (!ForgeRegistries.ITEMS.containsValue(item) || !(IClientItemExtensions.of(item)
+				if (!BuiltInRegistries.ITEM.containsValue(item) || !(IClientItemExtensions.of(item)
 					.getCustomRenderer() instanceof CustomRenderedItemModelRenderer)) {
 					iterator.remove();
 				}

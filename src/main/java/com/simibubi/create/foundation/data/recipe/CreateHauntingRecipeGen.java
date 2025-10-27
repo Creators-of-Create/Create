@@ -1,19 +1,19 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.HauntingRecipeGen;
 
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
-
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 /**
  * Create's own Data Generation for Haunting recipes
@@ -48,7 +48,7 @@ public final class CreateHauntingRecipeGen extends HauntingRecipeGen {
 
 	SOUL_SAND = convert(() -> Ingredient.of(ItemTags.SAND), () -> Blocks.SOUL_SAND),
 	SOUL_DIRT = convert(() -> Ingredient.of(ItemTags.DIRT), () -> Blocks.SOUL_SOIL),
-	BLACK_STONE = convert(() -> Ingredient.of(Tags.Items.COBBLESTONE), () -> Blocks.BLACKSTONE),
+		BLACK_STONE = convert(() -> Ingredient.of(Tags.Items.COBBLESTONES), () -> Blocks.BLACKSTONE),
 	CRIMSON_FUNGUS = convert(Items.RED_MUSHROOM, Items.CRIMSON_FUNGUS),
 	WARPED_FUNGUS = convert(Items.BROWN_MUSHROOM, Items.WARPED_FUNGUS),
 
@@ -62,13 +62,7 @@ public final class CreateHauntingRecipeGen extends HauntingRecipeGen {
 
 	;
 
-	public CreateHauntingRecipeGen(PackOutput output) {
-		super(output, Create.ID);
-	}
-
-	public GeneratedRecipe moddedConversion(Mods mod, String input, String output) {
-		return create("compat/" + mod.getId() + "/" + output, p -> p.require(mod, input)
-				.output(mod, output)
-				.whenModLoaded(mod.getId()));
+	public CreateHauntingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+		super(output, registries, Create.ID);
 	}
 }

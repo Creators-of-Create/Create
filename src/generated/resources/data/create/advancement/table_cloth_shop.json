@@ -1,0 +1,27 @@
+{
+  "parent": "create:frogport",
+  "criteria": {
+    "0": {
+      "trigger": "create:table_cloth_shop_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.table_cloth_shop.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:red_table_cloth"
+    },
+    "title": {
+      "translate": "advancement.create.table_cloth_shop"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

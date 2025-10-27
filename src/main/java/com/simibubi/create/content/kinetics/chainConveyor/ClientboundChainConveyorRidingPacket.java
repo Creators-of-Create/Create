@@ -1,36 +1,36 @@
 package com.simibubi.create.content.kinetics.chainConveyor;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.UUID;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.render.PlayerSkyhookRenderer;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
-public class ClientboundChainConveyorRidingPacket extends SimplePacketBase {
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-	private final Collection<UUID> uuids;
+public record ClientboundChainConveyorRidingPacket(Collection<UUID> uuids) implements ClientboundPacketPayload {
+	public static final StreamCodec<ByteBuf, ClientboundChainConveyorRidingPacket> STREAM_CODEC = StreamCodec.composite(
+		ByteBufCodecs.collection(HashSet::new, UUIDUtil.STREAM_CODEC), ClientboundChainConveyorRidingPacket::uuids,
+	    ClientboundChainConveyorRidingPacket::new
+	);
 
-	public ClientboundChainConveyorRidingPacket(Collection<UUID> uuids) {
-		this.uuids = uuids;
-	}
-
-	public ClientboundChainConveyorRidingPacket(FriendlyByteBuf buffer) {
-		this.uuids = buffer.readList(FriendlyByteBuf::readUUID);
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CLIENTBOUND_CHAIN_CONVEYOR;
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeCollection(uuids, FriendlyByteBuf::writeUUID);
-	}
-
-	@Override
-	public boolean handle(NetworkEvent.Context context) {
-		context.enqueueWork(() -> {
-			PlayerSkyhookRenderer.updatePlayerList(this.uuids);
-		});
-		return true;
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		PlayerSkyhookRenderer.updatePlayerList(this.uuids);
 	}
 }

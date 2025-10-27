@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
@@ -25,6 +25,7 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -68,8 +69,7 @@ public class BeltInventory {
 			toInsert.clear();
 			items.removeAll(toRemove);
 			toRemove.clear();
-			belt.setChanged();
-			belt.sendData();
+			belt.notifyUpdate();
 		}
 
 		if (belt.getSpeed() == 0)
@@ -79,8 +79,7 @@ public class BeltInventory {
 		if (beltMovementPositive != belt.getDirectionAwareBeltMovementSpeed() > 0) {
 			beltMovementPositive = !beltMovementPositive;
 			Collections.reverse(items);
-			belt.setChanged();
-			belt.sendData();
+			belt.notifyUpdate();
 		}
 
 		// Assuming the first entry is furthest on the belt
@@ -154,11 +153,11 @@ public class BeltInventory {
 				ItemStack item = currentItem.stack;
 				if (handleBeltProcessingAndCheckIfRemoved(currentItem, nextOffset, noMovement)) {
 					iterator.remove();
-					belt.sendData();
+					belt.notifyUpdate();
 					continue;
 				}
 				if (item != currentItem.stack)
-					belt.sendData();
+					belt.notifyUpdate();
 				if (currentItem.locked)
 					continue;
 			}
@@ -205,7 +204,7 @@ public class BeltInventory {
 					continue;
 
 				ItemStack remainder = inputBehaviour.handleInsertion(currentItem, movementFacing, false);
-				if (remainder.equals(currentItem.stack, false))
+				if (ItemStack.matches(remainder, currentItem.stack))
 					continue;
 
 				currentItem.stack = remainder;
@@ -217,7 +216,7 @@ public class BeltInventory {
 					currentItem.stack = remainder;
 
 				flapTunnel(this, lastOffset, movementFacing, false);
-				belt.sendData();
+				belt.notifyUpdate();
 				continue;
 			}
 
@@ -228,7 +227,7 @@ public class BeltInventory {
 				eject(currentItem);
 				iterator.remove();
 				flapTunnel(this, lastOffset, movementFacing, false);
-				belt.sendData();
+				belt.notifyUpdate();
 				continue;
 			}
 		}
@@ -248,7 +247,7 @@ public class BeltInventory {
 				return false;
 			if (processingBehaviour == null) {
 				currentItem.locked = false;
-				belt.sendData();
+				belt.notifyUpdate();
 				return false;
 			}
 
@@ -259,7 +258,7 @@ public class BeltInventory {
 				return false;
 
 			currentItem.locked = false;
-			belt.sendData();
+			belt.notifyUpdate();
 			return false;
 		}
 
@@ -292,7 +291,7 @@ public class BeltInventory {
 				if (result == ProcessingResult.HOLD) {
 					currentItem.beltPosition = segment + .5f + (beltMovementPositive ? 1 / 512f : -1 / 512f);
 					currentItem.locked = true;
-					belt.sendData();
+					belt.notifyUpdate();
 					return false;
 				}
 			}
@@ -406,22 +405,22 @@ public class BeltInventory {
 		return null;
 	}
 
-	public void read(CompoundTag nbt) {
+	public void read(CompoundTag nbt, HolderLookup.Provider registries) {
 		items.clear();
 		nbt.getList("Items", Tag.TAG_COMPOUND)
-			.forEach(inbt -> items.add(TransportedItemStack.read((CompoundTag) inbt)));
+			.forEach(inbt -> items.add(TransportedItemStack.read((CompoundTag) inbt, registries)));
 		if (nbt.contains("LazyItem"))
-			lazyClientItem = TransportedItemStack.read(nbt.getCompound("LazyItem"));
+			lazyClientItem = TransportedItemStack.read(nbt.getCompound("LazyItem"), registries);
 		beltMovementPositive = nbt.getBoolean("PositiveOrder");
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(HolderLookup.Provider registries) {
 		CompoundTag nbt = new CompoundTag();
 		ListTag itemsNBT = new ListTag();
-		items.forEach(stack -> itemsNBT.add(stack.serializeNBT()));
+		items.forEach(stack -> itemsNBT.add(stack.serializeNBT(registries)));
 		nbt.put("Items", itemsNBT);
 		if (lazyClientItem != null)
-			nbt.put("LazyItem", lazyClientItem.serializeNBT());
+			nbt.put("LazyItem", lazyClientItem.serializeNBT(registries));
 		nbt.putBoolean("PositiveOrder", beltMovementPositive);
 		return nbt;
 	}
@@ -471,8 +470,7 @@ public class BeltInventory {
 			toRemove.add(transported);
 		}
 		if (dirty) {
-			belt.setChanged();
-			belt.sendData();
+			belt.notifyUpdate();
 		}
 	}
 

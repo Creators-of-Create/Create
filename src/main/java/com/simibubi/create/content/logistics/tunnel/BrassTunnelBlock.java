@@ -27,20 +27,19 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState p_225533_1_, Level world, BlockPos pos, Player player,
-								 InteractionHand p_225533_5_, BlockHitResult p_225533_6_) {
-		return onBlockEntityUse(world, pos, be -> {
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+		return onBlockEntityUse(level, pos, be -> {
 			if (!(be instanceof BrassTunnelBlockEntity bte))
 				return InteractionResult.PASS;
-			List<ItemStack> stacksOfGroup = bte.grabAllStacksOfGroup(world.isClientSide);
+			List<ItemStack> stacksOfGroup = bte.grabAllStacksOfGroup(level.isClientSide);
 			if (stacksOfGroup.isEmpty())
 				return InteractionResult.PASS;
-			if (world.isClientSide)
+			if (level.isClientSide)
 				return InteractionResult.SUCCESS;
 			for (ItemStack itemStack : stacksOfGroup)
 				player.getInventory().placeItemBackInInventory(itemStack.copy());
-			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
-				1f + world.random.nextFloat());
+			level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
+				1f + level.random.nextFloat());
 			return InteractionResult.SUCCESS;
 		});
 	}

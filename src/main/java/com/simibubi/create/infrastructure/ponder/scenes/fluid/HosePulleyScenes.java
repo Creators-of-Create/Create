@@ -22,9 +22,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class HosePulleyScenes {
 
@@ -124,10 +125,11 @@ public class HosePulleyScenes {
 			scene.idle(3);
 		}
 
-		scene.world().modifyBlockEntity(util.grid().at(1, 5, 1), HosePulleyBlockEntity.class, be -> be
-			.getCapability(ForgeCapabilities.FLUID_HANDLER)
-			.ifPresent(
-				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE)));
+		scene.world().modifyBlockEntity(util.grid().at(1, 5, 1), HosePulleyBlockEntity.class, be -> {
+			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			if (ifh != null)
+				ifh.fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE);
+		});
 
 		scene.idle(20);
 		scene.world().modifyBlock(util.grid().at(3, 2, 1), s -> s.setValue(PumpBlock.FACING, Direction.DOWN), true);
@@ -227,10 +229,11 @@ public class HosePulleyScenes {
 
 		scene.world().showSectionAndMerge(cogs, Direction.NORTH, hoselink);
 		scene.world().showSectionAndMerge(pipes, Direction.WEST, hoselink);
-		scene.world().modifyBlockEntity(util.grid().at(1, 6, 1), HosePulleyBlockEntity.class,
-			be -> be.getCapability(ForgeCapabilities.FLUID_HANDLER)
-				.ifPresent(
-					fh -> ((HosePulleyFluidHandler) fh).fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE)));
+		scene.world().modifyBlockEntity(util.grid().at(1, 6, 1), HosePulleyBlockEntity.class, be -> {
+			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			if (ifh != null)
+				ifh.fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE);
+		});
 		scene.world().propagatePipeChange(util.grid().at(3, 2, 1));
 
 		Vec3 surface = util.vector().topOf(1, 3, 1)
@@ -342,10 +345,11 @@ public class HosePulleyScenes {
 			.pointAt(entryPoint);
 
 		scene.idle(40);
-		scene.world().modifyBlockEntity(util.grid().at(1, 3, 2), HosePulleyBlockEntity.class,
-			be -> be.getCapability(ForgeCapabilities.FLUID_HANDLER)
-				.ifPresent(
-					fh -> ((HosePulleyFluidHandler) fh).fill(new FluidStack(Fluids.WATER, 1000), FluidAction.EXECUTE)));
+		scene.world().modifyBlockEntity(util.grid().at(1, 3, 2), HosePulleyBlockEntity.class, be -> {
+			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			if (ifh != null)
+				ifh.fill(new FluidStack(Fluids.WATER, 1000), FluidAction.EXECUTE);
+		});
 		scene.world().setKineticSpeed(hose, 0);
 		scene.world().modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.DOWN), true);
 		scene.world().propagatePipeChange(pumpPos);

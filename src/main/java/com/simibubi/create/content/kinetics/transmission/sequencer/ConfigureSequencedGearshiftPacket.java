@@ -1,46 +1,42 @@
 package com.simibubi.create.content.kinetics.transmission.sequencer;
 
+import java.util.Vector;
+
+import com.simibubi.create.AllPackets;
+import com.simibubi.create.foundation.codec.CreateStreamCodecs;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 
 public class ConfigureSequencedGearshiftPacket extends BlockEntityConfigurationPacket<SequencedGearshiftBlockEntity> {
+	public static final StreamCodec<ByteBuf, ConfigureSequencedGearshiftPacket> STREAM_CODEC = StreamCodec.composite(
+			BlockPos.STREAM_CODEC, packet -> packet.pos,
+			Instruction.STREAM_CODEC.apply(CreateStreamCodecs.vector()), packet -> packet.instructions,
+			ConfigureSequencedGearshiftPacket::new
+	);
 
-	private ListTag instructions;
+	private final Vector<Instruction> instructions;
 
-	public ConfigureSequencedGearshiftPacket(BlockPos pos, ListTag instructions) {
+	public ConfigureSequencedGearshiftPacket(BlockPos pos, Vector<Instruction> instructions) {
 		super(pos);
 		this.instructions = instructions;
 	}
 
-	public ConfigureSequencedGearshiftPacket(FriendlyByteBuf buffer) {
-		super(buffer);
-	}
-
 	@Override
-	protected void readSettings(FriendlyByteBuf buffer) {
-		instructions = buffer.readNbt().getList("data", Tag.TAG_COMPOUND);
-	}
-
-	@Override
-	protected void writeSettings(FriendlyByteBuf buffer) {
-		CompoundTag tag = new CompoundTag();
-		tag.put("data", instructions);
-		buffer.writeNbt(tag);
-	}
-
-	@Override
-	protected void applySettings(SequencedGearshiftBlockEntity be) {
+	protected void applySettings(ServerPlayer player, SequencedGearshiftBlockEntity be) {
 		if (be.computerBehaviour.hasAttachedComputer())
 			return;
 
 		be.run(-1);
-		be.instructions = Instruction.deserializeAll(instructions);
+		be.instructions = this.instructions;
 		be.sendData();
 	}
 
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONFIGURE_SEQUENCER;
+	}
 }

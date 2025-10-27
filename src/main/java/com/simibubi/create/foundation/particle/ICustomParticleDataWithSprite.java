@@ -1,27 +1,33 @@
 package com.simibubi.create.foundation.particle;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 
 import net.minecraft.client.particle.ParticleEngine.SpriteParticleRegistration;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleOptions.Deserializer;
 import net.minecraft.core.particles.ParticleType;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+
+import org.jetbrains.annotations.NotNull;
 
 public interface ICustomParticleDataWithSprite<T extends ParticleOptions> extends ICustomParticleData<T> {
 
-	Deserializer<T> getDeserializer();
-
-	public default ParticleType<T> createType() {
-		return new ParticleType<>(false, getDeserializer()) {
+	default ParticleType<T> createType() {
+		return new ParticleType<>(false) {
 
 			@Override
-			public Codec<T> codec() {
+			public @NotNull MapCodec<T> codec() {
 				return ICustomParticleDataWithSprite.this.getCodec(this);
+			}
+
+			@Override
+			public @NotNull StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec() {
+				return ICustomParticleDataWithSprite.this.getStreamCodec();
 			}
 		};
 	}

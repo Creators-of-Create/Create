@@ -7,10 +7,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event.Result;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 @EventBusSubscriber
 public class FunnelItem extends BlockItem {
@@ -21,9 +21,8 @@ public class FunnelItem extends BlockItem {
 
 	@SubscribeEvent
 	public static void funnelItemAlwaysPlacesWhenUsed(PlayerInteractEvent.RightClickBlock event) {
-		if (event.getItemStack()
-			.getItem() instanceof FunnelItem)
-			event.setUseBlock(Result.DENY);
+		if (event.getItemStack().getItem() instanceof FunnelItem)
+			event.setUseBlock(TriState.FALSE);
 	}
 
 	@Override
@@ -46,7 +45,7 @@ public class FunnelItem extends BlockItem {
 			.getBlock();
 		BlockState equivalentBeltFunnel = beltFunnelBlock.getStateForPlacement(ctx)
 			.setValue(BeltFunnelBlock.HORIZONTAL_FACING, direction);
-		if (BeltFunnelBlock.isOnValidBelt(equivalentBeltFunnel, world, pos)) 
+		if (BeltFunnelBlock.isOnValidBelt(equivalentBeltFunnel, world, pos))
 			return equivalentBeltFunnel;
 
 		return state;

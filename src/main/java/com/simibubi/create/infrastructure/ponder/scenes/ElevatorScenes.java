@@ -17,6 +17,7 @@ import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Blocks;
@@ -369,7 +370,7 @@ public class ElevatorScenes {
 		scene.world().modifyBlockEntityNBT(util.select().position(nixiePos), NixieTubeBlockEntity.class, nbt -> {
 			Component component = Component.literal("0F");
 			nbt.putString("RawCustomText", component.getString());
-			nbt.putString("CustomText", Component.Serializer.toJson(component));
+			nbt.putString("CustomText", Component.Serializer.toJson(component, scene.world().getHolderLookupProvider()));
 		});
 
 		scene.overlay().showText(90)
@@ -400,7 +401,7 @@ public class ElevatorScenes {
 		scene.world().modifyBlockEntityNBT(util.select().position(nixiePos), NixieTubeBlockEntity.class, nbt -> {
 			Component component = Component.literal("1F");
 			nbt.putString("RawCustomText", component.getString());
-			nbt.putString("CustomText", Component.Serializer.toJson(component));
+			nbt.putString("CustomText", Component.Serializer.toJson(component, scene.world().getHolderLookupProvider()));
 		});
 
 		scene.idle(40);
@@ -416,7 +417,7 @@ public class ElevatorScenes {
 		scene.world().modifyBlockEntityNBT(util.select().position(nixiePos), NixieTubeBlockEntity.class, nbt -> {
 			Component component = Component.literal("2F");
 			nbt.putString("RawCustomText", component.getString());
-			nbt.putString("CustomText", Component.Serializer.toJson(component));
+			nbt.putString("CustomText", Component.Serializer.toJson(component, scene.world().getHolderLookupProvider()));
 		});
 	}
 

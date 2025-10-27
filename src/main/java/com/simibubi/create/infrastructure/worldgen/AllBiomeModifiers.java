@@ -6,15 +6,15 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraftforge.common.world.BiomeModifier;
-import net.minecraftforge.common.world.ForgeBiomeModifiers.AddFeaturesBiomeModifier;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.world.BiomeModifier;
+import net.neoforged.neoforge.common.world.BiomeModifiers.AddFeaturesBiomeModifier;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 public class AllBiomeModifiers {
 	public static final ResourceKey<BiomeModifier>
@@ -23,10 +23,10 @@ public class AllBiomeModifiers {
 				STRIATED_ORES_NETHER = key("striated_ores_nether");
 
 	private static ResourceKey<BiomeModifier> key(String name) {
-		return ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, Create.asResource(name));
+		return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, Create.asResource(name));
 	}
 
-	public static void bootstrap(BootstapContext<BiomeModifier> ctx) {
+	public static void bootstrap(BootstrapContext<BiomeModifier> ctx) {
 		HolderGetter<Biome> biomeLookup = ctx.lookup(Registries.BIOME);
 		HolderSet<Biome> isOverworld = biomeLookup.getOrThrow(BiomeTags.IS_OVERWORLD);
 		HolderSet<Biome> isNether = biomeLookup.getOrThrow(BiomeTags.IS_NETHER);

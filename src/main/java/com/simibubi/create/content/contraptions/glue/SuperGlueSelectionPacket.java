@@ -1,67 +1,53 @@
 package com.simibubi.create.content.contraptions.glue;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
+
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.network.NetworkEvent.Context;
 
 import java.util.Set;
 
-public class SuperGlueSelectionPacket extends SimplePacketBase {
+public record SuperGlueSelectionPacket(BlockPos from, BlockPos to) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, SuperGlueSelectionPacket> STREAM_CODEC = StreamCodec.composite(
+			BlockPos.STREAM_CODEC, SuperGlueSelectionPacket::from,
+			BlockPos.STREAM_CODEC, SuperGlueSelectionPacket::to,
+			SuperGlueSelectionPacket::new
+	);
 
-	private BlockPos from;
-	private BlockPos to;
+	@Override
+	public void handle(ServerPlayer player) {
+		double range = player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE) + 2;
+		if (player.distanceToSqr(Vec3.atCenterOf(to)) > range * range)
+			return;
+		if (!to.closerThan(from, 25))
+			return;
 
-	public SuperGlueSelectionPacket(BlockPos from, BlockPos to) {
-		this.from = from;
-		this.to = to;
-	}
+		Set<BlockPos> group = SuperGlueSelectionHelper.searchGlueGroup(player.level(), from, to, false);
+		if (group == null)
+			return;
+		if (!group.contains(to))
+			return;
+		if (!SuperGlueSelectionHelper.collectGlueFromInventory(player, 1, true))
+			return;
 
-	public SuperGlueSelectionPacket(FriendlyByteBuf buffer) {
-		from = buffer.readBlockPos();
-		to = buffer.readBlockPos();
+		AABB bb = SuperGlueEntity.span(from, to);
+		SuperGlueSelectionHelper.collectGlueFromInventory(player, 1, false);
+		SuperGlueEntity entity = new SuperGlueEntity(player.level(), bb);
+		player.level().addFreshEntity(entity);
+		entity.spawnParticles();
+
+		AllAdvancements.SUPER_GLUE.awardTo(player);
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeBlockPos(from);
-		buffer.writeBlockPos(to);
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.GLUE_IN_AREA;
 	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer player = context.getSender();
-
-			double range = player.getAttribute(ForgeMod.BLOCK_REACH.get())
-				.getValue() + 2;
-			if (player.distanceToSqr(Vec3.atCenterOf(to)) > range * range)
-				return;
-			if (!to.closerThan(from, 25))
-				return;
-
-			Set<BlockPos> group = SuperGlueSelectionHelper.searchGlueGroup(player.level(), from, to, false);
-			if (group == null)
-				return;
-			if (!group.contains(to))
-				return;
-			if (!SuperGlueSelectionHelper.collectGlueFromInventory(player, 1, true))
-				return;
-
-			AABB bb = SuperGlueEntity.span(from, to);
-			SuperGlueSelectionHelper.collectGlueFromInventory(player, 1, false);
-			SuperGlueEntity entity = new SuperGlueEntity(player.level(), bb);
-			player.level().addFreshEntity(entity);
-			entity.spawnParticles();
-
-			AllAdvancements.SUPER_GLUE.awardTo(player);
-		});
-		return true;
-	}
-
 }

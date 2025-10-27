@@ -17,7 +17,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -25,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -90,7 +93,7 @@ public class ChuteBlock extends AbstractChuteBlock implements ProperWaterloggedB
 			return InteractionResult.SUCCESS;
 		if (shape == Shape.ENCASED) {
 			level.setBlockAndUpdate(context.getClickedPos(), state.setValue(SHAPE, Shape.NORMAL));
-			level.levelEvent(2001, context.getClickedPos(),
+			level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, context.getClickedPos(),
 				Block.getId(AllBlocks.INDUSTRIAL_IRON_BLOCK.getDefaultState()));
 			return InteractionResult.SUCCESS;
 		}
@@ -101,19 +104,18 @@ public class ChuteBlock extends AbstractChuteBlock implements ProperWaterloggedB
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult hitResult) {
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		Shape shape = state.getValue(SHAPE);
-		if (!AllBlocks.INDUSTRIAL_IRON_BLOCK.isIn(player.getItemInHand(hand)))
-			return super.use(state, level, pos, player, hand, hitResult);
+		if (!AllBlocks.INDUSTRIAL_IRON_BLOCK.isIn(stack))
+			return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
 		if (shape == Shape.INTERSECTION || shape == Shape.ENCASED)
-			return super.use(state, level, pos, player, hand, hitResult);
+			return super.useItemOn(stack,state, level, pos, player, hand, hitResult);
 		if (player == null || level.isClientSide)
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 
 		level.setBlockAndUpdate(pos, state.setValue(SHAPE, Shape.ENCASED));
 		level.playSound(null, pos, SoundEvents.NETHERITE_BLOCK_HIT, SoundSource.BLOCKS, 0.5f, 1.05f);
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -204,7 +206,7 @@ public class ChuteBlock extends AbstractChuteBlock implements ProperWaterloggedB
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

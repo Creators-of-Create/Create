@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.item.render;
 
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 public class SimpleCustomRenderer implements IClientItemExtensions {
 

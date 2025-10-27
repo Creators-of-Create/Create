@@ -12,9 +12,10 @@ import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.outliner.Outliner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -33,8 +34,7 @@ public class LogisticallyLinkedClientHandler {
 			|| !LogisticallyLinkedBlockItem.isTuned(mainHandItem))
 			return;
 
-		CompoundTag tag = mainHandItem.getTag()
-			.getCompound(BlockItem.BLOCK_ENTITY_TAG);
+		CompoundTag tag = mainHandItem.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).copyTag();
 		if (!tag.hasUUID("Freq"))
 			return;
 

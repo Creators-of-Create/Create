@@ -13,9 +13,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
@@ -58,11 +59,7 @@ import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.Tags;
-
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
@@ -88,12 +85,16 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTable.Builder;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
+import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.Tags;
+
+@SuppressWarnings("removal") // addLayer is staying... for now
 public class BuilderTransformers {
 	public static <B extends EncasedShaftBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedShaft(String casing,
 																										 Supplier<CTSpriteShiftEntry> casingShift) {
@@ -117,7 +118,7 @@ public class BuilderTransformers {
 				.getExistingFile(p.modLoc("block/track/bogey/top"))))
 			.loot((p, l) -> p.dropOther(l, AllBlocks.RAILWAY_CASING.get()))
 			.onRegister(
-				block -> AbstractBogeyBlock.registerStandardBogey(CatnipServices.REGISTRIES.getKeyOrThrow(block)));
+				block -> AbstractBogeyBlock.registerStandardBogey(RegisteredObjectsHelper.getKeyOrThrow(block)));
 	}
 
 	public static <B extends CopycatBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> copycat() {
@@ -126,7 +127,8 @@ public class BuilderTransformers {
 				.getExistingFile(p.mcLoc("air"))))
 			.initialProperties(SharedProperties::softMetal)
 			.properties(p -> p.noOcclusion()
-				.mapColor(MapColor.NONE))
+				.mapColor(MapColor.NONE)
+				.isValidSpawn((state, level, pos, type) -> false))
 			.addLayer(() -> RenderType::solid)
 			.addLayer(() -> RenderType::cutout)
 			.addLayer(() -> RenderType::cutoutMipped)
@@ -209,14 +211,14 @@ public class BuilderTransformers {
 					.texture("casing", Create.asResource("block/" + casing + "_casing"))
 					.texture("particle", Create.asResource("block/" + casing + "_casing"))
 					.texture("4", Create.asResource("block/" + gearbox))
-					.texture("1", new ResourceLocation("block/stripped_" + wood + "_log_top"))
+					.texture("1", ResourceLocation.withDefaultNamespace("block/stripped_" + wood + "_log_top"))
 					.texture("side", Create.asResource("block/" + casing + encasedSuffix));
 			}, false))
 			.item()
 			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + blockFolder + "/item"))
 				.texture("casing", Create.asResource("block/" + casing + "_casing"))
 				.texture("particle", Create.asResource("block/" + casing + "_casing"))
-				.texture("1", new ResourceLocation("block/stripped_" + wood + "_log_top"))
+				.texture("1", ResourceLocation.withDefaultNamespace("block/stripped_" + wood + "_log_top"))
 				.texture("side", Create.asResource("block/" + casing + encasedSuffix)))
 			.build();
 	}
@@ -448,10 +450,8 @@ public class BuilderTransformers {
 					.when(survivesExplosion)
 					.setRolls(ConstantValue.exactly(1))
 					.add(LootItem.lootTableItem(drop.get())
-						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-							.copy("VanillaTag", "{}", CopyNbtFunction.MergeStrategy.MERGE))
-						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-							.copy("Air", "Air")))));
+						.apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+							.include(AllDataComponents.BACKTANK_AIR)))));
 			});
 	}
 

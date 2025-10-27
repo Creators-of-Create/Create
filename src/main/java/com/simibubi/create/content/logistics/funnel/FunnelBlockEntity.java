@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
@@ -29,20 +28,21 @@ import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
 import net.createmod.catnip.math.BlockFace;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
 public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHoveringInformation {
 
@@ -55,7 +55,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 
 	LerpedFloat flap;
 
-	static enum Mode {
+	enum Mode {
 		INVALID, PAUSED, COLLECT, PUSHING_TO_BELT, TAKING_FROM_BELT, EXTRACT
 	}
 
@@ -65,7 +65,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		flap = createChasingFlap();
 	}
 
-	public Mode determineCurrentMode() {
+	Mode determineCurrentMode() {
 		BlockState state = getBlockState();
 		if (!FunnelBlock.isFunnel(state))
 			return Mode.INVALID;
@@ -322,9 +322,8 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 	}
 
 	public void flap(boolean inward) {
-		if (!level.isClientSide) {
-			AllPackets.getChannel()
-				.send(packetTarget(), new FunnelFlapPacket(this, inward));
+		if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
+			CatnipServices.NETWORK.sendToClientsTrackingChunk(serverLevel, new ChunkPos(worldPosition), new FunnelFlapPacket(this, inward));
 		} else {
 			flap.setValue(inward ? -1 : 1);
 			AllSoundEvents.FUNNEL_FLAP.playAt(level, worldPosition, 1, 1, true);
@@ -333,42 +332,35 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 
 	public boolean hasFlap() {
 		BlockState blockState = getBlockState();
-		if (!AbstractFunnelBlock.getFunnelFacing(blockState)
+		return AbstractFunnelBlock.getFunnelFacing(blockState)
 			.getAxis()
-			.isHorizontal())
-			return false;
-		return true;
+			.isHorizontal();
 	}
 
 	public float getFlapOffset() {
 		BlockState blockState = getBlockState();
 		if (!(blockState.getBlock() instanceof BeltFunnelBlock))
 			return -1 / 16f;
-		switch (blockState.getValue(BeltFunnelBlock.SHAPE)) {
-			default:
-			case RETRACTED:
-				return 0;
-			case EXTENDED:
-				return 8 / 16f;
-			case PULLING:
-			case PUSHING:
-				return -2 / 16f;
-		}
+		return switch (blockState.getValue(BeltFunnelBlock.SHAPE)) {
+			case EXTENDED -> 8 / 16f;
+			case PULLING, PUSHING -> -2 / 16f;
+			default -> 0;
+		};
 	}
 
 	@Override
-	protected void write(CompoundTag compound, boolean clientPacket) {
-		super.write(compound, clientPacket);
+	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(compound, registries, clientPacket);
 		compound.putInt("TransferCooldown", extractionCooldown);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(compound, registries, clientPacket);
 		extractionCooldown = compound.getInt("TransferCooldown");
 
 		if (clientPacket)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> VisualizationHelper.queueUpdate(this));
+			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> VisualizationHelper.queueUpdate(this));
 	}
 
 	public void onTransfer(ItemStack stack) {

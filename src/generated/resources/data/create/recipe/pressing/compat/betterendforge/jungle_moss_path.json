@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "betterendforge"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "betterendforge:jungle_moss"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "betterendforge:jungle_moss_path"
+    }
+  ]
+}

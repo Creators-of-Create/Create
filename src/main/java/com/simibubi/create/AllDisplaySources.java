@@ -36,9 +36,8 @@ import com.simibubi.create.content.redstone.displayLink.source.TrainStatusDispla
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
-import net.minecraftforge.registries.ForgeRegistries;
-
 import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -48,47 +47,47 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 public class AllDisplaySources {
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
-	public static final RegistryEntry<DeathCounterDisplaySource> DEATH_COUNT = REGISTRATE.displaySource("death_count", DeathCounterDisplaySource::new)
+	public static final RegistryEntry<DisplaySource, DeathCounterDisplaySource> DEATH_COUNT = REGISTRATE.displaySource("death_count", DeathCounterDisplaySource::new)
 		.associate(Blocks.RESPAWN_ANCHOR)
 		.register();
-	public static final RegistryEntry<ScoreboardDisplaySource> SCOREBOARD = REGISTRATE.displaySource("scoreboard", ScoreboardDisplaySource::new)
+	public static final RegistryEntry<DisplaySource, ScoreboardDisplaySource> SCOREBOARD = REGISTRATE.displaySource("scoreboard", ScoreboardDisplaySource::new)
 		.associate(BlockEntityType.COMMAND_BLOCK)
 		.register();
-	public static final RegistryEntry<EnchantPowerDisplaySource> ENCHANT_POWER = REGISTRATE.displaySource("enchant_power", EnchantPowerDisplaySource::new)
+	public static final RegistryEntry<DisplaySource, EnchantPowerDisplaySource> ENCHANT_POWER = REGISTRATE.displaySource("enchant_power", EnchantPowerDisplaySource::new)
 		.associate(BlockEntityType.ENCHANTING_TABLE)
 		.register();
-	public static final RegistryEntry<RedstonePowerDisplaySource> REDSTONE_POWER = REGISTRATE.displaySource("redstone_power", RedstonePowerDisplaySource::new)
+	public static final RegistryEntry<DisplaySource, RedstonePowerDisplaySource> REDSTONE_POWER = REGISTRATE.displaySource("redstone_power", RedstonePowerDisplaySource::new)
 		.associate(Blocks.TARGET)
 		.register();
 
-	public static final RegistryEntry<NixieTubeDisplaySource> NIXIE_TUBE = simple("nixie_tube", NixieTubeDisplaySource::new);
-	public static final RegistryEntry<ItemNameDisplaySource> ITEM_NAMES = simple("item_names", ItemNameDisplaySource::new);
-	public static final RegistryEntry<BoilerDisplaySource> BOILER = simple("boiler", BoilerDisplaySource::new);
-	public static final RegistryEntry<CurrentFloorDisplaySource> CURRENT_FLOOR = simple("current_floor", CurrentFloorDisplaySource::new);
-	public static final RegistryEntry<FillLevelDisplaySource> FILL_LEVEL = simple("fill_level", FillLevelDisplaySource::new);
-	public static final RegistryEntry<FactoryGaugeDisplaySource> GAUGE_STATUS = simple("gauge_status", FactoryGaugeDisplaySource::new);
-	public static final RegistryEntry<EntityNameDisplaySource> ENTITY_NAME = simple("entity_name", EntityNameDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, NixieTubeDisplaySource> NIXIE_TUBE = simple("nixie_tube", NixieTubeDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, ItemNameDisplaySource> ITEM_NAMES = simple("item_names", ItemNameDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, BoilerDisplaySource> BOILER = simple("boiler", BoilerDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, CurrentFloorDisplaySource> CURRENT_FLOOR = simple("current_floor", CurrentFloorDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, FillLevelDisplaySource> FILL_LEVEL = simple("fill_level", FillLevelDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, FactoryGaugeDisplaySource> GAUGE_STATUS = simple("gauge_status", FactoryGaugeDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, EntityNameDisplaySource> ENTITY_NAME = simple("entity_name", EntityNameDisplaySource::new);
 
-	public static final RegistryEntry<TimeOfDayDisplaySource> TIME_OF_DAY = simple("time_of_day", TimeOfDayDisplaySource::new);
-	public static final RegistryEntry<StopWatchDisplaySource> STOPWATCH = simple("stopwatch", StopWatchDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, TimeOfDayDisplaySource> TIME_OF_DAY = simple("time_of_day", TimeOfDayDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, StopWatchDisplaySource> STOPWATCH = simple("stopwatch", StopWatchDisplaySource::new);
 
-	public static final RegistryEntry<KineticSpeedDisplaySource> KINETIC_SPEED = simple("kinetic_speed", KineticSpeedDisplaySource::new);
-	public static final RegistryEntry<KineticStressDisplaySource> KINETIC_STRESS = simple("kinetic_stress", KineticStressDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, KineticSpeedDisplaySource> KINETIC_SPEED = simple("kinetic_speed", KineticSpeedDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, KineticStressDisplaySource> KINETIC_STRESS = simple("kinetic_stress", KineticStressDisplaySource::new);
 
-	public static final RegistryEntry<StationSummaryDisplaySource> STATION_SUMMARY = simple("station_summary", StationSummaryDisplaySource::new);
-	public static final RegistryEntry<TrainStatusDisplaySource> TRAIN_STATUS = simple("train_status", TrainStatusDisplaySource::new);
-	public static final RegistryEntry<ObservedTrainNameSource> OBSERVED_TRAIN_NAME = simple("observed_train_name", ObservedTrainNameSource::new);
+	public static final RegistryEntry<DisplaySource, StationSummaryDisplaySource> STATION_SUMMARY = simple("station_summary", StationSummaryDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, TrainStatusDisplaySource> TRAIN_STATUS = simple("train_status", TrainStatusDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, ObservedTrainNameSource> OBSERVED_TRAIN_NAME = simple("observed_train_name", ObservedTrainNameSource::new);
 
-	public static final RegistryEntry<AccumulatedItemCountDisplaySource> ACCUMULATE_ITEMS = simple("accumulate_items", AccumulatedItemCountDisplaySource::new);
-	public static final RegistryEntry<ItemThroughputDisplaySource> ITEM_THROUGHPUT = simple("item_throughput", ItemThroughputDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, AccumulatedItemCountDisplaySource> ACCUMULATE_ITEMS = simple("accumulate_items", AccumulatedItemCountDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, ItemThroughputDisplaySource> ITEM_THROUGHPUT = simple("item_throughput", ItemThroughputDisplaySource::new);
 
-	public static final RegistryEntry<ItemCountDisplaySource> COUNT_ITEMS = simple("count_items", ItemCountDisplaySource::new);
-	public static final RegistryEntry<ItemListDisplaySource> LIST_ITEMS = simple("list_items", ItemListDisplaySource::new);
-	public static final RegistryEntry<FluidAmountDisplaySource> COUNT_FLUIDS = simple("count_fluids", FluidAmountDisplaySource::new);
-	public static final RegistryEntry<FluidListDisplaySource> LIST_FLUIDS = simple("list_fluids", FluidListDisplaySource::new);
-	public static final RegistryEntry<PackageAddressDisplaySource> READ_PACKAGE_ADDRESS = simple("read_package_address", PackageAddressDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, ItemCountDisplaySource> COUNT_ITEMS = simple("count_items", ItemCountDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, ItemListDisplaySource> LIST_ITEMS = simple("list_items", ItemListDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, FluidAmountDisplaySource> COUNT_FLUIDS = simple("count_fluids", FluidAmountDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, FluidListDisplaySource> LIST_FLUIDS = simple("list_fluids", FluidListDisplaySource::new);
+	public static final RegistryEntry<DisplaySource, PackageAddressDisplaySource> READ_PACKAGE_ADDRESS = simple("read_package_address", PackageAddressDisplaySource::new);
 
-	public static final RegistryEntry<ComputerDisplaySource> COMPUTER = REGISTRATE.displaySource("computer", ComputerDisplaySource::new)
+	public static final RegistryEntry<DisplaySource, ComputerDisplaySource> COMPUTER = REGISTRATE.displaySource("computer", ComputerDisplaySource::new)
 		.onRegisterAfter(Registries.BLOCK_ENTITY_TYPE, source -> {
 			if (!Mods.COMPUTERCRAFT.isLoaded())
 				return;
@@ -96,8 +95,8 @@ public class AllDisplaySources {
 			List<String> types = List.of("wired_modem_full", "computer_normal", "computer_advanced", "computer_command");
 			for (String name : types) {
 				ResourceLocation id = Mods.COMPUTERCRAFT.rl(name);
-				if (ForgeRegistries.BLOCK_ENTITY_TYPES.containsKey(id)) {
-					BlockEntityType<?> type = ForgeRegistries.BLOCK_ENTITY_TYPES.getValue(id);
+				if (BuiltInRegistries.BLOCK_ENTITY_TYPE.containsKey(id)) {
+					BlockEntityType<?> type = BuiltInRegistries.BLOCK_ENTITY_TYPE.get(id);
 					DisplaySource.BY_BLOCK_ENTITY.add(type, source);
 				} else {
 					Create.LOGGER.warn("Could not find block entity type {}. Outdated compat?", id);
@@ -106,8 +105,8 @@ public class AllDisplaySources {
 		})
 		.register();
 
-	public static final Map<String, RegistryEntry<? extends DisplaySource>> LEGACY_NAMES = Util.make(() -> {
-		Map<String, RegistryEntry<? extends DisplaySource>> map = new HashMap<>();
+	public static final Map<String, RegistryEntry<DisplaySource, ? extends DisplaySource>> LEGACY_NAMES = Util.make(() -> {
+		Map<String, RegistryEntry<DisplaySource, ? extends DisplaySource>> map = new HashMap<>();
 		map.put("death_count_display_source", DEATH_COUNT);
 		map.put("scoreboard_display_source", SCOREBOARD);
 		map.put("enchant_power_display_source", ENCHANT_POWER);
@@ -152,7 +151,7 @@ public class AllDisplaySources {
 		return map;
 	});
 
-	private static <T extends DisplaySource> RegistryEntry<T> simple(String name, Supplier<T> supplier) {
+	private static <T extends DisplaySource> RegistryEntry<DisplaySource, T> simple(String name, Supplier<T> supplier) {
 		return REGISTRATE.displaySource(name, supplier).register();
 	}
 

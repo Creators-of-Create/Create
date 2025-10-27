@@ -1,6 +1,6 @@
 {
 	"parent": "create:block/track/obj_track",
-	"loader": "forge:obj",
+	"loader": "neoforge:obj",
 	"flip_v": true,
 	"model": "create:models/block/track/segment_right.obj"
 }

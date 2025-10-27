@@ -25,16 +25,18 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BeltDeployerCallbacks {
 
 	public static ProcessingResult onItemReceived(TransportedItemStack s, TransportedItemStackHandlerBehaviour i,
-		DeployerBlockEntity blockEntity) {
+												  DeployerBlockEntity blockEntity) {
 
 		if (blockEntity.getSpeed() == 0)
 			return ProcessingResult.PASS;
@@ -61,7 +63,7 @@ public class BeltDeployerCallbacks {
 	}
 
 	public static ProcessingResult whenItemHeld(TransportedItemStack s, TransportedItemStackHandlerBehaviour i,
-		DeployerBlockEntity blockEntity) {
+												DeployerBlockEntity blockEntity) {
 
 		if (blockEntity.getSpeed() == 0)
 			return ProcessingResult.PASS;
@@ -74,12 +76,12 @@ public class BeltDeployerCallbacks {
 		if (held.isEmpty())
 			return ProcessingResult.HOLD;
 
-		Recipe<?> recipe = blockEntity.getRecipe(s.stack);
-		if (recipe == null)
+		RecipeHolder<? extends Recipe<?>> recipeHolder = blockEntity.getRecipe(s.stack);
+		if (recipeHolder == null)
 			return ProcessingResult.PASS;
 
 		if (blockEntity.state == State.RETRACTING && blockEntity.timer == 1000) {
-			activate(s, i, blockEntity, recipe);
+			activate(s, i, blockEntity, recipeHolder.value());
 			return ProcessingResult.HOLD;
 		}
 
@@ -93,10 +95,10 @@ public class BeltDeployerCallbacks {
 	}
 
 	public static void activate(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler,
-		DeployerBlockEntity blockEntity, Recipe<?> recipe) {
+								DeployerBlockEntity blockEntity, Recipe<?> recipe) {
 
 		List<TransportedItemStack> collect =
-			RecipeApplier.applyRecipeOn(blockEntity.getLevel(), ItemHandlerHelper.copyStackWithSize(transported.stack, 1), recipe)
+			RecipeApplier.applyRecipeOn(blockEntity.getLevel(), transported.stack.copyWithCount(1), recipe, true)
 				.stream()
 				.map(stack -> {
 					TransportedItemStack copy = transported.copy();
@@ -113,13 +115,13 @@ public class BeltDeployerCallbacks {
 				.collect(Collectors.toList());
 
 		blockEntity.award(AllAdvancements.DEPLOYER);
-		
+
 		transported.clearFanProcessingData();
 
 		TransportedItemStack left = transported.copy();
 		blockEntity.player.spawnedItemEffects = transported.stack.copy();
 		left.stack.shrink(1);
-		ItemStack resultItem = null;
+		ItemStack resultItem;
 
 		if (collect.isEmpty()) {
 			resultItem = left.stack.copy();
@@ -130,21 +132,27 @@ public class BeltDeployerCallbacks {
 		}
 
 		ItemStack heldItem = blockEntity.player.getMainHandItem();
-		boolean unbreakable = heldItem.hasTag() && (
-				heldItem.getTag().getBoolean("Unbreakable") ||
-				heldItem.getTag().getString("Modifier").equals("forbidden_arcanus:eternal")); // Forbidden Arcanus Compat, See Creators-of-Create#6220
 		boolean keepHeld =
 			recipe instanceof ItemApplicationRecipe && ((ItemApplicationRecipe) recipe).shouldKeepHeldItem();
 
-		if (!unbreakable && !keepHeld) {
-			if (heldItem.isDamageableItem())
-				heldItem.hurtAndBreak(1, blockEntity.player,
-					s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
-			else
+		if (!keepHeld) {
+			if (heldItem.getMaxDamage() > 0) {
+				heldItem.hurtAndBreak(1, blockEntity.player, EquipmentSlot.MAINHAND);
+			} else {
+				Player player = blockEntity.player;
+				ItemStack leftover = heldItem.getCraftingRemainingItem();
 				heldItem.shrink(1);
+				if (heldItem.isEmpty()) {
+					player.setItemInHand(InteractionHand.MAIN_HAND, leftover);
+				} else {
+					if (!player.getInventory().add(leftover)) {
+						player.drop(leftover, false);
+					}
+				}
+			}
 		}
 
-		if (resultItem != null && !resultItem.isEmpty())
+		if (!resultItem.isEmpty())
 			awardAdvancements(blockEntity, resultItem);
 
 		BlockPos pos = blockEntity.getBlockPos();

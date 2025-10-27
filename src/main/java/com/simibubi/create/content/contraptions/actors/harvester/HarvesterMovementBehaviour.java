@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.actors.harvester;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.mixin.accessor.CropBlockAccessor;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -25,6 +26,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BushBlock; // TODO: 1.21.5-rc1+ change to VegetationBlock (https://github.com/neoforged/NeoForge/commit/9f6edae1894ad249a8719c4e1f14beda0fdedc72)
 import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.GrowingPlantBlock;
@@ -35,8 +37,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
-
-import net.minecraftforge.common.IPlantable;
+import net.neoforged.neoforge.common.SpecialPlantable;
 
 public class HarvesterMovementBehaviour implements MovementBehaviour {
 
@@ -152,7 +153,10 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 				return false;
 			}
 
-			if (state.getBlock() instanceof IPlantable)
+			// TODO: 1.21.5-rc1+ change to VegetationBlock (https://github.com/neoforged/NeoForge/commit/9f6edae1894ad249a8719c4e1f14beda0fdedc72)
+			if (state.getBlock() instanceof BushBlock)
+				return true;
+			if (state.getBlock() instanceof SpecialPlantable)
 				return true;
 		}
 
@@ -170,7 +174,11 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 
 		Block block = state.getBlock();
 		if (block instanceof CropBlock crop) {
-			return crop.getStateForAge(0);
+			BlockState newState = crop.getStateForAge(0);
+			if (!newState.is(block))
+				return newState;
+			IntegerProperty ageProperty = ((CropBlockAccessor) crop).create$callGetAgeProperty();
+			return state.setValue(ageProperty, 0);
 		}
 		if (block == Blocks.SWEET_BERRY_BUSH) {
 			return state.setValue(BlockStateProperties.AGE_3, Integer.valueOf(1));

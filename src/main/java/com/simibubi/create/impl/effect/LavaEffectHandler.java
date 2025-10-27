@@ -8,7 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class LavaEffectHandler implements OpenPipeEffectHandler {
 	@Override
@@ -18,7 +18,7 @@ public class LavaEffectHandler implements OpenPipeEffectHandler {
 
 		List<Entity> entities = level.getEntities((Entity) null, area, entity -> !entity.fireImmune());
 		for (Entity entity : entities) {
-			entity.setSecondsOnFire(3);
+			entity.igniteForSeconds(3);
 		}
 	}
 }

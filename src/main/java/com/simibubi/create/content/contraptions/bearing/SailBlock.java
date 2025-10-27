@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
@@ -24,6 +24,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -34,6 +35,7 @@ import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -71,39 +73,37 @@ public class SailBlock extends WrenchableDirectionalBlock {
 			.getOpposite());
 	}
 
-	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult ray) {
-		ItemStack heldItem = player.getItemInHand(hand);
 
+	@Override
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
 		if (!player.isShiftKeyDown() && player.mayBuild()) {
-			if (placementHelper.matchesItem(heldItem)) {
-				placementHelper.getOffset(player, world, state, pos, ray)
-					.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
-				return InteractionResult.SUCCESS;
+			if (placementHelper.matchesItem(stack)) {
+				placementHelper.getOffset(player, level, state, pos, hitResult)
+					.placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
+				return ItemInteractionResult.SUCCESS;
 			}
 		}
 
-		if (heldItem.getItem() instanceof ShearsItem) {
-			if (!world.isClientSide)
-				world.playSound(null, pos, SoundEvents.SHEEP_SHEAR, SoundSource.BLOCKS, 1.0f, 1.0f);
-				applyDye(state, world, pos, ray.getLocation(), null);
-			return InteractionResult.SUCCESS;
+		if (stack.getItem() instanceof ShearsItem) {
+			if (!level.isClientSide)
+				level.playSound(null, pos, SoundEvents.SHEEP_SHEAR, SoundSource.BLOCKS, 1.0f, 1.0f);
+			applyDye(state, level, pos, hitResult.getLocation(), null);
+			return ItemInteractionResult.SUCCESS;
 		}
 
 		if (frame)
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		DyeColor color = DyeColor.getColor(heldItem);
+		DyeColor color = DyeColor.getColor(stack);
 		if (color != null) {
-			if (!world.isClientSide)
-				world.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0f, 1.1f - world.random.nextFloat() * .2f);
-				applyDye(state, world, pos, ray.getLocation(), color);
-			return InteractionResult.SUCCESS;
+			if (!level.isClientSide)
+				level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0f, 1.1f - level.random.nextFloat() * .2f);
+			applyDye(state, level, pos, hitResult.getLocation(), color);
+			return ItemInteractionResult.SUCCESS;
 		}
 
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	public void applyDye(BlockState state, Level world, BlockPos pos, Vec3 hit, @Nullable DyeColor color) {
@@ -182,12 +182,12 @@ public class SailBlock extends WrenchableDirectionalBlock {
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
-		Player player) {
-		ItemStack pickBlock = super.getCloneItemStack(state, target, world, pos, player);
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos,
+									   Player player) {
+		ItemStack pickBlock = super.getCloneItemStack(state, target, level, pos, player);
 		if (pickBlock.isEmpty())
 			return AllBlocks.SAIL.get()
-				.getCloneItemStack(state, target, world, pos, player);
+				.getCloneItemStack(state, target, level, pos, player);
 		return pickBlock;
 	}
 
@@ -216,7 +216,7 @@ public class SailBlock extends WrenchableDirectionalBlock {
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

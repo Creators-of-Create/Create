@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.item.CountedItemStackList;
 import net.createmod.catnip.data.IntAttached;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class ItemListDisplaySource extends ValueListDisplaySource {
 

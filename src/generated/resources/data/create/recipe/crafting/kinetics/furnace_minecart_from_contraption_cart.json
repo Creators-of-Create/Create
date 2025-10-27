@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "create:furnace_minecart_contraption"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:furnace_minecart"
+  }
+}

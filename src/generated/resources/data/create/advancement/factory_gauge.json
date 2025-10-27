@@ -1,0 +1,27 @@
+{
+  "parent": "create:table_cloth_shop",
+  "criteria": {
+    "0": {
+      "trigger": "create:factory_gauge_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.factory_gauge.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:factory_gauge"
+    },
+    "title": {
+      "translate": "advancement.create.factory_gauge"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

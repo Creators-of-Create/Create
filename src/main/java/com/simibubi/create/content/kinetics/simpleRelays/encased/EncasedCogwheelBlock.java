@@ -30,10 +30,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -67,13 +67,13 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
 		if (target instanceof BlockHitResult)
 			return ((BlockHitResult) target).getDirection()
-				.getAxis() != getRotationAxis(state)
+					.getAxis() != getRotationAxis(state)
 				? isLarge ? AllBlocks.LARGE_COGWHEEL.asStack() : AllBlocks.COGWHEEL.asStack()
 				: getCasing().asItem().getDefaultInstance();
-		return super.getCloneItemStack(state, target, world, pos, player);
+		return super.getCloneItemStack(state, target, level, pos, player);
 	}
 
 	@Override
@@ -127,7 +127,7 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 		if (context.getLevel().isClientSide)
 			return InteractionResult.SUCCESS;
 		context.getLevel()
-			.levelEvent(2001, context.getClickedPos(), Block.getId(state));
+			.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, context.getClickedPos(), Block.getId(state));
 		KineticBlockEntity.switchToBlockState(context.getLevel(), context.getClickedPos(),
 			(isLarge ? AllBlocks.LARGE_COGWHEEL : AllBlocks.COGWHEEL).getDefaultState()
 				.setValue(AXIS, state.getValue(AXIS)));

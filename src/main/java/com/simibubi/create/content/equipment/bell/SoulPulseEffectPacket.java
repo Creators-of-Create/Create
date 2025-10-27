@@ -1,43 +1,33 @@
 package com.simibubi.create.content.equipment.bell;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-public class SoulPulseEffectPacket extends SimplePacketBase {
+public record SoulPulseEffectPacket(BlockPos pos, int distance, boolean canOverlap) implements ClientboundPacketPayload {
+	public static final StreamCodec<ByteBuf, SoulPulseEffectPacket> STREAM_CODEC = StreamCodec.composite(
+	        BlockPos.STREAM_CODEC, SoulPulseEffectPacket::pos,
+			ByteBufCodecs.INT, SoulPulseEffectPacket::distance,
+			ByteBufCodecs.BOOL, SoulPulseEffectPacket::canOverlap,
+	        SoulPulseEffectPacket::new
+	);
 
-	public BlockPos pos;
-	public int distance;
-	public boolean canOverlap;
-
-	public SoulPulseEffectPacket(BlockPos pos, int distance, boolean overlaps) {
-		this.pos = pos;
-		this.distance = distance;
-		this.canOverlap = overlaps;
-	}
-
-	public SoulPulseEffectPacket(FriendlyByteBuf buffer) {
-		pos = buffer.readBlockPos();
-		distance = buffer.readInt();
-		canOverlap = buffer.readBoolean();
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		CreateClient.SOUL_PULSE_EFFECT_HANDLER.addPulse(new SoulPulseEffect(pos, distance, canOverlap));
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeBlockPos(pos);
-		buffer.writeInt(distance);
-		buffer.writeBoolean(canOverlap);
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.SOUL_PULSE;
 	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			CreateClient.SOUL_PULSE_EFFECT_HANDLER.addPulse(new SoulPulseEffect(pos, distance, canOverlap));
-		});
-		return true;
-	}
-
 }

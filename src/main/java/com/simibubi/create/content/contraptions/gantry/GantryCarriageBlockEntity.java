@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -30,7 +31,7 @@ public class GantryCarriageBlockEntity extends KineticBlockEntity implements IDi
 	public GantryCarriageBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 		super(typeIn, pos, state);
 	}
-	
+
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
@@ -111,7 +112,7 @@ public class GantryCarriageBlockEntity extends KineticBlockEntity implements IDi
 		if (ContraptionCollider.isCollidingWithWorld(level, contraption, worldPosition.relative(movementDirection),
 			movementDirection))
 			return;
-		
+
 		if (contraption.containsBlockBreakers())
 			award(AllAdvancements.CONTRAPTION_ACTORS);
 
@@ -129,15 +130,15 @@ public class GantryCarriageBlockEntity extends KineticBlockEntity implements IDi
 	}
 
 	@Override
-	protected void write(CompoundTag compound, boolean clientPacket) {
-		AssemblyException.write(compound, lastException);
-		super.write(compound, clientPacket);
+	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		AssemblyException.write(compound, registries, lastException);
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		lastException = AssemblyException.read(compound);
-		super.read(compound, clientPacket);
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		lastException = AssemblyException.read(compound, registries);
+		super.read(compound, registries, clientPacket);
 	}
 
 	@Override

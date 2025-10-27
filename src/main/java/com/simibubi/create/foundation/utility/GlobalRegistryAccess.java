@@ -4,20 +4,19 @@ import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.MinecraftServer;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 public final class GlobalRegistryAccess {
 	private static Supplier<@Nullable RegistryAccess> supplier;
 
 	static {
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> supplier = () -> {
+		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> supplier = () -> {
 			ClientPacketListener packetListener = Minecraft.getInstance().getConnection();
 			if (packetListener == null) {
 				return null;

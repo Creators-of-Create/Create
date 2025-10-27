@@ -1,13 +1,10 @@
 package com.simibubi.create.foundation.events;
 
-import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.elevator.ElevatorControlsHandler;
 import com.simibubi.create.content.contraptions.wrench.RadialWrenchHandler;
 import com.simibubi.create.content.equipment.toolbox.ToolboxHandlerClient;
-import com.simibubi.create.content.equipment.wrench.IWrenchable;
-import com.simibubi.create.content.equipment.wrench.WrenchItem;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorConnectionHandler;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorInteractionHandler;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainPackageInteractionHandler;
@@ -18,15 +15,17 @@ import com.simibubi.create.content.trains.TrainHUD;
 import com.simibubi.create.content.trains.entity.TrainRelocator;
 import com.simibubi.create.content.trains.track.CurvedTrackInteraction;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.common.Tags;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class InputEvents {
@@ -49,7 +48,7 @@ public class InputEvents {
 		if (Minecraft.getInstance().screen != null)
 			return;
 
-		double delta = event.getScrollDelta();
+		double delta = event.getScrollDeltaY();
 //		CollisionDebugger.onScroll(delta);
 		boolean cancelled = CreateClient.SCHEMATIC_HANDLER.mouseScrolled(delta)
 			|| CreateClient.SCHEMATIC_AND_QUILL_HANDLER.mouseScrolled(delta) || TrainHUD.onScroll(delta)
@@ -115,16 +114,16 @@ public class InputEvents {
 			event.setCanceled(true);
 			return;
 		}
-		
+
 		if (mc.player != null) {
 			ItemStack itemInHand = mc.player.getItemInHand(event.getHand());
-			if (AllItemTags.WRENCH.matches(itemInHand))
+			if (itemInHand.is(Tags.Items.TOOLS_WRENCH))
 				return;
 			if (itemInHand.is(Items.CHAIN) || AllBlocks.PACKAGE_FROGPORT.isIn(itemInHand))
 				return;
 		}
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> {
 			if (ChainPackageInteractionHandler.onUse())
 				event.setCanceled(true);
 		});

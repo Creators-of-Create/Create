@@ -16,6 +16,8 @@ import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
 import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.tags.BlockTags;
@@ -26,7 +28,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -36,13 +38,12 @@ import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.material.Fluids;
 
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 @GameTestGroup(path = "fluids")
 public class TestFluids {
@@ -216,8 +217,8 @@ public class TestFluids {
 
 	@GameTest(template = "waterwheel_materials", timeoutTicks = CreateGameTestHelper.FIFTEEN_SECONDS)
 	public static void waterwheelMaterials(CreateGameTestHelper helper) {
-		List<Item> planks = ForgeRegistries.BLOCKS.tags().getTag(BlockTags.PLANKS).stream()
-				.map(ItemLike::asItem).collect(Collectors.toCollection(ArrayList::new));
+		List<Item> planks = BuiltInRegistries.BLOCK.getOrCreateTag(BlockTags.PLANKS).stream()
+				.map(Holder::value).map(ItemLike::asItem).collect(Collectors.toCollection(ArrayList::new));
 		List<BlockPos> chests = List.of(new BlockPos(6, 4, 2), new BlockPos(6, 4, 3));
 		List<BlockPos> deployers = chests.stream().map(pos -> pos.below(2)).toList();
 		helper.runAfterDelay(3, () -> chests.forEach(chest ->
@@ -232,16 +233,16 @@ public class TestFluids {
 		helper.succeedWhen(() -> {
 			Item plank = planks.get(0);
 			if (!(plank instanceof BlockItem blockItem))
-				throw new GameTestAssertException(ForgeRegistries.ITEMS.getKey(plank) + " is not a BlockItem");
+				throw new GameTestAssertException(BuiltInRegistries.ITEM.getKey(plank) + " is not a BlockItem");
 			Block block = blockItem.getBlock();
 
 			WaterWheelBlockEntity smallWheelBe = helper.getBlockEntity(AllBlockEntityTypes.WATER_WHEEL.get(), smallWheel);
 			if (!smallWheelBe.material.is(block))
-				helper.fail("Small waterwheel has not consumed " + ForgeRegistries.ITEMS.getKey(plank));
+				helper.fail("Small waterwheel has not consumed " + BuiltInRegistries.ITEM.getKey(plank));
 
 			WaterWheelBlockEntity largeWheelBe = helper.getBlockEntity(AllBlockEntityTypes.LARGE_WATER_WHEEL.get(), largeWheel);
 			if (!largeWheelBe.material.is(block))
-				helper.fail("Large waterwheel has not consumed " + ForgeRegistries.ITEMS.getKey(plank));
+				helper.fail("Large waterwheel has not consumed " + BuiltInRegistries.ITEM.getKey(plank));
 
 			// next item
 			planks.remove(0);
@@ -346,7 +347,7 @@ public class TestFluids {
 		BlockPos farmland = new BlockPos(3, 2, 3);
 		BlockPos depot = new BlockPos(5, 2, 1);
 		helper.pullLever(2, 3, 2);
-		ItemStack waterBottle = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+		ItemStack waterBottle = PotionContents.createItemStack(Items.POTION, Potions.WATER);
 
 		helper.succeedWhen(() -> {
 			// lava

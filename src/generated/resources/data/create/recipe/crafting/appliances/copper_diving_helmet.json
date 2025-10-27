@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "tag": "c:glass_blocks"
+    },
+    "P": {
+      "tag": "c:ingots/copper"
+    }
+  },
+  "pattern": [
+    "PPP",
+    "PGP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:copper_diving_helmet"
+  }
+}

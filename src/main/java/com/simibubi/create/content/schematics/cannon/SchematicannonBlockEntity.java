@@ -4,10 +4,14 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
@@ -28,15 +32,21 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CSchematics;
 
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.codecs.CatnipCodecUtils;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap.Builder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -55,13 +65,13 @@ import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.EmptyHandler;
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.wrapper.EmptyItemHandler;
 
 public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuProvider {
 
@@ -86,7 +96,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	private boolean blockSkipped;
 
 	public BlockPos previousTarget;
-	public LinkedHashSet<LazyOptional<IItemHandler>> attachedInventories;
+	public LinkedHashSet<IItemHandler> attachedInventories;
 	public List<LaunchedItem> flyingBlocks;
 	public MaterialChecklist checklist;
 
@@ -134,9 +144,9 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 
 			BlockEntity blockEntity = level.getBlockEntity(worldPosition.relative(facing));
 			if (blockEntity != null) {
-				LazyOptional<IItemHandler> capability =
-					blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, facing.getOpposite());
-				if (capability.isPresent()) {
+				IItemHandler capability =
+					level.getCapability(Capabilities.ItemHandler.BLOCK, blockEntity.getBlockPos(), facing.getOpposite());
+				if (capability != null) {
 					attachedInventories.add(capability);
 				}
 			}
@@ -144,9 +154,9 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		if (!clientPacket) {
-			inventory.deserializeNBT(compound.getCompound("Inventory"));
+			inventory.deserializeNBT(registries, compound.getCompound("Inventory"));
 		}
 
 		// Gui information
@@ -160,27 +170,29 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		blocksToPlace = compound.getInt("AmountToPlace");
 
 		missingItem = null;
-		if (compound.contains("MissingItem"))
-			missingItem = ItemStack.of(compound.getCompound("MissingItem"));
+		if (compound.contains("MissingItem")) {
+			ItemStack.parse(registries, compound.getCompound("MissingItem")).ifPresent(i -> missingItem = i);
+		}
 
 		// Settings
-		CompoundTag options = compound.getCompound("Options");
-		replaceMode = options.getInt("ReplaceMode");
-		skipMissing = options.getBoolean("SkipMissing");
-		replaceBlockEntities = options.getBoolean("ReplaceTileEntities");
+		SchematicannonOptions options = CatnipCodecUtils.decode(SchematicannonOptions.CODEC, registries, compound.getCompound("Options"))
+			.orElse(new SchematicannonOptions(2, true, false));
+		replaceMode = options.replaceMode;
+		skipMissing = options.skipMissing;
+		replaceBlockEntities = options.replaceBlockEntities;
 
 		// Printer & Flying Blocks
 		if (compound.contains("Printer"))
 			printer.fromTag(compound.getCompound("Printer"), clientPacket);
 		if (compound.contains("FlyingBlocks"))
-			readFlyingBlocks(compound);
+			readFlyingBlocks(compound, registries);
 
 		defaultYaw = compound.getFloat("DefaultYaw");
 
-		super.read(compound, clientPacket);
+		super.read(compound, registries, clientPacket);
 	}
 
-	protected void readFlyingBlocks(CompoundTag compound) {
+	protected void readFlyingBlocks(CompoundTag compound, HolderLookup.Provider registries) {
 		ListTag tagBlocks = compound.getList("FlyingBlocks", 10);
 		if (tagBlocks.isEmpty())
 			flyingBlocks.clear();
@@ -189,7 +201,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 
 		for (int i = 0; i < tagBlocks.size(); i++) {
 			CompoundTag c = tagBlocks.getCompound(i);
-			LaunchedItem launched = LaunchedItem.fromNBT(c, blockHolderGetter());
+			LaunchedItem launched = LaunchedItem.fromNBT(c, registries, blockHolderGetter());
 			BlockPos readBlockPos = launched.target;
 
 			// Always write to Server block entity
@@ -216,9 +228,9 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		if (!clientPacket) {
-			compound.put("Inventory", inventory.serializeNBT());
+			compound.put("Inventory", inventory.serializeNBT(registries));
 			if (state == State.RUNNING) {
 				compound.putBoolean("Running", true);
 			}
@@ -234,13 +246,10 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		compound.putInt("AmountToPlace", blocksToPlace);
 
 		if (missingItem != null)
-			compound.put("MissingItem", missingItem.serializeNBT());
+			compound.put("MissingItem", missingItem.saveOptional(registries));
 
 		// Settings
-		CompoundTag options = new CompoundTag();
-		options.putInt("ReplaceMode", replaceMode);
-		options.putBoolean("SkipMissing", skipMissing);
-		options.putBoolean("ReplaceTileEntities", replaceBlockEntities);
+		Tag options = CatnipCodecUtils.encode(SchematicannonOptions.CODEC, registries, new SchematicannonOptions(replaceMode, skipMissing, replaceBlockEntities)).orElseThrow();
 		compound.put("Options", options);
 
 		// Printer & Flying Blocks
@@ -250,12 +259,12 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 
 		ListTag tagFlyingBlocks = new ListTag();
 		for (LaunchedItem b : flyingBlocks)
-			tagFlyingBlocks.add(b.serializeNBT());
+			tagFlyingBlocks.add(b.serializeNBT(registries));
 		compound.put("FlyingBlocks", tagFlyingBlocks);
 
 		compound.putFloat("DefaultYaw", defaultYaw);
 
-		super.write(compound, clientPacket);
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
@@ -434,15 +443,14 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	}
 
 	protected void initializePrinter(ItemStack blueprint) {
-		if (!blueprint.hasTag()) {
+		if (!blueprint.has(AllDataComponents.SCHEMATIC_ANCHOR)) {
 			state = State.STOPPED;
 			statusMsg = "schematicInvalid";
 			sendUpdate = true;
 			return;
 		}
 
-		if (!blueprint.getTag()
-			.getBoolean("Deployed")) {
+		if (!blueprint.getOrDefault(AllDataComponents.SCHEMATIC_DEPLOYED, false)) {
 			state = State.STOPPED;
 			statusMsg = "schematicNotPlaced";
 			sendUpdate = true;
@@ -497,30 +505,31 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		if (hasCreativeCrate)
 			return true;
 
-		attachedInventories.removeIf(cap -> !cap.isPresent());
+		attachedInventories.removeIf(Objects::isNull);
 
 		ItemUseType usage = required.usage;
 
 		// Find and apply damage
 		if (usage == ItemUseType.DAMAGE) {
-			for (LazyOptional<IItemHandler> cap : attachedInventories) {
-				IItemHandler itemHandler = cap.orElse(EmptyHandler.INSTANCE);
-				for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
-					ItemStack extractItem = itemHandler.extractItem(slot, 1, true);
+			for (IItemHandler cap : attachedInventories) {
+				if (cap == null)
+					cap = EmptyItemHandler.INSTANCE;
+				for (int slot = 0; slot < cap.getSlots(); slot++) {
+					ItemStack extractItem = cap.extractItem(slot, 1, true);
 					if (!required.matches(extractItem))
 						continue;
 					if (!extractItem.isDamageableItem())
 						continue;
 
 					if (!simulate) {
-						ItemStack stack = itemHandler.extractItem(slot, 1, false);
+						ItemStack stack = cap.extractItem(slot, 1, false);
 						stack.setDamageValue(stack.getDamageValue() + 1);
 						if (stack.getDamageValue() <= stack.getMaxDamage()) {
-							if (itemHandler.getStackInSlot(slot)
+							if (cap.getStackInSlot(slot)
 								.isEmpty())
-								itemHandler.insertItem(slot, stack, false);
+								cap.insertItem(slot, stack, false);
 							else
-								ItemHandlerHelper.insertItem(itemHandler, stack, false);
+								ItemHandlerHelper.insertItem(cap, stack, false);
 						}
 					}
 
@@ -534,10 +543,11 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		// Find and remove
 		boolean success = false;
 		int amountFound = 0;
-		for (LazyOptional<IItemHandler> cap : attachedInventories) {
-			IItemHandler itemHandler = cap.orElse(EmptyHandler.INSTANCE);
+		for (IItemHandler cap : attachedInventories) {
+			if (cap == null)
+				cap = EmptyItemHandler.INSTANCE;
 			amountFound += ItemHelper
-				.extract(itemHandler, required::matches, ExtractionCountMode.UPTO,
+				.extract(cap, required::matches, ExtractionCountMode.UPTO,
 					required.stack.getCount(), true)
 				.getCount();
 
@@ -550,10 +560,11 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 
 		if (!simulate && success) {
 			amountFound = 0;
-			for (LazyOptional<IItemHandler> cap : attachedInventories) {
-				IItemHandler itemHandler = cap.orElse(EmptyHandler.INSTANCE);
+			for (IItemHandler cap : attachedInventories) {
+				if (cap == null)
+					cap = EmptyItemHandler.INSTANCE;
 				amountFound += ItemHelper
-					.extract(itemHandler, required::matches, ExtractionCountMode.UPTO,
+					.extract(cap, required::matches, ExtractionCountMode.UPTO,
 						required.stack.getCount(), false)
 					.getCount();
 				if (amountFound < required.stack.getCount())
@@ -666,8 +677,12 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 				.shrink(1);
 		else {
 			boolean externalGunpowderFound = false;
-			for (LazyOptional<IItemHandler> cap : attachedInventories) {
-				IItemHandler itemHandler = cap.orElse(EmptyHandler.INSTANCE);
+			for (IItemHandler cap : attachedInventories) {
+				IItemHandler itemHandler = cap;
+
+				if (itemHandler == null)
+					itemHandler = EmptyItemHandler.INSTANCE;
+
 				if (ItemHelper.extract(itemHandler, stack -> inventory.isItemValid(4, stack), 1, false)
 					.isEmpty())
 					continue;
@@ -791,7 +806,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 			return;
 		}
 
-		CompoundTag data = BlockHelper.prepareBlockEntityData(blockState, blockEntity);
+		CompoundTag data = BlockHelper.prepareBlockEntityData(level, blockState, blockEntity);
 		launchBlock(target, icon, blockState, data);
 	}
 
@@ -819,11 +834,6 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		AllSoundEvents.SCHEMATICANNON_LAUNCH_BLOCK.playOnServer(level, worldPosition);
 	}
 
-	public void sendToMenu(FriendlyByteBuf buffer) {
-		buffer.writeBlockPos(getBlockPos());
-		buffer.writeNbt(getUpdateTag());
-	}
-
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
 		return SchematicannonMenu.create(id, inv, this);
@@ -847,13 +857,12 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 
 		checklist.gathered.clear();
 		findInventories();
-		for (LazyOptional<IItemHandler> cap : attachedInventories) {
-			if (!cap.isPresent())
+		for (IItemHandler cap : attachedInventories) {
+			if (cap == null)
 				continue;
-			IItemHandler inventory = cap.orElse(EmptyHandler.INSTANCE);
-			for (int slot = 0; slot < inventory.getSlots(); slot++) {
-				ItemStack stackInSlot = inventory.getStackInSlot(slot);
-				if (inventory.extractItem(slot, 1, true)
+			for (int slot = 0; slot < cap.getSlots(); slot++) {
+				ItemStack stackInSlot = cap.getStackInSlot(slot);
+				if (cap.extractItem(slot, 1, true)
 					.isEmpty())
 					continue;
 				checklist.collect(stackInSlot);
@@ -874,11 +883,41 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AABB getRenderBoundingBox() {
-		return INFINITE_EXTENT_AABB;
+		return AABB.INFINITE;
+	}
+
+	@Override
+	protected void applyImplicitComponents(DataComponentInput componentInput) {
+		SchematicannonOptions options = componentInput.getOrDefault(AllDataComponents.SCHEMATICANNON_OPTIONS,
+				new SchematicannonOptions(2, true, false));
+		replaceMode = options.replaceMode;
+		skipMissing = options.skipMissing;
+		replaceBlockEntities = options.replaceBlockEntities;
+	}
+
+	@Override
+	protected void collectImplicitComponents(Builder components) {
+		components.set(AllDataComponents.SCHEMATICANNON_OPTIONS,
+			new SchematicannonOptions(replaceMode, skipMissing, replaceBlockEntities));
 	}
 
 	public enum State {
 		STOPPED, PAUSED, RUNNING;
+	}
+
+	public record SchematicannonOptions(int replaceMode, boolean skipMissing, boolean replaceBlockEntities) {
+		public static final Codec<SchematicannonOptions> CODEC = RecordCodecBuilder.create(i -> i.group(
+				Codec.INT.fieldOf("replace_mode").forGetter(SchematicannonOptions::replaceMode),
+				Codec.BOOL.fieldOf("skip_missing").forGetter(SchematicannonOptions::skipMissing),
+				Codec.BOOL.fieldOf("replace_block_entities").forGetter(SchematicannonOptions::replaceBlockEntities)
+		).apply(i, SchematicannonOptions::new));
+
+		public static final StreamCodec<ByteBuf, SchematicannonOptions> STREAM_CODEC = StreamCodec.composite(
+				ByteBufCodecs.INT, SchematicannonOptions::replaceMode,
+				ByteBufCodecs.BOOL, SchematicannonOptions::skipMissing,
+				ByteBufCodecs.BOOL, SchematicannonOptions::replaceBlockEntities,
+				SchematicannonOptions::new
+		);
 	}
 
 }

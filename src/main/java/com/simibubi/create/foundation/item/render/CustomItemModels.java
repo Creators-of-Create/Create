@@ -9,9 +9,10 @@ import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.item.Items;
 
 public class CustomItemModels {
 
@@ -38,8 +39,8 @@ public class CustomItemModels {
 	private void loadEntries() {
 		finalModelFuncs.clear();
 		modelFuncs.asMap().forEach((location, funcList) -> {
-			Item item = ForgeRegistries.ITEMS.getValue(location);
-			if (item == null) {
+			Item item = BuiltInRegistries.ITEM.get(location);
+			if (item == Items.AIR) {
 				return;
 			}
 

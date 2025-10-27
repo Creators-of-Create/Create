@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.mounted;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.redstone.rail.ControllerRailBlock;
@@ -28,8 +28,8 @@ public class CartAssemblerBlockItem extends BlockItem {
 		super(block, properties);
 	}
 
+	@NotNull
 	@Override
-	@Nonnull
 	public InteractionResult useOn(UseOnContext context) {
 		if (tryPlaceAssembler(context)) {
 			context.getLevel()

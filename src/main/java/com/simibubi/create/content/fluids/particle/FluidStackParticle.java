@@ -1,5 +1,9 @@
 package com.simibubi.create.content.fluids.particle;
 
+import net.minecraft.core.particles.ColorParticleOption;
+
+import org.jetbrains.annotations.NotNull;
+
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.fluids.potion.PotionFluid;
 
@@ -11,14 +15,14 @@ import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class FluidStackParticle extends TextureSheetParticle {
 	private final float uo;
 	private final float vo;
-	private FluidStack fluid;
-	private IClientFluidTypeExtensions clientFluid;
+	private final FluidStack fluid;
+	private final IClientFluidTypeExtensions clientFluid;
 
 	public static FluidStackParticle create(ParticleType<FluidParticleData> type, ClientLevel world, FluidStack fluid,
 		double x, double y, double z, double vx, double vy, double vz) {
@@ -71,19 +75,19 @@ public class FluidStackParticle extends TextureSheetParticle {
 	}
 
 	protected float getU0() {
-		return this.sprite.getU((double) ((this.uo + 1.0F) / 4.0F * 16.0F));
+		return this.sprite.getU((this.uo + 1.0F) / 4.0F);
 	}
 
 	protected float getU1() {
-		return this.sprite.getU((double) (this.uo / 4.0F * 16.0F));
+		return this.sprite.getU(this.uo / 4.0F);
 	}
 
 	protected float getV0() {
-		return this.sprite.getV((double) (this.vo / 4.0F * 16.0F));
+		return this.sprite.getV(this.vo / 4.0F);
 	}
 
 	protected float getV1() {
-		return this.sprite.getV((double) ((this.vo + 1.0F) / 4.0F * 16.0F));
+		return this.sprite.getV((this.vo + 1.0F) / 4.0F);
 	}
 
 	@Override
@@ -99,8 +103,7 @@ public class FluidStackParticle extends TextureSheetParticle {
 			return;
 
 		Color color = new Color(clientFluid.getTintColor(fluid));
-		level.addParticle(ParticleTypes.ENTITY_EFFECT, x, y, z, color.getRedAsFloat(), color.getGreenAsFloat(),
-			color.getBlueAsFloat());
+		level.addParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, color.getRedAsFloat(), color.getGreenAsFloat(), color.getBlueAsFloat()), x, y, z, 0, 0, 0);
 	}
 
 	protected boolean canEvaporate() {
@@ -108,7 +111,7 @@ public class FluidStackParticle extends TextureSheetParticle {
 	}
 
 	@Override
-	public ParticleRenderType getRenderType() {
+	public @NotNull ParticleRenderType getRenderType() {
 		return ParticleRenderType.TERRAIN_SHEET;
 	}
 

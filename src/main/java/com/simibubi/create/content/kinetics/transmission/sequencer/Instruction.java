@@ -1,14 +1,24 @@
 package com.simibubi.create.content.kinetics.transmission.sequencer;
 
+import java.util.List;
 import java.util.Vector;
 
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 
+import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 public class Instruction {
+	public static final StreamCodec<ByteBuf, Instruction> STREAM_CODEC = StreamCodec.composite(
+			SequencerInstructions.STREAM_CODEC, instruction -> instruction.instruction,
+			InstructionSpeedModifiers.STREAM_CODEC, instruction -> instruction.speedModifier,
+			ByteBufCodecs.VAR_INT, instruction -> instruction.value,
+			Instruction::new
+	);
 
 	SequencerInstructions instruction;
 	InstructionSpeedModifiers speedModifier;
@@ -98,7 +108,7 @@ public class Instruction {
 		return instruction == SequencerInstructions.AWAIT ? OnIsPoweredResult.CONTINUE : OnIsPoweredResult.NOTHING;
 	}
 
-	public static ListTag serializeAll(Vector<Instruction> instructions) {
+	public static ListTag serializeAll(List<Instruction> instructions) {
 		ListTag list = new ListTag();
 		instructions.forEach(i -> list.add(i.serialize()));
 		return list;

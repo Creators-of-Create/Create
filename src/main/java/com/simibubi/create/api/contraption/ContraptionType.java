@@ -2,7 +2,7 @@ package com.simibubi.create.api.contraption;
 
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllContraptionTypes;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
@@ -14,11 +14,10 @@ import net.minecraft.tags.TagKey;
 
 public final class ContraptionType {
 	public final Supplier<? extends Contraption> factory;
-	public final Holder.Reference<ContraptionType> holder;
+	public final Holder.Reference<ContraptionType> holder = CreateBuiltInRegistries.CONTRAPTION_TYPE.createIntrusiveHolder(this);
 
 	public ContraptionType(Supplier<? extends Contraption> factory) {
 		this.factory = factory;
-		this.holder = CreateBuiltInRegistries.CONTRAPTION_TYPE.createIntrusiveHolder(this);
 	}
 
 	public boolean is(TagKey<ContraptionType> tag) {

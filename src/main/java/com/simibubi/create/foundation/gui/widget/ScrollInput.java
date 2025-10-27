@@ -124,19 +124,19 @@ public class ScrollInput extends AbstractSimiWidget {
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+	public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
 		if (inverted)
-			delta *= -1;
+			pScrollY *= -1;
 
 		StepContext context = new StepContext();
 		context.control = AllKeys.ctrlDown();
 		context.shift = AllKeys.shiftDown();
 		context.currentValue = state;
-		context.forward = delta > 0;
+		context.forward = pScrollY > 0;
 
 		int priorState = state;
 		boolean shifted = AllKeys.shiftDown();
-		int step = (int) Math.signum(delta) * this.step.apply(context);
+		int step = (int) Math.signum(pScrollY) * this.step.apply(context);
 
 		state += step;
 		if (shifted)

@@ -3,10 +3,10 @@ package com.simibubi.create.content.logistics.itemHatch;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.block.IBE;
@@ -20,7 +20,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -40,14 +40,16 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+
+import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.common.Tags.Items;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class ItemHatchBlock extends HorizontalDirectionalBlock
 	implements IBE<ItemHatchBlockEntity>, IWrenchable, ProperWaterloggedBlock {
+	public static final MapCodec<ItemHatchBlock> CODEC = simpleCodec(ItemHatchBlock::new);
 
 	public static final BooleanProperty OPEN = BooleanProperty.create("open");
 
@@ -90,32 +92,30 @@ public class ItemHatchBlock extends HorizontalDirectionalBlock
 	}
 
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
-		if (pLevel.isClientSide())
-			return InteractionResult.SUCCESS;
-		if (pPlayer instanceof FakePlayer)
-			return InteractionResult.SUCCESS;
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (level.isClientSide())
+			return ItemInteractionResult.SUCCESS;
+		if (player instanceof FakePlayer)
+			return ItemInteractionResult.SUCCESS;
 
-		BlockEntity blockEntity = pLevel.getBlockEntity(pPos.relative(pState.getValue(FACING)));
+		BlockEntity blockEntity = level.getBlockEntity(pos.relative(state.getValue(FACING)));
 		if (blockEntity == null)
-			return InteractionResult.FAIL;
-		LazyOptional<IItemHandler> optional = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER);
-		IItemHandler targetInv = optional.orElse(null);
+			return ItemInteractionResult.FAIL;
+		IItemHandler targetInv = level.getCapability(ItemHandler.BLOCK, blockEntity.getBlockPos(), null);
 		if (targetInv == null)
-			return InteractionResult.FAIL;
+			return ItemInteractionResult.FAIL;
 
-		FilteringBehaviour filter = BlockEntityBehaviour.get(pLevel, pPos, FilteringBehaviour.TYPE);
+		FilteringBehaviour filter = BlockEntityBehaviour.get(level, pos, FilteringBehaviour.TYPE);
 		if (filter == null)
-			return InteractionResult.FAIL;
+			return ItemInteractionResult.FAIL;
 
-		Inventory inventory = pPlayer.getInventory();
+		Inventory inventory = player.getInventory();
 		List<ItemStack> failedInsertions = new ArrayList<>();
 		boolean anyInserted = false;
-		boolean depositItemInHand = !pPlayer.isShiftKeyDown();
+		boolean depositItemInHand = !player.isShiftKeyDown();
 
-		if (!depositItemInHand && AllItemTags.WRENCH.matches(pPlayer.getItemInHand(pHand)))
-			return InteractionResult.PASS;
+		if (!depositItemInHand && stack.is(Items.TOOLS_WRENCH))
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
 		for (int i = 0; i < inventory.items.size(); i++) {
 			if (Inventory.isHotbarSlot(i) != depositItemInHand)
@@ -148,16 +148,15 @@ public class ItemHatchBlock extends HorizontalDirectionalBlock
 		failedInsertions.forEach(inventory::placeItemBackInInventory);
 
 		if (!anyInserted)
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 
-		AllSoundEvents.ITEM_HATCH.playOnServer(pLevel, pPos);
-		pLevel.setBlockAndUpdate(pPos, pState.setValue(OPEN, true));
-		pLevel.scheduleTick(pPos, this, 10);
+		AllSoundEvents.ITEM_HATCH.playOnServer(level, pos);
+		level.setBlockAndUpdate(pos, state.setValue(OPEN, true));
+		level.scheduleTick(pos, this, 10);
 
 		CreateLang.translate(depositItemInHand ? "item_hatch.deposit_item" : "item_hatch.deposit_inventory")
-			.sendStatus(pPlayer);
-
-		return InteractionResult.SUCCESS;
+			.sendStatus(player);
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -188,8 +187,12 @@ public class ItemHatchBlock extends HorizontalDirectionalBlock
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 
+	@Override
+	protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+		return CODEC;
+	}
 }

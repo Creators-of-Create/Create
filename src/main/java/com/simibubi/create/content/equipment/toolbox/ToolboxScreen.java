@@ -7,12 +7,12 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
+import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
@@ -60,7 +60,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 
 		disposeButton = new IconButton(leftPos + 30 + 81, topPos + 69, AllIcons.I_TOOLBOX);
 		disposeButton.withCallback(() -> {
-			AllPackets.getChannel().sendToServer(new ToolboxDisposeAllPacket(menu.contentHolder.getBlockPos()));
+			CatnipServices.NETWORK.sendToServer(new ToolboxDisposeAllPacket(menu.contentHolder.getBlockPos()));
 		});
 		disposeButton.setToolTip(CreateLang.translateDirect("toolbox.depositBox"));
 		addRenderableWidget(disposeButton);

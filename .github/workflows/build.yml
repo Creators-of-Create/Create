@@ -1,6 +1,14 @@
 name: Build
-
-on: [ workflow_dispatch, pull_request ]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      is-release:
+        description: 'Publish release to Modrinth, Curseforge and Github'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   build:
@@ -9,14 +17,26 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Java
-        run: echo "JAVA_HOME=$JAVA_HOME_17_X64" >> "$GITHUB_ENV"
+      - name: Setup Java 21
+        run: echo "JAVA_HOME=$JAVA_HOME_21_X64" >> "$GITHUB_ENV"
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-
-      - name: Validate Gradle Wrapper Integrity
-        uses: gradle/actions/wrapper-validation@v3
+        with:
+          cache-disabled: ${{ inputs.is-release }}
+          cache-read-only: false
 
       - name: Build
         run: ./gradlew build
+
+      - name: Run Gametests
+        if: ${{ !inputs.is-release }}
+        run: ./gradlew runGameTestServer
+
+      - name: Publish
+        if: ${{ inputs.is-release }}
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew publishMods

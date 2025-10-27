@@ -1,73 +1,56 @@
 package com.simibubi.create.content.trains.signal;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
-public class SignalEdgeGroupPacket extends SimplePacketBase {
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-	List<UUID> ids;
-	List<EdgeGroupColor> colors;
-	boolean add;
+public record SignalEdgeGroupPacket(List<UUID> ids, List<EdgeGroupColor> colors, boolean add) implements ClientboundPacketPayload {
+	public static final StreamCodec<FriendlyByteBuf, SignalEdgeGroupPacket> STREAM_CODEC = StreamCodec.composite(
+			CatnipStreamCodecBuilders.list(UUIDUtil.STREAM_CODEC), p -> p.ids,
+			CatnipStreamCodecBuilders.list(EdgeGroupColor.STREAM_CODEC), p -> p.colors,
+			ByteBufCodecs.BOOL, p -> p.add,
+	        SignalEdgeGroupPacket::new
+	);
 
 	public SignalEdgeGroupPacket(UUID id, EdgeGroupColor color) {
 		this(ImmutableList.of(id), ImmutableList.of(color), true);
 	}
 
-	public SignalEdgeGroupPacket(List<UUID> ids, List<EdgeGroupColor> colors, boolean add) {
-		this.ids = ids;
-		this.colors = colors;
-		this.add = add;
-	}
-
-	public SignalEdgeGroupPacket(FriendlyByteBuf buffer) {
-		ids = new ArrayList<>();
-		colors = new ArrayList<>();
-		add = buffer.readBoolean();
-		int size = buffer.readVarInt();
-		for (int i = 0; i < size; i++)
-			ids.add(buffer.readUUID());
-		size = buffer.readVarInt();
-		for (int i = 0; i < size; i++)
-			colors.add(EdgeGroupColor.values()[buffer.readVarInt()]);
-	}
-
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeBoolean(add);
-		buffer.writeVarInt(ids.size());
-		ids.forEach(buffer::writeUUID);
-		buffer.writeVarInt(colors.size());
-		colors.forEach(c -> buffer.writeVarInt(c.ordinal()));
-	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			Map<UUID, SignalEdgeGroup> signalEdgeGroups = CreateClient.RAILWAYS.signalEdgeGroups;
-			int i = 0;
-			for (UUID id : ids) {
-				if (!add) {
-					signalEdgeGroups.remove(id);
-					continue;
-				}
-
-				SignalEdgeGroup group = new SignalEdgeGroup(id);
-				signalEdgeGroups.put(id, group);
-				if (colors.size() > i)
-					group.color = colors.get(i);
-				i++;
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		Map<UUID, SignalEdgeGroup> signalEdgeGroups = CreateClient.RAILWAYS.signalEdgeGroups;
+		for (int i = 0; i < ids.size(); i++) {
+			UUID id = ids.get(i);
+			if (!add) {
+				signalEdgeGroups.remove(id);
+				continue;
 			}
-		});
-		return true;
+
+			SignalEdgeGroup group = new SignalEdgeGroup(id);
+			signalEdgeGroups.put(id, group);
+			if (i < colors.size())
+				group.color = colors.get(i);
+		}
 	}
 
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.SYNC_EDGE_GROUP;
+	}
 }

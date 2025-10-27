@@ -1,0 +1,35 @@
+{
+  "values": [
+    "create:blaze_cake_base",
+    "create:blaze_cake",
+    "create:creative_blaze_cake",
+    "create:builders_tea",
+    "minecraft:glass_bottle",
+    "minecraft:potion",
+    "minecraft:splash_potion",
+    "minecraft:lingering_potion",
+    "minecraft:honey_bottle",
+    "minecraft:cake",
+    "minecraft:bowl",
+    "minecraft:mushroom_stew",
+    "minecraft:rabbit_stew",
+    "minecraft:beetroot_soup",
+    "minecraft:suspicious_stew",
+    {
+      "id": "atmospheric:orange_pudding",
+      "required": false
+    },
+    {
+      "id": "atmospheric:orange_sorbet",
+      "required": false
+    },
+    {
+      "id": "atmospheric:passion_fruit_sorbet",
+      "required": false
+    },
+    {
+      "id": "atmospheric:aloe_gel_bottle",
+      "required": false
+    }
+  ]
+}

@@ -3,60 +3,62 @@ package com.simibubi.create.foundation.data.recipe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
-
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.api.data.recipe.ProcessingRecipeGen;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.fluids.FluidType;
+
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.fluids.FluidType;
 
 /**
  * The class that handles gathering Create's generated recipes for most types.
- * Data here is only generated when running server dategen
+ * Data here is only generated when running server datagen
+ *
  * @see com.simibubi.create.infrastructure.data.CreateDatagen
  */
 public final class CreateRecipeProvider extends RecipeProvider {
 
-	static final List<ProcessingRecipeGen> GENERATORS = new ArrayList<>();
+	static final List<ProcessingRecipeGen<?, ?, ?>> GENERATORS = new ArrayList<>();
 	static final int BUCKET = FluidType.BUCKET_VOLUME;
 	static final int BOTTLE = 250;
 
-	public CreateRecipeProvider(PackOutput output) {
-		super(output);
+	public CreateRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+		super(output, registries);
 	}
 
 	@Override
-	protected void buildRecipes(Consumer<FinishedRecipe> writer) {}
+	protected void buildRecipes(RecipeOutput recipeOutput) {
+	}
 
-	public static void registerAllProcessing(DataGenerator gen, PackOutput output) {
-		GENERATORS.add(new CreateCrushingRecipeGen(output));
-		GENERATORS.add(new CreateMillingRecipeGen(output));
-		GENERATORS.add(new CreateCuttingRecipeGen(output));
-		GENERATORS.add(new CreateWashingRecipeGen(output));
-		GENERATORS.add(new CreatePolishingRecipeGen(output));
-		GENERATORS.add(new CreateDeployingRecipeGen(output));
-		GENERATORS.add(new CreateMixingRecipeGen(output));
-		GENERATORS.add(new CreateCompactingRecipeGen(output));
-		GENERATORS.add(new CreatePressingRecipeGen(output));
-		GENERATORS.add(new CreateFillingRecipeGen(output));
-		GENERATORS.add(new CreateEmptyingRecipeGen(output));
-		GENERATORS.add(new CreateHauntingRecipeGen(output));
-		GENERATORS.add(new CreateItemApplicationRecipeGen(output));
+	public static void registerAllProcessing(DataGenerator gen, PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+		GENERATORS.add(new CreateCrushingRecipeGen(output, registries));
+		GENERATORS.add(new CreateMillingRecipeGen(output, registries));
+		GENERATORS.add(new CreateCuttingRecipeGen(output, registries));
+		GENERATORS.add(new CreateWashingRecipeGen(output, registries));
+		GENERATORS.add(new CreatePolishingRecipeGen(output, registries));
+		GENERATORS.add(new CreateDeployingRecipeGen(output, registries));
+		GENERATORS.add(new CreateMixingRecipeGen(output, registries));
+		GENERATORS.add(new CreateCompactingRecipeGen(output, registries));
+		GENERATORS.add(new CreatePressingRecipeGen(output, registries));
+		GENERATORS.add(new CreateFillingRecipeGen(output, registries));
+		GENERATORS.add(new CreateEmptyingRecipeGen(output, registries));
+		GENERATORS.add(new CreateHauntingRecipeGen(output, registries));
+		GENERATORS.add(new CreateItemApplicationRecipeGen(output, registries));
 
 		gen.addProvider(true, new DataProvider() {
 
@@ -93,11 +95,11 @@ public final class CreateRecipeProvider extends RecipeProvider {
 		}
 
 		static TagKey<Item> goldSheet() {
-			return AllTags.forgeItemTag("plates/gold");
+			return CommonMetal.GOLD.plates;
 		}
 
 		static TagKey<Item> stone() {
-			return Tags.Items.STONE;
+			return Tags.Items.STONES;
 		}
 
 		static ItemLike andesiteAlloy() {
@@ -129,11 +131,11 @@ public final class CreateRecipeProvider extends RecipeProvider {
 		}
 
 		static TagKey<Item> brass() {
-			return AllTags.forgeItemTag("ingots/brass");
+			return CommonMetal.BRASS.ingots;
 		}
 
 		static TagKey<Item> brassSheet() {
-			return AllTags.forgeItemTag("plates/brass");
+			return CommonMetal.BRASS.plates;
 		}
 
 		static TagKey<Item> iron() {
@@ -145,15 +147,15 @@ public final class CreateRecipeProvider extends RecipeProvider {
 		}
 
 		static TagKey<Item> zinc() {
-			return AllTags.forgeItemTag("ingots/zinc");
+			return CommonMetal.ZINC.ingots;
 		}
 
 		static TagKey<Item> ironSheet() {
-			return AllTags.forgeItemTag("plates/iron");
+			return CommonMetal.IRON.plates;
 		}
 
 		static TagKey<Item> sturdySheet() {
-			return AllTags.forgeItemTag("plates/obsidian");
+			return AllItemTags.OBSIDIAN_PLATES.tag;
 		}
 
 		static ItemLike brassCasing() {
@@ -177,15 +179,15 @@ public final class CreateRecipeProvider extends RecipeProvider {
 		}
 
 		static TagKey<Item> brassBlock() {
-			return AllTags.forgeItemTag("storage_blocks/brass");
+			return CommonMetal.BRASS.storageBlocks.items();
 		}
 
 		static TagKey<Item> zincBlock() {
-			return AllTags.forgeItemTag("storage_blocks/zinc");
+			return CommonMetal.ZINC.storageBlocks.items();
 		}
 
 		static TagKey<Item> wheatFlour() {
-			return AllTags.forgeItemTag("flour/wheat");
+			return AllItemTags.WHEAT_FLOURS.tag;
 		}
 
 		static TagKey<Item> copper() {
@@ -193,7 +195,7 @@ public final class CreateRecipeProvider extends RecipeProvider {
 		}
 
 		static TagKey<Item> copperNugget() {
-			return AllTags.forgeItemTag("nuggets/copper");
+			return CommonMetal.COPPER.nuggets;
 		}
 
 		static TagKey<Item> copperBlock() {
@@ -201,15 +203,15 @@ public final class CreateRecipeProvider extends RecipeProvider {
 		}
 
 		static TagKey<Item> copperSheet() {
-			return AllTags.forgeItemTag("plates/copper");
+			return CommonMetal.COPPER.plates;
 		}
 
 		static TagKey<Item> brassNugget() {
-			return AllTags.forgeItemTag("nuggets/brass");
+			return CommonMetal.BRASS.nuggets;
 		}
 
 		static TagKey<Item> zincNugget() {
-			return AllTags.forgeItemTag("nuggets/zinc");
+			return CommonMetal.ZINC.nuggets;
 		}
 
 		static ItemLike copperCasing() {

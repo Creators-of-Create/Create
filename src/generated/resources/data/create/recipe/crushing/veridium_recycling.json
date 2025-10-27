@@ -1,0 +1,19 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "tag": "create:stone_types/veridium"
+    }
+  ],
+  "processing_time": 250,
+  "results": [
+    {
+      "chance": 0.8,
+      "id": "create:crushed_raw_copper"
+    },
+    {
+      "chance": 0.8,
+      "id": "create:copper_nugget"
+    }
+  ]
+}

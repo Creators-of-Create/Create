@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 2,
-  "ingredient": {
-    "item": "create:copper_tiles"
-  },
-  "result": "create:copper_tile_slab"
-}

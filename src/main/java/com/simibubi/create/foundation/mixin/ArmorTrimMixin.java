@@ -18,35 +18,42 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.armortrim.ArmorTrim;
+import net.minecraft.world.item.armortrim.TrimMaterial;
 import net.minecraft.world.item.armortrim.TrimPattern;
 
 @Mixin(ArmorTrim.class)
 public abstract class ArmorTrimMixin {
 	@Shadow
 	@Final
+	private Holder<TrimMaterial> material;
+
+	@Shadow
+	@Final
 	private Holder<TrimPattern> pattern;
 
 	@Shadow
-	protected abstract String getColorPaletteSuffix(ArmorMaterial pArmorMaterial);
+	private static String getColorPaletteSuffix(Holder<TrimMaterial> trimMaterial, Holder<ArmorMaterial> armorMaterial) {
+		throw new AssertionError();
+	}
 
 	@Unique
-	private final BiFunction<Boolean, ArmorMaterial, ResourceLocation> create$textureCardboard = Util.memoize((inner, material) -> {
+	private final BiFunction<Boolean, Holder<ArmorMaterial>, ResourceLocation> create$textureCardboard = Util.memoize((inner, armorMaterial) -> {
 		String assetPath = pattern.value().assetId().getPath();
-		String colorSuffix = getColorPaletteSuffix(material);
+		String colorSuffix = getColorPaletteSuffix(material, armorMaterial);
 		return Create.asResource("trims/models/armor/card_" + assetPath + (inner ? "_leggings_" : "_") + colorSuffix);
 	});
 
 	@Inject(method = "innerTexture", at = @At("HEAD"), cancellable = true)
-	private void create$swapTexturesForCardboardTrimsInner(ArmorMaterial pArmorMaterial, CallbackInfoReturnable<ResourceLocation> cir) {
-		if (pArmorMaterial == AllArmorMaterials.CARDBOARD) {
-			cir.setReturnValue(create$textureCardboard.apply(true, pArmorMaterial));
+	private void create$swapTexturesForCardboardTrimsInner(Holder<ArmorMaterial> armorMaterial, CallbackInfoReturnable<ResourceLocation> cir) {
+		if (armorMaterial == AllArmorMaterials.CARDBOARD) {
+			cir.setReturnValue(create$textureCardboard.apply(true, armorMaterial));
 		}
 	}
 
 	@Inject(method = "outerTexture", at = @At("HEAD"), cancellable = true)
-	private void create$swapTexturesForCardboardTrimsOuter(ArmorMaterial pArmorMaterial, CallbackInfoReturnable<ResourceLocation> cir) {
-		if (pArmorMaterial == AllArmorMaterials.CARDBOARD) {
-			cir.setReturnValue(create$textureCardboard.apply(false, pArmorMaterial));
+	private void create$swapTexturesForCardboardTrimsOuter(Holder<ArmorMaterial> armorMaterial, CallbackInfoReturnable<ResourceLocation> cir) {
+		if (armorMaterial == AllArmorMaterials.CARDBOARD) {
+			cir.setReturnValue(create$textureCardboard.apply(false, armorMaterial));
 		}
 	}
 }

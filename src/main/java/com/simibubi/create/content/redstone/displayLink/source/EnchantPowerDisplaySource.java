@@ -11,8 +11,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.EnchantmentTableBlock;
-import net.minecraft.world.level.block.entity.EnchantmentTableBlockEntity;
+import net.minecraft.world.level.block.EnchantingTableBlock;
+import net.minecraft.world.level.block.entity.EnchantingTableBlockEntity;
 
 public class EnchantPowerDisplaySource extends NumericSingleLineDisplaySource {
 
@@ -21,15 +21,15 @@ public class EnchantPowerDisplaySource extends NumericSingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		if (!(context.getSourceBlockEntity() instanceof EnchantmentTableBlockEntity))
+		if (!(context.getSourceBlockEntity() instanceof EnchantingTableBlockEntity))
 			return ZERO.copy();
 
 		BlockPos pos = context.getSourcePos();
 		Level level = context.level();
 		float enchantPower = 0;
 
-		for(BlockPos offset : EnchantmentTableBlock.BOOKSHELF_OFFSETS) {
-			if (!EnchantmentTableBlock.isValidBookShelf(level, pos, offset))
+		for(BlockPos offset : EnchantingTableBlock.BOOKSHELF_OFFSETS) {
+			if (!EnchantingTableBlock.isValidBookShelf(level, pos, offset))
 				continue;
 
 			enchantPower += level.getBlockState(pos.offset(offset)).getEnchantPowerBonus(level, pos.offset(offset));

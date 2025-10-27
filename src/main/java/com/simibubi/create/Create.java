@@ -13,6 +13,7 @@ import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.compat.curios.Curios;
 import com.simibubi.create.compat.inventorySorter.InventorySorterCompat;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
+import com.simibubi.create.content.equipment.armor.AllArmorMaterials;
 import com.simibubi.create.content.equipment.potatoCannon.AllPotatoProjectileBlockHitActions;
 import com.simibubi.create.content.equipment.potatoCannon.AllPotatoProjectileEntityHitActions;
 import com.simibubi.create.content.equipment.potatoCannon.AllPotatoProjectileRenderModes;
@@ -21,6 +22,7 @@ import com.simibubi.create.content.kinetics.TorquePropagator;
 import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
 import com.simibubi.create.content.kinetics.mechanicalArm.AllArmInteractionPointTypes;
 import com.simibubi.create.content.logistics.item.filter.attribute.AllItemAttributeTypes;
+import com.simibubi.create.content.logistics.packagePort.AllPackagePortTargetTypes;
 import com.simibubi.create.content.logistics.packager.AllInventoryIdentifiers;
 import com.simibubi.create.content.logistics.packager.AllUnpackingHandlers;
 import com.simibubi.create.content.logistics.packagerLink.GlobalLogisticsManager;
@@ -32,11 +34,11 @@ import com.simibubi.create.content.trains.track.AllPortalTracks;
 import com.simibubi.create.foundation.CreateNBTProcessors;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.block.CopperRegistries;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipModifier;
+import com.simibubi.create.foundation.recipe.AllIngredients;
 import com.simibubi.create.infrastructure.command.ServerLagger;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.data.CreateDatagen;
@@ -45,23 +47,21 @@ import com.simibubi.create.infrastructure.worldgen.AllPlacementModifiers;
 
 import net.createmod.catnip.lang.FontHelper;
 import net.createmod.catnip.lang.LangBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.RegisterEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 @Mod(Create.ID)
 public class Create {
@@ -86,7 +86,7 @@ public class Create {
 	 * <b>Other mods should not use this field!</b> If you are an addon developer, create your own instance of
 	 * {@link CreateRegistrate}.
 	 * </br
-	 * If you were using this instance to render a callback listener use {@link CreateRegistrateRegistrationCallback#register} instead.
+	 * If you were using this instance to register a callback listener use {@link CreateRegistrateRegistrationCallback#register} instead.
 	 */
 	private static final CreateRegistrate REGISTRATE = CreateRegistrate.create(ID)
 		.defaultCreativeTab((ResourceKey<CreativeModeTab>) null)
@@ -102,24 +102,19 @@ public class Create {
 	public static final GlobalLogisticsManager LOGISTICS = new GlobalLogisticsManager();
 	public static final ServerLagger LAGGER = new ServerLagger();
 
-	public Create() {
-		onCtor();
+	public Create(IEventBus eventBus, ModContainer modContainer) {
+		onCtor(eventBus, modContainer);
 	}
 
-	public static void onCtor() {
+	public static void onCtor(IEventBus modEventBus, ModContainer modContainer) {
 		LOGGER.info("{} {} initializing! Commit hash: {}", NAME, CreateBuildInfo.VERSION, CreateBuildInfo.GIT_COMMIT);
-
 		ModLoadingContext modLoadingContext = ModLoadingContext.get();
-
-		IEventBus modEventBus = FMLJavaModLoadingContext.get()
-			.getModEventBus();
-		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
 		REGISTRATE.registerEventListeners(modEventBus);
 
 		AllSoundEvents.prepare();
-		AllTags.init();
 		AllCreativeModeTabs.register(modEventBus);
+		AllArmorMaterials.register(modEventBus);
 		AllDisplaySources.register();
 		AllDisplayTargets.register();
 		AllBlocks.register();
@@ -129,17 +124,23 @@ public class Create {
 		AllMenuTypes.register();
 		AllEntityTypes.register();
 		AllBlockEntityTypes.register();
-		AllEnchantments.register();
 		AllRecipeTypes.register(modEventBus);
 		AllParticleTypes.register(modEventBus);
 		AllStructureProcessorTypes.register(modEventBus);
 		AllEntityDataSerializers.register(modEventBus);
-		AllPackets.registerPackets();
+		AllPackets.register();
 		AllFeatures.register(modEventBus);
 		AllPlacementModifiers.register(modEventBus);
+		AllIngredients.register(modEventBus);
+		AllAttachmentTypes.register(modEventBus);
+		AllDataComponents.register(modEventBus);
+		AllMapDecorationTypes.register(modEventBus);
 		AllMountedStorageTypes.register();
 
-		AllConfigs.register(modLoadingContext);
+		AllConfigs.register(modLoadingContext, modContainer);
+
+		// TODO - Make these use Registry.register and move them into the RegisterEvent
+		AllPackagePortTargetTypes.register(modEventBus);
 
 		AllSchematicStateFilters.registerDefaults();
 
@@ -150,19 +151,17 @@ public class Create {
 
 		ComputerCraftProxy.register();
 
-		ForgeMod.enableMilkFluid();
-		CopperRegistries.inject();
+		NeoForgeMod.enableMilkFluid();
 
 		modEventBus.addListener(Create::init);
 		modEventBus.addListener(Create::onRegister);
 		modEventBus.addListener(AllEntityTypes::registerEntityAttributes);
+		modEventBus.addListener(EventPriority.HIGHEST, CreateDatagen::gatherDataHighPriority);
 		modEventBus.addListener(EventPriority.LOWEST, CreateDatagen::gatherData);
 		modEventBus.addListener(AllSoundEvents::register);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
-
 		// FIXME: this is not thread-safe
-		Mods.CURIOS.executeIfInstalled(() -> () -> Curios.init(modEventBus, forgeEventBus));
+		Mods.CURIOS.executeIfInstalled(() -> () -> Curios.init(modEventBus));
 		Mods.INVENTORYSORTER.executeIfInstalled(() -> () -> InventorySorterCompat.init(modEventBus));
 	}
 
@@ -185,9 +184,6 @@ public class Create {
 			AllUnpackingHandlers.registerDefaults();
 			AllInventoryIdentifiers.registerDefaults();
 			// --
-
-			AllAdvancements.register();
-			AllTriggers.register();
 		});
 	}
 
@@ -199,6 +195,11 @@ public class Create {
 		AllPotatoProjectileRenderModes.init();
 		AllPotatoProjectileEntityHitActions.init();
 		AllPotatoProjectileBlockHitActions.init();
+
+		if (event.getRegistry() == BuiltInRegistries.TRIGGER_TYPES) {
+			AllAdvancements.register();
+			AllTriggers.register();
+		}
 	}
 
 	public static LangBuilder lang() {
@@ -206,7 +207,7 @@ public class Create {
 	}
 
 	public static ResourceLocation asResource(String path) {
-		return new ResourceLocation(ID, path);
+		return ResourceLocation.fromNamespaceAndPath(ID, path);
 	}
 
 	public static CreateRegistrate registrate() {

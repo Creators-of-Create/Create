@@ -7,7 +7,7 @@ import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 
 public class RedstoneLinkGenerator extends SpecialBlockStateGen {
 
@@ -32,7 +32,7 @@ public class RedstoneLinkGenerator extends SpecialBlockStateGen {
 			variant += "_vertical";
 		if (state.getValue(RedstoneLinkBlock.POWERED))
 			variant += "_powered";
-		
+
 		return prov.models().getExistingFile(prov.modLoc("block/redstone_link/" + variant));
 	}
 

@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -20,11 +20,9 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import net.minecraftforge.items.SlotItemHandler;
-
 public class ToolboxMenu extends MenuBase<ToolboxBlockEntity> {
 
-	public ToolboxMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public ToolboxMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
@@ -39,14 +37,14 @@ public class ToolboxMenu extends MenuBase<ToolboxBlockEntity> {
 	}
 
 	@Override
-	protected ToolboxBlockEntity createOnClient(FriendlyByteBuf extraData) {
+	protected ToolboxBlockEntity createOnClient(RegistryFriendlyByteBuf extraData) {
 		BlockPos readBlockPos = extraData.readBlockPos();
 		CompoundTag readNbt = extraData.readNbt();
 
 		ClientLevel world = Minecraft.getInstance().level;
 		BlockEntity blockEntity = world.getBlockEntity(readBlockPos);
 		if (blockEntity instanceof ToolboxBlockEntity toolbox) {
-			toolbox.readClient(readNbt);
+			toolbox.readClient(readNbt, extraData.registryAccess());
 			return toolbox;
 		}
 
@@ -63,10 +61,11 @@ public class ToolboxMenu extends MenuBase<ToolboxBlockEntity> {
 		int size = contentHolder.inventory.getSlots();
 		boolean success;
 		if (index < size) {
-			success = !moveItemStackTo(stack, size, slots.size(), false);
+			success = !moveItemStackTo(stack, size, slots.size(), true);
 			contentHolder.inventory.onContentsChanged(index);
-		} else
+		} else {
 			success = !moveItemStackTo(stack, 0, size, false);
+		}
 
 		return success ? ItemStack.EMPTY : stack;
 	}
@@ -137,11 +136,11 @@ public class ToolboxMenu extends MenuBase<ToolboxBlockEntity> {
 			int baseIndex = compartment * STACKS_PER_COMPARTMENT;
 
 			// Representative Slots
-			addSlot(new ToolboxSlot(this, inventory, baseIndex, xOffsets[compartment], yOffsets[compartment]));
+			addSlot(new ToolboxSlot(this, inventory, baseIndex, xOffsets[compartment], yOffsets[compartment], true));
 
 			// Hidden Slots
 			for (int i = 1; i < STACKS_PER_COMPARTMENT; i++)
-				addSlot(new SlotItemHandler(inventory, baseIndex + i, -10000, -10000));
+				addSlot(new ToolboxSlot(this, inventory, baseIndex + i, -10000, -10000, false));
 		}
 
 		addPlayerSlots(8, 165);

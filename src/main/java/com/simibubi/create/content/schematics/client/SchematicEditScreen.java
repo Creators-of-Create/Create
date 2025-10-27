@@ -2,6 +2,7 @@ package com.simibubi.create.content.schematics.client;
 
 import java.util.List;
 
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -183,10 +184,8 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		if (validCoords && newLocation != null) {
 			ItemStack item = handler.getActiveSchematicItem();
 			if (item != null) {
-				item.getTag()
-					.putBoolean("Deployed", true);
-				item.getTag()
-					.put("Anchor", NbtUtils.writeBlockPos(newLocation));
+				item.set(AllDataComponents.SCHEMATIC_DEPLOYED, true);
+				item.set(AllDataComponents.SCHEMATIC_ANCHOR, newLocation);
 			}
 
 			handler.getTransformation()

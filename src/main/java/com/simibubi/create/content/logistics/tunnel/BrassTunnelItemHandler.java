@@ -3,8 +3,8 @@ package com.simibubi.create.content.logistics.tunnel;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class BrassTunnelItemHandler implements IItemHandler {
 
@@ -13,7 +13,7 @@ public class BrassTunnelItemHandler implements IItemHandler {
 	public BrassTunnelItemHandler(BrassTunnelBlockEntity be) {
 		this.blockEntity = be;
 	}
-	
+
 	@Override
 	public int getSlots() {
 		return 1;
@@ -27,27 +27,27 @@ public class BrassTunnelItemHandler implements IItemHandler {
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		if (!blockEntity.hasDistributionBehaviour()) {
-			LazyOptional<IItemHandler> beltCapability = blockEntity.getBeltCapability();
-			if (!beltCapability.isPresent())
+			IItemHandler beltCapability = blockEntity.getBeltCapability();
+			if (beltCapability == null)
 				return stack;
-			return beltCapability.orElse(null).insertItem(slot, stack, simulate);
+			return beltCapability.insertItem(slot, stack, simulate);
 		}
-		
+
 		if (!blockEntity.canTakeItems())
 			return stack;
-		
+
 		ItemStack remainder = ItemHelper.limitCountToMaxStackSize(stack, simulate);
-		if (!simulate) 
+		if (!simulate)
 			blockEntity.setStackToDistribute(stack, null);
 		return remainder;
 	}
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		LazyOptional<IItemHandler> beltCapability = blockEntity.getBeltCapability();
-		if (!beltCapability.isPresent())
+		IItemHandler beltCapability = blockEntity.getBeltCapability();
+		if (beltCapability == null)
 			return ItemStack.EMPTY;
-		return beltCapability.orElse(null).extractItem(slot, amount, simulate);
+		return beltCapability.extractItem(slot, amount, simulate);
 	}
 
 	@Override

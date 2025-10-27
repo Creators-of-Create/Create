@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.RedstoneLampBlock;
 
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 @GameTestGroup(path = "contraptions")
 public class TestContraptions {
@@ -112,8 +112,10 @@ public class TestContraptions {
 		List<BlockPos> dirt = List.of(new BlockPos(4, 2, 6), new BlockPos(2, 2, 4), new BlockPos(4, 2, 2));
 		List<BlockPos> wheat = List.of(new BlockPos(4, 3, 7), new BlockPos(1, 3, 4), new BlockPos(4, 3, 1));
 
-		helper.pressButton(button);
+		helper.whenSecondsPassed(1, () -> helper.pressButton(button));
 		helper.succeedWhen(() -> {
+			helper.assertBlockPresent(Blocks.STONE_BUTTON, button);
+
 			// wait for gearshift to reset
 			helper.assertBlockProperty(gearshift, SequencedGearshiftBlock.STATE, 0);
 			if (step.get() == 4)
@@ -233,10 +235,12 @@ public class TestContraptions {
 
 	@GameTest(template = "dispensers_dont_fight")
 	public static void dispensersDontFight(CreateGameTestHelper helper) {
-		helper.pullLever(2, 3, 1);
+		BlockPos lever = new BlockPos(2, 3, 1);
 		BlockPos bottom = new BlockPos(6, 4, 1);
 		BlockPos top = new BlockPos(6, 6, 1);
 		BlockPos dispenser = new BlockPos(3, 4, 1);
+
+		helper.pullLever(lever);
 
 		helper.succeedWhen(() -> {
 			helper.assertEntitiesPresent(EntityType.ARROW, bottom, 3, 0);

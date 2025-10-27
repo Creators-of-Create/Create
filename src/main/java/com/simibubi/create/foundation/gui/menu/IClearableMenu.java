@@ -1,13 +1,13 @@
 package com.simibubi.create.foundation.gui.menu;
 
-import com.simibubi.create.AllPackets;
+import net.createmod.catnip.platform.CatnipServices;
 
 public interface IClearableMenu {
 
 	default void sendClearPacket() {
-		AllPackets.getChannel().sendToServer(new ClearMenuPacket());
+		CatnipServices.NETWORK.sendToServer(ClearMenuPacket.INSTANCE);
 	}
 
-	public void clearContents();
+	void clearContents();
 
 }

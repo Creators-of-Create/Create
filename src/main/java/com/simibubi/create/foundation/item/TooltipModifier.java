@@ -1,12 +1,14 @@
 package com.simibubi.create.foundation.item;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.api.registry.SimpleRegistry;
 
 import net.minecraft.world.item.Item;
 
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 @FunctionalInterface
 public interface TooltipModifier {

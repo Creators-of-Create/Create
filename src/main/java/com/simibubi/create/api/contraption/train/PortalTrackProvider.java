@@ -1,12 +1,8 @@
 package com.simibubi.create.api.contraption.train;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.api.registry.SimpleRegistry;
-import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.content.trains.track.AllPortalTracks;
 
 import net.createmod.catnip.math.BlockFace;
@@ -15,10 +11,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Portal;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.portal.PortalInfo;
-
-import net.minecraftforge.common.util.ITeleporter;
 
 /**
  * A provider for portal track connections.
@@ -59,31 +53,17 @@ public interface PortalTrackProvider {
 	}
 
 	/**
-	 * Find an exit location by using an {@link ITeleporter} instance.
+	 * Find an exit location by using an {@link Portal} instance.
 	 * @param level              The level of the inbound track
 	 * @param face				 The face of the inbound track
 	 * @param firstDimension     The first dimension (typically the Overworld)
 	 * @param secondDimension    The second dimension (e.g., Nether, Aether)
-	 * @param customPortalForcer A function to obtain the {@link ITeleporter} for the target level
+	 * @param portal 			 The portal
 	 * @return A found exit, or null if one wasn't found
 	 */
-	static Exit fromTeleporter(ServerLevel level, BlockFace face, ResourceKey<Level> firstDimension,
-							   ResourceKey<Level> secondDimension, Function<ServerLevel, ITeleporter> customPortalForcer) {
-		return AllPortalTracks.fromTeleporter(level, face, firstDimension, secondDimension, customPortalForcer);
-	}
-
-	/**
-	 * Find an exit location by teleporting a probe entity to find a {@link PortalInfo}.
-	 * @param level              The level of the inbound track
-	 * @param face 				 The face of the inbound track
-	 * @param firstDimension     The first dimension
-	 * @param secondDimension    The second dimension
-	 * @param portalInfoProvider A function that provides the {@link PortalInfo} given the target level and probe entity.
-	 * @return A found exit, or null if one wasn't found
-	 */
-	static Exit fromProbe(ServerLevel level, BlockFace face, ResourceKey<Level> firstDimension,
-						  ResourceKey<Level> secondDimension, BiFunction<ServerLevel, SuperGlueEntity, PortalInfo> portalInfoProvider) {
-		return AllPortalTracks.fromProbe(level, face, firstDimension, secondDimension, portalInfoProvider);
+	static Exit fromPortal(ServerLevel level, BlockFace face, ResourceKey<Level> firstDimension,
+							   ResourceKey<Level> secondDimension, Portal portal) {
+		return AllPortalTracks.fromPortal(level, face, firstDimension, secondDimension, portal);
 	}
 
 	record Exit(ServerLevel level, BlockFace face) {

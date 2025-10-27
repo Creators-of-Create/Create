@@ -6,13 +6,12 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
@@ -40,6 +39,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
@@ -52,11 +52,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHaveGoggleInformation {
 
@@ -81,8 +79,8 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 	private Set<BrassTunnelBlockEntity> syncSet;
 
 	protected ScrollOptionBehaviour<SelectionMode> selectionMode;
-	private LazyOptional<IItemHandler> beltCapability;
-	private LazyOptional<IItemHandler> tunnelCapability;
+	private IItemHandler beltCapability;
+	private IItemHandler tunnelCapability;
 
 	public BrassTunnelBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -90,10 +88,18 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		syncSet = new HashSet<>();
 		stackToDistribute = ItemStack.EMPTY;
 		stackEnteredFrom = null;
-		beltCapability = LazyOptional.empty();
-		tunnelCapability = LazyOptional.of(() -> new BrassTunnelItemHandler(this));
+		beltCapability = null;
+		tunnelCapability = new BrassTunnelItemHandler(this);
 		previousOutputIndex = 0;
 		syncedOutputActive = false;
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+				Capabilities.ItemHandler.BLOCK,
+				AllBlockEntityTypes.BRASS_TUNNEL.get(),
+				(be, context) -> be.tunnelCapability
+		);
 	}
 
 	@Override
@@ -210,7 +216,6 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		});
 	}
 
-	private static Random rand = new Random();
 	private static Map<Pair<BrassTunnelBlockEntity, Direction>, ItemStack> distributed = new IdentityHashMap<>();
 	private static Set<Pair<BrassTunnelBlockEntity, Direction>> full = new HashSet<>();
 
@@ -229,7 +234,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		boolean robin = mode == SelectionMode.FORCED_ROUND_ROBIN || mode == SelectionMode.ROUND_ROBIN;
 
 		if (mode == SelectionMode.RANDOMIZE)
-			indexStart = rand.nextInt(amountTargets);
+			indexStart = level.random.nextInt(amountTargets);
 		if (mode == SelectionMode.PREFER_NEAREST || mode == SelectionMode.SYNCHRONIZE)
 			indexStart = 0;
 
@@ -268,7 +273,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 					}
 
 					int count = split ? splitStackSize + (splitRemainder > 0 ? 1 : 0) : stackSize;
-					ItemStack toOutput = ItemHandlerHelper.copyStackWithSize(toDistributeThisCycle, count);
+					ItemStack toOutput = toDistributeThisCycle.copyWithCount(count);
 
 					// Grow by 1 to determine if target is full even after a successful transfer
 					boolean testWithIncreasedCount = distributed.containsKey(pair);
@@ -322,7 +327,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		}
 
 		toDistribute.grow(failedTransferrals);
-		stackToDistribute = ItemHandlerHelper.copyStackWithSize(stackToDistribute, toDistribute.getCount());
+		stackToDistribute = stackToDistribute.copyWithCount(toDistribute.getCount());
 		if (stackToDistribute.isEmpty())
 			stackEnteredFrom = null;
 		previousOutputIndex++;
@@ -585,12 +590,12 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putBoolean("SyncedOutput", syncedOutputActive);
 		compound.putBoolean("ConnectedLeft", connectedLeft);
 		compound.putBoolean("ConnectedRight", connectedRight);
 
-		compound.put("StackToDistribute", stackToDistribute.serializeNBT());
+		compound.put("StackToDistribute", stackToDistribute.saveOptional(registries));
 		if (stackEnteredFrom != null)
 			NBTHelper.writeEnum(compound, "StackEnteredFrom", stackEnteredFrom);
 
@@ -610,11 +615,11 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 				}));
 		}
 
-		super.write(compound, clientPacket);
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		boolean wasConnectedLeft = connectedLeft;
 		boolean wasConnectedRight = connectedRight;
 
@@ -622,7 +627,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		connectedLeft = compound.getBoolean("ConnectedLeft");
 		connectedRight = compound.getBoolean("ConnectedRight");
 
-		stackToDistribute = ItemStack.of(compound.getCompound("StackToDistribute"));
+		stackToDistribute = ItemStack.parseOptional(registries, compound.getCompound("StackToDistribute"));
 		stackEnteredFrom =
 			compound.contains("StackEnteredFrom") ? NBTHelper.readEnum(compound, "StackEnteredFrom", Direction.class)
 				: null;
@@ -635,13 +640,13 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		for (boolean filtered : Iterate.trueAndFalse) {
 			distributionTargets.set(filtered, NBTHelper
 				.readCompoundList(compound.getList(filtered ? "FilteredTargets" : "Targets", Tag.TAG_COMPOUND), nbt -> {
-					BlockPos pos = NbtUtils.readBlockPos(nbt.getCompound("Pos"));
+					BlockPos pos = NBTHelper.readBlockPos(nbt, "Pos");
 					Direction face = Direction.from3DDataValue(nbt.getInt("Face"));
 					return Pair.of(pos, face);
 				}));
 		}
 
-		super.read(compound, clientPacket);
+		super.read(compound, registries, clientPacket);
 
 		if (!clientPacket)
 			return;
@@ -727,7 +732,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		tunnelCapability.invalidate();
+		invalidateCapabilities();
 	}
 
 	@Override
@@ -737,18 +742,11 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		stackEnteredFrom = null;
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
-		if (capability == ForgeCapabilities.ITEM_HANDLER)
-			return tunnelCapability.cast();
-		return super.getCapability(capability, side);
-	}
-
-	public LazyOptional<IItemHandler> getBeltCapability() {
-		if (!beltCapability.isPresent()) {
+	public IItemHandler getBeltCapability() {
+		if (beltCapability == null) {
 			BlockEntity blockEntity = level.getBlockEntity(worldPosition.below());
 			if (blockEntity != null)
-				beltCapability = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER);
+				beltCapability = level.getCapability(Capabilities.ItemHandler.BLOCK, blockEntity.getBlockPos(), null);
 		}
 		return beltCapability;
 	}

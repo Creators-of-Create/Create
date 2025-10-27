@@ -3,19 +3,30 @@ package com.simibubi.create.content.processing.basin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.simple.DeferralBehaviour;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
+import com.simibubi.create.foundation.recipe.trie.AbstractVariant;
+import com.simibubi.create.foundation.recipe.trie.RecipeTrie;
+import com.simibubi.create.foundation.recipe.trie.RecipeTrieFinder;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import net.neoforged.neoforge.capabilities.Capabilities.FluidHandler;
+import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public abstract class BasinOperatingBlockEntity extends KineticBlockEntity {
 
@@ -87,7 +98,7 @@ public abstract class BasinOperatingBlockEntity extends KineticBlockEntity {
 		return true;
 	}
 
-	protected <C extends Container> boolean matchBasinRecipe(Recipe<C> recipe) {
+	protected <I extends RecipeInput> boolean matchBasinRecipe(Recipe<I> recipe) {
 		if (recipe == null)
 			return false;
 		Optional<BasinBlockEntity> basin = getBasin();
@@ -120,14 +131,36 @@ public abstract class BasinOperatingBlockEntity extends KineticBlockEntity {
 	}
 
 	protected List<Recipe<?>> getMatchingRecipes() {
-		if (getBasin().map(BasinBlockEntity::isEmpty)
-			.orElse(true))
+		Optional<BasinBlockEntity> $basin = getBasin();
+		BasinBlockEntity basin;
+		if ($basin.isEmpty() || (basin = $basin.get()).isEmpty())
 			return new ArrayList<>();
 
 		List<Recipe<?>> list = new ArrayList<>();
-		for (Recipe<?> r : RecipeFinder.get(getRecipeCacheKey(), level, this::matchStaticFilters))
-			if (matchBasinRecipe(r))
-				list.add(r);
+		try {
+
+			IItemHandler availableItems = level.getCapability(ItemHandler.BLOCK, basin.getBlockPos(), null);
+			IFluidHandler availableFluids = level.getCapability(FluidHandler.BLOCK, basin.getBlockPos(), null);
+
+			// no point even searching, since no recipe will ever match
+			if (availableItems == null && availableFluids == null) {
+				return list;
+			}
+
+			RecipeTrie<?> trie = RecipeTrieFinder.get(getRecipeCacheKey(), level, this::matchStaticFilters);
+			Set<AbstractVariant> availableVariants = RecipeTrie.getVariants(availableItems, availableFluids);
+
+			for (Recipe<?> r : trie.lookup(availableVariants))
+				if (matchBasinRecipe(r))
+					list.add(r);
+		} catch (Exception e) {
+			Create.LOGGER.error("Failed to get recipe trie, falling back to slow logic", e);
+			list.clear();
+
+			for (RecipeHolder<? extends Recipe<?>> r : RecipeFinder.get(getRecipeCacheKey(), level, this::matchStaticFilters))
+				if (matchBasinRecipe(r.value()))
+					list.add(r.value());
+		}
 
 		list.sort((r1, r2) -> r2.getIngredients().size() - r1.getIngredients().size());
 
@@ -149,7 +182,7 @@ public abstract class BasinOperatingBlockEntity extends KineticBlockEntity {
 		return Optional.empty();
 	}
 
-	protected abstract <C extends Container> boolean matchStaticFilters(Recipe<C> recipe);
+	protected abstract boolean matchStaticFilters(RecipeHolder<? extends Recipe<?>> recipe);
 
 	protected abstract Object getRecipeCacheKey();
 }

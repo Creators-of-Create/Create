@@ -3,6 +3,7 @@ package com.simibubi.create.content.kinetics.chainDrive;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,15 +20,15 @@ public class ChainGearshiftBlockEntity extends KineticBlockEntity {
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putInt("Signal", signal);
-		super.write(compound, clientPacket);
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		signal = compound.getInt("Signal");
-		super.read(compound, clientPacket);
+		super.read(compound, registries, clientPacket);
 	}
 
 	public float getModifier() {
@@ -38,7 +39,7 @@ public class ChainGearshiftBlockEntity extends KineticBlockEntity {
 		if (!hasLevel())
 			return;
 		int power = level.getBestNeighborSignal(worldPosition);
-		if (power != signal) 
+		if (power != signal)
 			signalChanged = true;
 	}
 

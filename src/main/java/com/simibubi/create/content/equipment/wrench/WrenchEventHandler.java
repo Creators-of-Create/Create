@@ -1,7 +1,6 @@
 package com.simibubi.create.content.equipment.wrench;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags.AllItemTags;
 
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -11,10 +10,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.Tags.Items;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 @EventBusSubscriber
 public class WrenchEventHandler {
@@ -34,7 +34,7 @@ public class WrenchEventHandler {
 			return;
 		if (AllItems.WRENCH.isIn(itemStack))
 			return;
-		if (!AllItemTags.WRENCH.matches(itemStack.getItem()))
+		if (!itemStack.is(Items.TOOLS_WRENCH))
 			return;
 
 		BlockState state = event.getLevel()

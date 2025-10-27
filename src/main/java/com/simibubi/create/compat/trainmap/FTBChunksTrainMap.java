@@ -18,10 +18,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+
+import net.neoforged.fml.util.ObfuscationReflectionHelper;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 
 public class FTBChunksTrainMap {
 
@@ -110,7 +111,7 @@ public class FTBChunksTrainMap {
 			Mth.floor(largeMapScreen.width / regionTileSize), Mth.floor(largeMapScreen.height / regionTileSize));
 
 		List<FormattedText> tooltip = TrainMapManager.renderAndPick(graphics, Mth.floor(mouseX), Mth.floor(mouseY),
-			event.getPartialTick(), linearFiltering, bounds);
+			linearFiltering, bounds);
 
 		pose.popPose();
 

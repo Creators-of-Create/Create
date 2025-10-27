@@ -15,6 +15,8 @@ import static com.simibubi.create.foundation.data.TagGen.axeOrPickaxe;
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 import static com.simibubi.create.foundation.data.TagGen.tagBlockAndItem;
 
+import java.util.Map;
+
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.api.behaviour.interaction.ConductorBlockInteractionBehavior;
@@ -59,7 +61,6 @@ import com.simibubi.create.content.contraptions.piston.MechanicalPistonHeadBlock
 import com.simibubi.create.content.contraptions.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock;
 import com.simibubi.create.content.decoration.CardboardBlock;
-import com.simibubi.create.content.decoration.CardboardBlockItem;
 import com.simibubi.create.content.decoration.MetalLadderBlock;
 import com.simibubi.create.content.decoration.MetalScaffoldingBlock;
 import com.simibubi.create.content.decoration.RoofBlockCTBehaviour;
@@ -258,6 +259,7 @@ import com.simibubi.create.foundation.block.CopperBlockSet;
 import com.simibubi.create.foundation.block.DyedBlockList;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
+import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.BuilderTransformers;
@@ -265,13 +267,13 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.MetalBarsGen;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
+import com.simibubi.create.foundation.data.recipe.CommonMetal;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.UncontainableBlockItem;
 import com.simibubi.create.foundation.mixin.accessor.BlockLootSubProviderAccessor;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.infrastructure.config.CStress;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
@@ -279,6 +281,7 @@ import net.createmod.catnip.data.Couple;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -291,6 +294,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -308,17 +312,16 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTable.Builder;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
+import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
-import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.ForgeSoundType;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.util.DeferredSoundType;
 
 @SuppressWarnings("removal")
 public class AllBlocks {
@@ -344,8 +347,8 @@ public class AllBlocks {
 					.setRolls(ConstantValue.exactly(1))
 					.add(LootItem.lootTableItem(AllBlocks.SCHEMATICANNON.get()
 							.asItem())
-						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-							.copy("Options", "BlockEntityTag.Options")))));
+						.apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+							.include(AllDataComponents.SCHEMATICANNON_OPTIONS)))));
 			})
 			.item()
 			.transform(customItemModel())
@@ -535,6 +538,7 @@ public class AllBlocks {
 		.transform(CStress.setNoImpact())
 		.transform(displaySource(AllDisplaySources.ITEM_NAMES))
 		.onRegister(CreateRegistrate.blockModel(() -> BeltModel::new))
+		.clientExtension(() -> () -> new BeltBlock.RenderProperties())
 		.register();
 
 	public static final BlockEntry<ChainConveyorBlock> CHAIN_CONVEYOR =
@@ -597,6 +601,7 @@ public class AllBlocks {
 	public static final BlockEntry<WaterWheelStructuralBlock> WATER_WHEEL_STRUCTURAL =
 		REGISTRATE.block("water_wheel_structure", WaterWheelStructuralBlock::new)
 			.initialProperties(SharedProperties::wooden)
+			.clientExtension(() -> () -> new WaterWheelStructuralBlock.RenderProperties())
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStatesExcept(BlockStateGen.mapToAir(p), WaterWheelStructuralBlock.FACING))
 			.properties(p -> p.noOcclusion()
@@ -810,6 +815,7 @@ public class AllBlocks {
 			.isSuffocating((state, level, pos) -> false))
 		.transform(pickaxeOnly())
 		.addLayer(() -> RenderType::cutoutMipped)
+		.clientExtension(() -> () -> new ReducedDestroyEffects())
 		.blockstate(new ChuteGenerator()::generate)
 		.item(ChuteItem::new)
 		.transform(customItemModel("_", "block"))
@@ -823,6 +829,7 @@ public class AllBlocks {
 			.isSuffocating((state, level, pos) -> false)
 			.isRedstoneConductor((state, level, pos) -> false))
 		.addLayer(() -> RenderType::cutoutMipped)
+		.clientExtension(() -> () -> new ReducedDestroyEffects())
 		.transform(pickaxeOnly())
 		.blockstate((c, p) -> BlockStateGen.simpleBlock(c, p, AssetLookup.forPowered(c, p)))
 		.item()
@@ -1609,9 +1616,10 @@ public class AllBlocks {
 			.forceSolidOn())
 		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(pickaxeOnly())
+		.clientExtension(() -> () -> new TrackBlock.RenderProperties())
 		.onRegister(CreateRegistrate.blockModel(() -> TrackModel::new))
 		.blockstate(new TrackBlockStateGenerator()::generate)
-		.tag(AllBlockTags.RELOCATION_NOT_SUPPORTED.tag)
+		.tag(Tags.Blocks.RELOCATION_NOT_SUPPORTED)
 		.tag(AllBlockTags.TRACKS.tag)
 		.tag(AllBlockTags.GIRDABLE_TRACKS.tag)
 		.lang("Train Track")
@@ -1717,6 +1725,7 @@ public class AllBlocks {
 			.properties(p -> p.mapColor(MapColor.STONE))
 			.transform(pickaxeOnly())
 			.tag(AllBlockTags.SAFE_NBT.tag)
+			.clientExtension(() -> () -> new ReducedDestroyEffects())
 			.onRegister(movementBehaviour(FunnelMovementBehaviour.andesite()))
 			.blockstate(new FunnelGenerator("andesite", false)::generate)
 			.item(FunnelItem::new)
@@ -1732,6 +1741,7 @@ public class AllBlocks {
 			.properties(p -> p.mapColor(MapColor.STONE))
 			.transform(pickaxeOnly())
 			.tag(AllBlockTags.SAFE_NBT.tag)
+			.clientExtension(() -> () -> new ReducedDestroyEffects())
 			.blockstate(new BeltFunnelGenerator("andesite")::generate)
 			.loot((p, b) -> p.dropOther(b, ANDESITE_FUNNEL.get()))
 			.register();
@@ -1743,6 +1753,7 @@ public class AllBlocks {
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW))
 			.transform(pickaxeOnly())
 			.tag(AllBlockTags.SAFE_NBT.tag)
+			.clientExtension(() -> () -> new ReducedDestroyEffects())
 			.onRegister(movementBehaviour(FunnelMovementBehaviour.brass()))
 			.blockstate(new FunnelGenerator("brass", true)::generate)
 			.item(FunnelItem::new)
@@ -1758,6 +1769,7 @@ public class AllBlocks {
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW))
 			.transform(pickaxeOnly())
 			.tag(AllBlockTags.SAFE_NBT.tag)
+			.clientExtension(() -> () -> new ReducedDestroyEffects())
 			.blockstate(new BeltFunnelGenerator("brass")::generate)
 			.loot((p, b) -> p.dropOther(b, BRASS_FUNNEL.get()))
 			.register();
@@ -1765,7 +1777,7 @@ public class AllBlocks {
 	public static final BlockEntry<BeltTunnelBlock> ANDESITE_TUNNEL =
 		REGISTRATE.block("andesite_tunnel", BeltTunnelBlock::new)
 			.properties(p -> p.mapColor(MapColor.STONE))
-			.transform(BuilderTransformers.beltTunnel("andesite", new ResourceLocation("block/polished_andesite")))
+			.transform(BuilderTransformers.beltTunnel("andesite", ResourceLocation.withDefaultNamespace("block/polished_andesite")))
 			.transform(displaySource(AllDisplaySources.ACCUMULATE_ITEMS))
 			.transform(displaySource(AllDisplaySources.ITEM_THROUGHPUT))
 			.register();
@@ -1997,7 +2009,7 @@ public class AllBlocks {
 			.transform(BuilderTransformers.tableCloth("brass", SharedProperties::softMetal, false))
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW)
 				.requiresCorrectToolForDrops())
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")),
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(CommonMetal.BRASS.ingots),
 				RecipeCategory.DECORATIONS, c::get, 2))
 			.transform(pickaxeOnly())
 			.lang("Brass Table Cover")
@@ -2007,7 +2019,7 @@ public class AllBlocks {
 		REGISTRATE.block("copper_table_cloth", p -> new TableClothBlock(p, "copper"))
 			.transform(BuilderTransformers.tableCloth("copper", SharedProperties::copperMetal, false))
 			.properties(p -> p.requiresCorrectToolForDrops())
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")),
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(CommonMetal.COPPER.ingots),
 				RecipeCategory.DECORATIONS, c::get, 2))
 			.transform(pickaxeOnly())
 			.lang("Copper Table Cover")
@@ -2110,6 +2122,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::copperMetal)
 		.properties(p -> p.forceSolidOn())
 		.transform(pickaxeOnly())
+		.tag(AllBlockTags.SAFE_NBT.tag)
 		.blockstate((c, p) -> p.horizontalFaceBlock(c.get(), AssetLookup.standardModel(c, p)))
 		.simpleItem()
 		.register();
@@ -2219,17 +2232,17 @@ public class AllBlocks {
 				.forceSolidOn())
 			.addLayer(() -> RenderType::cutoutMipped)
 			.loot((lt, block) -> {
-				Builder builder = LootTable.lootTable();
-				LootItemCondition.Builder survivesExplosion = ExplosionCondition.survivesExplosion();
-				lt.add(block, builder.withPool(LootPool.lootPool()
-					.when(survivesExplosion)
-					.setRolls(ConstantValue.exactly(1))
-					.add(LootItem.lootTableItem(block)
-						.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-							.copy("UniqueId", "UniqueId"))
-						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-							.copy("Inventory", "Inventory")))));
+				lt.add(block, LootTable.lootTable().withPool(LootPool.lootPool()
+						.when(ExplosionCondition.survivesExplosion())
+						.setRolls(ConstantValue.exactly(1))
+						.add(LootItem.lootTableItem(block)
+								.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
+								.apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+										.include(AllDataComponents.TOOLBOX_UUID)
+										.include(AllDataComponents.TOOLBOX_INVENTORY)
+								)
+						)
+				));
 			})
 			.blockstate((c, p) -> {
 				p.horizontalBlock(c.get(), p.models()
@@ -2276,21 +2289,21 @@ public class AllBlocks {
 	public static final BlockEntry<MetalLadderBlock> BRASS_LADDER =
 		REGISTRATE.block("brass_ladder", MetalLadderBlock::new)
 			.transform(BuilderTransformers.ladder("brass",
-				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")), MapColor.TERRACOTTA_YELLOW))
+				() -> DataIngredient.tag(CommonMetal.BRASS.ingots), MapColor.TERRACOTTA_YELLOW))
 			.register();
 
 	public static final BlockEntry<MetalLadderBlock> COPPER_LADDER =
 		REGISTRATE.block("copper_ladder", MetalLadderBlock::new)
 			.transform(BuilderTransformers.ladder("copper",
-				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), MapColor.COLOR_ORANGE))
+				() -> DataIngredient.tag(CommonMetal.COPPER.ingots), MapColor.COLOR_ORANGE))
 			.register();
 
 	public static final BlockEntry<IronBarsBlock> ANDESITE_BARS = MetalBarsGen.createBars("andesite", true,
 		() -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()), MapColor.STONE);
 	public static final BlockEntry<IronBarsBlock> BRASS_BARS = MetalBarsGen.createBars("brass", true,
-		() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")), MapColor.TERRACOTTA_YELLOW);
+		() -> DataIngredient.tag(CommonMetal.BRASS.ingots), MapColor.TERRACOTTA_YELLOW);
 	public static final BlockEntry<IronBarsBlock> COPPER_BARS = MetalBarsGen.createBars("copper", true,
-		() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), MapColor.COLOR_ORANGE);
+		() -> DataIngredient.tag(CommonMetal.COPPER.ingots), MapColor.COLOR_ORANGE);
 
 	public static final BlockEntry<MetalScaffoldingBlock> ANDESITE_SCAFFOLD = REGISTRATE
 		.block("andesite_scaffolding", MetalScaffoldingBlock::new)
@@ -2302,14 +2315,14 @@ public class AllBlocks {
 	public static final BlockEntry<MetalScaffoldingBlock> BRASS_SCAFFOLD =
 		REGISTRATE.block("brass_scaffolding", MetalScaffoldingBlock::new)
 			.transform(BuilderTransformers.scaffold("brass",
-				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")), MapColor.TERRACOTTA_YELLOW,
+				() -> DataIngredient.tag(CommonMetal.BRASS.ingots), MapColor.TERRACOTTA_YELLOW,
 				AllSpriteShifts.BRASS_SCAFFOLD, AllSpriteShifts.BRASS_SCAFFOLD_INSIDE, AllSpriteShifts.BRASS_CASING))
 			.register();
 
 	public static final BlockEntry<MetalScaffoldingBlock> COPPER_SCAFFOLD =
 		REGISTRATE.block("copper_scaffolding", MetalScaffoldingBlock::new)
 			.transform(BuilderTransformers.scaffold("copper",
-				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), MapColor.COLOR_ORANGE,
+				() -> DataIngredient.tag(CommonMetal.COPPER.ingots), MapColor.COLOR_ORANGE,
 				AllSpriteShifts.COPPER_SCAFFOLD, AllSpriteShifts.COPPER_SCAFFOLD_INSIDE, AllSpriteShifts.COPPER_CASING))
 			.register();
 
@@ -2353,7 +2366,7 @@ public class AllBlocks {
 			.transform(BuilderTransformers.copycat())
 			.onRegister(CreateRegistrate.blockModel(() -> CopycatStepModel::new))
 			.item()
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/zinc")),
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(CommonMetal.ZINC.ingots),
 				RecipeCategory.BUILDING_BLOCKS, c::get, 4))
 			.transform(customItemModel("copycat_base", "step"))
 			.register();
@@ -2363,7 +2376,7 @@ public class AllBlocks {
 			.transform(BuilderTransformers.copycat())
 			.onRegister(CreateRegistrate.blockModel(() -> CopycatPanelModel::new))
 			.item()
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/zinc")),
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(CommonMetal.ZINC.ingots),
 				RecipeCategory.BUILDING_BLOCKS, c::get, 4))
 			.transform(customItemModel("copycat_base", "panel"))
 			.register();
@@ -2412,26 +2425,23 @@ public class AllBlocks {
 	});
 
 	public static final BlockEntry<SlidingDoorBlock> ANDESITE_DOOR =
-		REGISTRATE.block("andesite_door", p -> SlidingDoorBlock.metal(p, true))
+		REGISTRATE.block("andesite_door", p -> SlidingDoorBlock.stone(p, true))
 			.transform(BuilderTransformers.slidingDoor("andesite"))
 			.properties(p -> p.mapColor(MapColor.STONE)
-				.sound(SoundType.STONE)
 				.noOcclusion())
 			.register();
 
 	public static final BlockEntry<SlidingDoorBlock> BRASS_DOOR =
-		REGISTRATE.block("brass_door", p -> SlidingDoorBlock.metal(p, false))
+		REGISTRATE.block("brass_door", p -> SlidingDoorBlock.stone(p, false))
 			.transform(BuilderTransformers.slidingDoor("brass"))
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW)
-				.sound(SoundType.STONE)
 				.noOcclusion())
 			.register();
 
 	public static final BlockEntry<SlidingDoorBlock> COPPER_DOOR =
-		REGISTRATE.block("copper_door", p -> SlidingDoorBlock.metal(p, true))
+		REGISTRATE.block("copper_door", p -> SlidingDoorBlock.stone(p, true))
 			.transform(BuilderTransformers.slidingDoor("copper"))
 			.properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
-				.sound(SoundType.STONE)
 				.noOcclusion())
 			.register();
 
@@ -2439,15 +2449,13 @@ public class AllBlocks {
 		REGISTRATE.block("train_door", p -> SlidingDoorBlock.metal(p, false))
 			.transform(BuilderTransformers.slidingDoor("train"))
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
-				.sound(SoundType.NETHERITE_BLOCK)
 				.noOcclusion())
 			.register();
 
 	public static final BlockEntry<TrainTrapdoorBlock> TRAIN_TRAPDOOR =
-		REGISTRATE.block("train_trapdoor", TrainTrapdoorBlock::new)
+		REGISTRATE.block("train_trapdoor", TrainTrapdoorBlock::metal)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
-				.sound(SoundType.NETHERITE_BLOCK))
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN))
 			.transform(BuilderTransformers.trapdoor(true))
 			.register();
 
@@ -2455,16 +2463,14 @@ public class AllBlocks {
 		REGISTRATE.block("framed_glass_door", p -> SlidingDoorBlock.glass(p, false))
 			.transform(BuilderTransformers.slidingDoor("glass"))
 			.properties(p -> p.mapColor(MapColor.NONE)
-				.sound(SoundType.GLASS)
 				.noOcclusion())
 			.register();
 
 	public static final BlockEntry<TrainTrapdoorBlock> FRAMED_GLASS_TRAPDOOR =
-		REGISTRATE.block("framed_glass_trapdoor", TrainTrapdoorBlock::new)
+		REGISTRATE.block("framed_glass_trapdoor", TrainTrapdoorBlock::glass)
 			.initialProperties(SharedProperties::softMetal)
 			.transform(BuilderTransformers.trapdoor(false))
 			.properties(p -> p.mapColor(MapColor.NONE)
-				.sound(SoundType.GLASS)
 				.noOcclusion())
 			.onRegister(connectedTextures(TrapdoorCTBehaviour::new))
 			.addLayer(() -> RenderType::cutoutMipped)
@@ -2476,13 +2482,20 @@ public class AllBlocks {
 			.requiresCorrectToolForDrops()
 			.sound(SoundType.STONE))
 		.transform(pickaxeOnly())
-		.loot((lt, b) -> lt.add(b,
-			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
+		.loot((lt, b) ->  {
+			HolderLookup.RegistryLookup<Enchantment> enchantmentRegistryLookup = lt.getRegistries().lookupOrThrow(Registries.ENCHANTMENT);
+
+			lt.add(b,
+				lt.createSilkTouchDispatchTable(b,
 				lt.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
-					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
+					.apply(ApplyBonusCount.addOreBonusCount(enchantmentRegistryLookup.getOrThrow(Enchantments.FORTUNE))))));
+		})
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.ORES)
-		.transform(tagBlockAndItem("ores/zinc", "ores_in_ground/stone"))
+		.transform(tagBlockAndItem(Map.of(
+			CommonMetal.ZINC.ores.blocks(), CommonMetal.ZINC.ores.items(),
+			Tags.Blocks.ORES_IN_GROUND_STONE, Tags.Items.ORES_IN_GROUND_STONE
+		)))
 		.tag(Tags.Items.ORES)
 		.build()
 		.register();
@@ -2493,13 +2506,20 @@ public class AllBlocks {
 			.requiresCorrectToolForDrops()
 			.sound(SoundType.DEEPSLATE))
 		.transform(pickaxeOnly())
-		.loot((lt, b) -> lt.add(b,
-			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
-				lt.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
-					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
+		.loot((lt, b) -> {
+			HolderLookup.RegistryLookup<Enchantment> enchantmentRegistryLookup = lt.getRegistries().lookupOrThrow(Registries.ENCHANTMENT);
+
+			lt.add(b,
+					lt.createSilkTouchDispatchTable(b,
+					lt.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
+							.apply(ApplyBonusCount.addOreBonusCount(enchantmentRegistryLookup.getOrThrow(Enchantments.FORTUNE))))));
+		})
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.ORES)
-		.transform(tagBlockAndItem("ores/zinc", "ores_in_ground/deepslate"))
+		.transform(tagBlockAndItem(Map.of(
+			CommonMetal.ZINC.ores.blocks(), CommonMetal.ZINC.ores.items(),
+			Tags.Blocks.ORES_IN_GROUND_DEEPSLATE, Tags.Items.ORES_IN_GROUND_DEEPSLATE
+		)))
 		.tag(Tags.Items.ORES)
 		.build()
 		.register();
@@ -2512,7 +2532,7 @@ public class AllBlocks {
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.lang("Block of Raw Zinc")
-		.transform(tagBlockAndItem("storage_blocks/raw_zinc"))
+		.transform(tagBlockAndItem(CommonMetal.ZINC.rawStorageBlocks))
 		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.register();
@@ -2525,7 +2545,7 @@ public class AllBlocks {
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.tag(BlockTags.BEACON_BASE_BLOCKS)
-		.transform(tagBlockAndItem("storage_blocks/zinc"))
+		.transform(tagBlockAndItem(CommonMetal.ZINC.storageBlocks))
 		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.lang("Block of Zinc")
@@ -2538,7 +2558,7 @@ public class AllBlocks {
 		.transform(pickaxeOnly())
 		.blockstate(simpleCubeAll("andesite_block"))
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
-		.transform(tagBlockAndItem("storage_blocks/andesite_alloy"))
+		.transform(tagBlockAndItem(AllBlockTags.ANDESITE_ALLOY_STORAGE_BLOCKS.tag, AllItemTags.ANDESITE_ALLOY_STORAGE_BLOCKS.tag))
 		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.lang("Block of Andesite Alloy")
@@ -2563,7 +2583,7 @@ public class AllBlocks {
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.tag(BlockTags.BEACON_BASE_BLOCKS)
-		.transform(tagBlockAndItem("storage_blocks/brass"))
+		.transform(tagBlockAndItem(CommonMetal.BRASS.storageBlocks))
 		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.lang("Block of Brass")
@@ -2578,9 +2598,10 @@ public class AllBlocks {
 			.transform(axeOnly())
 			.blockstate(BlockStateGen.horizontalAxisBlockProvider(false))
 			.tag(Tags.Blocks.STORAGE_BLOCKS)
-			.tag(AllTags.forgeBlockTag("storage_blocks/cardboard"))
-			.item(CardboardBlockItem::new)
-			.tag(AllTags.forgeItemTag("storage_blocks/cardboard"))
+			.tag(AllBlockTags.CARDBOARD_STORAGE_BLOCKS.tag)
+			.item()
+			.burnTime(4000)
+			.tag(AllItemTags.CARDBOARD_STORAGE_BLOCKS.tag)
 			.tag(Tags.Items.STORAGE_BLOCKS)
 			.build()
 			.lang("Block of Cardboard")
@@ -2598,13 +2619,14 @@ public class AllBlocks {
 				.withPool(LootPool.lootPool()
 					.setRolls(ConstantValue.exactly(1.0F))
 					.add(LootItem.lootTableItem(b)
-						.when(BlockLootSubProviderAccessor.create$HAS_SILK_TOUCH())
+						.when(((BlockLootSubProviderAccessor) r).create$hasSilkTouch())
 						.otherwise(r.applyExplosionCondition(b, LootItem.lootTableItem(Items.STRING)))))
 				.withPool(r.applyExplosionCondition(b, LootPool.lootPool()
 					.setRolls(ConstantValue.exactly(1.0F))
 					.add(LootItem.lootTableItem(AllBlocks.CARDBOARD_BLOCK.asItem()))
-					.when(BlockLootSubProviderAccessor.create$HAS_SILK_TOUCH().invert())))))
-			.item(CardboardBlockItem::new)
+					.when(((BlockLootSubProviderAccessor) r).create$hasSilkTouch().invert())))))
+			.item()
+			.burnTime(4000)
 			.build()
 			.lang("Bound Block of Cardboard")
 			.register();
@@ -2613,7 +2635,7 @@ public class AllBlocks {
 		REGISTRATE.block("experience_block", ExperienceBlock::new)
 			.initialProperties(SharedProperties::softMetal)
 			.properties(p -> p.mapColor(MapColor.PLANT)
-				.sound(new ForgeSoundType(1, .5f, () -> SoundEvents.AMETHYST_BLOCK_BREAK,
+				.sound(new DeferredSoundType(1, .5f, () -> SoundEvents.AMETHYST_BLOCK_BREAK,
 					() -> SoundEvents.AMETHYST_BLOCK_STEP, () -> SoundEvents.AMETHYST_BLOCK_PLACE,
 					() -> SoundEvents.AMETHYST_BLOCK_HIT, () -> SoundEvents.AMETHYST_BLOCK_FALL))
 				.requiresCorrectToolForDrops()
@@ -2669,14 +2691,14 @@ public class AllBlocks {
 
 	public static final CopperBlockSet COPPER_SHINGLES = new CopperBlockSet(REGISTRATE, "copper_shingles",
 		"copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
-		p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), RecipeCategory.BUILDING_BLOCKS,
+		p.stonecutting(DataIngredient.tag(CommonMetal.COPPER.ingots), RecipeCategory.BUILDING_BLOCKS,
 			c::get, 2);
 	}, (ws, block) -> connectedTextures(() -> new RoofBlockCTBehaviour(AllSpriteShifts.COPPER_SHINGLES.get(ws)))
 		.accept(block));
 
 	public static final CopperBlockSet COPPER_TILES =
 		new CopperBlockSet(REGISTRATE, "copper_tiles", "copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
-			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), RecipeCategory.BUILDING_BLOCKS,
+			p.stonecutting(DataIngredient.tag(CommonMetal.COPPER.ingots), RecipeCategory.BUILDING_BLOCKS,
 				c::get, 2);
 		}, (ws, block) -> connectedTextures(() -> new RoofBlockCTBehaviour(AllSpriteShifts.COPPER_TILES.get(ws)))
 			.accept(block));

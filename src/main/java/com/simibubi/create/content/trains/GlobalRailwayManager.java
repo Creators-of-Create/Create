@@ -10,21 +10,24 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+
+import com.simibubi.create.content.trains.entity.RemoveTrainPacket;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.kinetics.KineticDebugger;
 import com.simibubi.create.content.trains.display.GlobalTrainDisplayData;
 import com.simibubi.create.content.trains.entity.Train;
-import com.simibubi.create.content.trains.entity.TrainPacket;
+import com.simibubi.create.content.trains.entity.AddTrainPacket;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackGraphSync;
 import com.simibubi.create.content.trains.graph.TrackGraphVisualizer;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
+import net.createmod.catnip.platform.CatnipServices;
+import com.simibubi.create.foundation.utility.DistExecutor;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.server.MinecraftServer;
@@ -32,10 +35,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class GlobalRailwayManager {
 
@@ -48,7 +49,7 @@ public class GlobalRailwayManager {
 	private List<Train> waitingTrains;
 
 	private RailwaySavedData savedData;
-	
+
 	public int version;
 
 	public GlobalRailwayManager() {
@@ -69,8 +70,7 @@ public class GlobalRailwayManager {
 					.toList(),
 				serverPlayer);
 			for (Train train : trains.values())
-				AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-					new TrainPacket(train, true));
+				CatnipServices.NETWORK.sendToClient(serverPlayer, new AddTrainPacket(train));
 		}
 	}
 
@@ -233,7 +233,7 @@ public class GlobalRailwayManager {
 			if (train.invalid) {
 				iterator.remove();
 				trains.remove(train.id);
-				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
+				CatnipServices.NETWORK.sendToAllClients(new RemoveTrainPacket(train));
 				continue;
 			}
 
@@ -249,7 +249,7 @@ public class GlobalRailwayManager {
 			if (train.invalid) {
 				iterator.remove();
 				trains.remove(train.id);
-				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
+				CatnipServices.NETWORK.sendToAllClients(new RemoveTrainPacket(train));
 				continue;
 			}
 
@@ -285,7 +285,7 @@ public class GlobalRailwayManager {
 		if (level != null && !level.isClientSide())
 			return this;
 		MutableObject<GlobalRailwayManager> m = new MutableObject<>();
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> clientManager(m));
+		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> clientManager(m));
 		return m.getValue();
 	}
 

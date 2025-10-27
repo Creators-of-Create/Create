@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_blue_table_cloth": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create:blue_table_cloth"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create:crafting/logistics/blue_table_cloth_clear"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_blue_table_cloth"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:crafting/logistics/blue_table_cloth_clear"
+    ]
+  }
+}

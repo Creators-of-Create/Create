@@ -1,17 +1,14 @@
 package com.simibubi.create.infrastructure.debugInfo.element;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.infrastructure.debugInfo.DebugInformation;
 import com.simibubi.create.infrastructure.debugInfo.InfoProvider;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
 /**
@@ -19,13 +16,6 @@ import net.minecraft.world.entity.player.Player;
  * To create one, use the {@link #builder(String) builder} method.
  */
 public record DebugInfoSection(String name, ImmutableList<InfoElement> elements) implements InfoElement {
-	@Override
-	public void write(Player player, FriendlyByteBuf buffer) {
-		buffer.writeBoolean(true);
-		buffer.writeUtf(name);
-		buffer.writeCollection(elements, (buf, element) -> element.write(player, buf));
-	}
-
 	public Builder builder() {
 		return builder(name).putAll(elements);
 	}
@@ -35,17 +25,6 @@ public record DebugInfoSection(String name, ImmutableList<InfoElement> elements)
 		String indent = DebugInformation.getIndent(depth);
 		lineConsumer.accept(indent + name + ":");
 		elements.forEach(element -> element.print(depth + 1, player, lineConsumer));
-	}
-
-	public static DebugInfoSection read(FriendlyByteBuf buffer) {
-		String name = buffer.readUtf();
-		ArrayList<InfoElement> elements = buffer.readCollection(ArrayList::new, InfoElement::read);
-		return new DebugInfoSection(name, ImmutableList.copyOf(elements));
-	}
-
-	public static DebugInfoSection readDirect(FriendlyByteBuf buf) {
-		buf.readBoolean(); // discard type marker
-		return read(buf);
 	}
 
 	public static Builder builder(String name) {

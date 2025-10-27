@@ -4,6 +4,7 @@ import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
@@ -14,20 +15,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface ValueSettingsBehaviour extends ClipboardCloneable {
 
-	public static record ValueSettings(int row, int value) {
-
+	record ValueSettings(int row, int value) {
 		public MutableComponent format() {
 			return CreateLang.number(value)
 				.component();
 		}
+	}
 
-	};
+	boolean testHit(Vec3 hit);
 
-	public boolean testHit(Vec3 hit);
-
-	public boolean isActive();
+	boolean isActive();
 
 	default boolean onlyVisibleWithWrench() {
 		return false;
@@ -35,13 +36,13 @@ public interface ValueSettingsBehaviour extends ClipboardCloneable {
 
 	default void newSettingHovered(ValueSettings valueSetting) {}
 
-	public ValueBoxTransform getSlotPositioning();
+	ValueBoxTransform getSlotPositioning();
 
-	public ValueSettingsBoard createBoard(Player player, BlockHitResult hitResult);
+	ValueSettingsBoard createBoard(Player player, BlockHitResult hitResult);
 
-	public void setValueSettings(Player player, ValueSettings valueSetting, boolean ctrlDown);
+	void setValueSettings(Player player, ValueSettings valueSetting, boolean ctrlDown);
 
-	public ValueSettings getValueSettings();
+	ValueSettings getValueSettings();
 
 	default boolean acceptsValueSettings() {
 		return true;
@@ -53,7 +54,7 @@ public interface ValueSettingsBehaviour extends ClipboardCloneable {
 	}
 
 	@Override
-	default boolean writeToClipboard(CompoundTag tag, Direction side) {
+	default boolean writeToClipboard(HolderLookup.@NotNull Provider registries, CompoundTag tag, Direction side) {
 		if (!acceptsValueSettings())
 			return false;
 		ValueSettings valueSettings = getValueSettings();
@@ -63,7 +64,7 @@ public interface ValueSettingsBehaviour extends ClipboardCloneable {
 	}
 
 	@Override
-	default boolean readFromClipboard(CompoundTag tag, Player player, Direction side, boolean simulate) {
+	default boolean readFromClipboard(HolderLookup.@NotNull Provider registries, CompoundTag tag, Player player, Direction side, boolean simulate) {
 		if (!acceptsValueSettings())
 			return false;
 		if (!tag.contains("Value") || !tag.contains("Row"))

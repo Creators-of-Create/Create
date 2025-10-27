@@ -17,7 +17,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -33,7 +35,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implements IBE<MechanicalPistonBlockEntity> {
 
@@ -62,41 +64,37 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-		BlockHitResult hit) {
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!player.mayBuild())
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (player.isShiftKeyDown())
-			return InteractionResult.PASS;
-		if (!player.getItemInHand(handIn)
-			.is(Tags.Items.SLIMEBALLS)) {
-			if (player.getItemInHand(handIn)
-				.isEmpty()) {
-				withBlockEntityDo(worldIn, pos, be -> be.assembleNextTick = true);
-				return InteractionResult.SUCCESS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		if (!stack.is(Tags.Items.SLIMEBALLS)) {
+			if (stack.isEmpty()) {
+				withBlockEntityDo(level, pos, be -> be.assembleNextTick = true);
+				return ItemInteractionResult.SUCCESS;
 			}
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		}
 		if (state.getValue(STATE) != PistonState.RETRACTED)
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		Direction direction = state.getValue(FACING);
-		if (hit.getDirection() != direction)
-			return InteractionResult.PASS;
+		if (hitResult.getDirection() != direction)
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (((MechanicalPistonBlock) state.getBlock()).isSticky)
-			return InteractionResult.PASS;
-		if (worldIn.isClientSide) {
-			Vec3 vec = hit.getLocation();
-			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		if (level.isClientSide) {
+			Vec3 vec = hitResult.getLocation();
+			level.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
+			return ItemInteractionResult.SUCCESS;
 		}
-		AllSoundEvents.SLIME_ADDED.playOnServer(worldIn, pos, .5f, 1);
+		AllSoundEvents.SLIME_ADDED.playOnServer(level, pos, .5f, 1);
 		if (!player.isCreative())
-			player.getItemInHand(handIn)
-				.shrink(1);
-		worldIn.setBlockAndUpdate(pos, AllBlocks.STICKY_MECHANICAL_PISTON.getDefaultState()
+			stack.shrink(1);
+		level.setBlockAndUpdate(pos, AllBlocks.STICKY_MECHANICAL_PISTON.getDefaultState()
 			.setValue(FACING, direction)
 			.setValue(AXIS_ALONG_FIRST_COORDINATE, state.getValue(AXIS_ALONG_FIRST_COORDINATE)));
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -144,7 +142,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	@Override
-	public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+	public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
 		Direction direction = state.getValue(FACING);
 		BlockPos pistonHead = null;
 		BlockPos pistonBase = pos;
@@ -185,7 +183,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 			break;
 		}
 
-		super.playerWillDestroy(worldIn, pos, state, player);
+		return super.playerWillDestroy(worldIn, pos, state, player);
 	}
 
 	public static int maxAllowedPistonPoles() {

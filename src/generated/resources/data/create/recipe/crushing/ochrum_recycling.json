@@ -1,0 +1,19 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "tag": "create:stone_types/ochrum"
+    }
+  ],
+  "processing_time": 250,
+  "results": [
+    {
+      "chance": 0.2,
+      "id": "create:crushed_raw_gold"
+    },
+    {
+      "chance": 0.2,
+      "id": "minecraft:gold_nugget"
+    }
+  ]
+}

@@ -8,13 +8,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import com.simibubi.create.AllBlockEntityTypes;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.filter.FilterItem;
@@ -23,16 +22,20 @@ import com.simibubi.create.content.logistics.packager.IdentifiedInventory;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour.RequestType;
 import com.simibubi.create.content.logistics.packagerLink.WiFiParticle;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import dan200.computercraft.api.peripheral.PeripheralCapability;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -47,13 +50,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class StockTickerBlockEntity extends StockCheckingBlockEntity implements IHaveHoveringInformation {
+
+	public AbstractComputerBehaviour computerBehaviour;
 
 	// Player-interface Feature
 	protected List<List<BigItemStack>> lastClientsideStockSnapshot;
@@ -67,21 +72,50 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 
 	// Shop feature
 	protected SmartInventory receivedPayments;
-	protected LazyOptional<IItemHandler> capability;
 
 	public StockTickerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		previouslyUsedAddress = "";
 		receivedPayments = new SmartInventory(27, this, 64, false);
-		capability = LazyOptional.of(() -> receivedPayments);
 		categories = new ArrayList<>();
 		hiddenCategoriesByPlayer = new HashMap<>();
 	}
 
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.registerBlockEntity(
+			Capabilities.ItemHandler.BLOCK,
+			AllBlockEntityTypes.STOCK_TICKER.get(),
+			(be, context) -> be.receivedPayments
+		);
+
+		if (Mods.COMPUTERCRAFT.isLoaded()) {
+			event.registerBlockEntity(
+				PeripheralCapability.get(),
+				AllBlockEntityTypes.STOCK_TICKER.get(),
+				(be, context) -> be.computerBehaviour.getPeripheralCapability()
+			);
+		}
+	}
+
+	@Override
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
+	}
+
 	public void refreshClientStockSnapshot() {
 		ticksSinceLastUpdate = 0;
-		AllPackets.getChannel()
-			.sendToServer(new LogisticalStockRequestPacket(worldPosition));
+		CatnipServices.NETWORK.sendToServer(new LogisticalStockRequestPacket(worldPosition));
+	}
+
+	public IItemHandler getReceivedPaymentsHandler() {
+		return receivedPayments;
 	}
 
 	public List<List<BigItemStack>> getClientStockSnapshot() {
@@ -126,11 +160,11 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 	}
 
 	@Override
-	protected void write(CompoundTag tag, boolean clientPacket) {
-		super.write(tag, clientPacket);
+	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(tag, registries, clientPacket);
 		tag.putString("PreviousAddress", previouslyUsedAddress);
-		tag.put("ReceivedPayments", receivedPayments.serializeNBT());
-		tag.put("Categories", NBTHelper.writeItemList(categories));
+		tag.put("ReceivedPayments", receivedPayments.serializeNBT(registries));
+		tag.put("Categories", NBTHelper.writeItemList(categories, registries));
 		tag.put("HiddenCategories", NBTHelper.writeCompoundList(hiddenCategoriesByPlayer.entrySet(), e -> {
 			CompoundTag c = new CompoundTag();
 			c.putUUID("Id", e.getKey());
@@ -143,11 +177,11 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 	}
 
 	@Override
-	protected void read(CompoundTag tag, boolean clientPacket) {
-		super.read(tag, clientPacket);
+	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(tag, registries, clientPacket);
 		previouslyUsedAddress = tag.getString("PreviousAddress");
-		receivedPayments.deserializeNBT(tag.getCompound("ReceivedPayments"));
-		categories = NBTHelper.readItemList(tag.getList("Categories", Tag.TAG_COMPOUND));
+		receivedPayments.deserializeNBT(registries, tag.getCompound("ReceivedPayments"));
+		categories = NBTHelper.readItemList(tag.getList("Categories", Tag.TAG_COMPOUND), registries);
 		categories.removeIf(stack -> !stack.isEmpty() && !(stack.getItem() instanceof FilterItem));
 		hiddenCategoriesByPlayer.clear();
 
@@ -238,13 +272,6 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 	}
 
 	@Override
-	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (isItemHandlerCap(cap))
-			return capability.cast();
-		return super.getCapability(cap, side);
-	}
-
-	@Override
 	public void destroy() {
 		ItemHelper.dropContents(level, worldPosition, receivedPayments);
 		for (ItemStack filter : categories)
@@ -252,12 +279,6 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 				Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(),
 					filter);
 		super.destroy();
-	}
-
-	@Override
-	public void invalidate() {
-		capability.invalidate();
-		super.invalidate();
 	}
 
 	public void playEffect() {

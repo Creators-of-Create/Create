@@ -17,7 +17,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 
 public class BeltHelper {
 
@@ -25,9 +25,16 @@ public class BeltHelper {
 	public static final ResourceManagerReloadListener LISTENER = resourceManager -> uprightCache.clear();
 
 	public static boolean isItemUpright(ItemStack stack) {
-		return uprightCache.computeIfAbsent(stack.getItem(),
-			item -> stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM)
-				.isPresent() || AllItemTags.UPRIGHT_ON_BELT.matches(stack));
+		return uprightCache.computeIfAbsent(
+			stack.getItem(),
+			item -> {
+				boolean isFluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM) != null;
+				boolean useUpright = AllItemTags.UPRIGHT_ON_BELT.matches(stack);
+				boolean forceDisableUpright = !AllItemTags.NOT_UPRIGHT_ON_BELT.matches(stack);
+
+				return (isFluidHandler || useUpright) && forceDisableUpright;
+			}
+		);
 	}
 
 	public static BeltBlockEntity getSegmentBE(LevelAccessor world, BlockPos pos) {

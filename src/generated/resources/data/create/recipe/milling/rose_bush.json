@@ -1,0 +1,25 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:rose_bush"
+    }
+  ],
+  "processing_time": 50,
+  "results": [
+    {
+      "count": 3,
+      "id": "minecraft:red_dye"
+    },
+    {
+      "chance": 0.05,
+      "count": 2,
+      "id": "minecraft:green_dye"
+    },
+    {
+      "chance": 0.25,
+      "count": 2,
+      "id": "minecraft:red_dye"
+    }
+  ]
+}

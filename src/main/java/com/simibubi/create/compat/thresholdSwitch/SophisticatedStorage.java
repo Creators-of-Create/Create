@@ -2,9 +2,10 @@ package com.simibubi.create.compat.thresholdSwitch;
 
 import com.simibubi.create.compat.Mods;
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class SophisticatedStorage implements ThresholdSwitchCompat {
 
@@ -13,7 +14,7 @@ public class SophisticatedStorage implements ThresholdSwitchCompat {
 		if (be == null)
 			return false;
 
-		String namespace = CatnipServices.REGISTRIES.getKeyOrThrow(be.getType())
+		String namespace = RegisteredObjectsHelper.getKeyOrThrow(be.getType())
 			.getNamespace();
 
 		return

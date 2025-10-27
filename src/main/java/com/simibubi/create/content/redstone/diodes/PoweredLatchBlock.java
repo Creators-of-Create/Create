@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -93,19 +93,19 @@ public class PoweredLatchBlock extends ToggleLatchBlock {
 		}
 
 		if (state != stateIn)
-			worldIn.setBlock(pos, state, 2);
+			worldIn.setBlock(pos, state, Block.UPDATE_CLIENTS);
 	}
 
 	@Override
-	protected InteractionResult activated(Level worldIn, BlockPos pos, BlockState state) {
+	protected ItemInteractionResult activated(Level worldIn, BlockPos pos, BlockState state) {
 		if (state.getValue(POWERED) != state.getValue(POWERED_SIDE))
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (!worldIn.isClientSide) {
 			float f = !state.getValue(POWERING) ? 0.6F : 0.5F;
 			worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
-			worldIn.setBlock(pos, state.cycle(POWERING), 2);
+			worldIn.setBlock(pos, state.cycle(POWERING), Block.UPDATE_CLIENTS);
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@Override

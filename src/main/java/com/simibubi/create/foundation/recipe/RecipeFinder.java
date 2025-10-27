@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -14,6 +14,7 @@ import com.simibubi.create.Create;
 
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 
 /**
@@ -23,7 +24,7 @@ import net.minecraft.world.level.Level;
  * @author simibubi
  */
 public class RecipeFinder {
-	private static final Cache<Object, List<Recipe<?>>> CACHED_SEARCHES = CacheBuilder.newBuilder().build();
+	private static final Cache<Object, List<RecipeHolder<? extends Recipe<?>>>> CACHED_SEARCHES = CacheBuilder.newBuilder().build();
 
 	public static final ResourceManagerReloadListener LISTENER = resourceManager -> CACHED_SEARCHES.invalidateAll();
 
@@ -35,7 +36,7 @@ public class RecipeFinder {
 	 * @param cacheKey (can be null to prevent the caching)
 	 * @return A started search to continue with more specific conditions.
 	 */
-	public static List<Recipe<?>> get(@Nullable Object cacheKey, Level level, Predicate<Recipe<?>> conditions) {
+	public static List<RecipeHolder<? extends Recipe<?>>> get(@Nullable Object cacheKey, Level level, Predicate<RecipeHolder<? extends Recipe<?>>> conditions) {
 		if (cacheKey == null)
 			return startSearch(level, conditions);
 
@@ -48,9 +49,9 @@ public class RecipeFinder {
 		return Collections.emptyList();
 	}
 
-	private static List<Recipe<?>> startSearch(Level level, Predicate<? super Recipe<?>> conditions) {
-		List<Recipe<?>> recipes = new ArrayList<>();
-		for (Recipe<?> r : level.getRecipeManager().getRecipes())
+	private static List<RecipeHolder<? extends Recipe<?>>> startSearch(Level level, Predicate<? super RecipeHolder<? extends Recipe<?>>> conditions) {
+		List<RecipeHolder<? extends Recipe<?>>> recipes = new ArrayList<>();
+		for (RecipeHolder<? extends Recipe<?>> r : level.getRecipeManager().getRecipes())
 			if (conditions.test(r))
 				recipes.add(r);
 		return recipes;

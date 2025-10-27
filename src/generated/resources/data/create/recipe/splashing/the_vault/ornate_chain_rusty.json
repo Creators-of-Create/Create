@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "the_vault"
+    }
+  ],
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "the_vault:ornate_chain"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "the_vault:ornate_chain_rusty"
+    }
+  ]
+}

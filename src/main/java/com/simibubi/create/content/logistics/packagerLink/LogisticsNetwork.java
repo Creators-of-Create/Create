@@ -8,12 +8,12 @@ import com.simibubi.create.Create;
 
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 public class LogisticsNetwork {
@@ -36,17 +36,16 @@ public class LogisticsNetwork {
 		locked = false;
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(HolderLookup.Provider registries) {
 		CompoundTag tag = new CompoundTag();
 		tag.putUUID("Id", id);
-		tag.put("Promises", panelPromises.write());
+		tag.put("Promises", panelPromises.write(registries));
 
 		tag.put("Links", NBTHelper.writeCompoundList(totalLinks, p -> {
-			CompoundTag nbt = NbtUtils.writeBlockPos(p.pos());
+			CompoundTag nbt = new CompoundTag();
+			nbt.put("Pos", NbtUtils.writeBlockPos(p.pos()));
 			if (p.dimension() != Level.OVERWORLD)
-				nbt.putString("Dim", p.dimension()
-					.location()
-					.toString());
+				NBTHelper.writeResourceLocation(nbt, "Dim", p.dimension().location());
 			return nbt;
 		}));
 
@@ -57,14 +56,14 @@ public class LogisticsNetwork {
 		return tag;
 	}
 
-	public static LogisticsNetwork read(CompoundTag tag) {
+	public static LogisticsNetwork read(CompoundTag tag, HolderLookup.Provider registries) {
 		LogisticsNetwork network = new LogisticsNetwork(tag.getUUID("Id"));
-		network.panelPromises = RequestPromiseQueue.read(tag.getCompound("Promises"), Create.LOGISTICS::markDirty);
+		network.panelPromises = RequestPromiseQueue.read(tag.getCompound("Promises"), registries, Create.LOGISTICS::markDirty);
 
 		NBTHelper.iterateCompoundList(tag.getList("Links", Tag.TAG_COMPOUND), nbt -> {
 			network.totalLinks.add(GlobalPos.of(nbt.contains("Dim")
-				? ResourceKey.create(Registries.DIMENSION, new ResourceLocation(nbt.getString("Dim")))
-				: Level.OVERWORLD, NbtUtils.readBlockPos(nbt)));
+				? ResourceKey.create(Registries.DIMENSION, NBTHelper.readResourceLocation(nbt, "Dim"))
+				: Level.OVERWORLD, NBTHelper.readBlockPos(nbt, "Pos")));
 		});
 
 		network.owner = tag.contains("Owner") ? tag.getUUID("Owner") : null;

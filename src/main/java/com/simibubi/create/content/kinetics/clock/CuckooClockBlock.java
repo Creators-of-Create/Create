@@ -25,22 +25,22 @@ public class CuckooClockBlock extends HorizontalKineticBlock implements IBE<Cuck
 	public static CuckooClockBlock regular(Properties properties) {
 		return new CuckooClockBlock(false, properties);
 	}
-	
+
 	public static CuckooClockBlock mysterious(Properties properties) {
 		return new CuckooClockBlock(true, properties);
 	}
-	
+
 	protected CuckooClockBlock(boolean mysterious, Properties properties) {
 		super(properties);
 		this.mysterious = mysterious;
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_,
 		CollisionContext p_220053_4_) {
 		return AllShapes.CUCKOO_CLOCK;
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Direction preferred = getPreferredHorizontalFacing(context);
@@ -63,9 +63,9 @@ public class CuckooClockBlock extends HorizontalKineticBlock implements IBE<Cuck
 	public Axis getRotationAxis(BlockState state) {
 		return state.getValue(HORIZONTAL_FACING).getAxis();
 	}
-	
+
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

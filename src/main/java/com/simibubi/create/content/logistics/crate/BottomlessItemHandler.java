@@ -6,8 +6,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
+
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -32,7 +32,7 @@ public class BottomlessItemHandler extends ItemStackHandler {
 		if (stack == null)
 			return ItemStack.EMPTY;
 		if (!stack.isEmpty())
-			return ItemHandlerHelper.copyStackWithSize(stack, stack.getMaxStackSize());
+			return stack.copyWithCount(stack.getMaxStackSize());
 		return stack;
 	}
 
@@ -52,7 +52,7 @@ public class BottomlessItemHandler extends ItemStackHandler {
 		if (stack == null)
 			return ItemStack.EMPTY;
 		if (!stack.isEmpty())
-			return ItemHandlerHelper.copyStackWithSize(stack, Math.min(stack.getMaxStackSize(), amount));
+			return stack.copyWithCount(Math.min(stack.getMaxStackSize(), amount));
 		return ItemStack.EMPTY;
 	}
 

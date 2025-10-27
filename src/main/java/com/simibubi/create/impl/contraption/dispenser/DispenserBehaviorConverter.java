@@ -9,24 +9,29 @@ import com.simibubi.create.api.contraption.dispenser.MountedDispenseBehavior;
 import com.simibubi.create.api.contraption.dispenser.MountedProjectileDispenseBehavior;
 import com.simibubi.create.api.registry.SimpleRegistry;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.content.contraptions.behaviour.dispenser.ContraptionBlockSource;
 import com.simibubi.create.foundation.mixin.accessor.DispenserBlockAccessor;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
-import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TagsUpdatedEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.TagsUpdatedEvent;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 public enum DispenserBehaviorConverter implements SimpleRegistry.Provider<Item, MountedDispenseBehavior> {
 	INSTANCE;
@@ -46,7 +51,7 @@ public enum DispenserBehaviorConverter implements SimpleRegistry.Provider<Item, 
 		if (AllItemTags.DISPENSE_BEHAVIOR_WRAP_BLACKLIST.matches(item))
 			return null;
 
-		if (vanilla instanceof AbstractProjectileDispenseBehavior projectile) {
+		if (vanilla instanceof ProjectileDispenseBehavior projectile) {
 			return MountedProjectileDispenseBehavior.of(projectile);
 		}
 
@@ -58,7 +63,7 @@ public enum DispenserBehaviorConverter implements SimpleRegistry.Provider<Item, 
 	@Override
 	public void onRegister(Runnable invalidate) {
 		// invalidate if the blacklist tag might've changed
-		MinecraftForge.EVENT_BUS.addListener((TagsUpdatedEvent event) -> {
+		NeoForge.EVENT_BUS.addListener((TagsUpdatedEvent event) -> {
 			if (event.shouldUpdateStaticData()) {
 				invalidate.run();
 			}
@@ -67,7 +72,11 @@ public enum DispenserBehaviorConverter implements SimpleRegistry.Provider<Item, 
 
 	@Nullable
 	private static DispenseItemBehavior getDispenseMethod(ItemStack stack) {
-		return ((DispenserBlockAccessor) Blocks.DISPENSER).create$callGetDispenseMethod(stack);
+		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+		if (server == null)
+			return null;
+
+		return ((DispenserBlockAccessor) Blocks.DISPENSER).create$callGetDispenseMethod(server.getLevel(Level.OVERWORLD), stack);
 	}
 
 	private static final class FallbackBehavior extends DefaultMountedDispenseBehavior {
@@ -85,15 +94,22 @@ public enum DispenserBehaviorConverter implements SimpleRegistry.Provider<Item, 
 			if (this.hasErrored)
 				return stack;
 
+			MinecraftServer server = context.world.getServer();
+			ServerLevel serverLevel = server != null ? server.getLevel(context.world.dimension()) : null;
+
 			Direction nearestFacing = MountedDispenseBehavior.getClosestFacingDirection(facing);
-			BlockSource source = new ContraptionBlockSource(context, pos, nearestFacing);
+			BlockState state = context.state;
+			if (state.hasProperty(BlockStateProperties.FACING))
+				state = state.setValue(BlockStateProperties.FACING, nearestFacing);
+
+			BlockSource source = new BlockSource(serverLevel, pos, state, null);
 
 			try {
 				// use a copy in case of implosion after modifying it
 				return this.wrapped.dispense(source, stack.copy());
 			} catch (NullPointerException e) {
 				// likely due to the lack of a BlockEntity
-				ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(this.item);
+				ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(this.item);
 				String message = "Error dispensing item '" + itemId + "' from contraption, not doing that anymore";
 				Create.LOGGER.error(message, e);
 				this.hasErrored = true;

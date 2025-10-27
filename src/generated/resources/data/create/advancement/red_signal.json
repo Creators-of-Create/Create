@@ -1,0 +1,29 @@
+{
+  "parent": "create:track_signal",
+  "criteria": {
+    "0": {
+      "trigger": "create:red_signal_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.red_signal.desc"
+    },
+    "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "create:track_signal"
+    },
+    "title": {
+      "translate": "advancement.create.red_signal"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

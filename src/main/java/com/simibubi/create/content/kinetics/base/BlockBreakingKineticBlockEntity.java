@@ -6,7 +6,9 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.sounds.SoundSource;
@@ -55,21 +57,22 @@ public abstract class BlockBreakingKineticBlockEntity extends KineticBlockEntity
 	}
 
 	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putInt("Progress", destroyProgress);
 		compound.putInt("NextTick", ticksUntilNextProgress);
 		if (breakingPos != null)
 			compound.put("Breaking", NbtUtils.writeBlockPos(breakingPos));
-		super.write(compound, clientPacket);
+		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		destroyProgress = compound.getInt("Progress");
 		ticksUntilNextProgress = compound.getInt("NextTick");
+		breakingPos = null;
 		if (compound.contains("Breaking"))
-			breakingPos = NbtUtils.readBlockPos(compound.getCompound("Breaking"));
-		super.read(compound, clientPacket);
+			breakingPos = NBTHelper.readBlockPos(compound, "Breaking");
+		super.read(compound, registries, clientPacket);
 	}
 
 	@Override

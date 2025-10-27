@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -20,19 +20,18 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraft.world.phys.Vec3;
 
 public class SchematicExport {
-	public static final Path SCHEMATICS = FMLPaths.GAMEDIR.get().resolve("schematics");
-
 	/**
 	 * Save a schematic to a file from a world.
-	 * @param dir the directory the schematic will be created in
-	 * @param fileName the ideal name of the schematic, may not be the name of the created file
+	 *
+	 * @param dir       the directory the schematic will be created in
+	 * @param fileName  the ideal name of the schematic, may not be the name of the created file
 	 * @param overwrite whether overwriting an existing schematic is allowed
-	 * @param level the level where the schematic structure is placed
-	 * @param first the first corner of the schematic area
-	 * @param second the second corner of the schematic area
+	 * @param level     the level where the schematic structure is placed
+	 * @param first     the first corner of the schematic area
+	 * @param second    the second corner of the schematic area
 	 * @return a SchematicExportResult, or null if an error occurred.
 	 */
 	@Nullable
@@ -45,7 +44,7 @@ public class SchematicExport {
 		structure.fillFromWorld(level, origin, bounds, true, Blocks.AIR);
 		CompoundTag data = structure.save(new CompoundTag());
 		SchematicAndQuillItem.replaceStructureVoidWithAir(data);
-		SchematicAndQuillItem.clampGlueBoxes(level, new AABB(origin, origin.offset(bounds)), data);
+		SchematicAndQuillItem.clampGlueBoxes(level, new AABB(Vec3.atLowerCornerOf(origin), Vec3.atLowerCornerOf(origin.offset(bounds))), data);
 
 		if (fileName.isEmpty())
 			fileName = CreateLang.translateDirect("schematicAndQuill.fallbackName").getString();
@@ -68,6 +67,7 @@ public class SchematicExport {
 		}
 	}
 
-	public record SchematicExportResult(Path file, Path dir, String fileName, boolean overwritten, BlockPos origin, BlockPos bounds) {
+	public record SchematicExportResult(Path file, Path dir, String fileName, boolean overwritten, BlockPos origin,
+										BlockPos bounds) {
 	}
 }

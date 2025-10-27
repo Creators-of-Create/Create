@@ -13,9 +13,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+
+import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public enum DefaultUnpackingHandler implements UnpackingHandler {
 	INSTANCE;
@@ -26,7 +27,7 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 		if (targetBE == null)
 			return false;
 
-		IItemHandler targetInv = targetBE.getCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve().orElse(null);
+		IItemHandler targetInv = level.getCapability(ItemHandler.BLOCK, pos, state, targetBE, side);
 		if (targetInv == null)
 			return false;
 
@@ -58,7 +59,7 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 					int maxStackSize = targetInv.getSlotLimit(slot);
 					if (maxStackSize < toInsert.getCount()) {
 						toInsert.shrink(maxStackSize);
-						toInsert = ItemHandlerHelper.copyStackWithSize(toInsert, maxStackSize);
+						toInsert = toInsert.copyWithCount(maxStackSize);
 					} else
 						items.set(boxSlot, ItemStack.EMPTY);
 
@@ -67,21 +68,19 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 					continue;
 				}
 
-				if (!ItemHandlerHelper.canItemStacksStack(toInsert, itemInSlot))
+				if (!ItemStack.isSameItemSameComponents(toInsert, itemInSlot))
 					continue;
 
 				int insertedAmount = toInsert.getCount() - targetInv.insertItem(slot, toInsert, simulate)
 					.getCount();
-				int slotLimit = (int) ((targetInv.getStackInSlot(slot)
-					.isEmpty() ? itemInSlot.getMaxStackSize() / 64f : 1) * targetInv.getSlotLimit(slot));
+				int slotLimit = Math.min(itemInSlot.getMaxStackSize(), targetInv.getSlotLimit(slot));
 				int insertableAmountWithPreviousItems =
 					Math.min(toInsert.getCount(), slotLimit - itemInSlot.getCount() - itemsAddedToSlot);
 
 				int added = Math.min(insertedAmount, Math.max(0, insertableAmountWithPreviousItems));
 				itemsAddedToSlot += added;
 
-				items.set(boxSlot,
-					ItemHandlerHelper.copyStackWithSize(toInsert, toInsert.getCount() - added));
+				items.set(boxSlot, toInsert.copyWithCount(toInsert.getCount() - added));
 			}
 		}
 

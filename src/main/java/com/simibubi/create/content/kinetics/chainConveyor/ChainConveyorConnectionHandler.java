@@ -1,9 +1,9 @@
 package com.simibubi.create.content.kinetics.chainConveyor;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.equipment.blueprint.BlueprintOverlayRenderer;
+import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -32,11 +32,11 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ChainConveyorConnectionHandler {
@@ -262,8 +262,7 @@ public class ChainConveyorConnectionHandler {
 		if (simulate)
 			return true;
 
-		AllPackets.getChannel()
-			.sendToServer(new ChainConveyorConnectionPacket(firstPos, pos, chain, true));
+		CatnipServices.NETWORK.sendToServer(new ChainConveyorConnectionPacket(firstPos, pos, chain, true));
 
 		CreateLang.text("") // Clear status message
 			.sendStatus(player);

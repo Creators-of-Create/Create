@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.AllItems;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.logistics.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -17,11 +15,13 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.lang.FontHelper.Palette;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 
 public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends AbstractSimiContainerScreen<F> {
 
@@ -73,9 +73,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 
 		background.render(graphics, x, y);
 		graphics.drawString(font, title, x + (background.getWidth() - 8) / 2 - font.width(title) / 2, y + 4,
-			AllItems.PACKAGE_FILTER.isIn(menu.contentHolder) ? 0x3D3C48
-				: AllItems.FILTER.isIn(menu.contentHolder) ? 0x303030 : 0x592424,
-			false);
+			getTitleColor(), false);
 
 		GuiGameElement.of(menu.contentHolder).<GuiGameElement
 			.GuiRenderBuilder>at(x + background.getWidth() + 8, y + background.getHeight() - 52, -200)
@@ -83,10 +81,13 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 			.render(graphics);
 	}
 
+	protected int getTitleColor() {
+		return 0x592424;
+	}
+
 	@Override
 	protected void containerTick() {
-		if (!menu.player.getMainHandItem()
-			.equals(menu.contentHolder, false))
+		if (!ItemStack.matches(menu.player.getMainHandItem(), menu.contentHolder))
 			menu.player.closeContainer();
 
 		super.containerTick();
@@ -140,8 +141,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 	protected void contentsCleared() {}
 
 	protected void sendOptionUpdate(Option option) {
-		AllPackets.getChannel()
-			.sendToServer(new FilterScreenPacket(option));
+		CatnipServices.NETWORK.sendToServer(new FilterScreenPacket(option));
 	}
 
 	@Override

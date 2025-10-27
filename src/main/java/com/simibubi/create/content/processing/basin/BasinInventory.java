@@ -3,7 +3,7 @@ package com.simibubi.create.content.processing.basin;
 import com.simibubi.create.foundation.item.SmartInventory;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class BasinInventory extends SmartInventory {
 
@@ -25,7 +25,7 @@ public class BasinInventory extends SmartInventory {
 
 		for (int i = 0; i < getSlots(); i++) {
 			// Only insert if no other slot already has a stack of this item
-			if (i != slot && ItemHandlerHelper.canItemStacksStack(stack, inv.getStackInSlot(i)))
+			if (i != slot && ItemStack.isSameItemSameComponents(stack, inv.getStackInSlot(i)))
 				return stack;
 			if (inv.getStackInSlot(i)
 				.isEmpty() && firstFreeSlot == -1)

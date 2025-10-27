@@ -1,43 +1,35 @@
 package com.simibubi.create.content.logistics.stockTicker;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 
 public class StockKeeperCategoryHidingPacket extends BlockEntityConfigurationPacket<StockTickerBlockEntity> {
+	public static final StreamCodec<ByteBuf, StockKeeperCategoryHidingPacket> STREAM_CODEC = StreamCodec.composite(
+	    BlockPos.STREAM_CODEC, i -> i.pos,
+		CatnipStreamCodecBuilders.list(ByteBufCodecs.INT), i -> i.indices,
+		StockKeeperCategoryHidingPacket::new
+	);
 
-	private List<Integer> indices;
+	private final List<Integer> indices;
 
 	public StockKeeperCategoryHidingPacket(BlockPos pos, List<Integer> indices) {
 		super(pos);
 		this.indices = indices;
 	}
 
-	public StockKeeperCategoryHidingPacket(FriendlyByteBuf buffer) {
-		super(buffer);
-	}
-
 	@Override
-	protected void writeSettings(FriendlyByteBuf buffer) {
-		buffer.writeVarIntArray(indices.stream()
-			.mapToInt(i -> i)
-			.toArray());
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.STOCK_KEEPER_HIDE_CATEGORY;
 	}
-
-	@Override
-	protected void readSettings(FriendlyByteBuf buffer) {
-		indices = IntStream.of(buffer.readVarIntArray())
-			.boxed()
-			.toList();
-	}
-
-	@Override
-	protected void applySettings(StockTickerBlockEntity be) {}
 
 	@Override
 	protected void applySettings(ServerPlayer player, StockTickerBlockEntity be) {

@@ -1,21 +1,32 @@
 package com.simibubi.create.content.logistics.redstoneRequester;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
 public class RedstoneRequesterConfigurationPacket extends BlockEntityConfigurationPacket<RedstoneRequesterBlockEntity> {
+	public static final StreamCodec<ByteBuf, RedstoneRequesterConfigurationPacket> STREAM_CODEC = StreamCodec.composite(
+	    BlockPos.STREAM_CODEC, packet -> packet.pos,
+		ByteBufCodecs.STRING_UTF8, packet -> packet.address,
+	    ByteBufCodecs.BOOL, packet -> packet.allowPartial,
+		CatnipStreamCodecBuilders.list(ByteBufCodecs.INT), packet -> packet.amounts,
+	    RedstoneRequesterConfigurationPacket::new
+	);
 
-	private String address;
-	private boolean allowPartial;
-	private List<Integer> amounts;
+	private final String address;
+	private final boolean allowPartial;
+	private final List<Integer> amounts;
 
 	public RedstoneRequesterConfigurationPacket(BlockPos pos, String address, boolean allowPartial,
 		List<Integer> amounts) {
@@ -25,30 +36,13 @@ public class RedstoneRequesterConfigurationPacket extends BlockEntityConfigurati
 		this.amounts = amounts;
 	}
 
-	public RedstoneRequesterConfigurationPacket(FriendlyByteBuf buffer) {
-		super(buffer);
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONFIGURE_REDSTONE_REQUESTER;
 	}
 
 	@Override
-	protected void writeSettings(FriendlyByteBuf buffer) {
-		buffer.writeUtf(address);
-		buffer.writeBoolean(allowPartial);
-		buffer.writeVarInt(amounts.size());
-		amounts.forEach(buffer::writeVarInt);
-	}
-
-	@Override
-	protected void readSettings(FriendlyByteBuf buffer) {
-		address = buffer.readUtf();
-		allowPartial = buffer.readBoolean();
-		int size = buffer.readVarInt();
-		amounts = new ArrayList<>();
-		for (int i = 0; i < size; i++)
-			amounts.add(buffer.readVarInt());
-	}
-
-	@Override
-	protected void applySettings(RedstoneRequesterBlockEntity be) {
+	protected void applySettings(ServerPlayer player, RedstoneRequesterBlockEntity be) {
 		be.encodedTargetAdress = address;
 		List<BigItemStack> stacks = be.encodedRequest.stacks();
 		for (int i = 0; i < stacks.size() && i < amounts.size(); i++) {

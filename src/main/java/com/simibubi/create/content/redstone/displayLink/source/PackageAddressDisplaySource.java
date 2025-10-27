@@ -15,7 +15,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.IItemHandler;
+
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class PackageAddressDisplaySource extends SingleLineDisplaySource {
 
@@ -31,12 +32,12 @@ public class PackageAddressDisplaySource extends SingleLineDisplaySource {
 
 		if (handler == null) {
 			BlockPos targetPos = cobe.getBlockPos().relative(SmartObserverBlock.getTargetDirection(cobe.getBlockState()));
-			
+
 			if (context.level().getBlockEntity(targetPos) instanceof ChainConveyorBlockEntity ccbe)
 				for (ChainConveyorPackage box : ccbe.getLoopingPackages())
 					if (filteringBehaviour.test(box.item))
 						return Component.literal(PackageItem.getAddress(box.item));
-			
+
 			return EMPTY_LINE;
 		}
 

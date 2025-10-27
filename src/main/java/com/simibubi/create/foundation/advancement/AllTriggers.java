@@ -3,7 +3,12 @@ package com.simibubi.create.foundation.advancement;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.advancements.CriteriaTriggers;
+import com.simibubi.create.Create;
+
+import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class AllTriggers {
 
@@ -19,7 +24,9 @@ public class AllTriggers {
 	}
 
 	public static void register() {
-		triggers.forEach(CriteriaTriggers::register);
+		triggers.forEach(trigger -> {
+			Registry.register(BuiltInRegistries.TRIGGER_TYPES, trigger.getId(), trigger);
+		});
 	}
 
 }

@@ -3,13 +3,11 @@ package com.simibubi.create.foundation.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,16 +16,17 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.extensions.IForgeGuiGraphics;
-import net.minecraftforge.common.MinecraftForge;
+
+import net.neoforged.neoforge.client.ClientHooks;
+import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.client.extensions.IGuiGraphicsExtension;
+import net.neoforged.neoforge.common.NeoForge;
 
 public class RemovedGuiUtils {
-	@Nonnull
+	@NotNull
 	private static ItemStack cachedTooltipStack = ItemStack.EMPTY;
 
-	public static void preItemToolTip(@Nonnull ItemStack stack) {
+	public static void preItemToolTip(@NotNull ItemStack stack) {
 		cachedTooltipStack = stack;
 	}
 
@@ -38,7 +37,7 @@ public class RemovedGuiUtils {
 	public static void drawHoveringText(GuiGraphics graphics, List<? extends FormattedText> textLines, int mouseX,
 		int mouseY, int screenWidth, int screenHeight, int maxTextWidth, Font font) {
 		drawHoveringText(graphics, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth,
-			IForgeGuiGraphics.DEFAULT_BACKGROUND_COLOR, IForgeGuiGraphics.DEFAULT_BORDER_COLOR_START, IForgeGuiGraphics.DEFAULT_BORDER_COLOR_END,
+			IGuiGraphicsExtension.DEFAULT_BACKGROUND_COLOR, IGuiGraphicsExtension.DEFAULT_BORDER_COLOR_START, IGuiGraphicsExtension.DEFAULT_BORDER_COLOR_END,
 			font);
 	}
 
@@ -49,29 +48,29 @@ public class RemovedGuiUtils {
 			backgroundColor, borderColorStart, borderColorEnd, font);
 	}
 
-	public static void drawHoveringText(@Nonnull final ItemStack stack, GuiGraphics graphics,
+	public static void drawHoveringText(@NotNull final ItemStack stack, GuiGraphics graphics,
 		List<? extends FormattedText> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight,
 		int maxTextWidth, Font font) {
 		drawHoveringText(stack, graphics, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth,
-			IForgeGuiGraphics.DEFAULT_BACKGROUND_COLOR, IForgeGuiGraphics.DEFAULT_BORDER_COLOR_START, IForgeGuiGraphics.DEFAULT_BORDER_COLOR_END,
+			IGuiGraphicsExtension.DEFAULT_BACKGROUND_COLOR, IGuiGraphicsExtension.DEFAULT_BORDER_COLOR_START, IGuiGraphicsExtension.DEFAULT_BORDER_COLOR_END,
 			font);
 	}
 
-	public static void drawHoveringText(@Nonnull final ItemStack stack, GuiGraphics graphics,
+	public static void drawHoveringText(@NotNull final ItemStack stack, GuiGraphics graphics,
 		List<? extends FormattedText> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight,
 		int maxTextWidth, int backgroundColor, int borderColorStart, int borderColorEnd, Font font) {
 		if (textLines.isEmpty())
 			return;
 
-		List<ClientTooltipComponent> list = ForgeHooksClient.gatherTooltipComponents(stack, textLines,
+		List<ClientTooltipComponent> list = ClientHooks.gatherTooltipComponents(stack, textLines,
 			stack.getTooltipImage(), mouseX, screenWidth, screenHeight, font);
 		RenderTooltipEvent.Pre event =
 			new RenderTooltipEvent.Pre(stack, graphics, mouseX, mouseY, screenWidth, screenHeight, font, list, null);
-		if (MinecraftForge.EVENT_BUS.post(event))
+		if (NeoForge.EVENT_BUS.post(event).isCanceled())
 			return;
 
 		PoseStack pStack = graphics.pose();
-		
+
 		mouseX = event.getX();
 		mouseY = event.getY();
 		screenWidth = event.getScreenWidth();
@@ -152,7 +151,7 @@ public class RemovedGuiUtils {
 		final int zLevel = 400;
 		RenderTooltipEvent.Color colorEvent = new RenderTooltipEvent.Color(stack, graphics, tooltipX, tooltipY,
 			font, backgroundColor, borderColorStart, borderColorEnd, list);
-		MinecraftForge.EVENT_BUS.post(colorEvent);
+		NeoForge.EVENT_BUS.post(colorEvent);
 		backgroundColor = colorEvent.getBackgroundStart();
 		borderColorStart = colorEvent.getBorderStart();
 		borderColorEnd = colorEvent.getBorderEnd();
@@ -179,8 +178,7 @@ public class RemovedGuiUtils {
 		graphics.fillGradient(tooltipX - 3, tooltipY + tooltipHeight + 2,
 			tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, zLevel, borderColorEnd, borderColorEnd);
 
-		MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(Tesselator.getInstance()
-			.getBuilder());
+		MultiBufferSource.BufferSource renderType = graphics.bufferSource();
 		pStack.translate(0.0D, 0.0D, zLevel);
 
 		for (int lineNumber = 0; lineNumber < list.size(); ++lineNumber) {

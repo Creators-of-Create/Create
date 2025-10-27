@@ -1,0 +1,35 @@
+{
+  "parent": "create:hose_pulley",
+  "criteria": {
+    "0": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create:chocolate_bucket"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.chocolate_bucket.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:chocolate_bucket"
+    },
+    "title": {
+      "translate": "advancement.create.chocolate_bucket"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

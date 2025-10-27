@@ -1,10 +1,10 @@
 package com.simibubi.create.compat.computercraft;
 
+import java.util.function.Function;
+
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.computercraft.implementation.ComputerBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
-
-import java.util.function.Function;
 
 public class ComputerCraftProxy {
 
@@ -16,6 +16,7 @@ public class ComputerCraftProxy {
 	private static void registerWithDependency() {
 		/* Comment if computercraft.implementation is not in the source set */
 		 computerFactory = ComputerBehaviour::new;
+		ComputerBehaviour.registerItemDetailProviders();
 	}
 
 	private static Function<SmartBlockEntity, ? extends AbstractComputerBehaviour> fallbackFactory;

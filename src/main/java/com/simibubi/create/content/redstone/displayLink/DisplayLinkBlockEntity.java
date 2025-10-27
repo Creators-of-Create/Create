@@ -2,33 +2,37 @@ package com.simibubi.create.content.redstone.displayLink;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.api.behaviour.display.DisplaySource;
 import com.simibubi.create.api.behaviour.display.DisplayTarget;
+import com.simibubi.create.api.contraption.transformable.TransformableBlockEntity;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
+import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelPosition;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelSupportBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.nbt.NBTHelper;
+import dan200.computercraft.api.peripheral.PeripheralCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
-public class DisplayLinkBlockEntity extends LinkWithBulbBlockEntity {
+public class DisplayLinkBlockEntity extends LinkWithBulbBlockEntity  implements TransformableBlockEntity {
 
 	protected BlockPos targetOffset;
 
@@ -47,6 +51,16 @@ public class DisplayLinkBlockEntity extends LinkWithBulbBlockEntity {
 		targetOffset = BlockPos.ZERO;
 		sourceConfig = new CompoundTag();
 		targetLine = 0;
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		if (Mods.COMPUTERCRAFT.isLoaded()) {
+			event.registerBlockEntity(
+					PeripheralCapability.get(),
+					AllBlockEntityTypes.DISPLAY_LINK.get(),
+					(be, context) -> be.computerBehaviour.getPeripheralCapability()
+			);
+		}
 	}
 
 	@Override
@@ -128,14 +142,14 @@ public class DisplayLinkBlockEntity extends LinkWithBulbBlockEntity {
 	}
 
 	@Override
-	public void writeSafe(CompoundTag tag) {
-		super.writeSafe(tag);
+	public void writeSafe(CompoundTag tag, HolderLookup.Provider registries) {
+		super.writeSafe(tag, registries);
 		writeGatheredData(tag);
 	}
 
 	@Override
-	protected void write(CompoundTag tag, boolean clientPacket) {
-		super.write(tag, clientPacket);
+	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(tag, registries, clientPacket);
 		writeGatheredData(tag);
 		if (clientPacket && activeTarget != null) {
 			ResourceLocation id = CreateBuiltInRegistries.DISPLAY_TARGET.getKey(this.activeTarget);
@@ -160,9 +174,9 @@ public class DisplayLinkBlockEntity extends LinkWithBulbBlockEntity {
 	}
 
 	@Override
-	protected void read(CompoundTag tag, boolean clientPacket) {
-		super.read(tag, clientPacket);
-		targetOffset = NbtUtils.readBlockPos(tag.getCompound("TargetOffset"));
+	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(tag, registries, clientPacket);
+		targetOffset = NBTHelper.readBlockPos(tag, "TargetOffset");
 		targetLine = tag.getInt("TargetLine");
 
 		if (clientPacket && tag.contains("TargetType"))
@@ -177,18 +191,9 @@ public class DisplayLinkBlockEntity extends LinkWithBulbBlockEntity {
 			sourceConfig = data.copy();
 	}
 
-	@NotNull
 	@Override
-	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (computerBehaviour.isPeripheralCap(cap))
-			return computerBehaviour.getPeripheralCapability();
-
-		return super.getCapability(cap, side);
-	}
-
-	@Override
-	public void invalidateCaps() {
-		super.invalidateCaps();
+	public void invalidate() {
+		super.invalidate();
 		computerBehaviour.removePeripheral();
 	}
 
@@ -221,13 +226,18 @@ public class DisplayLinkBlockEntity extends LinkWithBulbBlockEntity {
 	}
 
 	private static final Vec3 bulbOffset = VecHelper.voxelSpace(11, 7, 5);
-	private static final Vec3 bulbOffsetVertical = VecHelper.voxelSpace(5, 7, 11);
-
+private static final Vec3 bulbOffsetVertical = VecHelper.voxelSpace(5, 7, 11);
 	@Override
 	public Vec3 getBulbOffset(BlockState state) {
 		if (state.getOptionalValue(DisplayLinkBlock.FACING).orElse(Direction.UP).getAxis().isVertical())
 			return bulbOffsetVertical;
 		return bulbOffset;
+	}
+
+	@Override
+	public void transform(BlockEntity be, StructureTransform transform) {
+		targetOffset = transform.applyWithoutOffset(targetOffset);
+		notifyUpdate();
 	}
 
 }

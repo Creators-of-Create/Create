@@ -1,6 +1,10 @@
 package com.simibubi.create.foundation.blockEntity.renderer;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.blockEntity.CachedRenderBBBlockEntity;
+import com.simibubi.create.foundation.mixin.accessor.LevelRendererAccessor;
 
 import com.simibubi.create.foundation.mixin.accessor.LevelRendererAccessor;
 
@@ -51,5 +55,13 @@ public abstract class SafeBlockEntityRenderer<T extends BlockEntity> implements 
 		);
 
 		return !frustum.isVisible(itemBB);
+	}
+
+	@Override
+	public @NotNull AABB getRenderBoundingBox(@NotNull T blockEntity) {
+		if (blockEntity instanceof CachedRenderBBBlockEntity cbe)
+			return cbe.getRenderBoundingBox();
+
+		return BlockEntityRenderer.super.getRenderBoundingBox(blockEntity);
 	}
 }

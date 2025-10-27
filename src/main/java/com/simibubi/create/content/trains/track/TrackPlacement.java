@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllItemTags;
@@ -15,8 +18,10 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.data.Pair;
@@ -31,9 +36,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -52,11 +55,26 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class TrackPlacement {
+	public record ConnectingFrom(BlockPos pos, Vec3 axis, Vec3 normal, Vec3 end) {
+		public static final Codec<ConnectingFrom> CODEC = RecordCodecBuilder.create(i -> i.group(
+			BlockPos.CODEC.fieldOf("pos").forGetter(ConnectingFrom::pos),
+			Vec3.CODEC.fieldOf("axis").forGetter(ConnectingFrom::axis),
+			Vec3.CODEC.fieldOf("normal").forGetter(ConnectingFrom::normal),
+			Vec3.CODEC.fieldOf("end").forGetter(ConnectingFrom::end)
+		).apply(i, ConnectingFrom::new));
+
+		public static final StreamCodec<ByteBuf, ConnectingFrom> STREAM_CODEC = StreamCodec.composite(
+		    BlockPos.STREAM_CODEC, ConnectingFrom::pos,
+			CatnipStreamCodecs.VEC3, ConnectingFrom::axis,
+			CatnipStreamCodecs.VEC3, ConnectingFrom::normal,
+			CatnipStreamCodecs.VEC3, ConnectingFrom::end,
+		    ConnectingFrom::new
+		);
+	}
 
 	public static class PlacementInfo {
 
@@ -133,14 +151,13 @@ public class TrackPlacement {
 		Vec3 normedAxis2 = axis2.normalize();
 		Vec3 end2 = track.getCurveStart(level, pos2, state2, axis2);
 
-		CompoundTag itemTag = stack.getTag();
-		CompoundTag selectionTag = itemTag.getCompound("ConnectingFrom");
-		BlockPos pos1 = NbtUtils.readBlockPos(selectionTag.getCompound("Pos"));
-		Vec3 axis1 = VecHelper.readNBT(selectionTag.getList("Axis", Tag.TAG_DOUBLE));
+		ConnectingFrom connectingFrom = stack.get(AllDataComponents.TRACK_CONNECTING_FROM);
+
+		BlockPos pos1 = connectingFrom.pos();
+		Vec3 axis1 = connectingFrom.axis();
 		Vec3 normedAxis1 = axis1.normalize();
-		Vec3 end1 = VecHelper.readNBT(selectionTag.getList("End", Tag.TAG_DOUBLE));
-		Vec3 normal1 = VecHelper.readNBT(selectionTag.getList("Normal", Tag.TAG_DOUBLE));
-		boolean front1 = selectionTag.getBoolean("Front");
+		Vec3 end1 = connectingFrom.end();
+		Vec3 normal1 = connectingFrom.normal();
 		BlockState state1 = level.getBlockState(pos1);
 
 		if (level.isClientSide) {
@@ -165,7 +182,6 @@ public class TrackPlacement {
 		if (axis1.dot(end2.subtract(end1)) < 0) {
 			axis1 = axis1.scale(-1);
 			normedAxis1 = normedAxis1.scale(-1);
-			front1 = !front1;
 			end1 = track.getCurveStart(level, pos1, state1, axis1);
 			if (level.isClientSide) {
 				info.end1 = end1;
@@ -420,8 +436,8 @@ public class TrackPlacement {
 						int remainingItems =
 							count - Math.min(isTrack ? tracks - foundTracks : pavement - foundPavement, count);
 						if (i == inv.selected)
-							stackInSlot.setTag(null);
-						ItemStack newItem = ItemHandlerHelper.copyStackWithSize(stackInSlot, remainingItems);
+							stackInSlot.remove(AllDataComponents.TRACK_CONNECTING_FROM);
+						ItemStack newItem = stackInSlot.copyWithCount(remainingItems);
 						if (offhand)
 							player.setItemInHand(InteractionHand.OFF_HAND, newItem);
 						else
@@ -523,7 +539,7 @@ public class TrackPlacement {
 				}
 
 				if (canPlace)
-					level.setBlock(offsetPos, ProperWaterloggedBlock.withWater(level, toPlace, offsetPos), 3);
+					level.setBlock(offsetPos, ProperWaterloggedBlock.withWater(level, toPlace, offsetPos), Block.UPDATE_ALL);
 			}
 		}
 
@@ -535,12 +551,12 @@ public class TrackPlacement {
 			BlockState stateAtPos = level.getBlockState(targetPos1);
 			level.setBlock(targetPos1, ProperWaterloggedBlock.withWater(level,
 				(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : BlockHelper.copyProperties(state1, onto))
-					.setValue(TrackBlock.HAS_BE, true), targetPos1), 3);
+					.setValue(TrackBlock.HAS_BE, true), targetPos1), Block.UPDATE_ALL);
 
 			stateAtPos = level.getBlockState(targetPos2);
 			level.setBlock(targetPos2, ProperWaterloggedBlock.withWater(level,
 				(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : BlockHelper.copyProperties(state2, onto))
-					.setValue(TrackBlock.HAS_BE, true), targetPos2), 3);
+					.setValue(TrackBlock.HAS_BE, true), targetPos2), Block.UPDATE_ALL);
 		}
 
 		BlockEntity te1 = level.getBlockEntity(targetPos1);

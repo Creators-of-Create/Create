@@ -1,19 +1,25 @@
 package com.simibubi.create.content.equipment.extendoGrip;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
-import net.minecraft.network.FriendlyByteBuf;
+import com.simibubi.create.AllPackets;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.network.NetworkEvent.Context;
 
-public class ExtendoGripInteractionPacket extends SimplePacketBase {
-
-	private InteractionHand interactionHand;
-	private int target;
-	private Vec3 specificPoint;
+public record ExtendoGripInteractionPacket(InteractionHand hand, int target, Vec3 point) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, ExtendoGripInteractionPacket> STREAM_CODEC = StreamCodec.composite(
+			CatnipStreamCodecBuilders.nullable(CatnipStreamCodecs.HAND), ExtendoGripInteractionPacket::hand,
+			ByteBufCodecs.INT, ExtendoGripInteractionPacket::target,
+			CatnipStreamCodecBuilders.nullable(CatnipStreamCodecs.VEC3), ExtendoGripInteractionPacket::point,
+	        ExtendoGripInteractionPacket::new
+	);
 
 	public ExtendoGripInteractionPacket(Entity target) {
 		this(target, null);
@@ -24,56 +30,33 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 	}
 
 	public ExtendoGripInteractionPacket(Entity target, InteractionHand hand, Vec3 specificPoint) {
-		interactionHand = hand;
-		this.specificPoint = specificPoint;
-		this.target = target.getId();
-	}
-
-	public ExtendoGripInteractionPacket(FriendlyByteBuf buffer) {
-		target = buffer.readInt();
-		int handId = buffer.readInt();
-		interactionHand = handId == -1 ? null : InteractionHand.values()[handId];
-		if (buffer.readBoolean())
-			specificPoint = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+		this(hand, target.getId(), specificPoint);
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeInt(target);
-		buffer.writeInt(interactionHand == null ? -1 : interactionHand.ordinal());
-		buffer.writeBoolean(specificPoint != null);
-		if (specificPoint != null) {
-			buffer.writeDouble(specificPoint.x);
-			buffer.writeDouble(specificPoint.y);
-			buffer.writeDouble(specificPoint.z);
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.EXTENDO_INTERACT;
+	}
+
+	@Override
+	public void handle(ServerPlayer sender) {
+		if (sender == null)
+			return;
+		Entity entityByID = sender.level()
+				.getEntity(this.target);
+		if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
+			double d = sender.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE);
+			if (!sender.hasLineOfSight(entityByID))
+				d -= 3;
+			d *= d;
+			if (sender.distanceToSqr(entityByID) > d)
+				return;
+			if (this.hand == null)
+				sender.attack(entityByID);
+			else if (this.point == null)
+				sender.interactOn(entityByID, this.hand);
+			else
+				entityByID.interactAt(sender, this.point, this.hand);
 		}
 	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer sender = context.getSender();
-			if (sender == null)
-				return;
-			Entity entityByID = sender.level()
-				.getEntity(target);
-			if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
-				double d = sender.getAttribute(ForgeMod.BLOCK_REACH.get())
-					.getValue();
-				if (!sender.hasLineOfSight(entityByID))
-					d -= 3;
-				d *= d;
-				if (sender.distanceToSqr(entityByID) > d)
-					return;
-				if (interactionHand == null)
-					sender.attack(entityByID);
-				else if (specificPoint == null)
-					sender.interactOn(entityByID, interactionHand);
-				else
-					entityByID.interactAt(sender, specificPoint, interactionHand);
-			}
-		});
-		return true;
-	}
-
 }

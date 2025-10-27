@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "supplementaries"
+    }
+  ],
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "supplementaries:blackboard"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "supplementaries:blackboard"
+    }
+  ]
+}

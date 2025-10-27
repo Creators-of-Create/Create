@@ -4,63 +4,53 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.compat.trainmap.TrainMapSync.TrainMapSyncEntry;
-import com.simibubi.create.content.trains.graph.DimensionPalette;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
 
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.UUIDUtil;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.network.FriendlyByteBuf;
 
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
-public class TrainMapSyncPacket extends SimplePacketBase {
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-	public List<Pair<UUID, TrainMapSyncEntry>> entries = new ArrayList<>();
+public class TrainMapSyncPacket implements ClientboundPacketPayload {
+	public static final StreamCodec<FriendlyByteBuf, TrainMapSyncPacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.BOOL, packet -> packet.light,
+			CatnipStreamCodecBuilders.list(Pair.streamCodec(UUIDUtil.STREAM_CODEC, TrainMapSyncEntry.STREAM_CODEC)), packet -> packet.entries,
+			TrainMapSyncPacket::new
+	);
+
 	public boolean light;
+	public List<Pair<UUID, TrainMapSyncEntry>> entries = new ArrayList<>();
 
 	public TrainMapSyncPacket(boolean light) {
 		this.light = light;
+	}
+
+	public TrainMapSyncPacket(boolean light, List<Pair<UUID, TrainMapSyncEntry>> entries) {
+		this.light = light;
+		this.entries = entries;
 	}
 
 	public void add(UUID trainId, TrainMapSyncEntry data) {
 		entries.add(Pair.of(trainId, data));
 	}
 
-	public TrainMapSyncPacket(FriendlyByteBuf buffer) {
-		DimensionPalette dimensionPalette = DimensionPalette.receive(buffer);
-		light = buffer.readBoolean();
-
-		int size = buffer.readVarInt();
-		for (int i = 0; i < size; i++) {
-			UUID id = buffer.readUUID();
-			TrainMapSyncEntry entry = new TrainMapSyncEntry();
-			entry.receive(buffer, dimensionPalette, light);
-			entries.add(Pair.of(id, entry));
-		}
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		TrainMapSyncClient.receive(this);
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		DimensionPalette dimensionPalette = new DimensionPalette();
-		for (Pair<UUID, TrainMapSyncEntry> pair : entries)
-			pair.getSecond()
-				.gatherDimensions(dimensionPalette);
-
-		dimensionPalette.send(buffer);
-		buffer.writeBoolean(light);
-
-		buffer.writeVarInt(entries.size());
-		for (Pair<UUID, TrainMapSyncEntry> pair : entries) {
-			buffer.writeUUID(pair.getFirst());
-			pair.getSecond()
-				.send(buffer, dimensionPalette, light);
-		}
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.TRAIN_MAP_SYNC;
 	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> TrainMapSyncClient.receive(this));
-		return true;
-	}
-
 }

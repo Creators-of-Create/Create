@@ -3,28 +3,25 @@ package com.simibubi.create.content.kinetics.deployer;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
+import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
-public class DeployerRecipeSearchEvent extends Event {
+public class DeployerRecipeSearchEvent extends Event implements ICancellableEvent {
 	private final DeployerBlockEntity blockEntity;
 	private final RecipeWrapper inventory;
 	@Nullable
-	Recipe<? extends Container> recipe = null;
+	RecipeHolder<? extends Recipe<? extends RecipeInput>> recipe = null;
 	private int maxPriority = 0;
 
 	public DeployerRecipeSearchEvent(DeployerBlockEntity blockEntity, RecipeWrapper inventory) {
 		this.blockEntity = blockEntity;
 		this.inventory = inventory;
-	}
-
-	@Override
-	public boolean isCancelable() {
-		return true;
 	}
 
 	public DeployerBlockEntity getBlockEntity() {
@@ -41,13 +38,13 @@ public class DeployerRecipeSearchEvent extends Event {
 	}
 
 	@Nullable
-	public Recipe<? extends Container> getRecipe() {
+	public RecipeHolder<? extends Recipe<? extends RecipeInput>> getRecipe() {
 		if (isCanceled())
 			return null;
 		return recipe;
 	}
 
-	public void addRecipe(Supplier<Optional<? extends Recipe<? extends Container>>> recipeSupplier, int priority) {
+	public void addRecipe(Supplier<Optional<? extends RecipeHolder<? extends Recipe<? extends RecipeInput>>>> recipeSupplier, int priority) {
 		if (!shouldAddRecipeWithPriority(priority))
 			return;
 		recipeSupplier.get().ifPresent(newRecipe -> {

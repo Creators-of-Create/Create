@@ -1,0 +1,20 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "tag": "c:storage_blocks/raw_gold"
+    }
+  ],
+  "processing_time": 400,
+  "results": [
+    {
+      "count": 9,
+      "id": "create:crushed_raw_gold"
+    },
+    {
+      "chance": 0.75,
+      "count": 18,
+      "id": "create:experience_nugget"
+    }
+  ]
+}

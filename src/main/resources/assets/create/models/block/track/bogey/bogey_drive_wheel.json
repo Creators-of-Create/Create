@@ -1,6 +1,6 @@
 {
 	"parent": "create:block/track/bogey/textures",
-	"loader": "forge:obj",
+	"loader": "neoforge:obj",
 	"flip_v": true,
 	"model": "create:models/block/track/bogey/bogey_drive_wheel.obj"
 }

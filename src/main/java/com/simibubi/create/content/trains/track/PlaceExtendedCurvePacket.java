@@ -1,48 +1,34 @@
 package com.simibubi.create.content.trains.track;
 
+import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent.Context;
 
-public class PlaceExtendedCurvePacket extends SimplePacketBase {
+public record PlaceExtendedCurvePacket(boolean mainHand, boolean ctrlDown) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, PlaceExtendedCurvePacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.BOOL, PlaceExtendedCurvePacket::mainHand,
+			ByteBufCodecs.BOOL, PlaceExtendedCurvePacket::ctrlDown,
+	        PlaceExtendedCurvePacket::new
+	);
 
-	boolean mainHand;
-	boolean ctrlDown;
-
-	public PlaceExtendedCurvePacket(boolean mainHand, boolean ctrlDown) {
-		this.mainHand = mainHand;
-		this.ctrlDown = ctrlDown;
-	}
-
-	public PlaceExtendedCurvePacket(FriendlyByteBuf buffer) {
-		mainHand = buffer.readBoolean();
-		ctrlDown = buffer.readBoolean();
+	@Override
+	public void handle(ServerPlayer sender) {
+		ItemStack stack = sender.getItemInHand(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
+		if (!AllTags.AllBlockTags.TRACKS.matches(stack))
+			return;
+		stack.set(AllDataComponents.TRACK_EXTENDED_CURVE, true);
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeBoolean(mainHand);
-		buffer.writeBoolean(ctrlDown);
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.PLACE_CURVED_TRACK;
 	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer sender = context.getSender();
-			ItemStack stack = sender.getItemInHand(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
-			if (!AllTags.AllBlockTags.TRACKS.matches(stack) || !stack.hasTag())
-				return;
-			CompoundTag tag = stack.getTag();
-			tag.putBoolean("ExtendCurve", true);
-			stack.setTag(tag);
-		});
-		return true;
-	}
-
 }

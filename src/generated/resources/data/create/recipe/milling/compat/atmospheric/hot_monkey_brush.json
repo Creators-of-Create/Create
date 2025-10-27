@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "atmospheric:hot_monkey_brush"
+        }
+      ]
+    }
+  ],
+  "processing_time": 50,
+  "results": [
+    {
+      "count": 2,
+      "id": "minecraft:orange_dye"
+    },
+    {
+      "chance": 0.05,
+      "id": "minecraft:red_dye"
+    },
+    {
+      "chance": 0.05,
+      "id": "minecraft:yellow_dye"
+    }
+  ]
+}

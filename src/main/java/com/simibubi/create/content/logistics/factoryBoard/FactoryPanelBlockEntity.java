@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelSlot;
@@ -20,6 +20,7 @@ import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -35,7 +36,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class FactoryPanelBlockEntity extends SmartBlockEntity {
-
 	public EnumMap<PanelSlot, FactoryPanelBehaviour> panels;
 
 	public boolean redraw;
@@ -48,7 +48,7 @@ public class FactoryPanelBlockEntity extends SmartBlockEntity {
 		super(type, pos, state);
 		restocker = false;
 	}
-	
+
 	@Override
 	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).inflate(8);
@@ -137,13 +137,13 @@ public class FactoryPanelBlockEntity extends SmartBlockEntity {
 				behaviour.setNetwork(frequency);
 			redraw = true;
 			lastShape = null;
-			
+
 			if (activePanels() > 1) {
 				SoundType soundType = getBlockState().getSoundType();
 				level.playSound(null, worldPosition, soundType.getPlaceSound(), SoundSource.BLOCKS,
 					(soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
 			}
-			
+
 			return true;
 		}
 		return false;
@@ -155,13 +155,13 @@ public class FactoryPanelBlockEntity extends SmartBlockEntity {
 			behaviour.disable();
 			redraw = true;
 			lastShape = null;
-			
+
 			if (activePanels() > 0) {
 				SoundType soundType = getBlockState().getSoundType();
 				level.playSound(null, worldPosition, soundType.getBreakSound(), SoundSource.BLOCKS,
 					(soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
 			}
-			
+
 			return true;
 		}
 		return false;
@@ -196,8 +196,8 @@ public class FactoryPanelBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	protected void read(CompoundTag tag, boolean clientPacket) {
-		super.read(tag, clientPacket);
+	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(tag, registries, clientPacket);
 		restocker = tag.getBoolean("Restocker");
 		if (clientPacket && tag.contains("Redraw")) {
 			lastShape = null;
@@ -206,13 +206,12 @@ public class FactoryPanelBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	protected void write(CompoundTag tag, boolean clientPacket) {
-		super.write(tag, clientPacket);
+	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(tag, registries, clientPacket);
 		tag.putBoolean("Restocker", restocker);
 		if (clientPacket && redraw) {
 			NBTHelper.putMarker(tag, "Redraw");
 			redraw = false;
 		}
 	}
-
 }

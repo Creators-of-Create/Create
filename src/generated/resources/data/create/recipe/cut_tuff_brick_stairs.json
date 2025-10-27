@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "cut_tuff_brick_stairs",
+  "key": {
+    "X": {
+      "item": "create:cut_tuff_bricks"
+    }
+  },
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "result": {
+    "count": 4,
+    "id": "create:cut_tuff_brick_stairs"
+  }
+}

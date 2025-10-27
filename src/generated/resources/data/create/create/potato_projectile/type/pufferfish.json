@@ -10,28 +10,41 @@
           "effect": {
             "amplifier": 1,
             "duration": 1200,
-            "effect": "minecraft:poison"
-          },
-          "probability": 1.0
+            "id": "minecraft:poison",
+            "neoforge:cures": [
+              "protected_by_totem",
+              "milk",
+              "honey"
+            ],
+            "show_icon": true
+          }
         },
         {
           "effect": {
             "amplifier": 2,
             "duration": 300,
-            "effect": "minecraft:hunger"
-          },
-          "probability": 1.0
+            "id": "minecraft:hunger",
+            "neoforge:cures": [
+              "protected_by_totem",
+              "milk"
+            ],
+            "show_icon": true
+          }
         },
         {
           "effect": {
             "duration": 300,
-            "effect": "minecraft:nausea"
-          },
-          "probability": 1.0
+            "id": "minecraft:nausea",
+            "neoforge:cures": [
+              "protected_by_totem",
+              "milk"
+            ],
+            "show_icon": true
+          }
         }
       ],
       "nutrition": 1,
-      "saturation_modifier": 0.1
+      "saturation": 0.2
     },
     "recoverable": false
   },

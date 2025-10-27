@@ -1,0 +1,29 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "atmospheric:arid_sand"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "chance": 0.25,
+      "id": "minecraft:clay_ball"
+    },
+    {
+      "chance": 0.05,
+      "id": "atmospheric:aloe_kernels"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "vampirism"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "vampirism:cursed_earth"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "vampirism:cursed_earth_path"
+    }
+  ]
+}

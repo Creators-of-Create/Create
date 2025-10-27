@@ -1,0 +1,27 @@
+{
+  "parent": "create:mechanical_crafter",
+  "criteria": {
+    "0": {
+      "trigger": "create:crushing_wheel_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.crushing_wheel.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:crushing_wheel"
+    },
+    "title": {
+      "translate": "advancement.create.crushing_wheel"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

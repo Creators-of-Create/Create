@@ -1,9 +1,11 @@
 package com.simibubi.create.api.data.recipe;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.UnaryOperator;
 
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 
 /**
@@ -15,8 +17,8 @@ import net.minecraft.data.PackOutput;
  */
 public abstract class SequencedAssemblyRecipeGen extends BaseRecipeProvider {
 
-	public SequencedAssemblyRecipeGen(PackOutput output, String defaultNamespace) {
-		super(output, defaultNamespace);
+	public SequencedAssemblyRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, String defaultNamespace) {
+		super(output, registries, defaultNamespace);
 	}
 
 	@Override

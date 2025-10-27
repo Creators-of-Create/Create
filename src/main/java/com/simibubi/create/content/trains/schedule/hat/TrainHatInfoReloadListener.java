@@ -8,14 +8,16 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import com.simibubi.create.Create;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class TrainHatInfoReloadListener {
 
@@ -30,15 +32,15 @@ public class TrainHatInfoReloadListener {
 		FileToIdConverter converter = FileToIdConverter.json(HAT_INFO_DIRECTORY);
 		converter.listMatchingResources(manager).forEach((location, resource) -> {
 			String[] splitPath = location.getPath().split("/");
-			ResourceLocation entityName = new ResourceLocation(location.getNamespace(), splitPath[splitPath.length - 1].replace(".json", ""));
-			if (!ForgeRegistries.ENTITY_TYPES.containsKey(entityName)) {
+			ResourceLocation entityName = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), splitPath[splitPath.length - 1].replace(".json", ""));
+			if (!BuiltInRegistries.ENTITY_TYPE.containsKey(entityName)) {
 				Create.LOGGER.error("Failed to load train hat info for entity {} as it does not exist.", entityName);
 				return;
 			}
 
 			try (BufferedReader reader = resource.openAsReader()) {
 				JsonObject json = GsonHelper.parse(reader);
-				ENTITY_INFO_MAP.put(ForgeRegistries.ENTITY_TYPES.getValue(entityName), TrainHatInfo.CODEC.parse(JsonOps.INSTANCE, json).resultOrPartial(Create.LOGGER::error).orElseThrow());
+				ENTITY_INFO_MAP.put(BuiltInRegistries.ENTITY_TYPE.get(entityName), TrainHatInfo.CODEC.parse(JsonOps.INSTANCE, json).resultOrPartial(Create.LOGGER::error).orElseThrow());
 			} catch (Exception e) {
 				Create.LOGGER.error("Failed to read train hat info for entity {}!", entityName, e);
 			}
@@ -46,7 +48,12 @@ public class TrainHatInfoReloadListener {
 		Create.LOGGER.info("Loaded {} train hat configurations.", ENTITY_INFO_MAP.size());
 	}
 
-	public static TrainHatInfo getHatInfoFor(EntityType<?> type) {
-		return ENTITY_INFO_MAP.getOrDefault(type, DEFAULT);
+	public static TrainHatInfo getHatInfoFor(Entity entity) {
+		// Manual override for snow golems, they are a special case when they have a pumpkin on their head
+		if (entity instanceof SnowGolem snowGolem && snowGolem.hasPumpkin()) {
+			return new TrainHatInfo("", 0, new Vec3(0.0F, -3.0F, 0.0F), 1.18F);
+		}
+
+		return ENTITY_INFO_MAP.getOrDefault(entity.getType(), DEFAULT);
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
@@ -15,11 +16,12 @@ import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -47,7 +49,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayer;
 
 public class BacktankBlock extends HorizontalKineticBlock implements IBE<BacktankBlockEntity>, SimpleWaterloggedBlock, SpecialBlockItemRequirement {
 
@@ -113,23 +115,16 @@ public class BacktankBlock extends HorizontalKineticBlock implements IBE<Backtan
 		if (stack == null)
 			return;
 		withBlockEntityDo(worldIn, pos, be -> {
-			be.setCapacityEnchantLevel(stack.getEnchantmentLevel(AllEnchantments.CAPACITY.get()));
-			be.setAirLevel(stack.getOrCreateTag()
-				.getInt("Air"));
-			CompoundTag vanillaTag = stack.getOrCreateTag();
-			if (stack.hasCustomHoverName())
+			be.setCapacityEnchantLevel(stack.getEnchantmentLevel(worldIn.holderOrThrow(AllEnchantments.CAPACITY)));
+			be.setAirLevel(stack.getOrDefault(AllDataComponents.BACKTANK_AIR, 0));
+			if (stack.has(DataComponents.CUSTOM_NAME))
 				be.setCustomName(stack.getHoverName());
 
-			CompoundTag nbt = stack.serializeNBT();
-			CompoundTag forgeCapsTag = nbt.contains("ForgeCaps") ? nbt.getCompound("ForgeCaps") : null;
-			be.setTags(vanillaTag, forgeCapsTag);
+			be.setComponentPatch(stack.getComponentsPatch());
 		});
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
-	// Re-adding ForgeCaps to item here as there is no loot function that can modify
-	// outside of the vanilla tag
 	public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pBuilder) {
 		List<ItemStack> lootDrops = super.getDrops(pState, pBuilder);
 
@@ -137,65 +132,56 @@ public class BacktankBlock extends HorizontalKineticBlock implements IBE<Backtan
 		if (!(blockEntity instanceof BacktankBlockEntity bbe))
 			return lootDrops;
 
-		CompoundTag forgeCapsTag = bbe.getForgeCapsTag();
-		if (forgeCapsTag == null)
+		DataComponentPatch components = bbe.getComponentPatch()
+			.forget(c -> c.equals(AllDataComponents.BACKTANK_AIR));
+		if (components.isEmpty())
 			return lootDrops;
 
 		return lootDrops.stream()
-			.map(stack -> {
-				if (!(stack.getItem() instanceof BacktankItem))
-					return stack;
-
-				ItemStack modifiedStack = new ItemStack(stack.getItem(), stack.getCount(), forgeCapsTag.copy());
-				modifiedStack.setTag(stack.getTag());
-				return modifiedStack;
+			.peek(stack -> {
+				if (stack.getItem() instanceof BacktankItem)
+					stack.applyComponents(components);
 			})
 			.toList();
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult hit) {
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (player == null)
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (player instanceof FakePlayer)
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (player.isShiftKeyDown())
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (player.getMainHandItem()
-			.getItem() instanceof BlockItem)
-			return InteractionResult.PASS;
+				.getItem() instanceof BlockItem)
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (!player.getItemBySlot(EquipmentSlot.CHEST)
-			.isEmpty())
-			return InteractionResult.PASS;
-		if (!world.isClientSide) {
-			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .75f, 1);
-			player.setItemSlot(EquipmentSlot.CHEST, getCloneItemStack(world, pos, state));
-			world.destroyBlock(pos, false);
+				.isEmpty())
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		if (!level.isClientSide) {
+			level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .75f, 1);
+			player.setItemSlot(EquipmentSlot.CHEST, getCloneItemStack(level, pos, state));
+			level.destroyBlock(pos, false);
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos pos, BlockState state) {
+	public ItemStack getCloneItemStack(LevelReader pLevel, BlockPos pos, BlockState state) {
 		Item item = asItem();
 		if (item instanceof BacktankItem.BacktankBlockItem placeable)
 			item = placeable.getActualItem();
 
-		Optional<BacktankBlockEntity> blockEntityOptional = getBlockEntityOptional(blockGetter, pos);
+		Optional<BacktankBlockEntity> blockEntityOptional = getBlockEntityOptional(pLevel, pos);
 
-		CompoundTag forgeCapsTag = blockEntityOptional.map(BacktankBlockEntity::getForgeCapsTag)
-				.map(CompoundTag::copy)
-			.orElse(null);
-		CompoundTag vanillaTag = blockEntityOptional.map(BacktankBlockEntity::getVanillaTag)
-				.map(CompoundTag::copy)
-			.orElse(new CompoundTag());
+		DataComponentPatch components = blockEntityOptional.map(BacktankBlockEntity::getComponentPatch)
+			.orElse(DataComponentPatch.EMPTY);
 		int air = blockEntityOptional.map(BacktankBlockEntity::getAirLevel)
 			.orElse(0);
 
-		ItemStack stack = new ItemStack(item, 1, forgeCapsTag);
-		vanillaTag.putInt("Air", air);
-		stack.setTag(vanillaTag);
+		ItemStack stack = new ItemStack(item.builtInRegistryHolder(), 1, components);
+		stack.set(AllDataComponents.BACKTANK_AIR, air);
 		return stack;
 	}
 
@@ -216,7 +202,7 @@ public class BacktankBlock extends HorizontalKineticBlock implements IBE<Backtan
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

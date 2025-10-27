@@ -1,6 +1,6 @@
 {
 	"parent": "block/block",
-	"loader": "forge:obj",
+	"loader": "neoforge:obj",
 	"flip_v": true,
 	"model": "create:models/block/blaze_burner/blaze_rods_small.obj",
 	"textures": {

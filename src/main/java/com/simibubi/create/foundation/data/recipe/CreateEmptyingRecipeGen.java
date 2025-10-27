@@ -1,18 +1,18 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.api.data.recipe.EmptyingRecipeGen;
 
-import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
-
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
 
-import net.minecraftforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForgeMod;
 
 /**
  * Create's own Data Generation for Emptying recipes
@@ -36,7 +36,7 @@ public final class CreateEmptyingRecipeGen extends EmptyingRecipeGen {
 		.output(Items.GLASS_BOTTLE)),
 
 	FD_MILK = create(Mods.FD.recipeId("milk_bottle"), b -> b.require(Mods.FD, "milk_bottle")
-		.output(ForgeMod.MILK.get(), 250)
+		.output(NeoForgeMod.MILK.get(), 250)
 		.output(Items.GLASS_BOTTLE)
 		.whenModLoaded(Mods.FD.getId())),
 
@@ -46,13 +46,13 @@ public final class CreateEmptyingRecipeGen extends EmptyingRecipeGen {
 		.whenModLoaded(Mods.AM.getId())),
 
 	NEO_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Mods.FD, "milk_bottle")
-		.output(ForgeMod.MILK.get(), 250)
+		.output(NeoForgeMod.MILK.get(), 250)
 		.output(Items.GLASS_BOTTLE)
 		.whenModLoaded(Mods.NEA.getId()))
 
 	;
 
-	public CreateEmptyingRecipeGen(PackOutput output) {
-		super(output, Create.ID);
+	public CreateEmptyingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+		super(output, registries, Create.ID);
 	}
 }

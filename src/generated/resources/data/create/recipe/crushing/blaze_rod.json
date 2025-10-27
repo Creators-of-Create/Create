@@ -1,0 +1,20 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:blaze_rod"
+    }
+  ],
+  "processing_time": 100,
+  "results": [
+    {
+      "count": 3,
+      "id": "minecraft:blaze_powder"
+    },
+    {
+      "chance": 0.25,
+      "count": 3,
+      "id": "minecraft:blaze_powder"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:lever"
+    },
+    "C": {
+      "item": "create:railway_casing"
+    },
+    "I": {
+      "item": "create:precision_mechanism"
+    }
+  },
+  "pattern": [
+    "B",
+    "C",
+    "I"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:controls"
+  }
+}

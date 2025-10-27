@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "create:polished_cut_scoria_slab"
+    },
+    {
+      "item": "create:polished_cut_scoria_slab"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:polished_cut_scoria"
+  }
+}

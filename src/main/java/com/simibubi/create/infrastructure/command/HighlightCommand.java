@@ -4,10 +4,10 @@ import java.util.Collection;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.IDisplayAssemblyExceptions;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -15,15 +15,13 @@ import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.network.PacketDistributor;
 
 public class HighlightCommand {
 
@@ -35,9 +33,7 @@ public class HighlightCommand {
 						Collection<ServerPlayer> players = EntityArgument.getPlayers(ctx, "players");
 						BlockPos pos = BlockPosArgument.getLoadedBlockPos(ctx, "pos");
 
-						for (ServerPlayer p : players) {
-							AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> p), new HighlightPacket(pos));
-						}
+						CatnipServices.NETWORK.sendToClients(players, new HighlightPacket(pos));
 
 						return players.size();
 					}))
@@ -45,8 +41,7 @@ public class HighlightCommand {
 				.executes(ctx -> {
 					BlockPos pos = BlockPosArgument.getLoadedBlockPos(ctx, "pos");
 
-					AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) ctx.getSource()
-						.getEntity()), new HighlightPacket(pos));
+					CatnipServices.NETWORK.sendToClient((ServerPlayer) ctx.getSource().getEntity(), new HighlightPacket(pos));
 
 					return Command.SINGLE_SUCCESS;
 				}))
@@ -68,8 +63,7 @@ public class HighlightCommand {
 	}
 
 	private static int highlightAssemblyExceptionFor(ServerPlayer player, CommandSourceStack source) {
-		double distance = player.getAttribute(ForgeMod.BLOCK_REACH.get())
-			.getValue();
+		double distance = player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE);
 		Vec3 start = player.getEyePosition(1);
 		Vec3 look = player.getViewVector(1);
 		Vec3 end = start.add(look.x * distance, look.y * distance, look.z * distance);
@@ -104,7 +98,8 @@ public class HighlightCommand {
 
 		BlockPos p = exception.getPosition();
 		String command = "/create highlight " + p.getX() + " " + p.getY() + " " + p.getZ();
-		return player.server.getCommands()
-			.performPrefixedCommand(source, command);
+		player.server.getCommands().performPrefixedCommand(source, command);
+
+		return Command.SINGLE_SUCCESS;
 	}
 }

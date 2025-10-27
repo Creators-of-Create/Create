@@ -4,7 +4,7 @@ import static com.simibubi.create.content.equipment.toolbox.ToolboxInventory.STA
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
@@ -12,9 +12,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
+import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
@@ -213,11 +213,11 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 	}
 
 	@Override
-	public void renderBackground(GuiGraphics graphics) {
+	public void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
 		Color color = BACKGROUND_COLOR
 				.scaleAlpha(Math.min(1, (ticksOpen + AnimationTickHolder.getPartialTicks()) / 20f));
 
-		graphics.fillGradient(0, 0, this.width, this.height, color.getRGB(), color.getRGB());
+		pGuiGraphics.fillGradient(0, 0, this.width, this.height, color.getRGB(), color.getRGB());
 	}
 
 	@Override
@@ -236,9 +236,9 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			if (state == State.DETACH)
 				return;
 			else if (state == State.SELECT_BOX)
-				toolboxes.forEach(be -> AllPackets.getChannel().sendToServer(new ToolboxDisposeAllPacket(be.getBlockPos())));
+				toolboxes.forEach(be -> CatnipServices.NETWORK.sendToServer(new ToolboxDisposeAllPacket(be.getBlockPos())));
 			else
-				AllPackets.getChannel().sendToServer(new ToolboxDisposeAllPacket(selectedBox.getBlockPos()));
+				CatnipServices.NETWORK.sendToServer(new ToolboxDisposeAllPacket(selectedBox.getBlockPos()));
 			return;
 		}
 
@@ -247,13 +247,13 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 		if (state == State.DETACH) {
 			if (selected == UNEQUIP)
-				AllPackets.getChannel().sendToServer(
+				CatnipServices.NETWORK.sendToServer(
 					new ToolboxEquipPacket(null, selected, minecraft.player.getInventory().selected));
 			return;
 		}
 
 		if (selected == UNEQUIP)
-			AllPackets.getChannel().sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
+			CatnipServices.NETWORK.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
 				minecraft.player.getInventory().selected));
 
 		if (selected < 0)
@@ -266,19 +266,19 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			.isEmpty())
 			return;
 
-		AllPackets.getChannel().sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
+		CatnipServices.NETWORK.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
 			minecraft.player.getInventory().selected));
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+	public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
 		Window window = getMinecraft().getWindow();
-		double hoveredX = mouseX - window.getGuiScaledWidth() / 2;
-		double hoveredY = mouseY - window.getGuiScaledHeight() / 2;
+		double hoveredX = pMouseY - window.getGuiScaledWidth() / 2;
+		double hoveredY = pMouseY - window.getGuiScaledHeight() / 2;
 		double distance = hoveredX * hoveredX + hoveredY * hoveredY;
 		if (distance <= 150) {
 			scrollMode = true;
-			scrollSlot = (((int) (scrollSlot - delta)) + 8) % 8;
+			scrollSlot = (((int) (scrollSlot - pScrollY)) + 8) % 8;
 			for (int i = 0; i < 10; i++) {
 
 				if (state == State.SELECT_ITEM || state == State.SELECT_ITEM_UNEQUIP) {
@@ -296,13 +296,13 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 				if (state == State.DETACH)
 					break;
 
-				scrollSlot -= Mth.sign(delta);
+				scrollSlot -= Mth.sign(pScrollY);
 				scrollSlot = (scrollSlot + 8) % 8;
 			}
 			return true;
 		}
 
-		return super.mouseScrolled(mouseX, mouseY, delta);
+		return super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
 	}
 
 	@Override
@@ -339,7 +339,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 			if (state == State.SELECT_ITEM_UNEQUIP && selected == UNEQUIP) {
 				if (toolboxes.size() > 1) {
-					AllPackets.getChannel().sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
+					CatnipServices.NETWORK.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
 						minecraft.player.getInventory().selected));
 					state = State.SELECT_BOX;
 					return true;

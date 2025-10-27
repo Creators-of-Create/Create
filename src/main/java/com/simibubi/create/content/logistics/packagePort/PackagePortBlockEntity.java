@@ -3,24 +3,24 @@ package com.simibubi.create.content.logistics.packagePort;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.content.equipment.clipboard.ClipboardContent;
 import com.simibubi.create.content.equipment.clipboard.ClipboardEntry;
-import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides;
+import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides.ClipboardType;
+import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.animatedContainer.AnimatedContainerBehaviour;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.codecs.CatnipCodecUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -29,12 +29,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.network.NetworkHooks;
+
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public abstract class PackagePortBlockEntity extends SmartBlockEntity implements MenuProvider {
 
@@ -45,14 +43,14 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 
 	protected AnimatedContainerBehaviour<PackagePortMenu> openTracker;
 
-	protected LazyOptional<IItemHandler> itemHandler;
+	protected IItemHandler itemHandler;
 
 	public PackagePortBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		addressFilter = "";
 		acceptsPackages = true;
-		inventory = new SmartInventory(18, this);
-		itemHandler = LazyOptional.of(() -> new PackagePortAutomationInventoryWrapper(inventory, this));
+		inventory = new SmartInventory(18, this, (slot, stack) -> PackageItem.isPackage(stack));
+		itemHandler = new PackagePortAutomationInventoryWrapper(inventory, this);
 	}
 
 	public boolean isBackedUp() {
@@ -82,21 +80,21 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 	}
 
 	@Override
-	protected void write(CompoundTag tag, boolean clientPacket) {
-		super.write(tag, clientPacket);
+	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(tag, registries, clientPacket);
 		if (target != null)
-			tag.put("Target", target.write());
+			tag.put("Target", CatnipCodecUtils.encode(PackagePortTarget.CODEC, registries, target).orElseThrow());
 		tag.putString("AddressFilter", addressFilter);
 		tag.putBoolean("AcceptsPackages", acceptsPackages);
-		tag.put("Inventory", inventory.serializeNBT());
+		tag.put("Inventory", inventory.serializeNBT(registries));
 	}
 
 	@Override
-	protected void read(CompoundTag tag, boolean clientPacket) {
-		super.read(tag, clientPacket);
-		inventory.deserializeNBT(tag.getCompound("Inventory"));
+	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(tag, registries, clientPacket);
+		inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
 		PackagePortTarget prevTarget = target;
-		target = PackagePortTarget.read(tag.getCompound("Target"));
+		target = CatnipCodecUtils.decode(PackagePortTarget.CODEC, registries, tag.getCompound("Target")).orElse(null);
 		addressFilter = tag.getString("AddressFilter");
 		acceptsPackages = tag.getBoolean("AcceptsPackages");
 		if (clientPacket && prevTarget != target)
@@ -104,15 +102,7 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 	}
 
 	@Override
-	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (isItemHandlerCap(cap))
-			return itemHandler.cast();
-		return super.getCapability(cap, side);
-	}
-
-	@Override
 	public void invalidate() {
-		itemHandler.invalidate();
 		super.invalidate();
 	}
 
@@ -139,37 +129,38 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 
 	protected abstract void onOpenChange(boolean open);
 
-	public InteractionResult use(Player player) {
+	public ItemInteractionResult use(Player player) {
 		if (player == null || player.isCrouching())
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (player instanceof FakePlayer)
-			return InteractionResult.PASS;
-
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		ItemStack mainHandItem = player.getMainHandItem();
 		boolean clipboard = AllBlocks.CLIPBOARD.isIn(mainHandItem);
 
 		if (level.isClientSide) {
 			if (!clipboard)
 				onOpenedManually();
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
 
 		if (clipboard) {
 			addAddressToClipboard(player, mainHandItem);
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
 
-		NetworkHooks.openScreen((ServerPlayer) player, this, worldPosition);
-		return InteractionResult.SUCCESS;
+		player.openMenu(this, worldPosition);
+		return ItemInteractionResult.SUCCESS;
 	}
 
-	protected void onOpenedManually() {};
+	protected void onOpenedManually() {
+	}
 
 	private void addAddressToClipboard(Player player, ItemStack mainHandItem) {
 		if (addressFilter == null || addressFilter.isBlank())
 			return;
 
-		List<List<ClipboardEntry>> list = ClipboardEntry.readAll(mainHandItem);
+		ClipboardContent clipboard = mainHandItem.getOrDefault(AllDataComponents.CLIPBOARD_CONTENT, ClipboardContent.EMPTY);
+		List<List<ClipboardEntry>> list = ClipboardEntry.readAll(clipboard);
 		for (List<ClipboardEntry> page : list) {
 			for (ClipboardEntry entry : page) {
 				String existing = entry.text.getString();
@@ -196,15 +187,15 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 		player.displayClientMessage(CreateLang.translate("clipboard.address_added", addressFilter)
 			.component(), true);
 
-		ClipboardEntry.saveAll(list, mainHandItem);
-		mainHandItem.getTag()
-			.putInt("Type", ClipboardOverrides.ClipboardType.WRITTEN.ordinal());
+
+		clipboard = clipboard.setPages(list).setType(ClipboardType.WRITTEN);
+		mainHandItem.set(AllDataComponents.CLIPBOARD_CONTENT, clipboard);
 	}
 
 	@Override
 	public Component getDisplayName() {
-        return Component.empty();
-    }
+		return Component.empty();
+	}
 
 	@Override
 	public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {

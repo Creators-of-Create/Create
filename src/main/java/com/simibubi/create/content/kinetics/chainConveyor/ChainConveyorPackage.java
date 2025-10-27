@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.utility.TickBasedCache;
 
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.data.WorldAttached;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -85,22 +86,22 @@ public class ChainConveyorPackage {
 		this.physicsData = null;
 	}
 
-	public CompoundTag writeToClient() {
-		CompoundTag tag = write();
+	public CompoundTag writeToClient(HolderLookup.Provider registries) {
+		CompoundTag tag = write(registries);
 		tag.putInt("NetID", netId);
 		return tag;
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(HolderLookup.Provider registries) {
 		CompoundTag compoundTag = new CompoundTag();
 		compoundTag.putFloat("Position", chainPosition);
-		compoundTag.put("Item", item.serializeNBT());
+		compoundTag.put("Item", item.saveOptional(registries));
 		return compoundTag;
 	}
 
-	public static ChainConveyorPackage read(CompoundTag compoundTag) {
+	public static ChainConveyorPackage read(CompoundTag compoundTag, HolderLookup.Provider registries) {
 		float pos = compoundTag.getFloat("Position");
-		ItemStack item = ItemStack.of(compoundTag.getCompound("Item"));
+		ItemStack item = ItemStack.parseOptional(registries, compoundTag.getCompound("Item"));
 		if (compoundTag.contains("NetID"))
 			return new ChainConveyorPackage(pos, item, compoundTag.getInt("NetID"));
 		return new ChainConveyorPackage(pos, item);

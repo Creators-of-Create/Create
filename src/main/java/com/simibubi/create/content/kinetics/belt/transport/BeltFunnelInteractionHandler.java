@@ -16,8 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.minecraftforge.items.ItemHandlerHelper;
-
 public class BeltFunnelInteractionHandler {
 
 	public static boolean checkForFunnels(BeltInventory beltInventory, TransportedItemStack currentItem,
@@ -99,7 +97,7 @@ public class BeltFunnelInteractionHandler {
 			}
 
 			ItemStack remainder = inserting.insert(toInsert);
-			if (toInsert.equals(remainder, false)) {
+			if (ItemStack.matches(toInsert, remainder)) {
 				beltInventory.belt.invVersionTracker.awaitNewVersion(inserting);
 				if (blocking)
 					return true;
@@ -111,12 +109,12 @@ public class BeltFunnelInteractionHandler {
 			if (!remainder.isEmpty()) {
 				remainder.grow(notFilled);
 			} else if (notFilled > 0)
-				remainder = ItemHandlerHelper.copyStackWithSize(currentItem.stack, notFilled);
+				remainder = currentItem.stack.copyWithCount(notFilled);
 
 			funnelBE.flap(true);
 			funnelBE.onTransfer(toInsert);
 			currentItem.stack = remainder;
-			beltInventory.belt.sendData();
+			beltInventory.belt.notifyUpdate();
 			if (blocking)
 				return true;
 		}

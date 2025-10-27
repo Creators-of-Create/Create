@@ -3,6 +3,7 @@ package com.simibubi.create.content.kinetics.waterwheel;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.outliner.Outliner;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -16,9 +17,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class LargeWaterWheelBlockItem extends BlockItem {
 
@@ -37,7 +37,7 @@ public class LargeWaterWheelBlockItem extends BlockItem {
 				.relative(clickedFace), clickedFace));
 		if (result == InteractionResult.FAIL && ctx.getLevel()
 			.isClientSide())
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> showBounds(ctx));
+			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> showBounds(ctx));
 		return result;
 	}
 

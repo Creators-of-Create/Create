@@ -2,7 +2,7 @@ package com.simibubi.create.content.fluids.tank.storage;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllMountedStorageTypes;
 import com.simibubi.create.api.contraption.storage.SyncedMountedStorage;
@@ -14,19 +14,20 @@ import com.simibubi.create.content.fluids.tank.storage.FluidTankMountedStorage.H
 
 import net.createmod.catnip.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class FluidTankMountedStorage extends WrapperMountedFluidStorage<Handler> implements SyncedMountedStorage {
-	public static final Codec<FluidTankMountedStorage> CODEC = RecordCodecBuilder.create(i -> i.group(
+	public static final MapCodec<FluidTankMountedStorage> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
 		ExtraCodecs.NON_NEGATIVE_INT.fieldOf("capacity").forGetter(FluidTankMountedStorage::getCapacity),
-		FluidStack.CODEC.fieldOf("fluid").forGetter(FluidTankMountedStorage::getFluid)
+		FluidStack.OPTIONAL_CODEC.fieldOf("fluid").forGetter(FluidTankMountedStorage::getFluid)
 	).apply(i, FluidTankMountedStorage::new));
 
 	private boolean dirty;
@@ -69,7 +70,7 @@ public class FluidTankMountedStorage extends WrapperMountedFluidStorage<Handler>
 
 	@Override
 	public void afterSync(Contraption contraption, BlockPos localPos) {
-		BlockEntity be = contraption.presentBlockEntities.get(localPos);
+		BlockEntity be = contraption.getBlockEntityClientSide(localPos);
 		if (!(be instanceof FluidTankBlockEntity tank))
 			return;
 
@@ -88,14 +89,15 @@ public class FluidTankMountedStorage extends WrapperMountedFluidStorage<Handler>
 		return new FluidTankMountedStorage(inventory.getCapacity(), inventory.getFluid().copy());
 	}
 
-	public static FluidTankMountedStorage fromLegacy(CompoundTag nbt) {
+	public static FluidTankMountedStorage fromLegacy(HolderLookup.Provider registries, CompoundTag nbt) {
 		int capacity = nbt.getInt("Capacity");
-		FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
+		FluidStack fluid = FluidStack.parseOptional(registries, nbt);
 		return new FluidTankMountedStorage(capacity, fluid);
 	}
 
 	public static final class Handler extends FluidTank {
-		private Runnable onChange = () -> {};
+		private Runnable onChange = () -> {
+		};
 
 		public Handler(int capacity, FluidStack stack) {
 			super(capacity);

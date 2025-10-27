@@ -2,6 +2,9 @@ package com.simibubi.create.foundation.render;
 
 import static com.simibubi.create.Create.asResource;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+
 import org.lwjgl.system.MemoryUtil;
 
 import com.simibubi.create.content.fluids.FluidInstance;
@@ -15,9 +18,6 @@ import dev.engine_room.flywheel.api.layout.IntegerRepr;
 import dev.engine_room.flywheel.api.layout.LayoutBuilder;
 import dev.engine_room.flywheel.lib.instance.SimpleInstanceType;
 import dev.engine_room.flywheel.lib.util.ExtraMemoryOps;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class AllInstanceTypes {

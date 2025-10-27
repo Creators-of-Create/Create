@@ -1,20 +1,19 @@
 package com.simibubi.create.content.trains.entity;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataSerializer;
 
 public class CarriageSyncDataSerializer implements EntityDataSerializer<CarriageSyncData> {
 
-	@Override
-	public void write(FriendlyByteBuf buffer, CarriageSyncData data) {
-		data.write(buffer);
-	}
+	private static final StreamCodec<RegistryFriendlyByteBuf, CarriageSyncData> STREAM_CODEC = StreamCodec.of(
+			(buf, data) -> data.write(buf),
+			CarriageSyncData::new
+	);
 
 	@Override
-	public CarriageSyncData read(FriendlyByteBuf buffer) {
-		CarriageSyncData data = new CarriageSyncData();
-		data.read(buffer);
-		return data;
+	public StreamCodec<? super RegistryFriendlyByteBuf, CarriageSyncData> codec() {
+		return STREAM_CODEC;
 	}
 
 	@Override

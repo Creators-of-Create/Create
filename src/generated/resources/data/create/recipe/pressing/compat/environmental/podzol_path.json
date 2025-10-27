@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "environmental"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "minecraft:podzol"
+    }
+  ],
+  "results": [
+    {
+      "id": "environmental:podzol_path"
+    }
+  ]
+}

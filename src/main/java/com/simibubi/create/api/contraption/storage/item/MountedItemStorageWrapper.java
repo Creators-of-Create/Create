@@ -3,8 +3,9 @@ package com.simibubi.create.api.contraption.storage.item;
 import com.google.common.collect.ImmutableMap;
 
 import net.minecraft.core.BlockPos;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
 
 /**
  * Wrapper around many MountedItemStorages, providing access to all of them as one storage.

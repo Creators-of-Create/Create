@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "galosphere"
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "tag": "create:stone_types/galosphere/lumiere"
+    }
+  ],
+  "processing_time": 300,
+  "results": [
+    {
+      "chance": 0.8,
+      "count": 4,
+      "id": "galosphere:lumiere_shard"
+    }
+  ]
+}

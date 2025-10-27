@@ -1,0 +1,28 @@
+{
+  "parent": "create:windmill_maxed",
+  "criteria": {
+    "0": {
+      "trigger": "create:ejector_maxed_builtin"
+    }
+  },
+  "display": {
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.ejector_maxed.desc"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "create:weighted_ejector"
+    },
+    "title": {
+      "translate": "advancement.create.ejector_maxed"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,77 +1,56 @@
 package com.simibubi.create.content.schematics.packet;
 
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.schematics.SchematicInstances;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraftforge.network.NetworkEvent.Context;
 
-public class SchematicSyncPacket extends SimplePacketBase {
+public record SchematicSyncPacket(int slot, boolean deployed, BlockPos anchor, Rotation rotation, Mirror mirror) implements ServerboundPacketPayload {
+	public static final StreamCodec<ByteBuf, SchematicSyncPacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.VAR_INT, SchematicSyncPacket::slot,
+			ByteBufCodecs.BOOL, SchematicSyncPacket::deployed,
+			BlockPos.STREAM_CODEC, SchematicSyncPacket::anchor,
+			CatnipStreamCodecs.ROTATION, SchematicSyncPacket::rotation,
+			CatnipStreamCodecs.MIRROR, SchematicSyncPacket::mirror,
+	        SchematicSyncPacket::new
+	);
 
-	public int slot;
-	public boolean deployed;
-	public BlockPos anchor;
-	public Rotation rotation;
-	public Mirror mirror;
-
-	public SchematicSyncPacket(int slot, StructurePlaceSettings settings,
-			BlockPos anchor, boolean deployed) {
-		this.slot = slot;
-		this.deployed = deployed;
-		this.anchor = anchor;
-		this.rotation = settings.getRotation();
-		this.mirror = settings.getMirror();
-	}
-
-	public SchematicSyncPacket(FriendlyByteBuf buffer) {
-		slot = buffer.readVarInt();
-		deployed = buffer.readBoolean();
-		anchor = buffer.readBlockPos();
-		rotation = buffer.readEnum(Rotation.class);
-		mirror = buffer.readEnum(Mirror.class);
+	public SchematicSyncPacket(int slot, StructurePlaceSettings settings, BlockPos anchor, boolean deployed) {
+		this(slot, deployed, anchor, settings.getRotation(), settings.getMirror());
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeVarInt(slot);
-		buffer.writeBoolean(deployed);
-		buffer.writeBlockPos(anchor);
-		buffer.writeEnum(rotation);
-		buffer.writeEnum(mirror);
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.SYNC_SCHEMATIC;
 	}
 
 	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ServerPlayer player = context.getSender();
-			if (player == null)
-				return;
-			ItemStack stack = ItemStack.EMPTY;
-			if (slot == -1) {
-				stack = player.getMainHandItem();
-			} else {
-				stack = player.getInventory().getItem(slot);
-			}
-			if (!AllItems.SCHEMATIC.isIn(stack)) {
-				return;
-			}
-			CompoundTag tag = stack.getOrCreateTag();
-			tag.putBoolean("Deployed", deployed);
-			tag.put("Anchor", NbtUtils.writeBlockPos(anchor));
-			tag.putString("Rotation", rotation.name());
-			tag.putString("Mirror", mirror.name());
-			SchematicInstances.clearHash(stack);
-		});
-		return true;
+	public void handle(ServerPlayer player) {
+		ItemStack stack;
+		if (slot == -1) {
+			stack = player.getMainHandItem();
+		} else {
+			stack = player.getInventory().getItem(slot);
+		}
+		if (!AllItems.SCHEMATIC.isIn(stack)) {
+			return;
+		}
+		stack.set(AllDataComponents.SCHEMATIC_DEPLOYED, deployed);
+		stack.set(AllDataComponents.SCHEMATIC_ANCHOR, anchor);
+		stack.set(AllDataComponents.SCHEMATIC_ROTATION, rotation);
+		stack.set(AllDataComponents.SCHEMATIC_MIRROR, mirror);
+		SchematicInstances.clearHash(stack);
 	}
-
 }

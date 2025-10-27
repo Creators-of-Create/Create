@@ -1,6 +1,7 @@
 package com.simibubi.create.infrastructure.ponder.scenes;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
@@ -46,7 +47,7 @@ public class TunnelScenes {
 		scene.world().showSection(util.select().fromTo(4, 1, 2, 0, 1, 2), Direction.SOUTH);
 		scene.idle(10);
 
-		Vector<ElementLink<WorldSectionElement>> tunnels = new Vector<>(3);
+		List<ElementLink<WorldSectionElement>> tunnels = new ArrayList<>(3);
 		for (int i = 0; i < 3; i++) {
 			tunnels.add(scene.world().showIndependentSection(util.select().position(1 + i, 2, 4), Direction.DOWN));
 			scene.world().moveSection(tunnels.get(i), util.vector().of(0, 0, -2), 0);
@@ -119,7 +120,7 @@ public class TunnelScenes {
 		scene.world().showSection(util.select().fromTo(5, 1, 2, 1, 1, 2), Direction.SOUTH);
 		scene.idle(10);
 
-		Vector<ElementLink<WorldSectionElement>> tunnels = new Vector<>(3);
+		List<ElementLink<WorldSectionElement>> tunnels = new ArrayList<>(3);
 		for (int i = 0; i < 3; i++) {
 			tunnels.add(scene.world().showIndependentSection(util.select().position(2 + i, 2, 4), Direction.DOWN));
 			scene.world().moveSection(tunnels.get(i), util.vector().of(0, 0, -2), 0);

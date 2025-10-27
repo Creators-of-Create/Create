@@ -12,15 +12,15 @@ import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class RedstoneRequesterMenu extends GhostItemMenu<RedstoneRequesterBlockEntity> {
 
@@ -28,7 +28,7 @@ public class RedstoneRequesterMenu extends GhostItemMenu<RedstoneRequesterBlockE
 		super(type, id, inv, contentHolder);
 	}
 
-	public RedstoneRequesterMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public RedstoneRequesterMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
@@ -52,7 +52,7 @@ public class RedstoneRequesterMenu extends GhostItemMenu<RedstoneRequesterBlockE
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected RedstoneRequesterBlockEntity createOnClient(FriendlyByteBuf extraData) {
+	protected RedstoneRequesterBlockEntity createOnClient(RegistryFriendlyByteBuf extraData) {
 		BlockPos blockPos = extraData.readBlockPos();
 		return AllBlocks.REDSTONE_REQUESTER.get()
 			.getBlockEntity(Minecraft.getInstance().level, blockPos);

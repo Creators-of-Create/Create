@@ -90,7 +90,6 @@ public class KineticEffectHandler {
 		if (world == null)
 			return;
 
-		char axisChar = axis.name().charAt(0);
 		Vec3 vec = VecHelper.getCenterOf(pos);
 		SpeedLevel speedLevel = SpeedLevel.of(speed);
 		int color = speedLevel.getColor();
@@ -99,7 +98,7 @@ public class KineticEffectHandler {
 
 		if (world instanceof ServerLevel) {
 			RotationIndicatorParticleData particleData =
-				new RotationIndicatorParticleData(color, particleSpeed, radius1, radius2, 10, axisChar);
+				new RotationIndicatorParticleData(color, particleSpeed, radius1, radius2, 10, axis);
 			((ServerLevel) world).sendParticles(particleData, vec.x, vec.y, vec.z, 20, 0, 0, 0, 1);
 		}
 	}

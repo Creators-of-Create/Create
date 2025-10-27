@@ -1,26 +1,25 @@
 package com.simibubi.create.foundation.networking;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.events.CommonEvents;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent.Context;
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 
-public class LeftClickPacket extends SimplePacketBase {
+public enum LeftClickPacket implements ServerboundPacketPayload {
+	INSTANCE;
 
-	public LeftClickPacket() {}
-
-	public LeftClickPacket(FriendlyByteBuf buffer) {}
-
-	@Override
-	public void write(FriendlyByteBuf buffer) {}
+	public static final StreamCodec<ByteBuf, LeftClickPacket> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
 	@Override
-	public boolean handle(Context context) {
-		if (context.getDirection() != NetworkDirection.PLAY_TO_SERVER)
-			return false;
-		context.enqueueWork(() -> CommonEvents.leftClickEmpty(context.getSender()));
-		return true;
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.LEFT_CLICK;
 	}
 
+	@Override
+	public void handle(ServerPlayer player) {
+		CommonEvents.leftClickEmpty(player);
+	}
 }

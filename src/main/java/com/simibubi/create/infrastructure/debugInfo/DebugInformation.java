@@ -3,33 +3,33 @@ package com.simibubi.create.infrastructure.debugInfo;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.GlUtil;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateBuildInfo;
+import com.simibubi.create.compat.pojav.PojavChecker;
 import com.simibubi.create.foundation.mixin.accessor.SystemReportAccessor;
 import com.simibubi.create.infrastructure.debugInfo.element.DebugInfoSection;
 import com.simibubi.create.infrastructure.debugInfo.element.InfoElement;
 import com.simibubi.create.infrastructure.debugInfo.element.InfoEntry;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.forgespi.language.IModInfo;
-
 import dev.engine_room.flywheel.api.Flywheel;
 import dev.engine_room.flywheel.api.backend.Backend;
 import dev.engine_room.flywheel.api.backend.BackendManager;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.SharedConstants;
 import net.minecraft.SystemReport;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
+
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforgespi.language.IModInfo;
 
 /**
  * Allows for providing easily accessible debugging information.
@@ -73,11 +73,11 @@ public class DebugInformation {
 			.put("Mod Version", CreateBuildInfo.VERSION)
 			.put("Mod Git Commit", CreateBuildInfo.GIT_COMMIT)
 			.put("Ponder Version", getVersionOfMod("ponder"))
-			.put("Forge Version", getVersionOfMod("forge"))
+			.put("NeoForge Version", getVersionOfMod("neoforge"))
 			.put("Minecraft Version", SharedConstants.getCurrentVersion().getName())
 			.buildTo(DebugInformation::registerBothInfo);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> {
 			DebugInfoSection.builder("Graphics")
 				.put("Flywheel Version", ModList.get()
 					.getModContainerById(Flywheel.ID)
@@ -88,7 +88,8 @@ public class DebugInformation {
 				.put("Flywheel Backend", () -> Backend.REGISTRY.getIdOrThrow(BackendManager.currentBackend()).toString())
 				.put("OpenGL Renderer", GlUtil::getRenderer)
 				.put("OpenGL Version", GlUtil::getOpenGLVersion)
-				.put("Graphics Mode", () -> I18n.get(Minecraft.getInstance().options.graphicsMode().get().getKey()))
+				.put("Graphics Mode", () -> Minecraft.getInstance().options.graphicsMode().get().name().toLowerCase(Locale.ROOT))
+				.put("PojavLauncher Detected", () -> String.valueOf(PojavChecker.IS_PRESENT))
 				.buildTo(DebugInformation::registerClientInfo);
 		});
 
@@ -117,7 +118,7 @@ public class DebugInformation {
 		List<InfoElement> mods = new ArrayList<>();
 		ModList.get().forEachModContainer((id, mod) -> {
 			if (!id.equals(Create.ID) &&
-				!id.equals("forge") &&
+				!id.equals("neoforge") &&
 				!id.equals("minecraft") &&
 				!id.equals("flywheel") &&
 				!id.equals("ponder")) {

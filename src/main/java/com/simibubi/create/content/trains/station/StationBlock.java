@@ -11,11 +11,13 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
 import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -37,9 +39,8 @@ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class StationBlock extends Block implements IBE<StationBlockEntity>, IWrenchable, ProperWaterloggedBlock {
 
@@ -102,52 +103,48 @@ public class StationBlock extends Block implements IBE<StationBlockEntity>, IWre
 	}
 
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (player == null || player.isShiftKeyDown())
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		if (AllItems.WRENCH.isIn(stack))
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		if (pPlayer == null || pPlayer.isShiftKeyDown())
-			return InteractionResult.PASS;
-		ItemStack itemInHand = pPlayer.getItemInHand(pHand);
-		if (AllItems.WRENCH.isIn(itemInHand))
-			return InteractionResult.PASS;
-
-		if (itemInHand.getItem() == Items.FILLED_MAP) {
-			return onBlockEntityUse(pLevel, pPos, station -> {
-				if (pLevel.isClientSide)
-					return InteractionResult.SUCCESS;
+		if (stack.getItem() == Items.FILLED_MAP) {
+			return onBlockEntityUseItemOn(level, pos, station -> {
+				if (level.isClientSide)
+					return ItemInteractionResult.SUCCESS;
 
 				if (station.getStation() == null || station.getStation().getId() == null)
-					return InteractionResult.FAIL;
+					return ItemInteractionResult.FAIL;
 
-				MapItemSavedData savedData = MapItem.getSavedData(itemInHand, pLevel);
+				MapItemSavedData savedData = MapItem.getSavedData(stack, level);
 				if (!(savedData instanceof StationMapData stationMapData))
-					return InteractionResult.FAIL;
+					return ItemInteractionResult.FAIL;
 
-				if (!stationMapData.toggleStation(pLevel, pPos, station))
-					return InteractionResult.FAIL;
+				if (!stationMapData.toggleStation(level, pos, station))
+					return ItemInteractionResult.FAIL;
 
-				return InteractionResult.SUCCESS;
+				return ItemInteractionResult.SUCCESS;
 			});
 		}
 
-		InteractionResult result = onBlockEntityUse(pLevel, pPos, station -> {
+		InteractionResult result = onBlockEntityUse(level, pos, station -> {
 			ItemStack autoSchedule = station.getAutoSchedule();
 			if (autoSchedule.isEmpty())
 				return InteractionResult.PASS;
-			if (pLevel.isClientSide)
+			if (level.isClientSide)
 				return InteractionResult.SUCCESS;
-			pPlayer.getInventory()
+			player.getInventory()
 				.placeItemBackInInventory(autoSchedule.copy());
 			station.depotBehaviour.removeHeldItem();
 			station.notifyUpdate();
-			AllSoundEvents.playItemPickup(pPlayer);
+			AllSoundEvents.playItemPickup(player);
 			return InteractionResult.SUCCESS;
 		});
 
 		if (result == InteractionResult.PASS)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-				() -> () -> withBlockEntityDo(pLevel, pPos, be -> this.displayScreen(be, pPlayer)));
-		return InteractionResult.SUCCESS;
+			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> withBlockEntityDo(level, pos, be -> this.displayScreen(be, player)));
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
@@ -178,7 +175,7 @@ public class StationBlock extends Block implements IBE<StationBlockEntity>, IWre
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

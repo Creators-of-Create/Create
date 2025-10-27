@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,6 +21,7 @@ import com.simibubi.create.content.trains.station.StationMapData;
 import com.simibubi.create.content.trains.station.StationMarker;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -56,30 +58,30 @@ public class MapItemSavedDataMixin implements StationMapData {
 	private final Map<String, StationMarker> create$stationMarkers = Maps.newHashMap();
 
 	@Inject(
-			method = "load(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;",
+			method = "load",
 			at = @At("RETURN")
 	)
-	private static void create$onLoad(CompoundTag compound, CallbackInfoReturnable<MapItemSavedData> cir) {
+	private static void create$onLoad(CompoundTag tag, HolderLookup.Provider levelRegistry, CallbackInfoReturnable<MapItemSavedData> cir) {
 		MapItemSavedData mapData = cir.getReturnValue();
 		StationMapData stationMapData = (StationMapData) mapData;
 
-		ListTag listTag = compound.getList(STATION_MARKERS_KEY, Tag.TAG_COMPOUND);
+		ListTag listTag = tag.getList(STATION_MARKERS_KEY, Tag.TAG_COMPOUND);
 		for (int i = 0; i < listTag.size(); ++i) {
-			StationMarker stationMarker = StationMarker.load(listTag.getCompound(i));
+			StationMarker stationMarker = StationMarker.load(listTag.getCompound(i), levelRegistry);
 			stationMapData.addStationMarker(stationMarker);
 		}
 	}
 
 	@Inject(
-			method = "save(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag;",
+			method = "save",
 			at = @At("RETURN")
 	)
-	public void create$onSave(CompoundTag compound, CallbackInfoReturnable<CompoundTag> cir) {
+	public void create$onSave(CompoundTag tag, HolderLookup.Provider registries, CallbackInfoReturnable<CompoundTag> cir) {
 		ListTag listTag = new ListTag();
 		for (StationMarker stationMarker : create$stationMarkers.values()) {
-			listTag.add(stationMarker.save());
+			listTag.add(stationMarker.save(registries));
 		}
-		compound.put(STATION_MARKERS_KEY, listTag);
+		tag.put(STATION_MARKERS_KEY, listTag);
 	}
 
 	@Override
@@ -98,14 +100,14 @@ public class MapItemSavedDataMixin implements StationMapData {
 		byte localXByte = (byte) (int) (localX * 2.0F + 0.5F);
 		byte localZByte = (byte) (int) (localZ * 2.0F + 0.5F);
 
-		MapDecoration decoration = new StationMarker.Decoration(localXByte, localZByte, marker.getName());
+		MapDecoration decoration = StationMarker.createStationDecoration(localXByte, localZByte, Optional.of(marker.getName()));
 		MapDecoration oldDecoration = decorations.put(marker.getId(), decoration);
 		if (!decoration.equals(oldDecoration)) {
-			if (oldDecoration != null && oldDecoration.getType().shouldTrackCount()) {
+			if (oldDecoration != null && oldDecoration.type().value().trackCount()) {
 				--trackedDecorationCount;
 			}
 
-			if (decoration.getType().shouldTrackCount()) {
+			if (decoration.type().value().trackCount()) {
 				++trackedDecorationCount;
 			}
 
@@ -114,7 +116,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 	}
 
 	@Shadow
-	private void removeDecoration(String identifier) {
+	public void removeDecoration(String identifier) {
 		throw new AssertionError();
 	}
 

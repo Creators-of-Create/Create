@@ -1,10 +1,13 @@
 package com.simibubi.create.content.kinetics.chainConveyor;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -12,10 +15,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class ChainConveyorConnectionPacket extends BlockEntityConfigurationPacket<ChainConveyorBlockEntity> {
+	public static final StreamCodec<RegistryFriendlyByteBuf, ChainConveyorConnectionPacket> STREAM_CODEC = StreamCodec.composite(
+	    BlockPos.STREAM_CODEC, packet -> packet.pos,
+		BlockPos.STREAM_CODEC, packet -> packet.targetPos,
+		ItemStack.STREAM_CODEC, packet -> packet.chain,
+		ByteBufCodecs.BOOL, packet -> packet.connect,
+		ChainConveyorConnectionPacket::new
+	);
 
-	private BlockPos targetPos;
-	private boolean connect;
-	private ItemStack chain;
+	private final BlockPos targetPos;
+	private final ItemStack chain;
+	private final boolean connect;
 
 	public ChainConveyorConnectionPacket(BlockPos pos, BlockPos targetPos, ItemStack chain, boolean connect) {
 		super(pos);
@@ -24,22 +34,9 @@ public class ChainConveyorConnectionPacket extends BlockEntityConfigurationPacke
 		this.connect = connect;
 	}
 
-	public ChainConveyorConnectionPacket(FriendlyByteBuf buffer) {
-		super(buffer);
-	}
-
 	@Override
-	protected void writeSettings(FriendlyByteBuf buffer) {
-		buffer.writeBlockPos(targetPos);
-		buffer.writeBoolean(connect);
-		buffer.writeItem(chain);
-	}
-
-	@Override
-	protected void readSettings(FriendlyByteBuf buffer) {
-		targetPos = buffer.readBlockPos();
-		connect = buffer.readBoolean();
-		chain = buffer.readItem();
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CHAIN_CONVEYOR_CONNECT;
 	}
 
 	@Override
@@ -90,8 +87,4 @@ public class ChainConveyorConnectionPacket extends BlockEntityConfigurationPacke
 		} else
 			be.removeConnectionTo(targetPos);
 	}
-
-	@Override
-	protected void applySettings(ChainConveyorBlockEntity be) {}
-
 }

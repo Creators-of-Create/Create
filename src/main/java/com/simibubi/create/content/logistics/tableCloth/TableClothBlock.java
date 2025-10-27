@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.tableCloth;
 import java.util.List;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
@@ -21,7 +21,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -86,37 +86,35 @@ public class TableClothBlock extends Block implements IHaveBigOutline, IWrenchab
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult ray) {
-		if (ray.getDirection() == Direction.DOWN)
-			return InteractionResult.PASS;
-		if (world.isClientSide)
-			return InteractionResult.SUCCESS;
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (hitResult.getDirection() == Direction.DOWN)
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		if (level.isClientSide)
+			return ItemInteractionResult.SUCCESS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
 		boolean shiftKeyDown = player.isShiftKeyDown();
 		if (!player.mayBuild())
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
 		if (placementHelper.matchesItem(heldItem)) {
 			if (shiftKeyDown)
-				return InteractionResult.PASS;
-			placementHelper.getOffset(player, world, state, pos, ray)
-				.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
-			return InteractionResult.SUCCESS;
+				return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			placementHelper.getOffset(player, level, state, pos, hitResult)
+				.placeInWorld(level, (BlockItem) heldItem.getItem(), player, hand, hitResult);
+			return ItemInteractionResult.SUCCESS;
 		}
 
 		if ((shiftKeyDown || heldItem.isEmpty()) && !state.getValue(HAS_BE))
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		if (!world.isClientSide() && !state.getValue(HAS_BE))
-			world.setBlockAndUpdate(pos, state.cycle(HAS_BE));
+		if (!level.isClientSide() && !state.getValue(HAS_BE))
+			level.setBlockAndUpdate(pos, state.cycle(HAS_BE));
 
-		return onBlockEntityUse(world, pos, dcbe -> dcbe.use(player, ray));
+		return onBlockEntityUseItemOn(level, pos, dcbe -> dcbe.use(player, hitResult));
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public List<ItemStack> getDrops(BlockState pState,
 		net.minecraft.world.level.storage.loot.LootParams.Builder pParams) {

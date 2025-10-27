@@ -9,10 +9,11 @@ import com.simibubi.create.api.contraption.storage.item.MountedItemStorageWrappe
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.MountedStorageManager;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class TrainCargoManager extends MountedStorageManager {
 
@@ -36,14 +37,14 @@ public class TrainCargoManager extends MountedStorageManager {
 	}
 
 	@Override
-	public void write(CompoundTag nbt, boolean clientPacket) {
-		super.write(nbt, clientPacket);
+	public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(nbt, registries, clientPacket);
 		nbt.putInt("TicksSinceLastExchange", ticksSinceLastExchange);
 	}
 
 	@Override
-	public void read(CompoundTag nbt, boolean clientPacket, @Nullable Contraption contraption) {
-		super.read(nbt, clientPacket, contraption);
+	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket, @Nullable Contraption contraption) {
+		super.read(nbt, registries, clientPacket, contraption);
 		ticksSinceLastExchange = nbt.getInt("TicksSinceLastExchange");
 	}
 

@@ -6,6 +6,7 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -37,19 +38,19 @@ public abstract class BlockEntityBehaviour {
 
 	}
 
-	public void read(CompoundTag nbt, boolean clientPacket) {
+	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 
 	}
 
-	public void write(CompoundTag nbt, boolean clientPacket) {
+	public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 
 	}
 
 	/**
 	 * Called when isSafeNBT == true. Defaults to write()
 	 */
-	public void writeSafe(CompoundTag nbt) {
-		write(nbt, false);
+	public void writeSafe(CompoundTag nbt, HolderLookup.Provider registries) {
+		write(nbt, registries, false);
 	}
 
 	public boolean isSafeNBT() {

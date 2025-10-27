@@ -17,10 +17,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LootingLevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 
 @EventBusSubscriber
 public class CrushingWheelBlockEntity extends KineticBlockEntity {
@@ -56,16 +55,6 @@ public class CrushingWheelBlockEntity extends KineticBlockEntity {
 	public void lazyTick() {
 		super.lazyTick();
 		fixControllers();
-	}
-
-	// This increases the drops when dropCustomDeathLoot is called, and LootingEnchantFunctionMixin increases the drops
-	// defined in the entity loot table
-	@SubscribeEvent
-	public static void crushingIsFortunate(LootingLevelEvent event) {
-		DamageSource damageSource = event.getDamageSource();
-		if (damageSource == null || !damageSource.is(AllDamageTypes.CRUSH))
-			return;
-		event.setLootingLevel(2);
 	}
 
 	@SubscribeEvent

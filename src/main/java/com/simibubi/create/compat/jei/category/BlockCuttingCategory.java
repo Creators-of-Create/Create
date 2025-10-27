@@ -9,10 +9,9 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -63,7 +62,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 		List<ItemStack> outputs = new ArrayList<>();
 
 		public CondensedBlockCuttingRecipe(Ingredient ingredient) {
-			super(new ResourceLocation(""), "", ingredient, ItemStack.EMPTY);
+			super("", ingredient, ItemStack.EMPTY);
 		}
 
 		public void addOutput(ItemStack stack) {
@@ -98,19 +97,19 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 
 	}
 
-	public static List<CondensedBlockCuttingRecipe> condenseRecipes(List<Recipe<?>> stoneCuttingRecipes) {
-		List<CondensedBlockCuttingRecipe> condensed = new ArrayList<>();
-		Recipes: for (Recipe<?> recipe : stoneCuttingRecipes) {
-			Ingredient i1 = recipe.getIngredients().get(0);
-			for (CondensedBlockCuttingRecipe condensedRecipe : condensed) {
-				if (ItemHelper.matchIngredients(i1, condensedRecipe.getIngredients().get(0))) {
-					condensedRecipe.addOutput(getResultItem(recipe));
+	public static List<RecipeHolder<CondensedBlockCuttingRecipe>> condenseRecipes(List<RecipeHolder<?>> stoneCuttingRecipes) {
+		List<RecipeHolder<CondensedBlockCuttingRecipe>> condensed = new ArrayList<>();
+		Recipes: for (RecipeHolder<?> recipe : stoneCuttingRecipes) {
+			Ingredient i1 = recipe.value().getIngredients().get(0);
+			for (RecipeHolder<CondensedBlockCuttingRecipe> condensedRecipe : condensed) {
+				if (ItemHelper.matchIngredients(i1, condensedRecipe.value().getIngredients().get(0))) {
+					condensedRecipe.value().addOutput(getResultItem(recipe.value()));
 					continue Recipes;
 				}
 			}
 			CondensedBlockCuttingRecipe cr = new CondensedBlockCuttingRecipe(i1);
-			cr.addOutput(getResultItem(recipe));
-			condensed.add(cr);
+			cr.addOutput(getResultItem(recipe.value()));
+			condensed.add(new RecipeHolder<>(recipe.id(), cr));
 		}
 		return condensed;
 	}

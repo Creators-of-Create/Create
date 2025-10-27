@@ -1,0 +1,28 @@
+{
+  "parent": "create:conductor",
+  "criteria": {
+    "0": {
+      "trigger": "create:track_signal_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.track_signal.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:track_signal"
+    },
+    "title": {
+      "translate": "advancement.create.track_signal"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

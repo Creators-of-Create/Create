@@ -6,13 +6,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+
+import org.jetbrains.annotations.NotNull;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.longs.LongSets;
 import it.unimi.dsi.fastutil.shorts.ShortList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -22,9 +26,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.UpgradeData;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -151,7 +155,7 @@ public class VirtualChunk extends ChunkAccess {
 	}
 
 	@Override
-	public ChunkStatus getStatus() {
+	public ChunkStatus getPersistedStatus() {
 		return ChunkStatus.LIGHT;
 	}
 
@@ -172,16 +176,16 @@ public class VirtualChunk extends ChunkAccess {
 
 	@Override
 	@Nullable
-	public CompoundTag getBlockEntityNbtForSaving(BlockPos pos) {
+	public CompoundTag getBlockEntityNbtForSaving(BlockPos pos, HolderLookup.Provider registries) {
 		return null;
 	}
 
 	@Override
-	public void findBlocks(BiPredicate<BlockState, BlockPos> predicate, BiConsumer<BlockPos, BlockState> consumer) {
+	public void findBlocks(@NotNull Predicate<BlockState> roughFilter, @NotNull BiPredicate<BlockState, BlockPos> fineFilter, @NotNull BiConsumer<BlockPos, BlockState> output) {
 		world.blockStates.forEach((pos, state) -> {
 			if (SectionPos.blockToSectionCoord(pos.getX()) == chunkPos.x && SectionPos.blockToSectionCoord(pos.getZ()) == chunkPos.z) {
-				if (predicate.test(state, pos)) {
-					consumer.accept(pos, state);
+				if (roughFilter.test(state) && fineFilter.test(state, pos)) {
+					output.accept(pos, state);
 				}
 			}
 		});

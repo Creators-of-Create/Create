@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "c:dyes/light_gray"
+    },
+    {
+      "tag": "create:postboxes"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:light_gray_postbox"
+  }
+}

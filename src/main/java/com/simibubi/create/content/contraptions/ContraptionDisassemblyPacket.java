@@ -1,38 +1,30 @@
 package com.simibubi.create.content.contraptions;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import io.netty.buffer.ByteBuf;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-public class ContraptionDisassemblyPacket extends SimplePacketBase {
+public record ContraptionDisassemblyPacket(int entityId, StructureTransform transform) implements ClientboundPacketPayload {
+	public static final StreamCodec<ByteBuf, ContraptionDisassemblyPacket> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.INT, ContraptionDisassemblyPacket::entityId,
+			StructureTransform.STREAM_CODEC, ContraptionDisassemblyPacket::transform,
+			ContraptionDisassemblyPacket::new
+	);
 
-	int entityID;
-	StructureTransform transform;
-
-	public ContraptionDisassemblyPacket(int entityID, StructureTransform transform) {
-		this.entityID = entityID;
-		this.transform = transform;
-	}
-
-	public ContraptionDisassemblyPacket(FriendlyByteBuf buffer) {
-		entityID = buffer.readInt();
-		transform = StructureTransform.fromBuffer(buffer);
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		AbstractContraptionEntity.handleDisassemblyPacket(this);
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeInt(entityID);
-		transform.writeToBuffer(buffer);
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONTRAPTION_DISASSEMBLE;
 	}
-
-	@Override
-	public boolean handle(Context context) {
-		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-			() -> () -> AbstractContraptionEntity.handleDisassemblyPacket(this)));
-		return true;
-	}
-
 }

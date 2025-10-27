@@ -1,31 +1,39 @@
 package com.simibubi.create.content.logistics.funnel;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.networking.BlockEntityDataPacket;
 
-import net.minecraft.network.FriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 public class FunnelFlapPacket extends BlockEntityDataPacket<FunnelBlockEntity> {
+	public static final StreamCodec<ByteBuf, FunnelFlapPacket> STREAM_CODEC = StreamCodec.composite(
+			BlockPos.STREAM_CODEC, packet -> packet.pos,
+			ByteBufCodecs.BOOL, packet -> packet.inwards,
+			FunnelFlapPacket::new
+	);
 
     private final boolean inwards;
 
-    public FunnelFlapPacket(FriendlyByteBuf buffer) {
-        super(buffer);
-
-        inwards = buffer.readBoolean();
-    }
-
     public FunnelFlapPacket(FunnelBlockEntity blockEntity, boolean inwards) {
-        super(blockEntity.getBlockPos());
-        this.inwards = inwards;
+        this(blockEntity.getBlockPos(), inwards);
     }
 
-    @Override
-    protected void writeData(FriendlyByteBuf buffer) {
-        buffer.writeBoolean(inwards);
-    }
+	private FunnelFlapPacket(BlockPos pos, boolean inwards) {
+		super(pos);
+		this.inwards = inwards;
+	}
 
     @Override
     protected void handlePacket(FunnelBlockEntity blockEntity) {
         blockEntity.flap(inwards);
     }
+
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.FUNNEL_FLAP;
+	}
 }

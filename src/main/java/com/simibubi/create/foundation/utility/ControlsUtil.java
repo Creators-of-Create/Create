@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.simibubi.create.AllKeys;
@@ -11,12 +12,12 @@ import net.minecraft.client.Options;
 
 public class ControlsUtil {
 
-	private static Vector<KeyMapping> standardControls;
+	private static List<KeyMapping> standardControls;
 
-	public static Vector<KeyMapping> getControls() {
+	public static List<KeyMapping> getControls() {
 		if (standardControls == null) {
 			Options gameSettings = Minecraft.getInstance().options;
-			standardControls = new Vector<>(6);
+			standardControls = new ArrayList<>(6);
 			standardControls.add(gameSettings.keyUp);
 			standardControls.add(gameSettings.keyDown);
 			standardControls.add(gameSettings.keyLeft);

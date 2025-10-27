@@ -9,6 +9,7 @@ import com.simibubi.create.api.contraption.dispenser.OptionalMountedDispenseBeha
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -26,7 +27,7 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -46,7 +47,7 @@ public class AllMountedDispenseItemBehaviors {
 				return super.execute(stack, context, pos, facing);
 
 			if (context.world instanceof ServerLevel serverLevel) {
-				EntityType<?> type = egg.getType(stack.getTag());
+				EntityType<?> type = egg.getType(stack);
 				BlockPos offset = BlockPos.containing(facing.x + .7, facing.y + .7, facing.z + .7);
 				Entity entity = type.spawn(serverLevel, stack, null, pos.offset(offset), MobSpawnType.DISPENSER, facing.y < .5, false);
 				if (entity != null) {
@@ -100,9 +101,9 @@ public class AllMountedDispenseItemBehaviors {
 			SmallFireball fireball = new SmallFireball(
 				context.world,
 				x, y, z,
-				random.nextGaussian() * 0.05 + facing.x + context.motion.x,
+				new Vec3(random.nextGaussian() * 0.05 + facing.x + context.motion.x,
 				random.nextGaussian() * 0.05 + facing.y + context.motion.y,
-				random.nextGaussian() * 0.05 + facing.z + context.motion.z
+				random.nextGaussian() * 0.05 + facing.z + context.motion.z).normalize()
 			);
 			fireball.setItem(stack); // copies the stack
 			context.world.addFreshEntity(fireball);
@@ -124,7 +125,7 @@ public class AllMountedDispenseItemBehaviors {
 				return super.execute(stack, context, pos, facing);
 			}
 
-			ItemStack bucket = bucketPickup.pickupBlock(context.world, interactionPos, state);
+			ItemStack bucket = bucketPickup.pickupBlock(null, context.world, interactionPos, state);
 			MountedDispenseBehavior.placeItemInInventory(bucket, context, pos);
 			stack.shrink(1);
 			return stack;
@@ -132,7 +133,7 @@ public class AllMountedDispenseItemBehaviors {
 	};
 	private static final MountedDispenseBehavior POTIONS = new MountedProjectileDispenseBehavior() {
 		@Override
-		protected Projectile getProjectile(Level level, double x, double y, double z, ItemStack stack) {
+		protected Projectile getProjectile(Level level, double x, double y, double z, ItemStack stack, Direction facing) {
 			ThrownPotion potion = new ThrownPotion(level, x, y, z);
 			potion.setItem(stack); // copies item
 			return potion;
@@ -162,7 +163,7 @@ public class AllMountedDispenseItemBehaviors {
 				stack.shrink(1);
 				return stack;
 			} else if (context.world.getFluidState(interactionPos).is(FluidTags.WATER)) {
-				ItemStack waterBottle = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+				ItemStack waterBottle = PotionContents.createItemStack(Items.POTION, Potions.WATER);
 				MountedDispenseBehavior.placeItemInInventory(waterBottle, context, pos);
 				stack.shrink(1);
 				return stack;

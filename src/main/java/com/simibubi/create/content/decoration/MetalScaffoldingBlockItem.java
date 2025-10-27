@@ -1,6 +1,6 @@
 package com.simibubi.create.content.decoration;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -22,7 +22,7 @@ public class MetalScaffoldingBlockItem extends ScaffoldingBlockItem {
 
 	@Nullable
 	public BlockPlaceContext updatePlacementContext(BlockPlaceContext pContext) { // TODO replace with placement helper
-		BlockPos blockpos = pContext.getClickedPos();	
+		BlockPos blockpos = pContext.getClickedPos();
 		Level level = pContext.getLevel();
 		BlockState blockstate = level.getBlockState(blockpos);
 		Block block = this.getBlock();
@@ -65,7 +65,7 @@ public class MetalScaffoldingBlockItem extends ScaffoldingBlockItem {
 				++i;
 			}
 		}
-		
+
 		return null;
 	}
 

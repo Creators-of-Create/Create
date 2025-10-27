@@ -3,11 +3,13 @@ package com.simibubi.create.api.equipment.potatoCannon;
 import java.util.function.Function;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.EntityHitResult;
 
+// TODO: 1.21.1+ - Move into api package
 public interface PotatoProjectileEntityHitAction {
 	Codec<PotatoProjectileEntityHitAction> CODEC = CreateBuiltInRegistries.POTATO_PROJECTILE_ENTITY_HIT_ACTION.byNameCodec()
 		.dispatch(PotatoProjectileEntityHitAction::codec, Function.identity());
@@ -23,5 +25,5 @@ public interface PotatoProjectileEntityHitAction {
 	 */
 	boolean execute(ItemStack projectile, EntityHitResult ray, Type type);
 
-	Codec<? extends PotatoProjectileEntityHitAction> codec();
+	MapCodec<? extends PotatoProjectileEntityHitAction> codec();
 }

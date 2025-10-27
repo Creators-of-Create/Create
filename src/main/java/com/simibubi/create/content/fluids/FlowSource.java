@@ -3,20 +3,26 @@ package com.simibubi.create.content.fluids;
 import java.lang.ref.WeakReference;
 import java.util.function.Predicate;
 
+import org.jetbrains.annotations.Nullable;
+
+import com.simibubi.create.foundation.ICapabilityProvider;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.createmod.catnip.math.BlockFace;
+import net.createmod.ponder.api.level.PonderLevel;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 public abstract class FlowSource {
 
-	private static final LazyOptional<IFluidHandler> EMPTY = LazyOptional.empty();
+	private static final ICapabilityProvider<IFluidHandler> EMPTY = null;
 
 	BlockFace location;
 
@@ -25,7 +31,10 @@ public abstract class FlowSource {
 	}
 
 	public FluidStack provideFluid(Predicate<FluidStack> extractionPredicate) {
-		IFluidHandler tank = provideHandler().orElse(null);
+		@Nullable ICapabilityProvider<IFluidHandler> tankCache = provideHandler();
+		if (tankCache == null)
+			return FluidStack.EMPTY;
+		IFluidHandler tank = tankCache.getCapability();
 		if (tank == null)
 			return FluidStack.EMPTY;
 		FluidStack immediateFluid = tank.drain(1, FluidAction.SIMULATE);
@@ -51,34 +60,52 @@ public abstract class FlowSource {
 
 	public abstract boolean isEndpoint();
 
-	public void manageSource(Level world) {}
+	public void manageSource(Level world, BlockEntity networkBE) {
+	}
 
 	public void whileFlowPresent(Level world, boolean pulling) {}
 
-	public LazyOptional<IFluidHandler> provideHandler() {
+	public @Nullable ICapabilityProvider<IFluidHandler> provideHandler() {
 		return EMPTY;
 	}
 
 	public static class FluidHandler extends FlowSource {
-		LazyOptional<IFluidHandler> fluidHandler;
+		@Nullable
+		ICapabilityProvider<IFluidHandler> fluidHandlerCache;
 
 		public FluidHandler(BlockFace location) {
 			super(location);
-			fluidHandler = EMPTY;
+			fluidHandlerCache = EMPTY;
 		}
 
-		public void manageSource(Level world) {
-			if (fluidHandler.isPresent() && world.getGameTime() % 20 != 0)
-				return;
-			BlockEntity blockEntity = world.getBlockEntity(location.getConnectedPos());
-			if (blockEntity != null)
-				fluidHandler = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER,
-					location.getOppositeFace());
+		public void manageSource(Level level, BlockEntity networkBE) {
+			if (fluidHandlerCache == null) {
+				BlockEntity blockEntity = level.getBlockEntity(location.getConnectedPos());
+				if (blockEntity != null) {
+					if (level instanceof ServerLevel serverLevel) {
+						fluidHandlerCache = ICapabilityProvider.of(BlockCapabilityCache.create(
+							Capabilities.FluidHandler.BLOCK,
+							serverLevel,
+							blockEntity.getBlockPos(),
+							location.getOppositeFace(),
+							() -> !networkBE.isRemoved(),
+							() -> fluidHandlerCache = EMPTY
+						));
+					} else if (level instanceof PonderLevel) {
+						fluidHandlerCache = ICapabilityProvider.of(() -> level.getCapability(
+							Capabilities.FluidHandler.BLOCK,
+							blockEntity.getBlockPos(),
+							location.getOppositeFace()
+						));
+					}
+				}
+			}
 		}
 
 		@Override
-		public LazyOptional<IFluidHandler> provideHandler() {
-			return fluidHandler;
+		@Nullable
+		public ICapabilityProvider<IFluidHandler> provideHandler() {
+			return fluidHandlerCache;
 		}
 
 		@Override
@@ -95,7 +122,7 @@ public abstract class FlowSource {
 		}
 
 		@Override
-		public void manageSource(Level world) {
+		public void manageSource(Level world, BlockEntity networkBE) {
 			if (cached != null && cached.get() != null && !cached.get().blockEntity.isRemoved())
 				return;
 			cached = null;

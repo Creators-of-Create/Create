@@ -1,6 +1,6 @@
 {
 	"parent": "create:block/chain_conveyor/textures",
-	"loader": "forge:obj",
+	"loader": "neoforge:obj",
 	"flip_v": true,
 	"model": "create:models/block/chain_conveyor/conveyor_ports.obj"
 }

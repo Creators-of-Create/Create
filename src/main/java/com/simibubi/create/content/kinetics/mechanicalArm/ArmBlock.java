@@ -1,5 +1,7 @@
 package com.simibubi.create.content.kinetics.mechanicalArm;
 
+import net.minecraft.world.ItemInteractionResult;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlockEntityTypes;
@@ -53,19 +55,19 @@ public class ArmBlock extends KineticBlock implements IBE<ArmBlockEntity>, ICogW
 		CollisionContext p_220053_4_) {
 		return state.getValue(CEILING) ? AllShapes.MECHANICAL_ARM_CEILING : AllShapes.MECHANICAL_ARM;
 	}
-	
+
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, world, pos, oldState, isMoving);
 		withBlockEntityDo(world, pos, ArmBlockEntity::redstoneUpdate);
 	}
-	
+
 	@Override
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_,
 		BlockPos p_220069_5_, boolean p_220069_6_) {
 		withBlockEntityDo(world, pos, ArmBlockEntity::redstoneUpdate);
 	}
-	
+
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return Axis.Y;
@@ -80,30 +82,27 @@ public class ArmBlock extends KineticBlock implements IBE<ArmBlockEntity>, ICogW
 	public BlockEntityType<? extends ArmBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.MECHANICAL_ARM.get();
 	}
-	
-	@Override
-	public InteractionResult use(BlockState p_225533_1_, Level world, BlockPos pos, Player player,
-		InteractionHand hand, BlockHitResult p_225533_6_) {
-		ItemStack heldItem = player.getItemInHand(hand);
 
-		if (AllItems.GOGGLES.isIn(heldItem)) {
-			InteractionResult gogglesResult = onBlockEntityUse(world, pos, ate -> {
+	@Override
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (AllItems.GOGGLES.isIn(stack)) {
+			ItemInteractionResult gogglesResult = onBlockEntityUseItemOn(level, pos, ate -> {
 				if (ate.goggles)
-					return InteractionResult.PASS;
+					return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 				ate.goggles = true;
 				ate.notifyUpdate();
-				return InteractionResult.SUCCESS;
+				return ItemInteractionResult.SUCCESS;
 			});
 			if (gogglesResult.consumesAction())
 				return gogglesResult;
 		}
 
 		MutableBoolean success = new MutableBoolean(false);
-		withBlockEntityDo(world, pos, be -> {
+		withBlockEntityDo(level, pos, be -> {
 			if (be.heldItem.isEmpty())
 				return;
 			success.setTrue();
-			if (world.isClientSide)
+			if (level.isClientSide)
 				return;
 			player.getInventory().placeItemBackInInventory(be.heldItem);
 			be.heldItem = ItemStack.EMPTY;
@@ -111,8 +110,8 @@ public class ArmBlock extends KineticBlock implements IBE<ArmBlockEntity>, ICogW
 			be.setChanged();
 			be.sendData();
 		});
-		
-		return success.booleanValue() ? InteractionResult.SUCCESS : InteractionResult.PASS;
+
+		return success.booleanValue() ? ItemInteractionResult.SUCCESS : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 }

@@ -10,11 +10,10 @@ import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.visual.AbstractEntityVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class PackageVisual extends AbstractEntityVisual<PackageEntity> implements SimpleDynamicVisual {
 	public final TransformedInstance instance;
@@ -25,7 +24,7 @@ public class PackageVisual extends AbstractEntityVisual<PackageEntity> implement
 		ItemStack box = entity.box;
 		if (box.isEmpty() || !PackageItem.isPackage(box))
 			box = AllBlocks.CARDBOARD_BLOCK.asStack();
-		PartialModel model = AllPartialModels.PACKAGES.get(ForgeRegistries.ITEMS.getKey(box.getItem()));
+		PartialModel model = AllPartialModels.PACKAGES.get(BuiltInRegistries.ITEM.getKey(box.getItem()));
 
 		instance = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(model))
 			.createInstance();

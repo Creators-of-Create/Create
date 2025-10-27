@@ -19,11 +19,11 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.ClientHooks;
+import net.neoforged.neoforge.client.event.RenderHandEvent;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ExtendoGripRenderHandler {
@@ -67,7 +67,7 @@ public class ExtendoGripRenderHandler {
 		PoseStack ms = event.getPoseStack();
 		var msr = TransformStack.of(ms);
 		AbstractClientPlayer abstractclientplayerentity = mc.player;
-		RenderSystem.setShaderTexture(0, abstractclientplayerentity.getSkinTextureLocation());
+		RenderSystem.setShaderTexture(0, abstractclientplayerentity.getSkin().texture());
 
 		float flip = rightHand ? 1.0F : -1.0F;
 		float swingProgress = event.getSwingProgress();
@@ -116,7 +116,7 @@ public class ExtendoGripRenderHandler {
 				event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight());
 
 			if (!notInOffhand) {
-				ForgeHooksClient.handleCameraTransforms(ms, mc.getItemRenderer()
+				ClientHooks.handleCameraTransforms(ms, mc.getItemRenderer()
 					.getModel(offhandItem, null, null, 0), transform, !rightHand);
 				ms.translate(flip * -.05f, .15f, -1.2f);
 				ms.translate(0, 0, -animation * 2.25f);

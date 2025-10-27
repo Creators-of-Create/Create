@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.stockTicker;
 
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllShapes;
@@ -14,9 +15,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -30,11 +32,12 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class StockTickerBlock extends HorizontalDirectionalBlock implements IBE<StockTickerBlockEntity>, IWrenchable {
+
+	public static final MapCodec<StockTickerBlock> CODEC = simpleCodec(StockTickerBlock::new);
 
 	public StockTickerBlock(Properties pProperties) {
 		super(pProperties);
@@ -55,35 +58,33 @@ public class StockTickerBlock extends HorizontalDirectionalBlock implements IBE<
 	}
 
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
-		if (pPlayer != null && pPlayer.getItemInHand(pHand)
-			.getItem() instanceof LogisticallyLinkedBlockItem)
-			return InteractionResult.PASS;
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (stack.getItem() instanceof LogisticallyLinkedBlockItem)
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		return onBlockEntityUse(pLevel, pPos, stbe -> {
-			if (!stbe.behaviour.mayInteractMessage(pPlayer))
-				return InteractionResult.SUCCESS;
+		return onBlockEntityUseItemOn(level, pos, stbe -> {
+			if (!stbe.behaviour.mayInteractMessage(player))
+				return ItemInteractionResult.SUCCESS;
 
-			if (!pLevel.isClientSide() && !stbe.receivedPayments.isEmpty()) {
+			if (!level.isClientSide() && !stbe.receivedPayments.isEmpty()) {
 				for (int i = 0; i < stbe.receivedPayments.getSlots(); i++)
-					pPlayer.getInventory()
+					player.getInventory()
 						.placeItemBackInInventory(
 							stbe.receivedPayments.extractItem(i, stbe.receivedPayments.getStackInSlot(i)
 								.getCount(), false));
-				AllSoundEvents.playItemPickup(pPlayer);
-				return InteractionResult.SUCCESS;
+				AllSoundEvents.playItemPickup(player);
+				return ItemInteractionResult.SUCCESS;
 			}
 
-			if (pPlayer instanceof ServerPlayer sp) {
+			if (player instanceof ServerPlayer sp) {
 				if (stbe.isKeeperPresent())
-					NetworkHooks.openScreen(sp, stbe.new CategoryMenuProvider(), stbe.getBlockPos());
+					sp.openMenu(stbe.new CategoryMenuProvider(), stbe.getBlockPos());
 				else
 					CreateLang.translate("stock_ticker.keeper_missing")
-						.sendStatus(pPlayer);
+						.sendStatus(player);
 			}
 
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		});
 	}
 
@@ -111,10 +112,14 @@ public class StockTickerBlock extends HorizontalDirectionalBlock implements IBE<
 	public BlockEntityType<? extends StockTickerBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.STOCK_TICKER.get();
 	}
-	
+
 	@Override
-	public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 
+	@Override
+	protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+		return CODEC;
+	}
 }

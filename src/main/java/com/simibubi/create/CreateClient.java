@@ -4,9 +4,10 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.ftb.FTBIntegration;
+import com.simibubi.create.compat.pojav.PojavChecker;
+import com.simibubi.create.compat.sodium.SodiumCompat;
 import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderInfo;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderInfoManager;
+import com.simibubi.create.content.contraptions.render.ContraptionEntityRenderer;
 import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
 import com.simibubi.create.content.equipment.bell.SoulPulseEffectHandler;
 import com.simibubi.create.content.equipment.potatoCannon.PotatoCannonRenderHandler;
@@ -41,9 +42,13 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
+@Mod(value = Create.ID, dist = Dist.CLIENT)
 public class CreateClient {
 
 	public static final ModelSwapper MODEL_SWAPPER = new ModelSwapper();
@@ -62,7 +67,13 @@ public class CreateClient {
 
 	public static final ClientResourceReloadListener RESOURCE_RELOAD_LISTENER = new ClientResourceReloadListener();
 
-	public static void onCtorClient(IEventBus modEventBus, IEventBus forgeEventBus) {
+	public CreateClient(IEventBus modEventBus) {
+		onCtorClient(modEventBus);
+	}
+
+	public static void onCtorClient(IEventBus modEventBus) {
+		IEventBus neoEventBus = NeoForge.EVENT_BUS;
+
 		modEventBus.addListener(CreateClient::clientInit);
 		modEventBus.addListener(AllParticleTypes::registerFactories);
 
@@ -70,10 +81,12 @@ public class CreateClient {
 
 		MODEL_SWAPPER.registerListeners(modEventBus);
 
-		ZAPPER_RENDER_HANDLER.registerListeners(forgeEventBus);
-		POTATO_CANNON_RENDER_HANDLER.registerListeners(forgeEventBus);
+		ZAPPER_RENDER_HANDLER.registerListeners(neoEventBus);
+		POTATO_CANNON_RENDER_HANDLER.registerListeners(neoEventBus);
 
-		Mods.FTBLIBRARY.executeIfInstalled(() -> () -> FTBIntegration.init(modEventBus, forgeEventBus));
+		Mods.FTBLIBRARY.executeIfInstalled(() -> () -> FTBIntegration.init(modEventBus, neoEventBus));
+		Mods.SODIUM.executeIfInstalled(() -> () -> SodiumCompat.init(modEventBus, neoEventBus));
+		PojavChecker.init();
 	}
 
 	public static void clientInit(final FMLClientSetupEvent event) {
@@ -89,7 +102,7 @@ public class CreateClient {
 		SuperByteBufferCache.getInstance().registerCompartment(CachedBuffers.DIRECTIONAL_PARTIAL);
 		SuperByteBufferCache.getInstance().registerCompartment(KineticBlockEntityRenderer.KINETIC_BLOCK);
 		SuperByteBufferCache.getInstance().registerCompartment(WaterWheelRenderer.WATER_WHEEL);
-		SuperByteBufferCache.getInstance().registerCompartment(ContraptionRenderInfo.CONTRAPTION, 20);
+		SuperByteBufferCache.getInstance().registerCompartment(ContraptionEntityRenderer.CONTRAPTION, 20);
 
 		AllPartialModels.init();
 
@@ -103,7 +116,7 @@ public class CreateClient {
 
 	private static void setupConfigUIBackground() {
 		ConfigScreen.backgrounds.put(Create.ID, (screen, graphics, partialTicks) -> {
-			CreateMainMenuScreen.PANORAMA.render(screen.getMinecraft().getDeltaFrameTime(), 1);
+			CreateMainMenuScreen.PANORAMA.render(graphics, screen.width, screen.height, 1, partialTicks);
 
 			//RenderSystem.setShaderTexture(0, CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES);
 			RenderSystem.enableBlend();
@@ -123,7 +136,6 @@ public class CreateClient {
 
 	public static void invalidateRenderers() {
 		SCHEMATIC_HANDLER.updateRenderers();
-		ContraptionRenderInfoManager.resetAll();
 	}
 
 	public static void checkGraphicsFanciness() {

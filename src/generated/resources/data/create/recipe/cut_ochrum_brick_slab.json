@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "cut_ochrum_brick_slab",
+  "key": {
+    "X": {
+      "item": "create:cut_ochrum_bricks"
+    }
+  },
+  "pattern": [
+    "XXX"
+  ],
+  "result": {
+    "count": 6,
+    "id": "create:cut_ochrum_brick_slab"
+  }
+}

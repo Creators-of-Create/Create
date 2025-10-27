@@ -9,8 +9,9 @@ import com.simibubi.create.foundation.gui.menu.MenuBase;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -18,16 +19,17 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
+
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class StockKeeperCategoryMenu extends MenuBase<StockTickerBlockEntity> {
 
 	public boolean slotsActive = true;
 	public ItemStackHandler proxyInventory;
 
-	public StockKeeperCategoryMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public StockKeeperCategoryMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
@@ -47,7 +49,7 @@ public class StockKeeperCategoryMenu extends MenuBase<StockTickerBlockEntity> {
 	}
 
 	@Override
-	protected StockTickerBlockEntity createOnClient(FriendlyByteBuf extraData) {
+	protected StockTickerBlockEntity createOnClient(RegistryFriendlyByteBuf extraData) {
 		BlockPos blockPos = extraData.readBlockPos();
 		return AllBlocks.STOCK_TICKER.get()
 			.getBlockEntity(Minecraft.getInstance().level, blockPos);
@@ -60,12 +62,8 @@ public class StockKeeperCategoryMenu extends MenuBase<StockTickerBlockEntity> {
 	}
 
 	@Override
-	protected void addPlayerSlots(int x, int y) {
-		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
-			this.addSlot(new InactiveSlot(playerInventory, hotbarSlot, x + hotbarSlot * 18, y + 58));
-		for (int row = 0; row < 3; ++row)
-			for (int col = 0; col < 9; ++col)
-				this.addSlot(new InactiveSlot(playerInventory, col + row * 9 + 9, x + col * 18, y + row * 18));
+	protected Slot createPlayerSlot(Inventory inventory, int index, int x, int y) {
+		return new InactiveSlot(inventory, index, x, y);
 	}
 
 	@Override
@@ -74,7 +72,7 @@ public class StockKeeperCategoryMenu extends MenuBase<StockTickerBlockEntity> {
 	@Override
 	public boolean stillValid(Player player) {
 		return !contentHolder.isRemoved() && player.position()
-			.closerThan(Vec3.atCenterOf(contentHolder.getBlockPos()), player.getBlockReach() + 4);
+			.closerThan(Vec3.atCenterOf(contentHolder.getBlockPos()), player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE) + 4);
 	}
 
 	class InactiveSlot extends Slot {
@@ -118,7 +116,7 @@ public class StockKeeperCategoryMenu extends MenuBase<StockTickerBlockEntity> {
 		int size = 1;
 		boolean success = false;
 		if (index < size) {
-			success = !moveItemStackTo(stack, size, slots.size(), false);
+			success = !moveItemStackTo(stack, size, slots.size(), true);
 		} else
 			success = !moveItemStackTo(stack, 0, size, false);
 

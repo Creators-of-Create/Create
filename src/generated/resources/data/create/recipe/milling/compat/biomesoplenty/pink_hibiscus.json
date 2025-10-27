@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "biomesoplenty"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "biomesoplenty:pink_hibiscus"
+        }
+      ]
+    }
+  ],
+  "processing_time": 50,
+  "results": [
+    {
+      "count": 2,
+      "id": "minecraft:pink_dye"
+    },
+    {
+      "chance": 0.25,
+      "id": "minecraft:yellow_dye"
+    },
+    {
+      "chance": 0.1,
+      "id": "minecraft:green_dye"
+    }
+  ]
+}

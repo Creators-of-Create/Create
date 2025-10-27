@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.api.contraption.transformable.TransformableBlockEntity;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
+import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.redstoneRequester.AutoRequestData;
@@ -21,29 +26,40 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import dan200.computercraft.api.peripheral.PeripheralCapability;
+import net.createmod.catnip.codecs.CatnipCodecUtils;
 import net.createmod.catnip.data.IntAttached;
 import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class TableClothBlockEntity extends SmartBlockEntity {
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+
+public class TableClothBlockEntity extends SmartBlockEntity implements TransformableBlockEntity {
+
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public AutoRequestData requestData;
 	public List<ItemStack> manuallyAddedItems;
@@ -63,15 +79,26 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 		facing = Direction.SOUTH;
 	}
 
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		if (Mods.COMPUTERCRAFT.isLoaded()) {
+			event.registerBlockEntity(
+				PeripheralCapability.get(),
+				AllBlockEntityTypes.TABLE_CLOTH.get(),
+				(be, context) -> be.computerBehaviour.getPeripheralCapability()
+			);
+		}
+	}
+
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(priceTag = new TableClothFilteringBehaviour(this));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	public List<ItemStack> getItemsForRender() {
 		if (isShop()) {
 			if (renderedItemsForShop == null)
-				renderedItemsForShop = requestData.encodedRequest.stacks()
+				renderedItemsForShop = requestData.encodedRequest().stacks()
 					.stream()
 					.map(b -> b.stack)
 					.limit(4)
@@ -80,6 +107,15 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 		}
 
 		return manuallyAddedItems;
+	}
+
+	public void invalidateItemsForRender() {
+		renderedItemsForShop = null;
+	}
+
+	public void notifyShopUpdate() {
+		if (level instanceof ServerLevel serverLevel)
+			CatnipServices.NETWORK.sendToClientsTrackingChunk(serverLevel, new ChunkPos(worldPosition), new ShopUpdatePacket(worldPosition));
 	}
 
 	@Override
@@ -97,10 +133,10 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 	}
 
 	public boolean isShop() {
-		return !requestData.encodedRequest.isEmpty();
+		return !requestData.encodedRequest().isEmpty();
 	}
 
-	public InteractionResult use(Player player, BlockHitResult ray) {
+	public ItemInteractionResult use(Player player, BlockHitResult ray) {
 		if (isShop())
 			return useShop(player);
 
@@ -108,22 +144,22 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 
 		if (heldItem.isEmpty()) {
 			if (manuallyAddedItems.isEmpty())
-				return InteractionResult.SUCCESS;
+				return ItemInteractionResult.SUCCESS;
 			player.setItemInHand(InteractionHand.MAIN_HAND, manuallyAddedItems.remove(manuallyAddedItems.size() - 1));
 			level.playSound(null, worldPosition, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.5f, 1f);
 
-			if (manuallyAddedItems.isEmpty()) {
-				level.setBlock(worldPosition, getBlockState().setValue(TableClothBlock.HAS_BE, false), 3);
-				AllPackets.getChannel()
-					.send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));
+			if (manuallyAddedItems.isEmpty() && !computerBehaviour.hasAttachedComputer()) {
+				level.setBlock(worldPosition, getBlockState().setValue(TableClothBlock.HAS_BE, false), Block.UPDATE_ALL);
+				if (level instanceof ServerLevel serverLevel)
+					CatnipServices.NETWORK.sendToClientsTrackingChunk(serverLevel, new ChunkPos(worldPosition), new RemoveBlockEntityPacket(worldPosition));
 			} else
 				notifyUpdate();
 
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
 
 		if (manuallyAddedItems.size() >= 4)
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 
 		level.playSound(null, worldPosition, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.5f, 1f);
 		manuallyAddedItems.add(heldItem.copyWithCount(1));
@@ -133,7 +169,7 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 		if (heldItem.isEmpty())
 			player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 		notifyUpdate();
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	public boolean targetsPriceTag(Player player, BlockHitResult ray) {
@@ -142,7 +178,7 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 				.subtract(Vec3.atLowerCornerOf(worldPosition)));
 	}
 
-	public InteractionResult useShop(Player player) {
+	public ItemInteractionResult useShop(Player player) {
 		ItemStack itemInHand = player.getItemInHand(InteractionHand.MAIN_HAND);
 		ItemStack prevListItem = ItemStack.EMPTY;
 		boolean addOntoList = false;
@@ -169,18 +205,18 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 			CreateLang.translate("stock_keeper.shopping_list_empty_hand")
 				.sendStatus(player);
 			AllSoundEvents.DENY.playOnServer(level, worldPosition, 0.5f, 1);
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
 
 		if (getPaymentItem().isEmpty()) {
 			CreateLang.translate("stock_keeper.no_price_set")
 				.sendStatus(player);
 			AllSoundEvents.DENY.playOnServer(level, worldPosition, 0.5f, 1);
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
 
 		UUID tickerID = null;
-		BlockPos tickerPos = requestData.targetOffset.offset(worldPosition);
+		BlockPos tickerPos = requestData.targetOffset().offset(worldPosition);
 		if (level.getBlockEntity(tickerPos) instanceof StockTickerBlockEntity stbe && stbe.isKeeperPresent())
 			tickerID = stbe.behaviour.freqId;
 
@@ -191,7 +227,7 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 				.style(ChatFormatting.RED)
 				.sendStatus(player);
 			AllSoundEvents.DENY.playOnServer(level, worldPosition, 0.5f, 1);
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
 
 		if (stockLevel == 0) {
@@ -208,13 +244,13 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 						.placeItemBackInInventory(prevListItem);
 			}
 
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
 
 		ShoppingList list = new ShoppingList(new ArrayList<>(), owner, tickerID);
 
 		if (addOntoList) {
-			ShoppingList prevList = ShoppingListItem.getList(prevListItem);
+			ShoppingList prevList = ShoppingListItem.getList(prevListItem).duplicate();
 			if (owner.equals(prevList.shopOwner()) && tickerID.equals(prevList.shopNetwork()))
 				list = prevList;
 			else
@@ -229,10 +265,13 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 			CreateLang.translate("stock_keeper.limited_stock")
 				.style(ChatFormatting.RED)
 				.sendStatus(player);
-
 		} else {
 			AllSoundEvents.CONFIRM_2.playOnServer(level, worldPosition, 0.5f, 1.0f);
-			list.addPurchases(worldPosition, 1);
+
+			ShoppingList.Mutable mutable = new ShoppingList.Mutable(list);
+			mutable.addPurchases(worldPosition, 1);
+			list = mutable.toImmutable();
+
 			if (!addOntoList)
 				CreateLang.translate("stock_keeper.use_list_to_add_purchases")
 					.color(0xeeeeee)
@@ -242,7 +281,7 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 		}
 
 		ItemStack newListItem =
-			ShoppingListItem.saveList(AllItems.SHOPPING_LIST.asStack(), list, requestData.encodedTargetAdress);
+			ShoppingListItem.saveList(AllItems.SHOPPING_LIST.asStack(), list, requestData.encodedTargetAddress());
 
 		if (player.getItemInHand(InteractionHand.MAIN_HAND)
 			.isEmpty())
@@ -251,11 +290,11 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 			player.getInventory()
 				.placeItemBackInInventory(newListItem);
 
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	public int getStockLevelForTrade(@Nullable ShoppingList otherPurchases) {
-		BlockPos tickerPos = requestData.targetOffset.offset(worldPosition);
+		BlockPos tickerPos = requestData.targetOffset().offset(worldPosition);
 		if (!(level.getBlockEntity(tickerPos) instanceof StockTickerBlockEntity stbe))
 			return 0;
 
@@ -277,7 +316,7 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 				.getFirst();
 
 		int smallestQuotient = Integer.MAX_VALUE;
-		for (BigItemStack entry : requestData.encodedRequest.stacks())
+		for (BigItemStack entry : requestData.encodedRequest().stacks())
 			if (entry.count > 0)
 				smallestQuotient = Math.min(smallestQuotient,
 					(recentSummary.getCountOf(entry.stack) - modifierSummary.getCountOf(entry.stack)) / entry.count);
@@ -286,20 +325,21 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	protected void write(CompoundTag tag, boolean clientPacket) {
-		super.write(tag, clientPacket);
-		tag.put("Items", NBTHelper.writeItemList(manuallyAddedItems));
+	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(tag, registries, clientPacket);
+		tag.put("Items", NBTHelper.writeItemList(manuallyAddedItems, registries));
 		tag.putInt("Facing", facing.get2DDataValue());
-		requestData.write(tag);
+		tag.put("RequestData", CatnipCodecUtils.encode(AutoRequestData.CODEC, registries, requestData).orElseThrow());
 		if (owner != null)
 			tag.putUUID("OwnerUUID", owner);
 	}
 
 	@Override
-	protected void read(CompoundTag tag, boolean clientPacket) {
-		super.read(tag, clientPacket);
-		manuallyAddedItems = NBTHelper.readItemList(tag.getList("Items", Tag.TAG_COMPOUND));
-		requestData = AutoRequestData.read(tag);
+	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(tag, registries, clientPacket);
+		manuallyAddedItems = NBTHelper.readItemList(tag.getList("Items", Tag.TAG_COMPOUND), registries);
+		requestData = CatnipCodecUtils.decode(AutoRequestData.CODEC, registries, tag.get("RequestData"))
+			.orElse(new AutoRequestData());
 		owner = tag.contains("OwnerUUID") ? tag.getUUID("OwnerUUID") : null;
 		facing = Direction.from2DDataValue(Mth.positiveModulo(tag.getInt("Facing"), 4));
 	}
@@ -321,4 +361,16 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 			.isEmpty() ? 1 : priceTag.count;
 	}
 
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
+	}
+
+	public void transform(BlockEntity blockEntity, StructureTransform transform) {
+		facing = transform.mirrorFacing(facing);
+		if (transform.rotationAxis == Direction.Axis.Y)
+			facing = transform.rotateFacing(facing);
+		notifyUpdate();
+	}
 }

@@ -11,6 +11,7 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -118,8 +119,8 @@ public abstract class PortableStorageInterfaceBlockEntity extends SmartBlockEnti
 	}
 
 	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(compound, registries, clientPacket);
 		transferTimer = compound.getInt("Timer");
 		distance = compound.getFloat("Distance");
 		boolean poweredPreviously = powered;
@@ -129,8 +130,8 @@ public abstract class PortableStorageInterfaceBlockEntity extends SmartBlockEnti
 	}
 
 	@Override
-	protected void write(CompoundTag compound, boolean clientPacket) {
-		super.write(compound, clientPacket);
+	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(compound, registries, clientPacket);
 		compound.putInt("Timer", transferTimer);
 		compound.putFloat("Distance", distance);
 		compound.putBoolean("Powered", powered);

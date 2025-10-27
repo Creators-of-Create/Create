@@ -1,14 +1,15 @@
 package com.simibubi.create.api.event;
 
-import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.eventbus.api.GenericEvent;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+
+import net.neoforged.bus.api.Event;
 
 /**
  * Event that is fired just before a SmartBlockEntity is being deserialized<br>
@@ -22,21 +23,30 @@ import net.minecraftforge.eventbus.api.GenericEvent;
  * <br>
  * Because of the earliness of this event, the added behaviours will have access
  * to the initial NBT read (unless the BE was placed, not loaded), thereby
- * allowing block entities to store and retrieve data for injected behaviours.
+ * allowing block entities to store and retrieve data for injected behaviours.<br>
+ * <br>
+ * Example: <pre> {@code
+ * 		neoForgeEventBus.addListener((BlockEntityBehaviourEvent event) -> {
+ * 			event.forType(AllBlockEntityTypes.FUNNEL.get(), be -> {
+ * 				event.attach(new FunFunnelBehaviour(be));
+ * 			});
+ * 		});
+ * } <pre>
  */
-public class BlockEntityBehaviourEvent<T extends SmartBlockEntity> extends GenericEvent<T> {
-
-	private final T smartBlockEntity;
+public class BlockEntityBehaviourEvent extends Event {
+	private final SmartBlockEntity smartBlockEntity;
 	private final Map<BehaviourType<?>, BlockEntityBehaviour> behaviours;
 
-	public BlockEntityBehaviourEvent(T blockEntity, Map<BehaviourType<?>, BlockEntityBehaviour> behaviours) {
+	public BlockEntityBehaviourEvent(SmartBlockEntity blockEntity, Map<BehaviourType<?>, BlockEntityBehaviour> behaviours) {
 		smartBlockEntity = blockEntity;
 		this.behaviours = behaviours;
 	}
 
-	@Override
-	public Type getGenericType() {
-		return smartBlockEntity.getClass();
+	public <T extends SmartBlockEntity> void forType(BlockEntityType<T> type, Consumer<T> action) {
+		if (smartBlockEntity.getType() == type) {
+			//noinspection unchecked
+			action.accept((T) smartBlockEntity);
+		}
 	}
 
 	public void attach(BlockEntityBehaviour behaviour) {
@@ -45,14 +55,6 @@ public class BlockEntityBehaviourEvent<T extends SmartBlockEntity> extends Gener
 
 	public BlockEntityBehaviour remove(BehaviourType<?> type) {
 		return behaviours.remove(type);
-	}
-
-	public T getBlockEntity() {
-		return smartBlockEntity;
-	}
-
-	public BlockState getBlockState() {
-		return smartBlockEntity.getBlockState();
 	}
 
 }

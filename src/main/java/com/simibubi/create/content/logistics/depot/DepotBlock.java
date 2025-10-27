@@ -13,8 +13,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -37,24 +39,24 @@ public class DepotBlock extends Block implements IBE<DepotBlockEntity>, IWrencha
 		super(p_i48440_1_);
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
-	
+
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
 		super.createBlockStateDefinition(pBuilder.add(WATERLOGGED));
 	}
-	
+
 	@Override
 	public FluidState getFluidState(BlockState pState) {
 		return fluidState(pState);
 	}
-	
+
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
 		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
 		updateWater(pLevel, pState, pCurrentPos);
 		return pState;
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
 		return withWater(super.getStateForPlacement(pContext), pContext);
@@ -70,16 +72,15 @@ public class DepotBlock extends Block implements IBE<DepotBlockEntity>, IWrencha
 	public Class<DepotBlockEntity> getBlockEntityClass() {
 		return DepotBlockEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends DepotBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.DEPOT.get();
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult ray) {
-		return SharedDepotBlockMethods.onUse(state, world, pos, player, hand, ray);
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		return SharedDepotBlockMethods.onUse(stack, state, level, pos, player, hand, hitResult);
 	}
 
 	@Override
@@ -102,9 +103,9 @@ public class DepotBlock extends Block implements IBE<DepotBlockEntity>, IWrencha
 	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
 		return SharedDepotBlockMethods.getComparatorInputOverride(blockState, worldIn, pos);
 	}
-	
+
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
 	}
 

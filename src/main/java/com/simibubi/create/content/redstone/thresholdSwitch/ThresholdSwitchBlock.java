@@ -6,6 +6,7 @@ import com.simibubi.create.content.redstone.DirectedDirectionalBlock;
 import com.simibubi.create.foundation.block.IBE;
 
 import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,8 +14,9 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -27,13 +29,9 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
 
 public class ThresholdSwitchBlock extends DirectedDirectionalBlock implements IBE<ThresholdSwitchBlockEntity> {
 
@@ -83,13 +81,11 @@ public class ThresholdSwitchBlock extends DirectedDirectionalBlock implements IB
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-		BlockHitResult hit) {
-		if (player != null && AllItems.WRENCH.isIn(player.getItemInHand(handIn)))
-			return InteractionResult.PASS;
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-			() -> () -> withBlockEntityDo(worldIn, pos, be -> this.displayScreen(be, player)));
-		return InteractionResult.SUCCESS;
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (player != null && AllItems.WRENCH.isIn(stack))
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> withBlockEntityDo(level, pos, be -> this.displayScreen(be, player)));
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
@@ -101,18 +97,14 @@ public class ThresholdSwitchBlock extends DirectedDirectionalBlock implements IB
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState state = defaultBlockState();
-		Capability<IItemHandler> itemCap = ForgeCapabilities.ITEM_HANDLER;
-		Capability<IFluidHandler> fluidCap = ForgeCapabilities.FLUID_HANDLER;
 
 		Direction preferredFacing = null;
 		for (Direction face : context.getNearestLookingDirections()) {
 			BlockEntity be = context.getLevel()
 				.getBlockEntity(context.getClickedPos()
 					.relative(face));
-			if (be != null && (be.getCapability(itemCap)
-				.isPresent()
-				|| be.getCapability(fluidCap)
-					.isPresent())) {
+			if (be != null && (be.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, be.getBlockPos(), null) != null ||
+					be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null) != null)) {
 				preferredFacing = face;
 				break;
 			}

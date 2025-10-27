@@ -7,19 +7,20 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -30,7 +31,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 
@@ -209,8 +210,8 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 
 		SoundEvent soundevent = fillSound ? FluidHelper.getFillSound(stack) : FluidHelper.getEmptySound(stack);
 		world.playSound(null, splooshPos, soundevent, SoundSource.BLOCKS, 0.3F, 1.0F);
-		if (world instanceof ServerLevel)
-			AllPackets.sendToNear(world, splooshPos, 10, new FluidSplashPacket(splooshPos, stack));
+		if (world instanceof ServerLevel serverLevel)
+			CatnipServices.NETWORK.sendToClientsAround(serverLevel, splooshPos, 10, new FluidSplashPacket(splooshPos, stack));
 	}
 
 	protected boolean canDrainInfinitely(Fluid fluid) {
@@ -221,29 +222,29 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 	}
 
 	@Override
-	public void write(CompoundTag nbt, boolean clientPacket) {
+	public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		if (infinite)
 			NBTHelper.putMarker(nbt, "Infinite");
 		if (rootPos != null)
 			nbt.put("LastPos", NbtUtils.writeBlockPos(rootPos));
 		if (affectedArea != null) {
 			nbt.put("AffectedAreaFrom",
-				NbtUtils.writeBlockPos(new BlockPos(affectedArea.minX(), affectedArea.minY(), affectedArea.minZ())));
+					NbtUtils.writeBlockPos(new BlockPos(affectedArea.minX(), affectedArea.minY(), affectedArea.minZ())));
 			nbt.put("AffectedAreaTo",
-				NbtUtils.writeBlockPos(new BlockPos(affectedArea.maxX(), affectedArea.maxY(), affectedArea.maxZ())));
+					NbtUtils.writeBlockPos(new BlockPos(affectedArea.maxX(), affectedArea.maxY(), affectedArea.maxZ())));
 		}
-		super.write(nbt, clientPacket);
+		super.write(nbt, registries, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundTag nbt, boolean clientPacket) {
+	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		infinite = nbt.contains("Infinite");
 		if (nbt.contains("LastPos"))
-			rootPos = NbtUtils.readBlockPos(nbt.getCompound("LastPos"));
+			rootPos = NBTHelper.readBlockPos(nbt, "LastPos");
 		if (nbt.contains("AffectedAreaFrom") && nbt.contains("AffectedAreaTo"))
-			affectedArea = BoundingBox.fromCorners(NbtUtils.readBlockPos(nbt.getCompound("AffectedAreaFrom")),
-				NbtUtils.readBlockPos(nbt.getCompound("AffectedAreaTo")));
-		super.read(nbt, clientPacket);
+			affectedArea = BoundingBox.fromCorners(NBTHelper.readBlockPos(nbt, "AffectedAreaFrom"),
+					NBTHelper.readBlockPos(nbt, "AffectedAreaTo"));
+		super.read(nbt, registries, clientPacket);
 	}
 
 	public enum BottomlessFluidMode implements Predicate<Fluid> {

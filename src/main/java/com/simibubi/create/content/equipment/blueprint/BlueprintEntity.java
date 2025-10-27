@@ -3,15 +3,13 @@ package com.simibubi.create.content.equipment.blueprint;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.Create;
 import com.simibubi.create.api.schematic.requirement.SpecialEntityItemRequirement;
 import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
@@ -27,10 +25,9 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -42,6 +39,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -50,6 +48,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -60,20 +59,18 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
 public class BlueprintEntity extends HangingEntity
-	implements IEntityAdditionalSpawnData, SpecialEntityItemRequirement, ISyncPersistentData, IInteractionChecker {
+	implements IEntityWithComplexSpawn, SpecialEntityItemRequirement, ISyncPersistentData, IInteractionChecker {
 
 	protected int size;
 	protected Direction verticalOrientation;
@@ -102,9 +99,7 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
-	}
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {}
 
 	@Override
 	public void addAdditionalSaveData(CompoundTag p_213281_1_) {
@@ -130,7 +125,7 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	protected void updateFacingWithBoundingBox(Direction facing, Direction verticalOrientation) {
-		Validate.notNull(facing);
+		Objects.requireNonNull(facing);
 		this.direction = facing;
 		this.verticalOrientation = verticalOrientation;
 		if (facing.getAxis()
@@ -150,21 +145,16 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
-	protected float getEyeHeight(Pose p_213316_1_, EntityDimensions p_213316_2_) {
-		return 0;
+	public EntityDimensions getDimensions(Pose pose) {
+		return super.getDimensions(pose).withEyeHeight(0);
 	}
 
 	@Override
-	protected void recalculateBoundingBox() {
-		if (this.direction == null)
-			return;
-		if (this.verticalOrientation == null)
-			return;
-
+	protected AABB calculateBoundingBox(BlockPos blockPos, Direction direction) {
 		Vec3 pos = Vec3.atLowerCornerOf(getPos())
-			.add(.5, .5, .5)
-			.subtract(Vec3.atLowerCornerOf(direction.getNormal())
-				.scale(0.46875));
+				.add(.5, .5, .5)
+				.subtract(Vec3.atLowerCornerOf(direction.getNormal())
+						.scale(0.46875));
 		double d1 = pos.x;
 		double d2 = pos.y;
 		double d3 = pos.z;
@@ -173,16 +163,16 @@ public class BlueprintEntity extends HangingEntity
 		Axis axis = direction.getAxis();
 		if (size == 2)
 			pos = pos.add(Vec3.atLowerCornerOf(axis.isHorizontal() ? direction.getCounterClockWise()
-						.getNormal()
-						: verticalOrientation.getClockWise()
-						.getNormal())
-					.scale(0.5))
-				.add(Vec3
-					.atLowerCornerOf(axis.isHorizontal() ? Direction.UP.getNormal()
-						: direction == Direction.UP ? verticalOrientation.getNormal()
-						: verticalOrientation.getOpposite()
-						.getNormal())
-					.scale(0.5));
+									.getNormal()
+									: verticalOrientation.getClockWise()
+									.getNormal())
+							.scale(0.5))
+					.add(Vec3
+							.atLowerCornerOf(axis.isHorizontal() ? Direction.UP.getNormal()
+									: direction == Direction.UP ? verticalOrientation.getNormal()
+									: verticalOrientation.getOpposite()
+									.getNormal())
+							.scale(0.5));
 
 		d1 = pos.x;
 		d2 = pos.y;
@@ -206,9 +196,16 @@ public class BlueprintEntity extends HangingEntity
 		d4 = d4 / 32.0D;
 		d5 = d5 / 32.0D;
 		d6 = d6 / 32.0D;
-		this.setBoundingBox(new AABB(d1 - d4, d2 - d5, d3 - d6, d1 + d4, d2 + d5, d3 + d6));
+
+		return new AABB(d1 - d4, d2 - d5, d3 - d6, d1 + d4, d2 + d5, d3 + d6);
 	}
 
+	@Override
+	protected void recalculateBoundingBox() {
+		if (this.direction != null && this.verticalOrientation != null) {
+			setBoundingBox(calculateBoundingBox(pos, direction));
+		}
+	}
 	@Override
 	public void setPos(double pX, double pY, double pZ) {
 		setPosRaw(pX, pY, pZ);
@@ -250,12 +247,10 @@ public class BlueprintEntity extends HangingEntity
 			.isEmpty();
 	}
 
-	@Override
 	public int getWidth() {
 		return 16 * size;
 	}
 
-	@Override
 	public int getHeight() {
 		return 16 * size;
 	}
@@ -265,8 +260,7 @@ public class BlueprintEntity extends HangingEntity
 		if (!(source instanceof Player player) || level().isClientSide)
 			return super.skipAttackInteraction(source);
 
-		double attrib = player.getAttribute(ForgeMod.BLOCK_REACH.get())
-			.getValue() + (player.isCreative() ? 0 : -0.5F);
+		double attrib = player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE) + (player.isCreative() ? 0 : -0.5F);
 
 		Vec3 eyePos = source.getEyePosition(1);
 		Vec3 look = source.getViewVector(1);
@@ -326,25 +320,24 @@ public class BlueprintEntity extends HangingEntity
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void lerpTo(double p_180426_1_, double p_180426_3_, double p_180426_5_, float p_180426_7_, float p_180426_8_,
-					   int p_180426_9_, boolean p_180426_10_) {
+	public void lerpTo(double pX, double pY, double pZ, float pYRot, float pXRot, int pSteps) {
 		BlockPos blockpos =
-			this.pos.offset(BlockPos.containing(p_180426_1_ - this.getX(), p_180426_3_ - this.getY(), p_180426_5_ - this.getZ()));
-		this.setPos((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ());
+				this.pos.offset(BlockPos.containing(pX - this.getX(), pY - this.getY(), pZ - this.getZ()));
+		this.setPos(blockpos.getX(), blockpos.getY(), blockpos.getZ());
 	}
 
 	@Override
-	public void writeSpawnData(FriendlyByteBuf buffer) {
+	public void writeSpawnData(RegistryFriendlyByteBuf registryFriendlyByteBuf) {
 		CompoundTag compound = new CompoundTag();
 		addAdditionalSaveData(compound);
-		buffer.writeNbt(compound);
-		buffer.writeNbt(getPersistentData());
+		registryFriendlyByteBuf.writeNbt(compound);
+		registryFriendlyByteBuf.writeNbt(getPersistentData());
 	}
 
 	@Override
-	public void readSpawnData(FriendlyByteBuf additionalData) {
-		readAdditionalSaveData(additionalData.readNbt());
-		getPersistentData().merge(additionalData.readNbt());
+	public void readSpawnData(RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+		readAdditionalSaveData(registryFriendlyByteBuf.readNbt());
+		getPersistentData().merge(registryFriendlyByteBuf.readNbt());
 	}
 
 	@Override
@@ -362,8 +355,8 @@ public class BlueprintEntity extends HangingEntity
 			IItemHandlerModifiable playerInv = new InvWrapper(player.getInventory());
 			boolean firstPass = true;
 			int amountCrafted = 0;
-			ForgeHooks.setCraftingPlayer(player);
-			Optional<CraftingRecipe> recipe = Optional.empty();
+			CommonHooks.setCraftingPlayer(player);
+			Optional<RecipeHolder<CraftingRecipe>> recipe = Optional.empty();
 
 			do {
 				Map<Integer, ItemStack> stacksTaken = new HashMap<>();
@@ -400,9 +393,9 @@ public class BlueprintEntity extends HangingEntity
 
 					if (!recipe.isPresent())
 						recipe = level().getRecipeManager()
-							.getRecipeFor(RecipeType.CRAFTING, craftingInventory, level());
-					ItemStack result = recipe.filter(r -> r.matches(craftingInventory, level()))
-						.map(r -> r.assemble(craftingInventory, level().registryAccess()))
+							.getRecipeFor(RecipeType.CRAFTING, craftingInventory.asCraftInput(), level());
+					ItemStack result = recipe.filter(r -> r.value().matches(craftingInventory.asCraftInput(), level()))
+						.map(r -> r.value().assemble(craftingInventory.asCraftInput(), registryAccess()))
 						.orElse(ItemStack.EMPTY);
 
 					if (result.isEmpty()) {
@@ -412,13 +405,13 @@ public class BlueprintEntity extends HangingEntity
 					} else {
 						amountCrafted += result.getCount();
 						result.onCraftedBy(player.level(), player, 1);
-						ForgeEventFactory.firePlayerCraftingEvent(player, result, craftingInventory);
+						EventHooks.firePlayerCraftingEvent(player, result, craftingInventory);
 						NonNullList<ItemStack> nonnulllist = level().getRecipeManager()
-							.getRemainingItemsFor(RecipeType.CRAFTING, craftingInventory, level());
+							.getRemainingItemsFor(RecipeType.CRAFTING, craftingInventory.asCraftInput(), level());
 
 						if (firstPass)
 							level().playSound(null, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS,
-								.2f, 1f + Create.RANDOM.nextFloat());
+								.2f, 1f + level().getRandom().nextFloat());
 						player.getInventory()
 							.placeItemBackInInventory(result);
 						for (ItemStack itemStack : nonnulllist)
@@ -435,13 +428,13 @@ public class BlueprintEntity extends HangingEntity
 				}
 
 			} while (player.isShiftKeyDown());
-			ForgeHooks.setCraftingPlayer(null);
+			CommonHooks.setCraftingPlayer(null);
 			return InteractionResult.SUCCESS;
 		}
 
 		int i = section.index;
 		if (!level().isClientSide && player instanceof ServerPlayer) {
-			NetworkHooks.openScreen((ServerPlayer) player, section, buf -> {
+			player.openMenu(section, buf -> {
 				buf.writeVarInt(getId());
 				buf.writeVarInt(i);
 			});
@@ -527,13 +520,13 @@ public class BlueprintEntity extends HangingEntity
 			CompoundTag invNBT = list.getCompound(index + "");
 			inferredIcon = list.getBoolean("InferredIcon");
 			if (!invNBT.isEmpty())
-				newInv.deserializeNBT(invNBT);
+				newInv.deserializeNBT(registryAccess(), invNBT);
 			return newInv;
 		}
 
 		public void save(ItemStackHandler inventory) {
 			CompoundTag list = getOrCreateRecipeCompound();
-			list.put(index + "", inventory.serializeNBT());
+			list.put(index + "", inventory.serializeNBT(registryAccess()));
 			list.putBoolean("InferredIcon", inferredIcon);
 			cachedDisplayItems = null;
 			if (!level().isClientSide)

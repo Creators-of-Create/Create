@@ -6,27 +6,34 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.logistics.item.filter.attribute.AllItemAttributeTypes;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 
-import net.minecraft.nbt.CompoundTag;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class ItemNameAttribute implements ItemAttribute {
-	private String itemName;
+public record ItemNameAttribute(String itemName) implements ItemAttribute {
+	public static final MapCodec<ItemNameAttribute> CODEC = Codec.STRING
+			.xmap(ItemNameAttribute::new, ItemNameAttribute::itemName)
+			.fieldOf("value");
 
-	public ItemNameAttribute(String itemName) {
-		this.itemName = itemName;
-	}
+	public static final StreamCodec<ByteBuf, ItemNameAttribute> STREAM_CODEC = ByteBufCodecs.STRING_UTF8
+		.map(ItemNameAttribute::new, ItemNameAttribute::itemName);
 
 	private static String extractCustomName(ItemStack stack) {
-		CompoundTag compoundnbt = stack.getTagElement("display");
-		if (compoundnbt != null && compoundnbt.contains("Name", 8)) {
+		if (stack.has(DataComponents.CUSTOM_NAME)) {
 			try {
-				Component itextcomponent = Component.Serializer.fromJson(compoundnbt.getString("Name"));
+				Component itextcomponent = Component.Serializer.fromJson(stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString(), RegistryAccess.EMPTY);
 				if (itextcomponent != null) {
 					return itextcomponent.getString();
 				}
@@ -56,16 +63,6 @@ public class ItemNameAttribute implements ItemAttribute {
 		return AllItemAttributeTypes.HAS_NAME;
 	}
 
-	@Override
-	public void save(CompoundTag nbt) {
-		nbt.putString("name", itemName);
-	}
-
-	@Override
-	public void load(CompoundTag nbt) {
-		itemName = nbt.getString("name");
-	}
-
 	public static class Type implements ItemAttributeType {
 		@Override
 		public @NotNull ItemAttribute createAttribute() {
@@ -82,6 +79,16 @@ public class ItemNameAttribute implements ItemAttribute {
 			}
 
 			return list;
+		}
+
+		@Override
+		public MapCodec<? extends ItemAttribute> codec() {
+			return CODEC;
+		}
+
+		@Override
+		public StreamCodec<? super RegistryFriendlyByteBuf, ? extends ItemAttribute> streamCodec() {
+			return STREAM_CODEC;
 		}
 	}
 }

@@ -13,12 +13,12 @@ import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 public class SmartFluidTankBehaviour extends BlockEntityBehaviour {
 
@@ -31,7 +31,7 @@ public class SmartFluidTankBehaviour extends BlockEntityBehaviour {
 	protected int syncCooldown;
 	protected boolean queuedSync;
 	protected TankSegment[] tanks;
-	protected LazyOptional<? extends IFluidHandler> capability;
+	protected IFluidHandler capability;
 	protected boolean extractionAllowed;
 	protected boolean insertionAllowed;
 	protected Runnable fluidUpdateCallback;
@@ -55,7 +55,7 @@ public class SmartFluidTankBehaviour extends BlockEntityBehaviour {
 			this.tanks[i] = tankSegment;
 			handlers[i] = tankSegment.tank;
 		}
-		capability = LazyOptional.of(() -> new InternalFluidHandler(handlers, enforceVariety));
+		capability = new InternalFluidHandler(handlers, enforceVariety);
 		fluidUpdateCallback = () -> {
 		};
 	}
@@ -138,7 +138,7 @@ public class SmartFluidTankBehaviour extends BlockEntityBehaviour {
 	@Override
 	public void unload() {
 		super.unload();
-		capability.invalidate();
+		blockEntity.getLevel().invalidateCapabilities(getPos());
 	}
 
 	public SmartFluidTank getPrimaryHandler() {
@@ -165,26 +165,26 @@ public class SmartFluidTankBehaviour extends BlockEntityBehaviour {
 			action.accept(tankSegment);
 	}
 
-	public LazyOptional<? extends IFluidHandler> getCapability() {
+	public IFluidHandler getCapability() {
 		return capability;
 	}
 
 	@Override
-	public void write(CompoundTag nbt, boolean clientPacket) {
-		super.write(nbt, clientPacket);
+	public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
+		super.write(nbt, registries, clientPacket);
 		ListTag tanksNBT = new ListTag();
-		forEach(ts -> tanksNBT.add(ts.writeNBT()));
+		forEach(ts -> tanksNBT.add(ts.writeNBT(registries)));
 		nbt.put(getType().getName() + "Tanks", tanksNBT);
 	}
 
 	@Override
-	public void read(CompoundTag nbt, boolean clientPacket) {
-		super.read(nbt, clientPacket);
+	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(nbt, registries, clientPacket);
 		MutableInt index = new MutableInt(0);
 		NBTHelper.iterateCompoundList(nbt.getList(getType().getName() + "Tanks", Tag.TAG_COMPOUND), c -> {
 			if (index.intValue() >= tanks.length)
 				return;
-			tanks[index.intValue()].readNBT(c, clientPacket);
+			tanks[index.intValue()].readNBT(c, registries, clientPacket);
 			index.increment();
 		});
 	}
@@ -261,15 +261,15 @@ public class SmartFluidTankBehaviour extends BlockEntityBehaviour {
 			return fluidLevel.getValue(partialTicks) * tank.getCapacity();
 		}
 
-		public CompoundTag writeNBT() {
+		public CompoundTag writeNBT(HolderLookup.Provider registries) {
 			CompoundTag compound = new CompoundTag();
-			compound.put("TankContent", tank.writeToNBT(new CompoundTag()));
+			compound.put("TankContent", tank.writeToNBT(registries, new CompoundTag()));
 			compound.put("Level", fluidLevel.writeNBT());
 			return compound;
 		}
 
-		public void readNBT(CompoundTag compound, boolean clientPacket) {
-			tank.readFromNBT(compound.getCompound("TankContent"));
+		public void readNBT(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+			tank.readFromNBT(registries, compound.getCompound("TankContent"));
 			fluidLevel.readNBT(compound.getCompound("Level"), clientPacket);
 			if (!tank.getFluid()
 				.isEmpty())

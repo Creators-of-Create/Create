@@ -24,11 +24,13 @@ import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollVa
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -38,9 +40,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class ChassisBlockEntity extends SmartBlockEntity {
 
@@ -60,7 +61,7 @@ public class ChassisBlockEntity extends SmartBlockEntity {
 		range.requiresWrench();
 		range.between(1, max);
 		range.withClientCallback(
-			i -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ChassisRangeDisplay.display(this)));
+			i -> CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> ChassisRangeDisplay.display(this)));
 		range.setValue(max / 2);
 		range.withFormatter(s -> String.valueOf(currentlySelectedRange));
 		behaviours.add(range);
@@ -75,8 +76,8 @@ public class ChassisBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	protected void read(CompoundTag tag, boolean clientPacket) {
-		super.read(tag, clientPacket);
+	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(tag, registries, clientPacket);
 		if (clientPacket)
 			currentlySelectedRange = getRange();
 	}

@@ -10,14 +10,15 @@ import com.simibubi.create.Create;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
 import com.simibubi.create.api.registry.CreateRegistries;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class CreateMountedItemStorageTypeTagsProvider extends IntrinsicHolderTagsProvider<MountedItemStorageType<?>> {
-	public CreateMountedItemStorageTypeTagsProvider(PackOutput output, CompletableFuture<Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+	public CreateMountedItemStorageTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
 		super(output, CreateRegistries.MOUNTED_ITEM_STORAGE_TYPE, lookupProvider, type -> type.holder.key(), Create.ID, existingFileHelper);
 	}
 
@@ -29,14 +30,6 @@ public class CreateMountedItemStorageTypeTagsProvider extends IntrinsicHolderTag
 		tag(AllMountedItemStorageTypeTags.FUEL_BLACKLIST.tag).add(
 			AllMountedStorageTypes.VAULT.get()
 		);
-
-		// VALIDATE
-
-		for (AllMountedItemStorageTypeTags tag : AllMountedItemStorageTypeTags.values()) {
-			if (tag.alwaysDatagen) {
-				getOrCreateRawBuilder(tag.tag);
-			}
-		}
 	}
 
 	@Override

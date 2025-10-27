@@ -18,8 +18,8 @@ public abstract class AnimatedKinetics implements IDrawable {
 	public int offset = 0;
 
 	public static final ILightingSettings DEFAULT_LIGHTING = CustomLightingSettings.builder()
-			.firstLightRotation(12.5f, 45.0f)
-			.secondLightRotation(-20.0f, 50.0f)
+			.firstLightRotation(12.5f, -45.0f)
+			.secondLightRotation(-20.0f, -50.0f)
 			.build();
 
 	/**

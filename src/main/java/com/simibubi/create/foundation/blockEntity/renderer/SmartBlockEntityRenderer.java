@@ -21,7 +21,7 @@ public class SmartBlockEntityRenderer<T extends SmartBlockEntity> extends SafeBl
 
 	public SmartBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
 	}
-	
+
 	@Override
 	protected void renderSafe(T blockEntity, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 			int overlay) {
@@ -46,14 +46,16 @@ public class SmartBlockEntityRenderer<T extends SmartBlockEntity> extends SafeBl
 		ms.translate(0.5, f, 0.5);
 		ms.mulPose(mc.getEntityRenderDispatcher()
 			.cameraOrientation());
-		ms.scale(-0.025F, -0.025F, 0.025F);
+		ms.scale(0.025F, -0.025F, 0.025F);
 		Matrix4f matrix4f = ms.last()
 			.pose();
-		float f1 = mc.options.getBackgroundOpacity(0.25F);
-		int j = (int) (f1 * 255.0F) << 24;
-		float f2 = (float) (-mc.font.width(tag) / 2);
-		mc.font.drawInBatch(tag, f2, 0, 553648127, false, matrix4f, buffer, Font.DisplayMode.SEE_THROUGH, j, light);
-		mc.font.drawInBatch(tag, f2, 0, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, light);
+		float f2 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
+		int j = (int) (f2 * 255.0F) << 24;
+		Font font = mc.font;
+		float f1 = (float) (-font.width(tag) / 2);
+		font.drawInBatch(tag, f1, (float) 0, 553648127, false, matrix4f, buffer, Font.DisplayMode.SEE_THROUGH, j,
+			light);
+		font.drawInBatch(tag, f1, (float) 0, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, light);
 		ms.popPose();
 	}
 

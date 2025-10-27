@@ -5,12 +5,11 @@ import java.util.List;
 import com.simibubi.create.api.effect.OpenPipeEffectHandler;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.common.EffectCures;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class MilkEffectHandler implements OpenPipeEffectHandler {
 	@Override
@@ -19,9 +18,8 @@ public class MilkEffectHandler implements OpenPipeEffectHandler {
 			return;
 
 		List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, LivingEntity::isAffectedByPotions);
-		ItemStack curativeItem = new ItemStack(Items.MILK_BUCKET);
 		for (LivingEntity entity : entities) {
-			entity.curePotionEffects(curativeItem);
+			entity.removeEffectsCuredBy(EffectCures.MILK);
 		}
 	}
 }

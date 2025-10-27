@@ -1,5 +1,6 @@
 package com.simibubi.create.content.trains.schedule;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 
 public abstract class ScheduleDataEntry implements IScheduleInput {
@@ -16,14 +17,14 @@ public abstract class ScheduleDataEntry implements IScheduleInput {
 	}
 
 	@Override
-	public void setData(CompoundTag data) {
+	public void setData(HolderLookup.Provider registries, CompoundTag data) {
 		this.data = data;
-		readAdditional(data);
+		readAdditional(registries, data);
 	}
 
-	protected void writeAdditional(CompoundTag tag) {};
+	protected void writeAdditional(HolderLookup.Provider registries, CompoundTag tag) {}
 
-	protected void readAdditional(CompoundTag tag) {};
+	protected void readAdditional(HolderLookup.Provider registries, CompoundTag tag) {}
 
 	protected <T> T enumData(String key, Class<T> enumClass) {
 		T[] enumConstants = enumClass.getEnumConstants();

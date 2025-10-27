@@ -1,53 +1,42 @@
 package com.simibubi.create.content.logistics.box;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.AllPackets;
 
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkEvent.Context;
 
-public class PackageDestroyPacket extends SimplePacketBase {
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
-	protected Vec3 location;
-	private ItemStack box;
+public record PackageDestroyPacket(Vec3 location, ItemStack box) implements ClientboundPacketPayload {
+	public static final StreamCodec<RegistryFriendlyByteBuf, PackageDestroyPacket> STREAM_CODEC = StreamCodec.composite(
+		CatnipStreamCodecs.VEC3, PackageDestroyPacket::location,
+		ItemStack.STREAM_CODEC, PackageDestroyPacket::box,
+		PackageDestroyPacket::new
+	);
 
-	public PackageDestroyPacket(FriendlyByteBuf buffer) {
-		location = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-		box = buffer.readItem();
-	}
-
-	public PackageDestroyPacket(Vec3 location, ItemStack box) {
-		this.location = location;
-		this.box = box.copy();
-		this.box.setTag(null);
+	@Override
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.PACKAGE_DESTROYED;
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buffer) {
-		buffer.writeDouble(location.x);
-		buffer.writeDouble(location.y);
-		buffer.writeDouble(location.z);
-		buffer.writeItem(box);
+	@OnlyIn(Dist.CLIENT)
+	public void handle(LocalPlayer player) {
+		ClientLevel level = Minecraft.getInstance().level;
+		Vec3 motion = VecHelper.offsetRandomly(Vec3.ZERO, level.getRandom(), .125f);
+		Vec3 pos = location.add(motion.scale(4));
+		level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, box), pos.x, pos.y,
+			pos.z, motion.x, motion.y, motion.z);
 	}
-
-	@Override
-	public boolean handle(Context ctx) {
-		ctx.enqueueWork(() -> {
-			for (int i = 0; i < 20; i++) {
-				ClientLevel level = Minecraft.getInstance().level;
-				Vec3 motion = VecHelper.offsetRandomly(Vec3.ZERO, level.getRandom(), .125f);
-				Vec3 pos = location.add(motion.scale(4));
-				level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, box), pos.x, pos.y,
-					pos.z, motion.x, motion.y, motion.z);
-			}
-		});
-		return true;
-	}
-
 }

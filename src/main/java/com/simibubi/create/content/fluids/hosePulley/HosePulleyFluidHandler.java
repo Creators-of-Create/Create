@@ -2,7 +2,7 @@ package com.simibubi.create.content.fluids.hosePulley;
 
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.fluids.transfer.FluidDrainingBehaviour;
 import com.simibubi.create.content.fluids.transfer.FluidFillingBehaviour;
@@ -10,8 +10,8 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 
 import net.minecraft.core.BlockPos;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 public class HosePulleyFluidHandler implements IFluidHandler {
 
@@ -19,7 +19,7 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 
 	@Override
 	public int fill(FluidStack resource, FluidAction action) {
-		if (!internalTank.isEmpty() && !resource.isFluidEqual(internalTank.getFluid()))
+		if (!internalTank.isEmpty() && !FluidStack.isSameFluidSameComponents(resource, internalTank.getFluid()))
 			return 0;
 		if (resource.isEmpty() || !FluidHelper.hasBlockState(resource.getFluid()))
 			return 0;
@@ -66,7 +66,7 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 	}
 
 	private FluidStack drainInternal(int maxDrain, @Nullable FluidStack resource, FluidAction action) {
-		if (resource != null && !internalTank.isEmpty() && !resource.isFluidEqual(internalTank.getFluid()))
+		if (resource != null && !internalTank.isEmpty() && !FluidStack.isSameFluidSameComponents(resource, internalTank.getFluid()))
 			return FluidStack.EMPTY;
 		if (internalTank.getFluidAmount() >= 1000)
 			return internalTank.drain(maxDrain, action);
@@ -80,11 +80,11 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 		int available = 1000 + internalTank.getFluidAmount();
 		int drained;
 
-		if (!internalTank.isEmpty() && !internalTank.getFluid()
-			.isFluidEqual(returned) || returned.isEmpty())
+		if (!internalTank.isEmpty() && !FluidStack.isSameFluidSameComponents(internalTank.getFluid(), returned)
+				|| returned.isEmpty())
 			return internalTank.drain(maxDrain, action);
 
-		if (resource != null && !returned.isFluidEqual(resource))
+		if (resource != null && !FluidStack.isSameFluidSameComponents(returned, resource))
 			return FluidStack.EMPTY;
 
 		drained = Math.min(maxDrain, available);

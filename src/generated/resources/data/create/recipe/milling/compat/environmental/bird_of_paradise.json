@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "environmental"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "environmental:bird_of_paradise"
+        }
+      ]
+    }
+  ],
+  "processing_time": 50,
+  "results": [
+    {
+      "count": 3,
+      "id": "minecraft:orange_dye"
+    },
+    {
+      "chance": 0.25,
+      "id": "minecraft:blue_dye"
+    },
+    {
+      "chance": 0.25,
+      "id": "minecraft:red_dye"
+    }
+  ]
+}

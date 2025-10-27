@@ -11,6 +11,7 @@ import com.simibubi.create.content.equipment.bell.SoulParticle.ExpandingPerimete
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -84,7 +85,7 @@ public class SoulPulseEffect {
 		double dummyWidth = 0.2, dummyHeight = 0.75;
 		double w2 = dummyWidth / 2;
 
-		return world != null && NaturalSpawner.isSpawnPositionOk(SpawnPlacements.Type.ON_GROUND, world, at, dummy)
+		return world != null && SpawnPlacementTypes.ON_GROUND.isSpawnPositionOk(world, at, dummy)
 			&& (ignoreLight || isDark(world, at))
 			&& Streams
 				.stream(world.getBlockCollisions(null,

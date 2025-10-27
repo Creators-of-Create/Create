@@ -17,13 +17,13 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
-
-import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -57,10 +57,10 @@ import com.simibubi.create.content.contraptions.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlockEntity;
+import com.simibubi.create.content.contraptions.render.ClientContraption;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import com.simibubi.create.content.kinetics.base.IRotate;
-import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
 import com.simibubi.create.content.kinetics.gantry.GantryShaftBlock;
@@ -75,6 +75,8 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.data.UniqueLinkedList;
 import net.createmod.catnip.math.BBHelper;
@@ -85,6 +87,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -104,7 +107,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -126,8 +129,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.registries.GameData;
+import net.neoforged.neoforge.registries.GameData;
 
 public abstract class Contraption {
 
@@ -140,8 +142,10 @@ public abstract class Contraption {
 	public boolean hasUniversalCreativeCrate;
 	public boolean disassembled;
 
+	// TODO: SoA to reduce map lookups.
 	protected Map<BlockPos, StructureBlockInfo> blocks;
 	protected Map<BlockPos, CompoundTag> updateTags;
+	public Object2BooleanMap<BlockPos> isLegacy;
 	protected List<MutablePair<StructureBlockInfo, MovementContext>> actors;
 	protected Map<BlockPos, MovingInteractionBehaviour> interactors;
 	protected List<ItemStack> disabledActors;
@@ -159,28 +163,38 @@ public abstract class Contraption {
 
 	private CompletableFuture<Void> simplifiedEntityColliderProvider;
 
-	// Client
-	public Map<BlockPos, ModelData> modelData;
-	public Map<BlockPos, BlockEntity> presentBlockEntities;
-	public List<BlockEntity> renderedBlockEntities;
+	/**
+	 * All client-only data should be encapsulated here.
+	 *
+	 * <p>This field must be atomic as it is lazily accessed from both
+	 * the render thread and flywheel executors.
+	 *
+	 * <h2>Client/Server Safety</h2>
+	 * <p>Wrapping in an AtomicReference also makes this field server-safe,
+	 * as type erasure means ClientContraption will not be class loaded when
+	 * Contraption is class loaded.
+	 * Even still, care must be taken to not call {@link #getOrCreateClientContraptionLazy()}
+	 * from the server. The only references to that method should be in rendering code.
+	 * Additional utilities are provided to safely access and send signals to the ClientContraption,
+	 * without initializing it.
+	 */
+	private final AtomicReference<ClientContraption> clientContraption = new AtomicReference<>();
 
-	protected ContraptionWorld world;
-	public boolean deferInvalidate;
+	// Thin server and client side level used for generating optimized collision shapes.
+	protected ContraptionWorld collisionLevel;
 
 	public Contraption() {
 		blocks = new HashMap<>();
 		updateTags = new HashMap<>();
+		isLegacy = new Object2BooleanArrayMap<>();
 		seats = new ArrayList<>();
 		actors = new ArrayList<>();
 		disabledActors = new ArrayList<>();
-		modelData = new HashMap<>();
 		interactors = new HashMap<>();
 		superglue = new ArrayList<>();
 		seatMapping = new HashMap<>();
 		glueToRemove = new HashSet<>();
 		initialPassengers = new HashMap<>();
-		presentBlockEntities = new HashMap<>();
-		renderedBlockEntities = new ArrayList<>();
 		pendingSubContraptions = new ArrayList<>();
 		stabilizedSubContraptions = new HashMap<>();
 		simplifiedEntityColliders = Optional.empty();
@@ -189,9 +203,9 @@ public abstract class Contraption {
 	}
 
 	public ContraptionWorld getContraptionWorld() {
-		if (world == null)
-			world = new ContraptionWorld(entity.level(), this);
-		return world;
+		if (collisionLevel == null)
+			collisionLevel = new ContraptionWorld(entity.level(), this);
+		return collisionLevel;
 	}
 
 	public abstract boolean assemble(Level world, BlockPos pos) throws AssemblyException;
@@ -217,7 +231,7 @@ public abstract class Contraption {
 		String type = nbt.getString("Type");
 		Contraption contraption = ContraptionType.fromType(type);
 		contraption.readNBT(world, nbt, spawnData);
-		contraption.world = new ContraptionWorld(world, contraption);
+		contraption.collisionLevel = new ContraptionWorld(world, contraption);
 		contraption.gatherBBsOffThread();
 		return contraption;
 	}
@@ -635,7 +649,7 @@ public abstract class Contraption {
 		if (blockEntity instanceof PoweredShaftBlockEntity)
 			blockEntity = AllBlockEntityTypes.BRACKETED_KINETIC.create(pos, blockstate);
 		if (blockEntity instanceof FactoryPanelBlockEntity fpbe)
-			fpbe.writeSafe(compoundnbt);
+			fpbe.writeSafe(compoundnbt, world.registryAccess());
 
 		return Pair.of(new StructureBlockInfo(pos, blockstate, compoundnbt), blockEntity);
 	}
@@ -653,7 +667,7 @@ public abstract class Contraption {
 		BlockEntity be = pair.getValue();
 
 		if (be != null) {
-			CompoundTag updateTag = be.getUpdateTag();
+			CompoundTag updateTag = be.getUpdateTag(level.registryAccess());
 			// empty tags are intentionally kept, see writeBlocksCompound
 			// for testing, this line can be commented to emulate legacy behavior
 			updateTags.put(localPos, updateTag);
@@ -682,9 +696,9 @@ public abstract class Contraption {
 			return;
 
 		CompoundTag nbt = structureBlockInfo.nbt();
-		BlockPos controllerPos = nbt.contains("Controller") ?
-			toLocalPos(NbtUtils.readBlockPos(nbt.getCompound("Controller"))) :
-			localPos;
+		BlockPos controllerPos = localPos;
+		if (nbt.contains("Controller"))
+			controllerPos = toLocalPos(NBTHelper.readBlockPos(nbt, "Controller"));
 		nbt.put("Controller", NbtUtils.writeBlockPos(controllerPos));
 
 		if (updateTags.containsKey(localPos))
@@ -704,7 +718,7 @@ public abstract class Contraption {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
 		if (blockEntity == null)
 			return null;
-		CompoundTag nbt = blockEntity.saveWithFullMetadata();
+		CompoundTag nbt = blockEntity.saveWithFullMetadata(world.registryAccess());
 		nbt.remove("x");
 		nbt.remove("y");
 		nbt.remove("z");
@@ -725,10 +739,6 @@ public abstract class Contraption {
 	}
 
 	public void readNBT(Level world, CompoundTag nbt, boolean spawnData) {
-		blocks.clear();
-		presentBlockEntities.clear();
-		renderedBlockEntities.clear();
-
 		Tag blocks = nbt.get("Blocks");
 		// used to differentiate between the 'old' and the paletted serialization
 		boolean usePalettedDeserialization =
@@ -741,28 +751,31 @@ public abstract class Contraption {
 			if (!tag.contains("Controller", Tag.TAG_COMPOUND) && !tag.contains("Parts", Tag.TAG_LIST))
 				return;
 
-			BlockPos controllerPos = NbtUtils.readBlockPos(tag.getCompound("Controller"));
-			tag.getList("Parts", Tag.TAG_COMPOUND).forEach(part -> {
-				BlockPos partPos = NbtUtils.readBlockPos((CompoundTag) part);
-				StructureBlockInfo partInfo = this.blocks.get(partPos);
-				capturedMultiblocks.put(controllerPos, partInfo);
+			BlockPos controllerPos = NBTHelper.readBlockPos(tag, "Controller");
+				tag.getList("Parts", Tag.TAG_COMPOUND)
+					.forEach(part -> {
+						CompoundTag cPart = (CompoundTag) part;
+						BlockPos partPos = cPart.contains("Pos") ? NBTHelper.readBlockPos(cPart, "Pos")
+							: new BlockPos(cPart.getInt("X"), cPart.getInt("Y"), cPart.getInt("Z"));
+						StructureBlockInfo partInfo = this.blocks.get(partPos);
+						capturedMultiblocks.put(controllerPos, partInfo);
+					});
 			});
-		});
 
-		storage.read(nbt, spawnData, this);
+		storage.read(nbt, world.registryAccess(), spawnData, this);
 
 		actors.clear();
 		nbt.getList("Actors", Tag.TAG_COMPOUND)
 			.forEach(c -> {
 				CompoundTag comp = (CompoundTag) c;
-				StructureBlockInfo info = this.blocks.get(NbtUtils.readBlockPos(comp.getCompound("Pos")));
+				StructureBlockInfo info = this.blocks.get(NBTHelper.readBlockPos(comp, "Pos"));
 				if (info == null)
 					return;
 				MovementContext context = MovementContext.readNBT(world, info, comp, this);
 				getActors().add(MutablePair.of(info, context));
 			});
 
-		disabledActors = NBTHelper.readItemList(nbt.getList("DisabledActors", Tag.TAG_COMPOUND));
+		disabledActors = NBTHelper.readItemList(nbt.getList("DisabledActors", Tag.TAG_COMPOUND), world.registryAccess());
 		for (ItemStack stack : disabledActors)
 			setActorsActive(stack, false);
 
@@ -771,7 +784,9 @@ public abstract class Contraption {
 			c -> superglue.add(SuperGlueEntity.readBoundingBox(c)));
 
 		seats.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("Seats", Tag.TAG_COMPOUND), c -> seats.add(NbtUtils.readBlockPos(c)));
+		NBTHelper.iterateCompoundList(nbt.getList("Seats", Tag.TAG_COMPOUND),
+			c -> seats.add(c.contains("Pos") ? NBTHelper.readBlockPos(c, "Pos")
+				: new BlockPos(c.getInt("X"), c.getInt("Y"), c.getInt("Z"))));
 
 		seatMapping.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Passengers", Tag.TAG_COMPOUND),
@@ -783,7 +798,7 @@ public abstract class Contraption {
 
 		interactors.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Interactors", Tag.TAG_COMPOUND), c -> {
-			BlockPos pos = NbtUtils.readBlockPos(c.getCompound("Pos"));
+			BlockPos pos = NBTHelper.readBlockPos(c, "Pos");
 			StructureBlockInfo structureBlockInfo = getBlocks().get(pos);
 			if (structureBlockInfo == null)
 				return;
@@ -797,10 +812,10 @@ public abstract class Contraption {
 
 		stalled = nbt.getBoolean("Stalled");
 		hasUniversalCreativeCrate = nbt.getBoolean("BottomlessSupply");
-		anchor = NbtUtils.readBlockPos(nbt.getCompound("Anchor"));
+		anchor = NBTHelper.readBlockPos(nbt, "Anchor");
 	}
 
-	public CompoundTag writeNBT(boolean spawnPacket) {
+	public CompoundTag writeNBT(HolderLookup.Provider registries, boolean spawnPacket) {
 		CompoundTag nbt = new CompoundTag();
 		ResourceLocation typeId = this.getType().holder.key().location();
 		nbt.putString("Type", typeId.toString());
@@ -814,7 +829,11 @@ public abstract class Contraption {
 
 			Collection<StructureBlockInfo> multiblockParts = capturedMultiblocks.get(controllerPos);
 			ListTag partsNBT = new ListTag();
-			multiblockParts.forEach(info -> partsNBT.add(NbtUtils.writeBlockPos(info.pos())));
+			multiblockParts.forEach(info -> {
+				CompoundTag c = new CompoundTag();
+				c.put("Pos", NbtUtils.writeBlockPos(info.pos()));
+				partsNBT.add(c);
+			});
 			tag.put("Parts", partsNBT);
 
 			multiblocksNBT.add(tag);
@@ -832,7 +851,7 @@ public abstract class Contraption {
 			actorsNBT.add(compound);
 		}
 
-		ListTag disabledActorsNBT = NBTHelper.writeItemList(disabledActors);
+		ListTag disabledActorsNBT = NBTHelper.writeItemList(disabledActors, registries);
 
 		ListTag superglueNBT = new ListTag();
 		if (!spawnPacket) {
@@ -843,7 +862,7 @@ public abstract class Contraption {
 			}
 		}
 
-		writeStorage(nbt, spawnPacket);
+		writeStorage(nbt, registries, spawnPacket);
 
 		ListTag interactorNBT = new ListTag();
 		for (BlockPos pos : interactors.keySet()) {
@@ -852,7 +871,11 @@ public abstract class Contraption {
 			interactorNBT.add(c);
 		}
 
-		nbt.put("Seats", NBTHelper.writeCompoundList(getSeats(), NbtUtils::writeBlockPos));
+		nbt.put("Seats", NBTHelper.writeCompoundList(getSeats(), pos -> {
+			CompoundTag c = new CompoundTag();
+			c.put("Pos", NbtUtils.writeBlockPos(pos));
+			return c;
+		}));
 		nbt.put("Passengers", NBTHelper.writeCompoundList(getSeatMapping().entrySet(), e -> {
 			CompoundTag tag = new CompoundTag();
 			tag.put("Id", NbtUtils.createUUID(e.getKey()));
@@ -886,8 +909,8 @@ public abstract class Contraption {
 		return nbt;
 	}
 
-	public void writeStorage(CompoundTag nbt, boolean spawnPacket) {
-		storage.write(nbt, spawnPacket);
+	public void writeStorage(CompoundTag nbt, HolderLookup.Provider registries, boolean spawnPacket) {
+		storage.write(nbt, registries, spawnPacket);
 	}
 
 	private CompoundTag writeBlocksCompound(boolean spawnPacket) {
@@ -939,6 +962,10 @@ public abstract class Contraption {
 	}
 
 	private void readBlocksCompound(Tag compound, Level world, boolean usePalettedDeserialization) {
+		blocks.clear();
+		updateTags.clear();
+		isLegacy.clear();
+
 		HolderGetter<Block> holderGetter = world.holderLookup(Registries.BLOCK);
 		HashMapPalette<BlockState> palette = null;
 		ListTag blockList;
@@ -958,12 +985,10 @@ public abstract class Contraption {
 			blockList = (ListTag) compound;
 		}
 
-		HashMapPalette<BlockState> finalPalette = palette;
-		blockList.forEach(e -> {
-			CompoundTag c = (CompoundTag) e;
+		for (Tag tag : blockList) {
+			CompoundTag c = (CompoundTag) tag;
 
-			StructureBlockInfo info =
-				usePalettedDeserialization ? readStructureBlockInfo(c, finalPalette) : legacyReadStructureBlockInfo(c, holderGetter);
+			StructureBlockInfo info = usePalettedDeserialization ? readStructureBlockInfo(c, palette) : legacyReadStructureBlockInfo(c, holderGetter);
 
 			this.blocks.put(info.pos(), info);
 
@@ -973,63 +998,12 @@ public abstract class Contraption {
 				this.updateTags.put(info.pos(), updateTag);
 			}
 
-			if (!world.isClientSide)
-				return;
-
-			// create the BlockEntity client-side for rendering
-			BlockEntity be = readBlockEntity(world, info, c);
-			if (be == null)
-				return;
-
-			presentBlockEntities.put(info.pos(), be);
-			modelData.put(info.pos(), be.getModelData());
-
-			MovementBehaviour movementBehaviour = MovementBehaviour.REGISTRY.get(info.state());
-			if (movementBehaviour == null || !movementBehaviour.disableBlockEntityRendering()) {
-				renderedBlockEntities.add(be);
-			}
-		});
-	}
-
-	@Nullable
-	protected BlockEntity readBlockEntity(Level level, StructureBlockInfo info, CompoundTag tag) {
-		BlockState state = info.state();
-		BlockPos pos = info.pos();
-		CompoundTag nbt = info.nbt();
-
-		if (tag.contains("Legacy")) {
-			// for contraptions that were assembled pre-updateTags, we need to use the old strategy.
-			if (nbt == null)
-				return null;
-
-			nbt.putInt("x", pos.getX());
-			nbt.putInt("y", pos.getY());
-			nbt.putInt("z", pos.getZ());
-
-			BlockEntity be = BlockEntity.loadStatic(pos, state, nbt);
-			postprocessReadBlockEntity(level, be);
-			return be;
+			// Mark the pos if it has the legacy marker.
+			// This will be used when creating BlockEntities for the ClientContraption.
+			this.isLegacy.put(info.pos(), c.contains("Legacy"));
 		}
 
-		if (!state.hasBlockEntity() || !(state.getBlock() instanceof EntityBlock entityBlock))
-			return null;
-
-		BlockEntity be = entityBlock.newBlockEntity(pos, state);
-		postprocessReadBlockEntity(level, be);
-		if (be != null && nbt != null) {
-			be.handleUpdateTag(nbt);
-		}
-
-		return be;
-	}
-
-	private static void postprocessReadBlockEntity(Level level, @Nullable BlockEntity be) {
-		if (be != null) {
-			be.setLevel(level);
-			if (be instanceof KineticBlockEntity kbe) {
-				kbe.setSpeed(0);
-			}
-		}
+		resetClientContraption();
 	}
 
 	private static StructureBlockInfo readStructureBlockInfo(CompoundTag blockListEntry,
@@ -1040,7 +1014,7 @@ public abstract class Contraption {
 	}
 
 	private static StructureBlockInfo legacyReadStructureBlockInfo(CompoundTag blockListEntry, HolderGetter<Block> holderGetter) {
-		return new StructureBlockInfo(NbtUtils.readBlockPos(blockListEntry.getCompound("Pos")),
+		return new StructureBlockInfo(NBTHelper.readBlockPos(blockListEntry, "Pos"),
 			NbtUtils.readBlockState(holderGetter, blockListEntry.getCompound("Block")),
 			blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null);
 	}
@@ -1142,6 +1116,8 @@ public abstract class Contraption {
 			return;
 		disassembled = true;
 
+		boolean shouldDropBlocks = !AllConfigs.server().kinetics.noDropWhenContraptionReplaceBlocks.get();
+
 		translateMultiblockControllers(transform);
 
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
@@ -1167,8 +1143,10 @@ public abstract class Contraption {
 					.isEmpty())) {
 					if (targetPos.getY() == world.getMinBuildHeight())
 						targetPos = targetPos.above();
-					world.levelEvent(2001, targetPos, Block.getId(state));
-					Block.dropResources(state, world, targetPos, null);
+					world.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, targetPos, Block.getId(state));
+					if (shouldDropBlocks) {
+						Block.dropResources(state, world, targetPos, null);
+					}
 					continue;
 				}
 				if (state.getBlock() instanceof SimpleWaterloggedBlock
@@ -1177,7 +1155,7 @@ public abstract class Contraption {
 					state = state.setValue(BlockStateProperties.WATERLOGGED, FluidState.getType() == Fluids.WATER);
 				}
 
-				world.destroyBlock(targetPos, true);
+				world.destroyBlock(targetPos, shouldDropBlocks);
 
 				if (AllBlocks.SHAFT.has(state))
 					state = ShaftBlock.pickCorrectShaftType(state, world, targetPos);
@@ -1196,7 +1174,7 @@ public abstract class Contraption {
 				if (verticalRotation) {
 					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock
 						|| state.getBlock() instanceof DoorBlock)
-						world.destroyBlock(targetPos, true);
+						world.destroyBlock(targetPos, shouldDropBlocks);
 				}
 
 				BlockEntity blockEntity = world.getBlockEntity(targetPos);
@@ -1226,7 +1204,7 @@ public abstract class Contraption {
 						}
 					}
 
-					blockEntity.load(tag);
+					blockEntity.loadWithComponents(tag, world.registryAccess());
 				}
 
 				storage.unmount(world, block, targetPos, blockEntity);
@@ -1444,6 +1422,10 @@ public abstract class Contraption {
 		return blocks;
 	}
 
+	public Object2BooleanMap<BlockPos> getIsLegacy() {
+		return isLegacy;
+	}
+
 	public List<MutablePair<StructureBlockInfo, MovementContext>> getActors() {
 		return actors;
 	}
@@ -1475,7 +1457,7 @@ public abstract class Contraption {
 				for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
 					StructureBlockInfo info = entry.getValue();
 					BlockPos localPos = entry.getKey();
-					VoxelShape collisionShape = info.state().getCollisionShape(world, localPos, CollisionContext.empty());
+					VoxelShape collisionShape = info.state().getCollisionShape(collisionLevel, localPos, CollisionContext.empty());
 					if (collisionShape.isEmpty())
 						continue;
 					combinedShape = Shapes.joinUnoptimized(combinedShape,
@@ -1527,20 +1509,6 @@ public abstract class Contraption {
 		return this.storage;
 	}
 
-	public RenderedBlocks getRenderedBlocks() {
-		return new RenderedBlocks(pos -> {
-			StructureBlockInfo info = blocks.get(pos);
-			if (info == null) {
-				return Blocks.AIR.defaultBlockState();
-			}
-			return info.state();
-		}, blocks.keySet());
-	}
-
-	public Collection<BlockEntity> getRenderedBEs() {
-		return renderedBlockEntities;
-	}
-
 	public boolean isHiddenInPortal(BlockPos localPos) {
 		return false;
 	}
@@ -1562,7 +1530,83 @@ public abstract class Contraption {
 		return false;
 	}
 
-	public record RenderedBlocks(Function<BlockPos, BlockState> lookup, Iterable<BlockPos> positions) {
+	/**
+	 * See the docs on {@link #clientContraption}.
+	 */
+	public final ClientContraption getOrCreateClientContraptionLazy() {
+		var out = clientContraption.getAcquire();
+		if (out == null) {
+			// Another thread may hit this block in the same moment.
+			// One thread will win and the ContraptionRenderInfo that
+			// it generated will become canonical. It's important that
+			// we only maintain one RenderInfo instance, specifically
+			// for the VirtualRenderWorld inside.
+			clientContraption.compareAndExchangeRelease(null, createClientContraption());
+
+			// Must get again to ensure we have the canonical instance.
+			out = clientContraption.getAcquire();
+		}
+		return out;
 	}
 
+	/**
+	 * Create a <em>new</em> {@link ClientContraption} instance.
+	 * This will only be called once, when the contraption first has its
+	 * animation processed by either the render thread or a flywheel executor thread.
+	 *
+	 * <p>Most contraptions will not need to implement this.
+	 *
+	 * @return A new ClientContraption instance.
+	 */
+	@Contract(" -> new")
+	protected ClientContraption createClientContraption() {
+		return new ClientContraption(this);
+	}
+
+	/**
+	 * Entirely reset the client contraption, rebuilding the client level and re-running light updates.
+	 */
+	public void resetClientContraption() {
+		var maybeNullClientContraption = this.clientContraption.getAcquire();
+
+		// Nothing to invalidate if it hasn't been created yet.
+		if (maybeNullClientContraption != null) {
+			maybeNullClientContraption.resetRenderLevel();
+		}
+	}
+
+	/**
+	 * Invalidate the structure of the client contraption, triggering a rebuild of the main mesh.
+	 */
+	public void invalidateClientContraptionStructure() {
+		var maybeNullClientContraption = this.clientContraption.getAcquire();
+
+		// Nothing to invalidate if it hasn't been created yet.
+		if (maybeNullClientContraption != null) {
+			maybeNullClientContraption.invalidateStructure();
+		}
+	}
+
+	/**
+	 * Invalidate the children of the client contraption, triggering a rebuild of all child visuals.
+	 */
+	public void invalidateClientContraptionChildren() {
+		var maybeNullClientContraption = this.clientContraption.getAcquire();
+
+		// Nothing to invalidate if it hasn't been created yet.
+		if (maybeNullClientContraption != null) {
+			maybeNullClientContraption.invalidateChildren();
+		}
+	}
+
+	@org.jetbrains.annotations.Nullable
+	public BlockEntity getBlockEntityClientSide(BlockPos localPos) {
+		var maybeNullClientContraption = this.clientContraption.getAcquire();
+
+		if (maybeNullClientContraption == null) {
+			return null;
+		}
+
+		return maybeNullClientContraption.getBlockEntity(localPos);
+	}
 }

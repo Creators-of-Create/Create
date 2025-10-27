@@ -1,22 +1,19 @@
 package com.simibubi.create.content.fluids.particle;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.foundation.particle.ICustomParticleData;
 
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class FluidParticleData implements ParticleOptions, ICustomParticleData<FluidParticleData> {
 
@@ -44,52 +41,33 @@ public class FluidParticleData implements ParticleOptions, ICustomParticleData<F
 		return type;
 	}
 
-	@Override
-	public void writeToNetwork(FriendlyByteBuf buffer) {
-		buffer.writeFluidStack(fluid);
-	}
-
-	@Override
-	public String writeToString() {
-		return CatnipServices.REGISTRIES.getKeyOrThrow(type) + " " + CatnipServices.REGISTRIES.getKeyOrThrow(fluid.getFluid());
-	}
-
-	public static final Codec<FluidParticleData> CODEC = RecordCodecBuilder.create(i -> i
+	public static final MapCodec<FluidParticleData> CODEC = RecordCodecBuilder.mapCodec(i -> i
 		.group(FluidStack.CODEC.fieldOf("fluid")
 			.forGetter(p -> p.fluid))
 		.apply(i, fs -> new FluidParticleData(AllParticleTypes.FLUID_PARTICLE.get(), fs)));
 
-	public static final Codec<FluidParticleData> BASIN_CODEC = RecordCodecBuilder.create(i -> i
+	public static final StreamCodec<RegistryFriendlyByteBuf, FluidParticleData> STREAM_CODEC = FluidStack.STREAM_CODEC
+		.map(fs -> new FluidParticleData(AllParticleTypes.FLUID_PARTICLE.get(), fs), p -> p.fluid);
+
+
+	public static final MapCodec<FluidParticleData> BASIN_CODEC = RecordCodecBuilder.mapCodec(i -> i
 		.group(FluidStack.CODEC.fieldOf("fluid")
 			.forGetter(p -> p.fluid))
 		.apply(i, fs -> new FluidParticleData(AllParticleTypes.BASIN_FLUID.get(), fs)));
 
-	public static final Codec<FluidParticleData> DRIP_CODEC = RecordCodecBuilder.create(i -> i
+	public static final StreamCodec<RegistryFriendlyByteBuf, FluidParticleData> BASIN_STREAM_CODEC = FluidStack.STREAM_CODEC
+		.map(fs -> new FluidParticleData(AllParticleTypes.BASIN_FLUID.get(), fs), p -> p.fluid);
+
+	public static final MapCodec<FluidParticleData> DRIP_CODEC = RecordCodecBuilder.mapCodec(i -> i
 		.group(FluidStack.CODEC.fieldOf("fluid")
 			.forGetter(p -> p.fluid))
 		.apply(i, fs -> new FluidParticleData(AllParticleTypes.FLUID_DRIP.get(), fs)));
 
-	public static final ParticleOptions.Deserializer<FluidParticleData> DESERIALIZER =
-		new ParticleOptions.Deserializer<>() {
-
-			// TODO Fluid particles on command
-			public FluidParticleData fromCommand(ParticleType<FluidParticleData> particleTypeIn, StringReader reader)
-				throws CommandSyntaxException {
-				return new FluidParticleData(particleTypeIn, new FluidStack(Fluids.WATER, 1));
-			}
-
-			public FluidParticleData fromNetwork(ParticleType<FluidParticleData> particleTypeIn, FriendlyByteBuf buffer) {
-				return new FluidParticleData(particleTypeIn, buffer.readFluidStack());
-			}
-		};
+	public static final StreamCodec<RegistryFriendlyByteBuf, FluidParticleData> DRIP_STREAM_CODEC = FluidStack.STREAM_CODEC
+		.map(fs -> new FluidParticleData(AllParticleTypes.FLUID_DRIP.get(), fs), p -> p.fluid);
 
 	@Override
-	public Deserializer<FluidParticleData> getDeserializer() {
-		return DESERIALIZER;
-	}
-
-	@Override
-	public Codec<FluidParticleData> getCodec(ParticleType<FluidParticleData> type) {
+	public MapCodec<FluidParticleData> getCodec(ParticleType<FluidParticleData> type) {
 		if (type == AllParticleTypes.BASIN_FLUID.get())
 			return BASIN_CODEC;
 		if (type == AllParticleTypes.FLUID_DRIP.get())
@@ -97,4 +75,12 @@ public class FluidParticleData implements ParticleOptions, ICustomParticleData<F
 		return CODEC;
 	}
 
+	@Override
+	public StreamCodec<? super RegistryFriendlyByteBuf, FluidParticleData> getStreamCodec() {
+		if (type == AllParticleTypes.BASIN_FLUID.get())
+			return BASIN_STREAM_CODEC;
+		if (type == AllParticleTypes.FLUID_DRIP.get())
+			return DRIP_STREAM_CODEC;
+		return STREAM_CODEC;
+	}
 }

@@ -8,58 +8,58 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.logistics.item.filter.attribute.AllItemAttributeTypes;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
-
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 
-import net.createmod.catnip.platform.CatnipServices;
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.FireworkStarItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.FireworkExplosion;
 import net.minecraft.world.level.Level;
 
-import org.jetbrains.annotations.NotNull;
+public record ColorAttribute(DyeColor color) implements ItemAttribute {
+	public static final MapCodec<ColorAttribute> CODEC = DyeColor.CODEC
+			.xmap(ColorAttribute::new, ColorAttribute::color)
+			.fieldOf("value");
 
-public class ColorAttribute implements ItemAttribute {
-	private DyeColor color;
-
-	public ColorAttribute(DyeColor color) {
-		this.color = color;
-	}
+	public static final StreamCodec<ByteBuf, ColorAttribute> STREAM_CODEC = DyeColor.STREAM_CODEC
+		.map(ColorAttribute::new, ColorAttribute::color);
 
 	private static Collection<DyeColor> findMatchingDyeColors(ItemStack stack) {
-		CompoundTag nbt = stack.getTag();
-
 		DyeColor color = DyeColor.getColor(stack);
 		if (color != null)
 			return Collections.singletonList(color);
 
 		Set<DyeColor> colors = new HashSet<>();
-		if (stack.getItem() instanceof FireworkRocketItem && nbt != null) {
-			ListTag listnbt = nbt.getCompound("Fireworks").getList("Explosions", 10);
-			for (int i = 0; i < listnbt.size(); i++) {
-				colors.addAll(getFireworkStarColors(listnbt.getCompound(i)));
+		if (stack.has(DataComponents.FIREWORKS)) {
+			if (stack.getItem() instanceof FireworkRocketItem || stack.getItem() instanceof FireworkStarItem) {
+				List<FireworkExplosion> explosions = stack.get(DataComponents.FIREWORKS).explosions();
+				for (FireworkExplosion explosion : explosions) {
+					colors.addAll(getFireworkStarColors(explosion));
+				}
 			}
 		}
 
-		if (stack.getItem() instanceof FireworkStarItem && nbt != null) {
-			colors.addAll(getFireworkStarColors(nbt.getCompound("Explosion")));
-		}
-
-		Arrays.stream(DyeColor.values()).filter(c -> CatnipServices.REGISTRIES.getKeyOrThrow(stack.getItem()).getPath().startsWith(c.getName() + "_")).forEach(colors::add);
+		Arrays.stream(DyeColor.values()).filter(c -> RegisteredObjectsHelper.getKeyOrThrow(stack.getItem()).getPath().startsWith(c.getName() + "_")).forEach(colors::add);
 
 		return colors;
 	}
 
-	private static Collection<DyeColor> getFireworkStarColors(CompoundTag compound) {
+	private static Collection<DyeColor> getFireworkStarColors(FireworkExplosion explosion) {
 		Set<DyeColor> colors = new HashSet<>();
-		Arrays.stream(compound.getIntArray("Colors")).mapToObj(DyeColor::byFireworkColor).forEach(colors::add);
-		Arrays.stream(compound.getIntArray("FadeColors")).mapToObj(DyeColor::byFireworkColor).forEach(colors::add);
+		Arrays.stream(explosion.colors().toIntArray()).mapToObj(DyeColor::byFireworkColor).forEach(colors::add);
+		Arrays.stream(explosion.fadeColors().toIntArray()).mapToObj(DyeColor::byFireworkColor).forEach(colors::add);
 		return colors;
 	}
 
@@ -83,18 +83,6 @@ public class ColorAttribute implements ItemAttribute {
 		return AllItemAttributeTypes.HAS_COLOR;
 	}
 
-	@Override
-	public void save(CompoundTag nbt) {
-		nbt.putInt("color", color.getId());
-	}
-
-	@Override
-	public void load(CompoundTag nbt) {
-		if (nbt.contains("color")) {
-			color = DyeColor.byId(nbt.getInt("color"));
-		}
-	}
-
 	public static class Type implements ItemAttributeType {
 		@Override
 		public @NotNull ItemAttribute createAttribute() {
@@ -110,6 +98,16 @@ public class ColorAttribute implements ItemAttribute {
 			}
 
 			return list;
+		}
+
+		@Override
+		public MapCodec<? extends ItemAttribute> codec() {
+			return CODEC;
+		}
+
+		@Override
+		public StreamCodec<? super RegistryFriendlyByteBuf, ? extends ItemAttribute> streamCodec() {
+			return STREAM_CODEC;
 		}
 	}
 }

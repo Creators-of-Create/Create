@@ -3,6 +3,7 @@ package com.simibubi.create.api.contraption.storage.fluid;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.api.registry.SimpleRegistry;
@@ -20,9 +21,9 @@ public abstract class MountedFluidStorageType<T extends MountedFluidStorage> {
 	public static final Codec<MountedFluidStorageType<?>> CODEC = CreateBuiltInRegistries.MOUNTED_FLUID_STORAGE_TYPE.byNameCodec();
 	public static final SimpleRegistry<Block, MountedFluidStorageType<?>> REGISTRY = SimpleRegistry.create();
 
-	public final Codec<? extends T> codec;
+	public final MapCodec<? extends T> codec;
 
-	protected MountedFluidStorageType(Codec<? extends T> codec) {
+	protected MountedFluidStorageType(MapCodec<? extends T> codec) {
 		this.codec = codec;
 	}
 
@@ -33,7 +34,7 @@ public abstract class MountedFluidStorageType<T extends MountedFluidStorage> {
 	 * Utility for use with Registrate builders. Creates a builder transformer
 	 * that will register the given MountedFluidStorageType to a block when ready.
 	 */
-	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> mountedFluidStorage(RegistryEntry<? extends MountedFluidStorageType<?>> type) {
+	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> mountedFluidStorage(RegistryEntry<MountedFluidStorageType<?>, ? extends MountedFluidStorageType<?>> type) {
 		return builder -> builder.onRegisterAfter(CreateRegistries.MOUNTED_FLUID_STORAGE_TYPE, block -> REGISTRY.register(block, type.get()));
 	}
 }

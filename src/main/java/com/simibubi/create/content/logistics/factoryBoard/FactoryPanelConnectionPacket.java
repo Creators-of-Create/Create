@@ -1,15 +1,23 @@
 package com.simibubi.create.content.logistics.factoryBoard;
 
-import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelSlot;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
-import net.minecraft.network.FriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 
 public class FactoryPanelConnectionPacket extends BlockEntityConfigurationPacket<FactoryPanelBlockEntity> {
+	public static final StreamCodec<ByteBuf, FactoryPanelConnectionPacket> STREAM_CODEC = StreamCodec.composite(
+	    FactoryPanelPosition.STREAM_CODEC, packet -> packet.fromPos,
+		FactoryPanelPosition.STREAM_CODEC, packet -> packet.toPos,
+		ByteBufCodecs.BOOL, packet -> packet.relocate,
+	    FactoryPanelConnectionPacket::new
+	);
 
-	private FactoryPanelPosition fromPos;
-	private FactoryPanelPosition toPos;
+	private final FactoryPanelPosition fromPos;
+	private final FactoryPanelPosition toPos;
 	private boolean relocate;
 
 	public FactoryPanelConnectionPacket(FactoryPanelPosition fromPos, FactoryPanelPosition toPos, boolean relocate) {
@@ -19,26 +27,9 @@ public class FactoryPanelConnectionPacket extends BlockEntityConfigurationPacket
 		this.relocate = relocate;
 	}
 
-	public FactoryPanelConnectionPacket(FriendlyByteBuf buffer) {
-		super(buffer);
-	}
-
 	@Override
-	protected void writeSettings(FriendlyByteBuf buffer) {
-		buffer.writeBlockPos(fromPos.pos());
-		buffer.writeVarInt(fromPos.slot()
-			.ordinal());
-		buffer.writeBlockPos(toPos.pos());
-		buffer.writeVarInt(toPos.slot()
-			.ordinal());
-		buffer.writeBoolean(relocate);
-	}
-
-	@Override
-	protected void readSettings(FriendlyByteBuf buffer) {
-		fromPos = new FactoryPanelPosition(buffer.readBlockPos(), PanelSlot.values()[buffer.readVarInt()]);
-		toPos = new FactoryPanelPosition(buffer.readBlockPos(), PanelSlot.values()[buffer.readVarInt()]);
-		relocate = buffer.readBoolean();
+	public PacketTypeProvider getTypeProvider() {
+		return AllPackets.CONNECT_FACTORY_PANEL;
 	}
 
 	@Override
@@ -50,9 +41,6 @@ public class FactoryPanelConnectionPacket extends BlockEntityConfigurationPacket
 			else
 				behaviour.addConnection(fromPos);
 	}
-
-	@Override
-	protected void applySettings(FactoryPanelBlockEntity be) {}
 
 	@Override
 	protected int maxRange() {

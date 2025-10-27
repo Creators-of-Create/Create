@@ -17,9 +17,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteractSpecific;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.EntityInteractSpecific;
 
 @EventBusSubscriber
 public class ScheduleItemEntityInteraction {
@@ -112,7 +112,7 @@ public class ScheduleItemEntityInteraction {
 				true);
 
 			player.getInventory()
-				.placeItemBackInInventory(train.runtime.returnSchedule());
+				.placeItemBackInInventory(train.runtime.returnSchedule(player.registryAccess()));
 		}
 
 		player.getCooldowns()

@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.actors.roller.RollerBlockEntity.RollingMode;
@@ -39,10 +39,12 @@ import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.data.Pair;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -59,8 +61,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
-
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 
@@ -160,7 +160,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (!context.data.contains("ReferencePos"))
 			return;
 
-		BlockPos referencePos = NbtUtils.readBlockPos(context.data.getCompound("ReferencePos"));
+		BlockPos referencePos = NBTHelper.readBlockPos(context.data, "ReferencePos");
 		for (BlockPos otherPos : getPositionsToBreak(context, referencePos))
 			if (!otherPos.equals(pos))
 				destroyBlock(context, otherPos);
@@ -402,7 +402,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 	}
 
 	protected BlockState getStateToPaveWith(MovementContext context) {
-		return getStateToPaveWith(ItemStack.of(context.blockEntityData.getCompound("Filter")));
+		return getStateToPaveWith(ItemStack.parseOptional(context.world.registryAccess(), context.blockEntityData.getCompound("Filter")));
 	}
 
 	protected BlockState getStateToPaveWithAsSlab(MovementContext context) {
@@ -414,7 +414,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (block == null)
 			return null;
 
-		ResourceLocation rl = ForgeRegistries.BLOCKS.getKey(block);
+		ResourceLocation rl = BuiltInRegistries.BLOCK.getKey(block);
 		String namespace = rl.getNamespace();
 		String blockName = rl.getPath();
 		int nameLength = blockName.length();
@@ -428,8 +428,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 			possibleSlabLocations.add(blockName.substring(0, nameLength - 7) + "_slab");
 
 		for (String locationAttempt : possibleSlabLocations) {
-			Optional<Block> result = ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(namespace, locationAttempt))
-				.map(slabHolder -> slabHolder.value());
+			Optional<Block> result = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.fromNamespaceAndPath(namespace, locationAttempt));
 			if (result.isEmpty())
 				continue;
 			return result.get()

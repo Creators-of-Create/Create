@@ -1,9 +1,8 @@
 package com.simibubi.create.content.logistics.factoryBoard;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelSlot;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
@@ -13,6 +12,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -65,8 +65,7 @@ public class FactoryPanelConnectionHandler {
 		ItemStack filterFrom = panel.getFilter();
 		ItemStack filterTo = at.getFilter();
 
-		AllPackets.getChannel()
-			.sendToServer(new FactoryPanelConnectionPacket(panel.getPanelPosition(), connectingFrom, false));
+		CatnipServices.NETWORK.sendToServer(new FactoryPanelConnectionPacket(panel.getPanelPosition(), connectingFrom, false));
 
 		player.displayClientMessage(CreateLang.translate("factory_panel.panels_connected", filterFrom.getHoverName()
 			.getString(),
@@ -208,7 +207,7 @@ public class FactoryPanelConnectionHandler {
 			.disableLineNormals()
 			.lineWidth(1 / 16f);
 	}
-	
+
 	public static boolean onRightClick() {
 		if (connectingFrom == null || connectingFromBox == null)
 			return false;
@@ -219,8 +218,7 @@ public class FactoryPanelConnectionHandler {
 			if (mc.player.isShiftKeyDown())
 				validRelocationTarget = null;
 			if (validRelocationTarget != null)
-				AllPackets.getChannel()
-					.sendToServer(new FactoryPanelConnectionPacket(validRelocationTarget, connectingFrom, true));
+				CatnipServices.NETWORK.sendToServer(new FactoryPanelConnectionPacket(validRelocationTarget, connectingFrom, true));
 
 			connectingFrom = null;
 			connectingFromBox = null;
@@ -267,8 +265,7 @@ public class FactoryPanelConnectionHandler {
 					bestPosition = panelPosition;
 				}
 
-				AllPackets.getChannel()
-					.sendToServer(new FactoryPanelConnectionPacket(bestPosition, connectingFrom, false));
+				CatnipServices.NETWORK.sendToServer(new FactoryPanelConnectionPacket(bestPosition, connectingFrom, false));
 
 				mc.player.displayClientMessage(CreateLang
 					.translate("factory_panel.link_connected", blockEntity.getBlockState()

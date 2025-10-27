@@ -1,0 +1,24 @@
+{
+  "values": [
+    "create:blaze_burner",
+    "create:lit_blaze_burner",
+    "create:sail_frame",
+    "create:andesite_bars",
+    "create:brass_bars",
+    "create:copper_bars",
+    "create:copycat_base",
+    "minecraft:iron_bars",
+    "minecraft:mangrove_roots",
+    "minecraft:copper_grate",
+    "minecraft:exposed_copper_grate",
+    "minecraft:weathered_copper_grate",
+    "minecraft:oxidized_copper_grate",
+    "minecraft:waxed_copper_grate",
+    "minecraft:waxed_exposed_copper_grate",
+    "minecraft:waxed_weathered_copper_grate",
+    "minecraft:waxed_oxidized_copper_grate",
+    "#minecraft:campfires",
+    "#minecraft:fences",
+    "#minecraft:leaves"
+  ]
+}

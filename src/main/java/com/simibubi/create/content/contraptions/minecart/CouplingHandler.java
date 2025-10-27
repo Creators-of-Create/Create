@@ -4,8 +4,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.AllAttachmentTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -23,11 +24,9 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.entity.EntityMountEvent;
-import net.minecraftforge.eventbus.api.Event.Result;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityMountEvent;
 
 @EventBusSubscriber
 public class CouplingHandler {
@@ -35,15 +34,14 @@ public class CouplingHandler {
 	@SubscribeEvent
 	public static void preventEntitiesFromMoutingOccupiedCart(EntityMountEvent event) {
 		Entity e = event.getEntityBeingMounted();
-		LazyOptional<MinecartController> optional = e.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
-		if (!optional.isPresent())
-			return;
-		if (event.getEntityMounting() instanceof AbstractContraptionEntity)
-			return;
-		MinecartController controller = optional.orElse(null);
-		if (controller.isCoupledThroughContraption()) {
-			event.setCanceled(true);
-			event.setResult(Result.DENY);
+
+		MinecartController controller = e.getData(AllAttachmentTypes.MINECART_CONTROLLER);
+		if (controller != MinecartController.EMPTY) {
+			if (event.getEntityMounting() instanceof AbstractContraptionEntity)
+				return;
+			if (controller.isCoupledThroughContraption()) {
+				event.setCanceled(true);
+			}
 		}
 	}
 
@@ -170,7 +168,7 @@ public class CouplingHandler {
 		boolean forward) {
 		UUID coupledCart = controller.getCoupledCart(forward);
 		if (coupledCart == null)
-			return MinecartController.empty();
+			return MinecartController.EMPTY;
 		return CapabilityMinecartController.getIfPresent(world, coupledCart);
 	}
 

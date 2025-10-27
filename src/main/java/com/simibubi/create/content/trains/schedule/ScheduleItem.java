@@ -2,6 +2,7 @@ package com.simibubi.create.content.trains.schedule;
 
 import java.util.List;
 
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllMenuTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.Contraption;
@@ -16,6 +17,8 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.data.Couple;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,9 +37,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class ScheduleItem extends Item implements MenuProvider, SupportsItemCopying {
 
@@ -57,8 +59,8 @@ public class ScheduleItem extends Item implements MenuProvider, SupportsItemCopy
 
 		if (!player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
 			if (!world.isClientSide && player instanceof ServerPlayer)
-				NetworkHooks.openScreen((ServerPlayer) player, this, buf -> {
-					buf.writeItem(heldItem);
+				player.openMenu(this, buf -> {
+					ItemStack.STREAM_CODEC.encode(buf, heldItem);
 				});
 			return InteractionResultHolder.success(heldItem);
 		}
@@ -69,7 +71,7 @@ public class ScheduleItem extends Item implements MenuProvider, SupportsItemCopy
 											InteractionHand pUsedHand) {
 		InteractionResult pass = InteractionResult.PASS;
 
-		Schedule schedule = getSchedule(pStack);
+		Schedule schedule = getSchedule(pPlayer.registryAccess(), pStack);
 		if (schedule == null)
 			return pass;
 		if (pInteractionTarget == null)
@@ -126,8 +128,8 @@ public class ScheduleItem extends Item implements MenuProvider, SupportsItemCopy
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-		Schedule schedule = getSchedule(stack);
+	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+		Schedule schedule = getSchedule(context.registries(), stack);
 		if (schedule == null || schedule.entries.isEmpty())
 			return;
 
@@ -147,13 +149,10 @@ public class ScheduleItem extends Item implements MenuProvider, SupportsItemCopy
 		}
 	}
 
-	public static Schedule getSchedule(ItemStack pStack) {
-		if (!pStack.hasTag())
+	public static Schedule getSchedule(HolderLookup.Provider registries, ItemStack pStack) {
+		if (!pStack.has(AllDataComponents.TRAIN_SCHEDULE))
 			return null;
-		if (!pStack.getTag()
-			.contains("Schedule"))
-			return null;
-		return Schedule.fromTag(pStack.getTagElement("Schedule"));
+		return Schedule.fromTag(registries, pStack.get(AllDataComponents.TRAIN_SCHEDULE));
 	}
 
 	@Override
@@ -165,6 +164,11 @@ public class ScheduleItem extends Item implements MenuProvider, SupportsItemCopy
 	@Override
 	public Component getDisplayName() {
 		return getDescription();
+	}
+
+	@Override
+	public DataComponentType<?> getComponentType() {
+		return AllDataComponents.TRAIN_SCHEDULE;
 	}
 
 }

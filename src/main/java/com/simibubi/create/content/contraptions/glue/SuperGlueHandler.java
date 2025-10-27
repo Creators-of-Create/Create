@@ -4,20 +4,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.api.contraption.BlockMovementChecks;
 
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.levelWrappers.RayTraceLevel;
 import net.createmod.catnip.placement.IPlacementHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -26,11 +29,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.event.level.BlockEvent.EntityPlaceEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.level.BlockEvent.EntityPlaceEvent;
 
 @EventBusSubscriber
 public class SuperGlueHandler {
@@ -51,8 +52,7 @@ public class SuperGlueHandler {
 			BlockPos relative = pos.relative(direction);
 			if (SuperGlueEntity.isGlued(world, pos, direction, cached)
 				&& BlockMovementChecks.isMovementNecessary(world.getBlockState(relative), entity.level(), relative))
-				AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),
-					new GlueEffectPacket(pos, direction, true));
+				CatnipServices.NETWORK.sendToClientsTrackingAndSelf(entity, new GlueEffectPacket(pos, direction, true));
 		}
 
 		if (entity instanceof Player)
@@ -61,7 +61,7 @@ public class SuperGlueHandler {
 
 	public static void glueInOffHandAppliesOnBlockPlace(EntityPlaceEvent event, BlockPos pos, Player placer) {
 		ItemStack itemstack = placer.getOffhandItem();
-		AttributeInstance reachAttribute = placer.getAttribute(ForgeMod.BLOCK_REACH.get());
+		AttributeInstance reachAttribute = placer.getAttribute(Attributes.BLOCK_INTERACTION_RANGE);
 		if (!AllItems.SUPER_GLUE.isIn(itemstack) || reachAttribute == null)
 			return;
 		if (AllItems.WRENCH.isIn(placer.getMainHandItem()))
@@ -95,17 +95,18 @@ public class SuperGlueHandler {
 			return;
 
 		SuperGlueEntity entity = new SuperGlueEntity(world, SuperGlueEntity.span(gluePos, gluePos.relative(face)));
-		CompoundTag compoundnbt = itemstack.getTag();
-		if (compoundnbt != null)
-			EntityType.updateCustomEntityTag(world, placer, entity, compoundnbt);
+		CustomData customData = itemstack.get(DataComponents.CUSTOM_DATA);
+		if (customData != null)
+			EntityType.updateCustomEntityTag(world, placer, entity, customData);
 
 		if (SuperGlueEntity.isValidFace(world, gluePos, face)) {
 			if (!world.isClientSide) {
 				world.addFreshEntity(entity);
-				AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
+				CatnipServices.NETWORK.sendToClientsTrackingEntity(entity,
 					new GlueEffectPacket(gluePos, face, true));
 			}
-			itemstack.hurtAndBreak(1, placer, SuperGlueItem::onBroken);
+
+			itemstack.hurtAndBreak(1, placer, EquipmentSlot.MAINHAND);
 		}
 	}
 

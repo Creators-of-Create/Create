@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "small_veridium_brick_stairs",
+  "key": {
+    "X": {
+      "item": "create:small_veridium_bricks"
+    }
+  },
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "result": {
+    "count": 4,
+    "id": "create:small_veridium_brick_stairs"
+  }
+}

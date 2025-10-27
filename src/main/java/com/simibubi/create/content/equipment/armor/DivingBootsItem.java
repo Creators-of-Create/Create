@@ -1,6 +1,7 @@
 package com.simibubi.create.content.equipment.armor;
 
 import net.createmod.catnip.nbt.NBTHelper;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
@@ -13,16 +14,16 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 @EventBusSubscriber
 public class DivingBootsItem extends BaseArmorItem {
 	public static final EquipmentSlot SLOT = EquipmentSlot.FEET;
 	public static final ArmorItem.Type TYPE = ArmorItem.Type.BOOTS;
 
-	public DivingBootsItem(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
+	public DivingBootsItem(Holder<ArmorMaterial> material, Properties properties, ResourceLocation textureLoc) {
 		super(material, TYPE, properties, textureLoc);
 	}
 
@@ -42,8 +43,10 @@ public class DivingBootsItem extends BaseArmorItem {
 	}
 
 	@SubscribeEvent
-	public static void accellerateDescentUnderwater(LivingTickEvent event) {
-		LivingEntity entity = event.getEntity();
+	public static void accelerateDescentUnderwater(EntityTickEvent.Pre event) {
+		if (!(event.getEntity() instanceof LivingEntity entity))
+			return;
+
 		if (!affects(entity))
 			return;
 

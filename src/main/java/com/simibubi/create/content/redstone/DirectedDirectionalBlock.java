@@ -1,7 +1,8 @@
 package com.simibubi.create.content.redstone;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.api.contraption.transformable.TransformableBlock;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -17,9 +18,13 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
+import org.jetbrains.annotations.NotNull;
+
 public class DirectedDirectionalBlock extends HorizontalDirectionalBlock implements IWrenchable, TransformableBlock {
 
 	public static final EnumProperty<AttachFace> TARGET = EnumProperty.create("target", AttachFace.class);
+
+	public static final MapCodec<DirectedDirectionalBlock> CODEC = simpleCodec(DirectedDirectionalBlock::new);
 
 	public DirectedDirectionalBlock(Properties pProperties) {
 		super(pProperties);
@@ -94,4 +99,8 @@ public class DirectedDirectionalBlock extends HorizontalDirectionalBlock impleme
 			.setValue(FACING, newFacing);
 	}
 
+	@Override
+	protected @NotNull MapCodec<? extends HorizontalDirectionalBlock> codec() {
+		return CODEC;
+	}
 }

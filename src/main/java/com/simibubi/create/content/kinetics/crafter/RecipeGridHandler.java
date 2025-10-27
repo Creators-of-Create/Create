@@ -21,14 +21,16 @@ import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.math.Pointing;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.FireworkRocketRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -139,27 +141,27 @@ public class RecipeGridHandler {
 
 	public static ItemStack tryToApplyRecipe(Level world, GroupedItems items) {
 		items.calcStats();
-		CraftingContainer craftinginventory = new MechanicalCraftingInventory(items);
+		CraftingInput craftingInput = MechanicalCraftingInput.of(items);
 		ItemStack result = null;
 		RegistryAccess registryAccess = world.registryAccess();
 		if (AllConfigs.server().recipes.allowRegularCraftingInCrafter.get())
 			result = world.getRecipeManager()
-				.getRecipeFor(RecipeType.CRAFTING, craftinginventory, world)
-				.filter(r -> isRecipeAllowed(r, craftinginventory))
-				.map(r -> r.assemble(craftinginventory, registryAccess))
+				.getRecipeFor(RecipeType.CRAFTING, craftingInput, world)
+				.filter(r -> isRecipeAllowed(r, craftingInput))
+				.map(r -> r.value().assemble(craftingInput, registryAccess))
 				.orElse(null);
 		if (result == null)
-			result = AllRecipeTypes.MECHANICAL_CRAFTING.find(craftinginventory, world)
-				.map(r -> r.assemble(craftinginventory, registryAccess))
+			result = AllRecipeTypes.MECHANICAL_CRAFTING.find(craftingInput, world)
+				.map(r -> r.value().assemble(craftingInput, registryAccess))
 				.orElse(null);
 		return result;
 	}
 
-	public static boolean isRecipeAllowed(CraftingRecipe recipe, CraftingContainer inventory) {
-		if (recipe instanceof FireworkRocketRecipe) {
+	public static boolean isRecipeAllowed(RecipeHolder<CraftingRecipe> recipe, CraftingInput craftingInput) {
+		if (recipe.value() instanceof FireworkRocketRecipe) {
 			int numItems = 0;
-			for (int i = 0; i < inventory.getContainerSize(); i++) {
-				if (!inventory.getItem(i).isEmpty()) {
+			for (int i = 0; i < craftingInput.size(); i++) {
+				if (!craftingInput.getItem(i).isEmpty()) {
 					numItems++;
 				}
 			}
@@ -191,26 +193,26 @@ public class RecipeGridHandler {
 			other.statsReady = false;
 		}
 
-		public void write(CompoundTag nbt) {
+		public void write(CompoundTag nbt, HolderLookup.Provider registries) {
 			ListTag gridNBT = new ListTag();
 			grid.forEach((pair, stack) -> {
 				CompoundTag entry = new CompoundTag();
 				entry.putInt("x", pair.getKey());
 				entry.putInt("y", pair.getValue());
-				entry.put("item", stack.serializeNBT());
+				entry.put("item", stack.saveOptional(registries));
 				gridNBT.add(entry);
 			});
 			nbt.put("Grid", gridNBT);
 		}
 
-		public static GroupedItems read(CompoundTag nbt) {
+		public static GroupedItems read(CompoundTag nbt, HolderLookup.Provider registries) {
 			GroupedItems items = new GroupedItems();
 			ListTag gridNBT = nbt.getList("Grid", Tag.TAG_COMPOUND);
 			gridNBT.forEach(inbt -> {
 				CompoundTag entry = (CompoundTag) inbt;
 				int x = entry.getInt("x");
 				int y = entry.getInt("y");
-				ItemStack stack = ItemStack.of(entry.getCompound("item"));
+				ItemStack stack = ItemStack.parseOptional(registries, entry.getCompound("item"));
 				items.grid.put(Pair.of(x, y), stack);
 			});
 			return items;

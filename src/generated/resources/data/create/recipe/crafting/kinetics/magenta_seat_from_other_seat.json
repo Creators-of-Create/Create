@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "c:dyes/magenta"
+    },
+    {
+      "tag": "create:seats"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:magenta_seat"
+  }
+}

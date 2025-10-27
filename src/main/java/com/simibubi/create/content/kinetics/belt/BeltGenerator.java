@@ -9,7 +9,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 
 public class BeltGenerator extends SpecialBlockStateGen {
 
@@ -40,7 +40,7 @@ public class BeltGenerator extends SpecialBlockStateGen {
 		if (!casing)
 			return prov.models()
 				.getExistingFile(prov.modLoc("block/belt/particle"));
-		
+
 		BeltPart part = state.getValue(BeltBlock.PART);
 		Direction direction = state.getValue(BeltBlock.HORIZONTAL_FACING);
 		BeltSlope slope = state.getValue(BeltBlock.SLOPE);

@@ -13,7 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 public abstract class AbstractChassisBlock extends RotatedPillarBlock implements IWrenchable, IBE<ChassisBlockEntity>, TransformableBlock {
 
@@ -36,52 +36,50 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-		BlockHitResult hit) {
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!player.mayBuild())
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		ItemStack heldItem = player.getItemInHand(handIn);
-		boolean isSlimeBall = heldItem.is(Tags.Items.SLIMEBALLS) || AllItems.SUPER_GLUE.isIn(heldItem);
+		boolean isSlimeBall = stack.is(Tags.Items.SLIMEBALLS) || AllItems.SUPER_GLUE.isIn(stack);
 
-		BooleanProperty affectedSide = getGlueableSide(state, hit.getDirection());
+		BooleanProperty affectedSide = getGlueableSide(state, hitResult.getDirection());
 		if (affectedSide == null)
-			return InteractionResult.PASS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
 		if (isSlimeBall && state.getValue(affectedSide)) {
 			for (Direction face : Iterate.directions) {
 				BooleanProperty glueableSide = getGlueableSide(state, face);
 				if (glueableSide != null && !state.getValue(glueableSide)
-					&& glueAllowedOnSide(worldIn, pos, state, face)) {
-					if (worldIn.isClientSide) {
-						Vec3 vec = hit.getLocation();
-						worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
-						return InteractionResult.SUCCESS;
+					&& glueAllowedOnSide(level, pos, state, face)) {
+					if (level.isClientSide) {
+						Vec3 vec = hitResult.getLocation();
+						level.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
+						return ItemInteractionResult.SUCCESS;
 					}
-					AllSoundEvents.SLIME_ADDED.playOnServer(worldIn, pos, .5f, 1);
+					AllSoundEvents.SLIME_ADDED.playOnServer(level, pos, .5f, 1);
 					state = state.setValue(glueableSide, true);
 				}
 			}
-			if (!worldIn.isClientSide)
-				worldIn.setBlockAndUpdate(pos, state);
-			return InteractionResult.SUCCESS;
+			if (!level.isClientSide)
+				level.setBlockAndUpdate(pos, state);
+			return ItemInteractionResult.SUCCESS;
 		}
 
-		if ((!heldItem.isEmpty() || !player.isShiftKeyDown()) && !isSlimeBall)
-			return InteractionResult.PASS;
+		if ((!stack.isEmpty() || !player.isShiftKeyDown()) && !isSlimeBall)
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (state.getValue(affectedSide) == isSlimeBall)
-			return InteractionResult.PASS;
-		if (!glueAllowedOnSide(worldIn, pos, state, hit.getDirection()))
-			return InteractionResult.PASS;
-		if (worldIn.isClientSide) {
-			Vec3 vec = hit.getLocation();
-			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		if (!glueAllowedOnSide(level, pos, state, hitResult.getDirection()))
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		if (level.isClientSide) {
+			Vec3 vec = hitResult.getLocation();
+			level.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
+			return ItemInteractionResult.SUCCESS;
 		}
 
-		AllSoundEvents.SLIME_ADDED.playOnServer(worldIn, pos, .5f, 1);
-		worldIn.setBlockAndUpdate(pos, state.setValue(affectedSide, isSlimeBall));
-		return InteractionResult.SUCCESS;
+		AllSoundEvents.SLIME_ADDED.playOnServer(level, pos, .5f, 1);
+		level.setBlockAndUpdate(pos, state.setValue(affectedSide, isSlimeBall));
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@Override

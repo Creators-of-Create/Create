@@ -22,15 +22,26 @@ import com.simibubi.create.content.trains.schedule.destination.DestinationInstru
 import com.simibubi.create.content.trains.schedule.destination.FetchPackagesInstruction;
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
 
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.data.Pair;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 
 public class Schedule {
+	public static final StreamCodec<RegistryFriendlyByteBuf, Schedule> STREAM_CODEC = StreamCodec.composite(
+			CatnipStreamCodecBuilders.list(ScheduleEntry.STREAM_CODEC), schedule -> schedule.entries,
+			ByteBufCodecs.BOOL, schedule -> schedule.cyclic,
+			ByteBufCodecs.VAR_INT, schedule -> schedule.savedProgress,
+			Schedule::new
+	);
 
 	public static List<Pair<ResourceLocation, Supplier<? extends ScheduleInstruction>>> INSTRUCTION_TYPES =
 		new ArrayList<>();
@@ -76,14 +87,18 @@ public class Schedule {
 	public int savedProgress;
 
 	public Schedule() {
-		entries = new ArrayList<>();
-		cyclic = true;
-		savedProgress = 0;
+		this(new ArrayList<>(), true, 0);
 	}
 
-	public CompoundTag write() {
+	public Schedule(List<ScheduleEntry> entries, boolean cyclic, int savedProgress) {
+		this.entries = entries;
+		this.cyclic = cyclic;
+		this.savedProgress = savedProgress;
+	}
+
+	public CompoundTag write(HolderLookup.Provider registries) {
 		CompoundTag tag = new CompoundTag();
-		ListTag list = NBTHelper.writeCompoundList(entries, ScheduleEntry::write);
+		ListTag list = NBTHelper.writeCompoundList(entries, t -> t.write(registries));
 		tag.put("Entries", list);
 		tag.putBoolean("Cyclic", cyclic);
 		if (savedProgress > 0)
@@ -91,9 +106,9 @@ public class Schedule {
 		return tag;
 	}
 
-	public static Schedule fromTag(CompoundTag tag) {
+	public static Schedule fromTag(HolderLookup.Provider registries, CompoundTag tag) {
 		Schedule schedule = new Schedule();
-		schedule.entries = NBTHelper.readCompoundList(tag.getList("Entries", Tag.TAG_COMPOUND), ScheduleEntry::fromTag);
+		schedule.entries = NBTHelper.readCompoundList(tag.getList("Entries", Tag.TAG_COMPOUND), t -> ScheduleEntry.fromTag(registries, t));
 		schedule.cyclic = tag.getBoolean("Cyclic");
 		if (tag.contains("Progress"))
 			schedule.savedProgress = tag.getInt("Progress");

@@ -1,21 +1,22 @@
 package com.simibubi.create.content.redstone.diodes;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.tterrag.registrate.providers.DataGenContext;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.generators.BlockModelProvider;
-import net.minecraftforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 
 public class ToggleLatchGenerator extends AbstractDiodeGenerator {
 
 	@Override
-	protected <T extends Block> Vector<ModelFile> createModels(DataGenContext<Block, T> ctx, BlockModelProvider prov) {
+	protected <T extends Block> List<ModelFile> createModels(DataGenContext<Block, T> ctx, BlockModelProvider prov) {
 		String name = ctx.getName();
-		Vector<ModelFile> models = makeVector(4);
+		List<ModelFile> models = new ArrayList<>(4);
 		ResourceLocation off = existing("latch_off");
 		ResourceLocation on = existing("latch_on");
 

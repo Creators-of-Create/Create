@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "c:dyes/red"
+    },
+    {
+      "tag": "create:seats"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:red_seat"
+  }
+}

@@ -4,21 +4,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllPackets;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides.ClipboardType;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -29,7 +30,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.createmod.catnip.gui.AbstractSimiScreen;
-import net.minecraft.SharedConstants;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
@@ -43,19 +44,20 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.util.StringUtil;
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class ClipboardScreen extends AbstractSimiScreen {
+	public ClipboardContent content;
 
-	public ItemStack item;
 	public BlockPos targetedBlock;
 
 	List<List<ClipboardEntry>> pages;
@@ -64,7 +66,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	int frameTick;
 	PageButton forward;
 	PageButton backward;
-	int currentPage;
+	int currentPage = 0;
 	long lastClickTime;
 	int lastIndex = -1;
 
@@ -78,23 +80,24 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	IconButton closeBtn;
 	IconButton clearBtn;
 
-	private int targetSlot;
+	private final int targetSlot;
 
-	public ClipboardScreen(int targetSlot, ItemStack item, @Nullable BlockPos pos) {
+	public ClipboardScreen(int targetSlot, DataComponentMap components, @Nullable BlockPos pos) {
 		this.targetSlot = targetSlot;
 		this.targetedBlock = pos;
-		reopenWith(item);
+		reopenWith(components.getOrDefault(AllDataComponents.CLIPBOARD_CONTENT, ClipboardContent.EMPTY));
 	}
 
-	public void reopenWith(ItemStack clipboard) {
-		item = clipboard;
-		pages = ClipboardEntry.readAll(item);
+	public void reopenWith(ClipboardContent content) {
+		this.content = content;
+
+		pages = ClipboardEntry.readAll(content);
 		if (pages.isEmpty())
 			pages.add(new ArrayList<>());
 		if (clearBtn == null) {
-			currentPage = item.getTag() == null ? 0
-				: item.getTag()
-					.getInt("PreviouslyOpenedPage");
+			if (content != null) {
+				currentPage = content.previouslyOpenedPage();
+			}
 			currentPage = Mth.clamp(currentPage, 0, pages.size() - 1);
 		}
 		currentEntries = pages.get(currentPage);
@@ -105,8 +108,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		editContext = new TextFieldHelper(this::getCurrentEntryText, this::setCurrentEntryText, this::getClipboard,
 			this::setClipboard, this::validateTextForEntry);
 		editingIndex = startEmpty ? 0 : -1;
-		readonly = item.getTag() != null && item.getTag()
-			.getBoolean("Readonly");
+		readonly = content != null && content.readOnly();
 		if (readonly)
 			editingIndex = -1;
 		if (clearBtn != null)
@@ -342,10 +344,11 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			.isBlank()));
 		pages.removeIf(List::isEmpty);
 
-		for (int i = 0; i < pages.size(); i++)
-			if (pages.get(i) == currentEntries)
-				item.getOrCreateTag()
-					.putInt("PreviouslyOpenedPage", i);
+		for (int i = 0; i < pages.size(); i++) {
+			if (pages.get(i) == currentEntries) {
+				content = content.setPreviouslyOpenedPage(i);
+			}
+		}
 
 		send();
 
@@ -360,22 +363,19 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	}
 
 	private void send() {
-		ClipboardEntry.saveAll(pages, item);
-		ClipboardOverrides.switchTo(ClipboardType.WRITTEN, item);
-		if (pages.isEmpty())
-			item.setTag(new CompoundTag());
-		AllPackets.getChannel()
-			.sendToServer(new ClipboardEditPacket(targetSlot, item.getOrCreateTag(), targetedBlock));
+		content = content.setPages(pages);
+		content = content.setType(ClipboardType.WRITTEN);
+
+		if (pages.isEmpty()) {
+			content = null;
+		}
+
+		CatnipServices.NETWORK.sendToServer(new ClipboardEditPacket(targetSlot, content, targetedBlock));
 	}
 
 	@Override
-	public boolean isPauseScreen() {
-		return false;
-	}
-
-	@Override
-	public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
-		changePage(pDelta < 0);
+	public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
+		changePage(pScrollY < 0);
 		return true;
 	}
 
@@ -394,8 +394,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			clearDisplayCache();
 			return true;
 		}
-		if (super.keyPressed(pKeyCode, pScanCode, pModifiers))
-			return true;
+		super.keyPressed(pKeyCode, pScanCode, pModifiers);
 		return true;
 	}
 
@@ -403,7 +402,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	public boolean charTyped(char pCodePoint, int pModifiers) {
 		if (super.charTyped(pCodePoint, pModifiers))
 			return true;
-		if (!SharedConstants.isAllowedChatCharacter(pCodePoint))
+		if (!StringUtil.isAllowedChatCharacter(pCodePoint))
 			return false;
 		if (editingIndex == -1)
 			return false;
@@ -546,30 +545,27 @@ public class ClipboardScreen extends AbstractSimiScreen {
 
 	private void renderHighlight(Rect2i[] pSelected) {
 		Tesselator tesselator = Tesselator.getInstance();
-		BufferBuilder bufferbuilder = tesselator.getBuilder();
+		BufferBuilder bufferbuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
 		RenderSystem.setShader(GameRenderer::getPositionShader);
 		RenderSystem.setShaderColor(0.0F, 0.0F, 255.0F, 255.0F);
 //		RenderSystem.disableTexture();
 		RenderSystem.enableColorLogicOp();
 		RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
 
 		for (Rect2i rect2i : pSelected) {
 			int i = rect2i.getX();
 			int j = rect2i.getY();
 			int k = i + rect2i.getWidth();
 			int l = j + rect2i.getHeight();
-			bufferbuilder.vertex((double) i, (double) l, 0.0D)
-				.endVertex();
-			bufferbuilder.vertex((double) k, (double) l, 0.0D)
-				.endVertex();
-			bufferbuilder.vertex((double) k, (double) j, 0.0D)
-				.endVertex();
-			bufferbuilder.vertex((double) i, (double) j, 0.0D)
-				.endVertex();
+			bufferbuilder.addVertex(i, l, 0);
+			bufferbuilder.addVertex(k, l, 0);
+			bufferbuilder.addVertex(k, j, 0);
+			bufferbuilder.addVertex(i, j, 0);
 		}
 
-		tesselator.end();
+		@Nullable MeshData meshData = bufferbuilder.build();
+		if (meshData != null)
+			BufferUploader.drawWithShader(meshData);
 		RenderSystem.disableColorLogicOp();
 //		RenderSystem.enableTexture();
 	}
@@ -595,7 +591,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 				editingIndex = -1;
 				if (hoveredEntry < currentEntries.size()) {
 					currentEntries.get(hoveredEntry).checked ^= true;
-					if (currentEntries.get(hoveredEntry).checked == true)
+					if (currentEntries.get(hoveredEntry).checked)
 						Minecraft.getInstance()
 							.getSoundManager()
 							.play(SimpleSoundInstance.forUI(AllSoundEvents.CLIPBOARD_CHECKMARK.getMainEvent(),
@@ -870,14 +866,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	static class Pos2i {
-		public final int x;
-		public final int y;
-
-		Pos2i(int pX, int pY) {
-			x = pX;
-			y = pY;
-		}
+	record Pos2i(int x, int y) {
 	}
 
 }

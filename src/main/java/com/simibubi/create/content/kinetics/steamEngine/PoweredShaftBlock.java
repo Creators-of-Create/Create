@@ -15,17 +15,19 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -46,18 +48,16 @@ public class PoweredShaftBlock extends AbstractShaftBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-		BlockHitResult pHit) {
-		if (pPlayer.isShiftKeyDown() || !pPlayer.mayBuild())
-			return InteractionResult.PASS;
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (player.isShiftKeyDown() || !player.mayBuild())
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		ItemStack heldItem = pPlayer.getItemInHand(pHand);
 		IPlacementHelper helper = PlacementHelpers.get(ShaftBlock.placementHelperId);
-		if (helper.matchesItem(heldItem))
-			return helper.getOffset(pPlayer, pLevel, pState, pPos, pHit)
-				.placeInWorld(pLevel, (BlockItem) heldItem.getItem(), pPlayer, pHand, pHit);
+		if (helper.matchesItem(stack))
+			return helper.getOffset(player, level, state, pos, hitResult)
+				.placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
 
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 
 	@Override
@@ -70,11 +70,11 @@ public class PoweredShaftBlock extends AbstractShaftBlock {
 		if (!stillValid(pState, pLevel, pPos))
 			pLevel.setBlock(pPos, AllBlocks.SHAFT.getDefaultState()
 				.setValue(ShaftBlock.AXIS, pState.getValue(AXIS))
-				.setValue(WATERLOGGED, pState.getValue(WATERLOGGED)), 3);
+				.setValue(WATERLOGGED, pState.getValue(WATERLOGGED)), Block.UPDATE_ALL);
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
 		return AllBlocks.SHAFT.asStack();
 	}
 

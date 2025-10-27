@@ -1,5 +1,6 @@
 package com.simibubi.create.content.schematics.table;
 
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.IBE;
@@ -23,9 +24,12 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
+
+import org.jetbrains.annotations.NotNull;
 
 public class SchematicTableBlock extends HorizontalDirectionalBlock implements IBE<SchematicTableBlockEntity> {
+
+	public static final MapCodec<SchematicTableBlock> CODEC = simpleCodec(SchematicTableBlock::new);
 
 	public SchematicTableBlock(Properties properties) {
 		super(properties);
@@ -59,12 +63,11 @@ public class SchematicTableBlock extends HorizontalDirectionalBlock implements I
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-			BlockHitResult hit) {
-		if (worldIn.isClientSide)
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+		if (level.isClientSide)
 			return InteractionResult.SUCCESS;
-		withBlockEntityDo(worldIn, pos,
-				be -> NetworkHooks.openScreen((ServerPlayer) player, be, be::sendToMenu));
+		withBlockEntityDo(level, pos,
+				be -> player.openMenu(be, be::sendToMenu));
 		return InteractionResult.SUCCESS;
 	}
 
@@ -81,15 +84,20 @@ public class SchematicTableBlock extends HorizontalDirectionalBlock implements I
 	public Class<SchematicTableBlockEntity> getBlockEntityClass() {
 		return SchematicTableBlockEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends SchematicTableBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.SCHEMATIC_TABLE.get();
 	}
-	
+
 	@Override
-	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
 		return false;
+	}
+
+	@Override
+	protected @NotNull MapCodec<? extends HorizontalDirectionalBlock> codec() {
+		return CODEC;
 	}
 
 }

@@ -1,0 +1,35 @@
+{
+  "parent": "create:mechanical_mixer",
+  "criteria": {
+    "0": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create:cardboard"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.cardboard.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "create:cardboard"
+    },
+    "title": {
+      "translate": "advancement.create.cardboard"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

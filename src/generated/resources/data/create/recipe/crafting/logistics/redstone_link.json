@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "create:transmitter"
+    },
+    "S": {
+      "item": "create:andesite_casing"
+    }
+  },
+  "pattern": [
+    "C",
+    "S"
+  ],
+  "result": {
+    "count": 2,
+    "id": "create:redstone_link"
+  }
+}

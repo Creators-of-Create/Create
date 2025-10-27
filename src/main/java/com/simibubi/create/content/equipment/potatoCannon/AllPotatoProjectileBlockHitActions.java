@@ -1,6 +1,6 @@
 package com.simibubi.create.content.equipment.potatoCannon;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.equipment.potatoCannon.PotatoProjectileBlockHitAction;
@@ -17,11 +17,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.SpecialPlantable;
 
 public class AllPotatoProjectileBlockHitActions {
 
@@ -33,17 +31,17 @@ public class AllPotatoProjectileBlockHitActions {
 	public static void init() {
 	}
 
-	private static void register(String name, Codec<? extends PotatoProjectileBlockHitAction> codec) {
+	private static void register(String name, MapCodec<? extends PotatoProjectileBlockHitAction> codec) {
 		Registry.register(CreateBuiltInRegistries.POTATO_PROJECTILE_BLOCK_HIT_ACTION, Create.asResource(name), codec);
 	}
 
 	public record PlantCrop(Holder<Block> cropBlock) implements PotatoProjectileBlockHitAction {
-		public static final Codec<PlantCrop> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		public static final MapCodec<PlantCrop> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			BuiltInRegistries.BLOCK.holderByNameCodec().fieldOf("block").forGetter(PlantCrop::cropBlock)
 		).apply(instance, PlantCrop::new));
 
 		public PlantCrop(Block cropBlock) {
-			this(ForgeRegistries.BLOCKS.getDelegateOrThrow(cropBlock));
+			this(cropBlock.builtInRegistryHolder());
 		}
 
 		@Override
@@ -61,29 +59,26 @@ public class AllPotatoProjectileBlockHitActions {
 			if (!level.getBlockState(placePos)
 				.canBeReplaced())
 				return false;
-			if (!(cropBlock.value() instanceof IPlantable))
+			if (!(cropBlock.value() instanceof SpecialPlantable specialPlantable))
 				return false;
-			BlockState blockState = level.getBlockState(hitPos);
-			if (!blockState.canSustainPlant(level, hitPos, face, (IPlantable) cropBlock.value()))
-				return false;
-			level.setBlock(placePos, cropBlock.value()
-				.defaultBlockState(), 3);
+			if (specialPlantable.canPlacePlantAtPosition(projectile, level, placePos, null))
+				specialPlantable.spawnPlantAtPosition(projectile, level, placePos, null);
 			return true;
 		}
 
 		@Override
-		public Codec<? extends PotatoProjectileBlockHitAction> codec() {
+		public MapCodec<? extends PotatoProjectileBlockHitAction> codec() {
 			return CODEC;
 		}
 	}
 
 	public record PlaceBlockOnGround(Holder<Block> block) implements PotatoProjectileBlockHitAction {
-		public static final Codec<PlaceBlockOnGround> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		public static final MapCodec<PlaceBlockOnGround> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			BuiltInRegistries.BLOCK.holderByNameCodec().fieldOf("block").forGetter(PlaceBlockOnGround::block)
 		).apply(instance, PlaceBlockOnGround::new));
 
 		public PlaceBlockOnGround(Block block) {
-			this(ForgeRegistries.BLOCKS.getDelegateOrThrow(block));
+			this(block.builtInRegistryHolder());
 		}
 
 		@Override
@@ -102,7 +97,7 @@ public class AllPotatoProjectileBlockHitActions {
 
 			if (face == Direction.UP) {
 				levelAccessor.setBlock(placePos, block.value()
-					.defaultBlockState(), 3);
+					.defaultBlockState(), Block.UPDATE_ALL);
 			} else if (levelAccessor instanceof Level level) {
 				double y = ray.getLocation().y - 0.5;
 				if (!level.isEmptyBlock(placePos.above()))
@@ -120,7 +115,7 @@ public class AllPotatoProjectileBlockHitActions {
 		}
 
 		@Override
-		public Codec<? extends PotatoProjectileBlockHitAction> codec() {
+		public MapCodec<? extends PotatoProjectileBlockHitAction> codec() {
 			return CODEC;
 		}
 	}

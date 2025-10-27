@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.mixin.accessor.FluidInteractionRegistryAccessor;
@@ -21,10 +21,10 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.fluids.FluidInteractionRegistry.FluidInteraction;
-import net.minecraftforge.fluids.FluidInteractionRegistry.HasFluidInteraction;
-import net.minecraftforge.fluids.FluidInteractionRegistry.InteractionInformation;
-import net.minecraftforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.FluidInteractionRegistry.FluidInteraction;
+import net.neoforged.neoforge.fluids.FluidInteractionRegistry.HasFluidInteraction;
+import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation;
+import net.neoforged.neoforge.fluids.FluidType;
 
 public class CobbleGenOptimisation {
 
@@ -92,7 +92,7 @@ public class CobbleGenOptimisation {
 		ServerLevel owLevel = level.getServer().getLevel(Level.OVERWORLD);
 		if (owLevel == null)
 			owLevel = level;
-		
+
 		if (cachedLevel == null || cachedLevel.getLevel() != owLevel)
 			cachedLevel = new CobbleGenLevel(level);
 

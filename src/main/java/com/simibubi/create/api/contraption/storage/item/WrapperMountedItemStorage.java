@@ -3,9 +3,10 @@ package com.simibubi.create.api.contraption.storage.item;
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
+
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 /**
  * Partial implementation of a MountedItemStorage that wraps an item handler.

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "small_scoria_brick_slab",
+  "key": {
+    "X": {
+      "item": "create:small_scoria_bricks"
+    }
+  },
+  "pattern": [
+    "XXX"
+  ],
+  "result": {
+    "count": 6,
+    "id": "create:small_scoria_brick_slab"
+  }
+}

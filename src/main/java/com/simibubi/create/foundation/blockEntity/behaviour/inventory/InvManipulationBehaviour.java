@@ -13,12 +13,12 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItemHandler, InvManipulationBehaviour> {
 
@@ -58,8 +58,8 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 	}
 
 	@Override
-	protected Capability<IItemHandler> capability() {
-		return ForgeCapabilities.ITEM_HANDLER;
+	protected BlockCapability<IItemHandler, Direction> capability() {
+		return Capabilities.ItemHandler.BLOCK;
 	}
 
 	public ItemStack extract() {
@@ -76,7 +76,7 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 
 		if (getWorld().isClientSide)
 			return ItemStack.EMPTY;
-		IItemHandler inventory = targetCapability.orElse(null);
+		IItemHandler inventory = targetCapability;
 		if (inventory == null)
 			return ItemStack.EMPTY;
 
@@ -90,7 +90,7 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 	public ItemStack insert(ItemStack stack) {
 		boolean shouldSimulate = simulateNext;
 		simulateNext = false;
-		IItemHandler inventory = targetCapability.orElse(null);
+		IItemHandler inventory = targetCapability;
 		if (inventory == null)
 			return stack;
 		return ItemHandlerHelper.insertItemStacked(inventory, stack, shouldSimulate);

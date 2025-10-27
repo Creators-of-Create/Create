@@ -1,12 +1,20 @@
 package com.simibubi.create.content.processing.recipe;
 
-import com.simibubi.create.Create;
+import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+
+import org.jetbrains.annotations.NotNull;
+
+import com.mojang.serialization.Codec;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 
 import net.createmod.catnip.lang.Lang;
 
-public enum HeatCondition {
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.StringRepresentable;
+
+public enum HeatCondition implements StringRepresentable {
 
 	NONE(0xffffff), HEATED(0xE88300), SUPERHEATED(0x5C93E8),
 
@@ -14,7 +22,10 @@ public enum HeatCondition {
 
 	private int color;
 
-	private HeatCondition(int color) {
+	public static final Codec<HeatCondition> CODEC = StringRepresentable.fromEnum(HeatCondition::values);
+	public static final StreamCodec<ByteBuf, HeatCondition> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(HeatCondition.class);
+
+	HeatCondition(int color) {
 		this.color = color;
 	}
 
@@ -34,25 +45,18 @@ public enum HeatCondition {
 		return HeatLevel.NONE;
 	}
 
-	public String serialize() {
+	@Override
+	public @NotNull String getSerializedName() {
 		return Lang.asId(name());
 	}
 
 	public String getTranslationKey() {
-		return "recipe.heat_requirement." + serialize();
-	}
-
-	public static HeatCondition deserialize(String name) {
-		for (HeatCondition heatCondition : values())
-			if (heatCondition.serialize()
-					.equals(name))
-				return heatCondition;
-		Create.LOGGER.warn("Tried to deserialize invalid heat condition: \"" + name + "\"");
-		return NONE;
+		return "recipe.heat_requirement." + getSerializedName();
 	}
 
 	public int getColor() {
 		return color;
 	}
+
 
 }
