@@ -1,7 +1,6 @@
 package com.simibubi.create.content.trains.signal;
 
 import java.util.Optional;
-import java.util.Random;
 
 import javax.annotation.Nullable;
 
@@ -82,7 +81,7 @@ public class SignalBlock extends Block implements IBE<SignalBlockEntity>, IWrenc
 		Optional<SignalBlockEntity> ste = getBlockEntityOptional(pLevel, pPos);
 		boolean neighborPowered = false;
 		if (ste.isEmpty() || !ste.get().computerBehaviour.hasAttachedComputer()) {
-			powered = pLevel.hasNeighborSignal(pPos);
+			neighborPowered = pLevel.hasNeighborSignal(pPos);
 		}
 		if (powered == neighborPowered)
 			return;
