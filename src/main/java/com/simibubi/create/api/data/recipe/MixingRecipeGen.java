@@ -3,7 +3,6 @@ package com.simibubi.create.api.data.recipe;
 import java.util.concurrent.CompletableFuture;
 
 import com.simibubi.create.AllRecipeTypes;
-
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.basin.BasinRecipe.Builder;
@@ -12,6 +11,7 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluids;
 
 /**
  * The base class for Mixing recipe generation.

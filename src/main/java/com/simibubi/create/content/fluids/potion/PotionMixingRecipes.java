@@ -12,7 +12,6 @@ import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.basin.BasinRecipe.Builder;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.mixin.accessor.PotionBrewingAccessor;
 
 import net.minecraft.core.Holder.Reference;
@@ -149,11 +148,11 @@ public class PotionMixingRecipes {
 	private static RecipeHolder<MixingRecipe> createRecipe(String id, Ingredient ingredient, FluidStack fromFluid, FluidStack toFluid) {
 		ResourceLocation recipeId = Create.asResource(id);
 		MixingRecipe recipe = new Builder<>(MixingRecipe::new, recipeId)
-				.require(ingredient)
+			.require(ingredient)
 			.require(SizedFluidIngredient.of(fromFluid))
-				.output(toFluid)
-				.requiresHeat(HeatCondition.HEATED)
-				.build();
+			.output(toFluid)
+			.requiresHeat(HeatCondition.HEATED)
+			.build();
 
 		return new RecipeHolder<>(recipeId, recipe);
 	}

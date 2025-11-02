@@ -13,7 +13,6 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.recipe.DummyCraftingContainer;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
@@ -29,6 +28,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.items.IItemHandler;
 
 public abstract class AbstractBasinRecipe<P extends ProcessingRecipeParams> extends ProcessingRecipe<RecipeInput, P> {
@@ -76,7 +76,7 @@ public abstract class AbstractBasinRecipe<P extends ProcessingRecipeParams> exte
 		List<FluidStack> recipeOutputFluids = new ArrayList<>();
 
 		List<Ingredient> ingredients = new LinkedList<>(recipe.getIngredients());
-		List<FluidIngredient> fluidIngredients =
+		List<SizedFluidIngredient> fluidIngredients =
 			isBasinRecipe ? ((AbstractBasinRecipe<?>) recipe).getFluidIngredients() : Collections.emptyList();
 
 		for (boolean simulate : Iterate.trueAndFalse) {
@@ -108,8 +108,8 @@ public abstract class AbstractBasinRecipe<P extends ProcessingRecipeParams> exte
 
 			boolean fluidsAffected = false;
 			FluidIngredients:
-			for (FluidIngredient fluidIngredient : fluidIngredients) {
-				int amountRequired = fluidIngredient.getRequiredAmount();
+			for (SizedFluidIngredient fluidIngredient : fluidIngredients) {
+				int amountRequired = fluidIngredient.amount();
 
 				for (int tank = 0; tank < availableFluids.getTanks(); tank++) {
 					FluidStack fluidStack = availableFluids.getFluidInTank(tank);
