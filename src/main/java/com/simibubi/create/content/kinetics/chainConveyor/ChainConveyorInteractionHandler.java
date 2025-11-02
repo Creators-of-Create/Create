@@ -15,8 +15,8 @@ import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.TickBasedCache;
 
 import net.createmod.catnip.data.WorldAttached;
-import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -32,6 +32,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderHighlightEvent;
+import net.neoforged.neoforge.common.Tags;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ChainConveyorInteractionHandler {
@@ -52,12 +53,11 @@ public class ChainConveyorInteractionHandler {
 		}
 
 		Minecraft mc = Minecraft.getInstance();
-		ItemStack mainHandItem = mc.player.getMainHandItem();
-		boolean isWrench = AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem);
+		boolean isWrench = mc.player.isHolding(i -> i.is(Tags.Items.TOOLS_WRENCH));
 		boolean dismantling = isWrench && mc.player.isShiftKeyDown();
 		double range = mc.player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE) + 1;
 
-		Vec3 from = RaycastHelper.getTraceOrigin(mc.player);
+		Vec3 from = mc.player.getEyePosition();
 		Vec3 to = RaycastHelper.getTraceTarget(mc.player, range, from);
 		HitResult hitResult = mc.hitResult;
 
@@ -114,7 +114,7 @@ public class ChainConveyorInteractionHandler {
 	private static boolean isActive() {
 		Minecraft mc = Minecraft.getInstance();
 		ItemStack mainHandItem = mc.player.getMainHandItem();
-		return AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem) || AllBlocks.PACKAGE_FROGPORT.isIn(mainHandItem)
+		return mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches) || AllBlocks.PACKAGE_FROGPORT.isIn(mainHandItem)
 			|| PackageItem.isPackage(mainHandItem);
 	}
 
@@ -125,14 +125,17 @@ public class ChainConveyorInteractionHandler {
 		Minecraft mc = Minecraft.getInstance();
 		ItemStack mainHandItem = mc.player.getMainHandItem();
 
-		if (AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem)) {
+		if (mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches)) {
+			ItemStack offHandItem = mc.player.getOffhandItem();
+			ItemStack usedItem = AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem) ? mainHandItem : offHandItem;
+
 			if (!mc.player.isShiftKeyDown()) {
 				ChainConveyorRidingHandler.embark(selectedLift, selectedChainPosition, selectedConnection);
 				return true;
 			}
 
 			CatnipServices.NETWORK.sendToServer(new ChainConveyorConnectionPacket(selectedLift, selectedLift.offset(selectedConnection),
-				mainHandItem, false));
+				usedItem, false));
 			return true;
 		}
 

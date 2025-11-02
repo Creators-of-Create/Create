@@ -6,13 +6,11 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
-
 import org.jetbrains.annotations.UnknownNullability;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.contraptions.render.ContraptionVisual;
 import com.simibubi.create.content.trains.track.BezierConnection.GirderAngles;
 import com.simibubi.create.content.trains.track.BezierConnection.SegmentAngles;
 import com.simibubi.create.foundation.render.SpecialModels;
@@ -114,12 +112,12 @@ public class TrackVisual extends AbstractVisual implements BlockEntityVisual<Tra
 			maxZ = Math.max(maxZ, Mth.ceil(bounds.maxZ) + 1);
 		}
 
-		var minSectionX = ContraptionVisual.minLightSection(minX);
-		var minSectionY = ContraptionVisual.minLightSection(minY);
-		var minSectionZ = ContraptionVisual.minLightSection(minZ);
-		int maxSectionX = ContraptionVisual.maxLightSection(maxX);
-		int maxSectionY = ContraptionVisual.maxLightSection(maxY);
-		int maxSectionZ = ContraptionVisual.maxLightSection(maxZ);
+		var minSectionX = SectionPos.blockToSectionCoord(minX);
+		var minSectionY = SectionPos.blockToSectionCoord(minY);
+		var minSectionZ = SectionPos.blockToSectionCoord(minZ);
+		int maxSectionX = SectionPos.blockToSectionCoord(maxX);
+		int maxSectionY = SectionPos.blockToSectionCoord(maxY);
+		int maxSectionZ = SectionPos.blockToSectionCoord(maxZ);
 
 		LongSet out = new LongArraySet();
 

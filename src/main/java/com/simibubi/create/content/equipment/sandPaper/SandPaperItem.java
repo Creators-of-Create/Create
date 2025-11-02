@@ -23,6 +23,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -41,7 +42,6 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
-import net.neoforged.neoforge.common.util.FakePlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -112,31 +112,30 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 	}
 
 	@Override
-	public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+	public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entityLiving) {
 		if (!(entityLiving instanceof Player player))
 			return stack;
 		if (stack.has(AllDataComponents.SAND_PAPER_POLISHING)) {
 			ItemStack toPolish = stack.get(AllDataComponents.SAND_PAPER_POLISHING).item();
 			//noinspection DataFlowIssue - toPolish won't be null as we do call .has before calling .get
 			ItemStack polished =
-				SandPaperPolishingRecipe.applyPolish(worldIn, entityLiving.position(), toPolish, stack);
+				SandPaperPolishingRecipe.applyPolish(level, entityLiving.position(), toPolish, stack);
 
-			if (worldIn.isClientSide) {
+			if (level.isClientSide) {
 				spawnParticles(entityLiving.getEyePosition(1)
-						.add(entityLiving.getLookAngle()
-							.scale(.5f)),
-					toPolish, worldIn);
+					.add(entityLiving.getLookAngle().scale(.5f)), toPolish, level);
 				return stack;
 			}
 
+			Inventory playerInv = player.getInventory();
 			if (!polished.isEmpty()) {
-				if (player instanceof FakePlayer) {
-					player.drop(polished, false, false);
-				} else {
-					player.getInventory()
-						.placeItemBackInInventory(polished);
-				}
+				playerInv.placeItemBackInInventory(polished);
 			}
+
+			if (toPolish.hasCraftingRemainingItem()) {
+				playerInv.placeItemBackInInventory(toPolish.getCraftingRemainingItem());
+			}
+
 			stack.remove(AllDataComponents.SAND_PAPER_POLISHING);
 			stack.hurtAndBreak(1, entityLiving, LivingEntity.getSlotForHand(entityLiving.getUsedItemHand()));
 		}

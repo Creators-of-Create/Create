@@ -92,7 +92,7 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 		var msr = TransformStack.of(ms);
 
 		float buttondepth = 0;
-		if (ctx.contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
+		if (ctx.contraption.getBlockEntityClientSide(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
 			buttondepth = -1 / 24f * cbe.button.getValue(AnimationTickHolder.getPartialTicks(renderWorld));
 
 		ms.pushPose();

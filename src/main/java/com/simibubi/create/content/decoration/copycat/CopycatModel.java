@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
@@ -153,7 +153,7 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 		return getModelOf(material).getParticleIcon(wrappedData);
 	}
 
-	@Nullable
+	@NotNull
 	public static BlockState getMaterial(ModelData data) {
 		BlockState material = data == null ? null : data.get(MATERIAL_PROPERTY);
 		return material == null ? AllBlocks.COPYCAT_BASE.getDefaultState() : material;
@@ -177,7 +177,7 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 		}
 
 		public boolean isOccluded(Direction face) {
-			return face == null ? false : occluded[face.get3DDataValue()];
+			return face != null && occluded[face.get3DDataValue()];
 		}
 	}
 

@@ -1,16 +1,18 @@
 package com.simibubi.create.content.equipment.clipboard;
 
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllPackets;
-import com.simibubi.create.foundation.utility.CreateComponentProcessors;
 
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.nbt.NBTProcessors;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -18,17 +20,18 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public record ClipboardEditPacket(int hotbarSlot, DataComponentPatch dataComponentPatch, @Nullable BlockPos targetedBlock) implements ServerboundPacketPayload {
+public record ClipboardEditPacket(int hotbarSlot, @Nullable ClipboardContent clipboardContent,
+								  @Nullable BlockPos targetedBlock) implements ServerboundPacketPayload {
 	public static final StreamCodec<RegistryFriendlyByteBuf, ClipboardEditPacket> STREAM_CODEC = StreamCodec.composite(
 		ByteBufCodecs.VAR_INT, ClipboardEditPacket::hotbarSlot,
-		DataComponentPatch.STREAM_CODEC, ClipboardEditPacket::dataComponentPatch,
+		CatnipStreamCodecBuilders.nullable(ClipboardContent.STREAM_CODEC), ClipboardEditPacket::clipboardContent,
 		CatnipStreamCodecBuilders.nullable(BlockPos.STREAM_CODEC), ClipboardEditPacket::targetedBlock,
 		ClipboardEditPacket::new
 	);
 
 	@Override
 	public void handle(ServerPlayer sender) {
-		DataComponentPatch processedData = CreateComponentProcessors.clipboardProcessor(dataComponentPatch);
+		ClipboardContent processedContent = clipboardProcessor(clipboardContent);
 
 		if (targetedBlock != null) {
 			Level world = sender.level();
@@ -37,12 +40,13 @@ public record ClipboardEditPacket(int hotbarSlot, DataComponentPatch dataCompone
 			if (!targetedBlock.closerThan(sender.blockPosition(), 20))
 				return;
 			if (world.getBlockEntity(targetedBlock) instanceof ClipboardBlockEntity cbe) {
-				if (processedData.isEmpty()) {
-					clearComponents(cbe.dataContainer);
+				PatchedDataComponentMap map = new PatchedDataComponentMap(cbe.components());
+				if (processedContent == null) {
+					map.remove(AllDataComponents.CLIPBOARD_CONTENT);
 				} else {
-					cbe.dataContainer.remove(AllDataComponents.CLIPBOARD_PREVIOUSLY_OPENED_PAGE);
-					cbe.dataContainer.applyComponents(processedData);
+					map.set(AllDataComponents.CLIPBOARD_CONTENT, processedContent);
 				}
+				cbe.setComponents(map);
 				cbe.onEditedBy(sender);
 			}
 			return;
@@ -52,11 +56,10 @@ public record ClipboardEditPacket(int hotbarSlot, DataComponentPatch dataCompone
 				.getItem(hotbarSlot);
 		if (!AllBlocks.CLIPBOARD.isIn(itemStack))
 			return;
-		if (processedData.isEmpty()) {
-			clearComponents(itemStack);
+		if (processedContent == null) {
+			itemStack.remove(AllDataComponents.CLIPBOARD_CONTENT);
 		} else {
-			itemStack.remove(AllDataComponents.CLIPBOARD_PREVIOUSLY_OPENED_PAGE);
-			itemStack.applyComponents(processedData);
+			itemStack.set(AllDataComponents.CLIPBOARD_CONTENT, processedContent);
 		}
 	}
 
@@ -65,11 +68,17 @@ public record ClipboardEditPacket(int hotbarSlot, DataComponentPatch dataCompone
 		return AllPackets.CLIPBOARD_EDIT;
 	}
 
-	private static void clearComponents(ItemStack stack) {
-		stack.remove(AllDataComponents.CLIPBOARD_TYPE);
-		stack.remove(AllDataComponents.CLIPBOARD_PAGES);
-		stack.remove(AllDataComponents.CLIPBOARD_READ_ONLY);
-		stack.remove(AllDataComponents.CLIPBOARD_COPIED_VALUES);
-		stack.remove(AllDataComponents.CLIPBOARD_PREVIOUSLY_OPENED_PAGE);
+	public static ClipboardContent clipboardProcessor(@Nullable ClipboardContent content) {
+		if (content == null)
+			return null;
+
+		for (List<ClipboardEntry> page : content.pages()) {
+			for (ClipboardEntry entry : page) {
+				if (NBTProcessors.textComponentHasClickEvent(entry.text))
+					return null;
+			}
+		}
+
+		return content;
 	}
 }

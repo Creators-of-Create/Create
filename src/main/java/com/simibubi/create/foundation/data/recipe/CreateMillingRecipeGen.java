@@ -256,7 +256,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		.whenModLoaded(Mods.ATM.getId())),
 
 	ATMO_WARM_BRUSH = create(Mods.ATM.recipeId("warm_monkey_brush"), b -> b.duration(50)
-		.require(Mods.ATM, "scalding_monkey_brush")
+		.require(Mods.ATM, "warm_monkey_brush")
 		.output(Items.YELLOW_DYE, 2)
 		.output(.1f, Items.YELLOW_DYE, 2)
 		.output(.1f, Items.ORANGE_DYE)
@@ -267,6 +267,43 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		.output(Items.LIGHT_GRAY_DYE, 2)
 		.output(.05f, Items.WHITE_DYE)
 		.whenModLoaded(Mods.ATM.getId())),
+
+	ATMO_TALL_YUCCA_FLOWER = create(Mods.ATM.recipeId("tall_yucca_flower"), b -> b.duration(50)
+		.require(Mods.ATM, "tall_yucca_flower")
+		.output(Items.LIGHT_GRAY_DYE, 3)
+		.output(0.25f, Items.LIGHT_GRAY_DYE, 2)
+		.output(.05f, Items.WHITE_DYE, 2)
+		.whenModLoaded(Mods.ATM.getId())),
+
+	ATMO_FIRETHORN = create(Mods.ATM.recipeId("firethorn"), b -> b.duration(50)
+		.require(Mods.ATM, "firethorn")
+		.output(Items.RED_DYE, 2)
+		.output(.1f, Items.ORANGE_DYE, 2)
+		.output(.1f, Items.GREEN_DYE)
+		.whenModLoaded(Mods.ATM.getId())),
+
+	ATMO_FORSYTHIA = create(Mods.ATM.recipeId("forsythia"), b -> b.duration(50)
+		.require(Mods.ATM, "forsythia")
+		.output(Items.YELLOW_DYE, 2)
+		.output(.1f, Items.LIME_DYE, 2)
+		.output(.1f, Items.YELLOW_DYE)
+		.whenModLoaded(Mods.ATM.getId())),
+
+	ATMO_CACTUS = create(Mods.ATM.recipeId("barrel_cactus"), b -> b.duration(50)
+		.require(Mods.ATM, "barrel_cactus")
+		.output(Items.ORANGE_DYE, 2)
+		.output(.1f, Items.GREEN_DYE, 3)
+		.whenModLoaded(Mods.ATM.getId())),
+
+	ATMO_HYACINTH = create(Mods.ATM.recipeId("water_hyacinth"), b -> b.duration(50)
+		.require(Mods.ATM, "water_hyacinth")
+		.output(Items.PURPLE_DYE, 3)
+		.output(0.25f, Items.LIME_DYE, 2)
+		.output(.05f, Items.BROWN_DYE, 2)
+		.whenModLoaded(Mods.ATM.getId())),
+
+	ATMO_SAND_1 = moddedSandstone(Mods.ATM, "arid"),
+	ATMO_SAND_2 = moddedSandstone(Mods.ATM, "red_arid"),
 
 	// Autumnity
 
@@ -281,6 +318,9 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	BOP_HYDRANGEA = bopFlower("blue_hydrangea", List.of(1f, .05f, .25f),
 		List.of(Items.LIGHT_BLUE_DYE, Items.GREEN_DYE, Items.LIGHT_BLUE_DYE), List.of(3, 2, 2)),
 
+	BOP_GOLDENROD = bopFlower("goldenrod", List.of(1f, .05f, .25f),
+		List.of(Items.YELLOW_DYE, Items.YELLOW_DYE, Items.GREEN_DYE), List.of(3, 2, 2)),
+
 	BOP_BLOSSOM = bopFlower("burning_blossom", List.of(1f, .1f),
 		List.of(Items.ORANGE_DYE, Items.LIME_DYE), List.of(2, 1)),
 
@@ -289,6 +329,15 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 
 	BOP_LAVENDER = bopFlower("lavender", List.of(1f, .05f),
 		List.of(Items.PURPLE_DYE, Items.GREEN_DYE), List.of(2, 1)),
+
+	BOP_TALL_LAVENDER = bopFlower("tall_lavender", List.of(1f, 0.25f, .05f),
+		List.of(Items.PURPLE_DYE, Items.PURPLE_DYE, Items.GREEN_DYE), List.of(3, 2, 2)),
+
+	BOP_WHITE_LAVENDER = bopFlower("white_lavender", List.of(1f, .05f),
+		List.of(Items.WHITE_DYE, Items.GREEN_DYE), List.of(2, 1)),
+
+	BOP_TALL_WHITE_LAVENDER = bopFlower("tall_white_lavender", List.of(1f, 0.25f, .05f),
+		List.of(Items.WHITE_DYE, Items.LIGHT_BLUE_DYE, Items.GREEN_DYE), List.of(3, 2, 2)),
 
 	BOP_COSMOS = bopFlower("orange_cosmos", List.of(1f, .1f),
 		List.of(Items.ORANGE_DYE, Items.LIME_DYE), List.of(2, 1)),
@@ -307,7 +356,27 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	BOP_WILDFLOWER = bopFlower("wildflower", List.of(1f, .1f),
 		List.of(Items.MAGENTA_DYE, Items.LIME_DYE), List.of(2, 1)),
 
+	BOP_PETALS = bopFlower("white_petals", 1f, Items.WHITE_DYE, 2),
+
+	BOP_IRIS = bopFlower("icy_iris", List.of(1f, .05f, .25f),
+		List.of(Items.LIGHT_BLUE_DYE, Items.LIGHT_GRAY_DYE, Items.LIGHT_BLUE_DYE), List.of(3, 2, 2)),
+
 	BOP_LILY = bopFlower("wilted_lily", 1f, Items.GRAY_DYE, 2),
+
+	BOP_ENDBLOOM = bopFlower("endbloom", 1f, Items.LIGHT_GRAY_DYE, 2),
+
+	BOP_WATERLILY = bopFlower("waterlily", List.of(1f, .05f),
+		List.of(Items.RED_DYE, Items.PINK_DYE), List.of(2, 1)),
+
+	BOP_CACTUS = bopFlower("tiny_cactus", List.of(1f, 0.1f),
+		List.of(Items.GREEN_DYE, Items.GREEN_DYE), List.of(2, 1)),
+
+	BOP_CATTAIL = bopFlower("cattail", List.of(1f, .05f, .25f),
+		List.of(Items.BROWN_DYE, Items.GREEN_DYE, Items.BROWN_DYE), List.of(3, 2, 2)),
+
+	BOP_SAND_1 = moddedSandstone(Mods.BOP, "white"),
+	BOP_SAND_2 = moddedSandstone(Mods.BOP, "orange"),
+	BOP_SAND_3 = moddedSandstone(Mods.BOP, "black"),
 
 	// Botania
 	BTN_PETALS = botaniaPetals("black", "blue", "brown", "cyan", "gray", "green", "light_blue",
@@ -335,177 +404,177 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 
 	// Oh The Biomes You'll Go
 
-	BYG_ALLIUM_BUSH = bygFlower("allium_flower_bush", List.of(1f, .05f, .25f),
+	BWG_ALLIUM_BUSH = bwgFlower("allium_flower_bush", List.of(1f, .05f, .25f),
 		List.of(Items.PURPLE_DYE, Items.GREEN_DYE, Items.MAGENTA_DYE), List.of(3, 2, 2)),
 
-	BYG_BELLFLOWER = bygFlower("alpine_bellflower", List.of(1f, .1f, .1f),
+	BWG_BELLFLOWER = bwgFlower("alpine_bellflower", List.of(1f, .1f, .1f),
 		List.of(Items.PURPLE_DYE, Items.BLUE_DYE, Items.GREEN_DYE), List.of(2, 2, 1)),
 
-	BYG_AMARANTH = bygFlower("amaranth", List.of(1f, .05f, .25f),
+	BWG_AMARANTH = bwgFlower("amaranth", List.of(1f, .05f, .25f),
 		List.of(Items.RED_DYE, Items.GREEN_DYE, Items.RED_DYE), List.of(3, 2, 2)),
 
-	BYG_ANGELICA = bygFlower("angelica", List.of(1f, .1f),
+	BWG_ANGELICA = bwgFlower("angelica", List.of(1f, .1f),
 		List.of(Items.WHITE_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_BEGONIA = bygFlower("begonia", List.of(1f, .1f),
+	BWG_BEGONIA = bwgFlower("begonia", List.of(1f, .1f),
 		List.of(Items.RED_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_BISTORT = bygFlower("bistort", List.of(1f, .1f, .1f),
+	BWG_BISTORT = bwgFlower("bistort", List.of(1f, .1f, .1f),
 		List.of(Items.PINK_DYE, Items.RED_DYE, Items.GREEN_DYE), List.of(2, 2, 1)),
 
-	BYG_BLACK_ROSE = bygFlower("black_rose", List.of(1f, .1f),
+	BWG_BLACK_ROSE = bwgFlower("black_rose", List.of(1f, .1f),
 		List.of(Items.BLACK_DYE, Items.BLACK_DYE), List.of(2, 1)),
 
-	BYG_BLUE_SAGE = bygFlower("blue_sage", List.of(1f, .1f, .1f),
+	BWG_BLUE_SAGE = bwgFlower("blue_sage", List.of(1f, .1f, .1f),
 		List.of(Items.BLUE_DYE, Items.CYAN_DYE, Items.GREEN_DYE), List.of(2, 2, 1)),
 
-	BYG_CALIFORNIA_POPPY = bygFlower("california_poppy", List.of(1f, .05f),
+	BWG_CALIFORNIA_POPPY = bwgFlower("california_poppy", List.of(1f, .05f),
 		List.of(Items.ORANGE_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_CROCUS = bygFlower("crocus", List.of(1f, .1f, .1f),
+	BWG_CROCUS = bwgFlower("crocus", List.of(1f, .1f, .1f),
 		List.of(Items.PURPLE_DYE, Items.BLUE_DYE, Items.GREEN_DYE), List.of(2, 2, 1)),
 
-	BYG_CYAN_AMARANTH = bygFlower("cyan_amaranth", List.of(1f, .05f, .25f),
+	BWG_CYAN_AMARANTH = bwgFlower("cyan_amaranth", List.of(1f, .05f, .25f),
 		List.of(Items.RED_DYE, Items.GREEN_DYE, Items.RED_DYE), List.of(3, 2, 2)),
 
-	BYG_CYAN_ROSE = bygFlower("cyan_rose", List.of(1f, .1f),
+	BWG_CYAN_ROSE = bwgFlower("cyan_rose", List.of(1f, .1f),
 		List.of(Items.CYAN_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_CYAN_TULIP = bygFlower("cyan_tulip", List.of(1f, .1f),
+	BWG_CYAN_TULIP = bwgFlower("cyan_tulip", List.of(1f, .1f),
 		List.of(Items.CYAN_DYE, Items.LIME_DYE), List.of(2, 1)),
 
-	BYG_DAFFODIL = bygFlower("daffodil", List.of(1f, .1f, .1f),
+	BWG_DAFFODIL = bwgFlower("daffodil", List.of(1f, .1f, .1f),
 		List.of(Items.PINK_DYE, Items.GREEN_DYE, Items.MAGENTA_DYE), List.of(2, 1, 1)),
 
-	BYG_DELPHINIUM = bygFlower("delphinium", List.of(1f, .1f),
+	BWG_DELPHINIUM = bwgFlower("delphinium", List.of(1f, .1f),
 		List.of(Items.BLUE_DYE, Items.BLUE_DYE), List.of(3, 1)),
 
-	BYG_FAIRY_SLIPPER = bygFlower("fairy_slipper", List.of(1f, .1f, .1f),
+	BWG_FAIRY_SLIPPER = bwgFlower("fairy_slipper", List.of(1f, .1f, .1f),
 		List.of(Items.MAGENTA_DYE, Items.PINK_DYE, Items.YELLOW_DYE), List.of(2, 2, 1)),
 
-	BYG_FIRECRACKER_BUSH = bygFlower("firecracker_flower_bush", List.of(1f, .05f, .25f),
+	BWG_FIRECRACKER_BUSH = bwgFlower("firecracker_flower_bush", List.of(1f, .05f, .25f),
 		List.of(Items.PINK_DYE, Items.GREEN_DYE, Items.RED_DYE), List.of(3, 2, 2)),
 
-	BYG_FOXGLOVE = bygFlower("foxglove", List.of(1f, .25f, .25f),
+	BWG_FOXGLOVE = bwgFlower("foxglove", List.of(1f, .25f, .25f),
 		List.of(Items.MAGENTA_DYE, Items.PINK_DYE, Items.YELLOW_DYE), List.of(2, 1, 1)),
 
-	BYG_GREEN_TULIP = bygFlower("green_tulip", List.of(1f, .1f),
+	BWG_GREEN_TULIP = bwgFlower("green_tulip", List.of(1f, .1f),
 		List.of(Items.LIME_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_GUZMANIA = bygFlower("guzmania", List.of(1f, .25f, .25f),
+	BWG_GUZMANIA = bwgFlower("guzmania", List.of(1f, .25f, .25f),
 		List.of(Items.MAGENTA_DYE, Items.PINK_DYE, Items.YELLOW_DYE), List.of(2, 1, 1)),
 
-	BYG_HYDRANGEA = bygFlower("hydrangea_bush", List.of(1f, .1f, .1f),
+	BWG_HYDRANGEA = bwgFlower("hydrangea_bush", List.of(1f, .1f, .1f),
 		List.of(Items.PURPLE_DYE, Items.BLUE_DYE, Items.WHITE_DYE), List.of(2, 2, 1)),
 
-	BYG_INCAN_LILY = bygFlower("incan_lily", List.of(1f, .1f, .1f),
+	BWG_INCAN_LILY = bwgFlower("incan_lily", List.of(1f, .1f, .1f),
 		List.of(Items.ORANGE_DYE, Items.GREEN_DYE, Items.RED_DYE), List.of(2, 1, 1)),
 
-	BYG_IRIS = bygFlower("iris", List.of(1f, .05f),
+	BWG_IRIS = bwgFlower("iris", List.of(1f, .05f),
 		List.of(Items.PURPLE_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_ORCHID = bygFlower("orchid", List.of(1f, .05f),
+	BWG_ORCHID = bwgFlower("orchid", List.of(1f, .05f),
 		List.of(Items.PINK_DYE, Items.WHITE_DYE), List.of(2, 1)),
 
-	BYG_KOVAN = bygFlower("kovan_flower", List.of(1f, .2f, .05f),
+	BWG_KOVAN = bwgFlower("kovan_flower", List.of(1f, .2f, .05f),
 		List.of(Items.RED_DYE, Items.LIME_DYE, Items.GREEN_DYE), List.of(2, 1, 1)),
 
-	BYG_LAZARUS_BELLFLOWER = bygFlower("lazarus_bellflower", List.of(1f, .1f),
+	BWG_LAZARUS_BELLFLOWER = bwgFlower("lazarus_bellflower", List.of(1f, .1f),
 		List.of(Items.MAGENTA_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_LOLIPOP = bygFlower("lolipop_flower", List.of(1f, .25f, .05f),
+	BWG_LOLIPOP = bwgFlower("lolipop_flower", List.of(1f, .25f, .05f),
 		List.of(Items.YELLOW_DYE, Items.YELLOW_DYE, Items.GREEN_DYE), List.of(2, 1, 1)),
 
-	BYG_MAGENTA_AMARANTH = bygFlower("magenta_amaranth", List.of(1f, .05f, .25f),
+	BWG_MAGENTA_AMARANTH = bwgFlower("magenta_amaranth", List.of(1f, .05f, .25f),
 		List.of(Items.MAGENTA_DYE, Items.GREEN_DYE, Items.MAGENTA_DYE), List.of(3, 2, 2)),
 
-	BYG_MAGENTA_TULIP = bygFlower("magenta_tulip", List.of(1f, .1f),
+	BWG_MAGENTA_TULIP = bwgFlower("magenta_tulip", List.of(1f, .1f),
 		List.of(Items.MAGENTA_DYE, Items.LIME_DYE), List.of(2, 1)),
 
-	BYG_ORANGE_AMARANTH = bygFlower("orange_amaranth", List.of(1f, .05f, .25f),
+	BWG_ORANGE_AMARANTH = bwgFlower("orange_amaranth", List.of(1f, .05f, .25f),
 		List.of(Items.RED_DYE, Items.GREEN_DYE, Items.RED_DYE), List.of(3, 2, 2)),
 
-	BYG_DAISY = bygFlower("orange_daisy", List.of(1f, .2f, .05f),
+	BWG_DAISY = bwgFlower("orange_daisy", List.of(1f, .2f, .05f),
 		List.of(Items.ORANGE_DYE, Items.YELLOW_DYE, Items.LIME_DYE), List.of(2, 1, 1)),
 
-	BYG_OSIRIA_ROSE = bygFlower("osiria_rose", List.of(1f, .1f),
+	BWG_OSIRIA_ROSE = bwgFlower("osiria_rose", List.of(1f, .1f),
 		List.of(Items.BLACK_DYE, Items.BLACK_DYE), List.of(2, 1)),
 
-	BYG_PEACH_LEATHER = bygFlower("peach_leather_flower", List.of(1f, .25f),
+	BWG_PEACH_LEATHER = bwgFlower("peach_leather_flower", List.of(1f, .25f),
 		List.of(Items.PINK_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_PINK_ALLIUM = bygFlower("pink_allium", List.of(1f, .1f, .1f),
+	BWG_PINK_ALLIUM = bwgFlower("pink_allium", List.of(1f, .1f, .1f),
 		List.of(Items.MAGENTA_DYE, Items.PINK_DYE, Items.PURPLE_DYE), List.of(2, 2, 1)),
 
-	BYG_PINK_ALLIUM_BUSH = bygFlower("pink_allium_flower_bush", List.of(1f, .05f, .25f),
+	BWG_PINK_ALLIUM_BUSH = bwgFlower("pink_allium_flower_bush", List.of(1f, .05f, .25f),
 		List.of(Items.PURPLE_DYE, Items.GREEN_DYE, Items.MAGENTA_DYE), List.of(3, 2, 2)),
 
-	BYG_PINK_ANEMONE = bygFlower("pink_anemone", List.of(1f, .1f),
+	BWG_PINK_ANEMONE = bwgFlower("pink_anemone", List.of(1f, .1f),
 		List.of(Items.PINK_DYE, Items.PURPLE_DYE), List.of(2, 2)),
 
-	BYG_PINK_DAFODIL = bygFlower("pink_daffodil", List.of(1f, .1f, .1f),
+	BWG_PINK_DAFODIL = bwgFlower("pink_daffodil", List.of(1f, .1f, .1f),
 		List.of(Items.PINK_DYE, Items.GREEN_DYE, Items.WHITE_DYE), List.of(2, 1, 1)),
 
-	BYG_PROTEA = bygFlower("protea_flower", List.of(1f, .1f, .05f),
+	BWG_PROTEA = bwgFlower("protea_flower", List.of(1f, .1f, .05f),
 		List.of(Items.MAGENTA_DYE, Items.LIME_DYE, Items.PURPLE_DYE), List.of(2, 1, 1)),
 
-	BYG_PURPLE_AMARANTH = bygFlower("purple_amaranth", List.of(1f, .05f, .25f),
+	BWG_PURPLE_AMARANTH = bwgFlower("purple_amaranth", List.of(1f, .05f, .25f),
 		List.of(Items.PURPLE_DYE, Items.GREEN_DYE, Items.PURPLE_DYE), List.of(3, 2, 2)),
 
-	BYG_PURPLE_SAGE = bygFlower("purple_rose", List.of(1f, .1f),
+	BWG_PURPLE_SAGE = bwgFlower("purple_rose", List.of(1f, .1f),
 		List.of(Items.PURPLE_DYE, Items.MAGENTA_DYE), List.of(2, 1)),
 
-	BYG_PURPLE_TULIP = bygFlower("purple_tulip", List.of(1f, .1f),
+	BWG_PURPLE_TULIP = bwgFlower("purple_tulip", List.of(1f, .1f),
 		List.of(Items.PURPLE_DYE, Items.LIME_DYE), List.of(2, 1)),
 
-	BYG_RICHEA = bygFlower("richea", List.of(1f, .1f, .05f),
+	BWG_RICHEA = bwgFlower("richea", List.of(1f, .1f, .05f),
 		List.of(Items.MAGENTA_DYE, Items.PINK_DYE, Items.YELLOW_DYE), List.of(2, 1, 1)),
 
-	BYG_ROSE = bygFlower("rose", List.of(1f, .1f),
+	BWG_ROSE = bwgFlower("rose", List.of(1f, .1f),
 		List.of(Items.RED_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_SILVER_VASE = bygFlower("silver_vase_flower", List.of(1f, .1f, .05f),
+	BWG_SILVER_VASE = bwgFlower("silver_vase_flower", List.of(1f, .1f, .05f),
 		List.of(Items.PINK_DYE, Items.GREEN_DYE, Items.WHITE_DYE), List.of(2, 1, 1)),
 
-	BYG_SNOWDROPS = bygFlower("snowdrops", List.of(1f, .1f, .1f),
+	BWG_SNOWDROPS = bwgFlower("snowdrops", List.of(1f, .1f, .1f),
 		List.of(Items.WHITE_DYE, Items.LIME_DYE, Items.WHITE_DYE), List.of(2, 1, 1)),
 
-	BYG_TALL_ALLIUM = bygFlower("tall_allium", List.of(1f, .05f, .25f),
+	BWG_TALL_ALLIUM = bwgFlower("tall_allium", List.of(1f, .05f, .25f),
 		List.of(Items.PURPLE_DYE, Items.PURPLE_DYE, Items.MAGENTA_DYE), List.of(3, 2, 2)),
 
-	BYG_TALL_PINK_ALLIUM = bygFlower("tall_pink_allium", List.of(1f, .05f, .25f),
+	BWG_TALL_PINK_ALLIUM = bwgFlower("tall_pink_allium", List.of(1f, .05f, .25f),
 		List.of(Items.PINK_DYE, Items.PINK_DYE, Items.MAGENTA_DYE), List.of(3, 2, 2)),
 
-	BYG_TORCH_GINGER = bygFlower("torch_ginger", List.of(1f, .1f),
+	BWG_TORCH_GINGER = bwgFlower("torch_ginger", List.of(1f, .1f),
 		List.of(Items.RED_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_VIOLET_LEATHER = bygFlower("violet_leather_flower", List.of(1f, .25f),
+	BWG_VIOLET_LEATHER = bwgFlower("violet_leather_flower", List.of(1f, .25f),
 		List.of(Items.BLUE_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_WHITE_ANEMONE = bygFlower("white_anemone", List.of(1f, .1f),
+	BWG_WHITE_ANEMONE = bwgFlower("white_anemone", List.of(1f, .1f),
 		List.of(Items.WHITE_DYE, Items.LIGHT_GRAY_DYE), List.of(2, 2)),
 
-	BYG_PUFFBALL = create(Mods.BYG.recipeId("white_puffball_cap"), b -> b.duration(150)
-		.require(Mods.BYG, "white_puffball_cap")
-		.output(.25f, Mods.BYG, "white_puffball_spores", 1)
-		.whenModLoaded(Mods.BYG.getId())),
+	BWG_PUFFBALL = create(Mods.BWG.recipeId("white_puffball_cap"), b -> b.duration(150)
+		.require(Mods.BWG, "white_puffball_cap")
+		.output(.25f, Mods.BWG, "white_puffball_spores", 1)
+		.whenModLoaded(Mods.BWG.getId())),
 
-	BYG_WHITE_SAGE = bygFlower(Mods.BYG.recipeId("white_sage"), List.of(1f, .1f),
+	BWG_WHITE_SAGE = bwgFlower(Mods.BWG.recipeId("white_sage"), List.of(1f, .1f),
 		List.of(Items.WHITE_DYE, Items.GRAY_DYE), List.of(2, 1)),
 
-	BYG_WINTER_CYCLAMEN = bygFlower(Mods.BYG.recipeId("winter_cyclamen"), List.of(1f, .1f),
+	BWG_WINTER_CYCLAMEN = bwgFlower(Mods.BWG.recipeId("winter_cyclamen"), List.of(1f, .1f),
 		List.of(Items.CYAN_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_WINTER_ROSE = bygFlower("winter_rose", List.of(1f, .1f),
+	BWG_WINTER_ROSE = bwgFlower("winter_rose", List.of(1f, .1f),
 		List.of(Items.WHITE_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_WINTER_SCILLA = bygFlower("winter_scilla", List.of(1f, .1f),
+	BWG_WINTER_SCILLA = bwgFlower("winter_scilla", List.of(1f, .1f),
 		List.of(Items.LIGHT_BLUE_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BYG_YELLOW_DAFFODIL = bygFlower("yellow_daffodil", List.of(1f, .1f, .1f),
+	BWG_YELLOW_DAFFODIL = bwgFlower("yellow_daffodil", List.of(1f, .1f, .1f),
 		List.of(Items.YELLOW_DYE, Items.GREEN_DYE, Items.PINK_DYE), List.of(2, 1, 1)),
 
-	BYG_YELLOW_TULIP = bygFlower("yellow_tulip", List.of(1f, .1f),
+	BWG_YELLOW_TULIP = bwgFlower("yellow_tulip", List.of(1f, .1f),
 		List.of(Items.YELLOW_DYE, Items.LIME_DYE), List.of(2, 1)),
 
 	// Environmental
@@ -763,26 +832,26 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		}
 	}
 
-	GeneratedRecipe bygFlower(String input, List<Float> chances,
+	GeneratedRecipe bwgFlower(String input, List<Float> chances,
 							  List<Item> dyes, List<Integer> amounts) {
 		if (chances.size() == 2) {
-			return create(Mods.BYG.recipeId(input), b -> b.duration(50)
-				.require(Mods.BYG, input)
+			return create(Mods.BWG.recipeId(input), b -> b.duration(50)
+				.require(Mods.BWG, input)
 				.output(chances.get(0), dyes.get(0), amounts.get(0))
 				.output(chances.get(1), dyes.get(1), amounts.get(1))
-				.whenModLoaded(Mods.BYG.getId()));
+				.whenModLoaded(Mods.BWG.getId()));
 		} else if (chances.size() == 3) {
-			return create(Mods.BYG.recipeId(input), b -> b.duration(50)
-				.require(Mods.BYG, input)
+			return create(Mods.BWG.recipeId(input), b -> b.duration(50)
+				.require(Mods.BWG, input)
 				.output(chances.get(0), dyes.get(0), amounts.get(0))
 				.output(chances.get(1), dyes.get(1), amounts.get(1))
 				.output(chances.get(2), dyes.get(2), amounts.get(2))
-				.whenModLoaded(Mods.BYG.getId()));
+				.whenModLoaded(Mods.BWG.getId()));
 		} else if (chances.size() == 1) {
-			return create(Mods.BYG.recipeId(input), b -> b.duration(50)
-				.require(Mods.BYG, input)
+			return create(Mods.BWG.recipeId(input), b -> b.duration(50)
+				.require(Mods.BWG, input)
 				.output(chances.get(0), dyes.get(0), amounts.get(0))
-				.whenModLoaded(Mods.BYG.getId()));
+				.whenModLoaded(Mods.BWG.getId()));
 		} else {
 			return null;
 		}

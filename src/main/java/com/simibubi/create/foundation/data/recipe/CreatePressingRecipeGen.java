@@ -54,9 +54,9 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 		.output(Mods.ENV, "podzol_path")
 		.whenModLoaded(Mods.ENV.getId())),
 
-	// Oh The Biomes You'll Go
+	// Oh The Biomes We've Gone
 
-	BYG = moddedPaths(Mods.BYG, "lush_grass"),
+	BWG = moddedPaths(Mods.BWG, "lush_grass"),
 
 	//Infernal Expansion
 	IX_CRIMSON_PATH = create(Mods.IX.recipeId("crimson_nylium_path"), b -> b.require(Blocks.CRIMSON_NYLIUM)
@@ -116,13 +116,6 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 		super(output, registries, Create.ID);
 	}
 
-	private GeneratedRecipe moddedPaths(Mods mod, String... blocks) {
-		for(String block : blocks) {
-			moddedCompacting(mod, block, block + "_path");
-		}
-		return null;
-	}
-
 	private GeneratedRecipe iePlates() {
 		for (CommonMetal metal : CommonMetal.of(Mods.IE)) {
 			create(Mods.IE.recipeId("plate_" + metal), b -> b.require(metal.ingots)
@@ -130,11 +123,5 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 				.whenModLoaded(Mods.IE.getId()));
 		}
 		return null;
-	}
-
-	GeneratedRecipe moddedCompacting(Mods mod, String input, String output) {
-		return create("compat/" + mod.getId() + "/" + output, b -> b.require(mod, input)
-				.output(mod, output)
-				.whenModLoaded(mod.getId()));
 	}
 }

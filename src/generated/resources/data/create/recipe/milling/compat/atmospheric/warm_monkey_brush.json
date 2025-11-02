@@ -11,7 +11,7 @@
       "type": "neoforge:compound",
       "ingredients": [
         {
-          "item": "atmospheric:scalding_monkey_brush"
+          "item": "atmospheric:warm_monkey_brush"
         }
       ]
     }

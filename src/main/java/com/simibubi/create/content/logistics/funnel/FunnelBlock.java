@@ -6,6 +6,8 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.createmod.catnip.math.VecHelper;
@@ -131,7 +133,8 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 		if (projectedDiff < 0 == (direction.getAxisDirection() == AxisDirection.POSITIVE))
 			return;
 		float yOffset = direction == Direction.UP ? 0.25f : direction == Direction.DOWN ? -0.5f : -0.5f;
-		if (!PackageEntity.centerPackage(entityIn, openPos.add(0, yOffset, 0)))
+		FilteringBehaviour filter = BlockEntityBehaviour.get(worldIn, pos, FilteringBehaviour.TYPE);
+		if (filter.test(stack) && !PackageEntity.centerPackage(entityIn, openPos.add(0, yOffset, 0)))
 			return;
 
 		ItemStack remainder = tryInsert(worldIn, pos, stack, false);

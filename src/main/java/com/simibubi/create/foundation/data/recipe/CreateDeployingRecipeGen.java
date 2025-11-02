@@ -8,7 +8,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.DeployingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
 
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Blocks;
 
@@ -70,7 +70,7 @@ public final class CreateDeployingRecipeGen extends DeployingRecipeGen {
 		List.of(() -> Blocks.CUT_COPPER_SLAB, () -> Blocks.EXPOSED_CUT_COPPER_SLAB, () -> Blocks.WEATHERED_CUT_COPPER_SLAB, () -> Blocks.OXIDIZED_CUT_COPPER_SLAB),
 		List.of(() -> Blocks.WAXED_CUT_COPPER_SLAB, () -> Blocks.WAXED_EXPOSED_CUT_COPPER_SLAB, () -> Blocks.WAXED_WEATHERED_CUT_COPPER_SLAB, () -> Blocks.WAXED_OXIDIZED_CUT_COPPER_SLAB));
 
-	public CreateDeployingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+	public CreateDeployingRecipeGen(PackOutput output, CompletableFuture<Provider> registries) {
 		super(output, registries, Create.ID);
 	}
 }

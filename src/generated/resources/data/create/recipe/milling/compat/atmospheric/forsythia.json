@@ -1,0 +1,35 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "atmospheric:forsythia"
+        }
+      ]
+    }
+  ],
+  "processing_time": 50,
+  "results": [
+    {
+      "count": 2,
+      "id": "minecraft:yellow_dye"
+    },
+    {
+      "chance": 0.1,
+      "count": 2,
+      "id": "minecraft:lime_dye"
+    },
+    {
+      "chance": 0.1,
+      "id": "minecraft:yellow_dye"
+    }
+  ]
+}

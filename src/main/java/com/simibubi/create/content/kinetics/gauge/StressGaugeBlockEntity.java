@@ -57,6 +57,9 @@ public class StressGaugeBlockEntity extends GaugeBlockEntity {
 	public void updateFromNetwork(float maxStress, float currentStress, int networkSize) {
 		super.updateFromNetwork(maxStress, currentStress, networkSize);
 
+		if (computerBehaviour.hasAttachedComputer())
+			computerBehaviour.prepareComputerEvent(makeComputerKineticsChangeEvent());
+
 		if (!StressImpact.isEnabled())
 			dialTarget = 0;
 		else if (isOverStressed())

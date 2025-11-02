@@ -217,8 +217,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 
 		List<FlapDisplayLayout> lines = getLines();
 		for (int i = 0; i < lines.size(); i++)
-			tag.put("Display" + i, lines.get(i)
-				.write());
+			tag.put("Display" + i, lines.get(i).write(registries));
 	}
 
 	@Override

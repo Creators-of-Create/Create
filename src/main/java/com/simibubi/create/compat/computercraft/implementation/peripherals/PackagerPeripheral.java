@@ -9,8 +9,10 @@ import com.simibubi.create.compat.computercraft.implementation.ComputerUtil;
 import com.simibubi.create.compat.computercraft.implementation.luaObjects.PackageLuaObject;
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 
-import dan200.computercraft.api.lua.LuaException;
+import com.simibubi.create.compat.computercraft.events.ComputerEvent;
+import com.simibubi.create.compat.computercraft.events.PackageEvent;
 import dan200.computercraft.api.lua.LuaFunction;
+import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import net.minecraft.world.item.ItemStack;
 
@@ -80,6 +82,13 @@ public class PackagerPeripheral extends SyncedPeripheral<PackagerBlockEntity> {
 		if (box.isEmpty())
 			return null;
 		return new PackageLuaObject(blockEntity, box);
+	}
+
+	@Override
+	public void prepareComputerEvent(@NotNull ComputerEvent event) {
+		if (event instanceof PackageEvent pe) {
+			queueEvent(pe.status, new PackageLuaObject(blockEntity, pe.box));
+		}
 	}
 
 	@NotNull

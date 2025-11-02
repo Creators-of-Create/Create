@@ -24,12 +24,12 @@ import com.simibubi.create.content.trains.entity.Carriage.DimensionalCarriageEnt
 import com.simibubi.create.content.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.station.GlobalStation;
-import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -741,16 +741,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		dimensional.updateRenderedCutoff();
 	}
 
-	// FIXME: entities should not reference their visual in any way
-	@OnlyIn(Dist.CLIENT)
-	private WeakReference<CarriageContraptionVisual> instanceHolder;
-
-	@OnlyIn(Dist.CLIENT)
-	public void bindInstance(CarriageContraptionVisual instance) {
-		this.instanceHolder = new WeakReference<>(instance);
-		updateRenderedPortalCutoff();
-	}
-
 	@OnlyIn(Dist.CLIENT)
 	public void updateRenderedPortalCutoff() {
 		if (carriage == null)
@@ -782,24 +772,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		}
 		if (particleSlice.size() > 0)
 			particleAvgY /= particleSlice.size();
-
-		// update hidden bogeys (if instanced)
-		if (instanceHolder == null)
-			return;
-		CarriageContraptionVisual instance = instanceHolder.get();
-		if (instance == null)
-			return;
-
-		int bogeySpacing = carriage.bogeySpacing;
-
-		carriage.bogeys.forEachWithContext((bogey, first) -> {
-			if (bogey == null)
-				return;
-
-			BlockPos bogeyPos = bogey.isLeading ? BlockPos.ZERO
-				: BlockPos.ZERO.relative(getInitialOrientation().getCounterClockWise(), bogeySpacing);
-			instance.setBogeyVisibility(first, !contraption.isHiddenInPortal(bogeyPos));
-		});
 	}
 
 }

@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
@@ -45,6 +46,23 @@ public class CardboardArmorHandler {
 		if (!entity.level()
 			.isClientSide() && entity instanceof Player p)
 			AllAdvancements.CARDBOARD_ARMOR.awardTo(p);
+	}
+
+	@SubscribeEvent
+	public static void playerChangesEquipment(LivingEquipmentChangeEvent event) {
+		if (event.getEntity() instanceof Player player && player.getPose() == Pose.CROUCHING && (
+			isCardboardArmor(player.getItemBySlot(EquipmentSlot.HEAD))
+				|| isCardboardArmor(player.getItemBySlot(EquipmentSlot.CHEST))
+				|| isCardboardArmor(player.getItemBySlot(EquipmentSlot.LEGS))
+				|| isCardboardArmor(player.getItemBySlot(EquipmentSlot.FEET))
+		)) {
+			//assuming player is putting on last piece or took off first piece of cardboard armor
+			if (!player.level().isClientSide()) {
+				Pose pose = player.getPose();
+				player.setPose(pose == Pose.CROUCHING ? Pose.STANDING : Pose.CROUCHING);
+				player.setPose(pose);
+			}
+		}
 	}
 
 	@SubscribeEvent

@@ -30,6 +30,7 @@ import net.minecraft.world.level.material.Fluid;
 
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.items.IItemHandler;
 
 public class RecipeTrie<R extends Recipe<?>> {
@@ -200,19 +201,20 @@ public class RecipeTrie<R extends Recipe<?>> {
 				ingredients.add(new AbstractIngredient(variants));
 			}
 
-			if (recipe instanceof BasinRecipe basinRecipe) for (var ingredient : basinRecipe.getFluidIngredients()) {
-				if (ingredient.getRequiredAmount() == 0) {
-					ingredients.add(AbstractIngredient.Universal.INSTANCE);
-					continue;
-				}
+			if (recipe instanceof BasinRecipe basinRecipe)
+				for (SizedFluidIngredient ingredient : basinRecipe.getFluidIngredients()) {
+					if (ingredient.amount() == 0) {
+						ingredients.add(AbstractIngredient.Universal.INSTANCE);
+						continue;
+					}
 
-				Set<AbstractVariant> variants = new HashSet<>();
-				for (FluidStack stack : ingredient.getMatchingFluidStacks()) {
-					variants.add(getOrAssignVariant(stack.getFluid()));
-				}
+					Set<AbstractVariant> variants = new HashSet<>();
+					for (FluidStack stack : ingredient.getFluids()) {
+						variants.add(getOrAssignVariant(stack.getFluid()));
+					}
 
-				ingredients.add(new AbstractIngredient(variants));
-			}
+					ingredients.add(new AbstractIngredient(variants));
+				}
 
 			return new AbstractRecipe<>(recipe, ingredients);
 		}

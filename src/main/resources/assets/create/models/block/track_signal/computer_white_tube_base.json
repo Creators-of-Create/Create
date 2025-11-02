@@ -1,0 +1,24 @@
+{
+  "parent": "block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "1": "create:block/signal_glow_3",
+    "particle": "create:block/signal_glow_3"
+  },
+  "elements": [
+    {
+      "name": "tube3",
+      "from": [-3, -4.5, -3],
+      "to": [3, 4.5, 3],
+      "rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 8]},
+      "faces": {
+        "north": {"uv": [3, 7, 9, 16], "texture": "#1"},
+        "east": {"uv": [3, 7, 9, 16], "texture": "#1"},
+        "south": {"uv": [3, 7, 9, 16], "texture": "#1"},
+        "west": {"uv": [3, 7, 9, 16], "texture": "#1"},
+        "up": {"uv": [3, 0, 9, 6], "rotation": 90, "texture": "#1"},
+        "down": {"uv": [3, 0, 9, 6], "rotation": 90, "texture": "#1"}
+      }
+    }
+  ]
+}

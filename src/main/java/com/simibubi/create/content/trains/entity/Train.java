@@ -15,10 +15,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import org.jetbrains.annotations.Nullable;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
@@ -49,12 +48,12 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.codecs.stream.CatnipLargerStreamCodecs;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.data.Pair;
 import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -628,7 +627,7 @@ public class Train {
 		TravellingPoint trailingPoint = carriage.getTrailingPoint();
 		TravellingPoint leadingPoint = carriage.getLeadingPoint();
 
-		if (leadingPoint.node1 == null || trailingPoint.node1 == null)
+		if (leadingPoint.node1 == null || trailingPoint.node1 == null || leadingPoint.edge == null || trailingPoint.edge == null)
 			return;
 		ResourceKey<Level> dimension = leadingPoint.node1.getLocation().dimension;
 		if (!dimension.equals(trailingPoint.node1.getLocation().dimension))

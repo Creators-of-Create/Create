@@ -90,7 +90,8 @@ public abstract class GhostItemMenu<T> extends MenuBase<T> implements IClearable
 	@Override
 	public ItemStack quickMoveStack(Player playerIn, int index) {
 		if (index < 36) {
-			ItemStack stackToInsert = playerInventory.getItem(index);
+			Slot slot = this.slots.get(index);
+			ItemStack stackToInsert = slot.getItem();
 			for (int i = 0; i < ghostInventory.getSlots(); i++) {
 				ItemStack stack = ghostInventory.getStackInSlot(i);
 				if (!allowRepeats() && ItemStack.isSameItemSameComponents(stack, stackToInsert))

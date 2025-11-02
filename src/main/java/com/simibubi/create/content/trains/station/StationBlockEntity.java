@@ -12,6 +12,8 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import com.simibubi.create.compat.Mods;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
@@ -20,7 +22,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.contraption.transformable.TransformableBlockEntity;
-import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.computercraft.events.StationTrainPresenceEvent;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.AssemblyException;
@@ -49,7 +51,6 @@ import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.trains.schedule.Schedule;
 import com.simibubi.create.content.trains.schedule.ScheduleItem;
-import com.simibubi.create.content.trains.station.GlobalStation.GlobalPackagePort;
 import com.simibubi.create.content.trains.track.ITrackBlock;
 import com.simibubi.create.content.trains.track.TrackTargetingBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -258,13 +259,13 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 				if (target != currentTarget) {
 					flag.chase(target, 0.1f, Chaser.LINEAR);
 					if (target == 1)
-						AllSoundEvents.CONTRAPTION_ASSEMBLE.playAt(level, worldPosition, 1, 2, true);
+						AllSoundEvents.CONTRAPTION_DISASSEMBLE.playAt(level, worldPosition, 1, 2, true);
 				}
 			}
 			boolean settled = flag.getValue() > .15f;
 			flag.tickChaser();
 			if (currentTarget == 0 && settled != flag.getValue() > .15f)
-				AllSoundEvents.CONTRAPTION_DISASSEMBLE.playAt(level, worldPosition, 0.75f, 1.5f, true);
+				AllSoundEvents.CONTRAPTION_ASSEMBLE.playAt(level, worldPosition, 0.75f, 1.5f, true);
 			return;
 		}
 
@@ -283,6 +284,21 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 		if (trainPresent && imminentTrain.runtime.displayLinkUpdateRequested) {
 			DisplayLinkBlock.notifyGatherers(level, worldPosition);
 			imminentTrain.runtime.displayLinkUpdateRequested = false;
+		}
+
+		if (!level.isClientSide && computerBehaviour.hasAttachedComputer()) {
+			if (this.imminentTrain == null && imminentTrain != null)
+				computerBehaviour.prepareComputerEvent(
+						new StationTrainPresenceEvent(StationTrainPresenceEvent.Type.IMMINENT, imminentTrain));
+			if (newlyArrived) {
+				if (trainPresent)
+					computerBehaviour.prepareComputerEvent(
+							new StationTrainPresenceEvent(StationTrainPresenceEvent.Type.ARRIVAL, imminentTrain));
+				else
+					computerBehaviour.prepareComputerEvent(
+							new StationTrainPresenceEvent(StationTrainPresenceEvent.Type.DEPARTURE,
+									Create.RAILWAYS.trains.get(this.imminentTrain)));
+			}
 		}
 
 		if (newlyArrived)
@@ -993,22 +1009,15 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 		if (ppbe instanceof PostboxBlockEntity pbe)
 			pbe.trackedGlobalStation = new WeakReference<>(station);
 
-		if (station.connectedPorts.containsKey(ppbe.getBlockPos()))
-			restoreOfflineBuffer(ppbe, station.connectedPorts.get(ppbe.getBlockPos()));
+		GlobalPackagePort globalPackagePort = station.connectedPorts.get(ppbe.getBlockPos());
 
-		GlobalPackagePort globalPackagePort = new GlobalPackagePort();
-		globalPackagePort.address = ppbe.addressFilter;
-		station.connectedPorts.put(ppbe.getBlockPos(), globalPackagePort);
-	}
-
-	private void restoreOfflineBuffer(PackagePortBlockEntity ppbe, GlobalPackagePort globalPackagePort) {
-		if (!globalPackagePort.primed)
-			return;
-		for (int i = 0; i < globalPackagePort.offlineBuffer.getSlots(); i++) {
-			ppbe.inventory.setStackInSlot(i, globalPackagePort.offlineBuffer.getStackInSlot(i));
-			globalPackagePort.offlineBuffer.setStackInSlot(i, ItemStack.EMPTY);
+		if (globalPackagePort == null) {
+			globalPackagePort = new GlobalPackagePort();
+			globalPackagePort.address = ppbe.addressFilter;
+			station.connectedPorts.put(ppbe.getBlockPos(), globalPackagePort);
+		} else {
+			globalPackagePort.restoreOfflineBuffer(ppbe.inventory);
 		}
-		globalPackagePort.primed = false;
 	}
 
 	public void removePackagePort(PackagePortBlockEntity ppbe) {

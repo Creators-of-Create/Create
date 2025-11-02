@@ -11,9 +11,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import org.jetbrains.annotations.Nullable;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 
 import com.google.common.collect.HashMultimap;
@@ -49,6 +48,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
 import net.createmod.catnip.codecs.CatnipCodecUtils;
@@ -75,6 +75,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackLinkedSet;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -385,6 +386,15 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 			notifyRedstoneOutputs();
 	}
 
+	public static class ItemStackConnections extends ArrayList<FactoryPanelConnection> {
+		public ItemStack item;
+		public int totalAmount;
+
+		public ItemStackConnections(ItemStack item) {
+			this.item = item;
+		}
+	}
+
 	private void tickRequests() {
 		FactoryPanelBlockEntity panelBE = panelBE();
 		if (targetedBy.isEmpty() && !panelBE.restocker)
@@ -411,8 +421,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 
 		boolean failed = false;
 
-		Multimap<UUID, BigItemStack> toRequest = HashMultimap.create();
-		List<BigItemStack> toRequestAsList = new ArrayList<>();
+		Map<UUID, Map<ItemStack, ItemStackConnections>> consolidated = new HashMap<>();
 
 		for (FactoryPanelConnection connection : targetedBy.values()) {
 			FactoryPanelBehaviour source = at(getWorld(), connection);
@@ -420,18 +429,34 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 				return;
 
 			ItemStack item = source.getFilter();
-			int amount = connection.amount;
-			InventorySummary summary = LogisticsManager.getSummaryOfNetwork(source.network, true);
-			if (amount == 0 || item.isEmpty() || summary.getCountOf(item) < amount) {
-				sendEffect(connection.from, false);
-				failed = true;
-				continue;
-			}
 
-			BigItemStack stack = new BigItemStack(item, amount);
-			toRequest.put(source.network, stack);
-			toRequestAsList.add(stack);
-			sendEffect(connection.from, true);
+
+			Map<ItemStack, ItemStackConnections> networkItemCounts = consolidated.computeIfAbsent(source.network, $ -> new Object2ObjectOpenCustomHashMap<>(ItemStackLinkedSet.TYPE_AND_TAG));
+			networkItemCounts.computeIfAbsent(item, $ -> new ItemStackConnections(item));
+			ItemStackConnections existingConnections = networkItemCounts.get(item);
+			existingConnections.add(connection);
+			existingConnections.totalAmount += connection.amount;
+		}
+
+		Multimap<UUID, BigItemStack> toRequest = HashMultimap.create();
+
+		for (Entry<UUID, Map<ItemStack, ItemStackConnections>> entry : consolidated.entrySet()) {
+			UUID network = entry.getKey();
+			InventorySummary summary = LogisticsManager.getSummaryOfNetwork(network, true);
+
+			for (ItemStackConnections connections : entry.getValue().values()) {
+				if (connections.totalAmount == 0 || connections.item.isEmpty() || summary.getCountOf(connections.item) < connections.totalAmount) {
+					for (FactoryPanelConnection connection : connections)
+						sendEffect(connection.from, false);
+					failed = true;
+					continue;
+				}
+
+				BigItemStack stack = new BigItemStack(connections.item, connections.totalAmount);
+				toRequest.put(network, stack);
+				for (FactoryPanelConnection connection : connections)
+					sendEffect(connection.from, true);
+			}
 		}
 
 		if (failed)

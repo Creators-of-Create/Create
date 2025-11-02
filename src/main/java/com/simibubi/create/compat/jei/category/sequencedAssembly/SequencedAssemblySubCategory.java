@@ -1,5 +1,7 @@
 package com.simibubi.create.compat.jei.category.sequencedAssembly;
 
+import java.util.Arrays;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.jei.category.animations.AnimatedDeployer;
@@ -8,16 +10,16 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSpout;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedRecipe;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
-import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public abstract class SequencedAssemblySubCategory {
 
@@ -68,7 +70,7 @@ public abstract class SequencedAssemblySubCategory {
 
 		@Override
 		public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int x) {
-			FluidIngredient fluidIngredient = recipe.getRecipe()
+			SizedFluidIngredient fluidIngredient = recipe.getRecipe()
 					.getFluidIngredients()
 					.get(0);
 
@@ -82,10 +84,10 @@ public abstract class SequencedAssemblySubCategory {
 			ms.pushPose();
 			ms.translate(-7, 50, 0);
 			ms.scale(.75f, .75f, .75f);
-			spout.withFluids(recipe.getRecipe()
-				.getFluidIngredients()
-				.get(0)
-				.getMatchingFluidStacks())
+			spout.withFluids(Arrays.asList(recipe.getRecipe()
+					.getFluidIngredients()
+					.get(0)
+					.getFluids()))
 				.draw(graphics, getWidth() / 2, 0);
 			ms.popPose();
 		}

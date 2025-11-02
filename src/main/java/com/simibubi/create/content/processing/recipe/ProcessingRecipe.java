@@ -10,7 +10,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.common.base.Joiner;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -27,6 +26,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -35,7 +35,7 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 	protected P params;
 	protected NonNullList<Ingredient> ingredients;
 	protected NonNullList<ProcessingOutput> results;
-	protected NonNullList<FluidIngredient> fluidIngredients;
+	protected NonNullList<SizedFluidIngredient> fluidIngredients;
 	protected NonNullList<FluidStack> fluidResults;
 	protected int processingDuration;
 	protected HeatCondition requiredHeat;
@@ -123,7 +123,7 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 		return ingredients;
 	}
 
-	public NonNullList<FluidIngredient> getFluidIngredients() {
+	public NonNullList<SizedFluidIngredient> getFluidIngredients() {
 		return fluidIngredients;
 	}
 

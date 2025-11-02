@@ -6,7 +6,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.PolishingRecipeGen;
 
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
 
 /**
@@ -22,7 +22,7 @@ public final class CreatePolishingRecipeGen extends PolishingRecipeGen {
 
 	;
 
-	public CreatePolishingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+	public CreatePolishingRecipeGen(PackOutput output, CompletableFuture<Provider> registries) {
 		super(output, registries, Create.ID);
 	}
 }

@@ -13,12 +13,12 @@ import com.simibubi.create.foundation.model.BakedModelHelper;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.StitchedSprite;
 import net.createmod.catnip.render.SuperBufferFactory;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.render.SuperByteBufferCache;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
@@ -35,6 +35,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+
 import net.neoforged.neoforge.client.model.data.ModelData;
 
 public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends KineticBlockEntityRenderer<T> {
@@ -110,7 +111,7 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 		String path = id.getPath();
 
 		if (path.endsWith("_planks")) // Covers most wood types
-			return path.substring(0, path.length() - 7);
+			return (path.startsWith("archwood") ? "blue_" : "") + path.substring(0, path.length() - 7);
 
 		if (path.contains("wood/planks/")) // TerraFirmaCraft
 			return path.substring(12);

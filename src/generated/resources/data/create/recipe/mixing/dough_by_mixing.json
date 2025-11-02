@@ -5,7 +5,7 @@
       "tag": "c:flours/wheat"
     },
     {
-      "type": "fluid_stack",
+      "type": "neoforge:single",
       "amount": 1000,
       "fluid": "minecraft:water"
     }

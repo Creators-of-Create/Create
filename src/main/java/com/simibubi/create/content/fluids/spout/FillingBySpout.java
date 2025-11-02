@@ -8,7 +8,6 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -17,6 +16,7 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public class FillingBySpout {
 
@@ -40,18 +40,18 @@ public class FillingBySpout {
 		Optional<RecipeHolder<FillingRecipe>> assemblyRecipe = SequencedAssemblyRecipe.getRecipe(world, input,
 			AllRecipeTypes.FILLING.getType(), FillingRecipe.class, matchItemAndFluid(world, availableFluid, input));
 		if (assemblyRecipe.isPresent()) {
-			FluidIngredient requiredFluid = assemblyRecipe.get().value()
+			SizedFluidIngredient requiredFluid = assemblyRecipe.get().value()
 				.getRequiredFluid();
 			if (requiredFluid.test(availableFluid))
-				return requiredFluid.getRequiredAmount();
+				return requiredFluid.amount();
 		}
 
 		for (RecipeHolder<Recipe<SingleRecipeInput>> recipe : world.getRecipeManager()
 			.getRecipesFor(AllRecipeTypes.FILLING.getType(), input, world)) {
 			FillingRecipe fillingRecipe = (FillingRecipe) recipe.value();
-			FluidIngredient requiredFluid = fillingRecipe.getRequiredFluid();
+			SizedFluidIngredient requiredFluid = fillingRecipe.getRequiredFluid();
 			if (requiredFluid.test(availableFluid))
-				return requiredFluid.getRequiredAmount();
+				return requiredFluid.amount();
 		}
 		return GenericItemFilling.getRequiredAmountForItem(world, stack, availableFluid);
 	}
@@ -71,7 +71,7 @@ public class FillingBySpout {
 					for (RecipeHolder<Recipe<SingleRecipeInput>> recipe : level.getRecipeManager()
 						.getRecipesFor(AllRecipeTypes.FILLING.getType(), input, level)) {
 						FillingRecipe fr = (FillingRecipe) recipe.value();
-						FluidIngredient requiredFluid = fr.getRequiredFluid();
+						SizedFluidIngredient requiredFluid = fr.getRequiredFluid();
 						if (requiredFluid.test(toFill))
 							return new RecipeHolder<>(recipe.id(), fr);
 					}

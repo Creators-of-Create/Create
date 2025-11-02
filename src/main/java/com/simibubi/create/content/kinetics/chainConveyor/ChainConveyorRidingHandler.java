@@ -4,9 +4,9 @@ import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity.ConnectionStats;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
-import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
@@ -46,7 +46,7 @@ public class ChainConveyorRidingHandler {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.isPaused())
 			return;
-		if (!AllItemTags.CHAIN_RIDEABLE.matches(mc.player.getMainHandItem())) {
+		if (!mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches)) {
 			stopRiding();
 			return;
 		}
@@ -83,7 +83,7 @@ public class ChainConveyorRidingHandler {
 			targetPosition = stats.start()
 				.add((stats.end()
 					.subtract(stats.start())).normalize()
-						.scale(Math.min(stats.chainLength(), chainPosition)));
+					.scale(Math.min(stats.chainLength(), chainPosition)));
 		} else {
 			targetPosition = Vec3.atBottomCenterOf(ridingChainConveyor)
 				.add(VecHelper.rotate(new Vec3(0, 0.25, 1), chainPosition, Axis.Y));

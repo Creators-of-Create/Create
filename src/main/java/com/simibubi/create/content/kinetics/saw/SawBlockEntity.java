@@ -369,6 +369,8 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity {
 			for (ItemStack stack : results) {
 				ItemHelper.addToList(stack, list);
 			}
+			if (input.hasCraftingRemainingItem())
+				ItemHelper.addToList(input.getCraftingRemainingItem(), list);
 		}
 
 		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)

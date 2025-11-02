@@ -5,13 +5,11 @@ import java.util.List;
 
 import com.google.common.base.Joiner;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.DatagenMod;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe.Factory;
 import com.simibubi.create.foundation.data.SimpleDatagenIngredient;
-import com.simibubi.create.foundation.data.recipe.Mods;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
-import com.tterrag.registrate.util.DataIngredient;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -21,6 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -28,6 +27,8 @@ import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.common.conditions.NotCondition;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, R extends ProcessingRecipe<?, P>, S extends ProcessingRecipeBuilder<P, R, S>> {
 	protected ResourceLocation recipeId;
@@ -68,11 +69,11 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 		return self();
 	}
 
-	public S withFluidIngredients(FluidIngredient... ingredients) {
-		return withFluidIngredients(NonNullList.of(FluidIngredient.EMPTY, ingredients));
+	public S withFluidIngredients(SizedFluidIngredient... ingredients) {
+		return withFluidIngredients(NonNullList.of(new SizedFluidIngredient(FluidIngredient.empty(), 1000), ingredients));
 	}
 
-	public S withFluidIngredients(NonNullList<FluidIngredient> ingredients) {
+	public S withFluidIngredients(NonNullList<SizedFluidIngredient> ingredients) {
 		params.fluidIngredients = ingredients;
 		return self();
 	}
@@ -132,25 +133,26 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 		return self();
 	}
 
+	// TODO
 	public S require(ICustomIngredient ingredient) {
 		params.ingredients.add(ingredient.toVanilla());
 		return self();
 	}
 
-	public S require(Mods mod, String id) {
+	public S require(DatagenMod mod, String id) {
 		params.ingredients.add(new SimpleDatagenIngredient(mod, id).toVanilla());
 		return self();
 	}
 
-	public S require(Fluid fluid, int amount) {
-		return require(FluidIngredient.fromFluid(fluid, amount));
+	public S require(FlowingFluid fluid, int amount) {
+		return require(SizedFluidIngredient.of(fluid.getSource(), amount));
 	}
 
 	public S require(TagKey<Fluid> fluidTag, int amount) {
-		return require(FluidIngredient.fromTag(fluidTag, amount));
+		return require(SizedFluidIngredient.of(fluidTag, amount));
 	}
 
-	public S require(FluidIngredient ingredient) {
+	public S require(SizedFluidIngredient ingredient) {
 		params.fluidIngredients.add(ingredient);
 		return self();
 	}
@@ -179,7 +181,7 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 		return output(new ProcessingOutput(output, chance));
 	}
 
-	public S output(float chance, Mods mod, String id, int amount) {
+	public S output(float chance, DatagenMod mod, String id, int amount) {
 		return output(new ProcessingOutput(mod.asResource(id), amount, chance));
 	}
 
@@ -187,7 +189,7 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 		return output(1, id, 1);
 	}
 
-	public S output(Mods mod, String id) {
+	public S output(DatagenMod mod, String id) {
 		return output(1, mod.asResource(id), 1);
 	}
 

@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -49,21 +50,20 @@ public class AddressEditBoxHelper {
 
 		if (player == null)
 			return destinationSuggestions;
-		
+
 		if (localAddress != null) {
 			options.add(IntAttached.with(-1, localAddress));
 			alreadyAdded.add(localAddress);
 		}
 
 		for (int i = 0; i < Inventory.INVENTORY_SIZE; i++)
-			appendAddresses(options, alreadyAdded, player.getInventory()
-				.getItem(i));
+			appendAddresses(options, alreadyAdded, player.getInventory().getItem(i));
 
 		for (WeakReference<ClipboardBlockEntity> wr : NEARBY_CLIPBOARDS.asMap()
 			.values()) {
 			ClipboardBlockEntity cbe = wr.get();
 			if (cbe != null)
-				appendAddresses(options, alreadyAdded, cbe.dataContainer);
+				appendAddresses(options, alreadyAdded, cbe.components());
 		}
 
 		return destinationSuggestions;
@@ -73,12 +73,16 @@ public class AddressEditBoxHelper {
 		if (item == null || !AllBlocks.CLIPBOARD.isIn(item))
 			return;
 
-		List<List<ClipboardEntry>> pages = ClipboardEntry.readAll(item);
+		appendAddresses(options, alreadyAdded, item.getComponents());
+	}
+
+	private static void appendAddresses(List<IntAttached<String>> options, Set<String> alreadyAdded, DataComponentMap components) {
+		List<List<ClipboardEntry>> pages = ClipboardEntry.readAll(components);
 		pages.forEach(page -> page.forEach(entry -> {
 			String string = entry.text.getString();
 			if (entry.checked)
 				return;
-			if (!string.startsWith("#") || string.length() <= 1)
+			if (!string.startsWith("#") || string.length() == 1)
 				return;
 			String address = string.substring(1);
 			if (address.isBlank())

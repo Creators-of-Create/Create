@@ -3,6 +3,9 @@ package com.simibubi.create.compat.computercraft.implementation.peripherals;
 import java.util.Map;
 import java.util.Optional;
 
+import com.simibubi.create.compat.computercraft.events.ComputerEvent;
+import com.simibubi.create.compat.computercraft.events.RepackageEvent;
+import com.simibubi.create.compat.computercraft.events.PackageEvent;
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.compat.computercraft.implementation.ComputerUtil;
@@ -81,6 +84,15 @@ public class RepackagerPeripheral extends SyncedPeripheral<RepackagerBlockEntity
 			return null;
 
 		return new PackageLuaObject(blockEntity, box);
+	}
+
+	@Override
+	public void prepareComputerEvent(@NotNull ComputerEvent event) {
+		if (event instanceof RepackageEvent pe) {
+			queueEvent("package_repackaged", new PackageLuaObject(blockEntity, pe.box), pe.count);
+		} else if (event instanceof PackageEvent pe) {
+			queueEvent(pe.status, new PackageLuaObject(blockEntity, pe.box));
+		}
 	}
 
 	@NotNull

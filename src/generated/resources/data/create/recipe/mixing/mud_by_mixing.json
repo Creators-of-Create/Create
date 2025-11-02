@@ -6,7 +6,7 @@
       "tag": "minecraft:convertable_to_mud"
     },
     {
-      "type": "fluid_stack",
+      "type": "neoforge:single",
       "amount": 250,
       "fluid": "minecraft:water"
     }

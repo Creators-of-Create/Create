@@ -1,22 +1,16 @@
 package com.simibubi.create.content.logistics.filter;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllDataComponents;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.logistics.box.PackageItem;
-import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.recipe.ItemCopyingRecipe.SupportsItemCopying;
-import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.network.chat.CommonComponents;
@@ -37,31 +31,22 @@ import net.minecraft.world.level.Level;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class FilterItem extends Item implements MenuProvider, SupportsItemCopying {
-
-	private FilterType type;
-
-	private enum FilterType {
-		REGULAR, ATTRIBUTE, PACKAGE;
+public abstract class FilterItem extends Item implements MenuProvider, SupportsItemCopying {
+	public static ListFilterItem regular(Properties properties) {
+		return new ListFilterItem(properties);
 	}
 
-	public static FilterItem regular(Properties properties) {
-		return new FilterItem(FilterType.REGULAR, properties);
+	public static AttributeFilterItem attribute(Properties properties) {
+		return new AttributeFilterItem(properties);
 	}
 
-	public static FilterItem attribute(Properties properties) {
-		return new FilterItem(FilterType.ATTRIBUTE, properties);
+	public static PackageFilterItem address(Properties properties) {
+		return new PackageFilterItem(properties);
 	}
 
-	public static FilterItem address(Properties properties) {
-		return new FilterItem(FilterType.PACKAGE, properties);
-	}
-
-	private FilterItem(FilterType type, Properties properties) {
+	protected FilterItem(Properties properties) {
 		super(properties);
-		this.type = type;
 	}
 
 	@NotNull
@@ -84,80 +69,7 @@ public class FilterItem extends Item implements MenuProvider, SupportsItemCopyin
 		tooltip.addAll(makeSummary);
 	}
 
-	private List<Component> makeSummary(ItemStack filter) {
-		List<Component> list = new ArrayList<>();
-		if (filter.isComponentsPatchEmpty())
-			return list;
-
-		if (type == FilterType.REGULAR) {
-			ItemStackHandler filterItems = getFilterItems(filter);
-			boolean blacklist = filter.getOrDefault(AllDataComponents.FILTER_ITEMS_BLACKLIST, false);
-
-			list.add((blacklist ? CreateLang.translateDirect("gui.filter.deny_list")
-				: CreateLang.translateDirect("gui.filter.allow_list")).withStyle(ChatFormatting.GOLD));
-			int count = 0;
-			for (int i = 0; i < filterItems.getSlots(); i++) {
-				if (count > 3) {
-					list.add(Component.literal("- ...")
-						.withStyle(ChatFormatting.DARK_GRAY));
-					break;
-				}
-
-				ItemStack filterStack = filterItems.getStackInSlot(i);
-				if (filterStack.isEmpty())
-					continue;
-				list.add(Component.literal("- ")
-					.append(filterStack.getHoverName())
-					.withStyle(ChatFormatting.GRAY));
-				count++;
-			}
-
-			if (count == 0)
-				return Collections.emptyList();
-		}
-
-		if (type == FilterType.ATTRIBUTE) {
-			AttributeFilterWhitelistMode whitelistMode = filter.get(AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE);
-			list.add((whitelistMode == AttributeFilterWhitelistMode.WHITELIST_CONJ
-				? CreateLang.translateDirect("gui.attribute_filter.allow_list_conjunctive")
-				: whitelistMode == AttributeFilterWhitelistMode.WHITELIST_DISJ
-				? CreateLang.translateDirect("gui.attribute_filter.allow_list_disjunctive")
-				: CreateLang.translateDirect("gui.attribute_filter.deny_list")).withStyle(ChatFormatting.GOLD));
-
-			int count = 0;
-			List<ItemAttribute.ItemAttributeEntry> attributes = filter.getOrDefault(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, new ArrayList<>());
-			//noinspection DataFlowIssue
-			for (ItemAttribute.ItemAttributeEntry attributeEntry : attributes) {
-				ItemAttribute attribute = attributeEntry.attribute();
-				if (attribute == null)
-					continue;
-				boolean inverted = attributeEntry.inverted();
-				if (count > 3) {
-					list.add(Component.literal("- ...")
-						.withStyle(ChatFormatting.DARK_GRAY));
-					break;
-				}
-				list.add(Component.literal("- ")
-					.append(attribute.format(inverted)));
-				count++;
-			}
-
-			if (count == 0)
-				return Collections.emptyList();
-		}
-
-		if (type == FilterType.PACKAGE) {
-			String address = PackageItem.getAddress(filter);
-			if (!address.isBlank())
-				list.add(CreateLang.text("-> ")
-					.style(ChatFormatting.GRAY)
-					.add(CreateLang.text(address)
-						.style(ChatFormatting.GOLD))
-					.component());
-		}
-
-		return list;
-	}
+	public abstract List<Component> makeSummary(ItemStack filter);
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
@@ -174,33 +86,11 @@ public class FilterItem extends Item implements MenuProvider, SupportsItemCopyin
 	}
 
 	@Override
-	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-		ItemStack heldItem = player.getMainHandItem();
-		if (type == FilterType.REGULAR)
-			return FilterMenu.create(id, inv, heldItem);
-		if (type == FilterType.ATTRIBUTE)
-			return AttributeFilterMenu.create(id, inv, heldItem);
-		if (type == FilterType.PACKAGE)
-			return PackageFilterMenu.create(id, inv, heldItem);
-		return null;
-	}
+	public abstract AbstractContainerMenu createMenu(int id, Inventory inv, Player player);
 
 	@Override
 	public Component getDisplayName() {
 		return getDescription();
-	}
-
-	public static ItemStackHandler getFilterItems(ItemStack stack) {
-		ItemStackHandler newInv = new ItemStackHandler(18);
-		if (AllItems.FILTER.get() != stack.getItem())
-			throw new IllegalArgumentException("Cannot get filter items from non-filter: " + stack);
-		if (!stack.has(AllDataComponents.FILTER_ITEMS))
-			return newInv;
-
-		//noinspection DataFlowIssue - It's fine:tm: we check if it has the component before doing this
-		ItemHelper.fillItemStackHandler(stack.get(AllDataComponents.FILTER_ITEMS), newInv);
-
-		return newInv;
 	}
 
 	public static boolean testDirect(ItemStack filter, ItemStack stack, boolean matchNBT) {
@@ -233,13 +123,9 @@ public class FilterItem extends Item implements MenuProvider, SupportsItemCopyin
 		return true;
 	}
 
-	@Override
-	public DataComponentType<?> getComponentType() {
-		return switch (type) {
-		case ATTRIBUTE -> AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES;
-		case PACKAGE -> AllDataComponents.PACKAGE_ADDRESS;
-		case REGULAR -> AllDataComponents.FILTER_ITEMS;
-		};
-	}
+	public abstract DataComponentType<?> getComponentType();
 
+	public abstract FilterItemStack makeStackWrapper(ItemStack filter);
+
+	public abstract ItemStack[] getFilterItems(ItemStack stack);
 }

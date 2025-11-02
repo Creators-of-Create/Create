@@ -27,7 +27,8 @@ import net.neoforged.neoforge.fluids.FluidType;
 
 /**
  * The class that handles gathering Create's generated recipes for most types.
- * Data here is only generated when running server dategen
+ * Data here is only generated when running server datagen
+ *
  * @see com.simibubi.create.infrastructure.data.CreateDatagen
  */
 public final class CreateRecipeProvider extends RecipeProvider {

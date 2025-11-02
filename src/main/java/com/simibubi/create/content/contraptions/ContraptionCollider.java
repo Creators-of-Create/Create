@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -18,6 +16,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity.ContraptionRotationState;
 import com.simibubi.create.content.contraptions.ContraptionColliderLockPacket.ContraptionColliderLockPacketRequest;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterMovementBehaviour;
@@ -32,9 +31,9 @@ import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -295,7 +294,7 @@ public class ContraptionCollider {
 						movingInteractionBehaviour.handleEntityCollision(entity, pos, contraptionEntity);
 
 					bounce = BlockHelper.getBounceMultiplier(blockState.getBlock());
-					slide = Math.max(0, blockState.getFriction(contraption.world, pos, entity) - .6f);
+					slide = Math.max(0, blockState.getFriction(contraption.collisionLevel, pos, entity) - .6f);
 				}
 			}
 

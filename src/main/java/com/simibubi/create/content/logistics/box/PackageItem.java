@@ -186,9 +186,10 @@ public class PackageItem extends Item {
 			return boxAddress.isBlank();
 		if (address.equals("*") || boxAddress.equals("*"))
 			return true;
-		String matcher = Glob.toRegexPattern(address, "");
-		String boxMatcher = Glob.toRegexPattern(boxAddress, "");
-		return address.matches(boxMatcher) || boxAddress.matches(matcher);
+		if (address.equals(boxAddress))
+			return true;
+		return address.matches(Glob.toRegexPattern(boxAddress, "")) ||
+			boxAddress.matches(Glob.toRegexPattern(address, ""));
 	}
 
 	public static String getAddress(ItemStack box) {
@@ -230,8 +231,8 @@ public class PackageItem extends Item {
 				.withStyle(ChatFormatting.GOLD));
 
 		/*
-		 * Debug Fragmentation Data if (compoundnbt.contains("Fragment")) { CompoundTag
-		 * fragTag = compoundnbt.getCompound("Fragment");
+		 * Debug Fragmentation Data if (tag.contains("Fragment")) { CompoundTag
+		 * fragTag = tag.getCompound("Fragment");
 		 * pTooltipComponents.add(Component.literal("Order Information (Temporary)")
 		 * .withStyle(ChatFormatting.GREEN)); pTooltipComponents.add(Components
 		 * .literal(" Link " + fragTag.getInt("LinkIndex") +
@@ -334,8 +335,7 @@ public class PackageItem extends Item {
 
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
-		if (context.getPlayer()
-			.isShiftKeyDown()) {
+		if (context.getPlayer().isShiftKeyDown()) {
 			return open(context.getLevel(), context.getPlayer(), context.getHand()).getResult();
 		}
 

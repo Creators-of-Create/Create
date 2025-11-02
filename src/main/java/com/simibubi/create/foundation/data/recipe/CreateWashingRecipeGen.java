@@ -95,11 +95,6 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 		.output(0.05f, Mods.ATM, "aloe_kernels", 1)
 		.whenModLoaded(Mods.ATM.getId())),
 
-	// Oh The Biomes You'll Go
-
-	BYG = create("byg/cryptic_magma_block", b -> b.require(Mods.BYG, "cryptic_magma_block")
-		.output(Blocks.OBSIDIAN).whenModLoaded(Mods.BYG.getId())),
-
 	// Endergetic
 
 	ENDER_END = simpleModded(Mods.ENDER, "end_corrock", "petrified_end_corrock"),
@@ -137,10 +132,5 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 					.whenModLoaded(mod.getId()));
 		}
 		return null;
-	}
-
-	public GeneratedRecipe simpleModded(Mods mod, String input, String output) {
-		return create(mod.getId() + "/" + output, b -> b.require(mod, input)
-			.output(mod, output).whenModLoaded(mod.getId()));
 	}
 }

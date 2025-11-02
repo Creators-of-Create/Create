@@ -13,7 +13,7 @@ plugins {
 }
 
 apply(from: "./gradle/java.gradle")
-apply(from: "gradle/property_loader.gradle")
+apply(from: "./gradle/property_loader.gradle")
 
 boolean dev = System.getenv("RELEASE") == null || System.getenv("RELEASE") == "false"
 String buildNumber = System.getenv("BUILD_NUMBER")
@@ -271,25 +271,23 @@ publishing {
             }
         }
     }
+
+
     repositories {
-        String mavenUsername = providers.gradleProperty("mavenUsername").getOrNull()
-        String mavenPassword = providers.gradleProperty("mavenPassword").getOrNull()
-        String mavenURL = providers.gradleProperty("mavenURL").getOrNull()
-        if (mavenUsername != null && mavenPassword != null && mavenURL != null) {
+        if (project.hasProperty("mavenUsername") && project.hasProperty("mavenPassword") && project.hasProperty("mavenURL")) {
             project.logger.lifecycle("Adding maven from secrets")
 
             maven {
                 credentials {
-                    username = mavenUsername
-                    password = mavenPassword
+                    username = project.property("mavenUsername") as String
+                    password = project.property("mavenPassword") as String
                 }
-                url = URI.create(mavenURL)
+                url = URI.create(project.property("mavenURL") as String)
             }
         }
 
-        String mavendir = providers.gradleProperty("mavendir").getOrNull()
-        if (mavendir != null) {
-            maven { url = mavendir }
+        if (project.hasProperty("mavendir")) {
+            maven { url mavendir }
         }
     }
 }

@@ -11,9 +11,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import org.jetbrains.annotations.Nullable;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllBlockTags;
@@ -148,16 +147,20 @@ public class TreeCutter {
 		frontier.addAll(logs);
 
 		if (hasRoots) {
+			Set<BlockPos> oldLogs = new HashSet<>(logs);
 			while (!frontier.isEmpty()) {
 				BlockPos currentPos = frontier.remove(0);
-				if (!logs.contains(currentPos) && !visited.add(currentPos))
-					continue;
 
 				BlockState currentState = reader.getBlockState(currentPos);
 				if (!isRoot(currentState))
 					continue;
-				logs.add(currentPos);
-				forNeighbours(currentPos, visited, SearchDirection.DOWN, p -> frontier.add(new BlockPos(p)));
+				if (!oldLogs.contains(currentPos))
+					logs.add(currentPos);
+				forNeighbours(currentPos, visited, SearchDirection.DOWN, p -> {
+					BlockPos neighbourPos = p.immutable();
+					if (visited.add(neighbourPos))
+						frontier.add(neighbourPos);
+				});
 			}
 
 			visited.clear();
@@ -168,8 +171,6 @@ public class TreeCutter {
 		// Find all leaves
 		while (!frontier.isEmpty()) {
 			BlockPos prevPos = frontier.remove(0);
-			if (!logs.contains(prevPos) && !visited.add(prevPos))
-				continue;
 
 			BlockState prevState = reader.getBlockState(prevPos);
 			int prevLeafDistance = isLeaf(prevState) ? getLeafDistance(prevState) : 0;
@@ -186,13 +187,13 @@ public class TreeCutter {
 				}
 
 				int horizontalDistance = Math.max(Math.abs(subtract.getX()), Math.abs(subtract.getZ()));
-				if (horizontalDistance <= nonDecayingLeafDistance(state)) {
+				if (horizontalDistance <= nonDecayingLeafDistance(state) && visited.add(currentPosImmutable)) {
 					leaves.add(currentPosImmutable);
 					frontier.add(currentPosImmutable);
 					return;
 				}
 
-				if (isLeaf(state) && getLeafDistance(state) > prevLeafDistance) {
+				if (isLeaf(state) && getLeafDistance(state) > prevLeafDistance && visited.add(currentPosImmutable)) {
 					leaves.add(currentPosImmutable);
 					frontier.add(currentPosImmutable);
 					return;
@@ -200,7 +201,6 @@ public class TreeCutter {
 
 			});
 		}
-
 		return new Tree(logs, leaves, attachments);
 	}
 

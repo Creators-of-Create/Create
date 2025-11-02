@@ -37,6 +37,14 @@ public abstract class MillingRecipeGen extends StandardProcessingRecipeGen<Milli
 			.output(crushed.get()));
 	}
 
+	protected GeneratedRecipe moddedSandstone(DatagenMod mod, String name) {
+		String sandstone = name + "_sandstone";
+		return create(mod.recipeId(sandstone), b -> b.duration(150)
+			.require(mod, sandstone)
+			.output(mod, name + "_sand")
+			.whenModLoaded(mod.getId()));
+	}
+
 	public MillingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, String defaultNamespace) {
 		super(output, registries, defaultNamespace);
 	}

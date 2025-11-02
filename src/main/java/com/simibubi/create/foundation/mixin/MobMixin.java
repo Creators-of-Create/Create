@@ -11,16 +11,14 @@ import net.minecraft.world.entity.Mob;
 
 @Mixin(Mob.class)
 public class MobMixin {
-	
 	@ModifyExpressionValue(
-		method = "getAttackBoundingBox", 
+		method = "getAttackBoundingBox",
 		at = @At(
-			value = "INVOKE", 
+			value = "INVOKE",
 			target = "Lnet/minecraft/world/entity/Mob;getVehicle()Lnet/minecraft/world/entity/Entity;"
 			)
 		)
 	public Entity create$mobRidingContraptionsMaintainTheirAttackBox(Entity original) {
 		return original instanceof AbstractContraptionEntity ? null : original;
 	}
-	
 }

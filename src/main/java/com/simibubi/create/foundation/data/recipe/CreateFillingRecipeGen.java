@@ -77,10 +77,10 @@ public final class CreateFillingRecipeGen extends FillingRecipeGen {
 		.output(1, Mods.AM, "lava_bottle", 1)
 		.whenModLoaded(Mods.AM.getId())),
 
-	BYG_LUSH_GRASS = create(Mods.BYG.recipeId("lush_grass_block"), b -> b.require(Mods.BYG, "lush_dirt")
+	BWG_LUSH_GRASS = create(Mods.BWG.recipeId("lush_grass_block"), b -> b.require(Mods.BWG, "lush_dirt")
 		.require(Fluids.WATER, 500)
-		.output(Mods.BYG, "lush_grass_block")
-		.whenModLoaded(Mods.BYG.getId())),
+		.output(Mods.BWG, "lush_grass_block")
+		.whenModLoaded(Mods.BWG.getId())),
 
 	NEA_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Tags.Fluids.MILK, 250)
 		.require(Items.GLASS_BOTTLE)
@@ -111,13 +111,5 @@ public final class CreateFillingRecipeGen extends FillingRecipeGen {
 
 	public CreateFillingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		super(output, registries, Create.ID);
-	}
-
-	public GeneratedRecipe moddedGrass(Mods mod, String name) {
-		String grass = name + "_grass_block";
-		return create(mod.recipeId(grass), b -> b.require(Fluids.WATER, 500)
-				.require(mod, name + "_dirt")
-				.output(mod, grass)
-				.whenModLoaded(mod.getId()));
 	}
 }

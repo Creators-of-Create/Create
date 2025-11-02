@@ -356,7 +356,7 @@ public class ClientEvents {
 		}
 	}
 
-	@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+	@EventBusSubscriber(Dist.CLIENT)
 	public static class ModBusEvents {
 
 		@SubscribeEvent

@@ -11,7 +11,7 @@
       "item": "minecraft:red_sand"
     },
     {
-      "type": "fluid_stack",
+      "type": "neoforge:single",
       "amount": 100,
       "fluid": "minecraft:lava"
     }

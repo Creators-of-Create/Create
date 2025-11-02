@@ -11,6 +11,8 @@ import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 import com.simibubi.create.content.logistics.packager.PackagerItemHandler;
 import com.simibubi.create.content.logistics.packager.PackagingRequest;
 
+import com.simibubi.create.compat.computercraft.events.RepackageEvent;
+import com.simibubi.create.compat.computercraft.events.PackageEvent;
 import dan200.computercraft.api.peripheral.PeripheralCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -54,6 +56,7 @@ public class RepackagerBlockEntity extends PackagerBlockEntity {
 		if (simulate)
 			return true;
 
+		computerBehaviour.prepareComputerEvent(new PackageEvent(box, "package_received"));
 		previouslyUnwrapped = box;
 		animationInward = true;
 		animationTicks = CYCLE;
@@ -129,6 +132,11 @@ public class RepackagerBlockEntity extends PackagerBlockEntity {
 		if (boxesToExport.isEmpty())
 			return;
 
+		if (computerBehaviour.hasAttachedComputer()) {
+			for (BigItemStack box : boxesToExport) {
+				computerBehaviour.prepareComputerEvent(new RepackageEvent(box.stack, box.count));
+			}
+		}
 		queuedExitingPackages.addAll(boxesToExport);
 		notifyUpdate();
 	}

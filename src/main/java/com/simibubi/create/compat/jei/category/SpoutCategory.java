@@ -1,5 +1,6 @@
 package com.simibubi.create.compat.jei.category;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Consumer;
 
@@ -11,7 +12,6 @@ import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
 
@@ -34,6 +34,7 @@ import net.neoforged.neoforge.capabilities.Capabilities.FluidHandler;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 @ParametersAreNonnullByDefault
 public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
@@ -53,7 +54,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 				ResourceLocation id = Create.asResource("potions");
 				FillingRecipe recipe = new StandardProcessingRecipe.Builder<>(FillingRecipe::new, id)
 						.withItemIngredients(bottle)
-						.withFluidIngredients(FluidIngredient.fromFluidStack(fluidFromPotionItem))
+					.withFluidIngredients(SizedFluidIngredient.of(fluidFromPotionItem))
 						.withSingleItemOutput(stack)
 						.build();
 				consumer.accept(new RecipeHolder<>(id, recipe));
@@ -94,7 +95,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 							+ "_with_" + fluidName.getNamespace() + "_" + fluidName.getPath());
 					FillingRecipe recipe = new StandardProcessingRecipe.Builder<>(FillingRecipe::new, id)
 							.withItemIngredients(bucket)
-							.withFluidIngredients(FluidIngredient.fromFluidStack(fluidCopy))
+						.withFluidIngredients(SizedFluidIngredient.of(fluidCopy))
 							.withSingleItemOutput(container)
 							.build();
 					consumer.accept(new RecipeHolder<>(id, recipe));
@@ -122,8 +123,8 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 	public void draw(FillingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29);
-		spout.withFluids(recipe.getRequiredFluid()
-			.getMatchingFluidStacks())
+		spout.withFluids(Arrays.asList(recipe.getRequiredFluid()
+				.getFluids()))
 			.draw(graphics, getBackground().getWidth() / 2 - 13, 22);
 	}
 

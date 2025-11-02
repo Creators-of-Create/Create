@@ -8,6 +8,7 @@ import com.google.common.base.Strings;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.nbt.NBTHelper;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -119,7 +120,7 @@ public class FlapDisplaySection {
 		return size;
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(HolderLookup.Provider registries) {
 		CompoundTag tag = new CompoundTag();
 		tag.putFloat("Width", size);
 		tag.putString("Cycle", cycle);
@@ -132,7 +133,7 @@ public class FlapDisplaySection {
 		if (wideFlaps)
 			NBTHelper.putMarker(tag, "Wide");
 		if (component != null)
-			tag.putString("Text", Component.Serializer.toJson(component, RegistryAccess.EMPTY));
+			tag.putString("Text", Component.Serializer.toJson(component, registries));
 		if (sendTransition)
 			NBTHelper.putMarker(tag, "Transition");
 		sendTransition = false;

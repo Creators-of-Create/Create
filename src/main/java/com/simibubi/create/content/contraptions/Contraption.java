@@ -19,10 +19,10 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -57,11 +57,10 @@ import com.simibubi.create.content.contraptions.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlockEntity;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderInfo;
+import com.simibubi.create.content.contraptions.render.ClientContraption;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import com.simibubi.create.content.kinetics.base.IRotate;
-import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
 import com.simibubi.create.content.kinetics.gantry.GantryShaftBlock;
@@ -76,6 +75,8 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.data.UniqueLinkedList;
 import net.createmod.catnip.math.BBHelper;
@@ -106,7 +107,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.Rotation;
@@ -129,7 +129,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.registries.GameData;
 
 public abstract class Contraption {
@@ -143,8 +142,10 @@ public abstract class Contraption {
 	public boolean hasUniversalCreativeCrate;
 	public boolean disassembled;
 
+	// TODO: SoA to reduce map lookups.
 	protected Map<BlockPos, StructureBlockInfo> blocks;
 	protected Map<BlockPos, CompoundTag> updateTags;
+	public Object2BooleanMap<BlockPos> isLegacy;
 	protected List<MutablePair<StructureBlockInfo, MovementContext>> actors;
 	protected Map<BlockPos, MovingInteractionBehaviour> interactors;
 	protected List<ItemStack> disabledActors;
@@ -162,30 +163,38 @@ public abstract class Contraption {
 
 	private CompletableFuture<Void> simplifiedEntityColliderProvider;
 
-	// Client
-	public Map<BlockPos, ModelData> modelData;
-	public Map<BlockPos, BlockEntity> presentBlockEntities;
-	public List<BlockEntity> renderedBlockEntities;
-	// Must be atomic as this is accessed from both the render thread and flywheel executors.
-	private final AtomicReference<ContraptionRenderInfo> renderInfo = new AtomicReference<>();
+	/**
+	 * All client-only data should be encapsulated here.
+	 *
+	 * <p>This field must be atomic as it is lazily accessed from both
+	 * the render thread and flywheel executors.
+	 *
+	 * <h2>Client/Server Safety</h2>
+	 * <p>Wrapping in an AtomicReference also makes this field server-safe,
+	 * as type erasure means ClientContraption will not be class loaded when
+	 * Contraption is class loaded.
+	 * Even still, care must be taken to not call {@link #getOrCreateClientContraptionLazy()}
+	 * from the server. The only references to that method should be in rendering code.
+	 * Additional utilities are provided to safely access and send signals to the ClientContraption,
+	 * without initializing it.
+	 */
+	private final AtomicReference<ClientContraption> clientContraption = new AtomicReference<>();
 
-	protected ContraptionWorld world;
-	public boolean deferInvalidate;
+	// Thin server and client side level used for generating optimized collision shapes.
+	protected ContraptionWorld collisionLevel;
 
 	public Contraption() {
 		blocks = new HashMap<>();
 		updateTags = new HashMap<>();
+		isLegacy = new Object2BooleanArrayMap<>();
 		seats = new ArrayList<>();
 		actors = new ArrayList<>();
 		disabledActors = new ArrayList<>();
-		modelData = new HashMap<>();
 		interactors = new HashMap<>();
 		superglue = new ArrayList<>();
 		seatMapping = new HashMap<>();
 		glueToRemove = new HashSet<>();
 		initialPassengers = new HashMap<>();
-		presentBlockEntities = new HashMap<>();
-		renderedBlockEntities = new ArrayList<>();
 		pendingSubContraptions = new ArrayList<>();
 		stabilizedSubContraptions = new HashMap<>();
 		simplifiedEntityColliders = Optional.empty();
@@ -194,9 +203,9 @@ public abstract class Contraption {
 	}
 
 	public ContraptionWorld getContraptionWorld() {
-		if (world == null)
-			world = new ContraptionWorld(entity.level(), this);
-		return world;
+		if (collisionLevel == null)
+			collisionLevel = new ContraptionWorld(entity.level(), this);
+		return collisionLevel;
 	}
 
 	public abstract boolean assemble(Level world, BlockPos pos) throws AssemblyException;
@@ -222,7 +231,7 @@ public abstract class Contraption {
 		String type = nbt.getString("Type");
 		Contraption contraption = ContraptionType.fromType(type);
 		contraption.readNBT(world, nbt, spawnData);
-		contraption.world = new ContraptionWorld(world, contraption);
+		contraption.collisionLevel = new ContraptionWorld(world, contraption);
 		contraption.gatherBBsOffThread();
 		return contraption;
 	}
@@ -730,10 +739,6 @@ public abstract class Contraption {
 	}
 
 	public void readNBT(Level world, CompoundTag nbt, boolean spawnData) {
-		blocks.clear();
-		presentBlockEntities.clear();
-		renderedBlockEntities.clear();
-
 		Tag blocks = nbt.get("Blocks");
 		// used to differentiate between the 'old' and the paletted serialization
 		boolean usePalettedDeserialization =
@@ -957,6 +962,10 @@ public abstract class Contraption {
 	}
 
 	private void readBlocksCompound(Tag compound, Level world, boolean usePalettedDeserialization) {
+		blocks.clear();
+		updateTags.clear();
+		isLegacy.clear();
+
 		HolderGetter<Block> holderGetter = world.holderLookup(Registries.BLOCK);
 		HashMapPalette<BlockState> palette = null;
 		ListTag blockList;
@@ -976,12 +985,10 @@ public abstract class Contraption {
 			blockList = (ListTag) compound;
 		}
 
-		HashMapPalette<BlockState> finalPalette = palette;
-		blockList.forEach(e -> {
-			CompoundTag c = (CompoundTag) e;
+		for (Tag tag : blockList) {
+			CompoundTag c = (CompoundTag) tag;
 
-			StructureBlockInfo info =
-				usePalettedDeserialization ? readStructureBlockInfo(c, finalPalette) : legacyReadStructureBlockInfo(c, holderGetter);
+			StructureBlockInfo info = usePalettedDeserialization ? readStructureBlockInfo(c, palette) : legacyReadStructureBlockInfo(c, holderGetter);
 
 			this.blocks.put(info.pos(), info);
 
@@ -991,63 +998,12 @@ public abstract class Contraption {
 				this.updateTags.put(info.pos(), updateTag);
 			}
 
-			if (!world.isClientSide)
-				return;
-
-			// create the BlockEntity client-side for rendering
-			BlockEntity be = readBlockEntity(world, info, c);
-			if (be == null)
-				return;
-
-			presentBlockEntities.put(info.pos(), be);
-			modelData.put(info.pos(), be.getModelData());
-
-			MovementBehaviour movementBehaviour = MovementBehaviour.REGISTRY.get(info.state());
-			if (movementBehaviour == null || !movementBehaviour.disableBlockEntityRendering()) {
-				renderedBlockEntities.add(be);
-			}
-		});
-	}
-
-	@Nullable
-	protected BlockEntity readBlockEntity(Level level, StructureBlockInfo info, CompoundTag tag) {
-		BlockState state = info.state();
-		BlockPos pos = info.pos();
-		CompoundTag nbt = info.nbt();
-
-		if (tag.contains("Legacy")) {
-			// for contraptions that were assembled pre-updateTags, we need to use the old strategy.
-			if (nbt == null)
-				return null;
-
-			nbt.putInt("x", pos.getX());
-			nbt.putInt("y", pos.getY());
-			nbt.putInt("z", pos.getZ());
-
-			BlockEntity be = BlockEntity.loadStatic(pos, state, nbt, level.registryAccess());
-			postprocessReadBlockEntity(level, be);
-			return be;
+			// Mark the pos if it has the legacy marker.
+			// This will be used when creating BlockEntities for the ClientContraption.
+			this.isLegacy.put(info.pos(), c.contains("Legacy"));
 		}
 
-		if (!state.hasBlockEntity() || !(state.getBlock() instanceof EntityBlock entityBlock))
-			return null;
-
-		BlockEntity be = entityBlock.newBlockEntity(pos, state);
-		postprocessReadBlockEntity(level, be);
-		if (be != null && nbt != null) {
-			be.handleUpdateTag(nbt, level.registryAccess());
-		}
-
-		return be;
-	}
-
-	private static void postprocessReadBlockEntity(Level level, @Nullable BlockEntity be) {
-		if (be != null) {
-			be.setLevel(level);
-			if (be instanceof KineticBlockEntity kbe) {
-				kbe.setSpeed(0);
-			}
-		}
+		resetClientContraption();
 	}
 
 	private static StructureBlockInfo readStructureBlockInfo(CompoundTag blockListEntry,
@@ -1466,6 +1422,10 @@ public abstract class Contraption {
 		return blocks;
 	}
 
+	public Object2BooleanMap<BlockPos> getIsLegacy() {
+		return isLegacy;
+	}
+
 	public List<MutablePair<StructureBlockInfo, MovementContext>> getActors() {
 		return actors;
 	}
@@ -1497,7 +1457,7 @@ public abstract class Contraption {
 				for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
 					StructureBlockInfo info = entry.getValue();
 					BlockPos localPos = entry.getKey();
-					VoxelShape collisionShape = info.state().getCollisionShape(world, localPos, CollisionContext.empty());
+					VoxelShape collisionShape = info.state().getCollisionShape(collisionLevel, localPos, CollisionContext.empty());
 					if (collisionShape.isEmpty())
 						continue;
 					combinedShape = Shapes.joinUnoptimized(combinedShape,
@@ -1549,20 +1509,6 @@ public abstract class Contraption {
 		return this.storage;
 	}
 
-	public RenderedBlocks getRenderedBlocks() {
-		return new RenderedBlocks(pos -> {
-			StructureBlockInfo info = blocks.get(pos);
-			if (info == null) {
-				return Blocks.AIR.defaultBlockState();
-			}
-			return info.state();
-		}, blocks.keySet());
-	}
-
-	public Collection<BlockEntity> getRenderedBEs() {
-		return renderedBlockEntities;
-	}
-
 	public boolean isHiddenInPortal(BlockPos localPos) {
 		return false;
 	}
@@ -1584,23 +1530,83 @@ public abstract class Contraption {
 		return false;
 	}
 
-	public ContraptionRenderInfo getRenderInfo() {
-		var out = renderInfo.getAcquire();
+	/**
+	 * See the docs on {@link #clientContraption}.
+	 */
+	public final ClientContraption getOrCreateClientContraptionLazy() {
+		var out = clientContraption.getAcquire();
 		if (out == null) {
 			// Another thread may hit this block in the same moment.
 			// One thread will win and the ContraptionRenderInfo that
 			// it generated will become canonical. It's important that
 			// we only maintain one RenderInfo instance, specifically
 			// for the VirtualRenderWorld inside.
-			renderInfo.compareAndExchangeRelease(null, new ContraptionRenderInfo(this.entity.level(), this));
+			clientContraption.compareAndExchangeRelease(null, createClientContraption());
 
 			// Must get again to ensure we have the canonical instance.
-			out = renderInfo.getAcquire();
+			out = clientContraption.getAcquire();
 		}
 		return out;
 	}
 
-	public record RenderedBlocks(Function<BlockPos, BlockState> lookup, Iterable<BlockPos> positions) {
+	/**
+	 * Create a <em>new</em> {@link ClientContraption} instance.
+	 * This will only be called once, when the contraption first has its
+	 * animation processed by either the render thread or a flywheel executor thread.
+	 *
+	 * <p>Most contraptions will not need to implement this.
+	 *
+	 * @return A new ClientContraption instance.
+	 */
+	@Contract(" -> new")
+	protected ClientContraption createClientContraption() {
+		return new ClientContraption(this);
 	}
 
+	/**
+	 * Entirely reset the client contraption, rebuilding the client level and re-running light updates.
+	 */
+	public void resetClientContraption() {
+		var maybeNullClientContraption = this.clientContraption.getAcquire();
+
+		// Nothing to invalidate if it hasn't been created yet.
+		if (maybeNullClientContraption != null) {
+			maybeNullClientContraption.resetRenderLevel();
+		}
+	}
+
+	/**
+	 * Invalidate the structure of the client contraption, triggering a rebuild of the main mesh.
+	 */
+	public void invalidateClientContraptionStructure() {
+		var maybeNullClientContraption = this.clientContraption.getAcquire();
+
+		// Nothing to invalidate if it hasn't been created yet.
+		if (maybeNullClientContraption != null) {
+			maybeNullClientContraption.invalidateStructure();
+		}
+	}
+
+	/**
+	 * Invalidate the children of the client contraption, triggering a rebuild of all child visuals.
+	 */
+	public void invalidateClientContraptionChildren() {
+		var maybeNullClientContraption = this.clientContraption.getAcquire();
+
+		// Nothing to invalidate if it hasn't been created yet.
+		if (maybeNullClientContraption != null) {
+			maybeNullClientContraption.invalidateChildren();
+		}
+	}
+
+	@org.jetbrains.annotations.Nullable
+	public BlockEntity getBlockEntityClientSide(BlockPos localPos) {
+		var maybeNullClientContraption = this.clientContraption.getAcquire();
+
+		if (maybeNullClientContraption == null) {
+			return null;
+		}
+
+		return maybeNullClientContraption.getBlockEntity(localPos);
+	}
 }

@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "biomesoplenty"
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "biomesoplenty:rose_quartz_cluster"
+        }
+      ]
+    }
+  ],
+  "processing_time": 150,
+  "results": [
+    {
+      "count": 7,
+      "id": "biomesoplenty:rose_quartz_chunk"
+    },
+    {
+      "chance": 0.5,
+      "id": "biomesoplenty:rose_quartz_chunk"
+    }
+  ]
+}

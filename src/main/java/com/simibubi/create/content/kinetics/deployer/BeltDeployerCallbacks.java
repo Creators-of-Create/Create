@@ -24,7 +24,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -96,7 +98,7 @@ public class BeltDeployerCallbacks {
 								DeployerBlockEntity blockEntity, Recipe<?> recipe) {
 
 		List<TransportedItemStack> collect =
-			RecipeApplier.applyRecipeOn(blockEntity.getLevel(), transported.stack.copyWithCount(1), recipe)
+			RecipeApplier.applyRecipeOn(blockEntity.getLevel(), transported.stack.copyWithCount(1), recipe, true)
 				.stream()
 				.map(stack -> {
 					TransportedItemStack copy = transported.copy();
@@ -137,7 +139,16 @@ public class BeltDeployerCallbacks {
 			if (heldItem.getMaxDamage() > 0) {
 				heldItem.hurtAndBreak(1, blockEntity.player, EquipmentSlot.MAINHAND);
 			} else {
+				Player player = blockEntity.player;
+				ItemStack leftover = heldItem.getCraftingRemainingItem();
 				heldItem.shrink(1);
+				if (heldItem.isEmpty()) {
+					player.setItemInHand(InteractionHand.MAIN_HAND, leftover);
+				} else {
+					if (!player.getInventory().add(leftover)) {
+						player.drop(leftover, false);
+					}
+				}
 			}
 		}
 

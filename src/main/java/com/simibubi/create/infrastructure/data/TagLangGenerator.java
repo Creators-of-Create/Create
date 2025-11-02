@@ -103,6 +103,7 @@ public class TagLangGenerator {
 		// items
 		translate(AllItemTags.BLAZE_BURNER_FUEL_REGULAR, "Regular Blaze Burner Fuel");
 		translate(AllItemTags.BLAZE_BURNER_FUEL_SPECIAL, "Special Blaze Burner Fuel");
+		translate(AllItemTags.CASING, "Casings");
 		translate(AllItemTags.CONTRAPTION_CONTROLLED, "Contraption-controllable");
 		translate(AllItemTags.CREATE_INGOTS, "Create's Ingots");
 		translate(AllItemTags.CRUSHED_RAW_MATERIALS, "Crushed Raw Materials");

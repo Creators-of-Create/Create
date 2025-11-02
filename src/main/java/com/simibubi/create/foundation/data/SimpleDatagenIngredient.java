@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.simibubi.create.api.data.recipe.DatagenMod;
 import com.simibubi.create.foundation.data.recipe.Mods;
 import com.simibubi.create.foundation.mixin.accessor.MappedRegistryAccessor;
 
@@ -14,45 +15,44 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 public class SimpleDatagenIngredient implements ICustomIngredient {
-
 	/*
-	"ingredients": [
-		{
-			"item": "mod:compat_item"
-		}
-	]
+	  "ingredients": [
+		  {
+			  "item": "mod:compat_item"
+		  }
+	  ]
 	 */
-
 	private static final MapCodec<SimpleDatagenIngredient> INTERNAL_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-			ResourceLocation.CODEC.fieldOf("item").forGetter(i -> i.mod.asResource(i.id))
+		ResourceLocation.CODEC.fieldOf("item").forGetter(i -> i.mod.asResource(i.id))
 	).apply(instance, location -> {
 		for (Mods mod : Mods.values()) {
 			if (mod.getId().equals(location.getNamespace())) {
 				return new SimpleDatagenIngredient(mod, location.getPath());
 			}
 		}
-		throw new AssertionError("ID "+location.getNamespace()+" doesn't correspond to any compat mod." +
-				" SimpleDatagenIngredient is not meant for deserialization anyway");
+		throw new AssertionError("ID " + location.getNamespace() + " doesn't correspond to any compat mod." +
+			" SimpleDatagenIngredient is not meant for deserialization anyway");
 	}));
 
 	private static final MapCodec<SimpleDatagenIngredient> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-			INTERNAL_CODEC.codec().listOf().fieldOf("ingredients").forGetter(List::of)
+		INTERNAL_CODEC.codec().listOf().fieldOf("ingredients").forGetter(List::of)
 	).apply(instance, list -> {
 		assert list.size() == 1 : "SimpleDatagenIngredient should only be serialized as a single-element list, and shouldn't be deserialized anyway";
 		return list.getFirst();
 	}));
 	private static final IngredientType<?> INGREDIENT_TYPE = new IngredientType<>(CODEC);
 
-	private final Mods mod;
+	private final DatagenMod mod;
 	private final String id;
 
-	public SimpleDatagenIngredient(Mods mod, String id) {
+	public SimpleDatagenIngredient(DatagenMod mod, String id) {
 		this.mod = mod;
 		this.id = id;
 	}
@@ -108,9 +108,9 @@ public class SimpleDatagenIngredient implements ICustomIngredient {
 				didRegistryInjection = true;
 			} else {
 				throw new AssertionError("SimpleDatagenIngredient will not be able to" +
-						" serialize without injecting into a registry. Expected" +
-						" NeoForgeRegistries.INGREDIENT_TYPES to be of class MappedRegistry, is of class " +
-						NeoForgeRegistries.INGREDIENT_TYPES.getClass()
+					" serialize without injecting into a registry. Expected" +
+					" NeoForgeRegistries.INGREDIENT_TYPES to be of class MappedRegistry, is of class " +
+					NeoForgeRegistries.INGREDIENT_TYPES.getClass()
 				);
 			}
 		}

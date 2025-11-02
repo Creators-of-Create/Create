@@ -1,7 +1,7 @@
 package com.simibubi.create.content.trains.entity;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +19,7 @@ import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.MountedStorageManager;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsBlock;
 import com.simibubi.create.content.contraptions.minecart.TrainCargoManager;
+import com.simibubi.create.content.contraptions.render.ClientContraption;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.foundation.utility.CreateLang;
 
@@ -186,14 +187,6 @@ public class CarriageContraption extends Contraption {
 	}
 
 	@Override
-	protected BlockEntity readBlockEntity(Level level, StructureBlockInfo info, CompoundTag tag) {
-		if (info.state().getBlock() instanceof AbstractBogeyBlock<?> bogey && !bogey.captureBlockEntityForTrain())
-			return null; // Bogeys are typically rendered by the carriage contraption, not the BE
-
-		return super.readBlockEntity(level, info, tag);
-	}
-
-	@Override
 	public CompoundTag writeNBT(HolderLookup.Provider registries, boolean spawnPacket) {
 		CompoundTag tag = super.writeNBT(registries, spawnPacket);
 		NBTHelper.writeEnum(tag, "AssemblyDirection", getAssemblyDirection());
@@ -256,36 +249,6 @@ public class CarriageContraption extends Contraption {
 		return secondBogeyPos;
 	}
 
-	private Collection<BlockEntity> renderedBEsOutsidePortal = new ArrayList<>();
-
-	@Override
-	public RenderedBlocks getRenderedBlocks() {
-		if (notInPortal())
-			return super.getRenderedBlocks();
-
-		renderedBEsOutsidePortal = new ArrayList<>();
-		renderedBlockEntities.stream()
-			.filter(be -> !isHiddenInPortal(be.getBlockPos()))
-			.forEach(renderedBEsOutsidePortal::add);
-
-		Map<BlockPos, BlockState> values = new HashMap<>();
-		blocks.forEach((pos, info) -> {
-			if (withinVisible(pos)) {
-				values.put(pos, info.state());
-			} else if (atSeam(pos)) {
-				values.put(pos, Blocks.PURPLE_STAINED_GLASS.defaultBlockState());
-			}
-		});
-		return new RenderedBlocks(pos -> values.getOrDefault(pos, Blocks.AIR.defaultBlockState()), values.keySet());
-	}
-
-	@Override
-	public Collection<BlockEntity> getRenderedBEs() {
-		if (notInPortal())
-			return super.getRenderedBEs();
-		return renderedBEsOutsidePortal;
-	}
-
 	@Override
 	public Optional<List<AABB>> getSimplifiedEntityColliders() {
 		if (notInPortal())
@@ -297,7 +260,18 @@ public class CarriageContraption extends Contraption {
 	public boolean isHiddenInPortal(BlockPos localPos) {
 		if (notInPortal())
 			return super.isHiddenInPortal(localPos);
-		return !withinVisible(localPos) || atSeam(localPos);
+		Direction facing = assemblyDirection;
+		Axis axis = facing.getClockWise()
+			.getAxis();
+		int coord = axis.choose(localPos.getZ(), localPos.getY(), localPos.getX()) * -facing.getAxisDirection()
+			.getStep();
+		return !withinVisible(coord) || atSeam(coord);
+	}
+
+	public boolean isHiddenInPortal(int posAlongMovementAxis) {
+		if (notInPortal())
+			return false;
+		return !withinVisible(posAlongMovementAxis) || atSeam(posAlongMovementAxis);
 	}
 
 	public boolean notInPortal() {
@@ -310,7 +284,7 @@ public class CarriageContraption extends Contraption {
 			.getAxis();
 		int coord = axis.choose(localPos.getZ(), localPos.getY(), localPos.getX()) * -facing.getAxisDirection()
 			.getStep();
-		return coord == portalCutoffMin || coord == portalCutoffMax;
+		return atSeam(coord);
 	}
 
 	public boolean withinVisible(BlockPos localPos) {
@@ -319,7 +293,15 @@ public class CarriageContraption extends Contraption {
 			.getAxis();
 		int coord = axis.choose(localPos.getZ(), localPos.getY(), localPos.getX()) * -facing.getAxisDirection()
 			.getStep();
-		return coord > portalCutoffMin && coord < portalCutoffMax;
+		return withinVisible(coord);
+	}
+
+	public boolean atSeam(int posAlongMovementAxis) {
+		return posAlongMovementAxis == portalCutoffMin || posAlongMovementAxis == portalCutoffMax;
+	}
+
+	public boolean withinVisible(int posAlongMovementAxis) {
+		return posAlongMovementAxis > portalCutoffMin && posAlongMovementAxis < portalCutoffMax;
 	}
 
 	@Override
@@ -333,6 +315,63 @@ public class CarriageContraption extends Contraption {
 			return;
 		if (storageProxy != null)
 			storageProxy.write(nbt, registries, spawnPacket);
+	}
+
+	@Override
+	protected ClientContraption createClientContraption() {
+		return new CarriageClientContraption(this);
+	}
+
+	public class CarriageClientContraption extends ClientContraption {
+		// Parallel array to renderedBlockEntityView. Marks BEs that are outside the portal.
+		public final BitSet scratchBlockEntitiesOutsidePortal = new BitSet();
+
+		public CarriageClientContraption(CarriageContraption contraption) {
+			super(contraption);
+		}
+
+		@Override
+		public RenderedBlocks getRenderedBlocks() {
+			if (notInPortal())
+				return super.getRenderedBlocks();
+
+			Map<BlockPos, BlockState> values = new HashMap<>();
+			blocks.forEach((pos, info) -> {
+				if (withinVisible(pos)) {
+					values.put(pos, info.state());
+				} else if (atSeam(pos)) {
+					values.put(pos, Blocks.PURPLE_STAINED_GLASS.defaultBlockState());
+				}
+			});
+			return new RenderedBlocks(pos -> values.getOrDefault(pos, Blocks.AIR.defaultBlockState()), values.keySet());
+		}
+
+		@Override
+		public BlockEntity readBlockEntity(Level level, StructureBlockInfo info, boolean legacy) {
+			if (info.state().getBlock() instanceof AbstractBogeyBlock<?> bogey && !bogey.captureBlockEntityForTrain())
+				return null; // Bogeys are typically rendered by the carriage contraption, not the BE
+
+			return super.readBlockEntity(level, info, legacy);
+		}
+
+		@Override
+		public BitSet getAndAdjustShouldRenderBlockEntities() {
+			if (notInPortal()) {
+				return super.getAndAdjustShouldRenderBlockEntities();
+			}
+
+			scratchBlockEntitiesOutsidePortal.clear();
+			scratchBlockEntitiesOutsidePortal.or(shouldRenderBlockEntities);
+
+			for (var i = 0; i < renderedBlockEntityView.size(); i++) {
+				var be = renderedBlockEntityView.get(i);
+				if (isHiddenInPortal(be.getBlockPos())) {
+					scratchBlockEntitiesOutsidePortal.clear(i);
+				}
+			}
+
+			return scratchBlockEntitiesOutsidePortal;
+		}
 	}
 
 }

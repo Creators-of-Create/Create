@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.ContraptionHandler;
 import com.simibubi.create.content.contraptions.actors.psi.PortableFluidInterfaceBlockEntity;
 import com.simibubi.create.content.contraptions.actors.psi.PortableItemInterfaceBlockEntity;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsServerHandler;
+import com.simibubi.create.content.contraptions.chassis.StickerBlockEntity;
 import com.simibubi.create.content.contraptions.minecart.CouplingPhysics;
 import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
 import com.simibubi.create.content.equipment.toolbox.ToolboxBlockEntity;
@@ -29,6 +30,7 @@ import com.simibubi.create.content.kinetics.drill.CobbleGenOptimisation;
 import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.millstone.MillstoneBlockEntity;
+import com.simibubi.create.content.kinetics.motor.CreativeMotorBlockEntity;
 import com.simibubi.create.content.kinetics.saw.SawBlockEntity;
 import com.simibubi.create.content.kinetics.speedController.SpeedControllerBlockEntity;
 import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGearshiftBlockEntity;
@@ -50,7 +52,10 @@ import com.simibubi.create.content.logistics.vault.ItemVaultBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
 import com.simibubi.create.content.redstone.link.controller.LinkedControllerServerHandler;
+import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.content.trains.entity.CarriageEntityHandler;
+import com.simibubi.create.content.trains.observer.TrackObserverBlockEntity;
+import com.simibubi.create.content.trains.signal.SignalBlockEntity;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.foundation.data.RuntimeDataGenerator;
 import com.simibubi.create.foundation.map.StationMapDecorationRenderer;
@@ -299,6 +304,11 @@ public class CommonEvents {
 			FrogportBlockEntity.registerCapabilities(event);
 			RedstoneRequesterBlockEntity.registerCapabilities(event);
 			TableClothBlockEntity.registerCapabilities(event);
+			SignalBlockEntity.registerCapabilities(event);
+			CreativeMotorBlockEntity.registerCapabilities(event);
+			TrackObserverBlockEntity.registerCapabilities(event);
+			NixieTubeBlockEntity.registerCapabilities(event);
+			StickerBlockEntity.registerCapabilities(event);
 		}
 	}
 }

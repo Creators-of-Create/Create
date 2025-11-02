@@ -3,6 +3,7 @@ package com.simibubi.create.api.data.recipe;
 import java.util.concurrent.CompletableFuture;
 
 import com.simibubi.create.AllRecipeTypes;
+
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.basin.BasinRecipe.Builder;
@@ -20,6 +21,14 @@ import net.minecraft.resources.ResourceLocation;
  * Needs to be added to a registered recipe provider to do anything, see {@link com.simibubi.create.foundation.data.recipe.CreateRecipeProvider}
  */
 public abstract class MixingRecipeGen extends ProcessingRecipeGen<ProcessingRecipeParams, MixingRecipe, BasinRecipe.Builder<MixingRecipe>> {
+
+	protected GeneratedRecipe moddedMud(DatagenMod mod, String name) {
+		String mud = name + "_mud";
+		return create(mod.recipeId(mud), b -> b.require(Fluids.WATER, 250)
+			.require(mod, name + "_dirt")
+			.output(mod, mud)
+			.whenModLoaded(mod.getId()));
+	}
 
 	public MixingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, String defaultNamespace) {
 		super(output, registries, defaultNamespace);

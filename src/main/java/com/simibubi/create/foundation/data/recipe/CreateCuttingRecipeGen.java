@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.data.recipe;
 
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import com.simibubi.create.AllBlocks;
@@ -60,81 +59,17 @@ public final class CreateCuttingRecipeGen extends CuttingRecipeGen {
 
 	// Jaden's Nether Expansion
 	JNE_1 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_stem", "stripped_claret_stem", null),
-		JNE_2 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_hyphae", "stripped_claret_hyphae", null)
+		JNE_2 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_hyphae", "stripped_claret_hyphae", null),
+
+		// Atmospheric
+		ATM_1 = stripAndMakePlanks(Mods.ATM, "watchful_aspen_log", "aspen_log", null),
+	    ATM_2 = stripAndMakePlanks(Mods.ATM, "watchful_aspen_wood", "aspen_wood", null),
+		ATM_3 = stripAndMakePlanks(Mods.ATM, "crustose_log", "aspen_log", null),
+		ATM_4 = stripAndMakePlanks(Mods.ATM, "crustose_wood", "aspen_wood", null)
 		;
 
 	public CreateCuttingRecipeGen(PackOutput output, CompletableFuture<Provider> registries) {
 		super(output, registries, Create.ID);
-	}
-
-	GeneratedRecipe cuttingCompat(Mods mod, String... woodtypes) {
-		for (String type : woodtypes) {
-			String planks = type + "_planks";
-
-			if (mod == Mods.ARS_N && type.contains("archwood"))
-				planks = "archwood_planks";
-
-			String strippedPre = mod.strippedIsSuffix ? "" : "stripped_";
-			String strippedPost = mod.strippedIsSuffix ? "_stripped" : "";
-			stripAndMakePlanks(mod, type + "_log", strippedPre + type + "_log" + strippedPost, planks);
-
-			String wood = type + (mod.omitWoodSuffix ? "" : "_wood");
-			stripAndMakePlanks(mod, wood, strippedPre + wood + strippedPost, planks);
-		}
-		return null;
-	}
-
-	GeneratedRecipe cuttingCompatLogOnly(Mods mod, String... woodtypes) {
-		for (String type : woodtypes) {
-			String planks = type + "_planks";
-			String strippedPre = mod.strippedIsSuffix ? "" : "stripped_";
-			String strippedPost = mod.strippedIsSuffix ? "_stripped" : "";
-			stripAndMakePlanks(mod, type + "_log", strippedPre + type + "_log" + strippedPost, planks);
-		}
-		return null;
-	}
-
-	GeneratedRecipe stripOnlyDiffModId(Mods mod1, String wood, Mods mod2, String stripped) {
-		create("compat/" + mod1.getId() + "/" + wood, b -> b.duration(50)
-				.require(mod1, wood)
-				.output(1, mod2, stripped, 1)
-				.whenModLoaded(mod1.getId()));
-		return null;
-	}
-
-	GeneratedRecipe stripAndMakePlanksDiffPlanksModId(Mods mod1, String log, String stripped, Mods mod2, String planks) {
-		if (log != null)
-			create("compat/" + mod1.getId() + "/" + log, b -> b.duration(50)
-				.require(mod1, log)
-				.output(1, mod1, stripped, 1)
-				.whenModLoaded(mod1.getId()));
-		if (planks != null) // Shouldn't be needed as stripAndMakePlanks can already do what this method does if planks is null
-			create("compat/" + mod1.getId() + "/" + stripped, b -> b.duration(50)
-				.require(mod1, stripped)
-				.output(1, mod2, planks, 6)
-				.whenModLoaded(mod1.getId()));
-		return null;
-	}
-
-	GeneratedRecipe stripAndMakePlanks(Mods mod, String wood, String stripped, String planks) {
-		if (wood != null)
-			create("compat/" + mod.getId() + "/" + wood, b -> b.duration(50)
-				.require(mod, wood)
-				.output(1, mod, stripped, 1)
-				.whenModLoaded(mod.getId()));
-		if (planks != null)
-			if (!Objects.equals(mod.getId(), Mods.VH.getId())) {
-				create("compat/" + mod.getId() + "/" + stripped, b -> b.duration(50)
-						.require(mod, stripped)
-						.output(1, mod, planks, 6)
-						.whenModLoaded(mod.getId()));
-			} else {
-				create("compat/" + mod.getId() + "/" + stripped, b -> b.duration(50)
-						.require(mod, stripped)
-						.output(1, mod, planks, 4)
-						.whenModLoaded(mod.getId()));
-			}
-		return null;
 	}
 
 	GeneratedRecipe ieWires(CommonMetal... metals) {

@@ -1,10 +1,11 @@
 package com.simibubi.create.infrastructure.ponder.scenes;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.chassis.StickerBlockEntity;
-import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides;
+import com.simibubi.create.content.equipment.clipboard.ClipboardContent;
 import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides.ClipboardType;
 import com.simibubi.create.content.redstone.analogLever.AnalogLeverBlockEntity;
 import com.simibubi.create.content.redstone.diodes.BrassDiodeBlock;
@@ -28,7 +29,6 @@ import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -632,7 +632,7 @@ public class RedstoneScenes {
 		scene.idle(20);
 
 		ItemStack clipboard = AllBlocks.CLIPBOARD.asStack();
-		ClipboardOverrides.switchTo(ClipboardType.WRITTEN, clipboard);
+		clipboard.set(AllDataComponents.CLIPBOARD_CONTENT, ClipboardContent.EMPTY.setType(ClipboardType.WRITTEN));
 		scene.overlay().showControls(centerTube.add(1, .35, 0), Pointing.DOWN, 40).rightClick()
 			.withItem(clipboard);
 		scene.idle(7);

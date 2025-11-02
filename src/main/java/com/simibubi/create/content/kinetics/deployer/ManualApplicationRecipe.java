@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -89,7 +90,17 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 			if (heldItem.getMaxDamage() > 0) {
 				heldItem.hurtAndBreak(1, event.getEntity(), EquipmentSlot.MAINHAND);
 			} else {
+				Player player = event.getEntity();
+				InteractionHand hand = event.getHand();
+				ItemStack leftover = heldItem.getCraftingRemainingItem();
 				heldItem.shrink(1);
+				if (heldItem.isEmpty()) {
+					player.setItemInHand(hand, leftover);
+				} else {
+					if (!player.getInventory().add(leftover)) {
+						player.drop(leftover, false);
+					}
+				}
 			}
 		}
 

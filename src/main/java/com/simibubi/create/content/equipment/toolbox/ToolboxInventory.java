@@ -53,7 +53,7 @@ public class ToolboxInventory extends ItemStackHandler {
 
 	List<ItemStack> filters;
 	boolean settling;
-	private ToolboxBlockEntity blockEntity;
+	private final ToolboxBlockEntity blockEntity;
 
 	private boolean limitedMode;
 

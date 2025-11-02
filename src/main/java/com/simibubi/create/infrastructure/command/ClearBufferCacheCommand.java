@@ -7,7 +7,6 @@ import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.ponder.PonderClient;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-
 import net.minecraft.network.chat.Component;
 
 import net.neoforged.api.distmarker.Dist;
@@ -21,7 +20,7 @@ public class ClearBufferCacheCommand {
 			.executes(ctx -> {
 				CatnipServices.PLATFORM.executeOnClientOnly(() -> ClearBufferCacheCommand::execute);
 				ctx.getSource()
-					.sendSuccess(() -> Component.literal("Cleared rendering buffers."),true);
+						.sendSuccess(() -> Component.literal("Cleared rendering buffers."), true);
 				return 1;
 			});
 	}
