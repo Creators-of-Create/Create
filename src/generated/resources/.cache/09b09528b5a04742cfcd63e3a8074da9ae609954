@@ -1,4 +1,4 @@
-// 1.21.1	2025-10-13T14:39:07.664196703	create's sequenced assembly recipes
-fd38f2d0991c148cfafaeef53c54d48da6ac8c4f data/create/recipe/sequenced_assembly/precision_mechanism.json
-b2e0953132bad63b8e0dba38883883427443b95f data/create/recipe/sequenced_assembly/sturdy_sheet.json
-5cba3b8f97f01bde7caf3155ce20efec924f0b59 data/create/recipe/sequenced_assembly/track.json
+// 1.20.1	2025-11-02T10:48:28.213158566	create's sequenced assembly recipes
+dbaca5a5aa312f3bc7b826e51e665d32e798a5d7 data/create/recipes/sequenced_assembly/precision_mechanism.json
+dacafdb106304d183b00e21fb01517ac45eca800 data/create/recipes/sequenced_assembly/sturdy_sheet.json
+1274315b5c570722d6f5b2ed7f5e53fe01b6288a data/create/recipes/sequenced_assembly/track.json

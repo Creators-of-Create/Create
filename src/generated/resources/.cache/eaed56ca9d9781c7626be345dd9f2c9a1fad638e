@@ -1,4 +1,4 @@
-// 1.21.1	2025-10-25T16:24:46.599581126	Create's Generated Registry Entries
+// 1.20.1	2025-11-02T10:48:28.216901226	Create's Generated Registry Entries
 abb9dd2c98388abb430343d4ac02d460e5edc086 data/create/create/potato_projectile/type/apple.json
 1a20cb4e64dc07918a28fbccc73102bca3560f16 data/create/create/potato_projectile/type/baked_potato.json
 8450576952f7723d22250da6f554dd0fda4e9fce data/create/create/potato_projectile/type/beetroot.json
@@ -7,7 +7,7 @@ abb9dd2c98388abb430343d4ac02d460e5edc086 data/create/create/potato_projectile/ty
 6cef3daecf686b417c6dfbe02556fcdff9b1e417 data/create/create/potato_projectile/type/carrot.json
 af17d72549ee9421d2643a215ffc2291874fff93 data/create/create/potato_projectile/type/chocolate_berry.json
 8cb4811601d46db5fdc0291edce3ec2f3a64e902 data/create/create/potato_projectile/type/chorus_fruit.json
-69138506c1b02aa4e2456cc1912ddb70f8a1e42a data/create/create/potato_projectile/type/enchanted_golden_apple.json
+9dd1298993a4657d69a9d2ac4de3ad7879d9aa8d data/create/create/potato_projectile/type/enchanted_golden_apple.json
 e3ab3c4bd70ad742d37091ae05774aadffb1d1d5 data/create/create/potato_projectile/type/fallback.json
 98bf0ce51484c5a9709fc69d046d0c70d987cfdd data/create/create/potato_projectile/type/fish.json
 afe4e7cc87110d6f045f6672fb312a09290ca04a data/create/create/potato_projectile/type/glistering_melon.json
@@ -19,10 +19,10 @@ c6234751ccad5111857b0ae9e297e42f529ad32a data/create/create/potato_projectile/ty
 352402ba2fff3f23af178d15d61b0ba0a151097a data/create/create/potato_projectile/type/melon_slice.json
 cbfd3028ad878bddbdaeb0eec0cd5a1c50d4c901 data/create/create/potato_projectile/type/poison_potato.json
 38116c664c63ca9da0ea043edc16a3ce9264c706 data/create/create/potato_projectile/type/potato.json
-3ba8dbd239452eb2531d8f13332a37bc1ffa3616 data/create/create/potato_projectile/type/pufferfish.json
+d15070ca23129e7d4025d86cb4be5701a466e593 data/create/create/potato_projectile/type/pufferfish.json
 63e2df2c83982204bc92479b1df26561922e795d data/create/create/potato_projectile/type/pumpkin_block.json
 7d58a0671c55e40cdb728c60152665c89209fb91 data/create/create/potato_projectile/type/pumpkin_pie.json
-30bf0b35aeff136251d3bfe2af04fd89ccf953de data/create/create/potato_projectile/type/suspicious_stew.json
+0e73e50b02e9afe5f170729935ae5921d22d7091 data/create/create/potato_projectile/type/suspicious_stew.json
 b4a7c10bd9cdcfe67df2a5766e5ec2e35a3f9b24 data/create/create/potato_projectile/type/sweet_berry.json
 030ede1044384c4117ac1e491bf5c78bbd2842f5 data/create/damage_type/crush.json
 92b0416950ffeb3ba68811e587177c2f8811c2c5 data/create/damage_type/cuckoo_surprise.json
@@ -33,11 +33,9 @@ afdc8574e8e915dac5693f368e9c1260714ad111 data/create/damage_type/mechanical_roll
 43cfce97a9326a1a7ce95f91a052586610b9686c data/create/damage_type/mechanical_saw.json
 58ab7a8eed0841f05b4b1373ba159e3e6503b7c3 data/create/damage_type/potato_cannon.json
 4dae2c0fc9fe6749649ef06dd3b7baaa9bd5e807 data/create/damage_type/run_over.json
-eefc270acd718dc889a9a15e350cee5b9c673dfa data/create/enchantment/capacity.json
-d7ba49f29711546a65861c8140004d97fa09f16b data/create/enchantment/potato_recovery.json
-95c3416ba53bcedc4e8aae5d2e9fffb10e4f7d10 data/create/neoforge/biome_modifier/striated_ores_nether.json
-422b87075cee548e3d215822f546a06c89aaf7f4 data/create/neoforge/biome_modifier/striated_ores_overworld.json
-3bc0da630715b1fc7d796e1592dd15e0f36951a5 data/create/neoforge/biome_modifier/zinc_ore.json
+f650826db97d0562230ae0bd965ccbad4c696eff data/create/forge/biome_modifier/striated_ores_nether.json
+d401f270f1ba0e5d6940aeb8f72ebb3a02dd055e data/create/forge/biome_modifier/striated_ores_overworld.json
+ed82e4fd3dba36cf2fd81a196cc6670ae0c6da9f data/create/forge/biome_modifier/zinc_ore.json
 ed83634a4af759ef80cfd1101f5715d38268620f data/create/worldgen/configured_feature/striated_ores_nether.json
 39576de9dc1368287a96a8627bbdef34954242e0 data/create/worldgen/configured_feature/striated_ores_overworld.json
 fbf6999fb922a0770cfbea3a8bddc11ba8b1552b data/create/worldgen/configured_feature/zinc_ore.json

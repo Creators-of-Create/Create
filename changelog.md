@@ -5,6 +5,10 @@ Create 6.0.8
 #### Bug Fixes
 
 - Fix StockKeeperRequestScreen focusing search box if the chat key is pressed when typing in the address box
+- Fix signals not reacting to redstone input #9444
+- Fix held-item based menus not working correctly #9433
+- Fix z-fighting between elevators and walls
+- Fix crash with certain mods that add spawn eggs
 - Fix copycat blocks and other blocks depending on ModelData not being rendered correctly on contraptions when using indirect or instanced rendering #9410 (1.21.1)
 - Fix threshold switches not correctly counting empty slots #9420 (1.21.1)
 
