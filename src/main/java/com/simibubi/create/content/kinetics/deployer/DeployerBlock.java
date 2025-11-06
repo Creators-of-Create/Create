@@ -130,7 +130,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 
 			player.setItemInHand(hand, heldByDeployer);
 			be.player.setItemInHand(InteractionHand.MAIN_HAND, heldByPlayer);
-			be.sendData();
+			be.notifyUpdate();
 		});
 
 		return ItemInteractionResult.SUCCESS;
