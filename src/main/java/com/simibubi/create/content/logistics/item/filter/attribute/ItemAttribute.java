@@ -36,7 +36,7 @@ public interface ItemAttribute {
 
 	@Nullable
 	static ItemAttribute loadStatic(CompoundTag nbt, HolderLookup.Provider registries) {
-		return CatnipCodecUtils.decode(CODEC, registries, nbt.get("attribute")).orElse(null);
+		return CatnipCodecUtils.decodeOrNull(CODEC, registries, nbt.get("attribute"));
 	}
 
 	static List<ItemAttribute> getAllAttributes(ItemStack stack, Level level) {

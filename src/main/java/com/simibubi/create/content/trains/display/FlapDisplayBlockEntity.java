@@ -251,7 +251,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 		List<FlapDisplayLayout> lines = getLines();
 		for (int i = 0; i < lines.size(); i++)
 			lines.get(i)
-				.read(tag.getCompound("Display" + i));
+				.read(tag.getCompound("Display" + i), registries);
 	}
 
 	public int getLineIndexAt(double yCoord) {

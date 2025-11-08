@@ -13,7 +13,6 @@ import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -30,12 +29,13 @@ public record ItemNameAttribute(String itemName) implements ItemAttribute {
 	public static final StreamCodec<ByteBuf, ItemNameAttribute> STREAM_CODEC = ByteBufCodecs.STRING_UTF8
 		.map(ItemNameAttribute::new, ItemNameAttribute::itemName);
 
-	private static String extractCustomName(ItemStack stack) {
+	private static String extractCustomName(ItemStack stack, Level level) {
 		if (stack.has(DataComponents.CUSTOM_NAME)) {
 			try {
-				Component itextcomponent = Component.Serializer.fromJson(stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString(), RegistryAccess.EMPTY);
-				if (itextcomponent != null) {
-					return itextcomponent.getString();
+				String customName = stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
+				Component component = Component.Serializer.fromJson(customName, level.registryAccess());
+				if (component != null) {
+					return component.getString();
 				}
 			} catch (JsonParseException ignored) {
 			}
@@ -45,7 +45,7 @@ public record ItemNameAttribute(String itemName) implements ItemAttribute {
 
 	@Override
 	public boolean appliesTo(ItemStack itemStack, Level level) {
-		return extractCustomName(itemStack).equals(itemName);
+		return extractCustomName(itemStack, level).equals(itemName);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public record ItemNameAttribute(String itemName) implements ItemAttribute {
 		public List<ItemAttribute> getAllAttributes(ItemStack stack, Level level) {
 			List<ItemAttribute> list = new ArrayList<>();
 
-			String name = extractCustomName(stack);
+			String name = extractCustomName(stack, level);
 			if (!name.isEmpty()) {
 				list.add(new ItemNameAttribute(name));
 			}

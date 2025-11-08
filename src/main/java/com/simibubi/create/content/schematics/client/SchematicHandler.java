@@ -223,17 +223,19 @@ public class SchematicHandler implements LayeredDraw.Layer {
 		ms.pushPose();
 		transformation.applyTransformations(ms, camera);
 
-		float pt = AnimationTickHolder.getPartialTicks();
-		boolean lr = transformation.getScaleLR()
-			.getValue(pt) < 0;
-		boolean fb = transformation.getScaleFB()
-			.getValue(pt) < 0;
-		if (lr && !fb && renderers[2] != null) {
-			renderers[2].render(ms, buffer);
-		} else if (fb && !lr && renderers[1] != null) {
-			renderers[1].render(ms, buffer);
-		} else if (renderers[0] != null) {
-			renderers[0].render(ms, buffer);
+		if (deployed) {
+			float pt = AnimationTickHolder.getPartialTicks();
+			boolean lr = transformation.getScaleLR()
+				.getValue(pt) < 0;
+			boolean fb = transformation.getScaleFB()
+				.getValue(pt) < 0;
+			if (lr && !fb && renderers[2] != null) {
+				renderers[2].render(ms, buffer);
+			} else if (fb && !lr && renderers[1] != null) {
+				renderers[1].render(ms, buffer);
+			} else if (renderers[0] != null) {
+				renderers[0].render(ms, buffer);
+			}
 		}
 
 		currentTool.getTool()

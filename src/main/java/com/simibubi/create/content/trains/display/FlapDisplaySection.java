@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -140,7 +139,7 @@ public class FlapDisplaySection {
 		return tag;
 	}
 
-	public static FlapDisplaySection load(CompoundTag tag) {
+	public static FlapDisplaySection load(CompoundTag tag, HolderLookup.Provider registries) {
 		float width = tag.getFloat("Width");
 		String cycle = tag.getString("Cycle");
 		boolean singleFlap = tag.contains("SingleFlap");
@@ -154,15 +153,15 @@ public class FlapDisplaySection {
 		if (!tag.contains("Text"))
 			return section;
 
-		section.component = Component.Serializer.fromJson(tag.getString("Text"), RegistryAccess.EMPTY);
+		section.component = Component.Serializer.fromJson(tag.getString("Text"), registries);
 		section.refresh(tag.getBoolean("Transition"));
 		return section;
 	}
 
-	public void update(CompoundTag tag) {
+	public void update(CompoundTag tag, HolderLookup.Provider registries) {
 		String text = tag.getString("Text");
 		if (!text.isEmpty())
-			component = Component.Serializer.fromJson(text, RegistryAccess.EMPTY);
+			component = Component.Serializer.fromJson(text, registries);
 		if (cyclingOptions == null)
 			cyclingOptions = getFlapCycle(cycle);
 		refresh(tag.getBoolean("Transition"));

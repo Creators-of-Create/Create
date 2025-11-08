@@ -23,7 +23,6 @@ import net.createmod.catnip.data.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -80,7 +79,7 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 	}
 
 	private static final Couple<String> EMPTY = Couple.create("", "");
-	private static final String EMPTY_COMPONENT_JSON = Component.Serializer.toJson(Component.literal(""), RegistryAccess.EMPTY);
+	private static final String EMPTY_COMPONENT_JSON = "\"\""; // Same as Component.literal("")
 
 	private int redstoneStrength;
 	private Optional<DynamicComponent> customText;

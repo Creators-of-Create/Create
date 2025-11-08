@@ -1,12 +1,9 @@
-import dev.ithundxr.silk.ChangelogText
-import org.slf4j.event.Level
-
 plugins {
     id("idea")
     id("eclipse")
     id("maven-publish")
     id("net.kyori.blossom") version "2.1.0" // https://github.com/KyoriPowered/blossom
-    id("dev.ithundxr.silk") version "0.11.15" // https://github.com/ithundxr/silk
+    id("dev.ithundxr.silk") version "1.0.1" // https://github.com/ithundxr/silk
     id("net.neoforged.moddev") version "2.0.107" // https://projects.neoforged.net/neoforged/ModDevGradle
     id("me.modmuss50.mod-publish-plugin") version "0.8.4" // https://github.com/modmuss50/mod-publish-plugin
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.8" // https://github.com/JetBrains/gradle-idea-ext-plugin
@@ -83,7 +80,7 @@ neoForge {
 
             systemProperty("neoforge.enabledGameTestNamespaces", mod_id as String)
 
-            logLevel = Level.DEBUG
+//            logLevel = Level.DEBUG
         }
 
         client {
@@ -294,7 +291,7 @@ publishing {
 
 publishMods {
     file = jar.archiveFile
-    changelog = ChangelogText.getChangelogText(project).toString()
+    changelog = silk.changelog
     type = STABLE
     version = "mc$minecraft_version-$mod_version"
     displayName = "$mod_name $mod_version for mc$minecraft_version"

@@ -1,14 +1,23 @@
 package com.simibubi.create.foundation;
 
-import com.simibubi.create.AllBlockEntityTypes;
+import java.util.List;
 
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.content.equipment.clipboard.ClipboardContent;
+import com.simibubi.create.content.equipment.clipboard.ClipboardEntry;
+
+import net.createmod.catnip.codecs.CatnipCodecUtils;
 import net.createmod.catnip.nbt.NBTProcessors;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.network.Filterable;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.WrittenBookContent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class CreateNBTProcessors {
@@ -23,18 +32,15 @@ public class CreateNBTProcessors {
 			if (writableBookResource != BuiltInRegistries.ITEM.getDefaultKey() && book.getString("id").equals(writableBookResource.toString()))
 				return data;
 
-			if (!book.contains("tag", Tag.TAG_COMPOUND))
+			WrittenBookContent bookContent = CatnipCodecUtils.decodeOrNull(WrittenBookContent.CODEC, book);
+			if (bookContent == null)
 				return data;
-			CompoundTag tag = book.getCompound("tag");
 
-			if (!tag.contains("pages", Tag.TAG_LIST))
-				return data;
-			ListTag pages = tag.getList("pages", Tag.TAG_STRING);
-
-			for (Tag inbt : pages) {
-				if (NBTProcessors.textComponentHasClickEvent(inbt.getAsString()))
+			for (Filterable<Component> page : bookContent.pages()) {
+				if (NBTProcessors.textComponentHasClickEvent(page.get(false)))
 					return null;
 			}
+
 			return data;
 		});
 
@@ -44,26 +50,17 @@ public class CreateNBTProcessors {
 	}
 
 	public static CompoundTag clipboardProcessor(CompoundTag data) {
-		if (!data.contains("Item", Tag.TAG_COMPOUND))
+		DataComponentMap components = CatnipCodecUtils.decodeOrNull(DataComponentMap.CODEC, data.getCompound("components"));
+		if (components == null)
 			return data;
-		CompoundTag item = data.getCompound("Item");
 
-		if (!item.contains("components", Tag.TAG_COMPOUND))
+		ClipboardContent content = components.get(AllDataComponents.CLIPBOARD_CONTENT);
+		if (content == null)
 			return data;
-		CompoundTag itemComponents = item.getCompound("components");
 
-		if (!itemComponents.contains("create:clipboard_pages", Tag.TAG_LIST))
-			return data;
-		ListTag pages = itemComponents.getList("create:clipboard_pages", Tag.TAG_LIST);
-
-		for (Tag page : pages) {
-			if (!(page instanceof ListTag entries))
-				return data;
-
-			for (int i = 0; i < entries.size(); i++) {
-				CompoundTag entry = entries.getCompound(i);
-
-				if (NBTProcessors.textComponentHasClickEvent(entry.getCompound("text").getAsString()))
+		for (List<ClipboardEntry> entries : content.pages()) {
+			for (ClipboardEntry entry : entries) {
+				if (NBTProcessors.textComponentHasClickEvent(entry.text))
 					return null;
 			}
 		}

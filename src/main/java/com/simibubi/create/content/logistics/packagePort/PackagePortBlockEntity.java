@@ -94,7 +94,7 @@ public abstract class PackagePortBlockEntity extends SmartBlockEntity implements
 		super.read(tag, registries, clientPacket);
 		inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
 		PackagePortTarget prevTarget = target;
-		target = CatnipCodecUtils.decode(PackagePortTarget.CODEC, registries, tag.getCompound("Target")).orElse(null);
+		target = CatnipCodecUtils.decodeOrNull(PackagePortTarget.CODEC, registries, tag.getCompound("Target"));
 		addressFilter = tag.getString("AddressFilter");
 		acceptsPackages = tag.getBoolean("AcceptsPackages");
 		if (clientPacket && prevTarget != target)

@@ -590,8 +590,7 @@ public class PackagerBlockEntity extends SmartBlockEntity {
 			c -> CatnipCodecUtils.decode(BigItemStack.CODEC, registries, c)
 				.orElseThrow());
 		if (compound.contains("LastSummary"))
-			availableItems = CatnipCodecUtils.decode(InventorySummary.CODEC, registries, compound.getCompound("LastSummary"))
-				.orElse(null);
+			availableItems = CatnipCodecUtils.decodeOrNull(InventorySummary.CODEC, registries, compound.getCompound("LastSummary"));
 	}
 
 	@Override
