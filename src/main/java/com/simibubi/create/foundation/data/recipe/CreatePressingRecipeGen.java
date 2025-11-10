@@ -56,7 +56,11 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 
 	// Oh The Biomes We've Gone
 
-	BWG = moddedPaths(Mods.BWG, "lush_grass"),
+	BWG = moddedPaths(Mods.BWG, "lush_dirt", "sandy_dirt"),
+
+	BWG_GRASS_PATH = create(Mods.BWG.recipeId("lush_grass_path"), b -> b.require(Mods.BWG, "lush_grass_block")
+		.output(Mods.BWG, "lush_dirt_path")
+		.whenModLoaded(Mods.BWG.getId())),
 
 	//Infernal Expansion
 	IX_CRIMSON_PATH = create(Mods.IX.recipeId("crimson_nylium_path"), b -> b.require(Blocks.CRIMSON_NYLIUM)
