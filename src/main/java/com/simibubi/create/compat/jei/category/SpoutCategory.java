@@ -34,6 +34,7 @@ import net.neoforged.neoforge.capabilities.Capabilities.FluidHandler;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.fluids.crafting.DataComponentFluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 @ParametersAreNonnullByDefault
@@ -52,9 +53,11 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 				FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
 				Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
 				ResourceLocation id = Create.asResource("potions");
+				SizedFluidIngredient fluidIngredient = new SizedFluidIngredient(
+					DataComponentFluidIngredient.of(false, fluidFromPotionItem), fluidFromPotionItem.getAmount());
 				FillingRecipe recipe = new StandardProcessingRecipe.Builder<>(FillingRecipe::new, id)
 						.withItemIngredients(bottle)
-					.withFluidIngredients(SizedFluidIngredient.of(fluidFromPotionItem))
+					.withFluidIngredients(fluidIngredient)
 						.withSingleItemOutput(stack)
 						.build();
 				consumer.accept(new RecipeHolder<>(id, recipe));
@@ -93,9 +96,11 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 					ResourceLocation fluidName = RegisteredObjectsHelper.getKeyOrThrow(fluidCopy.getFluid());
 					ResourceLocation id = Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()
 							+ "_with_" + fluidName.getNamespace() + "_" + fluidName.getPath());
+					SizedFluidIngredient fluidIngredient = new SizedFluidIngredient(
+						DataComponentFluidIngredient.of(false, fluidCopy), fluidCopy.getAmount());
 					FillingRecipe recipe = new StandardProcessingRecipe.Builder<>(FillingRecipe::new, id)
 							.withItemIngredients(bucket)
-						.withFluidIngredients(SizedFluidIngredient.of(fluidCopy))
+						.withFluidIngredients(fluidIngredient)
 							.withSingleItemOutput(container)
 							.build();
 					consumer.accept(new RecipeHolder<>(id, recipe));
