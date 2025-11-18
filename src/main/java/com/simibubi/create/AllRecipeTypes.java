@@ -4,8 +4,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipeParams;
-
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +18,7 @@ import com.simibubi.create.content.kinetics.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.kinetics.crusher.CrushingRecipe;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe;
+import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipeParams;
 import com.simibubi.create.content.kinetics.deployer.ManualApplicationRecipe;
 import com.simibubi.create.content.kinetics.fan.processing.HauntingRecipe;
 import com.simibubi.create.content.kinetics.fan.processing.SplashingRecipe;
@@ -60,9 +59,9 @@ public enum AllRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	CRUSHING(CrushingRecipe::new),
 	CUTTING(CuttingRecipe::new),
 	MILLING(MillingRecipe::new),
-	BASIN(BasinRecipe::new),
-	MIXING(MixingRecipe::new),
-	COMPACTING(CompactingRecipe::new),
+	BASIN(() -> new BasinRecipe.Serializer<>(BasinRecipe::new)),
+	MIXING(() -> new BasinRecipe.Serializer<>(MixingRecipe::new)),
+	COMPACTING(() -> new BasinRecipe.Serializer<>(CompactingRecipe::new)),
 	PRESSING(PressingRecipe::new),
 	SANDPAPER_POLISHING(SandPaperPolishingRecipe::new),
 	SPLASHING(SplashingRecipe::new),
@@ -79,8 +78,8 @@ public enum AllRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	ITEM_COPYING(() -> new SimpleCraftingRecipeSerializer<>(ItemCopyingRecipe::new), () -> RecipeType.CRAFTING, false);
 
 	public static final Predicate<RecipeHolder<?>> CAN_BE_AUTOMATED = r -> !r.id()
-			.getPath()
-			.endsWith("_manual_only");
+		.getPath()
+		.endsWith("_manual_only");
 
 	public final ResourceLocation id;
 	public final Supplier<RecipeSerializer<?>> serializerSupplier;

@@ -31,7 +31,7 @@ public class ProcessingRecipeParams {
 	protected int processingDuration;
 	protected HeatCondition requiredHeat;
 
-	protected ProcessingRecipeParams() {
+	public ProcessingRecipeParams() {
 		ingredients = NonNullList.create();
 		results = NonNullList.create();
 		fluidIngredients = NonNullList.create();

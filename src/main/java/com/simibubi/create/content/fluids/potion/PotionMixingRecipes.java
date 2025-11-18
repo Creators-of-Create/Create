@@ -10,8 +10,8 @@ import java.util.Set;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
+import com.simibubi.create.content.processing.basin.BasinRecipe.Builder;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe.Builder;
 import com.simibubi.create.foundation.mixin.accessor.PotionBrewingAccessor;
 
 import net.minecraft.core.Holder.Reference;
@@ -127,7 +127,7 @@ public class PotionMixingRecipes {
 				for (ItemStack stack : supportedContainerStacks) {
 					if (input.test(stack)) {
 						ItemStack[] stacks = input.getItems();
-						if (stacks.length == 0){
+						if (stacks.length == 0) {
 							continue;
 						}
 						FluidStack inputFluid = PotionFluidHandler.getFluidFromPotionItem(stacks[0]);
@@ -148,11 +148,11 @@ public class PotionMixingRecipes {
 	private static RecipeHolder<MixingRecipe> createRecipe(String id, Ingredient ingredient, FluidStack fromFluid, FluidStack toFluid) {
 		ResourceLocation recipeId = Create.asResource(id);
 		MixingRecipe recipe = new Builder<>(MixingRecipe::new, recipeId)
-				.require(ingredient)
+			.require(ingredient)
 			.require(SizedFluidIngredient.of(fromFluid))
-				.output(toFluid)
-				.requiresHeat(HeatCondition.HEATED)
-				.build();
+			.output(toFluid)
+			.requiresHeat(HeatCondition.HEATED)
+			.build();
 
 		return new RecipeHolder<>(recipeId, recipe);
 	}

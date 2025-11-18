@@ -9,7 +9,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.processing.basin.BasinRecipe;
+import com.simibubi.create.content.processing.basin.AbstractBasinRecipe;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
@@ -31,17 +31,17 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 @ParametersAreNonnullByDefault
-public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
+public class BasinCategory<R extends AbstractBasinRecipe<?>> extends CreateRecipeCategory<R> {
 
 	private final boolean needsHeating;
 
-	public BasinCategory(Info<BasinRecipe> info, boolean needsHeating) {
+	public BasinCategory(Info<R> info, boolean needsHeating) {
 		super(info);
 		this.needsHeating = needsHeating;
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, BasinRecipe recipe, IFocusGroup focuses) {
+	public void setRecipe(IRecipeLayoutBuilder builder, R recipe, IFocusGroup focuses) {
 		List<Pair<Ingredient, MutableInt>> condensedIngredients = ItemHelper.condenseIngredients(recipe.getIngredients());
 
 		int size = condensedIngredients.size() + recipe.getFluidIngredients().size();
@@ -57,9 +57,9 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			}
 
 			builder
-					.addSlot(RecipeIngredientRole.INPUT, 17 + xOffset + (i % 3) * 19, 51 - (i / 3) * 19)
-					.setBackground(getRenderedSlot(), -1, -1)
-					.addItemStacks(stacks);
+				.addSlot(RecipeIngredientRole.INPUT, 17 + xOffset + (i % 3) * 19, 51 - (i / 3) * 19)
+				.setBackground(getRenderedSlot(), -1, -1)
+				.addItemStacks(stacks);
 			i++;
 		}
 		for (SizedFluidIngredient fluidIngredient : recipe.getFluidIngredients()) {
@@ -77,10 +77,10 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			int yPosition = -19 * (i / 2) + 51;
 
 			builder
-					.addSlot(RecipeIngredientRole.OUTPUT, xPosition, yPosition)
-					.setBackground(getRenderedSlot(result), -1, -1)
-					.addItemStack(result.getStack())
-					.addRichTooltipCallback(addStochasticTooltip(result));
+				.addSlot(RecipeIngredientRole.OUTPUT, xPosition, yPosition)
+				.setBackground(getRenderedSlot(result), -1, -1)
+				.addItemStack(result.getStack())
+				.addRichTooltipCallback(addStochasticTooltip(result));
 			i++;
 		}
 
@@ -94,18 +94,18 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (!requiredHeat.testBlazeBurner(HeatLevel.NONE)) {
 			builder
-					.addSlot(RecipeIngredientRole.RENDER_ONLY, 134, 81)
-					.addItemStack(AllBlocks.BLAZE_BURNER.asStack());
+				.addSlot(RecipeIngredientRole.RENDER_ONLY, 134, 81)
+				.addItemStack(AllBlocks.BLAZE_BURNER.asStack());
 		}
 		if (!requiredHeat.testBlazeBurner(HeatLevel.KINDLED)) {
 			builder
-					.addSlot(RecipeIngredientRole.CATALYST, 153, 81)
-					.addItemStack(AllItems.BLAZE_CAKE.asStack());
+				.addSlot(RecipeIngredientRole.CATALYST, 153, 81)
+				.addItemStack(AllItems.BLAZE_CAKE.asStack());
 		}
 	}
 
 	@Override
-	public void draw(BasinRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(R recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 
 		boolean noHeat = requiredHeat == HeatCondition.NONE;
@@ -124,7 +124,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
 		heatBar.render(graphics, 4, 80);
 		graphics.drawString(Minecraft.getInstance().font, CreateLang.translateDirect(requiredHeat.getTranslationKey()), 9,
-				86, requiredHeat.getColor(), false);
+			86, requiredHeat.getColor(), false);
 	}
 
 }

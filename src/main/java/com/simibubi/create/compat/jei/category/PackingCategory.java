@@ -1,10 +1,13 @@
 package com.simibubi.create.compat.jei.category;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -13,10 +16,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 @ParametersAreNonnullByDefault
-public class PackingCategory extends BasinCategory {
+public class PackingCategory extends BasinCategory<BasinRecipe> {
 
 	private final AnimatedPress press = new AnimatedPress(true);
 	private final AnimatedBlazeBurner heater = new AnimatedBlazeBurner();
@@ -53,17 +54,17 @@ public class PackingCategory extends BasinCategory {
 		while (i < size) {
 			Ingredient ingredient = ingredients.get(i);
 			builder
-					.addSlot(RecipeIngredientRole.INPUT, (rows == 2 ? 27 : 18) + (i % rows) * 19, 51 - (i / rows) * 19)
-					.setBackground(getRenderedSlot(), -1, -1)
-					.addIngredients(ingredient);
+				.addSlot(RecipeIngredientRole.INPUT, (rows == 2 ? 27 : 18) + (i % rows) * 19, 51 - (i / rows) * 19)
+				.setBackground(getRenderedSlot(), -1, -1)
+				.addIngredients(ingredient);
 
 			i++;
 		}
 
 		builder
-				.addSlot(RecipeIngredientRole.OUTPUT, 142, 51)
-				.setBackground(getRenderedSlot(), -1, -1)
-				.addItemStack(getResultItem(recipe));
+			.addSlot(RecipeIngredientRole.OUTPUT, 142, 51)
+			.setBackground(getRenderedSlot(), -1, -1)
+			.addItemStack(getResultItem(recipe));
 	}
 
 	@Override
