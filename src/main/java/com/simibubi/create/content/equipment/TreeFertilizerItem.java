@@ -1,14 +1,18 @@
 package com.simibubi.create.content.equipment;
 
 
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.createmod.catnip.levelWrappers.PlacementSimulationServerLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
@@ -16,7 +20,14 @@ import net.minecraft.world.level.block.MangrovePropaguleBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
+import java.util.Map;
+
 public class TreeFertilizerItem extends Item {
+	private static final Map<ResourceKey<Level>, TreesDreamWorld> WORLD_CACHE = new Reference2ObjectOpenHashMap<>();
+
+	public static void clearCache() {
+		WORLD_CACHE.clear();
+	}
 
 	public TreeFertilizerItem(Properties properties) {
 		super(properties);
@@ -38,8 +49,11 @@ public class TreeFertilizerItem extends Item {
 				return InteractionResult.SUCCESS;
 			}
 
+			ServerLevel level = (ServerLevel) context.getLevel();
+
 			BlockPos saplingPos = context.getClickedPos();
-			TreesDreamWorld world = new TreesDreamWorld((ServerLevel) context.getLevel(), saplingPos);
+			TreesDreamWorld world = WORLD_CACHE.computeIfAbsent(level.dimension(), k -> new TreesDreamWorld(level));
+			world.initializeSoil(level.getBlockState(saplingPos.below()));
 
 			for (BlockPos pos : BlockPos.betweenClosed(-1, 0, -1, 1, 0, 1)) {
 				if (context.getLevel()
@@ -90,17 +104,19 @@ public class TreeFertilizerItem extends Item {
 	}
 
 	private static class TreesDreamWorld extends PlacementSimulationServerLevel {
-		private final BlockState soil;
+		private BlockState soil;
 
-		protected TreesDreamWorld(ServerLevel wrapped, BlockPos saplingPos) {
+		protected TreesDreamWorld(ServerLevel wrapped) {
 			super(wrapped);
-			BlockState stateUnderSapling = wrapped.getBlockState(saplingPos.below());
+		}
 
+		public void initializeSoil(BlockState stateUnderSapling) {
 			// Tree features don't seem to succeed with mud as soil
 			if (stateUnderSapling.is(BlockTags.DIRT))
 				stateUnderSapling = Blocks.DIRT.defaultBlockState();
 
 			soil = stateUnderSapling;
+			blocksAdded.clear();
 		}
 
 		@Override
@@ -117,5 +133,4 @@ public class TreeFertilizerItem extends Item {
 			return super.setBlock(pos, newState, flags);
 		}
 	}
-
 }
