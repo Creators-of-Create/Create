@@ -3,6 +3,8 @@ package com.simibubi.create.content.kinetics.chainConveyor;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.minecraft.client.Camera;
+
 import org.joml.FrustumIntersection;
 import org.joml.Matrix4f;
 
@@ -43,6 +45,7 @@ import org.joml.Vector3f;
 public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConveyorBlockEntity> {
 
 	public static final ResourceLocation CHAIN_LOCATION = ResourceLocation.withDefaultNamespace("textures/block/chain.png");
+	public static final int MIP_DISTANCE = 48;
 	public static final int MIP_DISTANCE_SQR = 48 * 48;
 
 	public ChainConveyorRenderer(Context context) {
@@ -145,78 +148,43 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 	}
 
 	/**
-	 * Calculate the intersection points between a line segment and a circle centered at cameraPos with radius LODDistance.
-	 * The intersections array is used to store up to 2 intersection points.
-	 * Returns the number of intersection points (0, 1, or 2).
-	 */
-	private static int calculateLineCircleIntersection(Vec3 start, Vec3 end, Vec3 cameraPos, Vec3[] intersections) {
-		Vec3 ab = end.subtract(start);
-		Vec3 ac = start.subtract(cameraPos);
-		float a = (float) ab.lengthSqr();
-		float b = 2 * (float) ac.dot(ab);
-		float c = (float) ac.lengthSqr() - MIP_DISTANCE_SQR;
-		float discriminant = b * b - 4 * a * c;
-
-		if (discriminant < 0) {
-			return 0; // No intersection
-		}
-
-		float sqrtDisc = Mth.sqrt(discriminant);
-		float t1 = (-b - sqrtDisc) / (2 * a);
-		float t2 = (-b + sqrtDisc) / (2 * a);
-		int count = 0;
-		if (t1 >= 0 && t1 <= 1) {
-			intersections[count++] = start.add(ab.scale(t1));
-		}
-		// Avoid duplicate calculations (when t1 and t2 are almost equal)
-		if (t2 >= 0 && t2 <= 1 && Math.abs(t2 - t1) > 1e-6f) {
-			intersections[count++] = start.add(ab.scale(t2));
-		}
-		return count;
-	}
-
-	/**
-	 * Cut the line segment based on the intersection points with the circle centered at the camera position.
+	 * Cut the line segment based on depth.
 	 * The output Vector3f contains:
-	 * x: The distance from the start of the line segment to the intersection point (outside the LOD);
-	 * y: The length of the part of the line segment LOD0;
-	 * z: The distance from the intersection point to the end of the line segment (outside the LOD).
+	 * X: length inside LOD
+	 * Y: length outside LOD
+	 * Z: start point is farther than end point, 1 if true, -1 if false
 	 */
-	public static Vector3f calculateLODCut(Vec3 start, Vec3 end, Vec3 cameraPos) {
-		Vec3[] intersections = new Vec3[2];
-		int intersectionCount = calculateLineCircleIntersection(start, end, cameraPos, intersections);
-		float totalLength = (float) start.distanceTo(end);
-		float x = 0, y = 0, z = 0;
+	public static Vector3f calculateLODCut(Vec3 start, Vec3 end) {
+		Camera camera = Minecraft.getInstance().getBlockEntityRenderDispatcher().camera;
+		Vector3f forward = camera.getLookVector();
+		Vec3 camPos = camera.getPosition();
+		Vector3f point = camPos.toVector3f().fma(MIP_DISTANCE, forward);
 
-		if (intersectionCount == 0) {
-			// No intersection: Determine if the line segment is entirely inside or outside the circle
-			if (start.distanceToSqr(cameraPos) < MIP_DISTANCE_SQR && end.distanceToSqr(cameraPos) < MIP_DISTANCE_SQR) {
-				// Both ends are inside the circle
-				y = totalLength;
-			} else {
-				// The line segment is entirely outside the circle
-				x = totalLength;
-			}
-		} else if (intersectionCount == 1) {
-			// Only one intersection point, determine which end is inside the circle
-			// one end must be inside and the other outside
-			boolean endInside = end.distanceToSqr(cameraPos) < MIP_DISTANCE_SQR;
-			if (endInside) {
-				x = (float) start.distanceTo(intersections[0]);
-				y = (float) intersections[0].distanceTo(end);
-				z = 0;
-			} else {
-				x = 0;
-				y = (float) start.distanceTo(intersections[0]);
-				z = (float) intersections[0].distanceTo(end);
-			}
-		} else if (intersectionCount == 2) {
-			x = (float) start.distanceTo(intersections[0]);
-			y = (float) intersections[0].distanceTo(intersections[1]);
-			z = (float) end.distanceTo(intersections[1]);
+		float distStart = start.toVector3f().sub(point).dot(forward);
+		float distEnd = end.toVector3f().sub(point).dot(forward);
+		float totalLength = (float) start.distanceTo(end);
+
+		float startIsFar = camPos.distanceToSqr(start) > camPos.distanceToSqr(end) ? 1 : -1;
+
+		if (distStart < 1e-6f && distEnd < 1e-6f) { // Both points are inside LOD
+			return new Vector3f(totalLength, 0, startIsFar);
 		}
 
-		return new Vector3f(x, y, z);
+		if (distStart > 1e-6f && distEnd > 1e-6f) { // Both points are outside LOD
+			return new Vector3f(0, totalLength, startIsFar);
+		}
+
+		float denom = distStart - distEnd;
+		if (Math.abs(denom) < 1e-6f) {
+			return new Vector3f(0, totalLength, startIsFar);
+		}
+
+		float t = distStart / denom;
+		if (denom < 0) {
+			return new Vector3f(totalLength * t, totalLength * (1.0f - t), startIsFar);
+		} else {
+			return new Vector3f(totalLength * (1.0f - t), totalLength * t, startIsFar);
+		}
 	}
 
 	private void renderChains(ChainConveyorBlockEntity be, PoseStack ms, MultiBufferSource buffer, int light,
@@ -284,7 +252,7 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 				chain.uncenter();
 
 				if (frustum != null) {
-					renderChainWithLod(ms, buffer, animation, light1, light2, camPos, start, end, chain);
+					renderChainWithLod(ms, buffer, animation, light1, light2, start, end, chain);
 				} else {
 					renderChain(ms, buffer, animation, 0, stats.chainLength(), light1, light2, false);
 				}
@@ -331,7 +299,7 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 				int light1 = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, tilePos),
 					level.getBrightness(LightLayer.SKY, tilePos));
 
-				renderChainWithLod(ms, buffer, animation, light1, light1, camPos, start, end, chain);
+				renderChainWithLod(ms, buffer, animation, light1, light1, start, end, chain);
 				ms.popPose();
 			}
 
@@ -339,20 +307,21 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 	}
 
 	public static void renderChainWithLod(PoseStack ms, MultiBufferSource buffer, float animation, int light1,
-		int light2, Vec3 camPos, Vec3 chainStart, Vec3 chainEnd, TransformStack chain) {
-		Vector3f length = calculateLODCut(chainStart, chainEnd, camPos);
+		int light2, Vec3 chainStart, Vec3 chainEnd, TransformStack chain) {
+		Vector3f length = calculateLODCut(chainStart, chainEnd);
+		if (length.z > 0) {
+			float temp = length.x;
+			length.x = length.y;
+			length.y = temp;
+		}
+
 		if (length.x > 1e-6f) {
-			renderChain(ms, buffer, animation, 0, length.x, light1, light2, true);
+			renderChain(ms, buffer, animation, 0, length.x, light1, light2, length.z > 0);
 		}
 
 		if (length.y > 1e-6f) {
 			chain.translate(0, length.x, 0);
-			renderChain(ms, buffer, animation, length.x, length.y, light1, light2, false);
-		}
-
-		if (length.z > 1e-6f) {
-			chain.translate(0, length.y, 0);
-			renderChain(ms, buffer, animation, 0, length.z, light1, light2, true);
+			renderChain(ms, buffer, animation, length.x, length.y, light1, light2, length.z <= 0);
 		}
 	}
 
