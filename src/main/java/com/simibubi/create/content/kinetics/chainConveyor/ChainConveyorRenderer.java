@@ -81,14 +81,14 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 				.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 
 		for (ChainConveyorPackage box : be.loopingPackages)
-			renderBox(be, ms, buffer, overlay, pos, box, partialTicks, frustum, camPos);
+			renderBox(be, ms, buffer, overlay, pos, box, partialTicks);
 		for (Entry<BlockPos, List<ChainConveyorPackage>> entry : be.travellingPackages.entrySet())
 			for (ChainConveyorPackage box : entry.getValue())
-				renderBox(be, ms, buffer, overlay, pos, box, partialTicks, frustum, camPos);
+				renderBox(be, ms, buffer, overlay, pos, box, partialTicks);
 	}
 
 	private void renderBox(ChainConveyorBlockEntity be, PoseStack ms, MultiBufferSource buffer, int overlay,
-		BlockPos pos, ChainConveyorPackage box, float partialTicks, FrustumIntersection frustum, Vec3 camPos) {
+		BlockPos pos, ChainConveyorPackage box, float partialTicks) {
 		if (box.worldPosition == null)
 			return;
 		if (box.item == null || box.item.isEmpty())
@@ -100,11 +100,6 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 
 		Vec3 position = physicsData.prevPos.lerp(physicsData.pos, partialTicks);
 		Vec3 targetPosition = physicsData.prevTargetPos.lerp(physicsData.targetPos, partialTicks);
-		if (frustum != null && !frustum.testSphere(
-			(float) (targetPosition.x - camPos.x),
-			(float) (targetPosition.y - camPos.y),
-			(float) (targetPosition.z - camPos.z), 1))
-			return;
 
 		float yaw = AngleHelper.angleLerp(partialTicks, physicsData.prevYaw, physicsData.yaw);
 		Vec3 offset =
