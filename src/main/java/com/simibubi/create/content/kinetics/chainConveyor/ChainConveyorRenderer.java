@@ -3,13 +3,6 @@ package com.simibubi.create.content.kinetics.chainConveyor;
 import java.util.List;
 import java.util.Map.Entry;
 
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.SectionPos;
-import net.minecraft.world.level.chunk.ChunkAccess;
-
-import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.chunk.status.ChunkStatus;
-
 import org.joml.FrustumIntersection;
 import org.joml.Matrix4f;
 
@@ -64,6 +57,7 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 
 		FrustumIntersection frustum = null;
 		Vec3 camPos = null;
+		// If we are in main world, the frustum is not null, otherwise we are in a virtual world like ponder
 		if (Minecraft.getInstance().level == be.getLevel()) {
 			frustum = getFrustumIntersection();
 			camPos = Minecraft.getInstance().getBlockEntityRenderDispatcher().camera.getPosition();
@@ -227,7 +221,9 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 
 	private void renderChains(ChainConveyorBlockEntity be, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay, FrustumIntersection frustum, Vec3 camPos, boolean renderCentre) {
-		if (frustum != null) {
+		if (frustum != null) { // Rendering main world
+			// Discard rendering if the conveyor is out of render distance
+			// Instead, we would render a "virtual" chain from the other end of the connection if needed
 			float renderDistance = Minecraft.getInstance().gameRenderer.getRenderDistance();
 			if (camPos.distanceToSqr(be.getBlockPos().getCenter()) > renderDistance * renderDistance)
 				return;
@@ -295,6 +291,9 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 				ms.popPose();
 			}
 
+			// Render the "virtual" chain on the other side if the target is out of render distance
+			// So that we could see a pair of chains
+			// Do not render this if we are in a virtual world
 			if (frustum == null)
 				continue;
 
