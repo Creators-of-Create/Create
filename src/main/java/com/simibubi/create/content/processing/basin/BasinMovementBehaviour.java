@@ -53,4 +53,18 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 //				((BasinBlockEntity) blockEntity).readOnlyItems(context.blockEntityData, context.world.registryAccess());
 //		}
 	}
+
+	private int getLastTimesChanged(MovementContext context) {
+		if(context.temporaryData != null) return (int)context.temporaryData;
+		return 0;
+	}
+
+	private @Nullable BasinMountedItemStorage getMountedItemStorage(MovementContext context) {
+		MountedItemStorageWrapper wrapper = context.contraption.getStorage().getMountedItems();
+		MountedItemStorage storageHere = wrapper.storages.get(context.localPos);
+
+		if(storageHere instanceof BasinMountedItemStorage basin) return basin;
+		return null;
+	}
+
 }
