@@ -55,7 +55,7 @@ public class MinecartSim2020 {
 				&& Mth.equal(furnace.zPush, 0);
 
 		MinecartController controller = c.getData(AllAttachmentTypes.MINECART_CONTROLLER);
-		if (controller != MinecartController.EMPTY)
+		if (controller.isPresent())
 			return !controller.isStalled();
 		return true;
 	}

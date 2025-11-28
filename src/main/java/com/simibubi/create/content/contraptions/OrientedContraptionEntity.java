@@ -281,7 +281,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		boolean isStalled = isStalled();
 
 		MinecartController controller = riding.getData(AllAttachmentTypes.MINECART_CONTROLLER);
-		if (controller != MinecartController.EMPTY) {
+		if (controller.isPresent()) {
 			if (!level().isClientSide())
 				controller.setStalledExternally(isStalled);
 		} else {
