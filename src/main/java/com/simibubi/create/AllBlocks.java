@@ -740,6 +740,7 @@ public class AllBlocks {
 		.blockstate(new BasinGenerator()::generate)
 		.addLayer(() -> RenderType::cutoutMipped)
 		.onRegister(movementBehaviour(new BasinMovementBehaviour()))
+		.transform(mountedItemStorage(AllMountedStorageTypes.BASIN_ITEM))
 		.item()
 		.transform(customItemModel("_", "block"))
 		.register();

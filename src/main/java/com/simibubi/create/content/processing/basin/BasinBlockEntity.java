@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import com.simibubi.create.foundation.utility.InventoryUtil;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -790,6 +792,11 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			cachedHeatLevel = getHeatLevelOf(level.getBlockState(getBlockPos().below(1)));
 		}
 		return cachedHeatLevel;
+	}
+
+	public void applyInventories(BasinInventory inputInventory, SmartInventory outputInventory) {
+		InventoryUtil.copyInventoryToFrom(this.inputInventory, inputInventory);
+		InventoryUtil.copyInventoryToFrom(this.outputInventory, outputInventory);
 	}
 
 	static class BasinValueBox extends ValueBoxTransform.Sided {
