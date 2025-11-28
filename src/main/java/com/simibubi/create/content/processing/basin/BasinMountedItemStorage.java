@@ -7,7 +7,6 @@ import com.simibubi.create.api.contraption.storage.item.MountedItemStorage;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
 
 import com.simibubi.create.foundation.codec.CreateCodecs;
-import com.simibubi.create.foundation.item.SmartInventory;
 
 import com.simibubi.create.foundation.utility.InventoryUtil;
 
@@ -32,15 +31,26 @@ public class BasinMountedItemStorage extends MountedItemStorage {
 		).apply(i, BasinMountedItemStorage::fromCodec)
 	);
 
+	protected BasinInventory inputInventory;
+	protected BasinInventory outputInventory;
+	protected IItemHandlerModifiable itemCapability;
+
+	private int timesChanged;
+
 	protected BasinMountedItemStorage(MountedItemStorageType<?> type) {
 		super(type);
 
 		inputInventory = new BasinInventory(9, null);
-		outputInventory = new BasinInventory(9, null)
+		inputInventory.whenContentsChanged(i -> timesChanged++);
+
+		outputInventory = new BasinInventory(9, null);
+		outputInventory.whenContentsChanged(i -> timesChanged++)
 			.forbidInsertion()
 			.withMaxStackSize(64);
 
 		itemCapability = new CombinedInvWrapper(inputInventory, outputInventory);
+
+		timesChanged = 0;
 	}
 
 	protected BasinMountedItemStorage() { this(AllMountedStorageTypes.BASIN_ITEM.get()); }
@@ -63,17 +73,10 @@ public class BasinMountedItemStorage extends MountedItemStorage {
 		return basinMountedItemStorage;
 	}
 
-	public BasinInventory inputInventory() {
-		return this.inputInventory;
-	}
+	public BasinInventory inputInventory() { return this.inputInventory; }
+	public BasinInventory outputInventory() { return this.outputInventory; }
 
-	public BasinInventory outputInventory() {
-		return (BasinInventory)this.outputInventory;
-	}
-
-	protected BasinInventory inputInventory;
-	protected SmartInventory outputInventory;
-	protected IItemHandlerModifiable itemCapability;
+	public int getTimesChanged() { return timesChanged; }
 
 	@Override
 	public void unmount(Level level, BlockState state, BlockPos pos, @Nullable BlockEntity be) {
