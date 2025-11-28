@@ -1,9 +1,14 @@
 package com.simibubi.create.content.processing.basin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
+
+import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.animation.AnimationTickHolder;
@@ -14,6 +19,7 @@ import net.createmod.catnip.platform.NeoForgeCatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -21,6 +27,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -52,22 +59,18 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 		RandomSource r = RandomSource.create(pos.hashCode());
 		Vec3 baseVector = new Vec3(.125, level, 0);
 
-		IItemHandlerModifiable inv = basin.itemCapability;
-		if (inv == null)
-			inv = new ItemStackHandler();
+		IItemHandlerModifiable handler = basin.itemCapability;
+		if (handler == null)
+			handler = new ItemStackHandler();
 
-		int itemCount = 0;
-		for (int slot = 0; slot < inv.getSlots(); slot++)
-			if (!inv.getStackInSlot(slot)
-				.isEmpty())
-				itemCount++;
+		int itemCount = getItemCount(handler);
 
 		if (itemCount == 1)
 			baseVector = new Vec3(0, level, 0);
 
 		float anglePartition = 360f / itemCount;
-		for (int slot = 0; slot < inv.getSlots(); slot++) {
-			ItemStack stack = inv.getStackInSlot(slot);
+		for (int slot = 0; slot < handler.getSlots(); slot++) {
+			ItemStack stack = handler.getStackInSlot(slot);
 			if (stack.isEmpty())
 				continue;
 
@@ -136,7 +139,7 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 		}
 	}
 
-	protected void renderItem(PoseStack ms, MultiBufferSource buffer, int light, int overlay, ItemStack stack) {
+	protected static void renderItem(PoseStack ms, MultiBufferSource buffer, int light, int overlay, ItemStack stack) {
 		Minecraft mc = Minecraft.getInstance();
 		mc.getItemRenderer()
 			.renderStatic(stack, ItemDisplayContext.GROUND, light, overlay, ms, buffer, mc.level, 0);
@@ -183,6 +186,82 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 		}
 
 		return yMax;
+	}
+
+	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
+									ContraptionMatrices matrices, MultiBufferSource buffer, BasinMountedItemStorage itemStorage) {
+		PoseStack ms = matrices.getModelViewProjection();
+		ms.pushPose();
+
+		float fluidLevel = 0;
+		float level = .125f;
+
+		BlockEntity blockEntity = context.contraption.getBlockEntityClientSide(context.localPos);
+		if(!(blockEntity instanceof BasinBlockEntity basin)) return;
+
+		BlockPos basinPos = basin.getBlockPos();
+		Vec3 basinCenterPos = Vec3.atLowerCornerOf(basinPos);
+		Vec3 baseVector = new Vec3(.125, level, 0);
+
+		ms.translate(basinCenterPos.x, basinCenterPos.y, basinCenterPos.z);
+		ms.translate(.5, .2f, .5);
+
+		RandomSource random = RandomSource.create(basinPos.hashCode());
+
+		IItemHandlerModifiable handler = itemStorage.itemCapability;
+
+		int itemCount = getItemCount(handler);
+
+		if (itemCount == 1)
+			baseVector = new Vec3(0, level, 0);
+
+		float anglePartition = 360f / itemCount;
+		for (int slot = 0; slot < handler.getSlots(); slot++) {
+			ItemStack stack = handler.getStackInSlot(slot);
+			if (stack.isEmpty())
+				continue;
+
+			ms.pushPose();
+
+			if (fluidLevel > 0) {
+				ms.translate(0,
+					(Mth.sin(
+						AnimationTickHolder.getRenderTime(context.world) / 12f + anglePartition * itemCount) + 1.5f)
+						* 1 / 32f,
+					0);
+			}
+
+			Vec3 itemPosition = VecHelper.rotate(baseVector, anglePartition * itemCount, Axis.Y);
+			ms.translate(itemPosition.x, itemPosition.y, itemPosition.z);
+			TransformStack.of(ms)
+				.rotateYDegrees(anglePartition * itemCount + 35)
+				.rotateXDegrees(65);
+
+			int light = BlockEntityRenderHelper.getLight(context.world, renderWorld, basinPos, matrices.getLight());
+
+			for (int i = 0; i <= stack.getCount() / 8; i++) {
+				ms.pushPose();
+
+				Vec3 vec = VecHelper.offsetRandomly(Vec3.ZERO, random, 1 / 16f);
+
+				ms.translate(vec.x, vec.y, vec.z);
+				renderItem(ms, buffer, light, OverlayTexture.NO_OVERLAY, stack);
+				ms.popPose();
+			}
+			ms.popPose();
+
+			itemCount--;
+		}
+
+		ms.popPose();
+	}
+
+	private static int getItemCount(IItemHandlerModifiable handler) {
+		int itemCount = 0;
+		for (int slot = 0; slot < handler.getSlots(); slot++)
+			if (!handler.getStackInSlot(slot).isEmpty())
+				itemCount++;
+		return itemCount;
 	}
 
 	@Override

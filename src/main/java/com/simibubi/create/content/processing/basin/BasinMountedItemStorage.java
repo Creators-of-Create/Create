@@ -3,9 +3,11 @@ package com.simibubi.create.content.processing.basin;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllMountedStorageTypes;
+import com.simibubi.create.api.contraption.storage.SyncedMountedStorage;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorage;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
 
+import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.codec.CreateCodecs;
 
 import com.simibubi.create.foundation.utility.InventoryUtil;
@@ -23,11 +25,11 @@ import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BasinMountedItemStorage extends MountedItemStorage {
+public class BasinMountedItemStorage extends MountedItemStorage implements SyncedMountedStorage {
 	public static final MapCodec<BasinMountedItemStorage> CODEC = RecordCodecBuilder.mapCodec(
 		i -> i.group(
-			CreateCodecs.BASIN_INVENTORY.fieldOf("inputInventory").forGetter(BasinMountedItemStorage::inputInventory),
-			CreateCodecs.BASIN_INVENTORY.fieldOf("outputInventory").forGetter(BasinMountedItemStorage::outputInventory)
+			CreateCodecs.BASIN_INVENTORY.fieldOf("inputInventory").forGetter(BasinMountedItemStorage::getInputInventory),
+			CreateCodecs.BASIN_INVENTORY.fieldOf("outputInventory").forGetter(BasinMountedItemStorage::getOutputInventory)
 		).apply(i, BasinMountedItemStorage::fromCodec)
 	);
 
@@ -36,15 +38,16 @@ public class BasinMountedItemStorage extends MountedItemStorage {
 	protected IItemHandlerModifiable itemCapability;
 
 	private int timesChanged;
+	private boolean dirty;
 
 	protected BasinMountedItemStorage(MountedItemStorageType<?> type) {
 		super(type);
 
 		inputInventory = new BasinInventory(9, null);
-		inputInventory.whenContentsChanged(i -> timesChanged++);
+		inputInventory.whenContentsChanged(this::increaseTimesChanged);
 
 		outputInventory = new BasinInventory(9, null);
-		outputInventory.whenContentsChanged(i -> timesChanged++)
+		outputInventory.whenContentsChanged(this::increaseTimesChanged)
 			.forbidInsertion()
 			.withMaxStackSize(64);
 
@@ -73,10 +76,22 @@ public class BasinMountedItemStorage extends MountedItemStorage {
 		return basinMountedItemStorage;
 	}
 
-	public BasinInventory inputInventory() { return this.inputInventory; }
-	public BasinInventory outputInventory() { return this.outputInventory; }
+	public BasinInventory getInputInventory() { return this.inputInventory; }
+	public BasinInventory getOutputInventory() { return this.outputInventory; }
+	public IItemHandlerModifiable getCapability() { return this.itemCapability; }
 
 	public int getTimesChanged() { return timesChanged; }
+
+	@Override
+	public boolean isDirty() { return this.dirty; }
+
+	@Override
+	public void markClean() { this.dirty = false; }
+
+	public void increaseTimesChanged(int $) { this.timesChanged++; }
+
+	@Override
+	public void afterSync(Contraption contraption, BlockPos localPos) {}
 
 	@Override
 	public void unmount(Level level, BlockState state, BlockPos pos, @Nullable BlockEntity be) {

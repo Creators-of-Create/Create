@@ -1,13 +1,14 @@
 package com.simibubi.create.content.processing.basin;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorage;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorageWrapper;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 
+import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
+
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +33,6 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 	}
 
 	private void dump(MovementContext context, BasinMountedItemStorage storage, Vec3 facingVec) {
-
 		for (int i = 0; i < storage.getSlots(); i++) {
 			if (storage.getStackInSlot(i).isEmpty())
 				continue;
@@ -67,4 +67,19 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 		return null;
 	}
 
+	@Override
+	public boolean disableBlockEntityRendering() {
+		return true;
+	}
+
+	@Override
+	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
+		BlockEntity blockEntity = context.contraption.getBlockEntityClientSide(context.localPos);
+		if (blockEntity instanceof BasinBlockEntity basin) {
+			BasinMountedItemStorage mountedItemStorage = getMountedItemStorage(context);
+			if(mountedItemStorage == null) return;
+
+			BasinRenderer.renderInContraption(context, renderWorld, matrices, buffer, mountedItemStorage);
+		}
+	}
 }
