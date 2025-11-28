@@ -44,12 +44,9 @@ public class BasinMountedItemStorage extends MountedItemStorage implements Synce
 		super(type);
 
 		inputInventory = new BasinInventory(9, null);
-		inputInventory.whenContentsChanged(this::increaseTimesChanged);
 
 		outputInventory = new BasinInventory(9, null);
-		outputInventory.whenContentsChanged(this::increaseTimesChanged)
-			.forbidInsertion()
-			.withMaxStackSize(64);
+		outputInventory.forbidInsertion().withMaxStackSize(64);
 
 		itemCapability = new CombinedInvWrapper(inputInventory, outputInventory);
 
@@ -64,6 +61,8 @@ public class BasinMountedItemStorage extends MountedItemStorage implements Synce
 		InventoryUtil.copyInventoryToFrom(basinMountedItemStorage.inputInventory, input);
 		InventoryUtil.copyInventoryToFrom(basinMountedItemStorage.outputInventory, output);
 
+		basinMountedItemStorage.listenForChanges();
+
 		return basinMountedItemStorage;
 	}
 
@@ -73,7 +72,14 @@ public class BasinMountedItemStorage extends MountedItemStorage implements Synce
 		InventoryUtil.copyInventoryToFrom(basinMountedItemStorage.inputInventory, basin.inputInventory);
 		InventoryUtil.copyInventoryToFrom(basinMountedItemStorage.outputInventory, basin.outputInventory);
 
+		basinMountedItemStorage.listenForChanges();
+
 		return basinMountedItemStorage;
+	}
+
+	protected void listenForChanges() {
+		this.inputInventory.whenContentsChanged(this::increaseTimesChanged);
+		this.outputInventory.whenContentsChanged(this::increaseTimesChanged);
 	}
 
 	public BasinInventory getInputInventory() { return this.inputInventory; }
@@ -88,7 +94,10 @@ public class BasinMountedItemStorage extends MountedItemStorage implements Synce
 	@Override
 	public void markClean() { this.dirty = false; }
 
-	public void increaseTimesChanged(int $) { this.timesChanged++; }
+	public void increaseTimesChanged(int $) {
+		this.timesChanged++;
+		this.dirty = true;
+	}
 
 	@Override
 	public void afterSync(Contraption contraption, BlockPos localPos) {}
