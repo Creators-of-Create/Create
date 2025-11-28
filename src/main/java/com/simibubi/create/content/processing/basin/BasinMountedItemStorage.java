@@ -13,10 +13,13 @@ import com.simibubi.create.foundation.codec.CreateCodecs;
 import com.simibubi.create.foundation.utility.InventoryUtil;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
@@ -54,6 +57,12 @@ public class BasinMountedItemStorage extends MountedItemStorage implements Synce
 	}
 
 	protected BasinMountedItemStorage() { this(AllMountedStorageTypes.BASIN_ITEM.get()); }
+
+	@Override
+	public boolean handleInteraction(ServerPlayer player, Contraption contraption, StructureBlockInfo info) {
+		// interaction is handled in the Interaction Behavior, takes items out from basin
+		return false;
+	}
 
 	protected static BasinMountedItemStorage fromCodec(BasinInventory input, BasinInventory output) {
 		BasinMountedItemStorage basinMountedItemStorage = new BasinMountedItemStorage();

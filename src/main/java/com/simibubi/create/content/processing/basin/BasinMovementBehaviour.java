@@ -6,29 +6,70 @@ import com.simibubi.create.api.contraption.storage.item.MountedItemStorageWrappe
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
+import com.simibubi.create.content.logistics.box.PackageEntity;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class BasinMovementBehaviour implements MovementBehaviour {
 	@Override
 	public void tick(MovementContext context) {
 		BasinMountedItemStorage storage = getMountedItemStorage(context);
-		if(storage == null) return;
+		if (storage == null) return;
 
-		int newTimesChanged = storage.getTimesChanged();
-		if (getLastTimesChanged(context) != newTimesChanged) {
-			Vec3 facingVec = context.rotation.apply(Vec3.atLowerCornerOf(Direction.UP.getNormal()));
-			facingVec.normalize();
-			if (Direction.getNearest(facingVec.x, facingVec.y, facingVec.z) == Direction.DOWN)
+		Vec3 facingVec = context.rotation.apply(Vec3.atLowerCornerOf(Direction.UP.getNormal())).normalize();
+		Direction nearest = Direction.getNearest(facingVec.x, facingVec.y, facingVec.z);
+
+		if (nearest == Direction.DOWN) {
+			int newTimesChanged = storage.getTimesChanged();
+			if (getLastTimesChanged(context) != newTimesChanged) {
 				dump(context, storage, facingVec);
+			}
+		} else if(nearest == Direction.UP) {
+			pickup(context, storage);
+		}
+	}
+
+	private void pickup(MovementContext context, BasinMountedItemStorage storage) {
+		Level world = context.world;
+
+		Vec3 halfBlock = new Vec3(0.4, 0.4, 0.4);
+		Vec3 posTop = context.position.add(halfBlock);
+		Vec3 posBottom = context.position.subtract(halfBlock);
+
+		List<Entity> items = world.getEntities((Entity) null, new AABB(posTop, posBottom),
+			e -> e instanceof ItemEntity || e instanceof PackageEntity);
+
+		for (Entity entity : items) {
+			if (!entity.isAlive())
+				continue;
+			ItemStack toInsert = ItemHelper.fromItemEntity(entity);
+			ItemStack remainder =
+				ItemHandlerHelper.insertItemStacked(storage, toInsert, false);
+			if (remainder.getCount() == toInsert.getCount())
+				continue;
+			if (remainder.isEmpty()) {
+				entity.discard();
+				continue;
+			}
+
+			if (entity instanceof ItemEntity item)
+				item.setItem(remainder);
 		}
 	}
 
@@ -45,13 +86,6 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 		}
 
 		context.temporaryData = storage.getTimesChanged();
-
-		// FIXME: Why are we setting client-side data here?
-//		if (context.contraption.entity.level().isClientSide) {
-//			BlockEntity blockEntity = context.contraption.getBlockEntityClientSide(context.localPos);
-//			if (blockEntity instanceof BasinBlockEntity)
-//				((BasinBlockEntity) blockEntity).readOnlyItems(context.blockEntityData, context.world.registryAccess());
-//		}
 	}
 
 	private int getLastTimesChanged(MovementContext context) {
@@ -75,7 +109,7 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 	@Override
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
 		BlockEntity blockEntity = context.contraption.getBlockEntityClientSide(context.localPos);
-		if (blockEntity instanceof BasinBlockEntity basin) {
+		if (blockEntity instanceof BasinBlockEntity) {
 			BasinMountedItemStorage mountedItemStorage = getMountedItemStorage(context);
 			if(mountedItemStorage == null) return;
 

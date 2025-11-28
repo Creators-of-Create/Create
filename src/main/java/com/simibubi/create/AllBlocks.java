@@ -209,6 +209,7 @@ import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
 import com.simibubi.create.content.processing.basin.BasinBlock;
 import com.simibubi.create.content.processing.basin.BasinGenerator;
 import com.simibubi.create.content.processing.basin.BasinMovementBehaviour;
+import com.simibubi.create.content.processing.basin.MountedBasinInteractionBehaviour;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockItem;
 import com.simibubi.create.content.processing.burner.BlazeBurnerMovementBehaviour;
@@ -740,6 +741,7 @@ public class AllBlocks {
 		.blockstate(new BasinGenerator()::generate)
 		.addLayer(() -> RenderType::cutoutMipped)
 		.onRegister(movementBehaviour(new BasinMovementBehaviour()))
+		.onRegister(interactionBehaviour(new MountedBasinInteractionBehaviour()))
 		.transform(mountedItemStorage(AllMountedStorageTypes.BASIN_ITEM))
 		.item()
 		.transform(customItemModel("_", "block"))
