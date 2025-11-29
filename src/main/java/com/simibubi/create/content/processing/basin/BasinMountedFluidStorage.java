@@ -38,11 +38,9 @@ public class BasinMountedFluidStorage extends MountedFluidStorage implements Syn
 
 		this.inputTankHalf = input;
 		this.inputTankHalf.setUpdateCallback(this::onFluidStackChange);
-		this.inputTankHalf.initializeLevels();
 
 		this.outputTankHalf = output;
 		this.outputTankHalf.setUpdateCallback(this::onFluidStackChange);
-		this.outputTankHalf.initializeLevels();
 
 		this.bothTanks = new CombinedTankWrapper(input, output);
 	}
@@ -139,7 +137,9 @@ public class BasinMountedFluidStorage extends MountedFluidStorage implements Syn
 		public static final MapCodec<MountedBasinTankHalf> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
 			Codec.BOOL.fieldOf("insertionAllowed").forGetter(MountedBasinTankHalf::insertionAllowed),
 			FluidStack.OPTIONAL_CODEC.fieldOf("firstTank").forGetter(MountedBasinTankHalf::firstStack),
-			FluidStack.OPTIONAL_CODEC.fieldOf("secondTank").forGetter(MountedBasinTankHalf::secondStack)
+			FluidStack.OPTIONAL_CODEC.fieldOf("secondTank").forGetter(MountedBasinTankHalf::secondStack),
+			Codec.FLOAT.fieldOf("optionalFirst").forGetter(t -> t.firstLevel.getValue(1)),
+			Codec.FLOAT.fieldOf("optionalSecond").forGetter(t -> t.secondLevel.getValue(1))
 		).apply(i, MountedBasinTankHalf::fromStacks));
 
  		private final boolean insertionAllowed;
@@ -162,39 +162,19 @@ public class BasinMountedFluidStorage extends MountedFluidStorage implements Syn
 			enforceVariety();
 		}
 
-		public void onFluidStackChanged(FluidStack stack) {
-			IFluidHandler firstTank = this.getHandlerFromIndex(0);
-			firstLevel.chase(firstTank.getFluidInTank(0).getAmount() / (float) firstTank.getTankCapacity(0), .25, Chaser.EXP);
-
-			IFluidHandler secondTank = this.getHandlerFromIndex(1);
-			secondLevel.chase(secondTank.getFluidInTank(0).getAmount() / (float) secondTank.getTankCapacity(0), .25, Chaser.EXP);
-
-			if(this.updateCallback != null) this.updateCallback.accept(stack);
-		}
-
-		public void initializeLevels() {
-			IFluidHandler firstTank = this.getHandlerFromIndex(0);
-			float firstTarget = firstTank.getFluidInTank(0).getAmount() / (float) firstTank.getTankCapacity(0);
-			firstLevel.setValue(firstTarget);
-			firstLevel.chase(firstTarget, .25, Chaser.EXP);
-
-			IFluidHandler secondTank = this.getHandlerFromIndex(1);
-			float secondTarget = secondTank.getFluidInTank(0).getAmount() / (float) secondTank.getTankCapacity(0);
-			secondLevel.setValue(secondTarget);
-			secondLevel.chase(secondTarget, .25, Chaser.EXP);
-		}
-
-		public void setUpdateCallback(Consumer<FluidStack> updateCallback) {
-			this.updateCallback = updateCallback;
-		}
-
-		public static MountedBasinTankHalf fromStacks(boolean insertionAllowed, FluidStack first, FluidStack second) {
-			SmartFluidTank firstTank = new SmartFluidTank(1000, s -> {});
-			SmartFluidTank secondTank = new SmartFluidTank(1000, s -> {});
+		public static MountedBasinTankHalf fromStacks(boolean insertionAllowed, FluidStack first, FluidStack second, float previousFirst, float previousSecond) {
+			SmartFluidTank firstTank = new SmartFluidTank(getTankCapacity(), s -> {});
+			SmartFluidTank secondTank = new SmartFluidTank(getTankCapacity(), s -> {});
 
 			MountedBasinTankHalf tankHalf = new MountedBasinTankHalf(insertionAllowed, firstTank, secondTank);
 			tankHalf.fillTank(0, first);
 			tankHalf.fillTank(1, second);
+
+			tankHalf.firstLevel.setValue(previousFirst);
+ 			tankHalf.firstLevel.chase(tankHalf.firstStack().getAmount() / (float) getTankCapacity(), .25, Chaser.EXP);
+
+			tankHalf.secondLevel.setValue(previousSecond);
+			tankHalf.secondLevel.chase(tankHalf.secondStack().getAmount() / (float) getTankCapacity(), .25, Chaser.EXP);
 
 			firstTank.setUpdateCallback(tankHalf::onFluidStackChanged);
 			secondTank.setUpdateCallback(tankHalf::onFluidStackChanged);
@@ -202,8 +182,25 @@ public class BasinMountedFluidStorage extends MountedFluidStorage implements Syn
 			return tankHalf;
 		}
 
-		public boolean insertionAllowed() {
-			return insertionAllowed;
+		public void onFluidStackChanged(FluidStack stack) {
+			firstLevel.chase(firstStack().getAmount() / (float) getTankCapacity(), .25, Chaser.EXP);
+			secondLevel.chase(secondStack().getAmount() / (float) getTankCapacity(), .25, Chaser.EXP);
+
+			if(this.updateCallback != null) this.updateCallback.accept(stack);
+		}
+
+		public void tickChasers() {
+			firstLevel.tickChaser();
+			secondLevel.tickChaser();
+		}
+
+		public int getRenderedFluids() {
+			int total = 0;
+			for(int i = 0; i < this.getTanks(); i++) {
+				if(!this.getFluidInTank(i).isEmpty()) total++;
+			}
+
+			return total;
 		}
 
 		public FluidStack firstStack() {
@@ -224,18 +221,16 @@ public class BasinMountedFluidStorage extends MountedFluidStorage implements Syn
 				  secondLevel.getValue(partialTicks) * 1000;
 		}
 
-		public void tickChasers() {
-			firstLevel.tickChaser();
-			secondLevel.tickChaser();
+		public void setUpdateCallback(Consumer<FluidStack> updateCallback) {
+			this.updateCallback = updateCallback;
 		}
 
-		public int getRenderedFluids() {
-			int total = 0;
-			for(int i = 0; i < this.getTanks(); i++) {
-				if(!this.getFluidInTank(i).isEmpty()) total++;
-			}
+		public static int getTankCapacity() {
+			return 1000;
+		}
 
-			return total;
+		public boolean insertionAllowed() {
+			return insertionAllowed;
 		}
 
 		private void fillTank(int tank, FluidStack stack) {
