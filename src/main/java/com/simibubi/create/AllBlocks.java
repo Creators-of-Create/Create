@@ -743,6 +743,7 @@ public class AllBlocks {
 		.onRegister(movementBehaviour(new BasinMovementBehaviour()))
 		.onRegister(interactionBehaviour(new MountedBasinInteractionBehaviour()))
 		.transform(mountedItemStorage(AllMountedStorageTypes.BASIN_ITEM))
+		.transform(mountedFluidStorage(AllMountedStorageTypes.BASIN_FLUID))
 		.item()
 		.transform(customItemModel("_", "block"))
 		.register();

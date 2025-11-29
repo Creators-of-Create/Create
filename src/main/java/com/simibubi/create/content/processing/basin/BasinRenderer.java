@@ -3,6 +3,7 @@ package com.simibubi.create.content.processing.basin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
+import com.simibubi.create.content.processing.basin.BasinMountedFluidStorage.MountedBasinTankHalf;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
@@ -34,6 +35,8 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
+
+import org.jetbrains.annotations.Nullable;
 
 public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 
@@ -189,24 +192,28 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 	}
 
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
-									ContraptionMatrices matrices, MultiBufferSource buffer, BasinMountedItemStorage itemStorage) {
+										   ContraptionMatrices matrices, MultiBufferSource buffer,
+										   BasinMountedItemStorage itemStorage, @Nullable BasinMountedFluidStorage fluidStorage) {
 		PoseStack ms = matrices.getModelViewProjection();
+		int light = BlockEntityRenderHelper.getLight(context.world, renderWorld, context.localPos, matrices.getLight());
+
 		ms.pushPose();
 
-		float fluidLevel = 0;
-		float level = .125f;
-
 		BlockEntity blockEntity = context.contraption.getBlockEntityClientSide(context.localPos);
-		if(!(blockEntity instanceof BasinBlockEntity basin)) return;
+		if(!(blockEntity instanceof BasinBlockEntity)) return;
 
-		BlockPos basinPos = basin.getBlockPos();
-		Vec3 basinCenterPos = Vec3.atLowerCornerOf(basinPos);
-		Vec3 baseVector = new Vec3(.125, level, 0);
 
+		Vec3 basinCenterPos = Vec3.atLowerCornerOf(context.localPos);
 		ms.translate(basinCenterPos.x, basinCenterPos.y, basinCenterPos.z);
+
+		float fluidLevel = 0;
+		if(fluidStorage != null) fluidLevel = renderFluidsInContraption(context, renderWorld, ms, light, buffer, fluidStorage);
+
+		float level = Mth.clamp(fluidLevel - .3f, .125f, .6f);
+		Vec3 baseVector = new Vec3(.125, level, 0);
 		ms.translate(.5, .2f, .5);
 
-		RandomSource random = RandomSource.create(basinPos.hashCode());
+		RandomSource random = RandomSource.create(context.localPos.hashCode());
 
 		IItemHandlerModifiable handler = itemStorage.itemCapability;
 
@@ -237,8 +244,6 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 				.rotateYDegrees(anglePartition * itemCount + 35)
 				.rotateXDegrees(65);
 
-			int light = BlockEntityRenderHelper.getLight(context.world, renderWorld, basinPos, matrices.getLight());
-
 			for (int i = 0; i <= stack.getCount() / 8; i++) {
 				ms.pushPose();
 
@@ -254,6 +259,49 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 		}
 
 		ms.popPose();
+	}
+
+	public static float renderFluidsInContraption(MovementContext context, VirtualRenderWorld renderWorld, PoseStack ms, int light,
+												 MultiBufferSource buffer, BasinMountedFluidStorage mountedFluidStorage) {
+		float partialTicks = AnimationTickHolder.getPartialTicks();
+
+		mountedFluidStorage.tickChasers();
+		float totalUnits = mountedFluidStorage.getTotalFluidUnits(partialTicks);
+		if (totalUnits < 1)
+			return 0;
+
+		float fluidLevel = Mth.clamp(totalUnits / 2000, 0, 1);
+
+		fluidLevel = 1 - ((1 - fluidLevel) * (1 - fluidLevel));
+
+		float xMin = 2 / 16f;
+		float xMax = 2 / 16f;
+		final float yMin = 2 / 16f;
+		final float yMax = yMin + 12 / 16f * fluidLevel;
+		final float zMin = 2 / 16f;
+		final float zMax = 14 / 16f;
+
+		MountedBasinTankHalf[] tankHalves = {mountedFluidStorage.inputTank(), mountedFluidStorage.outputTank()};
+		for (MountedBasinTankHalf mountedBasinTankHalf : tankHalves) {
+			for(int tank : new int[]{0, 1}) {
+				FluidStack renderedFluid = mountedBasinTankHalf.getFluidInTank(tank);
+				if (renderedFluid.isEmpty())
+					continue;
+
+				float units = mountedBasinTankHalf.getTotalUnits(partialTicks, tank);
+				if (units < 1)
+					continue;
+
+				float partial = Mth.clamp(units / totalUnits, 0, 1);
+				xMax += partial * 12 / 16f;
+				NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(renderedFluid, xMin, yMin, zMin, xMax, yMax, zMax,
+					buffer, ms, light, false, false);
+
+				xMin = xMax;
+			}
+		}
+
+		return yMax;
 	}
 
 	private static int getItemCount(IItemHandlerModifiable handler) {

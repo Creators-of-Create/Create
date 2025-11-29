@@ -1,6 +1,8 @@
 package com.simibubi.create.content.processing.basin;
 
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
+import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorage;
+import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorageWrapper;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorage;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorageWrapper;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -101,6 +103,14 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 		return null;
 	}
 
+	private @Nullable BasinMountedFluidStorage getMountedFluidStorage(MovementContext context) {
+		MountedFluidStorageWrapper wrapper = context.contraption.getStorage().getFluids();
+		MountedFluidStorage storageHere = wrapper.storages.get(context.localPos);
+
+		if(storageHere instanceof BasinMountedFluidStorage basin) return basin;
+		return null;
+	}
+
 	@Override
 	public boolean disableBlockEntityRendering() {
 		return true;
@@ -113,7 +123,10 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 			BasinMountedItemStorage mountedItemStorage = getMountedItemStorage(context);
 			if(mountedItemStorage == null) return;
 
-			BasinRenderer.renderInContraption(context, renderWorld, matrices, buffer, mountedItemStorage);
+			BasinMountedFluidStorage mountedFluidStorage = getMountedFluidStorage(context);
+
+			BasinRenderer.renderInContraption(context, renderWorld, matrices, buffer,
+				mountedItemStorage, mountedFluidStorage);
 		}
 	}
 }
