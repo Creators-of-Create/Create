@@ -1,17 +1,26 @@
 package com.simibubi.create.content.processing.basin;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 
+import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
+import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
+
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BasinMovementBehaviour implements MovementBehaviour {
@@ -55,5 +64,25 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 				((BasinBlockEntity) blockEntity).readOnlyItems(context.blockEntityData);
 		}
 		context.temporaryData = false; // did already dump, so can't anymore
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
+		BasinBlockEntity basin = null;
+
+		Collection<BlockEntity> bes = context.contraption.getRenderedBEs();
+		for (BlockEntity blockEntity: bes) {
+			if (blockEntity instanceof BasinBlockEntity basinBlockEntity) {
+				if (basinBlockEntity.getBlockPos().equals(context.localPos)) basin = basinBlockEntity;
+			}
+		}
+
+		if (basin != null) {
+			basin.read(context.blockEntityData, true);
+			basin.tick();
+			BlockEntityRenderHelper.renderBlockEntities(context.world, renderWorld, List.of(basin),
+				matrices.getModelViewProjection(), matrices.getLight(), buffer);
+		}
 	}
 }
