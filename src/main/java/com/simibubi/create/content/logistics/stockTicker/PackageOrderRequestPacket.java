@@ -1,11 +1,13 @@
 package com.simibubi.create.content.logistics.stockTicker;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour.RequestType;
 import com.simibubi.create.content.logistics.packagerLink.WiFiEffectPacket;
 import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -52,7 +54,10 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 			if (!order.isEmpty())
 				AllSoundEvents.CONFIRM.playOnServer(be.getLevel(), pos);
 			player.closeContainer();
-			RedstoneRequesterBlock.programRequester(player, be, order, address);
+			boolean shouldReplace = AllBlocks.REDSTONE_REQUESTER.isIn(player.getMainHandItem()) && AllConfigs.server().logistics.allowSelfAddress.get();
+			RedstoneRequesterBlock.programRequester(player, be, order,
+				address.replace("@s", shouldReplace ? player.getName().getString() : "@s")
+			);
 			return;
 		}
 
@@ -62,7 +67,10 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 			WiFiEffectPacket.send(player.level(), pos);
 		}
 
-		be.broadcastPackageRequest(RequestType.PLAYER, order, null, address);
+		be.broadcastPackageRequest(RequestType.PLAYER, order, null,
+			address.replace("@s", AllConfigs.server().logistics.allowSelfAddress.get() ? player.getName().getString() : "@s")
+		);
+		be.previouslyUsedAddress = address;
 		return;
 	}
 
