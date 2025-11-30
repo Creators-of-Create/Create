@@ -1,25 +1,22 @@
 package com.simibubi.create.foundation.blockEntity.behaviour;
 
-import org.joml.Matrix3f;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.kinetics.simpleRelays.AbstractSimpleShaftBlock;
-
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Mth;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import com.simibubi.create.content.kinetics.simpleRelays.AbstractSimpleShaftBlock;
 
 public class ValueBoxRenderer {
 
@@ -30,66 +27,35 @@ public class ValueBoxRenderer {
 		BakedModel modelWithOverrides = itemRenderer.getModel(filter, null, null, 0);
 		boolean blockItem = modelWithOverrides.isGui3d();
 		float scale = (!blockItem ? .5f : 1f) + 1 / 64f;
-		float zOffset = (!blockItem ? -.15f : 0) + customZOffset(filter.getItem());
+		float zOffset = !blockItem ? -.15f : customZOffset(filter.getItem());
 		ms.scale(scale, scale, scale);
 		ms.translate(0, 0, zOffset);
 		itemRenderer.render(filter, ItemDisplayContext.FIXED, false, ms, buffer, light, overlay, modelWithOverrides);
 	}
 
-	public static void renderFlatItemIntoValueBox(ItemStack filter, PoseStack ms, MultiBufferSource buffer, int light,
-		int overlay) {
-		if (filter.isEmpty())
-			return;
-
-		int bl = light >> 4 & 0xf;
-		int sl = light >> 20 & 0xf;
-		int itemLight = Mth.floor(sl + .5) << 20 | (Mth.floor(bl + .5) & 0xf) << 4;
-
-		ms.pushPose();
+	public static void renderFlatItemIntoValueBox(ItemStack filter, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+		if (filter.isEmpty()) return;
 		TransformStack.of(ms)
-			.rotateXDegrees(230);
-		Matrix3f copy = new Matrix3f(ms.last()
-			.normal());
-		ms.popPose();
-
-		ms.pushPose();
-		TransformStack.of(ms)
-			.translate(0, 0, -1 / 4f)
-			.translate(0, 0, 1 / 32f + .001)
-			.rotateYDegrees(180);
-
-		PoseStack squashedMS = new PoseStack();
-		squashedMS.last()
-			.pose()
-			.mul(ms.last()
-				.pose());
-		squashedMS.scale(.5f, .5f, 1 / 1024f);
-		squashedMS.last()
-			.normal()
-			.set(copy);
+			.translate(0, 0, -1 / 4f + 1 / 32f + .001)
+			.rotateYDegrees(180)
+			.scale(.5f, .5f, .5f);
+		// Then, squash it flat, but leave the normals unaffected by this last transform
+		ms.last().pose().scale(1f, 1f, 1 / 512f);
 		Minecraft mc = Minecraft.getInstance();
-		mc.getItemRenderer()
-			.renderStatic(filter, ItemDisplayContext.GUI, itemLight, OverlayTexture.NO_OVERLAY, squashedMS, buffer, mc.level, 0);
-
-		ms.popPose();
+		ItemRenderer itemRenderer =  mc.getItemRenderer();
+		itemRenderer.renderStatic(filter, ItemDisplayContext.GUI, light, OverlayTexture.NO_OVERLAY, ms, buffer, mc.level, 0);
 	}
 
-	@SuppressWarnings("deprecation")
 	private static float customZOffset(Item item) {
-		float nudge = -.1f;
-		if (item instanceof BlockItem) {
-			Block block = ((BlockItem) item).getBlock();
-			if (block instanceof AbstractSimpleShaftBlock)
-				return nudge;
-			if (block instanceof FenceBlock)
-				return nudge;
-			if (block.builtInRegistryHolder()
-				.is(BlockTags.BUTTONS))
-				return nudge;
-			if (block == Blocks.END_ROD)
-				return nudge;
-		}
-		return 0;
+		final float nudge = -.1f;
+		if (!(item instanceof BlockItem blockItem)) return 0f;
+		// Special case : gears are thick enough but need to be offset anyway
+		Block block = blockItem.getBlock();
+		if (block instanceof AbstractSimpleShaftBlock) return nudge;
+		// General case : determine offset based on shape thickness
+		VoxelShape shape = block.defaultBlockState().getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+		if (shape.isEmpty()) return 0f;
+		double thickness = shape.max(Direction.Axis.Z) - shape.min(Direction.Axis.Z);
+		return thickness <= .25 ? nudge : 0f;
 	}
-
 }
