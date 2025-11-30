@@ -50,7 +50,12 @@ public class StationSummaryDisplaySource extends DisplaySource {
 
     @Override
 	public List<MutableComponent> provideText(DisplayLinkContext context, DisplayTargetStats stats) {
-		return EMPTY;
+		List<List<MutableComponent>> list = provideFlapDisplayText(context, stats);
+		if (list.isEmpty()) {
+			return EMPTY;
+		} else {
+			return list.get(0);
+		}
 	}
 
 	@Override
