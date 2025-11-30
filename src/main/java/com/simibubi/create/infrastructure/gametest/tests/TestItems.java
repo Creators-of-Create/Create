@@ -20,21 +20,41 @@ import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedstoneLampBlock;
+
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
+
+import java.util.UUID;
+
+import com.mojang.authlib.GameProfile;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+
+import net.minecraft.server.level.ServerLevel;
 
 @GameTestGroup(path = "items")
 public class TestItems {
@@ -408,5 +428,263 @@ public class TestItems {
 				helper.assertBlockProperty(lamp, RedstoneLampBlock.LIT, true);
 			}
 		});
+	}
+
+	public static void symmetryWandPlacer(CreateGameTestHelper helper, List<Block> blocks) throws AssertionError {
+		ServerLevel level = helper.getLevel();
+		FakePlayer fakePlayer = FakePlayerFactory.get(level, new GameProfile(UUID.randomUUID(), "TestPlayer"));
+		fakePlayer.setGameMode(GameType.CREATIVE);
+
+		BlockPos basePos = new BlockPos(0,1,0);
+		BlockPos mirrorPos = helper.absolutePos(basePos).offset(0,0,2);
+
+		ItemStack wand = new ItemStack(AllItems.WAND_OF_SYMMETRY.asItem(), 1);
+		helper.playerItemUseOn(fakePlayer, wand, 0, mirrorPos);
+
+		BlockPos placePos = helper.absolutePos(basePos).offset(0,0,0);
+		BlockPos breakPos = placePos.offset(0,1,0);
+
+		BlockPos mirroredPos = new BlockPos(0,2,4);
+
+		for (Block block : blocks) {
+			ItemStack blockStack = new ItemStack(block.asItem(), 2);
+			helper.playerItemUseOn(fakePlayer, blockStack, 1, placePos);
+
+			BlockState mirroredState = helper.getBlockState(mirroredPos);
+
+			if (!mirroredState.is(block)) {
+
+				throw new AssertionError("Expected mirrored block " + block.getName().getString() +
+						" at " + mirroredPos + " but found " + mirroredState.getBlock().getName().getString());
+			}
+			fakePlayer.gameMode.destroyBlock(breakPos);
+		}
+	}
+
+	public static void symmetryWandPlacer(CreateGameTestHelper helper, ItemStack blockStack) throws AssertionError {
+		ServerLevel level = helper.getLevel();
+		FakePlayer fakePlayer = FakePlayerFactory.get(level, new GameProfile(UUID.randomUUID(), "TestPlayer"));
+		fakePlayer.setGameMode(GameType.CREATIVE);
+
+		BlockPos basePos = new BlockPos(0,1,0);
+		BlockPos mirrorPos = helper.absolutePos(basePos).offset(0,0,2);
+
+		ItemStack wand = new ItemStack(AllItems.WAND_OF_SYMMETRY.asItem(), 1);
+		helper.playerItemUseOn(fakePlayer, wand, 0, mirrorPos);
+
+
+
+		BlockPos placePos = helper.absolutePos(basePos).offset(0,0,0);
+
+		BlockPos mirroredPos = new BlockPos(0,2,4);
+
+		helper.playerItemUseOn(fakePlayer, blockStack, 1, placePos);
+
+		helper.placeAt(fakePlayer, blockStack, placePos, Direction.DOWN);
+		BlockState mirroredState = helper.getBlockState(mirroredPos);
+
+		Block block = ((BlockItem) blockStack.getItem()).getBlock();
+
+		if (!mirroredState.is(block)) {
+			throw new AssertionError("Expected mirrored block " + block.getName().getString() +
+				" at " + mirroredPos + " but found " + mirroredState.getBlock().getName().getString());
+		}
+	}
+
+	@GameTest(template = "symmetrywand")
+	public static void symmetryWand(CreateGameTestHelper helper) {
+		List<Block> blocks = List.of(
+			Blocks.STONE,
+			Blocks.STONE_BRICK_WALL,
+			Blocks.STONE_STAIRS,
+			Blocks.STONE_SLAB,
+			Blocks.OAK_FENCE,
+			Blocks.CHAIN,
+			Blocks.SHULKER_BOX
+		);
+
+		try {
+			symmetryWandPlacer(helper, blocks);
+		} catch (AssertionError e) {
+			helper.fail(e.getMessage());
+			return;
+		}
+
+		helper.succeed();
+	}
+
+	@GameTest(template = "symmetrywand")
+	public static void symmetryWandInteractables(CreateGameTestHelper helper) {
+		List<Block> blocks = List.of(
+			Blocks.OAK_PRESSURE_PLATE,
+			Blocks.OAK_BUTTON,
+			Blocks.OAK_FENCE_GATE,
+			Blocks.OAK_SIGN,
+			Blocks.CRAFTING_TABLE,
+			Blocks.CAMPFIRE,
+			Blocks.CHEST,
+			Blocks.CAKE
+		);
+
+		try {
+			symmetryWandPlacer(helper, blocks);
+		} catch (AssertionError e) {
+			helper.fail(e.getMessage());
+			return;
+		}
+
+		helper.succeed();
+	}
+
+	@GameTest(template = "symmetrywand")
+	public static void symmetryWandDoubles(CreateGameTestHelper helper) {
+		List<Block> blocks = List.of(
+			Blocks.RED_BED,
+			Blocks.CHERRY_DOOR
+		);
+
+		try {
+			symmetryWandPlacer(helper, blocks);
+		} catch (AssertionError e) {
+			helper.fail(e.getMessage());
+			return;
+		}
+
+		helper.succeed();
+	}
+
+	@GameTest(template = "symmetrywand")
+	public static void symmetryWandNBTShulker(CreateGameTestHelper helper) {
+		ItemStack shulkerStack = new ItemStack(Items.SHULKER_BOX.asItem(), 1);
+		ItemStack grassStack = new ItemStack(Blocks.GRASS_BLOCK, 64);
+		CompoundTag shulkerTag = new CompoundTag();
+		ListTag itemsList = new ListTag();
+		CompoundTag itemTag = new CompoundTag();
+		itemTag.putByte("Slot", (byte) 0);
+		grassStack.save(itemTag);
+		itemsList.add(itemTag);
+		shulkerTag.put("Items", itemsList);
+		CompoundTag mainTag = shulkerStack.getOrCreateTag();
+		mainTag.put("BlockEntityTag", shulkerTag);
+
+		shulkerStack.grow(1);
+
+
+		BlockPos BlockPos = new BlockPos(0,2,0);
+		BlockPos mirroredBlockPos = new BlockPos(0,2,4);
+		try {
+			symmetryWandPlacer(helper, shulkerStack);
+			helper.assertBlockEntityNBTEquals(BlockPos, mirroredBlockPos);
+		} catch (AssertionError e) {
+			helper.fail(e.getMessage());
+			return;
+		}
+
+		helper.succeed();
+	}
+
+	@GameTest(template = "symmetrywand")
+	public static void symmetryWandNBTBanner(CreateGameTestHelper helper) {
+		ItemStack bannerStack = new ItemStack(Items.BLACK_BANNER.asItem(), 1);
+
+		CompoundTag bannerTag = new CompoundTag();
+
+		bannerTag.putInt("Base", 15);
+
+		ListTag patterns = new ListTag();
+
+		CompoundTag pattern = new CompoundTag();
+		pattern.putString("Pattern", "moj");
+		pattern.putInt("Color", 14);
+
+		patterns.add(pattern);
+
+		bannerTag.put("Patterns", patterns);
+
+		CompoundTag mainTag = bannerStack.getOrCreateTag();
+		mainTag.put("BlockEntityTag", bannerTag);
+
+		bannerStack.grow(1);
+
+		BlockPos BlockPos = new BlockPos(0,2,0);
+		BlockPos mirroredBlockPos = new BlockPos(0,2,4);
+		try {
+			symmetryWandPlacer(helper, bannerStack);
+			helper.assertBlockEntityNBTEquals(BlockPos, mirroredBlockPos);
+		} catch (AssertionError e) {
+			helper.fail(e.getMessage());
+			return;
+		}
+
+		helper.succeed();
+	}
+
+	@GameTest(template = "symmetrywand")
+	public static void symmetryWandNBTBeehive(CreateGameTestHelper helper) {
+		ItemStack beehiveStack = new ItemStack(Items.BEEHIVE.asItem(), 1);
+
+
+		CompoundTag beehiveTag = new CompoundTag();
+		ListTag beesList = new ListTag();
+
+		CompoundTag beeEntry = new CompoundTag();
+		CompoundTag entityData = new CompoundTag();
+		entityData.putString("id", "minecraft:bee");
+
+		beeEntry.put("EntityData", entityData);
+		beeEntry.putInt("TicksInHive", 0);
+		beeEntry.putInt("MinOccupationTicks", 2400);
+
+		beesList.add(beeEntry);
+		beehiveTag.put("Bees", beesList);
+
+		CompoundTag mainTag = beehiveStack.getOrCreateTag();
+		mainTag.put("BlockEntityTag", beehiveTag);
+
+		beehiveStack.grow(1);
+
+		BlockPos BlockPos = new BlockPos(0,2,0);
+		BlockPos mirroredBlockPos = new BlockPos(0,2,4);
+		try {
+			symmetryWandPlacer(helper, beehiveStack);
+			helper.assertBlockEntityNBTEquals(BlockPos, mirroredBlockPos);
+		} catch (AssertionError e) {
+			helper.fail(e.getMessage());
+			return;
+		}
+
+		helper.succeed();
+	}
+
+	@GameTest(template = "symmetrywand")
+	public static void symmetryWandNBTPot(CreateGameTestHelper helper) {
+		ItemStack decoratedPotStack = new ItemStack(Items.DECORATED_POT.asItem(), 1);
+
+		CompoundTag potTag = new CompoundTag();
+		ListTag sherdsList = new ListTag();
+
+		sherdsList.add(StringTag.valueOf("minecraft:angler_pottery_sherd"));
+		sherdsList.add(StringTag.valueOf("minecraft:archer_pottery_sherd"));
+		sherdsList.add(StringTag.valueOf("minecraft:arms_up_pottery_sherd"));
+		sherdsList.add(StringTag.valueOf("minecraft:skull_pottery_sherd"));
+
+		potTag.put("sherds", sherdsList);
+
+		CompoundTag mainTag = decoratedPotStack.getOrCreateTag();
+		mainTag.put("BlockEntityTag", potTag);
+
+		decoratedPotStack.grow(1);
+
+		BlockPos BlockPos = new BlockPos(0,2,0);
+		BlockPos mirroredBlockPos = new BlockPos(0,2,4);
+		try {
+			symmetryWandPlacer(helper, decoratedPotStack);
+			helper.assertBlockEntityNBTEquals(BlockPos, mirroredBlockPos);
+		} catch (AssertionError e) {
+			helper.fail(e.getMessage());
+			return;
+		}
+
+		helper.succeed();
 	}
 }

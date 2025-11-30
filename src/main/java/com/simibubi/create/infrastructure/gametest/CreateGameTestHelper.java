@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.minecraft.nbt.CompoundTag;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -58,12 +60,19 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import net.minecraft.world.item.context.UseOnContext;
+
+import net.minecraft.world.phys.BlockHitResult;
+
+import net.minecraftforge.common.util.FakePlayer;
+
 /**
  * A helper class expanding the functionality of {@link GameTestHelper}.
  * This class may replace the default helper parameter if a test is registered through {@link CreateTestFunction}.
  */
 public class CreateGameTestHelper extends GameTestHelper {
 	public static final int TICKS_PER_SECOND = 20;
+	public static final int FIVE_SECONDS = 5 * TICKS_PER_SECOND;
 	public static final int TEN_SECONDS = 10 * TICKS_PER_SECOND;
 	public static final int FIFTEEN_SECONDS = 15 * TICKS_PER_SECOND;
 	public static final int TWENTY_SECONDS = 20 * TICKS_PER_SECOND;
@@ -476,6 +485,58 @@ public class CreateGameTestHelper extends GameTestHelper {
 	}
 
 	// misc
+
+	public void playerItemUseOn(FakePlayer player, ItemStack itemStack, int slot, BlockPos location) {
+		Vec3 locationVec = new Vec3(location.getX(), location.getY(), location.getZ());
+		BlockPos itemPos = location.above();
+
+
+		player.getInventory().items.set(slot, itemStack);
+		player.getInventory().selected = slot;
+
+		player.interactAt(player, locationVec, InteractionHand.MAIN_HAND);
+		player.getInventory().getSelected().useOn(
+			new UseOnContext(player,
+				InteractionHand.MAIN_HAND,
+				new BlockHitResult(locationVec, Direction.UP, itemPos, true)
+			)
+		);
+	}
+
+	public void playerItemUseOn(FakePlayer player, ItemStack itemStack, int slot, Entity targetEntity) {
+		player.getInventory().items.set(slot, itemStack);
+		player.getInventory().selected = slot;
+
+		InteractionHand hand = InteractionHand.MAIN_HAND;
+
+		targetEntity.interact(player, hand);
+		targetEntity.interactAt(player, targetEntity.position(), hand);
+	}
+	public void assertItemInInventory (FakePlayer player, ItemStack itemStack) {
+
+		for(ItemStack stack : player.getInventory().items) {
+			if (stack.is(itemStack.getItem())) {
+				return;
+			}
+		}
+		fail("Item not found in given player inventory.");
+	}
+
+	public void assertBlockEntityNBTEquals(BlockPos pos1, BlockPos pos2) throws AssertionError{
+		BlockEntity be1 = getBlockEntity(pos1);
+		BlockEntity be2 = getBlockEntity(pos2);
+
+		if (be1 == null || be2 == null) {
+			throw new AssertionError("One or both blocks do not have block entities.");
+		}
+
+		CompoundTag tag1 = be1.saveWithoutMetadata();
+		CompoundTag tag2 = be2.saveWithoutMetadata();
+
+		if (!tag1.equals(tag2)) {
+			throw new AssertionError("Block NBT tags do not match:\nFirst: " + tag1 + "\nSecond: " + tag2);
+		}
+	}
 
 	@Contract("_->fail") // make IDEA happier
 	@Override

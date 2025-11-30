@@ -125,4 +125,100 @@ public class TestProcessing {
 		ItemStack expected = new ItemStack(AllItems.WHEAT_FLOUR.get(), 3);
 		helper.succeedWhen(() -> helper.assertContainerContains(output, expected));
 	}
+	@GameTest(template = "no_crushing_recipe")
+	public static void noCrushingRecipe(CreateGameTestHelper helper) {
+		BlockPos chest = new BlockPos(7, 3, 2);
+		BlockPos lever = new BlockPos(2, 3, 1);
+		helper.pullLever(lever);
+		helper.runAfterDelay(CreateGameTestHelper.FIVE_SECONDS, () -> {
+			helper.assertContainerEmpty(chest);
+			helper.succeed();
+		});
+	}
+
+	@GameTest(template = "no_milling_recipe")
+	public static void noMillingRecipe(CreateGameTestHelper helper) {
+		BlockPos output = new BlockPos(1, 2, 1);
+
+		BlockPos lever = new BlockPos(1, 7, 1);
+		helper.pullLever(lever);
+		helper.runAfterDelay(CreateGameTestHelper.FIVE_SECONDS, () -> {
+			helper.assertContainerEmpty(output);
+			helper.succeed();
+		});
+	}
+
+	@GameTest(template = "no_recipe_mixer", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
+	public static void noMixerRecipe(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(2, 3, 2);
+		BlockPos chest = new BlockPos(7, 3, 1);
+		helper.pullLever(lever);
+		helper.runAfterDelay(CreateGameTestHelper.FIVE_SECONDS, () -> {
+			helper.assertContainerEmpty(chest);
+			helper.succeed();
+		});
+	}
+
+	@GameTest(template = "liquid_item_mixing_no_heat", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
+	public static void pulpMixing(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(2, 3, 2);
+		BlockPos chest = new BlockPos(7, 3, 1);
+		helper.pullLever(lever);
+		helper.succeedWhen(() -> helper.assertContainerContains(chest, AllItems.PULP.get()));
+	}
+
+	@GameTest(template = "mixer_brewing", timeoutTicks = CreateGameTestHelper.TICKS_PER_SECOND*20)
+	public static void mixerBrewing(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(2, 3, 2);
+		BlockPos pumpLever = new BlockPos(4,4,0);
+
+		BlockPos chest = new BlockPos(9, 2, 1);
+		helper.pullLever(lever);
+		helper.whenSecondsPassed(12, () -> {
+			helper.pullLever(pumpLever);
+		});
+
+		ItemStack expected = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.POISON);
+		helper.succeedWhen(() -> helper.assertContainerContains(chest, expected));
+	}
+
+
+	@GameTest(template = "cobble_melting", timeoutTicks = CreateGameTestHelper.TICKS_PER_SECOND*30)
+	public static void cobbleMelting(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(2, 3, 2);
+		BlockPos pumpLever = new BlockPos(4,4,0);
+
+		BlockPos chest = new BlockPos(9, 2, 1);
+		helper.pullLever(lever);
+		helper.whenSecondsPassed(12, () -> {
+			helper.pullLever(pumpLever);
+		});
+
+		ItemStack expected = new ItemStack(Items.LAVA_BUCKET);
+		helper.succeedWhen(() -> helper.assertContainerContains(chest, expected));
+	}
+
+	@GameTest(template = "fan_smoking", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
+	public static void fanSmoking(CreateGameTestHelper helper) {
+		BlockPos leverPos = new BlockPos(5, 3, 1);
+		helper.pullLever(leverPos);
+		BlockPos chestPos = new BlockPos(8, 3, 2);
+		helper.succeedWhen(() -> helper.assertContainerContains(chestPos, Items.COOKED_BEEF));
+	}
+
+	@GameTest(template = "fan_blasting", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
+	public static void fanBlasting(CreateGameTestHelper helper) {
+		BlockPos leverPos = new BlockPos(5, 3, 1);
+		helper.pullLever(leverPos);
+		BlockPos chestPos = new BlockPos(8, 3, 2);
+		helper.succeedWhen(() -> helper.assertContainerContains(chestPos, Items.NETHER_BRICK));
+	}
+
+	@GameTest(template = "fan_haunting", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
+	public static void fanHaunting(CreateGameTestHelper helper) {
+		BlockPos leverPos = new BlockPos(5, 3, 1);
+		helper.pullLever(leverPos);
+		BlockPos chestPos = new BlockPos(8, 3, 2);
+		helper.succeedWhen(() -> helper.assertContainerContains(chestPos, Items.GLOW_BERRIES));
+	}
 }
