@@ -69,16 +69,19 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 		tickActors();
 		Vec3 movementVec = getDeltaMovement();
 
-		if (ContraptionCollider.collideBlocks(this)) {
-			if (!level().isClientSide)
-				disassemble();
-			return;
-		}
-
 		if (!isStalled() && tickCount > 2) {
 			if (sequencedOffsetLimit >= 0)
 				movementVec = VecHelper.clampComponentWise(movementVec, (float) sequencedOffsetLimit);
+
 			move(movementVec.x, movementVec.y, movementVec.z);
+			if (ContraptionCollider.collideBlocks(this)) {
+				move(-movementVec.x, -movementVec.y, -movementVec.z);
+
+				if (!level().isClientSide)
+					disassemble();
+				return;
+			}
+
 			if (sequencedOffsetLimit > 0)
 				sequencedOffsetLimit = Math.max(0, sequencedOffsetLimit - movementVec.length());
 		}

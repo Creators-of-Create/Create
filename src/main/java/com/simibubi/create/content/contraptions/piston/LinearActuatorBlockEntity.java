@@ -289,7 +289,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 			return;
 		}
 		int initial = getInitialOffset();
-		if ((int) (offset + .5f) != initial && getMovementMode() == MovementMode.MOVE_PLACE_RETURNED) {
+		if (getMovementMode() == MovementMode.MOVE_PLACE_RETURNED && getGridOffset(offset) != initial) {
 			waitingForSpeedChange = true;
 			return;
 		}
@@ -319,7 +319,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 			waitingForSpeedChange = true;
 			return;
 		}
-		offset = getGridOffset(offset - getMovementSpeed());
+
 		resetContraptionToOffset();
 		tryDisassemble();
 	}
@@ -336,7 +336,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 	}
 
 	public float getMovementSpeed() {
-		float movementSpeed = Mth.clamp(convertToLinear(getSpeed()), -.49f, .49f) + clientOffsetDiff / 2f;
+		float movementSpeed = Mth.clamp(convertToLinear(getSpeed()), -1, 1) + clientOffsetDiff / 2f;
 		if (level.isClientSide)
 			movementSpeed *= ServerSpeedProvider.get();
 		if (sequencedOffsetLimit >= 0)
