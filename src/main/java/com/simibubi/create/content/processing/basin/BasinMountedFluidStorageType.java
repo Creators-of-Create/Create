@@ -43,9 +43,14 @@ public class BasinMountedFluidStorageType extends MountedFluidStorageType<BasinM
 				secondOutputStack.getAmount()
 			);
 
+			BasinMountedFluidStorage storage = new BasinMountedFluidStorage(inputTankHalf, outputTankHalf);
+
+			inputTankHalf.setUpdateCallback(s -> storage.markDirty());
+			outputTankHalf.setUpdateCallback(s -> storage.markDirty());
+
 			// i'm just... assuming these input and output tanks have two segments........ since that's how it's hardcoded
 
-			return new BasinMountedFluidStorage(inputTankHalf, outputTankHalf);
+			return storage;
 		}
 
 		return null;

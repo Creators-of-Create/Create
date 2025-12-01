@@ -37,10 +37,8 @@ public class BasinMountedFluidStorage extends MountedFluidStorage implements Syn
 		super(AllMountedStorageTypes.BASIN_FLUID.get());
 
 		this.inputTankHalf = input;
-		this.inputTankHalf.setUpdateCallback(this::onFluidStackChange);
 
 		this.outputTankHalf = output;
-		this.outputTankHalf.setUpdateCallback(this::onFluidStackChange);
 
 		this.bothTanks = new CombinedTankWrapper(input, output);
 	}
@@ -65,12 +63,10 @@ public class BasinMountedFluidStorage extends MountedFluidStorage implements Syn
 	@Override
 	public void markClean() { this.dirty = false; }
 
+	public void markDirty() { this.dirty = true; }
+
 	@Override
 	public void afterSync(Contraption contraption, BlockPos localPos) {}
-
-	public void onFluidStackChange(FluidStack stack) {
-		this.dirty = true;
-	}
 
 	public void tickChasers() {
 		this.inputTankHalf.tickChasers();
@@ -90,7 +86,7 @@ public class BasinMountedFluidStorage extends MountedFluidStorage implements Syn
 
 	@Override
 	public void unmount(Level level, BlockState state, BlockPos pos, @Nullable BlockEntity be) {
-		if(be instanceof BasinBlockEntity basin) {
+		if (be instanceof BasinBlockEntity basin) {
 			basin.applyTanks(this.inputTankHalf, this.outputTankHalf);
 		}
 	}
@@ -138,17 +134,25 @@ public class BasinMountedFluidStorage extends MountedFluidStorage implements Syn
 			Codec.BOOL.fieldOf("insertionAllowed").forGetter(MountedBasinTankHalf::insertionAllowed),
 			FluidStack.OPTIONAL_CODEC.fieldOf("firstTank").forGetter(MountedBasinTankHalf::firstStack),
 			FluidStack.OPTIONAL_CODEC.fieldOf("secondTank").forGetter(MountedBasinTankHalf::secondStack),
-			Codec.FLOAT.fieldOf("optionalFirst").forGetter(t -> t.firstLevel.getValue(1)),
-			Codec.FLOAT.fieldOf("optionalSecond").forGetter(t -> t.secondLevel.getValue(1))
+			Codec.FLOAT.fieldOf("previousFirstValue").forGetter(MountedBasinTankHalf::previousFirstValue),
+			Codec.FLOAT.fieldOf("previousSecondValue").forGetter(MountedBasinTankHalf::previousSecondValue)
 		).apply(i, MountedBasinTankHalf::fromStacks));
 
  		private final boolean insertionAllowed;
 		private final LerpedFloat firstLevel;
 		private final LerpedFloat secondLevel;
+
+		private float previousFirstValue;
+		private float previousSecondValue;
+		private float currentFirstValue;
+		private float currentSecondValue;
 		private Consumer<FluidStack> updateCallback;
 
 		public MountedBasinTankHalf(boolean insertionAllowed, IFluidHandler firstTank, IFluidHandler secondTank) {
 			super(firstTank, secondTank);
+
+			previousFirstValue = 0;
+			previousSecondValue = 0;
 
 			firstLevel = LerpedFloat.linear()
 				.startWithValue(0)
@@ -162,19 +166,27 @@ public class BasinMountedFluidStorage extends MountedFluidStorage implements Syn
 			enforceVariety();
 		}
 
-		public static MountedBasinTankHalf fromStacks(boolean insertionAllowed, FluidStack first, FluidStack second, float previousFirst, float previousSecond) {
+		public static MountedBasinTankHalf fromStacks(boolean insertionAllowed, FluidStack first, FluidStack second, float previousFirstValue, float previousSecondValue) {
 			SmartFluidTank firstTank = new SmartFluidTank(getTankCapacity(), s -> {});
 			SmartFluidTank secondTank = new SmartFluidTank(getTankCapacity(), s -> {});
 
 			MountedBasinTankHalf tankHalf = new MountedBasinTankHalf(insertionAllowed, firstTank, secondTank);
-			tankHalf.fillTank(0, first);
-			tankHalf.fillTank(1, second);
+			tankHalf.fillTank(0, first.copy());
+			tankHalf.fillTank(1, second.copy());
 
-			tankHalf.firstLevel.setValue(previousFirst);
- 			tankHalf.firstLevel.chase(tankHalf.firstStack().getAmount() / (float) getTankCapacity(), .25, Chaser.EXP);
+			float firstFill = first.getAmount() / (float) getTankCapacity();
+			float secondFill = second.getAmount() / (float) getTankCapacity();
 
-			tankHalf.secondLevel.setValue(previousSecond);
-			tankHalf.secondLevel.chase(tankHalf.secondStack().getAmount() / (float) getTankCapacity(), .25, Chaser.EXP);
+//			LogUtils.getLogger().info("first: {} -> {}", previousFirstValue, firstFill);
+//			LogUtils.getLogger().info("second: {} -> {}", previousSecondValue, secondFill);
+
+			tankHalf.currentFirstValue = firstFill;
+			tankHalf.currentSecondValue = secondFill;
+
+			tankHalf.firstLevel.setValue(previousFirstValue);
+			tankHalf.secondLevel.setValue(previousSecondValue);
+			tankHalf.firstLevel.chase(firstFill, .25, Chaser.EXP);
+			tankHalf.secondLevel.chase(secondFill, .25, Chaser.EXP);
 
 			firstTank.setUpdateCallback(tankHalf::onFluidStackChanged);
 			secondTank.setUpdateCallback(tankHalf::onFluidStackChanged);
@@ -183,10 +195,12 @@ public class BasinMountedFluidStorage extends MountedFluidStorage implements Syn
 		}
 
 		public void onFluidStackChanged(FluidStack stack) {
-			firstLevel.chase(firstStack().getAmount() / (float) getTankCapacity(), .25, Chaser.EXP);
-			secondLevel.chase(secondStack().getAmount() / (float) getTankCapacity(), .25, Chaser.EXP);
+			this.previousFirstValue = this.currentFirstValue;
+			this.previousSecondValue = this.currentSecondValue;
+			this.currentFirstValue = firstStack().getAmount() / (float) getTankCapacity();
+			this.currentSecondValue = secondStack().getAmount() / (float) getTankCapacity();
 
-			if(this.updateCallback != null) this.updateCallback.accept(stack);
+			if (this.updateCallback != null) this.updateCallback.accept(stack);
 		}
 
 		public void tickChasers() {
@@ -196,11 +210,19 @@ public class BasinMountedFluidStorage extends MountedFluidStorage implements Syn
 
 		public int getRenderedFluids() {
 			int total = 0;
-			for(int i = 0; i < this.getTanks(); i++) {
-				if(!this.getFluidInTank(i).isEmpty()) total++;
+			for (int i = 0; i < this.getTanks(); i++) {
+				if (!this.getFluidInTank(i).isEmpty()) total++;
 			}
 
 			return total;
+		}
+
+		public float previousFirstValue() {
+			return this.previousFirstValue;
+		}
+
+		public float previousSecondValue() {
+			return this.previousSecondValue;
 		}
 
 		public FluidStack firstStack() {
@@ -212,7 +234,7 @@ public class BasinMountedFluidStorage extends MountedFluidStorage implements Syn
 		}
 
 		public float getTotalUnits(float partialTicks, int tank) {
-			if(tank == 0) return firstLevel.getValue(partialTicks) * 1000;
+			if (tank == 0) return firstLevel.getValue(partialTicks) * 1000;
 			else return secondLevel.getValue(partialTicks) * 1000;
 		}
 
