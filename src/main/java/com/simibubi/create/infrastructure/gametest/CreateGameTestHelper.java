@@ -5,6 +5,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.minecraft.world.item.context.UseOnContext;
+
+import net.minecraft.world.phys.BlockHitResult;
+
+import net.minecraftforge.common.util.FakePlayer;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -476,6 +482,23 @@ public class CreateGameTestHelper extends GameTestHelper {
 	}
 
 	// misc
+
+	public void playerItemUseOn(FakePlayer player, ItemStack itemStack, int slot, BlockPos location) {
+		Vec3 locationVec = new Vec3(location.getX(), location.getY(), location.getZ());
+		BlockPos itemPos = location.above();
+
+
+		player.getInventory().items.set(slot, itemStack);
+		player.getInventory().selected = slot;
+
+		player.interactAt(player, locationVec, InteractionHand.MAIN_HAND);
+		player.getInventory().getSelected().useOn(
+			new UseOnContext(player,
+				InteractionHand.MAIN_HAND,
+				new BlockHitResult(locationVec, Direction.UP, itemPos, true)
+			)
+		);
+	}
 
 	@Contract("_->fail") // make IDEA happier
 	@Override

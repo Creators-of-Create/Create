@@ -183,6 +183,78 @@ public class BlockHelper {
 		return amountFound;
 	}
 
+	public static int findAndRemoveInInventory(BlockState block, ItemStack wantedStack, Player player, int amount) {
+		int amountFound = 0;
+		Item required = getRequiredItem(block).getItem();
+
+		boolean needsTwo = block.hasProperty(BlockStateProperties.SLAB_TYPE)
+			&& block.getValue(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE;
+
+		if (needsTwo)
+			amount *= 2;
+
+		for (IntegerProperty property : COUNT_STATES)
+			if (block.hasProperty(property))
+				amount *= block.getValue(property);
+
+		if (VINELIKE_BLOCKS.contains(block.getBlock())) {
+			int vineCount = 0;
+
+			for (BooleanProperty vineState : VINELIKE_STATES) {
+				if (block.hasProperty(vineState) && block.getValue(vineState)) {
+					vineCount++;
+				}
+			}
+
+			amount += vineCount - 1;
+		}
+
+		{
+			// Try held Item first
+			int preferredSlot = player.getInventory().selected;
+			ItemStack itemstack = player.getInventory()
+				.getItem(preferredSlot);
+			int count = itemstack.getCount();
+			if (itemstack.getItem() == required && count > 0) {
+				if (wantedStack == null || ItemStack.isSameItemSameTags(wantedStack, itemstack)) {
+					int taken = Math.min(count, amount - amountFound);
+					player.getInventory()
+						.setItem(preferredSlot, itemstack.copyWithCount(count - taken));
+					amountFound += taken;
+				}
+			}
+		}
+
+		// Search inventory
+		for (int i = 0; i < player.getInventory()
+			.getContainerSize(); ++i) {
+			if (amountFound == amount)
+				break;
+
+			ItemStack itemstack = player.getInventory()
+				.getItem(i);
+			int count = itemstack.getCount();
+			if (itemstack.getItem() == required && count > 0) {
+				if (wantedStack == null || ItemStack.isSameItemSameTags(wantedStack, itemstack)) {
+					int taken = Math.min(count, amount - amountFound);
+					player.getInventory()
+						.setItem(i, itemstack.copyWithCount(count - taken));
+					amountFound += taken;
+				}
+			}
+		}
+
+		if (needsTwo) {
+			// Give back 1 if uneven amount was removed
+			if (amountFound % 2 != 0)
+				player.getInventory()
+					.add(new ItemStack(required));
+			amountFound /= 2;
+		}
+
+		return amountFound;
+	}
+
 	public static ItemStack getRequiredItem(BlockState state) {
 		ItemStack itemStack = new ItemStack(state.getBlock());
 		Item item = itemStack.getItem();

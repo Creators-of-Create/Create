@@ -3,8 +3,10 @@ package com.simibubi.create.infrastructure.gametest.tests;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Stream;
 
+import com.mojang.authlib.GameProfile;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -21,8 +23,11 @@ import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -32,6 +37,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedstoneLampBlock;
 
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -408,5 +415,46 @@ public class TestItems {
 				helper.assertBlockProperty(lamp, RedstoneLampBlock.LIT, true);
 			}
 		});
+	}
+
+	@GameTest(template = "symmetry_wand_nbt_preservation")
+	public static void symmetryWandNBTPreservation(CreateGameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+
+		FakePlayer fakePlayer = FakePlayerFactory.get(level, new GameProfile(UUID.randomUUID(), "TestPlayer"));
+
+		BlockPos relativePos = new BlockPos(1, 0, 1);
+		BlockPos absPos = helper.absolutePos(relativePos);
+
+		ItemStack wand = new ItemStack(AllItems.WAND_OF_SYMMETRY.asItem(), 1);
+		helper.playerItemUseOn(fakePlayer, wand, 0, absPos);
+
+		ItemStack shulkerStack = new ItemStack(Items.SHULKER_BOX.asItem(), 1);
+		ItemStack grassStack = new ItemStack(Blocks.GRASS_BLOCK, 64);
+
+		CompoundTag shulkerTag = new CompoundTag();
+		ListTag itemsList = new ListTag();
+
+		CompoundTag itemTag = new CompoundTag();
+		itemTag.putByte("Slot", (byte) 0);
+		grassStack.save(itemTag);
+		itemsList.add(itemTag);
+
+		shulkerTag.put("Items", itemsList);
+
+		CompoundTag mainTag = shulkerStack.getOrCreateTag();
+		mainTag.put("BlockEntityTag", shulkerTag);
+
+		shulkerStack.grow(1);
+
+		BlockPos placePos = absPos.offset( 1,0,1);
+		helper.playerItemUseOn(fakePlayer, shulkerStack, 1, placePos);
+
+		BlockPos mirroredPos = new BlockPos(2, 2, 0);
+
+		helper.succeedIf(() -> {
+				helper.assertContainerContains(mirroredPos, grassStack);
+			}
+		);
 	}
 }
