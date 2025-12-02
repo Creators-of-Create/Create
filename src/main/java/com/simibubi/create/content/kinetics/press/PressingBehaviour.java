@@ -35,8 +35,8 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 	public List<ItemStack> particleItems = new ArrayList<>();
 
 	public PressingBehaviourSpecifics specifics;
-	public int prevRunningTicks;
-	public int runningTicks;
+	public float prevRunningTicks;
+	public float runningTicks;
 	public boolean running;
 	public boolean finished;
 	public Mode mode;
@@ -73,7 +73,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 		running = compound.getBoolean("Running");
 		mode = Mode.values()[compound.getInt("Mode")];
 		finished = compound.getBoolean("Finished");
-		prevRunningTicks = runningTicks = compound.getInt("Ticks");
+		prevRunningTicks = runningTicks = compound.getFloat("Ticks");
 		super.read(compound, clientPacket);
 
 		if (clientPacket) {
@@ -88,7 +88,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 		compound.putBoolean("Running", running);
 		compound.putInt("Mode", mode.ordinal());
 		compound.putBoolean("Finished", finished);
-		compound.putInt("Ticks", runningTicks);
+		compound.putFloat("Ticks", runningTicks);
 		super.write(compound, clientPacket);
 
 		if (clientPacket) {
@@ -100,7 +100,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 	public float getRenderedHeadOffset(float partialTicks) {
 		if (!running)
 			return 0;
-		int runningTicks = Math.abs(this.runningTicks);
+		float runningTicks = Math.abs(this.runningTicks);
 		float ticks = Mth.lerp(partialTicks, prevRunningTicks, runningTicks);
 		if (runningTicks < (CYCLE * 2) / 3)
 			return (float) Mth.clamp(Math.pow(ticks / CYCLE * 2, 3), 0, 1);
@@ -110,6 +110,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 	public void start(Mode mode) {
 		this.mode = mode;
 		running = true;
+		finished = false;
 		prevRunningTicks = 0;
 		runningTicks = 0;
 		particleItems.clear();
@@ -128,46 +129,48 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 	public void tick() {
 		super.tick();
 
+		if (specifics.getKineticSpeed() == 0) {
+			running = false;
+			return;
+		}
+
 		Level level = getWorld();
+
+		if (level == null)
+			return;
+
 		BlockPos worldPosition = getPos();
 
-		if (!running || level == null) {
-			if (level != null && !level.isClientSide) {
+		if (!running) {
+			if (level.isClientSide)
+				return;
 
-				if (specifics.getKineticSpeed() == 0)
+			if (entityScanCooldown > 0)
+				entityScanCooldown--;
+			if (entityScanCooldown <= 0) {
+				entityScanCooldown = ENTITY_SCAN;
+
+				if (BlockEntityBehaviour.get(level, worldPosition.below(2),
+					TransportedItemStackHandlerBehaviour.TYPE) != null)
 					return;
-				if (entityScanCooldown > 0)
-					entityScanCooldown--;
-				if (entityScanCooldown <= 0) {
-					entityScanCooldown = ENTITY_SCAN;
+				if (BasinBlock.isBasin(level, worldPosition.below(2)))
+					return;
 
-					if (BlockEntityBehaviour.get(level, worldPosition.below(2),
-						TransportedItemStackHandlerBehaviour.TYPE) != null)
-						return;
-					if (BasinBlock.isBasin(level, worldPosition.below(2)))
-						return;
-
-					for (ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class,
-						new AABB(worldPosition.below()).deflate(.125f))) {
-						if (!itemEntity.isAlive() || !itemEntity.onGround())
-							continue;
-						if (!specifics.tryProcessInWorld(itemEntity, true))
-							continue;
-						start(Mode.WORLD);
-						return;
-					}
+				for (ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class,
+					new AABB(worldPosition.below()).deflate(.125f))) {
+					if (!itemEntity.isAlive() || !itemEntity.onGround())
+						continue;
+					if (!specifics.tryProcessInWorld(itemEntity, true))
+						continue;
+					start(Mode.WORLD);
+					return;
 				}
 
 			}
 			return;
 		}
 
-		if (level.isClientSide && runningTicks == -CYCLE / 2) {
-			prevRunningTicks = CYCLE / 2;
-			return;
-		}
-
-		if (runningTicks == CYCLE / 2 && specifics.getKineticSpeed() != 0) {
+		if (runningTicks >= CYCLE / 2 && !finished) {
 			if (inWorld())
 				applyInWorld();
 			if (onBasin())
@@ -182,25 +185,22 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 
 			if (!level.isClientSide)
 				blockEntity.sendData();
+
+			finished = true;
 		}
 
-		if (!level.isClientSide && runningTicks > CYCLE) {
-			finished = true;
-			running = false;
-			particleItems.clear();
-			specifics.onPressingCompleted();
-			blockEntity.sendData();
-			return;
+		if (runningTicks > CYCLE) {
+			finished = false;
+			runningTicks -= CYCLE;
+			if (!level.isClientSide) {
+				particleItems.clear();
+				specifics.onPressingCompleted();
+				blockEntity.sendData();
+			}
 		}
 
 		prevRunningTicks = runningTicks;
 		runningTicks += getRunningTickSpeed();
-		if (prevRunningTicks < CYCLE / 2 && runningTicks >= CYCLE / 2) {
-			runningTicks = CYCLE / 2;
-			// Pause the ticks until a packet is received
-			if (level.isClientSide && !blockEntity.isVirtual())
-				runningTicks = -(CYCLE / 2);
-		}
 	}
 
 	protected void applyOnBasin() {
@@ -237,11 +237,11 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 		}
 	}
 
-	public int getRunningTickSpeed() {
+	public float getRunningTickSpeed() {
 		float speed = specifics.getKineticSpeed();
 		if (speed == 0)
 			return 0;
-		return (int) Mth.lerp(Mth.clamp(Math.abs(speed) / 512f, 0, 1), 1, 60);
+		return 30 * Mth.abs(speed) / 256;
 	}
 
 	protected void spawnParticles() {
