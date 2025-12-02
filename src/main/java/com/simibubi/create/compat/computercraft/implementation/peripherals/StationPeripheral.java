@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.PatternSyntaxException;
 
+import com.simibubi.create.content.trains.graph.DimensionPalette;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -111,6 +113,19 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 	}
 
 	@LuaFunction
+	public final CreateLuaTable getPresentTrain() throws LuaException {
+		GlobalStation station = blockEntity.getStation();
+		if (station == null)
+			throw new LuaException("station is not connected to a track");
+
+		if (station.getPresentTrain() == null)
+			return null;
+
+		DimensionPalette dimensions = new DimensionPalette();
+		return fromCompoundTag(station.getPresentTrain().write(dimensions));
+	}
+
+	@LuaFunction
 	public final boolean isTrainImminent() throws LuaException {
 		GlobalStation station = blockEntity.getStation();
 		if (station == null)
@@ -120,12 +135,38 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 	}
 
 	@LuaFunction
+	public final CreateLuaTable getImminentTrain() throws LuaException {
+		GlobalStation station = blockEntity.getStation();
+		if (station == null)
+			throw new LuaException("station is not connected to a track");
+
+		if (station.getImminentTrain() == null)
+			return null;
+
+		DimensionPalette dimensions = new DimensionPalette();
+		return fromCompoundTag(station.getImminentTrain().write(dimensions));
+	}
+
+	@LuaFunction
 	public final boolean isTrainEnroute() throws LuaException {
 		GlobalStation station = blockEntity.getStation();
 		if (station == null)
 			throw new LuaException("station is not connected to a track");
 
 		return station.getNearestTrain() != null;
+	}
+
+	@LuaFunction
+	public final CreateLuaTable getEnrouteTrain() throws LuaException {
+		GlobalStation station = blockEntity.getStation();
+		if (station == null)
+			throw new LuaException("station is not connected to a track");
+
+		if (station.getNearestTrain() == null)
+			return null;
+
+		DimensionPalette dimensions = new DimensionPalette();
+		return fromCompoundTag(station.getNearestTrain().write(dimensions));
 	}
 
 	@LuaFunction
