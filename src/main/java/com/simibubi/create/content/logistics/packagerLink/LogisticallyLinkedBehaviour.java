@@ -137,6 +137,10 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 		if (!loadedGlobally && global) {
 			loadedGlobally = true;
 			Create.LOGISTICS.linkLoaded(freqId, getGlobalPos());
+			// Call keepAlive regardless of redstone power.
+			// Otherwise, when no redstone power is present
+			// keepAlive won't be called until next lazy tick.
+			keepAlive(this);
 		}
 
 		if (!addedGlobally && global) {

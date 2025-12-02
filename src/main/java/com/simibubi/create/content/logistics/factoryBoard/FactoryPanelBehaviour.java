@@ -355,10 +355,15 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 
 	private void tickStorageMonitor() {
 		ItemStack filter = getFilter();
+		int unloadedLinkCount = getUnloadedLinks();
+		FactoryPanelBlockEntity panelBE = panelBE();
+		if (!panelBE.restocker && unloadedLinkCount == 0 && lastReportedUnloadedLinks != 0)
+			// All links have been loaded, invalidate cache so we can get an accurate summary!
+			// Otherwise, we will have to wait for 20 ticks and unnecessary packages will be sent!
+			LogisticsManager.SUMMARIES.invalidate(network);
 		int inStorage = getLevelInStorage();
 		int promised = getPromised();
 		int demand = getAmount() * (upTo ? 1 : filter.getMaxStackSize());
-		int unloadedLinkCount = getUnloadedLinks();
 		boolean shouldSatisfy = filter.isEmpty() || inStorage >= demand;
 		boolean shouldPromiseSatisfy = filter.isEmpty() || inStorage + promised >= demand;
 		boolean shouldWait = unloadedLinkCount > 0;
