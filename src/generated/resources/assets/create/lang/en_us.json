@@ -1676,7 +1676,7 @@
   "create.ponder.cart_assembler.text_2": "Without a redstone signal, it disassembles passing cart contraptions back into blocks",
   "create.ponder.cart_assembler.text_3": "Using a Wrench on the Minecart will let you carry the Contraption elsewhere",
   "create.ponder.cart_assembler_dual.header": "Assembling Carriage Contraptions",
-  "create.ponder.cart_assembler_dual.text_1": "Whenever two Cart Assembers share an attached structure...",
+  "create.ponder.cart_assembler_dual.text_1": "Whenever two Cart Assemblers share an attached structure...",
   "create.ponder.cart_assembler_dual.text_2": "Powering either of them will create a Carriage Contraption",
   "create.ponder.cart_assembler_dual.text_3": "The carts will behave like those connected via Minecart Coupling",
   "create.ponder.cart_assembler_modes.header": "Orientation Settings for Minecart Contraptions",
