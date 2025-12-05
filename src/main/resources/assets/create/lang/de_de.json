@@ -2720,7 +2720,7 @@
   "create.schedule.condition.redstone_link.frequency_state": "Frequenzzustand:",
   "create.schedule.condition.redstone_link.frequency_unpowered": "Kein Signal über Frequenz:",
   "create.schedule.condition.redstone_link.powered": "Aktiviert",
-  "create.schedule.condition.redstone_link.status": "Warten auf Restone-Link",
+  "create.schedule.condition.redstone_link.status": "Warten auf Redstone-Link",
   "create.schedule.condition.redstone_link.unpowered": "Deaktiviert",
   "create.schedule.condition.redstone_link_off": "Link aus",
   "create.schedule.condition.redstone_link_on": "Link an",

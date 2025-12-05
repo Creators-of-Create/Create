@@ -1167,7 +1167,7 @@
   "create.ponder.funnel_direction.text_5": "Los ingresos en las sintas extraerán/insertarán dependiendo de la dirección de movimiento.",
   "create.ponder.funnel_intro.header": "Usando Ingresos",
   "create.ponder.funnel_intro.text_1": "Los Ingresos son ideales para transferir artículos desde y hacia inventarios.",
-  "create.ponder.funnel_redstone.header": "Control de Restone",
+  "create.ponder.funnel_redstone.header": "Control de Redstone",
   "create.ponder.funnel_redstone.text_1": "Las señales de Redstone evitarán que actúe cualquier ingreso",
   "create.ponder.funnel_transfer.header": "Transferencia Directa",
   "create.ponder.funnel_transfer.text_1": "Los Ingresos nunca pueden transferir directamente entre inventarios cerrados.",

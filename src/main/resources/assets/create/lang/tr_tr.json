@@ -2581,7 +2581,7 @@
   "create.ponder.train_signal_placement.text_3": "Tarifeli Trenler hiçbir zaman sinyallere ters yönden geçmeyecektir",
   "create.ponder.train_signal_placement.text_4": "...ters yöne bakan ikinci bir sinyal eklenmediği sürece.",
   "create.ponder.train_signal_placement.text_5": "Nixie tüpleri, sinyal ışığını daha görünebilir hale getirmek için kullanılabilir",
-  "create.ponder.train_signal_redstone.header": "Sinyaller Ve Restone",
+  "create.ponder.train_signal_redstone.header": "Sinyaller Ve Redstone",
   "create.ponder.train_signal_redstone.text_1": "Sinyaller, Redstone sinyali ile kırmızı olmaya zorlanır",
   "create.ponder.train_signal_redstone.text_2": "Bunun tersine, kırmızı sinyaller bir karşılaştırıcı çıkışı yayar",
   "create.ponder.train_signal_signaling.header": "Sinyallerle Çarpışmayı Önleme",

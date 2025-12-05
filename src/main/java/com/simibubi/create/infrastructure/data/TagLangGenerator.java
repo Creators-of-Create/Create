@@ -151,7 +151,7 @@ public class TagLangGenerator {
 
 		// palletes
 		translate(AllItemTags.ALLURITE, "Allurite");
-		translate(AllItemTags.AMETHYST, "Amethust");
+		translate(AllItemTags.AMETHYST, "Amethyst");
 		translate(AllItemTags.LUMIERE, "Lumiere");
 
 		for (AllPaletteStoneTypes type : AllPaletteStoneTypes.values()) {
