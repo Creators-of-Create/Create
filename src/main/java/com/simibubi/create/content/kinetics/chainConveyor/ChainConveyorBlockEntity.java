@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.api.contraption.transformable.TransformableBlockEntity;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.kinetics.base.IRotate;
@@ -23,6 +24,7 @@ import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockEntity;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
+import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -65,6 +67,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 	}
 
 	public Set<BlockPos> connections = new HashSet<>();
+	public Set<BlockPos> promisedConnections = new HashSet<>();
 	public Map<BlockPos, ConnectionStats> connectionStats;
 
 	public Map<BlockPos, ConnectedPort> loopPorts = new HashMap<>();
@@ -135,6 +138,10 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 		if (checkInvalid && !level.isClientSide()) {
 			checkInvalid = false;
 			removeInvalidConnections();
+		}
+
+		if (!promisedConnections.isEmpty() && !level.isClientSide()) {
+			connectPromisedConnections();
 		}
 
 		float serverSpeed = level.isClientSide() && !isVirtual() ? ServerSpeedProvider.get() : 1f;
@@ -328,6 +335,39 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 		}
 		if (changed)
 			notifyUpdate();
+	}
+
+	private void connectPromisedConnections() {
+		boolean changed = false;
+		for (Iterator<BlockPos> iterator = promisedConnections.iterator(); iterator.hasNext(); ) {
+			BlockPos next = iterator.next();
+			BlockPos target = worldPosition.offset(next);
+			if (!level.isLoaded(target))
+				continue;
+			if (level.getBlockEntity(target) instanceof ChainConveyorBlockEntity ccbe) {
+				if (!ccbe.connections.contains(target.subtract(worldPosition))
+					&& connections.size() < AllConfigs.server().kinetics.maxChainConveyorConnections.get()
+					&& ccbe.connections.size() < AllConfigs.server().kinetics.maxChainConveyorConnections.get()) {
+					AllPackets.getChannel()
+						.sendToServer(new ChainConveyorConnectionPacket(target, worldPosition, new ItemStack(Items.CHAIN, getChainCost(worldPosition.subtract(target))), true));
+				}
+				else {
+					refundChains(next);
+				}
+				iterator.remove();
+				changed = true;
+			}
+		}
+		if (changed)
+			notifyUpdate();
+	}
+
+	private void refundChains(BlockPos blockPos) {
+		int chainCount = getChainCost(blockPos);
+		while (chainCount > 0) {
+			Block.popResource(level, worldPosition, new ItemStack(Blocks.CHAIN.asItem(), Math.min(chainCount, 64)));
+			chainCount -= 64;
+		}
 	}
 
 	public void notifyConnectedToValidate() {
@@ -601,6 +641,12 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 				clbe.removeConnectionTo(worldPosition);
 		}
 
+		if (!cancelDrops) {
+			for (BlockPos blockPos : promisedConnections) {
+				refundChains(blockPos);
+			}
+		}
+
 		for (ChainConveyorPackage box : loopingPackages)
 			drop(box);
 		for (Entry<BlockPos, List<ChainConveyorPackage>> entry : travellingPackages.entrySet())
@@ -667,7 +713,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 	@Override
 	public void writeSafe(CompoundTag tag) {
 		super.writeSafe(tag);
-		tag.put("Connections", NBTHelper.writeCompoundList(connections, NbtUtils::writeBlockPos));
+		tag.put("PromisedConnections", NBTHelper.writeCompoundList(connections, NbtUtils::writeBlockPos));
 	}
 
 	@Override
@@ -679,6 +725,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 		}
 
 		compound.put("Connections", NBTHelper.writeCompoundList(connections, NbtUtils::writeBlockPos));
+		compound.put("PromisedConnections", NBTHelper.writeCompoundList(promisedConnections, NbtUtils::writeBlockPos));
 		compound.put("TravellingPackages", NBTHelper.writeCompoundList(travellingPackages.entrySet(), entry -> {
 			CompoundTag compoundTag = new CompoundTag();
 			compoundTag.put("Target", NbtUtils.writeBlockPos(entry.getKey()));
@@ -700,6 +747,9 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 		connections.clear();
 		NBTHelper.iterateCompoundList(compound.getList("Connections", Tag.TAG_COMPOUND),
 			c -> connections.add(NbtUtils.readBlockPos(c)));
+		promisedConnections.clear();
+		NBTHelper.iterateCompoundList(compound.getList("PromisedConnections", Tag.TAG_COMPOUND),
+			c -> promisedConnections.add(NbtUtils.readBlockPos(c)));
 		travellingPackages.clear();
 		NBTHelper.iterateCompoundList(compound.getList("TravellingPackages", Tag.TAG_COMPOUND),
 			c -> travellingPackages.put(NbtUtils.readBlockPos(c.getCompound("Target")),
@@ -776,12 +826,11 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state) {
-		// TODO: Uncomment when Schematicannon is able to print these with chains
-//		int totalCost = 0;
-//		for (BlockPos pos : connections)
-//			totalCost += getChainCost(pos);
-//		if (totalCost > 0)
-//			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(Items.CHAIN, Mth.ceil(totalCost / 2.0)));
+		int totalCost = 0;
+		for (BlockPos pos : connections)
+			totalCost += getChainCost(pos);
+		if (totalCost > 0)
+			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(Items.CHAIN, Mth.ceil(totalCost / 2.0)));
 		return super.getRequiredItems(state);
 	}
 
