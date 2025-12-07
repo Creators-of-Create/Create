@@ -709,8 +709,13 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		return out;
 	}
 
-	public Map<Pair<Integer, Integer>, Double> rasterise() {
-		Map<Pair<Integer, Integer>, Double> yLevels = new HashMap<>();
+	public static class BezierPixel {
+		public double yLevel;
+		public double position;
+	}
+
+	public Map<Pair<Integer, Integer>, BezierPixel> rasterise() {
+		Map<Pair<Integer, Integer>, BezierPixel> pixels = new HashMap<>();
 		BlockPos tePosition = bePositions.getFirst();
 		Vec3 end1 = starts.getFirst()
 			.subtract(Vec3.atLowerCornerOf(tePosition))
@@ -733,9 +738,12 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		int segCount = getSegmentCount();
 		float[] lut = getStepLUT();
 		Vec3[] samples = new Vec3[segCount];
+		double[] positions = new double[segCount];
 
 		for (int i = 0; i < segCount; i++) {
 			float t = Mth.clamp((i + 0.5f) * lut[i] / segCount, 0, 1);
+			positions[i] = t * length;
+
 			Vec3 result = VecHelper.bezier(end1, end2, finish1, finish2, t);
 			Vec3 derivative = VecHelper.bezierDerivative(end1, end2, finish1, finish2, t)
 				.normalize();
@@ -762,10 +770,15 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 			Vec3 railMiddle = samples[i];
 			BlockPos pos = BlockPos.containing(railMiddle);
 			Pair<Integer, Integer> key = Pair.of(pos.getX(), pos.getZ());
-			boolean alreadyPresent = yLevels.containsKey(key);
-			if (alreadyPresent && yLevels.get(key) <= railMiddle.y)
+			boolean alreadyPresent = pixels.containsKey(key);
+			if (alreadyPresent && pixels.get(key).yLevel <= railMiddle.y)
 				continue;
-			yLevels.put(key, railMiddle.y);
+
+			BezierPixel pixel = new BezierPixel();
+			pixel.yLevel = railMiddle.y;
+			pixel.position = positions[i];
+			pixels.put(key, pixel);
+
 			if (alreadyPresent)
 				continue;
 
@@ -775,13 +788,13 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				boolean prevCloser = diff(prev, center) > diff(prev2, center);
 
 				if (doubledViaPrev2 && (!doubledViaPrev || !prevCloser)) {
-					yLevels.remove(prev2);
+					pixels.remove(prev2);
 					prev2 = prev;
 					prev = key;
 					continue;
 
 				} else if (doubledViaPrev && doubledViaPrev2 && prevCloser) {
-					yLevels.remove(prev);
+					pixels.remove(prev);
 					prev = key;
 					continue;
 				}
@@ -792,7 +805,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 			prev = key;
 		}
 
-		return yLevels;
+		return pixels;
 	}
 
 	private double diff(Pair<Integer, Integer> pFrom, Vec3 to) {

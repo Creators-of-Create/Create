@@ -22,8 +22,11 @@ import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
+import com.simibubi.create.content.trains.signal.EdgeGroupColor;
+import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.track.BezierConnection;
+import com.simibubi.create.content.trains.track.BezierConnection.BezierPixel;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -34,6 +37,7 @@ import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
@@ -450,6 +454,14 @@ public class TrainMapManager {
 		return hoveredElement;
 	}
 
+	public static EdgeGroupColor getEdgeGroupColor(TrackGraph graph, TrackEdge edge, double position) {
+		UUID groupId = edge.getEdgeData().getGroupAtPosition(graph, position);
+		if (groupId == null) return EdgeGroupColor.WHITE;
+		SignalEdgeGroup edgeGroup = CreateClient.RAILWAYS.signalEdgeGroups.get(groupId);
+		if (edgeGroup == null) return EdgeGroupColor.WHITE;
+		return edgeGroup.color;
+	}
+
 	// Background first so we can mindlessly paint over it
 	static final int PHASE_BACKGROUND = 0;
 	// Straights before curves so that curves anti-alias properly at the transition
@@ -498,6 +510,8 @@ public class TrainMapManager {
 
 		int portalFrameColor = 0xFF_4C2D5B;
 		int portalColor = 0xFF_FF7FD6;
+
+		boolean isSectionTheme = map.trackingTheme == CClient.TrainMapTheme.SECTION;
 
 		for (TrackGraph graph : CreateClient.RAILWAYS.trackNetworks.values()) {
 			for (TrackNodeLocation nodeLocation : graph.getNodes()) {
@@ -595,6 +609,12 @@ public class TrainMapManager {
 									continue;
 								}
 
+								if (isSectionTheme) {
+									EdgeGroupColor groupColor = getEdgeGroupColor(graph, edge, s * Mth.SQRT_OF_TWO);
+									mainColor = groupColor.getBGR();
+									darkerColor = groupColor.getDarkerBGR();
+								}
+
 								int alphaAt = map.alphaAt(x, z);
 								if (alphaAt > 0 && alphaAt != a)
 									collisions.add(Couple.create(x, z));
@@ -634,6 +654,13 @@ public class TrainMapManager {
 							int alphaAt = map.alphaAt(x, z);
 							if (alphaAt > 0 && alphaAt != a)
 								collisions.add(Couple.create(x, z));
+
+							if (isSectionTheme) {
+								EdgeGroupColor groupColor = getEdgeGroupColor(graph, edge, s);
+								mainColor = groupColor.getBGR();
+								darkerColor = groupColor.getDarkerBGR();
+							}
+
 							if (alphaAt <= a) {
 								map.setPixel(x, z, markY(mainColor, y));
 							}
@@ -649,19 +676,25 @@ public class TrainMapManager {
 						continue;
 
 					BlockPos origin = turn.bePositions.getFirst();
-					Map<Pair<Integer, Integer>, Double> rasterise = turn.rasterise();
+					Map<Pair<Integer, Integer>, BezierPixel> rasterise = turn.rasterise();
 
 					for (boolean antialias : Iterate.falseAndTrue) {
-						for (Entry<Pair<Integer, Integer>, Double> offset : rasterise.entrySet()) {
-							Pair<Integer, Integer> xz = offset.getKey();
+						for (Entry<Pair<Integer, Integer>, BezierPixel> bcPixel : rasterise.entrySet()) {
+							Pair<Integer, Integer> xz = bcPixel.getKey();
 							int x = origin.getX() + xz.getFirst();
-							int y = Mth.floor(origin.getY() + offset.getValue() + 0.5);
+							int y = Mth.floor(origin.getY() + bcPixel.getValue().yLevel + 0.5);
 							int z = origin.getZ() + xz.getSecond();
 
 							if (phase == PHASE_BACKGROUND) {
 								map.setPixels(x - 1, z, x + 1, z, outlineColor);
 								map.setPixels(x, z - 1, x, z + 1, outlineColor);
 								continue;
+							}
+
+							if (isSectionTheme) {
+								EdgeGroupColor groupColor = getEdgeGroupColor(graph, edge, bcPixel.getValue().position);
+								mainColor = groupColor.getBGR();
+								darkerColor = groupColor.getDarkerBGR();
 							}
 
 							int a = mapYtoAlpha(y);
@@ -677,12 +710,23 @@ public class TrainMapManager {
 								continue;
 							}
 
-							boolean mainColorBelowLeft =
-								map.is(x + 1, z + 1, mainColor) && Math.abs(map.alphaAt(x + 1, z + 1) - a) <= 1;
-							boolean mainColorBelowRight =
-								map.is(x - 1, z + 1, mainColor) && Math.abs(map.alphaAt(x - 1, z + 1) - a) <= 1;
+							boolean mainColorBelow = false;
+							for (int xDelta : Iterate.positiveAndNegative) {
+								if (Math.abs(map.alphaAt(x + xDelta, z + 1) - a) > 1) {
+									continue;
+								}
 
-							if (mainColorBelowLeft || mainColorBelowRight) {
+								int colorBelow = map.getPixel(x + xDelta, z + 1) & 0xFFFFFF;
+								mainColorBelow |= colorBelow == (mainColor & 0xFFFFFF);
+
+								if (isSectionTheme) {
+									for (EdgeGroupColor groupColor : EdgeGroupColor.values()) {
+										mainColorBelow |= colorBelow == (groupColor.getBGR() & 0xFFFFFF);
+									}
+								}
+							}
+
+							if (mainColorBelow) {
 								int alphaAt = map.alphaAt(x, z + 1);
 								if (alphaAt > 0 && alphaAt != a)
 									collisions.add(Couple.create(x, z));

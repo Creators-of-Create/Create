@@ -89,7 +89,7 @@ public class CClient extends ConfigBase {
 	}
 
 	public enum TrainMapTheme {
-		RED, GREY, WHITE
+		RED, GREY, WHITE, SECTION
 	}
 
 	private static class Comments {
