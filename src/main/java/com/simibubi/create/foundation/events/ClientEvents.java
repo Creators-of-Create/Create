@@ -320,17 +320,14 @@ public class ClientEvents {
 
 		ItemStack divingHelmet = DivingHelmetItem.getWornItem(entity);
 		if (!divingHelmet.isEmpty()) {
-			if (FluidHelper.isWater(fluid)) {
+			if (FluidHelper.isWater(fluid) && AllConfigs.server().equipment.shouldScaleWaterFogDistance.get()) {
 				event.scaleFarPlaneDistance(6.25f);
-				event.setCanceled(true);
-				return;
 			} else if (FluidHelper.isLava(fluid) && NetheriteDivingHandler.isNetheriteDivingHelmet(divingHelmet)) {
 				event.setNearPlaneDistance(-4.0f);
 				event.setFarPlaneDistance(20.0f);
-				event.setCanceled(true);
-				return;
 			}
 		}
+		event.setCanceled(true);
 	}
 
 	@SubscribeEvent
