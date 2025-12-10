@@ -1,4 +1,4 @@
-// 1.21.1	2025-11-02T10:48:42.643836944	Create's Standard Recipes
+// 1.21.1	2025-12-10T08:26:45.219015	Create's Standard Recipes
 489f0a3e3d8571c4897f49eada95a23290a472dc data/create/advancement/recipes/combat/crafting/appliances/netherite_backtank.json
 b024ae44179c47b9be8fa35acc763c22b7b01b2e data/create/advancement/recipes/combat/crafting/appliances/netherite_backtank_from_netherite.json
 41d2909fcf45f9098c0ee306810c16168d4e8ae4 data/create/advancement/recipes/combat/crafting/appliances/netherite_diving_boots.json
@@ -488,7 +488,7 @@ a5c159b421d293d78c3eff019a0c4679ee7b27f6 data/create/recipe/crafting/logistics/s
 1fb9b09ffee15f90f7c5f40ca0bd091bb478111e data/create/recipe/crafting/materials/andesite_alloy_block.json
 156eb4e2b4751735a4fde6c19909c2c1a176b100 data/create/recipe/crafting/materials/andesite_alloy_from_block.json
 e2dc9c6465a56670f7faa24863f278e8acbfbdd1 data/create/recipe/crafting/materials/andesite_alloy_from_zinc.json
-72d826d64a65796e2d4806f756bd7a1f7513164e data/create/recipe/crafting/materials/bound_cardboard_block.json
+20f9ea9b3eea2ad83b946548d9643525a9f9505c data/create/recipe/crafting/materials/bound_cardboard_block.json
 f90e384c97e6de444d7b77bc1742fdc5297b09b1 data/create/recipe/crafting/materials/brass_block_from_compacting.json
 9791c35874f96fdb3d96be6c2c9d03bdba7871a8 data/create/recipe/crafting/materials/brass_ingot_from_compacting.json
 319647782ae788242af731daa11d550ad73f0660 data/create/recipe/crafting/materials/brass_ingot_from_decompacting.json
