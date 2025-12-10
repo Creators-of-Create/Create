@@ -1270,6 +1270,7 @@ public class AllBlocks {
 				.getColorForPower(pos != null && world != null ? state.getValue(BlockStateProperties.POWER) : 0))
 			.tag(BlockTags.RAILS)
 			.item()
+			.tag(ItemTags.RAILS)
 			.model((c, p) -> p.generated(c, Create.asResource("block/" + c.getName())))
 			.build()
 			.register();
