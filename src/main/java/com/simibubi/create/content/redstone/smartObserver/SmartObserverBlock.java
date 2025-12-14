@@ -62,10 +62,10 @@ public class SmartObserverBlock extends DirectedDirectionalBlock implements IBE<
 				canDetect = true;
 			else if (BlockEntityBehaviour.get(blockEntity, FluidTransportBehaviour.TYPE) != null)
 				canDetect = true;
-			else if (blockEntity != null && (
-					context.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, blockEntity.getBlockPos(), null) != null ||
-					context.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, blockEntity.getBlockPos(), null) != null
-			))
+			else if (
+					context.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, offsetPos, null) != null ||
+					context.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, offsetPos, null) != null
+			)
 				canDetect = true;
 			else if (blockEntity instanceof FunnelBlockEntity)
 				canDetect = true;

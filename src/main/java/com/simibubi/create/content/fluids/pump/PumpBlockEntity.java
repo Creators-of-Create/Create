@@ -289,7 +289,7 @@ public class PumpBlockEntity extends KineticBlockEntity {
 			return false;
 
 		// fluid handler endpoint
-		if(level instanceof ILevelExtension ext) {
+		if(level instanceof ILevelExtension ext) { // Instead of this check we can just pass a ILevelExtension as parameter for this method
 			IFluidHandler capability = ext.getCapability(Capabilities.FluidHandler.BLOCK, connectedPos, face.getOpposite());
 			if(capability != null) return true;
 		}
