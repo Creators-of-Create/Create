@@ -103,6 +103,9 @@ public class GoggleOverlayRenderer {
 		ItemStack item = AllItems.GOGGLES.asStack();
 		List<Component> tooltip = new ArrayList<>();
 
+		if(!hasGoggleInformation && world.getBlockState(pos).getBlock() instanceof IHaveCustomOverlayIcon info)
+			item = info.getIcon(isShifting);
+
 		if (be instanceof IHaveCustomOverlayIcon customOverlayIcon)
 			item = customOverlayIcon.getIcon(isShifting);
 
@@ -121,6 +124,9 @@ public class GoggleOverlayRenderer {
 				tooltip.remove(tooltip.size() - 1);
 		}
 
+		if(world.getBlockState(pos).getBlock() instanceof IHaveGoggleInformation info)
+			goggleAddedInformation |= info.addToGoggleTooltip(world, pos, world.getBlockState(pos), tooltip, isShifting);
+
 		if (be instanceof IDisplayAssemblyExceptions) {
 			boolean exceptionAdded = ((IDisplayAssemblyExceptions) be).addExceptionToTooltip(tooltip);
 			if (exceptionAdded) {
@@ -138,33 +144,6 @@ public class GoggleOverlayRenderer {
 		if ((hasGoggleInformation && !goggleAddedInformation) && (hasHoveringInformation && !hoverAddedInformation)) {
 			hoverTicks = 0;
 			return;
-		}
-
-		// check for piston poles if goggles are worn
-		BlockState state = world.getBlockState(pos);
-		if (wearingGoggles && AllBlocks.PISTON_EXTENSION_POLE.has(state)) {
-			Direction[] directions = Iterate.directionsInAxis(state.getValue(PistonExtensionPoleBlock.FACING)
-				.getAxis());
-			int poles = 1;
-			boolean pistonFound = false;
-			for (Direction dir : directions) {
-				int attachedPoles = PistonExtensionPoleBlock.PlacementHelper.get()
-					.attachedPoles(world, pos, dir);
-				poles += attachedPoles;
-				pistonFound |= world.getBlockState(pos.relative(dir, attachedPoles + 1))
-					.getBlock() instanceof MechanicalPistonBlock;
-			}
-
-			if (!pistonFound) {
-				hoverTicks = 0;
-				return;
-			}
-			if (!tooltip.isEmpty())
-				tooltip.add(CommonComponents.EMPTY);
-
-			CreateLang.translate("gui.goggles.pole_length")
-				.text(" " + poles)
-				.forGoggles(tooltip);
 		}
 
 		if (tooltip.isEmpty()) {

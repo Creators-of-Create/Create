@@ -4,15 +4,20 @@ import static com.simibubi.create.content.contraptions.piston.MechanicalPistonBl
 import static com.simibubi.create.content.contraptions.piston.MechanicalPistonBlock.isPiston;
 import static com.simibubi.create.content.contraptions.piston.MechanicalPistonBlock.isPistonHead;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.placement.PoleHelper;
 
+import com.simibubi.create.foundation.utility.CreateLang;
+
+import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.placement.IPlacementHelper;
 import net.createmod.catnip.placement.PlacementHelpers;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -20,6 +25,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -44,7 +51,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class PistonExtensionPoleBlock extends WrenchableDirectionalBlock implements IWrenchable, SimpleWaterloggedBlock {
+public class PistonExtensionPoleBlock extends WrenchableDirectionalBlock implements IWrenchable, SimpleWaterloggedBlock, IHaveGoggleInformation {
 
 	private static final int placementHelperId = PlacementHelpers.register(PlacementHelper.get());
 
@@ -178,5 +185,27 @@ public class PistonExtensionPoleBlock extends WrenchableDirectionalBlock impleme
 		public Predicate<ItemStack> getItemPredicate() {
 			return AllBlocks.PISTON_EXTENSION_POLE::isIn;
 		}
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(Level level, BlockPos pos, BlockState state, List<Component> tooltip, boolean isPlayerSneaking) {
+		Direction[] directions = Iterate.directionsInAxis(state.getValue(PistonExtensionPoleBlock.FACING)
+			.getAxis());
+		int poles = 1;
+		boolean pistonFound = false;
+		for (Direction dir : directions) {
+			int attachedPoles = PistonExtensionPoleBlock.PlacementHelper.get()
+				.attachedPoles(level, pos, dir);
+			poles += attachedPoles;
+			pistonFound |= level.getBlockState(pos.relative(dir, attachedPoles + 1))
+				.getBlock() instanceof MechanicalPistonBlock;
+		}
+		if (!tooltip.isEmpty())
+			tooltip.add(CommonComponents.EMPTY);
+
+		CreateLang.translate("gui.goggles.pole_length")
+			.text(" " + poles)
+			.forGoggles(tooltip);
+		return pistonFound;
 	}
 }
