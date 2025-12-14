@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.neoforged.neoforge.common.extensions.ILevelExtension;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.HolderLookup;
@@ -287,10 +289,9 @@ public class PumpBlockEntity extends KineticBlockEntity {
 			return false;
 
 		// fluid handler endpoint
-		if (blockEntity != null) {
-			IFluidHandler capability = blockEntity.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, blockEntity.getBlockPos(), face.getOpposite());
-			if (capability != null)
-				return true;
+		if(level instanceof ILevelExtension ext) {
+			IFluidHandler capability = ext.getCapability(Capabilities.FluidHandler.BLOCK, connectedPos, face.getOpposite());
+			if(capability != null) return true;
 		}
 
 		// open endpoint
