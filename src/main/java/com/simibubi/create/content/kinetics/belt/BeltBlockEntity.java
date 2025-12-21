@@ -555,9 +555,10 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 	@Override
 	public ModelData getModelData() {
 		Builder builder = ModelData.builder();
+		if (casing != null)
+			builder.with(BeltModel.CASING_PROPERTY, casing.getModelInfo());
 		return builder
 			.with(BeltModel.COVER_PROPERTY, covered)
-			.with(BeltModel.CASING_PROPERTY, Optional.ofNullable(casing == null ? null : casing.getModelInfo()))
 			.build();
 	}
 

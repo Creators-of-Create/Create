@@ -25,10 +25,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class BeltModel extends BakedModelWrapper<BakedModel> {
 
-	public static final ModelProperty<Optional<BeltCasingRenderInfo>> CASING_PROPERTY = new ModelProperty<>();
+	public static final ModelProperty<BeltCasingRenderInfo> CASING_PROPERTY = new ModelProperty<>();
 	public static final ModelProperty<Boolean> COVER_PROPERTY = new ModelProperty<>();
-
-	private static final SpriteShiftEntry SPRITE_SHIFT = AllSpriteShifts.ANDESIDE_BELT_CASING;
 
 	public BeltModel(BakedModel template) {
 		super(template);
@@ -39,11 +37,10 @@ public class BeltModel extends BakedModelWrapper<BakedModel> {
 		if (!data.has(CASING_PROPERTY))
 			return super.getParticleIcon(data);
 
-		Optional<BeltCasingRenderInfo> type = data.get(CASING_PROPERTY);
-		if (type == null || type.isEmpty())
+		BeltCasingRenderInfo modelInfo = data.get(CASING_PROPERTY);
+		if (modelInfo == null)
 			return super.getParticleIcon(data);
 
-		BeltCasingRenderInfo modelInfo = type.get();
 		return modelInfo.spriteShift() == null ? super.getParticleIcon(data) :
 			modelInfo.spriteShift().getTarget();
 	}
@@ -55,12 +52,11 @@ public class BeltModel extends BakedModelWrapper<BakedModel> {
 			return quads;
 
 		boolean cover = extraData.get(COVER_PROPERTY);
-		@Nullable Optional<BeltCasingRenderInfo> type = extraData.get(CASING_PROPERTY);
+		@Nullable BeltCasingRenderInfo modelInfo = extraData.get(CASING_PROPERTY);
 
-		if (type == null || type.isEmpty())
+		if (modelInfo == null)
 			return quads;
 
-		BeltCasingRenderInfo modelInfo = type.get();
 		boolean noSpriteShift = modelInfo.spriteShift() == null;
 
 		if (noSpriteShift && !cover)
@@ -78,10 +74,12 @@ public class BeltModel extends BakedModelWrapper<BakedModel> {
 		if (noSpriteShift)
 			return quads;
 
+		final SpriteShiftEntry spriteShift = modelInfo.spriteShift();
+
 		for (int i = 0; i < quads.size(); i++) {
 			BakedQuad quad = quads.get(i);
 			TextureAtlasSprite original = quad.getSprite();
-			if (original != SPRITE_SHIFT.getOriginal())
+			if (original != spriteShift.getOriginal())
 				continue;
 
 			BakedQuad newQuad = BakedQuadHelper.clone(quad);
@@ -90,8 +88,8 @@ public class BeltModel extends BakedModelWrapper<BakedModel> {
 			for (int vertex = 0; vertex < 4; vertex++) {
 				float u = BakedQuadHelper.getU(vertexData, vertex);
 				float v = BakedQuadHelper.getV(vertexData, vertex);
-				BakedQuadHelper.setU(vertexData, vertex, SPRITE_SHIFT.getTargetU(u));
-				BakedQuadHelper.setV(vertexData, vertex, SPRITE_SHIFT.getTargetV(v));
+				BakedQuadHelper.setU(vertexData, vertex, spriteShift.getTargetU(u));
+				BakedQuadHelper.setV(vertexData, vertex, spriteShift.getTargetV(v));
 			}
 
 			quads.set(i, newQuad);
