@@ -1,12 +1,17 @@
 package com.simibubi.create.content.schematics.cannon;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.api.registry.CreateBuiltInRegistries;
+import com.simibubi.create.api.registry.CreateRegistries;
+import com.simibubi.create.content.kinetics.belt.AllBeltCasingTypes.LegacyCasingType;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
-import com.simibubi.create.content.kinetics.belt.BeltBlockEntity.CasingType;
+import com.simibubi.create.content.kinetics.belt.BeltCasingType;
 import com.simibubi.create.content.kinetics.belt.BeltPart;
 import com.simibubi.create.content.kinetics.belt.BeltSlope;
 import com.simibubi.create.content.kinetics.belt.item.BeltConnectorItem;
@@ -16,11 +21,14 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -134,7 +142,7 @@ public abstract class LaunchedItem {
 
 	public static class ForBelt extends ForBlockState {
 		public int length;
-		public CasingType[] casings;
+		public List<BeltCasingType> casings;
 
 		public ForBelt() {}
 
@@ -142,27 +150,51 @@ public abstract class LaunchedItem {
 		public CompoundTag serializeNBT(HolderLookup.Provider registries) {
 			CompoundTag serializeNBT = super.serializeNBT(registries);
 			serializeNBT.putInt("Length", length);
-			serializeNBT.putIntArray("Casing", Arrays.stream(casings)
-				.map(CasingType::ordinal)
-				.toList());
+
+			for (int i = 0; i < casings.size(); i++) {
+				BeltCasingType casing = casings.get(i);
+				if (casing == null)
+					continue;
+				ResourceKey<BeltCasingType> key = casing.holder.key();
+				serializeNBT.putString("CasingKey_" + i, key.location().toString());
+			}
+
 			return serializeNBT;
 		}
 
 		@Override
 		void readNBT(CompoundTag nbt, HolderLookup.Provider registries, HolderGetter<Block> holderGetter) {
 			length = nbt.getInt("Length");
-			int[] intArray = nbt.getIntArray("Casing");
-			casings = new CasingType[length];
-			for (int i = 0; i < casings.length; i++)
-				casings[i] = i >= intArray.length ? CasingType.NONE
-					: CasingType.values()[Mth.clamp(intArray[i], 0, CasingType.values().length - 1)];
+
+			//Read legacy "Casing" int array vs "CasingKeys" resource key array
+ 			if (nbt.contains("Casing", Tag.TAG_INT_ARRAY)) {
+				int[] intArray = nbt.getIntArray("Casing");
+				casings = Arrays.stream(intArray)
+					.mapToObj(i -> LegacyCasingType.values()[Mth.clamp(i, 0, LegacyCasingType.values().length - 1)])
+					.map(LegacyCasingType::getCasingType)
+					.toList();
+			} else {
+				 casings = new ArrayList<>(length);
+				 for (int i = 0; i < length; i++) {
+					 if (!nbt.contains("CasingKey_" + i)) //Null value means no casing
+						 continue;
+					 String key = nbt.getString("CasingKey_" + i);
+
+					 ResourceKey<BeltCasingType> resourceKey = ResourceKey.create(CreateRegistries.BELT_CASING_TYPE, ResourceLocation.parse(key));
+					 Optional<Reference<BeltCasingType>> holder = CreateBuiltInRegistries.BELT_CASING_TYPE.getHolder(resourceKey);
+
+					 final int insertIndex = i;
+					 holder.ifPresent(reference -> casings.set(insertIndex, reference.value()));
+				 }
+			}
+
 			super.readNBT(nbt, registries, holderGetter);
 		}
 
-		public ForBelt(BlockPos start, BlockPos target, ItemStack stack, BlockState state, CasingType[] casings) {
+		public ForBelt(BlockPos start, BlockPos target, ItemStack stack, BlockState state, List<BeltCasingType> casings) {
 			super(start, target, stack, state, null);
 			this.casings = casings;
-			this.length = casings.length;
+			this.length = casings.size();
 		}
 
 		@Override
@@ -180,12 +212,12 @@ public abstract class LaunchedItem {
 				target.offset(offset.getX() * i, offset.getY() * i, offset.getZ() * i));
 
 			for (int segment = 0; segment < length; segment++) {
-				if (casings[segment] == CasingType.NONE)
+				if (casings.get(segment) == null)
 					continue;
 				BlockPos casingTarget =
 					target.offset(offset.getX() * segment, offset.getY() * segment, offset.getZ() * segment);
 				if (world.getBlockEntity(casingTarget) instanceof BeltBlockEntity bbe)
-					bbe.setCasingType(casings[segment]);
+					bbe.setCasingType(casings.get(segment));
 			}
 		}
 

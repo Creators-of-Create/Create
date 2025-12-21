@@ -111,6 +111,7 @@ import com.simibubi.create.content.fluids.tank.FluidTankGenerator;
 import com.simibubi.create.content.fluids.tank.FluidTankItem;
 import com.simibubi.create.content.fluids.tank.FluidTankModel;
 import com.simibubi.create.content.fluids.tank.FluidTankMovementBehavior;
+import com.simibubi.create.content.kinetics.belt.AllBeltCasingTypes;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltGenerator;
 import com.simibubi.create.content.kinetics.belt.BeltModel;
@@ -1777,7 +1778,7 @@ public class AllBlocks {
 	public static final BlockEntry<BeltTunnelBlock> ANDESITE_TUNNEL =
 		REGISTRATE.block("andesite_tunnel", BeltTunnelBlock::new)
 			.properties(p -> p.mapColor(MapColor.STONE))
-			.transform(BuilderTransformers.beltTunnel("andesite", ResourceLocation.withDefaultNamespace("block/polished_andesite")))
+			.transform(BuilderTransformers.beltTunnel("andesite", ResourceLocation.withDefaultNamespace("block/polished_andesite"), () -> AllBeltCasingTypes.ANDESITE))
 			.transform(displaySource(AllDisplaySources.ACCUMULATE_ITEMS))
 			.transform(displaySource(AllDisplaySources.ITEM_THROUGHPUT))
 			.register();
@@ -1785,7 +1786,7 @@ public class AllBlocks {
 	public static final BlockEntry<BrassTunnelBlock> BRASS_TUNNEL =
 		REGISTRATE.block("brass_tunnel", BrassTunnelBlock::new)
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW))
-			.transform(BuilderTransformers.beltTunnel("brass", Create.asResource("block/brass_block")))
+			.transform(BuilderTransformers.beltTunnel("brass", Create.asResource("block/brass_block"), () ->  AllBeltCasingTypes.BRASS))
 			.transform(displaySource(AllDisplaySources.ACCUMULATE_ITEMS))
 			.transform(displaySource(AllDisplaySources.ITEM_THROUGHPUT))
 			.onRegister(connectedTextures(BrassTunnelCTBehaviour::new))
