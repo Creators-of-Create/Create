@@ -255,7 +255,6 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 		BeltCasingType casingBefore = casing;
 		boolean coverBefore = covered;
 		casing = BeltCasingType.read(compound, "Casing");
-		System.out.println("Read casing " + casing + " from string " + compound.getString("Casing"));
 		covered = compound.getBoolean("Covered");
 
 		if (!clientPacket)
