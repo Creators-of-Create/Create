@@ -793,7 +793,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		if (AllBlocks.BELT.has(blockState)) {
 			blockState = stripBeltIfNotLast(blockState);
 			if (blockEntity instanceof BeltBlockEntity bbe && AllBlocks.BELT.has(blockState)) {
-				List<BeltCasingType> casings = new ArrayList<>(bbe.beltLength);
+				BeltCasingType[] casings = new BeltCasingType[bbe.beltLength];
 				BlockPos currentPos = target;
 				for (int i = 0; i < bbe.beltLength; i++) {
 					BlockState currentState = bbe.getLevel()
@@ -803,11 +803,11 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 					if (!(bbe.getLevel()
 						.getBlockEntity(currentPos) instanceof BeltBlockEntity beltAtSegment))
 						break;
-					casings.set(i, beltAtSegment.casing);
+					casings[i] = beltAtSegment.casing;
 					currentPos = BeltBlock.nextSegmentPosition(currentState, currentPos,
 						blockState.getValue(BeltBlock.PART) != BeltPart.END);
 				}
-				launchBelt(target, blockState, bbe.beltLength, casings);
+				launchBelt(target, blockState, casings);
 			} else if (blockState != Blocks.AIR.defaultBlockState())
 				launchBlock(target, icon, blockState, null);
 			return;
@@ -817,7 +817,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		launchBlock(target, icon, blockState, data);
 	}
 
-	protected void launchBelt(BlockPos target, BlockState state, int length, List<BeltCasingType> casings) {
+	protected void launchBelt(BlockPos target, BlockState state, BeltCasingType[] casings) {
 		blocksPlaced++;
 		ItemStack connector = AllItems.BELT_CONNECTOR.asStack();
 		flyingBlocks.add(new LaunchedItem.ForBelt(this.getBlockPos(), target, connector, state, casings));

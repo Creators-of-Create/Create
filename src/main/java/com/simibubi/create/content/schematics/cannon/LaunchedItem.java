@@ -142,7 +142,7 @@ public abstract class LaunchedItem {
 
 	public static class ForBelt extends ForBlockState {
 		public int length;
-		public List<BeltCasingType> casings;
+		public BeltCasingType[] casings;
 
 		public ForBelt() {}
 
@@ -151,8 +151,8 @@ public abstract class LaunchedItem {
 			CompoundTag serializeNBT = super.serializeNBT(registries);
 			serializeNBT.putInt("Length", length);
 
-			for (int i = 0; i < casings.size(); i++) {
-				BeltCasingType casing = casings.get(i);
+			for (int i = 0; i < length; i++) {
+				BeltCasingType casing = casings[i];
 				if (casing == null)
 					continue;
 				ResourceKey<BeltCasingType> key = casing.holder.key();
@@ -172,9 +172,9 @@ public abstract class LaunchedItem {
 				casings = Arrays.stream(intArray)
 					.mapToObj(i -> LegacyCasingType.values()[Mth.clamp(i, 0, LegacyCasingType.values().length - 1)])
 					.map(LegacyCasingType::getCasingType)
-					.toList();
+					.toArray(BeltCasingType[]::new);
 			} else {
-				 casings = new ArrayList<>(length);
+				 casings = new BeltCasingType[length];
 				 for (int i = 0; i < length; i++) {
 					 if (!nbt.contains("CasingKey_" + i)) //Null value means no casing
 						 continue;
@@ -184,17 +184,17 @@ public abstract class LaunchedItem {
 					 Optional<Reference<BeltCasingType>> holder = CreateBuiltInRegistries.BELT_CASING_TYPE.getHolder(resourceKey);
 
 					 final int insertIndex = i;
-					 holder.ifPresent(reference -> casings.set(insertIndex, reference.value()));
+					 holder.ifPresent(reference -> casings[insertIndex] = reference.value());
 				 }
 			}
 
 			super.readNBT(nbt, registries, holderGetter);
 		}
 
-		public ForBelt(BlockPos start, BlockPos target, ItemStack stack, BlockState state, List<BeltCasingType> casings) {
+		public ForBelt(BlockPos start, BlockPos target, ItemStack stack, BlockState state, BeltCasingType[] casings) {
 			super(start, target, stack, state, null);
 			this.casings = casings;
-			this.length = casings.size();
+			this.length = casings.length;
 		}
 
 		@Override
@@ -212,12 +212,12 @@ public abstract class LaunchedItem {
 				target.offset(offset.getX() * i, offset.getY() * i, offset.getZ() * i));
 
 			for (int segment = 0; segment < length; segment++) {
-				if (casings.get(segment) == null)
+				if (casings[segment] == null)
 					continue;
 				BlockPos casingTarget =
 					target.offset(offset.getX() * segment, offset.getY() * segment, offset.getZ() * segment);
 				if (world.getBlockEntity(casingTarget) instanceof BeltBlockEntity bbe)
-					bbe.setCasingType(casings.get(segment));
+					bbe.setCasingType(casings[segment]);
 			}
 		}
 
