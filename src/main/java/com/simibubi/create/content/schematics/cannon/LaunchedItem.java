@@ -166,7 +166,7 @@ public abstract class LaunchedItem {
 		void readNBT(CompoundTag nbt, HolderLookup.Provider registries, HolderGetter<Block> holderGetter) {
 			length = nbt.getInt("Length");
 
-			//Read legacy "Casing" int array vs "CasingKeys" resource key array
+			//Read legacy "Casing" int array vs modern "CasingKeys" resource key array
  			if (nbt.contains("Casing", Tag.TAG_INT_ARRAY)) {
 				int[] intArray = nbt.getIntArray("Casing");
 				casings = Arrays.stream(intArray)

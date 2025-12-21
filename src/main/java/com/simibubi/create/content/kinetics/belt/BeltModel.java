@@ -2,6 +2,7 @@ package com.simibubi.create.content.kinetics.belt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.foundation.model.BakedQuadHelper;
@@ -20,10 +21,11 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BeltModel extends BakedModelWrapper<BakedModel> {
 
-	public static final ModelProperty<BeltCasingType> CASING_PROPERTY = new ModelProperty<>();
+	public static final ModelProperty<Optional<BeltCasingRenderInfo>> CASING_PROPERTY = new ModelProperty<>();
 	public static final ModelProperty<Boolean> COVER_PROPERTY = new ModelProperty<>();
 
 	private static final SpriteShiftEntry SPRITE_SHIFT = AllSpriteShifts.ANDESIDE_BELT_CASING;
@@ -37,11 +39,11 @@ public class BeltModel extends BakedModelWrapper<BakedModel> {
 		if (!data.has(CASING_PROPERTY))
 			return super.getParticleIcon(data);
 
-		BeltCasingType type = data.get(CASING_PROPERTY);
-		if (type == null)
+		Optional<BeltCasingRenderInfo> type = data.get(CASING_PROPERTY);
+		if (type == null || type.isEmpty())
 			return super.getParticleIcon(data);
 
-		BeltCasingRenderInfo modelInfo = type.getModelInfo();
+		BeltCasingRenderInfo modelInfo = type.get();
 		return modelInfo.spriteShift() == null ? super.getParticleIcon(data) :
 			modelInfo.spriteShift().getTarget();
 	}
@@ -53,12 +55,12 @@ public class BeltModel extends BakedModelWrapper<BakedModel> {
 			return quads;
 
 		boolean cover = extraData.get(COVER_PROPERTY);
-		BeltCasingType type = extraData.get(CASING_PROPERTY);
+		@Nullable Optional<BeltCasingRenderInfo> type = extraData.get(CASING_PROPERTY);
 
-		if (type == null)
+		if (type == null || type.isEmpty())
 			return quads;
 
-		BeltCasingRenderInfo modelInfo = type.getModelInfo();
+		BeltCasingRenderInfo modelInfo = type.get();
 		boolean noSpriteShift = modelInfo.spriteShift() == null;
 
 		if (noSpriteShift && !cover)

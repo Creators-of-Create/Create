@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 import com.simibubi.create.AllBlockEntityTypes;
@@ -36,6 +37,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -224,6 +226,12 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 	}
 
 	@Override
+	public void writeSafe(CompoundTag tag, Provider registries) {
+		super.writeSafe(tag, registries);
+		BeltCasingType.write(tag, "Casing", casing);
+	}
+
+	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
 
@@ -247,6 +255,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 		BeltCasingType casingBefore = casing;
 		boolean coverBefore = covered;
 		casing = BeltCasingType.read(compound, "Casing");
+		System.out.println("Read casing " + casing + " from string " + compound.getString("Casing"));
 		covered = compound.getBoolean("Covered");
 
 		if (!clientPacket)
@@ -544,12 +553,11 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 	}
 
 	@Override
-	public @NotNull ModelData getModelData() {
+	public ModelData getModelData() {
 		Builder builder = ModelData.builder();
-		if (casing != null)
-			builder.with(BeltModel.CASING_PROPERTY, casing);
 		return builder
 			.with(BeltModel.COVER_PROPERTY, covered)
+			.with(BeltModel.CASING_PROPERTY, Optional.ofNullable(casing == null ? null : casing.getModelInfo()))
 			.build();
 	}
 

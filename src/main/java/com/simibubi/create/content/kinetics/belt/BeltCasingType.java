@@ -55,7 +55,7 @@ public class BeltCasingType {
 	public static void write(CompoundTag tag, String key, @Nullable BeltCasingType casingType) {
 		if (casingType == null)
 			return;
-		NBTHelper.writeResourceLocation(tag, key, casingType.holder.key().location());
+		tag.putString(key, casingType.holder.key().location().toString());
 	}
 
 	public BlockItem getCasingBlockItem() {
