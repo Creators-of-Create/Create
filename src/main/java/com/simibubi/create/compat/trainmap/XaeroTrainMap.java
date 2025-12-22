@@ -78,7 +78,8 @@ public class XaeroTrainMap {
 		Window window = mc.getWindow();
 
 		double guiScale = (double) window.getScreenWidth() / window.getGuiScaledWidth();
-		double scale = mapScale / guiScale;
+		double interfaceScale = (double) window.getWidth() / window.getScreenWidth();
+		double scale = mapScale / guiScale / interfaceScale;
 
 		PoseStack pose = graphics.pose();
 		pose.pushPose();
