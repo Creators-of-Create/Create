@@ -101,7 +101,7 @@ public class ContraptionCollider {
 		List<Entity> entitiesWithinAABB = world.getEntitiesOfClass(Entity.class, bounds.inflate(2)
 			.expandTowards(0, 32, 0), contraptionEntity::canCollideWith);
 		for (Entity entity : entitiesWithinAABB) {
-			if (!entity.isAlive())
+			if (!entity.isAlive() || world.tickRateManager().isEntityFrozen(entity))
 				continue;
 
 			PlayerType playerType = getPlayerType(entity);
