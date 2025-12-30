@@ -7,10 +7,10 @@ import java.util.Set;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.fluids.PipeConnection.Flow;
 import com.simibubi.create.content.fluids.pipes.AxisPipeBlock;
+import com.simibubi.create.content.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.fluids.pipes.VanillaFluidTargets;
 import com.simibubi.create.content.fluids.pump.PumpBlock;
@@ -74,7 +74,7 @@ public class FluidPropagator {
 				BlockEntity blockEntity = world.getBlockEntity(target);
 				BlockState targetState = world.getBlockState(target);
 				if (blockEntity instanceof PumpBlockEntity) {
-					if (!AllBlocks.MECHANICAL_PUMP.has(targetState) || targetState.getValue(PumpBlock.FACING)
+					if (!(targetState.getBlock() instanceof PumpBlock) || targetState.getValue(PumpBlock.FACING)
 						.getAxis() != direction.getAxis())
 						continue;
 					discoveredPumps.add(Pair.of((PumpBlockEntity) blockEntity, direction.getOpposite()));
@@ -150,7 +150,7 @@ public class FluidPropagator {
 			return null;
 		if (otherBlock instanceof LiquidBlock)
 			return null;
-		if (getStraightPipeAxis(state) == null && !AllBlocks.ENCASED_FLUID_PIPE.has(state))
+		if (getStraightPipeAxis(state) == null && !(state.getBlock() instanceof EncasedPipeBlock))
 			return null;
 		for (Direction d : Iterate.directions) {
 			if (!pos.relative(d)
