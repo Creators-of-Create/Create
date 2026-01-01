@@ -900,8 +900,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 			onEditorClose.accept(true);
 			stopEditing();
 			return true;
-		}
-		if (hitE){
+		} else if (hitE) {
 			return false;
 		}
 		return super.keyPressed(pKeyCode, pScanCode, pModifiers);
