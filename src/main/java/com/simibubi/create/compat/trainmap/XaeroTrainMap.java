@@ -18,8 +18,8 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
+import xaero.lib.client.gui.ScreenBase;
 import xaero.map.gui.GuiMap;
-import xaero.map.gui.ScreenBase;
 
 import net.neoforged.neoforge.client.event.InputEvent;
 

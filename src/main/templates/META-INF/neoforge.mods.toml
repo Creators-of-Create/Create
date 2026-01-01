@@ -71,6 +71,14 @@ versionRange = "[1.21.1-6.0.0-beta.46,)"
 ordering = "NONE"
 side = "CLIENT"
 
+[[dependencies."${mod_id}"]]
+modId = "xaeroworldmap"
+type = "optional"
+reason = "Versions before 1.40.2 do not contain the classes Create requires to work with Xaero's World Map."
+versionRange = "[1.40.2,)"
+ordering = "NONE"
+side = "CLIENT"
+
 # Incompatible Mods
 
 # Users should use lithium instead, it's up to date and does not crash with level wrappers (anymore)

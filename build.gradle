@@ -117,6 +117,7 @@ repositories {
             includeGroup "mysticdrew"
         }
     }
+    maven {url "https://chocolateminecraft.com/maven" } // Xaero
 }
 
 dependencies {
@@ -158,7 +159,8 @@ dependencies {
         exclude(group: "curse.maven") // Pulls in a old version of journey map which is for forge
     }
 
-    compileOnly("curse.maven:xaeros-world-map-317780:6778114")
+    implementation("xaero.lib:xaerolib-neoforge-1.21:1.0.42")
+    implementation("curse.maven:xaeros-world-map-317780:7401095")
 }
 
 sourceSets.main {
