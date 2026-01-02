@@ -28,6 +28,10 @@ public record ContraptionSeatMappingPacket(int entityId, Map<UUID, Integer> mapp
 	        ContraptionSeatMappingPacket::new
 	);
 
+        public ContraptionSeatMappingPacket {
+                mapping = (mapping == null) ? null : mapping.clone();
+        }
+
 	public ContraptionSeatMappingPacket(int entityID, Map<UUID, Integer> mapping) {
 		this(entityID, mapping, -1);
 	}
