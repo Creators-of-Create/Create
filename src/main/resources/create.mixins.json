@@ -1,8 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "priority": 1100,
+  "priority": 1000,
   "package": "com.simibubi.create.foundation.mixin",
+  "plugin": "com.simibubi.create.foundation.mixin.CreateMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "ArmorTrimMixin",

@@ -101,7 +101,6 @@ repositories {
     maven { url = "https://maven.createmod.net" } // Ponder, Flywheel
     maven { url = "https://maven.ithundxr.dev/snapshots" } // Registrate
     maven { url = "https://maven.blamejared.com" } // JEI, Vazkii's Mods
-    maven { url = "https://harleyoconnor.com/maven" } // Dynamic Trees
     maven { url = "https://maven.theillusivec4.top/" } // Curios API
     maven { url = "https://maven.squiddev.cc" } // CC: Tweaked
     maven { url = "https://www.cursemaven.com" }
@@ -117,6 +116,7 @@ repositories {
             includeGroup "mysticdrew"
         }
     }
+    maven { url "https://chocolateminecraft.com/maven" } // Xaero
 }
 
 dependencies {
@@ -158,7 +158,8 @@ dependencies {
         exclude(group: "curse.maven") // Pulls in a old version of journey map which is for forge
     }
 
-    compileOnly("curse.maven:xaeros-world-map-317780:6778114")
+    compileOnly("xaero.lib:xaerolib-neoforge-1.21:1.0.42")
+    compileOnly("curse.maven:xaeros-world-map-317780:7401095")
 }
 
 sourceSets.main {

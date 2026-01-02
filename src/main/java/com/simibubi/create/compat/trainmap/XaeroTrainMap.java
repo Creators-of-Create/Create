@@ -18,8 +18,8 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
+import xaero.lib.client.gui.ScreenBase;
 import xaero.map.gui.GuiMap;
-import xaero.map.gui.ScreenBase;
 
 import net.neoforged.neoforge.client.event.InputEvent;
 
@@ -48,7 +48,7 @@ public class XaeroTrainMap {
 		try {
 			if (!(mc.screen instanceof GuiMap))
 				return;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Create.LOGGER.error("Failed to handle mouseClick for Xaero's World Map train map integration:", e);
 			encounteredException = true;
 			return;
@@ -64,10 +64,10 @@ public class XaeroTrainMap {
 
 	// Called by XaeroFullscreenMapMixin, guarded by try-catch
 	public static void onRender(GuiGraphics graphics, GuiMap screen, int mX, int mY, float pt) {
-		double x = ((XaeroFullscreenMapAccessor) screen).getCameraX();
-		double z = ((XaeroFullscreenMapAccessor) screen).getCameraZ();
-		double mapScale = ((XaeroFullscreenMapAccessor) screen).getScale();
-		renderedDimension = ((XaeroFullscreenMapAccessor) screen).getMapProcessor().getMapWorld().getCurrentDimension().getDimId();
+		double x = ((XaeroFullscreenMapAccessor) screen).create$getCameraX();
+		double z = ((XaeroFullscreenMapAccessor) screen).create$getCameraZ();
+		double mapScale = ((XaeroFullscreenMapAccessor) screen).create$getScale();
+		renderedDimension = ((XaeroFullscreenMapAccessor) screen).create$getMapProcessor().getMapWorld().getCurrentDimension().getDimId();
 
 		if (!AllConfigs.client().showTrainMapOverlay.get()) {
 			renderToggleWidgetAndTooltip(graphics, screen, mX, mY);
@@ -78,7 +78,8 @@ public class XaeroTrainMap {
 		Window window = mc.getWindow();
 
 		double guiScale = (double) window.getScreenWidth() / window.getGuiScaledWidth();
-		double scale = mapScale / guiScale;
+		double interfaceScale = (double) window.getWidth() / window.getScreenWidth();
+		double scale = mapScale / guiScale / interfaceScale;
 
 		PoseStack pose = graphics.pose();
 		pose.pushPose();
@@ -129,7 +130,7 @@ public class XaeroTrainMap {
 		try {
 			return screen instanceof ScreenBase screenBase &&
 				(screenBase instanceof GuiMap || screenBase.parent instanceof GuiMap);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Create.LOGGER.error("Failed to check if Xaero's World Map was open for train map integration:", e);
 			encounteredException = true;
 			return false;

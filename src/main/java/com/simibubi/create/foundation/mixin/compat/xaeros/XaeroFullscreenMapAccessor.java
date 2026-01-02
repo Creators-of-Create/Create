@@ -6,17 +6,17 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import xaero.map.MapProcessor;
 import xaero.map.gui.GuiMap;
 
-@Mixin(GuiMap.class)
+@Mixin(value = GuiMap.class, remap = false)
 public interface XaeroFullscreenMapAccessor {
-	@Accessor(remap = false)
-	double getCameraX();
+	@Accessor("cameraX")
+	double create$getCameraX();
 
-	@Accessor(remap = false)
-	double getCameraZ();
+	@Accessor("cameraZ")
+	double create$getCameraZ();
 
-	@Accessor(remap = false)
-	double getScale();
+	@Accessor("scale")
+	double create$getScale();
 
-	@Accessor(remap = false)
-	MapProcessor getMapProcessor();
+	@Accessor("mapProcessor")
+	MapProcessor create$getMapProcessor();
 }

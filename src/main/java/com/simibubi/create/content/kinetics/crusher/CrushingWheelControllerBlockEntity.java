@@ -75,9 +75,9 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-				Capabilities.ItemHandler.BLOCK,
-				AllBlockEntityTypes.CRUSHING_WHEEL_CONTROLLER.get(),
-				(be, context) -> be.inventory
+			Capabilities.ItemHandler.BLOCK,
+			AllBlockEntityTypes.CRUSHING_WHEEL_CONTROLLER.get(),
+			(be, context) -> be.inventory
 		);
 	}
 
@@ -134,7 +134,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 
 			float processingSpeed =
 				Mth.clamp((speed) / (!inventory.appliedRecipe ? (float) Math.log(inventory.getStackInSlot(0)
-					.getCount())/(float) Math.log(2) : 1), .25f, 20);
+					.getCount()) / (float) Math.log(2) : 1), .25f, 20);
 			inventory.remainingTime -= processingSpeed;
 			spawnParticles(inventory.getStackInSlot(0));
 
@@ -231,12 +231,12 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 				facing.getAxis() == Axis.Y ? .5f * offset : 0f, facing.getAxis() == Axis.Z ? .5f * offset : 0f);
 			int crusherDamage = AllConfigs.server().kinetics.crushingDamage.get();
 
-			if (processingEntity instanceof LivingEntity) {
-				if ((((LivingEntity) processingEntity).getHealth() - crusherDamage <= 0) // Takes LivingEntity instances
+			if (processingEntity instanceof LivingEntity livingEntity) {
+				if (livingEntity.getHealth() - crusherDamage <= 0 // Takes LivingEntity instances
 					// as exception, so it can
 					// move them before it would
 					// kill them.
-					&& (((LivingEntity) processingEntity).hurtTime <= 0)) { // This way it can actually output the items
+					&& livingEntity.hurtTime <= 0) { // This way it can actually output the items
 					// to the right spot.
 					processingEntity.setPos(entityOutPos.x, entityOutPos.y, entityOutPos.z);
 				}
@@ -315,8 +315,8 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 				}
 			}
 			if (input.hasCraftingRemainingItem()) {
-					ItemHelper.addToList(input.getCraftingRemainingItem(), list);
-				}
+				ItemHelper.addToList(input.getCraftingRemainingItem(), list);
+			}
 			for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
 				inventory.setStackInSlot(slot + 1, list.get(slot));
 		} else {

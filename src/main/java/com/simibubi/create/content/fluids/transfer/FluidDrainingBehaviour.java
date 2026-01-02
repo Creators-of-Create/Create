@@ -286,7 +286,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		}
 
 		int maxBlocks = maxBlocks();
-		if (visited.size() > maxBlocks && canDrainInfinitely(fluid) && !queue.isEmpty()) {
+		if (visited.size() >= maxBlocks && canDrainInfinitely(fluid) && !queue.isEmpty()) {
 			infinite = true;
 			BlockPos firstValid = queue.first()
 				.pos();
@@ -316,7 +316,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		}
 
 		int maxBlocks = maxBlocks();
-		if (validationVisited.size() > maxBlocks && canDrainInfinitely(fluid)) {
+		if (validationVisited.size() >= maxBlocks && canDrainInfinitely(fluid)) {
 			if (!infinite)
 				reset();
 			validationFrontier.clear();

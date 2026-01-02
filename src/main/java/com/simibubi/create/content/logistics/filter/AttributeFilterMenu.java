@@ -112,7 +112,8 @@ public class AttributeFilterMenu extends AbstractFilterMenu {
 			return ItemStack.EMPTY;
 		}
 		if (index < 36) {
-			ItemStack stackToInsert = playerInventory.getItem(index);
+			Slot slot = this.slots.get(index);
+			ItemStack stackToInsert = slot.getItem();
 			ItemStack copy = stackToInsert.copy();
 			copy.setCount(1);
 			ghostInventory.setStackInSlot(0, copy);

@@ -895,11 +895,13 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 			return super.keyPressed(pKeyCode, pScanCode, pModifiers);
 		InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
 		boolean hitEnter = getFocused() instanceof EditBox && (pKeyCode == 257 || pKeyCode == 335);
-		boolean hitE = getFocused() == null && minecraft.options.keyInventory.isActiveAndMatches(mouseKey);
-		if (hitE || hitEnter) {
+		boolean hitE = getFocused() == null || minecraft.options.keyInventory.isActiveAndMatches(mouseKey);
+		if (hitEnter) {
 			onEditorClose.accept(true);
 			stopEditing();
 			return true;
+		} else if (hitE) {
+			return false;
 		}
 		return super.keyPressed(pKeyCode, pScanCode, pModifiers);
 	}

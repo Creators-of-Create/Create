@@ -6,9 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jetbrains.annotations.Nullable;
-
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.HashMultimap;
 import com.simibubi.create.AllDataComponents;
@@ -187,8 +186,7 @@ public class DeployerHandler {
 								villager.setTradingPlayer(null);
 						}
 						success = true;
-					} else if (entity instanceof LivingEntity
-						&& stack.interactLivingEntity(player, (LivingEntity) entity, hand)
+					} else if (entity instanceof LivingEntity livingEntity && stack.interactLivingEntity(player, livingEntity, hand)
 						.consumesAction())
 						success = true;
 				}

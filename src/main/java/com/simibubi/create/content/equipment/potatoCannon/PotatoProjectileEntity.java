@@ -183,8 +183,8 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 		if (!target.isAlive())
 			return;
-		if (owner instanceof LivingEntity)
-			((LivingEntity) owner).setLastHurtMob(target);
+		if (owner instanceof LivingEntity livingEntity)
+			livingEntity.setLastHurtMob(target);
 
 		if (target instanceof PotatoProjectileEntity ppe) {
 			if (tickCount < 10 && target.tickCount < 10)

@@ -1,14 +1,56 @@
 ------------------------------------------------------
+Create 6.0.9
+------------------------------------------------------
+
+#### Optimizations
+
+- Slightly improve and optimize GlobalRailwayManager
+- Optimize memory & cpu usage of contraption collision generation
+
+#### Bug Fixes
+
+- Fix old clipboard schematics causing issues #9462
+- Fix floating point issues within GantryContraptionEntity #9481
+- Fix deployers not calling SyncedBlockEntity#notifyUpdate
+- Fix schematics sticking around after instant placement #9494
+- Fix block entities calling getChunk throwing UOE on contraptions on the client #9459
+- Fix seats not being bouncy
+- Fix nixie tubes and redstone links being powered by torches supporting them #8734
+- Fix precision issue in TrackNodeLocation #9509
+- Fix Item requirement for placard's being completely broken #9511
+- Fix ladders having shading when on contraptions
+- Fix clay crushing recipe not always giving 4 clay balls
+- Fix potion-based fluid recipes #9563
+- Fix schematicannons defaulting to skip missing blocks #9543
+- Fix server crashing when cauldrons being filled have their contents removed #9547
+- Fix bound cardboard recipe not using `#c:strings` tag #9501
+- Fix Furnace Minecart contraption not stopping when mining blocks #9630
+- Fix Portable Storage Interface Connection Issue #9624
+- Fix multiple typos in ponder scenes
+- Fix Factory gauges not reading the contents of the network when they've just been loaded
+- Fix blocks that specify BlockState#emissiveRendering not being emissive when placed in copycat blocks #9675
+- Fix blocks failing to render when they do not have an associated block entity in the wrench rotation menu #9608
+- Fix shapeless recipes not having conditions added to the generated recipe #9613
+- Fix drills not dropping xp when breaking xp dropping blocks #9292
+- Fix Xaero's train map compat
+- Fix contraption collision and coupling when ticking is frozen
+- Fix tree fertilizer not destroying blocks when growing trees
+- Fix toolboxes deleting items when reloaded #8844
+- Fix Xaero's train map compat not respecting interfaceScale
+- Fix shift clicking items into attribute filter inserting the wrong item
+- Fix typing E closing schedule menu #9716
+- Fix encased fan shaft texture being rotated incorrectly #9762
+- Fix crash when disassembling train at station with cc tweaked computer attached #9720
+- Fix bottomless limit being over by 1 #9750
+- Fix copycat blocks dropping items when /fill'd
+
+------------------------------------------------------
 Create 6.0.8
 ------------------------------------------------------
 
 #### Bug Fixes
 
 - Fix StockKeeperRequestScreen focusing search box if the chat key is pressed when typing in the address box
-- Fix signals not reacting to redstone input #9444
-- Fix held-item based menus not working correctly #9433
-- Fix z-fighting between elevators and walls
-- Fix crash with certain mods that add spawn eggs
 - Fix copycat blocks and other blocks depending on ModelData not being rendered correctly on contraptions when using indirect or instanced rendering #9410 (1.21.1)
 - Fix threshold switches not correctly counting empty slots #9420 (1.21.1)
 
