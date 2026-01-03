@@ -42,7 +42,7 @@ public class FillingBySpout {
 		if (assemblyRecipe.isPresent()) {
 			SizedFluidIngredient requiredFluid = assemblyRecipe.get().value()
 				.getRequiredFluid();
-			if (requiredFluid.test(availableFluid))
+			if (requiredFluid.ingredient().test(availableFluid))
 				return requiredFluid.amount();
 		}
 
@@ -50,7 +50,7 @@ public class FillingBySpout {
 			.getRecipesFor(AllRecipeTypes.FILLING.getType(), input, world)) {
 			FillingRecipe fillingRecipe = (FillingRecipe) recipe.value();
 			SizedFluidIngredient requiredFluid = fillingRecipe.getRequiredFluid();
-			if (requiredFluid.test(availableFluid))
+			if (requiredFluid.ingredient().test(availableFluid))
 				return requiredFluid.amount();
 		}
 		return GenericItemFilling.getRequiredAmountForItem(world, stack, availableFluid);
