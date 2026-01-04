@@ -36,6 +36,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -51,6 +52,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
@@ -137,10 +139,12 @@ public class DeployerHandler {
 
 	static void activate(DeployerFakePlayer player, Vec3 vec, BlockPos clickedPos, Vec3 extensionVector, Mode mode) {
 		HashMultimap<Holder<Attribute>, AttributeModifier> attributeModifiers = HashMultimap.create();
-		player.getMainHandItem()
+		ItemStack mainHandItem = player.getMainHandItem();
+		mainHandItem
 			.getAttributeModifiers()
 			.modifiers()
 			.forEach(e -> attributeModifiers.put(e.attribute(), e.modifier()));
+		EnchantmentHelper.forEachModifier(mainHandItem, EquipmentSlot.MAINHAND, attributeModifiers::put);
 
 		player.getAttributes()
 			.addTransientAttributeModifiers(attributeModifiers);
