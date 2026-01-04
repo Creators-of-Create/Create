@@ -274,7 +274,6 @@ public class ConnectivityHandler {
 			}
 		}
 		be.setExtraData(extraData);
-		be.notifyMultiUpdated();
 		return amount;
 	}
 
