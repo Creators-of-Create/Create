@@ -62,6 +62,8 @@ neoForge {
             systemProperty("mixin.debug.export", "true")
 
             systemProperty("neoforge.enabledGameTestNamespaces", mod_id as String)
+
+            loggingConfigFile = project.file("log4j2_confs/better_colors.xml")
         }
 
         client {
