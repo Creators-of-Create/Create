@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -30,8 +31,9 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 	}
 
 	@Override
-	public void render(PoseStack ms, MultiBufferSource buffer, int light, LivingEntity entity, float yaw, float pitch,
-					   float pt, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
+	public void render(PoseStack ms, MultiBufferSource buffer, int light, T entity,
+					   float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks,
+					   float netHeadYaw, float headPitch) {
 		if (entity.getPose() == Pose.SLEEPING)
 			return;
 
@@ -43,7 +45,8 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		if (!(entityModel instanceof HumanoidModel<?> model))
 			return;
 
-		VertexConsumer vc = buffer.getBuffer(Sheets.cutoutBlockSheet());
+		boolean hasGlint = entity.getItemBySlot(BacktankItem.SLOT).hasFoil();
+		VertexConsumer vc = ItemRenderer.getFoilBuffer(buffer, Sheets.cutoutBlockSheet(), false, true);
 		BlockState renderedState = item.getBlock().defaultBlockState()
 			.setValue(BacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
 		SuperByteBuffer backtank = CachedBuffers.block(renderedState);

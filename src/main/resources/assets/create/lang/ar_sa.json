@@ -1,11 +1,11 @@
 {
-  "advancement.create.andesite_alloy": "صخور أكثر ثباتاً",
+  "advancement.create.andesite_alloy": "صخور أكثر صلابة",
   "advancement.create.andesite_alloy.desc": "احصل على بعض سبائك الأنديسيت, تصنع أهم مورد",
   "advancement.create.andesite_casing": "عصر الأنديسيت",
   "advancement.create.andesite_casing.desc": "قم بتطبيق سبيكة أنديسايت على الخشب المجرد، لإنشاء غلاف أساسي لماكيناتك",
   "advancement.create.anvil_plough": "مدفعية الحداد",
   "advancement.create.anvil_plough.desc": "أطلق سندانًا باستخدام المحاريث الميكانيكية",
-  "advancement.create.arm_blaze_burner": "كومبست-أو-ترون",
+  "advancement.create.arm_blaze_burner": "كومباست-أو-ترون",
   "advancement.create.arm_blaze_burner.desc": "وجّه ذراعًا ميكانيكيًا لإطعام مشعل الملتهب الخاص بك",
   "advancement.create.arm_many_targets": "أورجنّايز-أو-ترون",
   "advancement.create.arm_many_targets.desc": "برمج ذراعًا ميكانيكيًا مع 10 أو أكثر من مواقع الإخراج",
