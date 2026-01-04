@@ -97,6 +97,13 @@ public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankB
 		if (moved)
 			return;
 		withBlockEntityDo(world, pos, FluidTankBlockEntity::updateConnectivity);
+
+		// updateConnectivity may have changed the in-world block state, which prevents the call to markAndNotifyBlock
+		// in net.neoforged.neoforge.common.CommonHooks#onPlaceItemIntoWorld from doing anything
+		BlockState newState = world.getBlockState(pos);
+		if (state != newState && newState.getBlock() == this) {
+			world.markAndNotifyBlock(pos, world.getChunkAt(pos), oldState, newState, UPDATE_ALL_IMMEDIATE, 512);
+		}
 	}
 
 	@Override
