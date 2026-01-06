@@ -3,6 +3,7 @@ package com.simibubi.create.content.trains.station;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -19,6 +20,10 @@ import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.signal.SingleBlockEntityEdgePoint;
+import com.simibubi.create.content.trains.schedule.Schedule;
+import com.simibubi.create.content.trains.schedule.ScheduleEntry;
+import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
+import com.simibubi.create.content.trains.schedule.destination.FetchPackagesInstruction;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.nbt.NBTHelper;
@@ -197,51 +202,57 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 			}
 		}
 
+		ScheduleEntry scheduleEntry = getCurrentScheduleStep(train);
 		for (Carriage carriage : train.carriages) {
 			IItemHandlerModifiable carriageInventory = carriage.storage.getAllItems();
 			if (carriageInventory == null)
 				continue;
 
 			// Import from station
-			for (Entry<BlockPos, GlobalPackagePort> entry : connectedPorts.entrySet()) {
-				GlobalPackagePort port = entry.getValue();
-				BlockPos pos = entry.getKey();
-				PostboxBlockEntity box = null;
+			if (scheduleEntry != null && scheduleEntry.instruction instanceof FetchPackagesInstruction instruction) {
+				for (Entry<BlockPos, GlobalPackagePort> entry : connectedPorts.entrySet()) {
+					GlobalPackagePort port = entry.getValue();
+					BlockPos pos = entry.getKey();
+					PostboxBlockEntity box = null;
 
-				IItemHandlerModifiable postboxInventory = port.offlineBuffer;
-				if (level != null && level.isLoaded(pos)
-					&& level.getBlockEntity(pos) instanceof PostboxBlockEntity ppbe) {
-					postboxInventory = ppbe.inventory;
-					box = ppbe;
-				}
-
-				for (int slot = 0; slot < postboxInventory.getSlots(); slot++) {
-					if (packagesTransferred >= maxPackagesPerTransfer)
-						return;
-					ItemStack stack = postboxInventory.getStackInSlot(slot);
-					if (!PackageItem.isPackage(stack))
-						continue;
-					if (PackageItem.matchAddress(stack, port.address))
-						continue;
-
-					ItemStack result = putPackageOntoTrain(carriageInventory, depots, stack);
-					if (box != null)
-						box.computerBehaviour.prepareComputerEvent(new PackageEvent(stack, "package_sent"));
-					if (!result.isEmpty())
-						continue;
-
-					postboxInventory.setStackInSlot(slot, ItemStack.EMPTY);
-					packagesTransferred++;
-
-					if (box == null) {
-						port.primed = true;
-					} else {
-						box.spawnParticles();
+					IItemHandlerModifiable postboxInventory = port.offlineBuffer;
+					if (level != null && level.isLoaded(pos)
+						&& level.getBlockEntity(pos) instanceof PostboxBlockEntity ppbe) {
+						postboxInventory = ppbe.inventory;
+						box = ppbe;
 					}
 
-					Create.RAILWAYS.markTracksDirty();
+					for (int slot = 0; slot < postboxInventory.getSlots(); slot++) {
+						if (packagesTransferred >= maxPackagesPerTransfer)
+							return;
+						ItemStack stack = postboxInventory.getStackInSlot(slot);
+						if (!PackageItem.isPackage(stack))
+							continue;
+						if (PackageItem.matchAddress(stack, port.address))
+							continue;
+						if (!PackageItem.matchAddress(stack, instruction.getFilter()))
+							continue;
+
+						ItemStack result = putPackageOntoTrain(carriageInventory, depots, stack);
+						if (box != null)
+							box.computerBehaviour.prepareComputerEvent(new PackageEvent(stack, "package_sent"));
+						if (!result.isEmpty())
+							continue;
+
+						postboxInventory.setStackInSlot(slot, ItemStack.EMPTY);
+						packagesTransferred++;
+
+						if (box == null) {
+							port.primed = true;
+						} else {
+							box.spawnParticles();
+						}
+
+						Create.RAILWAYS.markTracksDirty();
+					}
 				}
 			}
+
 
 			// Export to station
 			for (int slot = 0; slot < carriageInventory.getSlots(); slot++) {
@@ -290,4 +301,19 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 		}
 	}
 
+	private ScheduleEntry getCurrentScheduleStep(Train train){
+		ScheduleRuntime runtime = train.runtime;
+		if (runtime == null)
+			return null;
+		Schedule schedule = runtime.getSchedule();
+		if (schedule == null)
+			return null;
+		List<ScheduleEntry> entries = schedule.entries;
+		if (entries == null)
+			return null;
+		int currentEntry = runtime.currentEntry;
+		if (currentEntry < 0 || currentEntry >= entries.size())
+			return null;
+		return entries.get(currentEntry);
+	}
 }
