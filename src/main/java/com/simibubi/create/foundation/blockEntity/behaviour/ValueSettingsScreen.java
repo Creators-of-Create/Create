@@ -54,19 +54,20 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 		this.milestoneSize = iconMode ? 8 : 4;
 	}
 
-	protected float getScale(int max) {
+	float getScale(int max) {
 		if (max <= 256) {
 			return  max > 128 ? 1 : 2;
 		}
 
-		max--;
-		max >>= 8;
-		float scale = 1f;
-		while (max > 0) {
-			scale /= 2f;
-			max >>= 1;
-		}
-		return scale;
+		// same thing as
+		// 257~512  -> 0.5
+		// 513~1024 -> 0.25
+		// 1025~2048 -> 0.125
+		// ...
+
+		// 127: exponent offset, 8: 2^8 = 256
+		// -1: offset for being power of 2 inclusive, 23: mantissa offset
+		return Float.intBitsToFloat((127 - Integer.SIZE + 8 + Integer.numberOfLeadingZeros(max - 1)) << 23);
 	}
 
 	@Override
