@@ -32,6 +32,8 @@ import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequester
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity;
+import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlockEntity;
+import com.simibubi.create.compat.computercraft.implementation.peripherals.FactoryGaugePeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.SyncedPeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.TrackObserverPeripheral;
 import com.simibubi.create.content.contraptions.chassis.StickerBlockEntity;
@@ -93,6 +95,8 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
 			return () -> new StressGaugePeripheral(sgbe);
 		if (be instanceof StockTickerBlockEntity sgbe)
 			return () -> new StockTickerPeripheral(sgbe);
+		if (be instanceof FactoryPanelBlockEntity fpbe)
+			return () -> new FactoryGaugePeripheral(fpbe);
 		// Has to be before PackagerBlockEntity as it's a subclass
 		if (be instanceof RepackagerBlockEntity rpbe)
 			return () -> new RepackagerPeripheral(rpbe);
