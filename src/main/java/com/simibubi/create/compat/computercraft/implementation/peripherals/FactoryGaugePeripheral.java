@@ -40,28 +40,27 @@ public class FactoryGaugePeripheral extends SyncedPeripheral<FactoryPanelBlockEn
 
 	@Nullable
 	private FactoryPanelBehaviour getPanelBehaviour(Optional<String> slotName) throws LuaException {
-		PanelSlot slot = PanelSlot.TOP_LEFT; // default
 		if (slotName.isPresent()) {
+			PanelSlot slot;
 			try {
 				slot = PanelSlot.valueOf(slotName.get().toUpperCase());
 			} catch (IllegalArgumentException e) {
 				throw new LuaException("Invalid slot name. Use: TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT");
 			}
-		} else {
-			// Find first active panel
-			for (FactoryPanelBehaviour panel : blockEntity.panels.values()) {
-				if (panel.isActive()) {
-					return panel;
-				}
+			FactoryPanelBehaviour panel = blockEntity.panels.get(slot);
+			if (panel == null || !panel.isActive()) {
+				return null;
 			}
-			return null;
+			return panel;
 		}
 
-		FactoryPanelBehaviour panel = blockEntity.panels.get(slot);
-		if (panel == null || !panel.isActive()) {
-			return null;
+		// Find first active panel
+		for (FactoryPanelBehaviour panel : blockEntity.panels.values()) {
+			if (panel.isActive()) {
+				return panel;
+			}
 		}
-		return panel;
+		return null;
 	}
 
 	// === READ METHODS ===
