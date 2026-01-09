@@ -31,7 +31,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.Vec3;
 
 public class ContraptionControlsMovingInteraction extends MovingInteractionBehaviour {
-	@SuppressWarnings("D")
+
 	@Override
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
@@ -107,7 +107,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 		if (!filter.is(AllItemTags.TRAIN_CONTROLLED.tag))
 			return true;
 
-		// Special case: "TRAIN_CONTROLLED" tagged blocks are toggled on all carriages of a train
+		// Special case: "TRAIN_CONTROLLED" tagged block items are toggled on all carriages of a train
 		Carriage carriage = cce.getCarriage();
 		Train train = carriage.train;
 		for (Carriage c : train.carriages) {
