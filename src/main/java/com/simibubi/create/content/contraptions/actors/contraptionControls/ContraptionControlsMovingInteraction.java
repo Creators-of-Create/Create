@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.actors.contraptionControls;
 import java.util.Iterator;
 import java.util.List;
 
+import com.simibubi.create.AllTags.AllItemTags;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllSoundEvents;
@@ -29,6 +31,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.Vec3;
 
 public class ContraptionControlsMovingInteraction extends MovingInteractionBehaviour {
+	@SuppressWarnings("D")
 	@Override
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
@@ -101,10 +104,10 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 
 		if (!(contraptionEntity instanceof CarriageContraptionEntity cce))
 			return true;
-		if (!filter.is(ItemTags.DOORS))
+		if (!filter.is(AllItemTags.TRAIN_CONTROLLED.tag))
 			return true;
 
-		// Special case: Doors are toggled on all carriages of a train
+		// Special case: "TRAIN_CONTROLLED" tagged blocks are toggled on all carriages of a train
 		Carriage carriage = cce.getCarriage();
 		Train train = carriage.train;
 		for (Carriage c : train.carriages) {
