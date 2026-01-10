@@ -29,7 +29,7 @@ public record ContraptionSeatMappingPacket(int entityId, Map<UUID, Integer> mapp
 	);
 
         public ContraptionSeatMappingPacket {
-                mapping = (mapping == null) ? null : mapping.clone();
+                mapping = (mapping == null) ? null : new HashMap<>(mapping);
         }
 
 	public ContraptionSeatMappingPacket(int entityID, Map<UUID, Integer> mapping) {
