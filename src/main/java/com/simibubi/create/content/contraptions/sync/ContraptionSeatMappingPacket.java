@@ -23,10 +23,14 @@ import net.neoforged.api.distmarker.OnlyIn;
 public record ContraptionSeatMappingPacket(int entityId, Map<UUID, Integer> mapping, int dismountedId) implements ClientboundPacketPayload {
 	public static final StreamCodec<ByteBuf, ContraptionSeatMappingPacket> STREAM_CODEC = StreamCodec.composite(
 			ByteBufCodecs.INT, ContraptionSeatMappingPacket::entityId,
-		ByteBufCodecs.map(HashMap::new, UUIDUtil.STREAM_CODEC, ByteBufCodecs.INT), p -> new HashMap<>(p.mapping),
+			ByteBufCodecs.map(HashMap::new, UUIDUtil.STREAM_CODEC, ByteBufCodecs.INT), ContraptionSeatMappingPacket::mapping,
 			ByteBufCodecs.INT, ContraptionSeatMappingPacket::dismountedId,
 	        ContraptionSeatMappingPacket::new
 	);
+
+	public ContraptionSeatMappingPacket {
+		mapping = Map.copyOf(mapping);
+	}
 
 	public ContraptionSeatMappingPacket(int entityID, Map<UUID, Integer> mapping) {
 		this(entityID, mapping, -1);
