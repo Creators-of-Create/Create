@@ -33,7 +33,8 @@ public class TurntableHandler {
 		if (!(blockEntity instanceof TurntableBlockEntity turnTable))
 			return;
 
-		float speed = turnTable.getSpeed() * (2/3f) * deltaTracker.getRealtimeDeltaTicks();
+		float tickSpeed = mc.level.tickRateManager().tickrate() / 20;
+		float speed = turnTable.getSpeed() * (2/3f) * tickSpeed * deltaTracker.getRealtimeDeltaTicks();
 
 		if (speed == 0)
 			return;
