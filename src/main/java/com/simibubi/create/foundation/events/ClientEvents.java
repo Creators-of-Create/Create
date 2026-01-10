@@ -105,6 +105,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
 import net.neoforged.neoforge.client.event.ViewportEvent;
@@ -282,19 +283,10 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onRenderFramePre(ClientTickEvent.Pre event) {
-		onRenderFrame(true);
-	}
-
-	@SubscribeEvent
-	public static void onRenderFramePost(ClientTickEvent.Post event) {
-		onRenderFrame(false);
-	}
-
-	public static void onRenderFrame(boolean isPreEvent) {
+	public static void onRenderFrame(RenderFrameEvent.Pre event) {
 		if (!isGameActive())
 			return;
-		TurntableHandler.gameRenderFrame();
+		TurntableHandler.gameRenderFrame(event.getPartialTick());
 	}
 
 	@SubscribeEvent
