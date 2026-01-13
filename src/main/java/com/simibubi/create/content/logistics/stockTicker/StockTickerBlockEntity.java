@@ -58,6 +58,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
 public class StockTickerBlockEntity extends StockCheckingBlockEntity implements IHaveHoveringInformation, Clearable, ClipboardCloneable {
 	public AbstractComputerBehaviour computerBehaviour;
@@ -326,21 +327,21 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 
   
 	@Override
-	public boolean writeToClipboard(CompoundTag tag, Direction side) {
-		tag.put("Categories", NBTHelper.writeItemList(categories));
+	public boolean writeToClipboard(HolderLookup.Provider registries, CompoundTag tag, Direction side) {
+		tag.put("Categories", NBTHelper.writeItemList(categories, registries));
 		return true;
 	}
 
   
 	@Override
-	public boolean readFromClipboard(CompoundTag tag, Player player, Direction side, boolean simulate) {
+	public boolean readFromClipboard(HolderLookup.Provider registries, CompoundTag tag, Player player, Direction side, boolean simulate) {
 		if (!tag.contains("Categories"))
 			return false;
 		if (simulate)
 			return true;
 
     // Read categories from the tag
-    List<ItemStack> newCategories = NBTHelper.readItemList(tag.getList("Categories", Tag.TAG_COMPOUND));
+    List<ItemStack> newCategories = NBTHelper.readItemList(tag.getList("Categories", Tag.TAG_COMPOUND), registries);
 
     // Apply the new categories if the player is in creative mode
     if (player.isCreative()) {
@@ -379,7 +380,7 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
     for (Map.Entry<Item,Integer> e : counts.entrySet()) {
       for (boolean preferStacksWithoutData : Iterate.trueAndFalse) {
         while (e.getValue() > 0) {
-          if (ItemHelper.extract(inv, stack -> stack.getItem() == e.getKey() && preferStacksWithoutData != stack.hasTag(),
+          if (ItemHelper.extract(inv, stack -> stack.getItem() == e.getKey() && preferStacksWithoutData == stack.isComponentsPatchEmpty(),
               1, false)
             .isEmpty())
             break; 
