@@ -1,5 +1,6 @@
 package com.simibubi.create.infrastructure.command;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,6 +28,20 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 
 public class TrainCommand {
+
+	// duplicate of DumpRailwaysCommand.java, should really be unified
+	private static final int white = ChatFormatting.WHITE.getColor();
+	private static final int blue = 0xaac8e0;
+	//private static final int blue = 0xD3DEDC;
+	private static final int darkBlue = 0x88a5b7;
+	//private static final int darkBlue = 0x92A9BD;
+	private static final int darkerBlue = 0x6b8694;
+	private static final int darkestBlue = 0x536b75;
+	private static final int bright = 0xFFEFEF;
+	private static final int orange = 0xFFAD60;
+	//custom additions
+	private static final int green = 0xb5fb99;
+	private static final int red = 0xe08894;
 
 	static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("train")
@@ -127,84 +142,81 @@ public class TrainCommand {
 			return 0;
 		}
 
-		// Print schedule header
-		source.sendSuccess(() -> {
-			return Component.literal("").append(Component.literal("─────< Schedule for Train '")
-				.withStyle(ChatFormatting.WHITE))
-				.append(train.name)
-				.append(Component.literal("' >─────").withStyle(ChatFormatting.WHITE));
-		}, false);
+		// Build the message
+		List<Component> message = buildScheduleMessage(train, schedule);
 
-		// Print cyclic status
-		source.sendSuccess(() -> {
-			return Component.literal("Cyclic: " + (schedule.cyclic ? "Yes" : "No"))
-				.withStyle(ChatFormatting.GRAY);
-		}, false);
+		// Send each line to chat
+		for (Component line : message) {
+			source.sendSuccess(() -> line, true);
+		}
 
-		// Print current entry
-		source.sendSuccess(() -> {
-			return Component.literal("Current Entry: " + train.runtime.currentEntry + " / " + (schedule.entries.size() - 1))
-				.withStyle(ChatFormatting.GRAY);
-		}, false);
+		return Command.SINGLE_SUCCESS;
+	}
 
-		// Print state
-		source.sendSuccess(() -> {
-			return Component.literal("State: " + train.runtime.state.name())
-				.withStyle(ChatFormatting.GRAY);
-		}, false);
+	private static List<Component> buildScheduleMessage(Train train, Schedule schedule) {
+		List<Component> message = new ArrayList<>();
 
-		source.sendSuccess(() -> Component.literal(""), false);
+		// Add schedule header
+		message.add(Component.literal("").append(Component.literal("-+---<< Schedule for Train '"))
+			.append(train.name)
+			.append(Component.literal("' >>---+-").withColor(white)));
+		int headerLength = message.get(0).getString().length();
 
-		// Print each schedule entry
+		// Add cyclic status
+		message.add(Component.literal("Cyclic: ")
+			.append(Component.literal(schedule.cyclic ? "Yes" : "No")
+				.withColor(schedule.cyclic ? green : red))
+			.withColor(blue));
+
+		// Add current entry
+		message.add(Component.literal("Current Entry: " + train.runtime.currentEntry + " / " + (schedule.entries.size() - 1))
+			.withColor(blue));
+
+		// Add state
+		message.add(Component.literal("State: " + train.runtime.state.name())
+			.withColor(blue));
+
+		message.add(Component.literal("")); // Blank line
+
+		// Add each schedule entry
 		for (int i = 0; i < schedule.entries.size(); i++) {
-			final int index = i;
 			boolean isCurrent = i == train.runtime.currentEntry;
 			ScheduleEntry entry = schedule.entries.get(i);
 			ScheduleInstruction instruction = entry.instruction;
 
 			// Entry header
-			source.sendSuccess(() -> {
-				Component prefix = Component.literal((isCurrent ? "→ " : "  ") + "Entry " + index + ": ")
-					.withStyle(isCurrent ? ChatFormatting.YELLOW : ChatFormatting.WHITE);
-				Component summary = instruction.getSummary().getSecond();
-				return prefix.copy().append(summary);
-			}, false);
+			Component prefix = Component.literal("┬Entry " + i + ": " + (isCurrent ? "[ACTIVE]" : ""))
+				.withColor(isCurrent ? orange : white);
+			Component summary = instruction.getSummary().getSecond();
+			message.add(prefix.copy().append(summary));
 
-			// Print conditions
+			// Add conditions
 			if (instruction.supportsConditions() && !entry.conditions.isEmpty()) {
 				for (int columnIndex = 0; columnIndex < entry.conditions.size(); columnIndex++) {
 					List<ScheduleWaitCondition> column = entry.conditions.get(columnIndex);
-					final int col = columnIndex;
-					
-					source.sendSuccess(() -> {
-						return Component.literal("  Condition Group " + col + ":")
-							.withStyle(ChatFormatting.DARK_GRAY);
-					}, false);
-					
-					for (int condIndex = 0; condIndex < column.size(); condIndex++) {
-						ScheduleWaitCondition condition = column.get(condIndex);
-						source.sendSuccess(() -> {
-							Component summary = condition.getSummary().getSecond();
-							return Component.literal("    - ").withStyle(ChatFormatting.DARK_GRAY)
-								.append(summary);
-						}, false);
+					message.add(Component.literal("├─Condition Group " + columnIndex + ":")
+						.withColor(blue));
+
+					for (ScheduleWaitCondition condition : column) {
+						Component conditionSummary = condition.getSummary().getSecond();
+						message.add(Component.literal("├──")
+							.withColor(darkBlue)
+							.append(conditionSummary));
 					}
 				}
 			}
 
-			// Add spacing between entries
 			if (i < schedule.entries.size() - 1) {
-				source.sendSuccess(() -> Component.literal(""), false);
+				message.add(Component.literal("")); // Blank line between entries
 			}
 		}
 
-		// Print footer
-		source.sendSuccess(() -> {
-			return Component.literal("─────────────────────────────────")
-				.withStyle(ChatFormatting.WHITE);
-		}, false);
+		// Add footer (length cropped due to non-monospace font, best guess)
+		String footer = "-".repeat(Math.max(headerLength-6, 5));
+		message.add(Component.literal(footer)
+			.withColor(white));
 
-		return Command.SINGLE_SUCCESS;
+		return message;
 	}
 
 }
