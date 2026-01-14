@@ -148,7 +148,7 @@ public class DumpRailwaysCommand {
 					chat.accept("├─In %1$s near [%2$s]".formatted(key.location(), train.getPositionInDimension(key).get().toShortString()), darkerBlue)
 				);
 				chatRaw.accept(createTeleportButton(train));
-
+				chatRaw.accept(createScheduleButton(train));
 				chatRaw.accept(createDeleteButton(train));
 				chat.accept("", white);
 			}
@@ -184,6 +184,20 @@ public class DumpRailwaysCommand {
 						.withColor(darkBlue)
 						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/c train tp " + train.id.toString()))
 						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to teleport to ").append(train.name)));
+				}
+			)
+		);
+	}
+
+	private static Component createScheduleButton(Train train) {
+		return Component.literal("├─").withStyle(style -> style.withColor(darkBlue)).append(
+			ComponentUtils.wrapInSquareBrackets(
+				Component.literal("Schedule").withStyle(style -> style.withColor(orange))
+			).withStyle(style -> {
+					return style
+						.withColor(darkBlue)
+						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/c train " + train.id.toString() + " schedule"))
+						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to view schedule of ").append(train.name)));
 				}
 			)
 		);
