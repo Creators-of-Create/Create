@@ -40,8 +40,8 @@ public class TrainCommand {
 					.requires(CommandSourceStack::isPlayer)
 					.executes(ctx -> runTeleport(ctx.getSource(), UuidArgument.getUuid(ctx, "train")))
 				)
-			).then(Commands.argument("train", UuidArgument.uuid())
-				.then(Commands.literal("schedule")
+			).then(Commands.literal("schedule")
+				.then(Commands.argument("train", UuidArgument.uuid())
 					.executes(ctx -> runSchedule(ctx.getSource(), UuidArgument.getUuid(ctx, "train")))
 				)
 			);

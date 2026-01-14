@@ -196,7 +196,7 @@ public class DumpRailwaysCommand {
 			).withStyle(style -> {
 					return style
 						.withColor(darkBlue)
-						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/c train " + train.id.toString() + " schedule"))
+						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/c train schedule " + train.id.toString()))
 						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to view schedule of ").append(train.name)));
 				}
 			)
