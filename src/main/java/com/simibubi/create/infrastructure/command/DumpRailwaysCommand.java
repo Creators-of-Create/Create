@@ -168,7 +168,7 @@ public class DumpRailwaysCommand {
 	}
 
 	private static Component createClickableUuid(String fullUuid, int color) {
-		String shortUuid = fullUuid.substring(0, 5);
+		String shortUuid = fullUuid.length() >= 5 ? fullUuid.substring(0, 5) : fullUuid;
 		return ComponentUtils.wrapInSquareBrackets(
 			Component.literal(shortUuid)
 				.withStyle(style -> style

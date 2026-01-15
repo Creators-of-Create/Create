@@ -23,6 +23,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.UuidArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -267,9 +268,9 @@ public class TrainCommand {
 					for (ScheduleWaitCondition condition : column) {
 						// Use getTitleAs to get full condition details
 						List<Component> conditionTitle = condition.getTitleAs("condition");
-						Component conditionLine = Component.literal("    - ").withColor(darkBlue);
+						MutableComponent conditionLine = Component.literal("    - ").withColor(darkBlue);
 						for (Component titlePart : conditionTitle) {
-							conditionLine = conditionLine.copy().append(titlePart);
+							conditionLine.append(titlePart);
 						}
 						message.add(conditionLine);
 					}
