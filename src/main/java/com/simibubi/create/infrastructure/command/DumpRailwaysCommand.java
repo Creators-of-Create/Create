@@ -112,14 +112,16 @@ public class DumpRailwaysCommand {
 			chat.accept("", white);
 			for (Train train : nearestTrains) {
 				// Create the train header with clickable UUID
+				String fullUuid = train.id.toString();
+				String shortUuid = fullUuid.substring(0, 5);
 				Component trainHeader = Component.literal("┬").withColor(bright)
 					.append(ComponentUtils.wrapInSquareBrackets(
-						Component.literal(train.id.toString().substring(0, 5))
+						Component.literal(shortUuid)
 							.withStyle(style -> style
 								.withColor(bright)
-								.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, train.id.toString()))
+								.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, fullUuid))
 								.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
-									Component.literal("Click to copy full UUID:\n" + train.id.toString()))))
+									Component.literal("Click to copy full UUID:\n" + fullUuid))))
 					).withColor(bright))
 					.append(Component.literal(String.format(": %s, %d Wagons",
 						train.name.getString(),
