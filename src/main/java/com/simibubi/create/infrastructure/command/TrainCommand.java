@@ -52,14 +52,24 @@ public class TrainCommand {
 				.then(Commands.argument("train", UuidArgument.uuid())
 					.executes(ctx -> runDelete(ctx.getSource(), UuidArgument.getUuid(ctx, "train")))
 				)
+				.then(Commands.literal("nearest")
+					.executes(ctx -> runDeleteNearest(ctx.getSource()))
+				)
 			).then(Commands.literal("tp")
 				.then(Commands.argument("train", UuidArgument.uuid())
 					.requires(CommandSourceStack::isPlayer)
 					.executes(ctx -> runTeleport(ctx.getSource(), UuidArgument.getUuid(ctx, "train")))
 				)
+				.then(Commands.literal("nearest")
+					.requires(CommandSourceStack::isPlayer)
+					.executes(ctx -> runTeleportNearest(ctx.getSource()))
+				)
 			).then(Commands.literal("schedule")
 				.then(Commands.argument("train", UuidArgument.uuid())
 					.executes(ctx -> runSchedule(ctx.getSource(), UuidArgument.getUuid(ctx, "train")))
+				)
+				.then(Commands.literal("nearest")
+					.executes(ctx -> runScheduleNearest(ctx.getSource()))
 				)
 			);
 	}
@@ -78,6 +88,15 @@ public class TrainCommand {
                 .append("' removed successfully");
         }, true);
 		return Command.SINGLE_SUCCESS;
+	}
+
+	private static int runDeleteNearest(CommandSourceStack source) {
+		Train train = findNearestTrain(source);
+		if (train == null) {
+			source.sendFailure(Component.literal("No trains found nearby"));
+			return 0;
+		}
+		return runDelete(source, train.id);
 	}
 
 	private static int runTeleport(CommandSourceStack source, UUID argument) throws CommandSyntaxException {
@@ -129,6 +148,15 @@ public class TrainCommand {
 		return Command.SINGLE_SUCCESS;
 	}
 
+	private static int runTeleportNearest(CommandSourceStack source) throws CommandSyntaxException {
+		Train train = findNearestTrain(source);
+		if (train == null) {
+			source.sendFailure(Component.literal("No trains found nearby"));
+			return 0;
+		}
+		return runTeleport(source, train.id);
+	}
+
 	private static int runSchedule(CommandSourceStack source, UUID argument) {
 		Train train = Create.RAILWAYS.trains.get(argument);
 		if (train == null) {
@@ -153,6 +181,26 @@ public class TrainCommand {
 		}
 
 		return Command.SINGLE_SUCCESS;
+	}
+
+	private static int runScheduleNearest(CommandSourceStack source) {
+		Train train = findNearestTrain(source);
+		if (train == null) {
+			source.sendFailure(Component.literal("No trains found nearby"));
+			return 0;
+		}
+		return runSchedule(source, train.id);
+	}
+
+	private static Train findNearestTrain(CommandSourceStack source) {
+		ServerLevel level = source.getLevel();
+		return Create.RAILWAYS.trains.values()
+			.stream()
+			.sorted((t1, t2) -> Float.compare(
+				t1.distanceToLocationSqr(level, source.getPosition()),
+				t2.distanceToLocationSqr(level, source.getPosition())))
+			.findFirst()
+			.orElse(null);
 	}
 
 	private static List<Component> buildScheduleMessage(Train train, Schedule schedule) {

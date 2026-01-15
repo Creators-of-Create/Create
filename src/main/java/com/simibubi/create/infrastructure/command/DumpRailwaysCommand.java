@@ -111,11 +111,21 @@ public class DumpRailwaysCommand {
 			chat.accept("Nearest Trains: ", orange);
 			chat.accept("", white);
 			for (Train train : nearestTrains) {
-				chat.accept(String.format("┬%1$s: %2$s, %3$d Wagons",
-					train.id.toString().substring(0, 5),
-					train.name.getString(),
-					train.carriages.size()
-				), bright);
+				// Create the train header with clickable UUID
+				Component trainHeader = Component.literal("┬").withColor(bright)
+					.append(ComponentUtils.wrapInSquareBrackets(
+						Component.literal(train.id.toString().substring(0, 5))
+							.withStyle(style -> style
+								.withColor(bright)
+								.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, train.id.toString()))
+								.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
+									Component.literal("Click to copy full UUID:\n" + train.id.toString()))))
+					).withColor(bright))
+					.append(Component.literal(String.format(": %s, %d Wagons",
+						train.name.getString(),
+						train.carriages.size()
+					)).withColor(bright));
+				chatRaw.accept(trainHeader);
 				if (train.derailed)
 					chat.accept("├─Derailed", orange);
 				else if (train.graph != null)
