@@ -28,6 +28,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class TrainCommand {
 
@@ -194,12 +195,12 @@ public class TrainCommand {
 
 	private static Train findNearestTrain(CommandSourceStack source) {
 		ServerLevel level = source.getLevel();
+		Vec3 position = source.getPosition();
 		return Create.RAILWAYS.trains.values()
 			.stream()
-			.sorted((t1, t2) -> Float.compare(
-				t1.distanceToLocationSqr(level, source.getPosition()),
-				t2.distanceToLocationSqr(level, source.getPosition())))
-			.findFirst()
+			.min((t1, t2) -> Float.compare(
+				t1.distanceToLocationSqr(level, position),
+				t2.distanceToLocationSqr(level, position)))
 			.orElse(null);
 	}
 
