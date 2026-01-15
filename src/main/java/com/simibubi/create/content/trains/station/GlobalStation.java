@@ -232,7 +232,7 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 							continue;
 						if (PackageItem.matchAddress(stack, port.address))
 							continue;
-						if (!PackageItem.matchAddress(stack, instruction.getFilter()))
+						if (!PackageItem.getAddress(stack).matches(instruction.getFilterForRegex()))
 							continue;
 
 						ItemStack result = putPackageOntoTrain(carriageInventory, depots, stack);
