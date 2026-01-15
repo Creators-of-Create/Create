@@ -24,6 +24,7 @@ import net.minecraft.commands.arguments.UuidArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -52,6 +53,10 @@ public class TrainCommand {
 			.requires(cs -> cs.hasPermission(2))
 			.then(Commands.literal("remove")
 				.then(Commands.argument("train", UuidArgument.uuid())
+					.suggests((ctx, builder) -> {
+						builder.suggest("<UUID>");
+						return builder.buildFuture();
+					})
 					.executes(ctx -> runDelete(ctx.getSource(), UuidArgument.getUuid(ctx, "train")))
 				)
 				.then(Commands.literal("nearest")
@@ -59,6 +64,10 @@ public class TrainCommand {
 				)
 			).then(Commands.literal("tp")
 				.then(Commands.argument("train", UuidArgument.uuid())
+					.suggests((ctx, builder) -> {
+						builder.suggest("<UUID>");
+						return builder.buildFuture();
+					})
 					.requires(CommandSourceStack::isPlayer)
 					.executes(ctx -> runTeleport(ctx.getSource(), UuidArgument.getUuid(ctx, "train")))
 				)
@@ -68,6 +77,10 @@ public class TrainCommand {
 				)
 			).then(Commands.literal("schedule")
 				.then(Commands.argument("train", UuidArgument.uuid())
+					.suggests((ctx, builder) -> {
+						builder.suggest("<UUID>");
+						return builder.buildFuture();
+					})
 					.executes(ctx -> runSchedule(ctx.getSource(), UuidArgument.getUuid(ctx, "train")))
 				)
 				.then(Commands.literal("nearest")
@@ -270,7 +283,9 @@ public class TrainCommand {
 						List<Component> conditionTitle = condition.getTitleAs("condition");
 						MutableComponent conditionLine = Component.literal("    - ").withColor(darkBlue);
 						for (Component titlePart : conditionTitle) {
-							conditionLine.append(titlePart);
+							conditionLine.append(titlePart)
+								.append(" ") //This also adds a trailing space, meh
+							;
 						}
 						message.add(conditionLine);
 					}

@@ -82,7 +82,8 @@ public class DumpRailwaysCommand {
 			chat.accept("", white);
 			for (TrackGraph graph : nearest) {
 				String fullGraphId = graph.id.toString();
-				Component graphLine = createClickableUuid(fullGraphId, white)
+				Component graphLine = Component.literal("") // literal is necessary or append doesn't work
+					.append(createClickableUuid(fullGraphId, white))
 					.append(Component.literal(" with " + graph.getNodes().size() + " Nodes").withColor(white));
 				chatRaw.accept(graphLine);
 				Collection<SignalBoundary> signals = graph.getPoints(EdgePointType.SIGNAL);
