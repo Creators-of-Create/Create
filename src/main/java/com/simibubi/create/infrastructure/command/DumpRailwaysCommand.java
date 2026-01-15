@@ -81,11 +81,10 @@ public class DumpRailwaysCommand {
 			chat.accept("Nearest Graphs: ", orange);
 			chat.accept("", white);
 			for (TrackGraph graph : nearest) {
-				chat.accept(graph.id.toString()
-					.substring(0, 5) + " with "
-					+ graph.getNodes()
-					.size()
-					+ " Nodes", white);
+				String fullGraphId = graph.id.toString();
+				Component graphLine = createClickableUuid(fullGraphId, white)
+					.append(Component.literal(" with " + graph.getNodes().size() + " Nodes").withColor(white));
+				chatRaw.accept(graphLine);
 				Collection<SignalBoundary> signals = graph.getPoints(EdgePointType.SIGNAL);
 				if (!signals.isEmpty())
 					chat.accept(" -> " + signals.size() + " Signals", blue);
@@ -113,16 +112,8 @@ public class DumpRailwaysCommand {
 			for (Train train : nearestTrains) {
 				// Create the train header with clickable UUID
 				String fullUuid = train.id.toString();
-				String shortUuid = fullUuid.substring(0, 5);
 				Component trainHeader = Component.literal("┬").withColor(bright)
-					.append(ComponentUtils.wrapInSquareBrackets(
-						Component.literal(shortUuid)
-							.withStyle(style -> style
-								.withColor(bright)
-								.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, fullUuid))
-								.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
-									Component.literal("Click to copy full UUID:\n" + fullUuid))))
-					).withColor(bright))
+					.append(createClickableUuid(fullUuid, bright))
 					.append(Component.literal(String.format(": %s, %d Wagons",
 						train.name.getString(),
 						train.carriages.size()
@@ -130,9 +121,12 @@ public class DumpRailwaysCommand {
 				chatRaw.accept(trainHeader);
 				if (train.derailed)
 					chat.accept("├─Derailed", orange);
-				else if (train.graph != null)
-					chat.accept("├─On Track: " + train.graph.id.toString()
-						.substring(0, 5), blue);
+				else if (train.graph != null) {
+					String graphId = train.graph.id.toString();
+					Component trackLine = Component.literal("├─On Track: ").withColor(blue)
+						.append(createClickableUuid(graphId, blue));
+					chatRaw.accept(trackLine);
+				}
 				LivingEntity owner = train.getOwner(level);
 				if (owner != null)
 					chat.accept("├─Owned by " + owner.getName()
@@ -171,6 +165,18 @@ public class DumpRailwaysCommand {
 		}
 
 		chat.accept("-+--------------------------------+-", white);
+	}
+
+	private static Component createClickableUuid(String fullUuid, int color) {
+		String shortUuid = fullUuid.substring(0, 5);
+		return ComponentUtils.wrapInSquareBrackets(
+			Component.literal(shortUuid)
+				.withStyle(style -> style
+					.withColor(color)
+					.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, fullUuid))
+					.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+						Component.literal("Click to copy full UUID:\n" + fullUuid))))
+		);
 	}
 
 	private static Component createDeleteButton(Train train) {

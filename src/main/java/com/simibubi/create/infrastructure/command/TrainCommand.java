@@ -265,10 +265,13 @@ public class TrainCommand {
 						.withColor(blue));
 					List<ScheduleWaitCondition> column = entry.conditions.get(columnIndex);
 					for (ScheduleWaitCondition condition : column) {
-						Component conditionSummary = condition.getSummary().getSecond();
-						message.add(Component.literal("    - ")
-							.withColor(darkBlue)
-							.append(conditionSummary));
+						// Use getTitleAs to get full condition details
+						List<Component> conditionTitle = condition.getTitleAs("condition");
+						Component conditionLine = Component.literal("    - ").withColor(darkBlue);
+						for (Component titlePart : conditionTitle) {
+							conditionLine = conditionLine.copy().append(titlePart);
+						}
+						message.add(conditionLine);
 					}
 				}
 			}
