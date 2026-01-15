@@ -13,6 +13,8 @@ import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.schedule.Schedule;
 import com.simibubi.create.content.trains.schedule.ScheduleEntry;
 import com.simibubi.create.content.trains.schedule.condition.ScheduleWaitCondition;
+import com.simibubi.create.content.trains.schedule.destination.DeliverPackagesInstruction;
+import com.simibubi.create.content.trains.schedule.destination.FetchPackagesInstruction;
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
 
 import net.minecraft.ChatFormatting;
@@ -183,29 +185,44 @@ public class TrainCommand {
 			boolean isCurrent = i == train.runtime.currentEntry;
 			ScheduleEntry entry = schedule.entries.get(i);
 			ScheduleInstruction instruction = entry.instruction;
+			// Build entry summary with proper name (translated title + content)
+			Component title = Component.translatable("create.schedule.instruction." + instruction.getId().getPath());
 
-			// Entry header
-			Component prefix = Component.literal("┬Entry " + i + ": " + (isCurrent ? "[ACTIVE]" : ""))
+			Component summary;
+			// Special handling for Retrieve Package so information is not lost.
+			if (instruction instanceof FetchPackagesInstruction retrieve) {
+				Component target = Component.nullToEmpty(retrieve.getFilter());
+				summary = title.copy().append(Component.literal(": ")).append(target);
+			}
+			else if (instruction instanceof DeliverPackagesInstruction){
+				summary = title; //Deliver instructions have no content
+			}
+			else{
+				Component content = instruction.getSummary().getSecond();
+				summary = title.copy().append(Component.literal(": ")).append(content);
+			}
+
+			// Entry header with [ACTIVE] at the end
+			Component prefix = Component.literal((isCurrent ? "-> " : "") + "Entry " + i + ": ")
 				.withColor(isCurrent ? orange : white);
-			Component summary = instruction.getSummary().getSecond();
-			message.add(prefix.copy().append(summary));
+			Component active = isCurrent ? Component.literal(" [ACTIVE]").withColor(orange) : Component.literal("");
+			message.add(prefix.copy().append(summary).append(active));
 
-			// Add conditions
-			if (instruction.supportsConditions() && !entry.conditions.isEmpty()) {
+			// Add conditions with simple indented structure
+			boolean hasConditions = instruction.supportsConditions() && !entry.conditions.isEmpty();
+			if (hasConditions) {
 				for (int columnIndex = 0; columnIndex < entry.conditions.size(); columnIndex++) {
-					List<ScheduleWaitCondition> column = entry.conditions.get(columnIndex);
-					message.add(Component.literal("├─Condition Group " + columnIndex + ":")
+					message.add(Component.literal("  Condition Group " + columnIndex + ":")
 						.withColor(blue));
-
+					List<ScheduleWaitCondition> column = entry.conditions.get(columnIndex);
 					for (ScheduleWaitCondition condition : column) {
 						Component conditionSummary = condition.getSummary().getSecond();
-						message.add(Component.literal("├──")
+						message.add(Component.literal("    - ")
 							.withColor(darkBlue)
 							.append(conditionSummary));
 					}
 				}
 			}
-
 			if (i < schedule.entries.size() - 1) {
 				message.add(Component.literal("")); // Blank line between entries
 			}
@@ -215,6 +232,7 @@ public class TrainCommand {
 		String footer = "-".repeat(Math.max(headerLength-6, 5));
 		message.add(Component.literal(footer)
 			.withColor(white));
+
 
 		return message;
 	}
