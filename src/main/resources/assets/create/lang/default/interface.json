@@ -994,7 +994,7 @@
 	"create.train.status.navigation_success": "Navigation succeeded",
 	"create.train.status.no_match": "No station on graph matches '%1$s'",
 	"create.train.status.no_path": "No suitable path to the next Scheduled destination could be found",
-	"create.train.status.no_package_target": "A package in cargo has no postbox that matches its address",
+  "create.train.status.no_package_target": "A package in cargo has no postbox that can accept it",
 
 	"create.track_signal.cannot_change_mode": "Unable to switch mode of this Signal",
 	"create.track_signal.mode_change.entry_signal": "-> Allow passage if section unoccupied",

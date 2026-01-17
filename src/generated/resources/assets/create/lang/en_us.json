@@ -3087,7 +3087,7 @@
   "create.train.status.missing_driver": "Driver has gone missing",
   "create.train.status.navigation_success": "Navigation succeeded",
   "create.train.status.no_match": "No station on graph matches '%1$s'",
-  "create.train.status.no_package_target": "A package in cargo has no postbox that matches its address",
+  "create.train.status.no_package_target": "A package in cargo has no postbox that can accept it",
   "create.train.status.no_path": "No suitable path to the next Scheduled destination could be found",
   "create.train.status.opposite_driver": "Path requires a driver facing the opposite direction",
   "create.train.status.paused_for_manual": "Schedule paused for manual controls",
