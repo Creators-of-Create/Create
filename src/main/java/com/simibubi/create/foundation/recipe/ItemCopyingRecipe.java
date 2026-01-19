@@ -13,13 +13,14 @@ import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 
 public class ItemCopyingRecipe extends CustomRecipe {
 	public interface SupportsItemCopying {
 		default ItemStack createCopy(ItemStack original, int count) {
 			ItemStack copyWithCount = original.copyWithCount(count);
-			copyWithCount.remove(DataComponents.ENCHANTMENTS);
+			copyWithCount.set(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
 			copyWithCount.remove(DataComponents.STORED_ENCHANTMENTS);
 			return copyWithCount;
 		}
