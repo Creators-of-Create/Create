@@ -521,6 +521,8 @@
 
 	"create.gui.package_port.send_only": "Only send packages",
 	"create.gui.package_port.send_and_receive": "Send and receive packages",
+  "create.gui.package_port.explicit_fetch": "Only send packages when Retrieve Package instruction is used",
+  "create.gui.package_port.explicit_deliver": "Only receive packages when Deliver Package instruction is used",
 	"create.gui.package_port.catch_packages": "Catch packages addressed to...",
 	"create.gui.package_port.catch_packages_wildcard": "Use * as a text wildcard",
 	"create.gui.package_port.catch_packages_empty": "Leave empty to match non-addressed",

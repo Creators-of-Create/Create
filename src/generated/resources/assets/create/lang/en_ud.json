@@ -1270,6 +1270,8 @@
   "create.gui.package_port.catch_packages": "˙˙˙oʇ pǝssǝɹppɐ sǝbɐʞɔɐd ɥɔʇɐƆ",
   "create.gui.package_port.catch_packages_empty": "pǝssǝɹppɐ-uou ɥɔʇɐɯ oʇ ʎʇdɯǝ ǝʌɐǝꞀ",
   "create.gui.package_port.catch_packages_wildcard": "pɹɐɔpןıʍ ʇxǝʇ ɐ sɐ * ǝs∩",
+  "create.gui.package_port.explicit_deliver": "pǝsn sı uoıʇɔnɹʇsuı ǝbɐʞɔɐԀ ɹǝʌıןǝᗡ uǝɥʍ sǝbɐʞɔɐd ǝʌıǝɔǝɹ ʎןuO",
+  "create.gui.package_port.explicit_fetch": "pǝsn sı uoıʇɔnɹʇsuı ǝbɐʞɔɐԀ ǝʌǝıɹʇǝᴚ uǝɥʍ sǝbɐʞɔɐd puǝs ʎןuO",
   "create.gui.package_port.not_targeting_anything": "pǝʇɔǝןǝs ʇǝbɹɐʇ oN",
   "create.gui.package_port.send_and_receive": "sǝbɐʞɔɐd ǝʌıǝɔǝɹ puɐ puǝS",
   "create.gui.package_port.send_only": "sǝbɐʞɔɐd puǝs ʎןuO",

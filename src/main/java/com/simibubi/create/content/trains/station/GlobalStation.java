@@ -78,6 +78,8 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 			port.address = c.getString("Address");
 			port.offlineBuffer.deserializeNBT(registries, c.getCompound("OfflineBuffer"));
 			port.primed = c.getBoolean("Primed");
+			port.explicitFetch = c.getBoolean("ExplicitFetch");
+			port.explicitDeliver = c.getBoolean("ExplicitDeliver");
 			connectedPorts.put(NBTHelper.readBlockPos(c, "Pos"), port);
 		});
 	}
@@ -102,6 +104,8 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 			c.putString("Address", e.getValue().address);
 			c.put("OfflineBuffer", e.getValue().offlineBuffer.serializeNBT(registries));
 			c.putBoolean("Primed", e.getValue().primed);
+			c.putBoolean("ExplicitFetch", e.getValue().explicitFetch);
+			c.putBoolean("ExplicitDeliver", e.getValue().explicitDeliver);
 			c.put("Pos", NbtUtils.writeBlockPos(e.getKey()));
 			return c;
 		}));
@@ -177,10 +181,6 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 		Level level = server.getLevel(getBlockEntityDimension());
 
-		//TODO: Get these values from the connected port when buttons are implemented
-		boolean explicitFetch = true;
-		boolean explicitDelivery = true;
-
 		ScheduleEntry scheduleEntry = getCurrentScheduleStep(train);
 		FetchPackagesInstruction fetchInstruction = null;
 		DeliverPackagesInstruction deliverInstruction = null;
@@ -216,7 +216,7 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 						continue;
 					if (PackageItem.matchAddress(stack, port.address))
 						continue;
-					if(explicitFetch){
+					if(port.explicitFetch){
 						if(fetchInstruction == null)
 							continue;
 						if (!PackageItem.matchAddress(stack, fetchInstruction.getFilter()))
@@ -254,7 +254,7 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 
 					if (!PackageItem.matchAddress(stack, port.address))
 						continue;
-					if(explicitDelivery){
+					if(port.explicitDeliver){
 						if(deliverInstruction == null)
 							continue;
 						if (!PackageItem.matchAddress(stack, deliverInstruction.getFilter()))
