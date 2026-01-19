@@ -219,7 +219,7 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 					if(port.explicitFetch){
 						if(fetchInstruction == null)
 							continue;
-						if (!PackageItem.matchAddress(stack, fetchInstruction.getFilter()))
+						if (!PackageItem.getAddress(stack).matches(fetchInstruction.getFilterForRegex()))
 							continue;
 					}
 
@@ -257,7 +257,7 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 					if(port.explicitDeliver){
 						if(deliverInstruction == null)
 							continue;
-						if (!PackageItem.matchAddress(stack, deliverInstruction.getFilter()))
+						if (!PackageItem.getAddress(stack).matches(deliverInstruction.getFilterForRegex()))
 							continue;
 					}
 
