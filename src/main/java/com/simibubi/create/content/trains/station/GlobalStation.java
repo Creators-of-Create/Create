@@ -2,6 +2,7 @@ package com.simibubi.create.content.trains.station;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,6 +17,11 @@ import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.signal.SingleBlockEntityEdgePoint;
+import com.simibubi.create.content.trains.schedule.Schedule;
+import com.simibubi.create.content.trains.schedule.ScheduleEntry;
+import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
+import com.simibubi.create.content.trains.schedule.destination.DeliverPackagesInstruction;
+import com.simibubi.create.content.trains.schedule.destination.FetchPackagesInstruction;
 
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
@@ -171,6 +177,21 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 		Level level = server.getLevel(getBlockEntityDimension());
 
+		//TODO: Get these values from the connected port when buttons are implemented
+		boolean explicitFetch = true;
+		boolean explicitDelivery = true;
+
+		ScheduleEntry scheduleEntry = getCurrentScheduleStep(train);
+		FetchPackagesInstruction fetchInstruction = null;
+		DeliverPackagesInstruction deliverInstruction = null;
+
+		if (scheduleEntry != null){
+			if (scheduleEntry.instruction instanceof FetchPackagesInstruction instruction)
+				fetchInstruction = instruction;
+			else if (scheduleEntry.instruction instanceof DeliverPackagesInstruction instruction)
+				deliverInstruction = instruction;
+		}
+
 		for (Carriage carriage : train.carriages) {
 			IItemHandlerModifiable carriageInventory = carriage.storage.getAllItems();
 			if (carriageInventory == null)
@@ -195,6 +216,12 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 						continue;
 					if (PackageItem.matchAddress(stack, port.address))
 						continue;
+					if(explicitFetch){
+						if(fetchInstruction == null)
+							continue;
+						if (!PackageItem.matchAddress(stack, fetchInstruction.getFilter()))
+							continue;
+					}
 
 					ItemStack result = ItemHandlerHelper.insertItemStacked(carriageInventory, stack, false);
 					if (box != null)
@@ -227,6 +254,12 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 
 					if (!PackageItem.matchAddress(stack, port.address))
 						continue;
+					if(explicitDelivery){
+						if(deliverInstruction == null)
+							continue;
+						if (!PackageItem.matchAddress(stack, deliverInstruction.getFilter()))
+							continue;
+					}
 
 					IItemHandler postboxInventory = port.offlineBuffer;
 					if (level != null && level.isLoaded(pos)
@@ -258,4 +291,19 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 		}
 	}
 
+	private ScheduleEntry getCurrentScheduleStep(Train train){
+		ScheduleRuntime runtime = train.runtime;
+		if (runtime == null)
+			return null;
+		Schedule schedule = runtime.getSchedule();
+		if (schedule == null)
+			return null;
+		List<ScheduleEntry> entries = schedule.entries;
+		if (entries == null)
+			return null;
+		int currentEntry = runtime.currentEntry;
+		if (currentEntry < 0 || currentEntry >= entries.size())
+			return null;
+		return entries.get(currentEntry);
+	}
 }
