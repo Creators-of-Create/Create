@@ -105,6 +105,7 @@ repositories {
     maven { url = "https://maven.blamejared.com" } // JEI, Vazkii's Mods
     maven { url = "https://maven.theillusivec4.top/" } // Curios API
     maven { url = "https://maven.squiddev.cc" } // CC: Tweaked
+    maven { url = "https://harleyoconnor.com/maven" } // Dynamic Trees
     maven { url = "https://www.cursemaven.com" }
     maven { url = "https://api.modrinth.com/maven" }
     maven { url = "https://maven.ftb.dev/releases" } // FTB Mods
@@ -153,6 +154,10 @@ dependencies {
         compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cc_tweaked_version")
         compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cc_tweaked_version")
         runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cc_tweaked_version")
+    }
+
+    if (dynamic_trees_enable.toBoolean()) {
+        compileOnly("com.dtteam.dynamictrees:dynamictrees-neoforge-${dynamic_trees_minecraft_version}:${dynamic_trees_version}")
     }
 
     runtimeOnly("dev.architectury:architectury-neoforge:13d.0.8")
