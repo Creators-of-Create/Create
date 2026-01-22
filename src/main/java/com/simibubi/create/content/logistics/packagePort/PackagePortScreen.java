@@ -99,8 +99,7 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 		addRenderableWidget(dontAcceptPackages);
 
 		if(!frogMode){
-			//TODO: Change button icons to new ones
-			explicitFetchButton = new IconButton(x + 79, y + background.getHeight() - 24, AllIcons.I_SEND_AND_RECEIVE);
+			explicitFetchButton = new IconButton(x + 79, y + background.getHeight() - 24, AllIcons.I_EXPLICIT_FETCH);
 			explicitFetchButton.withCallback(() -> {
 				explicitFetchButton.green = !explicitFetchButton.green;
 			});
@@ -108,7 +107,7 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 			explicitFetchButton.setToolTip(CreateLang.translateDirect("gui.package_port.explicit_fetch"));
 			addRenderableWidget(explicitFetchButton);
 
-			explicitDeliverButton = new IconButton(x + 79 + 18, y + background.getHeight() - 24, AllIcons.I_SEND_AND_RECEIVE);
+			explicitDeliverButton = new IconButton(x + 79 + 18, y + background.getHeight() - 24, AllIcons.I_EXPLICIT_DELIVER);
 			explicitDeliverButton.withCallback(() -> {
 				explicitDeliverButton.green = !explicitDeliverButton.green;
 			});
