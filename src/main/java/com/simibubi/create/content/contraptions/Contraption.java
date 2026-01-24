@@ -28,6 +28,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllContraptionTypeTags;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
@@ -375,7 +376,7 @@ public abstract class Contraption {
 			moveWindmillBearing(pos, frontier, visited, state);
 
 		// Seats transfer their passenger to the contraption
-		if (state.getBlock() instanceof SeatBlock)
+		if (AllBlockTags.SEATS.matches(state))
 			moveSeat(world, pos);
 
 		// Pulleys drag their rope and their attached structure
