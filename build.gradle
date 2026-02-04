@@ -155,6 +155,10 @@ dependencies {
         runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cc_tweaked_version")
     }
 
+    if (farmers_delight_enable.toBoolean()) {
+        implementation("maven.modrinth:farmers-delight:${farmers_delight_version}")
+    }
+
     runtimeOnly("dev.architectury:architectury-neoforge:13d.0.8")
     implementation("dev.ftb.mods:ftb-chunks-neoforge:2101.1.1")
     implementation("dev.ftb.mods:ftb-teams-neoforge:2101.1.0")
