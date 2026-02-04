@@ -19,10 +19,8 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
@@ -71,7 +69,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 			ItemStack itemStack = tis.stack;
 			int angle = tis.angle;
 			Random r = new Random(0);
-			renderItem(be.getLevel(), ms, buffer, light, overlay, itemStack, angle, r, itemPosition, false);
+			renderItem(ms, buffer, light, overlay, itemStack, angle, r, itemPosition, false);
 			ms.popPose();
 		}
 
@@ -93,7 +91,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 				msr.rotateYDegrees(-(360 / 8f * i));
 			Random r = new Random(i + 1);
 			int angle = (int) (360 * r.nextFloat());
-			renderItem(be.getLevel(), ms, buffer, light, overlay, stack, renderUpright ? angle + 90 : angle, r,
+			renderItem(ms, buffer, light, overlay, stack, renderUpright ? angle + 90 : angle, r,
 				itemPosition, false);
 			ms.popPose();
 		}
@@ -101,12 +99,12 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 		ms.popPose();
 	}
 
-	public static void renderItem(Level level, PoseStack ms, MultiBufferSource buffer, int light, int overlay,
-		ItemStack itemStack, int angle, Random r, Vec3 itemPosition, boolean alwaysUpright) {
+	public static void renderItem(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
+								  ItemStack itemStack, int angle, Random r, Vec3 itemPosition, boolean alwaysUpright) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
 		var msr = TransformStack.of(ms);
-		int count = (int) (Mth.log2((int) (itemStack.getCount()))) / 2;
+		int count = Mth.log2((itemStack.getCount())) / 2;
 		BakedModel bakedModel = itemRenderer.getModel(itemStack, null, null, 0);
 		boolean blockItem = bakedModel.isGui3d();
 		boolean renderUpright = BeltHelper.isItemUpright(itemStack) || alwaysUpright && !blockItem;
@@ -115,14 +113,10 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 		msr.rotateYDegrees(angle);
 
 		if (renderUpright) {
-			Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
-			if (renderViewEntity != null) {
-				Vec3 positionVec = renderViewEntity.position();
-				Vec3 vectorForOffset = itemPosition;
-				Vec3 diff = vectorForOffset.subtract(positionVec);
-				float yRot = (float) (Mth.atan2(diff.x, diff.z) + Math.PI);
-				ms.mulPose(Axis.YP.rotation(yRot));
-			}
+			Vec3 cameraPosition = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+			Vec3 diff = itemPosition.subtract(cameraPosition);
+			float yRot = (float) (Mth.atan2(diff.x, diff.z) + Math.PI);
+			ms.mulPose(Axis.YP.rotation(yRot));
 			ms.translate(0, 3 / 32d, -1 / 16f);
 		}
 

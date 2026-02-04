@@ -21,7 +21,6 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -94,20 +93,17 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 			msr.rotateZDegrees(-verticalAngle);
 
 		if (renderUpright) {
-			Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
-			if (renderViewEntity != null) {
-				Vec3 positionVec = renderViewEntity.position();
-				Vec3 vectorForOffset = itemPosition.add(offsetVec);
-				Vec3 diff = vectorForOffset.subtract(positionVec);
+			Vec3 cameraPosition = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+			Vec3 vectorForOffset = itemPosition.add(offsetVec);
+			Vec3 diff = vectorForOffset.subtract(cameraPosition);
 
-				if (insertedFrom.getAxis() != Direction.Axis.X)
-					diff = VecHelper.rotate(diff, verticalAngle, Direction.Axis.X);
-				if (insertedFrom.getAxis() != Direction.Axis.Z)
-					diff = VecHelper.rotate(diff, -verticalAngle, Direction.Axis.Z);
+			if (insertedFrom.getAxis() != Direction.Axis.X)
+				diff = VecHelper.rotate(diff, verticalAngle, Direction.Axis.X);
+			if (insertedFrom.getAxis() != Direction.Axis.Z)
+				diff = VecHelper.rotate(diff, -verticalAngle, Direction.Axis.Z);
 
-				float yRot = (float) Mth.atan2(diff.z, -diff.x);
-				ms.mulPose(Axis.YP.rotation((float) (yRot - Math.PI / 2)));
-			}
+			float yRot = (float) Mth.atan2(diff.z, -diff.x);
+			ms.mulPose(Axis.YP.rotation((float) (yRot - Math.PI / 2)));
 			ms.translate(0, 0, -1 / 16f);
 		}
 
