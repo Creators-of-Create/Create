@@ -1,14 +1,14 @@
 package com.simibubi.create.compat.farmersdelight;
 
-import com.simibubi.create.Create;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
-import net.neoforged.bus.api.IEventBus;
+import net.minecraft.world.level.block.state.BlockState;
 
-import vectorwing.farmersdelight.FarmersDelight;
+import vectorwing.farmersdelight.common.registry.ModBlocks;
 
 public class FarmersDelightCompat {
-	public static void init(IEventBus modEventBus) {
-		// Yet empty.
-		Create.LOGGER.info("Create Farmer's compat loaded! " + FarmersDelight.MODID);
+	public static boolean shouldHarvestMushroom(Level world, BlockPos pos, BlockState state) {
+		return !world.getBlockState(pos.below()).is(ModBlocks.RICH_SOIL.get());
 	}
 }

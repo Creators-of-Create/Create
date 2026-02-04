@@ -155,6 +155,7 @@ dependencies {
         runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cc_tweaked_version")
     }
 
+    compileOnly("maven.modrinth:farmers-delight:${farmers_delight_version}")
     if (farmers_delight_enable.toBoolean()) {
         implementation("maven.modrinth:farmers-delight:${farmers_delight_version}")
     }

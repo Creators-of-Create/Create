@@ -165,7 +165,6 @@ public class Create {
 		// FIXME: this is not thread-safe
 		Mods.CURIOS.executeIfInstalled(() -> () -> Curios.init(modEventBus));
 		Mods.INVENTORYSORTER.executeIfInstalled(() -> () -> InventorySorterCompat.init(modEventBus));
-		Mods.FARMERSDELIGHT.executeIfInstalled(() -> () -> FarmersDelightCompat.init(modEventBus));
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
