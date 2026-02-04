@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.simibubi.create.compat.farmersdelight.FarmersDelightCompat;
+
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -163,6 +165,7 @@ public class Create {
 		// FIXME: this is not thread-safe
 		Mods.CURIOS.executeIfInstalled(() -> () -> Curios.init(modEventBus));
 		Mods.INVENTORYSORTER.executeIfInstalled(() -> () -> InventorySorterCompat.init(modEventBus));
+		Mods.FARMERSDELIGHT.executeIfInstalled(() -> () -> FarmersDelightCompat.init(modEventBus));
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {

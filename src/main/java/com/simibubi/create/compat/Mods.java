@@ -39,7 +39,8 @@ public enum Mods {
 	XAEROWORLDMAP,
 	FTBLIBRARY,
 	SODIUM,
-	INVENTORYSORTER;
+	INVENTORYSORTER,
+	FARMERSDELIGHT;
 
 	private final String id;
 	private final boolean isLoaded;
