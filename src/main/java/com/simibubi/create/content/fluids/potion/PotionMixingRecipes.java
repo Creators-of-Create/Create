@@ -10,7 +10,7 @@ import java.util.Set;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
-import com.simibubi.create.content.processing.recipe.HeatCondition;
+import com.simibubi.create.content.processing.recipe.BlazeBurnerHeatCondition;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe.Builder;
 import com.simibubi.create.foundation.mixin.accessor.PotionBrewingAccessor;
 
@@ -152,7 +152,7 @@ public class PotionMixingRecipes {
 				.require(ingredient)
 			.require(new SizedFluidIngredient(DataComponentFluidIngredient.of(false, fromFluid), fromFluid.getAmount()))
 				.output(toFluid)
-				.requiresHeat(HeatCondition.HEATED)
+				.requiresHeat(BlazeBurnerHeatCondition.HEATED)
 				.build();
 
 		return new RecipeHolder<>(recipeId, recipe);

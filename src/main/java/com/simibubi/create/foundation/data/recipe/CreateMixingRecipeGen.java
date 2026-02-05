@@ -3,11 +3,11 @@ package com.simibubi.create.foundation.data.recipe;
 import java.util.concurrent.CompletableFuture;
 
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.AllHeatConditions;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.MixingRecipeGen;
-import com.simibubi.create.content.processing.recipe.HeatCondition;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -31,27 +31,27 @@ public final class CreateMixingRecipeGen extends MixingRecipeGen {
 
 		TEMP_LAVA = create("lava_from_cobble", b -> b.require(Tags.Items.COBBLESTONES)
 		.output(Fluids.LAVA, 50)
-		.requiresHeat(HeatCondition.SUPERHEATED)),
+		.requiresHeat(AllHeatConditions.SUPERHEATED)),
 
 	TEA = create("tea", b -> b.require(Fluids.WATER, 250)
 		.require(Tags.Fluids.MILK, 250)
 		.require(ItemTags.LEAVES)
 		.output(AllFluids.TEA.get(), 500)
-		.requiresHeat(HeatCondition.HEATED)),
+		.requiresHeat(AllHeatConditions.HEATED)),
 
 	CHOCOLATE = create("chocolate", b -> b.require(Tags.Fluids.MILK, 250)
 		.require(Items.SUGAR)
 		.require(Items.COCOA_BEANS)
 		.output(AllFluids.CHOCOLATE.get(), 250)
-		.requiresHeat(HeatCondition.HEATED)),
+		.requiresHeat(AllHeatConditions.HEATED)),
 
 	CHOCOLATE_MELTING = create("chocolate_melting", b -> b.require(AllItems.BAR_OF_CHOCOLATE.get())
 		.output(AllFluids.CHOCOLATE.get(), 250)
-		.requiresHeat(HeatCondition.HEATED)),
+		.requiresHeat(AllHeatConditions.HEATED)),
 
 	HONEY = create("honey", b -> b.require(Items.HONEY_BLOCK)
 		.output(AllFluids.HONEY.get(), 1000)
-		.requiresHeat(HeatCondition.HEATED)),
+		.requiresHeat(AllHeatConditions.HEATED)),
 
 	DOUGH = create("dough_by_mixing", b -> b.require(CreateRecipeProvider.I.wheatFlour())
 		.require(Fluids.WATER, 1000)
@@ -60,7 +60,7 @@ public final class CreateMixingRecipeGen extends MixingRecipeGen {
 	BRASS_INGOT = create("brass_ingot", b -> b.require(CreateRecipeProvider.I.copper())
 		.require(CreateRecipeProvider.I.zinc())
 		.output(AllItems.BRASS_INGOT.get(), 2)
-		.requiresHeat(HeatCondition.HEATED)),
+		.requiresHeat(AllHeatConditions.HEATED)),
 
 	ANDESITE_ALLOY = create("andesite_alloy", b -> b.require(Blocks.ANDESITE)
 		.require(CreateRecipeProvider.I.ironNugget())

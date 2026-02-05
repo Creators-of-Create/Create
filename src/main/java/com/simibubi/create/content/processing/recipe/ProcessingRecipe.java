@@ -10,6 +10,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.common.base.Joiner;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
+import com.simibubi.create.api.recipe.HeatCondition;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -108,7 +109,7 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 		if (processingDuration > 0 && !canSpecifyDuration())
 			errors.add("Recipe specified a duration. Durations have no impact on this type of recipe.");
 
-		if (requiredHeat != HeatCondition.NONE && !canRequireHeat())
+		if (!requiredHeat.isEmpty() && !canRequireHeat())
 			errors.add("Recipe specified a heat condition. Heat conditions have no impact on this type of recipe.");
 
 		return errors;

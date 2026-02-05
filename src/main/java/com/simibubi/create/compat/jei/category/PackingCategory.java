@@ -3,7 +3,6 @@ package com.simibubi.create.compat.jei.category;
 import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
-import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -76,13 +75,8 @@ public class PackingCategory extends BasinCategory {
 		}
 
 
-		HeatCondition requiredHeat = recipe.getRequiredHeat();
-		if (requiredHeat != HeatCondition.NONE)
-			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())
-				.draw(graphics, getBackground().getWidth() / 2 + 3, 55);
+		this.drawHeat(recipe, graphics, getBackground().getWidth() / 2 + 3, 55);
 		press.draw(graphics, getBackground().getWidth() / 2 + 3, 34);
-
-
 	}
 
 }

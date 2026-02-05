@@ -96,7 +96,7 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 		return duration(100);
 	}
 
-	public S requiresHeat(HeatCondition condition) {
+	public S requiresHeat(BlazeBurnerHeatCondition condition) {
 		params.requiredHeat = condition;
 		return self();
 	}

@@ -5,17 +5,20 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.api.recipe.HeatCondition;
+
+import com.simibubi.create.compat.jei.CreateJEI;
+
+import mezz.jei.api.gui.drawable.IDrawable;
+
+import net.minecraft.network.chat.Component;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
-import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.utility.CreateLang;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -92,15 +95,11 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		}
 
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
-		if (!requiredHeat.testBlazeBurner(HeatLevel.NONE)) {
+		List<ItemStack> itemHints = requiredHeat.getItemHints();
+		for(int j = 0; j < itemHints.size(); j++) {
 			builder
-					.addSlot(RecipeIngredientRole.RENDER_ONLY, 134, 81)
-					.addItemStack(AllBlocks.BLAZE_BURNER.asStack());
-		}
-		if (!requiredHeat.testBlazeBurner(HeatLevel.KINDLED)) {
-			builder
-					.addSlot(RecipeIngredientRole.CATALYST, 153, 81)
-					.addItemStack(AllItems.BLAZE_CAKE.asStack());
+				.addSlot(RecipeIngredientRole.RENDER_ONLY, 134 + (j * 19), 81)
+				.addItemStack(itemHints.get(j));
 		}
 	}
 
@@ -108,7 +107,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 	public void draw(BasinRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 
-		boolean noHeat = requiredHeat == HeatCondition.NONE;
+		boolean noHeat = requiredHeat.isEmpty();
 
 		int vRows = (1 + recipe.getFluidResults().size() + recipe.getRollableResults().size()) / 2;
 
@@ -123,8 +122,17 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
 		heatBar.render(graphics, 4, 80);
-		graphics.drawString(Minecraft.getInstance().font, CreateLang.translateDirect(requiredHeat.getTranslationKey()), 9,
+
+		graphics.drawString(Minecraft.getInstance().font, Component.translatable(requiredHeat.getTranslationKey()), 9,
 				86, requiredHeat.getColor(), false);
 	}
 
+	public void drawHeat(BasinRecipe recipe, GuiGraphics graphics, int xOffset, int yOffset) {
+		HeatCondition requiredHeat = recipe.getRequiredHeat();
+		if (!requiredHeat.isEmpty()) {
+			IDrawable drawable = CreateJEI.HEAT_CONDITION_DRAWABLES.get(requiredHeat);
+			if (drawable != null)
+				drawable.draw(graphics, xOffset, yOffset);
+		}
+	}
 }
