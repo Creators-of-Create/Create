@@ -17,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 
 import net.minecraft.world.level.Level;
 
+import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -63,5 +64,6 @@ public interface HeatCondition {
 		return 0xffffff;
 	}
 
-	default boolean isEmpty() { return false; }
+	@Internal
+	default boolean isEmpty() { return this == NONE; }
 }

@@ -15,9 +15,4 @@ public class EmptyHeatCondition implements HeatCondition {
 	public String getTranslationKey() {
 		return "create.recipe.heat_requirement.none";
 	}
-
-	@Override
-	public boolean isEmpty() {
-		return true;
-	}
 }
