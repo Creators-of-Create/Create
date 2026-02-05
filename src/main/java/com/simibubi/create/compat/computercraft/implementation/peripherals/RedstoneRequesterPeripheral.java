@@ -49,10 +49,16 @@ public class RedstoneRequesterPeripheral extends SyncedPeripheral<RedstoneReques
 
 		List<BigItemStack> orderStacks = generateOrder(arguments);
 
-		PackageOrder order = new PackageOrder(orderStacks);
 		CraftingEntry orderContext = new CraftingEntry(new PackageOrder(orderStacks.stream()
 				.map(stack -> new BigItemStack(stack.stack.copyWithCount(1)))
 				.toList()), count);
+
+		// Multiply counts by batch count for the actual order (items to pull from storage)
+		List<BigItemStack> multipliedStacks = orderStacks.stream()
+				.map(stack -> stack.stack.isEmpty() ? stack : new BigItemStack(stack.stack, stack.count * count))
+				.toList();
+
+		PackageOrder order = new PackageOrder(multipliedStacks);
 
 		this.blockEntity.encodedRequest = new PackageOrderWithCrafts(order, List.of(orderContext));
 		this.blockEntity.notifyUpdate();
