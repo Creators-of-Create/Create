@@ -1,14 +1,15 @@
 package com.simibubi.create.api.recipe;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.simibubi.create.AllHeatConditions;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 
 import com.simibubi.create.api.registry.CreateRegistries;
 
 import com.simibubi.create.content.processing.recipe.EmptyHeatCondition;
 
-import com.simibubi.create.foundation.codec.CreateCodecs;
-
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -33,7 +34,16 @@ import java.util.List;
  */
 public interface HeatCondition {
 	HeatCondition NONE = new EmptyHeatCondition();
-	Codec<HeatCondition> CODEC = CreateCodecs.byNameCodecWithCreateDefault(CreateBuiltInRegistries.HEAT_CONDITION);
+	Codec<HeatCondition> CODEC = Util.make(() -> {
+		Codec<HeatCondition> byLegacyName = Codec.STRING.flatXmap(string -> switch (string) {
+			case "none" -> DataResult.success(HeatCondition.NONE);
+			case "heated" -> DataResult.success(AllHeatConditions.HEATED);
+			case "superheated" -> DataResult.success(AllHeatConditions.SUPERHEATED);
+			default -> DataResult.error(() -> "Not a legacy name");
+		}, condition -> DataResult.error(() -> "Cannot encode by legacy name"));
+
+		return Codec.withAlternative(CreateBuiltInRegistries.HEAT_CONDITION.byNameCodec(), byLegacyName);
+	});
 	StreamCodec<RegistryFriendlyByteBuf, HeatCondition> STREAM_CODEC = ByteBufCodecs.registry(CreateRegistries.HEAT_CONDITION);
 
 	/**
