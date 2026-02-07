@@ -406,8 +406,14 @@ public class BeltInventory {
 
 	public void read(CompoundTag nbt) {
 		items.clear();
+		toInsert.clear();
+		toRemove.clear();
 		nbt.getList("Items", Tag.TAG_COMPOUND)
 			.forEach(inbt -> items.add(TransportedItemStack.read((CompoundTag) inbt)));
+		nbt.getList("ToInsert", Tag.TAG_COMPOUND)
+			.forEach(inbt -> toInsert.add(TransportedItemStack.read((CompoundTag) inbt)));
+		nbt.getList("ToRemove", Tag.TAG_COMPOUND)
+			.forEach(inbt -> toRemove.add(TransportedItemStack.read((CompoundTag) inbt)));
 		if (nbt.contains("LazyItem"))
 			lazyClientItem = TransportedItemStack.read(nbt.getCompound("LazyItem"));
 		beltMovementPositive = nbt.getBoolean("PositiveOrder");
@@ -416,8 +422,14 @@ public class BeltInventory {
 	public CompoundTag write() {
 		CompoundTag nbt = new CompoundTag();
 		ListTag itemsNBT = new ListTag();
+		ListTag toInsertNBT = new ListTag();
+		ListTag toRemoveNBT = new ListTag();
 		items.forEach(stack -> itemsNBT.add(stack.serializeNBT()));
+		toInsert.forEach(stack -> toInsertNBT.add(stack.serializeNBT()));
+		toRemove.forEach(stack -> toRemoveNBT.add(stack.serializeNBT()));
 		nbt.put("Items", itemsNBT);
+		nbt.put("ToInsert", toInsertNBT);
+		nbt.put("ToRemove", toRemoveNBT);
 		if (lazyClientItem != null)
 			nbt.put("LazyItem", lazyClientItem.serializeNBT());
 		nbt.putBoolean("PositiveOrder", beltMovementPositive);
