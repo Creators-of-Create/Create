@@ -7,8 +7,6 @@ import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 
 import com.simibubi.create.api.registry.CreateRegistries;
 
-import com.simibubi.create.content.processing.recipe.EmptyHeatCondition;
-
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -18,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 
 import net.minecraft.world.level.Level;
 
-import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -33,10 +30,9 @@ import java.util.List;
  * </p>
  */
 public interface HeatCondition {
-	HeatCondition NONE = new EmptyHeatCondition();
 	Codec<HeatCondition> CODEC = Util.make(() -> {
 		Codec<HeatCondition> byLegacyName = Codec.STRING.flatXmap(string -> switch (string) {
-			case "none" -> DataResult.success(HeatCondition.NONE);
+			case "none" -> DataResult.success(null);
 			case "heated" -> DataResult.success(AllHeatConditions.HEATED);
 			case "superheated" -> DataResult.success(AllHeatConditions.SUPERHEATED);
 			default -> DataResult.error(() -> "Not a legacy name");
@@ -57,10 +53,13 @@ public interface HeatCondition {
 	/**
 	 * @return The HeatingCondition's translation key.
 	 */
-	String getTranslationKey();
+	default String getTranslationKey() {
+		return Util.makeDescriptionId("create.recipe.heat_requirement", CreateBuiltInRegistries.HEAT_CONDITION.getKeyOrNull(this));
+	}
 
 	/**
-	 * Provides items associated with this HeatCondition (e.g. a Blaze Burner)
+	 * Provides items associated with this HeatCondition (e.g. a Blaze Burner).
+	 * This is shown in JEI and should be cached.
 	 */
 	@NotNull
 	default List<ItemStack> getItemHints() {
@@ -73,7 +72,4 @@ public interface HeatCondition {
 	default int getColor() {
 		return 0xffffff;
 	}
-
-	@Internal
-	default boolean isEmpty() { return this == NONE; }
 }

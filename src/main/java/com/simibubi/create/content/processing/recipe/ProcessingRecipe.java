@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Joiner;
@@ -39,7 +40,7 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 	protected NonNullList<SizedFluidIngredient> fluidIngredients;
 	protected NonNullList<FluidStack> fluidResults;
 	protected int processingDuration;
-	protected HeatCondition requiredHeat;
+	@Nullable protected HeatCondition requiredHeat;
 
 	private RecipeType<?> type;
 	private RecipeSerializer<?> serializer;
@@ -109,7 +110,7 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 		if (processingDuration > 0 && !canSpecifyDuration())
 			errors.add("Recipe specified a duration. Durations have no impact on this type of recipe.");
 
-		if (!requiredHeat.isEmpty() && !canRequireHeat())
+		if (requiredHeat != null && !canRequireHeat())
 			errors.add("Recipe specified a heat condition. Heat conditions have no impact on this type of recipe.");
 
 		return errors;
@@ -165,6 +166,7 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 		return processingDuration;
 	}
 
+	@Nullable
 	public HeatCondition getRequiredHeat() {
 		return requiredHeat;
 	}

@@ -10,12 +10,12 @@ import java.util.function.Predicate;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllHeatConditions;
 import com.simibubi.create.api.recipe.HeatCondition;
 import com.simibubi.create.api.registry.SimpleRegistry;
 
 import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.content.processing.recipe.BlazeBurnerHeatCondition;
 
 import mezz.jei.api.gui.drawable.IDrawable;
 
@@ -492,8 +492,8 @@ public class CreateJEI implements IModPlugin {
 	public void onRuntimeAvailable(IJeiRuntime runtime) {
 		CreateJEI.runtime = runtime;
 
-		HEAT_CONDITION_DRAWABLES.register(BlazeBurnerHeatCondition.HEATED, new AnimatedBlazeBurner().withHeat(HeatLevel.KINDLED));
-		HEAT_CONDITION_DRAWABLES.register(BlazeBurnerHeatCondition.SUPERHEATED, new AnimatedBlazeBurner().withHeat(HeatLevel.SEETHING));
+		HEAT_CONDITION_DRAWABLES.register(AllHeatConditions.HEATED, new AnimatedBlazeBurner().withHeat(HeatLevel.KINDLED));
+		HEAT_CONDITION_DRAWABLES.register(AllHeatConditions.SUPERHEATED, new AnimatedBlazeBurner().withHeat(HeatLevel.SEETHING));
 	}
 
 }

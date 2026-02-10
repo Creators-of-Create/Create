@@ -792,7 +792,8 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		return true;
 	}
 
-	@NotNull HeatLevel getHeatLevel() {
+	@NotNull
+	public HeatLevel getHeatLevel() {
 		if (cachedHeatLevel == null) {
 			if (level == null)
 				return HeatLevel.NONE;

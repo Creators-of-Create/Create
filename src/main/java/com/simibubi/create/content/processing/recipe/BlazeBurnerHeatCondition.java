@@ -4,6 +4,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.recipe.HeatCondition;
 
+import com.simibubi.create.content.processing.basin.BasinBlockEntity;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 
@@ -26,18 +28,23 @@ public enum BlazeBurnerHeatCondition implements HeatCondition {
 
 	private final int color;
 	private final HeatLevel heatLevel;
-	private final List<ItemLike> itemHints;
+	private final List<ItemLike> itemsForItemHints;
+	private List<ItemStack> itemHints;
 
 	BlazeBurnerHeatCondition(int color, HeatLevel heatLevel, ItemLike... hints) {
 		this.color = color;
 		this.heatLevel = heatLevel;
-		this.itemHints = List.of(hints);
+		this.itemsForItemHints = List.of(hints);
 	}
 
 	@Override
 	public boolean test(Level level, BlockPos testPos) {
+		if (level.getBlockEntity(testPos) instanceof BasinBlockEntity basin)
+			return basin.getHeatLevel().isAtLeast(heatLevel); // use the Basin's caching to improve performance here
+
 		BlockState stateBelow = level.getBlockState(testPos.below());
-		if(!stateBelow.is(AllBlocks.BLAZE_BURNER.get())) return false;
+		if (!stateBelow.hasProperty(BlazeBurnerBlock.HEAT_LEVEL)) return false;
+
 		HeatLevel basinHeat = stateBelow.getValue(BlazeBurnerBlock.HEAT_LEVEL);
 		return basinHeat.isAtLeast(heatLevel);
 	}
@@ -45,18 +52,17 @@ public enum BlazeBurnerHeatCondition implements HeatCondition {
 	@Override
 	@NotNull
 	public List<ItemStack> getItemHints() {
-		return itemHints.stream().map(ItemStack::new).toList();
+		if (this.itemHints == null)
+			this.itemHints = this.itemsForItemHints.stream().map(ItemStack::new).toList();
+		return itemHints;
+	}
+
+	@Override
+	public int getColor() {
+		return color;
 	}
 
 	public String serialize() {
 		return Lang.asId(name());
-	}
-
-	public String getTranslationKey() {
-		return "create.recipe.heat_requirement." + serialize();
-	}
-
-	public int getColor() {
-		return color;
 	}
 }

@@ -7,7 +7,6 @@ import com.simibubi.create.content.processing.recipe.BlazeBurnerHeatCondition;
 import net.minecraft.core.Registry;
 
 public class AllHeatConditions {
-	public static final HeatCondition NONE = register("none", HeatCondition.NONE);
 	public static final BlazeBurnerHeatCondition HEATED = register("heated", BlazeBurnerHeatCondition.HEATED);
 	public static final BlazeBurnerHeatCondition SUPERHEATED = register("superheated", BlazeBurnerHeatCondition.SUPERHEATED);
 

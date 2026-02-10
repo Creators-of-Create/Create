@@ -2,6 +2,7 @@ package com.simibubi.create.content.processing.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.mojang.datafixers.util.Either;
@@ -21,6 +22,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
+import javax.annotation.Nullable;
+
 public class ProcessingRecipeParams {
 	public static MapCodec<ProcessingRecipeParams> CODEC = codec(ProcessingRecipeParams::new);
 	public static StreamCodec<RegistryFriendlyByteBuf, ProcessingRecipeParams> STREAM_CODEC = streamCodec(ProcessingRecipeParams::new);
@@ -30,7 +33,7 @@ public class ProcessingRecipeParams {
 	protected NonNullList<SizedFluidIngredient> fluidIngredients;
 	protected NonNullList<FluidStack> fluidResults;
 	protected int processingDuration;
-	protected HeatCondition requiredHeat;
+	@Nullable protected HeatCondition requiredHeat;
 
 	protected ProcessingRecipeParams() {
 		ingredients = NonNullList.create();
@@ -38,7 +41,7 @@ public class ProcessingRecipeParams {
 		fluidIngredients = NonNullList.create();
 		fluidResults = NonNullList.create();
 		processingDuration = 0;
-		requiredHeat = HeatCondition.NONE;
+		requiredHeat = null;
 	}
 
 	protected static <P extends ProcessingRecipeParams> MapCodec<P> codec(Supplier<P> factory) {
@@ -49,8 +52,8 @@ public class ProcessingRecipeParams {
 				.forGetter(ProcessingRecipeParams::results),
 			Codec.INT.optionalFieldOf("processing_time", 0)
 				.forGetter(ProcessingRecipeParams::processingDuration),
-			HeatCondition.CODEC.optionalFieldOf("heat_requirement", HeatCondition.NONE)
-				.forGetter(ProcessingRecipeParams::requiredHeat)
+			HeatCondition.CODEC.optionalFieldOf("heat_requirement")
+				.forGetter(ProcessingRecipeParams::optionalRequiredHeat)
 		).apply(instance, (ingredients, results, processingDuration, requiredHeat) -> {
 			P params = factory.get();
 			ingredients.forEach(either -> either
@@ -60,7 +63,7 @@ public class ProcessingRecipeParams {
 				.ifRight(params.results::add)
 				.ifLeft(params.fluidResults::add));
 			params.processingDuration = processingDuration;
-			params.requiredHeat = requiredHeat;
+			params.requiredHeat = requiredHeat.orElse(null);
 			return params;
 		}));
 	}
@@ -95,9 +98,7 @@ public class ProcessingRecipeParams {
 		return processingDuration;
 	}
 
-	protected final HeatCondition requiredHeat() {
-		return requiredHeat;
-	}
+	protected final Optional<HeatCondition> optionalRequiredHeat() { return Optional.ofNullable(requiredHeat); }
 
 	protected void encode(RegistryFriendlyByteBuf buffer) {
 		CatnipStreamCodecBuilders.nonNullList(Ingredient.CONTENTS_STREAM_CODEC).encode(buffer, ingredients);
@@ -105,7 +106,7 @@ public class ProcessingRecipeParams {
 		CatnipStreamCodecBuilders.nonNullList(ProcessingOutput.STREAM_CODEC).encode(buffer, results);
 		CatnipStreamCodecBuilders.nonNullList(FluidStack.STREAM_CODEC).encode(buffer, fluidResults);
 		ByteBufCodecs.VAR_INT.encode(buffer, processingDuration);
-		HeatCondition.STREAM_CODEC.encode(buffer, requiredHeat);
+		HeatCondition.STREAM_CODEC.apply(ByteBufCodecs::optional).encode(buffer, optionalRequiredHeat());
 	}
 
 	protected void decode(RegistryFriendlyByteBuf buffer) {
@@ -114,6 +115,6 @@ public class ProcessingRecipeParams {
 		results = CatnipStreamCodecBuilders.nonNullList(ProcessingOutput.STREAM_CODEC).decode(buffer);
 		fluidResults = CatnipStreamCodecBuilders.nonNullList(FluidStack.STREAM_CODEC).decode(buffer);
 		processingDuration = ByteBufCodecs.VAR_INT.decode(buffer);
-		requiredHeat = HeatCondition.STREAM_CODEC.decode(buffer);
+		requiredHeat = HeatCondition.STREAM_CODEC.apply(ByteBufCodecs::optional).decode(buffer).orElse(null);
 	}
 }

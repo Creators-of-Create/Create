@@ -95,6 +95,8 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		}
 
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
+		if(requiredHeat == null) return;
+
 		List<ItemStack> itemHints = requiredHeat.getItemHints();
 		for(int j = 0; j < itemHints.size(); j++) {
 			builder
@@ -107,7 +109,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 	public void draw(BasinRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 
-		boolean noHeat = requiredHeat.isEmpty();
+		boolean noHeat = requiredHeat == null;
 
 		int vRows = (1 + recipe.getFluidResults().size() + recipe.getRollableResults().size()) / 2;
 
@@ -123,13 +125,15 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
 		heatBar.render(graphics, 4, 80);
 
-		graphics.drawString(Minecraft.getInstance().font, Component.translatable(requiredHeat.getTranslationKey()), 9,
-				86, requiredHeat.getColor(), false);
+		String translationKey = noHeat ? "create.recipe.heat_requirement.create.none" : requiredHeat.getTranslationKey();
+		int color = noHeat ? 0xFFFFFF : requiredHeat.getColor();
+		graphics.drawString(Minecraft.getInstance().font, Component.translatable(translationKey), 9,
+				86, color, false);
 	}
 
 	public void drawHeat(BasinRecipe recipe, GuiGraphics graphics, int xOffset, int yOffset) {
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
-		if (!requiredHeat.isEmpty()) {
+		if (requiredHeat != null) {
 			IDrawable drawable = CreateJEI.HEAT_CONDITION_DRAWABLES.get(requiredHeat);
 			if (drawable != null)
 				drawable.draw(graphics, xOffset, yOffset);

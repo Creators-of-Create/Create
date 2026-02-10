@@ -75,9 +75,9 @@
 
 	"create.recipe.processing.chance": "%1$s%% Chance",
 	"create.recipe.deploying.not_consumed": "Not Consumed",
-	"create.recipe.heat_requirement.none": "No Heating Required",
-	"create.recipe.heat_requirement.heated": "Heated",
-	"create.recipe.heat_requirement.superheated": "Super-Heated",
+	"create.recipe.heat_requirement.create.none": "No Heating Required",
+	"create.recipe.heat_requirement.create.heated": "Heated",
+	"create.recipe.heat_requirement.create.superheated": "Super-Heated",
 
 	"create.generic.range": "Range",
 	"create.generic.radius": "Radius",
