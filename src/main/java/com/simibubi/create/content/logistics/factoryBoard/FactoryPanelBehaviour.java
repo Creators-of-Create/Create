@@ -21,6 +21,8 @@ import com.mojang.serialization.Codec;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.event.CreateRequestKind;
+import com.simibubi.create.api.event.FactoryPanelRequestEvent;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelSlot;
 import com.simibubi.create.content.logistics.filter.FilterItem;
@@ -85,6 +87,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.Tags.Items;
+import net.neoforged.neoforge.common.NeoForge;
 
 public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuProvider {
 
@@ -483,6 +486,15 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		for (Entry<UUID, Collection<BigItemStack>> entry : asMap.entrySet()) {
 			PackageOrderWithCrafts order =
 				new PackageOrderWithCrafts(new PackageOrder(new ArrayList<>(entry.getValue())), craftingContext.orderedCrafts());
+			FactoryPanelRequestEvent event = new FactoryPanelRequestEvent(
+				this,
+				entry.getKey(),
+				order,
+				recipeAddress,
+				CreateRequestKind.CRAFTING);
+			NeoForge.EVENT_BUS.post(event);
+			if (event.isCanceled())
+				continue;
 			Multimap<PackagerBlockEntity, PackagingRequest> request =
 				LogisticsManager.findPackagersForRequest(entry.getKey(), order, null, recipeAddress);
 			requests.add(request);
@@ -531,11 +543,21 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		BigItemStack orderedItem = new BigItemStack(item, Math.min(amountToOrder, availableOnNetwork));
 		PackageOrderWithCrafts order = PackageOrderWithCrafts.simple(List.of(orderedItem));
 
-		sendEffect(getPanelPosition(), true);
+		FactoryPanelRequestEvent event = new FactoryPanelRequestEvent(
+			this,
+			network,
+			order,
+			recipeAddress,
+			CreateRequestKind.RESTOCK);
+		NeoForge.EVENT_BUS.post(event);
+		if (event.isCanceled())
+			return;
 
 		if (!LogisticsManager.broadcastPackageRequest(network, RequestType.RESTOCK, order,
 			packager.targetInventory.getIdentifiedInventory(), recipeAddress))
 			return;
+
+		sendEffect(getPanelPosition(), true);
 
 		restockerPromises.add(new RequestPromise(orderedItem));
 	}
