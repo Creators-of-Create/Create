@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import net.neoforged.neoforge.capabilities.Capabilities.FluidHandler;
+import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -378,8 +381,8 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		if (!(blockState.getBlock() instanceof BasinBlock))
 			return;
 		Direction direction = blockState.getValue(BasinBlock.FACING);
-		BlockEntity be = level.getBlockEntity(worldPosition.below()
-			.relative(direction));
+		BlockPos out = worldPosition.below().relative(direction);
+		BlockEntity be = level.getBlockEntity(out);
 
 		FilteringBehaviour filter = null;
 		InvManipulationBehaviour inserter = null;
@@ -391,12 +394,10 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		if (filter != null && filter.isRecipeFilter())
 			filter = null; // Do not test spout outputs against the recipe filter
 
-		IItemHandler targetInv = be == null ? null
-			: Optional.ofNullable(level.getCapability(Capabilities.ItemHandler.BLOCK, be.getBlockPos(), direction.getOpposite()))
-			.orElse(inserter == null ? null : inserter.getInventory());
+		IItemHandler targetInv = level.getCapability(ItemHandler.BLOCK, out, direction.getOpposite());
+		if(targetInv == null && inserter != null) targetInv = inserter.getInventory();
 
-		IFluidHandler targetTank = be == null ? null
-			: level.getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), direction.getOpposite());
+		IFluidHandler targetTank = level.getCapability(FluidHandler.BLOCK, out, direction.getOpposite());
 
 		boolean update = false;
 
@@ -537,16 +538,15 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		Direction direction = blockState.getValue(BasinBlock.FACING);
 		if (direction != Direction.DOWN) {
 
-			BlockEntity be = level.getBlockEntity(worldPosition.below()
-				.relative(direction));
+			BlockPos out = worldPosition.below().relative(direction);
+			BlockEntity be = level.getBlockEntity(out);
 
 			InvManipulationBehaviour inserter =
 				be == null ? null : BlockEntityBehaviour.get(level, be.getBlockPos(), InvManipulationBehaviour.TYPE);
-			IItemHandler targetInv = be == null ? null
-				: Optional.ofNullable(level.getCapability(Capabilities.ItemHandler.BLOCK, be.getBlockPos(), direction.getOpposite()))
-				.orElse(inserter == null ? null : inserter.getInventory());
-			IFluidHandler targetTank = be == null ? null
-				: level.getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), direction.getOpposite());
+
+			IItemHandler targetInv = level.getCapability(ItemHandler.BLOCK, out, direction.getOpposite());
+			if(targetInv == null && inserter != null) targetInv = inserter.getInventory();
+			IFluidHandler targetTank = level.getCapability(Capabilities.FluidHandler.BLOCK, out, direction.getOpposite());
 			boolean externalTankNotPresent = targetTank == null;
 
 			if (!outputItems.isEmpty() && targetInv == null)

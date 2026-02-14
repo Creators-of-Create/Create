@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.minecraft.world.level.Level;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -247,10 +249,8 @@ public class CreateGameTestHelper extends GameTestHelper {
 	// transfer - fluids
 
 	public IFluidHandler fluidStorageAt(BlockPos pos) {
-		BlockEntity be = getBlockEntity(pos);
-		if (be == null)
-			fail("BlockEntity not present");
-		IFluidHandler handler = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+		Level level = getLevel();
+		IFluidHandler handler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
 		if (handler == null)
 			fail("handler not present");
 		return handler;

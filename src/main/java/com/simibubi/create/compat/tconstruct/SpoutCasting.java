@@ -8,7 +8,6 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -23,11 +22,7 @@ public enum SpoutCasting implements BlockSpoutingBehaviour {
 		if (!enabled())
 			return 0;
 
-		BlockEntity blockEntity = level.getBlockEntity(pos);
-		if (blockEntity == null)
-			return 0;
-
-		IFluidHandler handler = level.getCapability(Capabilities.FluidHandler.BLOCK, blockEntity.getBlockPos(), Direction.UP);
+		IFluidHandler handler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, Direction.UP);
 		if (handler == null)
 			return 0;
 		if (handler.getTanks() != 1)

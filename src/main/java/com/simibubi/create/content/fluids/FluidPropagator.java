@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.neoforged.neoforge.common.extensions.ILevelExtension;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllTags.AllBlockTags;
@@ -22,7 +24,6 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.data.Pair;
@@ -200,12 +201,8 @@ public class FluidPropagator {
 	}
 
 	public static boolean hasFluidCapability(BlockGetter world, BlockPos pos, Direction side) {
-		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (blockEntity == null || blockEntity.getLevel() == null)
-			return false;
-		IFluidHandler capability =
-			blockEntity.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, blockEntity.getBlockPos(), side);
-		return capability != null;
+		if(!(world instanceof ILevelExtension level)) return false; //Maybe we can just pass a ILevelExtension as parameter instead of returning false here
+		return level.getCapability(Capabilities.FluidHandler.BLOCK, pos, side) != null;
 	}
 
 	@Nullable

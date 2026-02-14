@@ -97,14 +97,15 @@ public class ThresholdSwitchBlock extends DirectedDirectionalBlock implements IB
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState state = defaultBlockState();
+		Level level = context.getLevel();
+
 
 		Direction preferredFacing = null;
 		for (Direction face : context.getNearestLookingDirections()) {
-			BlockEntity be = context.getLevel()
-				.getBlockEntity(context.getClickedPos()
-					.relative(face));
-			if (be != null && (be.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, be.getBlockPos(), null) != null ||
-					be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null) != null)) {
+			BlockPos pos = context.getClickedPos()
+				.relative(face);
+			if (level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null) != null ||
+					level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null) != null) {
 				preferredFacing = face;
 				break;
 			}
