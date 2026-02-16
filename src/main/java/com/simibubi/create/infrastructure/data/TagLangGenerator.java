@@ -79,6 +79,7 @@ public class TagLangGenerator {
 		translate(AllBlockTags.NON_MOVABLE, "Non-movable");
 		translate(AllBlockTags.NON_BREAKABLE, "Non-breakable");
 		translate(AllBlockTags.PASSIVE_BOILER_HEATERS, "Passive Boiler Heaters");
+		translate(AllBlockTags.DOUBLE_HIGH_CROPS, "Double-High Crops");
 		translate(AllBlockTags.SAFE_NBT, "Safe NBT");
 		translate(AllBlockTags.SEATS, AllItemTags.SEATS, "Seats");
 		translate(AllBlockTags.POSTBOXES, AllItemTags.POSTBOXES, "Postboxes");

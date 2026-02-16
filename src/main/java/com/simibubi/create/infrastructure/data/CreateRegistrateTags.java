@@ -162,6 +162,9 @@ public class CreateRegistrateTags {
 			"connector_hv", "connector_hv_relay", "connector_bundled", "connector_structural",
 			"connector_redstone", "connector_probe", "breaker_switch"));
 
+		TagGen.addOptional(prov.tag(AllBlockTags.DOUBLE_HIGH_CROPS.tag), Mods.IE,
+			List.of("hemp"));
+
 		TagGen.addOptional(prov.tag(AllBlockTags.ROOTS.tag), Mods.TF,
 			List.of("root", "liveroot_block", "mangrove_root"));
 	}
