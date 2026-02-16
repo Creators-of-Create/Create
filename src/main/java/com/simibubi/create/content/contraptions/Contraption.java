@@ -1109,6 +1109,8 @@ public abstract class Contraption {
 
 		translateMultiblockControllers(transform);
 
+		GhostPlacementServerLevel ghostLevel = null;
+
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
 			for (StructureBlockInfo block : blocks.values()) {
 				if (nonBrittles == BlockMovementChecks.isBrittle(block.state()))
@@ -1129,12 +1131,25 @@ public abstract class Contraption {
 				if (blockState.getDestroySpeed(world, targetPos) == -1 || (state.getCollisionShape(world, targetPos)
 					.isEmpty()
 					&& !blockState.getCollisionShape(world, targetPos)
-					.isEmpty())) {
+					.isEmpty()) || world.isOutsideBuildHeight(targetPos) || (state.isAir() && !block.state().isAir())) {
+					state = block.state();
 					if (targetPos.getY() == world.getMinBuildHeight())
 						targetPos = targetPos.above();
 					world.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, targetPos, Block.getId(state));
-					if (shouldDropBlocks) {
-						Block.dropResources(state, world, targetPos, null);
+					if (!shouldDropBlocks)
+						continue;
+					if (ghostLevel == null && world instanceof ServerLevel serverWorld)
+						ghostLevel = new GhostPlacementServerLevel(serverWorld);
+					if (ghostLevel != null) {
+						ghostLevel.setBlock(targetPos, state, Block.UPDATE_NONE);
+						BlockEntity blockEntity = ghostLevel.getBlockEntity(targetPos);
+						if (blockEntity != null) {
+							CompoundTag tag = block.nbt();
+							tag = NBTProcessors.process(state, blockEntity, tag, false);
+							if (tag != null)
+								blockEntity.loadWithComponents(tag, ghostLevel.registryAccess());
+						}
+						ghostLevel.destroyBlock(targetPos, true);
 					}
 					continue;
 				}
