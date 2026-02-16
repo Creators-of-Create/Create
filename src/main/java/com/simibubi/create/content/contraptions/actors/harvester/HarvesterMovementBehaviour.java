@@ -82,6 +82,17 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 			effectChance = .45f;
 		}
 
+		if (AllBlockTags.DOUBLE_HIGH_CROPS.matches(stateVisited)) {
+			BlockPos upperPos = pos.above();
+			BlockState upperState = world.getBlockState(upperPos);
+			if (upperState.is(stateVisited.getBlock())) {
+				BlockHelper.destroyBlockAs(world, upperPos, null,
+					item, effectChance,
+					stack -> collectOrDropItem(context, stack)
+				);
+			}
+		}
+
 		MutableBoolean seedSubtracted = new MutableBoolean(notCropButCuttable);
 		BlockState state = stateVisited;
 		BlockHelper.destroyBlockAs(world, pos, null, item, effectChance, stack -> {
@@ -100,6 +111,14 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 	public boolean isValidCrop(Level world, BlockPos pos, BlockState state) {
 		boolean harvestPartial = AllConfigs.server().kinetics.harvestPartiallyGrown.get();
 		boolean replant = AllConfigs.server().kinetics.harvesterReplants.get();
+
+		if (AllBlockTags.DOUBLE_HIGH_CROPS.matches(state)) {
+			BlockPos upperPos = pos.above();
+			BlockState upperState = world.getBlockState(upperPos);
+			if (!harvestPartial && !upperState.is(state.getBlock())) {
+				return false;
+			}
+		}
 
 		if (state.getBlock() instanceof CropBlock crop) {
 			if (harvestPartial)
