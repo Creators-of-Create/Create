@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
@@ -66,6 +67,7 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 			return;
 
 		boolean notCropButCuttable = false;
+		boolean upperDouble = false;
 
 		if (!isValidCrop(world, pos, stateVisited)) {
 			if (isValidOther(world, pos, stateVisited))
@@ -83,17 +85,30 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 		}
 
 		if (AllBlockTags.DOUBLE_HIGH_CROPS.matches(stateVisited)) {
-			BlockPos upperPos = pos.above();
-			BlockState upperState = world.getBlockState(upperPos);
-			if (upperState.is(stateVisited.getBlock())) {
-				BlockHelper.destroyBlockAs(world, upperPos, null,
-					item, effectChance,
-					stack -> collectOrDropItem(context, stack)
-				);
+			DoubleBlockHalf half = stateVisited
+				.getOptionalValue(BlockStateProperties.DOUBLE_BLOCK_HALF)
+				.orElse(DoubleBlockHalf.LOWER);
+			if (half == DoubleBlockHalf.UPPER) {
+				if (world.getBlockState(pos.below()).is(stateVisited.getBlock())) {
+					// This does not need to be replanted, a lower block is present.
+					upperDouble = true;
+				}
+			} else {
+				// Lower block - collect drops from the upper block, it'll
+				// break when we harvest the lower.
+				BlockPos upperPos = pos.above();
+				BlockState upperState = world.getBlockState(upperPos);
+				if (upperState.is(stateVisited.getBlock())) {
+					BlockHelper.destroyBlockAs(
+						world, upperPos, null,
+						item, effectChance,
+						stack -> collectOrDropItem(context, stack)
+					);
+				}
 			}
 		}
 
-		MutableBoolean seedSubtracted = new MutableBoolean(notCropButCuttable);
+		MutableBoolean seedSubtracted = new MutableBoolean(notCropButCuttable || upperDouble);
 		BlockState state = stateVisited;
 		BlockHelper.destroyBlockAs(world, pos, null, item, effectChance, stack -> {
 			if (AllConfigs.server().kinetics.harvesterReplants.get() && !seedSubtracted.getValue()
@@ -113,10 +128,18 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 		boolean replant = AllConfigs.server().kinetics.harvesterReplants.get();
 
 		if (AllBlockTags.DOUBLE_HIGH_CROPS.matches(state)) {
-			BlockPos upperPos = pos.above();
-			BlockState upperState = world.getBlockState(upperPos);
-			if (!harvestPartial && !upperState.is(state.getBlock())) {
-				return false;
+			DoubleBlockHalf half = state.getOptionalValue(BlockStateProperties.DOUBLE_BLOCK_HALF)
+				.orElse(DoubleBlockHalf.LOWER);
+			if (half == DoubleBlockHalf.UPPER) {
+				if (!world.getBlockState(pos.below()).is(state.getBlock())) {
+					return false;
+				}
+			} else {
+				BlockPos upperPos = pos.above();
+				BlockState upperState = world.getBlockState(upperPos);
+				if (!harvestPartial && !upperState.is(state.getBlock())) {
+					return false;
+				}
 			}
 		}
 
@@ -192,6 +215,15 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 		}
 
 		Block block = state.getBlock();
+		if (AllBlockTags.DOUBLE_HIGH_CROPS.matches(block) && state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)) {
+			if (state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER) {
+				if (state.getFluidState()
+					.isEmpty())
+					return Blocks.AIR.defaultBlockState();
+				return state.getFluidState()
+					.createLegacyBlock();
+			}
+		}
 		if (block instanceof CropBlock crop) {
 			BlockState newState = crop.getStateForAge(0);
 			if (!newState.is(block))
