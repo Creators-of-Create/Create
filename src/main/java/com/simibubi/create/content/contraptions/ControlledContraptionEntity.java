@@ -191,6 +191,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		context.motion = Vec3.atLowerCornerOf(facing.getNormal())
 			.scale(angleDelta / 360.0);
 		context.relativeMotion = context.motion;
+		context.realMotionIsZero = true;
 		int timer = context.data.getInt("StationaryTimer");
 		if (timer > 0) {
 			context.data.putInt("StationaryTimer", timer - 1);
