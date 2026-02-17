@@ -5,7 +5,6 @@ import static com.simibubi.create.content.contraptions.piston.MechanicalPistonBl
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -16,6 +15,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.SequencedMap;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -144,7 +144,7 @@ public abstract class Contraption {
 	public boolean disassembled;
 
 	// TODO: SoA to reduce map lookups.
-	protected Map<BlockPos, StructureBlockInfo> blocks;
+	protected SequencedMap<BlockPos, StructureBlockInfo> blocks;
 	protected Map<BlockPos, CompoundTag> updateTags;
 	public Object2BooleanMap<BlockPos> isLegacy;
 	protected List<MutablePair<StructureBlockInfo, MovementContext>> actors;
@@ -1011,12 +1011,6 @@ public abstract class Contraption {
 	}
 
 	public void removeBlocksFromWorld(Level world, BlockPos offset) {
-		// Invert order of the blocks LinkedHashMap, so all posterior iterations are inverted
-		List<Map.Entry<BlockPos, StructureBlockInfo>> entries = new ArrayList<>(blocks.entrySet());
-		Collections.reverse(entries);
-		blocks.clear();
-		entries.forEach(e -> blocks.put(e.getKey(), e.getValue()));
-
 		glueToRemove.forEach(glue -> {
 			superglue.add(glue.getBoundingBox()
 				.move(Vec3.atLowerCornerOf(offset.offset(anchor))
@@ -1029,7 +1023,7 @@ public abstract class Contraption {
 			minimisedGlue.add(null);
 
 		for (boolean brittles : Iterate.trueAndFalse) {
-			for (Iterator<StructureBlockInfo> iterator = blocks.values()
+			for (Iterator<StructureBlockInfo> iterator = blocks.reversed().values()
 				.iterator(); iterator.hasNext(); ) {
 				StructureBlockInfo block = iterator.next();
 				if (brittles != BlockMovementChecks.isBrittle(block.state()))
@@ -1077,7 +1071,7 @@ public abstract class Contraption {
 				superglue.add(bb);
 		}
 
-		for (StructureBlockInfo block : blocks.values()) {
+		for (StructureBlockInfo block : blocks.reversed().values()) {
 			BlockPos add = block.pos().offset(anchor)
 				.offset(offset);
 //			if (!shouldUpdateAfterMovement(block))
