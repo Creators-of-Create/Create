@@ -102,6 +102,8 @@ public class Create {
 	public static final GlobalLogisticsManager LOGISTICS = new GlobalLogisticsManager();
 	public static final ServerLagger LAGGER = new ServerLagger();
 
+	public static boolean hasBeenRegistered = false;
+
 	public Create(IEventBus eventBus, ModContainer modContainer) {
 		onCtor(eventBus, modContainer);
 	}
@@ -163,6 +165,8 @@ public class Create {
 		// FIXME: this is not thread-safe
 		Mods.CURIOS.executeIfInstalled(() -> () -> Curios.init(modEventBus));
 		Mods.INVENTORYSORTER.executeIfInstalled(() -> () -> InventorySorterCompat.init(modEventBus));
+
+		hasBeenRegistered = true;
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
