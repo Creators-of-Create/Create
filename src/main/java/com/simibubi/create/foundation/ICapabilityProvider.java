@@ -29,14 +29,10 @@ public interface ICapabilityProvider<T> {
 		private final BlockCapabilityCache<T, C> inner;
 		private volatile boolean invalid;
 
-		private BlockCapabilityCacheProvider(BlockCapabilityCache<T, C> inner) {
-			this.inner = inner;
-			this.invalid = false;
-		}
-
 		private BlockCapabilityCacheProvider(Function<Runnable, BlockCapabilityCache<T, C>> cacheFactory) {
 			this.invalid = false;
-			this.inner = cacheFactory == null ? null : cacheFactory.apply(() -> this.invalid = true);
+			this.inner = cacheFactory == null ? null :
+				cacheFactory.apply(() -> this.invalid = true);
 		}
 
 		@Override
