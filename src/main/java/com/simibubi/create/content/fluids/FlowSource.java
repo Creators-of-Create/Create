@@ -83,13 +83,16 @@ public abstract class FlowSource {
 				BlockEntity blockEntity = level.getBlockEntity(location.getConnectedPos());
 				if (blockEntity != null) {
 					if (level instanceof ServerLevel serverLevel) {
-						fluidHandlerCache = ICapabilityProvider.of(BlockCapabilityCache.create(
+						fluidHandlerCache = ICapabilityProvider.of((invalidate) -> BlockCapabilityCache.create(
 							Capabilities.FluidHandler.BLOCK,
 							serverLevel,
 							blockEntity.getBlockPos(),
 							location.getOppositeFace(),
 							() -> !networkBE.isRemoved(),
-							() -> fluidHandlerCache = EMPTY
+							() -> {
+								fluidHandlerCache = EMPTY;
+								invalidate.run();
+							}
 						));
 					} else if (level instanceof PonderLevel) {
 						fluidHandlerCache = ICapabilityProvider.of(() -> level.getCapability(
