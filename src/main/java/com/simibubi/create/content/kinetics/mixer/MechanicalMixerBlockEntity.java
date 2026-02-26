@@ -154,7 +154,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 							recipeSpeed = t / 100f;
 					}
 
-					processingTicks = Mth.clamp((Mth.log2((int) (512 / speed))) * Mth.ceil(recipeSpeed * 15) + 1, 1, 512);
+					processingTicks = Math.max((Mth.log2((int) (512 / speed))) * Mth.ceil(recipeSpeed * 15) + 1, 1);
 
 					Optional<BasinBlockEntity> basin = getBasin();
 					if (basin.isPresent()) {
