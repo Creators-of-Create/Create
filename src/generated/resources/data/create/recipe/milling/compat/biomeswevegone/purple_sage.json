@@ -11,7 +11,7 @@
       "type": "neoforge:compound",
       "ingredients": [
         {
-          "item": "biomeswevegone:orchid"
+          "item": "biomeswevegone:purple_sage"
         }
       ]
     }
@@ -20,11 +20,11 @@
   "results": [
     {
       "count": 2,
-      "id": "minecraft:pink_dye"
+      "id": "minecraft:purple_dye"
     },
     {
-      "chance": 0.05,
-      "id": "minecraft:white_dye"
+      "chance": 0.1,
+      "id": "minecraft:magenta_dye"
     }
   ]
 }

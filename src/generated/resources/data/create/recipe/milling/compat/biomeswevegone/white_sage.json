@@ -11,7 +11,7 @@
       "type": "neoforge:compound",
       "ingredients": [
         {
-          "item": "biomeswevegone:torch_ginger"
+          "item": "biomeswevegone:white_sage"
         }
       ]
     }
@@ -20,11 +20,11 @@
   "results": [
     {
       "count": 2,
-      "id": "minecraft:red_dye"
+      "id": "minecraft:white_dye"
     },
     {
       "chance": 0.1,
-      "id": "minecraft:green_dye"
+      "id": "minecraft:gray_dye"
     }
   ]
 }

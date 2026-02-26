@@ -11,20 +11,15 @@
       "type": "neoforge:compound",
       "ingredients": [
         {
-          "item": "biomeswevegone:blue_sage"
+          "item": "biomeswevegone:pink_sandstone"
         }
       ]
     }
   ],
-  "processing_time": 50,
+  "processing_time": 150,
   "results": [
     {
-      "count": 2,
-      "id": "minecraft:blue_dye"
-    },
-    {
-      "chance": 0.1,
-      "id": "minecraft:cyan_dye"
+      "id": "biomeswevegone:pink_sand"
     }
   ]
 }

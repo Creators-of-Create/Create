@@ -11,24 +11,15 @@
       "type": "neoforge:compound",
       "ingredients": [
         {
-          "item": "biomeswevegone:lolipop_flower"
+          "item": "biomeswevegone:blue_sandstone"
         }
       ]
     }
   ],
-  "processing_time": 50,
+  "processing_time": 150,
   "results": [
     {
-      "count": 2,
-      "id": "minecraft:yellow_dye"
-    },
-    {
-      "chance": 0.25,
-      "id": "minecraft:yellow_dye"
-    },
-    {
-      "chance": 0.05,
-      "id": "minecraft:green_dye"
+      "id": "biomeswevegone:blue_sand"
     }
   ]
 }

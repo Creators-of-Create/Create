@@ -11,14 +11,14 @@
       "type": "neoforge:compound",
       "ingredients": [
         {
-          "item": "biomeswevegone:lush_grass"
+          "item": "biomeswevegone:lush_grass_block"
         }
       ]
     }
   ],
   "results": [
     {
-      "id": "biomeswevegone:lush_grass_path"
+      "id": "biomeswevegone:lush_dirt_path"
     }
   ]
 }

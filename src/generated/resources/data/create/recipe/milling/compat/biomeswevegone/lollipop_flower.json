@@ -5,30 +5,30 @@
       "modid": "biomeswevegone"
     }
   ],
-  "type": "create:crushing",
+  "type": "create:milling",
   "ingredients": [
     {
       "type": "neoforge:compound",
       "ingredients": [
         {
-          "item": "biomeswevegone:blue_nether_gold_ore"
+          "item": "biomeswevegone:lollipop_flower"
         }
       ]
     }
   ],
-  "processing_time": 350,
+  "processing_time": 50,
   "results": [
     {
-      "count": 18,
-      "id": "minecraft:gold_nugget"
+      "count": 2,
+      "id": "minecraft:yellow_dye"
     },
     {
-      "chance": 0.75,
-      "id": "create:experience_nugget"
+      "chance": 0.25,
+      "id": "minecraft:yellow_dye"
     },
     {
-      "chance": 0.125,
-      "id": "biomeswevegone:blue_netherrack"
+      "chance": 0.05,
+      "id": "minecraft:green_dye"
     }
   ]
 }
