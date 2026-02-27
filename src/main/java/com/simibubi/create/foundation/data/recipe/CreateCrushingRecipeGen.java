@@ -245,7 +245,8 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 	// Silent Gems
 
 	SG = sgOres("peridot", "ruby", "sapphire", "topaz", "alexandrite", "black_diamond", "carnelian",
-		"citrine", "iolite", "moldavite", "turquoise", "ammolite", "kyanite", "rose_quartz", "heliodor", "white_diamond"),
+		"citrine", "iolite", "moldavite", "turquoise", "ammolite", "kyanite", "rose_quartz", "heliodor",
+		"white_diamond", "garnet", "aquamarine", "tanzanite", "opal", "pearl"),
 
 	// Simple Farming
 
@@ -363,15 +364,15 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 				.output(.75f, AllItems.EXP_NUGGET.get())
 				.output(.12f, Items.COBBLED_DEEPSLATE)
 				.whenModLoaded(Mods.SILENT_GEMS.getId()));
-			create(Mods.SILENT_GEMS.recipeId(type + "_nether_ore"), b -> b.duration(350)
-				.require(Mods.SILENT_GEMS, type + "_nether_ore")
+			create(Mods.SILENT_GEMS.recipeId("nether_" + type + "_ore"), b -> b.duration(350)
+				.require(Mods.SILENT_GEMS, "nether_" + type + "_ore")
 				.output(1f, Mods.SILENT_GEMS, type, 2)
 				.output(.25f, Mods.SILENT_GEMS, type, 1)
 				.output(.75f, AllItems.EXP_NUGGET.get())
 				.output(.12f, Items.NETHERRACK)
 				.whenModLoaded(Mods.SILENT_GEMS.getId()));
-			create(Mods.SILENT_GEMS.recipeId(type + "_end_ore"), b -> b.duration(350)
-				.require(Mods.SILENT_GEMS, type + "_end_ore")
+			create(Mods.SILENT_GEMS.recipeId("end_" + type + "_ore"), b -> b.duration(350)
+				.require(Mods.SILENT_GEMS, "end_" + type + "_ore")
 				.output(1f, Mods.SILENT_GEMS, type, 2)
 				.output(.25f, Mods.SILENT_GEMS, type, 1)
 				.output(.75f, AllItems.EXP_NUGGET.get())

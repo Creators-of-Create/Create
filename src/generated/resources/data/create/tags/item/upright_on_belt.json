@@ -58,6 +58,26 @@
     {
       "id": "biomeswevegone:aloe_vera_juice",
       "required": false
+    },
+    {
+      "id": "silentgems:cup_of_coffee",
+      "required": false
+    },
+    {
+      "id": "silentgems:uncooked_meaty_stew",
+      "required": false
+    },
+    {
+      "id": "silentgems:meaty_stew",
+      "required": false
+    },
+    {
+      "id": "silentgems:uncooked_fishy_stew",
+      "required": false
+    },
+    {
+      "id": "silentgems:fishy_stew",
+      "required": false
     }
   ]
 }
