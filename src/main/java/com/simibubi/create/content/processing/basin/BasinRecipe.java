@@ -5,10 +5,11 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.simibubi.create.api.recipe.HeatCondition;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
@@ -70,10 +71,11 @@ public class BasinRecipe extends StandardProcessingRecipe<RecipeInput> {
 		if (availableItems == null || availableFluids == null)
 			return false;
 
-		HeatLevel heat = basin.getHeatLevel();
-		if (isBasinRecipe && !((BasinRecipe) recipe).getRequiredHeat()
-			.testBlazeBurner(heat))
-			return false;
+		if (isBasinRecipe) {
+			BasinRecipe basinRecipe = (BasinRecipe)recipe;
+			HeatCondition heat = basinRecipe.getRequiredHeat();
+			if(heat != null && !heat.test(basin.getLevel(), basin.getBlockPos())) return false;
+		}
 
 		List<ItemStack> recipeOutputItems = new ArrayList<>();
 		List<FluidStack> recipeOutputFluids = new ArrayList<>();

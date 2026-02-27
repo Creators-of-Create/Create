@@ -11,6 +11,7 @@ import com.simibubi.create.api.equipment.potatoCannon.PotatoCannonProjectileType
 import com.simibubi.create.api.equipment.potatoCannon.PotatoProjectileBlockHitAction;
 import com.simibubi.create.api.equipment.potatoCannon.PotatoProjectileEntityHitAction;
 import com.simibubi.create.api.equipment.potatoCannon.PotatoProjectileRenderMode;
+import com.simibubi.create.api.recipe.HeatCondition;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.content.kinetics.mechanicalArm.ArmInteractionPointType;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
@@ -38,6 +39,7 @@ public class CreateRegistries {
 	public static final ResourceKey<Registry<MapCodec<? extends PotatoProjectileRenderMode>>> POTATO_PROJECTILE_RENDER_MODE = key("potato_projectile/render_mode");
 	public static final ResourceKey<Registry<MapCodec<? extends PotatoProjectileEntityHitAction>>> POTATO_PROJECTILE_ENTITY_HIT_ACTION = key("potato_projectile/entity_hit_action");
 	public static final ResourceKey<Registry<MapCodec<? extends PotatoProjectileBlockHitAction>>> POTATO_PROJECTILE_BLOCK_HIT_ACTION = key("potato_projectile/block_hit_action");
+	public static final ResourceKey<Registry<HeatCondition>> HEAT_CONDITION = key("heat_condition");
 
 	private static <T> ResourceKey<Registry<T>> key(String name) {
 		return ResourceKey.createRegistryKey(Create.asResource(name));

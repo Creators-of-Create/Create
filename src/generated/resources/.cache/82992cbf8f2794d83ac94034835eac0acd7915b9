@@ -1,4 +1,4 @@
-// 1.21.1	2025-12-13T13:03:10.670718499	Create's Standard Recipes
+// 1.21.1	2026-02-04T22:26:27.562441	Create's Standard Recipes
 489f0a3e3d8571c4897f49eada95a23290a472dc data/create/advancement/recipes/combat/crafting/appliances/netherite_backtank.json
 b024ae44179c47b9be8fa35acc763c22b7b01b2e data/create/advancement/recipes/combat/crafting/appliances/netherite_backtank_from_netherite.json
 41d2909fcf45f9098c0ee306810c16168d4e8ae4 data/create/advancement/recipes/combat/crafting/appliances/netherite_diving_boots.json
@@ -57,7 +57,7 @@ f5a3df96fec7cb84857d868eaa5f9cdf4802211a data/create/advancement/recipes/misc/cr
 786d677b44de56b3cb95cdb04c77cc2ca0d6e268 data/create/advancement/recipes/misc/crafting/appliances/slime_ball.json
 c418182116317374dd8f001006c07109e17ccf74 data/create/advancement/recipes/misc/crafting/appliances/tree_fertilizer.json
 45c0d38bf8df63fd948968b74dcd1717b0ca6326 data/create/advancement/recipes/misc/crafting/curiosities/brown_toolbox.json
-fa9c3955620e074844d1af5f537c51a07c74781b data/create/advancement/recipes/misc/crafting/curiosities/cake.json
+4a76070bd6556729d96910c4430b979b0fa33559 data/create/advancement/recipes/misc/crafting/curiosities/cake.json
 3e98a76c653b9681d124d35808b9a201682e3710 data/create/advancement/recipes/misc/crafting/curiosities/minecart_coupling.json
 ff665b29147dfc5fa0e6ffdd922003688ada76af data/create/advancement/recipes/misc/crafting/curiosities/peculiar_bell.json
 9b5851d0f5b4ea1380f2da6c7404af1382a63e46 data/create/advancement/recipes/misc/crafting/kinetics/adjustable_chain_gearshift.json
@@ -335,7 +335,7 @@ c7a35d43c82bc110337ba29e9b0454829286a33d data/create/recipe/crafting/appliances/
 c53527b57c3ccf08a6d10502144f9dd7bf9b326d data/create/recipe/crafting/appliances/slime_ball.json
 0c2b293c731a36f0616e13040278073fcc7af701 data/create/recipe/crafting/appliances/tree_fertilizer.json
 f13567bac676eb8b9b153a1907fdc18d57235b46 data/create/recipe/crafting/curiosities/brown_toolbox.json
-881bf0e571b3d1cd1c44f3fb134c6f8a1b05b8ad data/create/recipe/crafting/curiosities/cake.json
+12a19f3976fd1b6b81e7d64586ce8fd8b8882fbe data/create/recipe/crafting/curiosities/cake.json
 b961ce60986ebfed1b0cc0f7053d6e558de13e86 data/create/recipe/crafting/curiosities/item_copying.json
 1ee1e18ab9214dff72ed5d886c7a6db1ddefe9df data/create/recipe/crafting/curiosities/minecart_coupling.json
 bc6f3e762f559a89e0ae848bb4bdb5533def2d07 data/create/recipe/crafting/curiosities/peculiar_bell.json

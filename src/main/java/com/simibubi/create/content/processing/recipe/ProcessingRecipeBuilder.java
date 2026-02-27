@@ -2,10 +2,12 @@ package com.simibubi.create.content.processing.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.google.common.base.Joiner;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.DatagenMod;
+import com.simibubi.create.api.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe.Factory;
 import com.simibubi.create.foundation.data.SimpleDatagenIngredient;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -131,6 +133,10 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 	public S require(Ingredient ingredient) {
 		params.ingredients.add(ingredient);
 		return self();
+	}
+
+	public S requiresHeat(Supplier<HeatCondition> heatCondition) {
+		return requiresHeat(heatCondition.get());
 	}
 
 	// TODO

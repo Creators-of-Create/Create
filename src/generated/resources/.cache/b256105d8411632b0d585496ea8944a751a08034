@@ -1,4 +1,4 @@
-// 1.21.1	2025-11-17T18:16:14.466885779	Create's Processing Recipes
+// 1.21.1	2026-02-04T22:26:27.546641	Create's Processing Recipes
 cb988d3be6b4a28e4d13dc73d61eed3670520e8e data/create/recipe/compacting/andesite_from_flint.json
 d97f4e06363879d033b2151995a5d4f19ad7ef3a data/create/recipe/compacting/blaze_cake.json
 7879a7ba9019a2938363449d3a0e13013a4ad606 data/create/recipe/compacting/chocolate.json
@@ -691,18 +691,18 @@ f89fdc574a3168af94d4af81293874d2ced8f697 data/create/recipe/milling/wither_rose.
 8933ecca49bd48ae6a312cb94bf7bd39a78ace62 data/create/recipe/milling/wool.json
 df7e7efc67d7d2f2d410cf3685c9c6bf922ff10d data/create/recipe/mixing/andesite_alloy.json
 b484f6febeb2f966591591fcd93623916ca4f23c data/create/recipe/mixing/andesite_alloy_from_zinc.json
-8c2b237b7d0007da93c7c39a6e17d6980e3e777f data/create/recipe/mixing/brass_ingot.json
+20109144d26eb017659cf1c75c14fee4dad099a2 data/create/recipe/mixing/brass_ingot.json
 05de9524677e27e29a3aac12037ef8ce05f288d5 data/create/recipe/mixing/cardboard_pulp.json
-d00f57450dd818c43dcae5afb1baa182ae72588e data/create/recipe/mixing/chocolate.json
-5b4406c5cfb8aaaf258ac1a21f15c7b05398a225 data/create/recipe/mixing/chocolate_melting.json
+5f0e2c20972422881f2ed808da6bc4b3a48e37aa data/create/recipe/mixing/chocolate.json
+dbb8257d7fc45d416557b2ca83d3bc1163a280ca data/create/recipe/mixing/chocolate_melting.json
 e7fa4946405b361f63db16ca62dd7122c8add1c6 data/create/recipe/mixing/compat/ae2/fluix_crystal.json
 a70b5a2c1d834071eb5da835f66d96235ead0205 data/create/recipe/mixing/compat/regions_unexplored/peat_mud.json
 b2891762a0193de25e51e40c92ddfe15da3b1ff1 data/create/recipe/mixing/compat/regions_unexplored/silt_mud.json
 ec7452109cec2abd6339b07666ef779508418bb6 data/create/recipe/mixing/dough_by_mixing.json
-08cc8d63081a087c61ec535fc063afb2261800ce data/create/recipe/mixing/honey.json
-752c5523f77bba865e8ff555a753be7a9c8ec496 data/create/recipe/mixing/lava_from_cobble.json
+1ee934dd288932a03f8b126d7064f809eb341943 data/create/recipe/mixing/honey.json
+0134cf5c103c56dec27d3b2d865887fe59fb1460 data/create/recipe/mixing/lava_from_cobble.json
 e5006858050569f2391e6d4c2c773a800ff25b66 data/create/recipe/mixing/mud_by_mixing.json
-1f36fc93d49212140d020527393e134275cff6a3 data/create/recipe/mixing/tea.json
+82df6fa5a089d7087b8c0e060ca16c593173aa9d data/create/recipe/mixing/tea.json
 9a2e41b864f672445b1bceeba64a4b9a87ed8e18 data/create/recipe/pressing/aether_dirt_path.json
 34c57028f4680488f18817438f32b05d31032d48 data/create/recipe/pressing/aether_dirt_path_from_grass.json
 d1181274ab379daf8961b7cca0a0b13c18fd28c6 data/create/recipe/pressing/brass_ingot.json
