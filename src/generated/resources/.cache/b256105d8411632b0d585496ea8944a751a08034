@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-26T22:44:57.0227569	Create's Processing Recipes
+// 1.21.1	2026-02-27T22:44:19.7627189	Create's Processing Recipes
 cb988d3be6b4a28e4d13dc73d61eed3670520e8e data/create/recipe/compacting/andesite_from_flint.json
 d97f4e06363879d033b2151995a5d4f19ad7ef3a data/create/recipe/compacting/blaze_cake.json
 7879a7ba9019a2938363449d3a0e13013a4ad606 data/create/recipe/compacting/chocolate.json
@@ -213,6 +213,10 @@ fa95f4eaff379d6a35fdee68ecd0352494124319 data/create/recipe/cutting/compat/atmos
 4c80e9aae059aac000b6f72451bbb705e0c82f1a data/create/recipe/cutting/compat/atmospheric/watchful_aspen_wood.json
 611e4fc4e306fc12f24985ff936bfb47c257ad2d data/create/recipe/cutting/compat/autumnity/sappy_maple_log.json
 fa71994f0c03d95a1575ac5ffc0a5f4bcf7cd5f1 data/create/recipe/cutting/compat/autumnity/sappy_maple_wood.json
+8d7232fb63dcf3a4122526bb248c172e62c4498e data/create/recipe/cutting/compat/biomeswevegone/palo_verde_log.json
+f6c500e9c698ea8eeae82f0449d6f536a42f6250 data/create/recipe/cutting/compat/biomeswevegone/palo_verde_wood.json
+1d52353b4186152022d830f51a1dc4f9d8fc445f data/create/recipe/cutting/compat/biomeswevegone/stripped_palo_verde_log.json
+339455b6ee68a18ac2327b24de6a704f21215303 data/create/recipe/cutting/compat/biomeswevegone/stripped_palo_verde_wood.json
 479df256f03fd530e9f581ffcb78fad60fa877f7 data/create/recipe/cutting/compat/endergetic/glowing_poise_stem.json
 193a8bad3433949fa30b0f291eeace262449e060 data/create/recipe/cutting/compat/endergetic/glowing_poise_wood.json
 919ef6d1531a19ff51cea20dbb87fa8f253b604e data/create/recipe/cutting/compat/immersiveengineering/wire_aluminum.json
@@ -511,6 +515,7 @@ f1b92201e90cb64f72e1f6e18482063779676a99 data/create/recipe/milling/compat/biome
 d94ef135a5f2a5c417ac2803d6a8fce700fbff7a data/create/recipe/milling/compat/biomeswevegone/bistort.json
 6dee38fd5b93e3249e4c246fb40653db340dcacc data/create/recipe/milling/compat/biomeswevegone/black_rose.json
 c7d2359622e514a46aa8f2e337cba2d33269534f data/create/recipe/milling/compat/biomeswevegone/black_sandstone.json
+28dc063ec53d855abb790aa59896fa034e19bfc5 data/create/recipe/milling/compat/biomeswevegone/blue_rose_bush.json
 595929276fb57a7852b3ef2121813c9c1198c86c data/create/recipe/milling/compat/biomeswevegone/blue_sage.json
 2c464094964f5c017cfb19d6d2754f33e4211392 data/create/recipe/milling/compat/biomeswevegone/blue_sandstone.json
 5eb3e823098a06424f30ddaa08cd2cfa675a4411 data/create/recipe/milling/compat/biomeswevegone/california_poppy.json
@@ -523,8 +528,10 @@ a3e0ea34c1258cf71099afd99bd9e27c68cd485c data/create/recipe/milling/compat/biome
 b497cc2136d788c6cc0a628001330ee499ecbf90 data/create/recipe/milling/compat/biomeswevegone/fairy_slipper.json
 01b45347e7e451d2a1e429ed36691f8d806b56c2 data/create/recipe/milling/compat/biomeswevegone/firecracker_flower_bush.json
 f8e6098f0d76a02706a8d88d7aa97998cbb1ead7 data/create/recipe/milling/compat/biomeswevegone/foxglove.json
+39a403e4fb086ae84dda5cfe39f5bb44f9310631 data/create/recipe/milling/compat/biomeswevegone/golden_spined_cactus.json
 25372e0e271d4231086d1110edac8a73defa5360 data/create/recipe/milling/compat/biomeswevegone/green_tulip.json
 8f839eb5e8b33605463506e007c697a1ecddc1c6 data/create/recipe/milling/compat/biomeswevegone/guzmania.json
+97b98566132c2c70941546a87c421fd65d0f8b29 data/create/recipe/milling/compat/biomeswevegone/horseweed.json
 20f9a97baebf8dc21471dbba0402702b7eb9859a data/create/recipe/milling/compat/biomeswevegone/hydrangea_bush.json
 43c996e62a364d5e7b60ed3a7a1f11da8551ed72 data/create/recipe/milling/compat/biomeswevegone/incan_lily.json
 5c31507cee552b1624be261f3a0bdb7fa776ee32 data/create/recipe/milling/compat/biomeswevegone/iris.json
@@ -534,6 +541,7 @@ ce4f5c8050c7970f2d10797c9045e4ac24b2cbdf data/create/recipe/milling/compat/biome
 fe1e1d60420fb8dfa8bca3a590e977e517f40693 data/create/recipe/milling/compat/biomeswevegone/lollipop_flower.json
 10790abb9c475480036c132df648cfe7bb7c8a6a data/create/recipe/milling/compat/biomeswevegone/magenta_amaranth.json
 7e50c83c8cac57c676a89a85eeef4a86c65f0580 data/create/recipe/milling/compat/biomeswevegone/magenta_tulip.json
+fe9362cf4c01ee1abe136a97ee8e5d2a8351c5b5 data/create/recipe/milling/compat/biomeswevegone/mini_cactus.json
 7f86335b607338f5bcf62c3bfa1ad331f6faf35d data/create/recipe/milling/compat/biomeswevegone/orange_amaranth.json
 1b06b96575654d0ffff5484a35fc65c09431db8b data/create/recipe/milling/compat/biomeswevegone/orange_daisy.json
 78fed3671c472331af4dc83986b07a245737ca3c data/create/recipe/milling/compat/biomeswevegone/osiria_rose.json
@@ -543,6 +551,7 @@ e57bb0de68a62f43846c6440047afc4870e352bf data/create/recipe/milling/compat/biome
 e3e9e8eed166e6e3a3e1aeeb309f79a8256a7853 data/create/recipe/milling/compat/biomeswevegone/pink_anemone.json
 8f491af3d657061f60e267edf50b7c05918d65a7 data/create/recipe/milling/compat/biomeswevegone/pink_daffodil.json
 ffa8fca6d82717fd68094631fce3ecf765e9bb19 data/create/recipe/milling/compat/biomeswevegone/pink_sandstone.json
+e7148b0a7343f476d37c745cbd970ce03eb126a0 data/create/recipe/milling/compat/biomeswevegone/prickly_pear_cactus.json
 380ff88451e60075d1d635913094576a03aa9540 data/create/recipe/milling/compat/biomeswevegone/protea_flower.json
 168cafc3ca88bfc12fa549cad0071ea13be87889 data/create/recipe/milling/compat/biomeswevegone/purple_amaranth.json
 e678d6ada0aff34f50c22c36867a9e9992c79d83 data/create/recipe/milling/compat/biomeswevegone/purple_sage.json
@@ -554,7 +563,10 @@ c968a375ef22c30fa52fa8743b8a982057cebada data/create/recipe/milling/compat/biome
 91561b8747b057a9e7278920f008539cf47f7186 data/create/recipe/milling/compat/biomeswevegone/snowdrops.json
 0b1b25bf8ab63fca67977d3b15acd8e278b6e413 data/create/recipe/milling/compat/biomeswevegone/tall_allium.json
 4f4ce324ae3212a98060456939575f7bc822de99 data/create/recipe/milling/compat/biomeswevegone/tall_pink_allium.json
+b8711bd3f10a57f6d821a6d0db8b5bcee856ef3e data/create/recipe/milling/compat/biomeswevegone/tall_white_allium.json
 530f1f806d8b62fed71804b6afb7542a07cb0730 data/create/recipe/milling/compat/biomeswevegone/violet_leather_flower.json
+b162f8e13b49463cd760bac6a231fc0a37f4bdf2 data/create/recipe/milling/compat/biomeswevegone/white_allium.json
+0db816c0d094e182c596bd3680383e6208369b6a data/create/recipe/milling/compat/biomeswevegone/white_allium_flower_bush.json
 d1d319dbddaf7d3156a0871e27715bb1a9482bf6 data/create/recipe/milling/compat/biomeswevegone/white_anemone.json
 9dc2e0adcfceac3e955487cad27a8de0362e4536 data/create/recipe/milling/compat/biomeswevegone/white_puffball_cap.json
 8336b928f2fa9fc566d8ec86c6f826b0b3df015c data/create/recipe/milling/compat/biomeswevegone/white_sage.json
@@ -563,6 +575,7 @@ b8b09c71880755e1415c6fbf8cca1b043f077a31 data/create/recipe/milling/compat/biome
 ee3ef95503a29a0064e020c0db4a080da79afc46 data/create/recipe/milling/compat/biomeswevegone/winter_cyclamen.json
 2c206528819748960bc6a5b456c01f69670e44b7 data/create/recipe/milling/compat/biomeswevegone/winter_rose.json
 6a72b0e201a36f253fbfd55683e400ea1005c80b data/create/recipe/milling/compat/biomeswevegone/winter_scilla.json
+89baeea38295ca66a7f5c4d20b8d825d9e65e859 data/create/recipe/milling/compat/biomeswevegone/winter_succulent.json
 601bd54d11f3c6ad1ac23e8fddf1078d491bcb6f data/create/recipe/milling/compat/biomeswevegone/yellow_daffodil.json
 56e8be17e69ba84a7b089bbcd9215405e1ff7216 data/create/recipe/milling/compat/biomeswevegone/yellow_tulip.json
 a87fcbd1da70b8088b9c57683cb76b3e7ad3a103 data/create/recipe/milling/compat/botania/black_petal.json

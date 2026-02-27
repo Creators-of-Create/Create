@@ -30,6 +30,34 @@
     {
       "id": "atmospheric:aloe_gel_bottle",
       "required": false
+    },
+    {
+      "id": "biomeswevegone:blue_glow_bottle",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:green_glow_bottle",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:red_glow_bottle",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:yellow_glow_bottle",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:allium_oddion_soup",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:white_puffball_stew",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:aloe_vera_juice",
+      "required": false
     }
   ]
 }

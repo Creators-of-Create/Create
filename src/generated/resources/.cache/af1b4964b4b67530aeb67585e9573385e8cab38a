@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-26T22:44:57.0507538	Registrate Provider for create [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2026-02-27T22:44:19.8103416	Registrate Provider for create [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -4816,7 +4816,7 @@ e22493305e0cebfb7ededae122e19ee9dd24fc9d data/create/tags/item/stone_types/scorc
 5def5088f7fd31b80e6f28c1c4ea146aa9d7d15b data/create/tags/item/toolboxes.json
 2589b135c0e96ad29076569e144528fe32ea5b39 data/create/tags/item/tracks.json
 a5b5711d1798473a9b25db5b7f749570ed0a2769 data/create/tags/item/upgrade_aquatic/coral.json
-022126716005edbe39ac8b52f40f5ab931a7a849 data/create/tags/item/upright_on_belt.json
+30a42f272cfa8f7e91195de57787255d0e5bafd6 data/create/tags/item/upright_on_belt.json
 da739ad2160e7df4e0e5cc89587670ce5e9450c3 data/create/tags/item/valve_handles.json
 edf7390f09e622193bbc720ec51ba128ea1e96e6 data/curios/tags/item/head.json
 10d5f0c1763f80860a39398ecc33dbbe43099471 data/c/tags/block/glass_blocks/colorless.json

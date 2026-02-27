@@ -573,6 +573,33 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	BWG_YELLOW_TULIP = bwgFlower("yellow_tulip", List.of(1f, .1f),
 		List.of(Items.YELLOW_DYE, Items.LIME_DYE), List.of(2, 1)),
 
+	BWG_WHITE_ALLIUM = bwgFlower("white_allium", List.of(1f, .1f, .1f),
+		List.of(Items.WHITE_DYE, Items.LIGHT_GRAY_DYE, Items.GRAY_DYE), List.of(2, 2, 1)),
+
+	BWG_TALL_WHITE_ALLIUM = bwgFlower("tall_white_allium", List.of(1f, .05f, .25f),
+		List.of(Items.WHITE_DYE, Items.WHITE_DYE, Items.LIGHT_GRAY_DYE), List.of(3, 2, 2)),
+
+	BWG_WHITE_ALLIUM_BUSH = bwgFlower("white_allium_flower_bush", List.of(1f, .05f, .25f),
+		List.of(Items.WHITE_DYE, Items.GREEN_DYE, Items.LIGHT_GRAY_DYE), List.of(3, 2, 2)),
+
+	BWG_BLUE_ROSE_BUSH = bwgFlower("blue_rose_bush", List.of(1f, .05f, .25f),
+		List.of(Items.BLUE_DYE, Items.GREEN_DYE, Items.BLUE_DYE), List.of(3, 2, 2)),
+
+	BWG_HORSEWEED = bwgFlower("horseweed", List.of(1f, 0.25f),
+		List.of(Items.GREEN_DYE, Items.BROWN_DYE), List.of(2, 1)),
+
+	BWG_WINTER_SUCCULENT = bwgFlower("winter_succulent", List.of(1f, 0.25f),
+		List.of(Items.GREEN_DYE, Items.GREEN_DYE), List.of(2, 1)),
+
+	BWG_MINI_CACTUS = bwgFlower("mini_cactus", List.of(1f),
+		List.of(Items.GREEN_DYE), List.of(2)),
+
+	BWG_PRICKLY_PEAR_CACTUS = bwgFlower("prickly_pear_cactus", List.of(1f, 0.25f),
+		List.of(Items.GREEN_DYE, Items.GREEN_DYE), List.of(2, 1)),
+
+	BWG_GOLDEN_SPINED_CACTUS = bwgFlower("golden_spined_cactus", List.of(1f, 0.25f),
+		List.of(Items.GREEN_DYE, Items.YELLOW_DYE), List.of(2, 1)),
+
 	BWG_SAND_1 = moddedSandstone(Mods.BWG, "black"),
 	BWG_SAND_2 = moddedSandstone(Mods.BWG, "white"),
 	BWG_SAND_3 = moddedSandstone(Mods.BWG, "blue"),
