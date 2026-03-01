@@ -49,6 +49,8 @@ public class CreateRegistrateTags {
 	private static void genBlockTags(RegistrateTagsProvider<Block> provIn) {
 		CreateTagsProvider<Block> prov = new CreateTagsProvider<>(provIn, Block::builtInRegistryHolder);
 
+		prov.tag(AllBlockTags.BASIN_COMPATIBLE.tag).add(Blocks.HOPPER);
+
 		prov.tag(AllBlockTags.BRITTLE.tag)
 			.add(Blocks.BELL, Blocks.COCOA, Blocks.FLOWER_POT, Blocks.MOSS_CARPET, Blocks.BAMBOO_SAPLING,
 				Blocks.BIG_DRIPLEAF, Blocks.VINE, Blocks.TWISTING_VINES_PLANT, Blocks.TWISTING_VINES,
@@ -156,6 +158,8 @@ public class CreateRegistrateTags {
 			);
 
 		// COMPAT
+
+		TagGen.addOptional(prov.tag(AllBlockTags.BASIN_COMPATIBLE.tag), Mods.FD, List.of("basket"));
 
 		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE, List.of(
 			"connector_lv", "connector_lv_relay", "connector_mv", "connector_mv_relay",

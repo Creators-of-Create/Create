@@ -447,13 +447,17 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 				int fill = targetTank instanceof SmartFluidTankBehaviour.InternalFluidHandler
 					? ((SmartFluidTankBehaviour.InternalFluidHandler) targetTank).forceFill(fluidStack.copy(), action)
 					: targetTank.fill(fluidStack.copy(), action);
-				if (fill != fluidStack.getAmount())
+				if (fill == 0)
 					break;
 				if (simulate)
 					continue;
 
 				update = true;
-				iterator.remove();
+				if (fill == fluidStack.getAmount())
+					iterator.remove();
+				else{
+					fluidStack.shrink(fill);
+				}
 				if (visualizedOutputFluids.size() < 3)
 					visualizedOutputFluids.add(IntAttached.withZero(fluidStack));
 			}
