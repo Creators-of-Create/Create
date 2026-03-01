@@ -66,6 +66,7 @@ import com.simibubi.create.foundation.recipe.trie.RecipeTrieFinder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.TickBasedCache;
 import com.simibubi.create.infrastructure.command.AllCommands;
+import com.simibubi.create.content.contraptions.ContraptionInClientLevel;
 
 import net.createmod.catnip.data.WorldAttached;
 import net.minecraft.server.level.ServerPlayer;
@@ -109,6 +110,11 @@ public class CommonEvents {
 		TrainMapSync.serverTick(event);
 		ServerChainConveyorHandler.tick();
 		TickBasedCache.tick();
+	}
+
+	@SubscribeEvent
+	public static void onPreClientTick(net.neoforged.neoforge.client.event.ClientTickEvent.Pre event) {
+		ContraptionInClientLevel.tick();
 	}
 
 	@SubscribeEvent

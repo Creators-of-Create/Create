@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 
+import net.minecraft.world.level.entity.EntityInLevelCallback;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.NotNull;
@@ -89,6 +91,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	protected boolean initialized;
 	protected boolean prevPosInvalid;
 	private boolean skipActorStop;
+	private ClientContraptionStatus clientContraptionStatus = ClientContraptionStatus.ALIVE;
 
 	/*
 	 * staleTicks are a band-aid to prevent a frame or two of missing blocks between
@@ -933,5 +936,19 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	public boolean isPrevPosInvalid() {
 		return prevPosInvalid;
+	}
+
+	@Override
+	public void setLevelCallback(EntityInLevelCallback levelCallback) {
+		EntityInLevelCallback contraptionLevel = new ContraptionInClientLevel(levelCallback, this);
+		super.setLevelCallback(contraptionLevel);
+	}
+
+	public void setClientContraptionStatus(ClientContraptionStatus status) {
+		this.clientContraptionStatus = status;
+	}
+
+	public ClientContraptionStatus getClientContraptionStatus() {
+		return clientContraptionStatus;
 	}
 }

@@ -1,5 +1,10 @@
 package com.simibubi.create.content.contraptions.render;
 
+import com.simibubi.create.content.contraptions.ClientContraptionStatus;
+import com.simibubi.create.foundation.mixin.accessor.ClientLevelAccessor;
+
+import net.minecraft.client.renderer.LevelRenderer;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,6 +18,7 @@ import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.impl.visualization.VisualizationEventHandler;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.render.ShadedBlockSbbBuilder;
@@ -106,6 +112,23 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 	@Override
 	public void render(C entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffers,
 		int overlay) {
+		ClientContraptionStatus status = entity.getClientContraptionStatus();
+		Level level = entity.level();
+
+		switch (status) {
+			case MARKED_FOR_REMOVAL -> {
+				LevelRenderer levelRenderer = ((ClientLevelAccessor) level).create$getLevelRenderer();
+				if (levelRenderer.isSectionCompiled(entity.blockPosition())) {
+					entity.setClientContraptionStatus(ClientContraptionStatus.DO_REMOVE);
+				}
+			}
+			case DO_REMOVE -> {
+				if (VisualizationManager.supportsVisualization(entity.level()))
+					VisualizationEventHandler.onEntityLeaveLevel(entity.level(), entity);
+				return;
+			}
+		}
+
 		super.render(entity, yaw, partialTicks, poseStack, buffers, overlay);
 
 		Contraption contraption = entity.getContraption();
@@ -113,7 +136,6 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 			return;
 		}
 
-		Level level = entity.level();
 		ClientContraption clientContraption = contraption.getOrCreateClientContraptionLazy();
 		VirtualRenderWorld renderWorld = clientContraption.getRenderLevel();
 		ContraptionMatrices matrices = clientContraption.getMatrices();
