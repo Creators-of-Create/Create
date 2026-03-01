@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "tconstruct:seared_channel",
+    "tconstruct:scorched_channel",
+    "tconstruct:seared_basin",
+    "tconstruct:scorched_basin",
+    "tconstruct:seared_table",
+    "tconstruct:scorched_table"    
+  ]
+}

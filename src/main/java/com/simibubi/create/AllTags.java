@@ -87,6 +87,7 @@ public class AllTags {
 
 	public enum AllBlockTags {
 
+        BASIN_COMPATIBLE,
 		BRITTLE,
 		FAN_HEATERS,
 		FAN_TRANSPARENT,

@@ -231,7 +231,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 			TileEntityBehaviour.get(world, output, DirectBeltInputBehaviour.TYPE);
 		if (directBeltInputBehaviour != null)
 			return directBeltInputBehaviour.canInsertFromSide(direction);
-		return false;
+		return world.getBlockState(output).is(AllBlockTags.BASIN_COMPATIBLE.tag);
 	}
 
 	@Override
