@@ -455,9 +455,8 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 				update = true;
 				if (fill == fluidStack.getAmount())
 					iterator.remove();
-				else{
+				else
 					fluidStack.shrink(fill);
-				}
 				if (visualizedOutputFluids.size() < 3)
 					visualizedOutputFluids.add(IntAttached.withZero(fluidStack));
 			}
