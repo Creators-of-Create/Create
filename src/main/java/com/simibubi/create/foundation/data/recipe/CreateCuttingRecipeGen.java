@@ -70,8 +70,8 @@ public final class CreateCuttingRecipeGen extends CuttingRecipeGen {
 		ATM_4 = stripAndMakePlanks(Mods.ATM, "crustose_wood", "aspen_wood", null),
 
 		// Oh The Biomes We've Gone
-		BWG_1 = stripAndMakePlanksDiffPlanksModId(Mods.BWG, "palo_verde_log", "stripped_palo_verde_log", Mods.VANILLA, "birch_planks"),
-		BWG_2 = stripAndMakePlanksDiffPlanksModId(Mods.BWG, "palo_verde_wood", "stripped_palo_verde_wood", Mods.VANILLA, "birch_planks")
+		BWG_1 = stripAndMakePlanksDiffPlanksModId(Mods.BWG, null, "stripped_palo_verde_log", Mods.VANILLA, "birch_planks"),
+		BWG_2 = stripAndMakePlanksDiffPlanksModId(Mods.BWG, null, "stripped_palo_verde_wood", Mods.VANILLA, "birch_planks")
 		;
 
 	public CreateCuttingRecipeGen(PackOutput output, CompletableFuture<Provider> registries) {
