@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-27T22:56:26.0051481	Create's Processing Recipes
+// 1.21.1	2026-03-04T22:48:27.6694881	Create's Processing Recipes
 cb988d3be6b4a28e4d13dc73d61eed3670520e8e data/create/recipe/compacting/andesite_from_flint.json
 d97f4e06363879d033b2151995a5d4f19ad7ef3a data/create/recipe/compacting/blaze_cake.json
 7879a7ba9019a2938363449d3a0e13013a4ad606 data/create/recipe/compacting/chocolate.json
@@ -540,7 +540,7 @@ c7d2359622e514a46aa8f2e337cba2d33269534f data/create/recipe/milling/compat/biome
 2c464094964f5c017cfb19d6d2754f33e4211392 data/create/recipe/milling/compat/biomeswevegone/blue_sandstone.json
 5eb3e823098a06424f30ddaa08cd2cfa675a4411 data/create/recipe/milling/compat/biomeswevegone/california_poppy.json
 cb0887cdb291d0623063f751d839e3fd90a85646 data/create/recipe/milling/compat/biomeswevegone/crocus.json
-3a19c19f3b53b4e26017a5b9a6ffe0021d5f12c2 data/create/recipe/milling/compat/biomeswevegone/cyan_amaranth.json
+12cdd1ba3af2ae58788dd4c34290c5ad89e5289a data/create/recipe/milling/compat/biomeswevegone/cyan_amaranth.json
 6e1db1a8d002d14c532edacafdc5414f268f9740 data/create/recipe/milling/compat/biomeswevegone/cyan_rose.json
 8aeb750764cdeb064eb5f0ab2a6943cdb41f5510 data/create/recipe/milling/compat/biomeswevegone/cyan_tulip.json
 d0db9e14b764208ab43a21e2b838eb3d7c79b1a5 data/create/recipe/milling/compat/biomeswevegone/daffodil.json
@@ -562,7 +562,7 @@ fe1e1d60420fb8dfa8bca3a590e977e517f40693 data/create/recipe/milling/compat/biome
 10790abb9c475480036c132df648cfe7bb7c8a6a data/create/recipe/milling/compat/biomeswevegone/magenta_amaranth.json
 7e50c83c8cac57c676a89a85eeef4a86c65f0580 data/create/recipe/milling/compat/biomeswevegone/magenta_tulip.json
 fe9362cf4c01ee1abe136a97ee8e5d2a8351c5b5 data/create/recipe/milling/compat/biomeswevegone/mini_cactus.json
-7f86335b607338f5bcf62c3bfa1ad331f6faf35d data/create/recipe/milling/compat/biomeswevegone/orange_amaranth.json
+f6ba1b0f900fcadb0c5e5276b1cffb45a4d2a0dd data/create/recipe/milling/compat/biomeswevegone/orange_amaranth.json
 1b06b96575654d0ffff5484a35fc65c09431db8b data/create/recipe/milling/compat/biomeswevegone/orange_daisy.json
 78fed3671c472331af4dc83986b07a245737ca3c data/create/recipe/milling/compat/biomeswevegone/osiria_rose.json
 5ed0e5fc0a36941674ea05d3ae617d8653e4c467 data/create/recipe/milling/compat/biomeswevegone/peach_leather_flower.json
