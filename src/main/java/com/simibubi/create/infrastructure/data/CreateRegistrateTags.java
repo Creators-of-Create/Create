@@ -155,6 +155,12 @@ public class CreateRegistrateTags {
 				Blocks.BUBBLE_CORAL_WALL_FAN, Blocks.FIRE_CORAL_WALL_FAN, Blocks.HORN_CORAL_WALL_FAN
 			);
 
+		prov.tag(AllBlockTags.PLOUGH_WHITELIST.tag)
+			.add(Blocks.SNOW);
+
+		prov.tag(AllBlockTags.PLOUGH_BLACKLIST.tag)
+			.addTag(BlockTags.PORTALS);
+
 		// COMPAT
 
 		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE, List.of(

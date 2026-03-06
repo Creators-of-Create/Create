@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.actors.plough;
 
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.actors.plough.PloughBlock.PloughFakePlayer;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
@@ -26,7 +27,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.LiquidBlock;
-import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -106,12 +106,14 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 			return false;
 		if (state.getBlock() instanceof BubbleColumnBlock)
 			return false;
-		if (state.getBlock() instanceof NetherPortalBlock)
-			return false;
 		if (state.getBlock() instanceof ITrackBlock)
 			return true;
 		if (state.getBlock() instanceof FakeTrackBlock)
 			return false;
+		if (AllBlockTags.PLOUGH_BLACKLIST.matches(state.getBlock()))
+			return false;
+		if (AllBlockTags.PLOUGH_WHITELIST.matches(state.getBlock()))
+			return true;
 		return state.getCollisionShape(world, breakingPos)
 			.isEmpty();
 	}
