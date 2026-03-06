@@ -11,7 +11,7 @@
       "type": "neoforge:compound",
       "ingredients": [
         {
-          "item": "environmental:blue_delphinium"
+          "item": "environmental:tasselflower"
         }
       ]
     }
@@ -19,12 +19,12 @@
   "processing_time": 50,
   "results": [
     {
-      "count": 3,
-      "id": "minecraft:light_blue_dye"
+      "count": 2,
+      "id": "minecraft:orange_dye"
     },
     {
       "chance": 0.1,
-      "id": "minecraft:light_blue_dye"
+      "id": "minecraft:green_dye"
     }
   ]
 }

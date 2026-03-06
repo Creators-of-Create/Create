@@ -243,6 +243,9 @@ public class CreateRegistrateTags {
 
 		TagGen.addOptional(prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag), Mods.SILENT_GEMS, List.of(
 			"cup_of_coffee", "uncooked_meaty_stew", "meaty_stew", "uncooked_fishy_stew", "fishy_stew"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag), Mods.AUTUM, List.of("foul_soup",
+			"syrup_bottle", "sap_bottle"));
 	}
 
 	private static ArrayList<String> gsPalette(String material) {

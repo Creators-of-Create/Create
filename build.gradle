@@ -282,7 +282,7 @@ publishMods {
     file = jar.archiveFile
     changelog = silk.changelog
     type = STABLE
-    version = "mc$minecraft_version-$mod_version"
+    version = "$mod_version+mc$minecraft_version"
     displayName = "$mod_name $mod_version for mc$minecraft_version"
     modLoaders.add("neoforge")
 

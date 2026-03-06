@@ -1,11 +1,8 @@
 {
   "neoforge:conditions": [
     {
-      "type": "neoforge:not",
-      "value": {
-        "type": "neoforge:mod_loaded",
-        "modid": "environmental"
-      }
+      "type": "neoforge:mod_loaded",
+      "modid": "environmental"
     }
   ],
   "type": "create:pressing",
@@ -19,18 +16,12 @@
       },
       {
         "item": "minecraft:rooted_dirt"
-      },
-      {
-        "item": "minecraft:mycelium"
-      },
-      {
-        "item": "minecraft:podzol"
       }
     ]
   ],
   "results": [
     {
-      "id": "minecraft:dirt_path"
+      "id": "environmental:dirt_path"
     }
   ]
 }
