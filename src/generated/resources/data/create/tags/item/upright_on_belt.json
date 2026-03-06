@@ -78,6 +78,18 @@
     {
       "id": "silentgems:fishy_stew",
       "required": false
+    },
+    {
+      "id": "autumnity:foul_soup",
+      "required": false
+    },
+    {
+      "id": "autumnity:syrup_bottle",
+      "required": false
+    },
+    {
+      "id": "autumnity:sap_bottle",
+      "required": false
     }
   ]
 }
