@@ -57,6 +57,8 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 
 	@Override
 	public FluidStack drain(FluidStack resource, FluidAction action) {
+		if (resource.isEmpty())
+			return FluidStack.EMPTY;
 		return drainInternal(resource.getAmount(), resource, action);
 	}
 

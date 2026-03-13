@@ -185,6 +185,8 @@ public class FluidNetwork {
 		Map<IFluidHandler, Integer> accumulatedFill = new IdentityHashMap<>();
 
 		for (boolean simulate : Iterate.trueAndFalse) {
+			if (flowSpeed <= 0)
+				break;
 			FluidAction action = simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE;
 
 			if (source == null)
