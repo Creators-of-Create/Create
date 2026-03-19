@@ -106,7 +106,8 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		computerBehaviour.removePeripheral();
+		if (computerBehaviour != null)
+			computerBehaviour.removePeripheral();
 	}
 
 	public void refreshClientStockSnapshot() {
