@@ -1,7 +1,5 @@
 package com.simibubi.create.content.equipment.potatoCannon;
 
-import net.minecraft.world.item.enchantment.Enchantments;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,17 +26,23 @@ import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -58,6 +62,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 	protected float additionalDamageMult = 1;
 	protected float additionalKnockback = 0;
+	protected boolean additionalFlame = false;
 	protected float recoveryChance = 0;
 
 	public PotatoProjectileEntity(EntityType<? extends AbstractHurtingProjectile> type, Level level) {
@@ -79,12 +84,14 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		int recovery = cannon.getEnchantmentLevel(enchantmentRegistry.getHolderOrThrow(AllEnchantments.POTATO_RECOVERY));
 		int power = cannon.getEnchantmentLevel(enchantmentRegistry.getHolderOrThrow(Enchantments.POWER));
 		int knockback = cannon.getEnchantmentLevel(enchantmentRegistry.getHolderOrThrow(Enchantments.PUNCH));
+		int flame = cannon.getEnchantmentLevel(enchantmentRegistry.getHolderOrThrow(Enchantments.FLAME));
 
 		if (recovery > 0)
 			recoveryChance = .125f + recovery * .125f;
 
 		additionalDamageMult = 1 + power * 0.2f;
 		additionalKnockback = knockback * 0.5f;
+		additionalFlame = flame > 0;
 	}
 
 	public ItemStack getItem() {
@@ -101,6 +108,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		setItem(ItemStack.parseOptional(this.registryAccess(), nbt.getCompound("Item")));
 		additionalDamageMult = nbt.getFloat("AdditionalDamage");
 		additionalKnockback = nbt.getFloat("AdditionalKnockback");
+		additionalFlame = nbt.getBoolean("AdditionalFlame");
 		recoveryChance = nbt.getFloat("Recovery");
 		super.readAdditionalSaveData(nbt);
 	}
@@ -110,6 +118,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		nbt.put("Item", stack.saveOptional(this.registryAccess()));
 		nbt.putFloat("AdditionalDamage", additionalDamageMult);
 		nbt.putFloat("AdditionalKnockback", additionalKnockback);
+		nbt.putBoolean("AdditionalFlame", additionalFlame);
 		nbt.putFloat("Recovery", recoveryChance);
 		super.addAdditionalSaveData(nbt);
 	}
@@ -172,7 +181,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 	@Override
 	protected boolean shouldBurn() {
-		return false;
+		return additionalFlame;
 	}
 
 	@Override
@@ -208,12 +217,16 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 		if (target instanceof WitherBoss && ((WitherBoss) target).isPowered())
 			return;
-		if (type.preEntityHit(stack, ray))
+
+		if (type.preEntityHit(stack, ray)) {
 			return;
+		}
 
 		boolean targetIsEnderman = target.getType() == EntityType.ENDERMAN;
+		boolean immuneToPoison = target.getType().is(EntityTypeTags.IGNORES_POISON_AND_REGEN) || (target instanceof Spider) || (target instanceof EnderDragon) || (target instanceof Witch);
 		int k = target.getRemainingFireTicks();
-		if (this.isOnFire() && !targetIsEnderman)
+
+		if (this.isOnFire() && !targetIsEnderman && (!getItem().is(Items.POISONOUS_POTATO) || immuneToPoison))
 			target.igniteForSeconds(5);
 
 		boolean onServer = !level().isClientSide;
