@@ -95,8 +95,6 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 
 	@Override
 	public void setReceivedStrength(int networkPower) {
-		if (!newPosition)
-			return;
 		signalCallback.accept(networkPower);
 	}
 
