@@ -83,7 +83,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (recovery > 0)
 			recoveryChance = .125f + recovery * .125f;
 
-		additionalDamageMult = power * 0.2f;
+		additionalDamageMult = 1 + power * 0.2f;
 		additionalKnockback = knockback * 0.5f;
 	}
 
