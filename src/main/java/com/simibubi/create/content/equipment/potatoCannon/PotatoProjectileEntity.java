@@ -1,5 +1,7 @@
 package com.simibubi.create.content.equipment.potatoCannon;
 
+import net.minecraft.world.item.enchantment.Enchantments;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,9 +77,14 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		Registry<Enchantment> enchantmentRegistry = registryAccess().registryOrThrow(Registries.ENCHANTMENT);
 
 		int recovery = cannon.getEnchantmentLevel(enchantmentRegistry.getHolderOrThrow(AllEnchantments.POTATO_RECOVERY));
+		int power = cannon.getEnchantmentLevel(enchantmentRegistry.getHolderOrThrow(Enchantments.POWER));
+		int knockback = cannon.getEnchantmentLevel(enchantmentRegistry.getHolderOrThrow(Enchantments.PUNCH));
 
 		if (recovery > 0)
 			recoveryChance = .125f + recovery * .125f;
+
+		additionalDamageMult = power * 0.2f;
+		additionalKnockback = knockback * 0.5f;
 	}
 
 	public ItemStack getItem() {
