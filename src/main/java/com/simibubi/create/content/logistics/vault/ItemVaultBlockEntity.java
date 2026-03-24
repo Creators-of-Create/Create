@@ -316,6 +316,14 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 	}
 
 	@Override
+	public void writeSafe(CompoundTag compound, HolderLookup.Provider registries) {
+		if (isController()) {
+			compound.putInt("Size", radius);
+			compound.putInt("Length", length);
+		}
+	}
+
+	@Override
 	public void clearContent() {
 		((ItemStackHandlerAccessor) inventory).create$getStacks().clear();
 	}
