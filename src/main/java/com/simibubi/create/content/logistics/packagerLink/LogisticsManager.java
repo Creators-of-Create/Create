@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.packagerLink;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -109,15 +110,26 @@ public class LogisticsManager {
 			true);
 
 		// Select one link per inventory, preserving priority order (allAvailableLinks is sorted by redstonePower)
-		Set<InventoryIdentifier> seenInventories = new HashSet<>();
+		// Links tied on priority for the same inventory are load-balanced randomly.
+		Map<InventoryIdentifier, Integer> inventoryLinkIndex = new HashMap<>();
+		Map<InventoryIdentifier, Integer> inventoryTieCount = new HashMap<>();
 		List<LogisticallyLinkedBehaviour> availableLinks = new ArrayList<>();
 
 		for (LogisticallyLinkedBehaviour link : allAvailableLinks) {
 			InventoryIdentifier inventoryId = getInventoryIdentifierFromLink(link);
 			if (inventoryId != null) {
-				if (seenInventories.add(inventoryId))
+				Integer existingIndex = inventoryLinkIndex.get(inventoryId);
+				if (existingIndex == null) {
+					inventoryLinkIndex.put(inventoryId, availableLinks.size());
+					inventoryTieCount.put(inventoryId, 1);
 					availableLinks.add(link);
-				// Skip lower-priority links for already-seen inventories
+				} else if (availableLinks.get(existingIndex).redstonePower == link.redstonePower) {
+					// Tied priority — reservoir sample to load-balance randomly
+					int count = inventoryTieCount.merge(inventoryId, 1, Integer::sum);
+					if (r.nextInt(count) == 0)
+						availableLinks.set(existingIndex, link);
+				}
+				// else: lower priority (higher redstonePower), skip
 			} else {
 				availableLinks.add(link);
 			}
