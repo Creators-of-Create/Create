@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.packagerLink;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -109,26 +108,18 @@ public class LogisticsManager {
 		Iterable<LogisticallyLinkedBehaviour> allAvailableLinks = LogisticallyLinkedBehaviour.getAllPresent(freqId,
 			true);
 
-		// Group links by InventoryIdentifier and randomly select one from each group
-		Map<InventoryIdentifier, List<LogisticallyLinkedBehaviour>> linksByInventory = new HashMap<>();
+		// Select one link per inventory, preserving priority order (allAvailableLinks is sorted by redstonePower)
+		Set<InventoryIdentifier> seenInventories = new HashSet<>();
 		List<LogisticallyLinkedBehaviour> availableLinks = new ArrayList<>();
 
-		// Group links by their inventory identifier
 		for (LogisticallyLinkedBehaviour link : allAvailableLinks) {
 			InventoryIdentifier inventoryId = getInventoryIdentifierFromLink(link);
 			if (inventoryId != null) {
-				linksByInventory.computeIfAbsent(inventoryId, k -> new ArrayList<>()).add(link);
+				if (seenInventories.add(inventoryId))
+					availableLinks.add(link);
+				// Skip lower-priority links for already-seen inventories
 			} else {
-				// Links without inventory identifier are added directly
 				availableLinks.add(link);
-			}
-		}
-
-		// Randomly select one link from each inventory group
-		for (List<LogisticallyLinkedBehaviour> linkGroup : linksByInventory.values()) {
-			if (!linkGroup.isEmpty()) {
-				LogisticallyLinkedBehaviour selectedLink = linkGroup.get(r.nextInt(linkGroup.size()));
-				availableLinks.add(selectedLink);
 			}
 		}
 
