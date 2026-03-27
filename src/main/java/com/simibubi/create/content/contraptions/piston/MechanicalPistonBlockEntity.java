@@ -53,6 +53,16 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 
 		// Collect Construct
 		PistonContraption contraption = new PistonContraption(direction, getMovementSpeed() < 0);
+		if (!contraption.collectExtensions(level, worldPosition))
+			return;
+
+		// Check if not at limit already before assembling
+		extensionLength = contraption.extensionLength;
+		float resultingOffset = contraption.initialExtensionProgress + Math.signum(getMovementSpeed()) * .5f;
+		if (resultingOffset <= 0 || resultingOffset >= extensionLength) {
+			return;
+		}
+
 		if (!contraption.assemble(level, worldPosition))
 			return;
 
@@ -64,13 +74,6 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 		if (ContraptionCollider.isCollidingWithWorld(level, contraption, anchor.relative(movementDirection),
 			movementDirection))
 			return;
-
-		// Check if not at limit already
-		extensionLength = contraption.extensionLength;
-		float resultingOffset = contraption.initialExtensionProgress + Math.signum(getMovementSpeed()) * .5f;
-		if (resultingOffset <= 0 || resultingOffset >= extensionLength) {
-			return;
-		}
 
 		// Run
 		running = true;
