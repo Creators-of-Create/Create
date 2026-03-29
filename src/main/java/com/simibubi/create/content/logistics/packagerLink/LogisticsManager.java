@@ -94,92 +94,107 @@ public class LogisticsManager {
 		performPackageRequests(requests);
 		return true;
 	}
+    
+    public static Multimap<PackagerBlockEntity, PackagingRequest> findPackagersForRequest(UUID freqId,
+                                                                                          PackageOrderWithCrafts order, @Nullable IdentifiedInventory ignoredHandler, String address) {
+        // Aggregate identical items to prevent same-tick stale cache issues (over-requesting)
+        List<BigItemStack> aggregatedStacks = new ArrayList<>();
 
-	public static Multimap<PackagerBlockEntity, PackagingRequest> findPackagersForRequest(UUID freqId,
-																						  PackageOrderWithCrafts order, @Nullable IdentifiedInventory ignoredHandler, String address) {
-		List<BigItemStack> stacks = new ArrayList<>();
+        for (BigItemStack originalStack : order.stacks()) {
+            if (originalStack.stack.isEmpty() || originalStack.count <= 0) 
+                continue;
 
-		for (BigItemStack stack : order.stacks())
-			if (!stack.stack.isEmpty() && stack.count > 0)
-				stacks.add(stack);
+            boolean merged = false;
+            for (BigItemStack existing : aggregatedStacks) {
+                if (ItemStack.isSameItemSameComponents(existing.stack, originalStack.stack)) {
+                    existing.count += originalStack.count;
+                    merged = true;
+                    break;
+                }
+            }
+            if (!merged) {
+                // Instantiate new BigItemStack to preserve the original order specifics for defrag
+                aggregatedStacks.add(new BigItemStack(originalStack.stack, originalStack.count));
+            }
+        }
 
-		Multimap<PackagerBlockEntity, PackagingRequest> requests = HashMultimap.create();
+        Multimap<PackagerBlockEntity, PackagingRequest> requests = HashMultimap.create();
 
-		// Packages need to track their index and successors for successful defrag
-		Iterable<LogisticallyLinkedBehaviour> allAvailableLinks = LogisticallyLinkedBehaviour.getAllPresent(freqId,
-			true);
+        // Packages need to track their index and successors for successful defrag
+        Iterable<LogisticallyLinkedBehaviour> allAvailableLinks = LogisticallyLinkedBehaviour.getAllPresent(freqId, true);
 
-		// Group links by InventoryIdentifier and randomly select one from each group
-		Map<InventoryIdentifier, List<LogisticallyLinkedBehaviour>> linksByInventory = new HashMap<>();
-		List<LogisticallyLinkedBehaviour> availableLinks = new ArrayList<>();
+        // Group links by InventoryIdentifier and randomly select one from each group
+        Map<InventoryIdentifier, List<LogisticallyLinkedBehaviour>> linksByInventory = new HashMap<>();
+        List<LogisticallyLinkedBehaviour> availableLinks = new ArrayList<>();
 
-		// Group links by their inventory identifier
-		for (LogisticallyLinkedBehaviour link : allAvailableLinks) {
-			InventoryIdentifier inventoryId = getInventoryIdentifierFromLink(link);
-			if (inventoryId != null) {
-				linksByInventory.computeIfAbsent(inventoryId, k -> new ArrayList<>()).add(link);
-			} else {
-				// Links without inventory identifier are added directly
-				availableLinks.add(link);
-			}
-		}
+        for (LogisticallyLinkedBehaviour link : allAvailableLinks) {
+            InventoryIdentifier inventoryId = getInventoryIdentifierFromLink(link);
+            if (inventoryId != null) {
+                linksByInventory.computeIfAbsent(inventoryId, k -> new ArrayList<>()).add(link);
+            } else {
+                availableLinks.add(link);
+            }
+        }
 
-		// Randomly select one link from each inventory group
-		for (List<LogisticallyLinkedBehaviour> linkGroup : linksByInventory.values()) {
-			if (!linkGroup.isEmpty()) {
-				LogisticallyLinkedBehaviour selectedLink = linkGroup.get(r.nextInt(linkGroup.size()));
-				availableLinks.add(selectedLink);
-			}
-		}
+        for (List<LogisticallyLinkedBehaviour> linkGroup : linksByInventory.values()) {
+            if (!linkGroup.isEmpty()) {
+                LogisticallyLinkedBehaviour selectedLink = linkGroup.get(r.nextInt(linkGroup.size()));
+                availableLinks.add(selectedLink);
+            }
+        }
 
-		List<LogisticallyLinkedBehaviour> usedLinks = new ArrayList<>();
-		MutableBoolean finalLinkTracker = new MutableBoolean(false);
+        List<LogisticallyLinkedBehaviour> usedLinks = new ArrayList<>();
+        MutableBoolean finalLinkTracker = new MutableBoolean(false);
 
-		// First box needs to carry the order specifics for successful defrag
-		PackageOrderWithCrafts context = order;
+        // First box needs to carry the order specifics for successful defrag
+        PackageOrderWithCrafts context = order;
+        int orderId = r.nextInt();
 
-		// Packages from future orders should not be merged in the packager queue
-		int orderId = r.nextInt();
+        // Iterate over aggregated requirements instead of individual order slots
+        for (int i = 0; i < aggregatedStacks.size(); i++) {
+            BigItemStack entry = aggregatedStacks.get(i);
+            int remainingCount = entry.count;
+            boolean finalEntry = i == aggregatedStacks.size() - 1;
+            ItemStack requestedItem = entry.stack;
 
-		for (int i = 0; i < stacks.size(); i++) {
-			BigItemStack entry = stacks.get(i);
-			int remainingCount = entry.count;
-			boolean finalEntry = i == stacks.size() - 1;
-			ItemStack requestedItem = entry.stack;
+            for (LogisticallyLinkedBehaviour link : availableLinks) {
+                int usedIndex = usedLinks.indexOf(link);
+                int linkIndex = usedIndex == -1 ? usedLinks.size() : usedIndex;
+                MutableBoolean isFinalLink = new MutableBoolean(false);
+                if (linkIndex == usedLinks.size() - 1)
+                    isFinalLink = finalLinkTracker;
 
-			for (LogisticallyLinkedBehaviour link : availableLinks) {
-				int usedIndex = usedLinks.indexOf(link);
-				int linkIndex = usedIndex == -1 ? usedLinks.size() : usedIndex;
-				MutableBoolean isFinalLink = new MutableBoolean(false);
-				if (linkIndex == usedLinks.size() - 1)
-					isFinalLink = finalLinkTracker;
+                Pair<PackagerBlockEntity, PackagingRequest> request = link.processRequest(requestedItem, remainingCount,
+                        address, linkIndex, isFinalLink, orderId, context, ignoredHandler);
+                
+                if (request == null)
+                    continue;
 
-				// Only send context and craftingContext with first package
-				Pair<PackagerBlockEntity, PackagingRequest> request = link.processRequest(requestedItem, remainingCount,
-					address, linkIndex, isFinalLink, orderId, context, ignoredHandler);
-				if (request == null)
-					continue;
+                requests.put(request.getFirst(), request.getSecond());
 
-				requests.put(request.getFirst(), request.getSecond());
+                int processedCount = request.getSecond().getCount();
+                
+                if (processedCount > 0) {
+                    // Only the first package needs to carry the order context for successful defrag
+                    context = null; 
 
-				int processedCount = request.getSecond()
-					.getCount();
-				if (processedCount > 0 && usedIndex == -1) {
-					context = null;
-					usedLinks.add(link);
-					finalLinkTracker = isFinalLink;
-				}
+                    if (usedIndex == -1) {
+                        usedLinks.add(link);
+                        finalLinkTracker = isFinalLink;
+                    }
+                }
 
-				remainingCount -= processedCount;
-				if (remainingCount > 0)
-					continue;
-				if (finalEntry)
-					finalLinkTracker.setTrue();
-				break;
-			}
-		}
-		return requests;
-	}
+                remainingCount -= processedCount;
+                if (remainingCount > 0)
+                    continue; 
+                
+                if (finalEntry)
+                    finalLinkTracker.setTrue();
+                break; 
+            }
+        }
+        return requests;
+    }
 
 	@Nullable
 	private static InventoryIdentifier getInventoryIdentifierFromLink(LogisticallyLinkedBehaviour link) {
