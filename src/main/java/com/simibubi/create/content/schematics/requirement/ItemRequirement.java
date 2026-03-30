@@ -6,6 +6,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.simibubi.create.AllTags;
+
+import com.simibubi.create.AllTags.AllItemTags;
+
+import net.minecraft.world.level.ItemLike;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.api.schematic.requirement.SchematicRequirementRegistries;
@@ -53,16 +59,24 @@ public class ItemRequirement {
 	}
 
 	public ItemRequirement(ItemUseType usage, ItemStack stack) {
-		this(new StackRequirement(stack, usage));
+		this(StackRequirement.of(stack, usage));
 	}
-
 	public ItemRequirement(ItemUseType usage, Item item) {
 		this(usage, new ItemStack(item));
 	}
 
+	public ItemRequirement(ItemStack stack) {
+		this(StackRequirement.of(stack));
+	}
+
+	public ItemRequirement(Item item) {
+		this(new ItemStack(item));
+	}
+
+
 	public ItemRequirement(ItemUseType usage, List<ItemStack> requiredItems) {
 		this(requiredItems.stream()
-			.map(req -> new StackRequirement(req, usage))
+			.map(req -> StackRequirement.of(req, usage))
 			.collect(Collectors.toList()));
 	}
 
@@ -128,8 +142,11 @@ public class ItemRequirement {
 		// Large ferns don't exist as blocks so use 2 ferns instead
 		if (block == Blocks.LARGE_FERN)
 			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(Items.FERN, 2));
-
-		return new ItemRequirement(ItemUseType.CONSUME, item);
+		if (be != null) //aka if the block is on safenbt
+			try {
+				return new ItemRequirement(state.getCloneItemStack(null, be.getLevel(), be.getBlockPos(), null));
+			} catch (Exception e) {}; //in case it doesn't handle null hit target
+		return new ItemRequirement(item);
 	}
 
 	public static ItemRequirement of(Entity entity) {
@@ -186,13 +203,29 @@ public class ItemRequirement {
 	}
 
 	public enum ItemUseType {
-		CONSUME, DAMAGE
+		CONSUME, DAMAGE;
+
+		public static ItemUseType getType(ItemStack item) {
+			return item.is(AllItemTags.SCHEMATIC_DAMAGE_TYPE.tag)?DAMAGE:CONSUME;
+		}
 	}
 
 	public static class StackRequirement {
 		public final ItemStack stack;
 		public final ItemUseType usage;
 
+		public static StackRequirement of(ItemStack stack) {
+			ItemUseType usage = ItemUseType.getType(stack);
+			return StackRequirement.of(stack, usage);
+		}
+
+		public static StackRequirement of(ItemStack stack, ItemUseType usage) {
+			if (stack.is(AllItemTags.STRICT_NBT_MATCH.tag))
+				return new StrictNbtStackRequirement(stack, usage);
+			return new StackRequirement(stack, usage);
+		}
+
+		//use StackRequirement.of instead
 		public StackRequirement(ItemStack stack, ItemUseType usage) {
 			this.stack = stack;
 			this.usage = usage;

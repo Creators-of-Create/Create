@@ -266,6 +266,7 @@ public class AllItems {
 		.properties(p -> p.stacksTo(1)
 			.durability(99))
 		.tag(ItemTags.DURABILITY_ENCHANTABLE)
+		.tag(AllItemTags.SCHEMATIC_DAMAGE_TYPE.tag)
 		.register();
 
 	public static final ItemEntry<MinecartCouplingItem> MINECART_COUPLING =

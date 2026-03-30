@@ -240,7 +240,10 @@ public class AllTags {
 		FOODS_DOUGH_WHEAT(COMMON, "foods/dough/wheat"),
 
 		UA_CORAL(MOD, "upgrade_aquatic/coral"),
-		CURIOS_HEAD(CURIOS, "head");
+		CURIOS_HEAD(CURIOS, "head"),
+
+		STRICT_NBT_MATCH,
+		SCHEMATIC_DAMAGE_TYPE;
 
 		public final TagKey<Item> tag;
 

@@ -280,7 +280,7 @@ public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, 
 
 	@Override
 	public ItemRequirement getRequiredItems() {
-		return new ItemRequirement(ItemUseType.DAMAGE, AllItems.SUPER_GLUE.get());
+		return new ItemRequirement(AllItems.SUPER_GLUE.get());
 	}
 
 	@Override
