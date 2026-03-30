@@ -206,7 +206,7 @@ public class ItemRequirement {
 		CONSUME, DAMAGE;
 
 		public static ItemUseType getType(ItemStack item) {
-			return item.is(AllItemTags.SCHEMATIC_DAMAGE_TYPE.tag)?DAMAGE:CONSUME;
+			return AllItemTags.SCHEMATIC_DAMAGE_TYPE.matches(item) ? DAMAGE : CONSUME;
 		}
 	}
 
@@ -220,12 +220,13 @@ public class ItemRequirement {
 		}
 
 		public static StackRequirement of(ItemStack stack, ItemUseType usage) {
-			if (stack.is(AllItemTags.STRICT_NBT_MATCH.tag))
+			if (AllItemTags.STRICT_NBT_MATCH.matches(stack))
 				return new StrictNbtStackRequirement(stack, usage);
 			return new StackRequirement(stack, usage);
 		}
 
 		//use StackRequirement.of instead
+		@Deprecated
 		public StackRequirement(ItemStack stack, ItemUseType usage) {
 			this.stack = stack;
 			this.usage = usage;

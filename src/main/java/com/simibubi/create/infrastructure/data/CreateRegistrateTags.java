@@ -224,8 +224,6 @@ public class CreateRegistrateTags {
 		prov.tag(AllItemTags.CURIOS_HEAD.tag)
 			.add(AllItems.GOGGLES.get());
 
-		prov.tag(AllItemTags.STRICT_NBT_MATCH.tag);
-
 		TagGen.addOptional(prov.tag(AllItemTags.ALLURITE.tag), Mods.GS, gsPalette("allurite"));
 
 		TagGen.addOptional(prov.tag(AllItemTags.LUMIERE.tag), Mods.GS, gsPalette("lumiere"));
