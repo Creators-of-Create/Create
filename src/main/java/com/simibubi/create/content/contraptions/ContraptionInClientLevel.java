@@ -29,7 +29,7 @@ public class ContraptionInClientLevel implements EntityInLevelCallback {
 
 	@Override
 	public void onRemove(@NotNull RemovalReason removalReason) {
-		if (entity.level() instanceof ClientLevel && removalReason == RemovalReason.DISCARDED
+		if (entity.level().isClientSide && removalReason == RemovalReason.DISCARDED
 			&& !delayedRemovals.containsKey(this) && entity.contraption != null) {
 			entity.collidingEntities.clear();
 			int forced_tick = 0;
