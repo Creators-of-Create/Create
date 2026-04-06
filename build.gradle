@@ -313,6 +313,7 @@ publishMods {
 String calculateGitHash() {
     try {
         ExecOutput output = providers.exec {
+            it.workingDir(project.projectDir)
             commandLine("git", "rev-parse", "HEAD")
         }
         return output.standardOutput.asText.get().trim()
@@ -324,6 +325,7 @@ String calculateGitHash() {
 boolean hasUnstaged() {
     try {
         ExecOutput output = providers.exec {
+            it.workingDir(project.projectDir)
             commandLine("git", "status", "--porcelain")
         }
         String result = output.standardOutput.asText.get().replace("/M gradlew(\\.bat)?/", "").trim()
