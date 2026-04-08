@@ -228,10 +228,10 @@ public class AllItems {
 		IRON_SHEET = taggedIngredient("iron_sheet", CommonMetal.IRON.plates, PLATES.tag),
 		GOLDEN_SHEET = taggedIngredient("golden_sheet", CommonMetal.GOLD.plates, PLATES.tag, ItemTags.PIGLIN_LOVED),
 
-	CRUSHED_IRON = taggedIngredient("crushed_raw_iron", CRUSHED_RAW_MATERIALS.tag),
-		CRUSHED_GOLD = taggedIngredient("crushed_raw_gold", CRUSHED_RAW_MATERIALS.tag, ItemTags.PIGLIN_LOVED),
-		CRUSHED_COPPER = taggedIngredient("crushed_raw_copper", CRUSHED_RAW_MATERIALS.tag),
-		CRUSHED_ZINC = taggedIngredient("crushed_raw_zinc", CRUSHED_RAW_MATERIALS.tag);
+	CRUSHED_IRON = taggedIngredient("crushed_raw_iron", CommonMetal.IRON.crushedOres, CRUSHED_RAW_MATERIALS.tag),
+		CRUSHED_GOLD = taggedIngredient("crushed_raw_gold", CommonMetal.GOLD.crushedOres, CRUSHED_RAW_MATERIALS.tag, ItemTags.PIGLIN_LOVED),
+		CRUSHED_COPPER = taggedIngredient("crushed_raw_copper", CommonMetal.COPPER.crushedOres, CRUSHED_RAW_MATERIALS.tag),
+		CRUSHED_ZINC = taggedIngredient("crushed_raw_zinc", CommonMetal.ZINC.crushedOres, CRUSHED_RAW_MATERIALS.tag);
 
 	public static final ItemEntry<TagDependentIngredientItem> CRUSHED_OSMIUM = compatCrushedOre(OSMIUM),
 		CRUSHED_PLATINUM = compatCrushedOre(PLATINUM), CRUSHED_SILVER = compatCrushedOre(SILVER),
@@ -526,7 +526,7 @@ public class AllItems {
 		return REGISTRATE
 			.item("crushed_raw_" + metal,
 				props -> new TagDependentIngredientItem(props, metal.ores.items()))
-			.tag(CRUSHED_RAW_MATERIALS.tag)
+			.tag(CRUSHED_RAW_MATERIALS.tag, metal.crushedOres)
 			.register();
 	}
 
