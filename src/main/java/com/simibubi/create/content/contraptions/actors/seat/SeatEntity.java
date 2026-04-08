@@ -15,7 +15,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Cod;
 import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.entity.animal.Pufferfish;
+import net.minecraft.world.entity.animal.Salmon;
+import net.minecraft.world.entity.animal.TropicalFish;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.frog.Frog;
 import net.minecraft.world.entity.monster.Skeleton;
@@ -83,6 +87,14 @@ public class SeatEntity extends Entity implements IEntityWithComplexSpawn {
 			return 1 / 8.0;
 		if (entity instanceof PackageEntity)
 			return 3 / 32f;
+		if (entity instanceof Cod)
+			return 1 / 8f;
+		if (entity instanceof TropicalFish)
+			return 1 / 16f;
+		if (entity instanceof Pufferfish)
+			return 1 / 16f;
+		if (entity instanceof Salmon)
+			return 1 / 24f;
 		return 0;
 	}
 
