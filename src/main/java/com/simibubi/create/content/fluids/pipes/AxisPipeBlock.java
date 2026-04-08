@@ -59,11 +59,9 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 
 	@Override
 	public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
-		if (world.isClientSide())
-			return super.playerWillDestroy(world, pos, state, player);
-		if (!player.isCreative())
-			return super.playerWillDestroy(world, pos, state, player);
-		removeBracket(world, pos, true);
+		if (!world.isClientSide() && player.isCreative()) {
+			removeBracket(world, pos, true);
+		}
 		return super.playerWillDestroy(world, pos, state, player);
 	}
 
