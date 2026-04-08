@@ -190,7 +190,7 @@ public class AllItems {
 	public static final ItemEntry<Item> RAW_ZINC =
 		taggedIngredient("raw_zinc", CommonMetal.ZINC.rawOres, Items.RAW_MATERIALS);
 
-	public static final ItemEntry<Item> ANDESITE_ALLOY = taggedIngredient("andesite_alloy", CREATE_INGOTS.tag),
+	public static final ItemEntry<Item> ANDESITE_ALLOY = taggedIngredient("andesite_alloy", AllItemTags.ANDESITE_ALLOY_INGOTS.tag, CREATE_INGOTS.tag),
 		ZINC_INGOT = taggedIngredient("zinc_ingot", CommonMetal.ZINC.ingots, CREATE_INGOTS.tag),
 		BRASS_INGOT = taggedIngredient("brass_ingot", CommonMetal.BRASS.ingots, CREATE_INGOTS.tag);
 

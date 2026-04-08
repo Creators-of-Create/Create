@@ -226,6 +226,7 @@ public class AllTags {
 
 		CARDBOARD_STORAGE_BLOCKS(COMMON, "storage_blocks/cardboard"),
 		ANDESITE_ALLOY_STORAGE_BLOCKS(COMMON, "storage_blocks/andesite_alloy"),
+		ANDESITE_ALLOY_INGOTS(COMMON, "ingots/andesite_alloy"),
 
 		CHOCOLATE_BUCKETS(COMMON, "buckets/chocolate"),
 		HONEY_BUCKETS(COMMON, "buckets/honey"),
