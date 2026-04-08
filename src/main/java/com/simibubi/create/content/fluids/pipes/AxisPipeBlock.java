@@ -31,7 +31,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -55,6 +57,16 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 			removeBracket(world, pos, true).ifPresent(stack -> Block.popResource(world, pos, stack));
 		if (state.hasBlockEntity() && (blockTypeChanged || !newState.hasBlockEntity()))
 			world.removeBlockEntity(pos);
+	}
+
+	@Override
+	public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+		if (world.isClientSide())
+			return super.playerWillDestroy(world, pos, state, player);
+		if (!player.isCreative())
+			return super.playerWillDestroy(world, pos, state, player);
+		removeBracket(world, pos, true);
+		return super.playerWillDestroy(world, pos, state, player);
 	}
 
 	@Override
