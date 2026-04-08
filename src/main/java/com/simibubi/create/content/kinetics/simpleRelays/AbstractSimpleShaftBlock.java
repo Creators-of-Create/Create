@@ -48,7 +48,7 @@ public abstract class AbstractSimpleShaftBlock extends AbstractShaftBlock implem
 
 	@Override
 	public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
-		if (!world.isClientSide() && player.isCreative())) {
+		if (!world.isClientSide() && player.isCreative()) {
 			removeBracket(world, pos, true);
 		}
 		return super.playerWillDestroy(world, pos, state, player);
