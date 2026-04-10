@@ -8,6 +8,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.Blocks;
+
+import net.neoforged.neoforge.common.Tags;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
@@ -230,6 +239,15 @@ public class BeltInventory {
 				belt.notifyUpdate();
 				continue;
 			}
+
+			if(ending == Ending.TRASHED){
+				if(trash(currentItem, nextPosition)){
+					iterator.remove();
+					flapTunnel(this, lastOffset, movementFacing, false);
+					belt.notifyUpdate();
+					continue;
+				}
+			}
 		}
 	}
 
@@ -311,7 +329,7 @@ public class BeltInventory {
 	}
 
 	private enum Ending {
-		UNRESOLVED(0), EJECT(0), INSERT(.25f), FUNNEL(.5f), BLOCKED(.45f);
+		UNRESOLVED(0), EJECT(0), INSERT(.25f), FUNNEL(.5f), BLOCKED(.45f), TRASHED(-.25f);
 
 		private float margin;
 
@@ -331,6 +349,9 @@ public class BeltInventory {
 			BlockEntityBehaviour.get(world, nextPosition, DirectBeltInputBehaviour.TYPE);
 		if (inputBehaviour != null)
 			return Ending.INSERT;
+
+		if(world.getBlockState(nextPosition).is(Blocks.LAVA_CAULDRON))
+			return Ending.TRASHED;
 
 		if (BlockHelper.hasBlockSolidSide(world.getBlockState(nextPosition), world, nextPosition,
 			belt.getMovementFacing()
@@ -429,6 +450,46 @@ public class BeltInventory {
 			nbt.put("LazyItem", lazyClientItem.serializeNBT(registries));
 		nbt.putBoolean("PositiveOrder", beltMovementPositive);
 		return nbt;
+	}
+
+	public boolean trash(TransportedItemStack stack, BlockPos nextPos){
+		if(stack.stack.has(DataComponents.FIRE_RESISTANT))
+			return false;
+
+		if(belt.getLevel() != null){
+			if (belt.getLevel() instanceof ServerLevel serverLevel) {
+				BlockPos abovePosition = nextPos.above();
+				double x = abovePosition.getX() + 0.5;
+				double y = abovePosition.getY() + 0.2;
+				double z = abovePosition.getZ() + 0.5;
+
+				belt.getLevel().playSound(
+					null,
+					abovePosition,
+					SoundEvents.LAVA_EXTINGUISH,
+					SoundSource.BLOCKS,
+					0.5F,
+					0.8F + belt.getLevel().random.nextFloat() * 0.4F
+				);
+
+				serverLevel.getLevel().sendParticles(
+					ParticleTypes.LAVA,
+					x, y, z,
+					2,
+					0.2, 0.1, 0.2,
+					0.05
+				);
+
+				serverLevel.sendParticles(
+					ParticleTypes.LARGE_SMOKE,
+					x, y, z,
+					1,
+					0.1, 0.1, 0.1,
+					0.02
+				);
+			}
+		}
+		return true;
 	}
 
 	public void eject(TransportedItemStack stack) {
