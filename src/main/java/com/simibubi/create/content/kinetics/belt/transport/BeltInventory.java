@@ -485,7 +485,7 @@ public class BeltInventory {
 					x, y, z,
 					1,
 					0.1, 0.1, 0.1,
-					0.023
+					0.022
 				);
 			}
 		}
