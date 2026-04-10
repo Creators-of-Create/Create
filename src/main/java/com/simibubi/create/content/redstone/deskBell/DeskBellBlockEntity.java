@@ -56,12 +56,14 @@ public class DeskBellBlockEntity extends SmartBlockEntity {
 		super.write(tag, registries, clientPacket);
 		if (clientPacket && ding)
 			NBTHelper.putMarker(tag, "Ding");
+		tag.putInt("Timer", blockStateTimer);
 		ding = false;
 	}
 
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
+		blockStateTimer = tag.getInt("Timer");
 		if (clientPacket && tag.contains("Ding"))
 			ding();
 	}
