@@ -213,19 +213,21 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 
 		int amountToExtract = getAmountToExtract();
 		ExtractionCountMode mode = getModeToExtract();
-		MutableBoolean deniedByInsertion = new MutableBoolean(false);
-		ItemStack stack = invManipulation.extract(mode, amountToExtract, s -> {
-			ItemStack handleInsertion = inputBehaviour.handleInsertion(s, facing, true);
-			if (handleInsertion.isEmpty())
-				return true;
-			deniedByInsertion.setTrue();
-			return false;
-		});
+		ItemStack stack = invManipulation.simulate().extract(mode, amountToExtract);
 		if (stack.isEmpty()) {
-			if (deniedByInsertion.isFalse())
-				invVersionTracker.awaitNewVersion(invManipulation.getInventory());
+			invVersionTracker.awaitNewVersion(invManipulation);
 			return;
 		}
+
+		ItemStack remaining = inputBehaviour.handleInsertion(stack, facing, true);
+		if (remaining.getCount() == stack.getCount()) {
+			invVersionTracker.awaitNewVersion(invManipulation);
+			return;
+		}
+
+		stack = invManipulation.extract(mode, stack.getCount() - remaining.getCount());
+		if (stack.isEmpty())
+			return;
 		flap(false);
 		onTransfer(stack);
 		inputBehaviour.handleInsertion(stack, facing, false);
