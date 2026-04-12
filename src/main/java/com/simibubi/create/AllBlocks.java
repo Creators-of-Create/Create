@@ -1344,7 +1344,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<DrillBlock> MECHANICAL_DRILL = REGISTRATE.block("mechanical_drill", DrillBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.PODZOL))
+		.properties(p -> p.noOcclusion().mapColor(MapColor.PODZOL))
 		.transform(axeOrPickaxe())
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.transform(CStress.setImpact(4.0))
@@ -1357,7 +1357,7 @@ public class AllBlocks {
 	public static final BlockEntry<SawBlock> MECHANICAL_SAW = REGISTRATE.block("mechanical_saw", SawBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.addLayer(() -> RenderType::cutoutMipped)
-		.properties(p -> p.mapColor(MapColor.PODZOL))
+		.properties(p -> p.noOcclusion().mapColor(MapColor.PODZOL))
 		.transform(axeOrPickaxe())
 		.blockstate(new SawGenerator()::generate)
 		.transform(CStress.setImpact(4.0))
@@ -1370,7 +1370,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<DeployerBlock> DEPLOYER = REGISTRATE.block("deployer", DeployerBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.PODZOL))
+		.properties(p -> p.noOcclusion().mapColor(MapColor.PODZOL))
 		.transform(axeOrPickaxe())
 		.blockstate(BlockStateGen.directionalAxisBlockProvider())
 		.transform(CStress.setImpact(4.0))
@@ -1384,7 +1384,7 @@ public class AllBlocks {
 	public static final BlockEntry<PortableStorageInterfaceBlock> PORTABLE_STORAGE_INTERFACE =
 		REGISTRATE.block("portable_storage_interface", PortableStorageInterfaceBlock::forItems)
 			.initialProperties(SharedProperties::stone)
-			.properties(p -> p.mapColor(MapColor.PODZOL))
+			.properties(p -> p.noOcclusion().mapColor(MapColor.PODZOL))
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
 			.onRegister(movementBehaviour(new PortableStorageInterfaceMovement()))
