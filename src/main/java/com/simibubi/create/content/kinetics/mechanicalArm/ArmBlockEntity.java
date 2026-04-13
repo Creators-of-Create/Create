@@ -552,9 +552,6 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
 		boolean hadGoggles = goggles;
 		goggles = tag.getBoolean("Goggles");
 
-		if (!clientPacket)
-			return;
-
 		if (hadGoggles != goggles && CatnipServices.PLATFORM.getEnv().isClient())
 			Client.queueUpdate(this);
 
