@@ -33,7 +33,6 @@ import com.simibubi.create.content.contraptions.wrench.RadialWrenchMenuSubmitPac
 import com.simibubi.create.content.equipment.bell.SoulPulseEffectPacket;
 import com.simibubi.create.content.equipment.blueprint.BlueprintAssignCompleteRecipePacket;
 import com.simibubi.create.content.equipment.clipboard.ClipboardEditPacket;
-import com.simibubi.create.content.equipment.extendoGrip.ExtendoGripInteractionPacket;
 import com.simibubi.create.content.equipment.potatoCannon.PotatoCannonPacket;
 import com.simibubi.create.content.equipment.symmetryWand.ConfigureSymmetryWandPacket;
 import com.simibubi.create.content.equipment.symmetryWand.SymmetryEffectPacket;
@@ -126,7 +125,6 @@ public enum AllPackets implements BasePacketPayload.PacketTypeProvider {
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket.STREAM_CODEC),
 	CLEAR_CONTAINER(ClearMenuPacket.class, ClearMenuPacket.STREAM_CODEC),
 	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket.STREAM_CODEC),
-	EXTENDO_INTERACT(ExtendoGripInteractionPacket.class, ExtendoGripInteractionPacket.STREAM_CODEC),
 	CONTRAPTION_INTERACT(ContraptionInteractionPacket.class, ContraptionInteractionPacket.STREAM_CODEC),
 	CLIENT_MOTION(ClientMotionPacket.class, ClientMotionPacket.STREAM_CODEC),
 	PLACE_ARM(ArmPlacementPacket.class, ArmPlacementPacket.STREAM_CODEC),
