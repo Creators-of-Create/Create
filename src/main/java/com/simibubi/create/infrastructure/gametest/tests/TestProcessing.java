@@ -83,12 +83,17 @@ public class TestProcessing {
 		SequencedAssemblyRecipe recipe = (SequencedAssemblyRecipe) helper.getLevel().getRecipeManager()
 				.byKey(Create.asResource("sequenced_assembly/precision_mechanism"))
 				.orElseThrow(() -> new GameTestAssertException("Precision Mechanism recipe not found")).value();
+		Item result = recipe.getResultItem(helper.getLevel().registryAccess()).getItem();
 		Item[] possibleResults = recipe.resultPool.stream()
 				.map(ProcessingOutput::getStack)
 				.map(ItemStack::getItem)
+				.filter(item -> item != result)
 				.toArray(Item[]::new);
 
-		helper.succeedWhen(() -> helper.assertAnyContained(output, possibleResults));
+		helper.succeedWhen(() -> {
+			helper.assertContainerContains(output, result);
+			helper.assertAnyContained(output, possibleResults);
+		});
 	}
 
 	@GameTest(template = "sand_washing", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
