@@ -147,10 +147,14 @@ public class RenderTypes extends RenderStateShard {
 		private static ShaderInstance glowingShader;
 
 		@SubscribeEvent
-		public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
+		public static void onRegisterShaders(RegisterShadersEvent event) {
 			ResourceProvider resourceProvider = event.getResourceProvider();
-			event.registerShader(new ShaderInstance(resourceProvider, Create.asResource("glowing_shader"),
-				DefaultVertexFormat.NEW_ENTITY), shader -> glowingShader = shader);
+			try {
+				event.registerShader(new ShaderInstance(resourceProvider, Create.asResource("glowing_shader"),
+					DefaultVertexFormat.NEW_ENTITY), shader -> glowingShader = shader);
+			} catch (IOException exception) {
+				Create.LOGGER.error("Error loading shader file for glowing_shader: {}", exception.getMessage());
+			}
 		}
 	}
 }
