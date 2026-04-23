@@ -157,7 +157,7 @@ dependencies {
         implementation("maven.modrinth:farmers-delight:${farmers_delight_version}")
     }
 
-    runtimeOnly("dev.architectury:architectury-neoforge:13d.0.8")
+    runtimeOnly("dev.architectury:architectury-neoforge:13.0.8")
     implementation("dev.ftb.mods:ftb-chunks-neoforge:2101.1.1")
     implementation("dev.ftb.mods:ftb-teams-neoforge:2101.1.0")
     implementation("dev.ftb.mods:ftb-library-neoforge:2101.1.3")
@@ -307,6 +307,7 @@ publishMods {
 String calculateGitHash() {
     try {
         ExecOutput output = providers.exec {
+            it.workingDir(project.projectDir)
             commandLine("git", "rev-parse", "HEAD")
         }
         return output.standardOutput.asText.get().trim()
@@ -318,6 +319,7 @@ String calculateGitHash() {
 boolean hasUnstaged() {
     try {
         ExecOutput output = providers.exec {
+            it.workingDir(project.projectDir)
             commandLine("git", "status", "--porcelain")
         }
         String result = output.standardOutput.asText.get().replace("/M gradlew(\\.bat)?/", "").trim()
