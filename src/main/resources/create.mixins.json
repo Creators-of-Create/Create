@@ -52,6 +52,7 @@
   ],
   "client": [
     "accessor.AgeableListModelAccessor",
+    "accessor.ClientLevelAccessor",
     "accessor.EntityRenderDispatcherAccessor",
     "accessor.FontAccessor",
     "accessor.GuiAccessor",

@@ -121,7 +121,7 @@ repositories {
 dependencies {
     jarJar(implementation("com.tterrag.registrate:Registrate:$registrate_version"))
 
-    compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-$minecraft_version:$flywheel_version")
+    compileOnly("dev.engine-room.flywheel:flywheel-neoforge-$minecraft_version:$flywheel_version")
     runtimeOnly(jarJar("dev.engine-room.flywheel:flywheel-neoforge-$minecraft_version:$flywheel_version") {
         version {
             strictly "[${flywheel_version},2.0)"
