@@ -104,9 +104,9 @@ public enum AllKeys {
 	}
 
 	public static boolean isKeyDown(int key) {
-		return InputConstants.isKeyDown(Minecraft.getInstance()
+		return (key != -1 && InputConstants.isKeyDown(Minecraft.getInstance()
 			.getWindow()
-			.getWindow(), key);
+			.getWindow(), key));
 	}
 
 	public static boolean isMouseButtonDown(int button) {
