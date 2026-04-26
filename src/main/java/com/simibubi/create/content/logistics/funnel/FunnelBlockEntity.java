@@ -220,10 +220,8 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		}
 
 		ItemStack remaining = inputBehaviour.handleInsertion(stack, facing, true);
-		if (remaining.getCount() == stack.getCount()) {
-			invVersionTracker.awaitNewVersion(invManipulation);
+		if (remaining.getCount() == stack.getCount())
 			return;
-		}
 
 		stack = invManipulation.extract(mode, stack.getCount() - remaining.getCount());
 		if (stack.isEmpty())
