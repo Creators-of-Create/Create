@@ -45,6 +45,7 @@ public class VanillaHatOffsetGenerator extends TrainHatInfoProvider {
 		this.makeInfoFor(EntityType.MOOSHROOM, new Vec3(0, 3, -3), 0.87F);
 		this.makeInfoFor(EntityType.MULE, new Vec3(0, -0.8, 2));
 		this.makeInfoFor(EntityType.OCELOT, new Vec3(0, 1, -0.25F));
+		this.makeInfoFor(EntityType.RABBIT, new Vec3(0, -1, -2.5F));
 		this.makeInfoFor(EntityType.PANDA, new Vec3(0, 4, 0.5), 0.75F);
 		this.makeInfoFor(EntityType.PARROT, new Vec3(0, 0, -1.5));
 		this.makeInfoFor(EntityType.PHANTOM, new Vec3(0, 0, -1), "body/head");

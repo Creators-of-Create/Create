@@ -59,6 +59,7 @@
     "accessor.LevelRendererAccessor",
     "accessor.MinecraftAccessor",
     "accessor.MouseHandlerAccessor",
+    "accessor.RabbitModelAccessor",
     "accessor.TimerAccessor",
     "client.BlockDestructionProgressMixin",
     "client.CameraMixin",
