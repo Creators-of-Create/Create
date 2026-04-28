@@ -11,6 +11,7 @@ import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Package ordering context containing additional information of package orders.
@@ -43,18 +44,24 @@ public record PackageOrderWithCrafts(PackageOrder orderedStacks, List<CraftingEn
 	}
 
 	public static PackageOrderWithCrafts singleRecipe(List<BigItemStack> pattern) {
-		return new PackageOrderWithCrafts(PackageOrder.empty(), List.of(new CraftingEntry(new PackageOrder(pattern), 1)));
+		return singleRecipe(pattern, ItemStack.EMPTY);
 	}
 
-	public record CraftingEntry(PackageOrder pattern, int count) {
+	public static PackageOrderWithCrafts singleRecipe(List<BigItemStack> pattern, ItemStack result) {
+		return new PackageOrderWithCrafts(PackageOrder.empty(), List.of(new CraftingEntry(new PackageOrder(pattern), 1, result)));
+	}
+
+	public record CraftingEntry(PackageOrder pattern, int count, ItemStack suggestedResult) {
 		public static final Codec<CraftingEntry> CODEC = RecordCodecBuilder.create(i -> i.group(
 			PackageOrder.CODEC.fieldOf("pattern").forGetter(CraftingEntry::pattern),
-			Codec.INT.fieldOf("count").forGetter(CraftingEntry::count)
+			Codec.INT.fieldOf("count").forGetter(CraftingEntry::count),
+			ItemStack.OPTIONAL_CODEC.fieldOf("suggestedResult").forGetter(CraftingEntry::suggestedResult)
 		).apply(i, CraftingEntry::new));
 
 		public static final StreamCodec<RegistryFriendlyByteBuf, CraftingEntry> STREAM_CODEC = StreamCodec.composite(
 			PackageOrder.STREAM_CODEC, s -> s.pattern,
 			ByteBufCodecs.VAR_INT, s -> s.count,
+			ItemStack.OPTIONAL_STREAM_CODEC, s -> s.suggestedResult,
 			CraftingEntry::new
 		);
 	}
