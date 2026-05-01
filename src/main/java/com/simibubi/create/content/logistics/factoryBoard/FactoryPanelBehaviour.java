@@ -477,7 +477,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		if (!activeCraftingArrangement.isEmpty())
 			craftingContext = PackageOrderWithCrafts.singleRecipe(activeCraftingArrangement.stream()
 				.map(stack -> new BigItemStack(stack.copyWithCount(1)))
-				.toList(), filter.item());
+				.toList(), filter.item()); // Note that the filter ItemStack doesn't have the right count
 
 		// Collect request distributions
 		for (Entry<UUID, Collection<BigItemStack>> entry : asMap.entrySet()) {

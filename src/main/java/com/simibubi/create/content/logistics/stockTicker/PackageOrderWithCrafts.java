@@ -12,6 +12,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 /**
  * Package ordering context containing additional information of package orders.
@@ -52,6 +53,10 @@ public record PackageOrderWithCrafts(PackageOrder orderedStacks, List<CraftingEn
 	}
 
 	public record CraftingEntry(PackageOrder pattern, int count, ItemStack suggestedResult) {
+		public CraftingEntry(PackageOrder pattern, int count) {
+			this(pattern, count, ItemStack.EMPTY);
+		}
+
 		public static final Codec<CraftingEntry> CODEC = RecordCodecBuilder.create(i -> i.group(
 			PackageOrder.CODEC.fieldOf("pattern").forGetter(CraftingEntry::pattern),
 			Codec.INT.fieldOf("count").forGetter(CraftingEntry::count),

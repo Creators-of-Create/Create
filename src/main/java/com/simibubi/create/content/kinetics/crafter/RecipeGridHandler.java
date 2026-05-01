@@ -170,7 +170,7 @@ public class RecipeGridHandler {
 		}
 
 		for (ItemStack result : potentialResults) {
-			if (result.getItem() == suggestedResult.getItem() && result.getCount() == suggestedResult.getCount())
+			if (result.getItem() == suggestedResult.getItem()) //TODO: Maybe compare ItemStack count/metadata?
 				return result;
 		}
 
