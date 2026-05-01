@@ -157,7 +157,7 @@ public class ContinuousOBBCollider {
 					timeOfImpact = 0;
 				}
 
-				if (timeOfImpact >= 0 && temporalResponse > timeOfImpact) {
+				if (timeOfImpact >= 0 && temporalResponse > timeOfImpact && mf.normalAxis != null) {
 					double scale = ContinuousSeparationManifold.withSignedEpsilon(mf.normalSeparation);
 					normalX = mf.normalAxis.x * scale;
 					normalY = mf.normalAxis.y * scale;
