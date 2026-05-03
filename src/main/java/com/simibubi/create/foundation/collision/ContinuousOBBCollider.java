@@ -158,10 +158,12 @@ public class ContinuousOBBCollider {
 				}
 
 				if (timeOfImpact >= 0 && temporalResponse > timeOfImpact) {
-					double scale = ContinuousSeparationManifold.withSignedEpsilon(mf.normalSeparation);
-					normalX = mf.normalAxis.x * scale;
-					normalY = mf.normalAxis.y * scale;
-					normalZ = mf.normalAxis.z * scale;
+					if (mf.normalAxis != null) {
+						double scale = ContinuousSeparationManifold.withSignedEpsilon(mf.normalSeparation);
+						normalX = mf.normalAxis.x * scale;
+						normalY = mf.normalAxis.y * scale;
+						normalZ = mf.normalAxis.z * scale;
+					}
 
 					locationX = mf.collisionX;
 					locationY = mf.collisionY;
