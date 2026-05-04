@@ -158,12 +158,10 @@ public class ContinuousOBBCollider {
 				}
 
 				if (timeOfImpact >= 0 && temporalResponse > timeOfImpact) {
-					if (mf.normalAxis != null) {
-						double scale = ContinuousSeparationManifold.withSignedEpsilon(mf.normalSeparation);
-						normalX = mf.normalAxis.x * scale;
-						normalY = mf.normalAxis.y * scale;
-						normalZ = mf.normalAxis.z * scale;
-					}
+					double scale = ContinuousSeparationManifold.withSignedEpsilon(mf.normalSeparation);
+					normalX = mf.normalAxis.x * scale;
+					normalY = mf.normalAxis.y * scale;
+					normalZ = mf.normalAxis.z * scale;
 
 					locationX = mf.collisionX;
 					locationY = mf.collisionY;
@@ -249,7 +247,7 @@ public class ContinuousOBBCollider {
 				earliestCollisionExitTime = Math.min(exitTime, earliestCollisionExitTime);
 			}
 
-			if (axisOfObjA && distance != 0 && -(diff) <= abs(normalSeparation)) {
+			if (axisOfObjA && -(diff) <= abs(normalSeparation)) {
 				normalAxis = axis;
 				normalSeparation = separation;
 			}
@@ -276,7 +274,7 @@ public class ContinuousOBBCollider {
 				}
 			}
 
-			if (distance != 0 && -(diff) <= abs(this.separation)) {
+			if (-(diff) <= abs(this.separation)) {
 				this.axis = axis;
 				this.separation = separation;
 				double scale = signum(TL) * (axisOfObjA ? -rA : -rB) - signum(separation) * 0.125;
