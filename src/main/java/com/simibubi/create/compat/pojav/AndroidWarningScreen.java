@@ -13,16 +13,16 @@ import net.minecraft.network.chat.Component;
 /**
  * @see TitleScreen
  */
-public class PojavWarningScreen extends WarningScreen {
-	public static final Component TITLE = CreateLang.translateDirect("gui.pojav.title").withStyle(ChatFormatting.RED);
-	public static final Component CONTENT = CreateLang.translateDirect("gui.pojav.content");
+public class AndroidWarningScreen extends WarningScreen {
+	public static final Component TITLE = CreateLang.translateDirect("gui.android.title").withStyle(ChatFormatting.RED);
+	public static final Component CONTENT = CreateLang.translateDirect("gui.android.content");
 	public static final Component NARRATION = TITLE.copy().append("\n").append(CONTENT);
-	public static final Component CONTINUE = CreateLang.translateDirect("gui.pojav.continue");
+	public static final Component CONTINUE = CreateLang.translateDirect("gui.android.continue");
 	public static final Component QUIT = Component.translatable("menu.quit");
 
 	private final TitleScreen titleScreen;
 
-	public PojavWarningScreen(TitleScreen titleScreen) {
+	public AndroidWarningScreen(TitleScreen titleScreen) {
 		super(TITLE, CONTENT, null, NARRATION);
 		this.titleScreen = titleScreen;
 	}
