@@ -19,14 +19,19 @@ import net.neoforged.neoforge.common.NeoForge;
  * Based on Sodium's impl
  * <a href="https://github.com/CaffeineMC/sodium/blob/d8fe39c3d2a119d9638c3a5e338a9fbaf4de67fe/common/src/boot/java/net/caffeinemc/mods/sodium/client/compatibility/checks/PostLaunchChecks.java">here</a>.
  */
-public class PojavChecker {
-	private static final Logger LOGGER = LoggerFactory.getLogger(PojavChecker.class);
+public class AndroidChecker {
+	private static final Logger LOGGER = LoggerFactory.getLogger(AndroidChecker.class);
 
 	private static final Pattern KNOWN_ANDROID_PATH = Pattern.compile("/data/user/[0-9]+/net\\.kdt\\.pojavlaunch");
 
 	public static final boolean IS_PRESENT = Util.make(() -> {
 		if (System.getenv("POJAV_RENDERER") != null) {
 			LOGGER.warn("[Create]: Detected presence of environment variable POJAV_LAUNCHER, which seems to indicate we are running on Android");
+			return true;
+		}
+
+		if (System.getenv("AMETHYST_RENDERER") != null) { // Pojav fork
+			LOGGER.warn("[Create]: Detected presence of environment variable AMETHYST, which seems to indicate we are running on Android");
 			return true;
 		}
 
@@ -50,6 +55,12 @@ public class PojavChecker {
 				return true;
 			}
 		}
+		if(System.getProperty("java.vendor", "").toLowerCase().contains("android")
+			|| System.getProperty("java.vm.vendor", "").toLowerCase().contains("android")
+			|| System.getProperty("java.runtime.name", "").toLowerCase().contains("android")) {
+			LOGGER.warn("[Create]: Java Runtime vendor seems to be android");
+			return true;
+		}
 
 		return false;
 	});
@@ -60,12 +71,12 @@ public class PojavChecker {
 		if (!IS_PRESENT)
 			return;
 
-		NeoForge.EVENT_BUS.addListener(PojavChecker::onScreenInit);
+		NeoForge.EVENT_BUS.addListener(AndroidChecker::onScreenInit);
 	}
 
 	public static void onScreenInit(ScreenEvent.Init.Post event) {
 		if (!screenShown && event.getScreen() instanceof TitleScreen titleScreen) {
-			Minecraft.getInstance().setScreen(new PojavWarningScreen(titleScreen));
+			Minecraft.getInstance().setScreen(new AndroidWarningScreen(titleScreen));
 			screenShown = true;
 		}
 	}
