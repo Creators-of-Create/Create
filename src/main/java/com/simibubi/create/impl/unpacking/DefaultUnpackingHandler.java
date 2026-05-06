@@ -3,11 +3,6 @@ package com.simibubi.create.impl.unpacking;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.AllEntityTypes;
-
-import com.simibubi.create.content.logistics.box.PackageItem;
-import com.simibubi.create.content.logistics.box.PackageStyles;
-
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.Vec3;
 
