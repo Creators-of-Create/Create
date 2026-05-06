@@ -36,6 +36,7 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 	private ScrollInput offBelow;
 	private ScrollInput onAbove;
 	private SelectionScrollInput inStacks;
+	private SelectionScrollInput inBuckets;
 
 	private IconButton confirmButton;
 	private IconButton flipSignals;
@@ -69,6 +70,12 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 			.titled(CreateLang.translateDirect("schedule.condition.threshold.item_measure"))
 			.setState(blockEntity.inStacks ? 1 : 0);
 
+		inBuckets = (SelectionScrollInput) new SelectionScrollInput(x + 100, y + 23, 52, 42)
+			.forOptions(List.of(CreateLang.translateDirect("schedule.condition.threshold.millibuckets"),
+				CreateLang.translateDirect("schedule.condition.threshold.buckets")))
+			.titled(CreateLang.translateDirect("schedule.condition.threshold.fluid_measure"))
+			.setState(blockEntity.inBuckets ? 1 : 0);
+
 		offBelow = new ScrollInput(x + 48, y + 47, 1, 18)
 			.withRange(blockEntity.getMinLevel(), blockEntity.getMaxLevel() + 1 - getValueStep())
 			.titled(CreateLang.translateDirect("gui.threshold_switch.lower_threshold"))
@@ -78,13 +85,13 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 
 				if (onAbove.getState() / valueStep == 0 && state / valueStep == 0)
 					return;
-				
+
 				if (onAbove.getState() / valueStep <= state / valueStep) {
 					onAbove.setState((state + valueStep) / valueStep * valueStep);
 					onAbove.onChanged();
 				}
 			})
-			.withStepFunction(sc -> sc.shift ? 10 * getValueStep() : getValueStep())
+			.withStepFunction(sc -> sc.shift ? getShiftValueStep() : getValueStep())
 			.setState(blockEntity.offWhenBelow);
 
 		onAbove = new ScrollInput(x + 48, y + 23, 1, 18)
@@ -102,7 +109,7 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 					offBelow.onChanged();
 				}
 			})
-			.withStepFunction(sc -> sc.shift ? 10 * getValueStep() : getValueStep())
+			.withStepFunction(sc -> sc.shift ? getShiftValueStep() : getValueStep())
 			.setState(blockEntity.onWhenAbove);
 
 		onAbove.onChanged();
@@ -111,6 +118,7 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 		addRenderableWidget(onAbove);
 		addRenderableWidget(offBelow);
 		addRenderableWidget(inStacks);
+		addRenderableWidget(inBuckets);
 
 		confirmButton =
 			new IconButton(x + background.getWidth() - 33, y + background.getHeight() - 24, AllIcons.I_CONFIRM);
@@ -146,36 +154,43 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 
 		ThresholdType typeOfCurrentTarget = blockEntity.getTypeOfCurrentTarget();
 		boolean forItems = typeOfCurrentTarget == ThresholdType.ITEM;
+		boolean forFluids = typeOfCurrentTarget == ThresholdType.FLUID;
 		AllGuiTextures inputBg =
-			forItems ? AllGuiTextures.THRESHOLD_SWITCH_ITEMCOUNT_INPUTS : AllGuiTextures.THRESHOLD_SWITCH_MISC_INPUTS;
+			forItems || forFluids ? AllGuiTextures.THRESHOLD_SWITCH_ITEMCOUNT_INPUTS : AllGuiTextures.THRESHOLD_SWITCH_MISC_INPUTS;
 
 		inputBg.render(graphics, x + 44, y + 21);
 		inputBg.render(graphics, x + 44, y + 21 + 24);
 
 		int valueStep = 1;
 		boolean stacks = inStacks.getState() == 1;
-		if (typeOfCurrentTarget == ThresholdType.FLUID)
-			valueStep = 1000;
+		boolean buckets = inBuckets.getState() == 1;
 
 		if (forItems) {
 			Component suffix =
-				inStacks.getState() == 0 ? CreateLang.translateDirect("schedule.condition.threshold.items")
-					: CreateLang.translateDirect("schedule.condition.threshold.stacks");
-			valueStep = inStacks.getState() == 0 ? 1 : 64;
+				stacks ? CreateLang.translateDirect("schedule.condition.threshold.stacks")
+					: CreateLang.translateDirect("schedule.condition.threshold.items");
+			valueStep = stacks ? 64 : 1;
 			graphics.drawString(font, suffix, x + 105, y + 28, 0xFFFFFFFF, true);
 			graphics.drawString(font, suffix, x + 105, y + 28 + 24, 0xFFFFFFFF, true);
 
+		} else if (forFluids){
+			Component suffix =
+				buckets ? CreateLang.translateDirect("schedule.condition.threshold.buckets")
+					: CreateLang.translateDirect("schedule.condition.threshold.millibuckets");
+			valueStep = buckets ? 1000 : 1;
+			graphics.drawString(font, suffix, x + 105, y + 28, 0xFFFFFFFF, true);
+			graphics.drawString(font, suffix, x + 105, y + 28 + 24, 0xFFFFFFFF, true);
 		}
 
 		graphics.drawString(font,
 			Component.literal("\u2265 " + (typeOfCurrentTarget == ThresholdType.UNSUPPORTED ? ""
-				: forItems ? onAbove.getState() / valueStep
+				: forItems || forFluids ? onAbove.getState() / valueStep
 				: blockEntity.format(onAbove.getState() / valueStep, stacks)
 				.getString())),
 			x + 53, y + 28, 0xFFFFFFFF, true);
 		graphics.drawString(font,
 			Component.literal("\u2264 " + (typeOfCurrentTarget == ThresholdType.UNSUPPORTED ? ""
-				: forItems ? offBelow.getState() / valueStep
+				: forItems || forFluids ? offBelow.getState() / valueStep
 				: blockEntity.format(offBelow.getState() / valueStep, stacks)
 				.getString())),
 			x + 53, y + 28 + 24, 0xFFFFFFFF, true);
@@ -299,10 +314,12 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 	private void updateInputBoxes() {
 		ThresholdType typeOfCurrentTarget = blockEntity.getTypeOfCurrentTarget();
 		boolean forItems = typeOfCurrentTarget == ThresholdType.ITEM;
+		boolean forFluids = typeOfCurrentTarget == ThresholdType.FLUID;
 		final int valueStep = getValueStep();
 		inStacks.active = inStacks.visible = forItems;
-		onAbove.setWidth(forItems ? 48 : 103);
-		offBelow.setWidth(forItems ? 48 : 103);
+		inBuckets.active = inBuckets.visible = forFluids;
+		onAbove.setWidth(forItems || forFluids ? 48 : 103);
+		offBelow.setWidth(forItems || forFluids ? 48 : 103);
 
 		onAbove.visible = typeOfCurrentTarget != ThresholdType.UNSUPPORTED;
 		offBelow.visible = typeOfCurrentTarget != ThresholdType.UNSUPPORTED;
@@ -328,12 +345,31 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 
 	private int getValueStep() {
 		boolean stacks = inStacks.getState() == 1;
+		boolean buckets = inBuckets.getState() == 1;
 		int valueStep = 1;
-		if (blockEntity.getTypeOfCurrentTarget() == ThresholdType.FLUID)
-			valueStep = 1000;
-		else if (stacks)
-			valueStep = 64;
+		switch (blockEntity.getTypeOfCurrentTarget()) {
+			case ThresholdType.FLUID:
+			valueStep = buckets ? 1000 : 25;
+			break;
+			case ThresholdType.ITEM:
+			valueStep = stacks ? 64 : 1;
+			break;
+		}
 		return valueStep;
+	}
+
+	private int getShiftValueStep() {
+		boolean stacks = inStacks.getState() == 1;
+		boolean buckets = inBuckets.getState() == 1;
+		int shiftValueStep = 10;
+		switch (blockEntity.getTypeOfCurrentTarget()) {
+			case ThresholdType.FLUID:
+			shiftValueStep = buckets ? 10000 : 100;
+			break;
+			case ThresholdType.ITEM:
+			shiftValueStep = stacks ? 640 : 10;
+		}
+		return shiftValueStep;
 	}
 
 	@Override
@@ -343,7 +379,7 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 
 	protected void send(boolean invert) {
 		CatnipServices.NETWORK.sendToServer(new ConfigureThresholdSwitchPacket(blockEntity.getBlockPos(), offBelow.getState(),
-				onAbove.getState(), invert, inStacks.getState() == 1));
+				onAbove.getState(), invert, inStacks.getState() == 1, inBuckets.getState() == 1));
 	}
 
 }
