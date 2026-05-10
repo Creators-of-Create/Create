@@ -3,8 +3,6 @@ package com.simibubi.create.content.logistics.filter;
 import java.util.List;
 import java.util.Objects;
 
-import net.minecraft.world.food.FoodProperties;
-
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllDataComponents;
