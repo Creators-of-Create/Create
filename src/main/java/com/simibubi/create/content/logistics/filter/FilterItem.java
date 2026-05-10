@@ -85,17 +85,7 @@ public abstract class FilterItem extends Item implements MenuProvider, SupportsI
 			return InteractionResultHolder.success(heldItem);
 		}
 		else {
-			FoodProperties foodproperties = heldItem.getFoodProperties(player);
-			if (foodproperties != null) {
-				if (player.canEat(foodproperties.canAlwaysEat())) {
-					player.startUsingItem(hand);
-					return InteractionResultHolder.consume(heldItem);
-				} else {
-					return InteractionResultHolder.fail(heldItem);
-				}
-			} else {
-				return InteractionResultHolder.pass(player.getItemInHand(hand));
-			}
+			return super.use(world, player, hand);
 		}
 	}
 
