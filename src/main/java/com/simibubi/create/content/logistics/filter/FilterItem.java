@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.filter;
 import java.util.List;
 import java.util.Objects;
 
+import net.minecraft.world.food.FoodProperties;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllDataComponents;
@@ -82,7 +84,19 @@ public abstract class FilterItem extends Item implements MenuProvider, SupportsI
 				});
 			return InteractionResultHolder.success(heldItem);
 		}
-		return InteractionResultHolder.pass(heldItem);
+		else {
+			FoodProperties foodproperties = heldItem.getFoodProperties(player);
+			if (foodproperties != null) {
+				if (player.canEat(foodproperties.canAlwaysEat())) {
+					player.startUsingItem(hand);
+					return InteractionResultHolder.consume(heldItem);
+				} else {
+					return InteractionResultHolder.fail(heldItem);
+				}
+			} else {
+				return InteractionResultHolder.pass(player.getItemInHand(hand));
+			}
+		}
 	}
 
 	@Override
