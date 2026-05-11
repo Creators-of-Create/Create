@@ -61,13 +61,15 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 			return true;
 		}
 
+		List<ItemStack> compressedItems = new ArrayList<>();
+
 		for (int boxSlot = 0; boxSlot < items.size(); boxSlot++) {
 			ItemStack boxItemStack = items.get(boxSlot);
 			if (boxItemStack.isEmpty())
 				continue;
 
 			int amountToInsert = 0;
-			// iterate over contents of the box and count similar items
+			// iterate over contents of the package and count similar items
 			for (int otherBoxSlot = boxSlot; otherBoxSlot < items.size(); otherBoxSlot++) {
 				ItemStack otherBoxItemStack = items.get(otherBoxSlot);
 				if (!ItemStack.isSameItemSameComponents(boxItemStack, otherBoxItemStack))
@@ -78,13 +80,27 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 				items.set(otherBoxSlot, otherBoxItemStack.copyWithCount(0));
 			}
 
-			// compress similar items into one stack so that it's easier to work with
-			ItemStack itemToInsert = boxItemStack.copyWithCount(amountToInsert);
-			for (int invSlot = 0; invSlot < targetInv.getSlots(); invSlot++) {
-				itemToInsert = targetInv.insertItem(invSlot, itemToInsert.copy(), true);
-			}
+			// compress similar items into one stack, so that it's easier to work with
+			compressedItems.add(boxItemStack.copyWithCount(amountToInsert));
+		}
 
-			if (!itemToInsert.isEmpty()) {
+		for (int invSlot = 0; invSlot < targetInv.getSlots(); invSlot++) {
+			for (int itemIndex = 0; itemIndex < compressedItems.size(); itemIndex++) {
+				ItemStack itemToInsert = compressedItems.get(itemIndex);
+				ItemStack remainder = targetInv.insertItem(invSlot, itemToInsert.copy(), true);
+
+				compressedItems.set(itemIndex, remainder);
+
+				// if there's remainder or inserted amount is equal to slot limit,
+				// then this slot is full, no need to check other items in the package
+				if (!remainder.isEmpty() || targetInv.getSlotLimit(invSlot) == itemToInsert.getCount()) {
+					break;
+				}
+			}
+		}
+
+		for (ItemStack stack : compressedItems) {
+			if (!stack.isEmpty()) {
 				return false;
 			}
 		}
