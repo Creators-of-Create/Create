@@ -89,6 +89,9 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 
 			for (int itemIndex = 0; itemIndex < compressedItems.size(); itemIndex++) {
 				ItemStack itemToInsert = compressedItems.get(itemIndex);
+				if (itemToInsert.isEmpty())
+					continue;
+
 				ItemStack remainder = targetInv.insertItem(invSlot, itemToInsert.copy(), true);
 
 				compressedItems.set(itemIndex, remainder);
