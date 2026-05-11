@@ -36,7 +36,30 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 		if (targetInv == null)
 			return false;
 
-		List<ItemStack> remainderList = new ArrayList<>();
+		if (!simulate) {
+			List<ItemStack> remainderList = new ArrayList<>();
+
+			for (ItemStack stack : items) {
+				ItemStack remainder = ItemHandlerHelper.insertItemStacked(targetInv, stack.copy(), false);
+				if (!remainder.isEmpty()) {
+					remainderList.add(remainder);
+				}
+			}
+
+			/*
+			 * Some mods may have inconsistency between simulate pass and actually pushing items
+			 * and possibly yield some leftover items
+			 */
+			if (!remainderList.isEmpty()) {
+				var itemPos = Vec3.atCenterOf(pos);
+				for (var itemStack : remainderList) {
+					var itemEntity = new ItemEntity(level, itemPos.x, itemPos.y, itemPos.z, itemStack);
+					level.addFreshEntity(itemEntity);
+				}
+			}
+
+			return true;
+		}
 
 		for (int boxSlot = 0; boxSlot < items.size(); boxSlot++) {
 			ItemStack boxItemStack = items.get(boxSlot);
@@ -58,25 +81,11 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 			// compress similar items into one stack so that it's easier to work with
 			ItemStack itemToInsert = boxItemStack.copyWithCount(amountToInsert);
 			for (int invSlot = 0; invSlot < targetInv.getSlots(); invSlot++) {
-				itemToInsert = targetInv.insertItem(invSlot, itemToInsert.copy(), simulate);
+				itemToInsert = targetInv.insertItem(invSlot, itemToInsert.copy(), true);
 			}
 
 			if (!itemToInsert.isEmpty()) {
-				if (simulate) {
-					return false;
-				} else {
-					remainderList.add(itemToInsert);
-				}
-			}
-		}
-
-		// if there's inconsistency between simulate on and off results there may be some leftover items
-		// so drop them on the ground
-		if (!simulate && !remainderList.isEmpty()) {
-			var itemPos = Vec3.atCenterOf(pos);
-			for (var itemStack : remainderList) {
-				var itemEntity = new ItemEntity(level, itemPos.x, itemPos.y, itemPos.z, itemStack);
-				level.addFreshEntity(itemEntity);
+				return false;
 			}
 		}
 
