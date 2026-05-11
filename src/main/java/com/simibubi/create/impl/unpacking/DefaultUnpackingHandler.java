@@ -3,6 +3,7 @@ package com.simibubi.create.impl.unpacking;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -37,17 +38,40 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 
 		List<ItemStack> remainderList = new ArrayList<>();
 
-		for (ItemStack itemStack : items) {
-			var remainder = ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate);
-			if (!remainder.isEmpty()) {
+		for (int boxSlot = 0; boxSlot < items.size(); boxSlot++) {
+			ItemStack boxItemStack = items.get(boxSlot);
+			if (boxItemStack.isEmpty())
+				continue;
+
+			int amountToInsert = 0;
+			// iterate over contents of the box and count similar items
+			for (int otherBoxSlot = boxSlot; otherBoxSlot < items.size(); otherBoxSlot++) {
+				ItemStack otherBoxItemStack = items.get(otherBoxSlot);
+				if (!ItemStack.isSameItemSameComponents(boxItemStack, otherBoxItemStack))
+					continue;
+
+				int stackSize = otherBoxItemStack.getCount();
+				amountToInsert += stackSize;
+				items.set(otherBoxSlot, otherBoxItemStack.copyWithCount(0));
+			}
+
+			// compress similar items into one stack so that it's easier to work with
+			ItemStack itemToInsert = boxItemStack.copyWithCount(amountToInsert);
+			for (int invSlot = 0; invSlot < targetInv.getSlots(); invSlot++) {
+				itemToInsert = targetInv.insertItem(invSlot, itemToInsert.copy(), simulate);
+			}
+
+			if (!itemToInsert.isEmpty()) {
 				if (simulate) {
 					return false;
 				} else {
-					remainderList.add(remainder);
+					remainderList.add(itemToInsert);
 				}
 			}
 		}
 
+		// if there's inconsistency between simulate on and off results there may be some leftover items
+		// so drop them on the ground
 		if (!simulate && !remainderList.isEmpty()) {
 			var itemPos = Vec3.atCenterOf(pos);
 			for (var itemStack : remainderList) {
