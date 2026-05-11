@@ -85,15 +85,18 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 		}
 
 		for (int invSlot = 0; invSlot < targetInv.getSlots(); invSlot++) {
+			ItemStack itemInSlot = targetInv.getStackInSlot(invSlot);
+
 			for (int itemIndex = 0; itemIndex < compressedItems.size(); itemIndex++) {
 				ItemStack itemToInsert = compressedItems.get(itemIndex);
 				ItemStack remainder = targetInv.insertItem(invSlot, itemToInsert.copy(), true);
 
 				compressedItems.set(itemIndex, remainder);
 
-				// if there's remainder or inserted amount is equal to slot limit,
+				// if there's remainder or new item amount is equal to slot limit,
 				// then this slot is full, no need to check other items in the package
-				if (!remainder.isEmpty() || targetInv.getSlotLimit(invSlot) == itemToInsert.getCount()) {
+				if (!remainder.isEmpty() ||
+					itemToInsert.getCount() + itemInSlot.getCount() == targetInv.getSlotLimit(invSlot)) {
 					break;
 				}
 			}
