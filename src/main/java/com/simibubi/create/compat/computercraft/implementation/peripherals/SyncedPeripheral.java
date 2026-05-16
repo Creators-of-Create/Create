@@ -62,6 +62,11 @@ public abstract class SyncedPeripheral<T extends SmartBlockEntity> implements IP
 
 	public void prepareComputerEvent(@NotNull ComputerEvent event) {}
 
+	@Override
+	public @Nullable Object getTarget() {
+		return blockEntity;
+	}
+
 	/**
 	 * Queue an event to all attached computers. Adds the peripheral attachment name as 1st event argument, followed by
 	 * any optional arguments passed to this method.
