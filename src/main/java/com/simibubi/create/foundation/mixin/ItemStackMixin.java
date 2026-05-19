@@ -16,7 +16,6 @@ import com.simibubi.create.content.equipment.clipboard.ClipboardContent;
 
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.PatchedDataComponentMap;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
