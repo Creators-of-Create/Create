@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -123,7 +124,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	public FactoryPanelBehaviour(FactoryPanelBlockEntity be, PanelSlot slot) {
 		super(be, new FactoryPanelSlotPositioning(slot));
 		this.slot = slot;
-		this.targetedBy = new HashMap<>();
+		this.targetedBy = new LinkedHashMap<>();
 		this.targetedByLinks = new HashMap<>();
 		this.targeting = new HashSet<>();
 		this.count = 0;
@@ -667,7 +668,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	public void disable() {
 		destroy();
 		active = false;
-		targetedBy = new HashMap<>();
+		targetedBy = new LinkedHashMap<>();
 		targeting = new HashSet<>();
 		count = 0;
 		satisfied = false;
