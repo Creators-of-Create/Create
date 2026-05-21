@@ -732,6 +732,12 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 	}
 
 	@Override
+	public void invalidate() {
+		super.invalidate();
+		invalidateCapabilities();
+	}
+
+	@Override
 	public void clearContent() {
 		((ItemStackHandlerAccessor) tunnelCapability).create$getStacks().clear();
 	}
