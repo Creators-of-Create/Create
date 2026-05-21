@@ -62,6 +62,13 @@ public class ClipboardEntry {
 		return this;
 	}
 
+	public ClipboardEntry deepCopy() {
+		ClipboardEntry copy = new ClipboardEntry(this.checked, this.text.copy());
+		if (!this.icon.isEmpty())
+			copy.displayItem(this.icon.copy(), this.itemAmount);
+		return copy;
+	}
+
 	public static List<List<ClipboardEntry>> readAll(ItemStack clipboardItem) {
 		return readAll(clipboardItem.getComponents());
 	}
@@ -92,6 +99,34 @@ public class ClipboardEntry {
 		int previouslyOpenedPage = heldItem.getOrDefault(AllDataComponents.CLIPBOARD_CONTENT, ClipboardContent.EMPTY).previouslyOpenedPage();
 		int page = Math.min(previouslyOpenedPage, pages.size() - 1);
 		return pages.get(page);
+	}
+
+	protected static final int CLIPBOARD_ENTRY_MAX_WIDTH = 150;
+	
+	private static final int ASSUMED_CHARACTER_WIDTH = 8;
+	private static final int CLIPBOARD_ICON_ASSUMED_WIDTH = 16;
+	private static final int LINE_HEIGHT = 9;
+
+	protected static int calculateHeight(MutableComponent text, int maxWidth, boolean clientSide) {
+		if (clientSide) {
+			return Math.max(12, ClipboardScreen.getClipboardFont().split(text, maxWidth).size() * LINE_HEIGHT + 3);
+		} else {
+			int lineCharLimit = Math.max(1, maxWidth / ASSUMED_CHARACTER_WIDTH);
+			int lines = 1 + (text.getString().length() - 1) / lineCharLimit;
+			return (lines * LINE_HEIGHT + 3);
+		}
+	}
+
+	public static int getHeightUniversal(MutableComponent text, boolean clientSide) {
+		return calculateHeight(text, CLIPBOARD_ENTRY_MAX_WIDTH, clientSide);
+	}
+
+	public int getHeight(boolean clientSide) {
+		int maxWidth = this.icon.isEmpty() ? CLIPBOARD_ENTRY_MAX_WIDTH : CLIPBOARD_ENTRY_MAX_WIDTH - CLIPBOARD_ICON_ASSUMED_WIDTH;
+		var height = calculateHeight(this.text, maxWidth, clientSide);
+		if (this.itemAmount != 0)
+			height += LINE_HEIGHT; 
+		return height;
 	}
 
 	@Override

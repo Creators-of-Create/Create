@@ -80,6 +80,9 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	IconButton closeBtn;
 	IconButton clearBtn;
 
+	public static final int MAX_TEXT_HEIGHT = 185;
+	public static final int PAGE_LIMIT = 50; // actually +1
+
 	private final int targetSlot;
 
 	public ClipboardScreen(int targetSlot, DataComponentMap components, @Nullable BlockPos pos) {
@@ -119,6 +122,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	protected void init() {
 		setWindowSize(256, 256);
 		super.init();
+		font = getClipboardFont();
 		clearDisplayCache();
 
 		int x = guiLeft;
@@ -144,7 +148,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		addRenderableWidget(forward);
 		addRenderableWidget(backward);
 
-		forward.visible = currentPage < 50 && (!readonly || currentPage + 1 < pages.size());
+		forward.visible = currentPage < PAGE_LIMIT && (!readonly || currentPage + 1 < pages.size());
 		backward.visible = currentPage > 0;
 	}
 
@@ -184,11 +188,8 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			hoveredCheck = mx < 20;
 			int totalHeight = 0;
 			for (int i = 0; i < currentEntries.size(); i++) {
-				ClipboardEntry clipboardEntry = currentEntries.get(i);
-				String text = clipboardEntry.text.getString();
-				totalHeight +=
-					Math.max(12, font.split(Component.literal(text), clipboardEntry.icon.isEmpty() ? 150 : 130)
-						.size() * 9 + 3);
+				var entry = currentEntries.get(i);
+				totalHeight += entry.getHeight(true);
 
 				if (totalHeight > my) {
 					hoveredEntry = i;
@@ -220,12 +221,11 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	private boolean validateTextForEntry(String newText) {
 		int totalHeight = 0;
 		for (int i = 0; i < currentEntries.size(); i++) {
-			ClipboardEntry clipboardEntry = currentEntries.get(i);
-			String text = i == editingIndex ? newText : clipboardEntry.text.getString();
-			totalHeight += Math.max(12, font.split(Component.literal(text), 150)
-				.size() * 9 + 3);
+			var entry = currentEntries.get(i);
+			var textComponent = i == editingIndex ? Component.literal(newText) : entry.text;
+			totalHeight += ClipboardEntry.getHeightUniversal(textComponent, true);
 		}
-		return totalHeight < 185;
+		return totalHeight < MAX_TEXT_HEIGHT;
 	}
 
 	private int yOffsetOfEditingEntry() {
@@ -233,16 +233,15 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		for (int i = 0; i < currentEntries.size(); i++) {
 			if (i == editingIndex)
 				break;
-			ClipboardEntry clipboardEntry = currentEntries.get(i);
-			totalHeight += Math.max(12, font.split(clipboardEntry.text, 150)
-				.size() * 9 + 3);
+			var entry = currentEntries.get(i);
+			totalHeight += entry.getHeight(true);
 		}
 		return totalHeight;
 	}
 
 	private void changePage(boolean next) {
 		int previously = currentPage;
-		currentPage = Mth.clamp(currentPage + (next ? 1 : -1), 0, 50);
+		currentPage = Mth.clamp(currentPage + (next ? 1 : -1), 0, PAGE_LIMIT);
 		if (currentPage == previously)
 			return;
 		editingIndex = -1;
@@ -263,7 +262,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			}
 		}
 
-		forward.visible = currentPage < 50 && (!readonly || currentPage + 1 < pages.size());
+		forward.visible = currentPage < PAGE_LIMIT && (!readonly || currentPage + 1 < pages.size());
 		backward.visible = currentPage > 0;
 
 		if (next)
@@ -630,25 +629,25 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			return false;
 		}
 
-		long i = Util.getMillis();
+		long currentTime = Util.getMillis();
 		DisplayCache cache = getDisplayCache();
-		int j = cache.getIndexAtPosition(font, convertScreenToLocal(new Pos2i((int) pMouseX, (int) pMouseY)));
-		if (j >= 0) {
-			if (j == lastIndex && i - lastClickTime < 250L) {
+		int currentIndex = cache.getIndexAtPosition(font, convertScreenToLocal(new Pos2i((int) pMouseX, (int) pMouseY)));
+		if (currentIndex >= 0) {
+			if (currentIndex == lastIndex && currentTime - lastClickTime < 250L) {
 				if (!editContext.isSelecting()) {
-					selectWord(j);
+					selectWord(currentIndex);
 				} else {
 					editContext.selectAll();
 				}
 			} else {
-				editContext.setCursorPos(j, Screen.hasShiftDown());
+				editContext.setCursorPos(currentIndex, Screen.hasShiftDown());
 			}
 
 			clearDisplayCache();
 		}
 
-		lastIndex = j;
-		lastClickTime = i;
+		lastIndex = currentIndex;
+		lastClickTime = currentTime;
 		return true;
 	}
 
@@ -667,10 +666,14 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			return false;
 
 		DisplayCache cache = getDisplayCache();
-		int i = cache.getIndexAtPosition(font, convertScreenToLocal(new Pos2i((int) pMouseX, (int) pMouseY)));
-		editContext.setCursorPos(i, true);
+		int currentIndex = cache.getIndexAtPosition(font, convertScreenToLocal(new Pos2i((int) pMouseX, (int) pMouseY)));
+		editContext.setCursorPos(currentIndex, true);
 		clearDisplayCache();
 		return true;
+	}
+	
+	public static Font getClipboardFont() {
+		return Minecraft.getInstance().font;
 	}
 
 	private DisplayCache getDisplayCache() {
