@@ -200,11 +200,6 @@ public class ClipboardValueSettingsHandler {
 						.setPages(listTo);
 					itemStack.set(AllDataComponents.CLIPBOARD_CONTENT, clipboardContent);
 				}
-
-				clipboardContent = clipboardContent
-					.setType(ClipboardType.WRITTEN)
-					.setPages(listTo);
-				itemStack.set(AllDataComponents.CLIPBOARD_CONTENT, clipboardContent);
 			}
 
 			player.displayClientMessage(CreateLang.translate("clipboard.copied_from_clipboard", world.getBlockState(pos)
