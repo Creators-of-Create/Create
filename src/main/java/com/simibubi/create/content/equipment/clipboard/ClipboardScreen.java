@@ -26,6 +26,7 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.content.equipment.clipboard.ui.ClipboardLayout;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -80,9 +81,6 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	IconButton closeBtn;
 	IconButton clearBtn;
 
-	public static final int MAX_TEXT_HEIGHT = 185;
-	public static final int PAGE_LIMIT = 50; // actually +1
-
 	private final int targetSlot;
 
 	public ClipboardScreen(int targetSlot, DataComponentMap components, @Nullable BlockPos pos) {
@@ -122,7 +120,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	protected void init() {
 		setWindowSize(256, 256);
 		super.init();
-		font = getClipboardFont();
+		font = ClipboardLayout.getClipboardFont();
 		clearDisplayCache();
 
 		int x = guiLeft;
@@ -148,7 +146,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		addRenderableWidget(forward);
 		addRenderableWidget(backward);
 
-		forward.visible = currentPage < PAGE_LIMIT && (!readonly || currentPage + 1 < pages.size());
+		forward.visible = currentPage < ClipboardLayout.PAGE_LIMIT && (!readonly || currentPage + 1 < pages.size());
 		backward.visible = currentPage > 0;
 	}
 
@@ -223,9 +221,9 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		for (int i = 0; i < currentEntries.size(); i++) {
 			var entry = currentEntries.get(i);
 			var textComponent = i == editingIndex ? Component.literal(newText) : entry.text;
-			totalHeight += ClipboardEntry.getHeightUniversal(textComponent, true);
+			totalHeight += ClipboardLayout.getHeightUniversal(textComponent, true);
 		}
-		return totalHeight < MAX_TEXT_HEIGHT;
+		return totalHeight < ClipboardLayout.PAGE_TEXT_HEIGHT;
 	}
 
 	private int yOffsetOfEditingEntry() {
@@ -241,7 +239,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 
 	private void changePage(boolean next) {
 		int previously = currentPage;
-		currentPage = Mth.clamp(currentPage + (next ? 1 : -1), 0, PAGE_LIMIT);
+		currentPage = Mth.clamp(currentPage + (next ? 1 : -1), 0, ClipboardLayout.PAGE_LIMIT);
 		if (currentPage == previously)
 			return;
 		editingIndex = -1;
@@ -262,7 +260,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			}
 		}
 
-		forward.visible = currentPage < PAGE_LIMIT && (!readonly || currentPage + 1 < pages.size());
+		forward.visible = currentPage < ClipboardLayout.PAGE_LIMIT && (!readonly || currentPage + 1 < pages.size());
 		backward.visible = currentPage > 0;
 
 		if (next)
@@ -281,12 +279,11 @@ public class ClipboardScreen extends AbstractSimiScreen {
 
 		AllGuiTextures.CLIPBOARD.render(graphics, x, y);
 		graphics.drawString(font, Component.translatable("book.pageIndicator", currentPage + 1, getNumPages()),
-			x + 150, y + 9, 0x43ffffff, false);
+			x + ClipboardLayout.PAGE_TEXT_WIDTH, y + ClipboardLayout.LINE_HEIGHT, 0x43ffffff, false);
 
 		for (int i = 0; i < currentEntries.size(); i++) {
 			ClipboardEntry clipboardEntry = currentEntries.get(i);
 			boolean checked = clipboardEntry.checked;
-			int iconOffset = clipboardEntry.icon.isEmpty() ? 0 : 16;
 
 			MutableComponent text = clipboardEntry.text;
 			String string = text.getString();
@@ -305,9 +302,10 @@ public class ClipboardScreen extends AbstractSimiScreen {
 					graphics.drawString(font, "\u2714", x + 45, y + 50, 0x31B25D, false);
 			}
 
-			List<FormattedCharSequence> split = font.split(text, 150 - iconOffset);
+			int iconOffset = ClipboardLayout.getIconOffset(clipboardEntry.icon);
+			List<FormattedCharSequence> split = font.split(text, ClipboardLayout.PAGE_TEXT_WIDTH - iconOffset);
 			if (split.isEmpty()) {
-				y += 12;
+				y += ClipboardLayout.LINE_HEIGHT + ClipboardLayout.ENTRY_PADDING;
 				continue;
 			}
 
@@ -318,9 +316,9 @@ public class ClipboardScreen extends AbstractSimiScreen {
 				if (i != editingIndex)
 					graphics.drawString(font, sequence, x + 58 + iconOffset, y + 50,
 						checked ? isAddress ? 0x668D7F6B : 0x31B25D : 0x311A00, false);
-				y += 9;
+				y += ClipboardLayout.LINE_HEIGHT;
 			}
-			y += 3;
+			y += ClipboardLayout.ENTRY_PADDING;
 		}
 
 		if (editingIndex == -1)
@@ -536,7 +534,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			return;
 		pCursorPos = convertLocalToScreen(pCursorPos);
 		if (!pIsEndOfText) {
-			graphics.fill(pCursorPos.x, pCursorPos.y - 1, pCursorPos.x + 1, pCursorPos.y + 9, -16777216);
+			graphics.fill(pCursorPos.x, pCursorPos.y - 1, pCursorPos.x + 1, pCursorPos.y + ClipboardLayout.LINE_HEIGHT, -16777216);
 		} else {
 			graphics.drawString(font, "_", (float) pCursorPos.x, (float) pCursorPos.y, 0, false);
 		}
@@ -672,10 +670,6 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		return true;
 	}
 	
-	public static Font getClipboardFont() {
-		return Minecraft.getInstance().font;
-	}
-
 	private DisplayCache getDisplayCache() {
 		if (displayCache == null)
 			displayCache = rebuildDisplayCache();
@@ -692,80 +686,79 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	}
 
 	private DisplayCache rebuildDisplayCache() {
-		String current = getCurrentEntryText();
-		boolean address = current.startsWith("#") && !current.substring(1)
+		String rawEntryText = getCurrentEntryText();
+		boolean isAddress = rawEntryText.startsWith("#") && !rawEntryText.substring(1)
 			.isBlank();
 		int offset = 0;
 
-		if (address) {
-			String stripped = current.substring(1)
+		if (isAddress) {
+			String stripped = rawEntryText.substring(1)
 				.stripLeading();
-			offset = current.length() - stripped.length();
-			current = stripped;
+			offset = rawEntryText.length() - stripped.length();
+			rawEntryText = stripped;
 		}
 
-		if (current.isEmpty())
+		if (rawEntryText.isEmpty())
 			return DisplayCache.EMPTY;
 
-		String s = current;
-		int i = editContext.getCursorPos();
-		int j = editContext.getSelectionPos();
-		i = Mth.clamp(i - offset, 0, s.length());
-		j = Mth.clamp(j - offset, 0, s.length());
+		String entryText = rawEntryText;
+		
+		int cursorPos = Mth.clamp(editContext.getCursorPos() - offset, 0, entryText.length());
+		int selectionPos = Mth.clamp(editContext.getSelectionPos() - offset, 0, entryText.length());
 
-		IntList intlist = new IntArrayList();
-		List<LineInfo> list = Lists.newArrayList();
-		MutableInt mutableint = new MutableInt();
-		MutableBoolean mutableboolean = new MutableBoolean();
-		StringSplitter stringsplitter = font.getSplitter();
-		stringsplitter.splitLines(s, 150, Style.EMPTY, true, (p_98132_, p_98133_, p_98134_) -> {
-			int k3 = mutableint.getAndIncrement();
-			String s2 = s.substring(p_98133_, p_98134_);
-			mutableboolean.setValue(s2.endsWith("\n"));
-			String s3 = StringUtils.stripEnd(s2, " \n");
-			int l3 = k3 * 9;
-			Pos2i pos1 = convertLocalToScreen(new Pos2i(0, l3));
-			intlist.add(p_98133_);
-			list.add(new LineInfo(p_98132_, s3, pos1.x, pos1.y));
+		IntList lineStartsMutable = new IntArrayList();
+		List<LineInfo> lines = Lists.newArrayList();
+		MutableInt lineIndexCounter = new MutableInt();
+		MutableBoolean hadNewLineInTheEnd = new MutableBoolean();
+		StringSplitter splitter = font.getSplitter();
+		splitter.splitLines(entryText, ClipboardLayout.PAGE_TEXT_WIDTH, Style.EMPTY, true, (style, leftCorner, rightCorner) -> {
+			int lineIndex = lineIndexCounter.getAndIncrement();
+			String substring = entryText.substring(leftCorner, rightCorner);
+			hadNewLineInTheEnd.setValue(substring.endsWith("\n"));
+			String trimmedSubstring = StringUtils.stripEnd(substring, " \n");
+			int posY = lineIndex * ClipboardLayout.LINE_HEIGHT;
+			Pos2i pos = convertLocalToScreen(new Pos2i(0, posY));
+			lineStartsMutable.add(leftCorner);
+			lines.add(new LineInfo(style, trimmedSubstring, pos.x, pos.y));
 		});
 
-		int[] aint = intlist.toIntArray();
-		boolean flag = i == s.length();
+		int[] lineStarts = lineStartsMutable.toIntArray();
+		boolean cursorIsAtEntryEnd = cursorPos == entryText.length();
 		Pos2i pos;
-		if (flag && mutableboolean.isTrue()) {
-			pos = new Pos2i(0, list.size() * 9);
+		if (cursorIsAtEntryEnd && hadNewLineInTheEnd.isTrue()) {
+			pos = new Pos2i(0, lines.size() * ClipboardLayout.LINE_HEIGHT);
 		} else {
-			int k = findLineFromPos(aint, i);
-			int l = font.width(s.substring(aint[k], i));
-			pos = new Pos2i(l, k * 9);
+			int lineIndex = findLineFromPos(lineStarts, cursorPos);
+			int posX = font.width(entryText.substring(lineStarts[lineIndex], cursorPos));
+			pos = new Pos2i(posX, lineIndex * ClipboardLayout.LINE_HEIGHT);
 		}
 
-		List<Rect2i> list1 = Lists.newArrayList();
-		if (i != j) {
-			int l2 = Math.min(i, j);
-			int i1 = Math.max(i, j);
-			int j1 = findLineFromPos(aint, l2);
-			int k1 = findLineFromPos(aint, i1);
-			if (j1 == k1) {
-				int l1 = j1 * 9;
-				int i2 = aint[j1];
-				list1.add(createPartialLineSelection(s, stringsplitter, l2, i1, l1, i2));
+		List<Rect2i> selectedLineChunks = Lists.newArrayList();
+		if (cursorPos != selectionPos) {
+			int firstPos = Math.min(cursorPos, selectionPos);
+			int lastPos = Math.max(cursorPos, selectionPos);
+			int firstSelLineIndex = findLineFromPos(lineStarts, firstPos);
+			int lastSelLineIndex = findLineFromPos(lineStarts, lastPos);
+			if (firstSelLineIndex == lastSelLineIndex) {
+				int lineY = firstSelLineIndex * ClipboardLayout.LINE_HEIGHT;
+				int lineStart = lineStarts[firstSelLineIndex];
+				selectedLineChunks.add(createPartialLineSelection(entryText, splitter, firstPos, lastPos, lineY, lineStart));
 			} else {
-				int i3 = j1 + 1 > aint.length ? s.length() : aint[j1 + 1];
-				list1.add(createPartialLineSelection(s, stringsplitter, l2, i3, j1 * 9, aint[j1]));
+				int firstLineEnd = firstSelLineIndex + 1 > lineStarts.length ? entryText.length() : lineStarts[firstSelLineIndex + 1];
+				selectedLineChunks.add(createPartialLineSelection(entryText, splitter, firstPos, firstLineEnd, firstSelLineIndex * ClipboardLayout.LINE_HEIGHT, lineStarts[firstSelLineIndex]));
 
-				for (int j3 = j1 + 1; j3 < k1; ++j3) {
-					int j2 = j3 * 9;
-					String s1 = s.substring(aint[j3], aint[j3 + 1]);
-					int k2 = (int) stringsplitter.stringWidth(s1);
-					list1.add(createSelection(new Pos2i(0, j2), new Pos2i(k2, j2 + 9)));
+				for (int lineIndex = firstSelLineIndex + 1; lineIndex < lastSelLineIndex; ++lineIndex) {
+					int lineY = lineIndex * ClipboardLayout.LINE_HEIGHT;
+					String lineText = entryText.substring(lineStarts[lineIndex], lineStarts[lineIndex + 1]);
+					int posX = (int) splitter.stringWidth(lineText);
+					selectedLineChunks.add(createSelection(new Pos2i(0, lineY), new Pos2i(posX, lineY + ClipboardLayout.LINE_HEIGHT)));
 				}
 
-				list1.add(createPartialLineSelection(s, stringsplitter, aint[k1], i1, k1 * 9, aint[k1]));
+				selectedLineChunks.add(createPartialLineSelection(entryText, splitter, lineStarts[lastSelLineIndex], lastPos, lastSelLineIndex * ClipboardLayout.LINE_HEIGHT, lineStarts[lastSelLineIndex]));
 			}
 		}
 
-		return new DisplayCache(s, pos, flag, aint, list.toArray(new LineInfo[0]), list1.toArray(new Rect2i[0]));
+		return new DisplayCache(entryText, pos, cursorIsAtEntryEnd, lineStarts, lines.toArray(new LineInfo[0]), selectedLineChunks.toArray(new Rect2i[0]));
 	}
 
 	static int findLineFromPos(int[] pLineStarts, int pFind) {
@@ -773,12 +766,12 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		return i < 0 ? -(i + 2) : i;
 	}
 
-	private Rect2i createPartialLineSelection(String pInput, StringSplitter pSplitter, int p_98122_, int p_98123_,
-		int p_98124_, int p_98125_) {
-		String s = pInput.substring(p_98125_, p_98122_);
-		String s1 = pInput.substring(p_98125_, p_98123_);
-		Pos2i firstPos = new Pos2i((int) pSplitter.stringWidth(s), p_98124_);
-		Pos2i secondPos = new Pos2i((int) pSplitter.stringWidth(s1), p_98124_ + 9);
+	private Rect2i createPartialLineSelection(String entryText, StringSplitter splitter, int selectionStart, int selectionEnd,
+		int lineY, int lineStart) {
+		String s = entryText.substring(lineStart, selectionStart);
+		String s1 = entryText.substring(lineStart, selectionEnd);
+		Pos2i firstPos = new Pos2i((int) splitter.stringWidth(s), lineY);
+		Pos2i secondPos = new Pos2i((int) splitter.stringWidth(s1), lineY + ClipboardLayout.LINE_HEIGHT);
 		return createSelection(firstPos, secondPos);
 	}
 
@@ -814,7 +807,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		}
 
 		public int getIndexAtPosition(Font pFont, Pos2i pCursorPosition) {
-			int i = pCursorPosition.y / 9;
+			int i = pCursorPosition.y / ClipboardLayout.LINE_HEIGHT;
 			if (i < 0)
 				return 0;
 			if (i >= lines.length)

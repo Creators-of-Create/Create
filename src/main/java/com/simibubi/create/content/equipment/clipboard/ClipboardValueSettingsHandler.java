@@ -3,7 +3,6 @@ package com.simibubi.create.content.equipment.clipboard;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -11,6 +10,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides.ClipboardType;
+import com.simibubi.create.content.equipment.clipboard.ui.ClipboardLayout;
 import com.simibubi.create.content.trains.track.TrackBlockOutline;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -194,7 +194,7 @@ public class ClipboardValueSettingsHandler {
 					itemStack.set(AllDataComponents.CLIPBOARD_CONTENT, clipboardContent);
 
 					copyEntries(toAdd, listTo);
-
+					
 					clipboardContent = clipboardContent
 						.setType(ClipboardType.WRITTEN)
 						.setPages(listTo);
@@ -313,18 +313,17 @@ public class ClipboardValueSettingsHandler {
 			currentHeight += existing.getHeight(false);
 		
 		for (ClipboardEntry entry : toAdd) {
-			int entryHeight = Math.min(entry.getHeight(false), ClipboardScreen.MAX_TEXT_HEIGHT);
+			int entryHeight = Math.min(entry.getHeight(false), ClipboardLayout.PAGE_TEXT_HEIGHT);
 
-			if (currentHeight + entryHeight >= ClipboardScreen.MAX_TEXT_HEIGHT) {
+			if (currentHeight + entryHeight >= ClipboardLayout.PAGE_TEXT_HEIGHT) {
 				for (currentPage++; currentPage < listTo.size(); currentPage++) {
 					currentHeight = 0;
 					for (ClipboardEntry existing : listTo.get(currentPage))
 						currentHeight += existing.getHeight(false);
-
-					if (currentHeight + entryHeight < ClipboardScreen.MAX_TEXT_HEIGHT)
+					if (currentHeight + entryHeight < ClipboardLayout.PAGE_TEXT_HEIGHT)
 						break;
 				}
-				if (currentPage > ClipboardScreen.PAGE_LIMIT) {
+				if (currentPage > ClipboardLayout.PAGE_LIMIT) {
 					break;
 				}
 				if (currentPage == listTo.size()) {
