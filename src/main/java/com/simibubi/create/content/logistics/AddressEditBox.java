@@ -46,7 +46,7 @@ public class AddressEditBox extends EditBox {
 		setBordered(false);
 		setFocused(false);
 		mouseClicked(0, 0, 0);
-		setMaxLength(AllConfigs.server().logistics.maxAddressLength.get());
+		setMaxLength(AllConfigs.client().maxAddressLength.get());
 	}
 
 	@Override

@@ -16,7 +16,6 @@ public class CLogistics extends ConfigBase {
 	public final ConfigInt brassTunnelTimer = i(10, 1, 10, "brassTunnelTimer", Comments.brassTunnelTimer);
 	public final ConfigInt factoryGaugeTimer = i(100, 5, "factoryGaugeTimer", Comments.factoryGaugeTimer);
 	public final ConfigBool seatHostileMobs = b(true, "seatHostileMobs", Comments.seatHostileMobs);
-	public final ConfigInt maxAddressLength = i(25, 1, 128, "maxAddressLength", Comments.maxAddressLength);
 
 	@Override
 	public String getName() {
@@ -38,7 +37,6 @@ public class CLogistics extends ConfigBase {
 		static String brassTunnelTimer = "The amount of ticks a brass tunnel waits between distributions.";
 		static String factoryGaugeTimer = "The amount of ticks a factory gauge waits between requests.";
 		static String seatHostileMobs = "Whether hostile mobs walking near a seat will start riding it.";
-		static String maxAddressLength = "Maximum length of an address for a Package Port.";
 	}
 
 }

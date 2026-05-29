@@ -76,7 +76,7 @@ public class StationScreen extends AbstractStationScreen {
 		nameBox = new EditBox(new NoShadowFontWrapper(font), x + 23, y + 4, background.getWidth() - 20, 10,
 			Component.literal(station.name));
 		nameBox.setBordered(false);
-		nameBox.setMaxLength(AllConfigs.server().logistics.maxAddressLength.get());
+		nameBox.setMaxLength(AllConfigs.client().maxAddressLength.get());
 		nameBox.setTextColor(0x592424);
 		nameBox.setValue(station.name);
 		nameBox.setFocused(false);
