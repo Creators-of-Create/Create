@@ -64,7 +64,7 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
         addressBox = new EditBox(new NoShadowFontWrapper(font), x + 23, y - 11, background.getWidth() - 20, 10,
                 Component.empty());
 		addressBox.setBordered(false);
-		addressBox.setMaxLength(getMaxAddressLength());
+		addressBox.setMaxLength(AllConfigs.server().logistics.maxAddressLength.get());
 		addressBox.setTextColor(0x3D3C48);
 		addressBox.setValue(menu.contentHolder.addressFilter);
 		addressBox.setFocused(false);
@@ -103,10 +103,6 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 
 	private int nameBoxX(String s, EditBox nameBox) {
 		return getGuiLeft() + background.getWidth() / 2 - (Math.min(font.width(s), nameBox.getWidth()) + 10) / 2;
-	}
-
-	protected int getMaxAddressLength() {
-		return AllConfigs.server().logistics.maxAddressLength.get();
 	}
 
 	@Override

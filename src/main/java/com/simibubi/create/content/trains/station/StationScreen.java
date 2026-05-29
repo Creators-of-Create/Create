@@ -19,6 +19,8 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
@@ -74,7 +76,7 @@ public class StationScreen extends AbstractStationScreen {
 		nameBox = new EditBox(new NoShadowFontWrapper(font), x + 23, y + 4, background.getWidth() - 20, 10,
 			Component.literal(station.name));
 		nameBox.setBordered(false);
-		nameBox.setMaxLength(25);
+		nameBox.setMaxLength(AllConfigs.server().logistics.maxAddressLength.get());
 		nameBox.setTextColor(0x592424);
 		nameBox.setValue(station.name);
 		nameBox.setFocused(false);
