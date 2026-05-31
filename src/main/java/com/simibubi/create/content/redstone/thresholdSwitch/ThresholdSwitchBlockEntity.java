@@ -23,7 +23,6 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.math.BlockFace;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
@@ -57,6 +56,8 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 	private InvManipulationBehaviour observedInventory;
 	private TankManipulationBehaviour observedTank;
 	private VersionedInventoryTrackerBehaviour invVersionTracker;
+
+	private static final int STACK_SIZE = 64;
 
 	private static final List<ThresholdSwitchCompat> COMPAT = List.of(
 		new FunctionalStorage(),
@@ -162,8 +163,14 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 
 				} else {
 					invVersionTracker.awaitNewVersion(inv);
+
 					for (int slot = 0; slot < inv.getSlots(); slot++) {
 						ItemStack stackInSlot = inv.getStackInSlot(slot);
+
+						// items mode sizes slots the same so the max doesn't shrink on unstackable items
+						int referenceStackSize = inStacks && !stackInSlot.isEmpty()
+							? stackInSlot.getMaxStackSize()
+							: filtering.getMaxStackSize();
 
 						int finalSlot = slot;
 						long space = COMPAT
@@ -171,15 +178,22 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 							.filter(compat -> compat.isFromThisMod(targetBlockEntity))
 							.map(compat -> compat.getSpaceInSlot(inv, finalSlot))
 							.findFirst()
-							.orElseGet(() -> (long) Math.min(stackInSlot.getOrDefault(DataComponents.MAX_STACK_SIZE, 64), inv.getSlotLimit(finalSlot)));
+							.orElseGet(() -> (long) Math.min(referenceStackSize, inv.getSlotLimit(finalSlot)));
 
-						int count = stackInSlot.getCount();
 						if (space == 0)
 							continue;
 
-						currentMaxLevel += space;
-						if (filtering.test(stackInSlot))
-							currentLevel += count;
+						if (inStacks) {
+							// count/maxStackSize per slot, x64 since levels are stored in items
+							currentMaxLevel += space * STACK_SIZE / referenceStackSize;
+							if (filtering.test(stackInSlot))
+								currentLevel += (long) stackInSlot.getCount() * STACK_SIZE / referenceStackSize;
+
+						} else {
+							currentMaxLevel += space;
+							if (filtering.test(stackInSlot))
+								currentLevel += stackInSlot.getCount();
+						}
 					}
 				}
 			}
