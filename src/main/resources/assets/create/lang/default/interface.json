@@ -285,6 +285,7 @@
 	"create.gui.threshold_switch.currently": "Currently %1$s",
 	"create.gui.threshold_switch.range": "(%1$s to %2$s)",
 	"create.gui.threshold_switch.range_max": "(max. %1$s)",
+	"create.gui.threshold_switch.slots": "Slots",
 	"create.gui.threshold_switch.pulley_y_level": "%1$sy",
 	"create.gui.threshold_switch.not_attached": "Not attached to a block",
 	"create.gui.threshold_switch.incompatible": "Incompatible block",

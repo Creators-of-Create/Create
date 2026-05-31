@@ -23,7 +23,6 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.math.BlockFace;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
@@ -57,6 +56,9 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 	private InvManipulationBehaviour observedInventory;
 	private TankManipulationBehaviour observedTank;
 	private VersionedInventoryTrackerBehaviour invVersionTracker;
+
+	/** Number of items represented by a single stack/slot when measuring fullness. */
+	private static final int STACK_SIZE = 64;
 
 	private static final List<ThresholdSwitchCompat> COMPAT = List.of(
 		new FunctionalStorage(),
@@ -162,6 +164,12 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 
 				} else {
 					invVersionTracker.awaitNewVersion(inv);
+
+					// Reference stack size for the "items" mode: sizing every slot uniformly
+					// keeps the maximum capacity stable as non-stackable (or low-stacking) items
+					// are inserted. Uses the filtered item's stack size, or 64 when unfiltered.
+					int stackSize = filtering.getMaxStackSize();
+
 					for (int slot = 0; slot < inv.getSlots(); slot++) {
 						ItemStack stackInSlot = inv.getStackInSlot(slot);
 
@@ -171,15 +179,28 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 							.filter(compat -> compat.isFromThisMod(targetBlockEntity))
 							.map(compat -> compat.getSpaceInSlot(inv, finalSlot))
 							.findFirst()
-							.orElseGet(() -> (long) Math.min(stackInSlot.getOrDefault(DataComponents.MAX_STACK_SIZE, 64), inv.getSlotLimit(finalSlot)));
+							.orElseGet(() -> (long) Math.min(stackSize, inv.getSlotLimit(finalSlot)));
 
-						int count = stackInSlot.getCount();
 						if (space == 0)
 							continue;
 
-						currentMaxLevel += space;
-						if (filtering.test(stackInSlot))
-							currentLevel += count;
+						if (inStacks) {
+							// "Stacks" measures slot occupancy: a slot counts as a full stack as
+							// soon as it holds anything, no matter how full it is. The container
+							// therefore reads as full once no empty slots remain - the point at
+							// which it can no longer accept an arbitrary new item. Setting the
+							// threshold just below the slot count keeps a free slot available for
+							// incoming items at all times.
+							currentMaxLevel += STACK_SIZE;
+							if (!stackInSlot.isEmpty() && filtering.test(stackInSlot))
+								currentLevel += STACK_SIZE;
+
+						} else {
+							// "Items" counts individual items against the theoretical capacity.
+							currentMaxLevel += space;
+							if (filtering.test(stackInSlot))
+								currentLevel += stackInSlot.getCount();
+						}
 					}
 				}
 			}
@@ -266,7 +287,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 				return tso.format(value);
 
 		String suffix = type == ThresholdType.ITEM
-			? stacks ? "schedule.condition.threshold.stacks" : "schedule.condition.threshold.items"
+			? stacks ? "gui.threshold_switch.slots" : "schedule.condition.threshold.items"
 			: "schedule.condition.threshold.buckets";
 		return CreateLang.text(value + " ")
 			.add(CreateLang.translate(suffix))

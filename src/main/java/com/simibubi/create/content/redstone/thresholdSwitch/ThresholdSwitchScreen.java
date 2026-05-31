@@ -65,7 +65,7 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 
 		inStacks = (SelectionScrollInput) new SelectionScrollInput(x + 100, y + 23, 52, 42)
 			.forOptions(List.of(CreateLang.translateDirect("schedule.condition.threshold.items"),
-				CreateLang.translateDirect("schedule.condition.threshold.stacks")))
+				CreateLang.translateDirect("gui.threshold_switch.slots")))
 			.titled(CreateLang.translateDirect("schedule.condition.threshold.item_measure"))
 			.setState(blockEntity.inStacks ? 1 : 0);
 
@@ -160,7 +160,7 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 		if (forItems) {
 			Component suffix =
 				inStacks.getState() == 0 ? CreateLang.translateDirect("schedule.condition.threshold.items")
-					: CreateLang.translateDirect("schedule.condition.threshold.stacks");
+					: CreateLang.translateDirect("gui.threshold_switch.slots");
 			valueStep = inStacks.getState() == 0 ? 1 : 64;
 			graphics.drawString(font, suffix, x + 105, y + 28, 0xFFFFFFFF, true);
 			graphics.drawString(font, suffix, x + 105, y + 28 + 24, 0xFFFFFFFF, true);

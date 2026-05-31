@@ -1434,6 +1434,7 @@
   "create.gui.threshold_switch.pulley_y_level": "%1$sy",
   "create.gui.threshold_switch.range": "(%1$s to %2$s)",
   "create.gui.threshold_switch.range_max": "(max. %1$s)",
+  "create.gui.threshold_switch.slots": "Slots",
   "create.gui.threshold_switch.title": "Threshold Switch",
   "create.gui.threshold_switch.upper_threshold": "...at or above:",
   "create.gui.toolmenu.cycle": "[SCROLL] to Cycle",
