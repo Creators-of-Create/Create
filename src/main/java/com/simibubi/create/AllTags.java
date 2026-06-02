@@ -26,6 +26,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -344,6 +345,28 @@ public class AllTags {
 
 		public boolean matches(Entity entity) {
 			return matches(entity.getType());
+		}
+
+	}
+
+	public enum AllBiomeTags {
+
+		WITHOUT_DIVING_HELMET_FOG_SCALING,
+
+		;
+
+		public final TagKey<Biome> tag;
+
+		AllBiomeTags() {
+			this(MOD);
+		}
+
+		AllBiomeTags(NameSpace namespace) {
+			this(namespace, null);
+		}
+
+		AllBiomeTags(NameSpace namespace, @Nullable String pathOverride) {
+			this.tag = TagKey.create(Registries.BIOME, namespace.id(this, pathOverride));
 		}
 
 	}
