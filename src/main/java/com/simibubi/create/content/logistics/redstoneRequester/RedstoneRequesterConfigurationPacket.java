@@ -43,6 +43,9 @@ public class RedstoneRequesterConfigurationPacket extends BlockEntityConfigurati
 
 	@Override
 	protected void applySettings(ServerPlayer player, RedstoneRequesterBlockEntity be) {
+		if (!be.behaviour.mayInteract(player))
+			return;
+
 		be.encodedTargetAdress = address;
 		List<BigItemStack> stacks = be.encodedRequest.stacks();
 		for (int i = 0; i < stacks.size() && i < amounts.size(); i++) {
