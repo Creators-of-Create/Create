@@ -30,7 +30,7 @@ public class StockKeeperRequestMenu extends MenuBase<StockTickerBlockEntity> {
 
 	public static AbstractContainerMenu create(int pContainerId, Inventory pPlayerInventory,
 		StockTickerBlockEntity stockTickerBlockEntity) {
-		return new StockKeeperCategoryMenu(AllMenuTypes.STOCK_KEEPER_REQUEST.get(), pContainerId, pPlayerInventory,
+		return new StockKeeperRequestMenu(AllMenuTypes.STOCK_KEEPER_REQUEST.get(), pContainerId, pPlayerInventory,
 			stockTickerBlockEntity);
 	}
 
