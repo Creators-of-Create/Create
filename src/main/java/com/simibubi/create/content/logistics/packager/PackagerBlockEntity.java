@@ -208,7 +208,12 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 		InventorySummary availableItems = new InventorySummary();
 
 		IItemHandler targetInv = targetInventory.getInventory();
-		if (targetInv == null || targetInv instanceof PackagerItemHandler) {
+		if (targetInv == null) {
+			if (this.availableItems == null)
+				this.availableItems = availableItems;
+			return this.availableItems;
+		}
+		if (targetInv instanceof PackagerItemHandler) {
 			this.availableItems = availableItems;
 			return availableItems;
 		}
@@ -224,7 +229,8 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 		}
 
 		invVersionTracker.awaitNewVersion(targetInventory.getInventory());
-		submitNewArrivals(this.availableItems, availableItems);
+		if (!level.isClientSide)
+			submitNewArrivals(this.availableItems, availableItems);
 		this.availableItems = availableItems;
 		return availableItems;
 	}
