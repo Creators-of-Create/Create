@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.simibubi.create.foundation.utility.VisitedItemStackTracker;
+
 import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -182,70 +184,41 @@ public class ItemHelper {
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, ExtractionCountMode mode, int amount,
 									boolean simulate) {
-		ItemStack extracting = ItemStack.EMPTY;
-		boolean amountRequired = mode == ExtractionCountMode.EXACTLY;
-		boolean checkHasEnoughItems = amountRequired;
-		boolean hasEnoughItems = !checkHasEnoughItems;
-		boolean potentialOtherMatch = false;
-		int maxExtractionCount = amount;
-
-		Extraction:
-		do {
-			extracting = ItemStack.EMPTY;
-
-			for (int slot = 0; slot < inv.getSlots(); slot++) {
-				ItemStack slotStack = inv.getStackInSlot(slot);
-				if (slotStack.isEmpty())
+		if (mode == ItemHelper.ExtractionCountMode.EXACTLY) {
+			VisitedItemStackTracker tracker = new VisitedItemStackTracker();
+			for (int i = 0; i < inv.getSlots(); i++) {
+				ItemStack stackIn = inv.getStackInSlot(i);
+				if (stackIn.isEmpty() || !test.test(stackIn))
 					continue;
-				int amountToExtractFromThisSlot =
-					Math.min(maxExtractionCount - extracting.getCount(), slotStack.getMaxStackSize());
-				ItemStack stack = inv.extractItem(slot, amountToExtractFromThisSlot, true);
 
-				if (stack.isEmpty())
+				ItemStack extracted = inv.extractItem(i, amount, true);
+				if (extracted.isEmpty())
 					continue;
-				if (!test.test(stack))
-					continue;
-				if (!extracting.isEmpty() && !canItemStackAmountsStack(stack, extracting)) {
-					potentialOtherMatch = true;
-					continue;
-				}
 
-				if (extracting.isEmpty())
-					extracting = stack.copy();
-				else
-					extracting.grow(stack.getCount());
-
-				if (!simulate && hasEnoughItems)
-					inv.extractItem(slot, stack.getCount(), false);
-
-				if (extracting.getCount() >= maxExtractionCount) {
-					if (checkHasEnoughItems) {
-						hasEnoughItems = true;
-						checkHasEnoughItems = false;
-						continue Extraction;
-					} else {
-						break Extraction;
+				VisitedItemStackTracker.SlotAmountRecord slotRecord = tracker.update(stackIn, i);
+				if (slotRecord.totalAmount >= amount) {
+					ItemStack result = extracted.copyWithCount(amount);
+					if (!simulate) {
+						for (int slot: slotRecord.slots) {
+							amount -= inv.extractItem(slot, amount, false).getCount();
+						}
 					}
+					return result;
 				}
 			}
+		} else {
+			for (int i = 0; i < inv.getSlots(); i++) {
+				ItemStack stackIn = inv.getStackInSlot(i);
+				if (stackIn.isEmpty() || !test.test(stackIn))
+					continue;
 
-			if (!extracting.isEmpty() && !hasEnoughItems && potentialOtherMatch) {
-				ItemStack blackListed = extracting.copy();
-				test = test.and(i -> !ItemStack.isSameItemSameComponents(i, blackListed));
-				continue;
+				ItemStack extracted = inv.extractItem(i, amount, simulate);
+				if (!extracted.isEmpty()) {
+					return extracted.copy();
+				}
 			}
-
-			if (checkHasEnoughItems)
-				checkHasEnoughItems = false;
-			else
-				break Extraction;
-
-		} while (true);
-
-		if (amountRequired && extracting.getCount() < amount)
-			return ItemStack.EMPTY;
-
-		return extracting;
+		}
+		return ItemStack.EMPTY;
 	}
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test,
