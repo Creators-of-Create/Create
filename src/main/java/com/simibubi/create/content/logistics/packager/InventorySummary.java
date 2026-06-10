@@ -92,8 +92,11 @@ public class InventorySummary {
 			}
 		}
 
-		if (stack.getCount() > stack.getMaxStackSize())
-			stack = stack.copyWithCount(1);
+		// Always store a defensive copy, never the caller's reference: an inventory slot's ItemStack is
+		// mutated in place when items are extracted (split/shrink → count 0, item AIR), which would
+		// corrupt this entry and make getCountOf report 0 until the summary is rebuilt. The real count
+		// lives in BigItemStack.count, so normalising the stored stack to 1 is sufficient.
+		stack = stack.copyWithCount(1);
 
 		BigItemStack newEntry = new BigItemStack(stack, count);
 		stacks.add(newEntry);
