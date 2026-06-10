@@ -7,6 +7,8 @@ import java.util.function.Predicate;
 
 import com.simibubi.create.foundation.utility.VisitedItemStackTracker;
 
+import com.simibubi.create.foundation.utility.VisitedItemStackTracker.SlotAmountRecord;
+
 import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -188,34 +190,58 @@ public class ItemHelper {
 			VisitedItemStackTracker tracker = new VisitedItemStackTracker();
 			for (int i = 0; i < inv.getSlots(); i++) {
 				ItemStack stackIn = inv.getStackInSlot(i);
-				if (stackIn.isEmpty() || !test.test(stackIn))
+				if (stackIn.isEmpty() || stackIn.getMaxStackSize() < amount || !test.test(stackIn))
 					continue;
 
-				ItemStack extracted = inv.extractItem(i, amount, true);
+				ItemStack extracted = inv.extractItem(i, stackIn.getCount(), true);
 				if (extracted.isEmpty())
 					continue;
 
-				VisitedItemStackTracker.SlotAmountRecord slotRecord = tracker.update(stackIn, i);
+				VisitedItemStackTracker.SlotAmountRecord slotRecord = tracker.update(extracted.copy(), i);
 				if (slotRecord.totalAmount >= amount) {
 					ItemStack result = extracted.copyWithCount(amount);
 					if (!simulate) {
 						for (int slot: slotRecord.slots) {
-							amount -= inv.extractItem(slot, amount, false).getCount();
+							int extractAmount = Math.min(inv.getStackInSlot(slot).getCount(), amount);
+							amount -= inv.extractItem(slot, extractAmount, false).getCount();
 						}
 					}
 					return result;
 				}
 			}
 		} else {
+			VisitedItemStackTracker.SlotAmountRecord slotRecord = new SlotAmountRecord();
+			ItemStack result = ItemStack.EMPTY;
+			int maxExtractAmount = amount;
 			for (int i = 0; i < inv.getSlots(); i++) {
 				ItemStack stackIn = inv.getStackInSlot(i);
-				if (stackIn.isEmpty() || !test.test(stackIn))
+				if (stackIn.isEmpty() || (!result.isEmpty() && !ItemStack.isSameItemSameComponents(result, stackIn)) ||
+					!test.test(stackIn))
 					continue;
 
-				ItemStack extracted = inv.extractItem(i, amount, simulate);
-				if (!extracted.isEmpty()) {
-					return extracted.copy();
+				ItemStack extracted = inv.extractItem(i, stackIn.getCount(), true);
+				if (extracted.isEmpty())
+					continue;
+
+				if (result.isEmpty()) {
+					result = extracted.copy();
+					maxExtractAmount = Math.min(amount, extracted.getMaxStackSize());
 				}
+
+				slotRecord.add(i, extracted.getCount());
+				if (slotRecord.totalAmount >= maxExtractAmount)
+					break;
+			}
+			if (!result.isEmpty()) {
+				amount = Math.min(slotRecord.totalAmount, result.getMaxStackSize());
+				result.setCount(amount);
+				if (!simulate) {
+					for (int slot: slotRecord.slots) {
+						int extractAmount = Math.min(inv.getStackInSlot(slot).getCount(), amount);
+						amount -= inv.extractItem(slot, extractAmount, false).getCount();
+					}
+				}
+				return result;
 			}
 		}
 		return ItemStack.EMPTY;

@@ -46,7 +46,7 @@ public class VisitedItemStackTracker {
 		public final IntArrayList slots = new IntArrayList();
 		public int totalAmount = 0;
 
-		void add(int slot, int amount) {
+		public void add(int slot, int amount) {
 			slots.add(slot);
 			totalAmount += amount;
 		}
