@@ -233,7 +233,7 @@ public class ItemHelper {
 					break;
 			}
 			if (!result.isEmpty()) {
-				amount = Math.min(slotRecord.totalAmount, result.getMaxStackSize());
+				amount = Math.min(slotRecord.totalAmount, maxExtractAmount);
 				result.setCount(amount);
 				if (!simulate) {
 					for (int slot: slotRecord.slots) {
