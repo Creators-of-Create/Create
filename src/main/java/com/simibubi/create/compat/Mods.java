@@ -17,6 +17,7 @@ import net.neoforged.fml.loading.LoadingModList;
  * For compatibility with and without another mod present, we have to define load conditions of the specific code
  */
 public enum Mods {
+	AE2,
 	AETHER,
 	AETHER_II,
 	BETTEREND,

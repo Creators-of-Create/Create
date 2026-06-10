@@ -12,6 +12,7 @@ import com.simibubi.create.api.schematic.requirement.SchematicRequirementRegistr
 import com.simibubi.create.api.schematic.requirement.SpecialBlockEntityItemRequirement;
 import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
 import com.simibubi.create.api.schematic.requirement.SpecialEntityItemRequirement;
+import com.simibubi.create.compat.ae2.AppliedEnergistics2InSchematics;
 import com.simibubi.create.compat.framedblocks.FramedBlocksInSchematics;
 import com.simibubi.create.foundation.data.recipe.Mods;
 import com.simibubi.create.foundation.mixin.accessor.ItemFrameAccessor;
@@ -71,7 +72,9 @@ public class ItemRequirement {
 
 		ItemRequirement requirement;
 		SchematicRequirementRegistries.BlockRequirement blockRequirement = SchematicRequirementRegistries.BLOCKS.get(block);
-		if (blockRequirement != null) {
+		if (AppliedEnergistics2InSchematics.isCableBus(state)) {
+			requirement = AppliedEnergistics2InSchematics.getRequiredItems(state, be);
+		} else if (blockRequirement != null) {
 			requirement = blockRequirement.getRequiredItems(state, be);
 		} else if (block instanceof SpecialBlockItemRequirement specialBlock) {
 			requirement = specialBlock.getRequiredItems(state, be);

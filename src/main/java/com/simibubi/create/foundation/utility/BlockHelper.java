@@ -15,6 +15,7 @@ import com.simibubi.create.api.schematic.state.SchematicStateFilter;
 import com.simibubi.create.api.schematic.state.SchematicStateFilterRegistry;
 import com.simibubi.create.api.schematic.state.SchematicStateFilterRegistry.StateFilter;
 import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.ae2.AppliedEnergistics2InSchematics;
 import com.simibubi.create.compat.framedblocks.FramedBlocksInSchematics;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
@@ -307,6 +308,8 @@ public class BlockHelper {
 		} else if (blockEntity instanceof PartialSafeNBT safeNbtBE) {
 			data = new CompoundTag();
 			safeNbtBE.writeSafe(data, access);
+		} else if (AppliedEnergistics2InSchematics.isCableBus(blockState)) {
+			data = AppliedEnergistics2InSchematics.prepareBlockEntityData(level, blockState, blockEntity);
 		} else if (Mods.FRAMEDBLOCKS.contains(blockState.getBlock())) {
 			data = FramedBlocksInSchematics.prepareBlockEntityData(blockState, blockEntity);
 		}
