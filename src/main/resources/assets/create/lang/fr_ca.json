@@ -634,7 +634,7 @@
   "block.create.pink_valve_handle": "Volant de vanne rose",
   "block.create.piston_extension_pole": "Barre d'extension de piston",
   "block.create.placard": "Panneau",
-  "block.create.placard.tooltip.behaviour1": "_Ajoute_ l'_objet_ tenu au panneau. _Émet_ un bref signal de _redstone_ si un objet correspondant été déjà présent.",
+  "block.create.placard.tooltip.behaviour1": "_Ajoute_ l'_objet_ tenu au panneau. _Émet_ un bref signal de _redstone_ si un objet correspondant était déjà présent.",
   "block.create.placard.tooltip.behaviour2": "_Enlève_ l'_objet_ actuel dans le cadre.",
   "block.create.placard.tooltip.condition1": "Clic droit avec un objet",
   "block.create.placard.tooltip.condition2": "Quand attaqué",
