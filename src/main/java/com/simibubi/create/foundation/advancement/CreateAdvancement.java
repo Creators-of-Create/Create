@@ -97,6 +97,10 @@ public class CreateAdvancement {
 		if (createBuilder.func != null)
 			createBuilder.icon(createBuilder.func.apply(registries));
 
+		if (createBuilder.awardOnIconCollected)
+			mcBuilder.addCriterion(String.valueOf(createBuilder.keyIndex++),
+				InventoryChangeTrigger.TriggerInstance.hasItems(createBuilder.icon.getItem()));
+
 		mcBuilder.display(createBuilder.icon, Component.translatable(titleKey()),
 			Component.translatable(descriptionKey()).withStyle(s -> s.withColor(0xDBA213)),
 			id.equals("root") ? BACKGROUND : null, createBuilder.type.advancementType, createBuilder.type.toast,
@@ -141,6 +145,7 @@ public class CreateAdvancement {
 		private int keyIndex;
 		private ItemStack icon;
 		private Function<Provider, ItemStack> func;
+		private boolean awardOnIconCollected;
 
 		Builder special(TaskType type) {
 			this.type = type;
@@ -153,7 +158,11 @@ public class CreateAdvancement {
 		}
 
 		Builder icon(ItemProviderEntry<?, ?> item) {
-			return icon(item.asStack());
+			// Resolve lazily at save() rather than now: AllAdvancements' static
+			// initializer runs inside RegisterEvent, where this Create item may not be
+			// bound yet under some mod-load orders, causing an intermittent
+			// "Trying to access unbound value" boot crash on large modpacks.
+			return icon(registries -> item.asStack());
 		}
 
 		Builder icon(ItemLike item) {
@@ -185,7 +194,12 @@ public class CreateAdvancement {
 		}
 
 		Builder whenIconCollected() {
-			return externalTrigger(InventoryChangeTrigger.TriggerInstance.hasItems(icon.getItem()));
+			// The icon may resolve lazily (see icon(ItemProviderEntry)), so its item
+			// isn't available at build time. Flag externalTrigger so no builtin trigger
+			// is added; the real criterion is appended in save(), once the icon resolves.
+			externalTrigger = true;
+			awardOnIconCollected = true;
+			return this;
 		}
 
 		Builder whenItemCollected(ItemProviderEntry<?, ?> item) {
