@@ -8,6 +8,31 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import com.simibubi.create.foundation.block.CopperBlockSet.StairVariant;
+
+import net.minecraft.world.level.block.BaseRailBlock;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.GrassBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.RailBlock;
+import net.minecraft.world.level.block.SculkShriekerBlock;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+
+import net.minecraft.world.level.block.TntBlock;
+import net.minecraft.world.level.block.TorchBlock;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
+
+import net.minecraft.world.level.block.piston.PistonHeadBlock;
+
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -64,6 +89,35 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 		registerRotationProperty(HopperBlock.FACING, "Facing");
 		registerRotationProperty(DirectedDirectionalBlock.TARGET, "Target");
 
+
+		registerRotationProperty(ChestBlock.WATERLOGGED, "Waterlogged");
+		registerRotationProperty(ChestBlock.FACING, "Waterlogged");
+		registerRotationProperty(ChestBlock.TYPE, "Waterlogged");
+
+		registerRotationProperty(StairBlock.FACING, "Waterlogged");
+		registerRotationProperty(SlabBlock.TYPE, "Type");
+
+		registerRotationProperty(LeavesBlock.PERSISTENT, "Persistent");
+
+		registerRotationProperty(SculkShriekerBlock.CAN_SUMMON, "Can Summon Warden");
+
+		registerRotationProperty(PistonBaseBlock.EXTENDED, "Extended");
+
+		registerRotationProperty(DoorBlock.OPEN, "Open");
+		registerRotationProperty(DoorBlock.HINGE, "Hinge Side");
+		registerRotationProperty(DoorBlock.HALF, "Half");
+
+		registerRotationProperty(CampfireBlock.LIT, "Lit");
+
+		registerRotationProperty(CropBlock.AGE, "Age");
+
+		registerRotationProperty(RailBlock.SHAPE, "Shape");
+
+
+		registerRotationProperty(TntBlock.UNSTABLE, "Unstable");
+
+
+
 		registerRotationProperty(SequencedGearshiftBlock.VERTICAL, "Vertical");
 	}
 
@@ -90,6 +144,7 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 
 	private final BlockState state;
 	private final BlockPos pos;
+	@Nullable
 	private final BlockEntity blockEntity;
 	private final Level level;
 	private final NonVisualizationLevel nonVisualizationLevel;
@@ -273,21 +328,29 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 			poseStack.translate(0, 0, 100);
 
 			try {
-				Level previousLevel = blockEntity.getLevel();
-				blockEntity.setLevel(nonVisualizationLevel);
-				GuiGameElement.of(blockState, blockEntity)
-					.rotateBlock(player.getXRot(), player.getYRot() + 180, 0f)
-					.scale(24)
-					.at(-12, 12)
-					.render(graphics);
-				blockEntity.setLevel(previousLevel);
+				withLevel(blockEntity, nonVisualizationLevel, () -> {
+					if (blockEntity != null) {
+						// Render with BlockEntity data
+						GuiGameElement.of(blockState, blockEntity)
+							.rotateBlock(player.getXRot(), player.getYRot() + 180, 0f)
+							.scale(24)
+							.at(-12, 12)
+							.render(graphics);
+					} else {
+						// Render only with BlockState (for blocks without TileEntities)
+						GuiGameElement.of(blockState)
+							.rotateBlock(player.getXRot(), player.getYRot() + 180, 0f)
+							.scale(24)
+							.at(-12, 12)
+							.render(graphics);
+					}
+				});
 			} catch (Exception e) {
 				Create.LOGGER.warn("Failed to render blockstate in RadialWrenchMenu", e);
 				allStates.remove(i);
 				selectedStateIndex = 0;
 				return;
 			}
-
 			poseStack.translate(0, 0, 50);
 
 			if (i == selectedStateIndex) {
@@ -357,7 +420,24 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 
 		onClose();
 	}
+	private void withLevel(@Nullable BlockEntity blockEntity, Level newLevel, Runnable action) {
+		boolean hasBlockEntity = blockEntity != null;
 
+		Level originalLevel = null;
+		if (hasBlockEntity) {
+			originalLevel = blockEntity.getLevel();
+			blockEntity.setLevel(newLevel);
+		}
+
+		try {
+			action.run();
+		} finally {
+			if (hasBlockEntity) {
+				//noinspection DataFlowIssue
+				blockEntity.setLevel(originalLevel);
+			}
+		}
+	}
 	@Override
 	public void renderBackground(GuiGraphics graphics) {
 		Color color = BACKGROUND_COLOR
