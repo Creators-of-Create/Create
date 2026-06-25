@@ -207,7 +207,8 @@ public class BlockHelper {
 
 	public static void destroyBlock(Level world, BlockPos pos, float effectChance,
 									Consumer<ItemStack> droppedItemCallback) {
-		destroyBlockAs(world, pos, null, ItemStack.EMPTY, effectChance, droppedItemCallback);
+		ItemStack fallbackTool = new ItemStack(Items.COBBLESTONE);
+		destroyBlockAs(world, pos, null, fallbackTool, effectChance, droppedItemCallback);
 	}
 
 	public static void destroyBlockAs(Level level, BlockPos pos, @Nullable Player player, ItemStack usedTool,
