@@ -1012,7 +1012,7 @@
   "create.gui.stock_keeper.craft": "Izradi %1$s",
   "create.gui.stock_keeper.network_locked": "Mreža je zaključana",
   "create.gui.stock_keeper.network_open": "Mreža je otvorena",
-  "create.gui.stock_keeper.package_adress": "Adresa Paketa",
+  "create.gui.stock_keeper.package_address": "Adresa Paketa",
   "create.gui.stock_keeper.request_sent": "Zahtjev Poslan!",
   "create.gui.stock_keeper.send": "Pošalji",
   "create.gui.stock_keeper.unsorted_category": "Nesvrstano",

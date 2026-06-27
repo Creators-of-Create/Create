@@ -172,7 +172,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 			if (isPlayerEntity != level.isClientSide)
 				continue;
 
-			entity.setPos(worldPosition.getX() + .5f, worldPosition.getY() + 1, worldPosition.getZ() + .5f);
+			entity.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5);
 			launcher.applyMotion(entity, facing);
 
 			if (!isPlayerEntity)

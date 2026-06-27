@@ -401,7 +401,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		.output(.1f, Items.LIME_DYE)
 		.whenModLoaded(Mods.BB.getId())),
 
-	// Oh The Biomes You'll Go
+	// Oh The Biomes We've Gone
 
 	BWG_ALLIUM_BUSH = bwgFlower("allium_flower_bush", List.of(1f, .05f, .25f),
 		List.of(Items.PURPLE_DYE, Items.GREEN_DYE, Items.MAGENTA_DYE), List.of(3, 2, 2)),
@@ -424,8 +424,8 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	BWG_BLACK_ROSE = bwgFlower("black_rose", List.of(1f, .1f),
 		List.of(Items.BLACK_DYE, Items.BLACK_DYE), List.of(2, 1)),
 
-	BWG_BLUE_SAGE = bwgFlower("blue_sage", List.of(1f, .1f, .1f),
-		List.of(Items.BLUE_DYE, Items.CYAN_DYE, Items.GREEN_DYE), List.of(2, 2, 1)),
+	BWG_BLUE_SAGE = bwgFlower("blue_sage", List.of(1f, .1f),
+		List.of(Items.BLUE_DYE, Items.CYAN_DYE), List.of(2, 1)),
 
 	BWG_CALIFORNIA_POPPY = bwgFlower("california_poppy", List.of(1f, .05f),
 		List.of(Items.ORANGE_DYE, Items.GREEN_DYE), List.of(2, 1)),
@@ -434,7 +434,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		List.of(Items.PURPLE_DYE, Items.BLUE_DYE, Items.GREEN_DYE), List.of(2, 2, 1)),
 
 	BWG_CYAN_AMARANTH = bwgFlower("cyan_amaranth", List.of(1f, .05f, .25f),
-		List.of(Items.RED_DYE, Items.GREEN_DYE, Items.RED_DYE), List.of(3, 2, 2)),
+		List.of(Items.CYAN_DYE, Items.GREEN_DYE, Items.CYAN_DYE), List.of(3, 2, 2)),
 
 	BWG_CYAN_ROSE = bwgFlower("cyan_rose", List.of(1f, .1f),
 		List.of(Items.CYAN_DYE, Items.GREEN_DYE), List.of(2, 1)),
@@ -472,8 +472,11 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	BWG_IRIS = bwgFlower("iris", List.of(1f, .05f),
 		List.of(Items.PURPLE_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BWG_ORCHID = bwgFlower("orchid", List.of(1f, .05f),
+	BWG_ORCHID = bwgFlower("japanese_orchid", List.of(1f, .05f),
 		List.of(Items.PINK_DYE, Items.WHITE_DYE), List.of(2, 1)),
+
+	BWG_PURPLE_SAGE = bwgFlower("purple_sage", List.of(1f, .1f),
+		List.of(Items.PURPLE_DYE, Items.MAGENTA_DYE), List.of(2, 1)),
 
 	BWG_KOVAN = bwgFlower("kovan_flower", List.of(1f, .2f, .05f),
 		List.of(Items.RED_DYE, Items.LIME_DYE, Items.GREEN_DYE), List.of(2, 1, 1)),
@@ -481,7 +484,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	BWG_LAZARUS_BELLFLOWER = bwgFlower("lazarus_bellflower", List.of(1f, .1f),
 		List.of(Items.MAGENTA_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
-	BWG_LOLIPOP = bwgFlower("lolipop_flower", List.of(1f, .25f, .05f),
+	BWG_LOLLIPOP = bwgFlower("lollipop_flower", List.of(1f, .25f, .05f),
 		List.of(Items.YELLOW_DYE, Items.YELLOW_DYE, Items.GREEN_DYE), List.of(2, 1, 1)),
 
 	BWG_MAGENTA_AMARANTH = bwgFlower("magenta_amaranth", List.of(1f, .05f, .25f),
@@ -491,13 +494,13 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		List.of(Items.MAGENTA_DYE, Items.LIME_DYE), List.of(2, 1)),
 
 	BWG_ORANGE_AMARANTH = bwgFlower("orange_amaranth", List.of(1f, .05f, .25f),
-		List.of(Items.RED_DYE, Items.GREEN_DYE, Items.RED_DYE), List.of(3, 2, 2)),
+		List.of(Items.ORANGE_DYE, Items.GREEN_DYE, Items.ORANGE_DYE), List.of(3, 2, 2)),
 
 	BWG_DAISY = bwgFlower("orange_daisy", List.of(1f, .2f, .05f),
 		List.of(Items.ORANGE_DYE, Items.YELLOW_DYE, Items.LIME_DYE), List.of(2, 1, 1)),
 
 	BWG_OSIRIA_ROSE = bwgFlower("osiria_rose", List.of(1f, .1f),
-		List.of(Items.BLACK_DYE, Items.BLACK_DYE), List.of(2, 1)),
+		List.of(Items.PINK_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
 	BWG_PEACH_LEATHER = bwgFlower("peach_leather_flower", List.of(1f, .25f),
 		List.of(Items.PINK_DYE, Items.GREEN_DYE), List.of(2, 1)),
@@ -520,9 +523,6 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	BWG_PURPLE_AMARANTH = bwgFlower("purple_amaranth", List.of(1f, .05f, .25f),
 		List.of(Items.PURPLE_DYE, Items.GREEN_DYE, Items.PURPLE_DYE), List.of(3, 2, 2)),
 
-	BWG_PURPLE_SAGE = bwgFlower("purple_rose", List.of(1f, .1f),
-		List.of(Items.PURPLE_DYE, Items.MAGENTA_DYE), List.of(2, 1)),
-
 	BWG_PURPLE_TULIP = bwgFlower("purple_tulip", List.of(1f, .1f),
 		List.of(Items.PURPLE_DYE, Items.LIME_DYE), List.of(2, 1)),
 
@@ -544,9 +544,6 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	BWG_TALL_PINK_ALLIUM = bwgFlower("tall_pink_allium", List.of(1f, .05f, .25f),
 		List.of(Items.PINK_DYE, Items.PINK_DYE, Items.MAGENTA_DYE), List.of(3, 2, 2)),
 
-	BWG_TORCH_GINGER = bwgFlower("torch_ginger", List.of(1f, .1f),
-		List.of(Items.RED_DYE, Items.GREEN_DYE), List.of(2, 1)),
-
 	BWG_VIOLET_LEATHER = bwgFlower("violet_leather_flower", List.of(1f, .25f),
 		List.of(Items.BLUE_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
@@ -558,10 +555,10 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		.output(.25f, Mods.BWG, "white_puffball_spores", 1)
 		.whenModLoaded(Mods.BWG.getId())),
 
-	BWG_WHITE_SAGE = bwgFlower(Mods.BWG.recipeId("white_sage"), List.of(1f, .1f),
+	BWG_WHITE_SAGE = bwgFlower("white_sage", List.of(1f, .1f),
 		List.of(Items.WHITE_DYE, Items.GRAY_DYE), List.of(2, 1)),
 
-	BWG_WINTER_CYCLAMEN = bwgFlower(Mods.BWG.recipeId("winter_cyclamen"), List.of(1f, .1f),
+	BWG_WINTER_CYCLAMEN = bwgFlower("winter_cyclamen", List.of(1f, .1f),
 		List.of(Items.CYAN_DYE, Items.GREEN_DYE), List.of(2, 1)),
 
 	BWG_WINTER_ROSE = bwgFlower("winter_rose", List.of(1f, .1f),
@@ -576,13 +573,47 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	BWG_YELLOW_TULIP = bwgFlower("yellow_tulip", List.of(1f, .1f),
 		List.of(Items.YELLOW_DYE, Items.LIME_DYE), List.of(2, 1)),
 
+	BWG_WHITE_ALLIUM = bwgFlower("white_allium", List.of(1f, .1f, .1f),
+		List.of(Items.WHITE_DYE, Items.LIGHT_GRAY_DYE, Items.GRAY_DYE), List.of(2, 2, 1)),
+
+	BWG_TALL_WHITE_ALLIUM = bwgFlower("tall_white_allium", List.of(1f, .05f, .25f),
+		List.of(Items.WHITE_DYE, Items.WHITE_DYE, Items.LIGHT_GRAY_DYE), List.of(3, 2, 2)),
+
+	BWG_WHITE_ALLIUM_BUSH = bwgFlower("white_allium_flower_bush", List.of(1f, .05f, .25f),
+		List.of(Items.WHITE_DYE, Items.GREEN_DYE, Items.LIGHT_GRAY_DYE), List.of(3, 2, 2)),
+
+	BWG_BLUE_ROSE_BUSH = bwgFlower("blue_rose_bush", List.of(1f, .05f, .25f),
+		List.of(Items.BLUE_DYE, Items.GREEN_DYE, Items.BLUE_DYE), List.of(3, 2, 2)),
+
+	BWG_HORSEWEED = bwgFlower("horseweed", List.of(1f, 0.25f),
+		List.of(Items.GREEN_DYE, Items.BROWN_DYE), List.of(2, 1)),
+
+	BWG_WINTER_SUCCULENT = bwgFlower("winter_succulent", List.of(1f, 0.25f),
+		List.of(Items.GREEN_DYE, Items.GREEN_DYE), List.of(2, 1)),
+
+	BWG_MINI_CACTUS = bwgFlower("mini_cactus", List.of(1f),
+		List.of(Items.GREEN_DYE), List.of(2)),
+
+	BWG_PRICKLY_PEAR_CACTUS = bwgFlower("prickly_pear_cactus", List.of(1f, 0.25f),
+		List.of(Items.GREEN_DYE, Items.GREEN_DYE), List.of(2, 1)),
+
+	BWG_GOLDEN_SPINED_CACTUS = bwgFlower("golden_spined_cactus", List.of(1f, 0.25f),
+		List.of(Items.GREEN_DYE, Items.YELLOW_DYE), List.of(2, 1)),
+
+	BWG_SAND_1 = moddedSandstone(Mods.BWG, "black"),
+	BWG_SAND_2 = moddedSandstone(Mods.BWG, "white"),
+	BWG_SAND_3 = moddedSandstone(Mods.BWG, "blue"),
+	BWG_SAND_4 = moddedSandstone(Mods.BWG, "purple"),
+	BWG_SAND_5 = moddedSandstone(Mods.BWG, "pink"),
+	BWG_SAND_6 = moddedSandstone(Mods.BWG, "windswept"),
+
 	// Environmental
 
 	ENV_BIRD_OF_PARADISE = envFlower("bird_of_paradise", List.of(1f, .25f, .25f),
 		List.of(Items.ORANGE_DYE, Items.BLUE_DYE, Items.RED_DYE), List.of(3, 1, 1)),
 
-	ENV_BLUE_DELPHINIUM = envFlower("blue_delphinium", List.of(1f, .1f),
-		List.of(Items.BLUE_DYE, Items.BLUE_DYE), List.of(3, 1)),
+	ENV_BLUE_DELPHINIUM = envFlower("blue_delphinium", List.of(1f,.1f),
+		List.of(Items.LIGHT_BLUE_DYE, Items.LIGHT_BLUE_DYE), List.of(3,1)),
 
 	ENV_BLUEBELL = envFlower("bluebell", List.of(1f),
 		List.of(Items.BLUE_DYE), List.of(2)),
@@ -590,8 +621,8 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	ENV_CARTWHEEL = envFlower("cartwheel", List.of(1f, .1f),
 		List.of(Items.PINK_DYE, Items.ORANGE_DYE), List.of(2, 1)),
 
-	ENV_DIANTHUS = envFlower("dianthus", List.of(1f, .1f),
-		List.of(Items.GREEN_DYE, Items.GREEN_DYE), List.of(2, 1)),
+	ENV_DIANTHUS = envFlower("dianthus", List.of(1f,.1f),
+		List.of(Items.LIME_DYE, Items.LIME_DYE), List.of(2,1)),
 
 	ENV_MAGENTA_HIBISCUS = envFlower("magenta_hibiscus", List.of(1f, .1f),
 		List.of(Items.MAGENTA_DYE, Items.MAGENTA_DYE), List.of(2, 1)),
@@ -623,11 +654,14 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	ENV_WHITE_DELPHINIUM = envFlower("white_delphinium", List.of(1f, .1f),
 		List.of(Items.WHITE_DYE, Items.WHITE_DYE), List.of(3, 1)),
 
-	ENV_WHITE_LOTUS_FLOWER = envFlower("white_lotus_flower", List.of(1f, .1f),
-		List.of(Items.WHITE_DYE, Items.LIME_DYE), List.of(2, 1)),
+	ENV_WHITE_LOTUS_FLOWER = envFlower("white_lotus_flower", List.of(1f,.1f),
+		List.of(Items.WHITE_DYE, Items.WHITE_DYE), List.of(2,1)),
 
 	ENV_YELLOW_HIBISCUS = envFlower("yellow_hibiscus", List.of(1f, .1f),
 		List.of(Items.YELLOW_DYE, Items.YELLOW_DYE), List.of(2, 1)),
+
+	ENV_TASSELFLOWER = envFlower("tasselflower", List.of(1f, .1f),
+		List.of(Items.ORANGE_DYE, Items.GREEN_DYE), List.of(2,1)),
 
 	// Duidcraft
 	DC_LAVENDER = create(Mods.DRUIDCRAFT.recipeId("lavender"), b -> b.duration(50)

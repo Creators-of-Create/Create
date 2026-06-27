@@ -1,0 +1,13 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "minecraft:grass_block"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:dirt_path"
+    }
+  ]
+}

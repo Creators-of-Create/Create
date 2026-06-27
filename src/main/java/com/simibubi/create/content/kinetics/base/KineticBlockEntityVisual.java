@@ -4,6 +4,7 @@ import com.simibubi.create.content.kinetics.simpleRelays.ICogWheel;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
+import net.createmod.catnip.theme.Color;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
@@ -37,5 +38,23 @@ public abstract class KineticBlockEntityVisual<T extends KineticBlockEntity> ext
 
 	public static Axis rotationAxis(BlockState blockState) {
 		return (blockState.getBlock() instanceof IRotate irotate) ? irotate.getRotationAxis(blockState) : Axis.Y;
+	}
+
+	public static void applyOverstressEffect(KineticBlockEntity be, RotatingInstance... instances) {
+		float overStressedEffect = be.effects.overStressedEffect;
+		if (overStressedEffect != 0) {
+			boolean overstressed = overStressedEffect > 0;
+			Color color = overstressed ? Color.RED : Color.SPRING_GREEN;
+			float weight = overstressed ? overStressedEffect : -overStressedEffect;
+
+			for (RotatingInstance instance : instances)
+				instance.setColor(Color.WHITE.mixWith(color, weight));
+		} else {
+			for (RotatingInstance instance : instances)
+				instance.setColor(Color.WHITE);
+		}
+
+		for (RotatingInstance instance : instances)
+			instance.setChanged();
 	}
 }

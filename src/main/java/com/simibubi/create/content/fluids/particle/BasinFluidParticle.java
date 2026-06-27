@@ -87,7 +87,7 @@ public class BasinFluidParticle extends FluidStackParticle {
 	public void render(VertexConsumer vb, Camera info, float pt) {
 		Quaternionf rotation = info.rotation();
 		Quaternionf prevRotation = new Quaternionf(rotation);
-		rotation.set(1, 0, 0, 1);
+		rotation.set(-1, 0, 0, 1);
 		rotation.normalize();
 		super.render(vb, info, pt);
 		rotation.set(0, 0, 0, 1);

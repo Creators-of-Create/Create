@@ -2,6 +2,7 @@ package com.simibubi.create.content.kinetics.belt.transport;
 
 import com.simibubi.create.foundation.item.ItemHelper;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.neoforge.items.IItemHandler;
@@ -68,7 +69,7 @@ public class ItemHandlerBeltSegment implements IItemHandler {
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return Math.min(getStackInSlot(slot).getMaxStackSize(), 64);
+		return getStackInSlot(slot).getOrDefault(DataComponents.MAX_STACK_SIZE, 64);
 	}
 
 	@Override

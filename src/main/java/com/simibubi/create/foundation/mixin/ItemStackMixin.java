@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.mixin;
 
 import java.util.function.BiFunction;
 
+import com.simibubi.create.content.equipment.clipboard.ClipboardBlockItem;
+
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -23,6 +25,9 @@ import net.minecraft.world.level.ItemLike;
 public class ItemStackMixin {
 	@Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;verifyComponentsAfterLoad(Lnet/minecraft/world/item/ItemStack;)V"))
 	private void create$migrateOldClipboardComponents(ItemLike item, int count, PatchedDataComponentMap components, CallbackInfo ci) {
+		if (!(item.asItem() instanceof ClipboardBlockItem) || components.isPatchEmpty() || components.has(AllDataComponents.CLIPBOARD_CONTENT))
+			return;
+
 		ClipboardContent content = ClipboardContent.EMPTY;
 
 		content = create$migrateComponent(content, components, AllDataComponents.CLIPBOARD_PAGES, ClipboardContent::setPages);

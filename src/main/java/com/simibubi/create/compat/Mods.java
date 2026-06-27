@@ -39,12 +39,15 @@ public enum Mods {
 	XAEROWORLDMAP,
 	FTBLIBRARY,
 	SODIUM,
-	INVENTORYSORTER;
+	INVENTORYSORTER,
+	FARMERSDELIGHT;
 
 	private final String id;
+	private final boolean isLoaded;
 
 	Mods() {
 		id = Lang.asId(name());
+		isLoaded = LoadingModList.get().getModFileById(id) != null;
 	}
 
 	/**
@@ -79,7 +82,7 @@ public enum Mods {
 	 * @return a boolean of whether the mod is loaded or not based on mod id
 	 */
 	public boolean isLoaded() {
-		return LoadingModList.get().getModFileById(id) != null;
+		return isLoaded;
 	}
 
 	/**

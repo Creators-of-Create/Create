@@ -9,7 +9,7 @@
       "item": "minecraft:milk_bucket"
     },
     "P": {
-      "tag": "c:doughs"
+      "tag": "c:foods/dough"
     },
     "S": {
       "item": "minecraft:sugar"

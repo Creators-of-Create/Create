@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation;
 
 import java.util.function.Supplier;
+import java.util.function.Function;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -11,8 +12,8 @@ public interface ICapabilityProvider<T> {
 	@Nullable
 	T getCapability();
 
-	static <T, C> ICapabilityProvider<T> of(BlockCapabilityCache<T, C> cache) {
-		return new BlockCapabilityCacheProvider<>(cache);
+	static <T, C> ICapabilityProvider<T> of(Function<Runnable, BlockCapabilityCache<T, C>> cacheFactory) {
+		return new BlockCapabilityCacheProvider<>(cacheFactory);
 	}
 
 	static <T> ICapabilityProvider<T> of(Supplier<T> supplier) {
@@ -26,14 +27,17 @@ public interface ICapabilityProvider<T> {
 	@ApiStatus.Internal
 	class BlockCapabilityCacheProvider<T, C> implements ICapabilityProvider<T> {
 		private final BlockCapabilityCache<T, C> inner;
+		private volatile boolean invalid;
 
-		private BlockCapabilityCacheProvider(BlockCapabilityCache<T, C> inner) {
-			this.inner = inner;
+		private BlockCapabilityCacheProvider(Function<Runnable, BlockCapabilityCache<T, C>> cacheFactory) {
+			this.invalid = false;
+			this.inner = cacheFactory == null ? null :
+				cacheFactory.apply(() -> this.invalid = true);
 		}
 
 		@Override
 		public @Nullable T getCapability() {
-			return inner == null ? null : inner.getCapability();
+			return inner == null || invalid ? null : inner.getCapability();
 		}
 	}
 

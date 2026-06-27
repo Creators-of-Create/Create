@@ -1,0 +1,27 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "environmental"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    [
+      {
+        "item": "minecraft:dirt"
+      },
+      {
+        "item": "minecraft:coarse_dirt"
+      },
+      {
+        "item": "minecraft:rooted_dirt"
+      }
+    ]
+  ],
+  "results": [
+    {
+      "id": "environmental:dirt_path"
+    }
+  ]
+}

@@ -182,7 +182,7 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 	public static boolean playerInRange(Player player, Level world, BlockPos pos) {
 		//double modifier = world.isRemote ? 0 : 1.0;
 		double reach = 0.4 * player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE);// + modifier;
-		return player.distanceToSqr(Vec3.atCenterOf(pos)) < reach * reach;
+		return player.getEyePosition().distanceToSqr(Vec3.atCenterOf(pos)) < reach * reach;
 	}
 
 	private ItemStack createLinkedController() {

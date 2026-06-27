@@ -1,4 +1,66 @@
 ------------------------------------------------------
+Create 6.0.10
+------------------------------------------------------
+
+#### Gameplay Changes
+
+- Improve Recipe Viewer Sync in Stock Keepers and Allow selecting from 4 different modes:
+    - Disabled
+    - Sync only from Recipe Viewers
+    - Sync only to Recipe Viewers
+    - Sync from and to Recipe Viewers
+- Add keybinds for ctrl, shift and alt modifiers #10187
+
+#### Optimizations
+
+- Further optimize contraption collision
+- Optimize GlobalRailwayManager#playerLogin
+
+#### Bug Fixes
+
+- Fix warnings being logged for missing classes that create has mixins into
+- Fix backtanks not having the enchantment glint when worn #9792
+- Fix spouts not stopping items when filling them when the spout is also actively being filled #9621
+- Fix stock links on same storage (for example double chests) reporting the item amounts twice #9627
+- Fix older flywheel being loaded when a mod like vanillin is installed
+- Fix turntables not rotating players smoothly #8160
+- Fix rare crash with COntraptionSeatMappingPacket #7919
+- Fix tanks not updating correctly in specific cases #8535
+- Fix steam engines not filling with water if expanded after engines have been placed already #9342
+- Fix enchanted items disappearing in contraption storages #9788
+- Fix adjustable chain gearshifts causing a crash in specific setups #9046
+- Fix postbox duplication if someone breaks it while it is still being accessed #8759
+- Fix tools with efficiency not being faster when used in deployers #9615
+- Fix waxed copper tiles and shingles not having the correct stonecutting recipes #9510
+- Fix crash when a CC: Tweaked computer is attached to a train station #9843
+- Limit the maxAssemblyLength to 512 and maxBogeyCount to 200 to prevent issues such as #9626
+- Fix VirtualRenderWorld not marking block entities as removed #9821
+- Fix rendered items in stockkeeper screens not having the correct count on the item itself #9403
+- Fix dough being tagged incorrectly #9831
+- Fix players using lectern controllers with their feet height rather than their eye height #9922
+- Fix the count of filtering behaviours being set to 1 when the item has been removed #9777
+- Fix schedules not stacking after copy #9886
+- Fix mechanical mixers that are mixing at a slower than required speed still playing an animation and continuing to mix #6249
+- Fix threshold switches detecting the wrong amount of items for chutes, smart chutes #9488
+- Fix basins not spawning fluid particles #9808
+- Fix exception in displaylink computercraft-api, when setting the cursor position to negative value #9984
+- Fix ItemStackMixin trying to migrate clipboard components on all item stacks
+- Fix fluid crashes by ensuring cache is only called when valid #10016
+- Fix harvesters harvesting vanilla mushrooms on rich soil #9940
+- Fix rendering jitter when walking ontop of belts and depots #9931
+- Fix items disappearing during belt transfers when chunks unload #9882
+- Fix outdated environmental compat #4710 #7301
+- Fix hand crank rotation visuals #8828
+- Fix outdated BWG/Silent Gems compat #9500
+- Fix placed clipboards causing a crash when you are too far away from the block #10185
+- Fix multiple create blocks and entities not respecting block and entity reach attributes
+
+#### API Changes
+
+- Add seats tags #9907
+- Add Plough blacklist and whitelist tags #7162
+
+------------------------------------------------------
 Create 6.0.9
 ------------------------------------------------------
 

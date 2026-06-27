@@ -47,8 +47,7 @@ public class LogisticallyLinkedClientHandler {
 				.getShape(player.level(), be.getBlockPos());
 			if (shape.isEmpty())
 				continue;
-			if (!player.blockPosition()
-				.closerThan(be.getBlockPos(), 64))
+			if (!player.canInteractWithBlock(be.getBlockPos(), 64))
 				continue;
 			for (int i = 0; i < shape.toAabbs()
 				.size(); i++) {
@@ -73,8 +72,7 @@ public class LogisticallyLinkedClientHandler {
 		LocalPlayer player = Minecraft.getInstance().player;
 		if (player == null)
 			return;
-		if (!player.blockPosition()
-			.closerThan(fpb.getPos(), 64))
+		if (!player.blockPosition().closerThan(fpb.getPos(), 64))
 			return;
 
 		Outliner.getInstance()

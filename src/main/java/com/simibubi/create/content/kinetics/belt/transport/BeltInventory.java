@@ -415,6 +415,12 @@ public class BeltInventory {
 	}
 
 	public CompoundTag write(HolderLookup.Provider registries) {
+		if (!toInsert.isEmpty() || !toRemove.isEmpty()) {
+			toInsert.forEach(this::insert);
+			toInsert.clear();
+			items.removeAll(toRemove);
+			toRemove.clear();
+		}
 		CompoundTag nbt = new CompoundTag();
 		ListTag itemsNBT = new ListTag();
 		items.forEach(stack -> itemsNBT.add(stack.serializeNBT(registries)));

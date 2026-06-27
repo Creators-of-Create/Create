@@ -29,7 +29,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class CloneCommand {
-
 	private static final Dynamic2CommandExceptionType CLONE_TOO_BIG_EXCEPTION = new Dynamic2CommandExceptionType(
 		(arg1, arg2) -> Component.translatable("commands.clone.toobig", arg1, arg2));
 
@@ -47,20 +46,14 @@ public class CloneCommand {
 							BlockPosArgument.getLoadedBlockPos(ctx, "end"),
 							BlockPosArgument.getLoadedBlockPos(ctx, "destination"), true)))))
 			.executes(ctx -> {
-				ctx.getSource()
-					.sendSuccess(() -> {
-                                return Component.literal(
-                                    "Clones all blocks as well as super glue from the specified area to the target destination");
-                            },
-						true);
+				ctx.getSource().sendSuccess(() -> Component.literal("Clones all blocks as well as super glue from the specified area to the target destination"), true);
 
 				return Command.SINGLE_SUCCESS;
 			});
-
 	}
 
 	private static int doClone(CommandSourceStack source, BlockPos begin, BlockPos end, BlockPos destination,
-		boolean cloneBlocks) throws CommandSyntaxException {
+							   boolean cloneBlocks) throws CommandSyntaxException {
 		BoundingBox sourceArea = BoundingBox.fromCorners(begin, end);
 		BlockPos destinationEnd = destination.offset(sourceArea.getLength());
 		BoundingBox destinationArea = BoundingBox.fromCorners(destination, destinationEnd);
@@ -83,12 +76,12 @@ public class CloneCommand {
 
 		if (cloneBlocks)
 			source.sendSuccess(() -> {
-                return Component.literal("Successfully cloned " + blockPastes + " Blocks");
-            }, true);
+				return Component.literal("Successfully cloned " + blockPastes + " Blocks");
+			}, true);
 
 		source.sendSuccess(() -> {
-            return Component.literal("Successfully applied glue " + gluePastes + " times");
-        }, true);
+			return Component.literal("Successfully applied glue " + gluePastes + " times");
+		}, true);
 		return blockPastes + gluePastes;
 
 	}

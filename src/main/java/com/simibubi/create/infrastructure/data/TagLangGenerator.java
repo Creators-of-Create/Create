@@ -131,8 +131,7 @@ public class TagLangGenerator {
 		translate(AllItemTags.HONEY_BUCKETS, "Honey Buckets");
 		translate(AllItemTags.FLOURS, "Flours");
 		translate(AllItemTags.WHEAT_FLOURS, "Wheat Flours");
-		translate(AllItemTags.DOUGHS, "Doughs");
-		translate(AllItemTags.WHEAT_DOUGHS, "Wheat Doughs");
+		translate(AllItemTags.FOODS_DOUGH_WHEAT, "Wheat Doughs");
 		translate(AllItemTags.UA_CORAL, "Upgrade Aquatic Coral");
 
 		// fluids

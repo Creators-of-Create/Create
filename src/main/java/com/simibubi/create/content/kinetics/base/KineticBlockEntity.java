@@ -453,13 +453,11 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		boolean added = false;
-
 		if (!StressImpact.isEnabled())
-			return added;
+			return false;
 		float stressAtBase = calculateStressApplied();
 		if (Mth.equal(stressAtBase, 0))
-			return added;
+			return false;
 
 		CreateLang.translate("gui.goggles.kinetic_stats")
 			.forGoggles(tooltip);
@@ -514,7 +512,9 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	}
 
 	public static float convertToAngular(float speed) {
-		return speed * 3 / 10f;
+		// speed (rpm) * 360 (revolution->deg) / 60 (min->sec) / 20 (sec->tick)
+		// rpm -> deg/tick
+		return speed * 360f / 60f / 20f;
 	}
 
 	public boolean isOverStressed() {

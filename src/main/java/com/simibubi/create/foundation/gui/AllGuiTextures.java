@@ -8,6 +8,7 @@ import net.createmod.catnip.gui.element.ScreenElement;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -182,6 +183,11 @@ public enum AllGuiTextures implements ScreenElement, TextureSheetSegment {
 	STOCK_KEEPER_CATEGORY_HIDDEN("stock_keeper", 143, 176, 8, 8),
 	STOCK_KEEPER_CATEGORY_SHOWN("stock_keeper", 151, 176, 8, 8),
 	NUMBERS("stock_keeper", 48, 176, 5, 8),
+
+	STOCK_KEEPER_SEARCH_SYNC_BOTH("stock_keeper", 160, 176, 15, 16),
+	STOCK_KEEPER_SEARCH_SYNC_FROM_STOCK_KEEPER("stock_keeper", 176, 176, 15, 16),
+	STOCK_KEEPER_SEARCH_SYNC_FROM_JEI("stock_keeper", 192, 176, 15, 16),
+	STOCK_KEEPER_SEARCH_SYNC_DISABLED("stock_keeper", 208, 176, 15, 16),
 
 	STOCK_KEEPER_CATEGORY("stock_keeper_categories", 32, 32, 192, 20),
 	STOCK_KEEPER_CATEGORY_SAYS("stock_keeper_categories", 238, 86, 14, 20),

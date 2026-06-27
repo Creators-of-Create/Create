@@ -197,85 +197,7 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 		URANIUM_RAW_BLOCK = moddedRawOreBlock(URANIUM, AllItems.CRUSHED_URANIUM::get),
 		NICKEL_RAW_BLOCK = moddedRawOreBlock(NICKEL, AllItems.CRUSHED_NICKEL::get),
 
-	// Oh The Biomes You'll Go
-	BWG_AMETRINE_ORE = create(Mods.BWG.recipeId("ametrine_ore"), b -> b.duration(500)
-		.require(AllItemTags.AMETRINE_ORES.tag)
-		.output(1f, Mods.BWG, "ametrine_gems", 2)
-		.output(.25f, Mods.BWG, "ametrine_gems", 1)
-		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-		.output(.125f, Mods.BWG, "cobbled_ether_stone", 1)
-		.whenModLoaded(Mods.BWG.getId())),
-
-	BWG_ANTHRACITE_ORE = create(Mods.BWG.recipeId("anthracite_ore"), b -> b.duration(150)
-		.require(AllItemTags.ANTHRACITE_ORES.tag)
-		.output(1f, Mods.BWG, "anthracite", 2)
-		.output(.5f, Mods.BWG, "anthracite", 1)
-		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-		.output(.125f, Mods.BWG, "brimstone", 1)
-		.whenModLoaded(Mods.BWG.getId())),
-
-	BWG_BLUE_GOLD_ORE = create(Mods.BWG.recipeId("blue_nether_gold_ore"), b -> b.duration(350)
-		.require(Mods.BWG, "blue_nether_gold_ore")
-		.output(1f, Items.GOLD_NUGGET, 18)
-		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-		.output(.125f, Mods.BWG, "blue_netherrack", 1)
-		.whenModLoaded(Mods.BWG.getId())),
-
-	BWG_BLUE_QUARTZ_ORE = create(Mods.BWG.recipeId("blue_nether_quartz_ore"), b -> b.duration(350)
-		.require(Mods.BWG, "blue_nether_quartz_ore")
-		.output(1f, Items.QUARTZ, 2)
-		.output(.25f, Items.QUARTZ, 1)
-		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-		.output(.125f, Mods.BWG, "blue_netherrack", 1)
-		.whenModLoaded(Mods.BWG.getId())),
-
-	BWG_BRIMSTONE_GOLD_ORE = create(Mods.BWG.recipeId("brimstone_nether_gold_ore"), b -> b.duration(350)
-		.require(Mods.BWG, "brimstone_nether_gold_ore")
-		.output(1f, Items.GOLD_NUGGET, 18)
-		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-		.output(.125f, Mods.BWG, "brimstone", 1)
-		.whenModLoaded(Mods.BWG.getId())),
-
-	BWG_BRIMSTONE_QUARTZ_ORE = create(Mods.BWG.recipeId("brimstone_nether_quartz_ore"), b -> b.duration(350)
-		.require(Mods.BWG, "brimstone_nether_quartz_ore")
-		.output(1f, Items.QUARTZ, 2)
-		.output(.25f, Items.QUARTZ, 1)
-		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-		.output(.125f, Mods.BWG, "brimstone", 1)
-		.whenModLoaded(Mods.BWG.getId())),
-
-	BWG_REDSTONE_ORE = create(Mods.BWG.recipeId("cryptic_redstone_ore"), b -> b.duration(250)
-		.require(Mods.BWG, "cryptic_redstone_ore")
-		.output(1f, Items.REDSTONE, 6)
-		.output(.5f, Items.REDSTONE, 1)
-		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-		.output(.125f, Mods.BWG, "cryptic_stone", 1)
-		.whenModLoaded(Mods.BWG.getId())),
-
-	BWG_EMERALDITE_ORE = create(Mods.BWG.recipeId("emeraldite_ore"), b -> b.duration(500)
-		.require(AllItemTags.EMERALDITE_ORES.tag)
-		.output(1f, Mods.BWG, "emeraldite_shards", 2)
-		.output(.25f, Mods.BWG, "emeraldite_shards", 1)
-		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-		.output(.125f, Mods.BWG, "scoria_cobblestone", 1)
-		.whenModLoaded(Mods.BWG.getId())),
-
-	BWG_LIGNITE_ORE = create(Mods.BWG.recipeId("lignite_ore"), b -> b.duration(300)
-		.require(AllItemTags.LIGNITE_ORES.tag)
-		.output(1f, Mods.BWG, "lignite", 2)
-		.output(.5f, Mods.BWG, "lignite", 2)
-		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-		.output(.125f, Mods.BWG, "cobbled_ether_stone", 1)
-		.whenModLoaded(Mods.BWG.getId())),
-
-	BWG_NETHERRACK_ORE = create(Mods.BWG.recipeId("pervaded_netherrack"), b -> b.duration(150)
-		.require(AllItemTags.EMERALDITE_ORES.tag)
-		.output(1f, Items.GLOWSTONE, 2)
-		.output(.5f, Items.GLOWSTONE, 1)
-		.output(.75f, AllItems.EXP_NUGGET.get(), 1)
-		.output(.125f, Items.NETHERRACK, 1)
-		.whenModLoaded(Mods.BWG.getId())),
-
+	// Oh The Biomes We've Gone
 	BWG_RED_ROCK_ORE = create(Mods.BWG.recipeId("red_rock"), b -> b.duration(150)
 		.require(Mods.BWG, "red_rock")
 		.output(1f, Items.RED_SAND, 1)
@@ -323,7 +245,8 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 	// Silent Gems
 
 	SG = sgOres("peridot", "ruby", "sapphire", "topaz", "alexandrite", "black_diamond", "carnelian",
-		"citrine", "iolite", "moldavite", "turquoise", "ammolite", "kyanite", "rose_quartz", "heliodor", "white_diamond"),
+		"citrine", "iolite", "moldavite", "turquoise", "ammolite", "kyanite", "rose_quartz", "heliodor",
+		"white_diamond", "garnet", "aquamarine", "tanzanite", "opal", "pearl"),
 
 	// Simple Farming
 
@@ -441,15 +364,15 @@ public final class CreateCrushingRecipeGen extends CrushingRecipeGen {
 				.output(.75f, AllItems.EXP_NUGGET.get())
 				.output(.12f, Items.COBBLED_DEEPSLATE)
 				.whenModLoaded(Mods.SILENT_GEMS.getId()));
-			create(Mods.SILENT_GEMS.recipeId(type + "_nether_ore"), b -> b.duration(350)
-				.require(Mods.SILENT_GEMS, type + "_nether_ore")
+			create(Mods.SILENT_GEMS.recipeId("nether_" + type + "_ore"), b -> b.duration(350)
+				.require(Mods.SILENT_GEMS, "nether_" + type + "_ore")
 				.output(1f, Mods.SILENT_GEMS, type, 2)
 				.output(.25f, Mods.SILENT_GEMS, type, 1)
 				.output(.75f, AllItems.EXP_NUGGET.get())
 				.output(.12f, Items.NETHERRACK)
 				.whenModLoaded(Mods.SILENT_GEMS.getId()));
-			create(Mods.SILENT_GEMS.recipeId(type + "_end_ore"), b -> b.duration(350)
-				.require(Mods.SILENT_GEMS, type + "_end_ore")
+			create(Mods.SILENT_GEMS.recipeId("end_" + type + "_ore"), b -> b.duration(350)
+				.require(Mods.SILENT_GEMS, "end_" + type + "_ore")
 				.output(1f, Mods.SILENT_GEMS, type, 2)
 				.output(.25f, Mods.SILENT_GEMS, type, 1)
 				.output(.75f, AllItems.EXP_NUGGET.get())

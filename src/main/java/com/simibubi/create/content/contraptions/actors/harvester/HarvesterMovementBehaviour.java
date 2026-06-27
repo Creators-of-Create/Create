@@ -1,5 +1,11 @@
 package com.simibubi.create.content.contraptions.actors.harvester;
 
+import com.simibubi.create.compat.Mods;
+
+import com.simibubi.create.compat.farmersdelight.FarmersDelightCompat;
+
+import net.minecraft.world.level.block.MushroomBlock;
+
 import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
@@ -151,6 +157,10 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 					.equals(BlockStateProperties.AGE_1.getName()))
 					continue;
 				return false;
+			}
+
+			if (state.getBlock() instanceof MushroomBlock && Mods.FARMERSDELIGHT.isLoaded()) {
+				return FarmersDelightCompat.shouldHarvestMushroom(world, pos, state);
 			}
 
 			// TODO: 1.21.5-rc1+ change to VegetationBlock (https://github.com/neoforged/NeoForge/commit/9f6edae1894ad249a8719c4e1f14beda0fdedc72)

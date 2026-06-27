@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "biomeswevegone"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "biomeswevegone:sandy_dirt"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "id": "biomeswevegone:sandy_dirt_path"
+    }
+  ]
+}

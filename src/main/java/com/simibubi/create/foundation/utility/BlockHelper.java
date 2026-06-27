@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.utility;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -233,7 +234,7 @@ public class BlockHelper {
 			&& (player == null || !player.isCreative())) {
 			List<ItemStack> drops = Block.getDrops(state, serverLevel, pos, blockEntity, player, usedTool);
 
-			BlockDropsEvent event = new BlockDropsEvent(serverLevel, pos, state, blockEntity, List.of(), player, usedTool);
+			BlockDropsEvent event = new BlockDropsEvent(serverLevel, pos, state, blockEntity, new ArrayList<>(), player, usedTool);
 			NeoForge.EVENT_BUS.post(event);
 			if (!event.isCanceled()) {
 				if (event.getDroppedExperience() > 0) {

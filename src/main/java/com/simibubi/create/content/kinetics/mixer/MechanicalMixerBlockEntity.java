@@ -138,6 +138,13 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 			if (level.isClientSide && runningTicks == 20)
 				renderParticles();
 
+			if (getSpeed() == 0 || !isSpeedRequirementFulfilled()) {
+				if (runningTicks < 20)
+					runningTicks = 40 - runningTicks;
+				else if (runningTicks == 20)
+					runningTicks++;
+			}
+
 			if ((!level.isClientSide || isVirtual()) && runningTicks == 20) {
 				if (processingTicks < 0) {
 					float recipeSpeed = 1;
@@ -147,7 +154,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 							recipeSpeed = t / 100f;
 					}
 
-					processingTicks = Mth.clamp((Mth.log2((int) (512 / speed))) * Mth.ceil(recipeSpeed * 15) + 1, 1, 512);
+					processingTicks = Math.max((Mth.log2((int) (512 / speed))) * Mth.ceil(recipeSpeed * 15) + 1, 1);
 
 					Optional<BasinBlockEntity> basin = getBasin();
 					if (basin.isPresent()) {
@@ -156,7 +163,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 						if (!tanks.getFirst()
 							.isEmpty()
 							|| !tanks.getSecond()
-								.isEmpty())
+							.isEmpty())
 							level.playSound(null, worldPosition, SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT,
 								SoundSource.BLOCKS, .75f, speed < 65 ? .75f : 1.5f);
 					}
@@ -255,9 +262,9 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 	protected boolean matchStaticFilters(RecipeHolder<? extends Recipe<?>> recipe) {
 		Recipe<?> r = recipe.value();
 		return ((r instanceof CraftingRecipe && !(r instanceof ShapedRecipe)
-				 && AllConfigs.server().recipes.allowShapelessInMixer.get() && r.getIngredients()
-				.size() > 1
-				 && !MechanicalPressBlockEntity.canCompress(r)) && !AllRecipeTypes.shouldIgnoreInAutomation(recipe)
+			&& AllConfigs.server().recipes.allowShapelessInMixer.get() && r.getIngredients()
+			.size() > 1
+			&& !MechanicalPressBlockEntity.canCompress(r)) && !AllRecipeTypes.shouldIgnoreInAutomation(recipe)
 			|| r.getType() == AllRecipeTypes.MIXING.getType());
 	}
 

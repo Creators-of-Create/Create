@@ -36,6 +36,8 @@ public final class CreateCuttingRecipeGen extends CuttingRecipeGen {
 		ARS_N_4 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_purple_archwood_wood", "archwood_planks"),
 		ARS_N_5 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_green_archwood_wood", "archwood_planks"),
 		ARS_N_6 = stripAndMakePlanks(Mods.ARS_N, null, "stripped_red_archwood_wood", "archwood_planks"),
+
+		// Ars Elemental
 		ARS_E_1 = stripAndMakePlanksDiffPlanksModId(Mods.ARS_E, null, "stripped_yellow_archwood_log", Mods.ARS_N, "archwood_planks"),
 		ARS_E_2 = stripAndMakePlanksDiffPlanksModId(Mods.ARS_E, null, "stripped_yellow_archwood", Mods.ARS_N, "archwood_planks"),
 
@@ -57,15 +59,19 @@ public final class CreateCuttingRecipeGen extends CuttingRecipeGen {
 		// IE
 		IE_WIRES = ieWires(CommonMetal.COPPER, CommonMetal.ELECTRUM, CommonMetal.ALUMINUM, CommonMetal.STEEL, CommonMetal.LEAD),
 
-	// Jaden's Nether Expansion
-	JNE_1 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_stem", "stripped_claret_stem", null),
+		// Jaden's Nether Expansion
+		JNE_1 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_stem", "stripped_claret_stem", null),
 		JNE_2 = stripAndMakePlanks(Mods.JNE, "cerebrage_claret_hyphae", "stripped_claret_hyphae", null),
 
 		// Atmospheric
 		ATM_1 = stripAndMakePlanks(Mods.ATM, "watchful_aspen_log", "aspen_log", null),
 	    ATM_2 = stripAndMakePlanks(Mods.ATM, "watchful_aspen_wood", "aspen_wood", null),
 		ATM_3 = stripAndMakePlanks(Mods.ATM, "crustose_log", "aspen_log", null),
-		ATM_4 = stripAndMakePlanks(Mods.ATM, "crustose_wood", "aspen_wood", null)
+		ATM_4 = stripAndMakePlanks(Mods.ATM, "crustose_wood", "aspen_wood", null),
+
+		// Oh The Biomes We've Gone
+		BWG_1 = stripAndMakePlanksDiffPlanksModId(Mods.BWG, null, "stripped_palo_verde_log", Mods.VANILLA, "birch_planks"),
+		BWG_2 = stripAndMakePlanksDiffPlanksModId(Mods.BWG, null, "stripped_palo_verde_wood", Mods.VANILLA, "birch_planks")
 		;
 
 	public CreateCuttingRecipeGen(PackOutput output, CompletableFuture<Provider> registries) {

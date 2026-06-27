@@ -64,6 +64,7 @@ public class SmartChuteBlockEntity extends ChuteBlockEntity implements Clearable
 
 	@Override
 	public void clearContent() {
+		super.clearContent();
 		filtering.setFilter(ItemStack.EMPTY);
 	}
 

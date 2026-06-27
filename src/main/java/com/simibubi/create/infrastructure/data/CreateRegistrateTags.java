@@ -155,6 +155,12 @@ public class CreateRegistrateTags {
 				Blocks.BUBBLE_CORAL_WALL_FAN, Blocks.FIRE_CORAL_WALL_FAN, Blocks.HORN_CORAL_WALL_FAN
 			);
 
+		prov.tag(AllBlockTags.PLOUGH_WHITELIST.tag)
+			.add(Blocks.SNOW);
+
+		prov.tag(AllBlockTags.PLOUGH_BLACKLIST.tag)
+			.addTag(BlockTags.PORTALS);
+
 		// COMPAT
 
 		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE, List.of(
@@ -230,6 +236,16 @@ public class CreateRegistrateTags {
 
 		TagGen.addOptional(prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag), Mods.ATM, List.of(
 			"orange_pudding", "orange_sorbet", "passion_fruit_sorbet", "aloe_gel_bottle"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag), Mods.BWG, List.of(
+			"blue_glow_bottle", "green_glow_bottle", "red_glow_bottle", "yellow_glow_bottle",
+			"allium_oddion_soup", "white_puffball_stew", "aloe_vera_juice"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag), Mods.SILENT_GEMS, List.of(
+			"cup_of_coffee", "uncooked_meaty_stew", "meaty_stew", "uncooked_fishy_stew", "fishy_stew"));
+
+		TagGen.addOptional(prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag), Mods.AUTUM, List.of("foul_soup",
+			"syrup_bottle", "sap_bottle"));
 	}
 
 	private static ArrayList<String> gsPalette(String material) {

@@ -20,11 +20,11 @@
   "results": [
     {
       "count": 3,
-      "id": "minecraft:blue_dye"
+      "id": "minecraft:light_blue_dye"
     },
     {
       "chance": 0.1,
-      "id": "minecraft:blue_dye"
+      "id": "minecraft:light_blue_dye"
     }
   ]
 }

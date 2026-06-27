@@ -27,21 +27,21 @@ public class CouplingCommand {
 
 	public static final SimpleCommandExceptionType ONLY_MINECARTS_ALLOWED;
 
-    static {
-        ONLY_MINECARTS_ALLOWED = new SimpleCommandExceptionType(Component.literal("Only Minecarts can be coupled"));
-    }
+	static {
+		ONLY_MINECARTS_ALLOWED = new SimpleCommandExceptionType(Component.literal("Only Minecarts can be coupled"));
+	}
 
-    public static final SimpleCommandExceptionType SAME_DIMENSION;
+	public static final SimpleCommandExceptionType SAME_DIMENSION;
 
-    static {
-        SAME_DIMENSION = new SimpleCommandExceptionType(Component.literal("Minecarts have to be in the same Dimension"));
-    }
+	static {
+		SAME_DIMENSION = new SimpleCommandExceptionType(Component.literal("Minecarts have to be in the same Dimension"));
+	}
 
-    public static final DynamicCommandExceptionType TWO_CARTS =
+	public static final DynamicCommandExceptionType TWO_CARTS =
 		new DynamicCommandExceptionType(a -> {
-            return Component.literal(
-                "Your selector targeted " + a + " entities. You can only couple 2 Minecarts at a time.");
-        });
+			return Component.literal(
+				"Your selector targeted " + a + " entities. You can only couple 2 Minecarts at a time.");
+		});
 
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 
@@ -115,8 +115,8 @@ public class CouplingCommand {
 							if (cart1Capability == MinecartController.EMPTY) {
 								ctx.getSource()
 									.sendSuccess(() -> {
-                                        return Component.literal("Minecart has no Couplings Attached");
-                                    }, true);
+										return Component.literal("Minecart has no Couplings Attached");
+									}, true);
 								return 0;
 							}
 
@@ -125,8 +125,8 @@ public class CouplingCommand {
 							if (cart1Couplings == 0) {
 								ctx.getSource()
 									.sendSuccess(() -> {
-                                        return Component.literal("Minecart has no Couplings Attached");
-                                    }, true);
+										return Component.literal("Minecart has no Couplings Attached");
+									}, true);
 								return 0;
 							}
 
@@ -150,8 +150,8 @@ public class CouplingCommand {
 
 							ctx.getSource()
 								.sendSuccess(() -> {
-                                    return Component.literal("The specified Carts are not coupled");
-                                }, true);
+									return Component.literal("The specified Carts are not coupled");
+								}, true);
 
 							return 0;
 						}))))
@@ -166,8 +166,8 @@ public class CouplingCommand {
 						if (capability == MinecartController.EMPTY) {
 							ctx.getSource()
 								.sendSuccess(() -> {
-                                    return Component.literal("Minecart has no Couplings Attached");
-                                }, true);
+									return Component.literal("Minecart has no Couplings Attached");
+								}, true);
 							return 0;
 						}
 
@@ -176,8 +176,8 @@ public class CouplingCommand {
 						if (couplings == 0) {
 							ctx.getSource()
 								.sendSuccess(() -> {
-                                    return Component.literal("Minecart has no Couplings Attached");
-                                }, true);
+									return Component.literal("Minecart has no Couplings Attached");
+								}, true);
 							return 0;
 						}
 
@@ -185,9 +185,9 @@ public class CouplingCommand {
 
 						ctx.getSource()
 							.sendSuccess(() ->
-                            {
-                                return Component.literal("Removed " + couplings + " couplings from the Minecart");
-                            }, true);
+							{
+								return Component.literal("Removed " + couplings + " couplings from the Minecart");
+							}, true);
 
 						return couplings;
 					})));

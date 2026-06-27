@@ -123,6 +123,8 @@ public class AllTags {
 		SUGAR_CANE_VARIANTS,
 		NON_HARVESTABLE,
 		SINGLE_BLOCK_INVENTORIES,
+		PLOUGH_WHITELIST,
+		PLOUGH_BLACKLIST,
 		CARDBOARD_STORAGE_BLOCKS(COMMON, "storage_blocks/cardboard"),
 		ANDESITE_ALLOY_STORAGE_BLOCKS(COMMON, "storage_blocks/andesite_alloy"),
 
@@ -235,8 +237,7 @@ public class AllTags {
 		FLOURS(COMMON),
 		WHEAT_FLOURS(COMMON, "flours/wheat"),
 
-		DOUGHS(COMMON),
-		WHEAT_DOUGHS(COMMON, "doughs/wheat"),
+		FOODS_DOUGH_WHEAT(COMMON, "foods/dough/wheat"),
 
 		UA_CORAL(MOD, "upgrade_aquatic/coral"),
 		CURIOS_HEAD(CURIOS, "head");
