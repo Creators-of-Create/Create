@@ -454,6 +454,9 @@ public class BlockHelper {
 
 	public static InteractionResult invokeUse(BlockState state, Level level, Player player,
 											   InteractionHand hand, BlockHitResult ray) {
+		if (player.isSpectator()) {
+			return InteractionResult.SUCCESS;
+		}
 		ItemInteractionResult iteminteractionresult = state.useItemOn(
 				player.getItemInHand(hand), level, player, hand, ray
 		);
