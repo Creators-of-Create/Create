@@ -9,9 +9,11 @@ import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.logistics.item.filter.attribute.AllItemAttributeTypes;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -41,7 +43,13 @@ public record InTagAttribute(TagKey<Item> tag) implements ItemAttribute {
 
 	@Override
 	public Object[] getTranslationParameters() {
-		return new Object[]{"#" + tag.location()};
+		String fallback = "#" + tag.location();
+		if (AllConfigs.client().translateTags.get()) {
+			String tagKey = "tag.item." + tag.location().getNamespace() + "." + tag.location().getPath().replace('/', '.');
+			if (I18n.exists(tagKey))
+				return new Object[] { "'" + I18n.get(tagKey) + "'" };
+		}
+		return new Object[] { fallback };
 	}
 
 	@Override
