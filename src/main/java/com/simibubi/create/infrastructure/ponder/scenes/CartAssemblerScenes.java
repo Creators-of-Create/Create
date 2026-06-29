@@ -346,7 +346,7 @@ public class CartAssemblerScenes {
 			.colored(PonderPalette.GREEN)
 			.pointAt(util.vector().blockSurface(util.grid().at(2, 2, 4), Direction.NORTH))
 			.placeNearTarget()
-			.text("Whenever two Cart Assembers share an attached structure...")
+			.text("Whenever two Cart Assemblers share an attached structure...")
 			.attachKeyFrame();
 		scene.idle(70);
 

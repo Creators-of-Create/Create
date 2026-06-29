@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryWrapper;
+import com.simibubi.create.foundation.mixin.accessor.ItemStackHandlerAccessor;
 import com.simibubi.create.foundation.utility.SameSizeCombinedInvWrapper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -22,6 +23,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -30,14 +32,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBlockEntityContainer.Inventory {
-
+public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBlockEntityContainer.Inventory, Clearable {
 	protected ICapabilityProvider<IItemHandler> itemCapability = null;
 	protected InventoryIdentifier invId;
 
@@ -230,7 +232,7 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 		BlockState state = getBlockState();
 		if (ItemVaultBlock.isVault(state)) {
 			state = state.setValue(ItemVaultBlock.LARGE, false);
-			getLevel().setBlock(worldPosition, state, 22);
+			getLevel().setBlock(worldPosition, state, Block.UPDATE_CLIENTS | Block.UPDATE_INVISIBLE | Block.UPDATE_KNOWN_SHAPE);
 		}
 
 		itemCapability = null;
@@ -313,6 +315,11 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 		}
 	}
 
+	@Override
+	public void clearContent() {
+		((ItemStackHandlerAccessor) inventory).create$getStacks().clear();
+	}
+
 	public ItemStackHandler getInventoryOfBlock() {
 		return inventory;
 	}
@@ -383,7 +390,7 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 	public void notifyMultiUpdated() {
 		BlockState state = this.getBlockState();
 		if (ItemVaultBlock.isVault(state)) { // safety
-			level.setBlock(getBlockPos(), state.setValue(ItemVaultBlock.LARGE, radius > 2), 6);
+			level.setBlock(getBlockPos(), state.setValue(ItemVaultBlock.LARGE, radius > 2), Block.UPDATE_CLIENTS | Block.UPDATE_INVISIBLE);
 		}
 		itemCapability = null;
 		invalidateCapabilities();

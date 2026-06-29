@@ -25,7 +25,6 @@ import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap.Builder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -158,7 +157,7 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 				}
 
 				int count = playerStack.getCount();
-				int targetAmount = (referenceItem.getOrDefault(DataComponents.MAX_STACK_SIZE, 64) + 1) / 2;
+				int targetAmount = (referenceItem.getMaxStackSize() + 1) / 2;
 
 				if (count < targetAmount) {
 					int amountToReplenish = targetAmount - count;

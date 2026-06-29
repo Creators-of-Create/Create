@@ -6,14 +6,14 @@
       "tag": "minecraft:leaves"
     },
     {
-      "type": "fluid_stack",
+      "type": "neoforge:single",
       "amount": 250,
       "fluid": "minecraft:water"
     },
     {
-      "type": "fluid_tag",
+      "type": "neoforge:tag",
       "amount": 250,
-      "fluid_tag": "c:milk"
+      "tag": "c:milk"
     }
   ],
   "results": [

@@ -2,7 +2,7 @@ package com.simibubi.create.content.trains.schedule.destination;
 
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.graph.DiscoveredPath;

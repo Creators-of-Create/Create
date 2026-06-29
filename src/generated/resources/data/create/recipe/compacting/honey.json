@@ -2,9 +2,9 @@
   "type": "create:compacting",
   "ingredients": [
     {
-      "type": "fluid_tag",
+      "type": "neoforge:tag",
       "amount": 1000,
-      "fluid_tag": "c:honey"
+      "tag": "c:honey"
     }
   ],
   "results": [

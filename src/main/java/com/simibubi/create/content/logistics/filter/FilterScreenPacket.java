@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.filter;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;

@@ -1,30 +1,25 @@
 package com.simibubi.create.infrastructure.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
+
+import net.neoforged.neoforge.common.NeoForgeConfig;
 
 public class FixLightingCommand {
-
 	static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("fixLighting")
 			.requires(cs -> cs.hasPermission(0))
 			.executes(ctx -> {
-				CatnipServices.NETWORK.simpleActionToClient(
-						(ServerPlayer) ctx.getSource().getEntity(),
-						"experimentalLighting",
-						String.valueOf(true)
-				);
+				NeoForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.set(true);
+				Minecraft.getInstance().levelRenderer.allChanged();
 
-				ctx.getSource()
-					.sendSuccess(() ->
-						Component.literal("NeoForge's experimental block rendering pipeline is now enabled."), true);
-
-				return 1;
+				ctx.getSource().sendSuccess(() -> Component.literal("NeoForge's experimental block rendering pipeline is now enabled."), true);
+				return Command.SINGLE_SUCCESS;
 			});
 	}
 }

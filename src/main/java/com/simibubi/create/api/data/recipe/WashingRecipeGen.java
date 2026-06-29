@@ -32,6 +32,11 @@ public abstract class WashingRecipeGen extends StandardProcessingRecipeGen<Splas
 			.output(secondaryChance, secondary.get(), 1));
 	}
 
+	protected GeneratedRecipe simpleModded(DatagenMod mod, String input, String output) {
+		return create(mod.getId() + "/" + output, b -> b.require(mod, input)
+			.output(mod, output).whenModLoaded(mod.getId()));
+	}
+
 	public WashingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, String defaultNamespace) {
 		super(output, registries, defaultNamespace);
 	}

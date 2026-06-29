@@ -2,7 +2,7 @@ package com.simibubi.create.content.processing.burner;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -244,7 +244,7 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 		BlazeBurnerFuel superheatedFuel = holder.getData(CreateDataMaps.SUPERHEATED_BLAZE_BURNER_FUELS);
 		BlazeBurnerFuel normalFuel = holder.getData(CreateDataMaps.REGULAR_BLAZE_BURNER_FUELS);
 
-		// TODO: 1.21.7 - Remove fallback to tags
+		// TODO: 1.21.1+ - Remove fallback to tags
 		if (superheatedFuel != null) {
 			newBurnTime = superheatedFuel.burnTime();
 			newFuel = FuelType.SPECIAL;

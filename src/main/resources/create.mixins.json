@@ -1,10 +1,10 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "priority": 1100,
+  "priority": 1000,
   "package": "com.simibubi.create.foundation.mixin",
+  "plugin": "com.simibubi.create.foundation.mixin.CreateMixinPlugin",
   "compatibilityLevel": "JAVA_21",
-  "refmap": "create.refmap.json",
   "mixins": [
     "ArmorTrimMixin",
     "BeehiveBlockMixin",
@@ -14,14 +14,13 @@
     "CustomItemUseEffectsMixin",
     "EnchantedCountIncreaseFunctionMixin",
     "EntityMixin",
+    "ItemStackMixin",
     "LavaSwimmingMixin",
     "MapItemSavedDataMixin",
     "MobMixin",
     "PlayerMixin",
     "ProjectileUtilMixin",
-    "ShulkerBoxBlockMixin",
     "SmithingMenuMixin",
-    "TestCommandMixin",
     "WaterWheelFluidSpreadMixin",
     "accessor.BlockBehaviourAccessor",
     "accessor.BlockLootSubProviderAccessor",
@@ -32,6 +31,7 @@
     "accessor.FlowingFluidAccessor",
     "accessor.FluidInteractionRegistryAccessor",
     "accessor.GameTestHelperAccessor",
+    "accessor.ItemFrameAccessor",
     "accessor.ItemModelGeneratorsAccessor",
     "accessor.ItemStackHandlerAccessor",
     "accessor.LivingEntityAccessor",
@@ -68,7 +68,10 @@
     "client.HumanoidArmorLayerMixin",
     "client.HumanoidModelMixin",
     "client.LevelRendererMixin",
-    "client.PlayerRendererMixin"
+    "client.PlayerRendererMixin",
+    "compat.xaeros.XaeroFullscreenMapAccessor",
+    "compat.xaeros.XaeroFullscreenMapMixin",
+    "compat.xaeros.XaeroPauseScreenOverrideMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -37,10 +37,12 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -53,7 +55,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.items.IItemHandler;
 
-public class BeltBlockEntity extends KineticBlockEntity {
+public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public Optional<DyeColor> color;
 	public int beltLength;
@@ -179,6 +181,13 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			return;
 		itemHandler = new ItemHandlerBeltSegment(inventory, index);
 		invalidateCapabilities();
+	}
+
+	@Override
+	public void clearContent() {
+		if (inventory != null) {
+			inventory.getTransportedItems().clear();
+		}
 	}
 
 	@Override
@@ -426,7 +435,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		}
 
 		if (casing != CasingType.NONE)
-			level.levelEvent(2001, worldPosition,
+			level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, worldPosition,
 				Block.getId(casing == CasingType.ANDESITE ? AllBlocks.ANDESITE_CASING.getDefaultState()
 					: AllBlocks.BRASS_CASING.getDefaultState()));
 		if (blockState.getValue(BeltBlock.CASING) != shouldBlockHaveCasing)

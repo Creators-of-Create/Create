@@ -1,6 +1,7 @@
 package com.simibubi.create.compat.curios;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,11 +14,12 @@ import com.simibubi.create.content.equipment.goggles.GogglesItem;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import top.theillusivec4.curios.api.CuriosCapability;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class Curios {
 
@@ -66,7 +68,7 @@ public class Curios {
 				}
 
 				return stacks;
-			}).orElse(new ArrayList<>()));
+			}).orElse(Collections.emptyList()));
 
 		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> modEventBus.addListener(CuriosRenderers::onLayerRegister));
 	}

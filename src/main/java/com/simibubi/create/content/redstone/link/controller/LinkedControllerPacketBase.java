@@ -1,6 +1,6 @@
 package com.simibubi.create.content.redstone.link.controller;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllItems;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;

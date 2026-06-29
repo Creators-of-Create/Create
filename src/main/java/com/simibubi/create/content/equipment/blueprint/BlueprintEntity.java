@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllItems;
@@ -566,30 +566,7 @@ public class BlueprintEntity extends HangingEntity
 
 	@Override
 	public boolean canPlayerUse(Player player) {
-		AABB box = getBoundingBox();
-
-		double dx = 0;
-		if (box.minX > player.getX()) {
-			dx = box.minX - player.getX();
-		} else if (player.getX() > box.maxX) {
-			dx = player.getX() - box.maxX;
-		}
-
-		double dy = 0;
-		if (box.minY > player.getY()) {
-			dy = box.minY - player.getY();
-		} else if (player.getY() > box.maxY) {
-			dy = player.getY() - box.maxY;
-		}
-
-		double dz = 0;
-		if (box.minZ > player.getZ()) {
-			dz = box.minZ - player.getZ();
-		} else if (player.getZ() > box.maxZ) {
-			dz = player.getZ() - box.maxZ;
-		}
-
-		return (dx * dx + dy * dy + dz * dz) <= 64.0D;
+		return player.canInteractWithEntity(this, 8);
 	}
 
 }

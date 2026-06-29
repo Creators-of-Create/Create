@@ -48,9 +48,9 @@ public class TrainCommand {
 
 		train.invalid = true;
 		source.sendSuccess(() -> {
-            return Component.literal("Train '").append(train.name)
-                .append("' removed successfully");
-        }, true);
+			return Component.literal("Train '").append(train.name)
+				.append("' removed successfully");
+		}, true);
 		return Command.SINGLE_SUCCESS;
 	}
 
@@ -97,9 +97,9 @@ public class TrainCommand {
 		);
 
 		source.sendSuccess(() -> {
-            return Component.literal("Teleported to Train '").append(train.name)
-                .append("' successfully");
-        }, true);
+			return Component.literal("Teleported to Train '").append(train.name)
+				.append("' successfully");
+		}, true);
 		return Command.SINGLE_SUCCESS;
 	}
 

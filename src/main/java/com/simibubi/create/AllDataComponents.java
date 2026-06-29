@@ -5,8 +5,10 @@ import java.util.UUID;
 import java.util.function.UnaryOperator;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 
 import com.mojang.serialization.Codec;
+import com.simibubi.create.content.equipment.clipboard.ClipboardContent;
 import com.simibubi.create.content.equipment.clipboard.ClipboardEntry;
 import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides.ClipboardType;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperItemComponent;
@@ -135,29 +137,9 @@ public class AllDataComponents {
 		builder -> builder.persistent(ItemAttributeEntry.CODEC.listOf()).networkSynchronized(CatnipStreamCodecBuilders.list(ItemAttributeEntry.STREAM_CODEC))
 	);
 
-	public static final DataComponentType<ClipboardType> CLIPBOARD_TYPE = register(
-			"clipboard_type",
-			builder -> builder.persistent(ClipboardType.CODEC).networkSynchronized(ClipboardType.STREAM_CODEC)
-	);
-
-	public static final DataComponentType<List<List<ClipboardEntry>>> CLIPBOARD_PAGES = register(
-			"clipboard_pages",
-			builder -> builder.persistent(ClipboardEntry.CODEC.listOf().listOf()).networkSynchronized(CatnipStreamCodecBuilders.list(CatnipStreamCodecBuilders.list(ClipboardEntry.STREAM_CODEC)))
-	);
-
-	public static final DataComponentType<Unit> CLIPBOARD_READ_ONLY = register(
-			"clipboard_read_only",
-			builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
-	);
-
-	public static final DataComponentType<CompoundTag> CLIPBOARD_COPIED_VALUES = register(
-			"clipboard_copied_values",
-			builder -> builder.persistent(CompoundTag.CODEC).networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-	);
-
-	public static final DataComponentType<Integer> CLIPBOARD_PREVIOUSLY_OPENED_PAGE = register(
-			"clipboard_previously_opened_page",
-			builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+	public static final DataComponentType<ClipboardContent> CLIPBOARD_CONTENT = register(
+		"clipboard_content",
+		builder -> builder.persistent(ClipboardContent.CODEC).networkSynchronized(ClipboardContent.STREAM_CODEC)
 	);
 
 	public static final DataComponentType<ConnectingFrom> TRACK_CONNECTING_FROM = register(
@@ -334,6 +316,57 @@ public class AllDataComponents {
 	public static final DataComponentType<ClickToLinkData> CLICK_TO_LINK_DATA = register(
 		"click_to_link_data",
 		builder -> builder.persistent(ClickToLinkData.CODEC).networkSynchronized(ClickToLinkData.STREAM_CODEC)
+	);
+
+	/**
+	 * @deprecated Use {@link AllDataComponents#CLIPBOARD_CONTENT} instead.
+	 */
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
+	@Deprecated(since = "6.0.7", forRemoval = true)
+	public static final DataComponentType<ClipboardType> CLIPBOARD_TYPE = register(
+		"clipboard_type",
+		builder -> builder.persistent(ClipboardType.CODEC).networkSynchronized(ClipboardType.STREAM_CODEC)
+	);
+
+	// Deprecated components
+	/**
+	 * @deprecated Use {@link AllDataComponents#CLIPBOARD_CONTENT} instead.
+	 */
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
+	@Deprecated(since = "6.0.7", forRemoval = true)
+	public static final DataComponentType<List<List<ClipboardEntry>>> CLIPBOARD_PAGES = register(
+		"clipboard_pages",
+		builder -> builder.persistent(ClipboardEntry.CODEC.listOf().listOf()).networkSynchronized(CatnipStreamCodecBuilders.list(CatnipStreamCodecBuilders.list(ClipboardEntry.STREAM_CODEC)))
+	);
+
+	/**
+	 * @deprecated Use {@link AllDataComponents#CLIPBOARD_CONTENT} instead.
+	 */
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
+	@Deprecated(since = "6.0.7", forRemoval = true)
+	public static final DataComponentType<Unit> CLIPBOARD_READ_ONLY = register(
+		"clipboard_read_only",
+		builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
+	);
+
+	/**
+	 * @deprecated Use {@link AllDataComponents#CLIPBOARD_CONTENT} instead.
+	 */
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
+	@Deprecated(since = "6.0.7", forRemoval = true)
+	public static final DataComponentType<CompoundTag> CLIPBOARD_COPIED_VALUES = register(
+		"clipboard_copied_values",
+		builder -> builder.persistent(CompoundTag.CODEC).networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
+	);
+
+	/**
+	 * @deprecated Use {@link AllDataComponents#CLIPBOARD_CONTENT} instead.
+	 */
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
+	@Deprecated(since = "6.0.7", forRemoval = true)
+	public static final DataComponentType<Integer> CLIPBOARD_PREVIOUSLY_OPENED_PAGE = register(
+		"clipboard_previously_opened_page",
+		builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
 	);
 
 	private static <T> DataComponentType<T> register(String name, UnaryOperator<Builder<T>> builder) {

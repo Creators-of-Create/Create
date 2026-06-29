@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.mounted;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -44,6 +44,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
@@ -138,7 +139,7 @@ public class MinecartContraptionItem extends Item {
 		@Override
 		protected void playSound(BlockSource source) {
 			source.level()
-				.levelEvent(1000, source.pos(), 0);
+				.levelEvent(LevelEvent.SOUND_DISPENSER_DISPENSE, source.pos(), 0);
 		}
 	};
 

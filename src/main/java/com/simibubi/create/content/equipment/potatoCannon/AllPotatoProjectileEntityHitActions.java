@@ -46,7 +46,7 @@ import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 
 public class AllPotatoProjectileEntityHitActions {
-	
+
 	static {
 		register("set_on_fire", SetOnFire.CODEC);
 		register("potion_effect", PotionEffect.CODEC);
@@ -55,7 +55,7 @@ public class AllPotatoProjectileEntityHitActions {
 		register("cure_zombie_villager", CureZombieVillager.CODEC);
 		register("suspicious_stew", SuspiciousStew.CODEC);
 	}
-	
+
 	public static void init() {
 	}
 
@@ -99,8 +99,8 @@ public class AllPotatoProjectileEntityHitActions {
 			Entity entity = ray.getEntity();
 			if (entity.level().isClientSide)
 				return true;
-			if (entity instanceof LivingEntity)
-				applyEffect((LivingEntity) entity, new MobEffectInstance(effect, ticks, level - 1));
+			if (entity instanceof LivingEntity livingEntity)
+				applyEffect(livingEntity, new MobEffectInstance(effect, ticks, level - 1));
 			return !recoverable;
 		}
 

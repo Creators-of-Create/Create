@@ -1,13 +1,16 @@
 package com.simibubi.create.content.logistics.packagePort.postbox;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.Create;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.logistics.packagePort.PackagePortBlockEntity;
+import com.simibubi.create.content.trains.station.GlobalPackagePort;
 import com.simibubi.create.content.trains.station.GlobalStation;
-import com.simibubi.create.content.trains.station.GlobalStation.GlobalPackagePort;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
@@ -18,9 +21,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.BoneMealItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
@@ -32,6 +35,8 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 	public boolean forceFlag;
 
 	private boolean sendParticles;
+
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public PostboxBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -46,6 +51,12 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 			AllBlockEntityTypes.PACKAGE_POSTBOX.get(),
 			(be, context) -> be.itemHandler
 		);
+	}
+
+	@Override
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+		super.addBehaviours(behaviours);
 	}
 
 	@Override
@@ -79,7 +90,12 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 
 	@Override
 	protected void onOpenChange(boolean open) {
-		level.setBlockAndUpdate(worldPosition, getBlockState().setValue(PostboxBlock.OPEN, open));
+		// cached getBlockState doesn't update if we're exploded in the meantime, refreshBlockState crashes validation
+		BlockState state = level.getBlockState(worldPosition);
+		if (!(state.getBlock() instanceof PostboxBlock))
+			return;
+
+		level.setBlockAndUpdate(worldPosition, state.setValue(PostboxBlock.OPEN, open));
 		level.playSound(null, worldPosition, open ? SoundEvents.BARREL_OPEN : SoundEvents.BARREL_CLOSE,
 			SoundSource.BLOCKS);
 	}
@@ -103,23 +119,29 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 	}
 
 	@Override
-	public void onChunkUnloaded() {
+	public void setChanged() {
+		saveOfflineBuffer();
+		super.setChanged();
+	}
+
+	private void saveOfflineBuffer() {
 		if (level == null || level.isClientSide)
 			return;
+
 		GlobalStation station = trackedGlobalStation.get();
 		if (station == null)
 			return;
-		if (!station.connectedPorts.containsKey(worldPosition))
-			return;
-		GlobalPackagePort globalPackagePort = station.connectedPorts.get(worldPosition);
-		for (int i = 0; i < inventory.getSlots(); i++) {
-			globalPackagePort.offlineBuffer.setStackInSlot(i, inventory.getStackInSlot(i));
-			inventory.setStackInSlot(i, ItemStack.EMPTY);
-		}
 
-		globalPackagePort.primed = true;
-		Create.RAILWAYS.markTracksDirty();
-		super.onChunkUnloaded();
+		GlobalPackagePort globalPackagePort = station.connectedPorts.get(worldPosition);
+		if (globalPackagePort == null)
+			return;
+
+		globalPackagePort.saveOfflineBuffer(inventory);
 	}
 
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
+	}
 }

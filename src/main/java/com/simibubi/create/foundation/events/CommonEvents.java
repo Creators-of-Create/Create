@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.ContraptionHandler;
 import com.simibubi.create.content.contraptions.actors.psi.PortableFluidInterfaceBlockEntity;
 import com.simibubi.create.content.contraptions.actors.psi.PortableItemInterfaceBlockEntity;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsServerHandler;
+import com.simibubi.create.content.contraptions.chassis.StickerBlockEntity;
 import com.simibubi.create.content.contraptions.minecart.CouplingPhysics;
 import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
 import com.simibubi.create.content.equipment.toolbox.ToolboxBlockEntity;
@@ -29,6 +30,7 @@ import com.simibubi.create.content.kinetics.drill.CobbleGenOptimisation;
 import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.millstone.MillstoneBlockEntity;
+import com.simibubi.create.content.kinetics.motor.CreativeMotorBlockEntity;
 import com.simibubi.create.content.kinetics.saw.SawBlockEntity;
 import com.simibubi.create.content.kinetics.speedController.SpeedControllerBlockEntity;
 import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGearshiftBlockEntity;
@@ -41,20 +43,26 @@ import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockE
 import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlockEntity;
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 import com.simibubi.create.content.logistics.packager.repackager.RepackagerBlockEntity;
+import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlockEntity;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity;
+import com.simibubi.create.content.logistics.tableCloth.TableClothBlockEntity;
 import com.simibubi.create.content.logistics.tunnel.BeltTunnelBlockEntity;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity;
 import com.simibubi.create.content.logistics.vault.ItemVaultBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
 import com.simibubi.create.content.redstone.link.controller.LinkedControllerServerHandler;
+import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.content.trains.entity.CarriageEntityHandler;
+import com.simibubi.create.content.trains.observer.TrackObserverBlockEntity;
+import com.simibubi.create.content.trains.signal.SignalBlockEntity;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.foundation.data.RuntimeDataGenerator;
 import com.simibubi.create.foundation.map.StationMapDecorationRenderer;
 import com.simibubi.create.foundation.pack.DynamicPack;
 import com.simibubi.create.foundation.pack.DynamicPackSource;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
+import com.simibubi.create.foundation.recipe.trie.RecipeTrieFinder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.TickBasedCache;
 import com.simibubi.create.infrastructure.command.AllCommands;
@@ -72,6 +80,7 @@ import net.minecraft.world.level.LevelAccessor;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.gui.map.RegisterMapDecorationRenderersEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
@@ -171,6 +180,7 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void addReloadListeners(AddReloadListenerEvent event) {
 		event.addListener(RecipeFinder.LISTENER);
+		event.addListener(RecipeTrieFinder.LISTENER);
 		event.addListener(BeltHelper.LISTENER);
 	}
 
@@ -221,7 +231,7 @@ public class CommonEvents {
 		}
 	}
 
-	@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+	@EventBusSubscriber
 	public static class ModBusEvents {
 		@SubscribeEvent
 		public static void addPackFinders(AddPackFindersEvent event) {
@@ -257,7 +267,7 @@ public class CommonEvents {
 		}
 
 		@net.neoforged.bus.api.SubscribeEvent
-		public static void registerCapabilities(net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent event) {
+		public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 			ChuteBlockEntity.registerCapabilities(event);
 			SmartChuteBlockEntity.registerCapabilities(event);
 			BeltBlockEntity.registerCapabilities(event);
@@ -292,6 +302,13 @@ public class CommonEvents {
 			RepackagerBlockEntity.registerCapabilities(event);
 			PostboxBlockEntity.registerCapabilities(event);
 			FrogportBlockEntity.registerCapabilities(event);
+			RedstoneRequesterBlockEntity.registerCapabilities(event);
+			TableClothBlockEntity.registerCapabilities(event);
+			SignalBlockEntity.registerCapabilities(event);
+			CreativeMotorBlockEntity.registerCapabilities(event);
+			TrackObserverBlockEntity.registerCapabilities(event);
+			NixieTubeBlockEntity.registerCapabilities(event);
+			StickerBlockEntity.registerCapabilities(event);
 		}
 	}
 }

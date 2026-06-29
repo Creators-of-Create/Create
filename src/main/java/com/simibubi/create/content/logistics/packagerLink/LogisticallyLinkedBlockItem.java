@@ -15,7 +15,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -68,11 +72,28 @@ public class LogisticallyLinkedBlockItem extends BlockItem {
 	}
 
 	@Override
+	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+		ItemStack stack = player.getItemInHand(usedHand);
+		if (isTuned(stack)) {
+			if (level.isClientSide) {
+				level.playSound(player, player.blockPosition(), SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.75f, 1.0f);
+			} else {
+				player.displayClientMessage(CreateLang.translateDirect("logistically_linked.cleared"), true);
+				stack.remove(DataComponents.BLOCK_ENTITY_DATA);
+			}
+			return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+		} else {
+			return super.use(level, player, usedHand);
+		}
+	}
+
+	@Override
 	public @NotNull InteractionResult useOn(UseOnContext pContext) {
 		ItemStack stack = pContext.getItemInHand();
 		BlockPos pos = pContext.getClickedPos();
 		Level level = pContext.getLevel();
 		Player player = pContext.getPlayer();
+		InteractionHand hand = pContext.getHand();
 
 		if (player == null)
 			return InteractionResult.FAIL;

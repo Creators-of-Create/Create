@@ -1,7 +1,5 @@
 package com.simibubi.create.content.redstone.nixieTube;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.redstone.nixieTube.DoubleFaceAttachedBlock.DoubleAttachFace;
@@ -11,10 +9,10 @@ import com.simibubi.create.foundation.utility.DyeHelper;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -26,13 +24,13 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEntity> {
-
-	private static Random r = new Random();
+	private static final int GLOW_VIEW_DISTANCE = 96;
 
 	public NixieTubeRenderer(BlockEntityRendererProvider.Context context) {}
 
@@ -52,7 +50,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 			.rotateZDegrees(xRot)
 			.uncenter();
 
-		if (be.signalState != null) {
+		if (be.signalState != null || be.computerSignal != null) {
 			renderAsSignal(be, partialTicks, ms, buffer, light, overlay);
 			ms.popPose();
 			return;
@@ -65,27 +63,28 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 
 		Couple<String> s = be.getDisplayedStrings();
 		DyeColor color = NixieTubeBlock.colorOf(be.getBlockState());
+		RandomSource random = be.getLevel().getRandom();
 
 		ms.pushPose();
 		ms.translate(-4 / 16f, 0, 0);
 		ms.scale(scale, -scale, scale);
-		drawTube(ms, buffer, s.getFirst(), height, color);
+		drawTube(ms, buffer, s.getFirst(), height, color, random);
 		ms.popPose();
 
 		ms.pushPose();
 		ms.translate(4 / 16f, 0, 0);
 		ms.scale(scale, -scale, scale);
-		drawTube(ms, buffer, s.getSecond(), height, color);
+		drawTube(ms, buffer, s.getSecond(), height, color, random);
 		ms.popPose();
 
 		ms.popPose();
 	}
 
-	public static void drawTube(PoseStack ms, MultiBufferSource buffer, String c, float height, DyeColor color) {
+	public static void drawTube(PoseStack ms, MultiBufferSource buffer, String c, float height, DyeColor color, RandomSource random) {
 		Font fontRenderer = Minecraft.getInstance().font;
 		float charWidth = fontRenderer.width(c);
 		float shadowOffset = .5f;
-		float flicker = r.nextFloat();
+		float flicker = random.nextFloat();
 		Couple<Integer> couple = DyeHelper.getDyeColors(color);
 		int brightColor = couple.getFirst();
 		int darkColor = couple.getSecond();
@@ -144,55 +143,111 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 		ms.pushPose();
 		ms.translate(1 / 2f, 7.5f / 16f, 1 / 2f);
 		float renderTime = AnimationTickHolder.getRenderTime(be.getLevel());
+		Vec3 lampVec = Vec3.atCenterOf(be.getBlockPos());
+		Vec3 diff = lampVec.subtract(observerVec);
 
-		for (boolean first : Iterate.trueAndFalse) {
-			Vec3 lampVec = Vec3.atCenterOf(be.getBlockPos());
-			Vec3 diff = lampVec.subtract(observerVec);
+		if (be.signalState != null) {
+			for (boolean first : Iterate.trueAndFalse) {
+				if (first && !be.signalState.isRedLight(renderTime))
+					continue;
+				if (!first && !be.signalState.isGreenLight(renderTime) && !be.signalState.isYellowLight(renderTime))
+					continue;
 
-			if (first && !be.signalState.isRedLight(renderTime))
-				continue;
-			if (!first && !be.signalState.isGreenLight(renderTime) && !be.signalState.isYellowLight(renderTime))
-				continue;
+				boolean flip = first == invertTubes;
+				boolean yellow = be.signalState.isYellowLight(renderTime);
 
-			boolean flip = first == invertTubes;
-			boolean yellow = be.signalState.isYellowLight(renderTime);
+				ms.pushPose();
+				ms.translate(flip ? 4 / 16f : -4 / 16f, 0, 0);
 
-			ms.pushPose();
-			ms.translate(flip ? 4 / 16f : -4 / 16f, 0, 0);
+				if (diff.lengthSqr() < GLOW_VIEW_DISTANCE * GLOW_VIEW_DISTANCE) {
+					boolean vert = first ^ facing.getAxis()
+						.isHorizontal();
+					float longSide = yellow ? 1 : 4;
+					float longSideGlow = yellow ? 2 : 5.125f;
 
-			if (diff.lengthSqr() < 96 * 96) {
-				boolean vert = first ^ facing.getAxis()
-					.isHorizontal();
-				float longSide = yellow ? 1 : 4;
-				float longSideGlow = yellow ? 2 : 5.125f;
+					CachedBuffers.partial(AllPartialModels.SIGNAL_WHITE_CUBE, blockState)
+						.light(0xf000f0)
+						.disableDiffuse()
+						.scale(vert ? longSide : 1, vert ? 1 : longSide, 1)
+						.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
 
-				CachedBuffers.partial(AllPartialModels.SIGNAL_WHITE_CUBE, blockState)
-					.light(0xf000f0)
-					.disableDiffuse()
-					.scale(vert ? longSide : 1, vert ? 1 : longSide, 1)
-					.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
+					CachedBuffers
+						.partial(
+							first ? AllPartialModels.SIGNAL_RED_GLOW
+								: yellow ? AllPartialModels.SIGNAL_YELLOW_GLOW : AllPartialModels.SIGNAL_WHITE_GLOW,
+							blockState)
+						.light(0xf000f0)
+						.disableDiffuse()
+						.scale(vert ? longSideGlow : 2, vert ? 2 : longSideGlow, 2)
+						.renderInto(ms, buffer.getBuffer(RenderTypes.additive()));
+				}
 
 				CachedBuffers
-					.partial(
-						first ? AllPartialModels.SIGNAL_RED_GLOW
-							: yellow ? AllPartialModels.SIGNAL_YELLOW_GLOW : AllPartialModels.SIGNAL_WHITE_GLOW,
-						blockState)
-					.light(0xf000f0)
+					.partial(first ? AllPartialModels.SIGNAL_RED
+						: yellow ? AllPartialModels.SIGNAL_YELLOW : AllPartialModels.SIGNAL_WHITE, blockState)
+					.light(0xF000F0)
 					.disableDiffuse()
-					.scale(vert ? longSideGlow : 2, vert ? 2 : longSideGlow, 2)
+					.scale(1 + 1 / 16f)
 					.renderInto(ms, buffer.getBuffer(RenderTypes.additive()));
+
+				ms.popPose();
 			}
+		} else if (be.computerSignal != null) {
+			for (boolean first : Iterate.trueAndFalse) {
+				NixieTubeBlockEntity.ComputerSignal.TubeDisplay tubeDisplay = first ?
+					be.computerSignal.first : be.computerSignal.second;
+				if (tubeDisplay.blinkPeriod == 0 || tubeDisplay.blinkPeriod > 1 && renderTime % tubeDisplay.blinkPeriod < tubeDisplay.blinkOffTime)
+					continue;
 
-			CachedBuffers
-				.partial(first ? AllPartialModels.SIGNAL_RED
-					: yellow ? AllPartialModels.SIGNAL_YELLOW : AllPartialModels.SIGNAL_WHITE, blockState)
-				.light(0xF000F0)
-				.disableDiffuse()
-				.scale(1 + 1 / 16f)
-				.renderInto(ms, buffer.getBuffer(RenderTypes.additive()));
+				boolean flip = first == invertTubes;
 
-			ms.popPose();
+				ms.pushPose();
+				ms.translate(flip ? 4 / 16f : -4 / 16f, 0, 0);
+
+				if (diff.lengthSqr() < GLOW_VIEW_DISTANCE * GLOW_VIEW_DISTANCE) {
+					boolean horiz = facing.getAxis().isHorizontal();
+					float width = horiz ? tubeDisplay.glowWidth : tubeDisplay.glowHeight;
+					float height = horiz ? tubeDisplay.glowHeight : tubeDisplay.glowWidth;
+
+					CachedBuffers.partial(AllPartialModels.SIGNAL_COMPUTER_WHITE_CUBE, blockState)
+						.light(0xf000f0)
+						.disableDiffuse()
+						.scale(width, height,  1)
+						.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
+
+					CachedBuffers
+						.partial(AllPartialModels.SIGNAL_COMPUTER_WHITE_GLOW, blockState)
+						.light(0xf000f0)
+						.color(
+							Math.min(((tubeDisplay.r & 0xFF) * 6 + 256) >> 3, 255),
+							Math.min(((tubeDisplay.g & 0xFF) * 6 + 256) >> 3, 255),
+							Math.min(((tubeDisplay.b & 0xFF) * 6 + 256) >> 3, 255),
+							255)
+						.disableDiffuse()
+						.scale(width + 1.125f, height + 1.125f, 2)
+						.renderInto(ms, buffer.getBuffer(RenderTypes.additive()));
+				}
+
+				CachedBuffers
+					.partial(AllPartialModels.SIGNAL_COMPUTER_WHITE_BASE, blockState)
+					.light(0xF000F0)
+					.color(12, 12, 12, 255)
+					.disableDiffuse()
+					.scale(1 + 1.25f / 16f)
+					.renderInto(ms, buffer.getBuffer(RenderTypes.additive()));
+
+				CachedBuffers
+					.partial(AllPartialModels.SIGNAL_COMPUTER_WHITE, blockState)
+					.light(0xF000F0)
+					.color(tubeDisplay.r, tubeDisplay.g, tubeDisplay.b, 255)
+					.disableDiffuse()
+					.scale(1 + 1 / 16f)
+					.renderInto(ms, buffer.getBuffer(RenderTypes.additive()));
+
+				ms.popPose();
+			}
 		}
+
 		ms.popPose();
 
 	}

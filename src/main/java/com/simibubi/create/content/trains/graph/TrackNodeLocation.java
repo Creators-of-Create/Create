@@ -30,7 +30,7 @@ public class TrackNodeLocation extends Vec3i {
 	}
 
 	public TrackNodeLocation(double x, double y, double z) {
-		super(Mth.floor(Math.round(x * 2)), Mth.floor(y) * 2, Mth.floor(Math.round(z * 2)));
+		super(Mth.floor((double) Math.round(x * 2)), Mth.floor(y) * 2, Mth.floor((double) Math.round(z * 2)));
 	}
 
 	public TrackNodeLocation in(Level level) {

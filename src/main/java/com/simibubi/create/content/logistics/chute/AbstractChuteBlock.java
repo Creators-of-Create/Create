@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.chute;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;

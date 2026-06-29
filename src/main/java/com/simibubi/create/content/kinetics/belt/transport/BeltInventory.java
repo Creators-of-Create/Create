@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
@@ -415,6 +415,12 @@ public class BeltInventory {
 	}
 
 	public CompoundTag write(HolderLookup.Provider registries) {
+		if (!toInsert.isEmpty() || !toRemove.isEmpty()) {
+			toInsert.forEach(this::insert);
+			toInsert.clear();
+			items.removeAll(toRemove);
+			toRemove.clear();
+		}
 		CompoundTag nbt = new CompoundTag();
 		ListTag itemsNBT = new ListTag();
 		items.forEach(stack -> itemsNBT.add(stack.serializeNBT(registries)));

@@ -27,7 +27,6 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -36,6 +35,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -97,7 +97,7 @@ public class BeltSlicer {
 			world.setBlock(pos, ProperWaterloggedBlock.withWater(world, Blocks.AIR.defaultBlockState(), pos),
 				Block.UPDATE_ALL | Block.UPDATE_MOVE_BY_PISTON);
 			world.removeBlockEntity(pos);
-			world.levelEvent(2001, pos, Block.getId(state));
+			world.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(state));
 
 			if (!creative && AllBlocks.BELT.has(replacedState)
 				&& replacedState.getValue(BeltBlock.PART) == BeltPart.PULLEY)
@@ -304,7 +304,7 @@ public class BeltSlicer {
 							mergedBeltLength - transportedItemStack.prevBeltPosition;
 					}
 				}
-				
+
 				beltChain = BeltBlock.getBeltChain(world, mergedController.getBlockPos());
 			}
 		}
@@ -364,7 +364,7 @@ public class BeltSlicer {
 						continue;
 					belt.invalidateItemHandler();
 				}
-				
+
 				// Transfer items to other controller
 				BlockPos search = controllerBE.getBlockPos();
 				for (int i = 0; i < 10000; i++) {

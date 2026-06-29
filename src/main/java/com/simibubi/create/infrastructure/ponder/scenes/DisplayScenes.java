@@ -1,8 +1,9 @@
 package com.simibubi.create.infrastructure.ponder.scenes;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides;
+import com.simibubi.create.content.equipment.clipboard.ClipboardContent;
 import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides.ClipboardType;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -284,7 +285,7 @@ public class DisplayScenes {
 
 		Vec3 target = util.vector().of(3.95, 2.75, 3.25);
 		ItemStack clipboard = AllBlocks.CLIPBOARD.asStack();
-		ClipboardOverrides.switchTo(ClipboardType.WRITTEN, clipboard);
+		clipboard.set(AllDataComponents.CLIPBOARD_CONTENT, ClipboardContent.EMPTY.setType(ClipboardType.WRITTEN));
 		scene.overlay().showControls(target, Pointing.RIGHT, 40).withItem(clipboard)
 			.rightClick();
 		scene.idle(6);

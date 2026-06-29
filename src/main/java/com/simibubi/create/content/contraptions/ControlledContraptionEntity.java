@@ -246,9 +246,13 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		float angle = getAngle(partialTicks);
 		Axis axis = getRotationAxis();
 
+		// Always apply a nudge to prevent Z fighting for translating contraptions.
+		// This is particularly noticeable in elevators.
+		TransformStack.of(matrixStack)
+			.nudge(getId());
+
 		if (axis != null) {
 			TransformStack.of(matrixStack)
-				.nudge(getId())
 				.center()
 				.rotateDegrees(angle, axis)
 				.uncenter();

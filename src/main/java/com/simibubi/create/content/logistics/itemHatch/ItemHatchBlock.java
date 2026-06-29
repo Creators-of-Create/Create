@@ -7,7 +7,6 @@ import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.block.IBE;
@@ -41,7 +40,9 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
 import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.common.Tags.Items;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
@@ -113,7 +114,7 @@ public class ItemHatchBlock extends HorizontalDirectionalBlock
 		boolean anyInserted = false;
 		boolean depositItemInHand = !player.isShiftKeyDown();
 
-		if (!depositItemInHand && AllItemTags.WRENCH.matches(stack))
+		if (!depositItemInHand && stack.is(Items.TOOLS_WRENCH))
 			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
 		for (int i = 0; i < inventory.items.size(); i++) {

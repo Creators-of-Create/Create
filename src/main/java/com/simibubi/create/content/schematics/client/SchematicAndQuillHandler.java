@@ -11,15 +11,16 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.schematics.SchematicExport;
 import com.simibubi.create.content.schematics.SchematicExport.SchematicExportResult;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
-import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.CreatePaths;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
 
-import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -83,7 +84,7 @@ public class SchematicAndQuillHandler {
 		secondPos = BlockPos.containing(bb.maxX, bb.maxY, bb.maxZ);
 		LocalPlayer player = Minecraft.getInstance().player;
 		CreateLang.translate("schematicAndQuill.dimensions", (int) bb.getXsize() + 1, (int) bb.getYsize() + 1,
-			(int) bb.getZsize() + 1)
+				(int) bb.getZsize() + 1)
 			.sendStatus(player);
 
 		return true;
@@ -173,7 +174,7 @@ public class SchematicAndQuillHandler {
 				RaycastHelper.rayTraceUntil(player, 70, pos -> inside ^ bb.contains(VecHelper.getCenterOf(pos)));
 			selectedFace = result.missed() ? null
 				: inside ? result.getFacing()
-					.getOpposite() : result.getFacing();
+				.getOpposite() : result.getFacing();
 		}
 
 		AABB currentSelectionBox = getCurrentSelectionBox();
@@ -205,19 +206,19 @@ public class SchematicAndQuillHandler {
 
 	public void saveSchematic(String string, boolean convertImmediately) {
 		SchematicExportResult result = SchematicExport.saveSchematic(
-				SchematicExport.SCHEMATICS, string, false,
-				Minecraft.getInstance().level, firstPos, secondPos
+			CreatePaths.SCHEMATICS_DIR, string, false,
+			Minecraft.getInstance().level, firstPos, secondPos
 		);
 		LocalPlayer player = Minecraft.getInstance().player;
 		if (result == null) {
 			CreateLang.translate("schematicAndQuill.failed")
-					.style(ChatFormatting.RED)
-					.sendStatus(player);
+				.style(ChatFormatting.RED)
+				.sendStatus(player);
 			return;
 		}
 		Path file = result.file();
 		CreateLang.translate("schematicAndQuill.saved", file.getFileName().toString())
-				.sendStatus(player);
+			.sendStatus(player);
 		firstPos = null;
 		secondPos = null;
 		if (!convertImmediately)

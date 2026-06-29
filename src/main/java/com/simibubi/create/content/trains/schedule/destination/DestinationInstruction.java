@@ -3,7 +3,7 @@ package com.simibubi.create.content.trains.schedule.destination;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 

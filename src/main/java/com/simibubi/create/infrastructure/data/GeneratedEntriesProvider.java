@@ -23,7 +23,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 public class GeneratedEntriesProvider extends DatapackBuiltinEntriesProvider {
 	private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
 		.add(Registries.ENCHANTMENT, AllEnchantments::bootstrap)
-			.add(Registries.DAMAGE_TYPE, AllDamageTypes::bootstrap)
+		.add(Registries.DAMAGE_TYPE, AllDamageTypes::bootstrap)
 		.add(Registries.CONFIGURED_FEATURE, AllConfiguredFeatures::bootstrap)
 		.add(Registries.PLACED_FEATURE, AllPlacedFeatures::bootstrap)
 		.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, AllBiomeModifiers::bootstrap)

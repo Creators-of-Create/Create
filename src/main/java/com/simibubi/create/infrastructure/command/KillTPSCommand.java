@@ -46,7 +46,7 @@ public class KillTPSCommand {
 					return 1;
 				})
 				.then(Commands.argument(CreateLang.translateDirect("command.killTPSCommand.argument.tickTime")
-					.getString(), IntegerArgumentType.integer(1))
+						.getString(), IntegerArgumentType.integer(1))
 					.executes(ctx -> {
 						// killtps start tickTime
 						int tickTime = IntegerArgumentType.getInteger(ctx,

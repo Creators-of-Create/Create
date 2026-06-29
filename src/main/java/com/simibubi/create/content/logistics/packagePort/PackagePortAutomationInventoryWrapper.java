@@ -2,38 +2,31 @@ package com.simibubi.create.content.logistics.packagePort;
 
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.item.ItemHandlerWrapper;
-import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.world.item.ItemStack;
+
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 public class PackagePortAutomationInventoryWrapper extends ItemHandlerWrapper {
-
-	private PackagePortBlockEntity ppbe;
-
-	private boolean access;
+	private final PackagePortBlockEntity ppbe;
 
 	public PackagePortAutomationInventoryWrapper(IItemHandlerModifiable wrapped, PackagePortBlockEntity ppbe) {
 		super(wrapped);
 		this.ppbe = ppbe;
-		access = false;
 	}
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		if (access)
-			return super.extractItem(slot, amount, simulate);
+		ItemStack preview = super.extractItem(slot, 64, true);
 
-		access = true;
-		ItemStack extract = ItemHelper.extract(this, stack -> {
-			if (!PackageItem.isPackage(stack))
-				return false;
-			String filterString = ppbe.getFilterString();
-			return filterString != null && PackageItem.matchAddress(stack, filterString);
-		}, simulate);
-		access = false;
+		if (!PackageItem.isPackage(preview))
+			return ItemStack.EMPTY;
 
-		return extract;
+		String filterString = ppbe.getFilterString();
+		if (filterString == null || !PackageItem.matchAddress(preview, filterString))
+			return ItemStack.EMPTY;
+
+		return simulate ? preview : super.extractItem(slot, amount, false);
 	}
 
 	@Override
@@ -45,5 +38,4 @@ public class PackagePortAutomationInventoryWrapper extends ItemHandlerWrapper {
 			return stack;
 		return super.insertItem(slot, stack, simulate);
 	}
-
 }

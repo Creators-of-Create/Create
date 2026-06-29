@@ -2,9 +2,9 @@ package com.simibubi.create.infrastructure.command;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSpecialTextures;
-import net.createmod.catnip.net.base.ClientboundPacketPayload;
 
 import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
 import net.createmod.catnip.outliner.Outliner;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -24,13 +24,11 @@ public record HighlightPacket(BlockPos pos) implements ClientboundPacketPayload 
 			return;
 		}
 
-		Outliner.getInstance().showAABB("highlightCommand", Shapes.block()
-						.bounds()
-						.move(pos), 200)
-				.lineWidth(1 / 32f)
-				.colored(0xEeEeEe)
-				// .colored(0x243B50)
-				.withFaceTexture(AllSpecialTextures.SELECTION);
+		Outliner.getInstance().showAABB("highlightCommand", Shapes.block().bounds().move(pos), 200)
+			.lineWidth(1 / 32f)
+			.colored(0xEeEeEe)
+			// .colored(0x243B50)
+			.withFaceTexture(AllSpecialTextures.SELECTION);
 	}
 
 	@Override

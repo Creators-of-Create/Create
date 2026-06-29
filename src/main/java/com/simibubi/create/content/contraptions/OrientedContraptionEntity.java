@@ -5,7 +5,7 @@ import static net.createmod.catnip.math.AngleHelper.angleLerp;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllAttachmentTypes;
@@ -281,7 +281,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		boolean isStalled = isStalled();
 
 		MinecartController controller = riding.getData(AllAttachmentTypes.MINECART_CONTROLLER);
-		if (controller != MinecartController.EMPTY) {
+		if (controller.isPresent()) {
 			if (!level().isClientSide())
 				controller.setStalledExternally(isStalled);
 		} else {

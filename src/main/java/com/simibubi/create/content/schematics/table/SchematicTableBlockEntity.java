@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.mixin.accessor.ItemStackHandlerAccessor;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.IInteractionChecker;
 
@@ -11,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -18,10 +20,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class SchematicTableBlockEntity extends SmartBlockEntity implements MenuProvider, IInteractionChecker {
-
+public class SchematicTableBlockEntity extends SmartBlockEntity implements MenuProvider, Clearable {
 	public SchematicTableInventory inventory;
 	public boolean isUploading;
 	public String uploadingSchematic;
@@ -76,6 +78,11 @@ public class SchematicTableBlockEntity extends SmartBlockEntity implements MenuP
 	}
 
 	@Override
+	public void clearContent() {
+		((ItemStackHandlerAccessor) inventory).create$getStacks().clear();
+	}
+
+	@Override
 	public void tick() {
 		// Update Client block entity
 		if (sendUpdate) {
@@ -110,15 +117,5 @@ public class SchematicTableBlockEntity extends SmartBlockEntity implements MenuP
 	}
 
 	@Override
-	public boolean canPlayerUse(Player player) {
-		if (level == null || level.getBlockEntity(worldPosition) != this) {
-			return false;
-		}
-		return player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D,
-			worldPosition.getZ() + 0.5D) <= 64.0D;
-	}
-
-	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {}
-
 }

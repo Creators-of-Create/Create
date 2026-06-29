@@ -5,10 +5,9 @@ import com.simibubi.create.api.registry.CreateRegistries;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.EventBusSubscriber.Bus;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 
-@EventBusSubscriber(bus = Bus.MOD)
+@EventBusSubscriber
 public class CreateRegistriesImpl {
 	@SubscribeEvent
 	public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {

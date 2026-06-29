@@ -8,14 +8,15 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
-public class DepotBlockEntity extends SmartBlockEntity {
-
+public class DepotBlockEntity extends SmartBlockEntity implements Clearable {
 	DepotBehaviour depotBehaviour;
 
 	public DepotBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -36,6 +37,11 @@ public class DepotBlockEntity extends SmartBlockEntity {
 		depotBehaviour.addSubBehaviours(behaviours);
 	}
 
+	@Override
+	public void clearContent() {
+		depotBehaviour.clearContent();
+	}
+
 	public ItemStack getHeldItem() {
 		return depotBehaviour.getHeldItemStack();
 	}
@@ -46,5 +52,4 @@ public class DepotBlockEntity extends SmartBlockEntity {
 			newStack.angle = depotBehaviour.heldItem.angle;
 		depotBehaviour.setHeldItem(newStack);
 	}
-
 }

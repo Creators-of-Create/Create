@@ -70,14 +70,22 @@ public class ChainConveyorRoutingTable {
 	}
 
 	private void insert(RoutingTableEntry entry) {
+		// Search our routing table for an entry with same port
 		int targetIndex = 0;
 		for (int i = 0; i < entriesByDistance.size(); i++) {
 			RoutingTableEntry otherEntry = entriesByDistance.get(i);
 			if (otherEntry.distance() > entry.distance())
+				// Still not found at this distance : this either means it's an new port or a shorter route to a known port
+				// In either case, we need to add the provided entry to our routing table
 				break;
-			if (otherEntry.port()
-				.equals(entry.port())) {
-				otherEntry.timeout.setValue(ENTRY_TIMEOUT);
+			if (otherEntry.port().equals(entry.port())) {
+				if (otherEntry.distance() == entry.distance() && otherEntry.nextConnection().equals(entry.nextConnection()))
+					// We know this port, and we are given a route we already have (same distant, same connection)
+					// In that case, we can keep our existing entry and simply refresh its life time
+					otherEntry.timeout.setValue(ENTRY_TIMEOUT);
+				// ...else...
+				// We know this port, but we are given a different route, either longer or going through a different connection
+				// It's time to question our existing entry. As it might be obsolete, we let it decay (ie. we do nothing)
 				return;
 			}
 			targetIndex = i + 1;

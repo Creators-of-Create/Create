@@ -25,8 +25,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
 public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
-
-	protected boolean hadCollisionWithOtherPiston;
 	protected int extensionLength;
 
 	public MechanicalPistonBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -144,7 +142,8 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 	}
 
 	@Override
-	protected void visitNewPosition() {}
+	protected void visitNewPosition() {
+	}
 
 	@Override
 	protected Vec3 toMotionVector(float speed) {
@@ -156,7 +155,7 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 	@Override
 	protected Vec3 toPosition(float offset) {
 		Vec3 position = Vec3.atLowerCornerOf(getBlockState().getValue(BlockStateProperties.FACING)
-			.getNormal())
+				.getNormal())
 			.scale(offset);
 		return position.add(Vec3.atLowerCornerOf(movedContraption.getContraption().anchor));
 	}
@@ -177,5 +176,4 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 		return movedContraption == null ? 0
 			: ((PistonContraption) movedContraption.getContraption()).initialExtensionProgress;
 	}
-
 }

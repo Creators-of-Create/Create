@@ -7,21 +7,24 @@ import com.simibubi.create.infrastructure.gametest.tests.TestFluids;
 import com.simibubi.create.infrastructure.gametest.tests.TestItems;
 import com.simibubi.create.infrastructure.gametest.tests.TestMisc;
 import com.simibubi.create.infrastructure.gametest.tests.TestProcessing;
+import com.simibubi.create.infrastructure.gametest.tests.TestRegressions;
 
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterGameTestsEvent;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public class CreateGameTests {
 	private static final Class<?>[] testHolders = {
 			TestContraptions.class,
 			TestFluids.class,
 			TestItems.class,
 			TestMisc.class,
-			TestProcessing.class
+			TestProcessing.class,
+			TestRegressions.class
 	};
 
 	@SubscribeEvent

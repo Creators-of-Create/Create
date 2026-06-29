@@ -2,6 +2,8 @@ package com.simibubi.create.content.decoration.placard;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
@@ -21,7 +23,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -43,10 +44,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import net.neoforged.neoforge.items.ItemHandlerHelper;
-
-import org.jetbrains.annotations.NotNull;
 
 public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 	implements ProperWaterloggedBlock, IBE<PlacardBlockEntity>, SpecialBlockItemRequirement, IWrenchable {
@@ -148,7 +145,7 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 				}
 
 				AllSoundEvents.CONFIRM.play(level, null, pos, 1, 1);
-				level.setBlock(pos, state.setValue(POWERED, true), 3);
+				level.setBlock(pos, state.setValue(POWERED, true), Block.UPDATE_ALL);
 				updateNeighbours(state, level, pos);
 				pte.poweredTicks = 19;
 				pte.notifyUpdate();

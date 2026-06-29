@@ -1,6 +1,9 @@
 package com.simibubi.create.compat.jei.category;
 
+import static mezz.jei.api.recipe.RecipeType.createRecipeHolderType;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -12,55 +15,50 @@ import java.util.function.Supplier;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.CreateJEI;
 import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.ItemIcon;
+import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
+import com.simibubi.create.content.processing.recipe.ProcessingOutput;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotRichTooltipCallback;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-
-import net.createmod.catnip.config.ConfigBase.ConfigBool;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.level.ItemLike;
-
-import org.jetbrains.annotations.NotNull;
-
-import com.simibubi.create.AllFluids;
-import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
-import com.simibubi.create.content.processing.recipe.ProcessingOutput;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.utility.CreateLang;
-
-import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IRecipeSlotRichTooltipCallback;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.createmod.catnip.config.ConfigBase.ConfigBool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.level.ItemLike;
 
 import net.neoforged.neoforge.fluids.FluidStack;
-
-import static mezz.jei.api.recipe.RecipeType.createRecipeHolderType;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -169,11 +167,11 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 	}
 
 	@SuppressWarnings("removal") // see below
-	public static IRecipeSlotBuilder addFluidSlot(IRecipeLayoutBuilder builder, int x, int y, FluidIngredient ingredient) {
-		int amount = ingredient.getRequiredAmount();
+	public static IRecipeSlotBuilder addFluidSlot(IRecipeLayoutBuilder builder, int x, int y, SizedFluidIngredient ingredient) {
+		int amount = ingredient.amount();
 		return builder.addSlot(RecipeIngredientRole.INPUT, x, y)
 			.setBackground(getRenderedSlot(), -1, -1)
-			.addIngredients(NeoForgeTypes.FLUID_STACK, ingredient.getMatchingFluidStacks())
+			.addIngredients(NeoForgeTypes.FLUID_STACK, Arrays.asList(ingredient.getFluids()))
 			.setFluidRenderer(amount, false, 16, 16) // make fluid take up the full slot
 			.addTooltipCallback(CreateRecipeCategory::addPotionTooltip);
 	}

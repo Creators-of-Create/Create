@@ -98,8 +98,8 @@ public class BeltMovementHandler {
 
 		// Lock entities in place
 		boolean isPlayer = entityIn instanceof Player;
-		if (entityIn instanceof LivingEntity && !isPlayer)
-			((LivingEntity) entityIn).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 1, false, false));
+		if (entityIn instanceof LivingEntity livingEntity && !isPlayer)
+			livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 1, false, false));
 
 		final Direction beltFacing = blockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
 		final BeltSlope slope = blockState.getValue(BeltBlock.SLOPE);
@@ -108,7 +108,7 @@ public class BeltMovementHandler {
 		final Direction movementDirection = Direction.get(axis == Axis.X ? NEGATIVE : POSITIVE, axis);
 
 		Vec3i centeringDirection = Direction.get(POSITIVE, beltFacing.getClockWise()
-			.getAxis())
+				.getAxis())
 			.getNormal();
 		Vec3 movement = Vec3.atLowerCornerOf(movementDirection.getNormal())
 			.scale(movementSpeed);
@@ -123,7 +123,7 @@ public class BeltMovementHandler {
 		boolean onSlope = notHorizontal && (part == BeltPart.MIDDLE || part == BeltPart.PULLEY
 			|| part == (slope == BeltSlope.UPWARD ? BeltPart.END : BeltPart.START) && entityIn.getY() - pos.getY() < top
 			|| part == (slope == BeltSlope.UPWARD ? BeltPart.START : BeltPart.END)
-				&& entityIn.getY() - pos.getY() > top);
+			&& entityIn.getY() - pos.getY() > top);
 
 		boolean movingDown = onSlope && slope == (movementFacing == beltFacing ? BeltSlope.DOWNWARD : BeltSlope.UPWARD);
 		boolean movingUp = onSlope && slope == (movementFacing == beltFacing ? BeltSlope.UPWARD : BeltSlope.DOWNWARD);
@@ -141,8 +141,7 @@ public class BeltMovementHandler {
 
 		Vec3 centering = Vec3.atLowerCornerOf(centeringDirection).scale(diffCenter * Math.min(Math.abs(movementSpeed), .1f) * 4);
 
-		if (!(entityIn instanceof LivingEntity)
-			|| ((LivingEntity) entityIn).zza == 0 && ((LivingEntity) entityIn).xxa == 0)
+		if (!(entityIn instanceof LivingEntity livingEntity) || livingEntity.zza == 0 && livingEntity.xxa == 0)
 			movement = movement.add(centering);
 
 		float step = entityIn.maxUpStep();
@@ -191,7 +190,7 @@ public class BeltMovementHandler {
 
 		boolean movedPastEndingSlope = onSlope && (AllBlocks.BELT.has(world.getBlockState(entityIn.blockPosition()))
 			|| AllBlocks.BELT.has(world.getBlockState(entityIn.blockPosition()
-				.below())));
+			.below())));
 
 		if (movedPastEndingSlope && !movingDown && Math.abs(movementSpeed) > 0)
 			entityIn.setPos(entityIn.getX(), entityIn.getY() + movement.y, entityIn.getZ());

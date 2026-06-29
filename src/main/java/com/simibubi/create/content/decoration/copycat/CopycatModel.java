@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
@@ -23,6 +23,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.neoforged.neoforge.client.model.QuadTransformers;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelData.Builder;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
@@ -32,6 +33,7 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 	public static final ModelProperty<BlockState> MATERIAL_PROPERTY = new ModelProperty<>();
 	private static final ModelProperty<OcclusionData> OCCLUSION_PROPERTY = new ModelProperty<>();
 	private static final ModelProperty<ModelData> WRAPPED_DATA_PROPERTY = new ModelProperty<>();
+	private static final ModelProperty<Boolean> IS_EMISSIVE_PROPERTY = new ModelProperty<>();
 
 	public CopycatModel(BakedModel originalModel) {
 		super(originalModel);
@@ -41,9 +43,6 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
 		ModelData blockEntityData) {
 		BlockState material = getMaterial(blockEntityData);
-		if (material == null)
-			return builder;
-
 		builder.with(MATERIAL_PROPERTY, material);
 
 		if (!(state.getBlock() instanceof CopycatBlock copycatBlock))
@@ -57,10 +56,15 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 			new FilteredBlockAndTintGetter(world,
 				targetPos -> copycatBlock.canConnectTexturesToward(world, pos, targetPos, state)),
 			pos, material, ModelData.EMPTY);
-		return builder.with(WRAPPED_DATA_PROPERTY, wrappedData);
+		builder.with(WRAPPED_DATA_PROPERTY, wrappedData);
+
+		boolean isEmissive = material.emissiveRendering(world, pos);
+		builder.with(IS_EMISSIVE_PROPERTY, isEmissive);
+
+		return builder;
 	}
 
-	private void gatherOcclusionData(BlockAndTintGetter world, BlockPos pos, BlockState state, BlockState material,
+	private void gatherOcclusionData(BlockAndTintGetter level, BlockPos pos, BlockState state, BlockState material,
 		OcclusionData occlusionData, CopycatBlock copycatBlock) {
 		MutableBlockPos mutablePos = new MutableBlockPos();
 		for (Direction face : Iterate.directions) {
@@ -68,20 +72,20 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 			// Rubidium: Run an additional IForgeBlock.hidesNeighborFace check because it
 			// seems to be missing in Block.shouldRenderFace
 			MutableBlockPos neighbourPos = mutablePos.setWithOffset(pos, face);
-			BlockState neighbourState = world.getBlockState(neighbourPos);
+			BlockState neighbourState = level.getBlockState(neighbourPos);
 			if (state.supportsExternalFaceHiding()
-				&& neighbourState.hidesNeighborFace(world, neighbourPos, state, face.getOpposite())) {
+				&& neighbourState.hidesNeighborFace(level, neighbourPos, state, face.getOpposite())) {
 				occlusionData.occlude(face);
 				continue;
 			}
 
 			if (!copycatBlock.canFaceBeOccluded(state, face))
 				continue;
-			if (!Block.shouldRenderFace(material, world, pos, face, neighbourPos))
+			if (!Block.shouldRenderFace(material, level, pos, face, neighbourPos))
 				occlusionData.occlude(face);
 		}
 	}
-	
+
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand) {
 		return getCroppedQuads(state, side, rand, getMaterial(ModelData.EMPTY), ModelData.EMPTY,
@@ -130,6 +134,11 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 				}
 		}
 
+		// Currently, it seems like there's no way to have different levels of emissivity in vanilla, if that changes,
+		// then this will need to aswell
+		if (Boolean.TRUE.equals(data.get(IS_EMISSIVE_PROPERTY)))
+			QuadTransformers.settingMaxEmissivity().processInPlace(croppedQuads);
+
 		return croppedQuads;
 	}
 
@@ -143,9 +152,6 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 	public TextureAtlasSprite getParticleIcon(ModelData data) {
 		BlockState material = getMaterial(data);
 
-		if (material == null)
-			return super.getParticleIcon(data);
-
 		ModelData wrappedData = data.get(WRAPPED_DATA_PROPERTY);
 		if (wrappedData == null)
 			wrappedData = ModelData.EMPTY;
@@ -153,7 +159,7 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 		return getModelOf(material).getParticleIcon(wrappedData);
 	}
 
-	@Nullable
+	@NotNull
 	public static BlockState getMaterial(ModelData data) {
 		BlockState material = data == null ? null : data.get(MATERIAL_PROPERTY);
 		return material == null ? AllBlocks.COPYCAT_BASE.getDefaultState() : material;
@@ -177,7 +183,7 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 		}
 
 		public boolean isOccluded(Direction face) {
-			return face == null ? false : occluded[face.get3DDataValue()];
+			return face != null && occluded[face.get3DDataValue()];
 		}
 	}
 

@@ -13,13 +13,13 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
@@ -53,7 +53,7 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 					continue;
 
 				if (stacks)
-					foundItems += stackInSlot.getCount() == stackInSlot.getOrDefault(DataComponents.MAX_STACK_SIZE, 64) ? 1 : 0;
+					foundItems += stackInSlot.getCount() == stackInSlot.getMaxStackSize() ? 1 : 0;
 				else
 					foundItems += stackInSlot.getCount();
 			}

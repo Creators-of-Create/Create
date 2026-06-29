@@ -6,7 +6,7 @@
       "item": "create:cardboard_block"
     },
     {
-      "item": "minecraft:string"
+      "tag": "c:strings"
     }
   ],
   "result": {

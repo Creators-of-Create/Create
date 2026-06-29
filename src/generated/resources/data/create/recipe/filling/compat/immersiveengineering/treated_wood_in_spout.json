@@ -11,9 +11,9 @@
       "tag": "minecraft:planks"
     },
     {
-      "type": "fluid_tag",
+      "type": "neoforge:tag",
       "amount": 125,
-      "fluid_tag": "c:creosote"
+      "tag": "c:creosote"
     }
   ],
   "results": [

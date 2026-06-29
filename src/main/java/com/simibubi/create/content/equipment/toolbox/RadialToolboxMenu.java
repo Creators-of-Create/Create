@@ -4,7 +4,7 @@ import static com.simibubi.create.content.equipment.toolbox.ToolboxInventory.STA
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;

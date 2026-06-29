@@ -1,19 +1,18 @@
 package com.simibubi.create.content.trains.track;
 
-import com.simibubi.create.AllDataComponents;
-
-import io.netty.buffer.ByteBuf;
-
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.track.TrackTargetingBlockItem.OverlapResult;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -84,7 +83,7 @@ public class CurvedTrackSelectionPacket extends BlockEntityConfigurationPacket<T
 
 	@Override
 	protected int maxRange() {
-		return 64;
+		return AllConfigs.server().trains.maxTrackPlacementLength.get() + 16;
 	}
 
 	@Override

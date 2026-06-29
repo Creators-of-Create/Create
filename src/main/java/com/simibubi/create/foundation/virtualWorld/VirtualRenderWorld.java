@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationLevel;
 import it.unimi.dsi.fastutil.objects.Object2ShortMap;
@@ -54,7 +55,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.LevelTickAccess;
 
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.client.model.data.ModelData;
 
 public class VirtualRenderWorld extends Level implements VisualizationLevel {
 	protected final Level level;
@@ -73,19 +74,13 @@ public class VirtualRenderWorld extends Level implements VisualizationLevel {
 
 	protected final BlockPos.MutableBlockPos scratchPos = new BlockPos.MutableBlockPos();
 
+	protected final Runnable onBlockUpdated;
+
 	private int externalPackedLight = 0;
 
-	public VirtualRenderWorld(Level level) {
-		this(level, Vec3i.ZERO);
-	}
-
-	public VirtualRenderWorld(Level level, Vec3i biomeOffset) {
-		this(level, level.getMinBuildHeight(), level.getHeight(), biomeOffset);
-	}
-
-	public VirtualRenderWorld(Level level, int minBuildHeight, int height, Vec3i biomeOffset) {
+	public VirtualRenderWorld(Level level, int minBuildHeight, int height, Vec3i biomeOffset, Runnable onBlockUpdated) {
 		super((WritableLevelData) level.getLevelData(), level.dimension(), level.registryAccess(), level.dimensionTypeRegistration(), level.getProfilerSupplier(),
-				true, false, 0, 0);
+			true, false, 0, 0);
 		this.level = level;
 		this.minBuildHeight = nextMultipleOf16(minBuildHeight);
 		this.height = nextMultipleOf16(height);
@@ -93,6 +88,7 @@ public class VirtualRenderWorld extends Level implements VisualizationLevel {
 
 		this.chunkSource = new VirtualChunkSource(this);
 		this.lightEngine = new LevelLightEngine(chunkSource, true, false);
+		this.onBlockUpdated = onBlockUpdated;
 	}
 
 	/**
@@ -122,6 +118,11 @@ public class VirtualRenderWorld extends Level implements VisualizationLevel {
 	}
 
 	@Override
+	public void sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flags) {
+		onBlockUpdated.run();
+	}
+
+	@Override
 	public int getBrightness(LightLayer lightType, BlockPos blockPos) {
 		var selfBrightness = super.getBrightness(lightType, blockPos);
 
@@ -143,8 +144,6 @@ public class VirtualRenderWorld extends Level implements VisualizationLevel {
 		});
 
 		nonEmptyBlockCounts.clear();
-
-		runLightEngine();
 	}
 
 	public void setBlockEntities(Collection<BlockEntity> blockEntities) {
@@ -172,17 +171,13 @@ public class VirtualRenderWorld extends Level implements VisualizationLevel {
 	// MEANINGFUL OVERRIDES
 
 	@Override
-	public LevelChunk getChunk(int x, int z) {
-		throw new UnsupportedOperationException();
-	}
-
-	public ChunkAccess actuallyGetChunk(int x, int z) {
-		return getChunk(x, z, ChunkStatus.FULL);
+	public LevelChunk getChunk(int chunkX, int chunkZ) {
+		return (LevelChunk) getChunk(chunkX, chunkZ, ChunkStatus.FULL);
 	}
 
 	@Override
 	public ChunkAccess getChunk(BlockPos pos) {
-		return actuallyGetChunk(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()));
+		return getChunk(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()));
 	}
 
 	@Override
@@ -270,8 +265,20 @@ public class VirtualRenderWorld extends Level implements VisualizationLevel {
 	@Override
 	public void removeBlockEntity(BlockPos pos) {
 		if (!isOutsideBuildHeight(pos)) {
-			blockEntities.remove(pos);
+			BlockEntity blockEntity = blockEntities.remove(pos);
+			if (blockEntity != null) {
+				blockEntity.setRemoved();
+			}
 		}
+	}
+
+	@Override
+	public ModelData getModelData(BlockPos pos) {
+		var blockEntity = getBlockEntity(pos);
+		if (blockEntity != null) {
+			return blockEntity.getModelData();
+		}
+		return ModelData.EMPTY;
 	}
 
 	@Override
@@ -403,17 +410,13 @@ public class VirtualRenderWorld extends Level implements VisualizationLevel {
 	// UNIMPORTANT IMPLEMENTATIONS
 
 	@Override
-	public void sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flags) {
-	}
-
-	@Override
 	public void playSeededSound(Player player, double x, double y, double z, Holder<SoundEvent> soundEvent,
-			SoundSource soundSource, float volume, float pitch, long seed) {
+								SoundSource soundSource, float volume, float pitch, long seed) {
 	}
 
 	@Override
 	public void playSeededSound(Player player, Entity entity, Holder<SoundEvent> soundEvent, SoundSource soundSource,
-			float volume, float pitch, long seed) {
+								float volume, float pitch, long seed) {
 	}
 
 	@Override
@@ -439,7 +442,8 @@ public class VirtualRenderWorld extends Level implements VisualizationLevel {
 	}
 
 	@Override
-	public void setMapData(MapId mapId, MapItemSavedData mapItemSavedData) {}
+	public void setMapData(MapId mapId, MapItemSavedData mapItemSavedData) {
+	}
 
 	@NotNull
 	@Override

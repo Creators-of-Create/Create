@@ -63,7 +63,7 @@ public record StateChangingBehavior(int amount, Predicate<Fluid> fluidTest, Pred
 	public static BlockSpoutingBehaviour incrementingState(int amount, Predicate<Fluid> fluidTest, IntegerProperty property) {
 		int max = property.getPossibleValues().stream().max(Integer::compareTo).orElseThrow();
 
-		Predicate<BlockState> canFill = state -> state.getValue(property) < max;
+		Predicate<BlockState> canFill = state -> state.hasProperty(property) && state.getValue(property) < max;
 		UnaryOperator<BlockState> fillFunction = state -> state.setValue(property, state.getValue(property) + 1);
 
 		return new StateChangingBehavior(amount, fluidTest, canFill, fillFunction);

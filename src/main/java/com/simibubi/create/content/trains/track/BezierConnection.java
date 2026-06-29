@@ -3,6 +3,10 @@ package com.simibubi.create.content.trains.track;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
@@ -11,9 +15,9 @@ import com.simibubi.create.AllBlocks;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.data.Pair;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -32,33 +36,21 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
-	public Couple<BlockPos> bePositions;
-	public Couple<Vec3> starts;
-	public Couple<Vec3> axes;
-	public Couple<Vec3> normals;
+	public final Couple<BlockPos> bePositions;
+	public final Couple<Vec3> starts;
+	public final Couple<Vec3> axes;
+	public final Couple<Vec3> normals;
+	@Nullable
 	public Couple<Integer> smoothing;
-	public boolean primary;
-	public boolean hasGirder;
+	public final boolean primary;
+	public final boolean hasGirder;
 	protected TrackMaterial trackMaterial;
 
 	// runtime
-
-	Vec3 finish1;
-	Vec3 finish2;
-	private boolean resolved;
-	private double length;
-	private float[] stepLUT;
-	private int segments;
-
-	private double radius;
-	private double handleLength;
-
-	private AABB bounds;
+	private final AtomicReference<@Nullable Runtime> lazyRuntime = new AtomicReference<>(null);
 
 	public BezierConnection(Couple<BlockPos> positions, Couple<Vec3> starts, Couple<Vec3> axes, Couple<Vec3> normals,
 		boolean primary, boolean girder, TrackMaterial material) {
@@ -69,7 +61,6 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		this.primary = primary;
 		this.hasGirder = girder;
 		this.trackMaterial = material;
-		resolved = false;
 	}
 
 	public BezierConnection secondary() {
@@ -81,7 +72,11 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	public BezierConnection clone() {
-		return secondary().secondary();
+		var out = new BezierConnection(bePositions.copy(), starts.copy(), axes.copy(), normals.copy(), primary, hasGirder, trackMaterial);
+		if (smoothing != null) {
+			out.smoothing = smoothing.copy();
+		}
+		return out;
 	}
 
 	private static boolean coupleEquals(Couple<?> a, Couple<?> b) {
@@ -184,61 +179,54 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	// Runtime information
 
 	public double getLength() {
-		resolve();
-		return length;
+		return resolve().length;
 	}
 
 	public float[] getStepLUT() {
-		resolve();
-		return stepLUT;
+		return resolve().stepLUT;
 	}
 
 	public int getSegmentCount() {
-		resolve();
-		return segments;
+		return resolve().segments;
 	}
 
 	public Vec3 getPosition(double t) {
-		resolve();
-		return VecHelper.bezier(starts.getFirst(), starts.getSecond(), finish1, finish2, (float) t);
+		var runtime = resolve();
+		return VecHelper.bezier(starts.getFirst(), starts.getSecond(), runtime.finish1, runtime.finish2, (float) t);
 	}
 
 	public double getRadius() {
-		resolve();
-		return radius;
+		return resolve().radius;
 	}
 
 	public double getHandleLength() {
-		resolve();
-		return handleLength;
+		return resolve().handleLength;
 	}
 
 	public float getSegmentT(int index) {
-		return index == segments ? 1 : index * stepLUT[index] / segments;
+		return resolve().getSegmentT(index);
 	}
 
 	public double incrementT(double currentT, double distance) {
-		resolve();
+		var runtime = resolve();
 		double dx =
-			VecHelper.bezierDerivative(starts.getFirst(), starts.getSecond(), finish1, finish2, (float) currentT)
+			VecHelper.bezierDerivative(starts.getFirst(), starts.getSecond(), runtime.finish1, runtime.finish2, (float) currentT)
 				.length() / getLength();
 		return currentT + distance / dx;
-
 	}
 
 	public AABB getBounds() {
-		resolve();
-		return bounds;
+		return resolve().bounds;
 	}
 
 	public Vec3 getNormal(double t) {
-		resolve();
+		var runtime = resolve();
 		Vec3 end1 = starts.getFirst();
 		Vec3 end2 = starts.getSecond();
 		Vec3 fn1 = normals.getFirst();
 		Vec3 fn2 = normals.getSecond();
 
-		Vec3 derivative = VecHelper.bezierDerivative(end1, end2, finish1, finish2, (float) t)
+		Vec3 derivative = VecHelper.bezierDerivative(end1, end2, runtime.finish1, runtime.finish2, (float) t)
 			.normalize();
 		Vec3 faceNormal = fn1.equals(fn2) ? fn1 : VecHelper.slerp((float) t, fn1, fn2);
 		Vec3 normal = faceNormal.cross(derivative)
@@ -246,114 +234,23 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		return derivative.cross(normal);
 	}
 
-	private void resolve() {
-		if (resolved)
-			return;
-		resolved = true;
+	@NotNull
+	private Runtime resolve() {
+		var out = lazyRuntime.get();
 
-		Vec3 end1 = starts.getFirst();
-		Vec3 end2 = starts.getSecond();
-		Vec3 axis1 = axes.getFirst()
-			.normalize();
-		Vec3 axis2 = axes.getSecond()
-			.normalize();
-
-		determineHandles(end1, end2, axis1, axis2);
-
-		finish1 = axis1.scale(handleLength)
-			.add(end1);
-		finish2 = axis2.scale(handleLength)
-			.add(end2);
-
-		int scanCount = 16;
-		length = 0;
-
-		{
-			Vec3 previous = end1;
-			for (int i = 0; i <= scanCount; i++) {
-				float t = i / (float) scanCount;
-				Vec3 result = VecHelper.bezier(end1, end2, finish1, finish2, t);
-				if (previous != null)
-					length += result.distanceTo(previous);
-				previous = result;
-			}
+		if (out == null) {
+			// Since this can be accessed from multiple threads, we consolidate the intermediary
+			// computation into a class and only publish complete results.
+			out = new Runtime(starts, axes);
+			// Doesn't matter if this one becomes the canonical value because all results are the same.
+			lazyRuntime.set(out);
 		}
 
-		segments = (int) (length * 2);
-		stepLUT = new float[segments + 1];
-		stepLUT[0] = 1;
-		float combinedDistance = 0;
-
-		bounds = new AABB(end1, end2);
-
-		// determine step lut
-		{
-			Vec3 previous = end1;
-			for (int i = 0; i <= segments; i++) {
-				float t = i / (float) segments;
-				Vec3 result = VecHelper.bezier(end1, end2, finish1, finish2, t);
-				bounds = bounds.minmax(new AABB(result, result));
-				if (i > 0) {
-					combinedDistance += result.distanceTo(previous) / length;
-					stepLUT[i] = (float) (t / combinedDistance);
-				}
-				previous = result;
-			}
-		}
-
-		bounds = bounds.inflate(1.375f);
-	}
-
-	private void determineHandles(Vec3 end1, Vec3 end2, Vec3 axis1, Vec3 axis2) {
-		Vec3 cross1 = axis1.cross(new Vec3(0, 1, 0));
-		Vec3 cross2 = axis2.cross(new Vec3(0, 1, 0));
-
-		radius = 0;
-		double a1 = Mth.atan2(-axis2.z, -axis2.x);
-		double a2 = Mth.atan2(axis1.z, axis1.x);
-		double angle = a1 - a2;
-
-		float circle = 2 * Mth.PI;
-		angle = (angle + circle) % circle;
-		if (Math.abs(circle - angle) < Math.abs(angle))
-			angle = circle - angle;
-
-		if (Mth.equal(angle, 0)) {
-			double[] intersect = VecHelper.intersect(end1, end2, axis1, cross2, Axis.Y);
-			if (intersect != null) {
-				double t = Math.abs(intersect[0]);
-				double u = Math.abs(intersect[1]);
-				double min = Math.min(t, u);
-				double max = Math.max(t, u);
-
-				if (min > 1.2 && max / min > 1 && max / min < 3) {
-					handleLength = (max - min);
-					return;
-				}
-			}
-
-			handleLength = end2.distanceTo(end1) / 3;
-			return;
-		}
-
-		double n = circle / angle;
-		double factor = 4 / 3d * Math.tan(Math.PI / (2 * n));
-		double[] intersect = VecHelper.intersect(end1, end2, cross1, cross2, Axis.Y);
-
-		if (intersect == null) {
-			handleLength = end2.distanceTo(end1) / 3;
-			return;
-		}
-
-		radius = Math.abs(intersect[1]);
-		handleLength = radius * factor;
-		if (Mth.equal(handleLength, 0))
-			handleLength = 1;
+		return out;
 	}
 
 	@Override
 	public Iterator<Segment> iterator() {
-		resolve();
 		var offset = Vec3.atLowerCornerOf(bePositions.getFirst())
 			.scale(-1)
 			.add(0, 3 / 16f, 0);
@@ -433,6 +330,128 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		trackMaterial = material;
 	}
 
+	private static class Runtime {
+		private final Vec3 finish1;
+		private final Vec3 finish2;
+		private final double length;
+		private final float[] stepLUT;
+		private final int segments;
+
+		private double radius;
+		private double handleLength;
+
+		private final AABB bounds;
+
+		private Runtime(Couple<Vec3> starts, Couple<Vec3> axes) {
+			Vec3 end1 = starts.getFirst();
+			Vec3 end2 = starts.getSecond();
+			Vec3 axis1 = axes.getFirst()
+				.normalize();
+			Vec3 axis2 = axes.getSecond()
+				.normalize();
+
+			determineHandles(end1, end2, axis1, axis2);
+
+			finish1 = axis1.scale(handleLength)
+				.add(end1);
+			finish2 = axis2.scale(handleLength)
+				.add(end2);
+
+			int scanCount = 16;
+
+			this.length = computeLength(finish1, finish2, end1, end2, scanCount);
+
+			segments = (int) (length * 2);
+			stepLUT = new float[segments + 1];
+			stepLUT[0] = 1;
+			float combinedDistance = 0;
+
+			AABB bounds = new AABB(end1, end2);
+
+			// determine step lut
+			{
+				Vec3 previous = end1;
+				for (int i = 0; i <= segments; i++) {
+					float t = i / (float) segments;
+					Vec3 result = VecHelper.bezier(end1, end2, finish1, finish2, t);
+					bounds = bounds.minmax(new AABB(result, result));
+					if (i > 0) {
+						combinedDistance += result.distanceTo(previous) / length;
+						stepLUT[i] = (float) (t / combinedDistance);
+					}
+					previous = result;
+				}
+			}
+
+			this.bounds = bounds.inflate(1.375f);
+		}
+
+		private static double computeLength(Vec3 finish1, Vec3 finish2, Vec3 end1, Vec3 end2, int scanCount) {
+			double length = 0;
+
+			Vec3 previous = end1;
+			for (int i = 0; i <= scanCount; i++) {
+				float t = i / (float) scanCount;
+				Vec3 result = VecHelper.bezier(end1, end2, finish1, finish2, t);
+				if (previous != null)
+					length += result.distanceTo(previous);
+				previous = result;
+			}
+			return length;
+		}
+
+		public float getSegmentT(int index) {
+			return index == segments ? 1 : index * stepLUT[index] / segments;
+		}
+
+		private void determineHandles(Vec3 end1, Vec3 end2, Vec3 axis1, Vec3 axis2) {
+			Vec3 cross1 = axis1.cross(new Vec3(0, 1, 0));
+			Vec3 cross2 = axis2.cross(new Vec3(0, 1, 0));
+
+			radius = 0;
+			double a1 = Mth.atan2(-axis2.z, -axis2.x);
+			double a2 = Mth.atan2(axis1.z, axis1.x);
+			double angle = a1 - a2;
+
+			float circle = 2 * Mth.PI;
+			angle = (angle + circle) % circle;
+			if (Math.abs(circle - angle) < Math.abs(angle))
+				angle = circle - angle;
+
+			if (Mth.equal(angle, 0)) {
+				double[] intersect = VecHelper.intersect(end1, end2, axis1, cross2, Axis.Y);
+				if (intersect != null) {
+					double t = Math.abs(intersect[0]);
+					double u = Math.abs(intersect[1]);
+					double min = Math.min(t, u);
+					double max = Math.max(t, u);
+
+					if (min > 1.2 && max / min > 1 && max / min < 3) {
+						handleLength = (max - min);
+						return;
+					}
+				}
+
+				handleLength = end2.distanceTo(end1) / 3;
+				return;
+			}
+
+			double n = circle / angle;
+			double factor = 4 / 3d * Math.tan(Math.PI / (2 * n));
+			double[] intersect = VecHelper.intersect(end1, end2, cross1, cross2, Axis.Y);
+
+			if (intersect == null) {
+				handleLength = end2.distanceTo(end1) / 3;
+				return;
+			}
+
+			radius = Math.abs(intersect[1]);
+			handleLength = radius * factor;
+			if (Mth.equal(handleLength, 0))
+				handleLength = 1;
+		}
+	}
+
 	public static class Segment {
 
 		public int index;
@@ -444,8 +463,6 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	private static class Bezierator implements Iterator<Segment> {
-
-		private final BezierConnection bc;
 		private final Segment segment;
 		private final Vec3 end1;
 		private final Vec3 end2;
@@ -453,10 +470,10 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		private final Vec3 finish2;
 		private final Vec3 faceNormal1;
 		private final Vec3 faceNormal2;
+		private final Runtime runtime;
 
 		private Bezierator(BezierConnection bc, Vec3 offset) {
-			bc.resolve();
-			this.bc = bc;
+			runtime = bc.resolve();
 
 			end1 = bc.starts.getFirst()
 				.add(offset);
@@ -464,10 +481,10 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				.add(offset);
 
 			finish1 = bc.axes.getFirst()
-				.scale(bc.handleLength)
+				.scale(runtime.handleLength)
 				.add(end1);
 			finish2 = bc.axes.getSecond()
-				.scale(bc.handleLength)
+				.scale(runtime.handleLength)
 				.add(end2);
 
 			faceNormal1 = bc.normals.getFirst();
@@ -478,13 +495,13 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
 		@Override
 		public boolean hasNext() {
-			return segment.index + 1 <= bc.segments;
+			return segment.index + 1 <= runtime.segments;
 		}
 
 		@Override
 		public Segment next() {
 			segment.index++;
-			float t = this.bc.getSegmentT(segment.index);
+			float t = runtime.getSegmentT(segment.index);
 			segment.position = VecHelper.bezier(end1, end2, finish1, finish2, t);
 			segment.derivative = VecHelper.bezierDerivative(end1, end2, finish1, finish2, t)
 				.normalize();
@@ -496,190 +513,204 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		}
 	}
 
-	private SegmentAngles[] bakedSegments;
-	private GirderAngles[] bakedGirders;
-
-	@OnlyIn(Dist.CLIENT)
 	public static class SegmentAngles {
+		public final int length;
+		public final @NotNull Pose[] tieTransform;
+		public final @NotNull Couple<Pose>[] railTransforms;
+		public final @NotNull BlockPos[] lightPosition;
 
-		public Pose tieTransform;
-		public Couple<Pose> railTransforms;
-		public BlockPos lightPosition;
+		private SegmentAngles(BezierConnection bc) {
+			int segmentCount = bc.getSegmentCount();
 
-	}
+			length = segmentCount + 1;
 
-	@OnlyIn(Dist.CLIENT)
-	public static class GirderAngles {
+			tieTransform = new Pose[segmentCount + 1];
+			railTransforms = new Couple[segmentCount + 1];
+			lightPosition = new BlockPos[segmentCount + 1];
 
-		public Couple<Pose> beams;
-		public Couple<Couple<Pose>> beamCaps;
-		public BlockPos lightPosition;
+			Couple<Vec3> previousOffsets = null;
 
-	}
+			for (BezierConnection.Segment segment : bc) {
+				int i = segment.index;
+				boolean end = i == 0 || i == segmentCount;
 
-	@OnlyIn(Dist.CLIENT)
-	public SegmentAngles[] getBakedSegments() {
-		if (bakedSegments != null)
-			return bakedSegments;
-
-		int segmentCount = getSegmentCount();
-		bakedSegments = new SegmentAngles[segmentCount + 1];
-		Couple<Vec3> previousOffsets = null;
-
-		for (BezierConnection.Segment segment : this) {
-			int i = segment.index;
-			boolean end = i == 0 || i == segmentCount;
-
-			SegmentAngles angles = bakedSegments[i] = new SegmentAngles();
-			Couple<Vec3> railOffsets = Couple.create(segment.position.add(segment.normal.scale(.965f)),
-				segment.position.subtract(segment.normal.scale(.965f)));
-			Vec3 railMiddle = railOffsets.getFirst()
-				.add(railOffsets.getSecond())
-				.scale(.5);
-
-			if (previousOffsets == null) {
-				previousOffsets = railOffsets;
-				continue;
-			}
-
-			// Tie
-			Vec3 prevMiddle = previousOffsets.getFirst()
-				.add(previousOffsets.getSecond())
-				.scale(.5);
-			Vec3 tieAngles = TrackRenderer.getModelAngles(segment.normal, railMiddle.subtract(prevMiddle));
-			angles.lightPosition = BlockPos.containing(railMiddle);
-			angles.railTransforms = Couple.create(null, null);
-
-			PoseStack poseStack = new PoseStack();
-			TransformStack.of(poseStack)
-				.translate(prevMiddle)
-				.rotateY((float) tieAngles.y)
-				.rotateX((float) tieAngles.x)
-				.rotateZ((float) tieAngles.z)
-				.translate(-1 / 2f, -2 / 16f - 1 / 256f, 0);
-			angles.tieTransform = poseStack.last();
-
-			// Rails
-			float scale = end ? 2.2f : 2.1f;
-			for (boolean first : Iterate.trueAndFalse) {
-				Vec3 railI = railOffsets.get(first);
-				Vec3 prevI = previousOffsets.get(first);
-				Vec3 diff = railI.subtract(prevI);
-				Vec3 anglesI = TrackRenderer.getModelAngles(segment.normal, diff);
-
-				poseStack = new PoseStack();
-				TransformStack.of(poseStack)
-					.translate(prevI)
-					.rotateY((float) anglesI.y)
-					.rotateX((float) anglesI.x)
-					.rotateZ((float) anglesI.z)
-					.translate(0, -2 / 16f - 1 / 256f, -1 / 32f)
-					.scale(1, 1, (float) diff.length() * scale);
-				angles.railTransforms.set(first, poseStack.last());
-			}
-
-			previousOffsets = railOffsets;
-		}
-
-		return bakedSegments;
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public GirderAngles[] getBakedGirders() {
-		if (bakedGirders != null)
-			return bakedGirders;
-
-		int segmentCount = getSegmentCount();
-		bakedGirders = new GirderAngles[segmentCount + 1];
-		Couple<Couple<Vec3>> previousOffsets = null;
-
-		for (BezierConnection.Segment segment : this) {
-			int i = segment.index;
-			boolean end = i == 0 || i == segmentCount;
-			GirderAngles angles = bakedGirders[i] = new GirderAngles();
-
-			Vec3 leftGirder = segment.position.add(segment.normal.scale(.965f));
-			Vec3 rightGirder = segment.position.subtract(segment.normal.scale(.965f));
-			Vec3 upNormal = segment.derivative.normalize()
-				.cross(segment.normal);
-			Vec3 firstGirderOffset = upNormal.scale(-8 / 16f);
-			Vec3 secondGirderOffset = upNormal.scale(-10 / 16f);
-			Vec3 leftTop = segment.position.add(segment.normal.scale(1))
-				.add(firstGirderOffset);
-			Vec3 rightTop = segment.position.subtract(segment.normal.scale(1))
-				.add(firstGirderOffset);
-			Vec3 leftBottom = leftTop.add(secondGirderOffset);
-			Vec3 rightBottom = rightTop.add(secondGirderOffset);
-
-			angles.lightPosition = BlockPos.containing(leftGirder.add(rightGirder)
-				.scale(.5));
-
-			Couple<Couple<Vec3>> offsets =
-				Couple.create(Couple.create(leftTop, rightTop), Couple.create(leftBottom, rightBottom));
-
-			if (previousOffsets == null) {
-				previousOffsets = offsets;
-				continue;
-			}
-
-			angles.beams = Couple.create(null, null);
-			angles.beamCaps = Couple.create(Couple.create(null, null), Couple.create(null, null));
-			float scale = end ? 2.3f : 2.2f;
-
-			for (boolean first : Iterate.trueAndFalse) {
-
-				// Middle
-				Vec3 currentBeam = offsets.getFirst()
-					.get(first)
-					.add(offsets.getSecond()
-						.get(first))
+				Couple<Vec3> railOffsets = Couple.create(segment.position.add(segment.normal.scale(.965f)),
+					segment.position.subtract(segment.normal.scale(.965f)));
+				Vec3 railMiddle = railOffsets.getFirst()
+					.add(railOffsets.getSecond())
 					.scale(.5);
-				Vec3 previousBeam = previousOffsets.getFirst()
-					.get(first)
-					.add(previousOffsets.getSecond()
-						.get(first))
+
+				if (previousOffsets == null) {
+					previousOffsets = railOffsets;
+					continue;
+				}
+
+				// Tie
+				Vec3 prevMiddle = previousOffsets.getFirst()
+					.add(previousOffsets.getSecond())
 					.scale(.5);
-				Vec3 beamDiff = currentBeam.subtract(previousBeam);
-				Vec3 beamAngles = TrackRenderer.getModelAngles(segment.normal, beamDiff);
+				Vec3 tieAngles = TrackRenderer.getModelAngles(segment.normal, railMiddle.subtract(prevMiddle));
+				lightPosition[i] = BlockPos.containing(railMiddle);
+				railTransforms[i] = Couple.create(null, null);
 
 				PoseStack poseStack = new PoseStack();
 				TransformStack.of(poseStack)
-					.translate(previousBeam)
-					.rotateY((float) beamAngles.y)
-					.rotateX((float) beamAngles.x)
-					.rotateZ((float) beamAngles.z)
-					.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
-					.scale(1, 1, (float) beamDiff.length() * scale);
-				angles.beams.set(first, poseStack.last());
+					.translate(prevMiddle)
+					.rotateY((float) tieAngles.y)
+					.rotateX((float) tieAngles.x)
+					.rotateZ((float) tieAngles.z)
+					.translate(-1 / 2f, -2 / 16f - 1 / 256f, 0);
+				tieTransform[i] = poseStack.last();
 
-				// Caps
-				for (boolean top : Iterate.trueAndFalse) {
-					Vec3 current = offsets.get(top)
-						.get(first);
-					Vec3 previous = previousOffsets.get(top)
-						.get(first);
-					Vec3 diff = current.subtract(previous);
-					Vec3 capAngles = TrackRenderer.getModelAngles(segment.normal, diff);
+				// Rails
+				float scale = end ? 2.2f : 2.1f;
+				for (boolean first : Iterate.trueAndFalse) {
+					Vec3 railI = railOffsets.get(first);
+					Vec3 prevI = previousOffsets.get(first);
+					Vec3 diff = railI.subtract(prevI);
+					Vec3 anglesI = TrackRenderer.getModelAngles(segment.normal, diff);
 
 					poseStack = new PoseStack();
 					TransformStack.of(poseStack)
-						.translate(previous)
-						.rotateY((float) capAngles.y)
-						.rotateX((float) capAngles.x)
-						.rotateZ((float) capAngles.z)
-						.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
-						.rotateZ(top ? 0 : 0)
+						.translate(prevI)
+						.rotateY((float) anglesI.y)
+						.rotateX((float) anglesI.x)
+						.rotateZ((float) anglesI.z)
+						.translate(0, -2 / 16f - 1 / 256f, -1 / 32f)
 						.scale(1, 1, (float) diff.length() * scale);
-					angles.beamCaps.get(top)
-						.set(first, poseStack.last());
+					railTransforms[i].set(first, poseStack.last());
 				}
+
+				previousOffsets = railOffsets;
 			}
-
-			previousOffsets = offsets;
-
 		}
 
-		return bakedGirders;
+	}
+
+	public static class GirderAngles {
+		public final int length;
+		public final Couple<Pose>[] beams;
+		public final Couple<Couple<Pose>>[] beamCaps;
+		public final BlockPos[] lightPosition;
+
+		private GirderAngles(BezierConnection bc) {
+			int segmentCount = bc.getSegmentCount();
+			length = segmentCount + 1;
+
+			beams = new Couple[length];
+			beamCaps = new Couple[length];
+			lightPosition = new BlockPos[length];
+
+			Couple<Couple<Vec3>> previousOffsets = null;
+
+			for (BezierConnection.Segment segment : bc) {
+				int i = segment.index;
+				boolean end = i == 0 || i == segmentCount;
+				Vec3 leftGirder = segment.position.add(segment.normal.scale(.965f));
+				Vec3 rightGirder = segment.position.subtract(segment.normal.scale(.965f));
+				Vec3 upNormal = segment.derivative.normalize()
+					.cross(segment.normal);
+				Vec3 firstGirderOffset = upNormal.scale(-8 / 16f);
+				Vec3 secondGirderOffset = upNormal.scale(-10 / 16f);
+				Vec3 leftTop = segment.position.add(segment.normal.scale(1))
+					.add(firstGirderOffset);
+				Vec3 rightTop = segment.position.subtract(segment.normal.scale(1))
+					.add(firstGirderOffset);
+				Vec3 leftBottom = leftTop.add(secondGirderOffset);
+				Vec3 rightBottom = rightTop.add(secondGirderOffset);
+
+				lightPosition[i] = BlockPos.containing(leftGirder.add(rightGirder)
+					.scale(.5));
+
+				Couple<Couple<Vec3>> offsets =
+					Couple.create(Couple.create(leftTop, rightTop), Couple.create(leftBottom, rightBottom));
+
+				if (previousOffsets == null) {
+					previousOffsets = offsets;
+					continue;
+				}
+
+				beams[i] = Couple.create(null, null);
+				beamCaps[i] = Couple.create(Couple.create(null, null), Couple.create(null, null));
+				float scale = end ? 2.3f : 2.2f;
+
+				for (boolean first : Iterate.trueAndFalse) {
+
+					// Middle
+					Vec3 currentBeam = offsets.getFirst()
+						.get(first)
+						.add(offsets.getSecond()
+							.get(first))
+						.scale(.5);
+					Vec3 previousBeam = previousOffsets.getFirst()
+						.get(first)
+						.add(previousOffsets.getSecond()
+							.get(first))
+						.scale(.5);
+					Vec3 beamDiff = currentBeam.subtract(previousBeam);
+					Vec3 beamAngles = TrackRenderer.getModelAngles(segment.normal, beamDiff);
+
+					PoseStack poseStack = new PoseStack();
+					TransformStack.of(poseStack)
+						.translate(previousBeam)
+						.rotateY((float) beamAngles.y)
+						.rotateX((float) beamAngles.x)
+						.rotateZ((float) beamAngles.z)
+						.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
+						.scale(1, 1, (float) beamDiff.length() * scale);
+					beams[i].set(first, poseStack.last());
+
+					// Caps
+					for (boolean top : Iterate.trueAndFalse) {
+						Vec3 current = offsets.get(top)
+							.get(first);
+						Vec3 previous = previousOffsets.get(top)
+							.get(first);
+						Vec3 diff = current.subtract(previous);
+						Vec3 capAngles = TrackRenderer.getModelAngles(segment.normal, diff);
+
+						poseStack = new PoseStack();
+						TransformStack.of(poseStack)
+							.translate(previous)
+							.rotateY((float) capAngles.y)
+							.rotateX((float) capAngles.x)
+							.rotateZ((float) capAngles.z)
+							.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
+							.rotateZ(top ? 0 : 0)
+							.scale(1, 1, (float) diff.length() * scale);
+						beamCaps[i].get(top)
+							.set(first, poseStack.last());
+					}
+				}
+
+				previousOffsets = offsets;
+
+			}
+		}
+
+	}
+
+	private final AtomicReference<@Nullable SegmentAngles> bakedSegments = new AtomicReference<>(null);
+	private final AtomicReference<@Nullable GirderAngles> bakedGirders = new AtomicReference<>(null);
+
+	public SegmentAngles getBakedSegments() {
+		var out = bakedSegments.get();
+
+		if (out == null) {
+			out = new BezierConnection.SegmentAngles(this);
+			bakedSegments.set(out);
+		}
+		return out;
+	}
+
+	public GirderAngles getBakedGirders() {
+		var out = bakedGirders.get();
+
+		if (out == null) {
+			out = new BezierConnection.GirderAngles(this);
+			bakedGirders.set(out);
+		}
+		return out;
 	}
 
 	public Map<Pair<Integer, Integer>, Double> rasterise() {

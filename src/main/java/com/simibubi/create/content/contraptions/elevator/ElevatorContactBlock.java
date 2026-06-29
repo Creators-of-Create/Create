@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.elevator;
 
 import java.util.Optional;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -48,6 +48,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -115,7 +116,7 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 		if (isPowered == pLevel.hasNeighborSignal(pPos))
 			return;
 
-		pLevel.setBlock(pPos, pState.cycle(POWERED), 2);
+		pLevel.setBlock(pPos, pState.cycle(POWERED), Block.UPDATE_CLIENTS);
 
 		if (isPowered)
 			return;
@@ -128,7 +129,7 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 
 	public void callToContactAndUpdate(ElevatorColumn elevatorColumn, BlockState pState, Level pLevel, BlockPos pPos,
 		boolean powered) {
-		pLevel.setBlock(pPos, pState.cycle(CALLING), 2);
+		pLevel.setBlock(pPos, pState.cycle(CALLING), Block.UPDATE_CLIENTS);
 
 		for (BlockPos otherPos : elevatorColumn.getContacts()) {
 			if (otherPos.equals(pPos))
@@ -142,7 +143,7 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 
 		if (powered)
 			pState = pState.setValue(POWERED, true);
-		pLevel.setBlock(pPos, pState.setValue(CALLING, true), 2);
+		pLevel.setBlock(pPos, pState.setValue(CALLING, true), Block.UPDATE_CLIENTS);
 		pLevel.updateNeighborsAt(pPos, this);
 
 		elevatorColumn.target(pPos.getY());

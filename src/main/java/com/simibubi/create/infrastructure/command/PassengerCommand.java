@@ -39,7 +39,7 @@ public class PassengerCommand {
 			return;
 		if (rider instanceof ControlledContraptionEntity)
 			return;
-		
+
 		if (vehicle instanceof AbstractContraptionEntity ace) {
 			if (ace.getContraption()
 				.getSeats()
@@ -47,7 +47,7 @@ public class PassengerCommand {
 				ace.addSittingPassenger(rider, index);
 			return;
 		}
-		
+
 		rider.startRiding(vehicle, true);
 	}
 }

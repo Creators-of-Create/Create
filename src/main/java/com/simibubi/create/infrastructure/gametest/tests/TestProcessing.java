@@ -42,6 +42,25 @@ public class TestProcessing {
 		helper.succeedWhen(() -> helper.assertContainerContains(output, AllItems.BRASS_INGOT.get()));
 	}
 
+	@GameTest(template = "potion_brewing", timeoutTicks = CreateGameTestHelper.THIRTY_SECONDS)
+	public static void potionBrewing(CreateGameTestHelper helper) {
+		BlockPos chest = new BlockPos(8, 3, 5);
+		BlockPos potionLever = new BlockPos(2, 3, 4);
+		BlockPos bottleLever = new BlockPos(7, 3, 2);
+		ItemStack expected = PotionContents.createItemStack(Items.POTION, Potions.HEALING);
+
+		helper.pullLever(potionLever);
+		helper.whenSecondsPassed(15, () -> helper.pullLever(bottleLever));
+		helper.succeedWhen(() -> helper.assertContainerContains(chest, expected));
+	}
+
+	@GameTest(template = "spout_crafting", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
+	public static void spoutCrafting(CreateGameTestHelper helper) {
+		BlockPos chest = new BlockPos(5, 3, 1);
+		helper.pullLever(2, 3, 2);
+		helper.succeedWhen(() -> helper.assertContainerContains(chest, Items.REDSTONE));
+	}
+
 	@GameTest(template = "crushing_wheel_crafting", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void crushingWheelCrafting(CreateGameTestHelper helper) {
 		BlockPos chest = new BlockPos(1, 4, 3);

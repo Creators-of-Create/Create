@@ -34,6 +34,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -81,7 +82,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 				player.getInventory()
 					.placeItemBackInInventory(consumedItem);
 			context.getLevel()
-				.levelEvent(2001, context.getClickedPos(), Block.getId(ufte.getBlockState()));
+				.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, context.getClickedPos(), Block.getId(ufte.getBlockState()));
 			ufte.setMaterial(AllBlocks.COPYCAT_BASE.getDefaultState());
 			ufte.setConsumedItem(ItemStack.EMPTY);
 			return InteractionResult.SUCCESS;

@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import net.createmod.catnip.nbt.NBTHelper;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -33,26 +34,26 @@ public class FlapDisplayLayout {
 		this.sections = sections;
 	}
 
-	public CompoundTag write() {
+	public CompoundTag write(HolderLookup.Provider registries) {
 		CompoundTag tag = new CompoundTag();
 		tag.putString("Key", layoutKey);
-		tag.put("Sections", NBTHelper.writeCompoundList(sections, FlapDisplaySection::write));
+		tag.put("Sections", NBTHelper.writeCompoundList(sections, s -> s.write(registries)));
 		return tag;
-	};
+	}
 
-	public void read(CompoundTag tag) {
+	public void read(CompoundTag tag, HolderLookup.Provider registries) {
 		String prevKey = layoutKey;
 		layoutKey = tag.getString("Key");
 		ListTag sectionsTag = tag.getList("Sections", Tag.TAG_COMPOUND);
 
 		if (!prevKey.equals(layoutKey)) {
-			sections = NBTHelper.readCompoundList(sectionsTag, FlapDisplaySection::load);
+			sections = NBTHelper.readCompoundList(sectionsTag, i -> FlapDisplaySection.load(i, registries));
 			return;
 		}
 
 		MutableInt index = new MutableInt(0);
 		NBTHelper.iterateCompoundList(sectionsTag, nbt -> sections.get(index.getAndIncrement())
-			.update(nbt));
+			.update(nbt, registries));
 	}
 
 	public List<FlapDisplaySection> getSections() {

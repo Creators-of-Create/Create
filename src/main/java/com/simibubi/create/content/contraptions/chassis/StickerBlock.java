@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -63,7 +64,7 @@ public class StickerBlock extends WrenchableDirectionalBlock implements IBE<Stic
 			state = state.cycle(POWERED);
 			if (state.getValue(POWERED))
 				state = state.cycle(EXTENDED);
-			worldIn.setBlock(pos, state, 2);
+			worldIn.setBlock(pos, state, Block.UPDATE_CLIENTS);
 		}
 	}
 

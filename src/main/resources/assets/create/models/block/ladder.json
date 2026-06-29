@@ -10,6 +10,7 @@
 			"name": "hoop_right",
 			"from": [2, 16, 14],
 			"to": [4, 18, 18],
+			"shade": false,
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [14, 4, 16, 6], "texture": "#0", "cullface": "up"},
@@ -21,6 +22,7 @@
 			"name": "hoop_right_backface",
 			"from": [2, 18, 14],
 			"to": [4, 16, 18],
+			"shade": false,
 			"rotation": {"angle": 0, "axis": "y", "origin": [13, 19, 16]},
 			"faces": {
 				"north": {"uv": [16, 4, 14, 6], "rotation": 180, "texture": "#0", "cullface": "up"},
@@ -43,6 +45,7 @@
 			"name": "ladder",
 			"from": [2, 0, 14],
 			"to": [14, 16, 16],
+			"shade": false,
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [2, 0, 14, 16], "texture": "#1"}
@@ -63,6 +66,7 @@
 			"name": "ladder_backface",
 			"from": [2, 0, 16],
 			"to": [14, 16, 14],
+			"shade": false,
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"south": {"uv": [14, 0, 2, 16], "texture": "#1"}
@@ -72,6 +76,7 @@
 			"name": "hoop_left",
 			"from": [12, 16, 14],
 			"to": [14, 18, 18],
+			"shade": false,
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [14, 4, 16, 6], "texture": "#0", "cullface": "up"},
@@ -83,6 +88,7 @@
 			"name": "hoop_left_backface",
 			"from": [12, 18, 14],
 			"to": [14, 16, 18],
+			"shade": false,
 			"rotation": {"angle": 0, "axis": "y", "origin": [13, 19, 16]},
 			"faces": {
 				"north": {"uv": [16, 4, 14, 6], "rotation": 180, "texture": "#0", "cullface": "up"},

@@ -3,7 +3,7 @@ package com.simibubi.create.content.kinetics.belt.item;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllDataComponents;
@@ -22,8 +22,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -36,8 +34,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-import org.jetbrains.annotations.NotNull;
-
 public class BeltConnectorItem extends BlockItem {
 
 	public BeltConnectorItem(Properties properties) {
@@ -49,7 +45,7 @@ public class BeltConnectorItem extends BlockItem {
 		return getOrCreateDescriptionId();
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		Player playerEntity = context.getPlayer();

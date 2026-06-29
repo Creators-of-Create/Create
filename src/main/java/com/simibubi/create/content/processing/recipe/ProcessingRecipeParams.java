@@ -2,23 +2,15 @@ package com.simibubi.create.content.processing.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.MapLike;
-import com.mojang.serialization.RecordBuilder;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
+import com.simibubi.create.foundation.codec.CreateCodecs;
 
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.minecraft.Util;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -26,6 +18,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public class ProcessingRecipeParams {
 	public static MapCodec<ProcessingRecipeParams> CODEC = codec(ProcessingRecipeParams::new);
@@ -33,7 +26,7 @@ public class ProcessingRecipeParams {
 
 	protected NonNullList<Ingredient> ingredients;
 	protected NonNullList<ProcessingOutput> results;
-	protected NonNullList<FluidIngredient> fluidIngredients;
+	protected NonNullList<SizedFluidIngredient> fluidIngredients;
 	protected NonNullList<FluidStack> fluidResults;
 	protected int processingDuration;
 	protected HeatCondition requiredHeat;
@@ -49,7 +42,7 @@ public class ProcessingRecipeParams {
 
 	protected static <P extends ProcessingRecipeParams> MapCodec<P> codec(Supplier<P> factory) {
 		return RecordCodecBuilder.mapCodec(instance -> instance.group(
-			Codec.either(FluidIngredient.CODEC, Ingredient.CODEC).listOf().fieldOf("ingredients")
+			Codec.either(CreateCodecs.SIZED_FLUID_INGREDIENT, Ingredient.CODEC).listOf().fieldOf("ingredients")
 				.forGetter(ProcessingRecipeParams::ingredients),
 			Codec.either(FluidStack.CODEC, ProcessingOutput.CODEC).listOf().fieldOf("results")
 				.forGetter(ProcessingRecipeParams::results),
@@ -81,8 +74,8 @@ public class ProcessingRecipeParams {
 			});
 	}
 
-	protected final List<Either<FluidIngredient, Ingredient>> ingredients() {
-		List<Either<FluidIngredient, Ingredient>> ingredients =
+	protected final List<Either<SizedFluidIngredient, Ingredient>> ingredients() {
+		List<Either<SizedFluidIngredient, Ingredient>> ingredients =
 			new ArrayList<>(this.ingredients.size() + this.fluidIngredients.size());
 		this.ingredients.forEach(ingredient -> ingredients.add(Either.right(ingredient)));
 		this.fluidIngredients.forEach(ingredient -> ingredients.add(Either.left(ingredient)));
@@ -107,7 +100,7 @@ public class ProcessingRecipeParams {
 
 	protected void encode(RegistryFriendlyByteBuf buffer) {
 		CatnipStreamCodecBuilders.nonNullList(Ingredient.CONTENTS_STREAM_CODEC).encode(buffer, ingredients);
-		CatnipStreamCodecBuilders.nonNullList(FluidIngredient.STREAM_CODEC).encode(buffer, fluidIngredients);
+		CatnipStreamCodecBuilders.nonNullList(SizedFluidIngredient.STREAM_CODEC).encode(buffer, fluidIngredients);
 		CatnipStreamCodecBuilders.nonNullList(ProcessingOutput.STREAM_CODEC).encode(buffer, results);
 		CatnipStreamCodecBuilders.nonNullList(FluidStack.STREAM_CODEC).encode(buffer, fluidResults);
 		ByteBufCodecs.VAR_INT.encode(buffer, processingDuration);
@@ -116,7 +109,7 @@ public class ProcessingRecipeParams {
 
 	protected void decode(RegistryFriendlyByteBuf buffer) {
 		ingredients = CatnipStreamCodecBuilders.nonNullList(Ingredient.CONTENTS_STREAM_CODEC).decode(buffer);
-		fluidIngredients = CatnipStreamCodecBuilders.nonNullList(FluidIngredient.STREAM_CODEC).decode(buffer);
+		fluidIngredients = CatnipStreamCodecBuilders.nonNullList(SizedFluidIngredient.STREAM_CODEC).decode(buffer);
 		results = CatnipStreamCodecBuilders.nonNullList(ProcessingOutput.STREAM_CODEC).decode(buffer);
 		fluidResults = CatnipStreamCodecBuilders.nonNullList(FluidStack.STREAM_CODEC).decode(buffer);
 		processingDuration = ByteBufCodecs.VAR_INT.decode(buffer);

@@ -127,7 +127,7 @@ public class WindowGen {
 				.pattern(" # ")
 				.pattern("#X#")
 				.define('#', ingredient.get())
-				.define('X', DataIngredient.tag(net.neoforged.neoforge.common.Tags.Items.GLASS_BLOCKS_COLORLESS).toVanilla())
+					.define('X', DataIngredient.tag(Tags.Items.GLASS_BLOCKS_COLORLESS).toVanilla())
 				.unlockedBy("has_ingredient", RegistrateRecipeProvider.has(ingredient.get()))
 				.save(p))
 			.initialProperties(() -> Blocks.GLASS)
@@ -148,12 +148,12 @@ public class WindowGen {
 			.initialProperties(() -> Blocks.GLASS)
 			.properties(WindowGen::glassProperties)
 			.loot((t, g) -> t.dropWhenSilkTouch(g))
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(net.neoforged.neoforge.common.Tags.Items.GLASS_BLOCKS_COLORLESS),
+				.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_BLOCKS_COLORLESS),
 				RecipeCategory.BUILDING_BLOCKS, c::get))
 			.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/", "framed_glass"))
-			.tag(net.neoforged.neoforge.common.Tags.Blocks.GLASS_BLOCKS_COLORLESS, BlockTags.IMPERMEABLE)
+				.tag(Tags.Blocks.GLASS_BLOCKS_COLORLESS, BlockTags.IMPERMEABLE)
 			.item()
-			.tag(net.neoforged.neoforge.common.Tags.Items.GLASS_BLOCKS_COLORLESS)
+				.tag(Tags.Items.GLASS_BLOCKS_COLORLESS)
 			.model((c, p) -> p.cubeColumn(c.getName(), p.modLoc(palettesDir() + c.getName()),
 				p.modLoc("block/palettes/framed_glass")))
 			.build()

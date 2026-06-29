@@ -6,9 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.HashMultimap;
 import com.simibubi.create.AllDataComponents;
@@ -23,7 +22,7 @@ import com.simibubi.create.content.trains.track.ITrackBlock;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import net.createmod.catnip.levelWrappers.WrappedServerLevel;
+import net.createmod.catnip.levelWrappers.WrappedLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -37,6 +36,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -52,9 +52,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -79,7 +81,7 @@ public class DeployerHandler {
 	private static final Map<BlockPos, List<ItemEntity>> CAPTURED_BLOCK_DROPS = new HashMap<>();
 	public static final Map<BlockPos, List<ItemEntity>> CAPTURED_BLOCK_DROPS_VIEW = Collections.unmodifiableMap(CAPTURED_BLOCK_DROPS);
 
-	private static final class ItemUseWorld extends WrappedServerLevel {
+	private static final class ItemUseWorld extends WrappedLevel implements ServerLevelAccessor {
 		private final Direction face;
 		private final BlockPos pos;
 		boolean rayMode = false;
@@ -88,6 +90,12 @@ public class DeployerHandler {
 			super(level);
 			this.face = face;
 			this.pos = pos;
+		}
+
+		@Override
+		public ServerLevel getLevel() {
+			// This is safe, we always pass ServerLevel in the constructor
+			return (ServerLevel) level;
 		}
 
 		@Override
@@ -131,10 +139,12 @@ public class DeployerHandler {
 
 	static void activate(DeployerFakePlayer player, Vec3 vec, BlockPos clickedPos, Vec3 extensionVector, Mode mode) {
 		HashMultimap<Holder<Attribute>, AttributeModifier> attributeModifiers = HashMultimap.create();
-		player.getMainHandItem()
+		ItemStack mainHandItem = player.getMainHandItem();
+		mainHandItem
 			.getAttributeModifiers()
 			.modifiers()
 			.forEach(e -> attributeModifiers.put(e.attribute(), e.modifier()));
+		EnchantmentHelper.forEachModifier(mainHandItem, EquipmentSlot.MAINHAND, attributeModifiers::put);
 
 		player.getAttributes()
 			.addTransientAttributeModifiers(attributeModifiers);
@@ -180,8 +190,7 @@ public class DeployerHandler {
 								villager.setTradingPlayer(null);
 						}
 						success = true;
-					} else if (entity instanceof LivingEntity
-						&& stack.interactLivingEntity(player, (LivingEntity) entity, hand)
+					} else if (entity instanceof LivingEntity livingEntity && stack.interactLivingEntity(player, livingEntity, hand)
 						.consumesAction())
 						success = true;
 				}
@@ -392,8 +401,8 @@ public class DeployerHandler {
 			&& stateUp.getBlock() == blockstate.getBlock()
 			&& stateUp.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
 			// hack to prevent DoublePlantBlock from dropping a duplicate item
-			world.setBlock(pos, Blocks.AIR.defaultBlockState(), 35);
-			world.setBlock(posUp, Blocks.AIR.defaultBlockState(), 35);
+			world.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+			world.setBlock(posUp, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 		} else {
 			if (!blockstate.onDestroyedByPlayer(world, pos, player, canHarvest, world.getFluidState(pos)))
 				return true;

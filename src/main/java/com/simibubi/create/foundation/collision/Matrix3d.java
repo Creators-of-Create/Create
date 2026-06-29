@@ -1,11 +1,7 @@
 package com.simibubi.create.foundation.collision;
 
-import org.joml.Matrix4f;
-
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class Matrix3d {
 
@@ -58,36 +54,10 @@ public class Matrix3d {
 		return this;
 	}
 
-	public Matrix3d transpose() {
-		double d = m01;
-		m01 = m10;
-		m10 = d;
-		d = m02;
-		m02 = m20;
-		m20 = d;
-		d = m12;
-		m12 = m21;
-		m21 = d;
-		return this;
-	}
-
 	public Matrix3d scale(double d) {
 		m00 *= d;
 		m11 *= d;
 		m22 *= d;
-		return this;
-	}
-
-	public Matrix3d add(Matrix3d matrix) {
-		m00 += matrix.m00;
-		m01 += matrix.m01;
-		m02 += matrix.m02;
-		m10 += matrix.m10;
-		m11 += matrix.m11;
-		m12 += matrix.m12;
-		m20 += matrix.m20;
-		m21 += matrix.m21;
-		m22 += matrix.m22;
 		return this;
 	}
 
@@ -114,35 +84,25 @@ public class Matrix3d {
 	}
 
 	public Vec3 transform(Vec3 vec) {
-		double x = vec.x * m00 + vec.y * m01 + vec.z * m02;
-		double y = vec.x * m10 + vec.y * m11 + vec.z * m12;
-		double z = vec.x * m20 + vec.y * m21 + vec.z * m22;
+		return transform(vec.x, vec.y, vec.z);
+	}
+
+
+	public Vec3 transformTransposed(Vec3 vec) {
+		return transformTransposed(vec.x, vec.y, vec.z);
+	}
+
+	public Vec3 transform(double vecX, double vecY, double vecZ) {
+		double x = vecX * m00 + vecY * m01 + vecZ * m02;
+		double y = vecX * m10 + vecY * m11 + vecZ * m12;
+		double z = vecX * m20 + vecY * m21 + vecZ * m22;
 		return new Vec3(x, y, z);
 	}
 
-	public Matrix3d copy() {
-		return new Matrix3d().add(this);
+	public Vec3 transformTransposed(double vecX, double vecY, double vecZ) {
+		double x = vecX * m00 + vecY * m10 + vecZ * m20;
+		double y = vecX * m01 + vecY * m11 + vecZ * m21;
+		double z = vecX * m02 + vecY * m12 + vecZ * m22;
+		return new Vec3(x, y, z);
 	}
-
-	float[] conversionBuffer = new float[16];
-
-	@OnlyIn(Dist.CLIENT)
-	public Matrix4f getAsMatrix4f() {
-		for (int i = 0; i < 4; i++)
-			for (int j = 0; j < 4; j++)
-				conversionBuffer[j * 4 + i] = i == j ? 1 : 0;
-
-		conversionBuffer[0] = (float) m00;
-		conversionBuffer[1] = (float) m01;
-		conversionBuffer[2] = (float) m02;
-		conversionBuffer[4] = (float) m10;
-		conversionBuffer[5] = (float) m11;
-		conversionBuffer[6] = (float) m12;
-		conversionBuffer[8] = (float) m20;
-		conversionBuffer[9] = (float) m21;
-		conversionBuffer[10] = (float) m22;
-
-		return new Matrix4f().setTransposed(conversionBuffer);
-	}
-
 }

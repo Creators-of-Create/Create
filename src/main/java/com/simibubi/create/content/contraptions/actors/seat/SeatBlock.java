@@ -2,8 +2,9 @@ package com.simibubi.create.content.contraptions.actors.seat;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Optional;
 import com.simibubi.create.AllBlocks;
@@ -122,7 +123,7 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 	@Override
 	public VoxelShape getCollisionShape(BlockState p_220071_1_, BlockGetter p_220071_2_, BlockPos p_220071_3_,
 										CollisionContext ctx) {
-		if (ctx instanceof EntityCollisionContext ecc && ecc.getEntity() instanceof Player)
+		if (ctx instanceof EntityCollisionContext ecc && ecc.getEntity() instanceof Player player)
 			return AllShapes.SEAT_COLLISION_PLAYERS;
 		return AllShapes.SEAT_COLLISION;
 	}
@@ -189,12 +190,12 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 		return passenger instanceof LivingEntity;
 	}
 
-	public static void sitDown(Level world, BlockPos pos, Entity entity) {
-		if (world.isClientSide)
+	public static void sitDown(Level level, BlockPos pos, Entity entity) {
+		if (level.isClientSide)
 			return;
-		SeatEntity seat = new SeatEntity(world, pos);
+		SeatEntity seat = new SeatEntity(level);
 		seat.setPos(pos.getX() + .5, pos.getY(), pos.getZ() + .5);
-		world.addFreshEntity(seat);
+		level.addFreshEntity(seat);
 		entity.startRiding(seat, true);
 		if (entity instanceof TamableAnimal ta)
 			ta.setInSittingPose(true);

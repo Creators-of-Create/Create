@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.simibubi.create.AllTags.AllItemTags;
+
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.math.AngleHelper;
 import net.minecraft.client.Minecraft;
@@ -38,7 +40,8 @@ public class PlayerSkyhookRenderer {
 
 	public static void afterSetupAnim(Player player, HumanoidModel<?> model) {
 		if (hangingPlayers.contains(player.getUUID()))
-			setHangingPose(player.getMainArm() == HumanoidArm.LEFT, model);
+			setHangingPose(player.getMainArm() == HumanoidArm.LEFT ^
+				!AllItemTags.CHAIN_RIDEABLE.matches(player.getMainHandItem()), model);
 	}
 
 	private static void setHangingPose(boolean isLeftArmMain, HumanoidModel<?> model) {

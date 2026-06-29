@@ -3,11 +3,10 @@ package com.simibubi.create.foundation.data.recipe;
 import java.util.concurrent.CompletableFuture;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.recipe.PressingRecipeGen;
 
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -24,7 +23,12 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 
 	SUGAR_CANE = create(() -> Items.SUGAR_CANE, b -> b.output(Items.PAPER)),
 
-	PATH = create("path", b -> b.require(Ingredient.of(Items.GRASS_BLOCK, Items.DIRT, Items.COARSE_DIRT, Items.ROOTED_DIRT))
+	PATH = create("path", b -> b.require(Ingredient.of(Items.DIRT,
+			Items.COARSE_DIRT, Items.ROOTED_DIRT, Items.MYCELIUM, Items.PODZOL))
+		.output(Items.DIRT_PATH)
+		.whenModMissing(Mods.ENV.getId())),
+
+	GRASS_PATH = create("path_from_grass", b -> b.require(Items.GRASS_BLOCK)
 		.output(Items.DIRT_PATH)),
 
 	IRON = create("iron_ingot", b -> b.require(CreateRecipeProvider.I.iron())
@@ -55,9 +59,18 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 		.output(Mods.ENV, "podzol_path")
 		.whenModLoaded(Mods.ENV.getId())),
 
-	// Oh The Biomes You'll Go
+	ENV_DIRT = create("compat/environmental/dirt_path", b -> b.require(Ingredient.of(
+		Items.DIRT, Items.COARSE_DIRT, Items.ROOTED_DIRT))
+			.output(Mods.ENV, "dirt_path")
+			.whenModLoaded(Mods.ENV.getId())),
 
-	BYG = moddedPaths(Mods.BYG, "lush_grass"),
+	// Oh The Biomes We've Gone
+
+	BWG = moddedPaths(Mods.BWG, "lush_dirt", "sandy_dirt"),
+
+	BWG_GRASS_PATH = create(Mods.BWG.recipeId("lush_grass_path"), b -> b.require(Mods.BWG, "lush_grass_block")
+		.output(Mods.BWG, "lush_dirt_path")
+		.whenModLoaded(Mods.BWG.getId())),
 
 	//Infernal Expansion
 	IX_CRIMSON_PATH = create(Mods.IX.recipeId("crimson_nylium_path"), b -> b.require(Blocks.CRIMSON_NYLIUM)
@@ -101,7 +114,7 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 
 	// IE
 
-	IE_PLATES = iePlates("aluminum", "lead", "silver", "nickel", "uranium", "constantan", "electrum", "steel"),
+	IE_PLATES = iePlates(),
 
 	// Vampirism
 
@@ -113,28 +126,16 @@ public final class CreatePressingRecipeGen extends PressingRecipeGen {
 
 	;
 
-	public CreatePressingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+	public CreatePressingRecipeGen(PackOutput output, CompletableFuture<Provider> registries) {
 		super(output, registries, Create.ID);
 	}
 
-	private GeneratedRecipe moddedPaths(Mods mod, String... blocks) {
-		for(String block : blocks) {
-			moddedCompacting(mod, block, block + "_path");
-		}
-		return null;
-	}
-
-	private GeneratedRecipe iePlates(String... metals) {
-		for (String metal : metals)
-			create(Mods.IE.recipeId("plate_" + metal), b -> b.require(AllTags.commonItemTag("ingots/" + metal))
+	private GeneratedRecipe iePlates() {
+		for (CommonMetal metal : CommonMetal.of(Mods.IE)) {
+			create(Mods.IE.recipeId("plate_" + metal), b -> b.require(metal.ingots)
 				.output(Mods.IE, "plate_" + metal)
 				.whenModLoaded(Mods.IE.getId()));
+		}
 		return null;
-	}
-
-	GeneratedRecipe moddedCompacting(Mods mod, String input, String output) {
-		return create("compat/" + mod.getId() + "/" + output, b -> b.require(mod, input)
-				.output(mod, output)
-				.whenModLoaded(mod.getId()));
 	}
 }

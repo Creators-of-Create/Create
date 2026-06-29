@@ -72,6 +72,7 @@ import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryEdit
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryHidingPacket;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryRefundPacket;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperLockPacket;
+import com.simibubi.create.content.logistics.tableCloth.ShopUpdatePacket;
 import com.simibubi.create.content.logistics.tunnel.TunnelFlapPacket;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkConfigurationPacket;
 import com.simibubi.create.content.redstone.link.controller.LinkedControllerBindPacket;
@@ -108,12 +109,10 @@ import com.simibubi.create.foundation.networking.ISyncPersistentData;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.infrastructure.command.HighlightPacket;
-import com.simibubi.create.infrastructure.command.SimpleCreateActions;
 import com.simibubi.create.infrastructure.debugInfo.ServerDebugInfoPacket;
 
 import net.createmod.catnip.net.base.BasePacketPayload;
 import net.createmod.catnip.net.base.CatnipPacketRegistry;
-import net.createmod.catnip.net.packets.ClientboundSimpleActionPacket;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -234,28 +233,16 @@ public enum AllPackets implements BasePacketPayload.PacketTypeProvider {
 	REDSTONE_REQUESTER_EFFECT(RedstoneRequesterEffectPacket.class, RedstoneRequesterEffectPacket.STREAM_CODEC),
 	KNOCKBACK(KnockbackPacket.class, KnockbackPacket.STREAM_CODEC),
 	TRAIN_MAP_SYNC(TrainMapSyncPacket.class, TrainMapSyncPacket.STREAM_CODEC),
-	CLIENTBOUND_CHAIN_CONVEYOR(ClientboundChainConveyorRidingPacket.class, ClientboundChainConveyorRidingPacket.STREAM_CODEC)
-	;
-
-	static {
-		ClientboundSimpleActionPacket.addAction("rainbowDebug", () -> SimpleCreateActions::rainbowDebug);
-		ClientboundSimpleActionPacket.addAction("overlayReset", () -> SimpleCreateActions::overlayReset);
-		ClientboundSimpleActionPacket.addAction("overlayScreen", () -> SimpleCreateActions::overlayScreen);
-		ClientboundSimpleActionPacket.addAction("experimentalLighting", () -> SimpleCreateActions::experimentalLighting);
-		ClientboundSimpleActionPacket.addAction("fabulousWarning", () -> SimpleCreateActions::fabulousWarning);
-		ClientboundSimpleActionPacket.addAction("zoomMultiplier", () -> SimpleCreateActions::zoomMultiplier);
-		ClientboundSimpleActionPacket.addAction("camAngleYawTarget", () -> value -> SimpleCreateActions.camAngleTarget(value, true));
-		ClientboundSimpleActionPacket.addAction("camAnglePitchTarget", () -> value -> SimpleCreateActions.camAngleTarget(value, false));
-		ClientboundSimpleActionPacket.addAction("camAngleFunction", () -> SimpleCreateActions::camAngleFunction);
-	}
+	CLIENTBOUND_CHAIN_CONVEYOR(ClientboundChainConveyorRidingPacket.class, ClientboundChainConveyorRidingPacket.STREAM_CODEC),
+	SHOP_UPDATE(ShopUpdatePacket.class, ShopUpdatePacket.STREAM_CODEC);;
 
 	private final CatnipPacketRegistry.PacketType<?> type;
 
 	<T extends BasePacketPayload> AllPackets(Class<T> clazz, StreamCodec<? super RegistryFriendlyByteBuf, T> codec) {
 		String name = this.name().toLowerCase(Locale.ROOT);
 		this.type = new CatnipPacketRegistry.PacketType<>(
-				new CustomPacketPayload.Type<>(Create.asResource(name)),
-				clazz, codec
+			new CustomPacketPayload.Type<>(Create.asResource(name)),
+			clazz, codec
 		);
 	}
 
@@ -266,7 +253,7 @@ public enum AllPackets implements BasePacketPayload.PacketTypeProvider {
 	}
 
 	public static void register() {
-		CatnipPacketRegistry packetRegistry = new CatnipPacketRegistry(Create.ID, 1);
+		CatnipPacketRegistry packetRegistry = new CatnipPacketRegistry(Create.ID, CreateBuildInfo.VERSION);
 		for (AllPackets packet : AllPackets.values()) {
 			packetRegistry.registerPacket(packet.type);
 		}

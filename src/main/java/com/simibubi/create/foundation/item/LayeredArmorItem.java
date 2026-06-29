@@ -17,16 +17,17 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 public interface LayeredArmorItem extends CustomRenderedArmorItem {
 	@OnlyIn(Dist.CLIENT)
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	default void renderArmorPiece(HumanoidArmorLayer<?, ?, ?> layer, PoseStack poseStack,
-			MultiBufferSource bufferSource, LivingEntity entity, EquipmentSlot slot, int light,
-			HumanoidModel<?> originalModel, ItemStack stack) {
+								  MultiBufferSource bufferSource, LivingEntity entity, EquipmentSlot slot, int light,
+								  HumanoidModel<?> originalModel, ItemStack stack) {
 		if (!(stack.getItem() instanceof ArmorItem item)) {
 			return;
 		}
@@ -55,9 +56,11 @@ public interface LayeredArmorItem extends CustomRenderedArmorItem {
 
 	// from HumanoidArmorLayer.renderModel
 	private void renderModel(PoseStack poseStack, MultiBufferSource bufferSource, int light, ArmorItem item,
-		Model model, boolean glint, int color, ResourceLocation armorResource) {
+							 Model model, boolean glint, int color, ResourceLocation armorResource) {
 		VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderType.armorCutoutNoCull(armorResource));
 		model.renderToBuffer(poseStack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, color);
+		if (glint)
+			model.renderToBuffer(poseStack, bufferSource.getBuffer(RenderType.armorEntityGlint()), light, OverlayTexture.NO_OVERLAY);
 	}
 
 	String getArmorTextureLocation(LivingEntity entity, EquipmentSlot slot, ItemStack stack, int layer);

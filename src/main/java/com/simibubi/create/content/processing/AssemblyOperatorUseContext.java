@@ -1,6 +1,6 @@
 package com.simibubi.create.content.processing;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;

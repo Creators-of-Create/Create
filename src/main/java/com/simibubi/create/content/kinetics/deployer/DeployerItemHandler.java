@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 public class DeployerItemHandler implements IItemHandlerModifiable {
@@ -62,7 +63,7 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 		if (!ItemStack.isSameItemSameComponents(held, stack))
 			return stack;
 
-		int space = held.getOrDefault(DataComponents.MAX_STACK_SIZE, 64) - held.getCount();
+		int space = held.getMaxStackSize() - held.getCount();
 		ItemStack remainder = stack.copy();
 		ItemStack split = remainder.split(space);
 
@@ -112,7 +113,7 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return Math.min(getStackInSlot(slot).getOrDefault(DataComponents.MAX_STACK_SIZE, 64), 64);
+		return getStackInSlot(slot).getOrDefault(DataComponents.MAX_STACK_SIZE, 64);
 	}
 
 	@Override

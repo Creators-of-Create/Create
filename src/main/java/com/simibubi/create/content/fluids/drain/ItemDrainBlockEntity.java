@@ -23,6 +23,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -35,7 +36,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
-public class ItemDrainBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
+public class ItemDrainBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation, Clearable {
 
 	public static final int FILLING_TIME = 20;
 
@@ -283,6 +284,11 @@ public class ItemDrainBlockEntity extends SmartBlockEntity implements IHaveGoggl
 	public void setHeldItem(TransportedItemStack heldItem, Direction insertedFrom) {
 		this.heldItem = heldItem;
 		this.heldItem.insertedFrom = insertedFrom;
+	}
+
+	@Override
+	public void clearContent() {
+		this.heldItem = null;
 	}
 
 	@Override

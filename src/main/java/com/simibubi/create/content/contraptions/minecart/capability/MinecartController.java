@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.jetbrains.annotations.NotNull;
@@ -289,6 +289,9 @@ public class MinecartController implements INBTSerializable<CompoundTag> {
 			return;
 
 		@Nullable AbstractMinecart cart = cart();
+		if (cart == null)
+			return;
+
 		if (stall && cart != null) {
 			stallData.set(internal, Optional.of(new StallData(cart)));
 			sendData();

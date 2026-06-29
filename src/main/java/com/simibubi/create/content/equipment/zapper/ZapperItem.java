@@ -2,8 +2,7 @@ package com.simibubi.create.content.equipment.zapper;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllDataComponents;
@@ -74,7 +73,7 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 		return newStack.getItem() instanceof ZapperItem;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		// Shift -> open GUI

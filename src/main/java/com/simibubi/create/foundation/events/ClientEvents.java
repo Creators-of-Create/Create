@@ -15,7 +15,6 @@ import com.simibubi.create.content.contraptions.minecart.CouplingHandlerClient;
 import com.simibubi.create.content.contraptions.minecart.CouplingPhysics;
 import com.simibubi.create.content.contraptions.minecart.CouplingRenderer;
 import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderInfoManager;
 import com.simibubi.create.content.contraptions.wrench.RadialWrenchHandler;
 import com.simibubi.create.content.decoration.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.equipment.armor.BacktankArmorLayer;
@@ -72,6 +71,7 @@ import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.TickBasedCache;
+import com.simibubi.create.infrastructure.command.AllCommands;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.animation.AnimationTickHolder;
@@ -103,9 +103,11 @@ import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
 import net.neoforged.neoforge.client.event.ViewportEvent;
@@ -120,7 +122,7 @@ import net.neoforged.neoforge.event.level.LevelEvent;
 public class ClientEvents {
 	@SubscribeEvent
 	public static void onTickPre(ClientTickEvent.Pre event) {
-		onTick( true);
+		onTick(true);
 	}
 
 	@SubscribeEvent
@@ -173,7 +175,6 @@ public class ClientEvents {
 		// CollisionDebugger.tick();
 		ArmInteractionPointHandler.tick();
 		EjectorTargetHandler.tick();
-		ContraptionRenderInfoManager.tickFor(world);
 		BlueprintOverlayRenderer.tick();
 		ToolboxHandlerClient.clientTick();
 		RadialWrenchHandler.clientTick();
@@ -284,19 +285,10 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onRenderFramePre(ClientTickEvent.Pre event) {
-		onRenderFrame(true);
-	}
-
-	@SubscribeEvent
-	public static void onRenderFramePost(ClientTickEvent.Post event) {
-		onRenderFrame(false);
-	}
-
-	public static void onRenderFrame(boolean isPreEvent) {
+	public static void onRenderFrame(RenderFrameEvent.Pre event) {
 		if (!isGameActive())
 			return;
-		TurntableHandler.gameRenderFrame();
+		TurntableHandler.gameRenderFrame(event.getPartialTick());
 	}
 
 	@SubscribeEvent
@@ -358,50 +350,50 @@ public class ClientEvents {
 		}
 	}
 
-	@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
-	public static class ModBusEvents {
+	@SubscribeEvent
+	public static void registerClientCommands(RegisterClientCommandsEvent event) {
+		AllCommands.registerClient(event.getDispatcher());
+	}
 
-		@SubscribeEvent
-		public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
-			event.registerReloadListener(CreateClient.RESOURCE_RELOAD_LISTENER);
-			event.registerReloadListener(TrainHatInfoReloadListener.LISTENER);
-		}
+	@SubscribeEvent
+	public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
+		event.registerReloadListener(CreateClient.RESOURCE_RELOAD_LISTENER);
+		event.registerReloadListener(TrainHatInfoReloadListener.LISTENER);
+	}
 
-		@SubscribeEvent
-		public static void addEntityRendererLayers(EntityRenderersEvent.AddLayers event) {
-			EntityRenderDispatcher dispatcher = Minecraft.getInstance()
-				.getEntityRenderDispatcher();
-			BacktankArmorLayer.registerOnAll(dispatcher);
-			CreateHatArmorLayer.registerOnAll(dispatcher);
-		}
+	@SubscribeEvent
+	public static void addEntityRendererLayers(EntityRenderersEvent.AddLayers event) {
+		EntityRenderDispatcher dispatcher = Minecraft.getInstance()
+			.getEntityRenderDispatcher();
+		BacktankArmorLayer.registerOnAll(dispatcher);
+		CreateHatArmorLayer.registerOnAll(dispatcher);
+	}
 
-		@SubscribeEvent
-		public static void registerGuiOverlays(RegisterGuiLayersEvent event) {
-			// Register overlays in reverse order
-			event.registerAbove(VanillaGuiLayers.AIR_LEVEL, Create.asResource("remaining_air"), RemainingAirOverlay.INSTANCE);
-			event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR, Create.asResource("train_hud"), TrainHUD.OVERLAY);
-			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("value_settings"), CreateClient.VALUE_SETTINGS_HANDLER);
-			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("track_placement"), TrackPlacementOverlay.INSTANCE);
-			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("goggle_info"), GoggleOverlayRenderer.OVERLAY);
-			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("blueprint"), BlueprintOverlayRenderer.OVERLAY);
-			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("linked_controller"), LinkedControllerClientHandler.OVERLAY);
-			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("schematic"), CreateClient.SCHEMATIC_HANDLER);
-			event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("toolbox"), ToolboxHandlerClient.OVERLAY);
-		}
+	@SubscribeEvent
+	public static void registerGuiOverlays(RegisterGuiLayersEvent event) {
+		// Register overlays in reverse order
+		event.registerAbove(VanillaGuiLayers.AIR_LEVEL, Create.asResource("remaining_air"), RemainingAirOverlay.INSTANCE);
+		event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR, Create.asResource("train_hud"), TrainHUD.OVERLAY);
+		event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("value_settings"), CreateClient.VALUE_SETTINGS_HANDLER);
+		event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("track_placement"), TrackPlacementOverlay.INSTANCE);
+		event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("goggle_info"), GoggleOverlayRenderer.OVERLAY);
+		event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("blueprint"), BlueprintOverlayRenderer.OVERLAY);
+		event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("linked_controller"), LinkedControllerClientHandler.OVERLAY);
+		event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("schematic"), CreateClient.SCHEMATIC_HANDLER);
+		event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("toolbox"), ToolboxHandlerClient.OVERLAY);
+	}
 
-		@SubscribeEvent
-		public static void registerItemDecorations(RegisterItemDecorationsEvent event) {
-			event.register(AllItems.POTATO_CANNON, PotatoCannonItemRenderer.DECORATOR);
-		}
+	@SubscribeEvent
+	public static void registerItemDecorations(RegisterItemDecorationsEvent event) {
+		event.register(AllItems.POTATO_CANNON, PotatoCannonItemRenderer.DECORATOR);
+	}
 
-		@SubscribeEvent
-		public static void onLoadComplete(FMLLoadCompleteEvent event) {
-			ModContainer createContainer = ModList.get()
-				.getModContainerById(Create.ID)
-				.orElseThrow(() -> new IllegalStateException("Create mod container missing on LoadComplete"));
-			Supplier<IConfigScreenFactory> configScreen = () -> (mc, previousScreen) -> new BaseConfigScreen(previousScreen, Create.ID);
-			createContainer.registerExtensionPoint(IConfigScreenFactory.class, configScreen);
-		}
-
+	@SubscribeEvent
+	public static void onLoadComplete(FMLLoadCompleteEvent event) {
+		ModContainer createContainer = ModList.get()
+			.getModContainerById(Create.ID)
+			.orElseThrow(() -> new IllegalStateException("Create mod container missing on LoadComplete"));
+		Supplier<IConfigScreenFactory> configScreen = () -> (mc, previousScreen) -> new BaseConfigScreen(previousScreen, Create.ID);
+		createContainer.registerExtensionPoint(IConfigScreenFactory.class, configScreen);
 	}
 }

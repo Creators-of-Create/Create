@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllParticleTypes;
@@ -52,6 +55,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -71,7 +75,7 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
 
-public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
+public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation, Clearable {
 
 	private boolean areFluidsMoving;
 	LerpedFloat ingredientRotationSpeed;
@@ -99,6 +103,8 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	public static final int OUTPUT_ANIMATION_TIME = 10;
 	List<IntAttached<ItemStack>> visualizedOutputItems;
 	List<IntAttached<FluidStack>> visualizedOutputFluids;
+
+	private @Nullable HeatLevel cachedHeatLevel;
 
 	public BasinBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -204,6 +210,15 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		visualizedOutputItems.clear();
 		visualizedOutputFluids.clear();
 	}
+
+	@Override
+	public void clearContent() {
+		spoutputBuffer.clear();
+		inputInventory.clearContent();
+		outputInventory.clearContent();
+		filtering.setFilter(ItemStack.EMPTY);
+	}
+
 
 	@Override
 	public void destroy() {
@@ -327,6 +342,8 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 	@Override
 	public void tick() {
+		cachedHeatLevel = null;
+
 		super.tick();
 		if (level.isClientSide) {
 			createFluidParticles();
@@ -773,6 +790,16 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			tooltip.remove(0);
 
 		return true;
+	}
+
+	@NotNull HeatLevel getHeatLevel() {
+		if (cachedHeatLevel == null) {
+			if (level == null)
+				return HeatLevel.NONE;
+
+			cachedHeatLevel = getHeatLevelOf(level.getBlockState(getBlockPos().below(1)));
+		}
+		return cachedHeatLevel;
 	}
 
 	static class BasinValueBox extends ValueBoxTransform.Sided {

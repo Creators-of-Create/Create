@@ -18,19 +18,19 @@ import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipul
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.TankManipulationBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryTrackerBehaviour;
 
-import net.createmod.catnip.math.BlockFace;
 import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.math.BlockFace;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SmartObserverBlockEntity extends SmartBlockEntity {
-
+public class SmartObserverBlockEntity extends SmartBlockEntity implements Clearable {
 	private static final int DEFAULT_DELAY = 6;
 	private FilteringBehaviour filtering;
 	private InvManipulationBehaviour observedInventory;
@@ -114,7 +114,7 @@ public class SmartObserverBlockEntity extends SmartBlockEntity {
 			}
 			return;
 		}
-		
+
 		// Detect packages looping on a chain conveyor
 		if (level.getBlockEntity(targetPos) instanceof ChainConveyorBlockEntity ccbe) {
 			for (ChainConveyorPackage box : ccbe.getLoopingPackages())
@@ -181,4 +181,8 @@ public class SmartObserverBlockEntity extends SmartBlockEntity {
 		turnOffTicks = compound.getInt("TurnOff");
 	}
 
+	@Override
+	public void clearContent() {
+		filtering.setFilter(ItemStack.EMPTY);
+	}
 }

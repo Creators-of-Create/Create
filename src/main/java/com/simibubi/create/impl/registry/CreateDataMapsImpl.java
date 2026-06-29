@@ -4,10 +4,9 @@ import com.simibubi.create.api.registry.CreateDataMaps;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.EventBusSubscriber.Bus;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 
-@EventBusSubscriber(bus = Bus.MOD)
+@EventBusSubscriber
 public class CreateDataMapsImpl {
 	@SubscribeEvent
 	public static void registerDataMaps(RegisterDataMapTypesEvent event) {

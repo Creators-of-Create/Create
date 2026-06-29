@@ -15,7 +15,7 @@ public abstract class CameraMixin {
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;getMaxZoom(F)F"),
 			index = 0
 	)
-	public float create$modifyCameraOffset(float originalValue) {
+	private float create$modifyCameraOffset(float originalValue) {
 		return originalValue * CameraDistanceModifier.getMultiplier();
 	}
 }

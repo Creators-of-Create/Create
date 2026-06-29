@@ -12,9 +12,6 @@ import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.content.fluids.tank.storage.FluidTankMountedStorage.Handler;
 
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-
 import net.createmod.catnip.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -23,6 +20,9 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class FluidTankMountedStorage extends WrapperMountedFluidStorage<Handler> implements SyncedMountedStorage {
 	public static final MapCodec<FluidTankMountedStorage> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
@@ -70,7 +70,7 @@ public class FluidTankMountedStorage extends WrapperMountedFluidStorage<Handler>
 
 	@Override
 	public void afterSync(Contraption contraption, BlockPos localPos) {
-		BlockEntity be = contraption.presentBlockEntities.get(localPos);
+		BlockEntity be = contraption.getBlockEntityClientSide(localPos);
 		if (!(be instanceof FluidTankBlockEntity tank))
 			return;
 
@@ -96,7 +96,8 @@ public class FluidTankMountedStorage extends WrapperMountedFluidStorage<Handler>
 	}
 
 	public static final class Handler extends FluidTank {
-		private Runnable onChange = () -> {};
+		private Runnable onChange = () -> {
+		};
 
 		public Handler(int capacity, FluidStack stack) {
 			super(capacity);

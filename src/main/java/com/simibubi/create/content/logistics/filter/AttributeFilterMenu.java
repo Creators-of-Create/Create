@@ -112,7 +112,8 @@ public class AttributeFilterMenu extends AbstractFilterMenu {
 			return ItemStack.EMPTY;
 		}
 		if (index < 36) {
-			ItemStack stackToInsert = playerInventory.getItem(index);
+			Slot slot = this.slots.get(index);
+			ItemStack stackToInsert = slot.getItem();
 			ItemStack copy = stackToInsert.copy();
 			copy.setCount(1);
 			ghostInventory.setStackInSlot(0, copy);
@@ -125,7 +126,7 @@ public class AttributeFilterMenu extends AbstractFilterMenu {
 		super.initAndReadInventory(filterItem);
 		selectedAttributes = new ArrayList<>();
 		whitelistMode = filterItem.getOrDefault(AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE, AttributeFilterWhitelistMode.WHITELIST_DISJ);
-		List<ItemAttribute.ItemAttributeEntry> attributes = filterItem.getOrDefault(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, new ArrayList<>());
+		List<ItemAttribute.ItemAttributeEntry> attributes = filterItem.getOrDefault(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, List.of());
 		selectedAttributes.addAll(attributes);
 	}
 

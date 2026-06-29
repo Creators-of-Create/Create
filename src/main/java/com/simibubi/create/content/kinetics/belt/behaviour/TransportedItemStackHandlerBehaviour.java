@@ -3,7 +3,7 @@ package com.simibubi.create.content.kinetics.belt.behaviour;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;

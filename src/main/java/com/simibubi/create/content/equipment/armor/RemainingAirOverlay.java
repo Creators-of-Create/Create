@@ -12,11 +12,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringUtil;
+import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Blocks;
 
 public class RemainingAirOverlay implements LayeredDraw.Layer {
 	public static final RemainingAirOverlay INSTANCE = new RemainingAirOverlay();
@@ -35,7 +38,9 @@ public class RemainingAirOverlay implements LayeredDraw.Layer {
 		if (!player.getPersistentData()
 			.contains("VisualBacktankAir"))
 			return;
-		if (!player.canDrownInFluidType(player.getEyeInFluidType()) && !player.isInLava())
+		boolean isAir = player.getEyeInFluidType().isAir() || player.level().getBlockState(BlockPos.containing(player.getX(), player.getEyeY(), player.getZ())).is(Blocks.BUBBLE_COLUMN);
+		boolean canBreathe = !player.canDrownInFluidType(player.getEyeInFluidType()) || MobEffectUtil.hasWaterBreathing(player) || player.getAbilities().invulnerable;
+		if ((isAir || canBreathe) && !player.isInLava())
 			return;
 
 		int timeLeft = player.getPersistentData()

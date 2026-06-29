@@ -76,7 +76,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 			method = "save",
 			at = @At("RETURN")
 	)
-	public void create$onSave(CompoundTag tag, HolderLookup.Provider registries, CallbackInfoReturnable<CompoundTag> cir) {
+	private void create$onSave(CompoundTag tag, HolderLookup.Provider registries, CallbackInfoReturnable<CompoundTag> cir) {
 		ListTag listTag = new ListTag();
 		for (StationMarker stationMarker : create$stationMarkers.values()) {
 			listTag.add(stationMarker.save(registries));

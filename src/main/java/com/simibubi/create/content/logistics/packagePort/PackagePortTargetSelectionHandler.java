@@ -7,8 +7,8 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -21,6 +21,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
+
+import net.neoforged.neoforge.common.Tags.Items;
 
 public class PackagePortTargetSelectionHandler {
 
@@ -73,7 +75,7 @@ public class PackagePortTargetSelectionHandler {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 		boolean isPostbox = AllItemTags.POSTBOXES.matches(player.getMainHandItem());
-		boolean isWrench = AllItemTags.WRENCH.matches(player.getMainHandItem());
+		boolean isWrench = player.getMainHandItem().is(Items.TOOLS_WRENCH);
 
 		if (!isWrench) {
 			if (activePackageTarget == null)

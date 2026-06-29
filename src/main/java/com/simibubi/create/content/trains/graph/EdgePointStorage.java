@@ -50,9 +50,11 @@ public class EdgePointStorage {
 	}
 
 	public void tick(TrackGraph graph, boolean preTrains) {
-		pointsByType.values()
-			.forEach(map -> map.values()
-				.forEach(p -> p.tick(graph, preTrains)));
+		for (Map<UUID, TrackEdgePoint> map : pointsByType.values()) {
+			for (TrackEdgePoint point : map.values()) {
+				point.tick(graph, preTrains);
+			}
+		}
 	}
 
 	public void transferAll(TrackGraph target, EdgePointStorage other) {

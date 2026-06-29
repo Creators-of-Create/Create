@@ -1,7 +1,8 @@
 package com.simibubi.create.content.processing.burner;
 
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -9,10 +10,13 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerInteractionHandler;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
+import com.simibubi.create.content.schematics.requirement.ItemRequirement;
+import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.IBE;
 
 import net.createmod.catnip.lang.Lang;
@@ -27,7 +31,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FlintAndSteelItem;
 import net.minecraft.world.item.Item;
@@ -36,6 +40,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -52,6 +57,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -61,7 +67,7 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<BlazeBurnerBlockEntity>, IWrenchable {
+public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<BlazeBurnerBlockEntity>, IWrenchable, SpecialBlockItemRequirement {
 
 	public static final EnumProperty<HeatLevel> HEAT_LEVEL = EnumProperty.create("blaze", HeatLevel.class);
 
@@ -86,6 +92,11 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
 		if (!(blockEntity instanceof BasinBlockEntity basin))
 			return;
 		basin.notifyChangeOfContents();
+	}
+
+	@Override
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+		return getLitOrUnlitStack(state);
 	}
 
 	@Override
@@ -142,7 +153,7 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
 					level.random.nextFloat() * 0.4F + 0.8F);
 				if (level.isClientSide)
 					return ItemInteractionResult.SUCCESS;
-				stack.hurtAndBreak(1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+				stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
 				level.setBlockAndUpdate(pos, AllBlocks.LIT_BLAZE_BURNER.getDefaultState());
 				return ItemInteractionResult.SUCCESS;
 			}
@@ -284,6 +295,16 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
 		}
 		builder.withPool(poolBuilder.setRolls(ConstantValue.exactly(1)));
 		return builder;
+	}
+
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state, @Nullable BlockEntity blockEntity) {
+		return new ItemRequirement(ItemUseType.CONSUME, getLitOrUnlitStack(state));
+	}
+
+	private static ItemStack getLitOrUnlitStack(BlockState state) {
+		boolean isLit = state.getValue(HEAT_LEVEL) != HeatLevel.NONE;
+		return (isLit ? AllBlocks.BLAZE_BURNER : AllItems.EMPTY_BLAZE_BURNER).asStack();
 	}
 
 	public enum HeatLevel implements StringRepresentable {

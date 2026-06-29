@@ -223,10 +223,11 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
 
 	@Override
 	public boolean canPlayerUse(Player player) {
-		if (level == null || level.getBlockEntity(worldPosition) != this)
-			return false;
-		return player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D,
-			worldPosition.getZ() + 0.5D) <= 64.0D;
+		if (level != null && level.getBlockEntity(worldPosition) == this) {
+			return player.canInteractWithBlock(worldPosition, 8);
+		}
+
+		return false;
 	}
 
 	public void sendToMenu(RegistryFriendlyByteBuf buffer) {

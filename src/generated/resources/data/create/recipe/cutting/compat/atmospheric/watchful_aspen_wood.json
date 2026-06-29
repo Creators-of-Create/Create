@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "atmospheric:watchful_aspen_wood"
+        }
+      ]
+    }
+  ],
+  "processing_time": 50,
+  "results": [
+    {
+      "id": "atmospheric:aspen_wood"
+    }
+  ]
+}

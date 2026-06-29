@@ -5,7 +5,7 @@ import com.simibubi.create.AllItems;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-// TODO: 1.21.7 - Move into api package
+// TODO: 1.21.1+ - Move into api package
 public sealed interface IHaveCustomOverlayIcon permits IHaveGoggleInformation, IHaveHoveringInformation {
 	/**
 	 * This method will be called when looking at a {@link BlockEntity} that implements {@link IHaveGoggleInformation}

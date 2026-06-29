@@ -2,24 +2,19 @@ package com.simibubi.create.infrastructure.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 public class FabulousWarningCommand {
-
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("dismissFabulousWarning")
-				.requires(AllCommands.SOURCE_IS_PLAYER)
-				.executes(ctx -> {
-					ServerPlayer player = ctx.getSource().getPlayerOrException();
-
-					CatnipServices.NETWORK.simpleActionToClient(player, "fabulousWarning", "");
-
-					return Command.SINGLE_SUCCESS;
-				});
-
+			.executes(ctx -> {
+				AllConfigs.client().ignoreFabulousWarning.set(true);
+				ctx.getSource().sendSuccess(() -> Component.literal("Disabled Fabulous graphics warning"), false);
+				return Command.SINGLE_SUCCESS;
+			});
 	}
 }

@@ -29,8 +29,10 @@ public abstract sealed class SimpleRegistryImpl<K, V> implements SimpleRegistry<
 
 		V existing = this.registrations.get(object);
 		if (existing != null) {
-			String message = String.format("Tried to register duplicate values for object %s: old=%s, new=%s", object, existing, value);
-			throw new IllegalArgumentException(message);
+			throw new IllegalArgumentException(String.format(
+				"Tried to register duplicate values for object %s (%s): old=%s, new=%s",
+				object, object.getClass(), existing, value
+			));
 		}
 
 		this.registrations.put(object, value);

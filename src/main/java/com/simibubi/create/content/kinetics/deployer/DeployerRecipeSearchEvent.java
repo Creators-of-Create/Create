@@ -3,7 +3,7 @@ package com.simibubi.create.content.kinetics.deployer;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;

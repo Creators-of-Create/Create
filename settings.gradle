@@ -2,8 +2,18 @@ pluginManagement {
     repositories {
         mavenLocal()
         gradlePluginPortal()
-        maven { url = 'https://maven.neoforged.net/releases' }
+        maven { url = "https://maven.neoforged.net/releases" }
     }
 }
 
-rootProject.name = 'Create'
+if (file("Ponder").exists()) {
+    includeBuild(".")
+    includeBuild("Ponder") {
+        dependencySubstitution {
+            substitute(module("net.createmod.ponder:ponder-neoforge")).using(project(":neoforge"))
+            substitute(module("net.createmod.ponder:ponder-common")).using(project(":common"))
+        }
+    }
+}
+
+rootProject.name = "$mod_id-$minecraft_version"

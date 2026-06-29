@@ -28,6 +28,10 @@ public record ContraptionSeatMappingPacket(int entityId, Map<UUID, Integer> mapp
 	        ContraptionSeatMappingPacket::new
 	);
 
+	public ContraptionSeatMappingPacket {
+		mapping = Map.copyOf(mapping);
+	}
+
 	public ContraptionSeatMappingPacket(int entityID, Map<UUID, Integer> mapping) {
 		this(entityID, mapping, -1);
 	}
@@ -46,8 +50,7 @@ public record ContraptionSeatMappingPacket(int entityId, Map<UUID, Integer> mapp
 						.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
 		}
 
-		contraptionEntity.getContraption()
-			.setSeatMapping(new HashMap<>(mapping));
+		contraptionEntity.getContraption().setSeatMapping(mapping);
 	}
 
 	@Override

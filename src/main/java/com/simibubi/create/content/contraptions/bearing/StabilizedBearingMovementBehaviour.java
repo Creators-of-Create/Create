@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.bearing;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.joml.Quaternionf;
 

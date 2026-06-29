@@ -5,9 +5,9 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.Lists;
 import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 
 import net.createmod.catnip.data.Pair;
 import net.minecraft.ChatFormatting;
@@ -37,13 +37,16 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.DataComponentFluidIngredient;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public class PotionFluidHandler {
 	private static final Component NO_EFFECT = Component.translatable("effect.none").withStyle(ChatFormatting.GRAY);
 
 	public static boolean isPotionItem(ItemStack stack) {
-		return stack.getItem() instanceof PotionItem && !(stack.getCraftingRemainingItem()
-			.getItem() instanceof BucketItem);
+		return stack.getItem() instanceof PotionItem
+			&& !(stack.getCraftingRemainingItem().getItem() instanceof BucketItem)
+			&& !AllItemTags.NOT_POTION.matches(stack);
 	}
 
 	public static Pair<FluidStack, ItemStack> emptyPotion(ItemStack stack, boolean simulate) {
@@ -53,9 +56,10 @@ public class PotionFluidHandler {
 		return Pair.of(fluid, new ItemStack(Items.GLASS_BOTTLE));
 	}
 
-	public static FluidIngredient potionIngredient(Holder<Potion> potion, int amount) {
-		return FluidIngredient.fromFluidStack(FluidHelper.copyStackWithAmount(PotionFluidHandler
-			.getFluidFromPotionItem(PotionContents.createItemStack(Items.POTION, potion)), amount));
+	public static SizedFluidIngredient potionIngredient(Holder<Potion> potion, int amount) {
+		FluidStack stack = FluidHelper.copyStackWithAmount(PotionFluidHandler
+			.getFluidFromPotionItem(PotionContents.createItemStack(Items.POTION, potion)), amount);
+		return new SizedFluidIngredient(DataComponentFluidIngredient.of(false, stack), amount);
 	}
 
 	public static FluidStack getFluidFromPotionItem(ItemStack stack) {

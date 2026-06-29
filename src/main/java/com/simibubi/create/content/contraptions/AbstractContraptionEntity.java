@@ -8,11 +8,10 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
@@ -27,7 +26,6 @@ import com.simibubi.create.content.contraptions.data.ContraptionSyncLimiting;
 import com.simibubi.create.content.contraptions.elevator.ElevatorContraption;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.mounted.MountedContraption;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderInfo;
 import com.simibubi.create.content.contraptions.sync.ContraptionSeatMappingPacket;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
@@ -37,7 +35,6 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.mixin.accessor.ServerLevelAccessor;
 
-import dev.engine_room.flywheel.api.backend.BackendManager;
 import io.netty.handler.codec.DecoderException;
 import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
@@ -330,6 +327,15 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		return true;
 	}
 
+	public boolean canInteractWithBlock(Player player, BlockPos localPos, double distance) {
+		return canInteractWithBlock(player, Vec3.atCenterOf(localPos), distance);
+	}
+
+	public boolean canInteractWithBlock(Player player, Vec3 localPos, double distance) {
+		BlockPos pos = BlockPos.containing(toGlobalVector(localPos, 0));
+		return player.canInteractWithBlock(pos, distance);
+	}
+
 	public Vec3 toGlobalVector(Vec3 localVec, float partialTicks) {
 		return toGlobalVector(localVec, partialTicks, false);
 	}
@@ -380,10 +386,6 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		contraption.tickStorage(this);
 		tickContraption();
 		super.tick();
-
-		if (level().isClientSide()) {
-			AbstractContraptionEntityClient.invalidate(contraption);
-		}
 
 		if (!(level() instanceof ServerLevelAccessor sl))
 			return;
@@ -603,10 +605,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		CompoundTag compound = new CompoundTag();
 		writeAdditional(compound, registryFriendlyByteBuf.registryAccess(), true);
 
-		if (!CatnipServices.PLATFORM.getLoader().isNeoForge() && ContraptionSyncLimiting.isTooLargeForSync(compound))
-			compound = null; // don't sync contraption data
-
-		registryFriendlyByteBuf.writeNbt(compound);
+		ContraptionSyncLimiting.writeSafe(compound, registryFriendlyByteBuf);
 	}
 
 	@Override
@@ -703,8 +702,6 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public void remove(RemovalReason p_146834_) {
 		if (!level().isClientSide && !isRemoved() && contraption != null && !skipActorStop)
 			contraption.stop(level());
-		if (contraption != null)
-			contraption.onEntityRemoved(this);
 		super.remove(p_146834_);
 	}
 
@@ -768,7 +765,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		StructureBlockInfo info = contraption.blocks.get(localPos);
 		contraption.blocks.put(localPos, new StructureBlockInfo(info.pos(), newState, info.nbt()));
 		if (info.state() != newState && !(newState.getBlock() instanceof SlidingDoorBlock))
-			contraption.deferInvalidate = true;
+			contraption.resetClientContraption();
 		contraption.invalidateColliders();
 	}
 
@@ -945,15 +942,5 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	public boolean isPrevPosInvalid() {
 		return prevPosInvalid;
-	}
-
-	private static class AbstractContraptionEntityClient {
-		private static void invalidate(Contraption contraption) {
-			// The visual will handle this with flywheel on.
-			if (!contraption.deferInvalidate || BackendManager.isBackendOn())
-				return;
-			contraption.deferInvalidate = false;
-			ContraptionRenderInfo.invalidate(contraption);
-		}
 	}
 }

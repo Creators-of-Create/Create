@@ -62,6 +62,7 @@ public class CreateDatagen {
 		generator.addProvider(event.includeServer(), new VanillaHatOffsetGenerator(output, lookupProvider));
 		generator.addProvider(event.includeServer(), new CuriosDataGenerator(output, lookupProvider, existingFileHelper));
 		generator.addProvider(event.includeServer(), new CreateEnchantmentTagsProvider(output, lookupProvider, existingFileHelper));
+		generator.addProvider(event.includeClient(), new CreateWikiBlockInfoProvider(output));
 
 		if (event.includeServer()) {
 			CreateRecipeProvider.registerAllProcessing(generator, output, lookupProvider);
@@ -80,6 +81,7 @@ public class CreateDatagen {
 			AllSoundEvents.provideLang(langConsumer);
 			AllKeys.provideLang(langConsumer);
 			providePonderLang(langConsumer);
+			new TagLangGenerator(langConsumer).generate();
 		});
 	}
 

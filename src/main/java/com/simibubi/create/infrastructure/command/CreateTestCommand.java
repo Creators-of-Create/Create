@@ -19,35 +19,35 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.schematics.SchematicExport;
 import com.simibubi.create.content.schematics.SchematicExport.SchematicExportResult;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
+import com.simibubi.create.foundation.utility.CreatePaths;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.neoforged.fml.loading.FMLPaths;
 
 /**
  * This command allows for quick exporting of GameTests.
  * It is only registered in a client development environment. It is not safe in production or multiplayer.
  */
 public class CreateTestCommand {
-	private static final Path gametests = FMLPaths.GAMEDIR.get()
-			.getParent()
-			.resolve("src/main/resources/data/create/structure/gametest")
-			.toAbsolutePath();
+	private static final Path gametests = CreatePaths.GAME_DIR
+		.getParent()
+		.resolve("src/main/resources/data/create/structure/gametest")
+		.toAbsolutePath();
 
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return literal("test")
-				.then(literal("export")
-						.then(argument("path", StringArgumentType.greedyString())
-								.suggests(CreateTestCommand::getSuggestions)
-								.executes(ctx -> handleExport(
-										ctx.getSource(),
-										ctx.getSource().getLevel(),
-										StringArgumentType.getString(ctx, "path")
-								))
-						)
-				);
+			.then(literal("export")
+				.then(argument("path", StringArgumentType.greedyString())
+					.suggests(CreateTestCommand::getSuggestions)
+					.executes(ctx -> handleExport(
+						ctx.getSource(),
+						ctx.getSource().getLevel(),
+						StringArgumentType.getString(ctx, "path")
+					))
+				)
+			);
 	}
 
 	private static int handleExport(CommandSourceStack source, ServerLevel level, String path) {
@@ -57,13 +57,12 @@ public class CreateTestCommand {
 			return 0;
 		}
 		SchematicExportResult result = SchematicExport.saveSchematic(
-				gametests, path, true,
-				level, handler.firstPos, handler.secondPos
+			gametests, path, true,
+			level, handler.firstPos, handler.secondPos
 		);
 		if (result == null) {
-            source.sendFailure(Component.literal("Failed to export, check logs").withStyle(ChatFormatting.RED));
-        }
-		else {
+			source.sendFailure(Component.literal("Failed to export, check logs").withStyle(ChatFormatting.RED));
+		} else {
 			sendSuccess(source, "Successfully exported test!", ChatFormatting.GREEN);
 			sendSuccess(source, "Overwritten: " + result.overwritten(), ChatFormatting.AQUA);
 			sendSuccess(source, "File: " + result.file(), ChatFormatting.GRAY);
@@ -73,8 +72,8 @@ public class CreateTestCommand {
 
 	private static void sendSuccess(CommandSourceStack source, String text, ChatFormatting color) {
 		source.sendSuccess(() -> {
-            return Component.literal(text).withStyle(color);
-        }, true);
+			return Component.literal(text).withStyle(color);
+		}, true);
 	}
 
 	// find existing tests and folders for autofill
@@ -93,14 +92,14 @@ public class CreateTestCommand {
 	private static CompletableFuture<Suggestions> findInDir(Path dir, SuggestionsBuilder builder) {
 		try (Stream<Path> paths = Files.list(dir)) {
 			paths.filter(p -> Files.isDirectory(p) || p.toString().endsWith(".nbt"))
-					.forEach(path -> {
-						String file = path.toString()
-								.replaceAll("\\\\", "/")
-								.substring(gametests.toString().length() + 1);
-						if (Files.isDirectory(path))
-							file += "/";
-						builder.suggest(file);
-					});
+				.forEach(path -> {
+					String file = path.toString()
+						.replaceAll("\\\\", "/")
+						.substring(gametests.toString().length() + 1);
+					if (Files.isDirectory(path))
+						file += "/";
+					builder.suggest(file);
+				});
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

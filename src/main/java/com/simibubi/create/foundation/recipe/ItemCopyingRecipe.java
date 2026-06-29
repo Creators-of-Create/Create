@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.recipe;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllRecipeTypes;
 
@@ -17,26 +17,23 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 
 public class ItemCopyingRecipe extends CustomRecipe {
-
-	public static interface SupportsItemCopying {
-
-		public default ItemStack createCopy(ItemStack original, int count) {
+	public interface SupportsItemCopying {
+		default ItemStack createCopy(ItemStack original, int count) {
 			ItemStack copyWithCount = original.copyWithCount(count);
 			copyWithCount.set(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
 			copyWithCount.remove(DataComponents.STORED_ENCHANTMENTS);
 			return copyWithCount;
 		}
 
-		public default boolean canCopyFromItem(ItemStack item) {
+		default boolean canCopyFromItem(ItemStack item) {
 			return item.has(getComponentType());
 		}
 
-		public default boolean canCopyToItem(ItemStack item) {
+		default boolean canCopyToItem(ItemStack item) {
 			return !item.has(getComponentType());
 		}
-		
-		public DataComponentType<?> getComponentType();
 
+		DataComponentType<?> getComponentType();
 	}
 
 	public ItemCopyingRecipe(CraftingBookCategory category) {
@@ -70,23 +67,31 @@ public class ItemCopyingRecipe extends CustomRecipe {
 			ItemStack itemInSlot = input.getItem(j);
 			if (itemInSlot.isEmpty())
 				continue;
-			if (!itemToCopy.isEmpty() && itemToCopy.getItem() != itemInSlot.getItem())
+			if (!(itemInSlot.getItem() instanceof SupportsItemCopying sic))
+				return null;
+			if (!sic.canCopyFromItem(itemInSlot))
+				continue;
+			itemToCopy = itemInSlot;
+			break;
+		}
+		if (itemToCopy.isEmpty())
+			return null;
+
+		for (int j = 0; j < input.size(); ++j) {
+			ItemStack itemInSlot = input.getItem(j);
+			if (itemInSlot.isEmpty() || itemInSlot == itemToCopy)
+				continue;
+			if (itemToCopy.getItem() != itemInSlot.getItem())
 				return null;
 			if (!(itemInSlot.getItem() instanceof SupportsItemCopying sic))
-				continue;
-
-			if (sic.canCopyFromItem(itemInSlot)) {
-				if (!itemToCopy.isEmpty())
-					return null;
-				itemToCopy = itemInSlot;
-				continue;
-			}
-
-			if (sic.canCopyToItem(itemInSlot))
-				copyTargets++;
+				return null;
+			if (sic.canCopyFromItem(itemInSlot))
+				return null;
+			if (!sic.canCopyToItem(itemInSlot))
+				return null;
+			copyTargets++;
 		}
-
-		if (itemToCopy.isEmpty() || copyTargets == 0)
+		if (copyTargets == 0)
 			return null;
 
 		return IntAttached.with(copyTargets, itemToCopy);

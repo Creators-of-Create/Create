@@ -17,6 +17,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Clearable;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +29,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class CloneCommand {
-
 	private static final Dynamic2CommandExceptionType CLONE_TOO_BIG_EXCEPTION = new Dynamic2CommandExceptionType(
 		(arg1, arg2) -> Component.translatable("commands.clone.toobig", arg1, arg2));
 
@@ -45,29 +46,24 @@ public class CloneCommand {
 							BlockPosArgument.getLoadedBlockPos(ctx, "end"),
 							BlockPosArgument.getLoadedBlockPos(ctx, "destination"), true)))))
 			.executes(ctx -> {
-				ctx.getSource()
-					.sendSuccess(() -> {
-                                return Component.literal(
-                                    "Clones all blocks as well as super glue from the specified area to the target destination");
-                            },
-						true);
+				ctx.getSource().sendSuccess(() -> Component.literal("Clones all blocks as well as super glue from the specified area to the target destination"), true);
 
 				return Command.SINGLE_SUCCESS;
 			});
-
 	}
 
 	private static int doClone(CommandSourceStack source, BlockPos begin, BlockPos end, BlockPos destination,
-		boolean cloneBlocks) throws CommandSyntaxException {
+							   boolean cloneBlocks) throws CommandSyntaxException {
 		BoundingBox sourceArea = BoundingBox.fromCorners(begin, end);
 		BlockPos destinationEnd = destination.offset(sourceArea.getLength());
 		BoundingBox destinationArea = BoundingBox.fromCorners(destination, destinationEnd);
 
-		int i = sourceArea.getXSpan() * sourceArea.getYSpan() * sourceArea.getZSpan();
-		if (i > 32768)
-			throw CLONE_TOO_BIG_EXCEPTION.create(32768, i);
-
 		ServerLevel world = source.getLevel();
+
+		int i = sourceArea.getXSpan() * sourceArea.getYSpan() * sourceArea.getZSpan();
+		int limit = world.getGameRules().getInt(GameRules.RULE_COMMAND_MODIFICATION_BLOCK_LIMIT);
+		if (i > limit)
+			throw CLONE_TOO_BIG_EXCEPTION.create(limit, i);
 
 		if (!world.hasChunksAt(begin, end) || !world.hasChunksAt(destination, destinationEnd))
 			throw BlockPosArgument.ERROR_NOT_LOADED.create();
@@ -80,12 +76,12 @@ public class CloneCommand {
 
 		if (cloneBlocks)
 			source.sendSuccess(() -> {
-                return Component.literal("Successfully cloned " + blockPastes + " Blocks");
-            }, true);
+				return Component.literal("Successfully cloned " + blockPastes + " Blocks");
+			}, true);
 
 		source.sendSuccess(() -> {
-            return Component.literal("Successfully applied glue " + gluePastes + " times");
-        }, true);
+			return Component.literal("Successfully applied glue " + gluePastes + " times");
+		}, true);
 		return blockPastes + gluePastes;
 
 	}
@@ -138,11 +134,11 @@ public class CloneCommand {
 		for (StructureTemplate.StructureBlockInfo info : reverse) {
 			BlockEntity be = world.getBlockEntity(info.pos());
 			Clearable.tryClear(be);
-			world.setBlock(info.pos(), Blocks.BARRIER.defaultBlockState(), 2);
+			world.setBlock(info.pos(), Blocks.BARRIER.defaultBlockState(), Block.UPDATE_CLIENTS);
 		}
 
 		for (StructureTemplate.StructureBlockInfo info : allBlocks) {
-			if (world.setBlock(info.pos(), info.state(), 2))
+			if (world.setBlock(info.pos(), info.state(), Block.UPDATE_CLIENTS))
 				blockPastes++;
 		}
 
@@ -158,7 +154,7 @@ public class CloneCommand {
 
 			// idk why the state is set twice for a be, but its done like this in the
 			// original clone command
-			world.setBlock(info.pos(), info.state(), 2);
+			world.setBlock(info.pos(), info.state(), Block.UPDATE_CLIENTS);
 		}
 
 		for (StructureTemplate.StructureBlockInfo info : reverse) {

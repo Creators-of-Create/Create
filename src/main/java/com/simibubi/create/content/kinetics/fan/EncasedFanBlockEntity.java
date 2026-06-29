@@ -2,7 +2,7 @@ package com.simibubi.create.content.kinetics.fan;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.logistics.chute.ChuteBlockEntity;

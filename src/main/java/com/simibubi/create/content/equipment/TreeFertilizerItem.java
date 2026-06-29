@@ -68,6 +68,7 @@ public class TreeFertilizerItem extends Item {
 						.isEmpty())
 					continue;
 
+				context.getLevel().destroyBlock(actualPos, true);
 				context.getLevel()
 					.setBlockAndUpdate(actualPos, newState);
 			}

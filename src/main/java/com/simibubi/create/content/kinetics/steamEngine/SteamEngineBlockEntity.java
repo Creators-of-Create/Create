@@ -3,7 +3,7 @@ package com.simibubi.create.content.kinetics.steamEngine;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;

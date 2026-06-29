@@ -43,10 +43,32 @@ public class SignalVisual extends AbstractBlockEntityVisual<SignalBlockEntity> i
 		signalOverlay = ctx.instancerProvider()
 			.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.TRACK_SIGNAL_OVERLAY))
 			.createInstance();
+
+		setupVisual();
 	}
 
 	@Override
 	public void tick(Context context) {
+		setupVisual();
+	}
+
+	@Override
+	public void updateLight(float partialTick) {
+		relight(signalLight, signalOverlay);
+	}
+
+	@Override
+	protected void _delete() {
+		signalLight.delete();
+		signalOverlay.delete();
+	}
+
+	@Override
+	public void collectCrumblingInstances(Consumer<@Nullable Instance> consumer) {
+		consumer.accept(signalLight);
+	}
+
+	private void setupVisual() {
 		{
 			SignalState signalState = blockEntity.getState();
 
@@ -81,43 +103,36 @@ public class SignalVisual extends AbstractBlockEntityVisual<SignalBlockEntity> i
 			Block block = trackState.getBlock();
 
 			if (!(block instanceof ITrackBlock trackBlock) || overlayState == OverlayState.SKIP) {
+				previousOverlayState = null;
 				signalOverlay.setZeroTransform()
 					.setChanged();
 				return;
 			}
 
-			signalOverlay.setIdentityTransform()
-				.translate(targetPosition);
-
-			RenderedTrackOverlayType type =
-				overlayState == OverlayState.DUAL ? RenderedTrackOverlayType.DUAL_SIGNAL : RenderedTrackOverlayType.SIGNAL;
-			PartialModel partial = trackBlock.prepareTrackOverlay(signalOverlay, level, targetPosition, trackState, target.getTargetBezier(), target.getTargetDirection(), type);
-
 			if (overlayState != previousOverlayState) {
+				previousOverlayState = overlayState;
+
+				PartialModel partial;
+				RenderedTrackOverlayType type;
+				if (overlayState == OverlayState.DUAL) {
+					type = RenderedTrackOverlayType.DUAL_SIGNAL;
+					partial = AllPartialModels.TRACK_SIGNAL_DUAL_OVERLAY;
+				} else {
+					type = RenderedTrackOverlayType.SIGNAL;
+					partial = AllPartialModels.TRACK_SIGNAL_OVERLAY;
+				}
+
 				instancerProvider()
 					.instancer(InstanceTypes.TRANSFORMED, Models.partial(partial))
 					.stealInstance(signalOverlay);
+
+				signalOverlay.setIdentityTransform()
+					.translate(targetPosition.subtract(renderOrigin()));
+
+				trackBlock.prepareTrackOverlay(signalOverlay, level, targetPosition, trackState, target.getTargetBezier(), target.getTargetDirection(), type);
+
+				signalOverlay.setChanged();
 			}
-
-			signalOverlay.setChanged();
-
-			previousOverlayState = overlayState;
 		}
-	}
-
-	@Override
-	public void updateLight(float partialTick) {
-		relight(signalLight, signalOverlay);
-	}
-
-	@Override
-	protected void _delete() {
-		signalLight.delete();
-		signalOverlay.delete();
-	}
-
-	@Override
-	public void collectCrumblingInstances(Consumer<@Nullable Instance> consumer) {
-		consumer.accept(signalLight);
 	}
 }

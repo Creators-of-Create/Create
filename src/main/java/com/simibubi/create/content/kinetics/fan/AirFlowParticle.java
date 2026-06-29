@@ -1,7 +1,7 @@
 package com.simibubi.create.content.kinetics.fan;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 
@@ -41,7 +41,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		setAlpha(.25f);
 	}
 
-	@Nonnull
+	@NotNull
 	public ParticleRenderType getRenderType() {
 		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}

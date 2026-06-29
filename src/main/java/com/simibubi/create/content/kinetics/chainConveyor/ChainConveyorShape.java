@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.chainConveyor;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

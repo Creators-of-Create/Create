@@ -165,9 +165,9 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 	}
 
 	public void dropController(BlockState state) {
-		Entity playerEntity = ((ServerLevel) level).getEntity(user);
-		if (playerEntity instanceof Player)
-			stopUsing((Player) playerEntity);
+		Entity entity = ((ServerLevel) level).getEntity(user);
+		if (entity instanceof Player player)
+			stopUsing(player);
 
 		Direction dir = state.getValue(LecternControllerBlock.FACING);
 		double x = worldPosition.getX() + 0.5 + 0.25 * dir.getStepX();
@@ -182,7 +182,7 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 	public static boolean playerInRange(Player player, Level world, BlockPos pos) {
 		//double modifier = world.isRemote ? 0 : 1.0;
 		double reach = 0.4 * player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE);// + modifier;
-		return player.distanceToSqr(Vec3.atCenterOf(pos)) < reach * reach;
+		return player.getEyePosition().distanceToSqr(Vec3.atCenterOf(pos)) < reach * reach;
 	}
 
 	private ItemStack createLinkedController() {

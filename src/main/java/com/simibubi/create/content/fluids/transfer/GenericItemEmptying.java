@@ -12,6 +12,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
+
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
@@ -38,17 +39,17 @@ public class GenericItemEmptying {
 		return false;
 	}
 
-	public static Pair<FluidStack, ItemStack> emptyItem(Level world, ItemStack stack, boolean simulate) {
+	public static Pair<FluidStack, ItemStack> emptyItem(Level level, ItemStack stack, boolean simulate) {
 		FluidStack resultingFluid = FluidStack.EMPTY;
 		ItemStack resultingItem = ItemStack.EMPTY;
 
 		if (PotionFluidHandler.isPotionItem(stack))
 			return PotionFluidHandler.emptyPotion(stack, simulate);
 
-		Optional<RecipeHolder<Recipe<SingleRecipeInput>>> recipe = AllRecipeTypes.EMPTYING.find(new SingleRecipeInput(stack), world);
+		Optional<RecipeHolder<Recipe<SingleRecipeInput>>> recipe = AllRecipeTypes.EMPTYING.find(new SingleRecipeInput(stack), level);
 		if (recipe.isPresent()) {
 			EmptyingRecipe emptyingRecipe = (EmptyingRecipe) recipe.get().value();
-			List<ItemStack> results = emptyingRecipe.rollResults();
+			List<ItemStack> results = emptyingRecipe.rollResults(level.random);
 			if (!simulate)
 				stack.shrink(1);
 			resultingItem = results.isEmpty() ? ItemStack.EMPTY : results.get(0);

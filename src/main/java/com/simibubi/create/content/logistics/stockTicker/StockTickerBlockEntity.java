@@ -8,11 +8,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import javax.annotation.Nullable;
-
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.filter.FilterItem;
@@ -21,10 +22,12 @@ import com.simibubi.create.content.logistics.packager.IdentifiedInventory;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour.RequestType;
 import com.simibubi.create.content.logistics.packagerLink.WiFiParticle;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import dan200.computercraft.api.peripheral.PeripheralCapability;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.platform.CatnipServices;
@@ -36,6 +39,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -46,13 +50,15 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 
-public class StockTickerBlockEntity extends StockCheckingBlockEntity implements IHaveHoveringInformation {
+public class StockTickerBlockEntity extends StockCheckingBlockEntity implements IHaveHoveringInformation, Clearable {
+	public AbstractComputerBehaviour computerBehaviour;
 
 	// Player-interface Feature
 	protected List<List<BigItemStack>> lastClientsideStockSnapshot;
@@ -81,11 +87,35 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 			AllBlockEntityTypes.STOCK_TICKER.get(),
 			(be, context) -> be.receivedPayments
 		);
+
+		if (Mods.COMPUTERCRAFT.isLoaded()) {
+			event.registerBlockEntity(
+				PeripheralCapability.get(),
+				AllBlockEntityTypes.STOCK_TICKER.get(),
+				(be, context) -> be.computerBehaviour.getPeripheralCapability()
+			);
+		}
+	}
+
+	@Override
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 	public void refreshClientStockSnapshot() {
 		ticksSinceLastUpdate = 0;
 		CatnipServices.NETWORK.sendToServer(new LogisticalStockRequestPacket(worldPosition));
+	}
+
+	public IItemHandler getReceivedPaymentsHandler() {
+		return receivedPayments;
 	}
 
 	public List<List<BigItemStack>> getClientStockSnapshot() {
@@ -242,6 +272,12 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 	}
 
 	@Override
+	public void clearContent() {
+		categories.clear();
+		receivedPayments.clearContent();
+	}
+
+	@Override
 	public void destroy() {
 		ItemHelper.dropContents(level, worldPosition, receivedPayments);
 		for (ItemStack filter : categories)
@@ -258,7 +294,6 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 	}
 
 	public class CategoryMenuProvider implements MenuProvider {
-
 		@Override
 		public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
 			return StockKeeperCategoryMenu.create(pContainerId, pPlayerInventory, StockTickerBlockEntity.this);
@@ -268,11 +303,9 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 		public Component getDisplayName() {
 			return Component.empty();
 		}
-
 	}
 
 	public class RequestMenuProvider implements MenuProvider {
-
 		@Override
 		public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
 			return StockKeeperRequestMenu.create(pContainerId, pPlayerInventory, StockTickerBlockEntity.this);
@@ -282,7 +315,5 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 		public Component getDisplayName() {
 			return Component.empty();
 		}
-
 	}
-
 }

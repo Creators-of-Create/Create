@@ -33,6 +33,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+
 import net.neoforged.neoforge.capabilities.Capabilities;
 
 // TODO - Documentation
@@ -60,7 +61,7 @@ public class AllItemAttributeTypes {
 		SMELTABLE = singleton("smeltable", (s, w) -> testRecipe(s, w, RecipeType.SMELTING)),
 		SMOKABLE = singleton("smokable", (s, w) -> testRecipe(s, w, RecipeType.SMOKING)),
 		BLASTABLE = singleton("blastable", (s, w) -> testRecipe(s, w, RecipeType.BLASTING)),
-		COMPOSTABLE = singleton("compostable", s -> ComposterBlock.COMPOSTABLES.containsKey(s.getItem())),
+		COMPOSTABLE = singleton("compostable", s -> ComposterBlock.getValue(s) > 0),
 
 	IN_TAG = register("in_tag", new InTagAttribute.Type()),
 		IN_ITEM_GROUP = register("in_item_group", new InItemGroupAttribute.Type()),
@@ -102,5 +103,5 @@ public class AllItemAttributeTypes {
 
 	public static void init() {
 	}
-	
+
 }

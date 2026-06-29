@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.actors.roller.RollerBlockEntity.RollingMode;
@@ -178,7 +178,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		BlockHelper.destroyBlock(context.world, breakingPos, 1f, stack -> {
 			if (noHarvest || context.world.random.nextBoolean())
 				return;
-			this.dropItem(context, stack);
+			this.collectOrDropItem(context, stack);
 		});
 
 		super.destroyBlock(context, breakingPos);

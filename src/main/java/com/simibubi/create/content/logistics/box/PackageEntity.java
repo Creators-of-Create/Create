@@ -4,7 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllEntityTypes;
@@ -45,6 +45,7 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -291,7 +292,7 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 		super.onInsideBlock(state);
 		if (!isAlive())
 			return;
-		if (state.getBlock() == Blocks.WATER) {
+		if (state.getBlock() == Blocks.WATER || (state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED))) {
 			destroy(damageSources().drown());
 			remove(RemovalReason.KILLED);
 		}

@@ -4,6 +4,8 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 import java.util.function.Predicate;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
@@ -24,7 +26,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -48,8 +49,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import org.jetbrains.annotations.NotNull;
 
 public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 	implements SimpleWaterloggedBlock, IWrenchable, IBE<SteamEngineBlockEntity> {
@@ -113,7 +112,7 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 		BlockPos shaftPos = getShaftPos(pState, pPos);
 		BlockState shaftState = pLevel.getBlockState(shaftPos);
 		if (isShaftValid(pState, shaftState))
-			pLevel.setBlock(shaftPos, PoweredShaftBlock.getEquivalent(shaftState), 3);
+			pLevel.setBlock(shaftPos, PoweredShaftBlock.getEquivalent(shaftState), Block.UPDATE_ALL);
 	}
 
 	@Override

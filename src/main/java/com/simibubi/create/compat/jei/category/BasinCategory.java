@@ -13,14 +13,12 @@ import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.createmod.catnip.data.Pair;
@@ -30,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 @ParametersAreNonnullByDefault
 public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
@@ -63,7 +62,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 					.addItemStacks(stacks);
 			i++;
 		}
-		for (FluidIngredient fluidIngredient : recipe.getFluidIngredients()) {
+		for (SizedFluidIngredient fluidIngredient : recipe.getFluidIngredients()) {
 			int x = 17 + xOffset + (i % 3) * 19;
 			int y = 51 - (i / 3) * 19;
 			addFluidSlot(builder, x, y, fluidIngredient);

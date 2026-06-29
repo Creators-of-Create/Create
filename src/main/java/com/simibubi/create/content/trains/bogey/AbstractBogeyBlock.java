@@ -7,20 +7,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
-import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
-
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
-
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.trains.entity.Carriage;
@@ -33,6 +29,7 @@ import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;

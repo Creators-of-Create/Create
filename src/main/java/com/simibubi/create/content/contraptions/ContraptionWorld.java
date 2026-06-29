@@ -11,14 +11,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public class ContraptionWorld extends WrappedLevel {
-    final Contraption contraption;
+	final Contraption contraption;
 	private final int minY;
 	private final int height;
 
 	public ContraptionWorld(Level world, Contraption contraption) {
-        super(world);
+		super(world);
 
-        this.contraption = contraption;
+		this.contraption = contraption;
 
 		// Include 1 block above/below contraption height range to avoid certain edge-case Starlight crashes with
 		// downward-facing mechanical pistons.
@@ -32,19 +32,19 @@ public class ContraptionWorld extends WrappedLevel {
 	}
 
 	@Override
-    public BlockState getBlockState(BlockPos pos) {
-        StructureTemplate.StructureBlockInfo blockInfo = contraption.getBlocks().get(pos);
+	public BlockState getBlockState(BlockPos pos) {
+		StructureTemplate.StructureBlockInfo blockInfo = contraption.getBlocks().get(pos);
 
-        if (blockInfo != null)
-            return blockInfo.state();
+		if (blockInfo != null)
+			return blockInfo.state();
 
-        return Blocks.AIR.defaultBlockState();
-    }
+		return Blocks.AIR.defaultBlockState();
+	}
 
-    @Override
-    public void playLocalSound(double x, double y, double z, SoundEvent sound, SoundSource category, float volume, float pitch, boolean distanceDelay) {
-        level.playLocalSound(x, y, z, sound, category, volume, pitch, distanceDelay);
-    }
+	@Override
+	public void playLocalSound(double x, double y, double z, SoundEvent sound, SoundSource category, float volume, float pitch, boolean distanceDelay) {
+		level.playLocalSound(x, y, z, sound, category, volume, pitch, distanceDelay);
+	}
 
 	// Ensure that we provide accurate information about ContraptionWorld height to mods (such as Starlight) which
 	// expect Levels to only have blocks located in chunks within their height range.

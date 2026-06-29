@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.BlockHitResult;
 
-// TODO: 1.21.7 - Move into api package
+// TODO: 1.21.1+ - Move into api package
 public interface PotatoProjectileBlockHitAction {
 	Codec<PotatoProjectileBlockHitAction> CODEC = CreateBuiltInRegistries.POTATO_PROJECTILE_BLOCK_HIT_ACTION.byNameCodec()
 		.dispatch(PotatoProjectileBlockHitAction::codec, Function.identity());

@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllAttachmentTypes;
 import com.simibubi.create.AllItems;

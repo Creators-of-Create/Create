@@ -4,10 +4,10 @@ import static net.minecraft.commands.Commands.literal;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.Create;
 import com.simibubi.create.infrastructure.debugInfo.ServerDebugInfoPacket;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 

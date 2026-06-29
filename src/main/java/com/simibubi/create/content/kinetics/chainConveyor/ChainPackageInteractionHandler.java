@@ -2,13 +2,11 @@ package com.simibubi.create.content.kinetics.chainConveyor;
 
 import java.util.List;
 
-import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.world.item.ItemStack;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -33,7 +31,7 @@ public class ChainPackageInteractionHandler {
 					.inflate(0.45);
 
 				double range = mc.player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE) + 1;
-				Vec3 from = RaycastHelper.getTraceOrigin(mc.player);
+				Vec3 from = mc.player.getEyePosition();
 				Vec3 to = RaycastHelper.getTraceTarget(mc.player, range, from);
 
 				if (bounds.clip(from, to)

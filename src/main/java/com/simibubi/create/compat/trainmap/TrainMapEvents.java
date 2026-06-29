@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.simibubi.create.compat.Mods;
 
 import net.minecraft.client.Minecraft;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -25,6 +26,8 @@ public class TrainMapEvents {
 			FTBChunksTrainMap.tick();
 		if (Mods.JOURNEYMAP.isLoaded())
 			JourneyTrainMap.tick();
+		if (Mods.XAEROWORLDMAP.isLoaded())
+			XaeroTrainMap.tick();
 	}
 
 	@SubscribeEvent
@@ -36,6 +39,8 @@ public class TrainMapEvents {
 			FTBChunksTrainMap.mouseClick(event);
 		if (Mods.JOURNEYMAP.isLoaded())
 			JourneyTrainMap.mouseClick(event);
+		if (Mods.XAEROWORLDMAP.isLoaded())
+			XaeroTrainMap.mouseClick(event);
 	}
 
 	@SubscribeEvent
@@ -49,5 +54,4 @@ public class TrainMapEvents {
 		if (Mods.FTBCHUNKS.isLoaded())
 			FTBChunksTrainMap.renderGui(event);
 	}
-
 }

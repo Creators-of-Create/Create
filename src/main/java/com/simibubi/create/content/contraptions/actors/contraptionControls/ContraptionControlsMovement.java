@@ -64,8 +64,10 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 			return;
 
 		Contraption contraption = ctx.contraption;
+		var blockEntity = contraption.getBlockEntityClientSide(ctx.localPos);
+
 		if (!(contraption instanceof ElevatorContraption ec)) {
-			if (!(contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe))
+			if (!(blockEntity instanceof ContraptionControlsBlockEntity cbe))
 				return;
 			ItemStack filter = getFilter(ctx);
 			int value =
@@ -83,7 +85,7 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 		ElevatorFloorSelection efs = (ElevatorFloorSelection) ctx.temporaryData;
 		tickFloorSelection(efs, ec);
 
-		if (!(contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe))
+		if (!(blockEntity instanceof ContraptionControlsBlockEntity cbe))
 			return;
 
 		cbe.tickAnimations();

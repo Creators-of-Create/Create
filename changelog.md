@@ -1,4 +1,254 @@
 ------------------------------------------------------
+Create 6.0.10
+------------------------------------------------------
+
+#### Gameplay Changes
+
+- Improve Recipe Viewer Sync in Stock Keepers and Allow selecting from 4 different modes:
+    - Disabled
+    - Sync only from Recipe Viewers
+    - Sync only to Recipe Viewers
+    - Sync from and to Recipe Viewers
+- Add keybinds for ctrl, shift and alt modifiers #10187
+
+#### Optimizations
+
+- Further optimize contraption collision
+- Optimize GlobalRailwayManager#playerLogin
+
+#### Bug Fixes
+
+- Fix warnings being logged for missing classes that create has mixins into
+- Fix backtanks not having the enchantment glint when worn #9792
+- Fix spouts not stopping items when filling them when the spout is also actively being filled #9621
+- Fix stock links on same storage (for example double chests) reporting the item amounts twice #9627
+- Fix older flywheel being loaded when a mod like vanillin is installed
+- Fix turntables not rotating players smoothly #8160
+- Fix rare crash with COntraptionSeatMappingPacket #7919
+- Fix tanks not updating correctly in specific cases #8535
+- Fix steam engines not filling with water if expanded after engines have been placed already #9342
+- Fix enchanted items disappearing in contraption storages #9788
+- Fix adjustable chain gearshifts causing a crash in specific setups #9046
+- Fix postbox duplication if someone breaks it while it is still being accessed #8759
+- Fix tools with efficiency not being faster when used in deployers #9615
+- Fix waxed copper tiles and shingles not having the correct stonecutting recipes #9510
+- Fix crash when a CC: Tweaked computer is attached to a train station #9843
+- Limit the maxAssemblyLength to 512 and maxBogeyCount to 200 to prevent issues such as #9626
+- Fix VirtualRenderWorld not marking block entities as removed #9821
+- Fix rendered items in stockkeeper screens not having the correct count on the item itself #9403
+- Fix dough being tagged incorrectly #9831
+- Fix players using lectern controllers with their feet height rather than their eye height #9922
+- Fix the count of filtering behaviours being set to 1 when the item has been removed #9777
+- Fix schedules not stacking after copy #9886
+- Fix mechanical mixers that are mixing at a slower than required speed still playing an animation and continuing to mix #6249
+- Fix threshold switches detecting the wrong amount of items for chutes, smart chutes #9488
+- Fix basins not spawning fluid particles #9808
+- Fix exception in displaylink computercraft-api, when setting the cursor position to negative value #9984
+- Fix ItemStackMixin trying to migrate clipboard components on all item stacks
+- Fix fluid crashes by ensuring cache is only called when valid #10016
+- Fix harvesters harvesting vanilla mushrooms on rich soil #9940
+- Fix rendering jitter when walking ontop of belts and depots #9931
+- Fix items disappearing during belt transfers when chunks unload #9882
+- Fix outdated environmental compat #4710 #7301
+- Fix hand crank rotation visuals #8828
+- Fix outdated BWG/Silent Gems compat #9500
+- Fix placed clipboards causing a crash when you are too far away from the block #10185
+- Fix multiple create blocks and entities not respecting block and entity reach attributes
+
+#### API Changes
+
+- Add seats tags #9907
+- Add Plough blacklist and whitelist tags #7162
+
+------------------------------------------------------
+Create 6.0.9
+------------------------------------------------------
+
+#### Optimizations
+
+- Slightly improve and optimize GlobalRailwayManager
+- Optimize memory & cpu usage of contraption collision generation
+
+#### Bug Fixes
+
+- Fix old clipboard schematics causing issues #9462
+- Fix floating point issues within GantryContraptionEntity #9481
+- Fix deployers not calling SyncedBlockEntity#notifyUpdate
+- Fix schematics sticking around after instant placement #9494
+- Fix block entities calling getChunk throwing UOE on contraptions on the client #9459
+- Fix seats not being bouncy
+- Fix nixie tubes and redstone links being powered by torches supporting them #8734
+- Fix precision issue in TrackNodeLocation #9509
+- Fix Item requirement for placard's being completely broken #9511
+- Fix ladders having shading when on contraptions
+- Fix clay crushing recipe not always giving 4 clay balls
+- Fix potion-based fluid recipes #9563
+- Fix schematicannons defaulting to skip missing blocks #9543
+- Fix server crashing when cauldrons being filled have their contents removed #9547
+- Fix bound cardboard recipe not using `#c:strings` tag #9501
+- Fix Furnace Minecart contraption not stopping when mining blocks #9630
+- Fix Portable Storage Interface Connection Issue #9624
+- Fix multiple typos in ponder scenes
+- Fix Factory gauges not reading the contents of the network when they've just been loaded
+- Fix blocks that specify BlockState#emissiveRendering not being emissive when placed in copycat blocks #9675
+- Fix blocks failing to render when they do not have an associated block entity in the wrench rotation menu #9608
+- Fix shapeless recipes not having conditions added to the generated recipe #9613
+- Fix drills not dropping xp when breaking xp dropping blocks #9292
+- Fix Xaero's train map compat
+- Fix contraption collision and coupling when ticking is frozen
+- Fix tree fertilizer not destroying blocks when growing trees
+- Fix toolboxes deleting items when reloaded #8844
+- Fix Xaero's train map compat not respecting interfaceScale
+- Fix shift clicking items into attribute filter inserting the wrong item
+- Fix typing E closing schedule menu #9716
+- Fix encased fan shaft texture being rotated incorrectly #9762
+- Fix crash when disassembling train at station with cc tweaked computer attached #9720
+- Fix bottomless limit being over by 1 #9750
+- Fix copycat blocks dropping items when /fill'd
+
+------------------------------------------------------
+Create 6.0.8
+------------------------------------------------------
+
+#### Bug Fixes
+
+- Fix StockKeeperRequestScreen focusing search box if the chat key is pressed when typing in the address box
+- Fix copycat blocks and other blocks depending on ModelData not being rendered correctly on contraptions when using indirect or instanced rendering #9410 (1.21.1)
+- Fix threshold switches not correctly counting empty slots #9420 (1.21.1)
+
+------------------------------------------------------
+Create 6.0.7
+------------------------------------------------------
+
+#### Gameplay Changes
+
+- Computer Craft Integration for Update 6 Blocks #7883
+- Expand Computer Craft integrations for more blocks #7453
+- Add Xaero's World Map compatibility for Create's Train Map feature #8109
+- Implement JEI support for StockKeeperRequestScreen; JEI's keybinds can now be used to find the uses and recipes for items/blocks that are listed in the stock list keeper section, request section and the craft section
+- Allow any wrench tagged with the wrenches tag to connect mechanical crafter's
+- Allow Train Tracks to be cleared by shift clicking into the air
+- Allow Logistically linked block items to clear their frequency by shift clicking into the air
+- Add a config option to prevent block dropping when contraption is replacing blocks #8456
+- Allow conditions to be used on retrieve package instruction #8554
+- Allow chain riding with a wrench in the offhand
+- Implement overstress animation for rotating visuals
+- Optimize package address checking #8189
+- Update BOP & Atmospheric compat #4709 #9338
+- Update BYG/BWG compat #7193 #7320
+
+#### Optimizations
+
+- Avoid double nbt → bytes serialization in contraption sync limiting
+- Optimize basin recipe lookup #9184 #9192
+- Improve the performance of TreeCutter #5785 #9284 #9327
+
+#### Bug Fixes
+
+- Fix using modifiers with keybinds for Create's keybindings #8633
+- Fix backtank's losing air when in bubble columns
+- Fix lighting on curved tracks whose start and end positions are on the same plane of chunks, but whose curve goes off the plane.
+- Fix schematic's being able to be placed outside the schematic directory when running an offline server
+- Fix Track signal and Track observer visuals/plates moving up into the air in certain situations
+- Fix packages being duplicated when extracting with automation from a frogport
+- Fix package ports being able to accept "illegal" packages
+- Fix rare crash depending on class load order
+- Fix packager locking up if pulsed faster than 40 ticks #8010
+- Fix Potato projectiles not respecting vanilla knockback resistance #8659
+- Fix placards not retaining nbt data when disassembled as part of a contraption #7254
+- Fix placards not requesting their item when being placed with a schematic cannon #7342
+- Fix blaze unlit blaze burner requesting lit blaze burner when being placed via the schematic cannon #8634
+- Fix blaze burner pick block giving always a lit blaze burner
+- Fix basin recipes with ingredients that have a count greater than 9 not working #8678
+- Fix ManualApplicationRecipe destroying unbreakable items after one use #8754
+- Fix toolboxes on contraptions not working after a world reload #8721
+- Fix schematic max size overflowing #4565
+- Fix schematics not working on macOS when using ATLauncher #5702
+- Fix multiple potential (but very unlikely) race conditions in BezierConnection
+- Fix schematic overlay not working with when using a modifier key
+- Fix deployers not placing fluids from buckets #8937
+- Fix packages not getting killed when in waterlogged blocks #7780
+- Fix Pink Petals, Torch flowers, and Pitcher Plant's not having milling recipes to get their respective dyes #8914
+- Fix wrench rotation screen not rendering flywheel visuals #7414
+- Fix crushing wheels not checking weather the other wheel is spinning #8946
+- Fix incompatibility with neoforge on 1.20.1
+- Fix all doors added by Create sounding like train doors when placed or broken #5738
+- Fix crash when a mechanical pump is placed without a player #8775
+- Fix honey and chocolate buckets being unable to be dispensed #2798
+- Fix arm interaction mode lang key being wrong #8696
+- Fix blocks not having access to block entities that are a part of a contraption #6393
+- Fix potato cannon projectile types crashing if the supplied item(s) cannot be found #8661
+- Fix mechanical bearings occasionally stalling #3647
+- Fix duplication exploit with toolboxes #8881
+- Fix contraptions emptying a tank with potions causing a network disconnect #9074
+- Fix schematic preview not rendering kinetic parts #8931
+- Fix schematic cannon incorrectly placing belts based on their position near the cannon #8718
+- Fix ContraptionVisual model enabling shade for all quads
+- Fix steam engine math so the linkages properly align
+- Fix routing for chain conveyors not being updated when chains are destroyed #8995
+- Fix Minecraft contraption stopping after chunks are reloaded #9102
+- Fix tracks copying the waterlogged state across portals
+- Fix multiple fluid tanks on a train losing part of their contents when unloading #6658
+- Fix multiple packagers on single inventory leading to stockkeepers showing duplicated items #7554
+- Fix SpecialModels applying cardinal lighting to unshaded quads
+- Fix exploit that allows schematics to apply enchantments to linked controllers
+- Fix crash when pressing recipes have chanced output #6053
+- Fix multiple factory gauges not being able to be placed in the same block when holding shift #7843
+  Fix edge case where RuntimeDatagen creates cutting recipes with empty ingredients #9050
+- Fix train signal placement being broken on any curved track when the max track placement length is set to 128 #6965
+- Fix fan blasting not respecting manual only recipes #9032
+- Fix mechanical crafter's breaking when rotated by contraptions #8918
+- Fix packagers not correctly realizing when their target capability has been invalidated #9225
+- Fix schematic cannons requesting the wrong items for glow item frames #8552
+- Fix JEI Deploying category only showing manual recipes #8044
+- Consolidate gauge inputs with the same item into one request #8371 #8372
+- Fix Create not looking at eye position and only looking at eye height #9245
+- Fix filter transmutation #8916
+- Fix waterwheels using Archwood planks from ars nouveau rendering with the wrong texture #8384
+- Fix not being able to use the offhand for the chain conveyor skyhook feature
+- Fix unloaded postbox voiding packages #7491
+- Fix max crusher advancement only being given when spinning with positive speed #3895
+- Fix swapping armour while sneaking with cardboard armour not changing their hitbox #8080
+- Fix a rare crash with block entity rendering on contraptions #8444
+- Fix wrong chain riding animation when the wrench is in offhand #9289
+- Fix empty list filter blacklist not working as expected #9286
+- Fix table cloth not being orientated correctly when rotated as a contraption #9039
+- Fix chat key not focusing stockkeeper's request screens search box #8023
+- Fix potential CME with wearing goggle predicate list #9134
+- Fix trains using the wrong sounds for moving/stopping #3185
+- Fix depot not being listed as a display source in the display link ponder scene #9052 #9337
+- Fix sequenced assembly recipe misselection when recipes have the same transition item #3947 #9310
+- Fix packages getting stuck in brass funnels #9335
+- Fix all recipe types not respecting crafting remaining items #4853 #4963 #9372
+- Fix slot order in most of create's menus
+- Fix runtime tag gen #8751 #8753 (1.21.1)
+- Fix all JEI fluids being outputs #8706 #8755 (1.21.1)
+- Fix a rare crash with seats on contraptions #7919 (1.21.1)
+- Fix tracks not stacking #8827 (1.21.1)
+- Fix bat hat offset being wrong #8915 (1.21.1)
+- Fix BaseUnpackingHandler not passing the side parameter for inventory handler retrieval #8938 (1.21.1)
+- Fix compostable attribute not respecting compostables datamap #8926 (1.21.1)
+- Fix missing refmap warning #8742 #9022 (1.21.1)
+- Fix items and fluids missing some tags #9097 (1.21.1)
+- Fix ClipboardEntry having a wrong hashCode implementation #9116 (1.21.1)
+- Fix crash with empty clipboard #9117 #9141 (1.21.1)
+- Fix a rare crash with malformed schematics #9217 (1.21.1)
+- Fix harvesters not destroying flowers #8811 #8813 (1.21.1)
+
+#### API Changes
+
+- Fix RegistrateRegistrationCallback #8890
+- Add `#create:not_upright_on_belt` tag to force disable the upright on belt behaviour #8841 #8843
+- Add #not_potion tag to prevent automatic draining and spouting #9147
+- Implement API for filters #7706 #8132
+- Change compat datagen from enum to interface #8895
+- Create datamap for regular and superheated blaze burner fuels #8911 (1.21.1)
+- Regular and superheated fuel tags are now deprecated (1.21.1)
+- Deprecated stuff is now marked with @ScheduledForRemoval (1.21.1)
+- Constructors for singleton API classes are now private (1.21.1)
+- Add support for using NeoForge's fluid ingredients (1.21.1)
+
+------------------------------------------------------
 Create 6.0.6
 ------------------------------------------------------
 
@@ -99,8 +349,7 @@ Create 6.0.6
 - Allow other mods and addons to use ValueSettingsFormatter without needing to use translations prefixed with "create."
   #8322
 - Refactored datagen so that addons have a clear API to follow. #7861
-- Reworked ProcessingRecipe (Addon developers will need to adjust to these changes for their addon to work with 6.0.6) (
-  1.21.1) #7945
+- Reworked ProcessingRecipe (Addon developers will need to adjust to these changes for their addon to work with 6.0.6) (1.21.1) #7945
 
 ------------------------------------------------------
 Create 6.0.5
@@ -294,7 +543,7 @@ _Now using Flywheel 1.0_
 - In common cobblegen scenarios, stationary drills now skip breaking blocks and just insert the result items into open
   inventories directly below
 - Held clipboards can now copy entries from other in-world clipboards
-- Filters, Clipboards and Schedules can now be copyied in the crafting table
+- Filters, Clipboards, and Schedules can now be copyied in the crafting table
 - Metal ladders no longer require a wall if another ladder block is above them
 - Bells assembled to elevator contraptions now activate when arriving at a floor
 - Sliding doors placed in front of contraption-mounted sliding doors now open and close automatically
@@ -382,16 +631,16 @@ _Now using Flywheel 1.0_
   For simple cases, create provides the `#create:simple_mounted_storage` and `#create:chest_mounted_storage` block tags.
 - Added `#create:non_breakable` to mark blocks that cannot be broken by block-breaking kinetics
 - Removed LangMerger and related classes
-- Implemented an api to allow mods to register schematic requirements, partial safe nbt and contraption transforms
+- Implemented an api to allow mods to register schematic requirements, partial safe nbt, and contraption transforms
   without implementing interfaces (#4702)
 - Add a method that developers can override to change the icon in goggle tooltips
-- Refactored Item Attributes types, Fan processing types and Arm interaction points, all 3 now use registries
+- Refactored Item Attributes types, Fan processing types, and Arm interaction points, all 3 now use registries
 - Synced AllPortalTracks with Create Fabric
 - Implemented DyeHelper api (#7265)
 - Implemented api to add custom block train conductors (#7030)
 - Convert Potato Cannon projectile types into a dynamic registry
     - Everything can be done with datapacks now, and there is no need to write a mod unless you need to add new
-      Render Modes, Entity Hit Actions or Block Hit Actions
+      Render Modes, Entity Hit Actions, or Block Hit Actions
 - Reworked the AttachedRegistry class into SimpleRegistry and added Provider functionality
 - Exposed all custom registries as API
 - Exposed a handful of previously internal classes to the API, and gave them some cleanup

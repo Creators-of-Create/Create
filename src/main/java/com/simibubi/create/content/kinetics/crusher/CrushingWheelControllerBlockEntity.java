@@ -33,6 +33,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -50,8 +51,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
-public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
-
+public class CrushingWheelControllerBlockEntity extends SmartBlockEntity implements Clearable {
 	public Entity processingEntity;
 	private UUID entityUUID;
 	protected boolean searchForEntity;
@@ -75,9 +75,9 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-				Capabilities.ItemHandler.BLOCK,
-				AllBlockEntityTypes.CRUSHING_WHEEL_CONTROLLER.get(),
-				(be, context) -> be.inventory
+			Capabilities.ItemHandler.BLOCK,
+			AllBlockEntityTypes.CRUSHING_WHEEL_CONTROLLER.get(),
+			(be, context) -> be.inventory
 		);
 	}
 
@@ -134,7 +134,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 
 			float processingSpeed =
 				Mth.clamp((speed) / (!inventory.appliedRecipe ? (float) Math.log(inventory.getStackInSlot(0)
-					.getCount())/(float) Math.log(2) : 1), .25f, 20);
+					.getCount()) / (float) Math.log(2) : 1), .25f, 20);
 			inventory.remainingTime -= processingSpeed;
 			spawnParticles(inventory.getStackInSlot(0));
 
@@ -231,12 +231,12 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 				facing.getAxis() == Axis.Y ? .5f * offset : 0f, facing.getAxis() == Axis.Z ? .5f * offset : 0f);
 			int crusherDamage = AllConfigs.server().kinetics.crushingDamage.get();
 
-			if (processingEntity instanceof LivingEntity) {
-				if ((((LivingEntity) processingEntity).getHealth() - crusherDamage <= 0) // Takes LivingEntity instances
+			if (processingEntity instanceof LivingEntity livingEntity) {
+				if (livingEntity.getHealth() - crusherDamage <= 0 // Takes LivingEntity instances
 					// as exception, so it can
 					// move them before it would
 					// kill them.
-					&& (((LivingEntity) processingEntity).hurtTime <= 0)) { // This way it can actually output the items
+					&& livingEntity.hurtTime <= 0) { // This way it can actually output the items
 					// to the right spot.
 					processingEntity.setPos(entityOutPos.x, entityOutPos.y, entityOutPos.z);
 				}
@@ -304,15 +304,18 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 
 		List<ItemStack> list = new ArrayList<>();
 		if (recipe.isPresent()) {
-			int rolls = inventory.getStackInSlot(0)
-				.getCount();
+			ItemStack input = inventory.getStackInSlot(0);
+			int rolls = input.getCount();
 			inventory.clear();
 			for (int roll = 0; roll < rolls; roll++) {
 				List<ItemStack> rolledResults = recipe.get().value()
-					.rollResults();
+					.rollResults(level.random);
 				for (ItemStack stack : rolledResults) {
 					ItemHelper.addToList(stack, list);
 				}
+			}
+			if (input.hasCraftingRemainingItem()) {
+				ItemHelper.addToList(input.getCraftingRemainingItem(), list);
 			}
 			for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
 				inventory.setStackInSlot(slot + 1, list.get(slot));
@@ -349,6 +352,11 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 		inventory.deserializeNBT(registries, compound.getCompound("Inventory"));
 	}
 
+	@Override
+	public void clearContent() {
+		inventory.clear();
+	}
+
 	public void startCrushing(Entity entity) {
 		processingEntity = entity;
 		entityUUID = entity.getUUID();
@@ -373,5 +381,4 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 	public boolean hasEntity() {
 		return processingEntity != null;
 	}
-
 }

@@ -1,6 +1,6 @@
 package com.simibubi.create.api.contraption.dispenser;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.mixin.accessor.ProjectileDispenseBehaviorAccessor;

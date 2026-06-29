@@ -1,9 +1,10 @@
 package com.simibubi.create.foundation.utility;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
@@ -55,6 +56,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.IceBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.SlimeBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -67,6 +69,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
+
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.SpecialPlantable;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
@@ -207,56 +210,57 @@ public class BlockHelper {
 		destroyBlockAs(world, pos, null, ItemStack.EMPTY, effectChance, droppedItemCallback);
 	}
 
-	public static void destroyBlockAs(Level world, BlockPos pos, @Nullable Player player, ItemStack usedTool,
+	public static void destroyBlockAs(Level level, BlockPos pos, @Nullable Player player, ItemStack usedTool,
 									  float effectChance, Consumer<ItemStack> droppedItemCallback) {
-		FluidState fluidState = world.getFluidState(pos);
-		BlockState state = world.getBlockState(pos);
+		FluidState fluidState = level.getFluidState(pos);
+		BlockState state = level.getBlockState(pos);
 
-		if (world.random.nextFloat() < effectChance)
-			world.levelEvent(2001, pos, Block.getId(state));
-		BlockEntity blockEntity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
+		if (level.random.nextFloat() < effectChance)
+			level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(state));
+		BlockEntity blockEntity = state.hasBlockEntity() ? level.getBlockEntity(pos) : null;
 
 		if (player != null) {
-			BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, player);
+			BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, state, player);
 			NeoForge.EVENT_BUS.post(event);
 			if (event.isCanceled())
 				return;
 
-			usedTool.mineBlock(world, state, pos, player);
+			usedTool.mineBlock(level, state, pos, player);
 			player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
 		}
 
-		if (world instanceof ServerLevel serverLevel && world.getGameRules()
-			.getBoolean(GameRules.RULE_DOBLOCKDROPS) && !world.restoringBlockSnapshots
+		if (level instanceof ServerLevel serverLevel && level.getGameRules()
+			.getBoolean(GameRules.RULE_DOBLOCKDROPS) && !level.restoringBlockSnapshots
 			&& (player == null || !player.isCreative())) {
 			List<ItemStack> drops = Block.getDrops(state, serverLevel, pos, blockEntity, player, usedTool);
-			if (player != null) {
-				BlockDropsEvent event = new BlockDropsEvent(serverLevel, pos, state, blockEntity, List.of(), player, usedTool);
-				NeoForge.EVENT_BUS.post(event);
-				if (!event.isCanceled()) {
-					if ( event.getDroppedExperience() > 0)
-						state.getBlock().popExperience(serverLevel, pos, event.getDroppedExperience());
+
+			BlockDropsEvent event = new BlockDropsEvent(serverLevel, pos, state, blockEntity, new ArrayList<>(), player, usedTool);
+			NeoForge.EVENT_BUS.post(event);
+			if (!event.isCanceled()) {
+				if (event.getDroppedExperience() > 0) {
+					state.getBlock().popExperience(serverLevel, pos, event.getDroppedExperience());
 				}
 			}
+
 			for (ItemStack itemStack : drops)
 				droppedItemCallback.accept(itemStack);
 
 			// Simulating IceBlock#playerDestroy. Not calling method directly as it would drop item
 			// entities as a side-effect
-			Registry<Enchantment> enchantmentRegistry = world.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+			Registry<Enchantment> enchantmentRegistry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
 			if (state.getBlock() instanceof IceBlock && usedTool.getEnchantmentLevel(enchantmentRegistry.getHolderOrThrow(Enchantments.SILK_TOUCH)) == 0) {
-				if (!world.dimensionType().ultraWarm()) {
-					BlockState below = world.getBlockState(pos.below());
+				if (!level.dimensionType().ultraWarm()) {
+					BlockState below = level.getBlockState(pos.below());
 					if (below.blocksMotion() || below.liquid()) {
 						fluidState = IceBlock.meltsInto().getFluidState();
 					}
 				}
 			}
 
-			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY, true);
+			state.spawnAfterBreak(serverLevel, pos, ItemStack.EMPTY, false);
 		}
 
-		world.setBlockAndUpdate(pos, fluidState.createLegacyBlock());
+		level.setBlockAndUpdate(pos, fluidState.createLegacyBlock());
 	}
 
 	public static boolean isSolidWall(BlockGetter reader, BlockPos fromPos, Direction toDirection) {
@@ -284,16 +288,16 @@ public class BlockHelper {
 		chunk.setUnsaved(true);
 		world.markAndNotifyBlock(target, chunk, old, state, 82, 512);
 
-		world.setBlock(target, state, 82);
+		world.setBlock(target, state, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_MOVE_BY_PISTON);
 		world.neighborChanged(target, world.getBlockState(target.below())
 			.getBlock(), target.below());
 	}
 
-	public static CompoundTag prepareBlockEntityData(BlockState blockState, BlockEntity blockEntity) {
+	public static CompoundTag prepareBlockEntityData(Level level, BlockState blockState, BlockEntity blockEntity) {
 		CompoundTag data = null;
 		if (blockEntity == null)
 			return null;
-		RegistryAccess access = blockEntity.getLevel().registryAccess();
+		RegistryAccess access = level.registryAccess();
 		SafeNbtWriter writer = SafeNbtWriterRegistry.REGISTRY.get(blockEntity.getType());
 		if (AllBlockTags.SAFE_NBT.matches(blockState)) {
 			data = blockEntity.saveWithFullMetadata(access);
@@ -361,9 +365,9 @@ public class BlockHelper {
 		} else if (state.getBlock() instanceof BaseRailBlock) {
 			placeRailWithoutUpdate(world, state, target);
 		} else if (AllBlocks.BELT.has(state)) {
-			world.setBlock(target, state, 2);
+			world.setBlock(target, state, Block.UPDATE_CLIENTS);
 		} else {
-			world.setBlock(target, state, 18);
+			world.setBlock(target, state, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
 		}
 
 		if (data != null) {
@@ -406,19 +410,17 @@ public class BlockHelper {
 		return 0;
 	}
 
-	public static boolean hasBlockSolidSide(BlockState p_220056_0_, BlockGetter p_220056_1_, BlockPos p_220056_2_,
-											Direction p_220056_3_) {
-		return !p_220056_0_.is(BlockTags.LEAVES)
-			&& Block.isFaceFull(p_220056_0_.getCollisionShape(p_220056_1_, p_220056_2_), p_220056_3_);
+	public static boolean hasBlockSolidSide(BlockState state, BlockGetter blockGetter, BlockPos pos, Direction dir) {
+		return !state.is(BlockTags.LEAVES)
+			&& Block.isFaceFull(state.getCollisionShape(blockGetter, pos), dir);
 	}
 
-	public static boolean extinguishFire(Level world, @Nullable Player p_175719_1_, BlockPos p_175719_2_,
-										 Direction p_175719_3_) {
-		p_175719_2_ = p_175719_2_.relative(p_175719_3_);
-		if (world.getBlockState(p_175719_2_)
+	public static boolean extinguishFire(Level world, @Nullable Player player, BlockPos pos, Direction dir) {
+		pos = pos.relative(dir);
+		if (world.getBlockState(pos)
 			.getBlock() == Blocks.FIRE) {
-			world.levelEvent(p_175719_1_, 1009, p_175719_2_, 0);
-			world.removeBlock(p_175719_2_, false);
+			world.levelEvent(player, LevelEvent.SOUND_EXTINGUISH_FIRE, pos, 0);
+			world.removeBlock(pos, false);
 			return true;
 		} else {
 			return false;

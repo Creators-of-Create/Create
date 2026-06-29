@@ -2,7 +2,7 @@ package com.simibubi.create.content.trains;
 
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.datafixers.util.Function4;
 import com.simibubi.create.AllPackets;

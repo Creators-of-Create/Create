@@ -6,7 +6,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.fluids.pipes.EncasedPipeBlock;

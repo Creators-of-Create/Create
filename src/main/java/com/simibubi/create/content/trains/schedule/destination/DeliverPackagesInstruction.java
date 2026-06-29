@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
@@ -16,8 +16,8 @@ import com.simibubi.create.content.trains.graph.DiscoveredPath;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime.State;
+import com.simibubi.create.content.trains.station.GlobalPackagePort;
 import com.simibubi.create.content.trains.station.GlobalStation;
-import com.simibubi.create.content.trains.station.GlobalStation.GlobalPackagePort;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.data.Pair;
@@ -28,6 +28,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 public class DeliverPackagesInstruction extends ScheduleInstruction {

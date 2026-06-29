@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelSlot;
@@ -48,7 +48,7 @@ public class FactoryPanelBlockEntity extends SmartBlockEntity {
 		super(type, pos, state);
 		restocker = false;
 	}
-	
+
 	@Override
 	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).inflate(8);
@@ -137,13 +137,13 @@ public class FactoryPanelBlockEntity extends SmartBlockEntity {
 				behaviour.setNetwork(frequency);
 			redraw = true;
 			lastShape = null;
-			
+
 			if (activePanels() > 1) {
 				SoundType soundType = getBlockState().getSoundType();
 				level.playSound(null, worldPosition, soundType.getPlaceSound(), SoundSource.BLOCKS,
 					(soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
 			}
-			
+
 			return true;
 		}
 		return false;
@@ -155,13 +155,13 @@ public class FactoryPanelBlockEntity extends SmartBlockEntity {
 			behaviour.disable();
 			redraw = true;
 			lastShape = null;
-			
+
 			if (activePanels() > 0) {
 				SoundType soundType = getBlockState().getSoundType();
 				level.playSound(null, worldPosition, soundType.getBreakSound(), SoundSource.BLOCKS,
 					(soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
 			}
-			
+
 			return true;
 		}
 		return false;

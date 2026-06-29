@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,14 +14,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
-import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.CreatePaths;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -35,8 +36,8 @@ public class ClientSchematicLoader {
 
 	public static final int PACKET_DELAY = 10;
 
-	private List<Component> availableSchematics;
-	private Map<String, InputStream> activeUploads;
+	private final List<Component> availableSchematics;
+	private final Map<String, InputStream> activeUploads;
 	private int packetCycle;
 
 	public ClientSchematicLoader() {
@@ -58,10 +59,10 @@ public class ClientSchematicLoader {
 	}
 
 	public void startNewUpload(String schematic) {
-		Path path = Paths.get("schematics", schematic);
+		Path path = CreatePaths.SCHEMATICS_DIR.resolve(schematic);
 
 		if (!Files.exists(path)) {
-			Create.LOGGER.error("Missing Schematic file: " + path.toString());
+			Create.LOGGER.error("Missing Schematic file: {}", path);
 			return;
 		}
 
@@ -85,14 +86,14 @@ public class ClientSchematicLoader {
 			activeUploads.put(schematic, in);
 			CatnipServices.NETWORK.sendToServer(SchematicUploadPacket.begin(schematic, size));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Create.LOGGER.error("Encountered an error while starting schematic upload", e);
 		}
 	}
 
 	public static boolean validateSizeLimitation(long size) {
 		if (Minecraft.getInstance().hasSingleplayerServer())
 			return true;
-		Integer maxSize = AllConfigs.server().schematics.maxTotalSchematicSize.get();
+		long maxSize = AllConfigs.server().schematics.maxTotalSchematicSize.get();
 		if (size > maxSize * 1000) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player != null) {
@@ -125,7 +126,7 @@ public class ClientSchematicLoader {
 
 	private void continueUpload(String schematic) {
 		if (activeUploads.containsKey(schematic)) {
-			Integer maxPacketSize = AllConfigs.server().schematics.maxSchematicPacketSize.get();
+			int maxPacketSize = AllConfigs.server().schematics.maxSchematicPacketSize.get();
 			byte[] data = new byte[maxPacketSize];
 			try {
 				int status = activeUploads.get(schematic).read(data);
@@ -136,6 +137,7 @@ public class ClientSchematicLoader {
 					if (Minecraft.getInstance().level != null)
 						CatnipServices.NETWORK.sendToServer(SchematicUploadPacket.write(schematic, data));
 					else {
+						//noinspection resource
 						activeUploads.remove(schematic);
 						return;
 					}
@@ -144,7 +146,7 @@ public class ClientSchematicLoader {
 				if (status < maxPacketSize)
 					finishUpload(schematic);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Create.LOGGER.error("Encountered a error while uploading schematic", e);
 			}
 		}
 	}
@@ -152,26 +154,27 @@ public class ClientSchematicLoader {
 	private void finishUpload(String schematic) {
 		if (activeUploads.containsKey(schematic)) {
 			CatnipServices.NETWORK.sendToServer(SchematicUploadPacket.finish(schematic));
+			//noinspection resource
 			activeUploads.remove(schematic);
 		}
 	}
 
 	public void refresh() {
-		FilesHelper.createFolderIfMissing("schematics");
+		FilesHelper.createFolderIfMissing(CreatePaths.SCHEMATICS_DIR);
 		availableSchematics.clear();
 
-		try {
-			Files.list(Paths.get("schematics/"))
-				.filter(f -> !Files.isDirectory(f) && f.getFileName().toString().endsWith(".nbt")).forEach(path -> {
+		try (Stream<Path> paths = Files.list(CreatePaths.SCHEMATICS_DIR)) {
+			paths.filter(f -> !Files.isDirectory(f) && f.getFileName().toString().endsWith(".nbt"))
+				.forEach(path -> {
 					if (Files.isDirectory(path))
 						return;
 
 					availableSchematics.add(Component.literal(path.getFileName().toString()));
 				});
-		} catch (NoSuchFileException e) {
+		} catch (NoSuchFileException ignored) {
 			// No Schematics created yet
 		} catch (IOException e) {
-			e.printStackTrace();
+			Create.LOGGER.error("Failed to refresh schematics", e);
 		}
 
 		availableSchematics.sort((aT, bT) -> {
@@ -230,10 +233,6 @@ public class ClientSchematicLoader {
 
 	public List<Component> getAvailableSchematics() {
 		return availableSchematics;
-	}
-
-	public Path getPath(String name) {
-		return Paths.get("schematics", name + ".nbt");
 	}
 
 }

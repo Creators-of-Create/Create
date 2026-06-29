@@ -114,7 +114,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 		boolean instant = Math.abs(getSpeed()) > 128;
 		for (FlapDisplayLayout line : lines)
 			for (FlapDisplaySection section : line.getSections())
-				activeFlaps += section.tick(instant);
+				activeFlaps += section.tick(instant, level.random);
 		if (activeFlaps == 0)
 			return;
 
@@ -217,8 +217,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 
 		List<FlapDisplayLayout> lines = getLines();
 		for (int i = 0; i < lines.size(); i++)
-			tag.put("Display" + i, lines.get(i)
-				.write());
+			tag.put("Display" + i, lines.get(i).write(registries));
 	}
 
 	@Override
@@ -252,7 +251,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 		List<FlapDisplayLayout> lines = getLines();
 		for (int i = 0; i < lines.size(); i++)
 			lines.get(i)
-				.read(tag.getCompound("Display" + i));
+				.read(tag.getCompound("Display" + i), registries);
 	}
 
 	public int getLineIndexAt(double yCoord) {

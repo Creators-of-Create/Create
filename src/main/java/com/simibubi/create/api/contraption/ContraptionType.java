@@ -2,7 +2,7 @@ package com.simibubi.create.api.contraption;
 
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllContraptionTypes;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;

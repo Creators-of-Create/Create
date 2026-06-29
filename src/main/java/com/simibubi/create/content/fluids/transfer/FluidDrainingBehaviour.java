@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -286,7 +286,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		}
 
 		int maxBlocks = maxBlocks();
-		if (visited.size() > maxBlocks && canDrainInfinitely(fluid) && !queue.isEmpty()) {
+		if (visited.size() >= maxBlocks && canDrainInfinitely(fluid) && !queue.isEmpty()) {
 			infinite = true;
 			BlockPos firstValid = queue.first()
 				.pos();
@@ -316,7 +316,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		}
 
 		int maxBlocks = maxBlocks();
-		if (validationVisited.size() > maxBlocks && canDrainInfinitely(fluid)) {
+		if (validationVisited.size() >= maxBlocks && canDrainInfinitely(fluid)) {
 			if (!infinite)
 				reset();
 			validationFrontier.clear();

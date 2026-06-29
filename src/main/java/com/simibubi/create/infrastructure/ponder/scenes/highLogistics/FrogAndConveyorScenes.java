@@ -15,8 +15,8 @@ import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockE
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
-import net.createmod.catnip.math.Pointing;
 import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.PonderPalette;
 import net.createmod.ponder.api.element.ElementLink;
 import net.createmod.ponder.api.element.ParrotElement;
@@ -38,7 +38,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -323,7 +322,7 @@ public class FrogAndConveyorScenes {
 
 		@Override
 		protected void renderLast(PonderLevel world, MultiBufferSource buffer, GuiGraphics graphics, float fade,
-			float pt) {
+								  float pt) {
 			PoseStack poseStack = graphics.pose();
 			EntityRenderDispatcher entityrenderermanager = Minecraft.getInstance()
 				.getEntityRenderDispatcher();
@@ -360,7 +359,7 @@ public class FrogAndConveyorScenes {
 			poseStack.translate(-0.1, 0.2, -0.6);
 			BakedModel bakedmodel = Minecraft.getInstance()
 				.getItemRenderer()
-				.getModel(wrench.getItem(), world, (LivingEntity) null, 0);
+				.getModel(wrench.getItem(), world, null, 0);
 			Minecraft.getInstance()
 				.getItemRenderer()
 				.render(wrench.getItem(), ItemDisplayContext.GROUND, false, poseStack, buffer,
@@ -693,9 +692,9 @@ public class FrogAndConveyorScenes {
 		scene.idle(20);
 		scene.world()
 			.hideSection(util.select()
-				.fromTo(0, 1, 6, 0, 1, 9)
-				.add(util.select()
-					.position(1, 1, 9)),
+					.fromTo(0, 1, 6, 0, 1, 9)
+					.add(util.select()
+						.position(1, 1, 9)),
 				Direction.SOUTH);
 		scene.world()
 			.setKineticSpeed(util.select()
@@ -725,9 +724,9 @@ public class FrogAndConveyorScenes {
 				.fromTo(1, 2, 5, 0, 1, 5), Direction.WEST);
 		scene.world()
 			.hideSection(util.select()
-				.fromTo(5, 2, 1, 5, 1, 0)
-				.add(util.select()
-					.fromTo(6, 1, 0, 9, 1, 0)),
+					.fromTo(5, 2, 1, 5, 1, 0)
+					.add(util.select()
+						.fromTo(6, 1, 0, 9, 1, 0)),
 				Direction.NORTH);
 		scene.world()
 			.hideSection(util.select()
@@ -818,10 +817,10 @@ public class FrogAndConveyorScenes {
 
 		scene.overlay()
 			.showOutlineWithText(util.select()
-				.position(fromFrog.below())
-				.add(util.select()
-					.position(fromFrog.below()
-						.west())),
+					.position(fromFrog.below())
+					.add(util.select()
+						.position(fromFrog.below()
+							.west())),
 				70)
 			.colored(PonderPalette.OUTPUT)
 			.text("Addresses packages to 'Peter'")
@@ -856,8 +855,8 @@ public class FrogAndConveyorScenes {
 		scene.world()
 			.modifyBlockEntity(util.grid()
 				.at(5, 1, 2), PackagerBlockEntity.class, be -> {
-					be.heldBox = ItemStack.EMPTY;
-				});
+				be.heldBox = ItemStack.EMPTY;
+			});
 		scene.world()
 			.modifyBlockEntity(fromFrog, FrogportBlockEntity.class, be -> be.startAnimation(box, true));
 
@@ -881,8 +880,8 @@ public class FrogAndConveyorScenes {
 
 		scene.overlay()
 			.showControls(util.vector()
-				.centerOf(util.grid()
-					.at(2, 2, 5)),
+					.centerOf(util.grid()
+						.at(2, 2, 5)),
 				Pointing.RIGHT, 40)
 			.rightClick()
 			.withItem(AllBlocks.CLIPBOARD.asStack());
@@ -913,7 +912,7 @@ public class FrogAndConveyorScenes {
 
 	public static void boxTransfer(BlockPos to, BlockPos from, ChainConveyorBlockEntity be) {
 		for (Iterator<ChainConveyorPackage> iterator = be.getLoopingPackages()
-			.iterator(); iterator.hasNext();) {
+			.iterator(); iterator.hasNext(); ) {
 			ChainConveyorPackage chainConveyorPackage = iterator.next();
 			chainConveyorPackage.chainPosition = 0;
 			be.addTravellingPackage(chainConveyorPackage, to.subtract(from));

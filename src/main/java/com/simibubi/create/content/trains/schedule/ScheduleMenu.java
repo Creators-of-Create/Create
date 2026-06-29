@@ -1,21 +1,19 @@
 package com.simibubi.create.content.trains.schedule;
 
-import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
+import com.simibubi.create.foundation.gui.menu.HeldItemGhostItemMenu;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
-public class ScheduleMenu extends GhostItemMenu<ItemStack> {
+public class ScheduleMenu extends HeldItemGhostItemMenu {
 
 	public boolean slotsActive = true;
 	public int targetSlotsActive = 1;
@@ -36,19 +34,8 @@ public class ScheduleMenu extends GhostItemMenu<ItemStack> {
 	}
 
 	@Override
-	public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
-		if (slotId != playerInventory.selected || clickTypeIn == ClickType.THROW)
-			super.clicked(slotId, dragType, clickTypeIn, player);
-	}
-
-	@Override
 	protected boolean allowRepeats() {
 		return true;
-	}
-
-	@Override
-	protected ItemStack createOnClient(RegistryFriendlyByteBuf extraData) {
-		return ItemStack.STREAM_CODEC.decode(extraData);
 	}
 
 	@Override
@@ -59,21 +46,12 @@ public class ScheduleMenu extends GhostItemMenu<ItemStack> {
 	}
 
 	@Override
-	protected void addPlayerSlots(int x, int y) {
-		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
-			this.addSlot(new InactiveSlot(playerInventory, hotbarSlot, x + hotbarSlot * 18, y + 58));
-		for (int row = 0; row < 3; ++row)
-			for (int col = 0; col < 9; ++col)
-				this.addSlot(new InactiveSlot(playerInventory, col + row * 9 + 9, x + col * 18, y + row * 18));
+	protected Slot createPlayerSlot(Inventory inventory, int index, int x, int y) {
+		return new InactiveSlot(inventory, index, x, y);
 	}
 
 	@Override
 	protected void saveData(ItemStack contentHolder) {}
-
-	@Override
-	public boolean stillValid(Player player) {
-		return playerInventory.getSelected() == contentHolder;
-	}
 
 	class InactiveSlot extends Slot {
 

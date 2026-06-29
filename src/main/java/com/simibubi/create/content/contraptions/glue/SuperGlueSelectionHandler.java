@@ -8,11 +8,11 @@ import com.google.common.base.Objects;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.content.contraptions.chassis.AbstractChassisBlock;
-import net.createmod.catnip.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
 import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -29,8 +29,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
-
-import net.neoforged.neoforge.common.NeoForgeMod;
 
 public class SuperGlueSelectionHandler {
 
@@ -77,7 +75,7 @@ public class SuperGlueSelectionHandler {
 		selected = null;
 		if (firstPos == null) {
 			double range = player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE) + 1;
-			Vec3 traceOrigin = RaycastHelper.getTraceOrigin(player);
+			Vec3 traceOrigin = player.getEyePosition();
 			Vec3 traceTarget = RaycastHelper.getTraceTarget(player, range, traceOrigin);
 
 			double bestDistance = Double.MAX_VALUE;

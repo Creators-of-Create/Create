@@ -1,6 +1,6 @@
 package com.simibubi.create.content.fluids.pipes.valve;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
@@ -66,7 +66,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock
 		return super.prefersConnectionTo(reader, pos, facing, shaftAxis);
 	}
 
-	@Nonnull
+	@NotNull
 	public static Axis getPipeAxis(BlockState state) {
 		if (!(state.getBlock() instanceof FluidValveBlock))
 			throw new IllegalStateException("Provided BlockState is for a different block.");

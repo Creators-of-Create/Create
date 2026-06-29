@@ -1,7 +1,6 @@
 #!/usr/bin/env groovy
 
 pipeline {
-
     agent any
 
     tools {
@@ -9,11 +8,8 @@ pipeline {
     }
 
     stages {
-
         stage('Setup') {
-
             steps {
-
                 echo 'Setup Project'
                 sh 'chmod +x gradlew'
                 sh './gradlew clean'
@@ -21,13 +17,10 @@ pipeline {
         }
 
         stage('Build') {
-
             steps {
-
                 withCredentials([
-                    file(credentialsId: 'build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile')
+                    usernamePassword(credentialsId: 'maven_secrets', usernameVariable: 'MAVEN_USERNAME', passwordVariable: 'MAVEN_PASSWORD')
                 ]) {
-
                     echo 'Building project.'
                     sh './gradlew build publish --stacktrace --warn'
                 }
@@ -36,9 +29,7 @@ pipeline {
     }
 
     post {
-
         always {
-
             archiveArtifacts artifacts: '**/build/libs/*.jar', fingerprint: true
 
             withCredentials([

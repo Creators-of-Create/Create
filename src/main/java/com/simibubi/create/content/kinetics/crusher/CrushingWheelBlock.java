@@ -84,7 +84,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements IBE
 			CrushingWheelBlockEntity otherBE = getBlockEntity(world, otherWheelPos);
 
 			if (be != null && otherBE != null && (be.getSpeed() > 0) != (otherBE.getSpeed() > 0)
-				&& be.getSpeed() != 0) {
+				&& be.getSpeed() != 0 && otherBE.getSpeed() != 0) {
 				Axis wheelAxis = state.getValue(AXIS);
 				Axis sideAxis = side.getAxis();
 				int controllerADO = Math.round(Math.signum(be.getSpeed())) * side.getAxisDirection()
@@ -121,7 +121,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements IBE
 				.setValue(CrushingWheelControllerBlock.FACING, controllerNewDirection));
 		}
 
-		((CrushingWheelControllerBlock) AllBlocks.CRUSHING_WHEEL_CONTROLLER.get())
+		AllBlocks.CRUSHING_WHEEL_CONTROLLER.get()
 			.updateSpeed(world.getBlockState(controllerPos), world, controllerPos);
 
 	}

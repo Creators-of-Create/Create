@@ -2,7 +2,7 @@ package com.simibubi.create.content.decoration.slidingDoor;
 
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.ContraptionWorld;
@@ -41,30 +41,40 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<SlidingDoorBlockEntity>, IHaveBigOutline {
-
 	public static final Supplier<BlockSetType> TRAIN_SET_TYPE =
-		() -> new BlockSetType("train", true, true, true,
+		() -> new BlockSetType("create:train", true, true, true,
 			BlockSetType.PressurePlateSensitivity.EVERYTHING, SoundType.NETHERITE_BLOCK, SoundEvents.IRON_DOOR_CLOSE,
 			SoundEvents.IRON_DOOR_OPEN, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundEvents.IRON_TRAPDOOR_OPEN,
 			SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
 			SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
 
 	public static final Supplier<BlockSetType> GLASS_SET_TYPE =
-		() -> new BlockSetType("train", true, true, true,
-			BlockSetType.PressurePlateSensitivity.EVERYTHING, SoundType.NETHERITE_BLOCK, SoundEvents.IRON_DOOR_CLOSE,
+		() -> new BlockSetType("create:glass", true, true, true,
+			BlockSetType.PressurePlateSensitivity.EVERYTHING, SoundType.GLASS, SoundEvents.IRON_DOOR_CLOSE,
+			SoundEvents.IRON_DOOR_OPEN, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundEvents.IRON_TRAPDOOR_OPEN,
+			SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
+			SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
+
+	public static final Supplier<BlockSetType> STONE_SET_TYPE =
+		() -> new BlockSetType("create:stone", true, true, true,
+			BlockSetType.PressurePlateSensitivity.EVERYTHING, SoundType.STONE, SoundEvents.IRON_DOOR_CLOSE,
 			SoundEvents.IRON_DOOR_OPEN, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundEvents.IRON_TRAPDOOR_OPEN,
 			SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
 			SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
 
 	public static final BooleanProperty VISIBLE = BooleanProperty.create("visible");
-	private boolean folds;
+	private final boolean folds;
 
-	public static SlidingDoorBlock metal(Properties p_52737_, boolean folds) {
-		return new SlidingDoorBlock(p_52737_, TRAIN_SET_TYPE.get(), folds);
+	public static SlidingDoorBlock metal(Properties properties, boolean folds) {
+		return new SlidingDoorBlock(properties, TRAIN_SET_TYPE.get(), folds);
 	}
 
-	public static SlidingDoorBlock glass(Properties p_52737_, boolean folds) {
-		return new SlidingDoorBlock(p_52737_, GLASS_SET_TYPE.get(), folds);
+	public static SlidingDoorBlock glass(Properties properties, boolean folds) {
+		return new SlidingDoorBlock(properties, GLASS_SET_TYPE.get(), folds);
+	}
+
+	public static SlidingDoorBlock stone(Properties properties, boolean folds) {
+		return new SlidingDoorBlock(properties, STONE_SET_TYPE.get(), folds);
 	}
 
 	public SlidingDoorBlock(Properties properties, BlockSetType type, boolean folds) {
@@ -142,7 +152,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 		BlockState changedState = state.setValue(OPEN, open);
 		if (open)
 			changedState = changedState.setValue(VISIBLE, false);
-		level.setBlock(pos, changedState, 10);
+		level.setBlock(pos, changedState, UPDATE_CLIENTS | UPDATE_IMMEDIATE);
 
 		DoorHingeSide hinge = changedState.getValue(HINGE);
 		Direction facing = changedState.getValue(FACING);
@@ -190,11 +200,11 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 					.setValue(OPEN, isPowered);
 				if (isPowered)
 					otherDoor = otherDoor.setValue(VISIBLE, false);
-				pLevel.setBlock(otherPos, otherDoor, 2);
+				pLevel.setBlock(otherPos, otherDoor, Block.UPDATE_CLIENTS);
 			}
 		}
 
-		pLevel.setBlock(pPos, changedState, 2);
+		pLevel.setBlock(pPos, changedState, Block.UPDATE_CLIENTS);
 	}
 
 	public static boolean isDoorPowered(Level pLevel, BlockPos pPos, BlockState state) {
@@ -219,7 +229,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 		boolean isOpen = state.getValue(OPEN);
 		if (isOpen)
 			state = state.setValue(VISIBLE, false);
-		level.setBlock(pos, state, 10);
+		level.setBlock(pos, state, UPDATE_CLIENTS | UPDATE_IMMEDIATE);
 		level.gameEvent(player, isOpen(state) ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
 
 		DoorHingeSide hinge = state.getValue(HINGE);
@@ -275,5 +285,4 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 	public BlockEntityType<? extends SlidingDoorBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.SLIDING_DOOR.get();
 	}
-
 }

@@ -11,21 +11,22 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.Vec3;
+
 import net.neoforged.neoforge.fluids.FluidStack;
 
-public class SmartFluidPipeBlockEntity extends SmartBlockEntity {
-
+public class SmartFluidPipeBlockEntity extends SmartBlockEntity implements Clearable {
 	private FilteringBehaviour filter;
 
 	public SmartFluidPipeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -40,13 +41,17 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity {
 		registerAwardables(behaviours, FluidPropagator.getSharedTriggers());
 	}
 
+	@Override
+	public void clearContent() {
+		filter.setFilter(ItemStack.EMPTY);
+	}
+
 	private void onFilterChanged(ItemStack newFilter) {
 		if (!level.isClientSide)
 			FluidPropagator.propagateChangedPipe(level, worldPosition, getBlockState());
 	}
 
 	class SmartPipeBehaviour extends StraightPipeFluidTransportBehaviour {
-
 		public SmartPipeBehaviour(SmartBlockEntity be) {
 			super(be);
 		}
@@ -63,11 +68,9 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity {
 			return state.getBlock() instanceof SmartFluidPipeBlock
 				&& SmartFluidPipeBlock.getPipeAxis(state) == direction.getAxis();
 		}
-
 	}
 
-	class SmartPipeFilterSlot extends ValueBoxTransform {
-
+	static class SmartPipeFilterSlot extends ValueBoxTransform {
 		@Override
 		public Vec3 getLocalOffset(LevelAccessor level, BlockPos pos, BlockState state) {
 			AttachFace face = state.getValue(SmartFluidPipeBlock.FACE);
@@ -96,7 +99,5 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity {
 				horizontalAngle += 180;
 			return horizontalAngle;
 		}
-
 	}
-
 }

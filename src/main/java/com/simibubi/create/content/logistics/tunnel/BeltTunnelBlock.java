@@ -199,7 +199,7 @@ public class BeltTunnelBlock extends Block implements IBE<BeltTunnelBlockEntity>
 		shape = shape == Shape.CLOSED ? Shape.WINDOW : Shape.CLOSED;
 		Level world = context.getLevel();
 		if (!world.isClientSide)
-			world.setBlock(context.getClickedPos(), state.setValue(SHAPE, shape), 2);
+			world.setBlock(context.getClickedPos(), state.setValue(SHAPE, shape), Block.UPDATE_CLIENTS);
 		return InteractionResult.SUCCESS;
 	}
 

@@ -12,7 +12,6 @@ import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe.Builder;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.mixin.accessor.PotionBrewingAccessor;
 
 import net.minecraft.core.Holder.Reference;
@@ -31,6 +30,8 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 import net.neoforged.neoforge.common.brewing.IBrewingRecipe;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.DataComponentFluidIngredient;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public class PotionMixingRecipes {
 
@@ -149,7 +150,7 @@ public class PotionMixingRecipes {
 		ResourceLocation recipeId = Create.asResource(id);
 		MixingRecipe recipe = new Builder<>(MixingRecipe::new, recipeId)
 				.require(ingredient)
-				.require(FluidIngredient.fromFluidStack(fromFluid))
+			.require(new SizedFluidIngredient(DataComponentFluidIngredient.of(false, fromFluid), fromFluid.getAmount()))
 				.output(toFluid)
 				.requiresHeat(HeatCondition.HEATED)
 				.build();

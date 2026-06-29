@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.funnel;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -85,7 +85,7 @@ public abstract class AbstractFunnelBlock extends Block
 	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource r) {
 		boolean previouslyPowered = state.getValue(POWERED);
 		if (previouslyPowered != worldIn.hasNeighborSignal(pos))
-			worldIn.setBlock(pos, state.cycle(POWERED), 2);
+			worldIn.setBlock(pos, state.cycle(POWERED), Block.UPDATE_CLIENTS);
 	}
 
 	public static ItemStack tryInsert(Level worldIn, BlockPos pos, ItemStack toInsert, boolean simulate) {

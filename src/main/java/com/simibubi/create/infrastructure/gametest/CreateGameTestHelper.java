@@ -66,6 +66,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 	public static final int TEN_SECONDS = 10 * TICKS_PER_SECOND;
 	public static final int FIFTEEN_SECONDS = 15 * TICKS_PER_SECOND;
 	public static final int TWENTY_SECONDS = 20 * TICKS_PER_SECOND;
+	public static final int THIRTY_SECONDS = 30 * TICKS_PER_SECOND;
 
 	private CreateGameTestHelper(GameTestInfo testInfo) {
 		super(testInfo);

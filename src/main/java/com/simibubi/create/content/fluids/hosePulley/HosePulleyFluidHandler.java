@@ -2,7 +2,7 @@ package com.simibubi.create.content.fluids.hosePulley;
 
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.fluids.transfer.FluidDrainingBehaviour;
 import com.simibubi.create.content.fluids.transfer.FluidFillingBehaviour;

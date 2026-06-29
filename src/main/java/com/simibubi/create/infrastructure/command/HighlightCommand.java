@@ -24,7 +24,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class HighlightCommand {
-
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("highlight")
 			.then(Commands.argument("pos", BlockPosArgument.blockPos())
@@ -55,11 +54,7 @@ public class HighlightCommand {
 	}
 
 	private static void sendMissMessage(CommandSourceStack source) {
-		source.sendSuccess(() ->
-			{
-				return Component.literal("Try looking at a Block that has failed to assemble a Contraption and try again.");
-			},
-			true);
+		source.sendSuccess(() -> Component.literal("Try looking at a Block that has failed to assemble a Contraption and try again."), true);
 	}
 
 	private static int highlightAssemblyExceptionFor(ServerPlayer player, CommandSourceStack source) {
@@ -90,9 +85,7 @@ public class HighlightCommand {
 		}
 
 		if (!exception.hasPosition()) {
-			source.sendSuccess(() -> {
-				return Component.literal("Can't highlight a specific position for this issue");
-			}, true);
+			source.sendSuccess(() -> Component.literal("Can't highlight a specific position for this issue"), true);
 			return Command.SINGLE_SUCCESS;
 		}
 

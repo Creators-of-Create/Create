@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "netherexp"
+    }
+  ],
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "ingredients": [
+        {
+          "item": "netherexp:cerebrage_claret_stem"
+        }
+      ]
+    }
+  ],
+  "processing_time": 50,
+  "results": [
+    {
+      "id": "netherexp:stripped_claret_stem"
+    }
+  ]
+}

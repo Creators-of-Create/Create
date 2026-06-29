@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.tableCloth;
 import java.util.List;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;

@@ -34,6 +34,8 @@ public class PortableItemInterfaceBlockEntity extends PortableStorageInterfaceBl
 	public void startTransferringTo(Contraption contraption, float distance) {
 		capability = new InterfaceItemHandler(contraption.getStorage().getAllItems());
 		invalidateCapability();
+        if (level != null && !level.isClientSide)
+            level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
 		super.startTransferringTo(contraption, distance);
 	}
 
@@ -41,6 +43,8 @@ public class PortableItemInterfaceBlockEntity extends PortableStorageInterfaceBl
 	protected void stopTransferring() {
 		capability = createEmptyHandler();
 		invalidateCapability();
+        if (level != null && !level.isClientSide)
+            level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
 		super.stopTransferring();
 	}
 

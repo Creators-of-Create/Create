@@ -1,6 +1,5 @@
 package com.simibubi.create.content.kinetics.base;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -10,6 +9,7 @@ import com.simibubi.create.content.kinetics.KineticDebugger;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.render.SuperByteBufferCache;
@@ -26,6 +26,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.data.ModelData;
 
@@ -35,6 +36,7 @@ public class KineticBlockEntityRenderer<T extends KineticBlockEntity> extends Sa
 	public static boolean rainbowMode = false;
 
 	protected static final RenderType[] REVERSED_CHUNK_BUFFER_LAYERS = RenderType.chunkBufferLayers().toArray(RenderType[]::new);
+
 	static {
 		ArrayUtils.reverse(REVERSED_CHUNK_BUFFER_LAYERS);
 	}
@@ -44,7 +46,7 @@ public class KineticBlockEntityRenderer<T extends KineticBlockEntity> extends Sa
 
 	@Override
 	protected void renderSafe(T be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
-		int light, int overlay) {
+							  int light, int overlay) {
 		if (VisualizationManager.supportsVisualization(be.getLevel())) return;
 
 		BlockState state = getRenderedBlockState(be);
@@ -72,13 +74,13 @@ public class KineticBlockEntityRenderer<T extends KineticBlockEntity> extends Sa
 	}
 
 	public static void renderRotatingKineticBlock(KineticBlockEntity be, BlockState renderedState, PoseStack ms,
-		VertexConsumer buffer, int light) {
+												  VertexConsumer buffer, int light) {
 		SuperByteBuffer superByteBuffer = CachedBuffers.block(KINETIC_BLOCK, renderedState);
 		renderRotatingBuffer(be, superByteBuffer, ms, buffer, light);
 	}
 
 	public static void renderRotatingBuffer(KineticBlockEntity be, SuperByteBuffer superBuffer, PoseStack ms,
-		VertexConsumer buffer, int light) {
+											VertexConsumer buffer, int light) {
 		standardKineticRotationTransform(superBuffer, be, light).renderInto(ms, buffer);
 	}
 
@@ -90,7 +92,7 @@ public class KineticBlockEntityRenderer<T extends KineticBlockEntity> extends Sa
 	}
 
 	public static SuperByteBuffer standardKineticRotationTransform(SuperByteBuffer buffer, KineticBlockEntity be,
-		int light) {
+																   int light) {
 		final BlockPos pos = be.getBlockPos();
 		Axis axis = ((IRotate) be.getBlockState()
 			.getBlock()).getRotationAxis(be.getBlockState());
@@ -98,7 +100,7 @@ public class KineticBlockEntityRenderer<T extends KineticBlockEntity> extends Sa
 	}
 
 	public static SuperByteBuffer kineticRotationTransform(SuperByteBuffer buffer, KineticBlockEntity be, Axis axis,
-		float angle, int light) {
+														   float angle, int light) {
 		buffer.light(light);
 		buffer.rotateCentered(angle, Direction.get(AxisDirection.POSITIVE, axis));
 
@@ -107,13 +109,15 @@ public class KineticBlockEntityRenderer<T extends KineticBlockEntity> extends Sa
 			buffer.color(be.hasNetwork() ? Color.generateFromLong(be.network) : Color.WHITE);
 		} else {
 			float overStressedEffect = be.effects.overStressedEffect;
-			if (overStressedEffect != 0)
-				if (overStressedEffect > 0)
-					buffer.color(Color.WHITE.mixWith(Color.RED, overStressedEffect));
-				else
-					buffer.color(Color.WHITE.mixWith(Color.SPRING_GREEN, -overStressedEffect));
-			else
+			if (overStressedEffect != 0) {
+				boolean overstressed = overStressedEffect > 0;
+				Color color = overstressed ? Color.RED : Color.SPRING_GREEN;
+				float weight = overstressed ? overStressedEffect : -overStressedEffect;
+
+				buffer.color(Color.WHITE.mixWith(color, weight));
+			} else {
 				buffer.color(Color.WHITE);
+			}
 		}
 
 		return buffer;

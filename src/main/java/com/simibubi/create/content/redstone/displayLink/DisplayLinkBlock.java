@@ -3,8 +3,6 @@ package com.simibubi.create.content.redstone.displayLink;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import net.createmod.catnip.platform.CatnipServices;
-
 import org.jetbrains.annotations.NotNull;
 
 import com.mojang.serialization.MapCodec;
@@ -20,6 +18,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -122,7 +121,7 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements IBE<
 		boolean powered = shouldBePowered(state, worldIn, pos);
 		boolean previouslyPowered = state.getValue(POWERED);
 		if (previouslyPowered != powered) {
-			worldIn.setBlock(pos, state.cycle(POWERED), 2);
+			worldIn.setBlock(pos, state.cycle(POWERED), Block.UPDATE_CLIENTS);
 			if (!powered)
 				withBlockEntityDo(worldIn, pos, DisplayLinkBlockEntity::onNoLongerPowered);
 		}
