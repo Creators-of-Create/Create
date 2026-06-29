@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ISidedScrollValueBehavior;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.SidedScrollValueBehavior;
 
 import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.platform.CatnipServices;
@@ -88,7 +88,7 @@ public class ValueSettingsClient implements LayeredDraw.Layer {
 			return;
 		}
 
-		if (valueSettingBehaviour instanceof ISidedScrollValueBehavior<?> sided) valueSettingBehaviour = sided.get(interactHeldFace);
+		if (valueSettingBehaviour instanceof SidedScrollValueBehavior<?> sided) valueSettingBehaviour = sided.get(interactHeldFace);
 
 		if (!mc.options.keyUse.isDown()) {
 			CatnipServices.NETWORK.sendToServer(new ValueSettingsPacket(interactHeldPos, 0, 0, interactHeldHand, blockHitResult,

@@ -15,7 +15,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 // Example implementation of ISidedScrollValueBehavior
-public class SidedScrollOptionBehavior<E extends Enum<E> & INamedIconOptions> extends ScrollValueBehaviour implements ISidedScrollValueBehavior<ScrollOptionBehaviour<E>> {
+public class SidedScrollOptionBehavior<E extends Enum<E> & INamedIconOptions> extends ScrollValueBehaviour implements SidedScrollValueBehavior<ScrollOptionBehaviour<E>> {
     Map<Direction, ScrollOptionBehaviour<E>> sidedBehaviours;
 
 	/**
@@ -25,7 +25,6 @@ public class SidedScrollOptionBehavior<E extends Enum<E> & INamedIconOptions> ex
 	 * @param be The SmartBlockEntity this behavior is associated with.
 	 * @param slot The ValueBoxTransform for the slot.
 	 */
-
     public SidedScrollOptionBehavior(Class<E> enum_, Component label, SmartBlockEntity be, ValueBoxTransform slot) {
 		super(label, be, slot);
 		sidedBehaviours = new IdentityHashMap<>();

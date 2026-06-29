@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBehaviour.ValueSettings;
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ISidedScrollValueBehavior;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.SidedScrollValueBehavior;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.createmod.catnip.codecs.stream.CatnipLargerStreamCodecs;
@@ -66,7 +66,7 @@ public class ValueSettingsPacket extends BlockEntityConfigurationPacket<SmartBlo
 				valueSettingsBehaviour.onShortInteract(player, interactHand, side, hitResult);
 				return;
 			}
-			if (valueSettingsBehaviour instanceof ISidedScrollValueBehavior<?>) valueSettingsBehaviour = ((ISidedScrollValueBehavior<?>) valueSettingsBehaviour).get(side);
+			if (valueSettingsBehaviour instanceof SidedScrollValueBehavior<?>) valueSettingsBehaviour = ((SidedScrollValueBehavior<?>) valueSettingsBehaviour).get(side);
 			valueSettingsBehaviour.newSettingHovered(new ValueSettings(row, value));
 			valueSettingsBehaviour.setValueSettings(player, new ValueSettings(row, value), ctrlDown);
 			return;

@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.blockEntity.behaviour.scrollValue;
 
 import net.minecraft.core.Direction;
 
-public interface ISidedScrollValueBehavior<B extends ScrollValueBehaviour>{
+public interface SidedScrollValueBehavior<B extends ScrollValueBehaviour>{
 
 	/**
 	 * Returns the ValueSettingsBehaviour for the given side.
