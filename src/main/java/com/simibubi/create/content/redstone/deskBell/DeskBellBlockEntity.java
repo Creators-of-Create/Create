@@ -6,9 +6,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -36,7 +36,7 @@ public class DeskBellBlockEntity extends SmartBlockEntity {
 		super.tick();
 		animation.tickChaser();
 
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		if (blockStateTimer == 0)
 			return;
@@ -67,14 +67,14 @@ public class DeskBellBlockEntity extends SmartBlockEntity {
 	}
 
 	public void ding() {
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			blockStateTimer = 20;
 			ding = true;
 			sendData();
 			return;
 		}
 
-		animationOffset = level.random.nextFloat() * 2 * Mth.PI;
+		animationOffset = level.getRandom().nextFloat() * 2 * Mth.PI;
 		animation.startWithValue(1)
 			.chase(0, 0.05, Chaser.LINEAR);
 	}

@@ -4,10 +4,9 @@ import com.simibubi.create.AllPackets;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public enum ControlsStopControllingPacket implements ClientboundPacketPayload {
 	INSTANCE;
@@ -15,8 +14,7 @@ public enum ControlsStopControllingPacket implements ClientboundPacketPayload {
 	public static final StreamCodec<ByteBuf, ControlsStopControllingPacket> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void handle(LocalPlayer player) {
+	public void handle(Player player) {
 		ControlsHandler.stopControlling();
 	}
 

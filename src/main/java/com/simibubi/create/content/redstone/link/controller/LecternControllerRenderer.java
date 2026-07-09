@@ -7,9 +7,9 @@ import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -26,8 +26,7 @@ public class LecternControllerRenderer extends SafeBlockEntityRenderer<LecternCo
 
 		ItemStack stack = AllItems.LINKED_CONTROLLER.asStack();
 		ItemDisplayContext transformType = ItemDisplayContext.NONE;
-		CustomRenderedItemModel mainModel = (CustomRenderedItemModel) Minecraft.getInstance()
-			.getItemRenderer()
+		CustomRenderedItemModel mainModel = (CustomRenderedItemModel) com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer()
 			.getModel(stack, be.getLevel(), null, 0);
 		PartialItemModelRenderer renderer = PartialItemModelRenderer.of(stack, transformType, ms, buffer, overlay);
 		boolean active = be.hasUser();

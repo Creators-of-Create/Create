@@ -1,9 +1,7 @@
 {
   "type": "create:splashing",
   "ingredients": [
-    {
-      "tag": "c:flours/wheat"
-    }
+    "#c:flours/wheat"
   ],
   "results": [
     {

@@ -7,14 +7,14 @@ import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.core.Direction;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -32,9 +32,9 @@ public class ControlsRenderer {
 			.center()
 			.rotateYDegrees(hAngle)
 			.uncenter()
-			.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+			.light(LightCoordsUtil.FULL_BRIGHT)
 			.useLevelLight(context.world, matrices.getWorld())
-			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.cutoutMipped()));
+			.renderInto(matrices.getViewProjection(), buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped()));
 
 		double yOffset = Mth.lerp(equipAnimation * equipAnimation, -0.15f, 0.05f);
 
@@ -53,9 +53,9 @@ public class ControlsRenderer {
 				.translate(0, -6 / 16f, -3 / 16f)
 				.translate(first ? 0 : 6 / 16f, 0, 0);
 			lever.transform(ms)
-				.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+				.light(LightCoordsUtil.FULL_BRIGHT)
 				.useLevelLight(context.world, matrices.getWorld())
-				.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));
+				.renderInto(matrices.getViewProjection(), buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 			ms.popPose();
 		}
 

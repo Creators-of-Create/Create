@@ -7,9 +7,7 @@
   ],
   "type": "create:splashing",
   "ingredients": [
-    {
-      "item": "create:crushed_raw_silver"
-    }
+    "create:crushed_raw_silver"
   ],
   "results": [
     {

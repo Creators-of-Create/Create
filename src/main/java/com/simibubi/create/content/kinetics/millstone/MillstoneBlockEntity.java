@@ -9,12 +9,14 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.item.LegacyItemTransferAdapter;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.mixin.accessor.ItemStackHandlerAccessor;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.HolderLookup;
@@ -24,13 +26,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -55,9 +57,9 @@ public class MillstoneBlockEntity extends KineticBlockEntity implements Clearabl
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-				Capabilities.ItemHandler.BLOCK,
+				Capabilities.Item.BLOCK,
 				AllBlockEntityTypes.MILLSTONE.get(),
-				(be, context) -> be.capability
+				(be, context) -> new LegacyItemTransferAdapter(be.capability)
 		);
 	}
 
@@ -69,7 +71,6 @@ public class MillstoneBlockEntity extends KineticBlockEntity implements Clearabl
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void tickAudio() {
 		super.tickAudio();
 
@@ -97,7 +98,7 @@ public class MillstoneBlockEntity extends KineticBlockEntity implements Clearabl
 		if (timer > 0) {
 			timer -= getProcessingSpeed();
 
-			if (level.isClientSide) {
+			if (level.isClientSide()) {
 				spawnParticles();
 				return;
 			}
@@ -157,13 +158,13 @@ public class MillstoneBlockEntity extends KineticBlockEntity implements Clearabl
 		}
 
 		ItemStack stackInSlot = inputInv.getStackInSlot(0);
-		ItemStack craftingRemainingItem = stackInSlot.getCraftingRemainingItem();
+		ItemStackTemplate craftingRemainingItem = stackInSlot.getCraftingRemainder();
 		stackInSlot.shrink(1);
 		inputInv.setStackInSlot(0, stackInSlot);
-		lastRecipe.rollResults(level.random)
+		lastRecipe.rollResults(level.getRandom())
 			.forEach(stack -> ItemHandlerHelper.insertItemStacked(outputInv, stack, false));
-		if (!craftingRemainingItem.isEmpty()) {
-			ItemHandlerHelper.insertItemStacked(outputInv, craftingRemainingItem, false);
+		if (craftingRemainingItem != null) {
+			ItemHandlerHelper.insertItemStacked(outputInv, craftingRemainingItem.create(), false);
 		}
 		award(AllAdvancements.MILLSTONE);
 
@@ -176,30 +177,30 @@ public class MillstoneBlockEntity extends KineticBlockEntity implements Clearabl
 		if (stackInSlot.isEmpty())
 			return;
 
-		ItemParticleOption data = new ItemParticleOption(ParticleTypes.ITEM, stackInSlot);
-		float angle = level.random.nextFloat() * 360;
+		ItemParticleOption data = new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(stackInSlot));
+		float angle = level.getRandom().nextFloat() * 360;
 		Vec3 offset = new Vec3(0, 0, 0.5f);
 		offset = VecHelper.rotate(offset, angle, Axis.Y);
 		Vec3 target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y);
 
 		Vec3 center = offset.add(VecHelper.getCenterOf(worldPosition));
-		target = VecHelper.offsetRandomly(target.subtract(offset), level.random, 1 / 128f);
+		target = VecHelper.offsetRandomly(target.subtract(offset), level.getRandom(), 1 / 128f);
 		level.addParticle(data, center.x, center.y, center.z, target.x, target.y, target.z);
 	}
 
 	@Override
 	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putInt("Timer", timer);
-		compound.put("InputInventory", inputInv.serializeNBT(registries));
-		compound.put("OutputInventory", outputInv.serializeNBT(registries));
+		compound.put("InputInventory", LegacyItemStackNbtBridge.serializeHandler(inputInv, registries));
+		compound.put("OutputInventory", LegacyItemStackNbtBridge.serializeHandler(outputInv, registries));
 		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		timer = compound.getInt("Timer");
-		inputInv.deserializeNBT(registries, compound.getCompound("InputInventory"));
-		outputInv.deserializeNBT(registries, compound.getCompound("OutputInventory"));
+		timer = compound.getIntOr("Timer", 0);
+		LegacyItemStackNbtBridge.deserializeHandler(inputInv, registries, compound.getCompoundOrEmpty("InputInventory"));
+		LegacyItemStackNbtBridge.deserializeHandler(outputInv, registries, compound.getCompoundOrEmpty("OutputInventory"));
 		super.read(compound, registries, clientPacket);
 	}
 

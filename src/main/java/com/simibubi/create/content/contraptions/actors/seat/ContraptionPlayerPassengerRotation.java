@@ -5,8 +5,8 @@ import com.simibubi.create.content.contraptions.AbstractContraptionEntity.Contra
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;

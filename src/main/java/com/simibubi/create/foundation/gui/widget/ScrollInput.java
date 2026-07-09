@@ -8,7 +8,7 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.gui.widget.AbstractSimiWidget;
+import net.createmod.catnip.api.client.gui.widget.AbstractSimiWidget;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;

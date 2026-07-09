@@ -9,8 +9,9 @@ import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.content.logistics.AddressEditBoxHelper;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -22,7 +23,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class ClipboardBlockEntity extends SmartBlockEntity {
 	private UUID lastEdit;
@@ -76,7 +76,7 @@ public class ClipboardBlockEntity extends SmartBlockEntity {
 				.ifPresent(encoded -> tag.put("components", encoded));
 
 			if (lastEdit != null)
-				tag.putUUID("LastEdit", lastEdit);
+				LegacyNbtUtilsBridge.putUUID(tag, "LastEdit", lastEdit);
 		}
 	}
 
@@ -86,7 +86,8 @@ public class ClipboardBlockEntity extends SmartBlockEntity {
 
 		if (clientPacket) {
 			if (tag.contains("components"))
-				DataComponentMap.CODEC.decode(registries.createSerializationContext(NbtOps.INSTANCE), tag.getCompound("components"))
+				DataComponentMap.CODEC.decode(registries.createSerializationContext(NbtOps.INSTANCE),
+						tag.getCompoundOrEmpty("components"))
 					.result()
 					.map(Pair::getFirst)
 					.ifPresent(this::setComponents);
@@ -95,12 +96,11 @@ public class ClipboardBlockEntity extends SmartBlockEntity {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private void readClientSide(CompoundTag tag) {
 		Minecraft mc = Minecraft.getInstance();
-		if (!(mc.screen instanceof ClipboardScreen cs))
+		if (!(mc.gui.screen() instanceof ClipboardScreen cs))
 			return;
-		if (tag.contains("LastEdit") && tag.getUUID("LastEdit")
+		if (tag.contains("LastEdit") && LegacyNbtUtilsBridge.getUUID(tag, "LastEdit")
 			.equals(mc.player.getUUID()))
 			return;
 		if (!worldPosition.equals(cs.targetedBlock))
@@ -108,7 +108,6 @@ public class ClipboardBlockEntity extends SmartBlockEntity {
 		cs.reopenWith(components().getOrDefault(AllDataComponents.CLIPBOARD_CONTENT, ClipboardContent.EMPTY));
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private void advertiseToAddressHelper() {
 		AddressEditBoxHelper.advertiseClipboard(this);
 	}

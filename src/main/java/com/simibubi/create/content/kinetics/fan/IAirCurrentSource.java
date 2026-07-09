@@ -5,13 +5,11 @@ import org.jetbrains.annotations.Nullable;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CKinetics;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
-@MethodsReturnNonnullByDefault
 public interface IAirCurrentSource {
 	@Nullable
 	AirCurrent getAirCurrent();

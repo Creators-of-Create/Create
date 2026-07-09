@@ -14,7 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -76,14 +76,14 @@ public class ToolboxMenu extends MenuBase<ToolboxBlockEntity> {
 	}
 
 	@Override
-	public void clicked(int index, int flags, ClickType type, Player player) {
+	public void clicked(int index, int flags, ContainerInput type, Player player) {
 		int size = contentHolder.inventory.getSlots();
 
 		if (index >= 0 && index < size) {
 			ItemStack itemInClickedSlot = getSlot(index).getItem();
 			ItemStack carried = getCarried();
 
-			if (type == ClickType.PICKUP && !carried.isEmpty() && !itemInClickedSlot.isEmpty()
+			if (type == ContainerInput.PICKUP && !carried.isEmpty() && !itemInClickedSlot.isEmpty()
 				&& ToolboxInventory.canItemsShareCompartment(itemInClickedSlot, carried)) {
 				int subIndex = index % STACKS_PER_COMPARTMENT;
 				if (subIndex != STACKS_PER_COMPARTMENT - 1) {
@@ -92,8 +92,8 @@ public class ToolboxMenu extends MenuBase<ToolboxBlockEntity> {
 				}
 			}
 
-			if (type == ClickType.PICKUP && carried.isEmpty() && itemInClickedSlot.isEmpty())
-				if (!player.level().isClientSide) {
+			if (type == ContainerInput.PICKUP && carried.isEmpty() && itemInClickedSlot.isEmpty())
+				if (!player.level().isClientSide()) {
 					contentHolder.inventory.filters.set(index / STACKS_PER_COMPARTMENT, ItemStack.EMPTY);
 					contentHolder.sendData();
 				}
@@ -154,7 +154,7 @@ public class ToolboxMenu extends MenuBase<ToolboxBlockEntity> {
 	@Override
 	public void removed(Player playerIn) {
 		super.removed(playerIn);
-		if (!playerIn.level().isClientSide)
+		if (!playerIn.level().isClientSide())
 			BlockEntityBehaviour.get(contentHolder, AnimatedContainerBehaviour.TYPE)
 				.stopOpen(playerIn);
 	}

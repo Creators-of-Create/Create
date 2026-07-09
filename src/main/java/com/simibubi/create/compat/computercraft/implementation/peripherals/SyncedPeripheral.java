@@ -10,7 +10,7 @@ import com.simibubi.create.compat.computercraft.AttachedComputerPacket;
 import com.simibubi.create.compat.computercraft.events.ComputerEvent;
 import com.simibubi.create.compat.computercraft.implementation.ComputerBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;

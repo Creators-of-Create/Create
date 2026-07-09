@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.tableCloth;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlock;
@@ -11,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.block.Block;
 
 public class TableClothBlockItem extends BlockItem {
@@ -25,16 +27,19 @@ public class TableClothBlockItem extends BlockItem {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-		super.appendHoverText(stack, tooltipContext, tooltipComponents, tooltipFlag);
+	public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, TooltipDisplay tooltipDisplay,
+		Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+		super.appendHoverText(stack, tooltipContext, tooltipDisplay, tooltipComponents, tooltipFlag);
 		if (!isFoil(stack))
 			return;
 
-		CreateLang.translate("table_cloth.shop_configured")
+		tooltipComponents.accept(CreateLang.translate("table_cloth.shop_configured")
 			.style(ChatFormatting.GOLD)
-			.addTo(tooltipComponents);
+			.component());
 
-		RedstoneRequesterBlock.appendRequesterTooltip(stack, tooltipComponents);
+		List<Component> requesterTooltip = new java.util.ArrayList<>();
+		RedstoneRequesterBlock.appendRequesterTooltip(stack, requesterTooltip);
+		requesterTooltip.forEach(tooltipComponents);
 	}
 
 }

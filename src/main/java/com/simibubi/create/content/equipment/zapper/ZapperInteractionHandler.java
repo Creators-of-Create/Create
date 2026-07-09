@@ -29,7 +29,7 @@ public class ZapperInteractionHandler {
 
 	@SubscribeEvent
 	public static void leftClickingBlocksWithTheZapperSelectsTheBlock(PlayerInteractEvent.LeftClickBlock event) {
-		if (event.getLevel().isClientSide)
+		if (event.getLevel().isClientSide())
 			return;
 		ItemStack heldItem = event.getEntity()
 			.getMainHandItem();

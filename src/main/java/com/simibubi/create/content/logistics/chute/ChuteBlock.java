@@ -8,16 +8,17 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.funnel.FunnelBlock;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.Mirror;
@@ -34,7 +36,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
@@ -44,7 +46,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public class ChuteBlock extends AbstractChuteBlock implements ProperWaterloggedBlock {
 
 	public static final Property<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
-	public static final DirectionProperty FACING = BlockStateProperties.FACING_HOPPER;
+	public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING_HOPPER;
 
 	public ChuteBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
@@ -89,7 +91,7 @@ public class ChuteBlock extends AbstractChuteBlock implements ProperWaterloggedB
 		if (shape == Shape.INTERSECTION)
 			return InteractionResult.PASS;
 		Level level = context.getLevel();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return InteractionResult.SUCCESS;
 		if (shape == Shape.ENCASED) {
 			level.setBlockAndUpdate(context.getClickedPos(), state.setValue(SHAPE, Shape.NORMAL));
@@ -104,18 +106,18 @@ public class ChuteBlock extends AbstractChuteBlock implements ProperWaterloggedB
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		Shape shape = state.getValue(SHAPE);
 		if (!AllBlocks.INDUSTRIAL_IRON_BLOCK.isIn(stack))
 			return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
 		if (shape == Shape.INTERSECTION || shape == Shape.ENCASED)
 			return super.useItemOn(stack,state, level, pos, player, hand, hitResult);
-		if (player == null || level.isClientSide)
-			return ItemInteractionResult.SUCCESS;
+		if (player == null || level.isClientSide())
+			return InteractionResult.SUCCESS;
 
 		level.setBlockAndUpdate(pos, state.setValue(SHAPE, Shape.ENCASED));
 		level.playSound(null, pos, SoundEvents.NETHERITE_BLOCK_HIT, SoundSource.BLOCKS, 0.5f, 1.05f);
-		return ItemInteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -132,10 +134,9 @@ public class ChuteBlock extends AbstractChuteBlock implements ProperWaterloggedB
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState above, LevelAccessor world,
-		BlockPos pos, BlockPos p_196271_6_) {
-		updateWater(world, state, pos);
-		return super.updateShape(state, direction, above, world, pos, p_196271_6_);
+	public BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess ticks, BlockPos pos, Direction direction, BlockPos p_196271_6_, BlockState above, RandomSource random) {
+		updateWater(ticks, world, state, pos);
+		return super.updateShape(state, world, ticks, pos, direction, p_196271_6_, above, random);
 	}
 
 	@Override

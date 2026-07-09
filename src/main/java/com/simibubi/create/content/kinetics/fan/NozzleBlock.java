@@ -7,7 +7,6 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -17,6 +16,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,7 +24,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-@MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class NozzleBlock extends WrenchableDirectionalBlock implements IBE<NozzleBlockEntity> {
 
@@ -48,11 +47,11 @@ public class NozzleBlock extends WrenchableDirectionalBlock implements IBE<Nozzl
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
-		if (worldIn.isClientSide)
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, Orientation orientation, boolean isMoving) {
+		if (worldIn.isClientSide())
 			return;
 
+		BlockPos fromPos = orientation == null ? pos : pos.relative(orientation.getFront());
 		if (fromPos.equals(pos.relative(state.getValue(FACING).getOpposite())))
 			if (!canSurvive(state, worldIn, pos)) {
 				worldIn.destroyBlock(pos, true);

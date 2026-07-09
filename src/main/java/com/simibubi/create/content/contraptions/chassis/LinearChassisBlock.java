@@ -13,13 +13,16 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.util.RandomSource;
 
 public class LinearChassisBlock extends AbstractChassisBlock {
 
@@ -57,8 +60,8 @@ public class LinearChassisBlock extends AbstractChassisBlock {
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction side, BlockState other, LevelAccessor p_196271_4_,
-		BlockPos p_196271_5_, BlockPos p_196271_6_) {
+	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
+		Direction side, BlockPos neighbourPos, BlockState other, RandomSource random) {
 		BooleanProperty property = getGlueableSide(state, side);
 		if (property == null || !sameKind(state, other) || state.getValue(AXIS) != other.getValue(AXIS))
 			return state;

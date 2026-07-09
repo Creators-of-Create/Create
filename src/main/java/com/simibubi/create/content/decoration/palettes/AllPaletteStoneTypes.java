@@ -10,7 +10,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;

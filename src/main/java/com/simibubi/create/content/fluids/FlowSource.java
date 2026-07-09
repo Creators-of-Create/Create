@@ -7,9 +7,11 @@ import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.ICapabilityProvider;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter;
 
-import net.createmod.catnip.math.BlockFace;
-import net.createmod.ponder.api.level.PonderLevel;
+import net.createmod.catnip.api.math.BlockFace;
+import net.createmod.ponder.api.client.level.PonderLevel;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,6 +21,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 
 public abstract class FlowSource {
 
@@ -83,23 +87,23 @@ public abstract class FlowSource {
 				BlockEntity blockEntity = level.getBlockEntity(location.getConnectedPos());
 				if (blockEntity != null) {
 					if (level instanceof ServerLevel serverLevel) {
-						fluidHandlerCache = ICapabilityProvider.of((invalidate) -> BlockCapabilityCache.create(
-							Capabilities.FluidHandler.BLOCK,
+						BlockCapabilityCache<ResourceHandler<FluidResource>, Direction> cache = BlockCapabilityCache.create(
+							Capabilities.Fluid.BLOCK,
 							serverLevel,
 							blockEntity.getBlockPos(),
 							location.getOppositeFace(),
 							() -> !networkBE.isRemoved(),
 							() -> {
 								fluidHandlerCache = EMPTY;
-								invalidate.run();
 							}
-						));
+						);
+						fluidHandlerCache = () -> LegacyFluidHandlerAdapter.of(cache.getCapability());
 					} else if (level instanceof PonderLevel) {
-						fluidHandlerCache = ICapabilityProvider.of(() -> level.getCapability(
-							Capabilities.FluidHandler.BLOCK,
+						fluidHandlerCache = ICapabilityProvider.of(() -> LegacyFluidHandlerAdapter.of(level.getCapability(
+							Capabilities.Fluid.BLOCK,
 							blockEntity.getBlockPos(),
 							location.getOppositeFace()
-						));
+						)));
 					}
 				}
 			}

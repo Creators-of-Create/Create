@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,11 +24,10 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -38,11 +37,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.Rotation;
@@ -89,7 +90,7 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 			for (Direction direction : Iterate.directions) {
 				if (clickedFace.getAxis() == direction.getAxis())
 					continue;
-				Vec3 centerOf = Vec3.atCenterOf(direction.getNormal());
+				Vec3 centerOf = Vec3.atCenterOf(direction.getUnitVec3i());
 				double distance = centerOf.distanceToSqr(clickLocation);
 				if (distance < closest) {
 					closest = distance;
@@ -101,7 +102,7 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 
 		if (clickedFace.getAxis() == axis)
 			return InteractionResult.PASS;
-		if (!world.isClientSide) {
+		if (!world.isClientSide()) {
 			withBlockEntityDo(world, pos, fpte -> fpte.getBehaviour(FluidTransportBehaviour.TYPE).interfaces.values()
 				.stream()
 				.filter(pc -> pc != null && pc.hasFlow())
@@ -124,12 +125,12 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-		ItemInteractionResult result = tryEncase(state, level, pos, stack, player, hand, hitResult);
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		InteractionResult result = tryEncase(state, level, pos, stack, player, hand, hitResult);
 		if (result.consumesAction())
 			return result;
 
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
 	public BlockState getAxisState(Axis axis) {
@@ -145,28 +146,26 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
-		if (blockTypeChanged && !world.isClientSide)
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
+		if (!world.isClientSide())
 			FluidPropagator.propagateChangedPipe(world, pos, state);
-		if (state != newState && !isMoving)
+		if (!isMoving)
 			removeBracket(world, pos, true).ifPresent(stack -> Block.popResource(world, pos, stack));
-		if (state.hasBlockEntity() && (blockTypeChanged || !newState.hasBlockEntity()))
+		if (state.hasBlockEntity())
 			world.removeBlockEntity(pos);
 	}
 
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return;
 		if (state != oldState)
 			world.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
-		boolean isMoving) {
-		DebugPackets.sendNeighborsUpdatePacket(world, pos);
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block otherBlock, Orientation orientation, boolean isMoving) {
+		BlockPos neighborPos = orientation == null ? pos : pos.relative(orientation.getFront());
 		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
@@ -184,7 +183,7 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 		return state.getBlock() instanceof FluidPipeBlock;
 	}
 
-	public static boolean canConnectTo(BlockAndTintGetter world, BlockPos neighbourPos, BlockState neighbour,
+	public static boolean canConnectTo(BlockGetter world, BlockPos neighbourPos, BlockState neighbour,
 		Direction direction) {
 		if (FluidPropagator.hasFluidCapability(world, neighbourPos, direction.getOpposite()))
 			return true;
@@ -201,7 +200,7 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 		return transport.canHaveFlowToward(neighbour, direction.getOpposite());
 	}
 
-	public static boolean shouldDrawRim(BlockAndTintGetter world, BlockPos pos, BlockState state, Direction direction) {
+	public static boolean shouldDrawRim(BlockGetter world, BlockPos pos, BlockState state, Direction direction) {
 		BlockPos offsetPos = pos.relative(direction);
 		BlockState facingState = world.getBlockState(offsetPos);
 		if (facingState.getBlock() instanceof EncasedPipeBlock)
@@ -217,12 +216,12 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 		return state.getValue(PROPERTY_BY_DIRECTION.get(direction));
 	}
 
-	public static boolean isCornerOrEndPipe(BlockAndTintGetter world, BlockPos pos, BlockState state) {
+	public static boolean isCornerOrEndPipe(BlockGetter world, BlockPos pos, BlockState state) {
 		return isPipe(state) && FluidPropagator.getStraightPipeAxis(state) == null
 			&& !shouldDrawCasing(world, pos, state);
 	}
 
-	public static boolean shouldDrawCasing(BlockAndTintGetter world, BlockPos pos, BlockState state) {
+	public static boolean shouldDrawCasing(BlockGetter world, BlockPos pos, BlockState state) {
 		if (!isPipe(state))
 			return false;
 		for (Axis axis : Iterate.axes) {
@@ -252,17 +251,16 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world,
-		BlockPos pos, BlockPos neighbourPos) {
+	public BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess ticks, BlockPos pos, Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
 		if (state.getValue(BlockStateProperties.WATERLOGGED))
-			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+			ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		if (isOpenAt(state, direction) && neighbourState.hasProperty(BlockStateProperties.WATERLOGGED))
-			world.scheduleTick(pos, this, 1, TickPriority.HIGH);
+			ticks.scheduleTick(pos, this, 1, TickPriority.HIGH);
 		return updateBlockState(state, direction, direction.getOpposite(), world, pos);
 	}
 
 	public BlockState updateBlockState(BlockState state, Direction preferredDirection, @Nullable Direction ignore,
-		BlockAndTintGetter world, BlockPos pos) {
+		BlockGetter world, BlockPos pos) {
 
 		BracketedBlockEntityBehaviour bracket = BlockEntityBehaviour.get(world, pos, BracketedBlockEntityBehaviour.TYPE);
 		if (bracket != null && bracket.isBracketPresent())
@@ -343,7 +341,7 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 	}
 
 	@Override
-	public VoxelShape getOcclusionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+	protected VoxelShape getOcclusionShape(BlockState pState) {
 		return OCCLUSION_BOX;
 	}
 

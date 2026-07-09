@@ -4,12 +4,12 @@ import com.simibubi.create.content.logistics.chute.ChuteBlock.Shape;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
+import com.tterrag.registrate.providers.generators.ModelFile;
 
 public class ChuteGenerator extends SpecialBlockStateGen {
 
@@ -24,7 +24,7 @@ public class ChuteGenerator extends SpecialBlockStateGen {
 	}
 
 	@Override
-	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
+	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockModelGenerator prov,
 		BlockState state) {
 		boolean horizontal = state.getValue(ChuteBlock.FACING) != Direction.DOWN;
 		ChuteBlock.Shape shape = state.getValue(ChuteBlock.SHAPE);

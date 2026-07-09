@@ -3,7 +3,6 @@ package com.simibubi.create.content.trains.station;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.compat.computercraft.ComputerScreen;
 import com.simibubi.create.content.trains.entity.Carriage;
@@ -14,12 +13,9 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.gui.AbstractSimiScreen;
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.gui.AbstractSimiScreen;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public abstract class AbstractStationScreen extends AbstractSimiScreen {
 
@@ -43,7 +39,7 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 	@Override
 	protected void init() {
 		if (blockEntity.computerBehaviour.hasAttachedComputer())
-			minecraft.setScreen(new ComputerScreen(title, () ->
+			minecraft.gui.setScreen(new ComputerScreen(title, () ->
                 Component.literal(station.name),
 				this::renderAdditional, this, blockEntity.computerBehaviour::hasAttachedComputer));
 
@@ -84,13 +80,13 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 		super.tick();
 
 		if (blockEntity.computerBehaviour.hasAttachedComputer())
-			minecraft.setScreen(new ComputerScreen(title, () ->
+			minecraft.gui.setScreen(new ComputerScreen(title, () ->
                 Component.literal(station.name),
 				this::renderAdditional, this, blockEntity.computerBehaviour::hasAttachedComputer));
 	}
 
 	@Override
-	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
@@ -98,27 +94,8 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 		renderAdditional(graphics, mouseX, mouseY, partialTicks, x, y, background);
 	}
 
-	private void renderAdditional(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background) {
-		PoseStack ms = graphics.pose();
-		ms.pushPose();
-		var msr = TransformStack.of(ms);
-		msr.pushPose()
-			.translate(guiLeft + background.getWidth() + 4, guiTop + background.getHeight() + 4, 100)
-			.scale(40)
-			.rotateXDegrees(-22)
-			.rotateYDegrees(63);
-		GuiGameElement.of(blockEntity.getBlockState()
-			.setValue(BlockStateProperties.WATERLOGGED, false))
-			.render(graphics);
-
-		if (blockEntity.resolveFlagAngle()) {
-			msr.translate(1 / 16f, -19 / 16f, -12 / 16f);
-			StationRenderer.transformFlag(msr, blockEntity, partialTicks, 180, false);
-			GuiGameElement.of(getFlag(partialTicks))
-				.render(graphics);
-		}
-
-		ms.popPose();
+	private void renderAdditional(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background) {
+		// TODO 26.2: restore the decorative station block preview on the new GUI render-state pipeline.
 	}
 
 	protected abstract PartialModel getFlag(float partialTicks);

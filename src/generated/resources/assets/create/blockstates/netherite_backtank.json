@@ -1,32 +1,17 @@
 {
   "variants": {
-    "facing=east,waterlogged=false": {
+    "facing=east": {
       "model": "create:block/netherite_backtank/block",
       "y": 90
     },
-    "facing=east,waterlogged=true": {
-      "model": "create:block/netherite_backtank/block",
-      "y": 90
-    },
-    "facing=north,waterlogged=false": {
+    "facing=north": {
       "model": "create:block/netherite_backtank/block"
     },
-    "facing=north,waterlogged=true": {
-      "model": "create:block/netherite_backtank/block"
-    },
-    "facing=south,waterlogged=false": {
+    "facing=south": {
       "model": "create:block/netherite_backtank/block",
       "y": 180
     },
-    "facing=south,waterlogged=true": {
-      "model": "create:block/netherite_backtank/block",
-      "y": 180
-    },
-    "facing=west,waterlogged=false": {
-      "model": "create:block/netherite_backtank/block",
-      "y": 270
-    },
-    "facing=west,waterlogged=true": {
+    "facing=west": {
       "model": "create:block/netherite_backtank/block",
       "y": 270
     }

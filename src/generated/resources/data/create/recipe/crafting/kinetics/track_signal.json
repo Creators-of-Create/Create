@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "item": "create:railway_casing"
-    },
-    {
-      "item": "create:electron_tube"
-    }
+    "create:railway_casing",
+    "create:electron_tube"
   ],
   "result": {
     "count": 4,

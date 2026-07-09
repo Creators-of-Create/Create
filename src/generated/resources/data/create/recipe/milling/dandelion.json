@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:dandelion"
-    }
+    "minecraft:dandelion"
   ],
   "processing_time": 50,
   "results": [

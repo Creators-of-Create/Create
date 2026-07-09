@@ -3,8 +3,9 @@ package com.simibubi.create.api.contraption.dispenser;
 import com.simibubi.create.api.registry.SimpleRegistry;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.impl.contraption.dispenser.DispenserBehaviorConverter;
+import com.simibubi.create.foundation.utility.LegacyDirectionBridge;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -44,12 +45,12 @@ public interface MountedDispenseBehavior {
 
 	static Vec3 getDispenserNormal(MovementContext ctx) {
 		Direction facing = ctx.state.getValue(DispenserBlock.FACING);
-		Vec3 normal = Vec3.atLowerCornerOf(facing.getNormal());
+		Vec3 normal = Vec3.atLowerCornerOf(facing.getUnitVec3i());
 		return ctx.rotation.apply(normal).normalize();
 	}
 
 	static Direction getClosestFacingDirection(Vec3 facing) {
-		return Direction.getNearest(facing.x, facing.y, facing.z);
+		return LegacyDirectionBridge.nearest(facing.x, facing.y, facing.z, Direction.NORTH);
 	}
 
 	/**

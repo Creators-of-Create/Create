@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "item": "create:cut_scorchia_slab"
-    },
-    {
-      "item": "create:cut_scorchia_slab"
-    }
+    "create:cut_scorchia_slab",
+    "create:cut_scorchia_slab"
   ],
   "result": {
-    "count": 1,
     "id": "create:cut_scorchia"
   }
 }

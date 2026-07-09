@@ -7,8 +7,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;

@@ -14,7 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
 public class ToggleDebugCommand {
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("rainbowDebug")
-			.requires(cs -> cs.hasPermission(0))
+			.requires(AllCommands.hasPermission(0))
 			.then(Commands.argument("status", BoolArgumentType.bool())
 				.executes(ctx -> {
 					KineticDebugger.rainbowDebug = BoolArgumentType.getBool(ctx, "status");

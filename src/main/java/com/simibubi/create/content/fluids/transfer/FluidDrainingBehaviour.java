@@ -15,8 +15,8 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 
 import it.unimi.dsi.fastutil.PriorityQueue;
 import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.BBHelper;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.BBHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;

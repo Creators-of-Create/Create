@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "create:exposed_copper_shingles"
-    },
-    {
-      "item": "minecraft:honeycomb_block"
-    }
+    "create:exposed_copper_shingles",
+    "minecraft:honeycomb_block"
   ],
   "keep_held_item": true,
   "results": [

@@ -9,7 +9,7 @@ import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -17,7 +17,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -35,18 +35,18 @@ public class SharedDepotBlockMethods {
 		return BlockEntityBehaviour.get(worldIn, pos, DepotBehaviour.TYPE);
 	}
 
-	public static ItemInteractionResult onUse(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+	public static InteractionResult onUse(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
 											  InteractionHand hand, BlockHitResult ray) {
 		if (ray.getDirection() != Direction.UP)
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-		if (level.isClientSide)
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
+		if (level.isClientSide())
+			return InteractionResult.SUCCESS;
 
 		DepotBehaviour behaviour = get(level, pos);
 		if (behaviour == null)
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (!behaviour.canAcceptItems.get())
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 
 		boolean wasEmptyHanded = stack.isEmpty();
 		boolean shouldntPlaceItem = AllBlocks.MECHANICAL_ARM.isIn(stack);
@@ -75,14 +75,14 @@ public class SharedDepotBlockMethods {
 		}
 
 		behaviour.blockEntity.notifyUpdate();
-		return ItemInteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	public static void onLanded(BlockGetter worldIn, Entity entityIn) {
 		ItemStack asItem = ItemHelper.fromItemEntity(entityIn);
 		if (asItem.isEmpty())
 			return;
-		if (entityIn.level().isClientSide)
+		if (entityIn.level().isClientSide())
 			return;
 
 		BlockPos pos = entityIn.blockPosition();

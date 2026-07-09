@@ -2,9 +2,10 @@ package com.simibubi.create.foundation.events;
 
 import java.util.function.Supplier;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.render.LegacyRenderSystemBridge;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllMapDecorationTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
@@ -24,7 +25,7 @@ import com.simibubi.create.content.equipment.armor.NetheriteBacktankFirstPersonR
 import com.simibubi.create.content.equipment.armor.NetheriteDivingHandler;
 import com.simibubi.create.content.equipment.armor.RemainingAirOverlay;
 import com.simibubi.create.content.equipment.blueprint.BlueprintOverlayRenderer;
-import com.simibubi.create.content.equipment.clipboard.ClipboardValueSettingsHandler;
+import com.simibubi.create.content.equipment.clipboard.ClipboardClient;
 import com.simibubi.create.content.equipment.extendoGrip.ExtendoGripRenderHandler;
 import com.simibubi.create.content.equipment.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.equipment.hats.CreateHatArmorLayer;
@@ -45,7 +46,7 @@ import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelConnection
 import com.simibubi.create.content.logistics.packagePort.PackagePortTargetSelectionHandler;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedClientHandler;
 import com.simibubi.create.content.logistics.tableCloth.TableClothOverlayRenderer;
-import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
+import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeClient;
 import com.simibubi.create.content.redstone.displayLink.ClickToLinkBlockItem;
 import com.simibubi.create.content.redstone.link.LinkRenderer;
 import com.simibubi.create.content.redstone.link.controller.LinkedControllerClientHandler;
@@ -66,6 +67,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollVa
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueRenderer;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
+import com.simibubi.create.foundation.map.StationMapDecorationRenderer;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
@@ -74,12 +76,12 @@ import com.simibubi.create.foundation.utility.TickBasedCache;
 import com.simibubi.create.infrastructure.command.AllCommands;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.config.ui.BaseConfigScreen;
-import net.createmod.catnip.levelWrappers.WrappedClientLevel;
-import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.catnip.render.DefaultSuperRenderTypeBuffer;
-import net.createmod.catnip.render.SuperRenderTypeBuffer;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.config.BaseConfigScreen;
+import net.createmod.catnip.api.client.level.wrapper.WrappedClientLevel;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.createmod.catnip.api.client.render.DefaultSuperRenderTypeBuffer;
+import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -104,15 +106,15 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
 import net.neoforged.neoforge.client.event.ViewportEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.client.gui.map.RegisterMapDecorationRenderersEvent;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -186,7 +188,7 @@ public class ClientEvents {
 		CameraDistanceModifier.tick();
 		CameraAngleAnimationService.tick();
 		TrainHUD.tick();
-		ClipboardValueSettingsHandler.clientTick();
+		ClipboardClient.clientTick();
 		CreateClient.VALUE_SETTINGS_HANDLER.tick();
 		ScrollValueHandler.tick();
 		NetheriteBacktankFirstPersonRenderer.clientTick();
@@ -233,15 +235,12 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onRenderWorld(RenderLevelStageEvent event) {
-		if (event.getStage() != Stage.AFTER_PARTICLES)
-			return;
-
+	public static void onRenderWorld(RenderLevelStageEvent.AfterTranslucentParticles event) {
 		PoseStack ms = event.getPoseStack();
 		ms.pushPose();
 		SuperRenderTypeBuffer buffer = DefaultSuperRenderTypeBuffer.getInstance();
-		Vec3 camera = Minecraft.getInstance().gameRenderer.getMainCamera()
-			.getPosition();
+		Vec3 camera = Minecraft.getInstance().gameRenderer.mainCamera()
+			.position();
 
 		TrackBlockOutline.drawCurveSelection(ms, buffer, camera);
 		TrackTargetingClient.render(ms, buffer, camera);
@@ -251,7 +250,7 @@ public class ClientEvents {
 		ChainConveyorInteractionHandler.drawCustomBlockSelection(ms, buffer, camera);
 
 		buffer.draw();
-		RenderSystem.enableCull();
+		LegacyRenderSystemBridge.enableCull();
 		ms.popPose();
 
 		ContraptionPlayerPassengerRotation.frame();
@@ -281,7 +280,7 @@ public class ClientEvents {
 			modifier.modify(event);
 		}
 
-		SequencedAssemblyRecipe.addToTooltip(event);
+		SequencedAssemblyRecipeClient.addToTooltip(event);
 	}
 
 	@SubscribeEvent
@@ -316,13 +315,13 @@ public class ClientEvents {
 	public static void getFogDensity(ViewportEvent.RenderFog event) {
 		Camera camera = event.getCamera();
 		Level level = Minecraft.getInstance().level;
-		BlockPos blockPos = camera.getBlockPosition();
+		BlockPos blockPos = camera.blockPosition();
 		FluidState fluidState = level.getFluidState(blockPos);
-		if (camera.getPosition().y >= blockPos.getY() + fluidState.getHeight(level, blockPos))
+		if (camera.position().y >= blockPos.getY() + fluidState.getHeight(level, blockPos))
 			return;
 
 		Fluid fluid = fluidState.getType();
-		Entity entity = camera.getEntity();
+		Entity entity = camera.entity();
 
 		if (entity.isSpectator())
 			return;
@@ -331,12 +330,10 @@ public class ClientEvents {
 		if (!divingHelmet.isEmpty()) {
 			if (FluidHelper.isWater(fluid)) {
 				event.scaleFarPlaneDistance(6.25f);
-				event.setCanceled(true);
 				return;
 			} else if (FluidHelper.isLava(fluid) && NetheriteDivingHandler.isNetheriteDivingHelmet(divingHelmet)) {
 				event.setNearPlaneDistance(-4.0f);
 				event.setFarPlaneDistance(20.0f);
-				event.setCanceled(true);
 				return;
 			}
 		}
@@ -346,7 +343,7 @@ public class ClientEvents {
 	public static void leftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
 		ItemStack stack = event.getItemStack();
 		if (stack.getItem() instanceof ZapperItem) {
-			CatnipServices.NETWORK.sendToServer(LeftClickPacket.INSTANCE);
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(LeftClickPacket.INSTANCE);
 		}
 	}
 
@@ -356,9 +353,9 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
-		event.registerReloadListener(CreateClient.RESOURCE_RELOAD_LISTENER);
-		event.registerReloadListener(TrainHatInfoReloadListener.LISTENER);
+	public static void registerClientReloadListeners(AddClientReloadListenersEvent event) {
+		event.addListener(Create.asResource("client_resources"), CreateClient.RESOURCE_RELOAD_LISTENER);
+		event.addListener(Create.asResource("train_hat_info"), TrainHatInfoReloadListener.LISTENER);
 	}
 
 	@SubscribeEvent
@@ -373,7 +370,7 @@ public class ClientEvents {
 	public static void registerGuiOverlays(RegisterGuiLayersEvent event) {
 		// Register overlays in reverse order
 		event.registerAbove(VanillaGuiLayers.AIR_LEVEL, Create.asResource("remaining_air"), RemainingAirOverlay.INSTANCE);
-		event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR, Create.asResource("train_hud"), TrainHUD.OVERLAY);
+		event.registerAbove(VanillaGuiLayers.EXPERIENCE_LEVEL, Create.asResource("train_hud"), TrainHUD.OVERLAY);
 		event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("value_settings"), CreateClient.VALUE_SETTINGS_HANDLER);
 		event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("track_placement"), TrackPlacementOverlay.INSTANCE);
 		event.registerAbove(VanillaGuiLayers.HOTBAR, Create.asResource("goggle_info"), GoggleOverlayRenderer.OVERLAY);
@@ -386,6 +383,11 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void registerItemDecorations(RegisterItemDecorationsEvent event) {
 		event.register(AllItems.POTATO_CANNON, PotatoCannonItemRenderer.DECORATOR);
+	}
+
+	@SubscribeEvent
+	public static void onRegisterMapDecorationRenderers(RegisterMapDecorationRenderersEvent event) {
+		event.register(AllMapDecorationTypes.STATION_MAP_DECORATION.value(), new StationMapDecorationRenderer());
 	}
 
 	@SubscribeEvent

@@ -10,14 +10,14 @@ import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.chute.ChuteBlock;
+import com.simibubi.create.foundation.mixin.accessor.ItemEntityAccessor;
 
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.ponder.api.level.PonderLevel;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.createmod.ponder.api.client.level.PonderLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -33,19 +33,21 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -84,7 +86,7 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 
 	public static PackageEntity fromDroppedItem(Level world, Entity originalEntity, ItemStack itemstack) {
 		PackageEntity packageEntity = AllEntityTypes.PACKAGE.get()
-			.create(world);
+			.create(world, EntitySpawnReason.TRIGGERED);
 
 		Vec3 position = originalEntity.position();
 		packageEntity.setPos(position);
@@ -93,7 +95,7 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 			.scale(1.5f));
 		packageEntity.originalEntity = originalEntity;
 
-		if (world != null && !world.isClientSide)
+		if (world != null && !world.isClientSide())
 			if (ChuteBlock.isChute(world.getBlockState(BlockPos.containing(position.x, position.y + .5f, position.z))))
 				packageEntity.setYRot(((int) packageEntity.getYRot()) / 90 * 90);
 
@@ -102,13 +104,12 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 
 	public static PackageEntity fromItemStack(Level world, Vec3 position, ItemStack itemstack) {
 		PackageEntity packageEntity = AllEntityTypes.PACKAGE.get()
-			.create(world);
+			.create(world, EntitySpawnReason.TRIGGERED);
 		packageEntity.setPos(position);
 		packageEntity.setBox(itemstack);
 		return packageEntity;
 	}
 
-	@Override
 	public ItemStack getPickedResult(HitResult target) {
 		return box.copy();
 	}
@@ -130,7 +131,7 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 	public void travel(Vec3 p_213352_1_) {
 		super.travel(p_213352_1_);
 
-		if (!level().isClientSide)
+		if (!level().isClientSide())
 			return;
 		if (getDeltaMovement().length() < 1 / 128f)
 			return;
@@ -143,17 +144,19 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 		motion = collideBoundingBox(this, motion, bb, level(), entityStream);
 
 		Vec3 clientPos = position().add(motion);
-		if (lerpSteps != 0)
-			clientPos = VecHelper.lerp(Math.min(1, tickCount / 20f), clientPos, new Vec3(lerpX, lerpY, lerpZ));
+		if (getInterpolation().hasActiveInterpolation())
+			clientPos = VecHelper.lerp(Math.min(1, tickCount / 20f), clientPos, getInterpolation().position());
 		if (tickCount < 5)
 			setPos(clientPos.x, clientPos.y, clientPos.z);
-		if (tickCount < 20)
-			lerpTo(clientPos.x, clientPos.y, clientPos.z, getYRot(), getXRot(), lerpSteps == 0 ? 3 : lerpSteps);
+		if (tickCount < 20) {
+			getInterpolation().setInterpolationLength(getInterpolation().hasActiveInterpolation() ? 5 : 3);
+			getInterpolation().interpolateTo(clientPos, getYRot(), getXRot());
+		}
 	}
 
 	@Override
-	public void lerpMotion(double x, double y, double z) {
-		setDeltaMovement(getDeltaMovement().add(x, y, z)
+	public void lerpMotion(Vec3 movement) {
+		setDeltaMovement(getDeltaMovement().add(movement)
 			.scale(.5f));
 	}
 
@@ -189,9 +192,7 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 	protected void verifyInitialEntity() {
 		if (!(originalEntity instanceof ItemEntity itemEntity))
 			return;
-		CompoundTag nbt = new CompoundTag();
-		itemEntity.addAdditionalSaveData(nbt);
-		if (nbt.getInt("PickupDelay") != 32767) // See: ItemEntity#makeFakeItem
+		if (((ItemEntityAccessor) itemEntity).create$getPickupDelay() != 32767) // See: ItemEntity#makeFakeItem
 			return;
 		discard();
 	}
@@ -242,21 +243,20 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 		return pEntity instanceof PackageEntity && pEntity.getBoundingBox().maxY < getBoundingBox().minY + .125f;
 	}
 
-	@Override
 	public boolean canBeCollidedWith() {
 		return false;
 	}
 
 	@Override
-	public InteractionResult interact(Player pPlayer, InteractionHand pHand) {
+	public InteractionResult interact(Player pPlayer, InteractionHand pHand, Vec3 location) {
 		if (!pPlayer.getItemInHand(pHand)
 			.isEmpty())
-			return super.interact(pPlayer, pHand);
-		if (pPlayer.level().isClientSide)
+			return super.interact(pPlayer, pHand, location);
+		if (pPlayer.level().isClientSide())
 			return InteractionResult.SUCCESS;
 		pPlayer.setItemInHand(pHand, box);
 		level().playSound(null, blockPosition(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
-			.75f + level().random.nextFloat());
+			.75f + level().getRandom().nextFloat());
 		remove(RemovalReason.DISCARDED);
 		return InteractionResult.SUCCESS;
 	}
@@ -299,11 +299,11 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 	}
 
 	@Override
-	public boolean hurt(DamageSource source, float amount) {
+	public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
 		if (source.getEntity() instanceof Player player && !CommonHooks.onPlayerAttackTarget(player, this))
 			return false;
 
-		if (level().isClientSide || !this.isAlive())
+		if (!this.isAlive())
 			return false;
 
 		if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
@@ -311,7 +311,7 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 			return false;
 		}
 
-		if (!box.getItem().canBeHurtBy(box, source))
+		if (!box.canBeHurtBy(source))
 			return false;
 
 		if (source.equals(damageSources().inWall()) && (isPassenger() || insertionDelay < 20))
@@ -320,7 +320,7 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 		if (source.is(DamageTypeTags.IS_FALL))
 			return false;
 
-		if (this.isInvulnerableTo(source))
+		if (this.isInvulnerableTo(level, source))
 			return false;
 
 		if (source.is(DamageTypeTags.IS_EXPLOSION)) {
@@ -377,7 +377,7 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 			if (itemstack.getItem() instanceof SpawnEggItem sei) {
 				EntityType<?> entitytype = sei.getType(itemstack);
 				Entity entity =
-					entitytype.spawn(level, itemstack, null, blockPosition(), MobSpawnType.SPAWN_EGG, false, false);
+					entitytype.spawn(level, itemstack, null, blockPosition(), EntitySpawnReason.SPAWN_ITEM_USE, false, false);
 				if (entity != null)
 					itemstack.shrink(1);
 			}
@@ -390,19 +390,19 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
-		super.readAdditionalSaveData(compound);
-		box = ItemStack.parseOptional(level().registryAccess(), compound.getCompound("Box"));
+	public void readAdditionalSaveData(ValueInput input) {
+		super.readAdditionalSaveData(input);
+		box = input.read("Box", ItemStack.OPTIONAL_CODEC)
+			.orElse(ItemStack.EMPTY);
 		refreshDimensions();
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
-		super.addAdditionalSaveData(compound);
-		compound.put("Box", box.saveOptional(level().registryAccess()));
+	public void addAdditionalSaveData(ValueOutput output) {
+		super.addAdditionalSaveData(output);
+		output.store("Box", ItemStack.OPTIONAL_CODEC, box);
 	}
 
-	@Override
 	public Iterable<ItemStack> getArmorSlots() {
 		return Collections.emptyList();
 	}
@@ -472,6 +472,7 @@ public class PackageEntity extends LivingEntity implements IEntityWithComplexSpa
 
 	@Override
 	public boolean fireImmune() {
-		return box.has(DataComponents.FIRE_RESISTANT) || super.fireImmune();
+		var resistance = box.get(DataComponents.DAMAGE_RESISTANT);
+		return super.fireImmune() || resistance != null && resistance.isResistantTo(damageSources().inFire());
 	}
 }

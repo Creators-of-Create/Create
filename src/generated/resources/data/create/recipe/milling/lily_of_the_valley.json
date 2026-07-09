@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:lily_of_the_valley"
-    }
+    "minecraft:lily_of_the_valley"
   ],
   "processing_time": 50,
   "results": [

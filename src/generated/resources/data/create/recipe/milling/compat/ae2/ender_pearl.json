@@ -7,9 +7,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "tag": "c:ender_pearls"
-    }
+    "#c:ender_pearls"
   ],
   "processing_time": 100,
   "results": [

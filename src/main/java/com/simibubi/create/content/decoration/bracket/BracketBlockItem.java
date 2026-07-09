@@ -36,7 +36,7 @@ public class BracketBlockItem extends BlockItem {
 			return InteractionResult.FAIL;
 		if (!behaviour.canHaveBracket())
 			return InteractionResult.FAIL;
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return InteractionResult.SUCCESS;
 
 		Optional<BlockState> suitableBracket = bracketBlock.getSuitableBracket(state, context.getClickedFace());

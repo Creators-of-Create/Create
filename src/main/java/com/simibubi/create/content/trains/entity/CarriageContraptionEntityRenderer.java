@@ -5,8 +5,8 @@ import com.simibubi.create.content.contraptions.render.ContraptionEntityRenderer
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.util.LightCoordsUtil;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
@@ -100,7 +100,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 
 		var lightPos = BlockPos.containing(anchorPosition == null ? entity.getLightProbePosition(partialTicks) : anchorPosition);
 
-		return LightTexture.pack(entity.level().getBrightness(LightLayer.BLOCK, lightPos),
+		return LightCoordsUtil.pack(entity.level().getBrightness(LightLayer.BLOCK, lightPos),
 			entity.level().getBrightness(LightLayer.SKY, lightPos));
 	}
 

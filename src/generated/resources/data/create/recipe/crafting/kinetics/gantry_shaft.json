@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "A": {
-      "item": "create:andesite_alloy"
-    },
-    "R": {
-      "tag": "c:dusts/redstone"
-    }
+    "A": "create:andesite_alloy",
+    "R": "#c:dusts/redstone"
   },
   "pattern": [
     "A",

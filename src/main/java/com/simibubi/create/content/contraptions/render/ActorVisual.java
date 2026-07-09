@@ -5,8 +5,9 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import dev.engine_room.flywheel.api.instance.InstancerProvider;
 import dev.engine_room.flywheel.api.visual.Visual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.Level;
 
 public abstract class ActorVisual implements Visual {
     protected final VisualizationContext visualizationContext;
@@ -23,11 +24,20 @@ public abstract class ActorVisual implements Visual {
         this.context = context;
     }
 
+    public ActorVisual(VisualizationContext visualizationContext, Level world, MovementContext context) {
+        this.visualizationContext = visualizationContext;
+		this.instancerProvider = visualizationContext.instancerProvider();
+        this.simulationWorld = null;
+        this.context = context;
+    }
+
 	public void tick() { }
 
     public void beginFrame() { }
 
     protected int localBlockLight() {
+		if (simulationWorld == null)
+			return 15;
         return simulationWorld.getBrightness(LightLayer.BLOCK, context.localPos);
     }
 

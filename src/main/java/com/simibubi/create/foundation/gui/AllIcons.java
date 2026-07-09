@@ -2,26 +2,26 @@ package com.simibubi.create.foundation.gui;
 
 import org.joml.Matrix4f;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.render.LegacyRenderSystemBridge;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.Create;
 
-import net.createmod.catnip.gui.element.DelegatedStencilElement;
-import net.createmod.catnip.gui.element.ScreenElement;
-import net.createmod.catnip.theme.Color;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+import net.createmod.catnip.api.client.gui.element.DelegatedStencilElement;
+import net.createmod.catnip.api.client.gui.element.ScreenElement;
+import net.createmod.catnip.api.theme.Color;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.util.LightCoordsUtil;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class AllIcons implements ScreenElement {
 
-	public static final ResourceLocation ICON_ATLAS = Create.asResource("textures/gui/icons.png");
+	public static final Identifier ICON_ATLAS = Create.asResource("textures/gui/icons.png");
 	public static final int ICON_ATLAS_SIZE = 256;
 
 	private static int x = 0, y = -1;
@@ -183,23 +183,20 @@ public class AllIcons implements ScreenElement {
 		return new AllIcons(x = 0, ++y);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public void bind() {
-		RenderSystem.setShaderTexture(0, ICON_ATLAS);
+		LegacyRenderSystemBridge.setShaderTexture(0, ICON_ATLAS);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void render(GuiGraphics graphics, int x, int y) {
-		graphics.blit(ICON_ATLAS, x, y, 0, iconX, iconY, 16, 16, 256, 256);
+	public void render(GuiGraphicsExtractor graphics, int x, int y) {
+		graphics.blit(RenderPipelines.GUI_TEXTURED, ICON_ATLAS, x, y, iconX, iconY, 16, 16, 256, 256);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public void render(PoseStack ms, MultiBufferSource buffer, int color) {
-		VertexConsumer builder = buffer.getBuffer(RenderType.text(ICON_ATLAS));
+		VertexConsumer builder = buffer.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.text(ICON_ATLAS));
 		Matrix4f matrix = ms.last().pose();
 		Color rgb = new Color(color);
-		int light = LightTexture.FULL_BRIGHT;
+		int light = LightCoordsUtil.FULL_BRIGHT;
 
 		Vec3 vec1 = new Vec3(0, 0, 0);
 		Vec3 vec2 = new Vec3(0, 1, 0);
@@ -217,7 +214,6 @@ public class AllIcons implements ScreenElement {
 		vertex(builder, matrix, vec4, rgb, u2, v1, light);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private void vertex(VertexConsumer builder, Matrix4f matrix, Vec3 vec, Color rgb, float u, float v, int light) {
 		builder.addVertex(matrix, (float) vec.x, (float) vec.y, (float) vec.z)
 			.setColor(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), 255)
@@ -225,7 +221,6 @@ public class AllIcons implements ScreenElement {
 			.setLight(light);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public DelegatedStencilElement asStencil() {
 		return new DelegatedStencilElement().withStencilRenderer((ms, w, h, alpha) -> this.render(ms, 0, 0)).withBounds(16, 16);
 	}

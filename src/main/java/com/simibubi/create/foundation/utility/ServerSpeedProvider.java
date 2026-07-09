@@ -2,17 +2,16 @@ package com.simibubi.create.foundation.utility;
 
 import com.simibubi.create.AllPackets;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class ServerSpeedProvider {
 	private static final LerpedFloat modifier = LerpedFloat.linear();
@@ -29,7 +28,6 @@ public class ServerSpeedProvider {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static void clientTick() {
 		if (Minecraft.getInstance()
 			.hasSingleplayerServer()
@@ -54,8 +52,7 @@ public class ServerSpeedProvider {
 		public static final StreamCodec<ByteBuf, Packet> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
 		@Override
-		@OnlyIn(Dist.CLIENT)
-		public void handle(LocalPlayer player) {
+		public void handle(Player player) {
 			if (!initialized) {
 				initialized = true;
 				clientTimer = 0;

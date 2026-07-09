@@ -32,8 +32,8 @@ import com.simibubi.create.content.logistics.depot.storage.DepotMountedStorage;
 import com.simibubi.create.content.logistics.vault.ItemVaultMountedStorage;
 import com.simibubi.create.impl.contraption.storage.FallbackMountedStorage;
 
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -255,9 +255,9 @@ public class MountedStorageManager {
 		this.reset();
 
 		try {
-			NBTHelper.iterateCompoundList(nbt.getList("items", Tag.TAG_COMPOUND), tag -> {
+			NBTHelper.iterateCompoundList(nbt.getListOrEmpty("items"), tag -> {
 				BlockPos pos = NBTHelper.readBlockPos(tag, "pos");
-				CompoundTag data = tag.getCompound("storage");
+				CompoundTag data = tag.getCompoundOrEmpty("storage");
 				// TODO - Use CatnipCodecUtils
 				MountedItemStorage.CODEC.decode(registryOps, data)
 					.resultOrPartial(err -> Create.LOGGER.error("Failed to deserialize mounted item storage: {}", err))
@@ -265,9 +265,9 @@ public class MountedStorageManager {
 					.ifPresent(storage -> this.addStorage(storage, pos));
 			});
 
-			NBTHelper.iterateCompoundList(nbt.getList("fluids", Tag.TAG_COMPOUND), tag -> {
+			NBTHelper.iterateCompoundList(nbt.getListOrEmpty("fluids"), tag -> {
 				BlockPos pos = NBTHelper.readBlockPos(tag, "pos");
-				CompoundTag data = tag.getCompound("storage");
+				CompoundTag data = tag.getCompoundOrEmpty("storage");
 				// TODO - Use CatnipCodecUtils
 				MountedFluidStorage.CODEC.decode(registryOps, data)
 					.resultOrPartial(err -> Create.LOGGER.error("Failed to deserialize mounted fluid storage: {}", err))
@@ -279,8 +279,9 @@ public class MountedStorageManager {
 
 			if (nbt.contains("interactable_positions")) {
 				this.interactablePositions = new HashSet<>();
-				NBTHelper.iterateCompoundList(nbt.getList("interactable_positions", Tag.TAG_COMPOUND), tag -> {
-					BlockPos pos = new BlockPos(tag.getInt("X"), tag.getInt("Y"), tag.getInt("Z"));
+				NBTHelper.iterateCompoundList(nbt.getListOrEmpty("interactable_positions"), tag -> {
+					BlockPos pos =
+						new BlockPos(tag.getIntOr("X", 0), tag.getIntOr("Y", 0), tag.getIntOr("Z", 0));
 					this.interactablePositions.add(pos);
 				});
 			}
@@ -317,7 +318,7 @@ public class MountedStorageManager {
 						.resultOrPartial(err -> Create.LOGGER.error("Failed to serialize mounted item storage: {}", err))
 						.ifPresent(encoded -> {
 							CompoundTag tag = new CompoundTag();
-							tag.put("pos", NbtUtils.writeBlockPos(pos));
+							tag.put("pos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(pos));
 							tag.put("storage", encoded);
 							items.add(tag);
 						});
@@ -336,7 +337,7 @@ public class MountedStorageManager {
 						.resultOrPartial(err -> Create.LOGGER.error("Failed to serialize mounted fluid storage: {}", err))
 						.ifPresent(encoded -> {
 							CompoundTag tag = new CompoundTag();
-							tag.put("pos", NbtUtils.writeBlockPos(pos));
+							tag.put("pos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(pos));
 							tag.put("storage", encoded);
 							fluids.add(tag);
 						});
@@ -439,30 +440,32 @@ public class MountedStorageManager {
 	}
 
 	private void readLegacy(HolderLookup.Provider registries, CompoundTag nbt) {
-		NBTHelper.iterateCompoundList(nbt.getList("Storage", Tag.TAG_COMPOUND), tag -> {
+		NBTHelper.iterateCompoundList(nbt.getListOrEmpty("Storage"), tag -> {
 			BlockPos pos = NBTHelper.readBlockPos(tag, "Pos");
-			CompoundTag data = tag.getCompound("Data");
+			CompoundTag data = tag.getCompoundOrEmpty("Data");
 
 			if (data.contains("Toolbox")) {
 				this.addStorage(ToolboxMountedStorage.fromLegacy(registries, data), pos);
 			} else if (data.contains("NoFuel")) {
 				this.addStorage(ItemVaultMountedStorage.fromLegacy(registries, data), pos);
 			} else if (data.contains("Bottomless")) {
-				ItemStack supplied = ItemStack.parseOptional(registries, data.getCompound("ProvidedStack"));
+				ItemStack supplied = com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge
+					.parseOptional(registries, data.getCompound("ProvidedStack"));
 				this.addStorage(new CreativeCrateMountedStorage(supplied), pos);
 			} else if (data.contains("Synced")) {
 				this.addStorage(DepotMountedStorage.fromLegacy(registries, data), pos);
 			} else {
 				// we can create a fallback storage safely, it will be validated before unmounting
 				ItemStackHandler handler = new ItemStackHandler();
-				handler.deserializeNBT(registries, data);
+				com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.deserializeHandler(handler, registries,
+					data);
 				this.addStorage(new FallbackMountedStorage(handler), pos);
 			}
 		});
 
-		NBTHelper.iterateCompoundList(nbt.getList("FluidStorage", Tag.TAG_COMPOUND), tag -> {
+		NBTHelper.iterateCompoundList(nbt.getListOrEmpty("FluidStorage"), tag -> {
 			BlockPos pos = NBTHelper.readBlockPos(tag, "Pos");
-			CompoundTag data = tag.getCompound("Data");
+			CompoundTag data = tag.getCompoundOrEmpty("Data");
 
 			if (data.contains("Bottomless")) {
 				this.addStorage(CreativeFluidTankMountedStorage.fromLegacy(registries, data), pos);

@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import com.simibubi.create.api.registry.SimpleRegistry;
 import com.simibubi.create.content.trains.track.AllPortalTracks;
 
-import net.createmod.catnip.math.BlockFace;
+import net.createmod.catnip.api.math.BlockFace;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;

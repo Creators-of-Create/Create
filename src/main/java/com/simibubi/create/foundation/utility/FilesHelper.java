@@ -12,7 +12,7 @@ import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
 import com.simibubi.create.Create;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 
 public class FilesHelper {
 	public static void createFolderIfMissing(Path path) {

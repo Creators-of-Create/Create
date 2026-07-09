@@ -4,7 +4,7 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.SymmetryMirror;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecs;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;

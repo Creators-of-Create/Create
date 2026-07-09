@@ -21,10 +21,10 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.TooltipHelper;
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -35,7 +35,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -45,7 +45,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities.Item;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
@@ -86,9 +86,9 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-			Capabilities.ItemHandler.BLOCK,
+			Capabilities.Item.BLOCK,
 			AllBlockEntityTypes.PACKAGE_FROGPORT.get(),
-			(be, context) -> be.itemHandler
+			(be, context) -> new com.simibubi.create.foundation.item.LegacyItemTransferAdapter(be.itemHandler)
 		);
 
 		if (Mods.COMPUTERCRAFT.isLoaded()) {
@@ -248,7 +248,7 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 					for (int i = 0; i < 5; i++)
 						level.addParticle(
 							new BlockParticleOption(ParticleTypes.BLOCK, AllBlocks.ROPE.getDefaultState()), vec.x,
-							vec.y - level.random.nextFloat() * 0.25, vec.z, 0, 0, 0);
+							vec.y - level.getRandom().nextFloat() * 0.25, vec.z, 0, 0, 0);
 			}
 		}
 
@@ -329,7 +329,7 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 		BlockEntity blockEntity = level.getBlockEntity(worldPosition.relative(side));
 		if (blockEntity == null || blockEntity instanceof FrogportBlockEntity)
 			return null;
-		return level.getCapability(ItemHandler.BLOCK, blockEntity.getBlockPos(), side.getOpposite());
+		return com.simibubi.create.foundation.item.LegacyItemHandlerAdapter.of(level.getCapability(Item.BLOCK, blockEntity.getBlockPos(), side.getOpposite()));
 	}
 
 	@Override
@@ -337,7 +337,7 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 		super.write(tag, registries, clientPacket);
 		tag.putFloat("PlacedYaw", passiveYaw);
 		if (animatedPackage != null && isAnimationInProgress()) {
-			tag.put("AnimatedPackage", animatedPackage.saveOptional(registries));
+			tag.put("AnimatedPackage", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(animatedPackage, registries));
 			tag.putBoolean("Deposit", currentlyDepositing);
 		}
 		if (sendAnticipate) {
@@ -353,14 +353,14 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
-		passiveYaw = tag.getFloat("PlacedYaw");
-		failedLastExport = tag.getBoolean("FailedLastExport");
-		goggles = tag.getBoolean("Goggles");
+		passiveYaw = tag.getFloatOr("PlacedYaw", 0);
+		failedLastExport = tag.getBooleanOr("FailedLastExport", false);
+		goggles = tag.getBooleanOr("Goggles", false);
 		if (!clientPacket)
 			animatedPackage = null;
 		if (tag.contains("AnimatedPackage")) {
-			deferAnimationInward = tag.getBoolean("Deposit");
-			deferAnimationStart = ItemStack.parseOptional(registries, tag.getCompound("AnimatedPackage"));
+			deferAnimationInward = tag.getBooleanOr("Deposit", false);
+			deferAnimationStart = com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.parseOptional(registries, tag.getCompoundOrEmpty("AnimatedPackage"));
 		}
 		if (clientPacket && tag.contains("Anticipate"))
 			anticipate();
@@ -390,9 +390,9 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 	}
 
 	@Override
-	public ItemInteractionResult use(Player player) {
+	public InteractionResult use(Player player) {
 		if (player == null)
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 
 		ItemStack mainHandItem = player.getMainHandItem();
 		if (!goggles && AllItems.GOGGLES.isIn(mainHandItem)) {
@@ -401,7 +401,7 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 				notifyUpdate();
 				level.playSound(null, worldPosition, SoundEvents.ARMOR_EQUIP_GOLD.value(), SoundSource.BLOCKS, 0.5f, 1.0f);
 			}
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		return super.use(player);

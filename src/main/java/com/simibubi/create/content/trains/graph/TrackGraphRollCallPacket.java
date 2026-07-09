@@ -13,15 +13,14 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.GlobalRailwayManager;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
-import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.client.player.LocalPlayer;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public record TrackGraphRollCallPacket(List<Entry> entries) implements ClientboundPacketPayload {
 	public static final StreamCodec<ByteBuf, TrackGraphRollCallPacket> STREAM_CODEC = CatnipStreamCodecBuilders.list(Entry.STREAM_CODEC).map(
@@ -37,8 +36,7 @@ public record TrackGraphRollCallPacket(List<Entry> entries) implements Clientbou
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void handle(LocalPlayer player) {
+	public void handle(Player player) {
 		GlobalRailwayManager manager = Create.RAILWAYS.sided(null);
 		Set<UUID> unusedIds = new HashSet<>(manager.trackNetworks.keySet());
 		List<Integer> failedIds = new ArrayList<>();
@@ -60,7 +58,7 @@ public record TrackGraphRollCallPacket(List<Entry> entries) implements Clientbou
 		}
 
 		for (Integer failed : failedIds)
-			CatnipServices.NETWORK.sendToServer(new TrackGraphRequestPacket(failed));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new TrackGraphRequestPacket(failed));
 		for (UUID unused : unusedIds)
 			manager.trackNetworks.remove(unused);
 	}

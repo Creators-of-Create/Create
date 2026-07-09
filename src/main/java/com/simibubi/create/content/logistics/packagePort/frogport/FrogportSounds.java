@@ -16,7 +16,7 @@ public class FrogportSounds {
 	public void close(Level level, BlockPos pos) {
 		if (!isPlayerNear(pos))
 			return;
-		AllSoundEvents.FROGPORT_CLOSE.playAt(level, Vec3.atCenterOf(pos), 1.0f, 1.25f + level.random.nextFloat() * 0.25f,
+		AllSoundEvents.FROGPORT_CLOSE.playAt(level, Vec3.atCenterOf(pos), 1.0f, 1.25f + level.getRandom().nextFloat() * 0.25f,
 			true);
 	}
 

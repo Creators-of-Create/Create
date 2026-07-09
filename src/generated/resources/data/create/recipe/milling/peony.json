@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:peony"
-    }
+    "minecraft:peony"
   ],
   "processing_time": 100,
   "results": [

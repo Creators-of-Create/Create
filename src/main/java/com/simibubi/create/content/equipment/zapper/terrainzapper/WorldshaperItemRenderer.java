@@ -10,11 +10,11 @@ import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.util.LightCoordsUtil;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -50,7 +50,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer {
 			multiplier = Mth.sin(worldTime * 5);
 
 		int lightItensity = (int) (15 * Mth.clamp(multiplier, 0, 1));
-		int glowLight = LightTexture.pack(lightItensity, max(lightItensity, 4));
+		int glowLight = LightCoordsUtil.pack(lightItensity, max(lightItensity, 4));
 		renderer.renderSolidGlowing(CORE.get(), glowLight);
 		renderer.renderGlowing(CORE_GLOW.get(), glowLight);
 

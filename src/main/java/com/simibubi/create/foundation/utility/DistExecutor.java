@@ -5,8 +5,8 @@ import java.util.function.Supplier;
 
 import org.jetbrains.annotations.ApiStatus;
 
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.loading.FMLLoader;
 
 @ApiStatus.Internal
 @Deprecated(forRemoval = true, since = "1.21")
@@ -18,7 +18,8 @@ public class DistExecutor {
 	@ApiStatus.Internal
 	@Deprecated(forRemoval = true, since = "1.21")
 	public static <T> T unsafeCallWhenOn(Dist dist, Supplier<Callable<T>> toRun) {
-		if (FMLLoader.getDist() == dist) {
+		if ((dist == Dist.CLIENT && CatnipServices.PLATFORM.getEnv().isClient())
+			|| (dist == Dist.DEDICATED_SERVER && CatnipServices.PLATFORM.getEnv().isServer())) {
 			try {
 				return toRun.get().call();
 			} catch (Exception e) {

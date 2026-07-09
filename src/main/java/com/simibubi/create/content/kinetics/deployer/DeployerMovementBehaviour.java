@@ -1,6 +1,5 @@
 package com.simibubi.create.content.kinetics.deployer;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,20 +28,20 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import net.createmod.catnip.levelWrappers.SchematicLevel;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.level.wrapper.SchematicLevel;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -62,13 +61,13 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	@Override
 	public Vec3 getActiveAreaOffset(MovementContext context) {
 		return Vec3.atLowerCornerOf(context.state.getValue(DeployerBlock.FACING)
-			.getNormal())
+			.getUnitVec3i())
 			.scale(2);
 	}
 
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
-		if (context.world.isClientSide)
+		if (context.world.isClientSide())
 			return;
 
 		tryGrabbingItem(context);
@@ -95,7 +94,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		}
 
 		Vec3 facingVec = Vec3.atLowerCornerOf(context.state.getValue(DeployerBlock.FACING)
-			.getNormal());
+			.getUnitVec3i());
 		facingVec = context.rotation.apply(facingVec);
 		Vec3 vec = context.position.subtract(facingVec.scale(2));
 
@@ -118,7 +117,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	protected void checkForTrackPlacementAdvancement(MovementContext context, DeployerFakePlayer player) {
 		if ((context.contraption instanceof MountedContraption || context.contraption instanceof CarriageContraption)
 			&& player.placedTracks && context.blockEntityData != null && context.blockEntityData.contains("Owner"))
-			AllAdvancements.SELF_DEPLOYING.awardTo(context.world.getPlayerByUUID(context.blockEntityData.getUUID("Owner")));
+			AllAdvancements.SELF_DEPLOYING.awardTo(context.world.getPlayerByUUID(LegacyNbtUtilsBridge.getUUID(context.blockEntityData, "Owner")));
 	}
 
 	protected void activateAsSchematicPrinter(MovementContext context, BlockPos pos, DeployerFakePlayer player,
@@ -173,7 +172,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	public void tick(MovementContext context) {
-		if (context.world.isClientSide)
+		if (context.world.isClientSide())
 			return;
 		if (!context.stall)
 			return;
@@ -183,7 +182,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 
 		Pair<BlockPos, Float> blockBreakingProgress = player.blockBreakingProgress;
 		if (blockBreakingProgress != null) {
-			int timer = context.data.getInt("Timer");
+			int timer = context.data.getIntOr("Timer", 0);
 			if (timer < 20) {
 				timer++;
 				context.data.putInt("Timer", timer);
@@ -200,7 +199,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	public void cancelStall(MovementContext context) {
-		if (context.world.isClientSide)
+		if (context.world.isClientSide())
 			return;
 
 		MovementBehaviour.super.cancelStall(context);
@@ -215,7 +214,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	public void stopMoving(MovementContext context) {
-		if (context.world.isClientSide)
+		if (context.world.isClientSide())
 			return;
 
 		DeployerFakePlayer player = getPlayer(context);
@@ -223,8 +222,8 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			return;
 
 		cancelStall(context);
-		context.blockEntityData.put("Inventory", player.getInventory()
-			.save(new ListTag()));
+		context.blockEntityData.put("Inventory",
+			LegacyNbtUtilsBridge.saveInventory(player.getInventory(), context.world.registryAccess(), "Inventory"));
 		player.discard();
 	}
 
@@ -250,18 +249,17 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		Inventory inv = player.getInventory();
 		FilterItemStack filter = context.getFilterFromBE();
 
-		for (List<ItemStack> list : Arrays.asList(inv.armor, inv.offhand, inv.items)) {
-			for (int i = 0; i < list.size(); ++i) {
-				ItemStack itemstack = list.get(i);
-				if (itemstack.isEmpty())
-					continue;
+		int selectedSlot = inv.getSelectedSlot();
+		for (int i = 0; i < inv.getContainerSize(); ++i) {
+			ItemStack itemstack = inv.getItem(i);
+			if (itemstack.isEmpty())
+				continue;
 
-				if (list == inv.items && i == inv.selected && filter.test(context.world, itemstack))
-					continue;
+			if (i == selectedSlot && filter.test(context.world, itemstack))
+				continue;
 
-				collectOrDropItem(context, itemstack);
-				list.set(i, ItemStack.EMPTY);
-			}
+			collectOrDropItem(context, itemstack);
+			inv.setItem(i, ItemStack.EMPTY);
 		}
 	}
 
@@ -270,19 +268,19 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		DeployerFakePlayer player = getPlayer(context);
 		if (player == null)
 			return;
-		context.data.put("HeldItem", player.getMainHandItem().saveOptional(context.world.registryAccess()));
+		context.data.put("HeldItem", LegacyItemStackNbtBridge.saveOptional(player.getMainHandItem(), context.world.registryAccess()));
 	}
 
 	private DeployerFakePlayer getPlayer(MovementContext context) {
 		if (!(context.temporaryData instanceof DeployerFakePlayer) && context.world instanceof ServerLevel) {
-			UUID owner = context.blockEntityData.contains("Owner") ? context.blockEntityData.getUUID("Owner") : null;
+			UUID owner = context.blockEntityData.contains("Owner") ? LegacyNbtUtilsBridge.getUUID(context.blockEntityData, "Owner") : null;
 			DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) context.world, owner);
 			deployerFakePlayer.onMinecartContraption = context.contraption instanceof MountedContraption;
-			deployerFakePlayer.getInventory()
-				.load(context.blockEntityData.getList("Inventory", Tag.TAG_COMPOUND));
+			LegacyNbtUtilsBridge.loadInventory(deployerFakePlayer.getInventory(), context.world.registryAccess(),
+				context.blockEntityData, "Inventory");
 			if (context.data.contains("HeldItem"))
 				deployerFakePlayer.setItemInHand(InteractionHand.MAIN_HAND,
-					ItemStack.parseOptional(context.world.registryAccess(), context.data.getCompound("HeldItem")));
+					LegacyItemStackNbtBridge.parseOptional(context.world.registryAccess(), context.data.getCompoundOrEmpty("HeldItem")));
 			context.blockEntityData.remove("Inventory");
 			context.temporaryData = deployerFakePlayer;
 		}

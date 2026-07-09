@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:deepslate_emerald_ore"
-    }
+    "minecraft:deepslate_emerald_ore"
   ],
   "processing_time": 450,
   "results": [

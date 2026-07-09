@@ -81,11 +81,9 @@ public class SoulParticle extends CustomRotationParticle {
 			isVisible = false;
 	}
 
-	@Override
 	public void render(VertexConsumer builder, Camera camera, float partialTicks) {
 		if (!isVisible)
 			return;
-		super.render(builder, camera, partialTicks);
 	}
 
 	public void setFrame(int frame) {
@@ -97,15 +95,10 @@ public class SoulParticle extends CustomRotationParticle {
 	public Quaternionf getCustomRotation(Camera camera, float partialTicks) {
 		if (isPerimeter)
 			return Axis.XP.rotationDegrees(90);
-		return new Quaternionf().rotationXYZ(0, -camera.getYRot() * Mth.DEG_TO_RAD, 0);
+		return new Quaternionf(camera.rotation());
 	}
 
 	public static class Data extends BasicParticleData<SoulParticle> {
-		@Override
-		public IBasicParticleFactory<SoulParticle> getBasicFactory() {
-			return (worldIn, x, y, z, vx, vy, vz, spriteSet) -> new SoulParticle(worldIn, x, y, z, vx, vy, vz,
-				spriteSet, this);
-		}
 
 		@Override
 		public ParticleType<?> getType() {
@@ -114,11 +107,6 @@ public class SoulParticle extends CustomRotationParticle {
 	}
 
 	public static class PerimeterData extends BasicParticleData<SoulParticle> {
-		@Override
-		public IBasicParticleFactory<SoulParticle> getBasicFactory() {
-			return (worldIn, x, y, z, vx, vy, vz, spriteSet) -> new SoulParticle(worldIn, x, y, z, vx, vy, vz,
-				spriteSet, this);
-		}
 
 		@Override
 		public ParticleType<?> getType() {

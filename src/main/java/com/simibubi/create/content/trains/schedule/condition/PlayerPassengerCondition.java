@@ -9,17 +9,16 @@ import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class PlayerPassengerCondition extends ScheduleWaitCondition {
 
@@ -32,7 +31,7 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	public ResourceLocation getId() {
+	public Identifier getId() {
 		return Create.asResource("player_count");
 	}
 
@@ -53,7 +52,6 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		builder.addScrollInput(0, 31, (i, l) -> {
 			i.titled(CreateLang.translateDirect("schedule.condition.player_count.players"))
@@ -69,7 +67,7 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 
 	@Override
 	public boolean tickCompletion(Level level, Train train, CompoundTag context) {
-		int prev = context.getInt("PrevPlayerCount");
+		int prev = context.getIntOr("PrevPlayerCount", -1);
 		int present = train.countPlayerPassengers();
 		int target = getTarget();
 		context.putInt("PrevPlayerCount", present);

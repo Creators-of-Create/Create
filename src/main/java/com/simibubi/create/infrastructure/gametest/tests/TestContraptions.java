@@ -15,9 +15,9 @@ import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTest;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.projectile.Arrow;
+import com.simibubi.create.infrastructure.gametest.legacy.GameTest;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -38,7 +38,7 @@ public class TestContraptions {
 		BlockPos pos2 = new BlockPos(4, 5, 4);
 		helper.succeedWhen(() -> {
 			helper.assertSecondsPassed(7);
-			List<Arrow> arrows = helper.getEntitiesBetween(EntityType.ARROW, pos1, pos2);
+			List<Arrow> arrows = helper.getEntitiesBetween(EntityTypes.ARROW, pos1, pos2);
 			if (arrows.size() != 4)
 				helper.fail("Expected 4 arrows");
 			helper.powerLever(lever); // disassemble contraption
@@ -166,7 +166,7 @@ public class TestContraptions {
 		BlockPos cowSpawn = new BlockPos(4, 4, 2);
 		BlockPos cowEnd = new BlockPos(4, 13, 2);
 
-		helper.runAtTickTime(1, () -> helper.spawn(EntityType.COW, cowSpawn));
+		helper.runAtTickTime(1, () -> helper.spawn(EntityTypes.COW, cowSpawn));
 		helper.runAtTickTime(
 				15, () -> helper.getBlockEntity(AllBlockEntityTypes.ELEVATOR_PULLEY.get(), pulley).clicked()
 		);
@@ -187,7 +187,7 @@ public class TestContraptions {
 			} else { // step 2: wait for top lamp and cow passenger
 				helper.assertBlockProperty(topLamp, RedstoneLampBlock.LIT, true);
 				helper.assertBlockProperty(bottomLamp, RedstoneLampBlock.LIT, false);
-				helper.assertEntityPresent(EntityType.COW, cowEnd);
+				helper.assertEntityPresent(EntityTypes.COW, cowEnd);
 				// all done, disassemble
 				helper.getBlockEntity(AllBlockEntityTypes.ELEVATOR_PULLEY.get(), pulley).clicked();
 			}
@@ -243,8 +243,8 @@ public class TestContraptions {
 		helper.pullLever(lever);
 
 		helper.succeedWhen(() -> {
-			helper.assertEntitiesPresent(EntityType.ARROW, bottom, 3, 0);
-			helper.assertEntityNotPresent(EntityType.ARROW, top);
+			helper.assertEntitiesPresent(EntityTypes.ARROW, bottom, 3, 0);
+			helper.assertEntityNotPresent(EntityTypes.ARROW, top);
 			helper.assertBlockPresent(Blocks.DISPENSER, dispenser);
 			helper.assertContainerContains(dispenser, new ItemStack(Items.ARROW, 2));
 		});

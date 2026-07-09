@@ -12,13 +12,13 @@ import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTank
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.platform.NeoForgeCatnipServices;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.platform.NeoForgeCatnipServices;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.render.ItemRenderer;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -63,7 +63,7 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 		float sideOffset = Mth.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
 
 		Vec3 offsetVec = Vec3.atLowerCornerOf(insertedFrom.getOpposite()
-			.getNormal())
+			.getUnitVec3i())
 			.scale(.5f - offset);
 		ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 		boolean alongX = insertedFrom.getClockWise()
@@ -74,8 +74,7 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 
 		ItemStack itemStack = transported.stack;
 		Random r = new Random(0);
-		ItemRenderer itemRenderer = Minecraft.getInstance()
-			.getItemRenderer();
+		ItemRenderer itemRenderer = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer();
 		int count = (int) (Mth.log2((int) (itemStack.getCount()))) / 2;
 		boolean renderUpright = BeltHelper.isItemUpright(itemStack);
 		BakedModel bakedModel = itemRenderer.getModel(itemStack, null, null, 0);
@@ -93,7 +92,7 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 			msr.rotateZDegrees(-verticalAngle);
 
 		if (renderUpright) {
-			Vec3 cameraPosition = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+			Vec3 cameraPosition = Minecraft.getInstance().gameRenderer.mainCamera().position();
 			Vec3 vectorForOffset = itemPosition.add(offsetVec);
 			Vec3 diff = vectorForOffset.subtract(cameraPosition);
 
@@ -121,9 +120,9 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 				if (!blockItem)
 					msr.rotateYDegrees(10);
 				ms.translate(0, blockItem ? 1 / 64d : 1 / 16d, 0);
-			} else
-				ms.translate(0, 0, -1 / 16f);
-		}
+		} else
+			ms.translate(0, 0, -1 / 16f);
+	}
 
 		ms.popPose();
 	}

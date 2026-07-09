@@ -7,7 +7,7 @@ import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
@@ -126,12 +126,12 @@ public class FluidHelper {
 			return false;
 
 		Pair<FluidStack, ItemStack> emptyingResult = GenericItemEmptying.emptyItem(worldIn, heldItem, true);
-		IFluidHandler capability = worldIn.getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+		IFluidHandler capability = com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter.of(worldIn.getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 		FluidStack fluidStack = emptyingResult.getFirst();
 
 		if (capability == null || fluidStack.getAmount() != capability.fill(fluidStack, FluidAction.SIMULATE))
 			return false;
-		if (worldIn.isClientSide)
+		if (worldIn.isClientSide())
 			return true;
 
 		ItemStack copyOfHeld = heldItem.copy();
@@ -155,7 +155,7 @@ public class FluidHelper {
 		if (!GenericItemFilling.canItemBeFilled(world, heldItem))
 			return false;
 
-		IFluidHandler capability = world.getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+		IFluidHandler capability = com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter.of(world.getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 
 		if (capability == null)
 			return false;
@@ -170,7 +170,7 @@ public class FluidHelper {
 			if (requiredAmountForItem > fluid.getAmount())
 				continue;
 
-			if (world.isClientSide)
+			if (world.isClientSide())
 				return true;
 
 			if (player.isCreative() || be instanceof CreativeFluidTankBlockEntity)

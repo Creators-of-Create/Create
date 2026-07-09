@@ -10,9 +10,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "tag": "c:ores/lead"
-    }
+    "#c:ores/lead"
   ],
   "processing_time": 400,
   "results": [

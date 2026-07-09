@@ -12,7 +12,6 @@
       "translate": "advancement.create.mechanical_pump_0.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:mechanical_pump"
     },
     "title": {

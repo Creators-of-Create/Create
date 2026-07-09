@@ -12,7 +12,6 @@
       "translate": "advancement.create.compacting.desc"
     },
     "icon": {
-      "count": 1,
       "id": "minecraft:iron_block"
     },
     "title": {

@@ -4,10 +4,10 @@ import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.outliner.Outliner;
-import net.createmod.catnip.render.SuperByteBufferCache;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.outliner.Outliner;
+import net.createmod.catnip.api.client.render.SuperByteBufferCache;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -53,7 +53,7 @@ public class KineticDebugger {
 		if (state.getBlock() instanceof IRotate) {
 			Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
 			Vec3 vec = Vec3.atLowerCornerOf(Direction.get(AxisDirection.POSITIVE, axis)
-				.getNormal());
+				.getUnitVec3i());
 			Vec3 center = VecHelper.getCenterOf(be.getBlockPos());
 			Outliner.getInstance().showLine("rotationAxis", center.add(vec), center.subtract(vec))
 				.lineWidth(1 / 16f);

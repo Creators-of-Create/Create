@@ -12,7 +12,6 @@
       "translate": "advancement.create.chute.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:chute"
     },
     "title": {

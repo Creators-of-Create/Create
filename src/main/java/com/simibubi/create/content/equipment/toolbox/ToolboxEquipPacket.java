@@ -3,7 +3,7 @@ package com.simibubi.create.content.equipment.toolbox;
 import com.simibubi.create.AllPackets;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -70,12 +70,12 @@ public record ToolboxEquipPacket(BlockPos toolboxPos, int slot, int hotbarSlot) 
 		}
 
 		CompoundTag compound = player.getPersistentData()
-				.getCompound("CreateToolboxData");
+				.getCompoundOrEmpty("CreateToolboxData");
 		String key = String.valueOf(hotbarSlot);
 
 		CompoundTag data = new CompoundTag();
 		data.putInt("Slot", slot);
-		data.put("Pos", NbtUtils.writeBlockPos(toolboxPos));
+		data.put("Pos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(toolboxPos));
 		compound.put(key, data);
 
 		player.getPersistentData()

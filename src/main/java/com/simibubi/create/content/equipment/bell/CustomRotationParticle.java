@@ -11,7 +11,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
@@ -38,9 +38,8 @@ public class CustomRotationParticle extends SimpleAnimatedParticle {
 		return quaternion;
 	}
 
-	@Override
 	public void render(VertexConsumer builder, Camera camera, float partialTicks) {
-		Vec3 cameraPos = camera.getPosition();
+		Vec3 cameraPos = camera.position();
 		float originX = (float) (Mth.lerp(partialTicks, xo, x) - cameraPos.x());
 		float originY = (float) (Mth.lerp(partialTicks, yo, y) - cameraPos.y());
 		float originZ = (float) (Mth.lerp(partialTicks, zo, z) - cameraPos.z());
@@ -65,7 +64,7 @@ public class CustomRotationParticle extends SimpleAnimatedParticle {
 		float maxU = mirror ? getU0() : getU1();
 		float minV = getV0();
 		float maxV = getV1();
-		int brightness = ShadersModHelper.isShaderPackInUse() ? LightTexture.pack(12, 15) : getLightColor(partialTicks);
+		int brightness = ShadersModHelper.isShaderPackInUse() ? LightCoordsUtil.pack(12, 15) : getLightCoords(partialTicks);
 		builder.addVertex(vertices[0].x(), vertices[0].y(), vertices[0].z()).setUv(maxU, maxV).setColor(rCol, gCol, bCol, alpha).setLight(brightness);
 		builder.addVertex(vertices[1].x(), vertices[1].y(), vertices[1].z()).setUv(maxU, minV).setColor(rCol, gCol, bCol, alpha).setLight(brightness);
 		builder.addVertex(vertices[2].x(), vertices[2].y(), vertices[2].z()).setUv(minU, minV).setColor(rCol, gCol, bCol, alpha).setLight(brightness);

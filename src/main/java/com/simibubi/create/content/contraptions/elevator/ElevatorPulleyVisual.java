@@ -23,7 +23,7 @@ import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import dev.engine_room.flywheel.lib.visual.util.InstanceRecycler;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
 

@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.tterrag.registrate.providers.DataGenContext;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
+import com.tterrag.registrate.providers.generators.BlockModelProvider;
+import com.tterrag.registrate.providers.generators.ModelFile;
 
 public class BrassDiodeGenerator extends AbstractDiodeGenerator {
 
@@ -17,7 +17,7 @@ public class BrassDiodeGenerator extends AbstractDiodeGenerator {
 	protected <T extends Block> List<ModelFile> createModels(DataGenContext<Block, T> ctx, BlockModelProvider prov) {
 		List<ModelFile> models = new ArrayList<>(4);
 		String name = ctx.getName();
-		ResourceLocation template = existing(name);
+		Identifier template = existing(name);
 
 		models.add(prov.getExistingFile(template));
 		models.add(prov.withExistingParent(name + "_powered", template)

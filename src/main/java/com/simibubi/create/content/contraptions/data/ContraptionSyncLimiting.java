@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.data;
 
 import com.simibubi.create.compat.Mods;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 

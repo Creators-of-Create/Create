@@ -10,6 +10,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -26,10 +27,9 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	@Override
-	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos,
-		boolean isMoving) {
-		super.neighborChanged(state, level, pos, block, fromPos, isMoving);
-		if (level.isClientSide)
+	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, Orientation orientation, boolean isMoving) {
+		super.neighborChanged(state, level, pos, block, orientation, isMoving);
+		if (level.isClientSide())
 			return;
 		if (!level.getBlockTicks()
 			.willTickThisTick(pos, this))

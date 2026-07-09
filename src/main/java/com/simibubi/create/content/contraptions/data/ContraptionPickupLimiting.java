@@ -4,7 +4,7 @@ import com.simibubi.create.compat.Mods;
 import com.simibubi.create.foundation.mixin.accessor.NbtAccounterAccessor;
 
 import io.netty.buffer.Unpooled;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;

@@ -6,13 +6,13 @@ import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTank
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.data.IntAttached;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.platform.NeoForgeCatnipServices;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.data.IntAttached;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.platform.NeoForgeCatnipServices;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -76,7 +76,7 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 			if (fluidLevel > 0) {
 				ms.translate(0,
 					(Mth.sin(
-							AnimationTickHolder.getRenderTime(basin.getLevel()) / 12f + anglePartition * itemCount) + 1.5f)
+							AnimationTickHolder.getRenderTime() / 12f + anglePartition * itemCount) + 1.5f)
 						* 1 / 32f,
 					0);
 			}
@@ -108,7 +108,7 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 		Direction direction = blockState.getValue(BasinBlock.FACING);
 		if (direction == Direction.DOWN)
 			return;
-		Vec3 directionVec = Vec3.atLowerCornerOf(direction.getNormal());
+		Vec3 directionVec = Vec3.atLowerCornerOf(direction.getUnitVec3i());
 		Vec3 outVec = VecHelper.getCenterOf(BlockPos.ZERO)
 			.add(directionVec.scale(.55)
 				.subtract(0, 1 / 2f, 0));
@@ -138,7 +138,7 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 
 	protected void renderItem(PoseStack ms, MultiBufferSource buffer, int light, int overlay, ItemStack stack) {
 		Minecraft mc = Minecraft.getInstance();
-		mc.getItemRenderer()
+		com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer()
 			.renderStatic(stack, ItemDisplayContext.GROUND, light, overlay, ms, buffer, mc.level, 0);
 	}
 

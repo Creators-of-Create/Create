@@ -15,7 +15,7 @@ import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -203,7 +203,7 @@ if (yaw != lastYaw) {
 				.setVisible(false);
 			return;
 		}
-		ResourceLocation key = BuiltInRegistries.ITEM.getKey(blockEntity.animatedPackage.getItem());
+		Identifier key = BuiltInRegistries.ITEM.getKey(blockEntity.animatedPackage.getItem());
 		if (key == BuiltInRegistries.ITEM.getDefaultKey()) {
 			rig.handle()
 				.setVisible(false);

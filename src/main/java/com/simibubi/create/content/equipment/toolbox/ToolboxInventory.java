@@ -14,12 +14,12 @@ import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemSlots;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
@@ -160,30 +160,28 @@ public class ToolboxInventory extends ItemStackHandler {
 		return insertItem;
 	}
 
-	@Override
 	public @NotNull CompoundTag serializeNBT(@NotNull HolderLookup.Provider registries) {
-		CompoundTag compound = super.serializeNBT(registries);
+		CompoundTag compound = LegacyItemStackNbtBridge.serializeHandler(this, registries);
 		compound.put("Compartments", NBTHelper.writeItemList(filters, registries));
 		return compound;
 	}
 
 	@Override
 	protected void onContentsChanged(int slot) {
-		if (!settling && (blockEntity == null || !blockEntity.getLevel().isClientSide))
+		if (!settling && (blockEntity == null || !blockEntity.getLevel().isClientSide()))
 			settle(slot / STACKS_PER_COMPARTMENT);
 		notifyUpdate();
 		super.onContentsChanged(slot);
 	}
 
-	@Override
 	public void deserializeNBT(@NotNull HolderLookup.Provider registries, CompoundTag nbt) {
-		filters = NBTHelper.readItemList(nbt.getList("Compartments", Tag.TAG_COMPOUND), registries);
+		filters = NBTHelper.readItemList(nbt.getListOrEmpty("Compartments"), registries);
 		if (filters.size() != 8) {
 			filters.clear();
 			for (int i = 0; i < 8; i++)
 				filters.add(ItemStack.EMPTY);
 		}
-		super.deserializeNBT(registries, nbt);
+		LegacyItemStackNbtBridge.deserializeHandler(this, registries, nbt);
 	}
 
 	public ItemStack distributeToCompartment(@NotNull ItemStack stack, int compartment, boolean simulate) {

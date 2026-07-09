@@ -2,18 +2,18 @@ package com.simibubi.create.content.decoration.girder;
 
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.Block;
 
-import net.neoforged.neoforge.client.model.generators.MultiPartBlockStateBuilder;
+import com.tterrag.registrate.providers.generators.MultiPartBlockStateBuilder;
 
 public class GirderBlockStateGenerator {
 
 	public static void blockStateWithShaft(DataGenContext<Block, GirderEncasedShaftBlock> c,
-		RegistrateBlockstateProvider p) {
+		RegistrateBlockModelGenerator p) {
 		MultiPartBlockStateBuilder builder = p.getMultipartBuilder(c.get());
 
 		builder.part()
@@ -44,7 +44,7 @@ public class GirderBlockStateGenerator {
 
 	}
 
-	public static void blockState(DataGenContext<Block, GirderBlock> c, RegistrateBlockstateProvider p) {
+	public static void blockState(DataGenContext<Block, GirderBlock> c, RegistrateBlockModelGenerator p) {
 		MultiPartBlockStateBuilder builder = p.getMultipartBuilder(c.get());
 
 		builder.part()

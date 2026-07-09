@@ -10,14 +10,13 @@ import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler.Freq
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +31,6 @@ import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
@@ -54,22 +52,22 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 		if (player.mayBuild()) {
 			if (player.isShiftKeyDown()) {
 				if (AllBlocks.LECTERN_CONTROLLER.has(hitState)) {
-					if (!world.isClientSide)
+					if (!world.isClientSide())
 						AllBlocks.LECTERN_CONTROLLER.get().withBlockEntityDo(world, pos, be ->
 							be.swapControllers(stack, player, ctx.getHand(), hitState));
 					return InteractionResult.SUCCESS;
 				}
 			} else {
 				if (AllBlocks.REDSTONE_LINK.has(hitState)) {
-					if (world.isClientSide)
+					if (world.isClientSide())
 						CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> this.toggleBindMode(ctx.getClickedPos()));
 					player.getCooldowns()
-						.addCooldown(this, 2);
+						.addCooldown(stack, 2);
 					return InteractionResult.SUCCESS;
 				}
 
 				if (hitState.is(Blocks.LECTERN) && !hitState.getValue(LecternBlock.HAS_BOOK)) {
-					if (!world.isClientSide) {
+					if (!world.isClientSide()) {
 						ItemStack lecternStack = player.isCreative() ? stack.copy() : stack.split(1);
 						AllBlocks.LECTERN_CONTROLLER.get().replaceLectern(hitState, world, pos, lecternStack);
 					}
@@ -81,37 +79,35 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 			}
 		}
 
-		return use(world, player, ctx.getHand()).getResult();
+		return use(world, player, ctx.getHand());
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+	public InteractionResult use(Level world, Player player, InteractionHand hand) {
 		ItemStack heldItem = player.getItemInHand(hand);
 
 		if (player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
-			if (!world.isClientSide && player instanceof ServerPlayer && player.mayBuild())
+			if (!world.isClientSide() && player instanceof ServerPlayer && player.mayBuild())
 				player.openMenu(this, buf -> {
 					ItemStack.STREAM_CODEC.encode(buf, heldItem);
 				});
-			return InteractionResultHolder.success(heldItem);
+			return InteractionResult.SUCCESS.heldItemTransformedTo(heldItem);
 		}
 
 		if (!player.isShiftKeyDown()) {
-			if (world.isClientSide)
+			if (world.isClientSide())
 				CatnipServices.PLATFORM.executeOnClientOnly(() -> this::toggleActive);
 			player.getCooldowns()
-				.addCooldown(this, 2);
+				.addCooldown(heldItem, 2);
 		}
 
-		return InteractionResultHolder.pass(heldItem);
+		return InteractionResult.PASS;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private void toggleBindMode(BlockPos pos) {
 		LinkedControllerClientHandler.toggleBindMode(pos);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private void toggleActive() {
 		LinkedControllerClientHandler.toggle();
 	}
@@ -140,11 +136,9 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 
 	@Override
 	public Component getDisplayName() {
-		return getDescription();
+		return getName(getDefaultInstance());
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 		consumer.accept(SimpleCustomRenderer.create(this, new LinkedControllerItemRenderer()));
 	}

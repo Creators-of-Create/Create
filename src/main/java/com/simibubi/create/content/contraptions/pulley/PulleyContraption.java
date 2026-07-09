@@ -52,7 +52,7 @@ public class PulleyContraption extends TranslatingContraption {
 
 	@Override
 	public void readNBT(Level world, CompoundTag nbt, boolean spawnData) {
-		initialOffset = nbt.getInt("InitialOffset");
+		initialOffset = nbt.getIntOr("InitialOffset", 0);
 		super.readNBT(world, nbt, spawnData);
 	}
 

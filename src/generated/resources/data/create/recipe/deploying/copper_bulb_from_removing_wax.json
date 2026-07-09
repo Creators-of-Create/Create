@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "minecraft:waxed_copper_bulb"
-    },
-    {
-      "tag": "minecraft:axes"
-    }
+    "minecraft:waxed_copper_bulb",
+    "#minecraft:axes"
   ],
   "keep_held_item": true,
   "results": [

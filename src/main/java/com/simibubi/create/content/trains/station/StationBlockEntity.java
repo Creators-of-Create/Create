@@ -56,17 +56,20 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.item.LegacyItemTransferAdapter;
+import com.simibubi.create.foundation.utility.LegacyComponentSerializationBridge;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.data.WorldAttached;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.data.WorldAttached;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -95,7 +98,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
@@ -135,9 +137,9 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-			Capabilities.ItemHandler.BLOCK,
+			Capabilities.Item.BLOCK,
 			AllBlockEntityTypes.TRACK_STATION.get(),
-			(be, context) -> be.depotBehaviour.itemHandler
+			(be, context) -> new LegacyItemTransferAdapter(be.depotBehaviour.itemHandler)
 		);
 
 		if (Mods.COMPUTERCRAFT.isLoaded()) {
@@ -164,15 +166,16 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		lastException = AssemblyException.read(tag, registries);
-		failedCarriageIndex = tag.getInt("FailedCarriageIndex");
+		failedCarriageIndex = tag.getIntOr("FailedCarriageIndex", 0);
 		super.read(tag, registries, clientPacket);
 		invalidateRenderBoundingBox();
 
 		if (tag.contains("ForceFlag"))
-			trainPresent = tag.getBoolean("ForceFlag");
+			trainPresent = tag.getBooleanOr("ForceFlag", false);
 		if (tag.contains("PrevTrainName"))
-			lastDisassembledTrainName = Component.Serializer.fromJson(tag.getString("PrevTrainName"), registries);
-		lastDisassembledMapColorIndex = tag.getInt("PrevTrainColor");
+			lastDisassembledTrainName =
+				LegacyComponentSerializationBridge.fromJson(tag.getStringOr("PrevTrainName", ""), registries);
+		lastDisassembledMapColorIndex = tag.getIntOr("PrevTrainColor", 0);
 
 		if (!clientPacket)
 			return;
@@ -184,7 +187,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 			return;
 		}
 
-		imminentTrain = tag.getUUID("ImminentTrain");
+		imminentTrain = LegacyNbtUtilsBridge.getUUID(tag, "ImminentTrain");
 		trainPresent = tag.contains("TrainPresent");
 		trainCanDisassemble = tag.contains("TrainCanDisassemble");
 		trainBackwards = tag.contains("TrainBackwards");
@@ -198,7 +201,8 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 		tag.putInt("FailedCarriageIndex", failedCarriageIndex);
 
 		if (lastDisassembledTrainName != null)
-			tag.putString("PrevTrainName", Component.Serializer.toJson(lastDisassembledTrainName, registries));
+			tag.putString("PrevTrainName",
+				LegacyComponentSerializationBridge.toJson(lastDisassembledTrainName, registries));
 		tag.putInt("PrevTrainColor", lastDisassembledMapColorIndex);
 
 		super.write(tag, registries, clientPacket);
@@ -208,7 +212,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 		if (imminentTrain == null)
 			return;
 
-		tag.putUUID("ImminentTrain", imminentTrain);
+		LegacyNbtUtilsBridge.putUUID(tag, "ImminentTrain", imminentTrain);
 
 		if (trainPresent)
 			NBTHelper.putMarker(tag, "TrainPresent");
@@ -240,18 +244,18 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 
 	@Override
 	public void lazyTick() {
-		if (isAssembling() && !level.isClientSide)
+		if (isAssembling() && !level.isClientSide())
 			refreshAssemblyInfo();
 		super.lazyTick();
 	}
 
 	@Override
 	public void tick() {
-		if (isAssembling() && level.isClientSide)
+		if (isAssembling() && level.isClientSide())
 			refreshAssemblyInfo();
 		super.tick();
 
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			float currentTarget = flag.getChaseTarget();
 			if (currentTarget == 0 || flag.settled()) {
 				int target = trainPresent || isAssembling() ? 1 : 0;
@@ -285,7 +289,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 			imminentTrain.runtime.displayLinkUpdateRequested = false;
 		}
 
-		if (!level.isClientSide && computerBehaviour.hasAttachedComputer()) {
+		if (!level.isClientSide() && computerBehaviour.hasAttachedComputer()) {
 			if (this.imminentTrain == null && imminentTrain != null) {
 				computerBehaviour.prepareComputerEvent(
 					new StationTrainPresenceEvent(StationTrainPresenceEvent.Type.IMMINENT, imminentTrain));
@@ -348,8 +352,8 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 					CompoundTag oldData = oldBE.getBogeyData();
 					BlockState newBlock = bogey.getNextSize(oldBE);
 					if (newBlock.getBlock() == bogey)
-						player.displayClientMessage(CreateLang.translateDirect("bogey.style.no_other_sizes")
-							.withStyle(ChatFormatting.RED), true);
+						player.sendOverlayMessage(CreateLang.translateDirect("bogey.style.no_other_sizes")
+							.withStyle(ChatFormatting.RED));
 					level.setBlock(bogeyPos, newBlock, Block.UPDATE_ALL);
 					BlockEntity newEntity = level.getBlockEntity(bogeyPos);
 					if (!(newEntity instanceof AbstractBogeyBlockEntity newBE))
@@ -365,7 +369,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 
 		ItemStack handItem = player.getItemInHand(hand);
 		if (!player.isCreative() && !AllBlocks.RAILWAY_CASING.isIn(handItem)) {
-			player.displayClientMessage(CreateLang.translateDirect("train_assembly.requires_casing"), true);
+			player.sendOverlayMessage(CreateLang.translateDirect("train_assembly.requires_casing"));
 			return false;
 		}
 
@@ -387,7 +391,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 		}
 		bogeyAnchor = ProperWaterloggedBlock.withWater(level, bogeyAnchor, pos);
 		level.setBlock(targetPos, bogeyAnchor, Block.UPDATE_ALL);
-		player.displayClientMessage(CreateLang.translateDirect("train_assembly.bogey_created"), true);
+		player.sendOverlayMessage(CreateLang.translateDirect("train_assembly.bogey_created"));
 		SoundType soundtype = bogeyAnchor.getBlock()
 			.getSoundType(state, level, pos, player);
 		level.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F,
@@ -609,7 +613,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 
 		bogeyCount = bogeyIndex;
 
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		if (prevLength == assemblyLength)
 			return;
@@ -655,7 +659,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 			.get(0)
 			.normalize()
 			.scale(axisDirection.getStep());
-		return assemblyDirection = Direction.getNearest(axis.x, axis.y, axis.z);
+		return assemblyDirection = Direction.getApproximateNearest(axis.x, axis.y, axis.z);
 	}
 
 	@Override
@@ -689,7 +693,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 		Vec3 center = Vec3.atBottomCenterOf(trackPosition)
 			.add(0, track.getElevationAtCenter(level, trackPosition, trackState), 0);
 		Collection<DiscoveredLocation> ends = track.getConnected(level, trackPosition, trackState, true, null);
-		Vec3 targetOffset = Vec3.atLowerCornerOf(assemblyDirection.getNormal());
+		Vec3 targetOffset = Vec3.atLowerCornerOf(assemblyDirection.getUnitVec3i());
 		for (DiscoveredLocation end : ends)
 			if (Mth.equal(0, targetOffset.distanceToSqr(end.getLocation()
 				.subtract(center)
@@ -718,7 +722,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 		}
 
 		List<TravellingPoint> points = new ArrayList<>();
-		Vec3 directionVec = Vec3.atLowerCornerOf(assemblyDirection.getNormal());
+		Vec3 directionVec = Vec3.atLowerCornerOf(assemblyDirection.getUnitVec3i());
 		TrackGraph graph = null;
 		TrackNode secondNode = null;
 
@@ -917,7 +921,6 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public AABB getRenderBoundingBox() {
 		if (isAssembling())
 			return AABB.INFINITE;
@@ -981,7 +984,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 		if (axis == null)
 			return false;
 
-		Direction nearest = Direction.getNearest(axis.x, 0, axis.z);
+		Direction nearest = Direction.getApproximateNearest(axis.x, 0, axis.z);
 		flagYRot = (int) (-nearest.toYRot() - 90);
 
 		Vec3 diff = Vec3.atLowerCornerOf(trackPos.subtract(worldPosition))
@@ -990,7 +993,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 			return true;
 
 		flagFlipped = diff.dot(Vec3.atLowerCornerOf(nearest.getClockWise()
-			.getNormal())) > 0;
+			.getUnitVec3i())) > 0;
 
 		return true;
 	}
@@ -1004,7 +1007,7 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 
 	public void attachPackagePort(PackagePortBlockEntity ppbe) {
 		GlobalStation station = getStation();
-		if (station == null || level.isClientSide)
+		if (station == null || level.isClientSide())
 			return;
 
 		if (ppbe instanceof PostboxBlockEntity pbe)

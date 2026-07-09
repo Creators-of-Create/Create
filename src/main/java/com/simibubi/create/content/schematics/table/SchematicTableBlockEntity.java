@@ -51,14 +51,15 @@ public class SchematicTableBlockEntity extends SmartBlockEntity implements MenuP
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		inventory.deserializeNBT(registries, compound.getCompound("Inventory"));
+		com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.deserializeHandler(inventory, registries,
+			compound.getCompoundOrEmpty("Inventory"));
 		super.read(compound, registries, clientPacket);
 		if (!clientPacket)
 			return;
 		if (compound.contains("Uploading")) {
 			isUploading = true;
-			uploadingSchematic = compound.getString("Schematic");
-			uploadingProgress = compound.getFloat("Progress");
+			uploadingSchematic = compound.getStringOr("Schematic", "");
+			uploadingProgress = compound.getFloatOr("Progress", 0);
 		} else {
 			isUploading = false;
 			uploadingSchematic = null;
@@ -68,7 +69,7 @@ public class SchematicTableBlockEntity extends SmartBlockEntity implements MenuP
 
 	@Override
 	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		compound.put("Inventory", inventory.serializeNBT(registries));
+		compound.put("Inventory", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.serializeHandler(inventory, registries));
 		super.write(compound, registries, clientPacket);
 		if (clientPacket && isUploading) {
 			compound.putBoolean("Uploading", true);

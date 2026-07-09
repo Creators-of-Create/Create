@@ -1,10 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "item": "create:bound_cardboard_block"
-    }
+    "create:bound_cardboard_block"
   ],
   "result": {
     "count": 4,

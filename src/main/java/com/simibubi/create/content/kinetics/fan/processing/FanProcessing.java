@@ -9,7 +9,7 @@ import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -19,15 +19,15 @@ public class FanProcessing {
 		if (entity.getPersistentData()
 			.contains("CreateData")) {
 			CompoundTag compound = entity.getPersistentData()
-				.getCompound("CreateData");
+				.getCompoundOrEmpty("CreateData");
 			if (compound.contains("Processing")) {
-				CompoundTag processing = compound.getCompound("Processing");
+				CompoundTag processing = compound.getCompoundOrEmpty("Processing");
 
-				if (AllFanProcessingTypes.parseLegacy(processing.getString("Type")) != type)
+				if (AllFanProcessingTypes.parseLegacy(processing.getStringOr("Type", "")) != type)
 					return type.canProcess(entity.getItem(), entity.level());
-				else if (processing.getInt("Time") >= 0)
+				else if (processing.getIntOr("Time", 0) >= 0)
 					return true;
-				else if (processing.getInt("Time") == -1)
+				else if (processing.getIntOr("Time", 0) == -1)
 					return false;
 			}
 		}
@@ -88,14 +88,14 @@ public class FanProcessing {
 
 		if (!nbt.contains("CreateData"))
 			nbt.put("CreateData", new CompoundTag());
-		CompoundTag createData = nbt.getCompound("CreateData");
+		CompoundTag createData = nbt.getCompoundOrEmpty("CreateData");
 
 		if (!createData.contains("Processing"))
 			createData.put("Processing", new CompoundTag());
-		CompoundTag processing = createData.getCompound("Processing");
+		CompoundTag processing = createData.getCompoundOrEmpty("Processing");
 
-		if (!processing.contains("Type") || AllFanProcessingTypes.parseLegacy(processing.getString("Type")) != type) {
-			ResourceLocation key = CreateBuiltInRegistries.FAN_PROCESSING_TYPE.getKey(type);
+		if (!processing.contains("Type") || AllFanProcessingTypes.parseLegacy(processing.getStringOr("Type", "")) != type) {
+			Identifier key = CreateBuiltInRegistries.FAN_PROCESSING_TYPE.getKey(type);
 			if (key == null)
 				throw new IllegalArgumentException("Could not get id for FanProcessingType " + type + "!");
 
@@ -107,7 +107,7 @@ public class FanProcessing {
 			processing.putInt("Time", processingTime);
 		}
 
-		int value = processing.getInt("Time") - 1;
+		int value = processing.getIntOr("Time", 0) - 1;
 		processing.putInt("Time", value);
 		return value;
 	}

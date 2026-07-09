@@ -26,6 +26,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.WrittenBookContent;
 
@@ -93,10 +94,10 @@ public class MaterialChecklist {
 		List<Item> keys = new ArrayList<>(Sets.union(required.keySet(), damageRequired.keySet()));
 		Collections.sort(keys, (item1, item2) -> {
 			Locale locale = Locale.ENGLISH;
-			String name1 = item1.getDescription()
+			String name1 = new ItemStack(item1).getHoverName()
 				.getString()
 				.toLowerCase(locale);
-			String name2 = item2.getDescription()
+			String name2 = new ItemStack(item2).getHoverName()
 				.getString()
 				.toLowerCase(locale);
 			return name1.compareTo(name2);
@@ -171,10 +172,10 @@ public class MaterialChecklist {
 		List<Item> keys = new ArrayList<>(Sets.union(required.keySet(), damageRequired.keySet()));
 		Collections.sort(keys, (item1, item2) -> {
 			Locale locale = Locale.ENGLISH;
-			String name1 = item1.getDescription()
+			String name1 = new ItemStack(item1).getHoverName()
 				.getString()
 				.toLowerCase(locale);
-			String name2 = item2.getDescription()
+			String name2 = new ItemStack(item2).getHoverName()
 				.getString()
 				.toLowerCase(locale);
 			return name1.compareTo(name2);
@@ -238,9 +239,10 @@ public class MaterialChecklist {
 		int stacks = amount / 64;
 		int remainder = amount % 64;
         MutableComponent tc = Component.empty();
-		tc.append(Component.translatable(item.getDescriptionId())
+		tc.append(item.getHoverName()
+			.copy()
 			.setStyle(Style.EMPTY
-				.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackInfo(item)))));
+				.withHoverEvent(new HoverEvent.ShowItem(ItemStackTemplate.fromNonEmptyStack(item)))));
 
 		if (!unfinished && forBook)
 			tc.append(" \u2714");

@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.blockEntity;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
@@ -16,8 +15,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
 
-@MethodsReturnNonnullByDefault
+import com.simibubi.create.foundation.utility.LegacyBlockEntityTagBridge;
+
 @ParametersAreNonnullByDefault
 public abstract class SyncedBlockEntity extends BlockEntity {
 	public SyncedBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -35,24 +36,23 @@ public abstract class SyncedBlockEntity extends BlockEntity {
 	}
 
 	@Override
-	public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
-		readClient(tag, registries);
+	public void handleUpdateTag(ValueInput input) {
+		readClient(LegacyBlockEntityTagBridge.read(input), input.lookup());
 	}
 
 	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider registries) {
-		CompoundTag tag = pkt.getTag();
-		readClient(tag == null ? new CompoundTag() : tag, registries);
+	public void onDataPacket(Connection net, ValueInput input) {
+		readClient(LegacyBlockEntityTagBridge.read(input), input.lookup());
 	}
 
 	// Special handling for client update packets
 	public void readClient(CompoundTag tag, HolderLookup.Provider registries) {
-		loadAdditional(tag, registries);
+		loadAdditional(LegacyBlockEntityTagBridge.input(tag, registries));
 	}
 
 	// Special handling for client update packets
 	public CompoundTag writeClient(CompoundTag tag, HolderLookup.Provider registries) {
-		saveAdditional(tag, registries);
+		tag.merge(LegacyBlockEntityTagBridge.output(registries, this::saveAdditional));
 		return tag;
 	}
 
@@ -67,6 +67,6 @@ public abstract class SyncedBlockEntity extends BlockEntity {
 	}
 
 	public HolderGetter<Block> blockHolderGetter() {
-		return level != null ? level.holderLookup(Registries.BLOCK) : BuiltInRegistries.BLOCK.asLookup();
+		return level != null ? level.registryAccess().lookupOrThrow(Registries.BLOCK) : BuiltInRegistries.BLOCK;
 	}
 }

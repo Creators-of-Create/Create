@@ -7,10 +7,10 @@ import com.simibubi.create.content.kinetics.simpleRelays.AbstractSimpleShaftBloc
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import com.simibubi.create.foundation.render.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
@@ -26,7 +26,7 @@ public class ValueBoxRenderer {
 	public static void renderItemIntoValueBox(ItemStack filter, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		Minecraft mc = Minecraft.getInstance();
-		ItemRenderer itemRenderer = mc.getItemRenderer();
+		ItemRenderer itemRenderer = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer();
 		BakedModel modelWithOverrides = itemRenderer.getModel(filter, null, null, 0);
 		boolean blockItem = modelWithOverrides.isGui3d();
 		float scale = (!blockItem ? .5f : 1f) + 1 / 64f;
@@ -68,7 +68,7 @@ public class ValueBoxRenderer {
 			.normal()
 			.set(copy);
 		Minecraft mc = Minecraft.getInstance();
-		mc.getItemRenderer()
+		com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer()
 			.renderStatic(filter, ItemDisplayContext.GUI, itemLight, OverlayTexture.NO_OVERLAY, squashedMS, buffer, mc.level, 0);
 
 		ms.popPose();

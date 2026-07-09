@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterBlockEntity.Inventory;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -227,9 +227,9 @@ public class ConnectedInputHandler {
 		}
 
 		public void read(CompoundTag nbt) {
-			isController = nbt.getBoolean("Controller");
-			data = NBTHelper.readCompoundList(nbt.getList("Data", Tag.TAG_COMPOUND),
-				c -> new BlockPos(c.getInt("X"), c.getInt("Y"), c.getInt("Z")));
+			isController = nbt.getBooleanOr("Controller", true);
+			data = NBTHelper.readCompoundList(nbt.getListOrEmpty("Data"),
+				c -> new BlockPos(c.getIntOr("X", 0), c.getIntOr("Y", 0), c.getIntOr("Z", 0)));
 
 			// nbt got wiped -> reset
 			if (data.isEmpty()) {

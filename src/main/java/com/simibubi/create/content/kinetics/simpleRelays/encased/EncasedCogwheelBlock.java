@@ -18,8 +18,8 @@ import com.simibubi.create.content.kinetics.simpleRelays.SimpleKineticBlockEntit
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.foundation.block.IBE;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.VoxelShaper;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.VoxelShaper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -67,13 +67,8 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
-		if (target instanceof BlockHitResult)
-			return ((BlockHitResult) target).getDirection()
-					.getAxis() != getRotationAxis(state)
-				? isLarge ? AllBlocks.LARGE_COGWHEEL.asStack() : AllBlocks.COGWHEEL.asStack()
-				: getCasing().asItem().getDefaultInstance();
-		return super.getCloneItemStack(state, target, level, pos, player);
+	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
+		return isLarge ? AllBlocks.LARGE_COGWHEEL.asStack() : AllBlocks.COGWHEEL.asStack();
 	}
 
 	@Override
@@ -102,7 +97,7 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 			return super.onWrenched(state, context);
 
 		Level level = context.getLevel();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return InteractionResult.SUCCESS;
 
 		BlockPos pos = context.getClickedPos();
@@ -124,7 +119,7 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 
 	@Override
 	public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
-		if (context.getLevel().isClientSide)
+		if (context.getLevel().isClientSide())
 			return InteractionResult.SUCCESS;
 		context.getLevel()
 			.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, context.getClickedPos(), Block.getId(state));

@@ -6,19 +6,19 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.elevator.ElevatorContraption;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.IntAttached;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.IntAttached;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class ContraptionControlsMovement implements MovementBehaviour {
 
@@ -51,11 +51,11 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 		CompoundTag blockEntityData = ctx.blockEntityData;
 		if (blockEntityData == null)
 			return null;
-		return ItemStack.parseOptional(ctx.world.registryAccess(), blockEntityData.getCompound("Filter"));
+		return LegacyItemStackNbtBridge.parseOptional(ctx.world.registryAccess(), blockEntityData.get("Filter"));
 	}
 
 	public static boolean isDisabledInitially(MovementContext ctx) {
-		return ctx.blockEntityData != null && ctx.blockEntityData.getBoolean("Disabled");
+		return ctx.blockEntityData != null && ctx.blockEntityData.getBooleanOr("Disabled", false);
 	}
 
 	@Override
@@ -141,7 +141,6 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext ctx, VirtualRenderWorld renderWorld, ContraptionMatrices matrices,
 		MultiBufferSource buffer) {
 		ContraptionControlsRenderer.renderInContraption(ctx, renderWorld, matrices, buffer);

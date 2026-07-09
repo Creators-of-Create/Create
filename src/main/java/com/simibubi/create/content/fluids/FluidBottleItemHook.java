@@ -2,7 +2,7 @@ package com.simibubi.create.content.fluids;
 
 import com.simibubi.create.Create;
 
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionResult;

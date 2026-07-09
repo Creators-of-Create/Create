@@ -14,13 +14,13 @@ import com.simibubi.create.content.trains.bogey.BogeyStyle;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +29,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -196,23 +196,27 @@ public class CarriageBogey {
 		tag.put("Points", points.serializeEach(tp -> tp.write(dimensions)));
 		tag.putBoolean("UpsideDown", upsideDown);
 		bogeyData.putBoolean(UPSIDE_DOWN_KEY, upsideDown);
-		NBTHelper.writeResourceLocation(bogeyData, BOGEY_STYLE_KEY, getStyle().id);
+		NBTHelper.writeIdentifier(bogeyData, BOGEY_STYLE_KEY, getStyle().id);
 		tag.put(BOGEY_DATA_KEY, bogeyData);
 		return tag;
 	}
 
 	public static CarriageBogey read(CompoundTag tag, TrackGraph graph, DimensionPalette dimensions) {
-		ResourceLocation location = ResourceLocation.parse(tag.getString("Type"));
-		AbstractBogeyBlock<?> type = (AbstractBogeyBlock<?>) BuiltInRegistries.BLOCK.get(location);
-		boolean upsideDown = tag.getBoolean("UpsideDown");
-		Couple<TravellingPoint> points = Couple.deserializeEach(tag.getList("Points", Tag.TAG_COMPOUND),
+		Identifier location = Identifier.parse(tag.getStringOr("Type", "minecraft:air"));
+		AbstractBogeyBlock<?> type = BuiltInRegistries.BLOCK.get(location)
+			.map(holder -> holder.value())
+			.filter(AbstractBogeyBlock.class::isInstance)
+			.map(AbstractBogeyBlock.class::cast)
+			.orElseThrow();
+		boolean upsideDown = tag.getBooleanOr("UpsideDown", false);
+		Couple<TravellingPoint> points = Couple.deserializeEach(tag.getListOrEmpty("Points"),
 			c -> TravellingPoint.read(c, graph, dimensions));
-		CompoundTag data = tag.getCompound(AbstractBogeyBlockEntity.BOGEY_DATA_KEY);
+		CompoundTag data = tag.getCompoundOrEmpty(AbstractBogeyBlockEntity.BOGEY_DATA_KEY);
 		return new CarriageBogey(type, upsideDown, data, points.getFirst(), points.getSecond());
 	}
 
 	public BogeyStyle getStyle() {
-		ResourceLocation location = NBTHelper.readResourceLocation(this.bogeyData, BOGEY_STYLE_KEY);
+		Identifier location = NBTHelper.readIdentifier(this.bogeyData, BOGEY_STYLE_KEY);
 		BogeyStyle style = AllBogeyStyles.BOGEY_STYLES.get(location);
 		return style != null ? style : AllBogeyStyles.STANDARD; // just for safety
 	}
@@ -224,7 +228,7 @@ public class CarriageBogey {
 	private CompoundTag createBogeyData() {
 		BogeyStyle style = type != null ? type.getDefaultStyle() : AllBogeyStyles.STANDARD;
 		CompoundTag nbt = style.defaultData != null ? style.defaultData : new CompoundTag();
-		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, style.id);
+		NBTHelper.writeIdentifier(nbt, BOGEY_STYLE_KEY, style.id);
 		nbt.putBoolean(UPSIDE_DOWN_KEY, isUpsideDown());
 		return nbt;
 	}

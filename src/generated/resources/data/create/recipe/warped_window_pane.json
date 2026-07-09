@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "create:warped_window"
-    }
+    "#": "create:warped_window"
   },
   "pattern": [
     "###",

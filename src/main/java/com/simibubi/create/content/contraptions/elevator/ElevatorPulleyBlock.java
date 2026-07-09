@@ -10,7 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -29,18 +29,18 @@ public class ElevatorPulleyBlock extends HorizontalKineticBlock implements IBE<E
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!player.mayBuild())
-			return ItemInteractionResult.FAIL;
+			return InteractionResult.FAIL;
 		if (player.isShiftKeyDown())
-			return ItemInteractionResult.FAIL;
+			return InteractionResult.FAIL;
 		if (!stack.isEmpty())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-		if (level.isClientSide)
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
+		if (level.isClientSide())
+			return InteractionResult.SUCCESS;
 		return onBlockEntityUseItemOn(level, pos, be -> {
 			be.clicked();
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		});
 	}
 

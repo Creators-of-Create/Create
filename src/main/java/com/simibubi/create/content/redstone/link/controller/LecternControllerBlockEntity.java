@@ -8,9 +8,10 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 
-import net.createmod.catnip.codecs.CatnipCodecUtils;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.data.codec.CatnipCodecUtils;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +31,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class LecternControllerBlockEntity extends SmartBlockEntity {
 	private ItemContainerContents controllerData = ItemContainerContents.EMPTY;
@@ -51,7 +51,7 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 		super.write(compound, registries, clientPacket);
 		compound.put("ControllerData", CatnipCodecUtils.encode(ItemContainerContents.CODEC, registries, controllerData).orElseThrow());
 		if (user != null)
-			compound.putUUID("User", user);
+			LegacyNbtUtilsBridge.putUUID(compound, "User", user);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 
 		controllerData = CatnipCodecUtils.decode(ItemContainerContents.CODEC, registries, compound.get("ControllerData"))
 			.orElse(ItemContainerContents.EMPTY);
-		user = compound.hasUUID("User") ? compound.getUUID("User") : null;
+		user = LegacyNbtUtilsBridge.hasUUID(compound, "User") ? LegacyNbtUtilsBridge.getUUID(compound, "User") : null;
 	}
 
 	public ItemStack getController() {
@@ -113,12 +113,12 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 	public void tick() {
 		super.tick();
 
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			CatnipServices.PLATFORM.executeOnClientOnly(() -> this::tryToggleActive);
 			prevUser = user;
 		}
 
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			deactivatedThisTick = false;
 
 			if (!(level instanceof ServerLevel))
@@ -137,7 +137,6 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private void tryToggleActive() {
 		if (user == null && Minecraft.getInstance().player.getUUID().equals(prevUser)) {
 			LinkedControllerClientHandler.deactivateInLectern();

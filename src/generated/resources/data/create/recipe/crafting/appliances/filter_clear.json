@@ -1,13 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "item": "create:filter"
-    }
+    "create:filter"
   ],
   "result": {
-    "count": 1,
     "id": "create:filter"
   }
 }

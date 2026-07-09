@@ -1,10 +1,11 @@
 package com.simibubi.create.foundation.mixin.accessor;
 
-import java.util.Map;
+import java.util.List;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
+import net.minecraft.CrashReportCategory.Entry;
 import net.minecraft.SystemReport;
 
 @Mixin(SystemReport.class)
@@ -20,5 +21,5 @@ public interface SystemReportAccessor {
 	}
 
 	@Accessor
-	Map<String, String> getEntries();
+	List<Entry> getEntries();
 }

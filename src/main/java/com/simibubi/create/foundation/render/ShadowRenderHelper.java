@@ -3,12 +3,13 @@ package com.simibubi.create.foundation.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.Lightmap;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.RenderShape;
@@ -23,7 +24,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class ShadowRenderHelper {
 
 	private static final RenderType SHADOW_LAYER =
-		RenderType.entityNoOutline(ResourceLocation.withDefaultNamespace("textures/misc/shadow.png"));
+		LegacyRenderTypes.shadow(Identifier.withDefaultNamespace("textures/misc/shadow.png"));
 
 	public static void renderShadow(PoseStack matrixStack, MultiBufferSource buffer, float opacity, float radius) {
 		PoseStack.Pose entry = matrixStack.last();
@@ -67,7 +68,7 @@ public class ShadowRenderHelper {
 			if (blockstate.isCollisionShapeFullBlock(world, blockpos)) {
 				VoxelShape voxelshape = blockstate.getShape(world, pos.below());
 				if (!voxelshape.isEmpty()) {
-					float brightness = LightTexture.getBrightness(world.dimensionType(), world.getMaxLocalRawBrightness(pos));
+					float brightness = Lightmap.getBrightness(world.dimensionType(), world.getMaxLocalRawBrightness(pos));
 					float f = (float) ((opacity - (y - pos.getY()) / 2.0D) * 0.5D * brightness);
 					if (f >= 0.0F) {
 						if (f > 1.0F) {
@@ -105,7 +106,7 @@ public class ShadowRenderHelper {
 			.setColor(1.0F, 1.0F, 1.0F, alpha)
 			.setUv(u, v)
 			.setOverlay(OverlayTexture.NO_OVERLAY)
-			.setLight(LightTexture.FULL_BRIGHT)
+			.setLight(LightCoordsUtil.FULL_BRIGHT)
 			.setNormal(entry.copy(), 0.0F, 1.0F, 0.0F);
 	}
 

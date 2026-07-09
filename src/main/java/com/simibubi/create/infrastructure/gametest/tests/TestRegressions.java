@@ -6,7 +6,7 @@ import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
 import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTest;
+import com.simibubi.create.infrastructure.gametest.legacy.GameTest;
 import net.minecraft.world.level.block.Blocks;
 
 @GameTestGroup(path = "regressions")
@@ -16,6 +16,6 @@ public class TestRegressions {
 		final BlockPos lever = new BlockPos(2, 5, 0);
 		final BlockPos goal = new BlockPos(1, 3, 4);
 		helper.unpowerLever(lever);
-		helper.succeedWhen(() -> helper.assertBlockPresent(Blocks.LIME_STAINED_GLASS, goal));
+		helper.succeedWhen(() -> helper.assertBlockPresent(Blocks.STAINED_GLASS.lime(), goal));
 	}
 }

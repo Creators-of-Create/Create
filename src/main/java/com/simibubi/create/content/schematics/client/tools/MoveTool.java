@@ -2,7 +2,7 @@ package com.simibubi.create.content.schematics.client.tools;
 
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.phys.Vec3;
 
@@ -25,7 +25,7 @@ public class MoveTool extends PlacementToolBase {
 			return true;
 
 		SchematicTransformation transformation = schematicHandler.getTransformation();
-		Vec3 vec = Vec3.atLowerCornerOf(selectedFace.getNormal()).scale(-Math.signum(delta));
+		Vec3 vec = Vec3.atLowerCornerOf(selectedFace.getUnitVec3i()).scale(-Math.signum(delta));
 		vec = vec.multiply(transformation.getMirrorModifier(Axis.X), 1, transformation.getMirrorModifier(Axis.Z));
 		vec = VecHelper.rotate(vec, transformation.getRotationTarget(), Axis.Y);
 		transformation.move((int) vec.x, 0, (int) vec.z);

@@ -7,12 +7,12 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.model.BakedModelHelper;
 import com.simibubi.create.foundation.model.BakedQuadHelper;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import com.simibubi.create.foundation.render.BlockRenderDispatcher;
+import com.simibubi.create.foundation.model.BakedQuad;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 
 public class CopycatPanelModel extends CopycatModel {
 
@@ -36,8 +36,7 @@ public class CopycatPanelModel extends CopycatModel {
 		ModelData wrappedData, RenderType renderType) {
 		Direction facing = state.getOptionalValue(CopycatPanelBlock.FACING)
 			.orElse(Direction.UP);
-		BlockRenderDispatcher blockRenderer = Minecraft.getInstance()
-			.getBlockRenderer();
+		BlockRenderDispatcher blockRenderer = com.simibubi.create.foundation.render.LegacyBlockRendererBridge.getBlockRenderer();
 
 		BlockState specialCopycatModelState = null;
 		if (CopycatSpecialCases.isBarsMaterial(material))
@@ -59,7 +58,7 @@ public class CopycatPanelModel extends CopycatModel {
 
 		List<BakedQuad> quads = new ArrayList<>();
 
-		Vec3 normal = Vec3.atLowerCornerOf(facing.getNormal());
+		Vec3 normal = Vec3.atLowerCornerOf(facing.getUnitVec3i());
 		Vec3 normalScaled14 = normal.scale(14 / 16f);
 
 		// 2 Pieces

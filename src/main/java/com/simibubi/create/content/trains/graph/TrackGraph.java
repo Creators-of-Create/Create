@@ -24,12 +24,13 @@ import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;
 import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.content.trains.track.TrackMaterial;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -520,7 +521,7 @@ public class TrackGraph {
 
 	public CompoundTag write(HolderLookup.Provider registries, DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
-		tag.putUUID("Id", id);
+		LegacyNbtUtilsBridge.putUUID(tag, "Id", id);
 		tag.putInt("Color", color.getRGB());
 
 		Map<TrackNode, Integer> indexTracker = new HashMap<>();
@@ -561,18 +562,18 @@ public class TrackGraph {
 	}
 
 	public static TrackGraph read(CompoundTag tag, HolderLookup.Provider registries, DimensionPalette dimensions) {
-		TrackGraph graph = new TrackGraph(tag.getUUID("Id"));
-		graph.color = new Color(tag.getInt("Color"));
-		graph.edgePoints.read(tag.getCompound("Points"), registries, dimensions);
+		TrackGraph graph = new TrackGraph(LegacyNbtUtilsBridge.getUUID(tag, "Id"));
+		graph.color = new Color(tag.getIntOr("Color", 0xffffff));
+		graph.edgePoints.read(tag.getCompoundOrEmpty("Points"), registries, dimensions);
 
 		Map<Integer, TrackNode> indexTracker = new HashMap<>();
-		ListTag nodesList = tag.getList("Nodes", Tag.TAG_COMPOUND);
+		ListTag nodesList = tag.getListOrEmpty("Nodes");
 
 		int i = 0;
 		for (Tag t : nodesList) {
 			CompoundTag nodeTag = (CompoundTag) t;
-			TrackNodeLocation location = TrackNodeLocation.read(nodeTag.getCompound("Location"), dimensions);
-			Vec3 normal = VecHelper.readNBT(nodeTag.getList("Normal", Tag.TAG_DOUBLE));
+			TrackNodeLocation location = TrackNodeLocation.read(nodeTag.getCompoundOrEmpty("Location"), dimensions);
+			Vec3 normal = VecHelper.readNBT(nodeTag.getListOrEmpty("Normal"));
 			graph.loadNode(location, nextNodeId(), normal);
 			indexTracker.put(i, graph.locateNode(location));
 			i++;
@@ -586,9 +587,9 @@ public class TrackGraph {
 
 			if (!nodeTag.contains("Connections"))
 				continue;
-			NBTHelper.iterateCompoundList(nodeTag.getList("Connections", Tag.TAG_COMPOUND), c -> {
-				TrackNode node2 = indexTracker.get(c.getInt("To"));
-				TrackEdge edge = TrackEdge.read(node1, node2, c.getCompound("EdgeData"), graph, dimensions);
+			NBTHelper.iterateCompoundList(nodeTag.getListOrEmpty("Connections"), c -> {
+				TrackNode node2 = indexTracker.get(c.getIntOr("To", -1));
+				TrackEdge edge = TrackEdge.read(node1, node2, c.getCompoundOrEmpty("EdgeData"), graph, dimensions);
 				graph.putConnection(node1, node2, edge);
 			});
 		}

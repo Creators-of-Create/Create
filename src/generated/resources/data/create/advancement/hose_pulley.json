@@ -12,7 +12,6 @@
       "translate": "advancement.create.hose_pulley.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:hose_pulley"
     },
     "title": {

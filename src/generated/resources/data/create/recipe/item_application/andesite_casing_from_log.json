@@ -1,12 +1,8 @@
 {
   "type": "create:item_application",
   "ingredients": [
-    {
-      "tag": "c:stripped_logs"
-    },
-    {
-      "item": "create:andesite_alloy"
-    }
+    "#c:stripped_logs",
+    "create:andesite_alloy"
   ],
   "results": [
     {

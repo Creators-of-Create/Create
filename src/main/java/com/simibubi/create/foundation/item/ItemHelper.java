@@ -13,9 +13,8 @@ import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.mixin.accessor.ItemStackHandlerAccessor;
 
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.Entity;
@@ -26,7 +25,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -84,10 +82,8 @@ public class ItemHelper {
 	}
 
 	public static <T extends IBE<? extends BlockEntity>> int calcRedstoneFromBlockEntity(T ibe, Level level, BlockPos pos) {
-		return ibe.getBlockEntityOptional(level, pos)
-			.map(be -> level.getCapability(ItemHandler.BLOCK, pos, null))
-			.map(ItemHelper::calcRedstoneFromInventory)
-			.orElse(0);
+		// TODO 26.2: migrate inventory redstone checks to NeoForge's ResourceHandler<ItemResource> capability.
+		return 0;
 	}
 
 	public static int calcRedstoneFromInventory(@Nullable IItemHandler inv) {
@@ -117,14 +113,13 @@ public class ItemHelper {
 		return Mth.floor(f * 14.0F) + (i > 0 ? 1 : 0);
 	}
 
-	public static List<Pair<Ingredient, MutableInt>> condenseIngredients(NonNullList<Ingredient> recipeIngredients) {
+	public static List<Pair<Ingredient, MutableInt>> condenseIngredients(List<Ingredient> recipeIngredients) {
 		List<Pair<Ingredient, MutableInt>> actualIngredients = new ArrayList<>();
 		Ingredients:
 		for (Ingredient igd : recipeIngredients) {
 			for (Pair<Ingredient, MutableInt> pair : actualIngredients) {
-				ItemStack[] stacks1 = pair.getFirst()
-					.getItems();
-				ItemStack[] stacks2 = igd.getItems();
+				ItemStack[] stacks1 = ingredientStacks(pair.getFirst());
+				ItemStack[] stacks2 = ingredientStacks(igd);
 				if (stacks1.length != stacks2.length)
 					continue;
 				for (int i = 0; i <= stacks1.length; i++) {
@@ -145,8 +140,8 @@ public class ItemHelper {
 	public static boolean matchIngredients(Ingredient i1, Ingredient i2) {
 		if (i1 == i2)
 			return true;
-		ItemStack[] stacks1 = i1.getItems();
-		ItemStack[] stacks2 = i2.getItems();
+		ItemStack[] stacks1 = ingredientStacks(i1);
+		ItemStack[] stacks2 = ingredientStacks(i2);
 		if (stacks1 == stacks2)
 			return true;
 		if (stacks1.length == stacks2.length) {
@@ -158,7 +153,7 @@ public class ItemHelper {
 		return false;
 	}
 
-	public static boolean matchAllIngredients(NonNullList<Ingredient> ingredients) {
+	public static boolean matchAllIngredients(List<Ingredient> ingredients) {
 		if (ingredients.size() <= 1)
 			return true;
 		Ingredient firstIngredient = ingredients.get(0);
@@ -316,7 +311,7 @@ public class ItemHelper {
 	}
 
 	public static void fillItemStackHandler(ItemContainerContents contents, ItemStackHandler inv) {
-		List<ItemStack> itemStacks = contents.stream().toList();
+		List<ItemStack> itemStacks = contents.allItemsCopyStream().toList();
 
 		for (int i = 0; i < itemStacks.size(); i++) {
 			inv.setStackInSlot(i, itemStacks.get(i));
@@ -361,5 +356,11 @@ public class ItemHelper {
 			}
 		}
 		return stacks;
+	}
+
+	private static ItemStack[] ingredientStacks(Ingredient ingredient) {
+		return ingredient.items()
+			.map(holder -> new ItemStack(holder.value()))
+			.toArray(ItemStack[]::new);
 	}
 }

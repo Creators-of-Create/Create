@@ -11,13 +11,14 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
 import com.simibubi.create.api.contraption.storage.item.WrapperMountedItemStorage;
 import com.simibubi.create.foundation.codec.CreateCodecs;
+import com.simibubi.create.foundation.item.LegacyItemHandlerAdapter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities.Item;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -49,7 +50,7 @@ public class SimpleMountedStorage extends WrapperMountedItemStorage<ItemStackHan
 		if (be == null)
 			return;
 
-		IItemHandler cap = level.getCapability(ItemHandler.BLOCK, pos, null);
+		IItemHandler cap = LegacyItemHandlerAdapter.modifiable(level.getCapability(Item.BLOCK, pos, null));
 		if (cap != null) {
 			validate(cap).ifPresent(handler -> {
 				for (int i = 0; i < handler.getSlots(); i++) {

@@ -31,8 +31,7 @@ public class CustomRenderedItems {
 			Iterator<Item> iterator = ITEMS.iterator();
 			while (iterator.hasNext()) {
 				Item item = iterator.next();
-				if (!BuiltInRegistries.ITEM.containsValue(item) || !(IClientItemExtensions.of(item)
-					.getCustomRenderer() instanceof CustomRenderedItemModelRenderer)) {
+				if (!BuiltInRegistries.ITEM.containsValue(item)) {
 					iterator.remove();
 				}
 			}

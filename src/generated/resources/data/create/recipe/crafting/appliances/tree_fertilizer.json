@@ -1,33 +1,16 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "tag": "minecraft:small_flowers"
-    },
-    {
-      "tag": "minecraft:small_flowers"
-    },
+    "#c:flowers/small",
+    "#c:flowers/small",
     [
-      {
-        "item": "minecraft:horn_coral"
-      },
-      {
-        "item": "minecraft:brain_coral"
-      },
-      {
-        "item": "minecraft:tube_coral"
-      },
-      {
-        "item": "minecraft:bubble_coral"
-      },
-      {
-        "item": "minecraft:fire_coral"
-      }
+      "minecraft:horn_coral",
+      "minecraft:brain_coral",
+      "minecraft:tube_coral",
+      "minecraft:bubble_coral",
+      "minecraft:fire_coral"
     ],
-    {
-      "item": "minecraft:bone_meal"
-    }
+    "minecraft:bone_meal"
   ],
   "result": {
     "count": 2,

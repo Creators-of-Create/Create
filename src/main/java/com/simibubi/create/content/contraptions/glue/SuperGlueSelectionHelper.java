@@ -7,10 +7,9 @@ import java.util.Set;
 
 import com.simibubi.create.api.contraption.BlockMovementChecks;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -69,9 +68,9 @@ public class SuperGlueSelectionHelper {
 		if (requiredAmount == 0)
 			return true;
 
-		NonNullList<ItemStack> items = player.getInventory().items;
+		List<ItemStack> items = player.getInventory().getNonEquipmentItems();
 		for (int i = -1; i < items.size(); i++) {
-			int slot = i == -1 ? player.getInventory().selected : i;
+			int slot = i == -1 ? player.getInventory().getSelectedSlot() : i;
 			ItemStack stack = items.get(slot);
 			if (stack.isEmpty())
 				continue;

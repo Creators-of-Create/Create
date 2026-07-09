@@ -8,19 +8,19 @@ import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.utility.DyeHelper;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.glyphs.BakedGlyph;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.util.LightCoordsUtil;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource.BufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Style;
@@ -111,21 +111,14 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 	}
 
 	public static void drawInWorldString(PoseStack ms, MultiBufferSource buffer, String c, int color) {
-		Font fontRenderer = Minecraft.getInstance().font;
-		fontRenderer.drawInBatch(c, 0, 0, color, false, ms.last()
-			.pose(), buffer, Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT);
-		if (buffer instanceof BufferSource) {
-			BakedGlyph texturedglyph = fontRenderer.getFontSet(Style.DEFAULT_FONT)
-				.whiteGlyph();
-			((BufferSource) buffer).endBatch(texturedglyph.renderType(Font.DisplayMode.NORMAL));
-		}
+		// TODO 26.2: Rebuild in-world text rendering on the new Font render-state API.
 	}
 
 	private void renderAsSignal(NixieTubeBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		BlockState blockState = be.getBlockState();
 		Direction facing = NixieTubeBlock.getFacing(blockState);
-		Vec3 observerVec = Minecraft.getInstance().cameraEntity.getEyePosition(partialTicks);
+		Vec3 observerVec = Minecraft.getInstance().getCameraEntity().getEyePosition(partialTicks);
 		var msr = TransformStack.of(ms);
 
 		if (facing == Direction.DOWN)
@@ -138,11 +131,11 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 
 		CachedBuffers.partial(AllPartialModels.SIGNAL_PANEL, blockState)
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+			.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 
 		ms.pushPose();
 		ms.translate(1 / 2f, 7.5f / 16f, 1 / 2f);
-		float renderTime = AnimationTickHolder.getRenderTime(be.getLevel());
+		float renderTime = AnimationTickHolder.getRenderTime();
 		Vec3 lampVec = Vec3.atCenterOf(be.getBlockPos());
 		Vec3 diff = lampVec.subtract(observerVec);
 
@@ -169,7 +162,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 						.light(0xf000f0)
 						.disableDiffuse()
 						.scale(vert ? longSide : 1, vert ? 1 : longSide, 1)
-						.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
+						.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.translucent()));
 
 					CachedBuffers
 						.partial(
@@ -213,7 +206,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 						.light(0xf000f0)
 						.disableDiffuse()
 						.scale(width, height,  1)
-						.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
+						.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.translucent()));
 
 					CachedBuffers
 						.partial(AllPartialModels.SIGNAL_COMPUTER_WHITE_GLOW, blockState)

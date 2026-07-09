@@ -5,8 +5,9 @@ import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.equipment.symmetryWand.SymmetryWandItem;
 
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.utility.LegacyBlockEntityDataComponentBridge;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -18,11 +19,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ItemVaultItem extends BlockItem {
@@ -46,15 +45,13 @@ public class ItemVaultItem extends BlockItem {
 		MinecraftServer minecraftserver = level.getServer();
 		if (minecraftserver == null)
 			return false;
-		CustomData blockEntityData = itemStack.get(DataComponents.BLOCK_ENTITY_DATA);
-		if (blockEntityData != null) {
-			CompoundTag nbt = blockEntityData.copyTag();
+		if (itemStack.has(DataComponents.BLOCK_ENTITY_DATA)) {
+			CompoundTag nbt = LegacyBlockEntityDataComponentBridge.get(itemStack);
 			nbt.remove("Length");
 			nbt.remove("Size");
 			nbt.remove("Controller");
 			nbt.remove("LastKnownPos");
-			BlockEntity.addEntityType(nbt, ((IBE<?>) this.getBlock()).getBlockEntityType());
-			itemStack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(nbt));
+			LegacyBlockEntityDataComponentBridge.set(itemStack, ((IBE<?>) this.getBlock()).getBlockEntityType(), nbt);
 		}
 		return super.updateCustomBlockEntityTag(blockPos, level, player, itemStack, blockState);
 	}

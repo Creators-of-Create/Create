@@ -11,12 +11,12 @@ import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForEntity;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.ponder.render.VirtualRenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -54,7 +54,7 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 
 		ms.pushPose();
 
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 
 		SuperByteBuffer connector = CachedBuffers.partial(AllPartialModels.SCHEMATICANNON_CONNECTOR, state);
 		connector.translate(.5f, 0, .5f);
@@ -177,16 +177,12 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 				}
 				float scale = .3f;
 				ms.scale(scale, scale, scale);
-				Minecraft.getInstance()
-					.getBlockRenderer()
-					.renderSingleBlock(state, ms, buffer, light, overlay,
-						VirtualRenderHelper.VIRTUAL_DATA, null);
+				// TODO 26.2: Rebuild launched-block rendering on the render-state block model pipeline.
 			} else if (launched instanceof ForEntity) {
 				// Render the item
 				float scale = 1.2f;
 				ms.scale(scale, scale, scale);
-				Minecraft.getInstance()
-					.getItemRenderer()
+				com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer()
 					.renderStatic(launched.stack, ItemDisplayContext.GROUND, light, overlay, ms, buffer, blockEntity.getLevel(), 0);
 			}
 
@@ -214,7 +210,7 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(SchematicannonBlockEntity blockEntity) {
+	public boolean shouldRenderOffScreen() {
 		return true;
 	}
 

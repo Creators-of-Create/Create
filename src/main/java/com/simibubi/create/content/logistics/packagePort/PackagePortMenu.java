@@ -106,7 +106,7 @@ public class PackagePortMenu extends MenuBase<PackagePortBlockEntity> {
 	@Override
 	public void removed(Player playerIn) {
 		super.removed(playerIn);
-		if (!playerIn.level().isClientSide)
+		if (!playerIn.level().isClientSide())
 			BlockEntityBehaviour.get(contentHolder, AnimatedContainerBehaviour.TYPE)
 				.stopOpen(playerIn);
 	}

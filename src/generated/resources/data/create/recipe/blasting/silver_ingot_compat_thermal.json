@@ -6,12 +6,8 @@
     }
   ],
   "type": "minecraft:blasting",
-  "category": "blocks",
-  "cookingtime": 100,
   "experience": 0.1,
-  "ingredient": {
-    "item": "create:crushed_raw_silver"
-  },
+  "ingredient": "create:crushed_raw_silver",
   "result": {
     "id": "thermal:silver_ingot"
   }

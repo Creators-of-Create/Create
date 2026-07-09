@@ -19,9 +19,9 @@ import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.content.redstone.displayLink.LinkWithBulbBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -69,7 +69,7 @@ public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 
 		vec3 = vec3.add(Vec3.atLowerCornerOf(state.getOptionalValue(PackagerLinkBlock.FACING)
 				.orElse(Direction.SOUTH)
-				.getNormal())
+				.getUnitVec3i())
 			.scale(f * 0.125));
 
 		pulse();
@@ -98,13 +98,13 @@ public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.write(tag, registries, clientPacket);
 		if (placedBy != null)
-			tag.putUUID("PlacedBy", placedBy);
+			tag.put("PlacedBy", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.createUUID(placedBy));
 	}
 
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
-		placedBy = tag.contains("PlacedBy") ? tag.getUUID("PlacedBy") : null;
+		placedBy = tag.contains("PlacedBy") ? com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.loadUUID(tag.get("PlacedBy")) : null;
 	}
 
 	@Override

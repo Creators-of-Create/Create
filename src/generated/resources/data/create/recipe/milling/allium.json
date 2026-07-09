@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:allium"
-    }
+    "minecraft:allium"
   ],
   "processing_time": 50,
   "results": [

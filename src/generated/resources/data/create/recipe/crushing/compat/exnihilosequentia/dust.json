@@ -7,9 +7,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:sand"
-    }
+    "minecraft:sand"
   ],
   "processing_time": 200,
   "results": [

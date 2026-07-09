@@ -13,16 +13,16 @@ import com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.processing.AssemblyOperatorUseContext;
 import com.simibubi.create.foundation.block.IBE;
 
-import net.createmod.catnip.placement.IPlacementHelper;
-import net.createmod.catnip.placement.PlacementHelpers;
-import net.createmod.catnip.placement.PlacementOffset;
-import net.minecraft.MethodsReturnNonnullByDefault;
+import net.createmod.catnip.api.placement.IPlacementHelper;
+import net.createmod.catnip.api.placement.PlacementHelpers;
+import net.createmod.catnip.api.placement.PlacementOffset;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -32,6 +32,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
@@ -42,10 +43,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<DeployerBlockEntity> {
 
-	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
+	private static final IPlacementHelper PLACEMENT_HELPER = PlacementHelpers.register(new PlacementHelper());
 
 	public DeployerBlock(Properties properties) {
 		super(properties);
@@ -69,13 +69,13 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		Vec3 normal = Vec3.atLowerCornerOf(state.getValue(FACING)
-			.getNormal());
+			.getUnitVec3i());
 		Vec3 location = context.getClickLocation()
 			.subtract(Vec3.atCenterOf(context.getClickedPos())
 				.subtract(normal.scale(.5)))
 			.multiply(normal);
 		if (location.length() > .75f) {
-			if (!context.getLevel().isClientSide)
+			if (!context.getLevel().isClientSide())
 				withBlockEntityDo(context.getLevel(), context.getClickedPos(), DeployerBlockEntity::changeMode);
 			return InteractionResult.SUCCESS;
 		}
@@ -90,37 +90,37 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!isMoving && !state.is(newState.getBlock()))
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel worldIn, BlockPos pos, boolean isMoving) {
+		if (!isMoving)
 			withBlockEntityDo(worldIn, pos, DeployerBlockEntity::discardPlayer);
-		super.onRemove(state, worldIn, pos, newState, isMoving);
+		super.affectNeighborsAfterRemoval(state, worldIn, pos, isMoving);
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		ItemStack heldByPlayer = stack.copy();
 
-		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
+		IPlacementHelper placementHelper = PLACEMENT_HELPER;
 		if (!player.isShiftKeyDown() && player.mayBuild()) {
 			if (placementHelper.matchesItem(heldByPlayer) && placementHelper.getOffset(player, level, state, pos, hitResult)
 				.placeInWorld(level, (BlockItem) heldByPlayer.getItem(), player, hand, hitResult)
 				.consumesAction())
-				return ItemInteractionResult.SUCCESS;
+				return InteractionResult.SUCCESS;
 		}
 
 		if (AllItems.WRENCH.isIn(heldByPlayer))
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 
 		Vec3 normal = Vec3.atLowerCornerOf(state.getValue(FACING)
-			.getNormal());
+			.getUnitVec3i());
 		Vec3 location = hitResult.getLocation()
 			.subtract(Vec3.atCenterOf(pos)
 				.subtract(normal.scale(.5)))
 			.multiply(normal);
 		if (location.length() < .75f)
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-		if (level.isClientSide)
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
+		if (level.isClientSide())
+			return InteractionResult.SUCCESS;
 
 		withBlockEntityDo(level, pos, be -> {
 			ItemStack heldByDeployer = be.player.getMainHandItem()
@@ -133,7 +133,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 			be.notifyUpdate();
 		});
 
-		return ItemInteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -153,8 +153,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
-								boolean p_220069_6_) {
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, Orientation orientation, boolean p_220069_6_) {
 		withBlockEntityDo(world, pos, DeployerBlockEntity::redstoneUpdate);
 	}
 
@@ -171,8 +170,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 			return super.getFacingForPlacement(context);
 	}
 
-	@MethodsReturnNonnullByDefault
-	private static class PlacementHelper implements IPlacementHelper {
+		private static class PlacementHelper implements IPlacementHelper {
 
 		@Override
 		public Predicate<ItemStack> getItemPredicate() {

@@ -16,10 +16,10 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatt
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,7 +37,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 
@@ -76,9 +75,9 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
-		totalUseTicks = compound.getInt("TotalUseTicks");
-		startAngle = compound.getInt("StartAngle");
-		targetAngle = compound.getInt("TargetAngle");
+		totalUseTicks = compound.getIntOr("TotalUseTicks", 0);
+		startAngle = compound.getIntOr("StartAngle", 0);
+		targetAngle = compound.getIntOr("TargetAngle", 0);
 	}
 
 	@Override
@@ -115,7 +114,7 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 			return false;
 		if (inUse > 0 || cooldown > 0)
 			return false;
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return true;
 
 		// Always overshoot, target will stop early
@@ -143,13 +142,11 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public SuperByteBuffer getRenderedHandle() {
 		return CachedBuffers.block(getBlockState());
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public boolean shouldRenderShaft() {
 		return false;
 	}
@@ -192,7 +189,7 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 
 		@Override
 		public void onShortInteract(Player player, InteractionHand hand, Direction side, BlockHitResult hitResult) {
-			if (getWorld().isClientSide)
+			if (getWorld().isClientSide())
 				return;
 			BlockState blockState = blockEntity.getBlockState();
 			if (blockState.getBlock() instanceof ValveHandleBlock vhb)

@@ -1,9 +1,7 @@
 {
   "type": "create:haunting",
   "ingredients": [
-    {
-      "item": "minecraft:lantern"
-    }
+    "minecraft:lantern"
   ],
   "results": [
     {

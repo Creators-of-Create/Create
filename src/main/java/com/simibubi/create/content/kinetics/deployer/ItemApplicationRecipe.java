@@ -9,7 +9,7 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -62,7 +62,7 @@ public class ItemApplicationRecipe extends ProcessingRecipe<RecipeWrapper, ItemA
 	}
 
 	public static class Builder<R extends ItemApplicationRecipe> extends ProcessingRecipeBuilder<ItemApplicationRecipeParams, R, Builder<R>> {
-		public Builder(Factory<R> factory, ResourceLocation recipeId) {
+		public Builder(Factory<R> factory, Identifier recipeId) {
 			super(factory, recipeId);
 		}
 
@@ -82,23 +82,14 @@ public class ItemApplicationRecipe extends ProcessingRecipe<RecipeWrapper, ItemA
 		}
 	}
 
-	public static class Serializer<R extends ItemApplicationRecipe> implements RecipeSerializer<R> {
-		private final MapCodec<R> codec;
-		private final StreamCodec<RegistryFriendlyByteBuf, R> streamCodec;
-
-		public Serializer(ProcessingRecipe.Factory<ItemApplicationRecipeParams, R> factory) {
-			this.codec = ProcessingRecipe.codec(factory, ItemApplicationRecipeParams.CODEC);
-			this.streamCodec = ProcessingRecipe.streamCodec(factory, ItemApplicationRecipeParams.STREAM_CODEC);
-		}
-
-		@Override
-		public MapCodec<R> codec() {
-			return codec;
-		}
-
-		@Override
-		public StreamCodec<RegistryFriendlyByteBuf, R> streamCodec() {
-			return streamCodec;
+	public static class Serializer {
+		public static <R extends ItemApplicationRecipe> RecipeSerializer<R> create(
+			ProcessingRecipe.Factory<ItemApplicationRecipeParams, R> factory
+		) {
+			return new RecipeSerializer<>(
+				ProcessingRecipe.codec(factory, ItemApplicationRecipeParams.CODEC),
+				ProcessingRecipe.streamCodec(factory, ItemApplicationRecipeParams.STREAM_CODEC)
+			);
 		}
 
 	}

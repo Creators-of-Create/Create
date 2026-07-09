@@ -8,7 +8,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.trains.track.TrackBlockOutline;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;

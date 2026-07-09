@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.INamedIconOptions;
 import com.simibubi.create.foundation.gui.AllIcons;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.BlockPos;
 
 public interface IControlContraption {

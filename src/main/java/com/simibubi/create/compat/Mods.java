@@ -3,13 +3,15 @@ package com.simibubi.create.compat;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import net.createmod.catnip.lang.Lang;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.api.lang.Lang;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 import net.neoforged.fml.loading.LoadingModList;
 
@@ -57,16 +59,20 @@ public enum Mods {
 		return id;
 	}
 
-	public ResourceLocation rl(String path) {
-		return ResourceLocation.fromNamespaceAndPath(id, path);
+	public Identifier rl(String path) {
+		return Identifier.fromNamespaceAndPath(id, path);
 	}
 
 	public Block getBlock(String id) {
-		return BuiltInRegistries.BLOCK.get(rl(id));
+		return BuiltInRegistries.BLOCK.get(rl(id))
+			.map(holder -> holder.value())
+			.orElse(Blocks.AIR);
 	}
 
 	public Item getItem(String id) {
-		return BuiltInRegistries.ITEM.get(rl(id));
+		return BuiltInRegistries.ITEM.get(rl(id))
+			.map(holder -> holder.value())
+			.orElse(Items.AIR);
 	}
 
 	public boolean contains(ItemLike entry) {

@@ -8,6 +8,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
+import com.simibubi.create.foundation.utility.LegacyBlockEntityTagBridge;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -17,7 +18,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Clearable;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,7 +35,7 @@ public class CloneCommand {
 
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("clone")
-			.requires(cs -> cs.hasPermission(2))
+			.requires(AllCommands.hasPermission(2))
 			.then(Commands.argument("begin", BlockPosArgument.blockPos())
 				.then(Commands.argument("end", BlockPosArgument.blockPos())
 					.then(Commands.argument("destination", BlockPosArgument.blockPos())
@@ -61,7 +62,7 @@ public class CloneCommand {
 		ServerLevel world = source.getLevel();
 
 		int i = sourceArea.getXSpan() * sourceArea.getYSpan() * sourceArea.getZSpan();
-		int limit = world.getGameRules().getInt(GameRules.RULE_COMMAND_MODIFICATION_BLOCK_LIMIT);
+		int limit = world.getGameRules().get(GameRules.MAX_BLOCK_MODIFICATIONS);
 		if (i > limit)
 			throw CLONE_TOO_BIG_EXCEPTION.create(limit, i);
 
@@ -133,7 +134,8 @@ public class CloneCommand {
 
 		for (StructureTemplate.StructureBlockInfo info : reverse) {
 			BlockEntity be = world.getBlockEntity(info.pos());
-			Clearable.tryClear(be);
+			if (be instanceof Clearable clearable)
+				clearable.clearContent();
 			world.setBlock(info.pos(), Blocks.BARRIER.defaultBlockState(), Block.UPDATE_CLIENTS);
 		}
 
@@ -148,7 +150,7 @@ public class CloneCommand {
 				info.nbt().putInt("x", info.pos().getX());
 				info.nbt().putInt("y", info.pos().getY());
 				info.nbt().putInt("z", info.pos().getZ());
-				be.loadWithComponents(info.nbt(), world.registryAccess());
+				be.loadWithComponents(LegacyBlockEntityTagBridge.input(info.nbt(), world.registryAccess()));
 				be.setChanged();
 			}
 
@@ -158,7 +160,7 @@ public class CloneCommand {
 		}
 
 		for (StructureTemplate.StructureBlockInfo info : reverse) {
-			world.blockUpdated(info.pos(), info.state().getBlock());
+			world.updateNeighborsAt(info.pos(), info.state().getBlock());
 		}
 
 		world.getBlockTicks()

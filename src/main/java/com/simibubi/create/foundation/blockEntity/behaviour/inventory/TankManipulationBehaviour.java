@@ -8,10 +8,14 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+
 import com.google.common.base.Predicates;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter;
 
 public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFluidHandler, TankManipulationBehaviour> {
 
@@ -57,8 +61,14 @@ public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFlu
 	}
 
 	@Override
-	protected BlockCapability<IFluidHandler, Direction> capability() {
-		return Capabilities.FluidHandler.BLOCK;
+	protected BlockCapability<?, Direction> capability() {
+		return Capabilities.Fluid.BLOCK;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	protected IFluidHandler adaptCapability(Object capability) {
+		return LegacyFluidHandlerAdapter.of((ResourceHandler<FluidResource>) capability);
 	}
 
 	@Override

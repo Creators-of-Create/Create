@@ -8,11 +8,11 @@ import com.simibubi.create.content.kinetics.gauge.GaugeBlock.Type;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.data.Iterate;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -57,7 +57,7 @@ public class GaugeRenderer extends ShaftRenderer<GaugeBlockEntity> {
 					facing))
 				continue;
 
-			VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+			VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 			rotateBufferTowards(dialBuffer, facing).translate(0, dialPivot, dialPivot)
 				.rotate((float) (Math.PI / 2 * -progress), Direction.EAST)
 				.translate(0, -dialPivot, -dialPivot)

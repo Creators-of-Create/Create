@@ -1,16 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "A": {
-      "item": "create:stock_link"
-    },
-    "B": {
-      "tag": "c:ingots/iron"
-    },
-    "C": {
-      "tag": "c:dusts/redstone"
-    }
+    "A": "create:stock_link",
+    "B": "#c:ingots/iron",
+    "C": "#c:dusts/redstone"
   },
   "pattern": [
     "C",
@@ -18,7 +11,6 @@
     "B"
   ],
   "result": {
-    "count": 1,
     "id": "create:redstone_requester"
   }
 }

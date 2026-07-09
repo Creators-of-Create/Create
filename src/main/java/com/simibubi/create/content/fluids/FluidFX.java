@@ -4,7 +4,7 @@ import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.fluids.particle.FluidParticleData;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -60,7 +60,7 @@ public class FluidFX {
 
 	public static void spawnRimParticles(Level world, BlockPos pos, Direction side, int amount, ParticleOptions particle,
 		float rimRadius) {
-		Vec3 directionVec = Vec3.atLowerCornerOf(side.getNormal());
+		Vec3 directionVec = Vec3.atLowerCornerOf(side.getUnitVec3i());
 		for (int i = 0; i < amount; i++) {
 			Vec3 vec = VecHelper.offsetRandomly(Vec3.ZERO, r, 1)
 				.normalize();

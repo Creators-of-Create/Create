@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:rose_bush"
-    }
+    "minecraft:rose_bush"
   ],
   "processing_time": 50,
   "results": [

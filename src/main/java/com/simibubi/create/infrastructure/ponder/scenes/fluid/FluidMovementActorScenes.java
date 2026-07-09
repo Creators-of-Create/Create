@@ -6,14 +6,15 @@ import com.simibubi.create.content.fluids.pump.PumpBlock;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter;
 
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -51,7 +52,7 @@ public class FluidMovementActorScenes {
 		scene.world().modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.NORTH), false);
 
 		scene.world().modifyBlockEntity(st, type, be -> {
-			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 			if (ifh != null)
 				ifh.fill(FluidHelper.copyStackWithAmount(chocolate, 10000), FluidAction.EXECUTE);
 		});
@@ -148,12 +149,12 @@ public class FluidMovementActorScenes {
 						.withItem(bucket);
 
 			scene.world().modifyBlockEntity(st, type, be -> {
-				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 				if (ifh != null)
 					ifh.drain(1000, FluidAction.EXECUTE);
 			});
 			scene.world().modifyBlockEntity(ct1, type, be -> {
-				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 				if (ifh != null)
 					ifh.fill(chocolate, FluidAction.EXECUTE);
 			});
@@ -161,12 +162,12 @@ public class FluidMovementActorScenes {
 		}
 		for (int i = 0; i < 8; i++) {
 			scene.world().modifyBlockEntity(st, type, be -> {
-				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 				if (ifh != null)
 					ifh.drain(1000, FluidAction.EXECUTE);
 			});
 			scene.world().modifyBlockEntity(ct2, type, be -> {
-				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 				if (ifh != null)
 					ifh.fill(chocolate, FluidAction.EXECUTE);
 			});
@@ -185,12 +186,12 @@ public class FluidMovementActorScenes {
 
 		for (int i = 0; i < 8; i++) {
 			scene.world().modifyBlockEntity(ct2, type, be -> {
-				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 				if (ifh != null)
 					ifh.drain(1000, FluidAction.EXECUTE);
 			});
 			scene.world().modifyBlockEntity(st, type, be -> {
-				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 				if (ifh != null)
 					ifh.fill(chocolate, FluidAction.EXECUTE);
 			});
@@ -198,12 +199,12 @@ public class FluidMovementActorScenes {
 		}
 		for (int i = 0; i < 16; i++) {
 			scene.world().modifyBlockEntity(ct1, type, be -> {
-				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 				if (ifh != null)
 					ifh.drain(1000, FluidAction.EXECUTE);
 			});
 			scene.world().modifyBlockEntity(st, type, be -> {
-				IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 				if (ifh != null)
 					ifh.fill(chocolate, FluidAction.EXECUTE);
 			});
@@ -211,7 +212,7 @@ public class FluidMovementActorScenes {
 		}
 
 		scene.world().modifyBlockEntity(util.grid().at(2, 2, 3), type, be -> {
-			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 			if (ifh != null)
 				ifh.drain(8000, FluidAction.EXECUTE);
 		});

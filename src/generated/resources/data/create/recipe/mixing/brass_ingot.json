@@ -2,12 +2,8 @@
   "type": "create:mixing",
   "heat_requirement": "heated",
   "ingredients": [
-    {
-      "tag": "c:ingots/copper"
-    },
-    {
-      "tag": "c:ingots/zinc"
-    }
+    "#c:ingots/copper",
+    "#c:ingots/zinc"
   ],
   "results": [
     {

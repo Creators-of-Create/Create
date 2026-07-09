@@ -1,9 +1,7 @@
 {
   "type": "create:pressing",
   "ingredients": [
-    {
-      "item": "create:pulp"
-    }
+    "create:pulp"
   ],
   "results": [
     {

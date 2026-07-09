@@ -4,14 +4,13 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.trains.TrainHUD;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
 
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public record TrainPromptPacket(Component text, boolean shadow) implements ClientboundPacketPayload {
 	public static final StreamCodec<RegistryFriendlyByteBuf, TrainPromptPacket> STREAM_CODEC = StreamCodec.composite(
@@ -21,8 +20,7 @@ public record TrainPromptPacket(Component text, boolean shadow) implements Clien
 	);
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void handle(LocalPlayer player) {
+	public void handle(Player player) {
 		TrainHUD.currentPrompt = text;
 		TrainHUD.currentPromptShadow = shadow;
 		TrainHUD.promptKeepAlive = 30;

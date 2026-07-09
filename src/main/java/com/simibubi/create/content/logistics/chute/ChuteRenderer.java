@@ -7,9 +7,9 @@ import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRender
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import com.simibubi.create.foundation.render.ItemRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,8 +35,7 @@ public class ChuteRenderer extends SafeBlockEntityRenderer<ChuteBlockEntity> {
 
 	public static void renderItem(ChuteBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		ItemRenderer itemRenderer = Minecraft.getInstance()
-			.getItemRenderer();
+		ItemRenderer itemRenderer = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer();
 		var msr = TransformStack.of(ms);
 		ms.pushPose();
 		msr.center();

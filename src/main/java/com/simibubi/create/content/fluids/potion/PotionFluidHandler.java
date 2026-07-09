@@ -8,8 +8,9 @@ import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.fluid.LazyComponentFluidIngredient;
 
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
@@ -35,17 +36,16 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluids;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.crafting.DataComponentFluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public class PotionFluidHandler {
 	private static final Component NO_EFFECT = Component.translatable("effect.none").withStyle(ChatFormatting.GRAY);
 
 	public static boolean isPotionItem(ItemStack stack) {
+		var remainder = stack.getItem().getCraftingRemainder();
 		return stack.getItem() instanceof PotionItem
-			&& !(stack.getCraftingRemainingItem().getItem() instanceof BucketItem)
+			&& !(remainder != null && remainder.item().value() instanceof BucketItem)
 			&& !AllItemTags.NOT_POTION.matches(stack);
 	}
 
@@ -59,7 +59,7 @@ public class PotionFluidHandler {
 	public static SizedFluidIngredient potionIngredient(Holder<Potion> potion, int amount) {
 		FluidStack stack = FluidHelper.copyStackWithAmount(PotionFluidHandler
 			.getFluidFromPotionItem(PotionContents.createItemStack(Items.POTION, potion)), amount);
-		return new SizedFluidIngredient(DataComponentFluidIngredient.of(false, stack), amount);
+		return new SizedFluidIngredient(LazyComponentFluidIngredient.of(false, stack), amount);
 	}
 
 	public static FluidStack getFluidFromPotionItem(ItemStack stack) {
@@ -105,7 +105,6 @@ public class PotionFluidHandler {
 	}
 
 	// Modified version of PotionContents#addPotionTooltip
-	@OnlyIn(Dist.CLIENT)
 	public static void addPotionTooltip(FluidStack fs, Consumer<Component> tooltipAdder, float durationFactor) {
 		PotionContents contents = fs.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
 		Iterable<MobEffectInstance> effects = contents.getAllEffects();

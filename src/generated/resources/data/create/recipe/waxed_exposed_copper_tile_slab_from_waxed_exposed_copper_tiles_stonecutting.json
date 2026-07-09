@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:waxed_exposed_copper_tiles"
-  },
+  "ingredient": "create:waxed_exposed_copper_tiles",
   "result": {
     "count": 2,
     "id": "create:waxed_exposed_copper_tile_slab"

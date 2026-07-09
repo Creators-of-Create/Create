@@ -40,7 +40,7 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 
 	@Override
 	public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
-		if (context.getLevel().isClientSide)
+		if (context.getLevel().isClientSide())
 			return InteractionResult.SUCCESS;
 		context.getLevel()
 			.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, context.getClickedPos(), Block.getId(state));
@@ -51,11 +51,8 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
-		if (target instanceof BlockHitResult)
-			return ((BlockHitResult) target).getDirection()
-				.getAxis() == getRotationAxis(state) ? AllBlocks.SHAFT.asStack() : getCasing().asItem().getDefaultInstance();
-		return super.getCloneItemStack(state, target, level, pos, player);
+	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
+		return AllBlocks.SHAFT.asStack();
 	}
 
 	@Override

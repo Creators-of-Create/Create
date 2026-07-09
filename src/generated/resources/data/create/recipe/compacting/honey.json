@@ -2,9 +2,9 @@
   "type": "create:compacting",
   "ingredients": [
     {
-      "type": "neoforge:tag",
+      "type": "neoforge:simple",
       "amount": 1000,
-      "tag": "c:honey"
+      "ingredient": "#c:honey"
     }
   ],
   "results": [

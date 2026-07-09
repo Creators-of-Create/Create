@@ -8,6 +8,7 @@ import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
 import com.simibubi.create.api.contraption.storage.item.WrapperMountedItemStorage;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.codec.CreateCodecs;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -53,7 +54,7 @@ public class ItemVaultMountedStorage extends WrapperMountedItemStorage<ItemStack
 
 	public static ItemVaultMountedStorage fromLegacy(HolderLookup.Provider registries,  CompoundTag nbt) {
 		ItemStackHandler handler = new ItemStackHandler();
-		handler.deserializeNBT(registries, nbt);
+		LegacyItemStackNbtBridge.deserializeHandler(handler, registries, nbt);
 		return new ItemVaultMountedStorage(handler);
 	}
 }

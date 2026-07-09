@@ -4,8 +4,8 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.ContextRequirement;
 
-import net.createmod.catnip.lang.Lang;
-import net.minecraft.resources.ResourceLocation;
+import net.createmod.catnip.api.lang.Lang;
+import net.minecraft.resources.Identifier;
 
 public enum AllCTTypes implements CTType {
 	HORIZONTAL(2, ContextRequirement.builder().horizontal().build()) {
@@ -169,7 +169,7 @@ public enum AllCTTypes implements CTType {
 		}
 	};
 
-	private final ResourceLocation id;
+	private final Identifier id;
 	private final int sheetSize;
 	private final ContextRequirement contextRequirement;
 
@@ -182,7 +182,7 @@ public enum AllCTTypes implements CTType {
 	}
 
 	@Override
-	public ResourceLocation getId() {
+	public Identifier getId() {
 		return id;
 	}
 

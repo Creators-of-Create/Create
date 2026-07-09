@@ -21,9 +21,9 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -50,7 +50,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		for (Pair<Ingredient, MutableInt> pair : condensedIngredients) {
 			List<ItemStack> stacks = new ArrayList<>();
-			for (ItemStack itemStack : pair.getFirst().getItems()) {
+			for (ItemStack itemStack : getItemStacks(pair.getFirst())) {
 				ItemStack copy = itemStack.copy();
 				copy.setCount(pair.getSecond().getValue());
 				stacks.add(copy);
@@ -99,13 +99,13 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		}
 		if (!requiredHeat.testBlazeBurner(HeatLevel.KINDLED)) {
 			builder
-					.addSlot(RecipeIngredientRole.CATALYST, 153, 81)
+					.addSlot(RecipeIngredientRole.CRAFTING_STATION, 153, 81)
 					.addItemStack(AllItems.BLAZE_CAKE.asStack());
 		}
 	}
 
 	@Override
-	public void draw(BasinRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(BasinRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 
 		boolean noHeat = requiredHeat == HeatCondition.NONE;
@@ -123,7 +123,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
 		heatBar.render(graphics, 4, 80);
-		graphics.drawString(Minecraft.getInstance().font, CreateLang.translateDirect(requiredHeat.getTranslationKey()), 9,
+		graphics.text(Minecraft.getInstance().font, CreateLang.translateDirect(requiredHeat.getTranslationKey()), 9,
 				86, requiredHeat.getColor(), false);
 	}
 

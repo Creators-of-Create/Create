@@ -13,6 +13,7 @@ import com.simibubi.create.content.kinetics.gantry.GantryShaftBlockEntity;
 import com.simibubi.create.content.kinetics.transmission.sequencer.SequencerInstructions;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.LegacyDirectionBridge;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -63,7 +64,7 @@ public class GantryCarriageBlockEntity extends KineticBlockEntity implements IDi
 	public void tick() {
 		super.tick();
 
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 
 		if (assembleNextTick) {
@@ -154,7 +155,7 @@ public class GantryCarriageBlockEntity extends KineticBlockEntity implements IDi
 		if (!stateTo.getValue(GantryShaftBlock.POWERED))
 			return defaultModifier;
 
-		Direction direction = Direction.getNearest(diff.getX(), diff.getY(), diff.getZ());
+		Direction direction = LegacyDirectionBridge.nearest(diff.getX(), diff.getY(), diff.getZ(), Direction.NORTH);
 		if (stateFrom.getValue(GantryCarriageBlock.FACING) != direction.getOpposite())
 			return defaultModifier;
 		return getGantryPinionModifier(stateTo.getValue(GantryShaftBlock.FACING), stateFrom.getValue(GantryCarriageBlock.FACING));

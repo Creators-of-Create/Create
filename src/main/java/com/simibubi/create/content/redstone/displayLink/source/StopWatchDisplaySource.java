@@ -22,7 +22,7 @@ public class StopWatchDisplaySource extends SingleLineDisplaySource {
 			onSignalReset(context);
 
 		long started = context.sourceConfig()
-			.getLong("StartTime");
+			.getLongOr("StartTime", 0);
 		long current = context.blockEntity()
 			.getLevel()
 			.getGameTime();

@@ -31,17 +31,17 @@ public class FramedBlocksInSchematics {
 		data = blockEntity.saveWithFullMetadata(blockEntity.getLevel().registryAccess());
 
 		List<String> keysToRemove = new ArrayList<>();
-		for (String key : data.getAllKeys())
+		for (String key : data.keySet())
 			if (!KEYS_TO_RETAIN.contains(key))
 				keysToRemove.add(key);
 		for (String key : keysToRemove)
 			data.remove(key);
 
-		if (data.getCompound("camo")
+		if (data.getCompoundOrEmpty("camo")
 			.contains("fluid"))
 			data.remove("camo");
 
-		if (data.getCompound("camo_two")
+		if (data.getCompoundOrEmpty("camo_two")
 			.contains("fluid"))
 			data.remove("camo_two");
 
@@ -55,21 +55,21 @@ public class FramedBlocksInSchematics {
 		CompoundTag data = blockEntity.saveWithFullMetadata(blockEntity.getLevel().registryAccess());
 		List<StackRequirement> list = new ArrayList<>();
 
-		if (data.getBoolean("intangible"))
+		if (data.getBooleanOr("intangible", false))
 			list.add(new StackRequirement(new ItemStack(Items.PHANTOM_MEMBRANE), ItemUseType.CONSUME));
 
-		if (data.getBoolean("glowing"))
+		if (data.getBooleanOr("glowing", false))
 			list.add(new StackRequirement(new ItemStack(Items.GLOWSTONE_DUST), ItemUseType.CONSUME));
 
-		if (data.getBoolean("reinforced"))
+		if (data.getBooleanOr("reinforced", false))
 			list.add(new StackRequirement(new ItemStack(Mods.FRAMEDBLOCKS.getItem("framed_reinforcement")),
 				ItemUseType.CONSUME));
 
 		if (data.contains("camo"))
-			addCamoStack(blockEntity.getLevel().holderLookup(Registries.BLOCK), data.getCompound("camo"), list);
+			addCamoStack(blockEntity.getLevel().holderLookup(Registries.BLOCK), data.getCompoundOrEmpty("camo"), list);
 
 		if (data.contains("camo_two"))
-			addCamoStack(blockEntity.getLevel().holderLookup(Registries.BLOCK), data.getCompound("camo_two"), list);
+			addCamoStack(blockEntity.getLevel().holderLookup(Registries.BLOCK), data.getCompoundOrEmpty("camo_two"), list);
 
 		return new ItemRequirement(list);
 	}
@@ -77,7 +77,7 @@ public class FramedBlocksInSchematics {
 	private static void addCamoStack(HolderGetter<Block> level, CompoundTag tag, List<StackRequirement> list) {
 		if (!tag.contains("state"))
 			return;
-		BlockState blockState = NbtUtils.readBlockState(level, tag.getCompound("state"));
+		BlockState blockState = NbtUtils.readBlockState(level, tag.getCompoundOrEmpty("state"));
 		ItemStack itemStack = new ItemStack(blockState.getBlock());
 		if (!itemStack.isEmpty())
 			list.add(new StackRequirement(itemStack, ItemUseType.CONSUME));

@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllPackets;
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -25,7 +25,7 @@ public class ShootableGadgetItemMethods {
 		boolean gunInOtherHand =
 			predicate.test(player.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND));
 		player.getCooldowns()
-			.addCooldown(item.getItem(), gunInOtherHand ? cooldown * 2 / 3 : cooldown);
+			.addCooldown(item, gunInOtherHand ? cooldown * 2 / 3 : cooldown);
 	}
 
 	public static void sendPackets(Player player, Function<Boolean, ? extends ShootGadgetPacket> factory) {

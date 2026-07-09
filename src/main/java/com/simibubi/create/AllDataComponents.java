@@ -31,8 +31,8 @@ import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity.S
 import com.simibubi.create.content.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.trains.track.TrackPlacement.ConnectingFrom;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.Vec3i;

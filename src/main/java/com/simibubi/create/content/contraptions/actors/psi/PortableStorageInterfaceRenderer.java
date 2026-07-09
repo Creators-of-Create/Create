@@ -13,19 +13,19 @@ import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -41,7 +41,7 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 
 		BlockState blockState = be.getBlockState();
 		float progress = be.getExtensionDistance(partialTicks);
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 		render(blockState, be.isConnected(), progress, null, sbb -> sbb.light(light)
 			.renderInto(ms, vb));
 	}
@@ -49,14 +49,14 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		BlockState blockState = context.state;
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 
 		LerpedFloat animation = PortableStorageInterfaceMovement.getAnimation(context);
 		float progress = animation.getValue(renderPartialTicks);
 		boolean lit = animation.settled();
 		render(blockState, lit, progress, matrices.getModel(),
-			sbb -> sbb.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+			sbb -> sbb.light(LightCoordsUtil.FULL_BRIGHT)
 				.useLevelLight(context.world, matrices.getWorld())
 				.renderInto(matrices.getViewProjection(), vb));
 	}

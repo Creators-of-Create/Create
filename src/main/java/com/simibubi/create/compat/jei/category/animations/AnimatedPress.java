@@ -1,13 +1,13 @@
 package com.simibubi.create.compat.jei.category.animations;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Direction;
+
+import org.joml.Matrix3x2fStack;
 
 public class AnimatedPress extends AnimatedKinetics {
 
@@ -18,35 +18,33 @@ public class AnimatedPress extends AnimatedKinetics {
 	}
 
 	@Override
-	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
-		PoseStack matrixStack = graphics.pose();
-		matrixStack.pushPose();
-		matrixStack.translate(xOffset, yOffset, 200);
-		matrixStack.mulPose(Axis.XP.rotationDegrees(-15.5f));
-		matrixStack.mulPose(Axis.YP.rotationDegrees(22.5f));
+	public void draw(GuiGraphicsExtractor graphics, int xOffset, int yOffset) {
+		Matrix3x2fStack matrixStack = graphics.pose();
+		matrixStack.pushMatrix();
+		matrixStack.translate(xOffset, yOffset);
 		int scale = basin ? 23 : 24;
 
 		blockElement(shaft(Direction.Axis.Z))
 				.rotateBlock(0, 0, getCurrentAngle())
 				.scale(scale)
-				.render(graphics);
+				.render(graphics, 0, 0, 0);
 
 		blockElement(AllBlocks.MECHANICAL_PRESS.getDefaultState())
 				.scale(scale)
-				.render(graphics);
+				.render(graphics, 0, 0, 0);
 
 		blockElement(AllPartialModels.MECHANICAL_PRESS_HEAD)
 				.atLocal(0, -getAnimatedHeadOffset(), 0)
 				.scale(scale)
-				.render(graphics);
+				.render(graphics, 0, 0, 0);
 
 		if (basin)
 			blockElement(AllBlocks.BASIN.getDefaultState())
-					.atLocal(0, 1.65, 0)
+					.atLocal(0, 1.65f, 0)
 					.scale(scale)
-					.render(graphics);
+					.render(graphics, 0, 0, 0);
 
-		matrixStack.popPose();
+		matrixStack.popMatrix();
 	}
 
 	private float getAnimatedHeadOffset() {

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:cherry_planks"
-    },
-    "X": {
-      "tag": "c:glass_blocks/colorless"
-    }
+    "#": "minecraft:cherry_planks",
+    "X": "#c:glass_blocks/colorless"
   },
   "pattern": [
     " # ",

@@ -1,12 +1,8 @@
 {
   "type": "create:item_application",
   "ingredients": [
-    {
-      "item": "create:cardboard_block"
-    },
-    {
-      "tag": "c:strings"
-    }
+    "create:cardboard_block",
+    "#c:strings"
   ],
   "results": [
     {

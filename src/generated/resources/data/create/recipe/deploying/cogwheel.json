@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "create:shaft"
-    },
-    {
-      "tag": "minecraft:planks"
-    }
+    "create:shaft",
+    "#minecraft:planks"
   ],
   "results": [
     {

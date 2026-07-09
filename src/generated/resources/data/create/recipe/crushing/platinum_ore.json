@@ -10,9 +10,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "tag": "c:ores/platinum"
-    }
+    "#c:ores/platinum"
   ],
   "processing_time": 400,
   "results": [

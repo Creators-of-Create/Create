@@ -2,7 +2,7 @@ package com.simibubi.create.content.kinetics.crank;
 
 import java.util.function.Consumer;
 
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 
 import org.joml.Quaternionf;
 

@@ -10,9 +10,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:diorite"
-    }
+    "minecraft:diorite"
   ],
   "processing_time": 350,
   "results": [

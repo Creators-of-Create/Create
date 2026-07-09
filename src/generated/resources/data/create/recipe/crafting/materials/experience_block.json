@@ -1,10 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "C": {
-      "item": "create:experience_nugget"
-    }
+    "C": "create:experience_nugget"
   },
   "pattern": [
     "CCC",
@@ -12,7 +9,6 @@
     "CCC"
   ],
   "result": {
-    "count": 1,
     "id": "create:experience_block"
   }
 }

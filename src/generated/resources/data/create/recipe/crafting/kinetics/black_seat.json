@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "item": "minecraft:black_wool"
-    },
-    {
-      "tag": "minecraft:wooden_slabs"
-    }
+    "minecraft:black_wool",
+    "#minecraft:wooden_slabs"
   ],
   "result": {
-    "count": 1,
     "id": "create:black_seat"
   }
 }

@@ -2,9 +2,7 @@
   "type": "create:mixing",
   "heat_requirement": "heated",
   "ingredients": [
-    {
-      "item": "minecraft:honey_block"
-    }
+    "minecraft:honey_block"
   ],
   "results": [
     {

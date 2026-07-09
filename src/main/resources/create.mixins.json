@@ -4,9 +4,8 @@
   "priority": 1000,
   "package": "com.simibubi.create.foundation.mixin",
   "plugin": "com.simibubi.create.foundation.mixin.CreateMixinPlugin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "ArmorTrimMixin",
     "BeehiveBlockMixin",
     "BlockItemMixin",
     "BlockMixin",
@@ -32,7 +31,7 @@
     "accessor.FluidInteractionRegistryAccessor",
     "accessor.GameTestHelperAccessor",
     "accessor.ItemFrameAccessor",
-    "accessor.ItemModelGeneratorsAccessor",
+    "accessor.ItemEntityAccessor",
     "accessor.ItemStackHandlerAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.MappedRegistryAccessor",
@@ -51,27 +50,19 @@
     "datafixer.V1460Mixin"
   ],
   "client": [
-    "accessor.AgeableListModelAccessor",
-    "accessor.EntityRenderDispatcherAccessor",
-    "accessor.FontAccessor",
-    "accessor.GuiAccessor",
-    "accessor.HumanoidArmorLayerAccessor",
-    "accessor.LevelRendererAccessor",
+    "accessor.HudAccessor",
     "accessor.MinecraftAccessor",
     "accessor.MouseHandlerAccessor",
     "accessor.TimerAccessor",
     "client.BlockDestructionProgressMixin",
     "client.CameraMixin",
     "client.EntityContraptionInteractionMixin",
+    "client.EntityRendererMixin",
+    "client.EntityRenderStateMixin",
     "client.GameRendererMixin",
     "client.HeavyBootsOnPlayerMixin",
-    "client.HumanoidArmorLayerMixin",
     "client.HumanoidModelMixin",
-    "client.LevelRendererMixin",
-    "client.PlayerRendererMixin",
-    "compat.xaeros.XaeroFullscreenMapAccessor",
-    "compat.xaeros.XaeroFullscreenMapMixin",
-    "compat.xaeros.XaeroPauseScreenOverrideMixin"
+    "client.ClientLevelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

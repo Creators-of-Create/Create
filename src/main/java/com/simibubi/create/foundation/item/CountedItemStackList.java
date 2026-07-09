@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 
-import net.createmod.catnip.data.IntAttached;
+import net.createmod.catnip.api.data.IntAttached;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

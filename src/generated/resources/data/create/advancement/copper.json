@@ -19,7 +19,6 @@
       "translate": "advancement.create.copper.desc"
     },
     "icon": {
-      "count": 1,
       "id": "minecraft:copper_ingot"
     },
     "show_toast": false,

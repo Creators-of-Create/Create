@@ -3,9 +3,9 @@ package com.simibubi.create.content.kinetics.base;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.equipment.goggles.GogglesItem;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -15,6 +15,7 @@ import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 
 public class RotationIndicatorParticle extends SimpleAnimatedParticle {
@@ -59,15 +60,8 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 		radius += (radius2 - radius) * .1f;
 	}
 
-	@Override
-	public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks) {
-		if (!isVisible)
-			return;
-		super.render(buffer, renderInfo, partialTicks);
-	}
-
 	public void move(double x, double y, double z) {
-		float time = AnimationTickHolder.getTicks(level);
+		float time = AnimationTickHolder.getTicks();
 		float angle = (float) ((time * speed) % 360) - (speed / 2 * age * (((float) age) / lifetime));
 		if (speed < 0 && axis.isVertical())
 			angle += 180;
@@ -85,7 +79,7 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 		}
 
 		public Particle createParticle(RotationIndicatorParticleData data, ClientLevel worldIn, double x, double y, double z,
-				double xSpeed, double ySpeed, double zSpeed) {
+				double xSpeed, double ySpeed, double zSpeed, RandomSource random) {
 			Minecraft mc = Minecraft.getInstance();
 			LocalPlayer player = mc.player;
 			boolean visible = worldIn != mc.level || player != null && GogglesItem.isWearingGoggles(player);

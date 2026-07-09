@@ -13,20 +13,20 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class AssemblyScreen extends AbstractStationScreen {
 
 	private IconButton quitAssembly;
 	private IconButton toggleAssemblyButton;
-	private List<ResourceLocation> iconTypes;
+	private List<Identifier> iconTypes;
 	private ScrollInput iconTypeScroll;
 
 	public AssemblyScreen(StationBlockEntity be, GlobalStation station) {
@@ -66,15 +66,15 @@ public class AssemblyScreen extends AbstractStationScreen {
 		toggleAssemblyButton.active = false;
 		toggleAssemblyButton.setToolTip(CreateLang.translateDirect("station.assemble_train"));
 		toggleAssemblyButton.withCallback(() -> {
-			CatnipServices.NETWORK.sendToServer(StationEditPacket.tryAssemble(blockEntity.getBlockPos()));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(StationEditPacket.tryAssemble(blockEntity.getBlockPos()));
 		});
 
 		quitAssembly = new IconButton(x + 73, by, AllIcons.I_DISABLE);
 		quitAssembly.active = true;
 		quitAssembly.setToolTip(CreateLang.translateDirect("station.cancel"));
 		quitAssembly.withCallback(() -> {
-			CatnipServices.NETWORK.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, station.name, null));
-			minecraft.setScreen(new StationScreen(blockEntity, station));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, station.name, null));
+			minecraft.gui.setScreen(new StationScreen(blockEntity, station));
 		});
 
 		addRenderableWidget(toggleAssemblyButton);
@@ -91,8 +91,8 @@ public class AssemblyScreen extends AbstractStationScreen {
 		toggleAssemblyButton.active = blockEntity.bogeyCount > 0 || train != null;
 
 		if (train != null) {
-			CatnipServices.NETWORK.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, station.name, null));
-			minecraft.setScreen(new StationScreen(blockEntity, station));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, station.name, null));
+			minecraft.gui.setScreen(new StationScreen(blockEntity, station));
 			for (Carriage carriage : train.carriages)
 				carriage.updateConductors();
 		}
@@ -106,37 +106,37 @@ public class AssemblyScreen extends AbstractStationScreen {
 			toggleAssemblyButton.setToolTip(CreateLang.translateDirect("station.assemble_train"));
 			toggleAssemblyButton.setIcon(AllGuiTextures.I_ASSEMBLE_TRAIN);
 			toggleAssemblyButton.withCallback(() -> {
-				CatnipServices.NETWORK.sendToServer(StationEditPacket.tryAssemble(blockEntity.getBlockPos()));
+				net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(StationEditPacket.tryAssemble(blockEntity.getBlockPos()));
 			});
 		} else {
-			CatnipServices.NETWORK.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, station.name, null));
-			minecraft.setScreen(new StationScreen(blockEntity, station));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, station.name, null));
+			minecraft.gui.setScreen(new StationScreen(blockEntity, station));
 		}
 	}
 
 	@Override
-	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		super.renderWindow(graphics, mouseX, mouseY, partialTicks);
 		int x = guiLeft;
 		int y = guiTop;
 
 		MutableComponent header = CreateLang.translateDirect("station.assembly_title");
-		graphics.drawString(font, header, x + background.getWidth() / 2 - font.width(header) / 2, y + 4, 0x0E2233, false);
+		graphics.text(font, header, x + background.getWidth() / 2 - font.width(header) / 2, y + 4, 0x0E2233, false);
 
 		AssemblyException lastAssemblyException = blockEntity.lastException;
 		if (lastAssemblyException != null) {
 			MutableComponent text = CreateLang.translateDirect("station.failed");
-			graphics.drawString(font, text, x + 97 - font.width(text) / 2, y + 47, 0x775B5B, false);
+			graphics.text(font, text, x + 97 - font.width(text) / 2, y + 47, 0x775B5B, false);
 			int offset = 0;
 			if (blockEntity.failedCarriageIndex != -1) {
-				graphics.drawString(font, CreateLang.translateDirect("station.carriage_number", blockEntity.failedCarriageIndex), x + 30,
+				graphics.text(font, CreateLang.translateDirect("station.carriage_number", blockEntity.failedCarriageIndex), x + 30,
 					y + 67, 0x7A7A7A, false);
 				offset += 10;
 			}
-			graphics.drawWordWrap(font, lastAssemblyException.component, x + 30, y + 67 + offset, 134, 0x775B5B);
+			graphics.textWithWordWrap(font, lastAssemblyException.component, x + 30, y + 67 + offset, 134, 0x775B5B);
 			offset += font.split(lastAssemblyException.component, 134)
 				.size() * 9 + 5;
-			graphics.drawWordWrap(font, CreateLang.translateDirect("station.retry"), x + 30, y + 67 + offset, 134, 0x7A7A7A);
+			graphics.textWithWordWrap(font, CreateLang.translateDirect("station.retry"), x + 30, y + 67 + offset, 134, 0x7A7A7A);
 			return;
 		}
 
@@ -145,11 +145,11 @@ public class AssemblyScreen extends AbstractStationScreen {
 		MutableComponent text = CreateLang.translateDirect(
 			bogeyCount == 0 ? "station.no_bogeys" : bogeyCount == 1 ? "station.one_bogey" : "station.more_bogeys",
 			bogeyCount);
-		graphics.drawString(font, text, x + 97 - font.width(text) / 2, y + 47, 0x7A7A7A, false);
+		graphics.text(font, text, x + 97 - font.width(text) / 2, y + 47, 0x7A7A7A, false);
 
-		graphics.drawWordWrap(font, CreateLang.translateDirect("station.how_to"), x + 28, y + 62, 134, 0x7A7A7A);
-		graphics.drawWordWrap(font, CreateLang.translateDirect("station.how_to_1"), x + 28, y + 94, 134, 0x7A7A7A);
-		graphics.drawWordWrap(font, CreateLang.translateDirect("station.how_to_2"), x + 28, y + 117, 138, 0x7A7A7A);
+		graphics.textWithWordWrap(font, CreateLang.translateDirect("station.how_to"), x + 28, y + 62, 134, 0x7A7A7A);
+		graphics.textWithWordWrap(font, CreateLang.translateDirect("station.how_to_1"), x + 28, y + 94, 134, 0x7A7A7A);
+		graphics.textWithWordWrap(font, CreateLang.translateDirect("station.how_to_2"), x + 28, y + 117, 138, 0x7A7A7A);
 	}
 
 	@Override
@@ -157,9 +157,9 @@ public class AssemblyScreen extends AbstractStationScreen {
 		super.removed();
 		Train train = displayedTrain.get();
 		if (train != null) {
-			ResourceLocation iconId = iconTypes.get(iconTypeScroll.getState());
+			Identifier iconId = iconTypes.get(iconTypeScroll.getState());
 			train.icon = TrainIconType.byId(iconId);
-			CatnipServices.NETWORK.sendToServer(new TrainEditPacket.Serverbound(train.id, "", iconId, train.mapColorIndex));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new TrainEditPacket.Serverbound(train.id, "", iconId, train.mapColorIndex));
 		}
 	}
 

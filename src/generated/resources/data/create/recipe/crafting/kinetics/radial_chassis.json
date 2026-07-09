@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "L": {
-      "tag": "minecraft:logs"
-    },
-    "P": {
-      "item": "create:andesite_alloy"
-    }
+    "L": "#minecraft:logs",
+    "P": "create:andesite_alloy"
   },
   "pattern": [
     " L ",

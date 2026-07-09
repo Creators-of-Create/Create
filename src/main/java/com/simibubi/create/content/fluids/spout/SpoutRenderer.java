@@ -7,10 +7,10 @@ import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTank
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.platform.NeoForgeCatnipServices;
-import net.createmod.catnip.render.CachedBuffers;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.platform.NeoForgeCatnipServices;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
@@ -83,7 +83,7 @@ public class SpoutRenderer extends SafeBlockEntityRenderer<SpoutBlockEntity> {
 		for (PartialModel bit : BITS) {
 			CachedBuffers.partial(bit, be.getBlockState())
 					.light(light)
-					.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+					.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 			ms.translate(0, -3 * squeeze / 32f, 0);
 		}
 		ms.popPose();

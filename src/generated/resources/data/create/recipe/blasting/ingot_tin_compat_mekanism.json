@@ -6,12 +6,8 @@
     }
   ],
   "type": "minecraft:blasting",
-  "category": "blocks",
-  "cookingtime": 100,
   "experience": 0.1,
-  "ingredient": {
-    "item": "create:crushed_raw_tin"
-  },
+  "ingredient": "create:crushed_raw_tin",
   "result": {
     "id": "mekanism:ingot_tin"
   }

@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "A": {
-      "item": "create:electron_tube"
-    },
-    "P": {
-      "item": "create:andesite_alloy"
-    }
+    "A": "create:electron_tube",
+    "P": "create:andesite_alloy"
   },
   "pattern": [
     "PAP"

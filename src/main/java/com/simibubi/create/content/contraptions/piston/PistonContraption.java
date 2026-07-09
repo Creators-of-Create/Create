@@ -22,7 +22,7 @@ import com.simibubi.create.content.contraptions.TranslatingContraption;
 import com.simibubi.create.content.contraptions.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -231,9 +231,9 @@ public class PistonContraption extends TranslatingContraption {
 	@Override
 	public void readNBT(Level world, CompoundTag nbt, boolean spawnData) {
 		super.readNBT(world, nbt, spawnData);
-		initialExtensionProgress = nbt.getInt("InitialLength");
-		extensionLength = nbt.getInt("ExtensionLength");
-		orientation = Direction.from3DDataValue(nbt.getInt("Orientation"));
+		initialExtensionProgress = nbt.getIntOr("InitialLength", 0);
+		extensionLength = nbt.getIntOr("ExtensionLength", 0);
+		orientation = Direction.from3DDataValue(nbt.getIntOr("Orientation", 0));
 	}
 
 	@Override

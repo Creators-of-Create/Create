@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "X": {
-      "item": "create:cut_scorchia_bricks"
-    }
+    "X": "create:cut_scorchia_bricks"
   },
   "pattern": [
     "XXX",

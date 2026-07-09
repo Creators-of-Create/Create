@@ -10,6 +10,7 @@ import com.simibubi.create.api.contraption.storage.item.WrapperMountedItemStorag
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.logistics.depot.DepotBlockEntity;
 import com.simibubi.create.content.logistics.depot.storage.DepotMountedStorage.Handler;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -85,7 +86,7 @@ public class DepotMountedStorage extends WrapperMountedItemStorage<Handler> impl
 
 	public static DepotMountedStorage fromLegacy(HolderLookup.Provider registries, CompoundTag nbt) {
 		ItemStackHandler handler = new ItemStackHandler();
-		handler.deserializeNBT(registries, nbt);
+		LegacyItemStackNbtBridge.deserializeHandler(handler, registries, nbt);
 		if (handler.getSlots() == 1) {
 			ItemStack stack = handler.getStackInSlot(0);
 			return new DepotMountedStorage(stack);

@@ -21,8 +21,8 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -127,7 +127,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 			return;
 
 		// Collect Construct
-		if (!level.isClientSide && mirrorParent == null) {
+		if (!level.isClientSide() && mirrorParent == null) {
 			needsContraption = false;
 			BlockPos anchor = worldPosition.below(Mth.floor(offset + 1));
 			initialOffset = Mth.floor(offset);
@@ -194,7 +194,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 		if (movedContraption != null)
 			resetContraptionToOffset();
 
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			if (shouldCreateRopes()) {
 				if (offset > 0) {
 					BlockPos magnetPos = worldPosition.below((int) offset);
@@ -268,7 +268,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 	@Override
 	protected void visitNewPosition() {
 		super.visitNewPosition();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		if (movedContraption != null)
 			return;
@@ -288,8 +288,8 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		initialOffset = compound.getInt("InitialOffset");
-		needsContraption = compound.getBoolean("NeedsContraption");
+		initialOffset = compound.getIntOr("InitialOffset", 0);
+		needsContraption = compound.getBooleanOr("NeedsContraption", false);
 		super.read(compound, registries, clientPacket);
 
 		BlockPos prevMirrorParent = mirrorParent;
@@ -298,7 +298,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 			mirrorParent = NBTHelper.readBlockPos(compound, "MirrorParent");
 		mirrorChildren = null;
 		if (compound.contains("MirrorChildren"))
-			mirrorChildren = NBTHelper.readCompoundList(compound.getList("MirrorChildren", Tag.TAG_COMPOUND), t -> NBTHelper.readBlockPos(t, "Pos"));
+			mirrorChildren = NBTHelper.readCompoundList(compound.getListOrEmpty("MirrorChildren"), t -> NBTHelper.readBlockPos(t, "Pos"));
 
 		if (mirrorParent != null) {
 			offset = 0;
@@ -316,11 +316,11 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 		super.write(compound, registries, clientPacket);
 
 		if (mirrorParent != null)
-			compound.put("MirrorParent", NbtUtils.writeBlockPos(mirrorParent));
+			compound.put("MirrorParent", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(mirrorParent));
 		if (mirrorChildren != null)
 			compound.put("MirrorChildren", NBTHelper.writeCompoundList(mirrorChildren, p -> {
 				CompoundTag tag = new CompoundTag();
-				tag.put("Pos", NbtUtils.writeBlockPos(p));
+				tag.put("Pos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(p));
 				return tag;
 			}));
 	}
@@ -363,7 +363,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 	@Override
 	protected int getExtensionRange() {
 		return Math.max(0, Math.min(AllConfigs.server().kinetics.maxRopeLength.get(),
-			(worldPosition.getY() - 1) - level.getMinBuildHeight()));
+			(worldPosition.getY() - 1) - level.getMinY()));
 	}
 
 	@Override
@@ -406,7 +406,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 
 	@Override
 	public int getMinValue() {
-		return level.getMinBuildHeight();
+		return level.getMinY();
 	}
 
 	@Override

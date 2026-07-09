@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:obsidian"
-    }
+    "minecraft:obsidian"
   ],
   "processing_time": 500,
   "results": [

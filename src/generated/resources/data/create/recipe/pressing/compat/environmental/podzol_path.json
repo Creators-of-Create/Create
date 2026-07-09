@@ -7,9 +7,7 @@
   ],
   "type": "create:pressing",
   "ingredients": [
-    {
-      "item": "minecraft:podzol"
-    }
+    "minecraft:podzol"
   ],
   "results": [
     {

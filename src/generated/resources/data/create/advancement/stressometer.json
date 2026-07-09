@@ -12,7 +12,6 @@
       "translate": "advancement.create.stressometer.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:stressometer"
     },
     "title": {

@@ -3,7 +3,7 @@ package com.simibubi.create.api.behaviour.spouting;
 import com.simibubi.create.api.registry.SimpleRegistry;
 import com.simibubi.create.content.fluids.spout.SpoutBlockEntity;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;

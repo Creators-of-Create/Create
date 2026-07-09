@@ -8,7 +8,7 @@ import com.simibubi.create.content.contraptions.mounted.MountedContraption;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -18,7 +18,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,7 +29,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	public void startMoving(MovementContext context) {
-		if (context.world.isClientSide)
+		if (context.world.isClientSide())
 			return;
 		context.data.putInt("BreakerId", -BlockBreakingKineticBlockEntity.NEXT_BREAKER_ID.incrementAndGet());
 	}
@@ -41,12 +41,12 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 
 		if (!stateVisited.isRedstoneConductor(world, pos))
 			damageEntities(context, pos, world);
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return;
 
 		if (!canBreak(world, pos, stateVisited))
 			return;
-		context.data.put("BreakingPos", NbtUtils.writeBlockPos(pos));
+		context.data.put("BreakingPos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(pos));
 		context.stall = true;
 	}
 
@@ -69,11 +69,11 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 						&& ((AbstractContraptionEntity) passenger).getContraption() == context.contraption)
 						continue Entities;
 
-			if (damageSource != null && !world.isClientSide) {
+			if (damageSource != null && !world.isClientSide()) {
 				float damage = (float) Mth.clamp(6 * Math.pow(context.relativeMotion.length(), 0.4) + 1, 2, 10);
 				entity.hurt(damageSource, damage);
 			}
-			if (throwsEntities(world) && (world.isClientSide == (entity instanceof Player)))
+			if (throwsEntities(world) && (world.isClientSide() == (entity instanceof Player)))
 				throwEntity(context, entity);
 		}
 	}
@@ -101,13 +101,13 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 	@Override
 	public void cancelStall(MovementContext context) {
 		CompoundTag data = context.data;
-		if (context.world.isClientSide)
+		if (context.world.isClientSide())
 			return;
 		if (!data.contains("BreakingPos"))
 			return;
 
 		Level world = context.world;
-		int id = data.getInt("BreakerId");
+		int id = data.getIntOr("BreakerId", 0);
 		BlockPos breakingPos = NBTHelper.readBlockPos(data, "BreakingPos");
 
 		data.remove("Progress");
@@ -131,7 +131,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 		if (!data.contains("WaitingTicks"))
 			return;
 
-		int waitingTicks = data.getInt("WaitingTicks");
+		int waitingTicks = data.getIntOr("WaitingTicks", 0);
 		if (waitingTicks-- > 0) {
 			data.putInt("WaitingTicks", waitingTicks);
 			context.stall = true;
@@ -147,7 +147,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 
 	public void tickBreaker(MovementContext context) {
 		CompoundTag data = context.data;
-		if (context.world.isClientSide)
+		if (context.world.isClientSide())
 			return;
 		if (!data.contains("BreakingPos")) {
 			context.stall = false;
@@ -158,7 +158,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 			return;
 		}
 
-		int ticksUntilNextProgress = data.getInt("TicksUntilNextProgress");
+		int ticksUntilNextProgress = data.getIntOr("TicksUntilNextProgress", 0);
 		if (ticksUntilNextProgress-- > 0) {
 			data.putInt("TicksUntilNextProgress", ticksUntilNextProgress);
 			return;
@@ -166,8 +166,8 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 
 		Level world = context.world;
 		BlockPos breakingPos = NBTHelper.readBlockPos(data, "BreakingPos");
-		int destroyProgress = data.getInt("Progress");
-		int id = data.getInt("BreakerId");
+		int destroyProgress = data.getIntOr("Progress", 0);
+		int id = data.getIntOr("BreakerId", 0);
 		BlockState stateToBreak = world.getBlockState(breakingPos);
 		float blockHardness = stateToBreak.getDestroySpeed(world, breakingPos);
 
@@ -246,7 +246,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 
 		CompoundTag data = context.data;
 		data.putInt("WaitingTicks", 10);
-		data.put("LastPos", NbtUtils.writeBlockPos(pos));
+		data.put("LastPos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(pos));
 		context.stall = true;
 	}
 

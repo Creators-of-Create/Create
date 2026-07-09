@@ -4,13 +4,13 @@ import com.simibubi.create.content.redstone.smartObserver.SmartObserverBlockEnti
 import com.simibubi.create.content.redstone.thresholdSwitch.ThresholdSwitchBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;

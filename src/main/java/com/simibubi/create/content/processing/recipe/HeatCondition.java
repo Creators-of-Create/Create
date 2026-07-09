@@ -1,6 +1,6 @@
 package com.simibubi.create.content.processing.recipe;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -8,7 +8,7 @@ import com.mojang.serialization.Codec;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;

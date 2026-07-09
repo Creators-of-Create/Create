@@ -12,7 +12,6 @@
       "translate": "advancement.create.conductor.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:schedule"
     },
     "title": {

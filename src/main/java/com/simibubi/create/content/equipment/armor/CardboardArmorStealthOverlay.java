@@ -1,27 +1,26 @@
 package com.simibubi.create.content.equipment.armor;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.mixin.accessor.GuiAccessor;
 
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
-public class CardboardArmorStealthOverlay extends Gui implements IClientItemExtensions {
+public class CardboardArmorStealthOverlay implements IClientItemExtensions {
 
 	public CardboardArmorStealthOverlay() {
-		super(Minecraft.getInstance());
 	}
 
-	private static final ResourceLocation PACKAGE_BLUR_LOCATION = Create.asResource("textures/misc/package_blur.png");
+	private static final Identifier PACKAGE_BLUR_LOCATION = Create.asResource("textures/misc/package_blur.png");
 
 	private static LerpedFloat opacity = LerpedFloat.linear()
 		.startWithValue(0)
@@ -37,13 +36,9 @@ public class CardboardArmorStealthOverlay extends Gui implements IClientItemExte
 	}
 
 	@Override
-	public void renderHelmetOverlay(ItemStack stack, Player player, int width, int height, float partialTick) {
-		Minecraft mc = Minecraft.getInstance();
-		float value = opacity.getValue(partialTick);
-		if (value == 0)
-			return;
-		((GuiAccessor) this).create$renderTextureOverlay(new GuiGraphics(mc, mc.renderBuffers()
-			.bufferSource()), PACKAGE_BLUR_LOCATION, value);
+	public void renderFirstPersonOverlay(ItemStack stack, EquipmentSlot slot, Player player, GuiGraphicsExtractor graphics,
+		DeltaTracker deltaTracker) {
+		// TODO 26.2: Rebuild package blur using GuiGraphicsExtractor's submit pipeline.
 	}
 
 }

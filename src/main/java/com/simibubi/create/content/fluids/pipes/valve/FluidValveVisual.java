@@ -13,7 +13,7 @@ import dev.engine_room.flywheel.lib.instance.InstanceTypes;
 import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 

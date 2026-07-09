@@ -3,6 +3,7 @@ package com.simibubi.create.compat.tconstruct;
 import com.simibubi.create.api.behaviour.spouting.BlockSpoutingBehaviour;
 import com.simibubi.create.content.fluids.spout.SpoutBlockEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
@@ -14,6 +15,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 
 public enum SpoutCasting implements BlockSpoutingBehaviour {
 	INSTANCE;
@@ -27,7 +30,9 @@ public enum SpoutCasting implements BlockSpoutingBehaviour {
 		if (blockEntity == null)
 			return 0;
 
-		IFluidHandler handler = level.getCapability(Capabilities.FluidHandler.BLOCK, blockEntity.getBlockPos(), Direction.UP);
+		ResourceHandler<FluidResource> resourceHandler =
+			level.getCapability(Capabilities.Fluid.BLOCK, blockEntity.getBlockPos(), Direction.UP);
+		IFluidHandler handler = LegacyFluidHandlerAdapter.of(resourceHandler);
 		if (handler == null)
 			return 0;
 		if (handler.getTanks() != 1)

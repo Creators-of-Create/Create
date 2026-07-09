@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
@@ -20,8 +20,8 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -60,12 +60,12 @@ public class AirCurrent {
 		if (direction == null)
 			rebuild();
 		Level world = source.getAirCurrentWorld();
-		if (world != null && world.isClientSide) {
+		if (world != null && world.isClientSide()) {
 			float offset = pushing ? 0.5f : maxDistance + .5f;
 			Vec3 pos = VecHelper.getCenterOf(source.getAirCurrentPos())
-				.add(Vec3.atLowerCornerOf(direction.getNormal())
+				.add(Vec3.atLowerCornerOf(direction.getUnitVec3i())
 					.scale(offset));
-			if (world.random.nextFloat() < AllConfigs.client().fanParticleDensity.get())
+			if (world.getRandom().nextFloat() < AllConfigs.client().fanParticleDensity.get())
 				world.addParticle(new AirFlowParticleData(source.getAirCurrentPos()), pos.x, pos.y, pos.z, 0, 0, 0);
 		}
 
@@ -82,7 +82,7 @@ public class AirCurrent {
 				continue;
 			}
 
-			Vec3i flow = (pushing ? direction : direction.getOpposite()).getNormal();
+			Vec3i flow = (pushing ? direction : direction.getOpposite()).getUnitVec3i();
 			float speed = Math.abs(source.getSpeed());
 			float sneakModifier = entity.isShiftKeyDown() ? 4096f : 512f;
 			double entityDistance = VecHelper.alignedDistanceToFace(entity.position(), source.getAirCurrentPos(), direction);
@@ -112,7 +112,7 @@ public class AirCurrent {
 				continue;
 
 			if (entity instanceof ItemEntity itemEntity) {
-				if (world != null && world.isClientSide) {
+				if (world != null && world.isClientSide()) {
 					processingType.spawnProcessingParticles(world, entity.position());
 					continue;
 				}
@@ -144,7 +144,7 @@ public class AirCurrent {
 				continue;
 
 			handler.handleProcessingOnAllItems(transported -> {
-				if (world.isClientSide) {
+				if (world.isClientSide()) {
 					processingType.spawnProcessingParticles(world, handler.getWorldPositionOf(transported));
 					return TransportedResult.doNothing();
 				}
@@ -172,7 +172,7 @@ public class AirCurrent {
 		BlockPos start = source.getAirCurrentPos();
 		float max = this.maxDistance;
 		Direction facing = direction;
-		Vec3 directionVec = Vec3.atLowerCornerOf(facing.getNormal());
+		Vec3 directionVec = Vec3.atLowerCornerOf(facing.getUnitVec3i());
 		maxDistance = getFlowLimit(world, start, max, facing);
 
 		// Determine segments with transported fluids/gases

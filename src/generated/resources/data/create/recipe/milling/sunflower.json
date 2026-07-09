@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:sunflower"
-    }
+    "minecraft:sunflower"
   ],
   "processing_time": 100,
   "results": [

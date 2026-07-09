@@ -18,9 +18,9 @@ import com.simibubi.create.content.contraptions.pulley.PulleyContraption;
 import com.simibubi.create.content.redstone.contact.RedstoneContactBlock;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.IntAttached;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.IntAttached;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -161,11 +161,11 @@ public class ElevatorContraption extends PulleyContraption {
 
 	@Override
 	public void readNBT(Level world, CompoundTag nbt, boolean spawnData) {
-		arrived = nbt.getBoolean("Arrived");
-		column = ColumnCoords.read(nbt.getCompound("Column"));
-		contactYOffset = nbt.getInt("ContactY");
-		maxContactY = nbt.getInt("MaxContactY");
-		minContactY = nbt.getInt("MinContactY");
+		arrived = nbt.getBooleanOr("Arrived", false);
+		column = ColumnCoords.read(nbt.getCompoundOrEmpty("Column"));
+		contactYOffset = nbt.getIntOr("ContactY", 0);
+		maxContactY = nbt.getIntOr("MaxContactY", 0);
+		minContactY = nbt.getIntOr("MinContactY", 0);
 		super.readNBT(world, nbt, spawnData);
 	}
 

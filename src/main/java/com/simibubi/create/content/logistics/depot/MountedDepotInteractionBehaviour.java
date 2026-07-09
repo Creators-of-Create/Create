@@ -21,7 +21,7 @@ public class MountedDepotInteractionBehaviour extends MovingInteractionBehaviour
 		ItemStack itemInHand = player.getItemInHand(activeHand);
 		if (activeHand == InteractionHand.OFF_HAND)
 			return false;
-		if (player.level().isClientSide)
+		if (player.level().isClientSide())
 			return true;
 
 		MountedStorageManager manager = contraptionEntity.getContraption().getStorage();

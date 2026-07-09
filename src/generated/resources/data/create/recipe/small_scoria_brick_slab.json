@@ -3,9 +3,7 @@
   "category": "building",
   "group": "small_scoria_brick_slab",
   "key": {
-    "X": {
-      "item": "create:small_scoria_bricks"
-    }
+    "X": "create:small_scoria_bricks"
   },
   "pattern": [
     "XXX"

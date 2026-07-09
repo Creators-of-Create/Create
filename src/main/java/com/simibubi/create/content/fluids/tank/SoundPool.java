@@ -86,7 +86,7 @@ public class SoundPool {
 	}
 
 	private void rollNextPosition(Level level) {
-		int index = level.random.nextInt(queuedPositions.size());
+		int index = level.getRandom().nextInt(queuedPositions.size());
 		long pos = queuedPositions.removeLong(index);
 		playAt(level, pos);
 	}

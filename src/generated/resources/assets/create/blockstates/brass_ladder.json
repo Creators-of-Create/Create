@@ -1,32 +1,17 @@
 {
   "variants": {
-    "facing=east,waterlogged=false": {
+    "facing=east": {
       "model": "create:block/brass_ladder",
       "y": 90
     },
-    "facing=east,waterlogged=true": {
-      "model": "create:block/brass_ladder",
-      "y": 90
-    },
-    "facing=north,waterlogged=false": {
+    "facing=north": {
       "model": "create:block/brass_ladder"
     },
-    "facing=north,waterlogged=true": {
-      "model": "create:block/brass_ladder"
-    },
-    "facing=south,waterlogged=false": {
+    "facing=south": {
       "model": "create:block/brass_ladder",
       "y": 180
     },
-    "facing=south,waterlogged=true": {
-      "model": "create:block/brass_ladder",
-      "y": 180
-    },
-    "facing=west,waterlogged=false": {
-      "model": "create:block/brass_ladder",
-      "y": 270
-    },
-    "facing=west,waterlogged=true": {
+    "facing=west": {
       "model": "create:block/brass_ladder",
       "y": 270
     }

@@ -9,13 +9,13 @@ import com.simibubi.create.content.logistics.depot.DepotRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.CachedBuffers;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -41,7 +41,7 @@ public class TableClothRenderer extends SmartBlockEntityRenderer<TableClothBlock
 				.rotateCentered(rotationInRadians, Direction.UP)
 				.light(light)
 				.overlay(overlay)
-				.renderInto(ms, buffer.getBuffer(RenderType.cutout()));
+				.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutout()));
 		}
 
 		ms.pushPose();
@@ -58,8 +58,7 @@ public class TableClothRenderer extends SmartBlockEntityRenderer<TableClothBlock
 				ms.mulPose(Axis.YP.rotationDegrees(-i * (360f / stacks.size()) - 45f));
 			}
 
-			BakedModel bakedModel = Minecraft.getInstance()
-				.getItemRenderer()
+			BakedModel bakedModel = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer()
 				.getModel(entry, null, null, 0);
 			boolean blockItem = bakedModel.isGui3d();
 			if (!blockItem)

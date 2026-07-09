@@ -16,14 +16,15 @@ import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter;
 
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -495,7 +496,7 @@ public class PipeScenes {
 		BlockPos smartPos = util.grid().at(3, 1, 1);
 
 		scene.world().modifyBlockEntity(basinPos, BasinBlockEntity.class, be -> {
-			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 			if (ifh != null)
 				ifh.fill(new FluidStack(NeoForgeMod.MILK.get(), 1000), FluidAction.EXECUTE);
 		});
@@ -579,7 +580,7 @@ public class PipeScenes {
 		}
 		scene.idle(15);
 		scene.world().modifyBlockEntity(basinPos, BasinBlockEntity.class, be -> {
-			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 			if (ifh != null)
 				ifh.fill(chocolate, FluidAction.EXECUTE);
 		});

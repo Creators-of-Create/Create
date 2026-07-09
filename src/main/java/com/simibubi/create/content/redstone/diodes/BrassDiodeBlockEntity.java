@@ -73,7 +73,7 @@ public abstract class BrassDiodeBlockEntity extends SmartBlockEntity implements 
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		state = compound.getInt("State");
+		state = compound.getIntOr("State", 0);
 		super.read(compound, registries, clientPacket);
 	}
 
@@ -103,7 +103,7 @@ public abstract class BrassDiodeBlockEntity extends SmartBlockEntity implements 
 		if (simulate)
 			return true;
 		BlockState blockState = getBlockState();
-		if (blockState.getValue(BrassDiodeBlock.INVERTED) != tag.getBoolean("Inverted"))
+		if (blockState.getValue(BrassDiodeBlock.INVERTED) != tag.getBooleanOr("Inverted", false))
 			level.setBlockAndUpdate(worldPosition, blockState.cycle(BrassDiodeBlock.INVERTED));
 		return true;
 	}

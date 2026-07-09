@@ -11,7 +11,7 @@ import net.minecraft.client.Camera;
 @Mixin(Camera.class)
 public abstract class CameraMixin {
 	@ModifyArg(
-			method = "setup(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/world/entity/Entity;ZZF)V",
+			method = "alignWithEntity(F)V",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;getMaxZoom(F)F"),
 			index = 0
 	)

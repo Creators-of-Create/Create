@@ -17,11 +17,12 @@ import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -57,7 +58,7 @@ public abstract class DisplayTarget {
 			return;
 
 		CompoundTag tag = target.getPersistentData();
-		CompoundTag compound = tag.getCompound("DisplayLink");
+		CompoundTag compound = tag.getCompoundOrEmpty("DisplayLink");
 		compound.putLong("Line" + line, context.blockEntity()
 			.getBlockPos()
 			.asLong());
@@ -66,12 +67,12 @@ public abstract class DisplayTarget {
 
 	public boolean isReserved(int line, BlockEntity target, DisplayLinkContext context) {
 		CompoundTag tag = target.getPersistentData();
-		CompoundTag compound = tag.getCompound("DisplayLink");
+		CompoundTag compound = tag.getCompoundOrEmpty("DisplayLink");
 
 		if (!compound.contains("Line" + line))
 			return false;
 
-		long l = compound.getLong("Line" + line);
+		long l = compound.getLongOr("Line" + line, 0L);
 		BlockPos reserved = BlockPos.of(l);
 
 		if (!reserved.equals(context.blockEntity()
@@ -101,7 +102,7 @@ public abstract class DisplayTarget {
 	 * Get the DisplayTarget with the given ID, accounting for legacy names.
 	 */
 	@Nullable
-	public static DisplayTarget get(@Nullable ResourceLocation id) {
+	public static DisplayTarget get(@Nullable Identifier id) {
 		if (id == null)
 			return null;
 
@@ -109,7 +110,9 @@ public abstract class DisplayTarget {
 			return AllDisplayTargets.LEGACY_NAMES.get(id.getPath()).get();
 		}
 
-		return CreateBuiltInRegistries.DISPLAY_TARGET.get(id);
+		return CreateBuiltInRegistries.DISPLAY_TARGET.get(id)
+			.map(Holder::value)
+			.orElse(null);
 	}
 
 	/**

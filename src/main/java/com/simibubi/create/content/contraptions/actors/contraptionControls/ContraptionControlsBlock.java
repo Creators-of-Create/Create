@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,8 +48,7 @@ public class ContraptionControlsBlock extends ControlsBlock implements IBE<Contr
 	}
 
 	@Override
-	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos,
-		boolean pIsMoving) {
+	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, Orientation orientation, boolean pIsMoving) {
 		withBlockEntityDo(pLevel, pPos, ContraptionControlsBlockEntity::updatePoweredState);
 	}
 

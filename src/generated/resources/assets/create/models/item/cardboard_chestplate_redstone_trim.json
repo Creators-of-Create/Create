@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "create:item/cardboard_chestplate",
-    "layer1": "create:trims/items/card_chestplate_trim_redstone"
-  }
-}

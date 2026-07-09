@@ -5,24 +5,24 @@ import java.util.List;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
-import com.tterrag.registrate.providers.RegistrateItemModelProvider;
+import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
+import com.tterrag.registrate.providers.generators.RegistrateItemModelGenerator;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
-import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
-import net.neoforged.neoforge.client.model.generators.ModelFile.ExistingModelFile;
+import com.tterrag.registrate.providers.generators.BlockModelProvider;
+import com.tterrag.registrate.providers.generators.ItemModelBuilder;
+import com.tterrag.registrate.providers.generators.ModelFile;
+import com.tterrag.registrate.providers.generators.ModelFile.ExistingModelFile;
 
 public abstract class AbstractDiodeGenerator extends SpecialBlockStateGen {
 
 	private List<ModelFile> models;
 
-	public static <I extends BlockItem> void diodeItemModel(DataGenContext<Item, I> c, RegistrateItemModelProvider p) {
+	public static <I extends BlockItem> void diodeItemModel(DataGenContext<Item, I> c, RegistrateItemModelGenerator p) {
 		String name = c.getName();
 		String path = "block/diodes/";
 		ItemModelBuilder builder = p.withExistingParent(name, p.modLoc(path + name));
@@ -45,7 +45,7 @@ public abstract class AbstractDiodeGenerator extends SpecialBlockStateGen {
 	protected abstract int getModelIndex(BlockState state);
 
 	@Override
-	public final <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
+	public final <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockModelGenerator prov,
 		BlockState state) {
 		if (models == null)
 			models = createModels(ctx, prov.models());
@@ -56,16 +56,16 @@ public abstract class AbstractDiodeGenerator extends SpecialBlockStateGen {
 		return prov.getExistingFile(existing(name));
 	}
 
-	protected ResourceLocation existing(String name) {
+	protected Identifier existing(String name) {
 		return Create.asResource("block/diodes/" + name);
 	}
 
-	protected <T extends Block> ResourceLocation texture(DataGenContext<Block, T> ctx, String name) {
+	protected <T extends Block> Identifier texture(DataGenContext<Block, T> ctx, String name) {
 		return Create.asResource("block/diodes/" + ctx.getName() + "/" + name);
 	}
 
-	protected ResourceLocation poweredTorch() {
-		return ResourceLocation.withDefaultNamespace("block/redstone_torch");
+	protected Identifier poweredTorch() {
+		return Identifier.withDefaultNamespace("block/redstone_torch");
 	}
 
 }

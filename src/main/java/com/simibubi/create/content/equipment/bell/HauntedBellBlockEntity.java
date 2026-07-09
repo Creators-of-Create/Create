@@ -16,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class HauntedBellBlockEntity extends AbstractBellBlockEntity {
 
@@ -31,7 +30,6 @@ public class HauntedBellBlockEntity extends AbstractBellBlockEntity {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public PartialModel getBellModel() {
 		return AllPartialModels.HAUNTED_BELL;
 	}
@@ -55,7 +53,7 @@ public class HauntedBellBlockEntity extends AbstractBellBlockEntity {
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
-		effectTicks = compound.getInt("EffectTicks");
+		effectTicks = compound.getIntOr("EffectTicks", 0);
 	}
 
 	@Override
@@ -66,7 +64,7 @@ public class HauntedBellBlockEntity extends AbstractBellBlockEntity {
 			return;
 		effectTicks--;
 
-		if (!level.isClientSide)
+		if (!level.isClientSide())
 			return;
 
 		RandomSource rand = level.getRandom();

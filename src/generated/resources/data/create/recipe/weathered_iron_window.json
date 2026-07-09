@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "create:weathered_iron_block"
-    },
-    "X": {
-      "tag": "c:glass_blocks/colorless"
-    }
+    "#": "create:weathered_iron_block",
+    "X": "#c:glass_blocks/colorless"
   },
   "pattern": [
     " # ",

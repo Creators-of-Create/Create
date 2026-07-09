@@ -3,9 +3,7 @@
   "category": "building",
   "group": "cut_granite_slab",
   "key": {
-    "X": {
-      "item": "create:cut_granite"
-    }
+    "X": "create:cut_granite"
   },
   "pattern": [
     "XXX"

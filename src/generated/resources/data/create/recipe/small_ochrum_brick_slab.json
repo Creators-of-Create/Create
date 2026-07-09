@@ -3,9 +3,7 @@
   "category": "building",
   "group": "small_ochrum_brick_slab",
   "key": {
-    "X": {
-      "item": "create:small_ochrum_bricks"
-    }
+    "X": "create:small_ochrum_bricks"
   },
   "pattern": [
     "XXX"

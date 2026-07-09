@@ -12,8 +12,9 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -28,7 +29,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 
 public class CopycatBlockEntity extends SmartBlockEntity
@@ -152,7 +153,7 @@ public class CopycatBlockEntity extends SmartBlockEntity
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
 
-		consumedItem = ItemStack.parseOptional(registries, tag.getCompound("Item"));
+		consumedItem = LegacyItemStackNbtBridge.parseOptional(registries, tag.getCompoundOrEmpty("Item"));
 
 		BlockState prevMaterial = material;
 		if (!tag.contains("Material")) {
@@ -160,7 +161,7 @@ public class CopycatBlockEntity extends SmartBlockEntity
 			return;
 		}
 
-		material = NbtUtils.readBlockState(blockHolderGetter(), tag.getCompound("Material"));
+		material = NbtUtils.readBlockState(blockHolderGetter(), tag.getCompoundOrEmpty("Material"));
 
 		// Validate Material
 		if (material != null && !clientPacket) {
@@ -184,7 +185,8 @@ public class CopycatBlockEntity extends SmartBlockEntity
 	public void writeSafe(CompoundTag tag, HolderLookup.Provider registries) {
 		super.writeSafe(tag, registries);
 
-		ItemStack stackWithoutComponents = new ItemStack(consumedItem.getItemHolder(), consumedItem.getCount(), DataComponentPatch.EMPTY);
+		ItemStack stackWithoutComponents = new ItemStack(consumedItem.typeHolder(), consumedItem.getCount(),
+			DataComponentPatch.EMPTY);
 
 		write(tag, registries, stackWithoutComponents, material);
 	}
@@ -196,7 +198,7 @@ public class CopycatBlockEntity extends SmartBlockEntity
 	}
 
 	protected void write(CompoundTag tag, HolderLookup.Provider registries, ItemStack stack, BlockState material) {
-		tag.put("Item", stack.saveOptional(registries));
+		tag.put("Item", LegacyItemStackNbtBridge.saveOptional(stack, registries));
 		tag.put("Material", NbtUtils.writeBlockState(material));
 	}
 

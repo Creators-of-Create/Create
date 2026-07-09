@@ -16,13 +16,11 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import org.jetbrains.annotations.Nullable;
-
-import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -42,13 +40,14 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
-import net.minecraft.MethodsReturnNonnullByDefault;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -61,7 +60,7 @@ import net.minecraft.data.recipes.SpecialRecipeBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
@@ -72,8 +71,11 @@ import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -206,7 +208,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 
 	TRANSMITTER = create(AllItems.TRANSMITTER).unlockedByTag(I::copper)
 		.viaShaped(b -> b.define('L', I.copperSheet())
-			.define('N', Items.LIGHTNING_ROD)
+			.define('N', Items.LIGHTNING_ROD.weathering().unaffected())
 			.define('R', I.redstone())
 			.pattern(" N ")
 			.pattern("LLL")
@@ -214,7 +216,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 
 	ROSE_QUARTZ = create(AllItems.ROSE_QUARTZ).unlockedBy(() -> Items.REDSTONE)
 		.viaShapeless(b -> b.requires(Tags.Items.GEMS_QUARTZ)
-			.requires(Ingredient.of(I.redstone()), 8)),
+			.requires(I.tag(I.redstone()), 8)),
 
 	SAND_PAPER = create(AllItems.SAND_PAPER).unlockedBy(() -> Items.PAPER)
 		.viaShapeless(b -> b.requires(Items.PAPER)
@@ -307,7 +309,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 			.pattern(" B ")),
 
 	SUPER_GLUE = create(AllItems.SUPER_GLUE).unlockedByTag(I::ironSheet)
-		.viaShaped(b -> b.define('A', Tags.Items.SLIMEBALLS)
+		.viaShaped(b -> b.define('A', Tags.Items.SLIME_BALLS)
 			.define('S', I.ironSheet())
 			.define('N', Tags.Items.NUGGETS_IRON)
 			.pattern("AS")
@@ -376,7 +378,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 			.pattern("I")),
 
 	STICKY_MECHANICAL_PISTON = create(AllBlocks.STICKY_MECHANICAL_PISTON).unlockedBy(I::andesiteAlloy)
-		.viaShaped(b -> b.define('S', Tags.Items.SLIMEBALLS)
+		.viaShaped(b -> b.define('S', Tags.Items.SLIME_BALLS)
 			.define('P', AllBlocks.MECHANICAL_PISTON.get())
 			.pattern("S")
 			.pattern("P")),
@@ -749,7 +751,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 			.pattern("I")),
 
 	CONTRAPTION_CONTROLS = create(AllBlocks.CONTRAPTION_CONTROLS).unlockedBy(I::andesiteAlloy)
-		.viaShaped(b -> b.define('B', ItemTags.BUTTONS)
+		.viaShaped(b -> b.define('B', ItemTags.WOODEN_BUTTONS)
 			.define('C', I.andesiteCasing())
 			.define('I', I.electronTube())
 			.pattern("B")
@@ -853,7 +855,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 		.viaShaped(b -> b.define('I', I.andesiteAlloy())
 			.define('C', Tags.Items.COBBLESTONES)
 			.define('R', I.redstone())
-			.define('S', Tags.Items.SLIMEBALLS)
+			.define('S', Tags.Items.SLIME_BALLS)
 			.pattern("ISI")
 			.pattern("CRC")),
 
@@ -1105,7 +1107,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 
 	PACKAGE_FROGPORT = create(AllBlocks.PACKAGE_FROGPORT).unlockedBy(I::cardboard)
 		.viaShaped(b -> b.define('C', I.andesiteAlloy())
-			.define('B', Tags.Items.SLIMEBALLS)
+			.define('B', Tags.Items.SLIME_BALLS)
 			.define('A', I.vault())
 			.pattern("B")
 			.pattern("A")
@@ -1201,7 +1203,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 		.viaShapeless(b -> b.requires(I.wheatFlour())
 			.requires(Items.WATER_BUCKET)),
 
-	CHAIN_FROM_ZINC = create(() -> Items.CHAIN).withSuffix("_from_zinc")
+	CHAIN_FROM_ZINC = create(() -> Items.IRON_CHAIN).withSuffix("_from_zinc")
 		.unlockedByTag(I::zinc)
 		.viaShaped(b -> b.define('C', I.zinc())
 			.define('S', I.zincNugget())
@@ -1307,7 +1309,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 
 	TREE_FERTILIZER = create(AllItems.TREE_FERTILIZER).returns(2)
 		.unlockedBy(() -> Items.BONE_MEAL)
-		.viaShapeless(b -> b.requires(Ingredient.of(ItemTags.SMALL_FLOWERS), 2)
+		.viaShapeless(b -> b.requires(I.tag(Tags.Items.FLOWERS_SMALL), 2)
 			.requires(Ingredient.of(Items.HORN_CORAL, Items.BRAIN_CORAL, Items.TUBE_CORAL, Items.BUBBLE_CORAL,
 				Items.FIRE_CORAL))
 			.requires(Items.BONE_MEAL)),
@@ -1375,7 +1377,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 	UA_TREE_FERTILIZER = create(AllItems.TREE_FERTILIZER::get).returns(2)
 		.unlockedBy(() -> Items.BONE_MEAL)
 		.whenModLoaded(Mods.UA.getId())
-		.viaShapeless(b -> b.requires(Ingredient.of(ItemTags.SMALL_FLOWERS), 2)
+		.viaShapeless(b -> b.requires(I.tag(Tags.Items.FLOWERS_SMALL), 2)
 			.requires(AllItemTags.UA_CORAL.tag)
 			.requires(Items.BONE_MEAL));
 
@@ -1397,7 +1399,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 		return new GeneratedRecipeBuilder(currentFolder, result);
 	}
 
-	GeneratedRecipeBuilder create(ResourceLocation result) {
+	GeneratedRecipeBuilder create(Identifier result) {
 		return new GeneratedRecipeBuilder(currentFolder, result);
 	}
 
@@ -1407,9 +1409,9 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 
 	GeneratedRecipe createSpecial(Function<CraftingBookCategory, Recipe<?>> builder, String recipeType,
 								  String path) {
-		ResourceLocation location = Create.asResource(recipeType + "/" + currentFolder + "/" + path);
+		Identifier location = Create.asResource(recipeType + "/" + currentFolder + "/" + path);
 		return register(consumer -> {
-			SpecialRecipeBuilder b = SpecialRecipeBuilder.special(builder);
+			SpecialRecipeBuilder b = SpecialRecipeBuilder.special(() -> builder.apply(CraftingBookCategory.MISC));
 			b.save(consumer, location.toString());
 		});
 	}
@@ -1424,7 +1426,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, CommonMetal metal) {
 		for (Mods mod : metal.mods) {
 			String metalName = metal.getName(mod);
-			ResourceLocation ingot = mod.ingotOf(metalName);
+			Identifier ingot = mod.ingotOf(metalName);
 			String modId = mod.getId();
 			create(ingot).withSuffix("_compat_" + modId)
 				.whenModLoaded(modId)
@@ -1509,10 +1511,10 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 		private String path;
 		private String suffix;
 		private Supplier<? extends ItemLike> result;
-		private ResourceLocation compatDatagenOutput;
+		private Identifier compatDatagenOutput;
 		List<ICondition> recipeConditions;
 
-		private Supplier<ItemPredicate> unlockedBy;
+		private Function<CreateStandardRecipeGen, ItemPredicate> unlockedBy;
 		private int amount;
 
 		private GeneratedRecipeBuilder(String path) {
@@ -1527,7 +1529,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 			this.result = result;
 		}
 
-		public GeneratedRecipeBuilder(String path, ResourceLocation result) {
+		public GeneratedRecipeBuilder(String path, Identifier result) {
 			this(path);
 			this.compatDatagenOutput = result;
 		}
@@ -1538,15 +1540,15 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 		}
 
 		GeneratedRecipeBuilder unlockedBy(Supplier<? extends ItemLike> item) {
-			this.unlockedBy = () -> ItemPredicate.Builder.item()
-				.of(item.get())
+			this.unlockedBy = provider -> ItemPredicate.Builder.item()
+				.of(provider.itemLookup(), item.get())
 				.build();
 			return this;
 		}
 
 		GeneratedRecipeBuilder unlockedByTag(Supplier<TagKey<Item>> tag) {
-			this.unlockedBy = () -> ItemPredicate.Builder.item()
-				.of(tag.get())
+			this.unlockedBy = provider -> ItemPredicate.Builder.item()
+				.of(provider.itemLookup(), tag.get())
 				.build();
 			return this;
 		}
@@ -1573,23 +1575,23 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 		GeneratedRecipe viaShaped(UnaryOperator<ShapedRecipeBuilder> builder) {
 			return register(consumer -> {
 				ShapedRecipeBuilder b =
-					builder.apply(ShapedRecipeBuilder.shaped(RecipeCategory.MISC, result.get(), amount));
+					builder.apply(CreateStandardRecipeGen.this.shaped(RecipeCategory.MISC, result.get(), amount));
 				if (unlockedBy != null)
-					b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
-				b.save(consumer, createLocation("crafting"));
+					b.unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(unlockedBy.apply(CreateStandardRecipeGen.this)));
+				b.save(consumer, createLocation("crafting").toString());
 			});
 		}
 
 		GeneratedRecipe viaShapeless(UnaryOperator<ShapelessRecipeBuilder> builder) {
 			return register(recipeOutput -> {
 				ShapelessRecipeBuilder b =
-					builder.apply(ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, result.get(), amount));
+					builder.apply(CreateStandardRecipeGen.this.shapeless(RecipeCategory.MISC, result.get(), amount));
 				if (unlockedBy != null)
-					b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
+					b.unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(unlockedBy.apply(CreateStandardRecipeGen.this)));
 
 				RecipeOutput conditionalOutput = recipeOutput.withConditions(recipeConditions.toArray(new ICondition[0]));
 
-				b.save(conditionalOutput, createLocation("crafting"));
+				b.save(conditionalOutput, createLocation("crafting").toString());
 			});
 		}
 
@@ -1599,22 +1601,22 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 					SmithingTransformRecipeBuilder.smithing(Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
 						Ingredient.of(base.get()), upgradeMaterial.get(), RecipeCategory.COMBAT, result.get()
 							.asItem());
-				b.unlocks("has_item", inventoryTrigger(ItemPredicate.Builder.item()
-					.of(base.get())
+				b.unlocks("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item()
+					.of(itemLookup(), base.get())
 					.build()));
-				b.save(consumer, createLocation("crafting"));
+				b.save(consumer, createLocation("crafting").toString());
 			});
 		}
 
-		private ResourceLocation createSimpleLocation(String recipeType) {
+		private Identifier createSimpleLocation(String recipeType) {
 			return Create.asResource(recipeType + "/" + getRegistryName().getPath() + suffix);
 		}
 
-		private ResourceLocation createLocation(String recipeType) {
+		private Identifier createLocation(String recipeType) {
 			return Create.asResource(recipeType + "/" + path + "/" + getRegistryName().getPath() + suffix);
 		}
 
-		private ResourceLocation getRegistryName() {
+		private Identifier getRegistryName() {
 			return compatDatagenOutput == null ? RegisteredObjectsHelper.getKeyOrThrow(result.get()
 				.asItem()) : compatDatagenOutput;
 		}
@@ -1624,7 +1626,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 		}
 
 		GeneratedCookingRecipeBuilder viaCookingTag(Supplier<TagKey<Item>> tag) {
-			return unlockedByTag(tag).viaCookingIngredient(() -> Ingredient.of(tag.get()));
+			return unlockedByTag(tag).viaCookingIngredient(() -> CreateStandardRecipeGen.this.tag(tag.get()));
 		}
 
 		GeneratedCookingRecipeBuilder viaCookingIngredient(Supplier<Ingredient> ingredient) {
@@ -1658,7 +1660,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 			}
 
 			GeneratedRecipe inFurnace(UnaryOperator<SimpleCookingRecipeBuilder> builder) {
-				return create(RecipeSerializer.SMELTING_RECIPE, builder, SmeltingRecipe::new, 1);
+				return create("smelting", builder, SmeltingRecipe::new, 1);
 			}
 
 			GeneratedRecipe inSmoker() {
@@ -1666,9 +1668,9 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 			}
 
 			GeneratedRecipe inSmoker(UnaryOperator<SimpleCookingRecipeBuilder> builder) {
-				create(RecipeSerializer.SMELTING_RECIPE, builder, SmeltingRecipe::new, 1);
-				create(RecipeSerializer.CAMPFIRE_COOKING_RECIPE, builder, CampfireCookingRecipe::new, 3);
-				return create(RecipeSerializer.SMOKING_RECIPE, builder, SmokingRecipe::new, .5f);
+				create("smelting", builder, SmeltingRecipe::new, 1);
+				create("campfire_cooking", builder, CampfireCookingRecipe::new, 3);
+				return create("smoking", builder, SmokingRecipe::new, .5f);
 			}
 
 			GeneratedRecipe inBlastFurnace() {
@@ -1676,30 +1678,34 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 			}
 
 			GeneratedRecipe inBlastFurnace(UnaryOperator<SimpleCookingRecipeBuilder> builder) {
-				create(RecipeSerializer.SMELTING_RECIPE, builder, SmeltingRecipe::new, 1);
-				return create(RecipeSerializer.BLASTING_RECIPE, builder, BlastingRecipe::new, .5f);
+				create("smelting", builder, SmeltingRecipe::new, 1);
+				return create("blasting", builder, BlastingRecipe::new, .5f);
 			}
 
-			private <T extends AbstractCookingRecipe> GeneratedRecipe create(RecipeSerializer<T> serializer,
+			private <T extends AbstractCookingRecipe> GeneratedRecipe create(String recipeType,
 																			 UnaryOperator<SimpleCookingRecipeBuilder> builder, AbstractCookingRecipe.Factory<T> factory, float cookingTimeModifier) {
 				return register(recipeOutput -> {
 					boolean isOtherMod = compatDatagenOutput != null;
 
 					SimpleCookingRecipeBuilder b = builder.apply(SimpleCookingRecipeBuilder.generic(ingredient.get(),
-						RecipeCategory.MISC, isOtherMod ? Items.DIRT : result.get(), exp,
-						(int) (cookingTime * cookingTimeModifier), serializer, factory));
+						RecipeCategory.MISC, CookingBookCategory.MISC, isOtherMod ? Items.DIRT : result.get(), exp,
+						(int) (cookingTime * cookingTimeModifier), factory));
 					if (unlockedBy != null)
-						b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
+						b.unlockedBy("has_item", InventoryChangeTrigger.TriggerInstance.hasItems(unlockedBy.apply(CreateStandardRecipeGen.this)));
 
 					RecipeOutput conditionalOutput = recipeOutput.withConditions(recipeConditions.toArray(new ICondition[0]));
 
 					b.save(
 						isOtherMod ? new ModdedCookingRecipeOutput(conditionalOutput, compatDatagenOutput) : conditionalOutput,
-						createSimpleLocation(RegisteredObjectsHelper.getKeyOrThrow(serializer).getPath())
+						recipeKey(createSimpleLocation(recipeType))
 					);
 				});
 			}
 		}
+	}
+
+	private static ResourceKey<Recipe<?>> recipeKey(Identifier id) {
+		return ResourceKey.create(Registries.RECIPE, id);
 	}
 
 	@Override
@@ -1712,15 +1718,14 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 	}
 
 	@ParametersAreNonnullByDefault
-	@MethodsReturnNonnullByDefault
-	private static class ModdedCookingRecipeOutputShim implements Recipe<RecipeInput> {
+		private static class ModdedCookingRecipeOutputShim implements Recipe<RecipeInput> {
 
-		private static final Map<RecipeType<?>, Serializer> serializers = new ConcurrentHashMap<>();
+		private static final Map<RecipeType<?>, RecipeSerializer<ModdedCookingRecipeOutputShim>> serializers = new ConcurrentHashMap<>();
 
 		private final Recipe<?> wrapped;
-		private final ResourceLocation overrideID;
+		private final Identifier overrideID;
 
-		private ModdedCookingRecipeOutputShim(Recipe<?> wrapped, ResourceLocation overrideID) {
+		private ModdedCookingRecipeOutputShim(Recipe<?> wrapped, Identifier overrideID) {
 			this.wrapped = wrapped;
 			this.overrideID = overrideID;
 		}
@@ -1731,39 +1736,60 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 		}
 
 		@Override
-		public ItemStack assemble(RecipeInput input, HolderLookup.Provider registries) {
+		public ItemStack assemble(RecipeInput input) {
 			throw new AssertionError("Only for datagen output");
 		}
 
-		@Override
 		public boolean canCraftInDimensions(int pWidth, int pHeight) {
 			throw new AssertionError("Only for datagen output");
 		}
 
-		@Override
 		public ItemStack getResultItem(HolderLookup.Provider registries) {
 			throw new AssertionError("Only for datagen output");
 		}
 
 		@Override
-		public RecipeSerializer<?> getSerializer() {
+		public RecipeSerializer<ModdedCookingRecipeOutputShim> getSerializer() {
 			return serializers.computeIfAbsent(
 				getType(),
 				t -> Serializer.create(wrapped)
 			);
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
-		public RecipeType<?> getType() {
-			return wrapped.getType();
+		public RecipeType<? extends Recipe<RecipeInput>> getType() {
+			return (RecipeType<? extends Recipe<RecipeInput>>) wrapped.getType();
+		}
+
+		@Override
+		public boolean showNotification() {
+			return wrapped.showNotification();
+		}
+
+		@Override
+		public String group() {
+			return wrapped.group();
+		}
+
+		@Override
+		public PlacementInfo placementInfo() {
+			return wrapped.placementInfo();
+		}
+
+		@Override
+		public RecipeBookCategory recipeBookCategory() {
+			return wrapped.recipeBookCategory();
 		}
 
 		private record Serializer(
-			MapCodec<Recipe<?>> wrappedCodec) implements RecipeSerializer<ModdedCookingRecipeOutputShim> {
-			private static Serializer create(Recipe<?> wrapped) {
+			MapCodec<Recipe<?>> wrappedCodec) {
+			private static RecipeSerializer<ModdedCookingRecipeOutputShim> create(Recipe<?> wrapped) {
 				RecipeSerializer<?> wrappedSerializer = wrapped.getSerializer();
 				@SuppressWarnings("unchecked")
-				Serializer serializer = new Serializer((MapCodec<Recipe<?>>) wrappedSerializer.codec());
+				Serializer helper = new Serializer((MapCodec<Recipe<?>>) wrappedSerializer.codec());
+				RecipeSerializer<ModdedCookingRecipeOutputShim> serializer =
+					new RecipeSerializer<>(helper.codec(), helper.streamCodec());
 
 				// Need to do some registry injection to get the Recipe/Registry#byNameCodec to encode the right type for this
 				// getResourceKey and getId
@@ -1789,7 +1815,6 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 				return serializer;
 			}
 
-			@Override
 			public MapCodec<ModdedCookingRecipeOutputShim> codec() {
 				return RecordCodecBuilder.mapCodec(instance -> instance.group(
 					wrappedCodec.forGetter(i -> i.wrapped),
@@ -1799,23 +1824,28 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 				}));
 			}
 
-			@Override
 			public StreamCodec<RegistryFriendlyByteBuf, ModdedCookingRecipeOutputShim> streamCodec() {
-				throw new AssertionError("Only for datagen output");
+				return StreamCodec.of(
+					(output, value) -> {
+						throw new AssertionError("Only for datagen output");
+					},
+					input -> {
+						throw new AssertionError("Only for datagen output");
+					}
+				);
 			}
 		}
 
-		private record FakeItemStack(ResourceLocation id) {
+		private record FakeItemStack(Identifier id) {
 			public static Codec<FakeItemStack> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-				ResourceLocation.CODEC.fieldOf("id").forGetter(FakeItemStack::id)
+				Identifier.CODEC.fieldOf("id").forGetter(FakeItemStack::id)
 			).apply(instance, FakeItemStack::new));
 		}
 	}
 
 	@ParametersAreNonnullByDefault
-	@MethodsReturnNonnullByDefault
-	private record ModdedCookingRecipeOutput(RecipeOutput wrapped,
-											 ResourceLocation outputOverride) implements RecipeOutput {
+		private record ModdedCookingRecipeOutput(RecipeOutput wrapped,
+											 Identifier outputOverride) implements RecipeOutput {
 
 		@Override
 		public Advancement.Builder advancement() {
@@ -1823,7 +1853,12 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 		}
 
 		@Override
-		public void accept(ResourceLocation id, Recipe<?> recipe, @Nullable AdvancementHolder advancement, ICondition... conditions) {
+		public void includeRootAdvancement() {
+			wrapped.includeRootAdvancement();
+		}
+
+		@Override
+		public void accept(ResourceKey<Recipe<?>> id, Recipe<?> recipe, AdvancementHolder advancement, ICondition... conditions) {
 			wrapped.accept(id, new ModdedCookingRecipeOutputShim(recipe, outputOverride), advancement, conditions);
 		}
 	}

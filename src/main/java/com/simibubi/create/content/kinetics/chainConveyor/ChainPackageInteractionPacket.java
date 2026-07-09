@@ -6,8 +6,8 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;

@@ -31,7 +31,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class DumpRailwaysCommand {
 
-	private static final int white = ChatFormatting.WHITE.getColor();
+	private static final int white = 0xFFFFFF;
 	private static final int blue = 0xaac8e0;
 	//private static final int blue = 0xD3DEDC;
 	private static final int darkBlue = 0x88a5b7;
@@ -43,7 +43,7 @@ public class DumpRailwaysCommand {
 
 	static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("trains")
-			.requires(cs -> cs.hasPermission(2))
+			.requires(AllCommands.hasPermission(2))
 			.executes(ctx -> {
 				CommandSourceStack source = ctx.getSource();
 				fillReport(source.getLevel(), source.getPosition(),
@@ -145,7 +145,7 @@ public class DumpRailwaysCommand {
 				if (presentDimensions.size() > 1)
 					chat.accept("├─Travelling between Dimensions:", darkerBlue);
 				presentDimensions.forEach(key ->
-					chat.accept("├─In %1$s near [%2$s]".formatted(key.location(), train.getPositionInDimension(key).get().toShortString()), darkerBlue)
+					chat.accept("├─In %1$s near [%2$s]".formatted(key.identifier(), train.getPositionInDimension(key).get().toShortString()), darkerBlue)
 				);
 				chatRaw.accept(createTeleportButton(train));
 
@@ -168,8 +168,8 @@ public class DumpRailwaysCommand {
 			).withStyle(style -> {
 					return style
 						.withColor(blue)
-						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/c train remove " + train.id.toString()))
-						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to remove ").append(train.name)));
+						.withClickEvent(new ClickEvent.RunCommand("/c train remove " + train.id.toString()))
+						.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to remove ").append(train.name)));
 				}
 			)
 		);
@@ -182,8 +182,8 @@ public class DumpRailwaysCommand {
 			).withStyle(style -> {
 					return style
 						.withColor(darkBlue)
-						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/c train tp " + train.id.toString()))
-						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to teleport to ").append(train.name)));
+						.withClickEvent(new ClickEvent.RunCommand("/c train tp " + train.id.toString()))
+						.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to teleport to ").append(train.name)));
 				}
 			)
 		);

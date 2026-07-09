@@ -11,7 +11,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class TimeOfDayDisplaySource extends SingleLineDisplaySource {
 
@@ -23,7 +22,7 @@ public class TimeOfDayDisplaySource extends SingleLineDisplaySource {
 
     @Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		if (!(context.level()instanceof ServerLevel sLevel))
+		if (!(context.level() instanceof ServerLevel sLevel))
 			return EMPTY_TIME;
 		if (!(context.getSourceBlockEntity() instanceof CuckooClockBlockEntity ccbe))
 			return EMPTY_TIME;
@@ -31,11 +30,11 @@ public class TimeOfDayDisplaySource extends SingleLineDisplaySource {
 			return EMPTY_TIME;
 
 		boolean c12 = context.sourceConfig()
-			.getInt("Cycle") == 0;
-		boolean isNatural = sLevel.dimensionType()
-			.natural();
+			.getIntOr("Cycle", 0) == 0;
+		boolean isNatural = !sLevel.dimensionType()
+			.hasFixedTime();
 
-		int dayTime = (int) (sLevel.getDayTime() % 24000);
+		int dayTime = (int) (sLevel.getDefaultClockTime() % 24000);
 		int hours = (dayTime / 1000 + 6) % 24;
 		int minutes = (dayTime % 1000) * 60 / 1000;
 		MutableComponent suffix = CreateLang.translateDirect("generic.daytime." + (hours > 11 ? "pm" : "am"));
@@ -48,8 +47,10 @@ public class TimeOfDayDisplaySource extends SingleLineDisplaySource {
 		}
 
 		if (!isNatural) {
-			hours = sLevel.random.nextInt(70) + 24;
-			minutes = sLevel.random.nextInt(40) + 60;
+			hours = sLevel.getRandom()
+				.nextInt(70) + 24;
+			minutes = sLevel.getRandom()
+				.nextInt(40) + 60;
 		}
 
 		MutableComponent component = Component.literal(
@@ -74,7 +75,6 @@ public class TimeOfDayDisplaySource extends SingleLineDisplaySource {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
 		super.initConfigurationWidgets(context, builder, isFirstLine);
 		if (isFirstLine)

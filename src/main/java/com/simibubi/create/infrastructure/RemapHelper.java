@@ -57,10 +57,10 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.recipe.CommonMetal;
 
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 
 import net.neoforged.bus.api.SubscribeEvent;
@@ -70,7 +70,7 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 
 @EventBusSubscriber
 public class RemapHelper {
-	private static final Map<String, ResourceLocation> reMap = new HashMap<>();
+	private static final Map<String, Identifier> reMap = new HashMap<>();
 
 	static {
 		reMap.put("toggle_latch", POWERED_TOGGLE_LATCH.getId());
@@ -99,7 +99,7 @@ public class RemapHelper {
 		reMap.put("adjustable_pulse_repeater", PULSE_REPEATER.getId());
 		reMap.put("adjustable_repeater", PULSE_REPEATER.getId());
 
-		reMap.put("copper_block", RegisteredObjectsHelper.getKeyOrThrow(Blocks.COPPER_BLOCK));
+		reMap.put("copper_block", RegisteredObjectsHelper.getKeyOrThrow(Blocks.COPPER_BLOCK.weathering().unaffected()));
 		reMap.put("copper_ore", RegisteredObjectsHelper.getKeyOrThrow(Blocks.COPPER_ORE));
 
 		reMap.put("acacia_glass", ACACIA_WINDOW.getId());
@@ -150,13 +150,13 @@ public class RemapHelper {
 		reMap.put("gabbro_stairs", asResource("polished_cut_dripstone_stairs"));
 		reMap.put("limestone_layers", asResource("layered_limestone"));
 
-		reMap.put("gabbro", ResourceLocation.withDefaultNamespace("dripstone_block"));
-		reMap.put("dolomite", ResourceLocation.withDefaultNamespace("calcite"));
-		reMap.put("weathered_limestone", ResourceLocation.withDefaultNamespace("tuff"));
-		reMap.put("gabbro_cobblestone", ResourceLocation.withDefaultNamespace("dripstone_block"));
-		reMap.put("andesite_cobblestone", ResourceLocation.withDefaultNamespace("andesite"));
-		reMap.put("diorite_cobblestone", ResourceLocation.withDefaultNamespace("diorite"));
-		reMap.put("granite_cobblestone", ResourceLocation.withDefaultNamespace("granite"));
+		reMap.put("gabbro", Identifier.withDefaultNamespace("dripstone_block"));
+		reMap.put("dolomite", Identifier.withDefaultNamespace("calcite"));
+		reMap.put("weathered_limestone", Identifier.withDefaultNamespace("tuff"));
+		reMap.put("gabbro_cobblestone", Identifier.withDefaultNamespace("dripstone_block"));
+		reMap.put("andesite_cobblestone", Identifier.withDefaultNamespace("andesite"));
+		reMap.put("diorite_cobblestone", Identifier.withDefaultNamespace("diorite"));
+		reMap.put("granite_cobblestone", Identifier.withDefaultNamespace("granite"));
 		reMap.put("dark_scoria", asResource("scorchia"));
 
 		// 1.15 palettes

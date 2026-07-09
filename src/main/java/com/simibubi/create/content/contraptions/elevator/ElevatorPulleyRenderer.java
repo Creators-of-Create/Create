@@ -9,12 +9,12 @@ import com.simibubi.create.content.contraptions.pulley.PulleyRenderer;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SpriteShiftEntry;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SpriteShiftEntry;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -36,7 +36,7 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer<ElevatorP
 
 		SpriteShiftEntry beltShift = AllSpriteShifts.ELEVATOR_BELT;
 		SpriteShiftEntry coilShift = AllSpriteShifts.ELEVATOR_COIL;
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 		Level world = be.getLevel();
 		BlockState blockState = be.getBlockState();
 		BlockPos pos = be.getBlockPos();
@@ -104,7 +104,7 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer<ElevatorP
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(ElevatorPulleyBlockEntity p_188185_1_) {
+	public boolean shouldRenderOffScreen() {
 		return true;
 	}
 

@@ -15,8 +15,8 @@ import com.simibubi.create.content.logistics.tableCloth.ShoppingListItem;
 import com.simibubi.create.content.logistics.tableCloth.ShoppingListItem.ShoppingList;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -71,9 +71,9 @@ public class StockTickerInteractionHandler {
 			return false;
 
 		if (!stbe.behaviour.mayInteract(player)) {
-			player.displayClientMessage(CreateLang.translate("stock_keeper.locked")
+			player.sendSystemMessage(CreateLang.translate("stock_keeper.locked")
 				.style(ChatFormatting.RED)
-				.component(), true);
+				.component());
 			return true;
 		}
 
@@ -155,7 +155,7 @@ public class StockTickerInteractionHandler {
 			InventorySummary tally = paymentEntries.copy();
 			List<ItemStack> toTransfer = new ArrayList<>();
 
-			for (int i = 0; i < player.getInventory().items.size(); i++) {
+			for (int i = 0; i < player.getInventory().getNonEquipmentItems().size(); i++) {
 				ItemStack item = player.getInventory()
 					.getItem(i);
 				if (item.isEmpty())

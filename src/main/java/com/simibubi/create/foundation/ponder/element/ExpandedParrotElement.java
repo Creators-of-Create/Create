@@ -2,9 +2,9 @@ package com.simibubi.create.foundation.ponder.element;
 
 import java.util.function.Supplier;
 
-import net.createmod.ponder.api.element.ParrotPose;
-import net.createmod.ponder.foundation.PonderScene;
-import net.createmod.ponder.foundation.element.ParrotElementImpl;
+import net.createmod.ponder.api.client.element.ParrotPose;
+import net.createmod.ponder.api.client.scene.PonderScene;
+import net.createmod.ponder.impl.client.element.ParrotElementImpl;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.Vec3;
 

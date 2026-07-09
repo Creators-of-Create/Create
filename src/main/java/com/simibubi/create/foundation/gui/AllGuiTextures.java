@@ -2,15 +2,15 @@ package com.simibubi.create.foundation.gui;
 
 import com.simibubi.create.Create;
 
-import net.createmod.catnip.gui.TextureSheetSegment;
-import net.createmod.catnip.gui.UIRenderHelper;
-import net.createmod.catnip.gui.element.ScreenElement;
-import net.createmod.catnip.theme.Color;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.createmod.catnip.api.client.gui.TextureSheetSegment;
+import net.createmod.catnip.api.client.gui.UIRenderHelper;
+import net.createmod.catnip.api.client.gui.element.ScreenElement;
+import net.createmod.catnip.api.theme.Color;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public enum AllGuiTextures implements ScreenElement, TextureSheetSegment {
 
@@ -269,7 +269,7 @@ public enum AllGuiTextures implements ScreenElement, TextureSheetSegment {
 
 	public static final int FONT_COLOR = 0x575F7A;
 
-	public final ResourceLocation location;
+	public final Identifier location;
 	private final int width;
 	private final int height;
 	private final int startX;
@@ -284,7 +284,7 @@ public enum AllGuiTextures implements ScreenElement, TextureSheetSegment {
 	}
 
 	AllGuiTextures(String namespace, String location, int startX, int startY, int width, int height) {
-		this.location = ResourceLocation.fromNamespaceAndPath(namespace, "textures/gui/" + location + ".png");
+		this.location = Identifier.fromNamespaceAndPath(namespace, "textures/gui/" + location + ".png");
 		this.width = width;
 		this.height = height;
 		this.startX = startX;
@@ -292,19 +292,16 @@ public enum AllGuiTextures implements ScreenElement, TextureSheetSegment {
 	}
 
 	@Override
-	public ResourceLocation getLocation() {
+	public Identifier getId() {
 		return location;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public void render(GuiGraphics graphics, int x, int y) {
-		graphics.blit(location, x, y, startX, startY, width, height);
+	public void render(GuiGraphicsExtractor graphics, int x, int y) {
+		graphics.blit(RenderPipelines.GUI_TEXTURED, location, x, y, startX, startY, width, height, 256, 256);
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public void render(GuiGraphics graphics, int x, int y, Color c) {
-		bind();
-		UIRenderHelper.drawColoredTexture(graphics, c, x, y, startX, startY, width, height);
+	public void render(GuiGraphicsExtractor graphics, int x, int y, Color c) {
+		UIRenderHelper.drawColoredTexture(graphics, bind(), c, x, y, startX, startY, width, height);
 	}
 
 	@Override

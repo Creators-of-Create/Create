@@ -6,7 +6,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.InputConstants;
 
-import net.createmod.catnip.client.ConflictSafeKeyMapping;
+import net.createmod.catnip.api.client.ConflictSafeKeyMapping;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 
@@ -28,6 +28,8 @@ public enum AllKeys {
 	CTRL_MODIFIER("ctrl_modifier", GLFW.GLFW_KEY_LEFT_CONTROL, "Ctrl Modifier", true),
 	ALT_MODIFIER("alt_modifier", GLFW.GLFW_KEY_LEFT_ALT, "Alt Modifier", true),
 	;
+
+	private static final KeyMapping.Category CREATE_CATEGORY = KeyMapping.Category.register(Create.asResource("main"));
 
 	private KeyMapping keybind;
 	private final String description;
@@ -53,6 +55,7 @@ public enum AllKeys {
 	}
 
 	public static void provideLang(BiConsumer<String, String> consumer) {
+		consumer.accept("key.category.create.main", Create.NAME);
 		for (AllKeys key : values())
 			if (key.modifiable)
 				consumer.accept(key.description, key.translation);
@@ -64,7 +67,7 @@ public enum AllKeys {
 			if (key.conflictSafe) {
 				key.keybind = new ConflictSafeKeyMapping(key.description, key.key, Create.NAME);
 			} else {
-				key.keybind = new KeyMapping(key.description, key.key, Create.NAME);
+				key.keybind = new KeyMapping(key.description, key.key, CREATE_CATEGORY);
 			}
 			if (!key.modifiable)
 				continue;
@@ -105,14 +108,13 @@ public enum AllKeys {
 
 	public static boolean isKeyDown(int key) {
 		return InputConstants.isKeyDown(Minecraft.getInstance()
-			.getWindow()
 			.getWindow(), key);
 	}
 
 	public static boolean isMouseButtonDown(int button) {
 		return GLFW.glfwGetMouseButton(Minecraft.getInstance()
 			.getWindow()
-			.getWindow(), button) == 1;
+			.handle(), button) == 1;
 	}
 
 	public static boolean ctrlDown() {

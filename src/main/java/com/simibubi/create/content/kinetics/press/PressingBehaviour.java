@@ -10,19 +10,20 @@ import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.processing.basin.BasinBlock;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.phys.AABB;
@@ -71,15 +72,15 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 
 	@Override
 	public void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		running = compound.getBoolean("Running");
-		mode = Mode.values()[compound.getInt("Mode")];
-		finished = compound.getBoolean("Finished");
-		prevRunningTicks = runningTicks = compound.getInt("Ticks");
+		running = compound.getBooleanOr("Running", false);
+		mode = Mode.values()[compound.getIntOr("Mode", 0)];
+		finished = compound.getBooleanOr("Finished", false);
+		prevRunningTicks = runningTicks = compound.getIntOr("Ticks", 0);
 		super.read(compound, registries, clientPacket);
 
 		if (clientPacket) {
-			NBTHelper.iterateCompoundList(compound.getList("ParticleItems", Tag.TAG_COMPOUND),
-				c -> particleItems.add(ItemStack.parseOptional(registries, c)));
+			NBTHelper.iterateCompoundList(compound.getListOrEmpty("ParticleItems"),
+				c -> particleItems.add(LegacyItemStackNbtBridge.parseOptional(registries, c)));
 			spawnParticles();
 		}
 	}
@@ -93,7 +94,8 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 		super.write(compound, registries, clientPacket);
 
 		if (clientPacket) {
-			compound.put("ParticleItems", NBTHelper.writeCompoundList(particleItems, s -> (CompoundTag) s.saveOptional(registries)));
+			compound.put("ParticleItems", NBTHelper.writeCompoundList(particleItems,
+				s -> LegacyItemStackNbtBridge.saveOptionalCompound(s, registries)));
 			particleItems.clear();
 		}
 	}
@@ -133,7 +135,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 		BlockPos worldPosition = getPos();
 
 		if (!running || level == null) {
-			if (level != null && !level.isClientSide) {
+			if (level != null && !level.isClientSide()) {
 
 				if (specifics.getKineticSpeed() == 0)
 					return;
@@ -163,7 +165,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 			return;
 		}
 
-		if (level.isClientSide && runningTicks == -CYCLE / 2) {
+		if (level.isClientSide() && runningTicks == -CYCLE / 2) {
 			prevRunningTicks = CYCLE / 2;
 			return;
 		}
@@ -181,11 +183,11 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.playOnServer(level, worldPosition, .5f,
 					.75f + (Math.abs(specifics.getKineticSpeed()) / 1024f));
 
-			if (!level.isClientSide)
+			if (!level.isClientSide())
 				blockEntity.sendData();
 		}
 
-		if (!level.isClientSide && runningTicks > CYCLE) {
+		if (!level.isClientSide() && runningTicks > CYCLE) {
 			finished = true;
 			running = false;
 			particleItems.clear();
@@ -199,14 +201,14 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 		if (prevRunningTicks < CYCLE / 2 && runningTicks >= CYCLE / 2) {
 			runningTicks = CYCLE / 2;
 			// Pause the ticks until a packet is received
-			if (level.isClientSide && !blockEntity.isVirtual())
+			if (level.isClientSide() && !blockEntity.isVirtual())
 				runningTicks = -(CYCLE / 2);
 		}
 	}
 
 	protected void applyOnBasin() {
 		Level level = getWorld();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		particleItems.clear();
 		if (specifics.tryProcessInBasin(false))
@@ -221,7 +223,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 
 		particleItems.clear();
 
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 
 		for (Entity entity : level.getEntities(null, bb)) {
@@ -270,26 +272,26 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 
 	public void makePressingParticleEffect(Vec3 pos, ItemStack stack, int amount) {
 		Level level = getWorld();
-		if (level == null || !level.isClientSide)
+		if (level == null || !level.isClientSide() || stack.isEmpty())
 			return;
 		for (int i = 0; i < amount; i++) {
-			Vec3 motion = VecHelper.offsetRandomly(Vec3.ZERO, level.random, .125f)
+			Vec3 motion = VecHelper.offsetRandomly(Vec3.ZERO, level.getRandom(), .125f)
 				.multiply(1, 0, 1);
 			motion = motion.add(0, amount != 1 ? 0.125f : 1 / 16f, 0);
-			level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), pos.x, pos.y - .25f, pos.z, motion.x,
-				motion.y, motion.z);
+			level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(stack)),
+				pos.x, pos.y - .25f, pos.z, motion.x, motion.y, motion.z);
 		}
 	}
 
 	public void makeCompactingParticleEffect(Vec3 pos, ItemStack stack) {
 		Level level = getWorld();
-		if (level == null || !level.isClientSide)
+		if (level == null || !level.isClientSide() || stack.isEmpty())
 			return;
 		for (int i = 0; i < 20; i++) {
-			Vec3 motion = VecHelper.offsetRandomly(Vec3.ZERO, level.random, .175f)
+			Vec3 motion = VecHelper.offsetRandomly(Vec3.ZERO, level.getRandom(), .175f)
 				.multiply(1, 0, 1);
-			level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z, motion.x,
-				motion.y + .25f, motion.z);
+			level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(stack)),
+				pos.x, pos.y, pos.z, motion.x, motion.y + .25f, motion.z);
 		}
 	}
 

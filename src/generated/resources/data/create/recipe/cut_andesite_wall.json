@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "X": {
-      "item": "create:cut_andesite"
-    }
+    "X": "create:cut_andesite"
   },
   "pattern": [
     "XXX",

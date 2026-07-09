@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "create:block/cut_diorite_brick_slab"
+  }
+}

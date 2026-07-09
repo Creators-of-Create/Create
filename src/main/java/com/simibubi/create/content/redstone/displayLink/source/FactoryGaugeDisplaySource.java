@@ -10,7 +10,7 @@ import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBehaviour;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelPosition;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 
-import net.createmod.catnip.data.IntAttached;
+import net.createmod.catnip.api.data.IntAttached;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

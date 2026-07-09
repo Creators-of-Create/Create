@@ -17,11 +17,11 @@ import com.simibubi.create.content.contraptions.minecart.CouplingHandler;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.data.WorldAttached;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.data.WorldAttached;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -62,7 +62,7 @@ public class CapabilityMinecartController {
 		for (AbstractMinecart cart : queued) {
 			UUID uniqueID = cart.getUUID();
 
-			if (world.isClientSide && carts.containsKey(uniqueID)) {
+			if (world.isClientSide() && carts.containsKey(uniqueID)) {
 				MinecartController minecartController = carts.get(uniqueID);
 				if (minecartController != null) {
 					AbstractMinecart minecartEntity = minecartController.cart();
@@ -78,7 +78,7 @@ public class CapabilityMinecartController {
 				carts.put(uniqueID, controller);
 				if (controller.isLeadingCoupling())
 					cartsWithCoupling.add(uniqueID);
-				if (!world.isClientSide && controller != null)
+				if (!world.isClientSide() && controller != null)
 					controller.sendData();
 			}
 		}
@@ -135,7 +135,7 @@ public class CapabilityMinecartController {
 		UUID uniqueID = entity.getUUID();
 		if (!carts.containsKey(uniqueID) || unloads.contains(uniqueID))
 			return;
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return;
 		handleKilledMinecart(world, carts.get(uniqueID), entity.position());
 	}

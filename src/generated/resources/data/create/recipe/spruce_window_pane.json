@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "create:spruce_window"
-    }
+    "#": "create:spruce_window"
   },
   "pattern": [
     "###",

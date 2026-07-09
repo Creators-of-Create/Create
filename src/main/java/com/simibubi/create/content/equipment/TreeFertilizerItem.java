@@ -1,9 +1,10 @@
 package com.simibubi.create.content.equipment;
 
 
-import net.createmod.catnip.levelWrappers.PlacementSimulationServerLevel;
+import net.createmod.catnip.api.level.wrapper.PlacementSimulationServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BoneMealItem;
@@ -27,13 +28,13 @@ public class TreeFertilizerItem extends Item {
 		BlockState state = context.getLevel()
 			.getBlockState(context.getClickedPos());
 		Block block = state.getBlock();
-		if (block instanceof BonemealableBlock bonemealableBlock && state.is(BlockTags.SAPLINGS)) {
+		if (block instanceof BonemealableBlock bonemealableBlock && state.is(BlockItemTags.SAPLINGS.block())) {
 
 			if (state.getOptionalValue(MangrovePropaguleBlock.HANGING)
 				.orElse(false))
 				return InteractionResult.PASS;
 
-			if (context.getLevel().isClientSide) {
+			if (context.getLevel().isClientSide()) {
 				BoneMealItem.addGrowthParticles(context.getLevel(), context.getClickedPos(), 100);
 				return InteractionResult.SUCCESS;
 			}

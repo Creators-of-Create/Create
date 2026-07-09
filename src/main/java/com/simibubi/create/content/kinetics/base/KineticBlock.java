@@ -11,8 +11,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.server.level.ServerLevel;
 
 public abstract class KineticBlock extends Block implements IRotate {
 
@@ -43,8 +45,9 @@ public abstract class KineticBlock extends Block implements IRotate {
 	}
 
 	@Override
-	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-		IBE.onRemove(pState, pLevel, pPos, pNewState);
+	protected void affectNeighborsAfterRemoval(BlockState pState, ServerLevel pLevel, BlockPos pPos, boolean pIsMoving) {
+		IBE.onRemove(pState, pLevel, pPos, Blocks.AIR.defaultBlockState());
+		super.affectNeighborsAfterRemoval(pState, pLevel, pPos, pIsMoving);
 	}
 
 	@Override
@@ -80,7 +83,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 	@Override
 	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		AdvancementBehaviour.setPlacedBy(worldIn, pos, placer);
-		if (worldIn.isClientSide)
+		if (worldIn.isClientSide())
 			return;
 
 		BlockEntity blockEntity = worldIn.getBlockEntity(pos);

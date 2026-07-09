@@ -3,9 +3,7 @@
   "category": "building",
   "group": "small_calcite_brick_stairs",
   "key": {
-    "X": {
-      "item": "create:small_calcite_bricks"
-    }
+    "X": "create:small_calcite_bricks"
   },
   "pattern": [
     "X  ",

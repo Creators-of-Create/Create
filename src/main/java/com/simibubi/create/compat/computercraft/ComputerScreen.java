@@ -5,11 +5,11 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.CreateLang;
-import net.createmod.catnip.gui.AbstractSimiScreen;
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.createmod.catnip.gui.widget.AbstractSimiWidget;
-import net.createmod.catnip.gui.widget.ElementWidget;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.gui.AbstractSimiScreen;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.createmod.catnip.api.client.gui.widget.AbstractSimiWidget;
+import net.createmod.catnip.api.client.gui.widget.ElementWidget;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -43,18 +43,17 @@ public class ComputerScreen extends AbstractSimiScreen {
 	@Override
 	public void tick() {
 		if (!hasAttachedComputer.get())
-			minecraft.setScreen(previousScreen);
+			minecraft.setScreenAndShow(previousScreen);
 
 		super.tick();
 	}
 
 	@Override
 	protected void init() {
-		setWindowSize(background.getWidth(), background.getHeight());
 		super.init();
 
-		int x = guiLeft;
-		int y = guiTop;
+		int x = left();
+		int y = top();
 
 		Mods.COMPUTERCRAFT.executeIfInstalled(() -> () -> {
 			computerWidget = new ElementWidget(x + 33, y + 38)
@@ -67,29 +66,36 @@ public class ComputerScreen extends AbstractSimiScreen {
 		confirmButton.withCallback(this::onClose);
 		addRenderableWidget(confirmButton);
 	}
-
-
-
 	@Override
-	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		int x = guiLeft;
-		int y = guiTop;
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+		int x = left();
+		int y = top();
 
 		background.render(graphics, x, y);
 
-		graphics.drawString(font, displayTitle.get(),
+		graphics.text(font, displayTitle.get(),
 			Math.round(x + background.getWidth() / 2.0F - font.width(displayTitle.get()) / 2.0F), y + 4, 0x442000, false);
-		graphics.drawWordWrap(font, CreateLang.translate("gui.attached_computer.controlled")
+		graphics.textWithWordWrap(font, CreateLang.translate("gui.attached_computer.controlled")
 			.component(), x + 55, y + 32, 111, 0x7A7A7A);
 
 		if (additional != null)
 			additional.render(graphics, mouseX, mouseY, partialTicks, x, y, background);
+
+		super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
+	}
+
+	private int left() {
+		return (width - background.getWidth()) / 2;
+	}
+
+	private int top() {
+		return (height - background.getHeight()) / 2;
 	}
 
 	@FunctionalInterface
 	public interface RenderWindowFunction {
 
-		void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background);
+		void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background);
 
 	}
 

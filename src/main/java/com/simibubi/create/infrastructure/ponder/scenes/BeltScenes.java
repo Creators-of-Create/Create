@@ -16,17 +16,17 @@ import com.simibubi.create.content.kinetics.press.PressingBehaviour.Mode;
 import com.simibubi.create.content.kinetics.simpleRelays.ShaftBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.EntityElement;
-import net.createmod.ponder.api.element.ParrotElement;
-import net.createmod.ponder.api.element.ParrotPose;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.EntityElement;
+import net.createmod.ponder.api.client.element.ParrotElement;
+import net.createmod.ponder.api.client.element.ParrotPose;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -157,7 +157,7 @@ public class BeltScenes {
 		scene.idle(70);
 
 		scene.overlay().showControls(util.vector().topOf(shaftLocation.east()), Pointing.DOWN, 50).rightClick()
-				.withItem(new ItemStack(Items.BLUE_DYE));
+				.withItem(new ItemStack(Items.DYE.blue()));
 		scene.idle(7);
 		scene.world().modifyBlockEntityNBT(util.select().fromTo(0, 1, 2, 4, 1, 2), BeltBlockEntity.class,
 			nbt -> NBTHelper.writeEnum(nbt, "Dye", DyeColor.BLUE));
@@ -336,7 +336,7 @@ public class BeltScenes {
 		scene.idle(10);
 		scene.special().movePointOfInterest(util.grid().at(2, 2, 0));
 
-		ItemStack stack = new ItemStack(Items.COPPER_BLOCK);
+		ItemStack stack = new ItemStack(Items.COPPER_BLOCK.weathering().unaffected());
 		ElementLink<EntityElement> item =
 			scene.world().createItemEntity(util.vector().centerOf(0, 4, 2), util.vector().of(0, 0, 0), stack);
 		scene.idle(13);
@@ -499,9 +499,9 @@ public class BeltScenes {
 		scene.idle(70);
 
 		scene.overlay().showControls(topOf, Pointing.DOWN, 20).rightClick()
-			.withItem(new ItemStack(Items.COPPER_BLOCK));
+			.withItem(new ItemStack(Items.COPPER_BLOCK.weathering().unaffected()));
 		scene.idle(7);
-		scene.world().createItemOnBeltLike(depotPos, Direction.NORTH, new ItemStack(Items.COPPER_BLOCK));
+		scene.world().createItemOnBeltLike(depotPos, Direction.NORTH, new ItemStack(Items.COPPER_BLOCK.weathering().unaffected()));
 		scene.idle(10);
 		scene.overlay().showText(70)
 			.attachKeyFrame()

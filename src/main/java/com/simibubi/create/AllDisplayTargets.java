@@ -7,7 +7,7 @@ import com.simibubi.create.content.redstone.displayLink.target.NixieTubeDisplayT
 import com.simibubi.create.content.redstone.displayLink.target.SignDisplayTarget;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -16,10 +16,10 @@ public class AllDisplayTargets {
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	public static final RegistryEntry<DisplayTarget, SignDisplayTarget> SIGN = REGISTRATE.displayTarget("sign", SignDisplayTarget::new)
-		.associate(BlockEntityType.SIGN)
+		.associate(BlockEntityTypes.SIGN)
 		.register();
 	public static final RegistryEntry<DisplayTarget, LecternDisplayTarget> LECTERN = REGISTRATE.displayTarget("lectern", LecternDisplayTarget::new)
-		.associate(BlockEntityType.LECTERN)
+		.associate(BlockEntityTypes.LECTERN)
 		.register();
 
 	public static final RegistryEntry<DisplayTarget, DisplayBoardTarget> DISPLAY_BOARD = simple("display_board", DisplayBoardTarget::new);

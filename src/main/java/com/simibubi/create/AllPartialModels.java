@@ -12,11 +12,11 @@ import com.simibubi.create.content.logistics.box.PackageStyles;
 import com.simibubi.create.content.logistics.box.PackageStyles.PackageStyle;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 
 public class AllPartialModels {
@@ -245,12 +245,12 @@ public class AllPartialModels {
 	public static final Map<Direction, PartialModel> METAL_GIRDER_BRACKETS = new EnumMap<>(Direction.class);
 	public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new EnumMap<>(DyeColor.class);
 	public static final Map<DyeColor, PartialModel> DYED_VALVE_HANDLES = new EnumMap<>(DyeColor.class);
-	public static final Map<ResourceLocation, Couple<PartialModel>> FOLDING_DOORS = new HashMap<>();
+	public static final Map<Identifier, Couple<PartialModel>> FOLDING_DOORS = new HashMap<>();
 	public static final List<PartialModel> CONTRAPTION_CONTROLS_INDICATOR = new ArrayList<>();
 
-	public static final Map<ResourceLocation, PartialModel> PACKAGES = new HashMap<>();
+	public static final Map<Identifier, PartialModel> PACKAGES = new HashMap<>();
 	public static final List<PartialModel> PACKAGES_TO_HIDE_AS = new ArrayList<>();
-	public static final Map<ResourceLocation, PartialModel> PACKAGE_RIGGING = new HashMap<>();
+	public static final Map<Identifier, PartialModel> PACKAGE_RIGGING = new HashMap<>();
 
 	public static final Map<GantryShaftKey, PartialModel> GANTRY_SHAFTS = new HashMap<>();
 
@@ -281,7 +281,7 @@ public class AllPartialModels {
 		putFoldingDoor("copper_door");
 
 		for (PackageStyle style : PackageStyles.STYLES) {
-			ResourceLocation key = style.getItemId();
+			Identifier key = style.getItemId();
 			PartialModel model = PartialModel.of(Create.asResource("item/" + key.getPath()));
 			PACKAGES.put(key, model);
 			if (!style.rare())
@@ -300,7 +300,7 @@ public class AllPartialModels {
 	}
 
 	public record GantryShaftKey(GantryShaftBlock.Part part, boolean powered, boolean flipped) {
-		private ResourceLocation name() {
+		private Identifier name() {
 			String partName = part.getSerializedName();
 
 			if (!(flipped || powered)) {

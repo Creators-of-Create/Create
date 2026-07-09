@@ -2,15 +2,15 @@ package com.simibubi.create.content.decoration.copycat;
 
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
+import com.tterrag.registrate.providers.generators.BlockModelProvider;
+import com.tterrag.registrate.providers.generators.ModelFile;
 
 public class SpecialCopycatPanelBlockState extends SpecialBlockStateGen {
 
@@ -35,7 +35,7 @@ public class SpecialCopycatPanelBlockState extends SpecialBlockStateGen {
 	}
 
 	@Override
-	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
+	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockModelGenerator prov,
 		BlockState state) {
 		BlockModelProvider models = prov.models();
 		return facing(state).getAxis() == Axis.Y

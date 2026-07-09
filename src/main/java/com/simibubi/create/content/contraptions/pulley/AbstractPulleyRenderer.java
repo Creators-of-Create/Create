@@ -8,17 +8,17 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SpriteShiftEntry;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SpriteShiftEntry;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,7 +36,7 @@ public abstract class AbstractPulleyRenderer<T extends KineticBlockEntity> exten
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(T p_188185_1_) {
+	public boolean shouldRenderOffScreen() {
 		return true;
 	}
 
@@ -51,7 +51,7 @@ public abstract class AbstractPulleyRenderer<T extends KineticBlockEntity> exten
 		float offset = getOffset(be, partialTicks);
 		boolean running = isRunning(be);
 
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 		scrollCoil(getRotatedCoil(be), getCoilShift(), offset, 1)
 			.light(light)
 			.renderInto(ms, vb);
@@ -82,7 +82,7 @@ public abstract class AbstractPulleyRenderer<T extends KineticBlockEntity> exten
 	public static void renderAt(LevelAccessor world, SuperByteBuffer partial, float offset, BlockPos pulleyPos,
 		PoseStack ms, VertexConsumer buffer) {
 		BlockPos actualPos = pulleyPos.below((int) offset);
-		int light = LevelRenderer.getLightColor(world, world.getBlockState(actualPos), actualPos);
+		int light = LightCoordsUtil.FULL_BRIGHT;
 		partial.translate(0, -offset, 0)
 		.light(light)
 			.renderInto(ms, buffer);

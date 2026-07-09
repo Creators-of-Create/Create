@@ -7,9 +7,7 @@
   ],
   "type": "create:splashing",
   "ingredients": [
-    {
-      "item": "create:crushed_raw_osmium"
-    }
+    "create:crushed_raw_osmium"
   ],
   "results": [
     {

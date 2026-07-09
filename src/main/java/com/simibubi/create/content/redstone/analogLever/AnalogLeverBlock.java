@@ -1,12 +1,12 @@
 package com.simibubi.create.content.redstone.analogLever;
 
 
+import java.util.Map;
+import java.util.function.Function;
+
 import com.mojang.serialization.MapCodec;
 
-import com.simibubi.create.foundation.mixin.accessor.BlockBehaviourAccessor;
-
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.foundation.block.IBE;
@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -24,29 +25,39 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock implements IBE<AnalogLeverBlockEntity> {
 
 	public static final MapCodec<AnalogLeverBlock> CODEC = simpleCodec(AnalogLeverBlock::new);
 
+	private final Function<BlockState, VoxelShape> shapes;
+
 	public AnalogLeverBlock(Properties p_i48402_1_) {
 		super(p_i48402_1_);
+		shapes = makeShapes();
+	}
+
+	private Function<BlockState, VoxelShape> makeShapes() {
+		VoxelShape baseShape = Block.boxZ(6.0D, 8.0D, 10.0D, 16.0D);
+		Map<AttachFace, Map<Direction, VoxelShape>> rotatedShapes = Shapes.rotateAttachFace(baseShape);
+		return getShapeForEachState(state -> rotatedShapes.get(state.getValue(FACE))
+			.get(state.getValue(FACING)));
 	}
 
 	@Override
 	public InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hit) {
-		if (worldIn.isClientSide) {
+		if (worldIn.isClientSide()) {
 			addParticles(state, worldIn, pos, 1.0F);
 			return InteractionResult.SUCCESS;
 		}
@@ -77,7 +88,6 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
 		withBlockEntityDo(worldIn, pos, be -> {
 			if (be.state != 0 && rand.nextFloat() < 0.25F)
@@ -86,14 +96,15 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (isMoving || state.getBlock() == newState.getBlock())
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel worldIn, BlockPos pos, boolean isMoving) {
+		if (isMoving)
 			return;
 		withBlockEntityDo(worldIn, pos, be -> {
 			if (be.state != 0)
 				updateNeighbors(state, worldIn, pos);
 			worldIn.removeBlockEntity(pos);
 		});
+		super.affectNeighborsAfterRemoval(state, worldIn, pos, isMoving);
 	}
 
 	private static void addParticles(BlockState state, LevelAccessor worldIn, BlockPos pos, float alpha) {
@@ -106,7 +117,7 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 			(double) pos.getY() + 0.5D + 0.1D * (double) direction.getStepY() + 0.2D * (double) direction1.getStepY();
 		double d2 =
 			(double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ() + 0.2D * (double) direction1.getStepZ();
-		worldIn.addParticle(new DustParticleOptions(new Vector3f(1.0F, 0.0F, 0.0F), alpha), d0, d1, d2, 0.0D, 0.0D,
+		worldIn.addParticle(new DustParticleOptions(0xff0000, alpha), d0, d1, d2, 0.0D, 0.0D,
 			0.0D);
 	}
 
@@ -117,7 +128,7 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 
 	@Override
 	public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-		return ((BlockBehaviourAccessor) Blocks.LEVER).create$getShape(state, worldIn, pos, context);
+		return shapes.apply(state);
 	}
 
 	@Override

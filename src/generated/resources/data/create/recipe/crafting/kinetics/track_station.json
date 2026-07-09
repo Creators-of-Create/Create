@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "item": "create:railway_casing"
-    },
-    {
-      "item": "minecraft:compass"
-    }
+    "create:railway_casing",
+    "minecraft:compass"
   ],
   "result": {
     "count": 2,

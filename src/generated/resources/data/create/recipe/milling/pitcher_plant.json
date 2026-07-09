@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:pitcher_plant"
-    }
+    "minecraft:pitcher_plant"
   ],
   "processing_time": 50,
   "results": [

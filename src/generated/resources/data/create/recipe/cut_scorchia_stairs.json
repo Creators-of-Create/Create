@@ -3,9 +3,7 @@
   "category": "building",
   "group": "cut_scorchia_stairs",
   "key": {
-    "X": {
-      "item": "create:cut_scorchia"
-    }
+    "X": "create:cut_scorchia"
   },
   "pattern": [
     "X  ",

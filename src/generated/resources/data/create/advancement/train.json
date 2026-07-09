@@ -11,7 +11,6 @@
       "translate": "advancement.create.train.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:track_station"
     },
     "title": {

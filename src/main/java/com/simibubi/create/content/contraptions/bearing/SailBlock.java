@@ -13,18 +13,17 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.placement.IPlacementHelper;
-import net.createmod.catnip.placement.PlacementHelpers;
-import net.createmod.catnip.placement.PlacementOffset;
-import net.minecraft.MethodsReturnNonnullByDefault;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.placement.IPlacementHelper;
+import net.createmod.catnip.api.placement.PlacementHelpers;
+import net.createmod.catnip.api.placement.PlacementOffset;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -55,7 +54,7 @@ public class SailBlock extends WrenchableDirectionalBlock {
 		return new SailBlock(properties, false, color);
 	}
 
-	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
+	private static final IPlacementHelper PLACEMENT_HELPER = PlacementHelpers.register(new PlacementHelper());
 
 	protected final boolean frame;
 	protected final DyeColor color;
@@ -75,35 +74,35 @@ public class SailBlock extends WrenchableDirectionalBlock {
 
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		IPlacementHelper placementHelper = PLACEMENT_HELPER;
 		if (!player.isShiftKeyDown() && player.mayBuild()) {
 			if (placementHelper.matchesItem(stack)) {
 				placementHelper.getOffset(player, level, state, pos, hitResult)
 					.placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
-				return ItemInteractionResult.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 		}
 
 		if (stack.getItem() instanceof ShearsItem) {
-			if (!level.isClientSide)
+			if (!level.isClientSide())
 				level.playSound(null, pos, SoundEvents.SHEEP_SHEAR, SoundSource.BLOCKS, 1.0f, 1.0f);
 			applyDye(state, level, pos, hitResult.getLocation(), null);
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		if (frame)
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 
 		DyeColor color = DyeColor.getColor(stack);
 		if (color != null) {
-			if (!level.isClientSide)
-				level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0f, 1.1f - level.random.nextFloat() * .2f);
+			if (!level.isClientSide())
+				level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0f, 1.1f - level.getRandom().nextFloat() * .2f);
 			applyDye(state, level, pos, hitResult.getLocation(), color);
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
 	public void applyDye(BlockState state, Level world, BlockPos pos, Vec3 hit, @Nullable DyeColor color) {
@@ -182,28 +181,21 @@ public class SailBlock extends WrenchableDirectionalBlock {
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos,
-									   Player player) {
-		ItemStack pickBlock = super.getCloneItemStack(state, target, level, pos, player);
+	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
+		ItemStack pickBlock = super.getCloneItemStack(level, pos, state, includeData);
 		if (pickBlock.isEmpty())
-			return AllBlocks.SAIL.get()
-				.getCloneItemStack(state, target, level, pos, player);
+			return AllBlocks.SAIL.asStack();
 		return pickBlock;
 	}
 
 	@Override
-	public void fallOn(Level p_152426_, BlockState p_152427_, BlockPos p_152428_, Entity p_152429_, float p_152430_) {
+	public void fallOn(Level p_152426_, BlockState p_152427_, BlockPos p_152428_, Entity p_152429_, double p_152430_) {
 		if (frame)
 			super.fallOn(p_152426_, p_152427_, p_152428_, p_152429_, p_152430_);
-		super.fallOn(p_152426_, p_152427_, p_152428_, p_152429_, 0);
-	}
-
-	public void updateEntityAfterFallOn(BlockGetter p_176216_1_, Entity p_176216_2_) {
-		if (frame || p_176216_2_.isSuppressingBounce()) {
-			super.updateEntityAfterFallOn(p_176216_1_, p_176216_2_);
-		} else {
-			this.bounce(p_176216_2_);
-		}
+		else
+			super.fallOn(p_152426_, p_152427_, p_152428_, p_152429_, 0);
+		if (!frame && !p_152429_.isSuppressingBounce())
+			this.bounce(p_152429_);
 	}
 
 	private void bounce(Entity p_226860_1_) {
@@ -228,8 +220,7 @@ public class SailBlock extends WrenchableDirectionalBlock {
 		return color;
 	}
 
-	@MethodsReturnNonnullByDefault
-	private static class PlacementHelper implements IPlacementHelper {
+		private static class PlacementHelper implements IPlacementHelper {
 		@Override
 		public Predicate<ItemStack> getItemPredicate() {
 			return i -> AllBlocks.SAIL.isIn(i) || AllBlocks.SAIL_FRAME.isIn(i);

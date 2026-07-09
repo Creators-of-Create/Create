@@ -1,10 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "P": {
-      "item": "create:cardboard"
-    }
+    "P": "create:cardboard"
   },
   "pattern": [
     "P P",
@@ -12,7 +9,6 @@
     "PPP"
   ],
   "result": {
-    "count": 1,
     "id": "create:cardboard_chestplate"
   }
 }

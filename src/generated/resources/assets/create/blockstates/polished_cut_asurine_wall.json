@@ -11,26 +11,6 @@
     {
       "apply": {
         "model": "create:block/polished_cut_asurine_wall_side",
-        "uvlock": true,
-        "y": 90
-      },
-      "when": {
-        "east": "low"
-      }
-    },
-    {
-      "apply": {
-        "model": "create:block/polished_cut_asurine_wall_side_tall",
-        "uvlock": true,
-        "y": 90
-      },
-      "when": {
-        "east": "tall"
-      }
-    },
-    {
-      "apply": {
-        "model": "create:block/polished_cut_asurine_wall_side",
         "uvlock": true
       },
       "when": {
@@ -39,11 +19,12 @@
     },
     {
       "apply": {
-        "model": "create:block/polished_cut_asurine_wall_side_tall",
-        "uvlock": true
+        "model": "create:block/polished_cut_asurine_wall_side",
+        "uvlock": true,
+        "y": 90
       },
       "when": {
-        "north": "tall"
+        "east": "low"
       }
     },
     {
@@ -58,22 +39,41 @@
     },
     {
       "apply": {
-        "model": "create:block/polished_cut_asurine_wall_side_tall",
-        "uvlock": true,
-        "y": 180
-      },
-      "when": {
-        "south": "tall"
-      }
-    },
-    {
-      "apply": {
         "model": "create:block/polished_cut_asurine_wall_side",
         "uvlock": true,
         "y": 270
       },
       "when": {
         "west": "low"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/polished_cut_asurine_wall_side_tall",
+        "uvlock": true
+      },
+      "when": {
+        "north": "tall"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/polished_cut_asurine_wall_side_tall",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "east": "tall"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/polished_cut_asurine_wall_side_tall",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "south": "tall"
       }
     },
     {

@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "P": {
-      "item": "create:cardboard"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "P": "create:cardboard",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "P",
@@ -15,7 +10,6 @@
     "S"
   ],
   "result": {
-    "count": 1,
     "id": "create:cardboard_sword"
   }
 }

@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "minecraft:exposed_cut_copper_slab"
-    },
-    {
-      "item": "minecraft:honeycomb_block"
-    }
+    "minecraft:exposed_cut_copper_slab",
+    "minecraft:honeycomb_block"
   ],
   "keep_held_item": true,
   "results": [

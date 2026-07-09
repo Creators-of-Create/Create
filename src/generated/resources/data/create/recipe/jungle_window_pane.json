@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "create:jungle_window"
-    }
+    "#": "create:jungle_window"
   },
   "pattern": [
     "###",

@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.item.LegacyItemTransferAdapter;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
@@ -32,9 +33,9 @@ public class CreativeCrateBlockEntity extends CrateBlockEntity implements Cleara
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-				Capabilities.ItemHandler.BLOCK,
+				Capabilities.Item.BLOCK,
 				AllBlockEntityTypes.CREATIVE_CRATE.get(),
-				(be, context) -> be.inv
+				(be, context) -> new LegacyItemTransferAdapter(be.inv)
 		);
 	}
 

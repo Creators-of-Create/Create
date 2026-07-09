@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.events;
 
-import com.simibubi.create.AllMapDecorationTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.trainmap.TrainMapSync;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
@@ -58,7 +57,6 @@ import com.simibubi.create.content.trains.observer.TrackObserverBlockEntity;
 import com.simibubi.create.content.trains.signal.SignalBlockEntity;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.foundation.data.RuntimeDataGenerator;
-import com.simibubi.create.foundation.map.StationMapDecorationRenderer;
 import com.simibubi.create.foundation.pack.DynamicPack;
 import com.simibubi.create.foundation.pack.DynamicPackSource;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
@@ -67,7 +65,7 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.TickBasedCache;
 import com.simibubi.create.infrastructure.command.AllCommands;
 
-import net.createmod.catnip.data.WorldAttached;
+import net.createmod.catnip.api.data.WorldAttached;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
@@ -81,9 +79,8 @@ import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.client.gui.map.RegisterMapDecorationRenderersEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -178,10 +175,10 @@ public class CommonEvents {
 	}
 
 	@SubscribeEvent
-	public static void addReloadListeners(AddReloadListenerEvent event) {
-		event.addListener(RecipeFinder.LISTENER);
-		event.addListener(RecipeTrieFinder.LISTENER);
-		event.addListener(BeltHelper.LISTENER);
+	public static void addReloadListeners(AddServerReloadListenersEvent event) {
+		event.addListener(Create.asResource("recipe_finder"), RecipeFinder.LISTENER);
+		event.addListener(Create.asResource("recipe_trie_finder"), RecipeTrieFinder.LISTENER);
+		event.addListener(Create.asResource("belt_helper"), BeltHelper.LISTENER);
 	}
 
 	@SubscribeEvent
@@ -259,11 +256,6 @@ public class CommonEvents {
 				RuntimeDataGenerator.insertIntoPack(dynamicPack);
 				event.addRepositorySource(new DynamicPackSource("create:dynamic_data", PackType.SERVER_DATA, Pack.Position.BOTTOM, dynamicPack));
 			}
-		}
-
-		@net.neoforged.bus.api.SubscribeEvent
-		public static void onRegisterMapDecorationRenderers(RegisterMapDecorationRenderersEvent event) {
-			event.register(AllMapDecorationTypes.STATION_MAP_DECORATION.value(), new StationMapDecorationRenderer());
 		}
 
 		@net.neoforged.bus.api.SubscribeEvent

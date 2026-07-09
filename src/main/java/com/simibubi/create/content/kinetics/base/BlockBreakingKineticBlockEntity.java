@@ -5,8 +5,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -14,7 +14,8 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -61,14 +62,14 @@ public abstract class BlockBreakingKineticBlockEntity extends KineticBlockEntity
 		compound.putInt("Progress", destroyProgress);
 		compound.putInt("NextTick", ticksUntilNextProgress);
 		if (breakingPos != null)
-			compound.put("Breaking", NbtUtils.writeBlockPos(breakingPos));
+			compound.put("Breaking", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(breakingPos));
 		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		destroyProgress = compound.getInt("Progress");
-		ticksUntilNextProgress = compound.getInt("NextTick");
+		destroyProgress = compound.getIntOr("Progress", 0);
+		ticksUntilNextProgress = compound.getIntOr("NextTick", 0);
 		breakingPos = null;
 		if (compound.contains("Breaking"))
 			breakingPos = NBTHelper.readBlockPos(compound, "Breaking");
@@ -78,7 +79,7 @@ public abstract class BlockBreakingKineticBlockEntity extends KineticBlockEntity
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		if (!level.isClientSide && destroyProgress != 0)
+		if (!level.isClientSide() && destroyProgress != 0)
 			level.destroyBlockProgress(breakerId, breakingPos, -1);
 	}
 
@@ -86,7 +87,7 @@ public abstract class BlockBreakingKineticBlockEntity extends KineticBlockEntity
 	public void tick() {
 		super.tick();
 
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		if (!shouldRun())
 			return;
@@ -137,12 +138,12 @@ public abstract class BlockBreakingKineticBlockEntity extends KineticBlockEntity
 	}
 
 	public void onBlockBroken(BlockState stateToBreak) {
-		Vec3 vec = VecHelper.offsetRandomly(VecHelper.getCenterOf(breakingPos), level.random, .125f);
+		Vec3 vec = VecHelper.offsetRandomly(VecHelper.getCenterOf(breakingPos), level.getRandom(), .125f);
 		BlockHelper.destroyBlock(level, breakingPos, 1f, (stack) -> {
 			if (stack.isEmpty())
 				return;
-			if (!level.getGameRules()
-				.getBoolean(GameRules.RULE_DOBLOCKDROPS))
+			if (level instanceof ServerLevel serverLevel && !serverLevel.getGameRules()
+				.get(GameRules.BLOCK_DROPS))
 				return;
 			if (level.restoringBlockSnapshots)
 				return;

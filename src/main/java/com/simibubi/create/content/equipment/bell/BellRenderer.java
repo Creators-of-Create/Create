@@ -3,11 +3,11 @@ package com.simibubi.create.content.equipment.bell;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.math.AngleHelper;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -37,7 +37,7 @@ public class BellRenderer<BE extends AbstractBellBlockEntity> extends SafeBlockE
 		bell.rotateCentered(AngleHelper.rad(rY), Direction.UP);
 
 		bell.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutout()));
+			.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutout()));
 	}
 
 	public static float getSwingAngle(float time) {

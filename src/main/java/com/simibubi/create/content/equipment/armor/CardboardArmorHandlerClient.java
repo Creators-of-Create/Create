@@ -10,7 +10,7 @@ import com.simibubi.create.content.logistics.box.PackageRenderer;
 import com.simibubi.create.foundation.utility.TickBasedCache;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -45,50 +45,12 @@ public class CardboardArmorHandlerClient {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void playerRendersAsBoxWhenSneaking(RenderPlayerEvent.Pre event) {
-		Player player = event.getEntity();
-		if (!CardboardArmorHandler.testForStealth(player))
-			return;
-
-		event.setCanceled(true);
-
-		if (player == Minecraft.getInstance().player
-			&& Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON)
-			return;
-
-		PoseStack ms = event.getPoseStack();
-		ms.pushPose();
-
-		Vec3 renderOffset = event.getRenderer().getRenderOffset((AbstractClientPlayer)player, event.getPartialTick());
-		ms.translate(0, -renderOffset.y, 0);
-
-		float movement = (float) player.position()
-			.subtract(player.xo, player.yo, player.zo)
-			.length();
-
-		if (player.onGround())
-			ms.translate(0,
-				Math.min(Math.abs(Mth.cos((AnimationTickHolder.getRenderTime() % 256) / 2.0f)) * -renderOffset.y, movement * 5),
-				0);
-
-		float interpolatedYaw = Mth.lerp(event.getPartialTick(), player.yRotO, player.getYRot());
-
-		float scale = player.getScale();
-		ms.scale(scale, scale, scale);
-
-		try {
-			PartialModel model = AllPartialModels.PACKAGES_TO_HIDE_AS.get(getCurrentBoxIndex(player));
-			PackageRenderer.renderBox(player, interpolatedYaw, ms, event.getMultiBufferSource(),
-				event.getPackedLight(), model);
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
-
-		ms.popPose();
+		// TODO 26.2: Rebuild cardboard player replacement against AvatarRenderState and SubmitNodeCollector.
 	}
 
 	private static Integer getCurrentBoxIndex(Player player) throws ExecutionException {
 		return BOXES_PLAYERS_ARE_HIDING_AS.get(player.getUUID(),
-			() -> player.level().random.nextInt(AllPartialModels.PACKAGES_TO_HIDE_AS.size()));
+			() -> player.level().getRandom().nextInt(AllPartialModels.PACKAGES_TO_HIDE_AS.size()));
 	}
 
 }

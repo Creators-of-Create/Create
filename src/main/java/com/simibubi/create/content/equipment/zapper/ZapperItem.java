@@ -1,36 +1,32 @@
 package com.simibubi.create.content.equipment.zapper;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.item.CustomArmPoseItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.LegacyBlockEntityTagBridge;
 
-import net.createmod.catnip.nbt.NBTProcessors;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.nbt.NBTProcessors;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.model.HumanoidModel.ArmPose;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
@@ -42,21 +38,19 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
-public abstract class ZapperItem extends Item implements CustomArmPoseItem {
+public abstract class ZapperItem extends Item {
 
 	public ZapperItem(Properties properties) {
 		super(properties.stacksTo(1));
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
+		Consumer<Component> tooltip, TooltipFlag flagIn) {
 		if (stack.has(AllDataComponents.SHAPER_BLOCK_USED)) {
 			MutableComponent usedBlock = stack.get(AllDataComponents.SHAPER_BLOCK_USED).getBlock().getName();
-			tooltip.add(CreateLang.translateDirect("terrainzapper.usingBlock", usedBlock.withStyle(ChatFormatting.GRAY))
+			tooltip.accept(CreateLang.translateDirect("terrainzapper.usingBlock", usedBlock.withStyle(ChatFormatting.GRAY))
 					.withStyle(ChatFormatting.DARK_GRAY));
 		}
 	}
@@ -79,14 +73,13 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 		// Shift -> open GUI
 		if (context.getPlayer() != null && context.getPlayer()
 			.isShiftKeyDown()) {
-			if (context.getLevel().isClientSide) {
+			if (context.getLevel().isClientSide()) {
 				CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> {
 					openHandgunGUI(context.getItemInHand(), context.getHand());
 				});
 				context.getPlayer()
 					.getCooldowns()
-					.addCooldown(context.getItemInHand()
-						.getItem(), 10);
+					.addCooldown(context.getItemInHand(), 10);
 			}
 			return InteractionResult.SUCCESS;
 		}
@@ -94,32 +87,32 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+	public InteractionResult use(Level world, Player player, InteractionHand hand) {
 		ItemStack item = player.getItemInHand(hand);
 		boolean mainHand = hand == InteractionHand.MAIN_HAND;
 
 		// Shift -> Open GUI
 		if (player.isShiftKeyDown()) {
-			if (world.isClientSide) {
+			if (world.isClientSide()) {
 				CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> {
 					openHandgunGUI(item, hand);
 				});
 				player.getCooldowns()
-					.addCooldown(item.getItem(), 10);
+					.addCooldown(item, 10);
 			}
-			return new InteractionResultHolder<>(InteractionResult.SUCCESS, item);
+			return InteractionResult.SUCCESS.heldItemTransformedTo(item);
 		}
 
 		if (ShootableGadgetItemMethods.shouldSwap(player, item, hand, this::isZapper))
-			return new InteractionResultHolder<>(InteractionResult.FAIL, item);
+			return InteractionResult.FAIL;
 
 		// Check if can be used
 		Component msg = validateUsage(item);
 		if (msg != null) {
 			AllSoundEvents.DENY.play(world, player, player.blockPosition());
-			player.displayClientMessage(msg.plainCopy()
-				.withStyle(ChatFormatting.RED), true);
-			return new InteractionResultHolder<>(InteractionResult.FAIL, item);
+			player.sendOverlayMessage(msg.plainCopy()
+				.withStyle(ChatFormatting.RED));
+			return InteractionResult.FAIL;
 		}
 
 		BlockState stateToUse = Blocks.AIR.defaultBlockState();
@@ -144,16 +137,16 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 		// No target
 		if (pos == null || stateReplaced.getBlock() == Blocks.AIR) {
 			ShootableGadgetItemMethods.applyCooldown(player, item, hand, this::isZapper, getCooldownDelay(item));
-			return new InteractionResultHolder<>(InteractionResult.SUCCESS, item);
+			return InteractionResult.SUCCESS.heldItemTransformedTo(item);
 		}
 
 		// Find exact position of gun barrel for VFX
 		Vec3 barrelPos = ShootableGadgetItemMethods.getGunBarrelVec(player, mainHand, new Vec3(.35f, -0.1f, 1));
 
 		// Client side
-		if (world.isClientSide) {
-			CreateClient.ZAPPER_RENDER_HANDLER.dontAnimateItem(hand);
-			return new InteractionResultHolder<>(InteractionResult.SUCCESS, item);
+		if (world.isClientSide()) {
+			ZapperClient.dontAnimateItem(hand);
+			return InteractionResult.SUCCESS.heldItemTransformedTo(item);
 		}
 
 		// Server side
@@ -163,7 +156,7 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 				b -> new ZapperBeamPacket(barrelPos, hand, b, raytrace.getLocation()));
 		}
 
-		return new InteractionResultHolder<>(InteractionResult.SUCCESS, item);
+		return InteractionResult.SUCCESS.heldItemTransformedTo(item);
 	}
 
 	public Component validateUsage(ItemStack item) {
@@ -175,7 +168,6 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 	protected abstract boolean activate(Level world, Player player, ItemStack item, BlockState stateToUse,
 		BlockHitResult raytrace, CompoundTag data);
 
-	@OnlyIn(Dist.CLIENT)
 	protected abstract void openHandgunGUI(ItemStack item, InteractionHand hand);
 
 	protected abstract int getCooldownDelay(ItemStack item);
@@ -187,27 +179,18 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 	}
 
 	@Override
-	public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+	public boolean onEntitySwing(ItemStack stack, LivingEntity entity, InteractionHand hand) {
 		return true;
 	}
 
 	@Override
-	public boolean canAttackBlock(BlockState state, Level worldIn, BlockPos pos, Player player) {
+	public boolean canDestroyBlock(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, LivingEntity entity) {
 		return false;
 	}
 
 	@Override
-	public UseAnim getUseAnimation(ItemStack stack) {
-		return UseAnim.NONE;
-	}
-
-	@Override
-	@Nullable
-	public ArmPose getArmPose(ItemStack stack, AbstractClientPlayer player, InteractionHand hand) {
-		if (!player.swinging) {
-			return ArmPose.CROSSBOW_HOLD;
-		}
-		return null;
+	public ItemUseAnimation getUseAnimation(ItemStack stack) {
+		return ItemUseAnimation.NONE;
 	}
 
 	public static void setBlockEntityData(Level world, BlockPos pos, BlockState state, CompoundTag data, Player player) {
@@ -220,7 +203,7 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 				data.putInt("x", pos.getX());
 				data.putInt("y", pos.getY());
 				data.putInt("z", pos.getZ());
-				blockEntity.loadWithComponents(data, world.registryAccess());
+				blockEntity.loadWithComponents(LegacyBlockEntityTagBridge.input(data, world.registryAccess()));
 			}
 		}
 	}

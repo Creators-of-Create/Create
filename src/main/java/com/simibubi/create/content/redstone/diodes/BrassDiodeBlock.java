@@ -13,7 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -41,24 +41,24 @@ public class BrassDiodeBlock extends AbstractDiodeBlock implements IBE<BrassDiod
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		return toggle(level, pos, state, player, hand);
 	}
 
-	public ItemInteractionResult toggle(Level pLevel, BlockPos pPos, BlockState pState, Player player,
+	public InteractionResult toggle(Level pLevel, BlockPos pPos, BlockState pState, Player player,
 									InteractionHand pHand) {
 		if (!player.mayBuild())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (player.isShiftKeyDown())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (AllItems.WRENCH.isIn(player.getItemInHand(pHand)))
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-		if (pLevel.isClientSide)
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
+		if (pLevel.isClientSide())
+			return InteractionResult.SUCCESS;
 		pLevel.setBlock(pPos, pState.cycle(INVERTED), Block.UPDATE_ALL);
 		float f = !pState.getValue(INVERTED) ? 0.6F : 0.5F;
 		pLevel.playSound(null, pPos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
-		return ItemInteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override

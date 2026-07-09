@@ -1,9 +1,7 @@
 {
   "type": "create:haunting",
   "ingredients": [
-    {
-      "item": "create:peculiar_bell"
-    }
+    "create:peculiar_bell"
   ],
   "results": [
     {

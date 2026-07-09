@@ -21,10 +21,10 @@ import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.utility.TickBasedCache;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.codecs.stream.CatnipLargerStreamCodecs;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.data.codec.stream.CatnipLargerStreamCodecs;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -153,7 +153,8 @@ public class TrainMapSync {
 		boolean sendImmediately = requestingPlayers.getIfPresent(sender.getUUID()) == null;
 		requestingPlayers.put(sender.getUUID(), new WeakReference<>(sender));
 		if (sendImmediately)
-			send(sender.server, false);
+			send(sender.level()
+				.getServer(), false);
 	}
 
 	public static void serverTick(ServerTickEvent event) {

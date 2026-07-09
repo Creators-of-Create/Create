@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:leather_horse_armor"
-    }
+    "minecraft:leather_horse_armor"
   ],
   "processing_time": 200,
   "results": [

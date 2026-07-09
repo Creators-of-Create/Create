@@ -13,10 +13,10 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.DyeHelper;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -101,8 +101,8 @@ public class ContraptionControlsBlockEntity extends SmartBlockEntity implements 
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
-		disabled = tag.getBoolean("Disabled");
-		powered = tag.getBoolean("Powered");
+		disabled = tag.getBooleanOr("Disabled", false);
+		powered = tag.getBooleanOr("Powered", false);
 	}
 
 	@Override

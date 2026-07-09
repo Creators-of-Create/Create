@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "minecraft:waxed_weathered_copper_trapdoor"
-    },
-    {
-      "tag": "minecraft:axes"
-    }
+    "minecraft:waxed_weathered_copper_trapdoor",
+    "#minecraft:axes"
   ],
   "keep_held_item": true,
   "results": [

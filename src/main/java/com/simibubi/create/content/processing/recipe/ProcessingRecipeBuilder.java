@@ -2,6 +2,7 @@ package com.simibubi.create.content.processing.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.google.common.base.Joiner;
 import com.simibubi.create.Create;
@@ -11,9 +12,13 @@ import com.simibubi.create.foundation.data.SimpleDatagenIngredient;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -31,12 +36,12 @@ import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, R extends ProcessingRecipe<?, P>, S extends ProcessingRecipeBuilder<P, R, S>> {
-	protected ResourceLocation recipeId;
+	protected Identifier recipeId;
 	protected Factory<P, R> factory;
 	protected P params;
 	protected List<ICondition> recipeConditions;
 
-	public ProcessingRecipeBuilder(Factory<P, R> factory, ResourceLocation recipeId) {
+	public ProcessingRecipeBuilder(Factory<P, R> factory, Identifier recipeId) {
 		this.recipeId = recipeId;
 		this.factory = factory;
 		this.params = createParams();
@@ -48,7 +53,10 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 	public abstract S self();
 
 	public S withItemIngredients(Ingredient... ingredients) {
-		return withItemIngredients(NonNullList.of(Ingredient.EMPTY, ingredients));
+		NonNullList<Ingredient> list = NonNullList.create();
+		for (Ingredient ingredient : ingredients)
+			list.add(ingredient);
+		return withItemIngredients(list);
 	}
 
 	public S withItemIngredients(NonNullList<Ingredient> ingredients) {
@@ -70,7 +78,10 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 	}
 
 	public S withFluidIngredients(SizedFluidIngredient... ingredients) {
-		return withFluidIngredients(NonNullList.of(new SizedFluidIngredient(FluidIngredient.empty(), 1000), ingredients));
+		NonNullList<SizedFluidIngredient> list = NonNullList.create();
+		for (SizedFluidIngredient ingredient : ingredients)
+			list.add(ingredient);
+		return withFluidIngredients(list);
 	}
 
 	public S withFluidIngredients(NonNullList<SizedFluidIngredient> ingredients) {
@@ -83,7 +94,11 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 	}
 
 	public S withFluidOutputs(NonNullList<FluidStack> outputs) {
-		params.fluidResults = outputs;
+		NonNullList<ProcessingFluidOutput> converted = NonNullList.create();
+		outputs.stream()
+			.map(ProcessingFluidOutput::new)
+			.forEach(converted::add);
+		params.fluidResults = converted;
 		return self();
 	}
 
@@ -108,20 +123,20 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 	public void build(RecipeOutput consumer) {
 		R recipe = build();
 		IRecipeTypeInfo recipeType = recipe.getTypeInfo();
-		ResourceLocation typeId = recipeType.getId();
-		ResourceLocation id = recipeId.withPrefix(typeId.getPath() + "/");
+		Identifier typeId = recipeType.getId();
+		Identifier id = recipeId.withPrefix(typeId.getPath() + "/");
 		var errors = recipe.validate();
 		if (!errors.isEmpty()) {
 			errors.add(recipe.getClass().getSimpleName() + "with id " + id + " failed validation:");
 			Create.LOGGER.warn(Joiner.on('\n').join(errors));
 		}
-		consumer.accept(id, recipe, null, recipeConditions.toArray(new ICondition[0]));
+		consumer.accept(ResourceKey.create(Registries.RECIPE, id), recipe, null, recipeConditions.toArray(new ICondition[0]));
 	}
 
 	// Datagen shortcuts
 
 	public S require(TagKey<Item> tag) {
-		return require(Ingredient.of(tag));
+		return require(Ingredient.of(HolderSet.emptyNamed(BuiltInRegistries.ITEM, tag)));
 	}
 
 	public S require(ItemLike item) {
@@ -149,7 +164,7 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 	}
 
 	public S require(TagKey<Fluid> fluidTag, int amount) {
-		return require(SizedFluidIngredient.of(fluidTag, amount));
+		return require(new SizedFluidIngredient(FluidIngredient.of(HolderSet.emptyNamed(BuiltInRegistries.FLUID, fluidTag)), amount));
 	}
 
 	public S require(SizedFluidIngredient ingredient) {
@@ -185,7 +200,7 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 		return output(new ProcessingOutput(mod.asResource(id), amount, chance));
 	}
 
-	public S output(ResourceLocation id) {
+	public S output(Identifier id) {
 		return output(1, id, 1);
 	}
 
@@ -193,7 +208,7 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 		return output(1, mod.asResource(id), 1);
 	}
 
-	public S output(float chance, ResourceLocation registryName, int amount) {
+	public S output(float chance, Identifier registryName, int amount) {
 		return output(new ProcessingOutput(registryName, amount, chance));
 	}
 
@@ -208,7 +223,7 @@ public abstract class ProcessingRecipeBuilder<P extends ProcessingRecipeParams, 
 	}
 
 	public S output(FluidStack fluidStack) {
-		params.fluidResults.add(fluidStack);
+		params.fluidResults.add(new ProcessingFluidOutput(fluidStack));
 		return self();
 	}
 

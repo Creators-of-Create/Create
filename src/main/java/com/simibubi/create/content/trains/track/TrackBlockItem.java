@@ -7,8 +7,8 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.content.trains.track.TrackPlacement.PlacementInfo;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -17,7 +17,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +30,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -44,7 +42,7 @@ public class TrackBlockItem extends BlockItem {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+	public InteractionResult use(Level level, Player player, InteractionHand usedHand) {
 		ItemStack stack = player.getItemInHand(usedHand);
 		if (player.isShiftKeyDown() && isFoil(stack)) {
 			return clearSelection(stack, level, player);
@@ -71,16 +69,16 @@ public class TrackBlockItem extends BlockItem {
 		if (!isFoil(stack)) {
 			if (state.getBlock() instanceof TrackBlock track && track.getTrackAxes(level, pos, state)
 				.size() > 1) {
-				if (!level.isClientSide)
-					player.displayClientMessage(CreateLang.translateDirect("track.junction_start")
-						.withStyle(ChatFormatting.RED), true);
+				if (!level.isClientSide())
+					player.sendSystemMessage(CreateLang.translateDirect("track.junction_start")
+						.withStyle(ChatFormatting.RED));
 				return InteractionResult.SUCCESS;
 			}
 
 			if (level.getBlockEntity(pos) instanceof TrackBlockEntity tbe && tbe.isTilted()) {
-				if (!level.isClientSide)
-					player.displayClientMessage(CreateLang.translateDirect("track.turn_start")
-						.withStyle(ChatFormatting.RED), true);
+				if (!level.isClientSide())
+					player.sendSystemMessage(CreateLang.translateDirect("track.turn_start")
+						.withStyle(ChatFormatting.RED));
 				return InteractionResult.SUCCESS;
 			}
 
@@ -90,7 +88,7 @@ public class TrackBlockItem extends BlockItem {
 			}
 			return super.useOn(pContext);
 		} else if (player.isShiftKeyDown()) {
-			return clearSelection(stack, level, player).getResult();
+			return clearSelection(stack, level, player);
 		}
 
 		boolean placing = !(state.getBlock() instanceof ITrackBlock);
@@ -109,14 +107,14 @@ public class TrackBlockItem extends BlockItem {
 		boolean hasGirder = AllBlocks.METAL_GIRDER.isIn(offhandItem);
 		PlacementInfo info = TrackPlacement.tryConnect(level, player, pos, state, stack, hasGirder, extend);
 
-		if (info.message != null && !level.isClientSide)
-			player.displayClientMessage(CreateLang.translateDirect(info.message), true);
+		if (info.message != null && !level.isClientSide())
+			player.sendSystemMessage(CreateLang.translateDirect(info.message));
 		if (!info.valid) {
 			AllSoundEvents.DENY.playFrom(player, 1, 1);
 			return InteractionResult.FAIL;
 		}
 
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return InteractionResult.SUCCESS;
 
 		stack = player.getMainHandItem();
@@ -134,14 +132,14 @@ public class TrackBlockItem extends BlockItem {
 		return InteractionResult.SUCCESS;
 	}
 
-	public static InteractionResultHolder<ItemStack> clearSelection(ItemStack stack, Level level, Player player) {
-		if (level.isClientSide) {
+	public static InteractionResult clearSelection(ItemStack stack, Level level, Player player) {
+		if (level.isClientSide()) {
 			level.playSound(player, player.blockPosition(), SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.75f, 1.0f);
 		} else {
-			player.displayClientMessage(CreateLang.translateDirect("track.selection_cleared"), true);
+			player.sendSystemMessage(CreateLang.translateDirect("track.selection_cleared"));
 			stack.remove(AllDataComponents.TRACK_CONNECTING_FROM);
 		}
-		return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+		return InteractionResult.SUCCESS.heldItemTransformedTo(stack);
 	}
 
 	public BlockState getPlacementState(UseOnContext pContext) {
@@ -166,15 +164,14 @@ public class TrackBlockItem extends BlockItem {
 	}
 
 	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
 	public static void sendExtenderPacket(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack stack = event.getItemStack();
-		if (!event.getLevel().isClientSide)
+		if (!event.getLevel().isClientSide())
 			return;
 		if (!AllTags.AllBlockTags.TRACKS.matches(stack))
 			return;
 		if (Minecraft.getInstance().options.keySprint.isDown())
-			CatnipServices.NETWORK.sendToServer(new PlaceExtendedCurvePacket(event.getHand() == InteractionHand.MAIN_HAND, true));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new PlaceExtendedCurvePacket(event.getHand() == InteractionHand.MAIN_HAND, true));
 	}
 
 	@Override

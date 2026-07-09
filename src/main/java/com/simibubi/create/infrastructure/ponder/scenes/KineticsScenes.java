@@ -17,13 +17,13 @@ import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -1035,7 +1035,7 @@ public class KineticsScenes {
 
 		scene.addKeyframe();
 		scene.overlay().showControls(topOf, Pointing.DOWN, 40).rightClick()
-			.withItem(new ItemStack(Items.BLUE_DYE));
+			.withItem(new ItemStack(Items.DYE.blue()));
 		scene.idle(7);
 		scene.world().modifyBlock(valvePos, s -> AllBlocks.DYED_VALVE_HANDLES.get(DyeColor.BLUE)
 			.getDefaultState()

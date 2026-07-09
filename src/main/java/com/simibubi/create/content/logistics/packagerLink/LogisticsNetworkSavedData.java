@@ -4,24 +4,30 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.mojang.serialization.Codec;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.utility.GlobalRegistryAccess;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 
 public class LogisticsNetworkSavedData extends SavedData {
 
+	private static final SavedDataType<LogisticsNetworkSavedData> TYPE =
+		new SavedDataType<>(Create.asResource("create_logistics"), level -> new LogisticsNetworkSavedData(),
+			level -> codec(level.registryAccess()));
+
 	private Map<UUID, LogisticsNetwork> logisticsNetworks = new HashMap<>();
 
-	public static SavedData.Factory<LogisticsNetworkSavedData> factory() {
-		return new SavedData.Factory<>(LogisticsNetworkSavedData::new, LogisticsNetworkSavedData::load);
+	private static Codec<LogisticsNetworkSavedData> codec(HolderLookup.Provider registries) {
+		return CompoundTag.CODEC.xmap(tag -> load(tag, registries), data -> data.save(new CompoundTag(), registries));
 	}
 
-	@Override
 	public CompoundTag save(CompoundTag nbt, HolderLookup.Provider registries) {
 		GlobalLogisticsManager logistics = Create.LOGISTICS;
 		nbt.put("LogisticsNetworks",
@@ -32,7 +38,7 @@ public class LogisticsNetworkSavedData extends SavedData {
 	private static LogisticsNetworkSavedData load(CompoundTag nbt, HolderLookup.Provider registries) {
 		LogisticsNetworkSavedData sd = new LogisticsNetworkSavedData();
 		sd.logisticsNetworks = new HashMap<>();
-		NBTHelper.iterateCompoundList(nbt.getList("LogisticsNetworks", Tag.TAG_COMPOUND), c -> {
+		NBTHelper.iterateCompoundList(nbt.getListOrEmpty("LogisticsNetworks"), c -> {
 			LogisticsNetwork network = LogisticsNetwork.read(c, registries);
 			sd.logisticsNetworks.put(network.id, network);
 		});
@@ -48,7 +54,7 @@ public class LogisticsNetworkSavedData extends SavedData {
 	public static LogisticsNetworkSavedData load(MinecraftServer server) {
 		return server.overworld()
 			.getDataStorage()
-			.computeIfAbsent(factory(), "create_logistics");
+			.computeIfAbsent(TYPE);
 	}
 
 }

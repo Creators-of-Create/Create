@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:wither_rose"
-    }
+    "minecraft:wither_rose"
   ],
   "processing_time": 50,
   "results": [

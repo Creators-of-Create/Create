@@ -10,12 +10,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.server.level.ServerPlayer;
 
-@MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class SimpleCreateTrigger extends CriterionTriggerBase<SimpleCreateTrigger.Instance> {
 	public SimpleCreateTrigger(String id) {
@@ -23,7 +21,7 @@ public class SimpleCreateTrigger extends CriterionTriggerBase<SimpleCreateTrigge
 	}
 
 	public void trigger(ServerPlayer player) {
-		super.trigger(player, null);
+		super.trigger(player, (List<Supplier<Object>>) null);
 	}
 
 	public SimpleCreateTrigger.Instance instance() {

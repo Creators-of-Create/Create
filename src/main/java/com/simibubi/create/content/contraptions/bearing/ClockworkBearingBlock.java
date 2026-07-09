@@ -6,7 +6,7 @@ import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -22,13 +22,13 @@ public class ClockworkBearingBlock extends BearingBlock implements IBE<Clockwork
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!player.mayBuild())
-			return ItemInteractionResult.FAIL;
+			return InteractionResult.FAIL;
 		if (player.isShiftKeyDown())
-			return ItemInteractionResult.FAIL;
+			return InteractionResult.FAIL;
 		if (stack.isEmpty()) {
-			if (!level.isClientSide) {
+			if (!level.isClientSide()) {
 				withBlockEntityDo(level, pos, be -> {
 					if (be.running) {
 						be.disassemble();
@@ -37,9 +37,9 @@ public class ClockworkBearingBlock extends BearingBlock implements IBE<Clockwork
 					be.assembleNextTick = true;
 				});
 			}
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class ClockworkBearingBlock extends BearingBlock implements IBE<Clockwork
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		InteractionResult resultType = super.onWrenched(state, context);
-		if (!context.getLevel().isClientSide && resultType.consumesAction())
+		if (!context.getLevel().isClientSide() && resultType.consumesAction())
 			withBlockEntityDo(context.getLevel(), context.getClickedPos(), ClockworkBearingBlockEntity::disassemble);
 		return resultType;
 	}

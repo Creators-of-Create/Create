@@ -10,13 +10,12 @@ import com.simibubi.create.content.trains.track.TrackTargetingBehaviour.Rendered
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import dev.engine_room.flywheel.lib.transform.Transform;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -83,7 +82,7 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 		PartialModel assemblyOverlay = track.prepareAssemblyOverlay(level, targetPosition, trackState, direction, ms);
 		int colorWhenValid = 0x96B5FF;
 		int colorWhenCarriage = 0xCAFF96;
-		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
+		VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped());
 
 		currentPos.move(direction, 1);
 		ms.translate(0, 0, 1);
@@ -98,7 +97,7 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 				}
 
 			if (valid != -1) {
-				int lightColor = LevelRenderer.getLightColor(level, currentPos);
+				int lightColor = com.simibubi.create.foundation.render.LegacyLightTexture.getLightColor(level, currentPos);
 				SuperByteBuffer sbb = CachedBuffers.partial(assemblyOverlay, trackState);
 				sbb.color(valid);
 				sbb.light(lightColor);
@@ -121,10 +120,10 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 			.rotateYDegrees(be.flagFlipped ? 0 : 180)
 			.translate(-0.5f / 16, 0, 0)
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+			.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped()));
 	}
 
-	public static void transformFlag(Transform<?> flag, StationBlockEntity be, float partialTicks, int yRot,
+	public static void transformFlag(SuperByteBuffer flag, StationBlockEntity be, float partialTicks, int yRot,
 									 boolean flipped) {
 		float value = be.flag.getValue(partialTicks);
 		float progress = (float) (Math.pow(Math.min(value * 5, 1), 2));
@@ -142,7 +141,7 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(StationBlockEntity pBlockEntity) {
+	public boolean shouldRenderOffScreen() {
 		return true;
 	}
 

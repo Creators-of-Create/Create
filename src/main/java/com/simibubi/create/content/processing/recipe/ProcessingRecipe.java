@@ -12,7 +12,6 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -20,7 +19,10 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -28,7 +30,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
-@MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public abstract class ProcessingRecipe<I extends RecipeInput, P extends ProcessingRecipeParams> implements Recipe<I> {
 
@@ -36,12 +37,12 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 	protected NonNullList<Ingredient> ingredients;
 	protected NonNullList<ProcessingOutput> results;
 	protected NonNullList<SizedFluidIngredient> fluidIngredients;
-	protected NonNullList<FluidStack> fluidResults;
+	protected NonNullList<ProcessingFluidOutput> fluidResults;
 	protected int processingDuration;
 	protected HeatCondition requiredHeat;
 
-	private RecipeType<?> type;
-	private RecipeSerializer<?> serializer;
+	private RecipeType<? extends Recipe<I>> type;
+	private RecipeSerializer<? extends Recipe<I>> serializer;
 	private IRecipeTypeInfo typeInfo;
 	private Supplier<ItemStack> forcedResult;
 
@@ -118,7 +119,6 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 		return params;
 	}
 
-	@Override
 	public NonNullList<Ingredient> getIngredients() {
 		return ingredients;
 	}
@@ -132,7 +132,11 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 	}
 
 	public NonNullList<FluidStack> getFluidResults() {
-		return fluidResults;
+		NonNullList<FluidStack> results = NonNullList.create();
+		fluidResults.stream()
+			.map(ProcessingFluidOutput::getStack)
+			.forEach(results::add);
+		return results;
 	}
 
 	public List<ItemStack> getRollableResultsAsItemStacks() {
@@ -171,16 +175,14 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 	// IRecipe<> paperwork
 
 	@Override
-	public ItemStack assemble(I t, HolderLookup.Provider provider) {
-		return getResultItem(provider);
+	public ItemStack assemble(I t) {
+		return getResultItem(null);
 	}
 
-	@Override
 	public boolean canCraftInDimensions(int width, int height) {
 		return true;
 	}
 
-	@Override
 	public ItemStack getResultItem(HolderLookup.Provider provider) {
 		return getRollableResults().isEmpty() ? ItemStack.EMPTY
 				: getRollableResults().getFirst()
@@ -194,17 +196,32 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 
 	// Processing recipes do not show up in the recipe book
 	@Override
-	public String getGroup() {
+	public String group() {
 		return "processing";
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public boolean showNotification() {
+		return false;
+	}
+
+	@Override
+	public PlacementInfo placementInfo() {
+		return PlacementInfo.NOT_PLACEABLE;
+	}
+
+	@Override
+	public RecipeBookCategory recipeBookCategory() {
+		return RecipeBookCategories.CRAFTING_MISC;
+	}
+
+	@Override
+	public RecipeSerializer<? extends Recipe<I>> getSerializer() {
 		return serializer;
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<? extends Recipe<I>> getType() {
 		return type;
 	}
 

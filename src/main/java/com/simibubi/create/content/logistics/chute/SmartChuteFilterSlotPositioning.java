@@ -2,8 +2,8 @@ package com.simibubi.create.content.logistics.chute;
 
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;

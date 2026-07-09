@@ -8,16 +8,15 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.CreateClient;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public record SignalEdgeGroupPacket(List<UUID> ids, List<EdgeGroupColor> colors, boolean add) implements ClientboundPacketPayload {
 	public static final StreamCodec<FriendlyByteBuf, SignalEdgeGroupPacket> STREAM_CODEC = StreamCodec.composite(
@@ -32,8 +31,7 @@ public record SignalEdgeGroupPacket(List<UUID> ids, List<EdgeGroupColor> colors,
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void handle(LocalPlayer player) {
+	public void handle(Player player) {
 		Map<UUID, SignalEdgeGroup> signalEdgeGroups = CreateClient.RAILWAYS.signalEdgeGroups;
 		for (int i = 0; i < ids.size(); i++) {
 			UUID id = ids.get(i);

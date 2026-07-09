@@ -38,7 +38,8 @@ public class ReducedDestroyEffects implements IClientBlockExtensions {
 			for (int xIndex = 0; xIndex < xParts; ++xIndex) {
 				for (int yIndex = 0; yIndex < yParts; ++yIndex) {
 					for (int zIndex = 0; zIndex < zParts; ++zIndex) {
-						if (world.random.nextDouble() > chance)
+						if (world.getRandom()
+							.nextDouble() > chance)
 							continue;
 
 						double d4 = (xIndex + .5) / xParts;

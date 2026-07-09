@@ -11,9 +11,9 @@ import com.simibubi.create.api.contraption.transformable.TransformableBlock;
 import com.simibubi.create.api.contraption.transformable.TransformableBlockEntity;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecs;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -32,7 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BellAttachType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.SlabType;
@@ -183,7 +183,7 @@ public class StructureTransform {
 		}
 
 		if (block instanceof FaceAttachedHorizontalDirectionalBlock) {
-			DirectionProperty facingProperty = FaceAttachedHorizontalDirectionalBlock.FACING;
+			EnumProperty<Direction> facingProperty = FaceAttachedHorizontalDirectionalBlock.FACING;
 			EnumProperty<AttachFace> faceProperty = FaceAttachedHorizontalDirectionalBlock.FACE;
 			Direction stateFacing = state.getValue(facingProperty);
 			AttachFace stateFace = state.getValue(faceProperty);

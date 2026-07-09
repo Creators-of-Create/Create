@@ -12,13 +12,15 @@ import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.mixin.accessor.FlowingFluidAccessor;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.math.BlockFace;
+import net.createmod.catnip.api.math.BlockFace;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
@@ -93,18 +95,25 @@ public class OpenEndedPipe extends FlowSource {
 
 	public CompoundTag serializeNBT(HolderLookup.Provider registries) {
 		CompoundTag compound = new CompoundTag();
-		fluidHandler.writeToNBT(registries, compound);
+		compound.merge(com.simibubi.create.foundation.utility.LegacyFluidNbtBridge.serializeTank(fluidHandler, registries));
 		compound.putBoolean("Pulling", wasPulling);
-		compound.put("Location", location.serializeNBT());
+		CompoundTag locationTag = new CompoundTag();
+		locationTag.put("Pos", LegacyNbtUtilsBridge.writeBlockPos(location.getPos()));
+		locationTag.putString("Face", location.getFace().getName());
+		compound.put("Location", locationTag);
 		return compound;
 	}
 
 	public static OpenEndedPipe fromNBT(CompoundTag compound, HolderLookup.Provider registries, BlockPos blockEntityPos) {
-		BlockFace fromNBT = BlockFace.fromNBT(compound.getCompound("Location"));
+		CompoundTag locationTag = compound.getCompoundOrEmpty("Location");
+		Direction face = Direction.byName(locationTag.getStringOr("Face", Direction.DOWN.getName()));
+		if (face == null)
+			face = Direction.DOWN;
+		BlockFace fromNBT = new BlockFace(LegacyNbtUtilsBridge.readBlockPos(locationTag.get("Pos")), face);
 		OpenEndedPipe oep = new OpenEndedPipe(new BlockFace(blockEntityPos, fromNBT.getFace()));
 
-		oep.fluidHandler.readFromNBT(registries, compound);
-		oep.wasPulling = compound.getBoolean("Pulling");
+		com.simibubi.create.foundation.utility.LegacyFluidNbtBridge.deserializeTank(oep.fluidHandler, registries, compound);
+		oep.wasPulling = compound.getBooleanOr("Pulling", false);
 		return oep;
 	}
 
@@ -149,8 +158,8 @@ public class OpenEndedPipe extends FlowSource {
 
 			var newFluidState = newState.getFluidState();
 
-			if (newFluidState.getType() instanceof FlowingFluidAccessor flowing) {
-				var potentiallyFilled = flowing.create$getNewLiquid(world, outputPos, newState);
+			if (newFluidState.getType() instanceof FlowingFluidAccessor flowing && world instanceof ServerLevel serverLevel) {
+				var potentiallyFilled = flowing.create$getNewLiquid(serverLevel, outputPos, newState);
 
 				// Check if we'd immediately become the same fluid again.
 				if (potentiallyFilled.equals(fluidState)) {
@@ -199,13 +208,12 @@ public class OpenEndedPipe extends FlowSource {
 		if (!AllConfigs.server().fluids.pipesPlaceFluidSourceBlocks.get())
 			return true;
 
-		if (world.dimensionType()
-			.ultraWarm() && FluidHelper.isTag(fluid, FluidTags.WATER)) {
+		if (vaporizesWater() && FluidHelper.isTag(fluid, FluidTags.WATER)) {
 			int i = outputPos.getX();
 			int j = outputPos.getY();
 			int k = outputPos.getZ();
 			world.playSound(null, i, j, k, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
-				2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
+				2.6F + (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.8F);
 			return true;
 		}
 
@@ -219,6 +227,11 @@ public class OpenEndedPipe extends FlowSource {
 			.defaultFluidState()
 			.createLegacyBlock(), Block.UPDATE_ALL);
 		return true;
+	}
+
+	private boolean vaporizesWater() {
+		// TODO 26.2: Reconnect to the replacement for DimensionType#ultraWarm.
+		return false;
 	}
 
 	private class OpenEndFluidHandler extends FluidTank {

@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "create:cherry_window"
-    }
+    "#": "create:cherry_window"
   },
   "pattern": [
     "###",

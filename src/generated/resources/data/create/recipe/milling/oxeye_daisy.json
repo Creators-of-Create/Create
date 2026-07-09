@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:oxeye_daisy"
-    }
+    "minecraft:oxeye_daisy"
   ],
   "processing_time": 50,
   "results": [

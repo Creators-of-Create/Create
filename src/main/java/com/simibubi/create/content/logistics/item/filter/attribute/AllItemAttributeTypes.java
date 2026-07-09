@@ -17,6 +17,7 @@ import com.simibubi.create.content.logistics.item.filter.attribute.attributes.In
 import com.simibubi.create.content.logistics.item.filter.attribute.attributes.InTagAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.attributes.ItemNameAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.attributes.ShulkerFillLevelAttribute;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerItemAdapter;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
@@ -24,24 +25,22 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Equipable;
+import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
-
-import net.neoforged.neoforge.capabilities.Capabilities;
 
 // TODO - Documentation
 public class AllItemAttributeTypes {
 	public static final ItemAttributeType
 		PLACEABLE = singleton("placeable", s -> s.getItem() instanceof BlockItem),
 		CONSUMABLE = singleton("consumable", s -> s.has(DataComponents.FOOD)),
-		FLUID_CONTAINER = singleton("fluid_container", s -> s.getCapability(Capabilities.FluidHandler.ITEM) != null),
+		FLUID_CONTAINER = singleton("fluid_container", s -> LegacyFluidHandlerItemAdapter.of(s) != null),
 		ENCHANTED = singleton("enchanted", ItemStack::isEnchanted),
 		MAX_ENCHANTED = singleton("max_enchanted", AllItemAttributeTypes::maxEnchanted),
 		RENAMED = singleton("renamed", s -> s.has(DataComponents.CUSTOM_NAME)),
@@ -49,11 +48,11 @@ public class AllItemAttributeTypes {
 		BADLY_DAMAGED = singleton("badly_damaged", s -> s.isDamaged() && (float) s.getDamageValue() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE = singleton("not_stackable", ((Predicate<ItemStack>) ItemStack::isStackable).negate()),
 		EQUIPABLE = singleton("equipable", s -> {
-			Equipable equipable = Equipable.get(s);
-			EquipmentSlot.Type type = equipable != null ? equipable.getEquipmentSlot().getType() : EquipmentSlot.MAINHAND.getType();
+			Equippable equipable = s.get(DataComponents.EQUIPPABLE);
+			EquipmentSlot.Type type = equipable != null ? equipable.slot().getType() : EquipmentSlot.MAINHAND.getType();
 			return type != EquipmentSlot.Type.HAND;
 		}),
-		FURNACE_FUEL = singleton("furnace_fuel", AbstractFurnaceBlockEntity::isFuel),
+		FURNACE_FUEL = singleton("furnace_fuel", (s, w) -> w.fuelValues().isFuel(s)),
 		WASHABLE = singleton("washable", AllFanProcessingTypes.SPLASHING::canProcess),
 		HAUNTABLE = singleton("hauntable", AllFanProcessingTypes.HAUNTING::canProcess),
 		CRUSHABLE = singleton("crushable", (s, w) -> testRecipe(s, w, AllRecipeTypes.CRUSHING.getType())
@@ -75,9 +74,10 @@ public class AllItemAttributeTypes {
 		BOOK_COPY = register("book_copy", new BookCopyAttribute.Type());
 
 	private static <T extends Recipe<SingleRecipeInput>> boolean testRecipe(ItemStack s, Level w, RecipeType<T> type) {
-		return w.getRecipeManager()
-				.getRecipeFor(type, new SingleRecipeInput(s.copy()), w)
+		if (w.recipeAccess() instanceof RecipeManager recipeManager)
+			return recipeManager.getRecipeFor(type, new SingleRecipeInput(s.copy()), w)
 				.isPresent();
+		return false;
 	}
 
 	private static boolean maxEnchanted(ItemStack s) {

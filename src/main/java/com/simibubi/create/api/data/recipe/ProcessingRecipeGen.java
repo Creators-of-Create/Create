@@ -14,10 +14,10 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
@@ -28,7 +28,7 @@ import net.minecraft.world.level.ItemLike;
  * Addons should usually extend {@link StandardProcessingRecipeGen} instead if the processing recipe uses
  * the base {@link ProcessingRecipeParams}.
  * For processing recipes that uses <b>CUSTOM</b> {@link ProcessingRecipeParams} like {@link ItemApplicationRecipe},
- * extend this class and override {@link #getRecipeType()} and {@link #getBuilder(ResourceLocation)},
+ * extend this class and override {@link #getRecipeType()} and {@link #getBuilder(Identifier)},
  * returning the corresponding recipe type and recipe builder.
  */
 public abstract class ProcessingRecipeGen<P extends ProcessingRecipeParams, R extends ProcessingRecipe<?, P>, B extends ProcessingRecipeBuilder<P, R, B>> extends BaseRecipeProvider {
@@ -45,7 +45,7 @@ public abstract class ProcessingRecipeGen<P extends ProcessingRecipeParams, R ex
 		GeneratedRecipe generatedRecipe = c -> {
 			ItemLike itemLike = singleIngredient.get();
 			transform
-				.apply(getBuilder(ResourceLocation.fromNamespaceAndPath(namespace, RegisteredObjectsHelper.getKeyOrThrow(itemLike.asItem()).getPath())).withItemIngredients(Ingredient.of(itemLike)))
+				.apply(getBuilder(Identifier.fromNamespaceAndPath(namespace, RegisteredObjectsHelper.getKeyOrThrow(itemLike.asItem()).getPath())).withItemIngredients(Ingredient.of(itemLike)))
 				.build(c);
 		};
 		all.add(generatedRecipe);
@@ -60,7 +60,7 @@ public abstract class ProcessingRecipeGen<P extends ProcessingRecipeParams, R ex
 		return create(Create.ID, singleIngredient, transform);
 	}
 
-	protected GeneratedRecipe createWithDeferredId(Supplier<ResourceLocation> name, UnaryOperator<B> transform) {
+	protected GeneratedRecipe createWithDeferredId(Supplier<Identifier> name, UnaryOperator<B> transform) {
 		GeneratedRecipe generatedRecipe =
 			c -> transform.apply(getBuilder(name.get()))
 				.build(c);
@@ -72,7 +72,7 @@ public abstract class ProcessingRecipeGen<P extends ProcessingRecipeParams, R ex
 	 * Create a new processing recipe, with recipe definitions provided by the
 	 * function
 	 */
-	protected GeneratedRecipe create(ResourceLocation name, UnaryOperator<B> transform) {
+	protected GeneratedRecipe create(Identifier name, UnaryOperator<B> transform) {
 		return createWithDeferredId(() -> name, transform);
 	}
 
@@ -86,11 +86,11 @@ public abstract class ProcessingRecipeGen<P extends ProcessingRecipeParams, R ex
 
 	protected abstract IRecipeTypeInfo getRecipeType();
 
-	protected abstract B getBuilder(ResourceLocation id);
+	protected abstract B getBuilder(Identifier id);
 
-	protected Supplier<ResourceLocation> idWithSuffix(Supplier<ItemLike> item, String suffix) {
+	protected Supplier<Identifier> idWithSuffix(Supplier<ItemLike> item, String suffix) {
 		return () -> {
-			ResourceLocation registryName = RegisteredObjectsHelper.getKeyOrThrow(item.get()
+			Identifier registryName = RegisteredObjectsHelper.getKeyOrThrow(item.get()
 					.asItem());
 			return asResource(registryName.getPath() + suffix);
 		};

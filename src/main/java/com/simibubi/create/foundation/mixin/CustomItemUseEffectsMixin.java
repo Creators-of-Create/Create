@@ -5,11 +5,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.simibubi.create.foundation.item.CustomUseEffectsItem;
 
-import net.createmod.catnip.data.TriState;
+import net.createmod.catnip.api.data.TriState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,22 +25,15 @@ public abstract class CustomItemUseEffectsMixin extends Entity {
 	@Shadow
 	public abstract ItemStack getUseItem();
 
-	@Inject(method = "shouldTriggerItemUseEffects()Z", at = @At("HEAD"), cancellable = true)
-	private void create$onShouldTriggerUseEffects(CallbackInfoReturnable<Boolean> cir) {
-		ItemStack using = getUseItem();
-		Item item = using.getItem();
-		if (item instanceof CustomUseEffectsItem handler) {
-			TriState result = handler.shouldTriggerUseEffects(using, (LivingEntity) (Object) this);
-			if (result != TriState.DEFAULT) {
-				cir.setReturnValue(result.getValue());
-			}
-		}
-	}
-
-	@Inject(method = "triggerItemUseEffects(Lnet/minecraft/world/item/ItemStack;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/UseAnim;", ordinal = 0), cancellable = true)
-	private void create$onTriggerUseEffects(ItemStack stack, int count, CallbackInfo ci) {
+	@Inject(method = "spawnItemParticles(Lnet/minecraft/world/item/ItemStack;I)V", at = @At("HEAD"), cancellable = true)
+	private void create$onSpawnItemParticles(ItemStack stack, int count, CallbackInfo ci) {
 		Item item = stack.getItem();
 		if (item instanceof CustomUseEffectsItem handler) {
+			TriState shouldTrigger = handler.shouldTriggerUseEffects(stack, (LivingEntity) (Object) this);
+			if (shouldTrigger == TriState.FALSE) {
+				ci.cancel();
+				return;
+			}
 			if (handler.triggerUseEffects(stack, (LivingEntity) (Object) this, count, random)) {
 				ci.cancel();
 			}

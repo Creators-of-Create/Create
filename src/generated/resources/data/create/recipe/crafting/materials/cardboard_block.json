@@ -1,17 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "C": {
-      "item": "create:cardboard"
-    }
+    "C": "create:cardboard"
   },
   "pattern": [
     "CC",
     "CC"
   ],
   "result": {
-    "count": 1,
     "id": "create:cardboard_block"
   }
 }

@@ -11,8 +11,8 @@ import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.foundation.gui.AllIcons;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;

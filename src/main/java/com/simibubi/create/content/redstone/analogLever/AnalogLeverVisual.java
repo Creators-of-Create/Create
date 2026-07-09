@@ -14,8 +14,8 @@ import dev.engine_room.flywheel.lib.transform.Rotate;
 import dev.engine_room.flywheel.lib.transform.Translate;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 

@@ -42,10 +42,10 @@ import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedI
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
-import net.createmod.catnip.codecs.CatnipCodecUtils;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.BlockFace;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.data.codec.CatnipCodecUtils;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.BlockFace;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -116,9 +116,9 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-			Capabilities.ItemHandler.BLOCK,
+			Capabilities.Item.BLOCK,
 			AllBlockEntityTypes.PACKAGER.get(),
-			(be, context) -> be.inventory
+			(be, context) -> new com.simibubi.create.foundation.item.LegacyItemTransferAdapter(be.inventory)
 		);
 
 		if (Mods.COMPUTERCRAFT.isLoaded()) {
@@ -181,7 +181,7 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 			return;
 		}
 
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			if (animationTicks == CYCLE - (animationInward ? 5 : 1))
 				AllSoundEvents.PACKAGER.playAt(level, worldPosition, 1, 1, true);
 			if (animationTicks == (animationInward ? 1 : 5))
@@ -576,21 +576,21 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
-		redstonePowered = compound.getBoolean("Active");
-		animationInward = compound.getBoolean("AnimationInward");
-		animationTicks = compound.getInt("AnimationTicks");
-		signBasedAddress = compound.getString("SignAddress");
-		customComputerAddress = compound.getString("ComputerAddress");
-		hasCustomComputerAddress = compound.getBoolean("HasComputerAddress");
-		heldBox = ItemStack.parseOptional(registries, compound.getCompound("HeldBox"));
-		previouslyUnwrapped = ItemStack.parseOptional(registries, compound.getCompound("InsertedBox"));
+		redstonePowered = compound.getBooleanOr("Active", false);
+		animationInward = compound.getBooleanOr("AnimationInward", false);
+		animationTicks = compound.getIntOr("AnimationTicks", 0);
+		signBasedAddress = compound.getStringOr("SignAddress", "");
+		customComputerAddress = compound.getStringOr("ComputerAddress", "");
+		hasCustomComputerAddress = compound.getBooleanOr("HasComputerAddress", false);
+		heldBox = com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.parseOptional(registries, compound.getCompoundOrEmpty("HeldBox"));
+		previouslyUnwrapped = com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.parseOptional(registries, compound.getCompoundOrEmpty("InsertedBox"));
 		if (clientPacket)
 			return;
-		queuedExitingPackages = NBTHelper.readCompoundList(compound.getList("QueuedExitingPackages", Tag.TAG_COMPOUND),
+		queuedExitingPackages = NBTHelper.readCompoundList(compound.getListOrEmpty("QueuedExitingPackages"),
 			c -> CatnipCodecUtils.decode(BigItemStack.CODEC, registries, c)
 				.orElseThrow());
 		if (compound.contains("LastSummary"))
-			availableItems = CatnipCodecUtils.decodeOrNull(InventorySummary.CODEC, registries, compound.getCompound("LastSummary"));
+			availableItems = CatnipCodecUtils.decodeOrNull(InventorySummary.CODEC, registries, compound.getCompoundOrEmpty("LastSummary"));
 	}
 
 	@Override
@@ -602,8 +602,8 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 		compound.putString("SignAddress", signBasedAddress);
 		compound.putString("ComputerAddress", customComputerAddress);
 		compound.putBoolean("HasComputerAddress", hasCustomComputerAddress);
-		compound.put("HeldBox", heldBox.saveOptional(registries));
-		compound.put("InsertedBox", previouslyUnwrapped.saveOptional(registries));
+		compound.put("HeldBox", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(heldBox, registries));
+		compound.put("InsertedBox", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(previouslyUnwrapped, registries));
 		if (clientPacket)
 			return;
 		compound.put("QueuedExitingPackages", NBTHelper.writeCompoundList(queuedExitingPackages, bis -> {

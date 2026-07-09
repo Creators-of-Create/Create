@@ -13,7 +13,6 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class EmptyMirror extends SymmetryMirror {
 
@@ -52,7 +51,6 @@ public class EmptyMirror extends SymmetryMirror {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public PartialModel getModel() {
 		return null;
 	}

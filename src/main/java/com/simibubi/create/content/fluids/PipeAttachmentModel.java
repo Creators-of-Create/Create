@@ -3,6 +3,7 @@ package com.simibubi.create.content.fluids;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -14,22 +15,21 @@ import com.simibubi.create.content.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import com.simibubi.create.foundation.model.BakedQuad;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelData.Builder;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
-import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData.Builder;
+import net.neoforged.neoforge.model.data.ModelProperty;
+import net.minecraft.util.TriState;
 
 public class PipeAttachmentModel extends BakedModelWrapperWithData {
 
@@ -67,25 +67,8 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 	}
 
 	@Override
-	public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
-		List<ChunkRenderTypeSet> set = new ArrayList<>();
-
-		set.add(super.getRenderTypes(state, rand, data));
-		set.add(AllPartialModels.FLUID_PIPE_CASING.get().getRenderTypes(state, rand, data));
-
-		if (data.has(PIPE_PROPERTY)) {
-			PipeModelData pipeData = data.get(PIPE_PROPERTY);
-			for (Direction d : Iterate.directions) {
-				AttachmentTypes type = pipeData.getAttachment(d);
-				for (ComponentPartials partial : type.partials) {
-					ChunkRenderTypeSet attachmentRenderTypeSet = AllPartialModels.PIPE_ATTACHMENTS.get(partial).get(d)
-						.get().getRenderTypes(state, rand, data);
-					set.add(attachmentRenderTypeSet);
-				}
-			}
-		}
-
-		return ChunkRenderTypeSet.union(set);
+	public Set<RenderType> getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
+		return super.getRenderTypes(state, rand, data);
 	}
 
 	@Override
@@ -99,7 +82,6 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 		return quads;
 	}
 
-	@Override
 	public TriState useAmbientOcclusion(BlockState state, ModelData data, RenderType renderType) {
 		if (ao) {
 			return TriState.TRUE;
@@ -121,15 +103,12 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 		for (Direction d : Iterate.directions) {
 			AttachmentTypes type = pipeData.getAttachment(d);
 			for (ComponentPartials partial : type.partials) {
-				quads.addAll(AllPartialModels.PIPE_ATTACHMENTS.get(partial)
-					.get(d)
-					.get()
-					.getQuads(state, side, rand, data, renderType));
+				// TODO 26.2: Partial pipe attachment models now bake as BlockModel.
 			}
 		}
-		if (pipeData.isEncased())
-			quads.addAll(AllPartialModels.FLUID_PIPE_CASING.get()
-				.getQuads(state, side, rand, data, renderType));
+		if (pipeData.isEncased()) {
+			// TODO 26.2: Restore casing partial quads through the new BlockModel path.
+		}
 	}
 
 	private static class PipeModelData {
@@ -144,8 +123,7 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 
 		public void putBracket(BlockState state) {
 			if (state != null) {
-				this.bracket = Minecraft.getInstance()
-					.getBlockRenderer()
+				this.bracket = com.simibubi.create.foundation.render.LegacyBlockRendererBridge.getBlockRenderer()
 					.getBlockModel(state);
 			}
 		}

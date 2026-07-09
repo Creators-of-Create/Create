@@ -13,7 +13,7 @@ public class ShadowSteelItem extends NoGravMagicalDohickyItem {
 	@Override
 	protected void onCreated(ItemEntity entity, CompoundTag persistentData) {
 		super.onCreated(entity, persistentData);
-		float yMotion = (entity.fallDistance + 3) / 50f;
+		float yMotion = (float) ((entity.fallDistance + 3) / 50f);
 		entity.setDeltaMovement(0, yMotion, 0);
 	}
 	

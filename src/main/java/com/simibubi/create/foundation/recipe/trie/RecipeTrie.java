@@ -15,6 +15,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
+import com.simibubi.create.foundation.fluid.LegacyFluidIngredientBridge;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -22,6 +23,7 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -183,7 +185,7 @@ public class RecipeTrie<R extends Recipe<?>> {
 		private <R1 extends R> AbstractRecipe<R1> createRecipe(R1 recipe) {
 			Set<AbstractIngredient> ingredients = new HashSet<>();
 
-			for (Ingredient ingredient : recipe.getIngredients()) {
+			for (Ingredient ingredient : recipe.placementInfo().ingredients()) {
 				if (ingredient.isEmpty()) {
 					ingredients.add(AbstractIngredient.Universal.INSTANCE);
 					continue;
@@ -194,8 +196,8 @@ public class RecipeTrie<R extends Recipe<?>> {
 				}
 
 				Set<AbstractVariant> variants = new HashSet<>();
-				for (ItemStack stack : ingredient.getItems()) {
-					variants.add(getOrAssignVariant(stack.getItem()));
+				for (Holder<Item> item : ingredient.items().toList()) {
+					variants.add(getOrAssignVariant(item.value()));
 				}
 
 				ingredients.add(new AbstractIngredient(variants));
@@ -209,7 +211,7 @@ public class RecipeTrie<R extends Recipe<?>> {
 					}
 
 					Set<AbstractVariant> variants = new HashSet<>();
-					for (FluidStack stack : ingredient.getFluids()) {
+					for (FluidStack stack : LegacyFluidIngredientBridge.getFluids(ingredient)) {
 						variants.add(getOrAssignVariant(stack.getFluid()));
 					}
 

@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "create:item/cardboard_leggings",
-    "layer1": "create:trims/items/card_leggings_trim_gold"
-  }
-}

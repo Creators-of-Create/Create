@@ -5,7 +5,7 @@ import static java.lang.Math.signum;
 
 import com.simibubi.create.foundation.collision.CollisionList.Populate;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.world.phys.Vec3;
 
 public class ContinuousOBBCollider {

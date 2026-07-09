@@ -5,7 +5,7 @@ import org.joml.Matrix4f;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
@@ -88,9 +88,10 @@ public class ContraptionMatrices {
 	}
 
 	public static void clearStack(PoseStack ms) {
-		while (!ms.clear()) {
+		while (!ms.isEmpty()) {
 			ms.popPose();
 		}
+		ms.setIdentity();
 	}
 
 }

@@ -1,19 +1,13 @@
 {
   "type": "create:compacting",
   "ingredients": [
+    "minecraft:flint",
+    "minecraft:flint",
+    "minecraft:red_sand",
     {
-      "item": "minecraft:flint"
-    },
-    {
-      "item": "minecraft:flint"
-    },
-    {
-      "item": "minecraft:red_sand"
-    },
-    {
-      "type": "neoforge:single",
+      "type": "neoforge:simple",
       "amount": 100,
-      "fluid": "minecraft:lava"
+      "ingredient": "minecraft:lava"
     }
   ],
   "results": [

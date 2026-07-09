@@ -7,10 +7,10 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.gui.AbstractSimiScreen;
-import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.api.client.gui.AbstractSimiScreen;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -105,10 +105,10 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		int posX = this.width / 2 + offsetX;
 		int posY = this.height / 2 + offsetY;
-		graphics.renderComponentTooltip(font, tooltip, posX, posY);
+		graphics.setComponentTooltipForNextFrame(font, tooltip, posX, posY);
 
 		// UIRenderHelper.breadcrumbArrow(ms, 50, 50, 100, 50, 20, 10, 0x80aa9999, 0x10aa9999);
 		// UIRenderHelper.breadcrumbArrow(ms, 100, 80, 0, -50, 20, -10, 0x80aa9999, 0x10aa9999);

@@ -1,9 +1,7 @@
 {
   "type": "create:sandpaper_polishing",
   "ingredients": [
-    {
-      "item": "create:rose_quartz"
-    }
+    "create:rose_quartz"
   ],
   "results": [
     {

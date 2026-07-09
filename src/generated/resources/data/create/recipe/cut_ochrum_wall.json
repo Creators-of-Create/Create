@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "X": {
-      "item": "create:cut_ochrum"
-    }
+    "X": "create:cut_ochrum"
   },
   "pattern": [
     "XXX",

@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "item": "create:electron_tube"
-    },
-    {
-      "item": "create:electron_tube"
-    }
+    "create:electron_tube",
+    "create:electron_tube"
   ],
   "result": {
     "count": 4,

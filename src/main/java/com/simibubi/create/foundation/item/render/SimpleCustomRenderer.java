@@ -12,11 +12,9 @@ public class SimpleCustomRenderer implements IClientItemExtensions {
 	}
 
 	public static SimpleCustomRenderer create(Item item, CustomRenderedItemModelRenderer renderer) {
-		CustomRenderedItems.register(item);
 		return new SimpleCustomRenderer(renderer);
 	}
 
-	@Override
 	public CustomRenderedItemModelRenderer getCustomRenderer() {
 		return renderer;
 	}

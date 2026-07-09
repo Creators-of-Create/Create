@@ -10,13 +10,13 @@ import com.simibubi.create.Create;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.FileToIdConverter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.SnowGolem;
+import net.minecraft.world.entity.animal.golem.SnowGolem;
 import net.minecraft.world.phys.Vec3;
 
 public class TrainHatInfoReloadListener {
@@ -32,7 +32,7 @@ public class TrainHatInfoReloadListener {
 		FileToIdConverter converter = FileToIdConverter.json(HAT_INFO_DIRECTORY);
 		converter.listMatchingResources(manager).forEach((location, resource) -> {
 			String[] splitPath = location.getPath().split("/");
-			ResourceLocation entityName = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), splitPath[splitPath.length - 1].replace(".json", ""));
+			Identifier entityName = Identifier.fromNamespaceAndPath(location.getNamespace(), splitPath[splitPath.length - 1].replace(".json", ""));
 			if (!BuiltInRegistries.ENTITY_TYPE.containsKey(entityName)) {
 				Create.LOGGER.error("Failed to load train hat info for entity {} as it does not exist.", entityName);
 				return;
@@ -40,7 +40,11 @@ public class TrainHatInfoReloadListener {
 
 			try (BufferedReader reader = resource.openAsReader()) {
 				JsonObject json = GsonHelper.parse(reader);
-				ENTITY_INFO_MAP.put(BuiltInRegistries.ENTITY_TYPE.get(entityName), TrainHatInfo.CODEC.parse(JsonOps.INSTANCE, json).resultOrPartial(Create.LOGGER::error).orElseThrow());
+				BuiltInRegistries.ENTITY_TYPE.get(entityName)
+					.ifPresent(entityType -> ENTITY_INFO_MAP.put(entityType.value(),
+						TrainHatInfo.CODEC.parse(JsonOps.INSTANCE, json)
+							.resultOrPartial(Create.LOGGER::error)
+							.orElseThrow()));
 			} catch (Exception e) {
 				Create.LOGGER.error("Failed to read train hat info for entity {}!", entityName, e);
 			}

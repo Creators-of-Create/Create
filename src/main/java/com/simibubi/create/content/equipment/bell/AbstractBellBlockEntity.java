@@ -6,7 +6,7 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public abstract class AbstractBellBlockEntity extends SmartBlockEntity {
 
@@ -73,7 +72,6 @@ public abstract class AbstractBellBlockEntity extends SmartBlockEntity {
 		isRinging = true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public abstract PartialModel getBellModel();
 
 }

@@ -1,18 +1,16 @@
 package com.simibubi.create.content.logistics.depot;
 
-import net.createmod.catnip.platform.CatnipServices;
-
-import org.joml.Vector3f;
+import net.createmod.catnip.api.platform.CatnipServices;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.outliner.Outliner;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.outliner.Outliner;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -56,7 +54,7 @@ public class EjectorTargetHandler {
 			return;
 		BlockPos pos = event.getPos();
 		Level world = event.getLevel();
-		if (!world.isClientSide)
+		if (!world.isClientSide())
 			return;
 		Player player = event.getEntity();
 		if (player == null || player.isSpectator() || !player.isShiftKeyDown())
@@ -64,8 +62,8 @@ public class EjectorTargetHandler {
 
 		String key = "weighted_ejector.target_set";
 		ChatFormatting colour = ChatFormatting.GOLD;
-		player.displayClientMessage(CreateLang.translateDirect(key)
-			.withStyle(colour), true);
+		player.sendSystemMessage(CreateLang.translateDirect(key)
+			.withStyle(colour));
 		currentSelection = pos;
 		launcher = null;
 		event.setCanceled(true);
@@ -76,7 +74,7 @@ public class EjectorTargetHandler {
 	public static void leftClickingBlocksDeselectsThem(PlayerInteractEvent.LeftClickBlock event) {
 		if (currentItem == null)
 			return;
-		if (!event.getLevel().isClientSide)
+		if (!event.getLevel().isClientSide())
 			return;
 		if (!event.getEntity()
 			.isShiftKeyDown())
@@ -102,8 +100,8 @@ public class EjectorTargetHandler {
 
 		Direction validTargetDirection = getValidTargetDirection(pos);
 		if (validTargetDirection == null) {
-			player.displayClientMessage(CreateLang.translateDirect(key)
-				.withStyle(colour), true);
+			player.sendSystemMessage(CreateLang.translateDirect(key)
+				.withStyle(colour));
 			currentItem = null;
 			currentSelection = null;
 			return;
@@ -112,16 +110,15 @@ public class EjectorTargetHandler {
 		key = "weighted_ejector.targeting";
 		colour = ChatFormatting.GREEN;
 
-		player.displayClientMessage(
+		player.sendSystemMessage(
 			CreateLang.translateDirect(key, currentSelection.getX(), currentSelection.getY(), currentSelection.getZ())
-				.withStyle(colour),
-			true);
+				.withStyle(colour));
 
 		BlockPos diff = pos.subtract(currentSelection);
 		h = Math.abs(diff.getX() + diff.getZ());
 		v = -diff.getY();
 
-		CatnipServices.NETWORK.sendToServer(new EjectorPlacementPacket(h, v, pos, validTargetDirection));
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new EjectorPlacementPacket(h, v, pos, validTargetDirection));
 		currentSelection = null;
 		currentItem = null;
 
@@ -208,8 +205,7 @@ public class EjectorTargetHandler {
 		double tickOffset = totalFlyingTicks / segments;
 		boolean valid = xDiff == validX && zDiff == validZ;
 		int intColor = valid ? 0x9ede73 : 0xff7171;
-		Vector3f color = new Color(intColor).asVectorF();
-		DustParticleOptions data = new DustParticleOptions(color, 1);
+		DustParticleOptions data = new DustParticleOptions(intColor, 1);
 		ClientLevel world = mc.level;
 
 		AABB bb = new AABB(0, 0, 0, 1, 0, 1).move(currentSelection.offset(-validX, -yDiff, -validZ));

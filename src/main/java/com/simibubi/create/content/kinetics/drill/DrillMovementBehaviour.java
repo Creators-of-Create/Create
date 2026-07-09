@@ -12,15 +12,14 @@ import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import net.createmod.catnip.math.VecHelper;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 
@@ -34,7 +33,7 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 	@Override
 	public Vec3 getActiveAreaOffset(MovementContext context) {
 		return Vec3.atLowerCornerOf(context.state.getValue(DrillBlock.FACING)
-			.getNormal()).scale(.65f);
+			.getUnitVec3i()).scale(.65f);
 	}
 
 	@Override
@@ -43,7 +42,6 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 	}
 
 	@Override
-	@OnlyIn(value = Dist.CLIENT)
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
         if (!VisualizationManager.supportsVisualization(context.world))

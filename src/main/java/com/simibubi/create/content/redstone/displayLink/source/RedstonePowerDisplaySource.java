@@ -9,7 +9,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class RedstonePowerDisplaySource extends PercentOrProgressBarDisplaySource {
 
@@ -42,11 +41,10 @@ public class RedstonePowerDisplaySource extends PercentOrProgressBarDisplaySourc
 	@Override
 	protected boolean progressBarActive(DisplayLinkContext context) {
 		return context.sourceConfig()
-			.getInt("Mode") != 0;
+			.getIntOr("Mode", 0) != 0;
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
 		super.initConfigurationWidgets(context, builder, isFirstLine);
 		if (isFirstLine)

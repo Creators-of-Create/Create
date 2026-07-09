@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "X": {
-      "item": "create:cut_scoria"
-    }
+    "X": "create:cut_scoria"
   },
   "pattern": [
     "XXX",

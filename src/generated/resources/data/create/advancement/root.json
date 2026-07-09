@@ -12,7 +12,6 @@
       "translate": "advancement.create.root.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:brass_hand"
     },
     "show_toast": false,

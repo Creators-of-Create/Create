@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "create:item/chest_minecart_contraption"
+  }
+}

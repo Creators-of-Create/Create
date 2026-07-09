@@ -15,10 +15,10 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -229,12 +229,12 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 		if (infinite)
 			NBTHelper.putMarker(nbt, "Infinite");
 		if (rootPos != null)
-			nbt.put("LastPos", NbtUtils.writeBlockPos(rootPos));
+			nbt.put("LastPos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(rootPos));
 		if (affectedArea != null) {
 			nbt.put("AffectedAreaFrom",
-				NbtUtils.writeBlockPos(new BlockPos(affectedArea.minX(), affectedArea.minY(), affectedArea.minZ())));
+				com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(new BlockPos(affectedArea.minX(), affectedArea.minY(), affectedArea.minZ())));
 			nbt.put("AffectedAreaTo",
-				NbtUtils.writeBlockPos(new BlockPos(affectedArea.maxX(), affectedArea.maxY(), affectedArea.maxZ())));
+				com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(new BlockPos(affectedArea.maxX(), affectedArea.maxY(), affectedArea.maxZ())));
 		}
 		super.write(nbt, registries, clientPacket);
 	}

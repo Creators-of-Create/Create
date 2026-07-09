@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "create:horizontal_framed_glass"
-    }
+    "#": "create:horizontal_framed_glass"
   },
   "pattern": [
     "###",

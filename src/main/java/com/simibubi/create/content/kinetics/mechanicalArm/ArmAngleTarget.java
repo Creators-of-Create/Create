@@ -1,7 +1,7 @@
 package com.simibubi.create.content.kinetics.mechanicalArm;
 
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -29,7 +29,7 @@ public class ArmAngleTarget {
 			.add(0, ceiling ? -6 / 16f : 6 / 16f, 0);
 		Vec3 clawTarget = target;
 		target = target.add(Vec3.atLowerCornerOf(clawFacing.getOpposite()
-			.getNormal())
+			.getUnitVec3i())
 			.scale(.5f));
 
 		Vec3 diff = target.subtract(origin);

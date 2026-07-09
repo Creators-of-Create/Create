@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -22,6 +22,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -63,8 +65,8 @@ public class SmartObserverBlock extends DirectedDirectionalBlock implements IBE<
 			else if (BlockEntityBehaviour.get(blockEntity, FluidTransportBehaviour.TYPE) != null)
 				canDetect = true;
 			else if (blockEntity != null && (
-					context.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, blockEntity.getBlockPos(), null) != null ||
-					context.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, blockEntity.getBlockPos(), null) != null
+					context.getLevel().getCapability(Capabilities.Item.BLOCK, blockEntity.getBlockPos(), null) != null ||
+					context.getLevel().getCapability(Capabilities.Fluid.BLOCK, blockEntity.getBlockPos(), null) != null
 			))
 				canDetect = true;
 			else if (blockEntity instanceof FunnelBlockEntity)
@@ -114,14 +116,14 @@ public class SmartObserverBlock extends DirectedDirectionalBlock implements IBE<
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		IBE.onRemove(state, worldIn, pos, newState);
+protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel worldIn, BlockPos pos, boolean isMoving) {
+		IBE.onRemove(state, worldIn, pos, Blocks.AIR.defaultBlockState());
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-		boolean isMoving) {
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, Orientation orientation, boolean isMoving) {
 		InvManipulationBehaviour behaviour = BlockEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
+		BlockPos fromPos = orientation == null ? pos : pos.relative(orientation.getFront());
 		if (behaviour != null)
 			behaviour.onNeighborChanged(fromPos);
 	}

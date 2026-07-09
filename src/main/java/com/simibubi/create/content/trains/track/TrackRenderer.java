@@ -12,13 +12,13 @@ import com.simibubi.create.content.trains.track.BezierConnection.SegmentAngles;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.render.CachedBuffers;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -38,7 +38,7 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 		Level level = be.getLevel();
 		if (VisualizationManager.supportsVisualization(level))
 			return;
-		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
+		VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped());
 		be.connections.values()
 			.forEach(bc -> renderBezierTurn(level, bc, ms, vb));
 	}
@@ -55,7 +55,7 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 		renderGirder(level, bc, ms, vb, bePosition);
 
 		for (int i = 1; i < segment.length; i++) {
-			int light = LevelRenderer.getLightColor(level, segment.lightPosition[i].offset(bePosition));
+			int light = com.simibubi.create.foundation.render.LegacyLightTexture.getLightColor(level, segment.lightPosition[i].offset(bePosition));
 
 			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
 
@@ -87,7 +87,7 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 		GirderAngles segment = bc.getBakedGirders();
 
 		for (int i = 1; i < segment.length; i++) {
-			int light = LevelRenderer.getLightColor(level, segment.lightPosition[i].offset(tePosition));
+			int light = com.simibubi.create.foundation.render.LegacyLightTexture.getLightColor(level, segment.lightPosition[i].offset(tePosition));
 
 			for (boolean first : Iterate.trueAndFalse) {
 				Pose beamTransform = segment.beams[i].get(first);
@@ -132,7 +132,7 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(TrackBlockEntity pBlockEntity) {
+	public boolean shouldRenderOffScreen() {
 		return true;
 	}
 

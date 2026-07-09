@@ -9,14 +9,14 @@ import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.util.LightCoordsUtil;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -36,7 +36,7 @@ public class HarvesterRenderer extends SafeBlockEntityRenderer<HarvesterBlockEnt
 		SuperByteBuffer superBuffer = CachedBuffers.partial(AllPartialModels.HARVESTER_BLADE, blockState);
 		transform(be.getLevel(), blockState.getValue(HarvesterBlock.FACING), superBuffer, be.getAnimatedSpeed(), PIVOT);
 		superBuffer.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+			.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped()));
 	}
 
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
@@ -53,15 +53,15 @@ public class HarvesterRenderer extends SafeBlockEntityRenderer<HarvesterBlockEnt
 		superBuffer.transform(matrices.getModel());
 		transform(context.world, facing, superBuffer, speed, PIVOT);
 
-		superBuffer.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+		superBuffer.light(LightCoordsUtil.FULL_BRIGHT)
 			.useLevelLight(context.world, matrices.getWorld())
-			.renderInto(matrices.getViewProjection(), buffers.getBuffer(RenderType.cutoutMipped()));
+			.renderInto(matrices.getViewProjection(), buffers.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped()));
 	}
 
 	public static void transform(Level world, Direction facing, SuperByteBuffer superBuffer, float speed, Vec3 pivot) {
 		float originOffset = 1 / 16f;
 		Vec3 rotOffset = new Vec3(0, pivot.y * originOffset, pivot.z * originOffset);
-		float time = AnimationTickHolder.getRenderTime(world) / 20;
+		float time = AnimationTickHolder.getRenderTime() / 20;
 		float angle = (time * speed) % 360;
 
 		superBuffer.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(facing)), Direction.UP)

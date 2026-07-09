@@ -23,6 +23,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
@@ -50,7 +51,7 @@ public class VirtualChunk extends LevelChunk {
 		this.sections = new VirtualChunkSection[sectionCount];
 
 		for (int i = 0; i < sectionCount; i++) {
-			sections[i] = new VirtualChunkSection(this, i << 4);
+			sections[i] = new VirtualChunkSection(this, world.getMinBuildHeight() + (i << 4));
 		}
 
 		this.needsLight = true;
@@ -63,7 +64,7 @@ public class VirtualChunk extends LevelChunk {
 
 	@Override
 	@Nullable
-	public BlockState setBlockState(BlockPos pos, BlockState state, boolean isMoving) {
+	public BlockState setBlockState(BlockPos pos, BlockState state, int flags) {
 		return null;
 	}
 
@@ -141,7 +142,6 @@ public class VirtualChunk extends LevelChunk {
 	public void setAllReferences(Map<Structure, LongSet> structureReferencesMap) {
 	}
 
-	@Override
 	public void setUnsaved(boolean unsaved) {
 	}
 
@@ -179,7 +179,7 @@ public class VirtualChunk extends LevelChunk {
 	@Override
 	public void findBlocks(@NotNull Predicate<BlockState> roughFilter, @NotNull BiPredicate<BlockState, BlockPos> fineFilter, @NotNull BiConsumer<BlockPos, BlockState> output) {
 		world.blockStates.forEach((pos, state) -> {
-			if (SectionPos.blockToSectionCoord(pos.getX()) == chunkPos.x && SectionPos.blockToSectionCoord(pos.getZ()) == chunkPos.z) {
+			if (SectionPos.blockToSectionCoord(pos.getX()) == chunkPos.x() && SectionPos.blockToSectionCoord(pos.getZ()) == chunkPos.z()) {
 				if (roughFilter.test(state) && fineFilter.test(state, pos)) {
 					output.accept(pos, state);
 				}
@@ -198,7 +198,7 @@ public class VirtualChunk extends LevelChunk {
 	}
 
 	@Override
-	public TicksToSave getTicksForSerialization() {
+	public ChunkAccess.PackedTicks getTicksForSerialization(long currentTick) {
 		throw new UnsupportedOperationException();
 	}
 

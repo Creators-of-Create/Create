@@ -68,7 +68,7 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueS
 
 	@Override
 	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
-		value = nbt.getInt("ScrollValue");
+		value = nbt.getIntOr("ScrollValue", 0);
 		super.read(nbt, registries, clientPacket);
 	}
 

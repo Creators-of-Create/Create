@@ -1,13 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "item": "create:sail_frame"
-    }
+    "create:sail_frame"
   ],
   "result": {
-    "count": 1,
     "id": "create:white_sail"
   }
 }

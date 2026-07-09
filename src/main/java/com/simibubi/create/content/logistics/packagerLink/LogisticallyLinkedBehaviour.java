@@ -26,7 +26,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.TickBasedCache;
 
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.HolderLookup;
@@ -88,7 +88,7 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 	}
 
 	public static void keepAlive(LogisticallyLinkedBehaviour behaviour) {
-		boolean onClient = behaviour.blockEntity.getLevel().isClientSide;
+		boolean onClient = behaviour.blockEntity.getLevel().isClientSide();
 		if (behaviour.redstonePower == 15)
 			return;
 		try {
@@ -131,7 +131,7 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 	@Override
 	public void initialize() {
 		super.initialize();
-		if (getWorld().isClientSide)
+		if (getWorld().isClientSide())
 			return;
 
 		if (!loadedGlobally && global) {
@@ -212,9 +212,9 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 	public boolean mayInteractMessage(Player player) {
 		boolean mayInteract = Create.LOGISTICS.mayInteract(freqId, player);
 		if (!mayInteract)
-			player.displayClientMessage(CreateLang.translate("logistically_linked.protected")
+			player.sendSystemMessage(CreateLang.translate("logistically_linked.protected")
 				.style(ChatFormatting.RED)
-				.component(), true);
+				.component());
 		return mayInteract;
 	}
 
@@ -233,13 +233,13 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 
 	@Override
 	public void writeSafe(CompoundTag tag, HolderLookup.Provider registries) {
-		tag.putUUID("Freq", freqId);
+		tag.put("Freq", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.createUUID(freqId));
 	}
 
 	@Override
 	public void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.write(tag, registries, clientPacket);
-		tag.putUUID("Freq", freqId);
+		tag.put("Freq", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.createUUID(freqId));
 		tag.putInt("Power", redstonePower);
 		tag.putBoolean("Added", addedGlobally);
 	}
@@ -247,10 +247,10 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 	@Override
 	public void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
-		if (tag.hasUUID("Freq"))
-			freqId = tag.getUUID("Freq");
-		redstonePower = tag.getInt("Power");
-		addedGlobally = tag.getBoolean("Added");
+		if (tag.contains("Freq"))
+			freqId = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.loadUUID(tag.get("Freq"));
+		redstonePower = tag.getIntOr("Power", 0);
+		addedGlobally = tag.getBooleanOr("Added", false);
 	}
 
 	@Override

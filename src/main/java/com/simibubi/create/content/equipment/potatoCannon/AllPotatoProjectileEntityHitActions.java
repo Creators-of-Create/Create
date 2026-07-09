@@ -11,7 +11,7 @@ import com.simibubi.create.api.equipment.potatoCannon.PotatoProjectileEntityHitA
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.foundation.codec.CreateCodecs;
 
-import net.createmod.catnip.data.WorldAttached;
+import net.createmod.catnip.api.data.WorldAttached;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
@@ -28,10 +28,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Fox;
-import net.minecraft.world.entity.monster.ZombieVillager;
+import net.minecraft.world.entity.animal.fox.Fox;
+import net.minecraft.world.entity.monster.zombie.ZombieVillager;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.food.FoodProperties.PossibleEffect;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -42,8 +41,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 
 public class AllPotatoProjectileEntityHitActions {
 
@@ -97,7 +94,7 @@ public class AllPotatoProjectileEntityHitActions {
 		@Override
 		public boolean execute(ItemStack projectile, EntityHitResult ray, Type type) {
 			Entity entity = ray.getEntity();
-			if (entity.level().isClientSide)
+			if (entity.level().isClientSide())
 				return true;
 			if (entity instanceof LivingEntity livingEntity)
 				applyEffect(livingEntity, new MobEffectInstance(effect, ticks, level - 1));
@@ -120,14 +117,11 @@ public class AllPotatoProjectileEntityHitActions {
 		@Override
 		public boolean execute(ItemStack projectile, EntityHitResult ray, Type type) {
 			Entity entity = ray.getEntity();
-			if (entity.level().isClientSide)
+			if (entity.level().isClientSide())
 				return true;
 
 			if (entity instanceof LivingEntity livingEntity) {
-				for (PossibleEffect effect : foodProperty.effects()) {
-					if (livingEntity.getRandom().nextFloat() < effect.probability())
-						applyEffect(livingEntity, effect.effect());
-				}
+				// TODO 26.2: Food effect payloads moved from FoodProperties to Consumable components.
 			}
 			return !recoverable;
 		}
@@ -146,8 +140,8 @@ public class AllPotatoProjectileEntityHitActions {
 		@Override
 		public boolean execute(ItemStack projectile, EntityHitResult ray, Type type) {
 			Entity entity = ray.getEntity();
-			Level level = entity.getCommandSenderWorld();
-			if (level.isClientSide)
+			Level level = entity.level();
+			if (level.isClientSide())
 				return true;
 			if (!(entity instanceof LivingEntity livingEntity))
 				return false;
@@ -164,11 +158,7 @@ public class AllPotatoProjectileEntityHitActions {
 				double teleportZ = entityZ + (livingEntity.getRandom()
 					.nextDouble() - 0.5D) * teleportDiameter;
 
-				EntityTeleportEvent.ChorusFruit event =
-					EventHooks.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
-				if (event.isCanceled())
-					return false;
-				if (livingEntity.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true)) {
+				if (livingEntity.randomTeleport(teleportX, teleportY, teleportZ, true, projectile)) {
 					if (livingEntity.isPassenger())
 						livingEntity.stopRiding();
 
@@ -208,7 +198,7 @@ public class AllPotatoProjectileEntityHitActions {
 
 			if (!(entity instanceof ZombieVillager zombieVillager) || !zombieVillager.hasEffect(MobEffects.WEAKNESS))
 				return EFFECT.execute(projectile, ray, type);
-			if (world.isClientSide)
+			if (world.isClientSide())
 				return false;
 
 			FakePlayer dummy = ZOMBIE_CONVERTERS.get(world);
@@ -246,9 +236,11 @@ public class AllPotatoProjectileEntityHitActions {
 	}
 
 	private static void applyEffect(LivingEntity entity, MobEffectInstance effect) {
-		if (effect.getEffect().value().isInstantenous()) {
+		if (effect.getEffect().value().isInstantaneous()) {
+			if (!(entity.level() instanceof ServerLevel level))
+				return;
 			effect.getEffect().value()
-				.applyInstantenousEffect(null, null, entity, effect.getDuration(), 1.0);
+				.applyInstantaneousEffect(level, null, null, entity, effect.getAmplifier(), 1.0);
 		} else {
 			entity.addEffect(effect);
 		}

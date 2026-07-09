@@ -16,7 +16,7 @@ import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -235,16 +235,16 @@ public class WorldshaperScreen extends ZapperScreen {
 	}
 
 	@Override
-	protected void drawOnBackground(GuiGraphics graphics, int x, int y) {
+	protected void drawOnBackground(GuiGraphicsExtractor graphics, int x, int y) {
 		super.drawOnBackground(graphics, x, y);
 
 		Brush currentBrush = this.currentBrush.get();
 		for (int index = 2; index >= currentBrush.amtParams; index--)
 			AllGuiTextures.TERRAINZAPPER_INACTIVE_PARAM.render(graphics, x + 56 + 20 * index, y + 40);
 
-		graphics.drawString(font, toolSection, x + 7, y + 69, fontColor, false);
+		graphics.text(font, toolSection, x + 7, y + 69, fontColor, false);
 		if (currentBrush.hasPlacementOptions())
-			graphics.drawString(font, placementSection, x + 136, y + 69, fontColor, false);
+			graphics.text(font, placementSection, x + 136, y + 69, fontColor, false);
 	}
 
 	@Override

@@ -31,15 +31,15 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.PackOutput.PathProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.armortrim.ArmorTrim;
-import net.minecraft.world.item.armortrim.TrimMaterial;
-import net.minecraft.world.item.armortrim.TrimMaterials;
-import net.minecraft.world.item.armortrim.TrimPattern;
-import net.minecraft.world.item.armortrim.TrimPatterns;
+import net.minecraft.world.item.equipment.trim.ArmorTrim;
+import net.minecraft.world.item.equipment.trim.TrimMaterial;
+import net.minecraft.world.item.equipment.trim.TrimMaterials;
+import net.minecraft.world.item.equipment.trim.TrimPattern;
+import net.minecraft.world.item.equipment.trim.TrimPatterns;
 import net.minecraft.world.level.block.Blocks;
 
 public class AllAdvancements implements DataProvider {
@@ -282,7 +282,7 @@ public class AllAdvancements implements DataProvider {
 
 	// Logistics - Secret
 
-	PACKAGE_CHUTE_THROW = create("package_chute_throw", b -> b.icon(PackageStyles.getDefaultBox())
+	PACKAGE_CHUTE_THROW = create("package_chute_throw", b -> b.icon($ -> PackageStyles.getDefaultBox())
 		.title("Nothing but net")
 		.description("Land your cardboard package throw in an item chute")
 		.after(CARDBOARD_ARMOR)
@@ -702,9 +702,9 @@ public class AllAdvancements implements DataProvider {
 			PathProvider pathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, "advancement");
 			List<CompletableFuture<?>> futures = new ArrayList<>();
 
-			Set<ResourceLocation> set = Sets.newHashSet();
+			Set<Identifier> set = Sets.newHashSet();
 			Consumer<AdvancementHolder> consumer = (advancement) -> {
-				ResourceLocation id = advancement.id();
+				Identifier id = advancement.id();
 				if (!set.add(id))
 					throw new IllegalStateException("Duplicate advancement " + id);
 				Path path = pathProvider.json(id);

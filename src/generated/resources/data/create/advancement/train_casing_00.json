@@ -12,7 +12,6 @@
       "translate": "advancement.create.train_casing_00.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:railway_casing"
     },
     "title": {

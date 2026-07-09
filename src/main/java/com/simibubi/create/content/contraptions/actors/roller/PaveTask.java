@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.api.data.Couple;
 import net.minecraft.core.BlockPos;
 
 public class PaveTask {

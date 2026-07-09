@@ -1,9 +1,8 @@
 package com.simibubi.create;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.render.GlStateManager;
+import com.simibubi.create.foundation.render.LegacyRenderSystemBridge;
 import com.simibubi.create.compat.Mods;
-import com.simibubi.create.compat.ftb.FTBIntegration;
 import com.simibubi.create.compat.pojav.PojavChecker;
 import com.simibubi.create.compat.sodium.SodiumCompat;
 import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
@@ -27,14 +26,15 @@ import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.gui.CreateMainMenuScreen;
 
-import net.createmod.catnip.config.ui.BaseConfigScreen;
-import net.createmod.catnip.config.ui.ConfigScreen;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBufferCache;
-import net.createmod.ponder.foundation.PonderIndex;
+import net.createmod.catnip.api.client.config.BaseConfigScreen;
+import net.createmod.catnip.api.client.config.ConfigScreen;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBufferCache;
+import net.createmod.ponder.api.client.PonderIndex;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.GraphicsStatus;
+import net.minecraft.client.GraphicsPreset;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -75,7 +75,7 @@ public class CreateClient {
 		IEventBus neoEventBus = NeoForge.EVENT_BUS;
 
 		modEventBus.addListener(CreateClient::clientInit);
-		modEventBus.addListener(AllParticleTypes::registerFactories);
+		modEventBus.addListener(AllParticleTypesClient::registerFactories);
 
 		AllInstanceTypes.init();
 
@@ -84,7 +84,6 @@ public class CreateClient {
 		ZAPPER_RENDER_HANDLER.registerListeners(neoEventBus);
 		POTATO_CANNON_RENDER_HANDLER.registerListeners(neoEventBus);
 
-		Mods.FTBLIBRARY.executeIfInstalled(() -> () -> FTBIntegration.init(modEventBus, neoEventBus));
 		Mods.SODIUM.executeIfInstalled(() -> () -> SodiumCompat.init(modEventBus, neoEventBus));
 		PojavChecker.init();
 	}
@@ -118,10 +117,11 @@ public class CreateClient {
 		ConfigScreen.backgrounds.put(Create.ID, (screen, graphics, partialTicks) -> {
 			CreateMainMenuScreen.PANORAMA.render(graphics, screen.width, screen.height, 1, partialTicks);
 
-			//RenderSystem.setShaderTexture(0, CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES);
-			RenderSystem.enableBlend();
-			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			graphics.blit(CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES, 0, 0, screen.width, screen.height, 0.0F, 0.0F, 16, 128, 16, 128);
+			//LegacyRenderSystemBridge.setShaderTexture(0, CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES);
+			LegacyRenderSystemBridge.enableBlend();
+			LegacyRenderSystemBridge.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+			graphics.blit(RenderPipelines.GUI_TEXTURED, CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES, 0, 0,
+				0.0F, 0.0F, screen.width, screen.height, 16, 128, 16, 128);
 
 			graphics.fill(0, 0, screen.width, screen.height, 0x90_282c34);
 		});
@@ -143,7 +143,7 @@ public class CreateClient {
 		if (mc.player == null)
 			return;
 
-		if (mc.options.graphicsMode().get() != GraphicsStatus.FABULOUS)
+		if (mc.options.graphicsPreset().get() != GraphicsPreset.FABULOUS)
 			return;
 
 		if (AllConfigs.client().ignoreFabulousWarning.get())
@@ -154,12 +154,11 @@ public class CreateClient {
 			.append(Component.literal(" Some of Create's visual features will not be available while Fabulous graphics are enabled!"))
 			.withStyle(style -> {
                 return style
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/create dismissFabulousWarning"))
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                            Component.literal("Click here to disable this warning")));
+                    .withClickEvent(new ClickEvent.RunCommand("/create dismissFabulousWarning"))
+                    .withHoverEvent(new HoverEvent.ShowText(Component.literal("Click here to disable this warning")));
             });
 
-		mc.player.displayClientMessage(text, false);
+		mc.player.sendSystemMessage(text);
 	}
 
 }

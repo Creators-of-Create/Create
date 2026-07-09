@@ -14,7 +14,7 @@ import com.simibubi.create.foundation.mixin.accessor.ItemStackHandlerAccessor;
 import com.simibubi.create.foundation.utility.SameSizeCombinedInvWrapper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -68,13 +68,14 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-				Capabilities.ItemHandler.BLOCK,
+				Capabilities.Item.BLOCK,
 				AllBlockEntityTypes.ITEM_VAULT.get(),
 				(be, context) -> {
 					be.initCapability();
 					if (be.itemCapability == null)
 						return null;
-					return be.itemCapability.getCapability();
+					IItemHandler capability = be.itemCapability.getCapability();
+					return capability == null ? null : new com.simibubi.create.foundation.item.LegacyItemTransferAdapter(capability);
 				}
 		);
 	}
@@ -174,7 +175,7 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 			updatePos.move(direction);
 			blockstate = level.getBlockState(updatePos);
 			if (blockstate.getWeakChanges(level, updatePos)) {
-				level.neighborChanged(blockstate, updatePos, provokingBlock, provokingPos, false);
+				level.neighborChanged(blockstate, updatePos, provokingBlock, null, false);
 			}
 		}
 	}
@@ -243,7 +244,7 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 
 	@Override
 	public void setController(BlockPos controller) {
-		if (level.isClientSide && !isVirtual())
+		if (level.isClientSide() && !isVirtual())
 			return;
 		if (controller.equals(this.controller))
 			return;
@@ -278,12 +279,12 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 			controller = NBTHelper.readBlockPos(compound, "Controller");
 
 		if (isController()) {
-			radius = compound.getInt("Size");
-			length = compound.getInt("Length");
+			radius = compound.getIntOr("Size", 0);
+			length = compound.getIntOr("Length", 0);
 		}
 
 		if (!clientPacket) {
-			inventory.deserializeNBT(registries, compound.getCompound("Inventory"));
+			com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.deserializeHandler(inventory, registries, compound.getCompoundOrEmpty("Inventory"));
 			return;
 		}
 
@@ -299,9 +300,9 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 			compound.putBoolean("Uninitialized", true);
 
 		if (lastKnownPos != null)
-			compound.put("LastKnownPos", NbtUtils.writeBlockPos(lastKnownPos));
+			compound.put("LastKnownPos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(lastKnownPos));
 		if (!isController())
-			compound.put("Controller", NbtUtils.writeBlockPos(controller));
+			compound.put("Controller", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(controller));
 		if (isController()) {
 			compound.putInt("Size", radius);
 			compound.putInt("Length", length);
@@ -311,7 +312,7 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 
 		if (!clientPacket) {
 			compound.putString("StorageType", "CombinedInv");
-			compound.put("Inventory", inventory.serializeNBT(registries));
+			compound.put("Inventory", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.serializeHandler(inventory, registries));
 		}
 	}
 

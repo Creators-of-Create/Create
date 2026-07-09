@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:deepslate_copper_ore"
-    }
+    "minecraft:deepslate_copper_ore"
   ],
   "processing_time": 350,
   "results": [

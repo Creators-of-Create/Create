@@ -13,17 +13,17 @@ import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.util.LightCoordsUtil;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -52,7 +52,7 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 		super.renderSafe(blockEntity, pt, ms, buffer, light, overlay);
 		ms.translate(buttonOffset.x, buttonOffset.y, buttonOffset.z);
 
-		VertexConsumer vc = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vc = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 		CachedBuffers.partialFacing(AllPartialModels.CONTRAPTION_CONTROLS_BUTTON, blockState, facing)
 			.light(light)
 			.renderInto(ms, vc);
@@ -78,7 +78,7 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 		float playerDistance = (float) (ctx.position == null || cameraEntity == null ? 0
 			: ctx.position.distanceToSqr(cameraEntity.getEyePosition()));
 
-		float flicker = renderWorld.random.nextFloat();
+		float flicker = renderWorld.getRandom().nextFloat();
 		Couple<Integer> couple = DyeHelper.getDyeColors(efs.targetYEqualsSelection ? DyeColor.WHITE : DyeColor.ORANGE);
 		int brightColor = couple.getFirst();
 		int darkColor = couple.getSecond();
@@ -93,14 +93,14 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 
 		float buttondepth = 0;
 		if (ctx.contraption.getBlockEntityClientSide(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
-			buttondepth = -1 / 24f * cbe.button.getValue(AnimationTickHolder.getPartialTicks(renderWorld));
+			buttondepth = -1 / 24f * cbe.button.getValue(AnimationTickHolder.getPartialTicks());
 
 		ms.pushPose();
 		msr.translate(ctx.localPos);
 		ms.translate(0, buttondepth, 0);
-		VertexConsumer vc = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vc = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 		CachedBuffers.partialFacing(AllPartialModels.CONTRAPTION_CONTROLS_BUTTON, ctx.state, ctx.state.getValue(ContraptionControlsBlock.FACING).getOpposite())
-			.light(LevelRenderer.getLightColor(renderWorld, ctx.localPos))
+			.light(LightCoordsUtil.FULL_BRIGHT)
 			.useLevelLight(ctx.world, matrices.getWorld())
 			.renderInto(ms, vc);
 		ms.popPose();

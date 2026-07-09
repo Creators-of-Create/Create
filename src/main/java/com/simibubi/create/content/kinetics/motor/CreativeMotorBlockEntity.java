@@ -16,8 +16,8 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -86,7 +86,7 @@ public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 		@Override
 		public Vec3 getLocalOffset(LevelAccessor level, BlockPos pos, BlockState state) {
 			Direction facing = state.getValue(CreativeMotorBlock.FACING);
-			return super.getLocalOffset(level, pos, state).add(Vec3.atLowerCornerOf(facing.getNormal())
+			return super.getLocalOffset(level, pos, state).add(Vec3.atLowerCornerOf(facing.getUnitVec3i())
 				.scale(-1 / 16f));
 		}
 

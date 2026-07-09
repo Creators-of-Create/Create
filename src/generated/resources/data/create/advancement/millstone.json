@@ -12,7 +12,6 @@
       "translate": "advancement.create.millstone.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:millstone"
     },
     "title": {

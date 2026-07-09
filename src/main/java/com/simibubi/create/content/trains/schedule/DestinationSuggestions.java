@@ -6,7 +6,7 @@ import java.util.List;
 import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.Suggestion;
 
-import net.createmod.catnip.data.IntAttached;
+import net.createmod.catnip.api.data.IntAttached;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.CommandSuggestions;

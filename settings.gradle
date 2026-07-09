@@ -1,12 +1,14 @@
 pluginManagement {
     repositories {
-        mavenLocal()
+        if (providers.gradleProperty("create.useMavenLocal").isPresent()) {
+            mavenLocal()
+        }
         gradlePluginPortal()
         maven { url = "https://maven.neoforged.net/releases" }
     }
 }
 
-if (file("Ponder").exists()) {
+if (providers.gradleProperty("create.useLocalPonderComposite").isPresent() && file("Ponder").exists()) {
     includeBuild(".")
     includeBuild("Ponder") {
         dependencySubstitution {

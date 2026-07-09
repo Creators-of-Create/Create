@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -64,7 +65,7 @@ public class SchematicTableBlock extends HorizontalDirectionalBlock implements I
 
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return InteractionResult.SUCCESS;
 		withBlockEntityDo(level, pos,
 				be -> player.openMenu(be, be::sendToMenu));
@@ -72,12 +73,13 @@ public class SchematicTableBlock extends HorizontalDirectionalBlock implements I
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel worldIn, BlockPos pos, boolean isMoving) {
+		if (!state.hasBlockEntity())
 			return;
 
 		withBlockEntityDo(worldIn, pos, be -> ItemHelper.dropContents(worldIn, pos, be.inventory));
 		worldIn.removeBlockEntity(pos);
+		super.affectNeighborsAfterRemoval(state, worldIn, pos, isMoving);
 	}
 
 	@Override

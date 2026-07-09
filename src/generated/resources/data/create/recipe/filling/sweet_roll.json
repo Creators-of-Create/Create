@@ -1,13 +1,11 @@
 {
   "type": "create:filling",
   "ingredients": [
+    "minecraft:bread",
     {
-      "item": "minecraft:bread"
-    },
-    {
-      "type": "neoforge:tag",
+      "type": "neoforge:simple",
       "amount": 250,
-      "tag": "c:milk"
+      "ingredient": "#c:milk"
     }
   ],
   "results": [

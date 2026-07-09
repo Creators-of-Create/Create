@@ -12,20 +12,20 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.data.WorldAttached;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.data.WorldAttached;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -37,7 +37,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RenderHighlightEvent;
+import net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class TrackBlockOutline {
@@ -49,12 +49,12 @@ public class TrackBlockOutline {
 
 	public static void pickCurves() {
 		Minecraft mc = Minecraft.getInstance();
-		if (!(mc.cameraEntity instanceof LocalPlayer player))
+		if (!(mc.getCameraEntity() instanceof Player player))
 			return;
 		if (mc.level == null)
 			return;
 
-		Vec3 origin = player.getEyePosition(AnimationTickHolder.getPartialTicks(mc.level));
+		Vec3 origin = player.getEyePosition(AnimationTickHolder.getPartialTicks());
 
 		double maxRange = mc.hitResult == null ? Double.MAX_VALUE
 			: mc.hitResult.getLocation()
@@ -142,14 +142,14 @@ public class TrackBlockOutline {
 
 	public static void drawCurveSelection(PoseStack ms, MultiBufferSource buffer, Vec3 camera) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
+		if (mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
 
 		BezierPointSelection result = TrackBlockOutline.result;
 		if (result == null)
 			return;
 
-		VertexConsumer vb = buffer.getBuffer(RenderType.lines());
+		VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.lines());
 		Vec3 vec = result.vec()
 			.subtract(camera);
 		Vec3 angles = result.angles();
@@ -166,11 +166,11 @@ public class TrackBlockOutline {
 	}
 
 	@SubscribeEvent
-	public static void drawCustomBlockSelection(RenderHighlightEvent.Block event) {
+	public static void drawCustomBlockSelection(ExtractBlockOutlineRenderStateEvent event) {
 		Minecraft mc = Minecraft.getInstance();
-		BlockHitResult target = event.getTarget();
-		BlockPos pos = target.getBlockPos();
-		BlockState blockstate = mc.level.getBlockState(pos);
+		BlockHitResult target = event.getHitResult();
+		BlockPos pos = event.getBlockPos();
+		BlockState blockstate = event.getBlockState();
 
 		if (!(blockstate.getBlock() instanceof TrackBlock))
 			return;
@@ -178,27 +178,14 @@ public class TrackBlockOutline {
 			.isWithinBounds(pos))
 			return;
 
-		VertexConsumer vb = event.getMultiBufferSource()
-			.getBuffer(RenderType.lines());
-		Vec3 camPos = event.getCamera()
-			.getPosition();
-
-		PoseStack ms = event.getPoseStack();
-
-		ms.pushPose();
-		ms.translate(pos.getX() - camPos.x, pos.getY() - camPos.y, pos.getZ() - camPos.z);
-
 		boolean holdingTrack = AllTags.AllBlockTags.TRACKS.matches(Minecraft.getInstance().player.getMainHandItem());
 		TrackShape shape = blockstate.getValue(TrackBlock.SHAPE);
 		boolean canConnectFrom = !shape.isJunction()
 			&& !(mc.level.getBlockEntity(pos)instanceof TrackBlockEntity tbe && tbe.isTilted());
 
-		walkShapes(shape, TransformStack.of(ms), s -> {
-			renderShape(s, ms, vb, holdingTrack ? canConnectFrom : null);
+		if (holdingTrack && canConnectFrom)
 			event.setCanceled(true);
-		});
-
-		ms.popPose();
+		// TODO 26.2: Rebuild the custom track outline through CustomBlockOutlineRenderer.
 	}
 
 	public static void renderShape(VoxelShape s, PoseStack ms, VertexConsumer vb, Boolean valid) {

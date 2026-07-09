@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:coal"
-    }
+    "minecraft:coal"
   ],
   "processing_time": 100,
   "results": [

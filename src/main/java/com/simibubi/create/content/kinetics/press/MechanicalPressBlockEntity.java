@@ -21,10 +21,9 @@ import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -108,7 +107,7 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
-		tracksCreated = compound.getInt("TracksCreated");
+		tracksCreated = compound.getIntOr("TracksCreated", 0);
 	}
 
 	@Override
@@ -134,7 +133,7 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 				ItemEntity created =
 					new ItemEntity(level, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result);
 				created.setDefaultPickUpDelay();
-				created.setDeltaMovement(VecHelper.offsetRandomly(Vec3.ZERO, level.random, .05f));
+				created.setDeltaMovement(VecHelper.offsetRandomly(Vec3.ZERO, level.getRandom(), .05f));
 				level.addFreshEntity(created);
 			}
 			item.shrink(1);
@@ -189,7 +188,7 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 	public static boolean canCompress(Recipe<?> recipe) {
 		if (!(recipe instanceof CraftingRecipe) || !AllConfigs.server().recipes.allowShapedSquareInPress.get())
 			return false;
-		NonNullList<Ingredient> ingredients = recipe.getIngredients();
+		List<Ingredient> ingredients = recipe.placementInfo().ingredients();
 		return (ingredients.size() == 4 || ingredients.size() == 9) && ItemHelper.matchAllIngredients(ingredients);
 	}
 

@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -93,8 +93,8 @@ public class WindmillBearingBlockEntity extends MechanicalBearingBlockEntity {
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		if (!wasMoved)
-			lastGeneratedSpeed = compound.getFloat("LastGenerated");
-		queuedReassembly = compound.getBoolean("QueueAssembly");
+			lastGeneratedSpeed = compound.getFloatOr("LastGenerated", 0);
+		queuedReassembly = compound.getBooleanOr("QueueAssembly", false);
 		super.read(compound, registries, clientPacket);
 	}
 
@@ -112,7 +112,7 @@ public class WindmillBearingBlockEntity extends MechanicalBearingBlockEntity {
 	private void onDirectionChanged() {
 		if (!running)
 			return;
-		if (!level.isClientSide)
+		if (!level.isClientSide())
 			updateGeneratedRotation();
 	}
 

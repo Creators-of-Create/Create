@@ -1,16 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "C": {
-      "item": "create:andesite_alloy"
-    },
-    "P": {
-      "tag": "minecraft:planks"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "C": "create:andesite_alloy",
+    "P": "#minecraft:planks",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "SSS",

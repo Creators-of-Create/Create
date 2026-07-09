@@ -66,7 +66,7 @@ public class ChainConveyorConnectionPacket extends BlockEntityConfigurationPacke
 				int chainCost = ChainConveyorBlockEntity.getChainCost(targetPos.subtract(pos));
 				while (chainCost > 0) {
 					player.getInventory()
-						.placeItemBackInInventory(new ItemStack(Items.CHAIN, Math.min(chainCost, 64)));
+						.placeItemBackInInventory(new ItemStack(Items.IRON_CHAIN, Math.min(chainCost, 64)));
 					chainCost -= 64;
 				}
 			}

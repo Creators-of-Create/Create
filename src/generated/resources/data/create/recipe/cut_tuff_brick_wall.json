@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "X": {
-      "item": "create:cut_tuff_bricks"
-    }
+    "X": "create:cut_tuff_bricks"
   },
   "pattern": [
     "XXX",

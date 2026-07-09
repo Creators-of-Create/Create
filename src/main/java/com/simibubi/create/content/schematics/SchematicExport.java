@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +42,7 @@ public class SchematicExport {
 		BlockPos bounds = new BlockPos(bb.getXSpan(), bb.getYSpan(), bb.getZSpan());
 
 		StructureTemplate structure = new StructureTemplate();
-		structure.fillFromWorld(level, origin, bounds, true, Blocks.AIR);
+		structure.fillFromWorld(level, origin, bounds, true, List.of(Blocks.AIR));
 		CompoundTag data = structure.save(new CompoundTag());
 		SchematicAndQuillItem.replaceStructureVoidWithAir(data);
 		SchematicAndQuillItem.clampGlueBoxes(level, new AABB(Vec3.atLowerCornerOf(origin), Vec3.atLowerCornerOf(origin.offset(bounds))), data);

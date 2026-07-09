@@ -11,7 +11,7 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -49,12 +49,13 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 		}
 
 		if (recipe.shouldKeepHeldItem())
-			handItemSlot.addTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(1, CreateLang.translateDirect("recipe.deploying.not_consumed").withStyle(ChatFormatting.GOLD)));
+			handItemSlot.addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(CreateLang.translateDirect("recipe.deploying.not_consumed")
+				.withStyle(ChatFormatting.GOLD)));
 
 	}
 
 	@Override
-	public void draw(DeployerApplicationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(DeployerApplicationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29 + (recipe.getRollableResults().size() > 2 ? -19 : 0));
 		deployer.draw(graphics, getBackground().getWidth() / 2 - 13, 22);

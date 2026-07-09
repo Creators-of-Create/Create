@@ -3,9 +3,7 @@
   "category": "building",
   "group": "cut_asurine_brick_stairs",
   "key": {
-    "X": {
-      "item": "create:cut_asurine_bricks"
-    }
+    "X": "create:cut_asurine_bricks"
   },
   "pattern": [
     "X  ",

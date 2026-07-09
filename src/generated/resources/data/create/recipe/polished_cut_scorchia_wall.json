@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "X": {
-      "item": "create:polished_cut_scorchia"
-    }
+    "X": "create:polished_cut_scorchia"
   },
   "pattern": [
     "XXX",

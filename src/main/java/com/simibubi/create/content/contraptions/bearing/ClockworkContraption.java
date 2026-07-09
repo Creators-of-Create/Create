@@ -11,7 +11,7 @@ import com.simibubi.create.api.contraption.ContraptionType;
 import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.Contraption;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -114,9 +114,9 @@ public class ClockworkContraption extends Contraption {
 
 	@Override
 	public void readNBT(Level world, CompoundTag tag, boolean spawnData) {
-		facing = Direction.from3DDataValue(tag.getInt("facing"));
+		facing = Direction.from3DDataValue(tag.getIntOr("facing", 0));
 		handType = NBTHelper.readEnum(tag, "HandType", HandType.class);
-		offset = tag.getInt("offset");
+		offset = tag.getIntOr("offset", 0);
 		super.readNBT(world, tag, spawnData);
 	}
 

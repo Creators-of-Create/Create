@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
-import com.simibubi.create.compat.curios.CuriosDataGenerator;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.data.CreateDatamapProvider;
 import com.simibubi.create.foundation.data.DamageTypeTagGen;
@@ -20,53 +19,56 @@ import com.simibubi.create.foundation.data.recipe.CreateStandardRecipeGen;
 import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.tterrag.registrate.providers.ProviderType;
+import com.tterrag.registrate.providers.RegistrateLangProvider;
 
-import net.createmod.ponder.foundation.PonderIndex;
+import net.createmod.ponder.api.client.PonderIndex;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+import net.minecraft.network.chat.Component;
 
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 public class CreateDatagen {
-	public static void gatherDataHighPriority(GatherDataEvent event) {
-		if (event.getMods().contains(Create.ID))
+	private static boolean defaultComponentsBoundForDatagen;
+
+	public static void gatherDataHighPriority(GatherDataEvent.Client event) {
+		if (event.getModContainer().getModId().equals(Create.ID))
 			addExtraRegistrateData();
 	}
 
-	public static void gatherData(GatherDataEvent event) {
-		if (!event.getMods().contains(Create.ID))
+	public static void gatherData(GatherDataEvent.Client event) {
+		if (!event.getModContainer().getModId().equals(Create.ID))
 			return;
 
 		DataGenerator generator = event.getGenerator();
 		PackOutput output = generator.getPackOutput();
 		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-		ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
-		generator.addProvider(event.includeClient(), AllSoundEvents.provider(generator));
+		generator.addProvider(true, AllSoundEvents.provider(generator));
 
+		bindDefaultComponentsForDatagen();
 		GeneratedEntriesProvider generatedEntriesProvider = new GeneratedEntriesProvider(output, lookupProvider);
 		lookupProvider = generatedEntriesProvider.getRegistryProvider();
-		generator.addProvider(event.includeServer(), generatedEntriesProvider);
+		generator.addProvider(true, generatedEntriesProvider);
 
-		generator.addProvider(event.includeServer(), new CreateRecipeSerializerTagsProvider(output, lookupProvider, existingFileHelper));
-		generator.addProvider(event.includeServer(), new CreateContraptionTypeTagsProvider(output, lookupProvider, existingFileHelper));
-		generator.addProvider(event.includeServer(), new CreateMountedItemStorageTypeTagsProvider(output, lookupProvider, existingFileHelper));
-		generator.addProvider(event.includeServer(), new DamageTypeTagGen(output, lookupProvider, existingFileHelper));
-		generator.addProvider(event.includeServer(), new AllAdvancements(output, lookupProvider));
-		generator.addProvider(event.includeServer(), new CreateStandardRecipeGen(output, lookupProvider));
-		generator.addProvider(event.includeServer(), new CreateMechanicalCraftingRecipeGen(output, lookupProvider));
-		generator.addProvider(event.includeServer(), new CreateSequencedAssemblyRecipeGen(output, lookupProvider));
-		generator.addProvider(event.includeServer(), new CreateDatamapProvider(output, lookupProvider));
-		generator.addProvider(event.includeServer(), new VanillaHatOffsetGenerator(output, lookupProvider));
-		generator.addProvider(event.includeServer(), new CuriosDataGenerator(output, lookupProvider, existingFileHelper));
-		generator.addProvider(event.includeServer(), new CreateEnchantmentTagsProvider(output, lookupProvider, existingFileHelper));
-		generator.addProvider(event.includeClient(), new CreateWikiBlockInfoProvider(output));
+		generator.addProvider(true, new CreateRecipeSerializerTagsProvider(output, lookupProvider));
+		generator.addProvider(true, new CreateContraptionTypeTagsProvider(output, lookupProvider));
+		generator.addProvider(true, new CreateMountedItemStorageTypeTagsProvider(output, lookupProvider));
+		generator.addProvider(true, new DamageTypeTagGen(output, lookupProvider));
+		generator.addProvider(true, new AllAdvancements(output, lookupProvider));
+		generator.addProvider(true, new CreateStandardRecipeGen(output, lookupProvider));
+		generator.addProvider(true, new CreateMechanicalCraftingRecipeGen(output, lookupProvider));
+		generator.addProvider(true, new CreateSequencedAssemblyRecipeGen(output, lookupProvider));
+		generator.addProvider(true, new CreateDatamapProvider(output, lookupProvider));
+		generator.addProvider(true, new VanillaHatOffsetGenerator(output, lookupProvider));
+		generator.addProvider(true, new CreateEnchantmentTagsProvider(output, lookupProvider));
+		generator.addProvider(true, new CreateWikiBlockInfoProvider(output));
 
-		if (event.includeServer()) {
-			CreateRecipeProvider.registerAllProcessing(generator, output, lookupProvider);
-		}
+		CreateRecipeProvider.registerAllProcessing(generator, output, lookupProvider);
 	}
 
 	private static void addExtraRegistrateData() {
@@ -80,7 +82,7 @@ public class CreateDatagen {
 			AllAdvancements.provideLang(langConsumer);
 			AllSoundEvents.provideLang(langConsumer);
 			AllKeys.provideLang(langConsumer);
-			providePonderLang(langConsumer);
+			providePonderLang(provider, langConsumer);
 			new TagLangGenerator(langConsumer).generate();
 		});
 	}
@@ -99,7 +101,34 @@ public class CreateDatagen {
 		}
 	}
 
-	private static void providePonderLang(BiConsumer<String, String> consumer) {
+	private static synchronized void bindDefaultComponentsForDatagen() {
+		if (defaultComponentsBoundForDatagen)
+			return;
+
+		BuiltInRegistries.ITEM.listElements()
+			.forEach(item -> {
+				if (item.areComponentsBound())
+					return;
+				item.bindComponents(DataComponentMap.builder()
+					.addAll(DataComponents.COMMON_ITEM_COMPONENTS)
+					.set(DataComponents.ITEM_NAME, Component.translatable(item.value()
+						.getDescriptionId()))
+					.set(DataComponents.ITEM_MODEL, item.key()
+						.identifier())
+					.build());
+			});
+		BuiltInRegistries.FLUID.listElements()
+			.forEach(fluid -> {
+				if (fluid.areComponentsBound())
+					return;
+				fluid.bindComponents(DataComponentMap.EMPTY);
+			});
+		defaultComponentsBoundForDatagen = true;
+	}
+
+	private static void providePonderLang(RegistrateLangProvider provider, BiConsumer<String, String> consumer) {
+		bindDefaultComponentsForDatagen();
+
 		// Register this since FMLClientSetupEvent does not run during datagen
 		PonderIndex.addPlugin(new CreatePonderPlugin());
 

@@ -8,8 +8,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllPackets;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.nbt.NBTProcessors;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.nbt.NBTProcessors;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.PatchedDataComponentMap;
@@ -19,6 +19,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public record ClipboardEditPacket(int hotbarSlot, @Nullable ClipboardContent clipboardContent,
 								  @Nullable BlockPos targetedBlock) implements ServerboundPacketPayload {
@@ -37,7 +38,7 @@ public record ClipboardEditPacket(int hotbarSlot, @Nullable ClipboardContent cli
 			Level world = sender.level();
 			if (!world.isLoaded(targetedBlock))
 				return;
-			if (!sender.canInteractWithBlock(targetedBlock, 20))
+			if (sender.distanceToSqr(Vec3.atCenterOf(targetedBlock)) > 20 * 20)
 				return;
 			if (world.getBlockEntity(targetedBlock) instanceof ClipboardBlockEntity cbe) {
 				PatchedDataComponentMap map = new PatchedDataComponentMap(cbe.components());

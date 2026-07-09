@@ -6,7 +6,7 @@ import java.util.List;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.lang.FontHelper.Palette;
+import net.createmod.catnip.api.client.lang.FontHelper.Palette;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;

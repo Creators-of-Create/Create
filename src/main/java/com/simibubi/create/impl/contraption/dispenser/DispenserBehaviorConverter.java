@@ -18,7 +18,7 @@ import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
@@ -109,7 +109,7 @@ public enum DispenserBehaviorConverter implements SimpleRegistry.Provider<Item, 
 				return this.wrapped.dispense(source, stack.copy());
 			} catch (NullPointerException e) {
 				// likely due to the lack of a BlockEntity
-				ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(this.item);
+				Identifier itemId = BuiltInRegistries.ITEM.getKey(this.item);
 				String message = "Error dispensing item '" + itemId + "' from contraption, not doing that anymore";
 				Create.LOGGER.error(message, e);
 				this.hasErrored = true;

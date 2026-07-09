@@ -15,20 +15,19 @@ import com.simibubi.create.content.trains.bogey.BogeySizes.BogeySize;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class BogeyStyle {
-	public final ResourceLocation id;
-	public final ResourceLocation cycleGroup;
+	public final Identifier id;
+	public final Identifier cycleGroup;
 	public final Component displayName;
 	public final Supplier<SoundEvent> soundEvent;
 	public final ParticleOptions contactParticle;
@@ -36,10 +35,9 @@ public class BogeyStyle {
 	public final CompoundTag defaultData;
 	private final Map<BogeySizes.BogeySize, Supplier<? extends AbstractBogeyBlock<?>>> sizes;
 
-	@OnlyIn(Dist.CLIENT)
 	private Map<BogeySizes.BogeySize, SizeRenderer> sizeRenderers;
 
-	public BogeyStyle(ResourceLocation id, ResourceLocation cycleGroup, Component displayName,
+	public BogeyStyle(Identifier id, Identifier cycleGroup, Component displayName,
 		Supplier<SoundEvent> soundEvent, ParticleOptions contactParticle, ParticleOptions smokeParticle,
 		CompoundTag defaultData, Map<BogeySizes.BogeySize, Supplier<? extends AbstractBogeyBlock<?>>> sizes,
 		Map<BogeySizes.BogeySize, Supplier<Supplier<? extends SizeRenderer>>> sizeRenderers) {
@@ -60,7 +58,7 @@ public class BogeyStyle {
 		});
 	}
 
-	public Map<ResourceLocation, BogeyStyle> getCycleGroup() {
+	public Map<Identifier, BogeyStyle> getCycleGroup() {
 		return AllBogeyStyles.getCycleGroup(cycleGroup);
 	}
 
@@ -81,7 +79,6 @@ public class BogeyStyle {
 				.orElse((AbstractBogeyBlock) getBlockForSize(currentSize));
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public void render(BogeySize size, float partialTick, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay, float wheelAngle, @Nullable CompoundTag bogeyData, boolean inContraption) {
 		if (bogeyData == null)
 			bogeyData = new CompoundTag();
@@ -94,7 +91,6 @@ public class BogeyStyle {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	@Nullable
 	public BogeyVisual createVisual(BogeySize size, VisualizationContext ctx, float partialTick, boolean inContraption) {
 		SizeRenderer renderer = sizeRenderers.get(size);
@@ -104,13 +100,12 @@ public class BogeyStyle {
 		return null;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public record SizeRenderer(BogeyRenderer renderer, BogeyVisualizer visualizer) {
 	}
 
 	public static class Builder {
-		protected final ResourceLocation id;
-		protected final ResourceLocation cycleGroup;
+		protected final Identifier id;
+		protected final Identifier cycleGroup;
 		protected final Map<BogeySizes.BogeySize, Supplier<? extends AbstractBogeyBlock<?>>> sizes = new HashMap<>();
 
 		protected Component displayName = CreateLang.translateDirect("bogey.style.invalid");
@@ -122,7 +117,7 @@ public class BogeyStyle {
 		protected final Map<BogeySizes.BogeySize, Supplier<Supplier<? extends SizeRenderer>>> sizeRenderers =
 			new HashMap<>();
 
-		public Builder(ResourceLocation id, ResourceLocation cycleGroup) {
+		public Builder(Identifier id, Identifier cycleGroup) {
 			this.id = id;
 			this.cycleGroup = cycleGroup;
 		}

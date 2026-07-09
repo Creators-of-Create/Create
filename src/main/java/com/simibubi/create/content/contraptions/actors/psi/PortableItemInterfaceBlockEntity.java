@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.actors.psi;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.item.ItemHandlerWrapper;
+import com.simibubi.create.foundation.item.LegacyItemTransferAdapter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -24,9 +25,9 @@ public class PortableItemInterfaceBlockEntity extends PortableStorageInterfaceBl
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-				Capabilities.ItemHandler.BLOCK,
+				Capabilities.Item.BLOCK,
 				AllBlockEntityTypes.PORTABLE_STORAGE_INTERFACE.get(),
-				(be, context) -> be.capability
+				(be, context) -> new LegacyItemTransferAdapter(be.capability)
 		);
 	}
 
@@ -34,7 +35,7 @@ public class PortableItemInterfaceBlockEntity extends PortableStorageInterfaceBl
 	public void startTransferringTo(Contraption contraption, float distance) {
 		capability = new InterfaceItemHandler(contraption.getStorage().getAllItems());
 		invalidateCapability();
-        if (level != null && !level.isClientSide)
+        if (level != null && !level.isClientSide())
             level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
 		super.startTransferringTo(contraption, distance);
 	}
@@ -43,7 +44,7 @@ public class PortableItemInterfaceBlockEntity extends PortableStorageInterfaceBl
 	protected void stopTransferring() {
 		capability = createEmptyHandler();
 		invalidateCapability();
-        if (level != null && !level.isClientSide)
+        if (level != null && !level.isClientSide())
             level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
 		super.stopTransferring();
 	}

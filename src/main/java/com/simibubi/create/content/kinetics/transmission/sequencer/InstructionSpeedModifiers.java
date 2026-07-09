@@ -6,10 +6,10 @@ import java.util.List;
 
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
 import io.netty.buffer.ByteBuf;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 

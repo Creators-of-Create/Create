@@ -27,12 +27,12 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import net.createmod.catnip.codecs.CatnipCodecUtils;
-import net.createmod.catnip.codecs.CatnipCodecs;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.data.codec.CatnipCodecUtils;
+import net.createmod.catnip.api.data.codec.CatnipCodecs;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.HolderLookup;
@@ -381,7 +381,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 			return false;
 		travellingPackages.computeIfAbsent(connection, $ -> new ArrayList<>())
 			.add(box);
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return true;
 		notifyUpdate();
 		return true;
@@ -531,9 +531,9 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 			return;
 
 		if (!forPointsAlongChains(target, chainCount,
-			vec -> level.addFreshEntity(new ItemEntity(level, vec.x, vec.y, vec.z, new ItemStack(Items.CHAIN))))) {
+			vec -> level.addFreshEntity(new ItemEntity(level, vec.x, vec.y, vec.z, new ItemStack(Items.IRON_CHAIN))))) {
 			while (chainCount > 0) {
-				Block.popResource(level, worldPosition, new ItemStack(Blocks.CHAIN.asItem(), Math.min(chainCount, 64)));
+				Block.popResource(level, worldPosition, new ItemStack(Blocks.IRON_CHAIN.asItem(), Math.min(chainCount, 64)));
 				chainCount -= 64;
 			}
 		}
@@ -589,7 +589,7 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 	private void spawnDestroyParticles(BlockPos blockPos) {
 		forPointsAlongChains(blockPos, (int) Math.round(Vec3.atLowerCornerOf(blockPos)
 				.length() * 8),
-			vec -> level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.CHAIN.defaultBlockState()),
+			vec -> level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.IRON_CHAIN.defaultBlockState()),
 				vec.x, vec.y, vec.z, 0, 0, 0));
 	}
 
@@ -683,14 +683,14 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.write(compound, registries, clientPacket);
 		if (clientPacket && chainDestroyedEffectToSend != null) {
-			compound.put("DestroyEffect", NbtUtils.writeBlockPos(chainDestroyedEffectToSend));
+			compound.put("DestroyEffect", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(chainDestroyedEffectToSend));
 			chainDestroyedEffectToSend = null;
 		}
 
 		compound.put("Connections", CatnipCodecUtils.encode(CatnipCodecs.set(BlockPos.CODEC), registries, connections).orElseThrow());
 		compound.put("TravellingPackages", NBTHelper.writeCompoundList(travellingPackages.entrySet(), entry -> {
 			CompoundTag compoundTag = new CompoundTag();
-			compoundTag.put("Target", NbtUtils.writeBlockPos(entry.getKey()));
+			compoundTag.put("Target", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(entry.getKey()));
 			compoundTag.put("Packages", NBTHelper.writeCompoundList(entry.getValue(),
 				p -> clientPacket ? p.writeToClient(registries) : p.write(registries)));
 			return compoundTag;
@@ -709,16 +709,16 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 		connections.clear();
 		CatnipCodecUtils.decode(CatnipCodecs.set(BlockPos.CODEC), registries, compound.get("Connections")).ifPresent(connections::addAll);
 		travellingPackages.clear();
-		NBTHelper.iterateCompoundList(compound.getList("TravellingPackages", Tag.TAG_COMPOUND),
+		NBTHelper.iterateCompoundList(compound.getListOrEmpty("TravellingPackages"),
 			c -> travellingPackages.put(NBTHelper.readBlockPos(c, "Target"),
-				NBTHelper.readCompoundList(c.getList("Packages", Tag.TAG_COMPOUND), t -> ChainConveyorPackage.read(t, registries))));
-		loopingPackages = NBTHelper.readCompoundList(compound.getList("LoopingPackages", Tag.TAG_COMPOUND),
+				NBTHelper.readCompoundList(c.getListOrEmpty("Packages"), t -> ChainConveyorPackage.read(t, registries))));
+		loopingPackages = NBTHelper.readCompoundList(compound.getListOrEmpty("LoopingPackages"),
 			t -> ChainConveyorPackage.read(t, registries));
 		connectionStats = null;
 		updateBoxWorldPositions();
 		updateChainShapes();
 
-		if (connections.size() != sizeBefore && level != null && level.isClientSide)
+		if (connections.size() != sizeBefore && level != null && level.isClientSide())
 			invalidateRenderBoundingBox();
 	}
 
@@ -738,18 +738,18 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 		int found = 0;
 
 		Inventory inv = player.getInventory();
-		int size = inv.items.size();
+		int size = inv.getNonEquipmentItems().size();
 		for (int j = 0; j <= size + 1; j++) {
 			int i = j;
 			boolean offhand = j == size + 1;
 			if (j == size)
-				i = inv.selected;
+				i = inv.getSelectedSlot();
 			else if (offhand)
 				i = 0;
-			else if (j == inv.selected)
+			else if (j == inv.getSelectedSlot())
 				continue;
 
-			ItemStack stackInSlot = (offhand ? inv.offhand : inv.items).get(i);
+			ItemStack stackInSlot = offhand ? player.getOffhandItem() : inv.getNonEquipmentItems().get(i);
 			if (!stackInSlot.is(chain.getItem()))
 				continue;
 			if (found >= cost)

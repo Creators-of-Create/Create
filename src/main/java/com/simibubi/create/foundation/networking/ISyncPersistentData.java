@@ -5,15 +5,14 @@ import java.util.HashSet;
 import com.simibubi.create.AllPackets;
 
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
-import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.client.player.LocalPlayer;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public interface ISyncPersistentData {
 
@@ -35,11 +34,13 @@ public interface ISyncPersistentData {
 		}
 
 		@Override
-		@OnlyIn(Dist.CLIENT)
-		public void handle(LocalPlayer player) {
-			Entity entityByID = player.clientLevel.getEntity(entityId);
+		public void handle(Player player) {
+			Entity entityByID = player.level()
+				.getEntity(entityId);
+			if (entityByID == null)
+				return;
 			CompoundTag data = entityByID.getPersistentData();
-			new HashSet<>(data.getAllKeys()).forEach(data::remove);
+			new HashSet<>(data.keySet()).forEach(data::remove);
 			data.merge(readData);
 			if (!(entityByID instanceof ISyncPersistentData))
 				return;

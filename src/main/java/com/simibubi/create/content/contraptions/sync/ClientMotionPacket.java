@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.sync;
 
 import com.simibubi.create.AllPackets;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

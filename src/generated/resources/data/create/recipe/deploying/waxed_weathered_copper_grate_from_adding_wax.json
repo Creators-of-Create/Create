@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "minecraft:weathered_copper_grate"
-    },
-    {
-      "item": "minecraft:honeycomb_block"
-    }
+    "minecraft:weathered_copper_grate",
+    "minecraft:honeycomb_block"
   ],
   "keep_held_item": true,
   "results": [

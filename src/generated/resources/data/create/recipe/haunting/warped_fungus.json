@@ -1,9 +1,7 @@
 {
   "type": "create:haunting",
   "ingredients": [
-    {
-      "item": "minecraft:brown_mushroom"
-    }
+    "minecraft:brown_mushroom"
   ],
   "results": [
     {

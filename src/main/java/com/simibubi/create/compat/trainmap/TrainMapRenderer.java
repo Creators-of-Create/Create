@@ -3,29 +3,23 @@ package com.simibubi.create.compat.trainmap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.joml.Matrix4f;
+import org.joml.Matrix3x2fStack;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.foundation.render.RenderTypes;
+import com.simibubi.create.Create;
 import com.simibubi.create.infrastructure.config.CClient;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.api.data.Couple;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
@@ -62,7 +56,7 @@ public class TrainMapRenderer implements AutoCloseable {
 		xCoord = Mth.positiveModulo(xCoord, WIDTH);
 		zCoord = Mth.positiveModulo(zCoord, HEIGHT);
 		instance.getImage()
-			.setPixelRGBA(xCoord, zCoord, color);
+			.setPixelABGR(xCoord, zCoord, color);
 	}
 
 	public int getPixel(int xCoord, int zCoord) {
@@ -74,7 +68,7 @@ public class TrainMapRenderer implements AutoCloseable {
 		xCoord = Mth.positiveModulo(xCoord, WIDTH);
 		zCoord = Mth.positiveModulo(zCoord, HEIGHT);
 		return instance.getImage()
-			.getPixelRGBA(xCoord, zCoord);
+			.getPixel(xCoord, zCoord);
 	}
 
 	public void setPixels(int xCoordFrom, int zCoordFrom, int xCoordTo, int zCoordTo, int color) {
@@ -88,7 +82,21 @@ public class TrainMapRenderer implements AutoCloseable {
 		xCoord = Mth.positiveModulo(xCoord, WIDTH);
 		zCoord = Mth.positiveModulo(zCoord, HEIGHT);
 		instance.getImage()
-			.blendPixel(xCoord, zCoord, FastColor.ABGR32.color(alpha, color));
+			.setPixelABGR(xCoord, zCoord, blendAbgr(instance.getImage().getPixel(xCoord, zCoord), abgrWithAlpha(alpha, color)));
+	}
+
+	private static int abgrWithAlpha(int alpha, int color) {
+		return (alpha & 0xff) << 24 | (color & 0x00ffffff);
+	}
+
+	private static int blendAbgr(int dst, int src) {
+		int srcA = src >>> 24;
+		int invA = 255 - srcA;
+		int b = (((src) & 0xff) * srcA + ((dst) & 0xff) * invA) / 255;
+		int g = (((src >>> 8) & 0xff) * srcA + ((dst >>> 8) & 0xff) * invA) / 255;
+		int r = (((src >>> 16) & 0xff) * srcA + ((dst >>> 16) & 0xff) * invA) / 255;
+		int a = Math.min(255, srcA + (dst >>> 24) * invA / 255);
+		return a << 24 | r << 16 | g << 8 | b;
 	}
 
 	public void blendPixels(int xCoordFrom, int zCoordFrom, int xCoordTo, int zCoordTo, int color, int alpha) {
@@ -130,18 +138,17 @@ public class TrainMapRenderer implements AutoCloseable {
 
 	//
 
-	public void render(GuiGraphics graphics, boolean linearFiltering, Rect2i bounds) {
-		BufferSource bufferSource = graphics.bufferSource();
-		PoseStack pose = graphics.pose();
+	public void render(GuiGraphicsExtractor graphics, boolean linearFiltering, Rect2i bounds) {
+		Matrix3x2fStack pose = graphics.pose();
 		maps.forEach((key, tmi) -> {
 			if (tmi.canBeSkipped(bounds))
 				return;
 			int x = key.getFirst();
 			int y = key.getSecond();
-			pose.pushPose();
-			pose.translate(x * WIDTH, y * HEIGHT, 0);
-			tmi.draw(pose, bufferSource, linearFiltering);
-			pose.popPose();
+			pose.pushMatrix();
+			pose.translate(x * WIDTH, y * HEIGHT);
+			tmi.draw(graphics, linearFiltering);
+			pose.popMatrix();
 		});
 	}
 
@@ -169,7 +176,6 @@ public class TrainMapRenderer implements AutoCloseable {
 	public class TrainMapInstance implements AutoCloseable {
 
 		private DynamicTexture texture;
-		private RenderType renderType;
 		private boolean requiresUpload;
 		private boolean linearFiltering;
 		private Rect2i bounds;
@@ -177,7 +183,7 @@ public class TrainMapRenderer implements AutoCloseable {
 		private boolean untouched;
 		private Couple<Integer> sectionKey;
 
-		public ResourceLocation location;
+		public Identifier location;
 
 		public TrainMapInstance(Couple<Integer> sectionKey) {
 			TextureManager textureManager = Minecraft.getInstance()
@@ -186,11 +192,10 @@ public class TrainMapRenderer implements AutoCloseable {
 			this.sectionKey = sectionKey;
 			untouched = false;
 			requiresUpload = true;
-			texture = new DynamicTexture(128, 128, true);
+			texture = new DynamicTexture("create train map", 128, 128, true);
 			linearFiltering = false;
-			location = textureManager
-				.register("create_trainmap/" + sectionKey.getFirst() + "_" + sectionKey.getSecond(), texture);
-			renderType = RenderTypes.TRAIN_MAP.apply(location, linearFiltering);
+			location = Create.asResource("trainmap/" + sectionKey.getFirst() + "_" + sectionKey.getSecond());
+			textureManager.register(location, texture);
 			bounds = new Rect2i(sectionKey.getFirst() * WIDTH, sectionKey.getSecond() * HEIGHT, WIDTH, HEIGHT);
 		}
 
@@ -207,7 +212,7 @@ public class TrainMapRenderer implements AutoCloseable {
 			return texture.getPixels();
 		}
 
-		public void draw(PoseStack pPoseStack, MultiBufferSource pBufferSource, boolean linearFiltering) {
+		public void draw(GuiGraphicsExtractor graphics, boolean linearFiltering) {
 			if (texture.getPixels() == null)
 				return;
 
@@ -216,35 +221,8 @@ public class TrainMapRenderer implements AutoCloseable {
 				requiresUpload = false;
 			}
 
-			if (pPoseStack == null)
-				return;
-
-			if (linearFiltering != this.linearFiltering) {
-				this.linearFiltering = linearFiltering;
-				renderType = RenderTypes.TRAIN_MAP.apply(location, linearFiltering);
-			}
-
-			int pPackedLight = LightTexture.FULL_BRIGHT;
-
-			Matrix4f matrix4f = pPoseStack.last()
-				.pose();
-			VertexConsumer vertexconsumer = pBufferSource.getBuffer(renderType);
-			vertexconsumer.addVertex(matrix4f, 0.0F, HEIGHT, 0)
-				.setColor(255, 255, 255, 255)
-				.setUv(0.0F, 1.0F)
-				.setLight(pPackedLight);
-			vertexconsumer.addVertex(matrix4f, WIDTH, HEIGHT, 0)
-				.setColor(255, 255, 255, 255)
-				.setUv(1.0F, 1.0F)
-				.setLight(pPackedLight);
-			vertexconsumer.addVertex(matrix4f, WIDTH, 0.0F, 0)
-				.setColor(255, 255, 255, 255)
-				.setUv(1.0F, 0.0F)
-				.setLight(pPackedLight);
-			vertexconsumer.addVertex(matrix4f, 0.0F, 0.0F, 0)
-				.setColor(255, 255, 255, 255)
-				.setUv(0.0F, 0.0F)
-				.setLight(pPackedLight);
+			this.linearFiltering = linearFiltering;
+			graphics.blit(RenderPipelines.GUI_TEXTURED, location, 0, 0, 0, 0, WIDTH, HEIGHT, WIDTH, HEIGHT);
 		}
 
 		public void close() {

@@ -1,7 +1,5 @@
 package com.simibubi.create.compat.jei.category;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
@@ -12,13 +10,15 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+
+import org.joml.Matrix3x2fStack;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -40,9 +40,9 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 		builder.addSlot(RecipeIngredientRole.INPUT, 51, 5)
 				.setBackground(getRenderedSlot(), -1, -1)
 				.addIngredients(recipe.getRequiredHeldItem())
-				.addTooltipCallback(
+				.addRichTooltipCallback(
 					recipe.shouldKeepHeldItem()
-						? (view, tooltip) -> tooltip.add(1, CreateLang.translateDirect("recipe.deploying.not_consumed")
+						? (view, tooltip) -> tooltip.add(CreateLang.translateDirect("recipe.deploying.not_consumed")
 							.withStyle(ChatFormatting.GOLD))
 						: (view, tooltip) -> {}
 				);
@@ -61,7 +61,7 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 	}
 
 	@Override
-	public void draw(ItemApplicationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(ItemApplicationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 47);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 74, 10);
 
@@ -79,19 +79,17 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 		BlockState state = blockItem.getBlock()
 			.defaultBlockState();
 
-		PoseStack matrixStack = graphics.pose();
-		matrixStack.pushPose();
-		matrixStack.translate(74, 51, 100);
-		matrixStack.mulPose(Axis.XP.rotationDegrees(-15.5f));
-		matrixStack.mulPose(Axis.YP.rotationDegrees(22.5f));
+		Matrix3x2fStack matrixStack = graphics.pose();
+		matrixStack.pushMatrix();
+		matrixStack.translate(74, 51);
 		int scale = 20;
 
 		GuiGameElement.of(state)
 			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 			.scale(scale)
-			.render(graphics);
+			.render(graphics, 0, 0, 0);
 
-		matrixStack.popPose();
+		matrixStack.popMatrix();
 	}
 
 }

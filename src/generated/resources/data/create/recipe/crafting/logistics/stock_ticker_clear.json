@@ -1,13 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "item": "create:stock_ticker"
-    }
+    "create:stock_ticker"
   ],
   "result": {
-    "count": 1,
     "id": "create:stock_ticker"
   }
 }

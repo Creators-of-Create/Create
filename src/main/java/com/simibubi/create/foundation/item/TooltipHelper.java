@@ -8,8 +8,8 @@ import java.util.List;
 import com.google.common.base.Strings;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.lang.FontHelper;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.client.lang.FontHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

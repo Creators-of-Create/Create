@@ -16,18 +16,15 @@ import com.simibubi.create.content.equipment.symmetryWand.mirror.CrossPlaneMirro
 import com.simibubi.create.content.equipment.symmetryWand.mirror.EmptyMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.PlaneMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.SymmetryMirror;
-import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.gui.ScreenOpener;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -44,8 +41,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.common.util.BlockSnapshot;
 import net.neoforged.neoforge.event.EventHooks;
@@ -63,24 +58,24 @@ public class SymmetryWandItem extends Item {
 		BlockPos pos = context.getClickedPos();
 		if (player == null)
 			return InteractionResult.PASS;
-		player.getCooldowns()
-			.addCooldown(this, 5);
 		ItemStack wand = player.getItemInHand(context.getHand());
+		player.getCooldowns()
+			.addCooldown(wand, 5);
 		checkComponents(wand);
 
 		// Shift -> open GUI
 		if (player.isShiftKeyDown()) {
-			if (player.level().isClientSide) {
+			if (player.level().isClientSide()) {
 				CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> {
 					openWandGUI(wand, context.getHand());
 				});
 				player.getCooldowns()
-					.addCooldown(this, 5);
+					.addCooldown(wand, 5);
 			}
 			return InteractionResult.SUCCESS;
 		}
 
-		if (context.getLevel().isClientSide || context.getHand() != InteractionHand.MAIN_HAND)
+		if (context.getLevel().isClientSide() || context.getHand() != InteractionHand.MAIN_HAND)
 			return InteractionResult.SUCCESS;
 
 		pos = pos.relative(context.getClickedFace());
@@ -126,30 +121,29 @@ public class SymmetryWandItem extends Item {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+	public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
 		ItemStack wand = playerIn.getItemInHand(handIn);
 		checkComponents(wand);
 
 		// Shift -> Open GUI
 		if (playerIn.isShiftKeyDown()) {
-			if (worldIn.isClientSide) {
+			if (worldIn.isClientSide()) {
 				CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> {
 					openWandGUI(playerIn.getItemInHand(handIn), handIn);
 				});
 				playerIn.getCooldowns()
-					.addCooldown(this, 5);
+					.addCooldown(wand, 5);
 			}
-			return new InteractionResultHolder<>(InteractionResult.SUCCESS, wand);
+			return InteractionResult.SUCCESS.heldItemTransformedTo(wand);
 		}
 
 		// No Shift -> Clear Mirror
 		wand.set(AllDataComponents.SYMMETRY_WAND_ENABLE, false);
-		return new InteractionResultHolder<>(InteractionResult.SUCCESS, wand);
+		return InteractionResult.SUCCESS.heldItemTransformedTo(wand);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private void openWandGUI(ItemStack wand, InteractionHand hand) {
-		ScreenOpener.open(new SymmetryWandScreen(wand, hand));
+		SymmetryWandClient.openScreen(wand, hand);
 	}
 
 	private static void checkComponents(ItemStack wand) {
@@ -205,8 +199,8 @@ public class SymmetryWandItem extends Item {
 			if (world.isUnobstructed(block, position, CollisionContext.of(player))) {
 				BlockState blockState = blockSet.get(position);
 				for (Direction face : Iterate.directions)
-					blockState = blockState.updateShape(face, world.getBlockState(position.relative(face)), world,
-						position, position.relative(face));
+					blockState = blockState.updateShape(world, world, position, face, position.relative(face),
+						world.getBlockState(position.relative(face)), world.getRandom());
 
 				if (player.isCreative()) {
 					world.setBlockAndUpdate(position, blockState);
@@ -312,10 +306,8 @@ public class SymmetryWandItem extends Item {
 		return false;
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-		consumer.accept(SimpleCustomRenderer.create(this, new SymmetryWandItemRenderer()));
+		SymmetryWandClient.initializeClient(this, consumer);
 	}
 
 }

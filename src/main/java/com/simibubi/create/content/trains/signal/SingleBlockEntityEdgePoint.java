@@ -2,7 +2,7 @@ package com.simibubi.create.content.trains.signal;
 
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -53,13 +53,13 @@ public abstract class SingleBlockEntityEdgePoint extends TrackEdgePoint {
 		if (migration)
 			return;
 		blockEntityPos = NBTHelper.readBlockPos(nbt, "BlockEntityPos");
-		blockEntityDimension = dimensions.decode(nbt.contains("BlockEntityDimension") ? nbt.getInt("BlockEntityDimension") : -1);
+		blockEntityDimension = dimensions.decode(nbt.getIntOr("BlockEntityDimension", -1));
 	}
 
 	@Override
 	public void write(CompoundTag nbt, HolderLookup.Provider registries, DimensionPalette dimensions) {
 		super.write(nbt, registries, dimensions);
-		nbt.put("BlockEntityPos", NbtUtils.writeBlockPos(blockEntityPos));
+		nbt.put("BlockEntityPos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(blockEntityPos));
 		nbt.putInt("BlockEntityDimension", dimensions.encode(blockEntityDimension));
 	}
 

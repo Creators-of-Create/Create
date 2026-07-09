@@ -36,7 +36,7 @@ public class RecipeApplier {
 			for (int i = 0; i < stackIn.getCount(); i++) {
 				List<ProcessingOutput> outputs =
 					pr instanceof ManualApplicationRecipe mar ? mar.getRollableResults() : pr.getRollableResults();
-				for (ItemStack stack : pr.rollResults(outputs, level.random)) {
+				for (ItemStack stack : pr.rollResults(outputs, level.getRandom())) {
 					for (ItemStack previouslyRolled : stacks) {
 						if (stack.isEmpty())
 							continue;
@@ -53,14 +53,14 @@ public class RecipeApplier {
 
 					stacks.add(stack);
 				}
-				if (returnProcessingRemainder && stackIn.hasCraftingRemainingItem()) {
-					ItemHelper.addToList(stackIn.getCraftingRemainingItem(), stacks);
+				ItemStack remainder = stackIn.getItem().getCraftingRemainder().create();
+				if (returnProcessingRemainder && !remainder.isEmpty()) {
+					ItemHelper.addToList(remainder, stacks);
 				}
 
 			}
 		} else {
-			ItemStack out = recipe.getResultItem(level.registryAccess())
-				.copy();
+			ItemStack out = ItemStack.EMPTY;
 			stacks = ItemHelper.multipliedOutput(stackIn, out);
 		}
 

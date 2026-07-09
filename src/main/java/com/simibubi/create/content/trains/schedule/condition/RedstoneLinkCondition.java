@@ -9,20 +9,20 @@ import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler.Freq
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class RedstoneLinkCondition extends ScheduleWaitCondition {
 
@@ -70,7 +70,7 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 
 	@Override
 	public boolean tickCompletion(Level level, Train train, CompoundTag context) {
-		int lastChecked = context.contains("LastChecked") ? context.getInt("LastChecked") : -1;
+		int lastChecked = context.getIntOr("LastChecked", -1);
 		int status = Create.REDSTONE_LINK_NETWORK_HANDLER.globalPowerVersion.get();
 		if (status == lastChecked)
 			return false;
@@ -91,13 +91,13 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	public ResourceLocation getId() {
+	public Identifier getId() {
 		return Create.asResource("redstone_link");
 	}
 
 	@Override
 	protected void writeAdditional(HolderLookup.Provider registries, CompoundTag tag) {
-		tag.put("Frequency", freq.serializeEach(f -> (CompoundTag) f.getStack().saveOptional(registries)));
+		tag.put("Frequency", freq.serializeEach(f -> LegacyItemStackNbtBridge.saveOptionalCompound(f.getStack(), registries)));
 	}
 
 	public boolean lowActivation() {
@@ -107,11 +107,11 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 	@Override
 	protected void readAdditional(HolderLookup.Provider registries, CompoundTag tag) {
 		if (tag.contains("Frequency"))
-			freq = Couple.deserializeEach(tag.getList("Frequency", Tag.TAG_COMPOUND), c -> Frequency.of(ItemStack.parseOptional(registries, c)));
+			freq = Couple.deserializeEach(tag.getListOrEmpty("Frequency"),
+				c -> Frequency.of(LegacyItemStackNbtBridge.parseOptional(registries, c)));
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		builder.addSelectionScrollInput(20, 101,
 			(i, l) -> i.forOptions(CreateLang.translatedOptions("schedule.condition.redstone_link", "powered", "unpowered"))

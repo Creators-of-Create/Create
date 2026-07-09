@@ -12,6 +12,7 @@ import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 
@@ -46,8 +47,7 @@ public class FillingBySpout {
 				return requiredFluid.amount();
 		}
 
-		for (RecipeHolder<Recipe<SingleRecipeInput>> recipe : world.getRecipeManager()
-			.getRecipesFor(AllRecipeTypes.FILLING.getType(), input, world)) {
+		for (RecipeHolder<Recipe<SingleRecipeInput>> recipe : getFillingRecipes(world, input)) {
 			FillingRecipe fillingRecipe = (FillingRecipe) recipe.value();
 			SizedFluidIngredient requiredFluid = fillingRecipe.getRequiredFluid();
 			if (requiredFluid.ingredient().test(availableFluid))
@@ -68,8 +68,7 @@ public class FillingBySpout {
 			.filter(fr -> fr.value().getRequiredFluid()
 					.test(toFill))
 				.orElseGet(() -> {
-					for (RecipeHolder<Recipe<SingleRecipeInput>> recipe : level.getRecipeManager()
-						.getRecipesFor(AllRecipeTypes.FILLING.getType(), input, level)) {
+					for (RecipeHolder<Recipe<SingleRecipeInput>> recipe : getFillingRecipes(level, input)) {
 						FillingRecipe fr = (FillingRecipe) recipe.value();
 						SizedFluidIngredient requiredFluid = fr.getRequiredFluid();
 						if (requiredFluid.test(toFill))
@@ -79,7 +78,7 @@ public class FillingBySpout {
 				});
 
 		if (fillingRecipe != null) {
-			List<ItemStack> results = fillingRecipe.value().rollResults(level.random);
+			List<ItemStack> results = fillingRecipe.value().rollResults(level.getRandom());
 			availableFluid.shrink(requiredAmount);
 			stack.shrink(1);
 			return results.isEmpty() ? ItemStack.EMPTY : results.get(0);
@@ -91,6 +90,18 @@ public class FillingBySpout {
 	private static Predicate<RecipeHolder<FillingRecipe>> matchItemAndFluid(Level world, FluidStack availableFluid, SingleRecipeInput input) {
 		return r -> r.value().matches(input, world) && r.value().getRequiredFluid()
 			.test(availableFluid);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static List<RecipeHolder<Recipe<SingleRecipeInput>>> getFillingRecipes(Level level, SingleRecipeInput input) {
+		if (!(level.recipeAccess() instanceof RecipeManager recipeManager))
+			return List.of();
+		return recipeManager.getRecipes()
+			.stream()
+			.filter(holder -> holder.value().getType() == AllRecipeTypes.FILLING.getType())
+			.map(holder -> (RecipeHolder<Recipe<SingleRecipeInput>>) (RecipeHolder<?>) holder)
+			.filter(holder -> holder.value().matches(input, level))
+			.toList();
 	}
 
 }

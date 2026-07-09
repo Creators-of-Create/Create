@@ -1,12 +1,8 @@
 {
   "type": "create:item_application",
   "ingredients": [
-    {
-      "tag": "c:stripped_woods"
-    },
-    {
-      "tag": "c:ingots/copper"
-    }
+    "#c:stripped_woods",
+    "#c:ingots/copper"
   ],
   "results": [
     {

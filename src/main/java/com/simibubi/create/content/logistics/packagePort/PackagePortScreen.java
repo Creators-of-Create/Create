@@ -14,11 +14,11 @@ import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.createmod.catnip.gui.widget.AbstractSimiWidget;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.createmod.catnip.api.client.gui.widget.AbstractSimiWidget;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -59,14 +59,13 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 
 		Consumer<String> onTextChanged;
 		onTextChanged = s -> addressBox.setX(nameBoxX(s, addressBox));
-        addressBox = new EditBox(new NoShadowFontWrapper(font), x + 23, y - 11, background.getWidth() - 20, 10,
+        addressBox = new EditBox(font, x + 23, y - 11, background.getWidth() - 20, 10,
                 Component.empty());
 		addressBox.setBordered(false);
 		addressBox.setMaxLength(25);
 		addressBox.setTextColor(0x3D3C48);
 		addressBox.setValue(menu.contentHolder.addressFilter);
 		addressBox.setFocused(false);
-		addressBox.mouseClicked(0, 0, 0);
 		addressBox.setResponder(onTextChanged);
 		addressBox.setX(nameBoxX(addressBox.getValue(), addressBox));
 		addRenderableWidget(addressBox);
@@ -111,7 +110,7 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 	}
 
 	@Override
-	protected void renderBg(GuiGraphics graphics, float pPartialTick, int pMouseX, int pMouseY) {
+	protected void renderBg(GuiGraphicsExtractor graphics, float pPartialTick, int pMouseX, int pMouseY) {
 		int x = getGuiLeft();
 		int y = getGuiTop();
 
@@ -125,7 +124,7 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 				.isEmpty()) {
 				text = icon.getHoverName()
 					.getString();
-				graphics.drawString(font, text, nameBoxX(text, addressBox), y - 11, 0x3D3C48, false);
+				graphics.text(font, text, nameBoxX(text, addressBox), y - 11, 0x3D3C48, false);
 			}
 			AllGuiTextures.FROGPORT_EDIT_NAME.render(graphics, nameBoxX(text, addressBox) + font.width(text) + 5,
 				y - 14);
@@ -146,10 +145,10 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 		x += 13;
 		y += 58;
 		AllGuiTextures.FROGPORT_SLOT.render(graphics, x, y);
-		graphics.renderItem(menu.contentHolder.target.getIcon(), x + 1, y + 1);
+		graphics.item(menu.contentHolder.target.getIcon(), x + 1, y + 1);
 
 		if (addressBox.isHovered()) {
-			graphics.renderComponentTooltip(font, List.of(CreateLang.translate("gui.package_port.catch_packages")
+			graphics.setComponentTooltipForNextFrame(font, List.of(CreateLang.translate("gui.package_port.catch_packages")
 				.color(AbstractSimiWidget.HEADER_RGB)
 				.component(),
 				CreateLang.translate("gui.package_port.catch_packages_empty")
@@ -177,7 +176,7 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 
 	@Override
 	public void removed() {
-		CatnipServices.NETWORK.sendToServer(new PackagePortConfigurationPacket(menu.contentHolder.getBlockPos(), addressBox.getValue(),
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new PackagePortConfigurationPacket(menu.contentHolder.getBlockPos(), addressBox.getValue(),
 				acceptPackages.green));
 		super.removed();
 	}

@@ -5,8 +5,6 @@ import java.util.function.Supplier;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
@@ -19,10 +17,12 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+
+import org.joml.Matrix3x2fStack;
 
 @ParametersAreNonnullByDefault
 public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends CreateRecipeCategory<T> {
@@ -44,7 +44,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 21, 48)
 				.setBackground(getRenderedSlot(), -1, -1)
-				.addIngredients(recipe.getIngredients().get(0));
+				.addIngredients(getIngredients(recipe).get(0));
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 141, 48)
 				.setBackground(getRenderedSlot(), -1, -1)
@@ -52,32 +52,30 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 	}
 
 	@Override
-	public void draw(T recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(T recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
 		renderWidgets(graphics, recipe, mouseX, mouseY);
 
-		PoseStack matrixStack = graphics.pose();
+		Matrix3x2fStack matrixStack = graphics.pose();
 
-		matrixStack.pushPose();
+		matrixStack.pushMatrix();
 		translateFan(matrixStack);
-		matrixStack.mulPose(Axis.XP.rotationDegrees(-12.5f));
-		matrixStack.mulPose(Axis.YP.rotationDegrees(22.5f));
 
 		AnimatedKinetics.defaultBlockElement(AllPartialModels.ENCASED_FAN_INNER)
 			.rotateBlock(180, 0, AnimatedKinetics.getCurrentAngle() * 16)
 			.scale(SCALE)
-			.render(graphics);
+			.render(graphics, 0, 0, 0);
 
 		AnimatedKinetics.defaultBlockElement(AllBlocks.ENCASED_FAN.getDefaultState())
 			.rotateBlock(0, 180, 0)
 			.atLocal(0, 0, 0)
 			.scale(SCALE)
-			.render(graphics);
+			.render(graphics, 0, 0, 0);
 
 		renderAttachedBlock(graphics);
-		matrixStack.popPose();
+		matrixStack.popMatrix();
 	}
 
-	protected void renderWidgets(GuiGraphics graphics, T recipe, double mouseX, double mouseY) {
+	protected void renderWidgets(GuiGraphicsExtractor graphics, T recipe, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 46, 29);
 		getBlockShadow().render(graphics, 65, 39);
 		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 54, 51);
@@ -87,11 +85,11 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 		return AllGuiTextures.JEI_SHADOW;
 	}
 
-	protected void translateFan(PoseStack matrixStack) {
-		matrixStack.translate(56, 33, 0);
+	protected void translateFan(Matrix3x2fStack matrixStack) {
+		matrixStack.translate(56, 33);
 	}
 
-	protected abstract void renderAttachedBlock(GuiGraphics graphics);
+	protected abstract void renderAttachedBlock(GuiGraphicsExtractor graphics);
 
 	public static abstract class MultiOutput<T extends StandardProcessingRecipe<?>> extends ProcessingViaFanCategory<T> {
 
@@ -107,7 +105,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 			builder
 					.addSlot(RecipeIngredientRole.INPUT, 5 * xOffsetAmount + 21, 48)
 					.setBackground(getRenderedSlot(), -1, -1)
-					.addIngredients(recipe.getIngredients().get(0));
+					.addIngredients(getIngredients(recipe).get(0));
 
 			int i = 0;
 			boolean excessive = results.size() > 9;
@@ -125,7 +123,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 		}
 
 		@Override
-		protected void renderWidgets(GuiGraphics graphics, T recipe, double mouseX, double mouseY) {
+		protected void renderWidgets(GuiGraphicsExtractor graphics, T recipe, double mouseX, double mouseY) {
 			int size = recipe.getRollableResultsAsItemStacks().size();
 			int xOffsetAmount = 1 - Math.min(3, size);
 

@@ -8,11 +8,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.model.BakedQuadHelper;
+import com.simibubi.create.foundation.model.BakedModelWrapper;
 
-import net.createmod.catnip.math.VecHelper;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.createmod.catnip.api.math.VecHelper;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import com.simibubi.create.foundation.model.BakedQuad;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
@@ -20,8 +21,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import net.neoforged.neoforge.client.model.BakedModelWrapper;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 
 public class TrackModel extends BakedModelWrapper<BakedModel> {
 

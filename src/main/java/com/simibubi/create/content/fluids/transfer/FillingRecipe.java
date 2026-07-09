@@ -1,6 +1,5 @@
 package com.simibubi.create.content.fluids.transfer;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -11,6 +10,7 @@ import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemb
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.content.processing.sequenced.IAssemblyRecipe;
+import com.simibubi.create.foundation.fluid.LegacyFluidIngredientBridge;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.network.chat.Component;
@@ -20,7 +20,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
@@ -66,10 +65,8 @@ public class FillingRecipe extends StandardProcessingRecipe<SingleRecipeInput> i
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public Component getDescriptionForAssembly() {
-		List<FluidStack> matchingFluidStacks = Arrays.asList(fluidIngredients.get(0)
-			.getFluids());
+		List<FluidStack> matchingFluidStacks = LegacyFluidIngredientBridge.getFluids(fluidIngredients.get(0));
 		if (matchingFluidStacks.size() == 0) {
             return Component.literal("Invalid");
         }

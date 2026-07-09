@@ -15,9 +15,9 @@ import com.simibubi.create.content.redstone.link.LinkBehaviour;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.IntAttached;
-import net.createmod.catnip.data.WorldAttached;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.IntAttached;
+import net.createmod.catnip.api.data.WorldAttached;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 

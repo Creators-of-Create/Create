@@ -28,12 +28,12 @@ public class PotionEffectHandler implements OpenPipeEffectHandler {
 		for (LivingEntity entity : entities) {
 			contents.forEachEffect(effectInstance -> {
 				MobEffect effect = effectInstance.getEffect().value();
-				if (effect.isInstantenous()) {
-					effect.applyInstantenousEffect(null, null, entity, effectInstance.getAmplifier(), 0.5D);
+				if (effect.isInstantaneous() && level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+					effect.applyInstantaneousEffect(serverLevel, null, null, entity, effectInstance.getAmplifier(), 0.5D);
 				} else {
 					entity.addEffect(new MobEffectInstance(effectInstance));
 				}
-			});
+			}, 1.0F);
 		}
 	}
 

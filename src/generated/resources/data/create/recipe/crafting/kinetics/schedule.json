@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:plates/obsidian"
-    },
-    {
-      "item": "minecraft:paper"
-    }
+    "#c:plates/obsidian",
+    "minecraft:paper"
   ],
   "result": {
     "count": 4,

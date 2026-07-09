@@ -11,7 +11,6 @@
       "translate": "advancement.create.cuckoo_clock.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:cuckoo_clock"
     },
     "title": {

@@ -9,9 +9,9 @@ import com.simibubi.create.content.contraptions.pulley.PulleyBlockEntity;
 import com.simibubi.create.content.kinetics.deployer.DeployerBlockEntity;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity;
 
-import net.createmod.ponder.api.level.PonderLevel;
-import net.createmod.ponder.foundation.PonderScene;
-import net.createmod.ponder.foundation.instruction.TickingInstruction;
+import net.createmod.ponder.api.client.level.PonderLevel;
+import net.createmod.ponder.api.client.scene.PonderScene;
+import net.createmod.ponder.impl.client.instruction.TickingInstruction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 

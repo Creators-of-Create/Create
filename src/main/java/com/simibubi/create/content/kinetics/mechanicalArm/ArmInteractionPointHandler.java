@@ -9,10 +9,10 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.kinetics.mechanicalArm.ArmInteractionPoint.Mode;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.api.client.outliner.Outliner;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -46,7 +46,7 @@ public class ArmInteractionPointHandler {
 			return;
 		BlockPos pos = event.getPos();
 		Level world = event.getLevel();
-		if (!world.isClientSide)
+		if (!world.isClientSide())
 			return;
 		Player player = event.getEntity();
 		if (player != null && player.isSpectator())
@@ -81,7 +81,7 @@ public class ArmInteractionPointHandler {
 	public static void leftClickingBlocksDeselectsThem(PlayerInteractEvent.LeftClickBlock event) {
 		if (currentItem == null)
 			return;
-		if (!event.getLevel().isClientSide)
+		if (!event.getLevel().isClientSide())
 			return;
 		BlockPos pos = event.getPos();
 		if (remove(pos) != null) {
@@ -124,7 +124,7 @@ public class ArmInteractionPointHandler {
 					.sendStatus(player);
 		}
 
-		CatnipServices.NETWORK.sendToServer(new ArmPlacementPacket(currentSelection, pos));
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ArmPlacementPacket(currentSelection, pos));
 		currentSelection.clear();
 		currentItem = null;
 	}

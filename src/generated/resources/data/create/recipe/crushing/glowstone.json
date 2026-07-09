@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:glowstone"
-    }
+    "minecraft:glowstone"
   ],
   "processing_time": 150,
   "results": [

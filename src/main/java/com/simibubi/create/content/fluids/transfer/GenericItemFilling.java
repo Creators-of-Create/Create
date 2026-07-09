@@ -4,18 +4,17 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerItemAdapter;
 
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MilkBucketItem;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
@@ -43,7 +42,7 @@ public class GenericItemFilling {
 		if (fluidHandler.getClass() == FluidBucketWrapper.class) {
 			Item item = stack.getItem();
 			// Forge does not patch the FluidBucketWrapper onto subclasses of BucketItem
-			if (item.getClass() != BucketItem.class && !(item instanceof MilkBucketItem)) {
+			if (item.getClass() != BucketItem.class && item != Items.MILK_BUCKET) {
 				return false;
 			}
 		}
@@ -56,7 +55,7 @@ public class GenericItemFilling {
 		if (stack.getItem() == Items.MILK_BUCKET)
 			return false;
 
-		IFluidHandlerItem capability = stack.getCapability(Capabilities.FluidHandler.ITEM);
+		IFluidHandlerItem capability = LegacyFluidHandlerItemAdapter.of(stack);
 		if (capability == null)
 			return false;
 		if (!isFluidHandlerValid(stack, capability))
@@ -75,7 +74,7 @@ public class GenericItemFilling {
 		if (stack.getItem() == Items.BUCKET && canFillBucketInternally(availableFluid))
 			return 1000;
 
-		IFluidHandlerItem capability = stack.getCapability(Capabilities.FluidHandler.ITEM);
+		IFluidHandlerItem capability = LegacyFluidHandlerItemAdapter.of(stack);
 		if (capability == null)
 			return -1;
 		if (capability instanceof FluidBucketWrapper) {
@@ -128,7 +127,7 @@ public class GenericItemFilling {
 
 		ItemStack split = stack.copy();
 		split.setCount(1);
-		IFluidHandlerItem capability = split.getCapability(Capabilities.FluidHandler.ITEM);
+		IFluidHandlerItem capability = LegacyFluidHandlerItemAdapter.of(split);
 		if (capability == null)
 			return ItemStack.EMPTY;
 		capability.fill(toFill, FluidAction.EXECUTE);

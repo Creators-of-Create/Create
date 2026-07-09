@@ -9,7 +9,6 @@ import com.simibubi.create.content.contraptions.elevator.ElevatorColumn.ColumnCo
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -20,7 +19,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,7 +29,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 @ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -86,8 +85,7 @@ public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 	}
 
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn,
-		BlockPos currentPos, BlockPos facingPos) {
+	public BlockState updateShape(BlockState stateIn, LevelReader worldIn, ScheduledTickAccess ticks, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random) {
 		if (facing != stateIn.getValue(FACING))
 			return stateIn;
 		boolean hasValidContact = hasValidContact(worldIn, currentPos, facing);
@@ -96,13 +94,11 @@ public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 		return stateIn;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.getBlock() == this && newState.getBlock() == this)
-			if (state == newState.cycle(POWERED))
-				worldIn.updateNeighborsAt(pos, this);
-		super.onRemove(state, worldIn, pos, newState, isMoving);
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel worldIn, BlockPos pos, boolean isMoving) {
+		if (state.getValue(POWERED))
+			worldIn.updateNeighborsAt(pos, this);
+		super.affectNeighborsAfterRemoval(state, worldIn, pos, isMoving);
 	}
 
 	@Override
@@ -112,7 +108,7 @@ public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 			worldIn.setBlockAndUpdate(pos, state.setValue(POWERED, hasValidContact));
 	}
 
-	public static boolean hasValidContact(LevelAccessor world, BlockPos pos, Direction direction) {
+	public static boolean hasValidContact(LevelReader world, BlockPos pos, Direction direction) {
 		BlockState blockState = world.getBlockState(pos.relative(direction));
 		return (AllBlocks.REDSTONE_CONTACT.has(blockState) || AllBlocks.ELEVATOR_CONTACT.has(blockState))
 			&& blockState.getValue(FACING) == direction.getOpposite();

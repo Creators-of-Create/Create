@@ -46,8 +46,8 @@ public class CreativeFluidTankMountedStorage extends WrapperMountedFluidStorage<
 	}
 
 	public static CreativeFluidTankMountedStorage fromLegacy(HolderLookup.Provider registries, CompoundTag nbt) {
-		int capacity = nbt.getInt("Capacity");
-		FluidStack fluid = FluidStack.parseOptional(registries, nbt.getCompound("ProvidedStack"));
+		int capacity = nbt.getIntOr("Capacity", 0);
+		FluidStack fluid = com.simibubi.create.foundation.utility.LegacyFluidNbtBridge.parseOptional(registries, nbt.getCompoundOrEmpty("ProvidedStack"));
 		CreativeSmartFluidTank tank = new CreativeSmartFluidTank(capacity, $ -> {});
 		tank.setContainedFluid(fluid);
 		return new CreativeFluidTankMountedStorage(tank);

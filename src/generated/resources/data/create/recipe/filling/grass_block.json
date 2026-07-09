@@ -1,13 +1,11 @@
 {
   "type": "create:filling",
   "ingredients": [
+    "minecraft:dirt",
     {
-      "item": "minecraft:dirt"
-    },
-    {
-      "type": "neoforge:single",
+      "type": "neoforge:simple",
       "amount": 500,
-      "fluid": "minecraft:water"
+      "ingredient": "minecraft:water"
     }
   ],
   "results": [

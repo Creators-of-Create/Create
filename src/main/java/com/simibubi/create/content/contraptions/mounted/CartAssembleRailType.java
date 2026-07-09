@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;

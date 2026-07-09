@@ -7,9 +7,7 @@
   ],
   "type": "create:cutting",
   "ingredients": [
-    {
-      "tag": "c:plates/lead"
-    }
+    "#c:plates/lead"
   ],
   "processing_time": 50,
   "results": [

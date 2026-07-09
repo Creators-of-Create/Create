@@ -5,15 +5,15 @@ import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.animation.LerpedFloat;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.animation.LerpedFloat;
 
 public class PSIActorVisual extends ActorVisual {
 
 	private final PIInstance instance;
 
 	public PSIActorVisual(VisualizationContext context, VirtualRenderWorld world, MovementContext movementContext) {
-		super(context, world, movementContext);
+		super(context, movementContext.world, movementContext);
 
 		instance = new PIInstance(context.instancerProvider(), movementContext.state, movementContext.localPos, false);
 

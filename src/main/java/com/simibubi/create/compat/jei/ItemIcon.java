@@ -1,11 +1,12 @@
 package com.simibubi.create.compat.jei;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.render.LegacyRenderSystemBridge;
 import mezz.jei.api.gui.drawable.IDrawable;
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
+
+import org.joml.Matrix3x2fStack;
 
 import java.util.function.Supplier;
 
@@ -29,20 +30,20 @@ public class ItemIcon implements IDrawable {
 	}
 
 	@Override
-	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
-		PoseStack matrixStack = graphics.pose();
+	public void draw(GuiGraphicsExtractor graphics, int xOffset, int yOffset) {
+		Matrix3x2fStack matrixStack = graphics.pose();
 		if (stack == null) {
 			stack = supplier.get();
 		}
 
-		RenderSystem.enableDepthTest();
-		matrixStack.pushPose();
-		matrixStack.translate(xOffset + 1, yOffset + 1, 0);
+		LegacyRenderSystemBridge.enableDepthTest();
+		matrixStack.pushMatrix();
+		matrixStack.translate(xOffset + 1, yOffset + 1);
 
 		GuiGameElement.of(stack)
-			.render(graphics);
+			.render(graphics, 0, 0, 0);
 
-		matrixStack.popPose();
+		matrixStack.popMatrix();
 	}
 
 

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.simibubi.create.AllShapes;
 
-import net.createmod.catnip.math.VoxelShaper;
+import net.createmod.catnip.api.math.VoxelShaper;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.BlockState;

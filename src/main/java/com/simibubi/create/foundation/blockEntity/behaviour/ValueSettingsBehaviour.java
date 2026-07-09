@@ -71,7 +71,7 @@ public interface ValueSettingsBehaviour extends ClipboardCloneable {
 			return false;
 		if (simulate)
 			return true;
-		setValueSettings(player, new ValueSettings(tag.getInt("Row"), tag.getInt("Value")), false);
+		setValueSettings(player, new ValueSettings(tag.getIntOr("Row", 0), tag.getIntOr("Value", 0)), false);
 		return true;
 	}
 

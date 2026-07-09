@@ -25,12 +25,13 @@ import com.simibubi.create.content.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -54,14 +55,13 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	private static final EntityDataAccessor<CarriageSyncData> CARRIAGE_DATA =
 		SynchedEntityData.defineId(CarriageContraptionEntity.class, AllEntityDataSerializers.CARRIAGE_DATA);
 	private static final EntityDataAccessor<Optional<UUID>> TRACK_GRAPH =
-		SynchedEntityData.defineId(CarriageContraptionEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+		SynchedEntityData.defineId(CarriageContraptionEntity.class, AllEntityDataSerializers.OPTIONAL_UUID);
 	private static final EntityDataAccessor<Boolean> SCHEDULED =
 		SynchedEntityData.defineId(CarriageContraptionEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -81,9 +81,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	private Vec3 serverPrevPos;
 
-	@OnlyIn(Dist.CLIENT)
 	public CarriageSounds sounds;
-	@OnlyIn(Dist.CLIENT)
 	public CarriageParticles particles;
 
 	public CarriageContraptionEntity(EntityType<?> type, Level world) {
@@ -91,11 +89,10 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		validForRender = false;
 		firstPositionUpdate = true;
 		arrivalSoundTicks = Integer.MIN_VALUE;
-		derailParticleOffset = VecHelper.offsetRandomly(Vec3.ZERO, world.random, 1.5f)
+		derailParticleOffset = VecHelper.offsetRandomly(Vec3.ZERO, world.getRandom(), 1.5f)
 			.multiply(1, .25f, 1);
 	}
 
-	@Override
 	public boolean isControlledByLocalInstance() {
 		return true;
 	}
@@ -121,7 +118,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
 		super.onSyncedDataUpdated(key);
 
-		if (!level().isClientSide)
+		if (!level().isClientSide())
 			return;
 
 		bindCarriage();
@@ -216,7 +213,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			return;
 
 		if (carriage == null) {
-			if (level().isClientSide)
+			if (level().isClientSide())
 				bindCarriage();
 			else
 				discard();
@@ -234,7 +231,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		CarriageSyncData carriageData = getCarriageData();
 
-		if (!level().isClientSide) {
+		if (!level().isClientSide()) {
 
 			entityData.set(SCHEDULED, carriage.train.runtime.getSchedule() != null);
 
@@ -468,15 +465,15 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	@Override
 	protected void writeAdditional(CompoundTag compound, HolderLookup.Provider registries, boolean spawnPacket) {
 		super.writeAdditional(compound, registries, spawnPacket);
-		compound.putUUID("TrainId", trainId);
+		LegacyNbtUtilsBridge.putUUID(compound, "TrainId", trainId);
 		compound.putInt("CarriageIndex", carriageIndex);
 	}
 
 	@Override
 	protected void readAdditional(CompoundTag compound, boolean spawnPacket) {
 		super.readAdditional(compound, spawnPacket);
-		trainId = compound.getUUID("TrainId");
-		carriageIndex = compound.getInt("CarriageIndex");
+		trainId = LegacyNbtUtilsBridge.getUUID(compound, "TrainId");
+		carriageIndex = compound.getIntOr("CarriageIndex", 0);
 		if (spawnPacket) {
 			xOld = getX();
 			yOld = getY();
@@ -550,7 +547,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			return false;
 		if (carriage.train.derailed)
 			return false;
-		if (level().isClientSide)
+		if (level().isClientSide())
 			return true;
 		if (player.isSpectator())
 			return false;
@@ -696,7 +693,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	private void cleanUpApproachStationMessage(Player player) {
 		if (!stationMessage)
 			return;
-		player.displayClientMessage(CommonComponents.EMPTY, true);
+		player.sendOverlayMessage(CommonComponents.EMPTY);
 		stationMessage = false;
 	}
 
@@ -741,7 +738,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		dimensional.updateRenderedCutoff();
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public void updateRenderedPortalCutoff() {
 		if (carriage == null)
 			return;

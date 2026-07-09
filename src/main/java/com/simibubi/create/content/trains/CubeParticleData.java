@@ -6,7 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.foundation.particle.ICustomParticleData;
 
-import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -15,7 +14,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class CubeParticleData implements ParticleOptions, ICustomParticleData<CubeParticleData> {
 
@@ -68,13 +66,6 @@ public class CubeParticleData implements ParticleOptions, ICustomParticleData<Cu
 	public MapCodec<CubeParticleData> getCodec(ParticleType<CubeParticleData> type) {
 		return CODEC;
 	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public ParticleProvider<CubeParticleData> getFactory() {
-		return new CubeParticle.Factory();
-	}
-
 	@Override
 	public ParticleType<?> getType() {
 		return AllParticleTypes.CUBE.get();

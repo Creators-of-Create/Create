@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 import com.simibubi.create.foundation.networking.ISyncPersistentData.PersistentDataPacket;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.catnip.data.WorldAttached;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.createmod.catnip.api.data.WorldAttached;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -39,7 +39,7 @@ public class ToolboxHandler {
 	static int validationTimer = 20;
 
 	public static void entityTick(Entity entity, Level world) {
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return;
 		if (!(world instanceof ServerLevel))
 			return;
@@ -54,15 +54,15 @@ public class ToolboxHandler {
 
 		boolean sendData = false;
 		CompoundTag compound = player.getPersistentData()
-			.getCompound("CreateToolboxData");
+			.getCompoundOrEmpty("CreateToolboxData");
 		for (int i = 0; i < 9; i++) {
 			String key = String.valueOf(i);
 			if (!compound.contains(key))
 				continue;
 
-			CompoundTag data = compound.getCompound(key);
+			CompoundTag data = compound.getCompoundOrEmpty(key);
 			BlockPos pos = NBTHelper.readBlockPos(data, "Pos");
-			int slot = data.getInt("Slot");
+			int slot = data.getIntOr("Slot", 0);
 
 			if (!world.isLoaded(pos))
 				continue;
@@ -88,7 +88,7 @@ public class ToolboxHandler {
 		if (player.getPersistentData()
 			.contains("CreateToolboxData")
 			&& !player.getPersistentData()
-			.getCompound("CreateToolboxData")
+			.getCompoundOrEmpty("CreateToolboxData")
 			.isEmpty()) {
 			syncData(player);
 		}
@@ -115,15 +115,15 @@ public class ToolboxHandler {
 
 	public static void unequip(Player player, int hotbarSlot, boolean keepItems) {
 		CompoundTag compound = player.getPersistentData()
-			.getCompound("CreateToolboxData");
+			.getCompoundOrEmpty("CreateToolboxData");
 		Level world = player.level();
 		String key = String.valueOf(hotbarSlot);
 		if (!compound.contains(key))
 			return;
 
-		CompoundTag prevData = compound.getCompound(key);
+		CompoundTag prevData = compound.getCompoundOrEmpty(key);
 		BlockPos prevPos = NBTHelper.readBlockPos(prevData, "Pos");
-		int prevSlot = prevData.getInt("Slot");
+		int prevSlot = prevData.getIntOr("Slot", 0);
 
 		BlockEntity prevBlockEntity = world.getBlockEntity(prevPos);
 		if (prevBlockEntity instanceof ToolboxBlockEntity toolbox) {

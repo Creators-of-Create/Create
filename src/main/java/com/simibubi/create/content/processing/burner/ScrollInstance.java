@@ -6,7 +6,7 @@ import org.joml.Quaternionfc;
 import dev.engine_room.flywheel.api.instance.InstanceHandle;
 import dev.engine_room.flywheel.api.instance.InstanceType;
 import dev.engine_room.flywheel.lib.instance.ColoredLitOverlayInstance;
-import net.createmod.catnip.render.SpriteShiftEntry;
+import net.createmod.catnip.api.client.render.SpriteShiftEntry;
 import net.minecraft.core.Vec3i;
 
 public class ScrollInstance extends ColoredLitOverlayInstance {

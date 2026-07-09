@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.tterrag.registrate.providers.DataGenContext;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
+import com.tterrag.registrate.providers.generators.BlockModelProvider;
+import com.tterrag.registrate.providers.generators.ModelFile;
 
 public class PoweredLatchGenerator extends AbstractDiodeGenerator {
 
@@ -17,8 +17,8 @@ public class PoweredLatchGenerator extends AbstractDiodeGenerator {
 	protected <T extends Block> List<ModelFile> createModels(DataGenContext<Block, T> ctx, BlockModelProvider prov) {
 		List<ModelFile> models = new ArrayList<>(2);
 		String name = ctx.getName();
-		ResourceLocation off = existing("latch_off");
-		ResourceLocation on = existing("latch_on");
+		Identifier off = existing("latch_off");
+		Identifier on = existing("latch_on");
 
 		models.add(prov.withExistingParent(name, off)
 			.texture("top", texture(ctx, "idle")));

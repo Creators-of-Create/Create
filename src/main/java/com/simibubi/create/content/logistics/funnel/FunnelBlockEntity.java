@@ -24,11 +24,11 @@ import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.math.BlockFace;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.math.BlockFace;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -97,7 +97,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		super.tick();
 		flap.tickChaser();
 		Mode mode = determineCurrentMode();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 
 		// Redstone resets the extraction cooldown
@@ -167,7 +167,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 			.isVertical();
 		boolean up = facing == Direction.UP;
 
-		outputPos = outputPos.add(Vec3.atLowerCornerOf(facing.getNormal())
+		outputPos = outputPos.add(Vec3.atLowerCornerOf(facing.getUnitVec3i())
 			.scale(vertical ? up ? .15f : .5f : .25f));
 		if (!vertical)
 			outputPos = outputPos.subtract(0, .45f, 0);
@@ -315,8 +315,8 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 	}
 
 	public void flap(boolean inward) {
-		if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
-			CatnipServices.NETWORK.sendToClientsTrackingChunk(serverLevel, new ChunkPos(worldPosition), new FunnelFlapPacket(this, inward));
+		if (!level.isClientSide() && level instanceof ServerLevel serverLevel) {
+			CatnipServices.NETWORK.sendToClientsTrackingChunk(serverLevel, ChunkPos.containing(worldPosition), new FunnelFlapPacket(this, inward));
 		} else {
 			flap.setValue(inward ? -1 : 1);
 			AllSoundEvents.FUNNEL_FLAP.playAt(level, worldPosition, 1, 1, true);
@@ -350,7 +350,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
-		extractionCooldown = compound.getInt("TransferCooldown");
+		extractionCooldown = compound.getIntOr("TransferCooldown", 0);
 
 		if (clientPacket)
 			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> VisualizationHelper.queueUpdate(this));

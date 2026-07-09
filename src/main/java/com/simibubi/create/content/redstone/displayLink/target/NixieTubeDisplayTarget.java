@@ -6,6 +6,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlock;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
+import com.simibubi.create.foundation.utility.LegacyComponentSerializationBridge;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -15,13 +16,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class NixieTubeDisplayTarget extends SingleLineDisplayTarget {
 
 	@Override
 	protected void acceptLine(MutableComponent text, DisplayLinkContext context) {
-		String tagElement = Component.Serializer.toJson(text, context.level().registryAccess());
+		String tagElement = LegacyComponentSerializationBridge.toJson(text, context.level().registryAccess());
 		NixieTubeBlock.walkNixies(context.level(), context.getTargetPos(), false, (currentPos, rowPosition) -> {
 			BlockEntity blockEntity = context.level()
 				.getBlockEntity(currentPos);
@@ -39,7 +39,6 @@ public class NixieTubeDisplayTarget extends SingleLineDisplayTarget {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public AABB getMultiblockBounds(LevelAccessor level, BlockPos pos) {
 		MutableObject<BlockPos> start = new MutableObject<>(null);
 		MutableObject<BlockPos> end = new MutableObject<>(null);

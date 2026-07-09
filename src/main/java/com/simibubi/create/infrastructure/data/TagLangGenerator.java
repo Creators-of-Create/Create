@@ -13,7 +13,7 @@ import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.data.recipe.CommonMetal;
 import com.simibubi.create.foundation.data.recipe.CommonMetal.ItemLikeTag;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 
 /**
@@ -175,7 +175,7 @@ public class TagLangGenerator {
 	}
 
 	protected static String keyFor(TagKey<?> tag) {
-		ResourceLocation registryId = tag.registry().location();
+		Identifier registryId = tag.registry().identifier();
 		String registry = sanitize(
 			registryId.getNamespace().equals("minecraft") ? registryId.getPath() : registryId.toLanguageKey()
 		);

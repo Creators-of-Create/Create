@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
-import net.createmod.catnip.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -47,11 +47,11 @@ public class HosePulleyBlockEntity extends KineticBlockEntity {
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-				Capabilities.FluidHandler.BLOCK,
+				Capabilities.Fluid.BLOCK,
 				AllBlockEntityTypes.HOSE_PULLEY.get(),
 				(be, context) -> {
 					if (context == null || HosePulleyBlock.hasPipeTowards(be.level, be.worldPosition, be.getBlockState(), context))
-						return be.handler;
+						return new com.simibubi.create.foundation.fluid.LegacyFluidTransferAdapter(be.handler);
 					return null;
 				}
 		);
@@ -137,7 +137,7 @@ public class HosePulleyBlockEntity extends KineticBlockEntity {
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		if (isMoving)
 			return;
@@ -159,7 +159,7 @@ public class HosePulleyBlockEntity extends KineticBlockEntity {
 		if (clientPacket)
 			offset.forceNextSync();
 		compound.put("Offset", offset.writeNBT());
-		compound.put("Tank", internalTank.writeToNBT(registries, new CompoundTag()));
+		compound.put("Tank", com.simibubi.create.foundation.utility.LegacyFluidNbtBridge.serializeTank(internalTank, registries));
 		super.write(compound, registries, clientPacket);
 		if (clientPacket)
 			compound.putBoolean("Infinite", infinite);
@@ -167,12 +167,12 @@ public class HosePulleyBlockEntity extends KineticBlockEntity {
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		offset.readNBT(compound.getCompound("Offset"), clientPacket);
+		offset.readNBT(compound.getCompoundOrEmpty("Offset"), clientPacket);
 
-		internalTank.readFromNBT(registries, compound.getCompound("Tank"));
+		com.simibubi.create.foundation.utility.LegacyFluidNbtBridge.deserializeTank(internalTank, registries, compound.getCompoundOrEmpty("Tank"));
 		super.read(compound, registries, clientPacket);
 		if (clientPacket)
-			infinite = compound.getBoolean("Infinite");
+			infinite = compound.getBooleanOr("Infinite", false);
 	}
 
 	@Override
@@ -183,7 +183,7 @@ public class HosePulleyBlockEntity extends KineticBlockEntity {
 
 	public float getMovementSpeed() {
 		float movementSpeed = convertToLinear(getSpeed());
-		if (level.isClientSide)
+		if (level.isClientSide())
 			movementSpeed *= ServerSpeedProvider.get();
 		return movementSpeed;
 	}

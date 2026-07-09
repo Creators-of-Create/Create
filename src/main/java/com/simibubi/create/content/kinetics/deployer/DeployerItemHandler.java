@@ -38,7 +38,7 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 	public void set(ItemStack stack) {
 		if (player == null)
 			return;
-		if (be.getLevel().isClientSide)
+		if (be.getLevel().isClientSide())
 			return;
 		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
 		be.setChanged();

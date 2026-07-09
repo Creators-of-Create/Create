@@ -1,33 +1,15 @@
 {
   "type": "create:compacting",
   "ingredients": [
-    {
-      "item": "minecraft:snow_block"
-    },
-    {
-      "item": "minecraft:snow_block"
-    },
-    {
-      "item": "minecraft:snow_block"
-    },
-    {
-      "item": "minecraft:snow_block"
-    },
-    {
-      "item": "minecraft:snow_block"
-    },
-    {
-      "item": "minecraft:snow_block"
-    },
-    {
-      "item": "minecraft:snow_block"
-    },
-    {
-      "item": "minecraft:snow_block"
-    },
-    {
-      "item": "minecraft:snow_block"
-    }
+    "minecraft:snow_block",
+    "minecraft:snow_block",
+    "minecraft:snow_block",
+    "minecraft:snow_block",
+    "minecraft:snow_block",
+    "minecraft:snow_block",
+    "minecraft:snow_block",
+    "minecraft:snow_block",
+    "minecraft:snow_block"
   ],
   "results": [
     {

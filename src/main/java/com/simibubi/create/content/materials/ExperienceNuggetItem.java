@@ -1,12 +1,12 @@
 package com.simibubi.create.content.materials;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -26,12 +26,12 @@ public class ExperienceNuggetItem extends Item {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+	public InteractionResult use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
 		ItemStack itemInHand = pPlayer.getItemInHand(pUsedHand);
-		if (pLevel.isClientSide) {
+		if (pLevel.isClientSide()) {
 			pLevel.playSound(pPlayer, pPlayer.blockPosition(), SoundEvents.AMETHYST_BLOCK_BREAK, SoundSource.PLAYERS,
 				.5f, 1);
-			return InteractionResultHolder.consume(itemInHand);
+			return InteractionResult.CONSUME.heldItemTransformedTo(itemInHand);
 		}
 
 		int amountUsed = pPlayer.isShiftKeyDown() ? 1 : itemInHand.getCount();
@@ -44,7 +44,7 @@ public class ExperienceNuggetItem extends Item {
 			if (value == 0)
 				continue;
 
-			Vec3 offset = VecHelper.offsetRandomly(Vec3.ZERO, pLevel.random, 1)
+			Vec3 offset = VecHelper.offsetRandomly(Vec3.ZERO, pLevel.getRandom(), 1)
 				.normalize();
 			Vec3 look = pPlayer.getLookAngle();
 			Vec3 motion = look.scale(0.2)
@@ -63,10 +63,10 @@ public class ExperienceNuggetItem extends Item {
 
 		itemInHand.shrink(amountUsed);
 		if (!itemInHand.isEmpty())
-			return InteractionResultHolder.success(itemInHand);
+			return InteractionResult.SUCCESS.heldItemTransformedTo(itemInHand);
 
 		pPlayer.setItemInHand(pUsedHand, ItemStack.EMPTY);
-		return InteractionResultHolder.consume(itemInHand);
+		return InteractionResult.CONSUME.heldItemTransformedTo(itemInHand);
 	}
 
 }

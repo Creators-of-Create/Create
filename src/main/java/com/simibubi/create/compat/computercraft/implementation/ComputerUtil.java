@@ -11,17 +11,40 @@ import java.util.Objects;
 import com.simibubi.create.compat.computercraft.implementation.luaObjects.LuaComparable;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
+import com.simibubi.create.foundation.utility.GlobalRegistryAccess;
 
 import dan200.computercraft.api.detail.VanillaDetailRegistries;
 import dan200.computercraft.api.lua.LuaException;
-import net.createmod.catnip.data.Glob;
+import net.createmod.catnip.api.data.Glob;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 
 import net.neoforged.neoforge.items.IItemHandler;
 
 public class ComputerUtil {
 
+	public static Map<String, Object> getBasicDetails(ItemStack stack) {
+		return VanillaDetailRegistries.ITEM_STACK.getBasicDetails(GlobalRegistryAccess.getOrThrow(), stack);
+	}
+
+	public static Map<String, Object> getDetails(ItemStack stack) {
+		return VanillaDetailRegistries.ITEM_STACK.getDetails(GlobalRegistryAccess.getOrThrow(), stack);
+	}
+
+	public static ItemLike getItemOrThrow(Identifier id) throws LuaException {
+		if (id == null)
+			throw new LuaException("Invalid item id");
+		var holder = BuiltInRegistries.ITEM.get(id);
+		if (holder.isEmpty())
+			throw new LuaException("Unknown item: " + id);
+		return holder.get()
+			.value();
+	}
+
 	public static int bigItemStackToLuaTableFilter(BigItemStack entry, Map<?, ?> filter) throws LuaException {
-		Map<String, Object> details = VanillaDetailRegistries.ITEM_STACK.getDetails(entry.stack);
+		Map<String, Object> details = getDetails(entry.stack);
 
 		// Count needs to be replaced because BigItemStack can have a different count than the stack
 		details.put("count", entry.count);
@@ -292,7 +315,7 @@ public class ComputerUtil {
 		var size = inventory.getSlots();
 		for (var i = 0; i < size; i++) {
 			var stack = inventory.getStackInSlot(i);
-			if (!stack.isEmpty()) result.put(i + 1, VanillaDetailRegistries.ITEM_STACK.getBasicDetails(stack));
+			if (!stack.isEmpty()) result.put(i + 1, getBasicDetails(stack));
 		}
 
 		return result;
@@ -304,7 +327,7 @@ public class ComputerUtil {
 		if (slot < 1 || slot > maxSlots)
 			throw new LuaException(String.format("Slot " + slot + " out of range, available slots between " + 1 + " and " + maxSlots));
 		var stack = inventory.getStackInSlot(slot - 1);
-		return stack.isEmpty() ? null : VanillaDetailRegistries.ITEM_STACK.getDetails(stack);
+		return stack.isEmpty() ? null : getDetails(stack);
 	}
 
 	public static Map<String, ?> getItemDetail(InventorySummary inventorySummary, int slot) throws LuaException {
@@ -313,7 +336,7 @@ public class ComputerUtil {
 		if (slot < 1 || slot > maxSlots)
 			throw new LuaException(String.format("Slot " + slot + " out of range, available slots between " + 1 + " and " + maxSlots));
 		BigItemStack entry = stacks.get(slot - 1);
-		Map<String, Object> details = new HashMap<>(VanillaDetailRegistries.ITEM_STACK.getDetails(entry.stack));
+		Map<String, Object> details = new HashMap<>(getDetails(entry.stack));
 		details.put("count", entry.count);
 
 		return

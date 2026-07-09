@@ -140,7 +140,7 @@ public class AllPotatoProjectileTypes {
 			.knockback(0.1f)
 			.renderTumbling()
 			.soundPitch(1.1f)
-			.onEntityHit(new PotionEffect(MobEffects.MOVEMENT_SLOWDOWN, 2, 160, true))
+			.onEntityHit(new PotionEffect(MobEffects.SLOWNESS, 2, 160, true))
 			.addItems(AllItems.HONEYED_APPLE.get())
 			.build());
 
@@ -278,7 +278,7 @@ public class AllPotatoProjectileTypes {
 			.knockback(0.2f)
 			.velocity(0.8f)
 			.renderTowardMotion(140, 1)
-			.dropStack(Items.BOWL.getDefaultInstance())
+			.dropItem(Items.BOWL)
 			.onEntityHit(SuspiciousStew.INSTANCE)
 			.addItems(Items.SUSPICIOUS_STEW)
 			.build());

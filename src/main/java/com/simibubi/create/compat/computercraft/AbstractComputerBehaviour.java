@@ -25,7 +25,7 @@ public class AbstractComputerBehaviour extends BlockEntityBehaviour {
 
 	@Override
 	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
-		hasAttachedComputer = nbt.getBoolean("HasAttachedComputer");
+		hasAttachedComputer = nbt.getBooleanOr("HasAttachedComputer", false);
 		super.read(nbt, registries, clientPacket);
 	}
 

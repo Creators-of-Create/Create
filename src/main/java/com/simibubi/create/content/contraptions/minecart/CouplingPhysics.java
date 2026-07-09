@@ -2,16 +2,16 @@ package com.simibubi.create.content.contraptions.minecart;
 
 import com.simibubi.create.content.contraptions.minecart.capability.MinecartController;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.TickRateManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,7 +35,7 @@ public class CouplingPhysics {
 		float couplingLength = c.getFirst()
 			.getCouplingLength(true);
 		softCollisionStep(world, carts, couplingLength);
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return;
 		hardCollisionStep(world, carts, couplingLength);
 	}
@@ -45,7 +45,7 @@ public class CouplingPhysics {
 			carts = carts.swap();
 
 		Couple<Vec3> corrections = Couple.create(null, null);
-		Couple<Float> maxSpeed = carts.map(AbstractMinecart::getMaxCartSpeedOnRail);
+		Couple<Float> maxSpeed = carts.map(cart -> 1.0f);
 		boolean firstLoop = true;
 		for (boolean current : new boolean[]{true, false, true}) {
 			AbstractMinecart cart = carts.get(current);
@@ -58,7 +58,7 @@ public class CouplingPhysics {
 				continue;
 
 			RailShape shape = null;
-			BlockPos railPosition = cart.getCurrentRailPosition();
+			BlockPos railPosition = cart.getCurrentBlockPosOrRailBelow();
 			BlockState railState = world.getBlockState(railPosition.above());
 
 			if (railState.getBlock() instanceof BaseRailBlock block) {
@@ -97,7 +97,7 @@ public class CouplingPhysics {
 	}
 
 	public static void softCollisionStep(Level world, Couple<AbstractMinecart> carts, double couplingLength) {
-		Couple<Float> maxSpeed = carts.map(AbstractMinecart::getMaxCartSpeedOnRail);
+		Couple<Float> maxSpeed = carts.map(cart -> 1.0f);
 		Couple<Boolean> canAddmotion = carts.map(MinecartSim2020::canAddMotion);
 
 		// Assuming Minecarts will never move faster than 1 block/tick

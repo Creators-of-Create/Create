@@ -21,10 +21,11 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBoard;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatter;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -88,7 +89,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 
 	@Override
 	public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
-		nbt.put("Filter", getFilter().saveOptional(registries));
+		nbt.put("Filter", LegacyItemStackNbtBridge.saveOptional(getFilter(), registries));
 		nbt.putInt("FilterAmount", count);
 		nbt.putBoolean("UpTo", upTo);
 		super.write(nbt, registries, clientPacket);
@@ -96,9 +97,9 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 
 	@Override
 	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
-		filter = FilterItemStack.of(registries, nbt.getCompound("Filter"));
-		count = nbt.getInt("FilterAmount");
-		upTo = nbt.getBoolean("UpTo");
+		filter = FilterItemStack.of(registries, nbt.getCompoundOrEmpty("Filter"));
+		count = nbt.getIntOr("FilterAmount", 0);
+		upTo = nbt.getBooleanOr("UpTo", false);
 
 		// Migrate from previous behaviour
 		if (count == 0) {
@@ -307,7 +308,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 			toApply.setCount(1);
 
 		if (!setFilter(side, toApply)) {
-			player.displayClientMessage(CreateLang.translateDirect("logistics.filter.invalid_item"), true);
+			player.sendOverlayMessage(CreateLang.translateDirect("logistics.filter.invalid_item"));
 			AllSoundEvents.DENY.playOnServer(player.level(), player.blockPosition(), 1, 1);
 			return;
 		}
@@ -362,7 +363,8 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 	public boolean writeToClipboard(HolderLookup.@NotNull Provider registries, CompoundTag tag, Direction side) {
 		ValueSettingsBehaviour.super.writeToClipboard(registries, tag, side);
 		ItemStack filter = getFilter(side);
-		tag.put("Filter", filter.saveOptional(registries));
+		tag.put("Filter", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(filter,
+			registries));
 		return true;
 	}
 
@@ -375,14 +377,16 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 			return upstreamResult;
 		if (simulate)
 			return true;
-		if (getWorld().isClientSide)
+		if (getWorld().isClientSide())
 			return true;
 
 		ItemStack refund = ItemStack.EMPTY;
 		if (getFilter(side).getItem() instanceof FilterItem && !player.isCreative())
 			refund = getFilter(side).copy();
 
-		ItemStack copied = ItemStack.parseOptional(registries, tag.getCompound("Filter"));
+		ItemStack copied =
+			com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.parseOptional(registries,
+				tag.getCompound("Filter"));
 
 		if (copied.getItem() instanceof FilterItem filterType && !player.isCreative()) {
 			InvWrapper inv = new InvWrapper(player.getInventory());
@@ -402,12 +406,12 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 				return true;
 			}
 
-			player.displayClientMessage(CreateLang
+			player.sendOverlayMessage(CreateLang
 				.translate("logistics.filter.requires_item_in_inventory", copied.getHoverName()
 					.copy()
 					.withStyle(ChatFormatting.WHITE))
 				.style(ChatFormatting.RED)
-				.component(), true);
+				.component());
 			AllSoundEvents.DENY.playOnServer(player.level(), player.blockPosition(), 1, 1);
 			return false;
 		}

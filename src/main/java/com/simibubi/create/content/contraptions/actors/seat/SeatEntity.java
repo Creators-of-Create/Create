@@ -6,22 +6,25 @@ import com.simibubi.create.content.logistics.box.PackageEntity;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.animal.Cat;
-import net.minecraft.world.entity.animal.Parrot;
-import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.animal.feline.Cat;
+import net.minecraft.world.entity.animal.parrot.Parrot;
+import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.animal.frog.Frog;
-import net.minecraft.world.entity.monster.Skeleton;
-import net.minecraft.world.entity.monster.Slime;
-import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.entity.monster.skeleton.Skeleton;
+import net.minecraft.world.entity.monster.cubemob.Slime;
+import net.minecraft.world.entity.monster.spider.Spider;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -92,7 +95,7 @@ public class SeatEntity extends Entity implements IEntityWithComplexSpawn {
 
 	@Override
 	public void tick() {
-		if (level().isClientSide)
+		if (level().isClientSide())
 			return;
 		boolean blockPresent = level().getBlockState(blockPosition())
 			.getBlock() instanceof SeatBlock;
@@ -124,14 +127,19 @@ public class SeatEntity extends Entity implements IEntityWithComplexSpawn {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {}
 
 	@Override
-	protected void readAdditionalSaveData(CompoundTag tag) {
+	public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+		return false;
 	}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundTag tag) {
+	protected void readAdditionalSaveData(ValueInput input) {
 	}
 
-	public static class Render extends EntityRenderer<SeatEntity> {
+	@Override
+	protected void addAdditionalSaveData(ValueOutput output) {
+	}
+
+	public static class Render extends EntityRenderer<SeatEntity, EntityRenderState> {
 
 		public Render(EntityRendererProvider.Context context) {
 			super(context);
@@ -144,8 +152,8 @@ public class SeatEntity extends Entity implements IEntityWithComplexSpawn {
 		}
 
 		@Override
-		public ResourceLocation getTextureLocation(SeatEntity seatEntity) {
-			return null;
+		public EntityRenderState createRenderState() {
+			return new EntityRenderState();
 		}
 	}
 

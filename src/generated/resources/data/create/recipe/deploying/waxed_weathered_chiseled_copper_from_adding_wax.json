@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "minecraft:weathered_chiseled_copper"
-    },
-    {
-      "item": "minecraft:honeycomb_block"
-    }
+    "minecraft:weathered_chiseled_copper",
+    "minecraft:honeycomb_block"
   ],
   "keep_held_item": true,
   "results": [

@@ -1,10 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "#": {
-      "tag": "c:ingots/zinc"
-    }
+    "#": "#c:ingots/zinc"
   },
   "pattern": [
     "###",
@@ -12,7 +9,6 @@
     "###"
   ],
   "result": {
-    "count": 1,
     "id": "create:zinc_block"
   }
 }

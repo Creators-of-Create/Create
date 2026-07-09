@@ -40,10 +40,6 @@ public class SoulBaseParticle extends CustomRotationParticle {
 	}
 
 	public static class Data extends BasicParticleData<SoulBaseParticle> {
-		@Override
-		public IBasicParticleFactory<SoulBaseParticle> getBasicFactory() {
-			return SoulBaseParticle::new;
-		}
 
 		@Override
 		public ParticleType<?> getType() {

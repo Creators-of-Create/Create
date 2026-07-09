@@ -7,9 +7,7 @@
   ],
   "type": "create:haunting",
   "ingredients": [
-    {
-      "item": "minecraft:apple"
-    }
+    "minecraft:apple"
   ],
   "results": [
     {

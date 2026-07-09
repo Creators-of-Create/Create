@@ -20,10 +20,12 @@ import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -31,6 +33,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -107,10 +110,9 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
-		BlockPos pCurrentPos, BlockPos pFacingPos) {
-		updateWater(pLevel, pState, pCurrentPos);
-		return super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
+	public BlockState updateShape(BlockState pState, LevelReader pLevel, ScheduledTickAccess ticks, BlockPos pCurrentPos, Direction pFacing, BlockPos pFacingPos, BlockState pFacingState, RandomSource random) {
+		updateWater(ticks, pLevel, pState, pCurrentPos);
+		return super.updateShape(pState, pLevel, ticks, pCurrentPos, pFacing, pFacingPos, pFacingState, random);
 	}
 
 	@Override
@@ -119,11 +121,11 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (player.isShiftKeyDown())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-		if (level.isClientSide)
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
+		if (level.isClientSide())
+			return InteractionResult.SUCCESS;
 
 		ItemStack inHand = player.getItemInHand(hand);
 		return onBlockEntityUseItemOn(level, pos, pte -> {
@@ -131,17 +133,17 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 
 			if (!player.mayBuild() || inHand.isEmpty() || !inBlock.isEmpty()) {
 				if (inBlock.isEmpty())
-					return ItemInteractionResult.FAIL;
+					return InteractionResult.FAIL;
 				if (inHand.isEmpty())
-					return ItemInteractionResult.FAIL;
+					return InteractionResult.FAIL;
 				if (state.getValue(POWERED))
-					return ItemInteractionResult.FAIL;
+					return InteractionResult.FAIL;
 
 				boolean test = inBlock.getItem() instanceof FilterItem ? FilterItemStack.of(inBlock)
 					.test(level, inHand) : ItemStack.isSameItemSameComponents(inHand, inBlock);
 				if (!test) {
 					AllSoundEvents.DENY.play(level, null, pos, 1, 1);
-					return ItemInteractionResult.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 
 				AllSoundEvents.CONFIRM.play(level, null, pos, 1, 1);
@@ -149,7 +151,7 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 				updateNeighbours(state, level, pos);
 				pte.poweredTicks = 19;
 				pte.notifyUpdate();
-				return ItemInteractionResult.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 
 			level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1, 1);
@@ -161,7 +163,7 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 					player.setItemInHand(hand, ItemStack.EMPTY);
 			}
 
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		});
 	}
 
@@ -170,17 +172,17 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-		boolean blockChanged = !pState.is(pNewState.getBlock());
-		if (!pIsMoving && blockChanged)
+	protected void affectNeighborsAfterRemoval(BlockState pState, ServerLevel pLevel, BlockPos pPos, boolean pIsMoving) {
+		if (!pIsMoving)
 			if (pState.getValue(POWERED))
 				updateNeighbours(pState, pLevel, pPos);
 
-		if (pState.hasBlockEntity() && (blockChanged || !pNewState.hasBlockEntity())) {
+		if (pState.hasBlockEntity()) {
 			if (!pIsMoving)
 				withBlockEntityDo(pLevel, pPos, be -> Block.popResource(pLevel, pPos, be.getHeldItem()));
 			pLevel.removeBlockEntity(pPos);
 		}
+		super.affectNeighborsAfterRemoval(pState, pLevel, pPos, pIsMoving);
 	}
 
 	public static void updateNeighbours(BlockState pState, Level pLevel, BlockPos pPos) {
@@ -190,7 +192,7 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	public void attack(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
-		if (pLevel.isClientSide)
+		if (pLevel.isClientSide())
 			return;
 		withBlockEntityDo(pLevel, pPos, pte -> {
 			ItemStack heldItem = pte.getHeldItem();

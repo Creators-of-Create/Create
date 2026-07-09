@@ -9,16 +9,15 @@ import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class ControlsMovementBehaviour implements MovementBehaviour {
 
@@ -43,7 +42,7 @@ public class ControlsMovementBehaviour implements MovementBehaviour {
 	@Override
 	public void tick(MovementContext context) {
 		MovementBehaviour.super.tick(context);
-		if (!context.world.isClientSide)
+		if (!context.world.isClientSide())
 			return;
 		if (!(context.temporaryData instanceof LeverAngles))
 			context.temporaryData = new LeverAngles();
@@ -54,7 +53,6 @@ public class ControlsMovementBehaviour implements MovementBehaviour {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		if (!(context.temporaryData instanceof LeverAngles angles))
@@ -87,7 +85,7 @@ public class ControlsMovementBehaviour implements MovementBehaviour {
 			angles.speed.chase(0, 0, Chaser.EXP);
 		}
 
-		float pt = AnimationTickHolder.getPartialTicks(context.world);
+		float pt = AnimationTickHolder.getPartialTicks();
 		ControlsRenderer.render(context, renderWorld, matrices, buffer, angles.equipAnimation.getValue(pt),
 			angles.speed.getValue(pt), angles.steering.getValue(pt));
 	}

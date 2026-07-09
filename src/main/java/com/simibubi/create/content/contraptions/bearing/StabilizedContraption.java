@@ -51,7 +51,7 @@ public class StabilizedContraption extends Contraption {
 
 	@Override
 	public void readNBT(Level world, CompoundTag tag, boolean spawnData) {
-		facing = Direction.from3DDataValue(tag.getInt("Facing"));
+		facing = Direction.from3DDataValue(tag.getIntOr("Facing", 0));
 		super.readNBT(world, tag, spawnData);
 	}
 

@@ -16,11 +16,11 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTest;
-import net.minecraft.gametest.framework.GameTestGenerator;
+import com.simibubi.create.infrastructure.gametest.legacy.GameTest;
+import com.simibubi.create.infrastructure.gametest.legacy.GameTestGenerator;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.StructureUtils;
-import net.minecraft.gametest.framework.TestFunction;
+import com.simibubi.create.infrastructure.gametest.legacy.TestFunction;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.StructureBlockEntity;
 
@@ -117,7 +117,7 @@ public class CreateTestFunction {
 		return consumer -> {
 			helper.andThen(gameTestHelper -> {
 				// give structure block test info
-				StructureBlockEntity be = gameTestHelper.getBlockEntity(BlockPos.ZERO);
+				StructureBlockEntity be = gameTestHelper.getBlockEntity(BlockPos.ZERO, StructureBlockEntity.class);
 				be.getPersistentData().putString("CreateTestFunction", fullName);
 			}).accept(CreateGameTestHelper.of(consumer));
 		};

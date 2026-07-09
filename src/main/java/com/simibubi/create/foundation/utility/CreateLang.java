@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.simibubi.create.Create;
 
-import net.createmod.catnip.lang.Lang;
-import net.createmod.catnip.lang.LangBuilder;
-import net.createmod.catnip.lang.LangNumberFormat;
+import net.createmod.catnip.api.lang.Lang;
+import net.createmod.catnip.api.lang.LangBuilder;
+import net.createmod.catnip.api.client.lang.LangNumberFormat;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;

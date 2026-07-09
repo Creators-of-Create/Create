@@ -8,7 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
+      "neoforge:ingredient_type": "neoforge:compound",
       "ingredients": [
         {
           "item": "regions_unexplored:yellow_snowbelle"

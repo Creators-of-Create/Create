@@ -7,9 +7,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "tag": "botania:petals/black"
-    }
+    "#botania:petals/black"
   ],
   "processing_time": 50,
   "results": [

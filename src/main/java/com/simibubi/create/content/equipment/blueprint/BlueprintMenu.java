@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -23,7 +24,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
@@ -66,14 +66,13 @@ public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 
 	public void onCraftMatrixChanged() {
 		Level level = contentHolder.getBlueprintWorld();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 
 		ServerPlayer serverplayerentity = (ServerPlayer) player;
 		CraftingContainer craftingInventory = new BlueprintCraftingInventory(this, ghostInventory);
-		Optional<RecipeHolder<CraftingRecipe>> optional = player.getServer()
-			.getRecipeManager()
-			.getRecipeFor(RecipeType.CRAFTING, craftingInventory.asCraftInput(), player.getCommandSenderWorld());
+		Optional<RecipeHolder<CraftingRecipe>> optional = ((ServerLevel) level).recipeAccess()
+			.getRecipeFor(RecipeType.CRAFTING, craftingInventory.asCraftInput(), level);
 
 		if (!optional.isPresent()) {
 			if (ghostInventory.getStackInSlot(9)
@@ -89,7 +88,7 @@ public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 		}
 
 		CraftingRecipe icraftingrecipe = optional.get().value();
-		ItemStack itemstack = icraftingrecipe.assemble(craftingInventory.asCraftInput(), level.registryAccess());
+		ItemStack itemstack = icraftingrecipe.assemble(craftingInventory.asCraftInput());
 		ghostInventory.setStackInSlot(9, itemstack);
 		contentHolder.inferredIcon = true;
 		ItemStack toSend = itemstack.copy();
@@ -122,7 +121,6 @@ public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	protected BlueprintSection createOnClient(RegistryFriendlyByteBuf extraData) {
 		int entityID = extraData.readVarInt();
 		int section = extraData.readVarInt();
@@ -164,7 +162,7 @@ public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 		@Override
 		public void setChanged() {
 			super.setChanged();
-			if (index == 9 && hasItem() && !contentHolder.getBlueprintWorld().isClientSide) {
+			if (index == 9 && hasItem() && !contentHolder.getBlueprintWorld().isClientSide()) {
 				contentHolder.inferredIcon = false;
 				ServerPlayer serverplayerentity = (ServerPlayer) player;
 				serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 36 + 9, getItem()));

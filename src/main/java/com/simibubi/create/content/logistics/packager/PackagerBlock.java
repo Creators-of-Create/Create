@@ -14,9 +14,10 @@ import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipul
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +26,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,7 +37,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 
-import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities.Item;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
 public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<PackagerBlockEntity>, IWrenchable {
@@ -65,7 +68,7 @@ public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<Pac
 					.relative(face));
 			if (be instanceof PackagerBlockEntity)
 				continue;
-			if (be != null && be.hasLevel() &&be.getLevel().getCapability(ItemHandler.BLOCK, be.getBlockPos(), null) != null) {
+			if (be != null && be.hasLevel() &&be.getLevel().getCapability(Item.BLOCK, be.getBlockPos(), null) != null) {
 				preferredFacing = face.getOpposite();
 				break;
 			}
@@ -94,37 +97,37 @@ public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<Pac
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (AllItems.WRENCH.isIn(stack))
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (AllBlocks.FACTORY_GAUGE.isIn(stack))
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (AllBlocks.STOCK_LINK.isIn(stack) && !(state.hasProperty(LINKED) && state.getValue(LINKED)))
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (AllBlocks.PACKAGE_FROGPORT.isIn(stack))
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 
 		if (onBlockEntityUseItemOn(level, pos, be -> {
 			if (be.heldBox.isEmpty()) {
 				if (be.animationTicks > 0)
-					return ItemInteractionResult.SUCCESS;
+					return InteractionResult.SUCCESS;
 				if (PackageItem.isPackage(stack)) {
 					if (level.isClientSide())
-						return ItemInteractionResult.SUCCESS;
+						return InteractionResult.SUCCESS;
 					if (!be.unwrapBox(stack.copy(), true))
-						return ItemInteractionResult.SUCCESS;
+						return InteractionResult.SUCCESS;
 					be.unwrapBox(stack.copy(), false);
 					be.triggerStockCheck();
 					stack.shrink(1);
 					AllSoundEvents.DEPOT_PLOP.playOnServer(level, pos);
 					if (stack.isEmpty())
 						player.setItemInHand(hand, ItemStack.EMPTY);
-					return ItemInteractionResult.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
-				return ItemInteractionResult.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 			if (be.animationTicks > 0)
-				return ItemInteractionResult.SUCCESS;
+				return InteractionResult.SUCCESS;
 			if (!level.isClientSide()) {
 				player.getInventory()
 					.placeItemBackInInventory(be.heldBox.copy());
@@ -132,11 +135,11 @@ public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<Pac
 				be.heldBox = ItemStack.EMPTY;
 				be.notifyUpdate();
 			}
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}).consumesAction())
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 
-		return ItemInteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -154,12 +157,12 @@ public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<Pac
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-								boolean isMoving) {
-		if (worldIn.isClientSide)
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, Orientation orientation, boolean isMoving) {
+		if (worldIn.isClientSide())
 			return;
 
 		InvManipulationBehaviour behaviour = BlockEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
+		BlockPos fromPos = orientation == null ? pos : pos.relative(orientation.getFront());
 		if (behaviour != null)
 			behaviour.onNeighborChanged(fromPos);
 
@@ -172,8 +175,8 @@ public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<Pac
 	}
 
 	@Override
-	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-		IBE.onRemove(pState, pLevel, pPos, pNewState);
+protected void affectNeighborsAfterRemoval(BlockState pState, ServerLevel pLevel, BlockPos pPos, boolean pIsMoving) {
+		IBE.onRemove(pState, pLevel, pPos, Blocks.AIR.defaultBlockState());
 	}
 
 	@Override
@@ -202,7 +205,7 @@ public class PackagerBlock extends WrenchableDirectionalBlock implements IBE<Pac
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
+	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos, Direction direction) {
 		return getBlockEntityOptional(pLevel, pPos).map(pbe -> {
 				boolean empty = pbe.inventory.getStackInSlot(0)
 					.isEmpty();

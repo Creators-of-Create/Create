@@ -26,7 +26,7 @@ public record ElevatorTargetFloorPacket(int entityId, int targetY) implements Se
 
 	@Override
 	public void handle(ServerPlayer sender) {
-		Entity entityByID = sender.serverLevel()
+		Entity entityByID = sender.level()
 				.getEntity(entityId);
 		if (!(entityByID instanceof AbstractContraptionEntity ace))
 			return;

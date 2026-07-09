@@ -13,8 +13,8 @@ import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.decoration.steamWhistle.WhistleBlock;
 import com.simibubi.create.content.decoration.steamWhistle.WhistleBlock.WhistleSize;
 
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -76,7 +76,7 @@ public class ArrivalSoundQueue {
 					continue;
 				BlockState state = info.state();
 				if (state.getBlock() instanceof WhistleBlock && info.nbt() != null) {
-					int pitch = info.nbt().getInt("Pitch");
+					int pitch = info.nbt().getIntOr("Pitch", 0);
 					WhistleSize size = state.getValue(WhistleBlock.SIZE);
 					return Pair.of(size == WhistleSize.LARGE, (size == WhistleSize.SMALL ? 12 : 0) - pitch);
 				}
@@ -91,17 +91,17 @@ public class ArrivalSoundQueue {
 		tag.put("Sources", NBTHelper.writeCompoundList(sources.entries(), e -> {
 			CompoundTag c = new CompoundTag();
 			c.putInt("Tick", e.getKey());
-			c.put("Pos", NbtUtils.writeBlockPos(e.getValue()));
+			c.put("Pos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(e.getValue()));
 			return c;
 		}));
 		tagIn.put("SoundQueue", tag);
 	}
 
 	public void deserialize(CompoundTag tagIn) {
-		CompoundTag tag = tagIn.getCompound("SoundQueue");
-		offset = tag.getInt("Offset");
-		NBTHelper.iterateCompoundList(tag.getList("Sources", Tag.TAG_COMPOUND),
-			c -> add(c.getInt("Tick"), NBTHelper.readBlockPos(c, "Pos")));
+		CompoundTag tag = tagIn.getCompoundOrEmpty("SoundQueue");
+		offset = tag.getIntOr("Offset", 0);
+		NBTHelper.iterateCompoundList(tag.getListOrEmpty("Sources"),
+			c -> add(c.getIntOr("Tick", 0), NBTHelper.readBlockPos(c, "Pos")));
 	}
 
 	public void add(int offset, BlockPos localPos) {
@@ -139,7 +139,7 @@ public class ArrivalSoundQueue {
 		}
 
 		if (state.getBlock() instanceof WhistleBlock && info.nbt() != null) {
-			int pitch = info.nbt().getInt("Pitch");
+			int pitch = info.nbt().getIntOr("Pitch", 0);
 			WhistleSize size = state.getValue(WhistleBlock.SIZE);
 			float f = (float) Math.pow(2, ((size == WhistleSize.SMALL ? 12 : 0) - pitch) / 12.0);
 			playSimple(entity,

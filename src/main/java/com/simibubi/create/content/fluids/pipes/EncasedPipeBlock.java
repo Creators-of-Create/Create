@@ -23,10 +23,9 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.IBE;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -38,6 +37,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.PipeBlock;
@@ -81,29 +81,27 @@ public class EncasedPipeBlock extends Block
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
-		if (blockTypeChanged && !world.isClientSide)
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
+		if (!world.isClientSide())
 			FluidPropagator.propagateChangedPipe(world, pos, state);
-		if (state.hasBlockEntity() && (blockTypeChanged || !newState.hasBlockEntity()))
+		if (state.hasBlockEntity())
 			world.removeBlockEntity(pos);
 	}
 
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (!world.isClientSide && state != oldState)
+		if (!world.isClientSide() && state != oldState)
 			world.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
 		return AllBlocks.FLUID_PIPE.asStack();
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
-		boolean isMoving) {
-		DebugPackets.sendNeighborsUpdatePacket(world, pos);
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block otherBlock, Orientation orientation, boolean isMoving) {
+		BlockPos neighborPos = orientation == null ? pos : pos.relative(orientation.getFront());
 		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
@@ -122,7 +120,7 @@ public class EncasedPipeBlock extends Block
 		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return InteractionResult.SUCCESS;
 
 		context.getLevel()

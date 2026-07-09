@@ -1,13 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "item": "create:repackager"
-    }
+    "create:repackager"
   ],
   "result": {
-    "count": 1,
     "id": "create:packager"
   }
 }

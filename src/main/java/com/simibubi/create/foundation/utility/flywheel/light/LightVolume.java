@@ -6,7 +6,7 @@ import com.simibubi.create.foundation.utility.flywheel.box.MutableBox;
 import dev.engine_room.flywheel.lib.memory.MemoryBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 
 import net.minecraft.world.level.LightLayer;
 

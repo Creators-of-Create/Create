@@ -3,9 +3,7 @@
   "category": "building",
   "group": "small_dripstone_brick_slab",
   "key": {
-    "X": {
-      "item": "create:small_dripstone_bricks"
-    }
+    "X": "create:small_dripstone_bricks"
   },
   "pattern": [
     "XXX"

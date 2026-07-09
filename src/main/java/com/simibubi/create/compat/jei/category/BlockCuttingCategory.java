@@ -8,15 +8,16 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
@@ -35,7 +36,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 		builder
 				.addSlot(RecipeIngredientRole.INPUT, 5, 5)
 				.setBackground(getRenderedSlot(), -1 , -1)
-				.addItemStacks(Arrays.asList(recipe.getIngredients().get(0).getItems()));
+				.addItemStacks(getItemStacks(getIngredients(recipe).get(0)));
 
 		int i = 0;
 		for (List<ItemStack> itemStacks : results) {
@@ -51,7 +52,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 	}
 
 	@Override
-	public void draw(CondensedBlockCuttingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(CondensedBlockCuttingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 31, 6);
 		AllGuiTextures.JEI_SHADOW.render(graphics, 33 - 17, 37 + 13);
 		saw.draw(graphics, 33, 37);
@@ -62,7 +63,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 		List<ItemStack> outputs = new ArrayList<>();
 
 		public CondensedBlockCuttingRecipe(Ingredient ingredient) {
-			super("", ingredient, ItemStack.EMPTY);
+			super(new Recipe.CommonInfo(false), ingredient, ItemStackTemplate.fromStack(ItemStack.EMPTY));
 		}
 
 		public void addOutput(ItemStack stack) {
@@ -100,9 +101,9 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 	public static List<RecipeHolder<CondensedBlockCuttingRecipe>> condenseRecipes(List<RecipeHolder<?>> stoneCuttingRecipes) {
 		List<RecipeHolder<CondensedBlockCuttingRecipe>> condensed = new ArrayList<>();
 		Recipes: for (RecipeHolder<?> recipe : stoneCuttingRecipes) {
-			Ingredient i1 = recipe.value().getIngredients().get(0);
+			Ingredient i1 = getIngredients(recipe.value()).get(0);
 			for (RecipeHolder<CondensedBlockCuttingRecipe> condensedRecipe : condensed) {
-				if (ItemHelper.matchIngredients(i1, condensedRecipe.value().getIngredients().get(0))) {
+				if (ItemHelper.matchIngredients(i1, getIngredients(condensedRecipe.value()).get(0))) {
 					condensedRecipe.value().addOutput(getResultItem(recipe.value()));
 					continue Recipes;
 				}

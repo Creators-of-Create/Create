@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "item": "minecraft:red_wool"
-    },
-    {
-      "item": "create:andesite_alloy"
-    }
+    "minecraft:red_wool",
+    "create:andesite_alloy"
   ],
   "result": {
     "count": 2,

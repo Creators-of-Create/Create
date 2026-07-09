@@ -15,7 +15,7 @@ import com.simibubi.create.foundation.block.CopperBlockSet.Variant;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -83,7 +83,7 @@ public abstract class DeployingRecipeGen extends ProcessingRecipeGen<ItemApplica
 	}
 
 	@Override
-	protected Builder<DeployerApplicationRecipe> getBuilder(ResourceLocation id) {
+	protected Builder<DeployerApplicationRecipe> getBuilder(Identifier id) {
 		return new Builder<>(DeployerApplicationRecipe::new, id);
 	}
 }

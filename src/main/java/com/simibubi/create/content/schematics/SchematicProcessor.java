@@ -6,22 +6,20 @@ import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllStructureProcessorTypes;
+import com.simibubi.create.foundation.utility.LegacyBlockEntityTagBridge;
 
-import net.createmod.catnip.nbt.NBTProcessors;
+import net.createmod.catnip.api.nbt.NBTProcessors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-public class SchematicProcessor extends StructureProcessor {
+public class SchematicProcessor implements StructureProcessor {
 	public static final SchematicProcessor INSTANCE = new SchematicProcessor();
 	public static final MapCodec<SchematicProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
 
@@ -47,19 +45,14 @@ public class SchematicProcessor extends StructureProcessor {
 	@Override
 	public StructureTemplate.StructureEntityInfo processEntity(LevelReader world, BlockPos pos, StructureTemplate.StructureEntityInfo rawInfo,
 			StructureTemplate.StructureEntityInfo info, StructurePlaceSettings settings, StructureTemplate template) {
-		return EntityType.by(info.nbt).flatMap(type -> {
-			if (world instanceof Level) {
-				Entity e = type.create((Level) world);
-				if (e != null && !e.onlyOpCanSetNbt()) {
-					return Optional.of(info);
-				}
-			}
-			return Optional.empty();
-		}).orElse(null);
+		return EntityType.by(LegacyBlockEntityTagBridge.input(info.nbt, world.registryAccess()))
+			.filter(type -> !type.onlyOpCanSetNbt())
+			.map(type -> info)
+			.orElse(null);
 	}
 
 	@Override
-	protected StructureProcessorType<?> getType() {
+	public MapCodec<SchematicProcessor> codec() {
 		return AllStructureProcessorTypes.SCHEMATIC.get();
 	}
 }

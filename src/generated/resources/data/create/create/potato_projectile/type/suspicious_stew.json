@@ -1,7 +1,6 @@
 {
   "damage": 3,
   "drop_stack": {
-    "count": 1,
     "id": "minecraft:bowl"
   },
   "items": "minecraft:suspicious_stew",

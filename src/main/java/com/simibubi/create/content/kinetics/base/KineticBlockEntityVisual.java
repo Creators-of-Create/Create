@@ -4,7 +4,7 @@ import com.simibubi.create.content.kinetics.simpleRelays.ICogWheel;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;

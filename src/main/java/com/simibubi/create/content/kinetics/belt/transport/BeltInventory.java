@@ -94,7 +94,7 @@ public class BeltInventory {
 			.getValue(BeltBlock.SLOPE) == BeltSlope.HORIZONTAL;
 		float spacing = 1;
 		Level world = belt.getLevel();
-		boolean onClient = world.isClientSide && !belt.isVirtual();
+		boolean onClient = world.isClientSide() && !belt.isVirtual();
 
 		// resolve ending only when items will reach it this tick
 		Ending ending = Ending.UNRESOLVED;
@@ -117,7 +117,7 @@ public class BeltInventory {
 				movement *= ServerSpeedProvider.get();
 
 			// Don't move if held by processing (client)
-			if (world.isClientSide && currentItem.locked)
+			if (world.isClientSide() && currentItem.locked)
 				continue;
 
 			// Don't move if held by external components
@@ -407,11 +407,11 @@ public class BeltInventory {
 
 	public void read(CompoundTag nbt, HolderLookup.Provider registries) {
 		items.clear();
-		nbt.getList("Items", Tag.TAG_COMPOUND)
+		nbt.getListOrEmpty("Items")
 			.forEach(inbt -> items.add(TransportedItemStack.read((CompoundTag) inbt, registries)));
 		if (nbt.contains("LazyItem"))
-			lazyClientItem = TransportedItemStack.read(nbt.getCompound("LazyItem"), registries);
-		beltMovementPositive = nbt.getBoolean("PositiveOrder");
+			lazyClientItem = TransportedItemStack.read(nbt.getCompoundOrEmpty("LazyItem"), registries);
+		beltMovementPositive = nbt.getBooleanOr("PositiveOrder", false);
 	}
 
 	public CompoundTag write(HolderLookup.Provider registries) {

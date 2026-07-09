@@ -1,9 +1,7 @@
 {
   "type": "create:haunting",
   "ingredients": [
-    {
-      "item": "minecraft:stone_bricks"
-    }
+    "minecraft:stone_bricks"
   ],
   "results": [
     {

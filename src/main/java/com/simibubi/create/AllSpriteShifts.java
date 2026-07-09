@@ -10,10 +10,10 @@ import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
 import com.simibubi.create.foundation.block.connected.CTType;
 
-import net.createmod.catnip.render.SpriteShiftEntry;
-import net.createmod.catnip.render.SpriteShifter;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.client.render.SpriteShiftEntry;
+import net.createmod.catnip.api.client.render.SpriteShifter;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.WeatheringCopper.WeatherState;
 import net.minecraft.world.level.block.state.properties.WoodType;

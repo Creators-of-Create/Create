@@ -18,11 +18,11 @@ import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import dev.engine_room.flywheel.lib.util.RecyclingPoseStack;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import com.simibubi.create.foundation.render.ItemRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -110,7 +110,7 @@ public class ArmVisual extends SingleAxisRotatingVisual<ArmBlockEntity> implemen
 	}
 
 	private void animateRave(float partialTick) {
-		var ticks = AnimationTickHolder.getTicks(blockEntity.getLevel());
+		var ticks = AnimationTickHolder.getTicks();
 		float renderTick = ticks + partialTick + (blockEntity.hashCode() % 64);
 
 		float baseAngle = (renderTick * 10) % 360;
@@ -157,8 +157,7 @@ public class ArmVisual extends SingleAxisRotatingVisual<ArmBlockEntity> implemen
 			msr.rotateZDegrees(180);
 
 		ItemStack item = blockEntity.heldItem;
-		ItemRenderer itemRenderer = Minecraft.getInstance()
-			.getItemRenderer();
+		ItemRenderer itemRenderer = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer();
 		boolean hasItem = !item.isEmpty();
 		boolean isBlockItem = hasItem && (item.getItem() instanceof BlockItem)
 			&& itemRenderer.getModel(item, Minecraft.getInstance().level, null, 0)

@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "X": {
-      "item": "create:small_diorite_bricks"
-    }
+    "X": "create:small_diorite_bricks"
   },
   "pattern": [
     "XXX",

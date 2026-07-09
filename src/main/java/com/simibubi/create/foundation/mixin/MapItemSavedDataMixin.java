@@ -10,30 +10,44 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.google.common.collect.Maps;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.content.trains.station.StationMapData;
 import com.simibubi.create.content.trains.station.StationMarker;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.world.level.saveddata.maps.MapBanner;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.saveddata.maps.MapFrame;
+import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+
+import java.nio.ByteBuffer;
 
 @Mixin(MapItemSavedData.class)
 public class MapItemSavedDataMixin implements StationMapData {
 	@Unique
 	private static final String STATION_MARKERS_KEY = "create:stations";
+
+	@Unique
+	private static final Codec<StationMarker> CREATE_STATION_MARKER_CODEC = CompoundTag.CODEC.xmap(
+		tag -> StationMarker.load(tag, null),
+		marker -> marker.save(null)
+	);
 
 	@Shadow
 	@Final
@@ -49,7 +63,34 @@ public class MapItemSavedDataMixin implements StationMapData {
 
 	@Shadow
 	@Final
+	public ResourceKey<Level> dimension;
+
+	@Shadow
+	@Final
+	private boolean trackingPosition;
+
+	@Shadow
+	@Final
+	private boolean unlimitedTracking;
+
+	@Shadow
+	@Final
+	public boolean locked;
+
+	@Shadow
+	public byte[] colors;
+
+	@Shadow
+	@Final
 	Map<String, MapDecoration> decorations;
+
+	@Shadow
+	@Final
+	private Map<String, MapBanner> bannerMarkers;
+
+	@Shadow
+	@Final
+	private Map<String, MapFrame> frameMarkers;
 
 	@Shadow
 	private int trackedDecorationCount;
@@ -58,30 +99,51 @@ public class MapItemSavedDataMixin implements StationMapData {
 	private final Map<String, StationMarker> create$stationMarkers = Maps.newHashMap();
 
 	@Inject(
-			method = "load",
-			at = @At("RETURN")
+			method = "type",
+			at = @At("RETURN"),
+			cancellable = true
 	)
-	private static void create$onLoad(CompoundTag tag, HolderLookup.Provider levelRegistry, CallbackInfoReturnable<MapItemSavedData> cir) {
-		MapItemSavedData mapData = cir.getReturnValue();
-		StationMapData stationMapData = (StationMapData) mapData;
-
-		ListTag listTag = tag.getList(STATION_MARKERS_KEY, Tag.TAG_COMPOUND);
-		for (int i = 0; i < listTag.size(); ++i) {
-			StationMarker stationMarker = StationMarker.load(listTag.getCompound(i), levelRegistry);
-			stationMapData.addStationMarker(stationMarker);
-		}
+	private static void create$useStationMarkerCodec(MapId id, CallbackInfoReturnable<SavedDataType<MapItemSavedData>> cir) {
+		SavedDataType<MapItemSavedData> original = cir.getReturnValue();
+		cir.setReturnValue(new SavedDataType<>(original.id(), original.factory(), level -> create$codec(), original.dataFixType()));
 	}
 
-	@Inject(
-			method = "save",
-			at = @At("RETURN")
-	)
-	private void create$onSave(CompoundTag tag, HolderLookup.Provider registries, CallbackInfoReturnable<CompoundTag> cir) {
-		ListTag listTag = new ListTag();
-		for (StationMarker stationMarker : create$stationMarkers.values()) {
-			listTag.add(stationMarker.save(registries));
-		}
-		tag.put(STATION_MARKERS_KEY, listTag);
+	@Unique
+	private static Codec<MapItemSavedData> create$codec() {
+		return RecordCodecBuilder.create(instance -> instance.group(
+				Level.RESOURCE_KEY_CODEC.fieldOf("dimension").forGetter(mapData -> mapData.dimension),
+				Codec.INT.fieldOf("xCenter").forGetter(mapData -> mapData.centerX),
+				Codec.INT.fieldOf("zCenter").forGetter(mapData -> mapData.centerZ),
+				Codec.BYTE.optionalFieldOf("scale", (byte) 0).forGetter(mapData -> mapData.scale),
+				Codec.BYTE_BUFFER.fieldOf("colors").forGetter(mapData -> ByteBuffer.wrap(mapData.colors)),
+				Codec.BOOL.optionalFieldOf("trackingPosition", true).forGetter(mapData -> ((MapItemSavedDataMixin) (Object) mapData).trackingPosition),
+				Codec.BOOL.optionalFieldOf("unlimitedTracking", false).forGetter(mapData -> ((MapItemSavedDataMixin) (Object) mapData).unlimitedTracking),
+				Codec.BOOL.optionalFieldOf("locked", false).forGetter(mapData -> mapData.locked),
+				MapBanner.CODEC.listOf().optionalFieldOf("banners", List.of()).forGetter(mapData -> List.copyOf(((MapItemSavedDataMixin) (Object) mapData).bannerMarkers.values())),
+				MapFrame.CODEC.listOf().optionalFieldOf("frames", List.of()).forGetter(mapData -> List.copyOf(((MapItemSavedDataMixin) (Object) mapData).frameMarkers.values())),
+				CREATE_STATION_MARKER_CODEC.listOf().optionalFieldOf(STATION_MARKERS_KEY, List.of()).forGetter(mapData -> List.copyOf(((MapItemSavedDataMixin) (Object) mapData).create$stationMarkers.values()))
+			)
+			.apply(instance, MapItemSavedDataMixin::create$load));
+	}
+
+	@Unique
+	private static MapItemSavedData create$load(ResourceKey<Level> dimension, int centerX, int centerZ, byte scale,
+												ByteBuffer colors, boolean trackingPosition, boolean unlimitedTracking,
+												boolean locked, List<MapBanner> banners, List<MapFrame> frames,
+												List<StationMarker> stationMarkers) {
+		MapItemSavedData mapData = create$createMapItemSavedData(dimension, centerX, centerZ, scale, colors,
+			trackingPosition, unlimitedTracking, locked, banners, frames);
+		StationMapData stationMapData = (StationMapData) mapData;
+		stationMarkers.forEach(stationMapData::addStationMarker);
+		return mapData;
+	}
+
+	@Invoker("<init>")
+	private static MapItemSavedData create$createMapItemSavedData(ResourceKey<Level> dimension, int centerX, int centerZ,
+																  byte scale, ByteBuffer colors, boolean trackingPosition,
+																  boolean unlimitedTracking, boolean locked,
+																  List<MapBanner> banners, List<MapFrame> frames) {
+		throw new AssertionError();
 	}
 
 	@Override

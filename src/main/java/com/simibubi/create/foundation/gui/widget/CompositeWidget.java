@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.gui.widget;
 
-import net.createmod.catnip.gui.TickableGuiEventListener;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.gui.TickableGuiEventListener;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -63,11 +63,11 @@ public class CompositeWidget extends AbstractContainerEventHandler implements Na
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		this.getChildAt(mouseX, mouseY).ifPresent(hovered -> this.hovered = hovered);
 
 		for (Renderable renderable : this.renderables) {
-			renderable.render(graphics, mouseX, mouseY, partialTicks);
+			renderable.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 		}
 	}
 

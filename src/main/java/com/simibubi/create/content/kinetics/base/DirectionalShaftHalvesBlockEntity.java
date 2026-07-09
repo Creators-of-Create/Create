@@ -1,5 +1,7 @@
 package com.simibubi.create.content.kinetics.base;
 
+import com.simibubi.create.foundation.utility.LegacyDirectionBridge;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -13,7 +15,7 @@ public class DirectionalShaftHalvesBlockEntity extends KineticBlockEntity {
 
 	public Direction getSourceFacing() {
 		BlockPos localSource = source.subtract(getBlockPos());
-		return Direction.getNearest(localSource.getX(), localSource.getY(), localSource.getZ());
+		return LegacyDirectionBridge.nearest(localSource.getX(), localSource.getY(), localSource.getZ(), Direction.NORTH);
 	}
 
 }

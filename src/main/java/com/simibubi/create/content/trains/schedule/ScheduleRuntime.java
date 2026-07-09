@@ -18,7 +18,7 @@ import com.simibubi.create.content.trains.schedule.destination.DestinationInstru
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
 import com.simibubi.create.content.trains.station.GlobalStation;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -174,7 +174,7 @@ public class ScheduleRuntime {
 
 			CompoundTag tag = conditionContext.get(i);
 			ScheduleWaitCondition condition = list.get(progress);
-			int prevVersion = tag.getInt("StatusVersion");
+			int prevVersion = tag.getIntOr("StatusVersion", 0);
 
 			if (condition.tickCompletion(level, train, tag)) {
 				conditionContext.set(i, new CompoundTag());
@@ -182,7 +182,7 @@ public class ScheduleRuntime {
 				displayLinkUpdateRequested |= i == 0;
 			}
 
-			displayLinkUpdateRequested |= i == 0 && prevVersion != tag.getInt("StatusVersion");
+			displayLinkUpdateRequested |= i == 0 && prevVersion != tag.getIntOr("StatusVersion", 0);
 		}
 
 		for (Carriage carriage : train.carriages)
@@ -389,26 +389,32 @@ public class ScheduleRuntime {
 		if (schedule != null)
 			tag.put("Schedule", schedule.write(registries));
 		NBTHelper.writeEnum(tag, "State", state);
-		tag.putIntArray("ConditionProgress", conditionProgress);
+		tag.putIntArray("ConditionProgress", conditionProgress.stream()
+			.mapToInt(Integer::intValue)
+			.toArray());
 		tag.put("ConditionContext", NBTHelper.writeCompoundList(conditionContext, CompoundTag::copy));
-		tag.putIntArray("TransitTimes", predictionTicks);
+		tag.putIntArray("TransitTimes", predictionTicks.stream()
+			.mapToInt(Integer::intValue)
+			.toArray());
 		return tag;
 	}
 
 	public void read(HolderLookup.Provider registries, CompoundTag tag) {
 		reset();
-		paused = tag.getBoolean("Paused");
-		completed = tag.getBoolean("Completed");
-		isAutoSchedule = tag.getBoolean("AutoSchedule");
-		currentEntry = Math.max(0, tag.getInt("CurrentEntry"));
+		paused = tag.getBooleanOr("Paused", true);
+		completed = tag.getBooleanOr("Completed", false);
+		isAutoSchedule = tag.getBooleanOr("AutoSchedule", false);
+		currentEntry = Math.max(0, tag.getIntOr("CurrentEntry", 0));
 		if (tag.contains("Schedule"))
-			schedule = Schedule.fromTag(registries, tag.getCompound("Schedule"));
+			schedule = Schedule.fromTag(registries, tag.getCompoundOrEmpty("Schedule"));
 		state = NBTHelper.readEnum(tag, "State", State.class);
-		for (int i : tag.getIntArray("ConditionProgress"))
+		for (int i : tag.getIntArray("ConditionProgress")
+			.orElse(new int[0]))
 			conditionProgress.add(i);
-		NBTHelper.iterateCompoundList(tag.getList("ConditionContext", Tag.TAG_COMPOUND), conditionContext::add);
+		NBTHelper.iterateCompoundList(tag.getListOrEmpty("ConditionContext"), conditionContext::add);
 
-		int[] readTransits = tag.getIntArray("TransitTimes");
+		int[] readTransits = tag.getIntArray("TransitTimes")
+			.orElse(new int[0]);
 		if (schedule != null) {
 			schedule.entries.forEach($ -> predictionTicks.add(TBD));
 			if (readTransits.length == schedule.entries.size())

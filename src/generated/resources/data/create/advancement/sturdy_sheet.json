@@ -19,7 +19,6 @@
       "translate": "advancement.create.sturdy_sheet.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:sturdy_sheet"
     },
     "title": {

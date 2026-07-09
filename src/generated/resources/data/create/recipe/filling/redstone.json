@@ -1,19 +1,20 @@
 {
   "type": "create:filling",
   "ingredients": [
+    "create:cinder_flour",
     {
-      "item": "create:cinder_flour"
-    },
-    {
-      "type": "neoforge:components",
+      "type": "create:components",
       "amount": 25,
-      "components": {
-        "create:potion_fluid_bottle_type": "regular",
-        "minecraft:potion_contents": {
-          "potion": "minecraft:strength"
-        }
-      },
-      "fluids": "create:potion"
+      "ingredient": {
+        "neoforge:ingredient_type": "create:components",
+        "components": {
+          "create:potion_fluid_bottle_type": "regular",
+          "minecraft:potion_contents": {
+            "potion": "minecraft:strength"
+          }
+        },
+        "fluids": "create:potion"
+      }
     }
   ],
   "results": [

@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.logistics.item.filter.attribute.AllItemAttributeTypes;
@@ -30,16 +29,9 @@ public record ItemNameAttribute(String itemName) implements ItemAttribute {
 		.map(ItemNameAttribute::new, ItemNameAttribute::itemName);
 
 	private static String extractCustomName(ItemStack stack, Level level) {
-		if (stack.has(DataComponents.CUSTOM_NAME)) {
-			try {
-				String customName = stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
-				Component component = Component.Serializer.fromJson(customName, level.registryAccess());
-				if (component != null) {
-					return component.getString();
-				}
-			} catch (JsonParseException ignored) {
-			}
-		}
+		if (stack.has(DataComponents.CUSTOM_NAME))
+			return stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty())
+				.getString();
 		return "";
 	}
 

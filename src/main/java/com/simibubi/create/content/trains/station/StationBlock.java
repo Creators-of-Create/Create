@@ -10,14 +10,14 @@ import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
-import net.createmod.catnip.gui.ScreenOpener;
-import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.client.player.LocalPlayer;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +28,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -39,8 +42,6 @@ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class StationBlock extends Block implements IBE<StationBlockEntity>, IWrenchable, ProperWaterloggedBlock {
 
@@ -63,9 +64,8 @@ public class StationBlock extends Block implements IBE<StationBlockEntity>, IWre
 	}
 
 	@Override
-	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
-		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
-		updateWater(pLevel, pState, pCurrentPos);
+	public BlockState updateShape(BlockState pState, LevelReader pLevel, ScheduledTickAccess ticks, BlockPos pCurrentPos, Direction pDirection, BlockPos pNeighborPos, BlockState pNeighborState, RandomSource random) {
+		updateWater(ticks, pLevel, pState, pCurrentPos);
 		return pState;
 	}
 
@@ -86,45 +86,45 @@ public class StationBlock extends Block implements IBE<StationBlockEntity>, IWre
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
+	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos, Direction direction) {
 		return getBlockEntityOptional(pLevel, pPos).map(ste -> ste.trainPresent ? 15 : 0)
 			.orElse(0);
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		IBE.onRemove(state, worldIn, pos, newState);
+protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel worldIn, BlockPos pos, boolean isMoving) {
+		IBE.onRemove(state, worldIn, pos, Blocks.AIR.defaultBlockState());
 	}
 
 	@Override
-	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
-		super.updateEntityAfterFallOn(worldIn, entityIn);
+	public void fallOn(Level worldIn, BlockState state, BlockPos pos, Entity entityIn, double fallDistance) {
+		super.fallOn(worldIn, state, pos, entityIn, fallDistance);
 		SharedDepotBlockMethods.onLanded(worldIn, entityIn);
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (player == null || player.isShiftKeyDown())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (AllItems.WRENCH.isIn(stack))
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 
 		if (stack.getItem() == Items.FILLED_MAP) {
 			return onBlockEntityUseItemOn(level, pos, station -> {
-				if (level.isClientSide)
-					return ItemInteractionResult.SUCCESS;
+				if (level.isClientSide())
+					return InteractionResult.SUCCESS;
 
 				if (station.getStation() == null || station.getStation().getId() == null)
-					return ItemInteractionResult.FAIL;
+					return InteractionResult.FAIL;
 
 				MapItemSavedData savedData = MapItem.getSavedData(stack, level);
 				if (!(savedData instanceof StationMapData stationMapData))
-					return ItemInteractionResult.FAIL;
+					return InteractionResult.FAIL;
 
 				if (!stationMapData.toggleStation(level, pos, station))
-					return ItemInteractionResult.FAIL;
+					return InteractionResult.FAIL;
 
-				return ItemInteractionResult.SUCCESS;
+				return InteractionResult.SUCCESS;
 			});
 		}
 
@@ -132,7 +132,7 @@ public class StationBlock extends Block implements IBE<StationBlockEntity>, IWre
 			ItemStack autoSchedule = station.getAutoSchedule();
 			if (autoSchedule.isEmpty())
 				return InteractionResult.PASS;
-			if (level.isClientSide)
+			if (level.isClientSide())
 				return InteractionResult.SUCCESS;
 			player.getInventory()
 				.placeItemBackInInventory(autoSchedule.copy());
@@ -143,20 +143,8 @@ public class StationBlock extends Block implements IBE<StationBlockEntity>, IWre
 		});
 
 		if (result == InteractionResult.PASS)
-			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> withBlockEntityDo(level, pos, be -> this.displayScreen(be, player)));
-		return ItemInteractionResult.SUCCESS;
-	}
-
-	@OnlyIn(value = Dist.CLIENT)
-	protected void displayScreen(StationBlockEntity be, Player player) {
-		if (!(player instanceof LocalPlayer))
-			return;
-		GlobalStation station = be.getStation();
-		BlockState blockState = be.getBlockState();
-		if (station == null || blockState == null)
-			return;
-		boolean assembling = blockState.getBlock() == this && blockState.getValue(ASSEMBLING);
-		ScreenOpener.open(assembling ? new AssemblyScreen(be, station) : new StationScreen(be, station));
+			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> withBlockEntityDo(level, pos, be -> StationClient.displayScreen(this, be, player)));
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override

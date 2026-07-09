@@ -7,7 +7,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.IDisplayAssemblyExceptions;
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -91,7 +91,7 @@ public class HighlightCommand {
 
 		BlockPos p = exception.getPosition();
 		String command = "/create highlight " + p.getX() + " " + p.getY() + " " + p.getZ();
-		player.server.getCommands().performPrefixedCommand(source, command);
+		source.getServer().getCommands().performPrefixedCommand(source, command);
 
 		return Command.SINGLE_SUCCESS;
 	}

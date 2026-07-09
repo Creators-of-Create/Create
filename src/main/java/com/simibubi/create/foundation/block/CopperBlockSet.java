@@ -9,24 +9,26 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import com.simibubi.create.foundation.data.DatagenModels;
 import com.simibubi.create.foundation.data.TagGen;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
+import com.tterrag.registrate.providers.generators.RegistrateRecipeProvider;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.lang.Lang;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.lang.Lang;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -38,7 +40,7 @@ import net.minecraft.world.level.block.WeatheringCopperFullBlock;
 import net.minecraft.world.level.block.WeatheringCopperSlabBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-import net.neoforged.neoforge.client.model.generators.ModelProvider;
+import com.tterrag.registrate.providers.generators.ModelProvider;
 
 public class CopperBlockSet {
 	protected static final WeatherState[] WEATHER_STATES = WeatherState.values();
@@ -47,10 +49,8 @@ public class CopperBlockSet {
 	protected static final Map<WeatherState, Supplier<Block>> BASE_BLOCKS = new EnumMap<>(WeatherState.class);
 
 	static {
-		BASE_BLOCKS.put(WeatherState.UNAFFECTED, () -> Blocks.COPPER_BLOCK);
-		BASE_BLOCKS.put(WeatherState.EXPOSED, () -> Blocks.EXPOSED_COPPER);
-		BASE_BLOCKS.put(WeatherState.WEATHERED, () -> Blocks.WEATHERED_COPPER);
-		BASE_BLOCKS.put(WeatherState.OXIDIZED, () -> Blocks.OXIDIZED_COPPER);
+		for (WeatherState state : WEATHER_STATES)
+			BASE_BLOCKS.put(state, () -> Blocks.COPPER_BLOCK.weathering().pick(state));
 	}
 
 	public static final Variant<?>[] DEFAULT_VARIANTS =
@@ -129,7 +129,7 @@ public class CopperBlockSet {
 		BlockBuilder<T, ?> builder = registrate.block(name, variant.getFactory(this, state, waxed))
 			.initialProperties(() -> baseBlock.get())
 			.loot((lt, block) -> variant.generateLootTable(lt, block, this, state, waxed))
-			.blockstate((ctx, prov) -> variant.generateBlockState(ctx, prov, this, state, waxed))
+			.blockstate(() -> (ctx, prov) -> variant.generateBlockState(ctx, prov, this, state, waxed))
 			.transform(TagGen.pickaxeOnly())
 			.onRegister(block -> onRegister.accept(state, block))
 			.tag(BlockTags.NEEDS_STONE_TOOL)
@@ -141,12 +141,12 @@ public class CopperBlockSet {
 			builder.recipe((ctx, prov) -> {
 				if (waxed) {
 					Block unwaxed = get(variant, state, false).get();
-					ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get())
+					ShapelessRecipeBuilder.shapeless(prov.itemLookup(), RecipeCategory.BUILDING_BLOCKS, ctx.get())
 						.requires(unwaxed)
 						.requires(Items.HONEYCOMB)
-						.unlockedBy("has_unwaxed", RegistrateRecipeProvider.has(unwaxed))
-						.save(prov, ResourceLocation.fromNamespaceAndPath(ctx.getId()
-							.getNamespace(), "crafting/" + generalDirectory + ctx.getName() + "_from_honeycomb"));
+						.unlockedBy("has_unwaxed", prov.has(unwaxed))
+						.save(prov, Identifier.fromNamespaceAndPath(ctx.getId()
+							.getNamespace(), "crafting/" + generalDirectory + ctx.getName() + "_from_honeycomb").toString());
 				}
 
 				variant.generateRecipes(get(BlockVariant.INSTANCE, state, waxed), ctx, prov);
@@ -214,7 +214,7 @@ public class CopperBlockSet {
 
 		void generateRecipes(BlockEntry<?> blockVariant, DataGenContext<Block, T> ctx, RegistrateRecipeProvider prov);
 
-		void generateBlockState(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov, CopperBlockSet blocks,
+		void generateBlockState(DataGenContext<Block, T> ctx, RegistrateBlockModelGenerator prov, CopperBlockSet blocks,
 								WeatherState state, boolean waxed);
 	}
 
@@ -239,20 +239,20 @@ public class CopperBlockSet {
 		}
 
 		@Override
-		public void generateBlockState(DataGenContext<Block, Block> ctx, RegistrateBlockstateProvider prov,
+		public void generateBlockState(DataGenContext<Block, Block> ctx, RegistrateBlockModelGenerator prov,
 									   CopperBlockSet blocks, WeatherState state, boolean waxed) {
 			Block block = ctx.get();
 			String path = RegisteredObjectsHelper.getKeyOrThrow(block)
 				.getPath();
 			String baseLoc = ModelProvider.BLOCK_FOLDER + "/" + blocks.generalDirectory + getWeatherStatePrefix(state);
 
-			ResourceLocation texture = prov.modLoc(baseLoc + blocks.getName());
+			Identifier texture = prov.modLoc(baseLoc + blocks.getName());
 			if (Objects.equals(blocks.getName(), blocks.getEndTextureName())) {
 				// End texture and base texture are equal, so we should use cube_all.
 				prov.simpleBlock(block, prov.models().cubeAll(path, texture));
 			} else {
 				// End texture and base texture aren't equal, so we should use cube_column.
-				ResourceLocation endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
+				Identifier endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
 				prov.simpleBlock(block, prov.models()
 					.cubeColumn(path, texture, endTexture));
 			}
@@ -294,16 +294,17 @@ public class CopperBlockSet {
 		}
 
 		@Override
-		public void generateBlockState(DataGenContext<Block, SlabBlock> ctx, RegistrateBlockstateProvider prov,
+		public void generateBlockState(DataGenContext<Block, SlabBlock> ctx, RegistrateBlockModelGenerator prov,
 									   CopperBlockSet blocks, WeatherState state, boolean waxed) {
-			ResourceLocation fullModel =
+			Identifier fullModel =
 				prov.modLoc(ModelProvider.BLOCK_FOLDER + "/" + getWeatherStatePrefix(state) + blocks.getName());
 
 			String baseLoc = ModelProvider.BLOCK_FOLDER + "/" + blocks.generalDirectory + getWeatherStatePrefix(state);
-			ResourceLocation texture = prov.modLoc(baseLoc + blocks.getName());
-			ResourceLocation endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
+			Identifier texture = prov.modLoc(baseLoc + blocks.getName());
+			Identifier endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
 
-			prov.slabBlock(ctx.get(), fullModel, texture, endTexture, endTexture);
+			DatagenModels.generateSlabBlock(prov, ctx.get(), fullModel, new Material(texture), new Material(endTexture),
+				new Material(endTexture));
 		}
 
 		@Override
@@ -342,12 +343,12 @@ public class CopperBlockSet {
 		}
 
 		@Override
-		public void generateBlockState(DataGenContext<Block, StairBlock> ctx, RegistrateBlockstateProvider prov,
+		public void generateBlockState(DataGenContext<Block, StairBlock> ctx, RegistrateBlockModelGenerator prov,
 									   CopperBlockSet blocks, WeatherState state, boolean waxed) {
 			String baseLoc = ModelProvider.BLOCK_FOLDER + "/" + blocks.generalDirectory + getWeatherStatePrefix(state);
-			ResourceLocation texture = prov.modLoc(baseLoc + blocks.getName());
-			ResourceLocation endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
-			prov.stairsBlock(ctx.get(), texture, endTexture, endTexture);
+			Identifier texture = prov.modLoc(baseLoc + blocks.getName());
+			Identifier endTexture = prov.modLoc(baseLoc + blocks.getEndTextureName());
+			prov.generateStairsBlock(ctx.get(), new Material(texture), new Material(endTexture), new Material(endTexture));
 		}
 
 		@Override

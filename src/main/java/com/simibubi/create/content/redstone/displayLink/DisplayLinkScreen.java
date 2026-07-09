@@ -3,7 +3,6 @@ package com.simibubi.create.content.redstone.displayLink;
 import java.util.Collections;
 import java.util.List;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.api.behaviour.display.DisplaySource;
 import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
@@ -17,28 +16,26 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 
-import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.gui.AbstractSimiScreen;
-import net.createmod.catnip.gui.ScreenOpener;
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.createmod.catnip.gui.widget.AbstractSimiWidget;
-import net.createmod.catnip.gui.widget.ElementWidget;
-import net.createmod.ponder.foundation.ui.PonderTagScreen;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.client.gui.AbstractSimiScreen;
+import net.createmod.catnip.api.client.gui.ScreenOpener;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.createmod.catnip.api.client.gui.widget.AbstractSimiWidget;
+import net.createmod.catnip.api.client.gui.widget.ElementWidget;
+import net.createmod.ponder.impl.client.gui.PonderTagScreen;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -115,9 +112,11 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		Block sourceBlock = sourceState.getBlock();
 		Block targetBlock = targetState.getBlock();
 
-		asItem = sourceBlock.getCloneItemStack(level, blockEntity.getSourcePosition(), sourceState);
+		asItem = sourceBlock.asItem()
+			.getDefaultInstance();
 		ItemStack sourceIcon = asItem == null || asItem.isEmpty() ? FALLBACK : asItem;
-		asItem = targetBlock.getCloneItemStack(level, blockEntity.getTargetPosition(), targetState);
+		asItem = targetBlock.asItem()
+			.getDefaultInstance();
 		ItemStack targetIcon = asItem == null || asItem.isEmpty() ? FALLBACK : asItem;
 
 		sources = DisplaySource.getAll(level, blockEntity.getSourcePosition());
@@ -243,52 +242,35 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 
 		if (!sources.isEmpty()) {
 			DisplaySource source = sources.get(sourceTypeSelector == null ? 0 : sourceTypeSelector.getState());
-			ResourceLocation id = CreateBuiltInRegistries.DISPLAY_SOURCE.getKey(source);
+			Identifier id = CreateBuiltInRegistries.DISPLAY_SOURCE.getKey(source);
 			if (id != null) {
 				sourceData.putString("Id", id.toString());
 			}
 			configWidgets.forEach(s -> s.saveValues(sourceData));
 		}
 
-		CatnipServices.NETWORK.sendToServer(new DisplayLinkConfigurationPacket(blockEntity.getBlockPos(), sourceData,
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new DisplayLinkConfigurationPacket(blockEntity.getBlockPos(), sourceData,
 			targetLineSelector == null ? 0 : targetLineSelector.getState()));
 	}
 
 	@Override
-	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
 		background.render(graphics, x, y);
 		MutableComponent header = CreateLang.translateDirect("display_link.title");
-		graphics.drawString(font, header, x + background.getWidth() / 2 - font.width(header) / 2, y + 4, 0x592424, false);
+		graphics.text(font, header, x + background.getWidth() / 2 - font.width(header) / 2, y + 4, 0x592424, false);
 
 		if (sources.isEmpty())
-			graphics.drawString(font, CreateLang.translateDirect("display_link.no_source"), x + 65, y + 30, 0xD3D3D3);
+			graphics.text(font, CreateLang.translateDirect("display_link.no_source"), x + 65, y + 30, 0xD3D3D3);
 		if (target == null)
-			graphics.drawString(font, CreateLang.translateDirect("display_link.no_target"), x + 65, y + 109, 0xD3D3D3);
+			graphics.text(font, CreateLang.translateDirect("display_link.no_target"), x + 65, y + 109, 0xD3D3D3);
 
-		PoseStack ms = graphics.pose();
-		ms.pushPose();
-		ms.translate(0, guiTop + 46, 0);
 		configWidgets.getFirst()
-			.renderWidgetBG(guiLeft, graphics);
-		ms.translate(0, 21, 0);
+			.renderWidgetBG(guiLeft, guiTop + 46, graphics);
 		configWidgets.getSecond()
-			.renderWidgetBG(guiLeft, graphics);
-		ms.popPose();
-
-		ms.pushPose();
-		TransformStack.of(ms)
-			.pushPose()
-			.translate(x + background.getWidth() + 4, y + background.getHeight() + 4, 100)
-			.scale(40)
-			.rotateXDegrees(-22)
-			.rotateYDegrees(63);
-		GuiGameElement.of(blockEntity.getBlockState()
-				.setValue(DisplayLinkBlock.FACING, Direction.UP))
-			.render(graphics);
-		ms.popPose();
+			.renderWidgetBG(guiLeft, guiTop + 67, graphics);
 	}
 
 	@Override

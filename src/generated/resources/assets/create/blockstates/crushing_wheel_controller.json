@@ -1,9 +1,39 @@
 {
   "variants": {
-    "valid=false": {
+    "facing=down,valid=false": {
       "model": "minecraft:block/air"
     },
-    "valid=true": {
+    "facing=down,valid=true": {
+      "model": "minecraft:block/air"
+    },
+    "facing=east,valid=false": {
+      "model": "minecraft:block/air"
+    },
+    "facing=east,valid=true": {
+      "model": "minecraft:block/air"
+    },
+    "facing=north,valid=false": {
+      "model": "minecraft:block/air"
+    },
+    "facing=north,valid=true": {
+      "model": "minecraft:block/air"
+    },
+    "facing=south,valid=false": {
+      "model": "minecraft:block/air"
+    },
+    "facing=south,valid=true": {
+      "model": "minecraft:block/air"
+    },
+    "facing=up,valid=false": {
+      "model": "minecraft:block/air"
+    },
+    "facing=up,valid=true": {
+      "model": "minecraft:block/air"
+    },
+    "facing=west,valid=false": {
+      "model": "minecraft:block/air"
+    },
+    "facing=west,valid=true": {
       "model": "minecraft:block/air"
     }
   }

@@ -1,19 +1,22 @@
 package com.simibubi.create.foundation.utility.worldWrappers;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.world.level.BlockAndLightGetter;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.CardinalLighting;
 import net.minecraft.world.level.ColorResolver;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 
 public class WrappedBlockAndTintGetter implements BlockAndTintGetter {
-	protected final BlockAndTintGetter wrapped;
+	protected final BlockGetter wrapped;
 
-	public WrappedBlockAndTintGetter(BlockAndTintGetter wrapped) {
+	public WrappedBlockAndTintGetter(BlockGetter wrapped) {
 		this.wrapped = wrapped;
 	}
 
@@ -38,23 +41,27 @@ public class WrappedBlockAndTintGetter implements BlockAndTintGetter {
 	}
 
 	@Override
-	public int getMinBuildHeight() {
-		return wrapped.getMinBuildHeight();
-	}
-
-	@Override
-	public float getShade(Direction pDirection, boolean pShade) {
-		return wrapped.getShade(pDirection, pShade);
+	public int getMinY() {
+		return wrapped.getMinY();
 	}
 
 	@Override
 	public LevelLightEngine getLightEngine() {
-		return wrapped.getLightEngine();
+		if (wrapped instanceof BlockAndLightGetter lightGetter)
+			return lightGetter.getLightEngine();
+		if (wrapped instanceof Level level)
+			return level.getLightEngine();
+		return BlockAndTintGetter.EMPTY.getLightEngine();
+	}
+
+	@Override
+	public CardinalLighting cardinalLighting() {
+		return wrapped instanceof BlockAndTintGetter tintGetter ? tintGetter.cardinalLighting() : CardinalLighting.DEFAULT;
 	}
 
 	@Override
 	public int getBlockTint(BlockPos pBlockPos, ColorResolver pColorResolver) {
-		return wrapped.getBlockTint(pBlockPos, pColorResolver);
+		return wrapped instanceof BlockAndTintGetter tintGetter ? tintGetter.getBlockTint(pBlockPos, pColorResolver) : 0xFFFFFF;
 	}
 	
 	@Override

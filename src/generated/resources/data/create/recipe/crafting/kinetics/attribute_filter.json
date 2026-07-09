@@ -1,19 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "A": {
-      "tag": "c:nuggets/brass"
-    },
-    "S": {
-      "tag": "minecraft:wool"
-    }
+    "A": "#c:nuggets/brass",
+    "S": "#minecraft:wool"
   },
   "pattern": [
     "ASA"
   ],
   "result": {
-    "count": 1,
     "id": "create:attribute_filter"
   }
 }

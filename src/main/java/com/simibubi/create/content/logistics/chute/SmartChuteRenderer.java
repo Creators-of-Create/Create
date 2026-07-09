@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.chute;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 public class SmartChuteRenderer extends SmartBlockEntityRenderer<SmartChuteBlockEntity> {

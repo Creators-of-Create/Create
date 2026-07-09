@@ -5,13 +5,13 @@ import org.jetbrains.annotations.Nullable;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.content.contraptions.StructureTransform;
 
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -23,6 +23,8 @@ import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class ArmInteractionPoint {
 
@@ -32,7 +34,7 @@ public class ArmInteractionPoint {
 	protected Mode mode = Mode.DEPOSIT;
 
 	protected BlockState cachedState;
-	protected BlockCapabilityCache<IItemHandler, Direction> cachedHandler;
+	protected BlockCapabilityCache<ResourceHandler<ItemResource>, Direction> cachedHandler;
 	protected ArmAngleTarget cachedAngles;
 
 	public ArmInteractionPoint(ArmInteractionPointType type, Level level, BlockPos pos, BlockState state) {
@@ -101,7 +103,7 @@ public class ArmInteractionPoint {
 			if (be == null)
 				return null;
 			cachedHandler = BlockCapabilityCache.create(
-				Capabilities.ItemHandler.BLOCK,
+				Capabilities.Item.BLOCK,
 				serverLevel,
 				pos,
 				Direction.UP,
@@ -109,7 +111,7 @@ public class ArmInteractionPoint {
 				() -> cachedHandler = null
 			);
 		}
-		return cachedHandler.getCapability();
+		return com.simibubi.create.foundation.item.LegacyItemHandlerAdapter.of(cachedHandler.getCapability());
 	}
 
 	public ItemStack insert(ArmBlockEntity armBlockEntity, ItemStack stack, boolean simulate) {
@@ -146,23 +148,25 @@ public class ArmInteractionPoint {
 	}
 
 	public final CompoundTag serialize(BlockPos anchor) {
-		ResourceLocation key = CreateBuiltInRegistries.ARM_INTERACTION_POINT_TYPE.getKey(type);
+		Identifier key = CreateBuiltInRegistries.ARM_INTERACTION_POINT_TYPE.getKey(type);
 		if (key == null)
 			throw new IllegalArgumentException("Could not get id for ArmInteractionPointType " + type + "!");
 
 		CompoundTag nbt = new CompoundTag();
 		nbt.putString("Type", key.toString());
-		nbt.put("Pos", NbtUtils.writeBlockPos(pos.subtract(anchor)));
+		nbt.put("Pos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(pos.subtract(anchor)));
 		serialize(nbt, anchor);
 		return nbt;
 	}
 
 	@Nullable
 	public static ArmInteractionPoint deserialize(CompoundTag nbt, Level level, BlockPos anchor) {
-		ResourceLocation id = ResourceLocation.tryParse(nbt.getString("Type"));
+		Identifier id = Identifier.tryParse(nbt.getStringOr("Type", ""));
 		if (id == null)
 			return null;
-		ArmInteractionPointType type = CreateBuiltInRegistries.ARM_INTERACTION_POINT_TYPE.get(id);
+		ArmInteractionPointType type = CreateBuiltInRegistries.ARM_INTERACTION_POINT_TYPE.get(id)
+			.map(reference -> reference.value())
+			.orElse(null);
 		if (type == null)
 			return null;
 		BlockPos pos = NBTHelper.readBlockPos(nbt, "Pos").offset(anchor);
@@ -179,7 +183,7 @@ public class ArmInteractionPoint {
 	public static void transformPos(CompoundTag nbt, StructureTransform transform) {
 		BlockPos pos = NBTHelper.readBlockPos(nbt, "Pos");
 		pos = transform.applyWithoutOffset(pos);
-		nbt.put("Pos", NbtUtils.writeBlockPos(pos));
+		nbt.put("Pos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(pos));
 	}
 
 	public static boolean isInteractable(Level level, BlockPos pos, BlockState state) {

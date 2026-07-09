@@ -13,7 +13,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox.IconValueBo
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox.TextValueBox;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.api.client.outliner.Outliner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;

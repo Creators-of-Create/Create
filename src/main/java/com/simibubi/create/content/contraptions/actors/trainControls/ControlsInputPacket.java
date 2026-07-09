@@ -8,7 +8,7 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -35,7 +35,7 @@ public record ControlsInputPacket(List<Integer> activatedButtons, boolean press,
 
 	@Override
 	public void handle(ServerPlayer player) {
-		Level world = player.getCommandSenderWorld();
+		Level world = player.level();
 		UUID uniqueID = player.getUUID();
 
 		if (player.isSpectator() && press)

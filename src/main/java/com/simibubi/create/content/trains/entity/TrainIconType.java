@@ -5,43 +5,43 @@ import java.util.Map;
 
 import com.simibubi.create.Create;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import io.netty.buffer.ByteBuf;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class TrainIconType {
-	public static final StreamCodec<ByteBuf, TrainIconType> STREAM_CODEC = ResourceLocation.STREAM_CODEC.map(
+	public static final StreamCodec<ByteBuf, TrainIconType> STREAM_CODEC = Identifier.STREAM_CODEC.map(
 			TrainIconType::byId, TrainIconType::getId
 	);
 
-	public static Map<ResourceLocation, TrainIconType> REGISTRY = new HashMap<>();
+	public static Map<Identifier, TrainIconType> REGISTRY = new HashMap<>();
 
-	public static void register(ResourceLocation id, ResourceLocation sheet, int x, int y) {
+	public static void register(Identifier id, Identifier sheet, int x, int y) {
 		REGISTRY.put(id, new TrainIconType(id, sheet, x, y));
 	}
 
 	static {
-		ResourceLocation sheet = Create.asResource("textures/gui/assemble.png");
+		Identifier sheet = Create.asResource("textures/gui/assemble.png");
 		register(Create.asResource("traditional"), sheet, 2, 205);
 		register(Create.asResource("electric"), sheet, 2, 216);
 		register(Create.asResource("modern"), sheet, 2, 227);
 	}
 
-	ResourceLocation sheet;
-	ResourceLocation id;
+	Identifier sheet;
+	Identifier id;
 	int x, y;
 
-	public TrainIconType(ResourceLocation id, ResourceLocation sheet, int x, int y) {
+	public TrainIconType(Identifier id, Identifier sheet, int x, int y) {
 		this.id = id;
 		this.sheet = sheet;
 		this.x = x;
 		this.y = y;
 	}
 
-	public static TrainIconType byId(ResourceLocation id) {
+	public static TrainIconType byId(Identifier id) {
 		return REGISTRY.getOrDefault(id, getDefault());
 	}
 
@@ -49,18 +49,17 @@ public class TrainIconType {
 		return REGISTRY.get(Create.asResource("traditional"));
 	}
 
-	public ResourceLocation getId() {
+	public Identifier getId() {
 		return id;
 	}
 
 	public static final int ENGINE = -1;
 	public static final int FLIPPED_ENGINE = -2;
 
-	@OnlyIn(Dist.CLIENT)
-	public int render(int lengthOrEngine, GuiGraphics graphics, int x, int y) {
+	public int render(int lengthOrEngine, GuiGraphicsExtractor graphics, int x, int y) {
 		int offset = getIconOffset(lengthOrEngine);
 		int width = getIconWidth(lengthOrEngine);
-		graphics.blit(sheet, x, y, 0, this.x + offset, this.y, width, 10, 256, 256);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, sheet, x, y, this.x + offset, this.y, width, 10, 256, 256);
 		return width;
 	}
 

@@ -5,9 +5,9 @@ import com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity;
 
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
@@ -15,7 +15,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public record WiFiEffectPacket(BlockPos pos) implements ClientboundPacketPayload {
 	public static final StreamCodec<ByteBuf, WiFiEffectPacket> STREAM_CODEC = BlockPos.STREAM_CODEC
@@ -27,8 +26,7 @@ public record WiFiEffectPacket(BlockPos pos) implements ClientboundPacketPayload
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void handle(LocalPlayer player) {
+	public void handle(Player player) {
 		BlockEntity blockEntity = Minecraft.getInstance().level.getBlockEntity(pos);
 			if (blockEntity instanceof PackagerLinkBlockEntity plbe)
 				plbe.playEffect();

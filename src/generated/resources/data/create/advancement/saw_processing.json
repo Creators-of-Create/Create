@@ -12,7 +12,6 @@
       "translate": "advancement.create.saw_processing.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:mechanical_saw"
     },
     "title": {

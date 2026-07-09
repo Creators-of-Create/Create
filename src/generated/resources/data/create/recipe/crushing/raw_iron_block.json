@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "tag": "c:storage_blocks/raw_iron"
-    }
+    "#c:storage_blocks/raw_iron"
   ],
   "processing_time": 400,
   "results": [

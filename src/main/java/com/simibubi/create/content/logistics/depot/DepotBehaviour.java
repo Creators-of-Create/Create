@@ -21,10 +21,11 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 import com.simibubi.create.foundation.mixin.accessor.ItemStackHandlerAccessor;
 
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -98,7 +99,7 @@ public class DepotBehaviour extends BlockEntityBehaviour implements Clearable {
 			TransportedItemStack ts = iterator.next();
 			if (!tick(ts))
 				continue;
-			if (world.isClientSide && !blockEntity.isVirtual())
+			if (world.isClientSide() && !blockEntity.isVirtual())
 				continue;
 			if (heldItem == null) {
 				heldItem = ts;
@@ -121,7 +122,7 @@ public class DepotBehaviour extends BlockEntityBehaviour implements Clearable {
 
 		BlockPos pos = blockEntity.getBlockPos();
 
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return;
 		if (handleBeltFunnelOutput())
 			return;
@@ -227,7 +228,7 @@ public class DepotBehaviour extends BlockEntityBehaviour implements Clearable {
 	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		if (heldItem != null)
 			compound.put("HeldItem", heldItem.serializeNBT(registries));
-		compound.put("OutputBuffer", processingOutputBuffer.serializeNBT(registries));
+		compound.put("OutputBuffer", LegacyItemStackNbtBridge.serializeHandler(processingOutputBuffer, registries));
 		if (canMergeItems() && !incoming.isEmpty())
 			compound.put("Incoming", NBTHelper.writeCompoundList(incoming, stack -> stack.serializeNBT(registries)));
 	}
@@ -236,10 +237,10 @@ public class DepotBehaviour extends BlockEntityBehaviour implements Clearable {
 	public void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		heldItem = null;
 		if (compound.contains("HeldItem"))
-			heldItem = TransportedItemStack.read(compound.getCompound("HeldItem"), registries);
-		processingOutputBuffer.deserializeNBT(registries, compound.getCompound("OutputBuffer"));
+			heldItem = TransportedItemStack.read(compound.getCompoundOrEmpty("HeldItem"), registries);
+		LegacyItemStackNbtBridge.deserializeHandler(processingOutputBuffer, registries, compound.getCompoundOrEmpty("OutputBuffer"));
 		if (canMergeItems()) {
-			ListTag list = compound.getList("Incoming", Tag.TAG_COMPOUND);
+			ListTag list = compound.getListOrEmpty("Incoming");
 			incoming = NBTHelper.readCompoundList(list, c -> TransportedItemStack.read(c, registries));
 		}
 	}

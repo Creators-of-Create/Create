@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 
 
 public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntity> implements ServerboundPacketPayload {
@@ -26,7 +27,7 @@ public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntit
 		Level world = player.level();
 		if (!world.isLoaded(this.pos))
 			return;
-		if (!player.canInteractWithBlock(this.pos, maxRange()))
+		if (player.distanceToSqr(Vec3.atCenterOf(this.pos)) > maxRange() * maxRange())
 			return;
 		BlockEntity blockEntity = world.getBlockEntity(this.pos);
 		if (blockEntity instanceof SyncedBlockEntity) {

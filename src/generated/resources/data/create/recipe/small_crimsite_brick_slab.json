@@ -3,9 +3,7 @@
   "category": "building",
   "group": "small_crimsite_brick_slab",
   "key": {
-    "X": {
-      "item": "create:small_crimsite_bricks"
-    }
+    "X": "create:small_crimsite_bricks"
   },
   "pattern": [
     "XXX"

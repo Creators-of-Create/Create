@@ -21,9 +21,9 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import joptsimple.internal.Strings;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -77,7 +77,7 @@ public class BoilerData {
 	// re-use the same lambda for each side
 	private final SoundPool.Sound sound = (level, pos) -> {
 		float volume = 3f / Math.max(2, attachedEngines / 6);
-		float pitch = 1.18f - level.random.nextFloat() * .25f;
+		float pitch = 1.18f - level.getRandom().nextFloat() * .25f;
 		level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(),
 			SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, volume, pitch, false);
 
@@ -90,12 +90,12 @@ public class BoilerData {
 		if (!isActive())
 			return;
 		Level level = controller.getLevel();
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			pools.values().forEach(p -> p.play(level));
 			gauge.tickChaser();
 			float current = gauge.getValue(1);
-			if (current > 1 && level.random.nextFloat() < 1 / 2f)
-				gauge.setValueNoUpdate(current + Math.min(-(current - 1) * level.random.nextFloat(), 0));
+			if (current > 1 && level.getRandom().nextFloat() < 1 / 2f)
+				gauge.setValueNoUpdate(current + Math.min(-(current - 1) * level.getRandom().nextFloat(), 0));
 			return;
 		}
 		if (needsHeatLevelUpdate && updateTemperature(controller))
@@ -129,7 +129,7 @@ public class BoilerData {
 	}
 
 	public void updateOcclusion(FluidTankBlockEntity controller) {
-		if (!controller.getLevel().isClientSide)
+		if (!controller.getLevel().isClientSide())
 			return;
 		if (attachedEngines + attachedWhistles == 0)
 			return;
@@ -431,12 +431,12 @@ public class BoilerData {
 	}
 
 	public void read(CompoundTag nbt, int boilerSize) {
-		waterSupply = nbt.getFloat("Supply");
-		activeHeat = nbt.getInt("ActiveHeat");
-		passiveHeat = nbt.getBoolean("PassiveHeat");
-		attachedEngines = nbt.getInt("Engines");
-		attachedWhistles = nbt.getInt("Whistles");
-		needsHeatLevelUpdate = nbt.getBoolean("Update");
+		waterSupply = nbt.getFloatOr("Supply", 0);
+		activeHeat = nbt.getIntOr("ActiveHeat", 0);
+		passiveHeat = nbt.getBooleanOr("PassiveHeat", false);
+		attachedEngines = nbt.getIntOr("Engines", 0);
+		attachedWhistles = nbt.getIntOr("Whistles", 0);
+		needsHeatLevelUpdate = nbt.getBooleanOr("Update", false);
 		Arrays.fill(supplyOverTime, (int) waterSupply);
 
 		int forBoilerSize = getMaxHeatLevelForBoilerSize(boilerSize);

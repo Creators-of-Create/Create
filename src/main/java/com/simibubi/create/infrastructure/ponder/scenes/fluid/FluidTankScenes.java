@@ -14,15 +14,16 @@ import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter;
 
-import net.createmod.catnip.math.Pointing;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -169,7 +170,7 @@ public class FluidTankScenes {
 		scene.idle(80);
 		scene.world().modifyBlockEntity(util.grid().at(4, 3, 0), SpoutBlockEntity.class,
 			be -> {
-				IFluidHandler handler = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+				IFluidHandler handler = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 				if (handler != null)
 					handler.fill(content, FluidAction.EXECUTE);
 			});

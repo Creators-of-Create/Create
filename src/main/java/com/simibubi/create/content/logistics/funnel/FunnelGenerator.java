@@ -3,23 +3,27 @@ package com.simibubi.create.content.logistics.funnel;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
-import com.tterrag.registrate.providers.RegistrateItemModelProvider;
+import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
+import com.tterrag.registrate.providers.generators.RegistrateItemModelGenerator;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
+import com.tterrag.registrate.providers.generators.BlockModelBuilder;
+import com.tterrag.registrate.providers.generators.ModelFile;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FunnelGenerator extends SpecialBlockStateGen {
 
 	private String type;
-	private ResourceLocation blockTexture;
+	private Identifier blockTexture;
 	private boolean hasFilter;
+	private final Map<String, ModelFile> models = new HashMap<>();
 
 	public FunnelGenerator(String type, boolean hasFilter) {
 		this.type = type;
@@ -38,7 +42,7 @@ public class FunnelGenerator extends SpecialBlockStateGen {
 	}
 
 	@Override
-	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> c, RegistrateBlockstateProvider p,
+	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> c, RegistrateBlockModelGenerator p,
 		BlockState s) {
 		String prefix = "block/funnel/";
 		String powered = s.getValue(FunnelBlock.POWERED) ? "_powered" : "_unpowered";
@@ -48,26 +52,28 @@ public class FunnelGenerator extends SpecialBlockStateGen {
 		boolean horizontal = facing.getAxis()
 			.isHorizontal();
 		String parent = horizontal ? "horizontal" : hasFilter ? "vertical" : "vertical_filterless";
+		String modelName = "block/" + type + "_funnel_" + parent + extracting + powered;
 
-		BlockModelBuilder model = p.models()
-			.withExistingParent("block/" + type + "_funnel_" + parent + extracting + powered,
-				p.modLoc(prefix + "block_" + parent))
-			.texture("particle", blockTexture)
-			.texture("base", p.modLoc(prefix + type + "_funnel"))
-			.texture("redstone", p.modLoc(prefix + type + "_funnel" + powered))
-			.texture("direction", p.modLoc(prefix + type + "_funnel" + extracting));
+		return models.computeIfAbsent(modelName, $ -> {
+			BlockModelBuilder model = p.models()
+				.withExistingParent(modelName, p.modLoc(prefix + "block_" + parent))
+				.texture("particle", blockTexture)
+				.texture("base", p.modLoc(prefix + type + "_funnel"))
+				.texture("redstone", p.modLoc(prefix + type + "_funnel" + powered))
+				.texture("direction", p.modLoc(prefix + type + "_funnel" + extracting));
 
-		if (horizontal)
-			return model.texture("block", blockTexture);
+			if (horizontal)
+				return model.texture("block", blockTexture);
 
-		return model.texture("frame", p.modLoc(prefix + type + "_funnel_frame"))
-			.texture("open", p.modLoc(prefix + "funnel" + closed));
+			return model.texture("frame", p.modLoc(prefix + type + "_funnel_frame"))
+				.texture("open", p.modLoc(prefix + "funnel" + closed));
+		});
 	}
 
-	public static NonNullBiConsumer<DataGenContext<Item, FunnelItem>, RegistrateItemModelProvider> itemModel(
+	public static NonNullBiConsumer<DataGenContext<Item, FunnelItem>, RegistrateItemModelGenerator> itemModel(
 		String type) {
 		String prefix = "block/funnel/";
-		ResourceLocation blockTexture = Create.asResource("block/" + type + "_block");
+		Identifier blockTexture = Create.asResource("block/" + type + "_block");
 		return (c, p) -> {
 			p.withExistingParent("item/" + type + "_funnel", p.modLoc("block/funnel/item"))
 				.texture("particle", blockTexture)

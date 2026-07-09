@@ -27,7 +27,7 @@ import com.simibubi.create.content.trains.signal.EdgeGroupColor;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -35,7 +35,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class GlobalRailwayManager {
 
@@ -57,7 +56,7 @@ public class GlobalRailwayManager {
 
 	public void playerLogin(Player player) {
 		if (player instanceof ServerPlayer serverPlayer) {
-			loadTrackData(serverPlayer.getServer());
+			loadTrackData(serverPlayer.level().getServer());
 			for (TrackGraph g : trackNetworks.values()) {
 				sync.sendFullGraphTo(g, serverPlayer);
 			}
@@ -294,7 +293,6 @@ public class GlobalRailwayManager {
 		return m.getValue();
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private void clientManager(MutableObject<GlobalRailwayManager> m) {
 		m.setValue(CreateClient.RAILWAYS);
 	}

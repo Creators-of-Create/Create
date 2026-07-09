@@ -7,13 +7,11 @@
   ],
   "type": "create:filling",
   "ingredients": [
+    "#minecraft:planks",
     {
-      "tag": "minecraft:planks"
-    },
-    {
-      "type": "neoforge:tag",
+      "type": "neoforge:simple",
       "amount": 125,
-      "tag": "c:creosote"
+      "ingredient": "#c:creosote"
     }
   ],
   "results": [

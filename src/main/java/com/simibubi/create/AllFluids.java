@@ -3,12 +3,10 @@ package com.simibubi.create;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
-import com.mojang.blaze3d.shaders.FogShape;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
@@ -20,20 +18,21 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;
 import com.tterrag.registrate.util.entry.FluidEntry;
 
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.FogRenderer.FogMode;
+import net.minecraft.client.renderer.fog.FogData;
+import net.minecraft.client.renderer.fog.environment.FogEnvironment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.DispensibleContainerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -58,8 +57,13 @@ public class AllFluids {
 		REGISTRATE.setCreativeTab(AllCreativeModeTabs.BASE_CREATIVE_TAB);
 	}
 
+	private static final Identifier POTION_STILL_TEXTURE = Identifier.fromNamespaceAndPath(Create.ID, "fluid/potion_still");
+	private static final Identifier POTION_FLOW_TEXTURE = Identifier.fromNamespaceAndPath(Create.ID, "fluid/potion_flow");
+
 	public static final FluidEntry<PotionFluid> POTION =
-		REGISTRATE.virtualFluid("potion", PotionFluidType::new, PotionFluid::createSource, PotionFluid::createFlowing)
+		REGISTRATE.virtualFluid("potion", POTION_STILL_TEXTURE, POTION_FLOW_TEXTURE,
+				PotionFluidType::new,
+				PotionFluid::createSource, PotionFluid::createFlowing)
 			.lang("Potion")
 			.register();
 
@@ -180,64 +184,41 @@ public class AllFluids {
 	public static abstract class TintedFluidType extends FluidType {
 
 		protected static final int NO_TINT = 0xffffffff;
-		private final ResourceLocation stillTexture;
-		private final ResourceLocation flowingTexture;
 
-		public TintedFluidType(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture) {
+		public TintedFluidType(Properties properties) {
 			super(properties);
-			this.stillTexture = stillTexture;
-			this.flowingTexture = flowingTexture;
 		}
 
-		@Override
 		public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
 			consumer.accept(new IClientFluidTypeExtensions() {
 
 				@Override
-				public ResourceLocation getStillTexture() {
-					return stillTexture;
-				}
-
-				@Override
-				public ResourceLocation getFlowingTexture() {
-					return flowingTexture;
-				}
-
-				@Override
-				public int getTintColor(FluidStack stack) {
-					return TintedFluidType.this.getTintColor(stack);
-				}
-
-				@Override
-				public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-					return TintedFluidType.this.getTintColor(state, getter, pos);
-				}
-
-				@Override
-				public @NotNull Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level,
-														int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
+				public void modifyFogColor(Camera camera, float partialTick, ClientLevel level,
+										   int renderDistance, float darkenWorldAmount, Vector4f fluidFogColor) {
 					Vector3f customFogColor = TintedFluidType.this.getCustomFogColor();
-					return customFogColor == null ? fluidFogColor : customFogColor;
+					if (customFogColor != null)
+						fluidFogColor.set(customFogColor.x(), customFogColor.y(), customFogColor.z(), fluidFogColor.w());
 				}
 
 				@Override
-				public void modifyFogRender(Camera camera, FogMode mode, float renderDistance, float partialTick,
-											float nearDistance, float farDistance, FogShape shape) {
+				public void modifyFogRender(Camera camera, @Nullable FogEnvironment environment, float renderDistance,
+											float partialTick, FogData fogData) {
 					float modifier = TintedFluidType.this.getFogDistanceModifier();
 					float baseWaterFog = 96.0f;
 					if (modifier != 1f) {
-						RenderSystem.setShaderFogShape(FogShape.CYLINDER);
-						RenderSystem.setShaderFogStart(-8);
-						RenderSystem.setShaderFogEnd(baseWaterFog * modifier);
+						fogData.environmentalStart = -8;
+						fogData.environmentalEnd = baseWaterFog * modifier;
+						fogData.skyEnd = fogData.environmentalEnd;
+						fogData.cloudEnd = fogData.environmentalEnd;
 					}
 				}
 
 			});
 		}
 
-		protected abstract int getTintColor(FluidStack stack);
+		public abstract int getTintColor(FluidStack stack);
 
-		protected abstract int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos);
+		public abstract int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos);
 
 		protected Vector3f getCustomFogColor() {
 			return null;
@@ -255,21 +236,20 @@ public class AllFluids {
 		private Supplier<Float> fogDistance;
 
 		public static FluidTypeFactory create(int fogColor, Supplier<Float> fogDistance) {
-			return (p, s, f) -> {
-				SolidRenderedPlaceableFluidType fluidType = new SolidRenderedPlaceableFluidType(p, s, f);
+			return properties -> {
+				SolidRenderedPlaceableFluidType fluidType = new SolidRenderedPlaceableFluidType(properties);
 				fluidType.fogColor = new Color(fogColor, false).asVectorF();
 				fluidType.fogDistance = fogDistance;
 				return fluidType;
 			};
 		}
 
-		private SolidRenderedPlaceableFluidType(Properties properties, ResourceLocation stillTexture,
-												ResourceLocation flowingTexture) {
-			super(properties, stillTexture, flowingTexture);
+		private SolidRenderedPlaceableFluidType(Properties properties) {
+			super(properties);
 		}
 
 		@Override
-		protected int getTintColor(FluidStack stack) {
+		public int getTintColor(FluidStack stack) {
 			return NO_TINT;
 		}
 

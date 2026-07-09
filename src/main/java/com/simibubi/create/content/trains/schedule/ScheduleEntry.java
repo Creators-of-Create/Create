@@ -6,8 +6,8 @@ import java.util.List;
 import com.simibubi.create.content.trains.schedule.condition.ScheduleWaitCondition;
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
 
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -52,10 +52,10 @@ public class ScheduleEntry {
 
 	public static ScheduleEntry fromTag(HolderLookup.Provider registries, CompoundTag tag) {
 		ScheduleEntry entry = new ScheduleEntry();
-		entry.instruction = ScheduleInstruction.fromTag(registries, tag.getCompound("Instruction"));
+		entry.instruction = ScheduleInstruction.fromTag(registries, tag.getCompoundOrEmpty("Instruction"));
 		entry.conditions = new ArrayList<>();
 		if (entry.instruction.supportsConditions())
-			for (Tag t : tag.getList("Conditions", Tag.TAG_LIST))
+			for (Tag t : tag.getListOrEmpty("Conditions"))
 				if (t instanceof ListTag list)
 					entry.conditions.add(NBTHelper.readCompoundList(list, conditionTag -> ScheduleWaitCondition.fromTag(registries, conditionTag)));
 		return entry;

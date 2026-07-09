@@ -12,11 +12,13 @@ import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe.Builder;
+import com.simibubi.create.foundation.fluid.LazyComponentFluidIngredient;
 import com.simibubi.create.foundation.mixin.accessor.PotionBrewingAccessor;
 
 import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -30,7 +32,6 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 import net.neoforged.neoforge.common.brewing.IBrewingRecipe;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.crafting.DataComponentFluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public class PotionMixingRecipes {
@@ -127,11 +128,7 @@ public class PotionMixingRecipes {
 				FluidStack outputFluid = null;
 				for (ItemStack stack : supportedContainerStacks) {
 					if (input.test(stack)) {
-						ItemStack[] stacks = input.getItems();
-						if (stacks.length == 0){
-							continue;
-						}
-						FluidStack inputFluid = PotionFluidHandler.getFluidFromPotionItem(stacks[0]);
+						FluidStack inputFluid = PotionFluidHandler.getFluidFromPotionItem(stack);
 						inputFluid.setAmount(1000);
 						if (outputFluid == null) {
 							outputFluid = PotionFluidHandler.getFluidFromPotionItem(output);
@@ -147,15 +144,15 @@ public class PotionMixingRecipes {
 	}
 
 	private static RecipeHolder<MixingRecipe> createRecipe(String id, Ingredient ingredient, FluidStack fromFluid, FluidStack toFluid) {
-		ResourceLocation recipeId = Create.asResource(id);
+		Identifier recipeId = Create.asResource(id);
 		MixingRecipe recipe = new Builder<>(MixingRecipe::new, recipeId)
 				.require(ingredient)
-			.require(new SizedFluidIngredient(DataComponentFluidIngredient.of(false, fromFluid), fromFluid.getAmount()))
+			.require(new SizedFluidIngredient(LazyComponentFluidIngredient.of(false, fromFluid), fromFluid.getAmount()))
 				.output(toFluid)
 				.requiresHeat(HeatCondition.HEATED)
 				.build();
 
-		return new RecipeHolder<>(recipeId, recipe);
+		return new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, recipeId), recipe);
 	}
 
 	private static Map<Item, List<MixingRecipe>> sortRecipesByItem(List<RecipeHolder<MixingRecipe>> all) {
@@ -163,8 +160,7 @@ public class PotionMixingRecipes {
 		Set<Item> processedItems = new HashSet<>();
 		for (RecipeHolder<MixingRecipe> recipe : all) {
 			for (Ingredient ingredient : recipe.value().getIngredients()) {
-				for (ItemStack itemStack : ingredient.getItems()) {
-					Item item = itemStack.getItem();
+				for (Item item : ingredient.items().map(itemHolder -> itemHolder.value()).toList()) {
 					if (processedItems.add(item)) {
 						byItem.computeIfAbsent(item, i -> new ArrayList<>())
 							.add(recipe.value());

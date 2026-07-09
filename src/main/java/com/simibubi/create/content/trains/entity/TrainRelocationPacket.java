@@ -10,10 +10,10 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecs;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
@@ -58,18 +58,18 @@ public record TrainRelocationPacket(UUID trainId, BlockPos pos, Vec3 lookAngle, 
 			return;
 
 		int verifyDistance = AllConfigs.server().trains.maxTrackPlacementLength.get() * 2;
-		if (!sender.canInteractWithBlock(pos, verifyDistance)) {
+		if (sender.distanceToSqr(Vec3.atCenterOf(pos)) > verifyDistance * verifyDistance) {
 			Create.LOGGER.warn(messagePrefix + train.name.getString() + ": player too far from clicked pos");
 			return;
 		}
-		if (!sender.canInteractWithEntity(cce, verifyDistance)) {
+		if (sender.distanceToSqr(cce) > verifyDistance * verifyDistance) {
 			Create.LOGGER.warn(messagePrefix + train.name.getString() + ": player too far from carriage entity");
 			return;
 		}
 
 		if (TrainRelocator.relocate(train, sender.level(), pos, hoveredBezier, direction, lookAngle, false)) {
-			sender.displayClientMessage(CreateLang.translateDirect("train.relocate.success")
-					.withStyle(ChatFormatting.GREEN), true);
+			sender.sendSystemMessage(CreateLang.translateDirect("train.relocate.success")
+					.withStyle(ChatFormatting.GREEN));
 			train.carriages.forEach(c -> c.forEachPresentEntity(e -> {
 				e.nonDamageTicks = 10;
 				CatnipServices.NETWORK.sendToClientsTrackingEntity(e,

@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
 
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -15,7 +15,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public record ContraptionDisableActorPacket(int entityId, ItemStack filter, boolean enable) implements ClientboundPacketPayload {
 	public static final StreamCodec<RegistryFriendlyByteBuf, ContraptionDisableActorPacket> STREAM_CODEC = StreamCodec.composite(
@@ -26,9 +25,8 @@ public record ContraptionDisableActorPacket(int entityId, ItemStack filter, bool
 	);
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void handle(LocalPlayer player) {
-		Entity entityByID = player.clientLevel.getEntity(entityId);
+	public void handle(Player player) {
+		Entity entityByID = player.level().getEntity(entityId);
 		if (!(entityByID instanceof AbstractContraptionEntity ace))
 			return;
 

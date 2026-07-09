@@ -10,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
-import net.createmod.catnip.codecs.stream.CatnipLargerStreamCodecs;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipLargerStreamCodecs;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

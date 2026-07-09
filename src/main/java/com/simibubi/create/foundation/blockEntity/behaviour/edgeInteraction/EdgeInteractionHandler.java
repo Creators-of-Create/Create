@@ -7,7 +7,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -93,7 +93,7 @@ public class EdgeInteractionHandler {
 
 	static AABB getBB(BlockPos pos, Direction direction) {
 		AABB bb = new AABB(pos);
-		Vec3i vec = direction.getNormal();
+		Vec3i vec = direction.getUnitVec3i();
 		int x = vec.getX();
 		int y = vec.getY();
 		int z = vec.getZ();

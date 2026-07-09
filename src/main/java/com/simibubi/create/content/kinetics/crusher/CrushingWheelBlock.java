@@ -7,12 +7,15 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.utility.LegacyDirectionBridge;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -37,7 +40,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements IBE
 
 	@Override
 	public RenderShape getRenderShape(BlockState state) {
-		return RenderShape.ENTITYBLOCK_ANIMATED;
+		return RenderShape.MODEL;
 	}
 
 	@Override
@@ -46,15 +49,13 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements IBE
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel worldIn, BlockPos pos, boolean isMoving) {
 		for (Direction d : Iterate.directions) {
 			if (d.getAxis() == state.getValue(AXIS))
 				continue;
 			if (AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(worldIn.getBlockState(pos.relative(d))))
 				worldIn.removeBlock(pos.relative(d), isMoving);
 		}
-
-		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
 	public void updateControllers(BlockState state, Level world, BlockPos pos, Direction side) {
@@ -93,8 +94,8 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements IBE
 					wheelAxis == Axis.Z ? 1 : 0).cross(
 						new Vec3(sideAxis == Axis.X ? 1 : 0, sideAxis == Axis.Y ? 1 : 0, sideAxis == Axis.Z ? 1 : 0));
 
-				controllerNewDirection = Direction.getNearest(controllerDirVec.x * controllerADO,
-					controllerDirVec.y * controllerADO, controllerDirVec.z * controllerADO);
+				controllerNewDirection = LegacyDirectionBridge.nearest(controllerDirVec.x * controllerADO,
+					controllerDirVec.y * controllerADO, controllerDirVec.z * controllerADO, Direction.NORTH);
 
 				controllerShouldBeValid = true;
 			}
@@ -127,7 +128,8 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements IBE
 	}
 
 	@Override
-	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn,
+		InsideBlockEffectApplier effectApplier, boolean isPrecise) {
 		if (entityIn.getY() < pos.getY() + 1.25f || !entityIn.onGround())
 			return;
 

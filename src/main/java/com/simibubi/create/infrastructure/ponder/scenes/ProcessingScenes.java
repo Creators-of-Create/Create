@@ -16,28 +16,31 @@ import com.simibubi.create.content.processing.burner.LitBlazeBurnerBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 
-import net.createmod.catnip.data.IntAttached;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.ParticleEmitter;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.EntityElement;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.data.IntAttached;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.scene.ParticleEmitter;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.EntityElement;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -212,7 +215,7 @@ public class ProcessingScenes {
 		scene.idle(18);
 		scene.world().modifyEntity(entity1, Entity::discard);
 		ParticleEmitter blockSpace =
-				scene.effects().particleEmitterWithinBlockSpace(new ItemParticleOption(ParticleTypes.ITEM, input), util.vector().of(0, 0, 0));
+				scene.effects().particleEmitterWithinBlockSpace(new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(input)), util.vector().of(0, 0, 0));
 		scene.effects().emitParticles(util.vector().centerOf(center)
 			.add(0, -0.2, 0), blockSpace, 3, 40);
 		scene.idle(10);
@@ -402,9 +405,9 @@ public class ProcessingScenes {
 		BlockPos pressPos = util.grid().at(1, 4, 2);
 		Vec3 basinSide = util.vector().blockSurface(basin, Direction.WEST);
 
-		ItemStack blue = new ItemStack(Items.BLUE_DYE);
-		ItemStack red = new ItemStack(Items.RED_DYE);
-		ItemStack purple = new ItemStack(Items.PURPLE_DYE);
+		ItemStack blue = new ItemStack(Items.DYE.blue());
+		ItemStack red = new ItemStack(Items.DYE.red());
+		ItemStack purple = new ItemStack(Items.DYE.purple());
 
 		scene.overlay().showText(60)
 			.pointAt(basinSide)
@@ -423,7 +426,7 @@ public class ProcessingScenes {
 		scene.idle(80);
 		scene.world().modifyBlockEntityNBT(util.select().position(basin), BasinBlockEntity.class, nbt -> {
 			nbt.put("VisualizedItems",
-				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, purple)), ia -> (CompoundTag) ia.getValue().saveOptional(scene.world().getHolderLookupProvider())));
+				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, purple)), ia -> (CompoundTag) com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(ia.getValue(), scene.world().getHolderLookupProvider())));
 		});
 		scene.idle(4);
 		scene.world().createItemOnBelt(util.grid().at(1, 1, 1), Direction.UP, purple);
@@ -485,7 +488,7 @@ public class ProcessingScenes {
 		Vec3 basinSide = util.vector().blockSurface(basin, Direction.WEST);
 
 		ItemStack copper = new ItemStack(Items.COPPER_INGOT);
-		ItemStack copperBlock = new ItemStack(Items.COPPER_BLOCK);
+		ItemStack copperBlock = new ItemStack(Items.COPPER_BLOCK.weathering().unaffected());
 
 		scene.overlay().showText(60)
 			.pointAt(basinSide)
@@ -504,7 +507,7 @@ public class ProcessingScenes {
 			.makeCompactingParticleEffect(util.vector().centerOf(basin), copper));
 		scene.world().modifyBlockEntityNBT(util.select().position(basin), BasinBlockEntity.class, nbt -> {
 			nbt.put("VisualizedItems",
-				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, copperBlock)), ia -> (CompoundTag) ia.getValue().saveOptional(scene.world().getHolderLookupProvider())));
+				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, copperBlock)), ia -> (CompoundTag) com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(ia.getValue(), scene.world().getHolderLookupProvider())));
 		});
 		scene.idle(4);
 		scene.world().createItemOnBelt(util.grid().at(1, 1, 1), Direction.UP, copperBlock);
@@ -529,7 +532,7 @@ public class ProcessingScenes {
 			.makeCompactingParticleEffect(util.vector().centerOf(basin), log));
 		scene.world().modifyBlockEntityNBT(util.select().position(basin), BasinBlockEntity.class, nbt -> {
 			nbt.put("VisualizedItems",
-				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, bark)), ia -> (CompoundTag) ia.getValue().saveOptional(scene.world().getHolderLookupProvider())));
+				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, bark)), ia -> (CompoundTag) com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(ia.getValue(), scene.world().getHolderLookupProvider())));
 		});
 		scene.idle(4);
 		scene.world().createItemOnBelt(util.grid().at(1, 1, 1), Direction.UP, bark);
@@ -568,7 +571,7 @@ public class ProcessingScenes {
 		BlockPos center = util.grid().at(2, 0, 2);
 
 		scene.world().createEntity(w -> {
-			Blaze blazeEntity = EntityType.BLAZE.create(w);
+			Blaze blazeEntity = EntityTypes.BLAZE.create(w, EntitySpawnReason.COMMAND);
 			Vec3 v = util.vector().topOf(center);
 			blazeEntity.setPosRaw(v.x, v.y, v.z);
 			blazeEntity.setYRot(blazeEntity.yRotO = 180);
@@ -701,7 +704,7 @@ public class ProcessingScenes {
 
 		Class<DeployerBlockEntity> teType = DeployerBlockEntity.class;
 		scene.world().modifyBlockEntityNBT(util.select().position(4, 1, 2), teType,
-			nbt -> nbt.put("HeldItem", AllItems.BLAZE_CAKE.asStack().saveOptional(scene.world().getHolderLookupProvider())));
+			nbt -> nbt.put("HeldItem", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(AllItems.BLAZE_CAKE.asStack(), scene.world().getHolderLookupProvider())));
 
 		scene.world().showSection(util.select().fromTo(3, 0, 5, 2, 0, 5), Direction.UP);
 		scene.idle(5);
@@ -823,7 +826,7 @@ public class ProcessingScenes {
 		scene.world().modifyBlockEntityNBT(util.select().position(basinPos), BasinBlockEntity.class, nbt -> {
 			nbt.put("VisualizedItems",
 				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, new ItemStack(Blocks.BRICKS))),
-					ia -> (CompoundTag) ia.getValue().saveOptional(scene.world().getHolderLookupProvider())));
+					ia -> (CompoundTag) com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(ia.getValue(), scene.world().getHolderLookupProvider())));
 		});
 		scene.idle(4);
 		scene.overlay().showControls(util.vector().topOf(basinPos.below().north()), Pointing.RIGHT, 30).withItem(new ItemStack(Items.BRICKS));
@@ -867,7 +870,7 @@ public class ProcessingScenes {
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.makeCompactingParticleEffect(util.vector().centerOf(basinPos), ingot));
 
-		ItemStack block = new ItemStack(Items.COPPER_BLOCK);
+		ItemStack block = new ItemStack(Items.COPPER_BLOCK.weathering().unaffected());
 		scene.idle(30);
 		scene.overlay().showControls(util.vector().topOf(basinPos), Pointing.RIGHT, 30).withItem(block);
 		scene.overlay().showText(70)

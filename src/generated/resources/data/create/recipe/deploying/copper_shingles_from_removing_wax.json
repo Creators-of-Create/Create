@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "create:waxed_copper_shingles"
-    },
-    {
-      "tag": "minecraft:axes"
-    }
+    "create:waxed_copper_shingles",
+    "#minecraft:axes"
   ],
   "keep_held_item": true,
   "results": [

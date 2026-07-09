@@ -28,7 +28,7 @@ public class VirtualChunkSource extends ChunkSource {
 	}
 
 	public ChunkAccess getChunk(int x, int z) {
-		return chunks.computeIfAbsent(ChunkPos.asLong(x, z), packedPos -> new VirtualChunk(world, ChunkPos.getX(packedPos), ChunkPos.getZ(packedPos)));
+		return chunks.computeIfAbsent(ChunkPos.pack(x, z), packedPos -> new VirtualChunk(world, ChunkPos.getX(packedPos), ChunkPos.getZ(packedPos)));
 	}
 
 	@Override

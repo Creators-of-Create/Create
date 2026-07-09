@@ -9,7 +9,7 @@ import com.simibubi.create.api.contraption.storage.item.MountedItemStorage;
 
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -30,7 +30,7 @@ public record MountedStorageSyncPacket(int contraptionId, Map<BlockPos, MountedI
 	}
 
 	@Override
-	public void handle(LocalPlayer player) {
+	public void handle(Player player) {
 		Entity entity = Minecraft.getInstance().level.getEntity(this.contraptionId);
 		if (!(entity instanceof AbstractContraptionEntity contraption))
 			return;

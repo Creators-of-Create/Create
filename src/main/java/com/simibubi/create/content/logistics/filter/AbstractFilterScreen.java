@@ -13,10 +13,10 @@ import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.item.TooltipHelper;
 
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.createmod.catnip.lang.FontHelper.Palette;
-import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.createmod.catnip.api.client.lang.FontHelper.Palette;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -63,7 +63,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 	}
 
 	@Override
-	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(GuiGraphicsExtractor graphics, float partialTicks, int mouseX, int mouseY) {
 		int invX = getLeftOfCentered(PLAYER_INVENTORY.getWidth());
 		int invY = topPos + background.getHeight() + 4;
 		renderPlayerInventory(graphics, invX, invY);
@@ -72,7 +72,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 		int y = topPos;
 
 		background.render(graphics, x, y);
-		graphics.drawString(font, title, x + (background.getWidth() - 8) / 2 - font.width(title) / 2, y + 4,
+		graphics.text(font, title, x + (background.getWidth() - 8) / 2 - font.width(title) / 2, y + 4,
 			getTitleColor(), false);
 
 		GuiGameElement.of(menu.contentHolder).<GuiGameElement
@@ -141,7 +141,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 	protected void contentsCleared() {}
 
 	protected void sendOptionUpdate(Option option) {
-		CatnipServices.NETWORK.sendToServer(new FilterScreenPacket(option));
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new FilterScreenPacket(option));
 	}
 
 	@Override

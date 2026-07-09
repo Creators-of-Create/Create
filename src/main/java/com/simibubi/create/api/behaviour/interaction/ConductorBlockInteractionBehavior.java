@@ -15,7 +15,7 @@ import com.simibubi.create.content.trains.schedule.ScheduleItem;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -69,27 +69,26 @@ public abstract class ConductorBlockInteractionBehavior extends MovingInteractio
 			Train train = carriageEntity.getCarriage().train;
 			if (train == null)
 				return false;
-			if (player.level().isClientSide)
+			if (player.level().isClientSide())
 				return true;
 
 			if (train.runtime.getSchedule() != null) {
 				if (train.runtime.paused && !train.runtime.completed) {
 					train.runtime.paused = false;
 					AllSoundEvents.CONFIRM.playOnServer(player.level(), player.blockPosition(), 1, 1);
-					player.displayClientMessage(CreateLang.translateDirect("schedule.continued"), true);
+					player.sendOverlayMessage(CreateLang.translateDirect("schedule.continued"));
 					return true;
 				}
 
 				if (!itemInHand.isEmpty()) {
 					AllSoundEvents.DENY.playOnServer(player.level(), player.blockPosition(), 1, 1);
-					player.displayClientMessage(CreateLang.translateDirect("schedule.remove_with_empty_hand"), true);
+					player.sendOverlayMessage(CreateLang.translateDirect("schedule.remove_with_empty_hand"));
 					return true;
 				}
 
 				AllSoundEvents.playItemPickup(player);
-				player.displayClientMessage(CreateLang.translateDirect(
-					train.runtime.isAutoSchedule ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"),
-					true);
+				player.sendOverlayMessage(CreateLang.translateDirect(
+					train.runtime.isAutoSchedule ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"));
 				player.setItemInHand(activeHand, train.runtime.returnSchedule(player.registryAccess()));
 				this.onScheduleUpdate(false, info.state(), newBlockState -> setBlockState(localPos, contraptionEntity, newBlockState));
 				return true;
@@ -104,21 +103,21 @@ public abstract class ConductorBlockInteractionBehavior extends MovingInteractio
 
 			if (schedule.entries.isEmpty()) {
 				AllSoundEvents.DENY.playOnServer(player.level(), player.blockPosition(), 1, 1);
-				player.displayClientMessage(CreateLang.translateDirect("schedule.no_stops"), true);
+				player.sendOverlayMessage(CreateLang.translateDirect("schedule.no_stops"));
 				return true;
 			}
 			this.onScheduleUpdate(true, info.state(), newBlockState -> setBlockState(localPos, contraptionEntity, newBlockState));
 			train.runtime.setSchedule(schedule, false);
 			AllAdvancements.CONDUCTOR.awardTo(player);
 			AllSoundEvents.CONFIRM.playOnServer(player.level(), player.blockPosition(), 1, 1);
-			player.displayClientMessage(CreateLang.translateDirect("schedule.applied_to_train")
-				.withStyle(ChatFormatting.GREEN), true);
+			player.sendOverlayMessage(CreateLang.translateDirect("schedule.applied_to_train")
+				.withStyle(ChatFormatting.GREEN));
 			itemInHand.shrink(1);
 			player.setItemInHand(activeHand, itemInHand.isEmpty() ? ItemStack.EMPTY : itemInHand);
 			return true;
 		}
 
-		player.displayClientMessage(CreateLang.translateDirect("schedule.non_controlling_seat"), true);
+		player.sendOverlayMessage(CreateLang.translateDirect("schedule.non_controlling_seat"));
 		AllSoundEvents.DENY.playOnServer(player.level(), player.blockPosition(), 1, 1);
 		return true;
 	}

@@ -12,18 +12,20 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.placement.PoleHelper;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.lang.Lang;
-import net.createmod.catnip.placement.IPlacementHelper;
-import net.createmod.catnip.placement.PlacementHelpers;
-import net.createmod.catnip.placement.PlacementOffset;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.lang.Lang;
+import net.createmod.catnip.api.placement.IPlacementHelper;
+import net.createmod.catnip.api.placement.PlacementHelpers;
+import net.createmod.catnip.api.placement.PlacementOffset;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +35,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -53,7 +57,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements IBE<Gan
 	public static final Property<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
+	private static final IPlacementHelper PLACEMENT_HELPER = PlacementHelpers.register(new PlacementHelper());
 
 	public enum Part implements StringRepresentable {
 		START, MIDDLE, END, SINGLE;
@@ -70,10 +74,10 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements IBE<Gan
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		IPlacementHelper placementHelper = PLACEMENT_HELPER;
 		if (!placementHelper.matchesItem(stack))
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 
 		return placementHelper.getOffset(player, level, state, pos, hitResult)
 			.placeInWorld(level, ((BlockItem) stack.getItem()), player, hand, hitResult);
@@ -88,12 +92,11 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements IBE<Gan
 
 	@Override
 	public RenderShape getRenderShape(BlockState state) {
-		return RenderShape.ENTITYBLOCK_ANIMATED;
+		return RenderShape.MODEL;
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbour, LevelAccessor world,
-		BlockPos pos, BlockPos neighbourPos) {
+	public BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess ticks, BlockPos pos, Direction direction, BlockPos neighbourPos, BlockState neighbour, RandomSource random) {
 		Direction facing = state.getValue(FACING);
 		Axis axis = facing.getAxis();
 		if (direction.getAxis() != axis)
@@ -166,7 +169,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements IBE<Gan
 		if (onWrenched.consumesAction()) {
 			BlockPos pos = context.getClickedPos();
 			Level world = context.getLevel();
-			neighborChanged(world.getBlockState(pos), world, pos, state.getBlock(), pos, false);
+			neighborChanged(world.getBlockState(pos), world, pos, state.getBlock(), null, false);
 		}
 		return onWrenched;
 	}
@@ -186,9 +189,8 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements IBE<Gan
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
-		boolean p_220069_6_) {
-		if (worldIn.isClientSide)
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block p_220069_4_, Orientation orientation, boolean p_220069_6_) {
+		if (worldIn.isClientSide())
 			return;
 		boolean previouslyPowered = state.getValue(POWERED);
 		boolean shouldPower = worldIn.hasNeighborSignal(pos); // shouldBePowered(state, worldIn, pos);

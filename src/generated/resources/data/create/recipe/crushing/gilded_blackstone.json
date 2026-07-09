@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:gilded_blackstone"
-    }
+    "minecraft:gilded_blackstone"
   ],
   "processing_time": 400,
   "results": [

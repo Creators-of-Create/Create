@@ -3,9 +3,7 @@
   "category": "building",
   "group": "cut_ochrum_stairs",
   "key": {
-    "X": {
-      "item": "create:cut_ochrum"
-    }
+    "X": "create:cut_ochrum"
   },
   "pattern": [
     "X  ",

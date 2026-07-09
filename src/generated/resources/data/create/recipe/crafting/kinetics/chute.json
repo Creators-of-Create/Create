@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "A": {
-      "tag": "c:plates/iron"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    }
+    "A": "#c:plates/iron",
+    "I": "#c:ingots/iron"
   },
   "pattern": [
     "A",

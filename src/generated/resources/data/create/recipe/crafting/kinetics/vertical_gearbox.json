@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "B": {
-      "item": "create:andesite_casing"
-    },
-    "C": {
-      "item": "create:cogwheel"
-    }
+    "B": "create:andesite_casing",
+    "C": "create:cogwheel"
   },
   "pattern": [
     "C C",
@@ -15,7 +10,6 @@
     "C C"
   ],
   "result": {
-    "count": 1,
     "id": "create:vertical_gearbox"
   }
 }

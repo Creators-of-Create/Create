@@ -14,11 +14,11 @@ import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
@@ -29,8 +29,10 @@ public class InItemGroupAttribute implements ItemAttribute {
 			.xmap(InItemGroupAttribute::new, i -> i.group)
 			.fieldOf("value");
 
-	public static final StreamCodec<ByteBuf, InItemGroupAttribute> STREAM_CODEC = CatnipStreamCodecBuilders.nullable(ResourceLocation.STREAM_CODEC)
-		.map(i -> new InItemGroupAttribute(BuiltInRegistries.CREATIVE_MODE_TAB.get(i)),
+	public static final StreamCodec<ByteBuf, InItemGroupAttribute> STREAM_CODEC = CatnipStreamCodecBuilders.nullable(Identifier.STREAM_CODEC)
+		.map(i -> new InItemGroupAttribute(i == null ? null : BuiltInRegistries.CREATIVE_MODE_TAB.get(i)
+			.map(ref -> ref.value())
+			.orElse(null)),
 			i -> i.group == null ? null : BuiltInRegistries.CREATIVE_MODE_TAB.getKey(i.group));
 
 	@Nullable

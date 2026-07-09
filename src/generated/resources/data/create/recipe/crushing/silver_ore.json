@@ -10,9 +10,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "tag": "c:ores/silver"
-    }
+    "#c:ores/silver"
   ],
   "processing_time": 400,
   "results": [

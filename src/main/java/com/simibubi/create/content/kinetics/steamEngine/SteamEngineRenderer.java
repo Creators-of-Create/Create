@@ -8,11 +8,11 @@ import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRender
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -47,7 +47,7 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 		float distance = Mth.sqrt(Mth.square(piston - 6 / 16f * Mth.sin(angle)));
 		float angle2 = (float) Math.acos(distance / (14 / 16f)) * (Mth.cos(angle) >= 0 ? 1f : -1f);
 
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 
 		transformed(AllPartialModels.ENGINE_PISTON, blockState, facing, roll90)
 			.translate(0, piston + 20 / 16f, 0)
@@ -60,7 +60,7 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 			.uncenter()
 			.translate(0, piston + 20 / 16f, 0)
 			.translate(0, 4 / 16f, 8 / 16f)
-			.rotateX(angle2)
+			.rotateXDegrees(angle2 * Mth.RAD_TO_DEG)
 			.translate(0, -4 / 16f, -8 / 16f)
 			.light(light)
 			.renderInto(ms, vb);
@@ -68,7 +68,7 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 		transformed(AllPartialModels.ENGINE_CONNECTOR, blockState, facing, roll90)
 			.translate(0, 2, 0)
 			.center()
-			.rotateX(-(angle + Mth.HALF_PI))
+			.rotateXDegrees(-(angle + Mth.HALF_PI) * Mth.RAD_TO_DEG)
 			.uncenter()
 			.light(light)
 			.renderInto(ms, vb);
@@ -83,7 +83,6 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 			.uncenter();
 	}
 
-	@Override
 	public int getViewDistance() {
 		return 128;
 	}

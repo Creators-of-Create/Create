@@ -20,9 +20,10 @@ import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.CreatePaths;
 
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.minecraft.Util;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.minecraft.util.Util;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -132,7 +133,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 	}
 
 	@Override
-	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(GuiGraphicsExtractor graphics, float partialTicks, int mouseX, int mouseY) {
 		int invX = getLeftOfCentered(PLAYER_INVENTORY.getWidth());
 		int invY = topPos + background.getHeight() + 4;
 		renderPlayerInventory(graphics, invX, invY);
@@ -151,10 +152,10 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		else
 			titleText = title;
 
-		graphics.drawString(font, titleText, x + (background.getWidth() - 8 - font.width(titleText)) / 2, y + 4, 0x505050, false);
+		graphics.text(font, titleText, x + (background.getWidth() - 8 - font.width(titleText)) / 2, y + 4, 0x505050, false);
 
 		if (schematicsArea == null)
-			graphics.drawString(font, noSchematics, x + 54, y + 26, 0xD3D3D3);
+			graphics.text(font, noSchematics, x + 54, y + 26, 0xD3D3D3);
 
 		GuiGameElement.of(renderedItem)
 			.<GuiGameElement.GuiRenderBuilder>at(x + background.getWidth(), y + background.getHeight() - 40, -200)
@@ -164,8 +165,8 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		int width = (int) (SCHEMATIC_TABLE_PROGRESS.getWidth()
 			* Mth.lerp(partialTicks, lastChasingProgress, chasingProgress));
 		int height = SCHEMATIC_TABLE_PROGRESS.getHeight();
-		graphics.blit(SCHEMATIC_TABLE_PROGRESS.location, x + 70, y + 59, SCHEMATIC_TABLE_PROGRESS.getStartX(),
-			SCHEMATIC_TABLE_PROGRESS.getStartY(), width, height);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, SCHEMATIC_TABLE_PROGRESS.location, x + 70, y + 59,
+			SCHEMATIC_TABLE_PROGRESS.getStartX(), SCHEMATIC_TABLE_PROGRESS.getStartY(), width, height, 256, 256);
 	}
 
 	@Override

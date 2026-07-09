@@ -8,15 +8,9 @@
   "type": "create:pressing",
   "ingredients": [
     [
-      {
-        "item": "minecraft:dirt"
-      },
-      {
-        "item": "minecraft:coarse_dirt"
-      },
-      {
-        "item": "minecraft:rooted_dirt"
-      }
+      "minecraft:dirt",
+      "minecraft:coarse_dirt",
+      "minecraft:rooted_dirt"
     ]
   ],
   "results": [

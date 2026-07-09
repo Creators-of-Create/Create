@@ -57,7 +57,7 @@ public class LinkHandler {
 			Vec3 localHit = ray.getLocation()
 				.subtract(Vec3.atLowerCornerOf(pos))
 				.add(Vec3.atLowerCornerOf(ray.getDirection()
-					.getNormal())
+					.getUnitVec3i())
 					.scale(.25f));
 			fakePlayerChoice = localHit.distanceToSqr(behaviour.firstSlot.getLocalOffset(world, pos, blockState)) > localHit
 				.distanceToSqr(behaviour.secondSlot.getLocalOffset(world, pos, blockState));

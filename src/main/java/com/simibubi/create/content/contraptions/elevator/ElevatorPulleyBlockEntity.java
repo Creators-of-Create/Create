@@ -10,7 +10,7 @@ import com.simibubi.create.content.contraptions.elevator.ElevatorColumn.ColumnCo
 import com.simibubi.create.content.contraptions.pulley.PulleyBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
@@ -36,7 +36,7 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 	}
 
 	private int getTargetOffset() {
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return clientOffsetTarget;
 		if (movedContraption == null || !(movedContraption.getContraption()instanceof ElevatorContraption ec))
 			return (int) offset;
@@ -53,8 +53,8 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 		super.attach(contraption);
 		if (offset >= 0)
 			resetContraptionToOffset();
-		if (level.isClientSide) {
-			CatnipServices.NETWORK.sendToServer(new ElevatorFloorListPacket.RequestFloorList(contraption));
+		if (level.isClientSide()) {
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ElevatorFloorListPacket.RequestFloorList(contraption));
 			return;
 		}
 
@@ -151,11 +151,11 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 		if (!clientPacket)
 			return;
 
-		clientOffsetTarget = compound.getInt("ClientTarget");
+		clientOffsetTarget = compound.getIntOr("ClientTarget", 0);
 		if (initialOffsetReceived)
 			return;
 
-		offset = compound.getFloat("Offset");
+		offset = compound.getFloatOr("Offset", 0);
 		initialOffsetReceived = true;
 		resetContraptionToOffset();
 	}
@@ -257,7 +257,7 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 		forceMove = true;
 
 		// Collect Construct
-		if (!level.isClientSide && mirrorParent == null) {
+		if (!level.isClientSide() && mirrorParent == null) {
 			needsContraption = false;
 			BlockPos anchor = worldPosition.below(Mth.floor(offset + 1));
 			offset = Mth.floor(offset);

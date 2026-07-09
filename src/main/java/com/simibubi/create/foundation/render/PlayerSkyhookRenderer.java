@@ -7,14 +7,16 @@ import java.util.UUID;
 
 import com.simibubi.create.AllTags.AllItemTags;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public class PlayerSkyhookRenderer {
 
@@ -29,6 +31,18 @@ public class PlayerSkyhookRenderer {
 		if (hangingPlayers.contains(player.getUUID()))
 			return;
 
+		resetPose(model);
+	}
+
+	public static void beforeSetupAnim(HumanoidRenderState state, HumanoidModel<?> model) {
+		UUID uuid = ((CreateEntityRenderStateExtension) state).create$getEntityUUID();
+		if (uuid == null || hangingPlayers.contains(uuid))
+			return;
+
+		resetPose(model);
+	}
+
+	private static void resetPose(HumanoidModel<?> model) {
 		model.head.resetPose();
 		model.hat.resetPose();
 		model.body.resetPose();
@@ -42,6 +56,15 @@ public class PlayerSkyhookRenderer {
 		if (hangingPlayers.contains(player.getUUID()))
 			setHangingPose(player.getMainArm() == HumanoidArm.LEFT ^
 				!AllItemTags.CHAIN_RIDEABLE.matches(player.getMainHandItem()), model);
+	}
+
+	public static void afterSetupAnim(HumanoidRenderState state, HumanoidModel<?> model) {
+		UUID uuid = ((CreateEntityRenderStateExtension) state).create$getEntityUUID();
+		if (uuid == null || !hangingPlayers.contains(uuid))
+			return;
+
+		ItemStack mainHandItem = state.getMainHandItemStack();
+		setHangingPose(state.mainArm == HumanoidArm.LEFT ^ !AllItemTags.CHAIN_RIDEABLE.matches(mainHandItem), model);
 	}
 
 	private static void setHangingPose(boolean isLeftArmMain, HumanoidModel<?> model) {

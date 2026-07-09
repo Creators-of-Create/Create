@@ -1,6 +1,5 @@
 package com.simibubi.create.content.kinetics.deployer;
 
-import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.UUID;
 
@@ -32,7 +31,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -54,7 +52,7 @@ public class DeployerFakePlayer extends FakePlayer {
 	private UUID owner;
 
 	public DeployerFakePlayer(ServerLevel world, @Nullable UUID owner) {
-		super(world, new DeployerGameProfile(fallbackID, "Deployer", owner));
+		super(world, createProfile(owner));
 		this.owner = owner;
 	}
 
@@ -69,7 +67,6 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public EntityDimensions getDefaultDimensions(Pose pose) {
 		return super.getDefaultDimensions(pose).withEyeHeight(0);
 	}
@@ -89,7 +86,6 @@ public class DeployerFakePlayer extends FakePlayer {
 		return false;
 	}
 
-	@Override
 	public ItemStack eat(Level level, ItemStack food, FoodProperties foodProperties) {
 		food.shrink(1);
 		return food;
@@ -130,7 +126,7 @@ public class DeployerFakePlayer extends FakePlayer {
 
 	@Override
 	public void remove(RemovalReason p_150097_) {
-		if (blockBreakingProgress != null && !level().isClientSide)
+		if (blockBreakingProgress != null && !level().isClientSide())
 			level().destroyBlockProgress(getId(), blockBreakingProgress.getKey(), -1);
 		super.remove(p_150097_);
 	}
@@ -160,46 +156,10 @@ public class DeployerFakePlayer extends FakePlayer {
 		}
 	}
 
-	// Credit to Mekanism for this approach. Helps fake players get past claims and
-	// protection by other mods
-	private static class DeployerGameProfile extends GameProfile {
-
-		private UUID owner;
-
-		public DeployerGameProfile(UUID id, String name, UUID owner) {
-			super(id, name);
-			this.owner = owner;
-		}
-
-		@Override
-		public UUID getId() {
-			return owner == null ? super.getId() : owner;
-		}
-
-		@Override
-		public String getName() {
-			if (owner == null)
-				return super.getName();
-			String lastKnownUsername = UsernameCache.getLastKnownUsername(owner);
-			return lastKnownUsername == null ? super.getName() : lastKnownUsername;
-		}
-
-		@Override
-		public boolean equals(final Object o) {
-			if (this == o)
-				return true;
-			if (!(o instanceof GameProfile otherProfile))
-				return false;
-			return Objects.equals(getId(), otherProfile.getId()) && Objects.equals(getName(), otherProfile.getName());
-		}
-
-		@Override
-		public int hashCode() {
-			UUID id = getId();
-			String name = getName();
-			int result = id == null ? 0 : id.hashCode();
-			result = 31 * result + (name == null ? 0 : name.hashCode());
-			return result;
-		}
+	private static GameProfile createProfile(@Nullable UUID owner) {
+		if (owner == null)
+			return new GameProfile(fallbackID, "Deployer");
+		String lastKnownUsername = UsernameCache.getLastKnownUsername(owner);
+		return new GameProfile(owner, lastKnownUsername == null ? "Deployer" : lastKnownUsername);
 	}
 }

@@ -15,13 +15,13 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.data.WorldAttached;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.data.WorldAttached;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
@@ -63,7 +63,7 @@ public abstract class FluidTransportBehaviour extends BlockEntityBehaviour {
 		super.tick();
 		Level world = getWorld();
 		BlockPos pos = getPos();
-		boolean onServer = !world.isClientSide || blockEntity.isVirtual();
+		boolean onServer = !world.isClientSide() || blockEntity.isVirtual();
 
 		if (interfaces == null)
 			return;

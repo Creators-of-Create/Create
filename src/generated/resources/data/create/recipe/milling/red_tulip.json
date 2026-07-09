@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:red_tulip"
-    }
+    "minecraft:red_tulip"
   ],
   "processing_time": 50,
   "results": [

@@ -12,8 +12,10 @@ import com.simibubi.create.foundation.data.recipe.Mods;
 import com.simibubi.create.foundation.mixin.accessor.MappedRegistryAccessor;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.neoforge.common.NeoForgeMod;
@@ -30,7 +32,7 @@ public class SimpleDatagenIngredient implements ICustomIngredient {
 	  ]
 	 */
 	private static final MapCodec<SimpleDatagenIngredient> INTERNAL_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ResourceLocation.CODEC.fieldOf("item").forGetter(i -> i.mod.asResource(i.id))
+		Identifier.CODEC.fieldOf("item").forGetter(i -> i.mod.asResource(i.id))
 	).apply(instance, location -> {
 		for (Mods mod : Mods.values()) {
 			if (mod.getId().equals(location.getNamespace())) {
@@ -59,12 +61,14 @@ public class SimpleDatagenIngredient implements ICustomIngredient {
 
 	@Override
 	public boolean test(@NotNull ItemStack stack) {
-		return stack.getItemHolder().getKey().location().equals(mod.asResource(id));
+		return BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(mod.asResource(id));
 	}
 
 	@Override
-	public @NotNull Stream<ItemStack> getItems() {
-		return Stream.empty();
+	public @NotNull Stream<Holder<Item>> items() {
+		return BuiltInRegistries.ITEM.get(mod.asResource(id))
+			.map(reference -> Stream.<Holder<Item>>of(reference))
+			.orElseGet(Stream::empty);
 	}
 
 	@Override

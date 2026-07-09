@@ -40,7 +40,7 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 	@Override
 	public Vec3 getActiveAreaOffset(MovementContext context) {
 		Direction facing = FunnelBlock.getFunnelFacing(context.state);
-		Vec3 vec = Vec3.atLowerCornerOf(facing.getNormal());
+		Vec3 vec = Vec3.atLowerCornerOf(facing.getUnitVec3i());
 		if (facing != Direction.UP)
 			return vec.scale(context.state.getValue(FunnelBlock.EXTRACTING) ? .15 : .65);
 
@@ -75,8 +75,8 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 			return;
 
 		FilterItemStack filter = context.getFilterFromBE();
-		int filterAmount = context.blockEntityData.getInt("FilterAmount");
-		boolean upTo = context.blockEntityData.getBoolean("UpTo");
+		int filterAmount = context.blockEntityData.getIntOr("FilterAmount", 0);
+		boolean upTo = context.blockEntityData.getBooleanOr("UpTo", false);
 		filterAmount = hasFilter ? filterAmount : 1;
 
 		ItemStack extract = ItemHelper.extract(context.contraption.getStorage().getAllItems(),
@@ -86,7 +86,7 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 		if (extract.isEmpty())
 			return;
 
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return;
 
 		ItemEntity entity = new ItemEntity(world, entityPos.x, entityPos.y, entityPos.z, extract);

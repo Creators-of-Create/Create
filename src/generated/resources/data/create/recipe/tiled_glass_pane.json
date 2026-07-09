@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "create:tiled_glass"
-    }
+    "#": "create:tiled_glass"
   },
   "pattern": [
     "###",

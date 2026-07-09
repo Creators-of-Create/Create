@@ -1,19 +1,20 @@
 package com.simibubi.create.content.processing.recipe;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 @ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public abstract class StandardProcessingRecipe<T extends RecipeInput> extends ProcessingRecipe<T, ProcessingRecipeParams> {
 	public StandardProcessingRecipe(IRecipeTypeInfo typeInfo, ProcessingRecipeParams params) {
 		super(typeInfo, params);
@@ -27,7 +28,7 @@ public abstract class StandardProcessingRecipe<T extends RecipeInput> extends Pr
 	public static class Builder<R extends StandardProcessingRecipe<?>>
 		extends ProcessingRecipeBuilder<ProcessingRecipeParams, R, Builder<R>> {
 
-		public Builder(Factory<R> factory, ResourceLocation recipeId) {
+		public Builder(Factory<R> factory, Identifier recipeId) {
 			super(factory, recipeId);
 		}
 
@@ -42,29 +43,28 @@ public abstract class StandardProcessingRecipe<T extends RecipeInput> extends Pr
 		}
 	}
 
-	public static class Serializer<R extends StandardProcessingRecipe<?>> implements RecipeSerializer<R> {
-		private final Factory<R> factory;
-		private final MapCodec<R> codec;
-		private final StreamCodec<RegistryFriendlyByteBuf, R> streamCodec;
+	public static class Serializer {
+		private static final Map<RecipeSerializer<?>, Factory<?>> FACTORIES = new ConcurrentHashMap<>();
 
-		public Serializer(Factory<R> factory) {
-			this.factory = factory;
-			this.codec = ProcessingRecipe.codec(factory, ProcessingRecipeParams.CODEC);
-			this.streamCodec = ProcessingRecipe.streamCodec(factory, ProcessingRecipeParams.STREAM_CODEC);
+		public static <R extends StandardProcessingRecipe<?>> RecipeSerializer<R> create(Factory<R> factory) {
+			RecipeSerializer<R> serializer = new RecipeSerializer<>(
+				ProcessingRecipe.codec(factory, ProcessingRecipeParams.CODEC),
+				ProcessingRecipe.streamCodec(factory, ProcessingRecipeParams.STREAM_CODEC)
+			);
+			FACTORIES.put(serializer, factory);
+			return serializer;
 		}
 
-		@Override
-		public MapCodec<R> codec() {
-			return codec;
+		public static boolean hasFactory(RecipeSerializer<?> serializer) {
+			return FACTORIES.containsKey(serializer);
 		}
 
-		@Override
-		public StreamCodec<RegistryFriendlyByteBuf, R> streamCodec() {
-			return streamCodec;
-		}
-
-		public Factory<R> factory() {
-			return factory;
+		@SuppressWarnings("unchecked")
+		public static <R extends StandardProcessingRecipe<?>> Factory<R> factory(RecipeSerializer<?> serializer) {
+			Factory<?> factory = FACTORIES.get(serializer);
+			if (factory == null)
+				throw new IllegalStateException("Recipe serializer " + serializer + " was not created by Create's processing recipe serializer factory");
+			return (Factory<R>) factory;
 		}
 	}
 }

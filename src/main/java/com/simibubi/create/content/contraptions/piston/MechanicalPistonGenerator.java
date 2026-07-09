@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.piston;
 import com.simibubi.create.content.contraptions.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.PistonType;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
+import com.tterrag.registrate.providers.generators.ModelFile;
 
 public class MechanicalPistonGenerator extends SpecialBlockStateGen {
 
@@ -36,7 +36,7 @@ public class MechanicalPistonGenerator extends SpecialBlockStateGen {
 	}
 
 	@Override
-	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
+	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockModelGenerator prov,
 		BlockState state) {
 		Direction facing = state.getValue(PistonBaseBlock.FACING);
 		boolean axisAlongFirst = state.getValue(MechanicalPistonBlock.AXIS_ALONG_FIRST_COORDINATE);

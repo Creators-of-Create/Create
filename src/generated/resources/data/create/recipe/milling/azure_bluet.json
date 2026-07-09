@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:azure_bluet"
-    }
+    "minecraft:azure_bluet"
   ],
   "processing_time": 50,
   "results": [

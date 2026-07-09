@@ -143,9 +143,9 @@ public class RepackagerBlockEntity extends PackagerBlockEntity {
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-			Capabilities.ItemHandler.BLOCK,
+			Capabilities.Item.BLOCK,
 			AllBlockEntityTypes.REPACKAGER.get(),
-			(be, context) -> be.inventory
+			(be, context) -> new com.simibubi.create.foundation.item.LegacyItemTransferAdapter(be.inventory)
 		);
 
 		if (Mods.COMPUTERCRAFT.isLoaded()) {

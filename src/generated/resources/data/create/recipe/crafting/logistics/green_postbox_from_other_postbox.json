@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "tag": "c:dyes/green"
-    },
-    {
-      "tag": "create:postboxes"
-    }
+    "#c:dyes/green",
+    "#create:postboxes"
   ],
   "result": {
-    "count": 1,
     "id": "create:green_postbox"
   }
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.content.trains.station.GlobalStation;
 
-import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.api.data.Couple;
 
 public class DiscoveredPath {
 	public List<Couple<TrackNode>> path;

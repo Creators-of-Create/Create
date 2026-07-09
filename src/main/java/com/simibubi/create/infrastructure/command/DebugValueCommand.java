@@ -13,7 +13,7 @@ public class DebugValueCommand {
 
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("debugValue")
-			.requires(cs -> cs.hasPermission(4))
+			.requires(AllCommands.hasPermission(4))
 			.then(Commands.argument("value", FloatArgumentType.floatArg())
 				.executes((ctx) -> {
 					value = FloatArgumentType.getFloat(ctx, "value");

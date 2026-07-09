@@ -12,8 +12,8 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CRecipes;
 
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -73,10 +73,11 @@ public class ChromaticCompoundItem extends Item {
 		Vec3 positionVec = entity.position();
 		CRecipes config = AllConfigs.server().recipes;
 
-		if (world.isClientSide) {
+		if (world.isClientSide()) {
+			RandomSource random = world.getRandom();
 			int light = getLight(itemStack);
-			if (world.random.nextInt(config.lightSourceCountForRefinedRadiance.get() + 20) < light) {
-				Vec3 start = VecHelper.offsetRandomly(positionVec, world.random, 3);
+			if (random.nextInt(config.lightSourceCountForRefinedRadiance.get() + 20) < light) {
+				Vec3 start = VecHelper.offsetRandomly(positionVec, random, 3);
 				Vec3 motion = positionVec.subtract(start)
 					.normalize()
 					.scale(.2f);
@@ -87,7 +88,7 @@ public class ChromaticCompoundItem extends Item {
 
 		double y = entity.getY();
 		double yMotion = entity.getDeltaMovement().y;
-		int minHeight = world.getMinBuildHeight();
+		int minHeight = world.getMinY();
 		CompoundTag data = entity.getPersistentData();
 
 		// Convert to Shadow steel if in void
@@ -130,7 +131,7 @@ public class ChromaticCompoundItem extends Item {
 		while (testPos.getY() > minHeight) {
 			testPos.move(Direction.DOWN);
 			BlockState state = world.getBlockState(testPos);
-			if (state.getLightBlock(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
+			if (state.getLightDampening() >= 15 && state.getBlock() != Blocks.BEDROCK)
 				break;
 			if (state.getBlock() == Blocks.BEACON) {
 				BlockEntity be = world.getBlockEntity(testPos);
@@ -154,7 +155,7 @@ public class ChromaticCompoundItem extends Item {
 		}
 
 		// Find a light source and eat it.
-		RandomSource r = world.random;
+		RandomSource r = world.getRandom();
 		int range = 3;
 		float rate = 1 / 2f;
 		if (r.nextFloat() > rate)

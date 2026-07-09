@@ -15,6 +15,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class CurvedTrackDestroyPacket extends BlockEntityConfigurationPacket<TrackBlockEntity> {
 	public static final StreamCodec<ByteBuf, CurvedTrackDestroyPacket> STREAM_CODEC = StreamCodec.composite(
@@ -39,7 +40,7 @@ public class CurvedTrackDestroyPacket extends BlockEntityConfigurationPacket<Tra
 	@Override
 	protected void applySettings(ServerPlayer player, TrackBlockEntity be) {
 		int verifyDistance = AllConfigs.server().trains.maxTrackPlacementLength.get() * 4;
-		if (!player.canInteractWithBlock(be.getBlockPos(), verifyDistance)) {
+		if (player.distanceToSqr(Vec3.atCenterOf(be.getBlockPos())) > verifyDistance * verifyDistance) {
 			Create.LOGGER.warn("{} too far away from destroyed Curve track", player.getScoreboardName());
 			return;
 		}
@@ -57,7 +58,7 @@ public class CurvedTrackDestroyPacket extends BlockEntityConfigurationPacket<Tra
 
 		if (wrench) {
 			AllSoundEvents.WRENCH_REMOVE.playOnServer(player.level(), soundSource, 1,
-				level.random.nextFloat() * .5f + .5f);
+				level.getRandom().nextFloat() * .5f + .5f);
 			if (!player.isCreative() && bezierConnection != null)
 				bezierConnection.addItemsToPlayer(player);
 		} else if (!player.isCreative() && bezierConnection != null)

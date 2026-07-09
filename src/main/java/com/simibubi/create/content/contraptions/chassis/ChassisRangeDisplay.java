@@ -14,7 +14,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
 
-import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.api.client.outliner.Outliner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;

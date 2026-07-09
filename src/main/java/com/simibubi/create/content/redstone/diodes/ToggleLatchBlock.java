@@ -12,7 +12,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -57,13 +57,13 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!player.mayBuild())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (player.isShiftKeyDown())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (AllItems.WRENCH.isIn(stack))
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		return activated(level, pos, state);
 	}
 
@@ -81,13 +81,13 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 			worldIn.setBlock(pos, newState.cycle(POWERING), Block.UPDATE_CLIENTS);
 	}
 
-	protected ItemInteractionResult activated(Level worldIn, BlockPos pos, BlockState state) {
-		if (!worldIn.isClientSide) {
+	protected InteractionResult activated(Level worldIn, BlockPos pos, BlockState state) {
+		if (!worldIn.isClientSide()) {
 			float f = !state.getValue(POWERING) ? 0.6F : 0.5F;
 			worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
 			worldIn.setBlock(pos, state.cycle(POWERING), Block.UPDATE_CLIENTS);
 		}
-		return ItemInteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override

@@ -3,8 +3,6 @@ package com.simibubi.create.content.kinetics.belt.item;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.joml.Vector3f;
-
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.kinetics.simpleRelays.ShaftBlock;
@@ -31,10 +29,10 @@ public class BeltConnectorHandler {
 
 		if (player == null || level == null)
 			return;
-		if (Minecraft.getInstance().screen != null)
+		if (Minecraft.getInstance().gui.screen() != null)
 			return;
 
-		RandomSource random = level.random;
+		RandomSource random = level.getRandom();
 
 		for (InteractionHand hand : InteractionHand.values()) {
 			ItemStack heldItem = player.getItemInHand(hand);
@@ -56,7 +54,7 @@ public class BeltConnectorHandler {
 			HitResult rayTrace = Minecraft.getInstance().hitResult;
 			if (rayTrace == null || !(rayTrace instanceof BlockHitResult)) {
 				if (random.nextInt(50) == 0) {
-					level.addParticle(new DustParticleOptions(new Vector3f(.3f, .9f, .5f), 1),
+					level.addParticle(new DustParticleOptions(0x4de680, 1),
 						first.getX() + .5f + randomOffset(random, .25f), first.getY() + .5f + randomOffset(random, .25f),
 						first.getZ() + .5f + randomOffset(random, .25f), 0, 0, 0);
 				}
@@ -123,7 +121,7 @@ public class BeltConnectorHandler {
 				Vec3 position = start.add(step.scale(f));
 				if (random.nextInt(10) == 0) {
 					level.addParticle(
-						new DustParticleOptions(new Vector3f(canConnect ? .3f : .9f, canConnect ? .9f : .3f, .5f), 1),
+						new DustParticleOptions(canConnect ? 0x4de680 : 0xe64d80, 1),
 						position.x + .5f, position.y + .5f, position.z + .5f, 0, 0, 0);
 				}
 			}

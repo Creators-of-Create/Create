@@ -12,19 +12,21 @@ import com.simibubi.create.foundation.blockEntity.ComparatorUtil;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidHelper.FluidExchange;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -34,6 +36,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -144,30 +147,31 @@ public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankB
 	}
 
 	@Override
-	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
-								  LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+	public BlockState updateShape(BlockState pState, LevelReader pLevel, ScheduledTickAccess ticks,
+								  BlockPos pCurrentPos, Direction pDirection, BlockPos pNeighborPos,
+								  BlockState pNeighborState, RandomSource random) {
 		if (pDirection == Direction.DOWN && pNeighborState.getBlock() != this)
 			withBlockEntityDo(pLevel, pCurrentPos, FluidTankBlockEntity::updateBoilerTemperature);
 		return pState;
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-		boolean onClient = level.isClientSide;
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		boolean onClient = level.isClientSide();
 
 		if (stack.isEmpty())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (!player.isCreative() && !creative)
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 
 		FluidExchange exchange = null;
 		FluidTankBlockEntity be = ConnectivityHandler.partAt(getBlockEntityType(), level, pos);
 		if (be == null)
-			return ItemInteractionResult.FAIL;
+			return InteractionResult.FAIL;
 
-		IFluidHandler tankCapability = level.getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+		IFluidHandler tankCapability = com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter.of(level.getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 		if (tankCapability == null)
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		FluidStack prevFluidInTank = tankCapability.getFluidInTank(0)
 			.copy();
 
@@ -179,8 +183,8 @@ public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankB
 		if (exchange == null) {
 			if (GenericItemEmptying.canItemBeEmptied(level, stack)
 				|| GenericItemFilling.canItemBeFilled(level, stack))
-				return ItemInteractionResult.SUCCESS;
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+				return InteractionResult.SUCCESS;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		}
 
 		SoundEvent soundevent = null;
@@ -217,7 +221,7 @@ public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankB
 				.clamp(1 - (1f * fluidInTank.getAmount() / (FluidTankBlockEntity.getCapacityMultiplier() * 16)), 0, 1);
 			pitch /= 1.5f;
 			pitch += .5f;
-			pitch += (level.random.nextFloat() - .5f) / 4f;
+			pitch += (level.getRandom().nextFloat() - .5f) / 4f;
 			level.playSound(null, pos, soundevent, SoundSource.BLOCKS, .5f, pitch);
 		}
 
@@ -244,7 +248,7 @@ public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankB
 							.scale(1 / 20f);
 						vec = vec.add(motion);
 						level.addParticle(blockParticleData, vec.x, vec.y, vec.z, motion.x, motion.y, motion.z);
-						return ItemInteractionResult.SUCCESS;
+						return InteractionResult.SUCCESS;
 					}
 
 					controllerBE.sendDataImmediately();
@@ -253,18 +257,16 @@ public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankB
 			}
 		}
 
-		return ItemInteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasBlockEntity() && (state.getBlock() != newState.getBlock() || !newState.hasBlockEntity())) {
-			BlockEntity be = world.getBlockEntity(pos);
-			if (!(be instanceof FluidTankBlockEntity tankBE))
-				return;
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
+		if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FluidTankBlockEntity tankBE) {
 			world.removeBlockEntity(pos);
 			ConnectivityHandler.splitMulti(tankBE);
 		}
+		super.affectNeighborsAfterRemoval(state, world, pos, isMoving);
 	}
 
 	@Override
@@ -347,7 +349,7 @@ public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankB
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos, Direction direction) {
 		return getBlockEntityOptional(worldIn, pos).map(FluidTankBlockEntity::getControllerBE)
 			.map(be -> ComparatorUtil.fractionToRedstoneLevel(be.getFillState()))
 			.orElse(0);

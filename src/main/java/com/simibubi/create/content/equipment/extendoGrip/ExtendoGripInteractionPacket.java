@@ -2,8 +2,8 @@ package com.simibubi.create.content.equipment.extendoGrip;
 
 import com.simibubi.create.AllPackets;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -54,9 +54,9 @@ public record ExtendoGripInteractionPacket(InteractionHand hand, int target, Vec
 			if (this.hand == null)
 				sender.attack(entityByID);
 			else if (this.point == null)
-				sender.interactOn(entityByID, this.hand);
+				sender.interactOn(entityByID, this.hand, Vec3.ZERO);
 			else
-				entityByID.interactAt(sender, this.point, this.hand);
+				entityByID.interact(sender, this.hand, this.point);
 		}
 	}
 }

@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:sea_pickle"
-    }
+    "minecraft:sea_pickle"
   ],
   "processing_time": 50,
   "results": [

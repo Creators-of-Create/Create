@@ -21,19 +21,19 @@ import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.render.ItemRenderer;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -85,8 +85,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		if (punching)
 			ms.translate(0, 1 / 8f, -1 / 16f);
 
-		ItemRenderer itemRenderer = Minecraft.getInstance()
-			.getItemRenderer();
+		ItemRenderer itemRenderer = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer();
 
 		ItemDisplayContext transform = ItemDisplayContext.NONE;
 		BakedModel bakedModel = itemRenderer.getModel(be.heldItem, be.getLevel(), null, 0);
@@ -97,7 +96,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 			ms.translate(0, isBlockItem ? 9 / 16f : 11 / 16f, 0);
 			ms.scale(scale, scale, scale);
 			transform = ItemDisplayContext.GROUND;
-			ms.mulPose(Axis.YP.rotationDegrees(AnimationTickHolder.getRenderTime(be.getLevel())));
+			ms.mulPose(Axis.YP.rotationDegrees(AnimationTickHolder.getRenderTime()));
 
 		} else {
 			float scale = punching ? .75f : isBlockItem ? .75f - 1 / 64f : .5f;
@@ -111,7 +110,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 
 	protected void renderComponents(DeployerBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 									int light, int overlay) {
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 		if (!VisualizationManager.supportsVisualization(be.getLevel())) {
 			KineticBlockEntityRenderer.renderRotatingKineticBlock(be, getRenderedBlockState(be), ms, vb, light);
 		}
@@ -132,7 +131,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 
 	protected Vec3 getHandOffset(DeployerBlockEntity be, float partialTicks, BlockState blockState) {
 		float distance = be.getHandOffset(partialTicks);
-		return Vec3.atLowerCornerOf(blockState.getValue(FACING).getNormal()).scale(distance);
+		return Vec3.atLowerCornerOf(blockState.getValue(FACING).getUnitVec3i()).scale(distance);
 	}
 
 	protected BlockState getRenderedBlockState(KineticBlockEntity be) {
@@ -156,7 +155,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 										   ContraptionMatrices matrices, MultiBufferSource buffer) {
-		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 		BlockState blockState = context.state;
 		Mode mode = NBTHelper.readEnum(context.blockEntityData, "Mode", Mode.class);
 		PartialModel handPose = getHandPose(mode);
@@ -181,7 +180,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		}
 
 		Vec3 offset = Vec3.atLowerCornerOf(blockState.getValue(FACING)
-			.getNormal()).scale(factor);
+			.getUnitVec3i()).scale(factor);
 
 		PoseStack m = matrices.getModel();
 		m.pushPose();
@@ -192,7 +191,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 			axis = def.getRotationAxis(context.state);
 		}
 
-		float time = AnimationTickHolder.getRenderTime(context.world) / 20;
+		float time = AnimationTickHolder.getRenderTime() / 20;
 		float angle = (time * speed) % 360;
 
 		TransformStack.of(m)
@@ -212,13 +211,13 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		transform(pole, blockState, true);
 		transform(hand, blockState, false);
 
-		shaft.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+		shaft.light(com.simibubi.create.foundation.render.LegacyLightTexture.getLightColor(renderWorld, context.localPos))
 			.useLevelLight(context.world, matrices.getWorld())
 			.renderInto(matrices.getViewProjection(), builder);
-		pole.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+		pole.light(com.simibubi.create.foundation.render.LegacyLightTexture.getLightColor(renderWorld, context.localPos))
 			.useLevelLight(context.world, matrices.getWorld())
 			.renderInto(matrices.getViewProjection(), builder);
-		hand.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+		hand.light(com.simibubi.create.foundation.render.LegacyLightTexture.getLightColor(renderWorld, context.localPos))
 			.useLevelLight(context.world, matrices.getWorld())
 			.renderInto(matrices.getViewProjection(), builder);
 

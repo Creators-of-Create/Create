@@ -5,7 +5,7 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedMixer;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -38,7 +38,7 @@ public class MixingCategory extends BasinCategory {
 	}
 
 	@Override
-	public void draw(BasinRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(BasinRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
 		super.draw(recipe, iRecipeSlotsView, graphics, mouseX, mouseY);
 
 		HeatCondition requiredHeat = recipe.getRequiredHeat();

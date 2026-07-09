@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 public class DisplayLinkConfigurationPacket extends BlockEntityConfigurationPacket<DisplayLinkBlockEntity> {
@@ -39,7 +39,7 @@ public class DisplayLinkConfigurationPacket extends BlockEntityConfigurationPack
 			return;
 		}
 
-		ResourceLocation id = ResourceLocation.tryParse(configData.getString("Id"));
+		Identifier id = Identifier.tryParse(configData.getStringOr("Id", ""));
 		DisplaySource source = DisplaySource.get(id);
 		if (source == null) {
 			be.notifyUpdate();

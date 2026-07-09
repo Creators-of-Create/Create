@@ -14,18 +14,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.content.equipment.clipboard.ClipboardContent;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.PatchedDataComponentMap;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
 
 @ScheduledForRemoval(inVersion = "1.21.1+ Port")
 @Deprecated(since = "6.0.7", forRemoval = true)
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
-	@Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;verifyComponentsAfterLoad(Lnet/minecraft/world/item/ItemStack;)V"))
-	private void create$migrateOldClipboardComponents(ItemLike item, int count, PatchedDataComponentMap components, CallbackInfo ci) {
-		if (!(item.asItem() instanceof ClipboardBlockItem) || components.isPatchEmpty() || components.has(AllDataComponents.CLIPBOARD_CONTENT))
+	@Inject(method = "<init>(Lnet/minecraft/core/Holder;ILnet/minecraft/core/component/PatchedDataComponentMap;)V", at = @At("TAIL"))
+	private void create$migrateOldClipboardComponents(Holder<Item> item, int count, PatchedDataComponentMap components, CallbackInfo ci) {
+		if (!(item.value() instanceof ClipboardBlockItem) || components.isPatchEmpty() || components.has(AllDataComponents.CLIPBOARD_CONTENT))
 			return;
 
 		ClipboardContent content = ClipboardContent.EMPTY;

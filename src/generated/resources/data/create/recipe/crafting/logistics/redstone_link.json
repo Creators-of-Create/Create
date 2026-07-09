@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "C": {
-      "item": "create:transmitter"
-    },
-    "S": {
-      "item": "create:andesite_casing"
-    }
+    "C": "create:transmitter",
+    "S": "create:andesite_casing"
   },
   "pattern": [
     "C",

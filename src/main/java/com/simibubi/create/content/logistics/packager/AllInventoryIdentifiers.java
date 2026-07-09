@@ -11,8 +11,8 @@ import com.simibubi.create.api.packager.InventoryIdentifier;
 import com.simibubi.create.api.registry.SimpleRegistry;
 import com.simibubi.create.content.logistics.vault.ItemVaultBlockEntity;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.BlockFace;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.BlockFace;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.WorldlyContainer;

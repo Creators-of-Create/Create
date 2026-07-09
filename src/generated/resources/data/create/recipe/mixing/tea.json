@@ -2,18 +2,16 @@
   "type": "create:mixing",
   "heat_requirement": "heated",
   "ingredients": [
+    "#minecraft:leaves",
     {
-      "tag": "minecraft:leaves"
+      "type": "neoforge:simple",
+      "amount": 250,
+      "ingredient": "minecraft:water"
     },
     {
-      "type": "neoforge:single",
+      "type": "neoforge:simple",
       "amount": 250,
-      "fluid": "minecraft:water"
-    },
-    {
-      "type": "neoforge:tag",
-      "amount": 250,
-      "tag": "c:milk"
+      "ingredient": "#c:milk"
     }
   ],
   "results": [

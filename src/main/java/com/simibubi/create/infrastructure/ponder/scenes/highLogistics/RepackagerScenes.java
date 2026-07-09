@@ -5,12 +5,13 @@ import java.util.List;
 import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterBlockEntity;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
+import com.simibubi.create.foundation.item.LegacyItemHandlerAdapter;
 
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 
-import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities.Item;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
@@ -384,7 +385,7 @@ public class RepackagerScenes {
 		scene.world()
 			.modifyBlockEntity(util.grid()
 				.at(3, 2, 5), BlockEntity.class, be -> {
-					IItemHandler handler = be.getLevel().getCapability(ItemHandler.BLOCK, be.getBlockPos(), null);
+					IItemHandler handler = LegacyItemHandlerAdapter.of(be.getLevel().getCapability(Item.BLOCK, be.getBlockPos(), null));
 					if (handler == null)
 						return;
 					ItemHandlerHelper.insertItemStacked(handler, stack, false);

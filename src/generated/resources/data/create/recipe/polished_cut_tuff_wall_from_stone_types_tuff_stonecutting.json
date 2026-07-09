@@ -1,10 +1,7 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "tag": "create:stone_types/tuff"
-  },
+  "ingredient": "#create:stone_types/tuff",
   "result": {
-    "count": 1,
     "id": "create:polished_cut_tuff_wall"
   }
 }

@@ -14,8 +14,9 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 
-import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.api.data.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -107,7 +108,7 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 	@Override
 	public void initialize() {
 		super.initialize();
-		if (getWorld().isClientSide)
+		if (getWorld().isClientSide())
 			return;
 		getHandler().addToNetwork(getWorld(), this);
 		newPosition = true;
@@ -121,7 +122,7 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 	@Override
 	public void unload() {
 		super.unload();
-		if (getWorld().isClientSide)
+		if (getWorld().isClientSide())
 			return;
 		getHandler().removeFromNetwork(getWorld(), this);
 	}
@@ -134,10 +135,8 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 	@Override
 	public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		super.write(nbt, registries, clientPacket);
-		nbt.put("FrequencyFirst", frequencyFirst.getStack()
-			.saveOptional(registries));
-		nbt.put("FrequencyLast", frequencyLast.getStack()
-			.saveOptional(registries));
+		nbt.put("FrequencyFirst", LegacyItemStackNbtBridge.saveOptional(frequencyFirst.getStack(), registries));
+		nbt.put("FrequencyLast", LegacyItemStackNbtBridge.saveOptional(frequencyLast.getStack(), registries));
 		nbt.putLong("LastKnownPosition", blockEntity.getBlockPos()
 			.asLong());
 	}
@@ -146,12 +145,12 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		long positionInTag = blockEntity.getBlockPos()
 			.asLong();
-		long positionKey = nbt.getLong("LastKnownPosition");
+		long positionKey = nbt.getLongOr("LastKnownPosition", positionInTag);
 		newPosition = positionInTag != positionKey;
 
 		super.read(nbt, registries, clientPacket);
-		frequencyFirst = Frequency.of(ItemStack.parseOptional(registries, nbt.getCompound("FrequencyFirst")));
-		frequencyLast = Frequency.of(ItemStack.parseOptional(registries, nbt.getCompound("FrequencyLast")));
+		frequencyFirst = Frequency.of(LegacyItemStackNbtBridge.parseOptional(registries, nbt.get("FrequencyFirst")));
+		frequencyLast = Frequency.of(LegacyItemStackNbtBridge.parseOptional(registries, nbt.get("FrequencyLast")));
 	}
 
 	public void setFrequency(boolean first, ItemStack stack) {
@@ -234,10 +233,8 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 
 	@Override
 	public boolean writeToClipboard(@NotNull HolderLookup.Provider registries, CompoundTag tag, Direction side) {
-		tag.put("First", frequencyFirst.getStack()
-			.saveOptional(registries));
-		tag.put("Last", frequencyLast.getStack()
-			.saveOptional(registries));
+		tag.put("First", LegacyItemStackNbtBridge.saveOptional(frequencyFirst.getStack(), registries));
+		tag.put("Last", LegacyItemStackNbtBridge.saveOptional(frequencyLast.getStack(), registries));
 		return true;
 	}
 
@@ -247,8 +244,8 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 			return false;
 		if (simulate)
 			return true;
-		setFrequency(true, ItemStack.parseOptional(registries, tag.getCompound("First")));
-		setFrequency(false, ItemStack.parseOptional(registries, tag.getCompound("Last")));
+		setFrequency(true, LegacyItemStackNbtBridge.parseOptional(registries, tag.get("First")));
+		setFrequency(false, LegacyItemStackNbtBridge.parseOptional(registries, tag.get("Last")));
 		return true;
 	}
 

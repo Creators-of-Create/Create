@@ -5,16 +5,16 @@ import com.simibubi.create.content.logistics.depot.EjectorBlockEntity;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.ParrotElement;
-import net.createmod.ponder.api.element.ParrotPose;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.ParrotElement;
+import net.createmod.ponder.api.client.element.ParrotPose;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -117,7 +117,7 @@ public class EjectorScenes {
 			.placeNearTarget();
 		scene.idle(60);
 
-		ItemStack copperBlock = new ItemStack(Items.COPPER_BLOCK);
+		ItemStack copperBlock = new ItemStack(Items.COPPER_BLOCK.weathering().unaffected());
 		ItemStack copperIngot = new ItemStack(Items.COPPER_INGOT);
 		scene.overlay().showControls(util.vector().topOf(ejectorPos).add(0.5, 0, 0), Pointing.RIGHT, 30).withItem(copperBlock);
 		scene.idle(7);

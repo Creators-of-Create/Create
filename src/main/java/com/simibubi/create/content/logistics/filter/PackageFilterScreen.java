@@ -9,9 +9,9 @@ import com.simibubi.create.content.logistics.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -53,10 +53,10 @@ public class PackageFilterScreen extends AbstractFilterScreen<PackageFilterMenu>
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		super.render(graphics, mouseX, mouseY, partialTicks);
 
-		PoseStack ms = graphics.pose();
+		PoseStack ms = new PoseStack();
 		ms.pushPose();
 		ms.translate(leftPos + 16, topPos + 23, 0);
 		GuiGameElement.of(PackageStyles.getDefaultBox())
@@ -68,7 +68,7 @@ public class PackageFilterScreen extends AbstractFilterScreen<PackageFilterMenu>
 		menu.address = s;
 		CompoundTag tag = new CompoundTag();
 		tag.putString("Address", s);
-		CatnipServices.NETWORK.sendToServer(new FilterScreenPacket(Option.UPDATE_ADDRESS, tag));
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new FilterScreenPacket(Option.UPDATE_ADDRESS, tag));
 	}
 
 	@Override

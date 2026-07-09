@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:calcite"
-    }
+    "minecraft:calcite"
   ],
   "processing_time": 250,
   "results": [

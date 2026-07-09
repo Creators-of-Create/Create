@@ -9,7 +9,7 @@ import com.simibubi.create.api.equipment.potatoCannon.PotatoProjectileRenderMode
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.util.Mth;
@@ -17,7 +17,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class AllPotatoProjectileRenderModes {
 	
@@ -41,7 +40,6 @@ public class AllPotatoProjectileRenderModes {
 		public static final MapCodec<Billboard> CODEC = MapCodec.unit(INSTANCE);
 
 		@Override
-		@OnlyIn(Dist.CLIENT)
 		public void transform(PoseStack ms, PotatoProjectileEntity entity, float pt) {
 			Minecraft mc = Minecraft.getInstance();
 			Vec3 p1 = mc.getCameraEntity()
@@ -67,7 +65,6 @@ public class AllPotatoProjectileRenderModes {
 		public static final MapCodec<Tumble> CODEC = MapCodec.unit(INSTANCE);
 
 		@Override
-		@OnlyIn(Dist.CLIENT)
 		public void transform(PoseStack ms, PotatoProjectileEntity entity, float pt) {
 			Billboard.INSTANCE.transform(ms, entity, pt);
 			TransformStack.of(ms)
@@ -88,7 +85,6 @@ public class AllPotatoProjectileRenderModes {
 		).apply(instance, TowardMotion::new));
 
 		@Override
-		@OnlyIn(Dist.CLIENT)
 		public void transform(PoseStack ms, PotatoProjectileEntity entity, float pt) {
 			Vec3 diff = entity.getDeltaMovement();
 			TransformStack.of(ms)
@@ -112,7 +108,6 @@ public class AllPotatoProjectileRenderModes {
 		).apply(instance, StuckToEntity::new));
 
 		@Override
-		@OnlyIn(Dist.CLIENT)
 		public void transform(PoseStack ms, PotatoProjectileEntity entity, float pt) {
 			TransformStack.of(ms).rotateYDegrees(AngleHelper.deg(Mth.atan2(offset.x, offset.z)));
 		}

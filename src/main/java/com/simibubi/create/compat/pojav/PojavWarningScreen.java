@@ -30,7 +30,7 @@ public class PojavWarningScreen extends WarningScreen {
 	@Override
 	protected Layout addFooterButtons() {
 		LinearLayout layout = LinearLayout.horizontal().spacing(8);
-		layout.addChild(Button.builder(CONTINUE, button -> this.minecraft.setScreen(this.titleScreen)).build());
+		layout.addChild(Button.builder(CONTINUE, button -> this.minecraft.setScreenAndShow(this.titleScreen)).build());
 		layout.addChild(Button.builder(QUIT, button -> this.minecraft.stop()).build());
 		return layout;
 	}

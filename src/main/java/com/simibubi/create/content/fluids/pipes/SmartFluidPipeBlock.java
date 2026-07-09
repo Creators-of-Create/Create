@@ -11,12 +11,11 @@ import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.VoxelShaper;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.VoxelShaper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,7 +25,10 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -93,11 +95,10 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
-		if (blockTypeChanged && !world.isClientSide)
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
+		if (!world.isClientSide())
 			FluidPropagator.propagateChangedPipe(world, pos, state);
-		IBE.onRemove(state, world, pos, newState);
+		IBE.onRemove(state, world, pos, Blocks.AIR.defaultBlockState());
 	}
 
 	@Override
@@ -107,16 +108,15 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return;
 		if (state != oldState)
 			world.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
-		boolean isMoving) {
-		DebugPackets.sendNeighborsUpdatePacket(world, pos);
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block otherBlock, Orientation orientation, boolean isMoving) {
+		BlockPos neighborPos = orientation == null ? pos : pos.relative(orientation.getFront());
 		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
@@ -166,9 +166,8 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
-		BlockPos pCurrentPos, BlockPos pFacingPos) {
-		updateWater(pLevel, pState, pCurrentPos);
+	public BlockState updateShape(BlockState pState, LevelReader pLevel, ScheduledTickAccess ticks, BlockPos pCurrentPos, Direction pFacing, BlockPos pFacingPos, BlockState pFacingState, RandomSource random) {
+		updateWater(ticks, pLevel, pState, pCurrentPos);
 		return pState;
 	}
 

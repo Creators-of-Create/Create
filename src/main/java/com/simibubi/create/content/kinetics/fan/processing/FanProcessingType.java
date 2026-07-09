@@ -6,9 +6,10 @@ import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +34,10 @@ public interface FanProcessingType {
 
 	@Nullable
 	static FanProcessingType parse(String str) {
-		return CreateBuiltInRegistries.FAN_PROCESSING_TYPE.get(ResourceLocation.tryParse(str));
+		Identifier id = Identifier.tryParse(str);
+		return id == null ? null : CreateBuiltInRegistries.FAN_PROCESSING_TYPE.get(id)
+			.map(Holder::value)
+			.orElse(null);
 	}
 
 	@Nullable

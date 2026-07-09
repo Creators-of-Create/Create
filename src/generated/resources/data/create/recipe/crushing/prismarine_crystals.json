@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:prismarine_crystals"
-    }
+    "minecraft:prismarine_crystals"
   ],
   "processing_time": 150,
   "results": [

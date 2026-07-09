@@ -15,8 +15,8 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -198,7 +198,7 @@ public class FactoryPanelBlockEntity extends SmartBlockEntity {
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
-		restocker = tag.getBoolean("Restocker");
+		restocker = tag.getBooleanOr("Restocker", false);
 		if (clientPacket && tag.contains("Redraw")) {
 			lastShape = null;
 			level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 16);

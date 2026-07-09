@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "create:industrial_iron_window"
-    }
+    "#": "create:industrial_iron_window"
   },
   "pattern": [
     "###",

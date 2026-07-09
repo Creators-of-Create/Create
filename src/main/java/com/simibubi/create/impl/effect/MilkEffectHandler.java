@@ -8,7 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
-import net.neoforged.neoforge.common.EffectCures;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class MilkEffectHandler implements OpenPipeEffectHandler {
@@ -19,7 +18,7 @@ public class MilkEffectHandler implements OpenPipeEffectHandler {
 
 		List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, LivingEntity::isAffectedByPotions);
 		for (LivingEntity entity : entities) {
-			entity.removeEffectsCuredBy(EffectCures.MILK);
+			entity.removeAllEffects();
 		}
 	}
 }

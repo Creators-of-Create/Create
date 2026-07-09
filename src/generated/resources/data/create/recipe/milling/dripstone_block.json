@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:dripstone_block"
-    }
+    "minecraft:dripstone_block"
   ],
   "processing_time": 250,
   "results": [

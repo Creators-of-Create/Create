@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "tag": "create:stone_types/scorchia"
-  },
+  "ingredient": "#create:stone_types/scorchia",
   "result": {
     "count": 2,
     "id": "create:polished_cut_scorchia_slab"

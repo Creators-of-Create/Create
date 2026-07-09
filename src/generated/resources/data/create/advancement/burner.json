@@ -19,7 +19,6 @@
       "translate": "advancement.create.burner.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:blaze_burner"
     },
     "title": {

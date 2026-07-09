@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -21,7 +20,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-@MethodsReturnNonnullByDefault
 public class EncasedFanBlockEntity extends KineticBlockEntity implements IAirCurrentSource {
 
 	public AirCurrent airCurrent;
@@ -125,7 +123,7 @@ public class EncasedFanBlockEntity extends KineticBlockEntity implements IAirCur
 	public void tick() {
 		super.tick();
 
-		boolean server = !level.isClientSide || isVirtual();
+		boolean server = !level.isClientSide() || isVirtual();
 
 		if (server && airCurrentUpdateCooldown-- <= 0) {
 			airCurrentUpdateCooldown = AllConfigs.server().kinetics.fanBlockCheckRate.get();

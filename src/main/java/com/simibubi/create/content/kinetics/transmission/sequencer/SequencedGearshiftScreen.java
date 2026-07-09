@@ -9,12 +9,12 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.gui.AbstractSimiScreen;
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.gui.AbstractSimiScreen;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -38,7 +38,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	@Override
 	protected void init() {
 		if (be.computerBehaviour.hasAttachedComputer())
-			minecraft.setScreen(
+			minecraft.gui.setScreen(
 				new ComputerScreen(title, this::renderAdditional, this, be.computerBehaviour::hasAttachedComputer));
 
 		setWindowSize(background.getWidth(), background.getHeight());
@@ -131,12 +131,12 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		super.tick();
 
 		if (be.computerBehaviour.hasAttachedComputer())
-			minecraft.setScreen(
+			minecraft.gui.setScreen(
 				new ComputerScreen(title, this::renderAdditional, this, be.computerBehaviour::hasAttachedComputer));
 	}
 
 	@Override
-	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
@@ -171,11 +171,11 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 				label(graphics, 127, yOffset - 1, instruction.speedModifier.label);
 		}
 
-		graphics.drawString(font, title, x + (background.getWidth() - 8) / 2 - font.width(title) / 2, y + 4, 0x592424, false);
+		graphics.text(font, title, x + (background.getWidth() - 8) / 2 - font.width(title) / 2, y + 4, 0x592424, false);
 		renderAdditional(graphics, mouseX, mouseY, partialTicks, x, y, background);
 	}
 
-	private void renderAdditional(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop,
+	private void renderAdditional(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop,
 								  AllGuiTextures background) {
 		GuiGameElement.of(renderedItem).<GuiGameElement
 				.GuiRenderBuilder>at(guiLeft + background.getWidth() + 6, guiTop + background.getHeight() - 56, 100)
@@ -183,12 +183,12 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			.render(graphics);
 	}
 
-	private void label(GuiGraphics graphics, int x, int y, Component text) {
-		graphics.drawString(font, text, guiLeft + x, guiTop + 26 + y, 0xFFFFEE);
+	private void label(GuiGraphicsExtractor graphics, int x, int y, Component text) {
+		graphics.text(font, text, guiLeft + x, guiTop + 26 + y, 0xFFFFEE);
 	}
 
 	public void sendPacket() {
-		CatnipServices.NETWORK.sendToServer(new ConfigureSequencedGearshiftPacket(be.getBlockPos(), instructions));
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ConfigureSequencedGearshiftPacket(be.getBlockPos(), instructions));
 	}
 
 	@Override

@@ -8,9 +8,9 @@ import com.mojang.serialization.Codec;
 import com.simibubi.create.content.equipment.zapper.ZapperItem;
 import com.simibubi.create.foundation.gui.AllIcons;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

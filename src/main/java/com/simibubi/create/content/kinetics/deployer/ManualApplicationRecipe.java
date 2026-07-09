@@ -12,7 +12,10 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -52,9 +55,13 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 		if (event.isCanceled())
 			return;
 
+		if (!(level instanceof ServerLevel serverLevel))
+			return;
+
 		RecipeType<Recipe<RecipeWrapper>> type = AllRecipeTypes.ITEM_APPLICATION.getType();
-		Optional<RecipeHolder<Recipe<RecipeWrapper>>> foundRecipe = level.getRecipeManager()
-			.getAllRecipesFor(type)
+		Optional<RecipeHolder<Recipe<RecipeWrapper>>> foundRecipe = serverLevel.recipeAccess()
+			.recipeMap()
+			.byType(type)
 			.stream()
 			.filter(r -> {
 				ManualApplicationRecipe mar = (ManualApplicationRecipe) r.value();
@@ -69,16 +76,13 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 		event.setCancellationResult(InteractionResult.SUCCESS);
 		event.setCanceled(true);
 
-		if (level.isClientSide())
-			return;
-
 		level.playSound(null, pos, SoundEvents.COPPER_BREAK, SoundSource.PLAYERS, 1, 1.45f);
 		ManualApplicationRecipe recipe = (ManualApplicationRecipe) foundRecipe.get().value();
 		level.destroyBlock(pos, false);
 
-		BlockState transformedBlock = recipe.transformBlock(blockState, level.random);
+		BlockState transformedBlock = recipe.transformBlock(blockState, level.getRandom());
 		level.setBlock(pos, transformedBlock, Block.UPDATE_ALL);
-		recipe.rollResults(level.random)
+		recipe.rollResults(level.getRandom())
 			.forEach(stack -> Block.popResource(level, pos, stack));
 
 		boolean creative = event.getEntity() != null && event.getEntity()
@@ -92,7 +96,9 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 			} else {
 				Player player = event.getEntity();
 				InteractionHand hand = event.getHand();
-				ItemStack leftover = heldItem.getCraftingRemainingItem();
+				ItemStack leftover = heldItem.getItem()
+					.getCraftingRemainder()
+					.create();
 				heldItem.shrink(1);
 				if (heldItem.isEmpty()) {
 					player.setItemInHand(hand, leftover);
@@ -130,8 +136,8 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 
 	public static RecipeHolder<DeployerApplicationRecipe> asDeploying(RecipeHolder<?> recipe) {
 		ManualApplicationRecipe mar = (ManualApplicationRecipe) recipe.value();
-		ResourceLocation id = AllRecipeTypes.CAN_BE_AUTOMATED.test(recipe) ?
-			recipe.id().withSuffix("_using_deployer") : recipe.id();
+		Identifier id = AllRecipeTypes.CAN_BE_AUTOMATED.test(recipe) ?
+			recipe.id().identifier().withSuffix("_using_deployer") : recipe.id().identifier();
 		ItemApplicationRecipe.Builder<DeployerApplicationRecipe> builder =
 			new ItemApplicationRecipe.Builder<>(DeployerApplicationRecipe::new, id)
 					.require(mar.ingredients.get(0))
@@ -140,7 +146,7 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 			builder.output(output);
 		if (mar.shouldKeepHeldItem())
 			builder.toolNotConsumed();
-		return new RecipeHolder<>(id, builder.build());
+		return new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, id), builder.build());
 	}
 
 	public boolean testBlock(BlockState in) {

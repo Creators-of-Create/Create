@@ -9,23 +9,28 @@ import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter;
+import com.simibubi.create.foundation.item.LegacyItemHandlerAdapter;
 import com.simibubi.create.foundation.recipe.DummyCraftingContainer;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
-import net.createmod.catnip.data.Iterate;
-import net.minecraft.client.Minecraft;
+import net.createmod.catnip.api.data.Iterate;
+import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.Level;
 
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -41,8 +46,7 @@ public class BasinRecipe extends StandardProcessingRecipe<RecipeInput> {
 		if (filter == null)
 			return false;
 
-		boolean filterTest = filter.test(recipe.getResultItem(basin.getLevel()
-			.registryAccess()));
+		boolean filterTest = filter.test(recipeResult(basin.getLevel(), recipe));
 		if (recipe instanceof BasinRecipe basinRecipe) {
 			if (basinRecipe.getRollableResults()
 				.isEmpty()
@@ -64,8 +68,10 @@ public class BasinRecipe extends StandardProcessingRecipe<RecipeInput> {
 
 	private static boolean apply(BasinBlockEntity basin, Recipe<?> recipe, boolean test) {
 		boolean isBasinRecipe = recipe instanceof BasinRecipe;
-		IItemHandler availableItems = basin.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, basin.getBlockPos(), null);
-		IFluidHandler availableFluids = basin.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, basin.getBlockPos(), null);
+		IItemHandler availableItems = LegacyItemHandlerAdapter.of(
+			basin.getLevel().getCapability(Capabilities.Item.BLOCK, basin.getBlockPos(), null));
+		IFluidHandler availableFluids = LegacyFluidHandlerAdapter.of(
+			basin.getLevel().getCapability(Capabilities.Fluid.BLOCK, basin.getBlockPos(), null));
 
 		if (availableItems == null || availableFluids == null)
 			return false;
@@ -78,7 +84,10 @@ public class BasinRecipe extends StandardProcessingRecipe<RecipeInput> {
 		List<ItemStack> recipeOutputItems = new ArrayList<>();
 		List<FluidStack> recipeOutputFluids = new ArrayList<>();
 
-		List<Ingredient> ingredients = new LinkedList<>(recipe.getIngredients());
+		PlacementInfo placementInfo = recipe.placementInfo();
+		List<Ingredient> ingredients = placementInfo.isImpossibleToPlace()
+			? new LinkedList<>()
+			: new LinkedList<>(placementInfo.ingredients());
 		List<SizedFluidIngredient> fluidIngredients =
 			isBasinRecipe ? ((BasinRecipe) recipe).getFluidIngredients() : Collections.emptyList();
 
@@ -148,18 +157,15 @@ public class BasinRecipe extends StandardProcessingRecipe<RecipeInput> {
 					.asCraftInput();
 
 				if (recipe instanceof BasinRecipe basinRecipe) {
-					recipeOutputItems.addAll(basinRecipe.rollResults(basin.getLevel().random));
+					recipeOutputItems.addAll(basinRecipe.rollResults(basin.getLevel().getRandom()));
 
 					for (FluidStack fluidStack : basinRecipe.getFluidResults())
 						if (!fluidStack.isEmpty())
 							recipeOutputFluids.add(fluidStack);
-					for (ItemStack stack : basinRecipe.getRemainingItems(remainderInput))
-						if (!stack.isEmpty())
-							recipeOutputItems.add(stack);
-
 				} else {
-					recipeOutputItems.add(recipe.getResultItem(basin.getLevel()
-						.registryAccess()));
+					ItemStack result = recipeResult(basin.getLevel(), recipe);
+					if (!result.isEmpty())
+						recipeOutputItems.add(result);
 
 					if (recipe instanceof CraftingRecipe craftingRecipe) {
 						for (ItemStack stack : craftingRecipe.getRemainingItems(remainderInput))
@@ -177,11 +183,33 @@ public class BasinRecipe extends StandardProcessingRecipe<RecipeInput> {
 	}
 
 	public static RecipeHolder<BasinRecipe> convertShapeless(RecipeHolder<?> recipe) {
+		Recipe<?> value = recipe.value();
 		BasinRecipe basinRecipe =
-			new Builder<>(BasinRecipe::new, recipe.id()).withItemIngredients(recipe.value().getIngredients())
-				.withSingleItemOutput(recipe.value().getResultItem(Minecraft.getInstance().level.registryAccess()))
+			new Builder<>(BasinRecipe::new, recipe.id().identifier())
+				.withItemIngredients(value.placementInfo().ingredients().toArray(new Ingredient[0]))
+				.withSingleItemOutput(recipeResult(value))
 				.build();
 		return new RecipeHolder<>(recipe.id(), basinRecipe);
+	}
+
+	private static ItemStack recipeResult(Recipe<?> recipe) {
+		return recipe.display()
+			.stream()
+			.findFirst()
+			.map(display -> display.result()
+				.resolveForFirstStack(ContextMap.EMPTY))
+			.orElse(ItemStack.EMPTY);
+	}
+
+	private static ItemStack recipeResult(Level level, Recipe<?> recipe) {
+		if (recipe instanceof ProcessingRecipe<?, ?> processingRecipe)
+			return processingRecipe.getResultItem(level.registryAccess());
+		return recipe.display()
+			.stream()
+			.findFirst()
+			.map(display -> display.result()
+				.resolveForFirstStack(SlotDisplayContext.fromLevel(level)))
+			.orElse(ItemStack.EMPTY);
 	}
 
 	protected BasinRecipe(IRecipeTypeInfo type, ProcessingRecipeParams params) {

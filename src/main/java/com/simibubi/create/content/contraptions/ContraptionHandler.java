@@ -9,8 +9,8 @@ import java.util.Map;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
-import net.createmod.catnip.data.WorldAttached;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.data.WorldAttached;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
@@ -62,16 +62,16 @@ public class ContraptionHandler {
 	}
 
 	public static void entitiesWhoJustDismountedGetSentToTheRightLocation(LivingEntity entityLiving, Level world) {
-		if (!world.isClientSide)
+		if (!world.isClientSide())
 			return;
 
 		CompoundTag data = entityLiving.getPersistentData();
 		if (!data.contains("ContraptionDismountLocation"))
 			return;
 
-		Vec3 position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", Tag.TAG_DOUBLE));
+		Vec3 position = VecHelper.readNBT(data.getListOrEmpty("ContraptionDismountLocation"));
 		if (entityLiving.getVehicle() == null)
-			entityLiving.absMoveTo(position.x, position.y, position.z, entityLiving.getYRot(), entityLiving.getXRot());
+			entityLiving.teleportTo(position.x, position.y, position.z);
 		data.remove("ContraptionDismountLocation");
 		entityLiving.setOnGround(false);
 	}

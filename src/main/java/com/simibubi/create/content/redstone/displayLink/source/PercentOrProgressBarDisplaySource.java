@@ -26,7 +26,7 @@ public abstract class PercentOrProgressBarDisplaySource extends NumericSingleLin
 			return formatNumeric(context, rawProgress);
 
 		String label = context.sourceConfig()
-			.getString("Label");
+			.getStringOr("Label", "");
 
 		int labelSize = label.isEmpty() ? 0 : label.length() + 1;
 		int length = Math.min(stats.maxColumns() - labelSize, 128);

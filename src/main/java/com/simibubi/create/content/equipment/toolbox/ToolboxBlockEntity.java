@@ -17,13 +17,17 @@ import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.animatedContainer.AnimatedContainerBehaviour;
+import com.simibubi.create.foundation.item.LegacyItemTransferAdapter;
+import com.simibubi.create.foundation.utility.LegacyComponentSerializationBridge;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 import com.simibubi.create.foundation.utility.ResetableLazy;
 
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap.Builder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -77,9 +81,9 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-				Capabilities.ItemHandler.BLOCK,
+				Capabilities.Item.BLOCK,
 				AllBlockEntityTypes.TOOLBOX.get(),
-				(be, context) -> be.inventory
+				(be, context) -> new LegacyItemTransferAdapter(be.inventory)
 		);
 	}
 
@@ -108,9 +112,9 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 	public void tick() {
 		super.tick();
 
-		if (level.isClientSide)
+		if (level.isClientSide())
 			tickAudio();
-		if (!level.isClientSide)
+		if (!level.isClientSide())
 			tickPlayers();
 
 		lid.chase(openTracker.openCount > 0 ? 1 : 0, 0.2f, Chaser.LINEAR);
@@ -148,7 +152,7 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 				if (clear || !playerStack.isEmpty()
 					&& !ToolboxInventory.canItemsShareCompartment(playerStack, referenceItem)) {
 					player.getPersistentData()
-						.getCompound("CreateToolboxData")
+						.getCompoundOrEmpty("CreateToolboxData")
 						.remove(String.valueOf(hotbarSlot));
 					playerEntries.remove();
 					if (player instanceof ServerPlayer)
@@ -220,7 +224,7 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 	}
 
 	public void unequipTracked() {
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 
 		Set<ServerPlayer> affected = new HashSet<>();
@@ -266,28 +270,29 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 		if (lid.settled()) {
 			if (openTracker.openCount > 0 && lid.getChaseTarget() == 0) {
 				level.playLocalSound(vec.x, vec.y, vec.z, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, 0.25F,
-					level.random.nextFloat() * 0.1F + 1.2F, true);
+					level.getRandom().nextFloat() * 0.1F + 1.2F, true);
 				level.playLocalSound(vec.x, vec.y, vec.z, SoundEvents.CHEST_OPEN, SoundSource.BLOCKS, 0.1F,
-					level.random.nextFloat() * 0.1F + 1.1F, true);
+					level.getRandom().nextFloat() * 0.1F + 1.1F, true);
 			}
 			if (openTracker.openCount == 0 && lid.getChaseTarget() == 1)
 				level.playLocalSound(vec.x, vec.y, vec.z, SoundEvents.CHEST_CLOSE, SoundSource.BLOCKS, 0.1F,
-					level.random.nextFloat() * 0.1F + 1.1F, true);
+					level.getRandom().nextFloat() * 0.1F + 1.1F, true);
 
 		} else if (openTracker.openCount == 0 && lid.getChaseTarget() == 0 && lid.getValue(0) > 1 / 16f
 			&& lid.getValue(1) < 1 / 16f)
 			level.playLocalSound(vec.x, vec.y, vec.z, SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, 0.25F,
-				level.random.nextFloat() * 0.1F + 1.2F, true);
+				level.getRandom().nextFloat() * 0.1F + 1.2F, true);
 	}
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		inventory.deserializeNBT(registries, compound.getCompound("Inventory"));
+		inventory.deserializeNBT(registries, compound.getCompoundOrEmpty("Inventory"));
 		super.read(compound, registries, clientPacket);
-		if (compound.contains("UniqueId", 11))
-			this.uniqueId = compound.getUUID("UniqueId");
-		if (compound.contains("CustomName", 8))
-			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"), registries);
+		if (LegacyNbtUtilsBridge.hasUUID(compound, "UniqueId"))
+			this.uniqueId = LegacyNbtUtilsBridge.getUUID(compound, "UniqueId");
+		if (compound.contains("CustomName"))
+			this.customName =
+				LegacyComponentSerializationBridge.fromJson(compound.getStringOr("CustomName", ""), registries);
 	}
 
 	@Override
@@ -296,10 +301,10 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 			uniqueId = UUID.randomUUID();
 
 		compound.put("Inventory", inventory.serializeNBT(registries));
-		compound.putUUID("UniqueId", uniqueId);
+		LegacyNbtUtilsBridge.putUUID(compound, "UniqueId", uniqueId);
 
 		if (customName != null)
-			compound.putString("CustomName", Component.Serializer.toJson(customName, registries));
+			compound.putString("CustomName", LegacyComponentSerializationBridge.toJson(customName, registries));
 		super.write(compound, registries, clientPacket);
 	}
 
@@ -316,7 +321,7 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 	}
 
 	public void connectPlayer(int slot, Player player, int hotbarSlot) {
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		WeakHashMap<Player, Integer> map = connectedPlayers.computeIfAbsent(slot, WeakHashMap::new);
 		Integer previous = map.get(player);
@@ -384,7 +389,7 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 	}
 
 	@Override
-	protected void applyImplicitComponents(DataComponentInput componentInput) {
+	protected void applyImplicitComponents(DataComponentGetter componentInput) {
 		setUniqueId(componentInput.get(AllDataComponents.TOOLBOX_UUID));
 		readInventory(componentInput.get(AllDataComponents.TOOLBOX_INVENTORY));
 	}

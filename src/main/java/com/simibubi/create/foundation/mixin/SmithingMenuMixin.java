@@ -29,10 +29,10 @@ public class SmithingMenuMixin {
 
 	// Only add enchantments to the backtank if it supports them
 	@ModifyExpressionValue(
-		method = "createResult",
+		method = "lambda$createResult$0",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/item/crafting/SmithingRecipe;assemble(Lnet/minecraft/world/item/crafting/RecipeInput;Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/world/item/ItemStack;"
+			target = "Lnet/minecraft/world/item/crafting/SmithingRecipe;assemble(Lnet/minecraft/world/item/crafting/RecipeInput;)Lnet/minecraft/world/item/ItemStack;"
 		)
 	)
 	private ItemStack create$preventUnbreakingOnBacktanks(ItemStack original) {

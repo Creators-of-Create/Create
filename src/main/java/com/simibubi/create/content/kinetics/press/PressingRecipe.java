@@ -21,7 +21,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 @ParametersAreNonnullByDefault
 public class PressingRecipe extends StandardProcessingRecipe<SingleRecipeInput> implements IAssemblyRecipe {
@@ -52,7 +51,6 @@ public class PressingRecipe extends StandardProcessingRecipe<SingleRecipeInput> 
 	public void addAssemblyIngredients(List<Ingredient> list) {}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public Component getDescriptionForAssembly() {
 		return CreateLang.translateDirect("recipe.assembly.pressing");
 	}

@@ -17,7 +17,7 @@ import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.signal.SingleBlockEntityEdgePoint;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -61,17 +61,18 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 	@Override
 	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean migration, DimensionPalette dimensions) {
 		super.read(nbt, registries, migration, dimensions);
-		name = nbt.getString("Name");
-		assembling = nbt.getBoolean("Assembling");
+		name = nbt.getStringOr("Name", "Track Station");
+		assembling = nbt.getBooleanOr("Assembling", false);
 		nearestTrain = new WeakReference<>(null);
 
 		connectedPorts.clear();
-		ListTag portList = nbt.getList("Ports", Tag.TAG_COMPOUND);
+		ListTag portList = nbt.getListOrEmpty("Ports");
 		NBTHelper.iterateCompoundList(portList, c -> {
 			GlobalPackagePort port = new GlobalPackagePort();
-			port.address = c.getString("Address");
-			port.offlineBuffer.deserializeNBT(registries, c.getCompound("OfflineBuffer"));
-			port.primed = c.getBoolean("Primed");
+			port.address = c.getStringOr("Address", "");
+			com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.deserializeHandler(port.offlineBuffer,
+				registries, c.getCompoundOrEmpty("OfflineBuffer"));
+			port.primed = c.getBooleanOr("Primed", false);
 			connectedPorts.put(NBTHelper.readBlockPos(c, "Pos"), port);
 		});
 	}
@@ -94,9 +95,10 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 		nbt.put("Ports", NBTHelper.writeCompoundList(connectedPorts.entrySet(), e -> {
 			CompoundTag c = new CompoundTag();
 			c.putString("Address", e.getValue().address);
-			c.put("OfflineBuffer", e.getValue().offlineBuffer.serializeNBT(registries));
+			c.put("OfflineBuffer", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge
+				.serializeHandler(e.getValue().offlineBuffer, registries));
 			c.putBoolean("Primed", e.getValue().primed);
-			c.put("Pos", NbtUtils.writeBlockPos(e.getKey()));
+			c.put("Pos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(e.getKey()));
 			return c;
 		}));
 	}

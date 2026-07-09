@@ -15,10 +15,10 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -36,50 +36,6 @@ public class BlockEntityRenderHelper {
 	 */
 	public static void renderBlockEntities(List<BlockEntity> blockEntities, BitSet shouldRenderBEs, BitSet erroredBEsOut, @javax.annotation.Nullable VirtualRenderWorld renderLevel, Level realLevel, PoseStack ms, @javax.annotation.Nullable Matrix4f lightTransform, MultiBufferSource buffer,
 										   float pt) {
-		for (int i = shouldRenderBEs.nextSetBit(0); i >= 0 && i < blockEntities.size(); i = shouldRenderBEs.nextSetBit(i + 1)) {
-			BlockEntity blockEntity = blockEntities.get(i);
-			if (VisualizationManager.supportsVisualization(realLevel) && VisualizationHelper.skipVanillaRender(blockEntity))
-				continue;
-
-			BlockEntityRenderer<BlockEntity> renderer = Minecraft.getInstance()
-				.getBlockEntityRenderDispatcher()
-				.getRenderer(blockEntity);
-			if (renderer == null) {
-				// Don't bother looping over it again if we can't do anything with it.
-				erroredBEsOut.set(i);
-				continue;
-			}
-
-			BlockPos pos = blockEntity.getBlockPos();
-			ms.pushPose();
-			TransformStack.of(ms)
-				.translate(pos);
-
-			try {
-				int realLevelLight = LevelRenderer.getLightColor(realLevel, getLightPos(lightTransform, pos));
-
-				int light;
-				if (renderLevel != null) {
-					renderLevel.setExternalLight(realLevelLight);
-					light = LevelRenderer.getLightColor(renderLevel, pos);
-				} else {
-					light = realLevelLight;
-				}
-
-				renderer.render(blockEntity, pt, ms, buffer, light, OverlayTexture.NO_OVERLAY);
-
-			} catch (Exception e) {
-				// Prevent this BE from causing more issues in the future.
-				erroredBEsOut.set(i);
-
-				String message = "BlockEntity " + RegisteredObjectsHelper.getKeyOrThrow(blockEntity.getType()) + " could not be rendered virtually.";
-				if (AllConfigs.client().explainRenderErrors.get()) Create.LOGGER.error(message, e);
-				else Create.LOGGER.error(message);
-			}
-
-			ms.popPose();
-		}
-
 		if (renderLevel != null) {
 			renderLevel.resetExternalLight();
 		}

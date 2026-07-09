@@ -4,12 +4,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.render.ItemRenderer;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -32,8 +32,7 @@ public class PlacardRenderer extends SafeBlockEntityRenderer<PlacardBlockEntity>
 		Direction facing = blockState.getValue(PlacardBlock.FACING);
 		AttachFace face = blockState.getValue(PlacardBlock.FACE);
 
-		ItemRenderer itemRenderer = Minecraft.getInstance()
-			.getItemRenderer();
+		ItemRenderer itemRenderer = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer();
 		BakedModel bakedModel = itemRenderer.getModel(heldItem, null, null, 0);
 		boolean blockItem = bakedModel.isGui3d();
 

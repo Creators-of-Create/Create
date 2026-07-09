@@ -1,26 +1,50 @@
 {
   "variants": {
-    "alt=false,axis=x": {
+    "alt=false,axis=x,waterlogged=false": {
       "model": "create:block/fluid_pipe/window",
       "x": 90,
       "y": 90
     },
-    "alt=false,axis=y": {
+    "alt=false,axis=x,waterlogged=true": {
+      "model": "create:block/fluid_pipe/window",
+      "x": 90,
+      "y": 90
+    },
+    "alt=false,axis=y,waterlogged=false": {
       "model": "create:block/fluid_pipe/window"
     },
-    "alt=false,axis=z": {
+    "alt=false,axis=y,waterlogged=true": {
+      "model": "create:block/fluid_pipe/window"
+    },
+    "alt=false,axis=z,waterlogged=false": {
       "model": "create:block/fluid_pipe/window",
       "x": 90
     },
-    "alt=true,axis=x": {
+    "alt=false,axis=z,waterlogged=true": {
+      "model": "create:block/fluid_pipe/window",
+      "x": 90
+    },
+    "alt=true,axis=x,waterlogged=false": {
       "model": "create:block/fluid_pipe/window",
       "x": 90,
       "y": 90
     },
-    "alt=true,axis=y": {
+    "alt=true,axis=x,waterlogged=true": {
+      "model": "create:block/fluid_pipe/window",
+      "x": 90,
+      "y": 90
+    },
+    "alt=true,axis=y,waterlogged=false": {
       "model": "create:block/fluid_pipe/window"
     },
-    "alt=true,axis=z": {
+    "alt=true,axis=y,waterlogged=true": {
+      "model": "create:block/fluid_pipe/window"
+    },
+    "alt=true,axis=z,waterlogged=false": {
+      "model": "create:block/fluid_pipe/window",
+      "x": 90
+    },
+    "alt=true,axis=z,waterlogged=true": {
       "model": "create:block/fluid_pipe/window",
       "x": 90
     }

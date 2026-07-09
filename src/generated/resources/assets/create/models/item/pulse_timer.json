@@ -1,6 +1,6 @@
 {
   "parent": "create:block/diodes/pulse_timer",
   "textures": {
-    "top": "create:block/diodes/pulse_timer/item"
+    "top": "block/diodes/pulse_timer/item"
   }
 }

@@ -13,7 +13,6 @@
     "frame": "goal",
     "hidden": true,
     "icon": {
-      "count": 1,
       "id": "create:item_drain"
     },
     "title": {

@@ -1,22 +1,14 @@
 {
   "type": "create:mixing",
   "ingredients": [
+    "#create:pulpifiable",
+    "#create:pulpifiable",
+    "#create:pulpifiable",
+    "#create:pulpifiable",
     {
-      "tag": "create:pulpifiable"
-    },
-    {
-      "tag": "create:pulpifiable"
-    },
-    {
-      "tag": "create:pulpifiable"
-    },
-    {
-      "tag": "create:pulpifiable"
-    },
-    {
-      "type": "neoforge:single",
+      "type": "neoforge:simple",
       "amount": 250,
-      "fluid": "minecraft:water"
+      "ingredient": "minecraft:water"
     }
   ],
   "results": [

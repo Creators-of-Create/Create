@@ -11,9 +11,10 @@ import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.logistics.item.filter.attribute.AllItemAttributeTypes;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerItemAdapter;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 public record FluidContentsAttribute(@Nullable Fluid fluid) implements ItemAttribute {
@@ -35,7 +35,7 @@ public record FluidContentsAttribute(@Nullable Fluid fluid) implements ItemAttri
 	private static List<Fluid> extractFluids(ItemStack stack) {
 		List<Fluid> fluids = new ArrayList<>();
 
-		IFluidHandlerItem capability = stack.getCapability(Capabilities.FluidHandler.ITEM);
+		IFluidHandlerItem capability = LegacyFluidHandlerItemAdapter.of(stack);
 
 		if (capability != null) {
 			for (int i = 0; i < capability.getTanks(); i++) {

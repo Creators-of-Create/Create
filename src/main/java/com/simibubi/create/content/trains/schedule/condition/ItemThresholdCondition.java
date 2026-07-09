@@ -10,18 +10,17 @@ import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 public class ItemThresholdCondition extends CargoThresholdCondition {
@@ -73,7 +72,7 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 	protected void readAdditional(HolderLookup.Provider registries, CompoundTag tag) {
 		super.readAdditional(registries, tag);
 		if (tag.contains("Item"))
-			stack = FilterItemStack.of(registries, tag.getCompound("Item"));
+			stack = FilterItemStack.of(registries, tag.getCompoundOrEmpty("Item"));
 	}
 
 	@Override
@@ -110,12 +109,11 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 	}
 
 	@Override
-	public ResourceLocation getId() {
+	public Identifier getId() {
 		return Create.asResource("item_threshold");
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		super.initConfigurationWidgets(builder);
 		builder.addSelectionScrollInput(71, 50, (i, l) -> {

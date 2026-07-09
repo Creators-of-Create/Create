@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlock;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
+import com.simibubi.create.foundation.utility.LegacyComponentSerializationBridge;
 
 import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
@@ -66,7 +67,7 @@ public class NixieTubePeripheral extends SyncedPeripheral<NixieTubeBlockEntity> 
 			return;
 		blockEntity.computerSignal = null;
 
-		String tagElement = Component.Serializer.toJson(Component.literal(arguments.getString(0)), level.registryAccess());
+		String tagElement = LegacyComponentSerializationBridge.toJson(Component.literal(arguments.getString(0)), level.registryAccess());
 
 		@Nullable String colour = arguments.optString(1, null);
 		BlockState state = null;

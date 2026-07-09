@@ -2,10 +2,10 @@ package com.simibubi.create.foundation.gui;
 
 import org.joml.Vector3f;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.render.LegacyRenderSystemBridge;
 import com.mojang.math.Axis;
 
-import net.createmod.catnip.gui.ILightingSettings;
+import net.createmod.catnip.api.client.gui.ILightingSettings;
 
 public class CustomLightingSettings implements ILightingSettings {
 
@@ -35,8 +35,8 @@ public class CustomLightingSettings implements ILightingSettings {
 	}
 
 	@Override
-	public void applyLighting() {
-		RenderSystem.setShaderLights(light1, light2);
+	public void apply() {
+		LegacyRenderSystemBridge.setShaderLights(light1, light2);
 	}
 
 	public static Builder builder() {

@@ -1,15 +1,9 @@
 {
   "type": "create:compacting",
   "ingredients": [
-    {
-      "tag": "c:eggs"
-    },
-    {
-      "item": "minecraft:sugar"
-    },
-    {
-      "item": "create:cinder_flour"
-    }
+    "#c:eggs",
+    "minecraft:sugar",
+    "create:cinder_flour"
   ],
   "results": [
     {

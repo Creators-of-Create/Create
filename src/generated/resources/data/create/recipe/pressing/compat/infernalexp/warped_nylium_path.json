@@ -7,9 +7,7 @@
   ],
   "type": "create:pressing",
   "ingredients": [
-    {
-      "item": "minecraft:warped_nylium"
-    }
+    "minecraft:warped_nylium"
   ],
   "results": [
     {

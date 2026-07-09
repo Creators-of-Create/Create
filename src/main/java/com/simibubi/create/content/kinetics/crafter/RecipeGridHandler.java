@@ -15,22 +15,22 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.Pointing;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.Pointing;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.FireworkRocketRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -143,16 +143,17 @@ public class RecipeGridHandler {
 		items.calcStats();
 		CraftingInput craftingInput = MechanicalCraftingInput.of(items);
 		ItemStack result = null;
-		RegistryAccess registryAccess = world.registryAccess();
+		RecipeManager recipeManager = world.getServer() == null ? null : world.getServer()
+			.getRecipeManager();
 		if (AllConfigs.server().recipes.allowRegularCraftingInCrafter.get())
-			result = world.getRecipeManager()
+			result = recipeManager == null ? null : recipeManager
 				.getRecipeFor(RecipeType.CRAFTING, craftingInput, world)
 				.filter(r -> isRecipeAllowed(r, craftingInput))
-				.map(r -> r.value().assemble(craftingInput, registryAccess))
+				.map(r -> r.value().assemble(craftingInput))
 				.orElse(null);
 		if (result == null)
 			result = AllRecipeTypes.MECHANICAL_CRAFTING.find(craftingInput, world)
-				.map(r -> r.value().assemble(craftingInput, registryAccess))
+				.map(r -> r.value().assemble(craftingInput))
 				.orElse(null);
 		return result;
 	}
@@ -199,7 +200,7 @@ public class RecipeGridHandler {
 				CompoundTag entry = new CompoundTag();
 				entry.putInt("x", pair.getKey());
 				entry.putInt("y", pair.getValue());
-				entry.put("item", stack.saveOptional(registries));
+				entry.put("item", LegacyItemStackNbtBridge.saveOptional(stack, registries));
 				gridNBT.add(entry);
 			});
 			nbt.put("Grid", gridNBT);
@@ -207,12 +208,12 @@ public class RecipeGridHandler {
 
 		public static GroupedItems read(CompoundTag nbt, HolderLookup.Provider registries) {
 			GroupedItems items = new GroupedItems();
-			ListTag gridNBT = nbt.getList("Grid", Tag.TAG_COMPOUND);
+			ListTag gridNBT = nbt.getListOrEmpty("Grid");
 			gridNBT.forEach(inbt -> {
 				CompoundTag entry = (CompoundTag) inbt;
-				int x = entry.getInt("x");
-				int y = entry.getInt("y");
-				ItemStack stack = ItemStack.parseOptional(registries, entry.getCompound("item"));
+				int x = entry.getIntOr("x", 0);
+				int y = entry.getIntOr("y", 0);
+				ItemStack stack = LegacyItemStackNbtBridge.parseOptional(registries, entry.getCompoundOrEmpty("item"));
 				items.grid.put(Pair.of(x, y), stack);
 			});
 			return items;

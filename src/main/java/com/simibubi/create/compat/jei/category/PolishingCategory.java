@@ -10,14 +10,13 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.NonNullList;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRecipe> {
@@ -45,22 +44,20 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 	}
 
 	@Override
-	public void draw(SandPaperPolishingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(SandPaperPolishingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 61, 21);
 		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52, 32);
 
-		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		ItemStack[] matchingStacks = ingredients.get(0)
-			.getItems();
-		if (matchingStacks.length == 0)
+		List<ItemStack> matchingStacks = getItemStacks(recipe.getIngredients().get(0));
+		if (matchingStacks.isEmpty())
 			return;
 
-		renderedSandpaper.set(AllDataComponents.SAND_PAPER_POLISHING, new SandPaperItemComponent(matchingStacks[0]));
+		renderedSandpaper.set(AllDataComponents.SAND_PAPER_POLISHING, new SandPaperItemComponent(matchingStacks.get(0)));
 		renderedSandpaper.set(AllDataComponents.SAND_PAPER_JEI, Unit.INSTANCE);
 		GuiGameElement.of(renderedSandpaper)
 				.<GuiGameElement.GuiRenderBuilder>at(getBackground().getWidth() / 2 - 16, 0, 0)
 				.scale(2)
-				.render(graphics);
+				.render(graphics, 0, 0, 0);
 	}
 
 }

@@ -3,9 +3,9 @@ package com.simibubi.create.content.logistics;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.joml.Matrix3x2fStack;
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.trains.schedule.DestinationSuggestions;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
@@ -14,9 +14,11 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -43,21 +45,19 @@ public class AddressEditBox extends EditBox {
 		setResponder(mainResponder);
 		setBordered(false);
 		setFocused(false);
-		mouseClicked(0, 0, 0);
 		setMaxLength(25);
 	}
 
 	@Override
-	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-		if (destinationSuggestions.keyPressed(pKeyCode, pScanCode, pModifiers))
+	public boolean keyPressed(KeyEvent event) {
+		if (destinationSuggestions.keyPressed(event))
 			return true;
-		if (isFocused() && pKeyCode == GLFW.GLFW_KEY_ENTER) {
+		if (isFocused() && event.key() == GLFW.GLFW_KEY_ENTER) {
 			setFocused(false);
 			moveCursorToEnd(false);
-			mouseClicked(0, 0, 0);
 			return true;
 		}
-		return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+		return super.keyPressed(event);
 	}
 
 	@Override
@@ -68,23 +68,25 @@ public class AddressEditBox extends EditBox {
 	}
 
 	@Override
-	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-		if (pButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-			if (isMouseOver(pMouseX, pMouseY)) {
+	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+		double mouseX = event.x();
+		double mouseY = event.y();
+		if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+			if (isMouseOver(mouseX, mouseY)) {
 				setValue("");
 				return true;
 			}
 		}
 
 		boolean wasFocused = isFocused();
-		if (super.mouseClicked(pMouseX, pMouseY, pButton)) {
+		if (super.mouseClicked(event, doubleClick)) {
 			if (!wasFocused) {
 				setHighlightPos(0);
 				setCursorPosition(getValue().length());
 			}
 			return true;
 		}
-		if (destinationSuggestions.mouseClicked((int) pMouseX, (int) pMouseY, pButton))
+		if (destinationSuggestions.mouseClicked(event))
 			return true;
 		return false;
 	}
@@ -101,20 +103,19 @@ public class AddressEditBox extends EditBox {
 	}
 
 	@Override
-	public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-		super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-		PoseStack matrixStack = pGuiGraphics.pose();
-		matrixStack.pushPose();
-		matrixStack.translate(0, 0, 500);
-		destinationSuggestions.render(pGuiGraphics, pMouseX, pMouseY);
-		matrixStack.popPose();
+	public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+		super.extractWidgetRenderState(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+		Matrix3x2fStack matrixStack = pGuiGraphics.pose();
+		matrixStack.pushMatrix();
+		destinationSuggestions.extractRenderState(pGuiGraphics, pMouseX, pMouseY);
+		matrixStack.popMatrix();
 
 		if (!destinationSuggestions.isEmpty())
 			return;
 
 		int itemX = getX() + width + 4;
 		int itemY = getY() - 4;
-		pGuiGraphics.renderItem(AllBlocks.CLIPBOARD.asStack(), itemX, itemY);
+		pGuiGraphics.item(AllBlocks.CLIPBOARD.asStack(), itemX, itemY);
 		if (pMouseX >= itemX && pMouseX < itemX + 16 && pMouseY >= itemY && pMouseY < itemY + 16) {
 			List<Component> promiseTip = List.of();
 			promiseTip = List.of(CreateLang.translate("gui.address_box.clipboard_tip")
@@ -132,7 +133,7 @@ public class AddressEditBox extends EditBox {
 				CreateLang.translate("gui.address_box.clipboard_tip_4")
 					.style(ChatFormatting.DARK_GRAY)
 					.component());
-			pGuiGraphics.renderComponentTooltip(Minecraft.getInstance().font, promiseTip, pMouseX, pMouseY);
+			pGuiGraphics.setComponentTooltipForNextFrame(Minecraft.getInstance().font, promiseTip, pMouseX, pMouseY);
 		}
 	}
 

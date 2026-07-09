@@ -30,10 +30,10 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.lang.Lang;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.lang.Lang;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -96,9 +96,9 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-				Capabilities.ItemHandler.BLOCK,
+				Capabilities.Item.BLOCK,
 				AllBlockEntityTypes.BRASS_TUNNEL.get(),
-				(be, context) -> be.tunnelCapability
+				(be, context) -> new com.simibubi.create.foundation.item.LegacyItemTransferAdapter(be.tunnelCapability)
 		);
 	}
 
@@ -133,7 +133,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 			return;
 		if (stackToDistribute.isEmpty() && !syncedOutputActive)
 			return;
-		if (level.isClientSide && !isVirtual())
+		if (level.isClientSide() && !isVirtual())
 			return;
 
 		if (distributionProgress == -1) {
@@ -234,7 +234,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		boolean robin = mode == SelectionMode.FORCED_ROUND_ROBIN || mode == SelectionMode.ROUND_ROBIN;
 
 		if (mode == SelectionMode.RANDOMIZE)
-			indexStart = level.random.nextInt(amountTargets);
+			indexStart = level.getRandom().nextInt(amountTargets);
 		if (mode == SelectionMode.PREFER_NEAREST || mode == SelectionMode.SYNCHRONIZE)
 			indexStart = 0;
 
@@ -417,7 +417,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 					float movementSpeed = Math.max(Math.abs(beltMovementSpeed), 1 / 8f);
 					int additionalOffset = beltMovementSpeed > 0 ? 1 : 0;
 					Vec3 outPos = BeltHelper.getVectorForOffset(controllerBE, below.index + additionalOffset);
-					Vec3 outMotion = Vec3.atLowerCornerOf(side.getNormal())
+					Vec3 outMotion = Vec3.atLowerCornerOf(side.getUnitVec3i())
 						.scale(movementSpeed)
 						.add(0, 1 / 8f, 0);
 					outPos.add(outMotion.normalize());
@@ -595,7 +595,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		compound.putBoolean("ConnectedLeft", connectedLeft);
 		compound.putBoolean("ConnectedRight", connectedRight);
 
-		compound.put("StackToDistribute", stackToDistribute.saveOptional(registries));
+		compound.put("StackToDistribute", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(stackToDistribute, registries));
 		if (stackEnteredFrom != null)
 			NBTHelper.writeEnum(compound, "StackEnteredFrom", stackEnteredFrom);
 
@@ -608,7 +608,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 			compound.put(filtered ? "FilteredTargets" : "Targets",
 				NBTHelper.writeCompoundList(distributionTargets.get(filtered), pair -> {
 					CompoundTag nbt = new CompoundTag();
-					nbt.put("Pos", NbtUtils.writeBlockPos(pair.getKey()));
+					nbt.put("Pos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(pair.getKey()));
 					nbt.putInt("Face", pair.getValue()
 						.get3DDataValue());
 					return nbt;
@@ -623,25 +623,25 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		boolean wasConnectedLeft = connectedLeft;
 		boolean wasConnectedRight = connectedRight;
 
-		syncedOutputActive = compound.getBoolean("SyncedOutput");
-		connectedLeft = compound.getBoolean("ConnectedLeft");
-		connectedRight = compound.getBoolean("ConnectedRight");
+		syncedOutputActive = compound.getBooleanOr("SyncedOutput", false);
+		connectedLeft = compound.getBooleanOr("ConnectedLeft", false);
+		connectedRight = compound.getBooleanOr("ConnectedRight", false);
 
-		stackToDistribute = ItemStack.parseOptional(registries, compound.getCompound("StackToDistribute"));
+		stackToDistribute = com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.parseOptional(registries, compound.getCompoundOrEmpty("StackToDistribute"));
 		stackEnteredFrom =
 			compound.contains("StackEnteredFrom") ? NBTHelper.readEnum(compound, "StackEnteredFrom", Direction.class)
 				: null;
 
-		distributionProgress = compound.getFloat("DistributionProgress");
-		previousOutputIndex = compound.getInt("PreviousIndex");
-		distributionDistanceLeft = compound.getInt("DistanceLeft");
-		distributionDistanceRight = compound.getInt("DistanceRight");
+		distributionProgress = compound.getFloatOr("DistributionProgress", 0);
+		previousOutputIndex = compound.getIntOr("PreviousIndex", 0);
+		distributionDistanceLeft = compound.getIntOr("DistanceLeft", 0);
+		distributionDistanceRight = compound.getIntOr("DistanceRight", 0);
 
 		for (boolean filtered : Iterate.trueAndFalse) {
 			distributionTargets.set(filtered, NBTHelper
-				.readCompoundList(compound.getList(filtered ? "FilteredTargets" : "Targets", Tag.TAG_COMPOUND), nbt -> {
+				.readCompoundList(compound.getListOrEmpty(filtered ? "FilteredTargets" : "Targets"), nbt -> {
 					BlockPos pos = NBTHelper.readBlockPos(nbt, "Pos");
-					Direction face = Direction.from3DDataValue(nbt.getInt("Face"));
+					Direction face = Direction.from3DDataValue(nbt.getIntOr("Face", 0));
 					return Pair.of(pos, face);
 				}));
 		}
@@ -673,7 +673,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 			connectedLeft = nowConnectedLeft;
 			connectivityChanged = true;
 			BrassTunnelBlockEntity adjacent = getAdjacent(true);
-			if (adjacent != null && !level.isClientSide) {
+			if (adjacent != null && !level.isClientSide()) {
 				adjacent.updateTunnelConnections();
 				adjacent.selectionMode.setValue(selectionMode.getValue());
 			}
@@ -683,7 +683,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 			connectedRight = nowConnectedRight;
 			connectivityChanged = true;
 			BrassTunnelBlockEntity adjacent = getAdjacent(false);
-			if (adjacent != null && !level.isClientSide) {
+			if (adjacent != null && !level.isClientSide()) {
 				adjacent.updateTunnelConnections();
 				adjacent.selectionMode.setValue(selectionMode.getValue());
 			}
@@ -746,7 +746,8 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		if (beltCapability == null) {
 			BlockEntity blockEntity = level.getBlockEntity(worldPosition.below());
 			if (blockEntity != null)
-				beltCapability = level.getCapability(Capabilities.ItemHandler.BLOCK, blockEntity.getBlockPos(), null);
+				beltCapability = com.simibubi.create.foundation.item.LegacyItemHandlerAdapter.of(
+					level.getCapability(Capabilities.Item.BLOCK, blockEntity.getBlockPos(), null));
 		}
 		return beltCapability;
 	}
@@ -794,7 +795,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		CreateLang.translate("tooltip.brass_tunnel.contains").style(ChatFormatting.WHITE).forGoggles(tooltip);
 		for (ItemStack item : allStacks) {
 			CreateLang.translate("tooltip.brass_tunnel.contains_entry",
-					Component.translatable(item.getDescriptionId()).getString(), item.getCount())
+					item.getHoverName().getString(), item.getCount())
 				.style(ChatFormatting.GRAY).forGoggles(tooltip);
 		}
 		CreateLang.translate("tooltip.brass_tunnel.retrieve").style(ChatFormatting.DARK_GRAY).forGoggles(tooltip);

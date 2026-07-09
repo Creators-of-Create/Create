@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.utility.DynamicComponent;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -61,7 +61,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 	}
 
 	public void updateControllerStatus() {
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 
 		BlockState blockState = getBlockState();
@@ -108,13 +108,13 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 	public void tick() {
 		super.tick();
 		isRunning = super.isSpeedRequirementFulfilled();
-		if ((!level.isClientSide || !isRunning) && !isVirtual())
+		if ((!level.isClientSide() || !isRunning) && !isVirtual())
 			return;
 		int activeFlaps = 0;
 		boolean instant = Math.abs(getSpeed()) > 128;
 		for (FlapDisplayLayout line : lines)
 			for (FlapDisplaySection section : line.getSections())
-				activeFlaps += section.tick(instant, level.random);
+				activeFlaps += section.tick(instant, level.getRandom());
 		if (activeFlaps == 0)
 			return;
 
@@ -227,9 +227,9 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 		int prevX = xSize;
 		int prevY = ySize;
 
-		isController = tag.getBoolean("Controller");
-		xSize = tag.getInt("XSize");
-		ySize = tag.getInt("YSize");
+		isController = tag.getBooleanOr("Controller", false);
+		xSize = tag.getIntOr("XSize", 1);
+		ySize = tag.getIntOr("YSize", 1);
 
 		manualLines = new boolean[ySize * 2];
 		for (int i = 0; i < ySize * 2; i++)
@@ -251,7 +251,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 		List<FlapDisplayLayout> lines = getLines();
 		for (int i = 0; i < lines.size(); i++)
 			lines.get(i)
-				.read(tag.getCompound("Display" + i), registries);
+				.read(tag.getCompoundOrEmpty("Display" + i), registries);
 	}
 
 	public int getLineIndexAt(double yCoord) {
@@ -302,7 +302,7 @@ public class FlapDisplayBlockEntity extends KineticBlockEntity {
 		if (!isController)
 			return aabb;
 		Vec3i normal = getDirection().getClockWise()
-			.getNormal();
+			.getUnitVec3i();
 		return aabb.expandTowards(normal.getX() * xSize, -ySize, normal.getZ() * xSize);
 	}
 

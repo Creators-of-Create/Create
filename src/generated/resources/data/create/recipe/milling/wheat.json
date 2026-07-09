@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:wheat"
-    }
+    "minecraft:wheat"
   ],
   "processing_time": 150,
   "results": [

@@ -16,9 +16,10 @@ import com.simibubi.create.compat.framedblocks.FramedBlocksInSchematics;
 import com.simibubi.create.foundation.data.recipe.Mods;
 import com.simibubi.create.foundation.mixin.accessor.ItemFrameAccessor;
 
-import net.createmod.catnip.components.ComponentProcessors;
+import net.createmod.catnip.api.data.component.ComponentProcessors;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.Item;
@@ -28,7 +29,7 @@ import net.minecraft.world.level.block.AbstractBannerBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirtPathBlock;
-import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.SeaPickleBlock;
 import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.TurtleEggBlock;
@@ -115,10 +116,14 @@ public class ItemRequirement {
 		if (block instanceof SnowLayerBlock)
 			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(item, state.getValue(SnowLayerBlock.LAYERS)
 				.intValue()));
-		// FD's rich soil extends FarmBlock so this is to make sure the cost is correct (it should be rich soil not dirt)
-		if (block == BuiltInRegistries.BLOCK.get(Mods.FD.asResource("rich_soil_farmland")))
-			return new ItemRequirement(ItemUseType.CONSUME, BuiltInRegistries.ITEM.get(Mods.FD.asResource("rich_soil")));
-		if (block instanceof FarmBlock || block instanceof DirtPathBlock)
+		// FD's rich soil extends FarmlandBlock so this is to make sure the cost is correct (it should be rich soil not dirt)
+		if (block == BuiltInRegistries.BLOCK.get(Mods.FD.asResource("rich_soil_farmland"))
+			.map(ref -> ref.value())
+			.orElse(null))
+			return BuiltInRegistries.ITEM.get(Mods.FD.asResource("rich_soil"))
+				.map(ref -> new ItemRequirement(ItemUseType.CONSUME, ref.value()))
+				.orElse(INVALID);
+		if (block instanceof FarmlandBlock || block instanceof DirtPathBlock)
 			return new ItemRequirement(ItemUseType.CONSUME, Items.DIRT);
 		if (block instanceof AbstractBannerBlock && be instanceof BannerBlockEntity bannerBE)
 			return new ItemRequirement(new StrictNbtStackRequirement(bannerBE.getItem(), ItemUseType.CONSUME));
@@ -152,9 +157,12 @@ public class ItemRequirement {
 		if (entity instanceof ArmorStand armorStand) {
 			List<StackRequirement> requirements = new ArrayList<>();
 			requirements.add(new StackRequirement(new ItemStack(Items.ARMOR_STAND), ItemUseType.CONSUME));
-			armorStand.getAllSlots()
-				.forEach(s -> requirements
-					.add(new StrictNbtStackRequirement(ComponentProcessors.withUnsafeComponentsDiscarded(s), ItemUseType.CONSUME)));
+			for (EquipmentSlot slot : EquipmentSlot.values()) {
+				ItemStack stack = armorStand.getItemBySlot(slot);
+				if (!stack.isEmpty())
+					requirements.add(new StrictNbtStackRequirement(ComponentProcessors.withUnsafeComponentsDiscarded(stack),
+						ItemUseType.CONSUME));
+			}
 			return new ItemRequirement(requirements);
 		}
 

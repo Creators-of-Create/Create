@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:deepslate_gold_ore"
-    }
+    "minecraft:deepslate_gold_ore"
   ],
   "processing_time": 350,
   "results": [

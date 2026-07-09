@@ -12,7 +12,7 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 /**
@@ -94,7 +93,7 @@ public interface MovementBehaviour {
 
 		ItemEntity itemEntity = new ItemEntity(context.world, vec.x, vec.y, vec.z, remainder);
 		itemEntity.setDeltaMovement(context.motion.add(0, 0.5f, 0)
-			.scale(context.world.random.nextFloat() * .3f));
+			.scale(context.world.getRandom().nextFloat() * .3f));
 		context.world.addFreshEntity(itemEntity);
 	}
 
@@ -112,11 +111,9 @@ public interface MovementBehaviour {
 		return false;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	default void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {}
 
-	@OnlyIn(Dist.CLIENT)
 	@Nullable
 	default ActorVisual createVisual(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
 		MovementContext movementContext) {

@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:terracotta"
-    }
+    "minecraft:terracotta"
   ],
   "processing_time": 200,
   "results": [

@@ -10,14 +10,14 @@ import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.Rotate;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import dev.engine_room.flywheel.lib.transform.Translate;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.data.IntAttached;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.data.IntAttached;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +31,6 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 		super(context);
 	}
 
-	@Override
 	public boolean shouldRenderOffScreen(EjectorBlockEntity p_188185_1_) {
 		return true;
 	}
@@ -48,7 +47,7 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 			SuperByteBuffer model = CachedBuffers.partial(AllPartialModels.EJECTOR_TOP, be.getBlockState());
 			applyLidAngle(be, angle, model);
 			model.light(light)
-					.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+					.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 		}
 
 		var msr = TransformStack.of(ms);
@@ -76,8 +75,7 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 				msr.rotateXDegrees(time * 40);
 			}
 			msr.translateBack(itemRotOffset);
-			Minecraft.getInstance()
-				.getItemRenderer()
+			com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer()
 				.renderStatic(intAttached.getValue(), ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 			ms.popPose();
 		}
@@ -100,7 +98,21 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 		applyLidAngle(be, pivot, angle, tr);
 	}
 
+	static void applyLidAngle(KineticBlockEntity be, float angle, SuperByteBuffer tr) {
+		applyLidAngle(be, pivot, angle, tr);
+	}
+
 	static <T extends Translate<T> & Rotate<T>> void applyLidAngle(KineticBlockEntity be, Vec3 rotationOffset, float angle, T tr) {
+		tr.center()
+			.rotateYDegrees(180 + AngleHelper.horizontalAngle(be.getBlockState()
+				.getValue(EjectorBlock.HORIZONTAL_FACING)))
+			.uncenter()
+			.translate(rotationOffset)
+			.rotateXDegrees(-angle)
+			.translateBack(rotationOffset);
+	}
+
+	static void applyLidAngle(KineticBlockEntity be, Vec3 rotationOffset, float angle, SuperByteBuffer tr) {
 		tr.center()
 			.rotateYDegrees(180 + AngleHelper.horizontalAngle(be.getBlockState()
 				.getValue(EjectorBlock.HORIZONTAL_FACING)))

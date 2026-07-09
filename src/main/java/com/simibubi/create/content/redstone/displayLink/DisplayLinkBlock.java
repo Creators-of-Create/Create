@@ -14,13 +14,11 @@ import com.simibubi.create.content.redstone.displayLink.source.RedstonePowerDisp
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
-import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.gui.ScreenOpener;
-import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.client.player.LocalPlayer;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,6 +29,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -42,9 +42,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class DisplayLinkBlock extends WrenchableDirectionalBlock implements IBE<DisplayLinkBlockEntity> {
 
@@ -71,8 +68,8 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements IBE<
 	}
 
 	@Override
-	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
-		IBE.onRemove(pState, pLevel, pPos, pNewState);
+protected void affectNeighborsAfterRemoval(BlockState pState, ServerLevel pLevel, BlockPos pPos, boolean pMovedByPiston) {
+		IBE.onRemove(pState, pLevel, pPos, Blocks.AIR.defaultBlockState());
 	}
 
 	public static void notifyGatherers(LevelAccessor level, BlockPos pos) {
@@ -109,11 +106,11 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements IBE<
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-		boolean isMoving) {
-		if (worldIn.isClientSide)
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, Orientation orientation, boolean isMoving) {
+		if (worldIn.isClientSide())
 			return;
 
+		BlockPos fromPos = orientation == null ? pos : pos.relative(orientation.getFront());
 		if (fromPos.equals(pos.relative(state.getValue(FACING)
 			.getOpposite())))
 			sendToGatherers(worldIn, fromPos, (dlte, p) -> dlte.tickSource(), RedstonePowerDisplaySource.class);
@@ -151,19 +148,8 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements IBE<
 			return InteractionResult.PASS;
 		if (player.isShiftKeyDown())
 			return InteractionResult.PASS;
-		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> withBlockEntityDo(level, pos, be -> this.displayScreen(be, player)));
+		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> withBlockEntityDo(level, pos, be -> DisplayLinkClient.displayScreen(be, player)));
 		return InteractionResult.SUCCESS;
-	}
-
-	@OnlyIn(value = Dist.CLIENT)
-	protected void displayScreen(DisplayLinkBlockEntity be, Player player) {
-		if (!(player instanceof LocalPlayer))
-			return;
-		if (be.targetOffset.equals(BlockPos.ZERO)) {
-			player.displayClientMessage(CreateLang.translateDirect("display_link.invalid"), true);
-			return;
-		}
-		ScreenOpener.open(new DisplayLinkScreen(be));
 	}
 
 	@Override

@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "item": "create:exposed_copper_shingle_stairs"
-    },
-    {
-      "item": "minecraft:honeycomb"
-    }
+    "create:exposed_copper_shingle_stairs",
+    "minecraft:honeycomb"
   ],
   "result": {
-    "count": 1,
     "id": "create:waxed_exposed_copper_shingle_stairs"
   }
 }

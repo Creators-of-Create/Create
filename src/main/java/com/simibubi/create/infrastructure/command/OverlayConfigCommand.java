@@ -5,7 +5,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.content.equipment.goggles.GoggleConfigScreen;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.api.client.gui.ScreenOpener;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 public class OverlayConfigCommand {
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("overlay")
-			.requires(cs -> cs.hasPermission(0))
+			.requires(AllCommands.hasPermission(0))
 			.then(Commands.literal("reset")
 				.executes(ctx -> {
 					AllConfigs.client().overlayOffsetX.set(0);

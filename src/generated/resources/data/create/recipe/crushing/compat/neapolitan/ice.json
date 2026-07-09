@@ -7,9 +7,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:ice"
-    }
+    "minecraft:ice"
   ],
   "processing_time": 100,
   "results": [

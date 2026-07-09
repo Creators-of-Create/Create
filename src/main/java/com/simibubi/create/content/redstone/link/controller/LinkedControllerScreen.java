@@ -14,9 +14,9 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -61,7 +61,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	}
 
 	@Override
-	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(GuiGraphicsExtractor graphics, float partialTicks, int mouseX, int mouseY) {
 		int invX = getLeftOfCentered(PLAYER_INVENTORY.getWidth());
 		int invY = topPos + background.getHeight() + 4;
 		renderPlayerInventory(graphics, invX, invY);
@@ -70,7 +70,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 		int y = topPos;
 
 		background.render(graphics, x, y);
-		graphics.drawString(font, title, x + 15, y + 4, 0x592424, false);
+		graphics.text(font, title, x + 15, y + 4, 0x592424, false);
 
 		GuiGameElement.of(menu.contentHolder).<GuiGameElement
 			.GuiRenderBuilder>at(x + background.getWidth() - 4, y + background.getHeight() - 56, -200)
@@ -87,7 +87,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	}
 
 	@Override
-	protected void renderTooltip(GuiGraphics graphics, int x, int y) {
+	protected void renderTooltip(GuiGraphicsExtractor graphics, int x, int y) {
 		if (!menu.getCarried()
 			.isEmpty() || this.hoveredSlot == null || hoveredSlot.container == menu.playerInventory) {
 			super.renderTooltip(graphics, x, y);
@@ -98,7 +98,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 		if (hoveredSlot.hasItem())
 			list = getTooltipFromContainerItem(hoveredSlot.getItem());
 
-		graphics.renderComponentTooltip(font, addToTooltip(list, hoveredSlot.getSlotIndex()), x, y);
+		graphics.setComponentTooltipForNextFrame(font, addToTooltip(list, hoveredSlot.getSlotIndex()), x, y);
 	}
 
 	private List<Component> addToTooltip(List<Component> list, int slot) {

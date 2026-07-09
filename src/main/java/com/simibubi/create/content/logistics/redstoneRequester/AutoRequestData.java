@@ -54,7 +54,7 @@ public record AutoRequestData(PackageOrderWithCrafts encodedRequest, String enco
 		mutable.targetOffset = mutable.targetOffset.subtract(position);
 		mutable.isValid =
 			mutable.targetOffset.closerThan(BlockPos.ZERO, 128) && requestData.targetDim.equals(level.dimension()
-				.location()
+				.identifier()
 				.toString());
 
 		if (player != null)

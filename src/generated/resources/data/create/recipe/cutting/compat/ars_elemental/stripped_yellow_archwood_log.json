@@ -8,7 +8,7 @@
   "type": "create:cutting",
   "ingredients": [
     {
-      "type": "neoforge:compound",
+      "neoforge:ingredient_type": "neoforge:compound",
       "ingredients": [
         {
           "item": "ars_elemental:stripped_yellow_archwood_log"

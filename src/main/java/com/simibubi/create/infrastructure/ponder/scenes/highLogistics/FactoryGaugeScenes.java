@@ -19,15 +19,15 @@ import com.simibubi.create.content.redstone.link.RedstoneLinkBlock;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
-import net.createmod.catnip.data.IntAttached;
-import net.createmod.catnip.math.Pointing;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.data.IntAttached;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -735,7 +735,7 @@ public class FactoryGaugeScenes {
 			.modifyBlockEntityNBT(basin, BasinBlockEntity.class, nbt -> {
 				nbt.put("VisualizedItems",
 					NBTHelper.writeCompoundList(
-						ImmutableList.of(IntAttached.with(1, AllItems.ANDESITE_ALLOY.asStack())), ia -> (CompoundTag) ia.getValue().saveOptional(builder.world().getHolderLookupProvider())));
+						ImmutableList.of(IntAttached.with(1, AllItems.ANDESITE_ALLOY.asStack())), ia -> (CompoundTag) com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(ia.getValue(), builder.world().getHolderLookupProvider())));
 			});
 		scene.idle(4);
 		scene.rotateCameraY(90);

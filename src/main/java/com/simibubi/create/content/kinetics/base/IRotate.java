@@ -5,8 +5,8 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.lang.Lang;
-import net.createmod.catnip.lang.LangBuilder;
+import net.createmod.catnip.api.lang.Lang;
+import net.createmod.catnip.api.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

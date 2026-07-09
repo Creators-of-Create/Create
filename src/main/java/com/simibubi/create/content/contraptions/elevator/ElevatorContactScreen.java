@@ -11,14 +11,14 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.TooltipArea;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.gui.AbstractSimiScreen;
-import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.client.gui.AbstractSimiScreen;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.CommonComponents;
@@ -113,28 +113,27 @@ public class ElevatorContactScreen extends AbstractSimiScreen {
 		editBox.setBordered(false);
 		editBox.setMaxLength(chars);
 		editBox.setFocused(false);
-		editBox.mouseClicked(0, 0, 0);
 		addRenderableWidget(editBox);
 		return editBox;
 	}
 
 	@Override
-	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
 		background.render(graphics, x, y);
 
 		FormattedCharSequence formattedcharsequence = title.getVisualOrderText();
-		graphics.drawString(font, formattedcharsequence,
-			(float) (x + (background.getWidth() - 8) / 2 - font.width(formattedcharsequence) / 2), (float) y + 6, 0x2F3738, false);
+		graphics.text(font, formattedcharsequence,
+			x + (background.getWidth() - 8) / 2 - font.width(formattedcharsequence) / 2, y + 6, 0x2F3738, false);
 
 		GuiGameElement.of(AllBlocks.ELEVATOR_CONTACT.asStack()).<GuiGameElement
 				.GuiRenderBuilder>at(x + background.getWidth() + 6, y + background.getHeight() - 56, -200)
 			.scale(5)
-			.render(graphics);
+			.render(graphics, 0, 0);
 
-		graphics.renderItem(AllBlocks.TRAIN_DOOR.asStack(), x + 37, y + 58);
+		graphics.item(AllBlocks.TRAIN_DOOR.asStack(), x + 37, y + 58);
 	}
 
 	@Override
@@ -149,7 +148,7 @@ public class ElevatorContactScreen extends AbstractSimiScreen {
 		}
 
 		if (shortNameInput.isHoveredOrFocused())
-			longNameInput.mouseClicked(0, 0, 0);
+			longNameInput.setFocused(false);
 
 		if (!consumed && pMouseX > guiLeft + 22 && pMouseY > guiTop + 24 && pMouseX < guiLeft + 50
 			&& pMouseY < guiTop + 40) {
@@ -177,7 +176,7 @@ public class ElevatorContactScreen extends AbstractSimiScreen {
 	}
 
 	private void confirm() {
-		CatnipServices.NETWORK.sendToServer(new ElevatorContactEditPacket(pos, shortName, longName, doorControl));
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ElevatorContactEditPacket(pos, shortName, longName, doorControl));
 		onClose();
 	}
 

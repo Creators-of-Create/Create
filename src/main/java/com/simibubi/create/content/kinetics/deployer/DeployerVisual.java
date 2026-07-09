@@ -21,7 +21,7 @@ import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleTickableVisual;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -114,7 +114,7 @@ public class DeployerVisual extends ShaftVisual<DeployerBlockEntity> implements 
         float handLength = currentHand == AllPartialModels.DEPLOYER_HAND_POINTING ? 0
                 : currentHand == AllPartialModels.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
         float distance = Math.min(Mth.clamp(progress, 0, 1) * (blockEntity.reach + handLength), 21 / 16f);
-        Vec3i facingVec = facing.getNormal();
+        Vec3i facingVec = facing.getUnitVec3i();
         BlockPos blockPos = getVisualPosition();
 
         float x = blockPos.getX() + ((float) facingVec.getX()) * distance;

@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "X": {
-      "item": "create:waxed_exposed_copper_tiles"
-    }
+    "X": "create:waxed_exposed_copper_tiles"
   },
   "pattern": [
     "X  ",

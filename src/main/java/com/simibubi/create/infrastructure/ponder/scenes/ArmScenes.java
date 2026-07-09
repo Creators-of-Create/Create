@@ -7,13 +7,13 @@ import com.simibubi.create.content.kinetics.mechanicalArm.ArmBlockEntity.Phase;
 import com.simibubi.create.content.logistics.funnel.FunnelBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -158,7 +158,7 @@ public class ArmScenes {
 
 		inputDepot = util.grid().at(1, 3, 4);
 		outputDepot = util.grid().at(1, 1, 0);
-		copper = new ItemStack(Items.COPPER_BLOCK);
+		copper = new ItemStack(Items.COPPER_BLOCK.weathering().unaffected());
 		scene.world().createItemOnBeltLike(inputDepot, Direction.SOUTH, copper);
 		scene.idle(20);
 		scene.world().instructArm(armPos, Phase.MOVE_TO_INPUT, ItemStack.EMPTY, 2);

@@ -11,7 +11,6 @@
       "translate": "advancement.create.train_portal.desc"
     },
     "icon": {
-      "count": 1,
       "id": "minecraft:amethyst_block"
     },
     "title": {

@@ -10,9 +10,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "tag": "c:raw_materials/lead"
-    }
+    "#c:raw_materials/lead"
   ],
   "processing_time": 400,
   "results": [

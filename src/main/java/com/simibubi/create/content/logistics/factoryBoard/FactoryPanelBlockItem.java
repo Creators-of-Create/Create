@@ -7,19 +7,18 @@ import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.Pane
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBlockItem;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.LegacyBlockEntityDataComponentBridge;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class FactoryPanelBlockItem extends LogisticallyLinkedBlockItem {
@@ -35,8 +34,8 @@ public class FactoryPanelBlockItem extends LogisticallyLinkedBlockItem {
 		if (!isTuned(stack)) {
 			AllSoundEvents.DENY.playOnServer(pContext.getLevel(), pContext.getClickedPos());
 			pContext.getPlayer()
-				.displayClientMessage(CreateLang.translate("factory_panel.tune_before_placing")
-					.component(), true);
+				.sendSystemMessage(CreateLang.translate("factory_panel.tune_before_placing")
+					.component());
 			return InteractionResult.FAIL;
 		}
 
@@ -52,20 +51,19 @@ public class FactoryPanelBlockItem extends LogisticallyLinkedBlockItem {
 	public static ItemStack fixCtrlCopiedStack(ItemStack stack) {
 		// Salvage frequency data from one of the panel slots
 		if (isTuned(stack) && networkFromStack(stack) == null) {
-			CompoundTag bet = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).copyTag();
+			CompoundTag bet = LegacyBlockEntityDataComponentBridge.get(stack);
 			UUID frequency = UUID.randomUUID();
 
 			for (PanelSlot slot : PanelSlot.values()) {
-				CompoundTag panelTag = bet.getCompound(CreateLang.asId(slot.name()));
-				if (panelTag.hasUUID("Freq"))
-					frequency = panelTag.getUUID("Freq");
+				CompoundTag panelTag = bet.getCompoundOrEmpty(CreateLang.asId(slot.name()));
+				if (panelTag.contains("Freq"))
+					frequency = LegacyNbtUtilsBridge.loadUUID(panelTag.get("Freq"));
 			}
 
 			bet = new CompoundTag();
-			bet.putUUID("Freq", frequency);
+			bet.put("Freq", LegacyNbtUtilsBridge.createUUID(frequency));
 
-			BlockEntity.addEntityType(bet, ((IBE<?>) ((BlockItem) stack.getItem()).getBlock()).getBlockEntityType());
-			stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(bet));
+			LegacyBlockEntityDataComponentBridge.set(stack, ((IBE<?>) ((BlockItem) stack.getItem()).getBlock()).getBlockEntityType(), bet);
 		}
 
 		return stack;

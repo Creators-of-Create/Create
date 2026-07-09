@@ -7,9 +7,9 @@ import com.simibubi.create.content.contraptions.bearing.BearingContraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -24,7 +24,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 /**
  * Ex: Pistons, bearings <br>
@@ -84,13 +83,13 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 			controllerPos = NBTHelper.readBlockPos(compound, "ControllerRelative").offset(blockPosition());
 		if (compound.contains("Axis"))
 			rotationAxis = NBTHelper.readEnum(compound, "Axis", Axis.class);
-		angle = compound.getFloat("Angle");
+		angle = compound.getFloatOr("Angle", 0);
 	}
 
 	@Override
 	protected void writeAdditional(CompoundTag compound, HolderLookup.Provider registries, boolean spawnPacket) {
 		super.writeAdditional(compound, registries, spawnPacket);
-		compound.put("ControllerRelative", NbtUtils.writeBlockPos(controllerPos.subtract(blockPosition())));
+		compound.put("ControllerRelative", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(controllerPos.subtract(blockPosition())));
 		if (rotationAxis != null)
 			NBTHelper.writeEnum(compound, "Axis", rotationAxis);
 		compound.putFloat("Angle", angle);
@@ -141,13 +140,10 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		return rotationAxis;
 	}
 
-	@Override
 	public void teleportTo(double p_70634_1_, double p_70634_3_, double p_70634_5_) {
 	}
 
 	// Always noop this. Controlled Contraptions are given their position on the client from the BE
-	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void lerpTo(double pX, double pY, double pZ, float pYRot, float pXRot, int pSteps) {
 	}
 
@@ -167,7 +163,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		}
 		if (!controller.isAttachedTo(this)) {
 			controller.attach(this);
-			if (level().isClientSide)
+			if (level().isClientSide())
 				setPos(getX(), getY(), getZ());
 		}
 	}
@@ -183,15 +179,15 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 			return false;
 		Direction facing = bc.getFacing();
 		Vec3 activeAreaOffset = actor.getActiveAreaOffset(context);
-		if (!activeAreaOffset.multiply(VecHelper.axisAlingedPlaneOf(Vec3.atLowerCornerOf(facing.getNormal())))
+		if (!activeAreaOffset.multiply(VecHelper.axisAlingedPlaneOf(Vec3.atLowerCornerOf(facing.getUnitVec3i())))
 			.equals(Vec3.ZERO))
 			return false;
 		if (!VecHelper.onSameAxis(blockInfo.pos(), BlockPos.ZERO, facing.getAxis()))
 			return false;
-		context.motion = Vec3.atLowerCornerOf(facing.getNormal())
+		context.motion = Vec3.atLowerCornerOf(facing.getUnitVec3i())
 			.scale(angleDelta / 360.0);
 		context.relativeMotion = context.motion;
-		int timer = context.data.getInt("StationaryTimer");
+		int timer = context.data.getIntOr("StationaryTimer", 0);
 		if (timer > 0) {
 			context.data.putInt("StationaryTimer", timer - 1);
 			return false;
@@ -241,7 +237,6 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void applyLocalTransforms(PoseStack matrixStack, float partialTicks) {
 		float angle = getAngle(partialTicks);
 		Axis axis = getRotationAxis();

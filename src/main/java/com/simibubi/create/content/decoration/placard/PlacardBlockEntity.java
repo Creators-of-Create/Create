@@ -2,13 +2,12 @@ package com.simibubi.create.content.decoration.placard;
 
 import java.util.List;
 
-import org.joml.Vector3f;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -33,7 +32,7 @@ public class PlacardBlockEntity extends SmartBlockEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		if (poweredTicks == 0)
 			return;
@@ -59,15 +58,15 @@ public class PlacardBlockEntity extends SmartBlockEntity {
 	@Override
 	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		tag.putInt("PoweredTicks", poweredTicks);
-		tag.put("Item", heldItem.saveOptional(registries));
+		tag.put("Item", LegacyItemStackNbtBridge.saveOptional(heldItem, registries));
 		super.write(tag, registries, clientPacket);
 	}
 
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		int prevTicks = poweredTicks;
-		poweredTicks = tag.getInt("PoweredTicks");
-		heldItem = ItemStack.parseOptional(registries, tag.getCompound("Item"));
+		poweredTicks = tag.getIntOr("PoweredTicks", 0);
+		heldItem = LegacyItemStackNbtBridge.parseOptional(registries, tag.getCompoundOrEmpty("Item"));
 		super.read(tag, registries, clientPacket);
 
 		if (clientPacket && prevTicks < poweredTicks)
@@ -79,14 +78,14 @@ public class PlacardBlockEntity extends SmartBlockEntity {
 		if (!AllBlocks.PLACARD.has(blockState))
 			return;
 
-		DustParticleOptions pParticleData = new DustParticleOptions(new Vector3f(1, .2f, 0), 1);
+		DustParticleOptions pParticleData = new DustParticleOptions(0xff3300, 1);
 		Vec3 centerOf = VecHelper.getCenterOf(worldPosition);
 		Vec3 normal = Vec3.atLowerCornerOf(PlacardBlock.connectedDirection(blockState)
-			.getNormal());
+			.getUnitVec3i());
 		Vec3 offset = VecHelper.axisAlingedPlaneOf(normal);
 
 		for (int i = 0; i < 10; i++) {
-			Vec3 v = VecHelper.offsetRandomly(Vec3.ZERO, level.random, .5f)
+			Vec3 v = VecHelper.offsetRandomly(Vec3.ZERO, level.getRandom(), .5f)
 				.multiply(offset)
 				.normalize()
 				.scale(.45f)

@@ -14,14 +14,14 @@ import com.simibubi.create.content.contraptions.minecart.CouplingHandler;
 import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.minecart.capability.MinecartController;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 
 public class CouplingCommand {
 
@@ -46,7 +46,7 @@ public class CouplingCommand {
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 
 		return Commands.literal("coupling")
-			.requires(cs -> cs.hasPermission(2))
+			.requires(AllCommands.hasPermission(2))
 			.then(Commands.literal("add")
 				.then(Commands.argument("cart1", EntityArgument.entity())
 					.then(Commands.argument("cart2", EntityArgument.entity())
@@ -59,15 +59,15 @@ public class CouplingCommand {
 							if (!(cart2 instanceof AbstractMinecart))
 								throw ONLY_MINECARTS_ALLOWED.create();
 
-							if (!cart1.getCommandSenderWorld()
-								.equals(cart2.getCommandSenderWorld()))
+							if (!cart1.level()
+								.equals(cart2.level()))
 								throw SAME_DIMENSION.create();
 
 							Entity source = ctx.getSource()
 								.getEntity();
 
 							CouplingHandler.tryToCoupleCarts(
-								source instanceof Player ? (Player) source : null, cart1.getCommandSenderWorld(),
+								source instanceof Player ? (Player) source : null, cart1.level(),
 								cart1.getId(), cart2.getId());
 
 							return Command.SINGLE_SUCCESS;
@@ -87,15 +87,15 @@ public class CouplingCommand {
 						if (!(cart2 instanceof AbstractMinecart))
 							throw ONLY_MINECARTS_ALLOWED.create();
 
-						if (!cart1.getCommandSenderWorld()
-							.equals(cart2.getCommandSenderWorld()))
+						if (!cart1.level()
+							.equals(cart2.level()))
 							throw SAME_DIMENSION.create();
 
 						Entity source = ctx.getSource()
 							.getEntity();
 
 						CouplingHandler.tryToCoupleCarts(source instanceof Player ? (Player) source : null,
-							cart1.getCommandSenderWorld(), cart1.getId(), cart2.getId());
+							cart1.level(), cart1.getId(), cart2.getId());
 
 						return Command.SINGLE_SUCCESS;
 					})))
@@ -139,7 +139,7 @@ public class CouplingCommand {
 									continue;
 
 								MinecartController cart2Controller =
-									CapabilityMinecartController.getIfPresent(cart1.getCommandSenderWorld(), coupledCart);
+									CapabilityMinecartController.getIfPresent(cart1.level(), coupledCart);
 								if (cart2Controller == null)
 									return 0;
 

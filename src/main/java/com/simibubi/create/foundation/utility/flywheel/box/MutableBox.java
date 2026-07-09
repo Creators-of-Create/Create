@@ -286,7 +286,7 @@ public class MutableBox implements Box {
 
 	public void mirrorAbout(Direction.Axis axis) {
 		Vec3i axisVec = Direction.get(Direction.AxisDirection.POSITIVE, axis)
-				.getNormal();
+				.getUnitVec3i();
 		int flipX = axisVec.getX() - 1;
 		int flipY = axisVec.getY() - 1;
 		int flipZ = axisVec.getZ() - 1;

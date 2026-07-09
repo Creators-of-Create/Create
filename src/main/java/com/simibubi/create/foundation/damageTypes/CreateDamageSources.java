@@ -51,17 +51,17 @@ public class CreateDamageSources {
 	}
 
 	private static DamageSource source(ResourceKey<DamageType> key, LevelReader level) {
-		Registry<DamageType> registry = level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
-		return new DamageSource(registry.getHolderOrThrow(key));
+		Registry<DamageType> registry = level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE);
+		return new DamageSource(registry.getOrThrow(key));
 	}
 
 	private static DamageSource source(ResourceKey<DamageType> key, LevelReader level, @Nullable Entity entity) {
-		Registry<DamageType> registry = level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
-		return new DamageSource(registry.getHolderOrThrow(key), entity);
+		Registry<DamageType> registry = level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE);
+		return new DamageSource(registry.getOrThrow(key), entity);
 	}
 
 	private static DamageSource source(ResourceKey<DamageType> key, LevelReader level, @Nullable Entity causingEntity, @Nullable Entity directEntity) {
-		Registry<DamageType> registry = level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
-		return new DamageSource(registry.getHolderOrThrow(key), causingEntity, directEntity);
+		Registry<DamageType> registry = level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE);
+		return new DamageSource(registry.getOrThrow(key), causingEntity, directEntity);
 	}
 }

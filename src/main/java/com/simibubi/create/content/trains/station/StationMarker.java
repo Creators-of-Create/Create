@@ -8,7 +8,7 @@ import com.simibubi.create.AllMapDecorationTypes;
 import com.simibubi.create.content.trains.track.TrackTargetingBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -34,8 +34,10 @@ public class StationMarker {
 	public static StationMarker load(CompoundTag tag, HolderLookup.Provider registries) {
 		BlockPos source = NBTHelper.readBlockPos(tag, "source");
 		BlockPos target = NBTHelper.readBlockPos(tag, "target");
-		Component name = Component.Serializer.fromJson(tag.getString("name"), registries);
-		if (name == null) name = CommonComponents.EMPTY;
+		Component name = Component.literal(tag.getStringOr("name", ""));
+		if (name.getString()
+			.isEmpty())
+			name = CommonComponents.EMPTY;
 
 		return new StationMarker(source, target, name);
 	}
@@ -54,9 +56,9 @@ public class StationMarker {
 
 	public CompoundTag save(HolderLookup.Provider registries) {
 		CompoundTag tag = new CompoundTag();
-		tag.put("source", NbtUtils.writeBlockPos(source));
-		tag.put("target", NbtUtils.writeBlockPos(target));
-		tag.putString("name", Component.Serializer.toJson(name, registries));
+		tag.put("source", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(source));
+		tag.put("target", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(target));
+		tag.putString("name", name.getString());
 
 		return tag;
 	}

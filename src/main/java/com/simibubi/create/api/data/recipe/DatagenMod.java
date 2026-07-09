@@ -1,10 +1,10 @@
 package com.simibubi.create.api.data.recipe;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface DatagenMod {
-	default ResourceLocation asResource(String id) {
-		return ResourceLocation.fromNamespaceAndPath(getId(), id);
+	default Identifier asResource(String id) {
+		return Identifier.fromNamespaceAndPath(getId(), id);
 	}
 
 	default String recipeId(String id) {
@@ -13,20 +13,20 @@ public interface DatagenMod {
 
 	String getId();
 
-	default ResourceLocation ingotOf(String type) {
-		return ResourceLocation.fromNamespaceAndPath(getId(), reversedMetalPrefix() ? "ingot_" + type : type + "_ingot");
+	default Identifier ingotOf(String type) {
+		return Identifier.fromNamespaceAndPath(getId(), reversedMetalPrefix() ? "ingot_" + type : type + "_ingot");
 	}
 
-	default ResourceLocation nuggetOf(String type) {
-		return ResourceLocation.fromNamespaceAndPath(getId(), reversedMetalPrefix() ? "nugget_" + type : type + "_nugget");
+	default Identifier nuggetOf(String type) {
+		return Identifier.fromNamespaceAndPath(getId(), reversedMetalPrefix() ? "nugget_" + type : type + "_nugget");
 	}
 
-	default ResourceLocation oreOf(String type) {
-		return ResourceLocation.fromNamespaceAndPath(getId(), reversedMetalPrefix() ? "ore_" + type : type + "_ore");
+	default Identifier oreOf(String type) {
+		return Identifier.fromNamespaceAndPath(getId(), reversedMetalPrefix() ? "ore_" + type : type + "_ore");
 	}
 
-	default ResourceLocation deepslateOreOf(String type) {
-		return ResourceLocation.fromNamespaceAndPath(getId(), reversedMetalPrefix() ? "deepslate_ore_" + type : "deepslate_" + type + "_ore");
+	default Identifier deepslateOreOf(String type) {
+		return Identifier.fromNamespaceAndPath(getId(), reversedMetalPrefix() ? "deepslate_ore_" + type : "deepslate_" + type + "_ore");
 	}
 
 	/**

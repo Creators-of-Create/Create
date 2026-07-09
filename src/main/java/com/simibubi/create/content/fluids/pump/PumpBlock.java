@@ -9,11 +9,10 @@ import com.simibubi.create.content.kinetics.simpleRelays.ICogWheel;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +20,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -63,9 +65,8 @@ public class PumpBlock extends DirectionalKineticBlock
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
-								boolean isMoving) {
-		DebugPackets.sendNeighborsUpdatePacket(world, pos);
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block otherBlock, Orientation orientation, boolean isMoving) {
+		BlockPos neighborPos = orientation == null ? pos : pos.relative(orientation.getFront());
 		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
@@ -87,10 +88,9 @@ public class PumpBlock extends DirectionalKineticBlock
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world,
-								  BlockPos pos, BlockPos neighbourPos) {
+	public BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess ticks, BlockPos pos, Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
 		if (state.getValue(BlockStateProperties.WATERLOGGED))
-			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+			ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return state;
 	}
 
@@ -113,8 +113,8 @@ public class PumpBlock extends DirectionalKineticBlock
 			BlockState adjState = level.getBlockState(adjPos);
 			if (!FluidPipeBlock.canConnectTo(level, adjPos, adjState, d))
 				continue;
-			double distance = Vec3.atLowerCornerOf(d.getNormal())
-				.distanceTo(Vec3.atLowerCornerOf(targetDirection.getNormal()));
+			double distance = Vec3.atLowerCornerOf(d.getUnitVec3i())
+				.distanceTo(Vec3.atLowerCornerOf(targetDirection.getUnitVec3i()));
 			if (distance > bestDistance)
 				continue;
 			bestDistance = distance;
@@ -134,7 +134,7 @@ public class PumpBlock extends DirectionalKineticBlock
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, world, pos, oldState, isMoving);
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return;
 		if (state != oldState)
 			world.scheduleTick(pos, this, 1, TickPriority.HIGH);
@@ -159,11 +159,9 @@ public class PumpBlock extends DirectionalKineticBlock
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		boolean blockTypeChanged = !state.is(newState.getBlock());
-		if (blockTypeChanged && !world.isClientSide)
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
+		if (!world.isClientSide())
 			FluidPropagator.propagateChangedPipe(world, pos, state);
-		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override

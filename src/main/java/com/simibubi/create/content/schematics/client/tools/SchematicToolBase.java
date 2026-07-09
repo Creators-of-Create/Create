@@ -9,13 +9,13 @@ import com.simibubi.create.content.schematics.client.SchematicTransformation;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.outliner.AABBOutline;
-import net.createmod.catnip.render.SuperRenderTypeBuffer;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.outliner.AABBOutline;
+import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -120,7 +120,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	}
 
 	@Override
-	public void renderOverlay(Gui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
+	public void renderOverlay(Gui gui, GuiGraphicsExtractor graphics, float partialTicks, int width, int height) {
 	}
 
 	@Override

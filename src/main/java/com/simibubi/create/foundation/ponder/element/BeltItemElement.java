@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.ponder.element;
 
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 
-import net.createmod.ponder.foundation.element.TrackedElementBase;
+import net.createmod.ponder.impl.client.element.TrackedElementBase;
 
 public class BeltItemElement extends TrackedElementBase<TransportedItemStack> {
 

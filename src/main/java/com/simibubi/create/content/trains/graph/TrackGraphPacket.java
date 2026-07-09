@@ -6,9 +6,8 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.trains.GlobalRailwayManager;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
 
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public abstract class TrackGraphPacket implements ClientboundPacketPayload {
 
@@ -17,8 +16,7 @@ public abstract class TrackGraphPacket implements ClientboundPacketPayload {
 	public boolean packetDeletesGraph;
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void handle(LocalPlayer player) {
+	public void handle(Player player) {
 		this.handle(CreateClient.RAILWAYS, CreateClient.RAILWAYS.getOrCreateGraph(graphId, netId));
 	}
 

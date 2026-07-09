@@ -26,6 +26,7 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -39,9 +40,11 @@ public class BacktankUtil {
 	static {
 		addBacktankSupplier(entity -> {
 			List<ItemStack> stacks = new ArrayList<>();
-			for (ItemStack itemStack : entity.getArmorSlots())
+			for (EquipmentSlot slot : List.of(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET)) {
+				ItemStack itemStack = entity.getItemBySlot(slot);
 				if (AllTags.AllItemTags.PRESSURIZED_AIR_SOURCES.matches(itemStack))
 					stacks.add(itemStack);
+			}
 
 			return stacks;
 		});

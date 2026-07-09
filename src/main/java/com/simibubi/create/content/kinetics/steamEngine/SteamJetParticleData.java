@@ -7,7 +7,6 @@ import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.foundation.particle.ICustomParticleDataWithSprite;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.particle.ParticleEngine.SpriteParticleRegistration;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -15,7 +14,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class SteamJetParticleData implements ParticleOptions, ICustomParticleDataWithSprite<SteamJetParticleData> {
 
@@ -46,13 +44,6 @@ public class SteamJetParticleData implements ParticleOptions, ICustomParticleDat
 	public MapCodec<SteamJetParticleData> getCodec(ParticleType<SteamJetParticleData> type) {
 		return CODEC;
 	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public SpriteParticleRegistration<SteamJetParticleData> getMetaFactory() {
-		return SteamJetParticle.Factory::new;
-	}
-
 	@Override
 	public StreamCodec<? super RegistryFriendlyByteBuf, SteamJetParticleData> getStreamCodec() {
 		return STREAM_CODEC;

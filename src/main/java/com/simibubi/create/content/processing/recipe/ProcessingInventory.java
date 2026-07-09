@@ -8,6 +8,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
+
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class ProcessingInventory extends ItemStackHandler {
@@ -55,21 +57,19 @@ public class ProcessingInventory extends ItemStackHandler {
 		return insertItem;
 	}
 
-	@Override
 	public @NotNull CompoundTag serializeNBT(@NotNull HolderLookup.Provider registries) {
-		CompoundTag nbt = super.serializeNBT(registries);
+		CompoundTag nbt = LegacyItemStackNbtBridge.serializeHandler(this, registries);
 		nbt.putFloat("ProcessingTime", remainingTime);
 		nbt.putFloat("RecipeTime", recipeDuration);
 		nbt.putBoolean("AppliedRecipe", appliedRecipe);
 		return nbt;
 	}
 
-	@Override
 	public void deserializeNBT(@NotNull HolderLookup.Provider registries, CompoundTag nbt) {
-		remainingTime = nbt.getFloat("ProcessingTime");
-		recipeDuration = nbt.getFloat("RecipeTime");
-		appliedRecipe = nbt.getBoolean("AppliedRecipe");
-		super.deserializeNBT(registries, nbt);
+		remainingTime = nbt.getFloatOr("ProcessingTime", 0);
+		recipeDuration = nbt.getFloatOr("RecipeTime", 0);
+		appliedRecipe = nbt.getBooleanOr("AppliedRecipe", false);
+		LegacyItemStackNbtBridge.deserializeHandler(this, registries, nbt);
 		if (isEmpty())
 			appliedRecipe = false;
 	}

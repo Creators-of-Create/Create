@@ -5,12 +5,12 @@ import java.util.function.Predicate;
 
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.BlockFace;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.BlockFace;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,7 +28,6 @@ import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class PipeConnection {
@@ -193,7 +192,7 @@ public class PipeConnection {
 		if (flow.fluid.isEmpty())
 			return;
 
-		if (world.isClientSide) {
+		if (world.isClientSide()) {
 			if (!source.isPresent())
 				determineSource(world, pos);
 
@@ -226,7 +225,8 @@ public class PipeConnection {
 		if (hasFlow()) {
 			CompoundTag flowData = new CompoundTag();
 			Flow flow = this.flow.get();
-			flowData.put("Fluid", flow.fluid.saveOptional(registries));
+			flowData.put("Fluid", com.simibubi.create.foundation.utility.LegacyFluidNbtBridge.saveOptional(flow.fluid,
+				registries));
 			flowData.putBoolean("In", flow.inbound);
 			if (!flow.complete)
 				flowData.put("Progress", flow.progress.writeNBT());
@@ -240,23 +240,23 @@ public class PipeConnection {
 	}
 
 	public void deserializeNBT(CompoundTag tag, HolderLookup.Provider registries, BlockPos blockEntityPos, boolean clientPacket) {
-		CompoundTag connectionData = tag.getCompound(side.getName());
+		CompoundTag connectionData = tag.getCompoundOrEmpty(side.getName());
 
 		if (connectionData.contains("Pressure")) {
-			ListTag pressureData = connectionData.getList("Pressure", Tag.TAG_FLOAT);
-			pressure = Couple.create(pressureData.getFloat(0), pressureData.getFloat(1));
+			ListTag pressureData = connectionData.getListOrEmpty("Pressure");
+			pressure = Couple.create(pressureData.getFloatOr(0, 0), pressureData.getFloatOr(1, 0));
 		} else
 			pressure.replace(f -> 0f);
 
 		source = Optional.empty();
 		if (connectionData.contains("OpenEnd"))
-			source = Optional.of(OpenEndedPipe.fromNBT(connectionData.getCompound("OpenEnd"), registries, blockEntityPos));
+			source = Optional.of(OpenEndedPipe.fromNBT(connectionData.getCompoundOrEmpty("OpenEnd"), registries, blockEntityPos));
 
 		if (connectionData.contains("Flow")) {
-			CompoundTag flowData = connectionData.getCompound("Flow");
+			CompoundTag flowData = connectionData.getCompoundOrEmpty("Flow");
 
-			FluidStack fluid = FluidStack.parseOptional(registries, flowData.getCompound("Fluid"));
-			boolean inbound = flowData.getBoolean("In");
+			FluidStack fluid = com.simibubi.create.foundation.utility.LegacyFluidNbtBridge.parseOptional(registries, flowData.getCompoundOrEmpty("Fluid"));
+			boolean inbound = flowData.getBooleanOr("In", false);
 			if (flow.isEmpty()) {
 				flow = Optional.of(new Flow(inbound, fluid));
 				if (clientPacket)
@@ -269,7 +269,7 @@ public class PipeConnection {
 			flow.complete = !flowData.contains("Progress");
 
 			if (!flow.complete)
-				flow.progress.readNBT(flowData.getCompound("Progress"), clientPacket);
+				flow.progress.readNBT(flowData.getCompoundOrEmpty("Progress"), clientPacket);
 			else {
 				if (flow.progress.getValue() == 0)
 					flow.progress.startWithValue(1);
@@ -369,18 +369,16 @@ public class PipeConnection {
 		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> spawnParticlesInner(world, pos, fluid));
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private void spawnParticlesInner(Level level, BlockPos pos, FluidStack fluid) {
 		if (level == Minecraft.getInstance().level)
 			if (!isRenderEntityWithinDistance(pos))
 				return;
 		if (hasOpenEnd())
 			spawnPouringLiquid(level, pos, fluid, 1);
-		else if (level.random.nextFloat() < IDLE_PARTICLE_SPAWN_CHANCE)
+		else if (level.getRandom().nextFloat() < IDLE_PARTICLE_SPAWN_CHANCE)
 			spawnRimParticles(level, pos, fluid, 1);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private void spawnSplashOnRimInner(Level world, BlockPos pos, FluidStack fluid) {
 		if (world == Minecraft.getInstance().level)
 			if (!isRenderEntityWithinDistance(pos))
@@ -388,7 +386,6 @@ public class PipeConnection {
 		spawnRimParticles(world, pos, fluid, SPLASH_PARTICLE_AMOUNT);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private void spawnRimParticles(Level world, BlockPos pos, FluidStack fluid, int amount) {
 		if (hasOpenEnd()) {
 			spawnPouringLiquid(world, pos, fluid, amount);
@@ -399,17 +396,15 @@ public class PipeConnection {
 		FluidFX.spawnRimParticles(world, pos, side, amount, particle, RIM_RADIUS);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private void spawnPouringLiquid(Level world, BlockPos pos, FluidStack fluid, int amount) {
 		ParticleOptions particle = FluidFX.getFluidParticle(fluid);
-		Vec3 directionVec = Vec3.atLowerCornerOf(side.getNormal());
+		Vec3 directionVec = Vec3.atLowerCornerOf(side.getUnitVec3i());
 		if (!hasFlow())
 			return;
 		Flow flow = this.flow.get();
 		FluidFX.spawnPouringLiquid(world, pos, amount, particle, RIM_RADIUS, directionVec, flow.inbound);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static boolean isRenderEntityWithinDistance(BlockPos pos) {
 		Entity renderViewEntity = Minecraft.getInstance()
 			.getCameraEntity();

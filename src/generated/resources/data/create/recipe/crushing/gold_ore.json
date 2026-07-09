@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:gold_ore"
-    }
+    "minecraft:gold_ore"
   ],
   "processing_time": 250,
   "results": [

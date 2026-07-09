@@ -24,8 +24,8 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -62,11 +62,11 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-				Capabilities.FluidHandler.BLOCK,
+				Capabilities.Fluid.BLOCK,
 				AllBlockEntityTypes.SPOUT.get(),
 				(be, context) -> {
 					if (context != Direction.DOWN)
-						return be.tank.getCapability();
+						return new com.simibubi.create.foundation.fluid.LegacyFluidTransferAdapter(be.tank.getCapability());
 					return null;
 				}
 		);
@@ -186,7 +186,7 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
-		processingTicks = compound.getInt("ProcessingTicks");
+		processingTicks = compound.getIntOr("ProcessingTicks", 0);
 
 		createdChocolateBerries = compound.contains("ChocolateBerries");
 		createdHoneyApple = compound.contains("HoneyApple");
@@ -228,7 +228,7 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			}
 		}
 
-		if (processingTicks >= 8 && level.isClientSide) {
+		if (processingTicks >= 8 && level.isClientSide()) {
 			spawnProcessingParticles(tank.getPrimaryTank()
 				.getRenderedFluid());
 		}
@@ -252,7 +252,7 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		vec = vec.subtract(0, 2 - 5 / 16f, 0);
 		ParticleOptions particle = FluidFX.getFluidParticle(fluid);
 		for (int i = 0; i < SPLASH_PARTICLE_COUNT; i++) {
-			Vec3 m = VecHelper.offsetRandomly(Vec3.ZERO, level.random, 0.125f);
+			Vec3 m = VecHelper.offsetRandomly(Vec3.ZERO, level.getRandom(), 0.125f);
 			m = new Vec3(m.x, Math.abs(m.y), m.z);
 			level.addAlwaysVisibleParticle(particle, vec.x, vec.y, vec.z, m.x, m.y, m.z);
 		}
@@ -261,6 +261,6 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
-			level.getCapability(Capabilities.FluidHandler.BLOCK, worldPosition, null));
+			level.getCapability(Capabilities.Fluid.BLOCK, worldPosition, null));
 	}
 }

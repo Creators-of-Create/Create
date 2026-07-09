@@ -11,12 +11,12 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.render.ItemRenderer;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -56,7 +56,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 			if (tis.insertedFrom.getAxis()
 				.isHorizontal()) {
 				Vec3 offsetVec = Vec3.atLowerCornerOf(tis.insertedFrom.getOpposite()
-					.getNormal())
+					.getUnitVec3i())
 					.scale(.5f - offset);
 				ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 				boolean alongX = tis.insertedFrom.getClockWise()
@@ -101,8 +101,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 
 	public static void renderItem(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
 								  ItemStack itemStack, int angle, Random r, Vec3 itemPosition, boolean alwaysUpright) {
-		ItemRenderer itemRenderer = Minecraft.getInstance()
-			.getItemRenderer();
+		ItemRenderer itemRenderer = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer();
 		var msr = TransformStack.of(ms);
 		int count = Mth.log2((itemStack.getCount())) / 2;
 		BakedModel bakedModel = itemRenderer.getModel(itemStack, null, null, 0);
@@ -113,7 +112,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 		msr.rotateYDegrees(angle);
 
 		if (renderUpright) {
-			Vec3 cameraPosition = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+			Vec3 cameraPosition = Minecraft.getInstance().gameRenderer.mainCamera().position();
 			Vec3 diff = itemPosition.subtract(cameraPosition);
 			float yRot = (float) (Mth.atan2(diff.x, diff.z) + Math.PI);
 			ms.mulPose(Axis.YP.rotation(yRot));

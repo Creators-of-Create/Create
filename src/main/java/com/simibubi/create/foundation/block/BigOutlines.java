@@ -2,8 +2,8 @@ package com.simibubi.create.foundation.block;
 
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -25,14 +25,14 @@ public class BigOutlines {
 
 	public static void pick() {
 		Minecraft mc = Minecraft.getInstance();
-		if (!(mc.cameraEntity instanceof LocalPlayer player))
+		if (!(mc.getCameraEntity() instanceof LocalPlayer player))
 			return;
 		if (mc.level == null)
 			return;
 
 		result = null;
 
-		Vec3 origin = player.getEyePosition(AnimationTickHolder.getPartialTicks(mc.level));
+		Vec3 origin = player.getEyePosition(AnimationTickHolder.getPartialTicks());
 
 		double maxRange = mc.hitResult == null ? Double.MAX_VALUE
 			: mc.hitResult.getLocation()

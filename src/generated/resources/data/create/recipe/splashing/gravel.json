@@ -1,9 +1,7 @@
 {
   "type": "create:splashing",
   "ingredients": [
-    {
-      "item": "minecraft:gravel"
-    }
+    "minecraft:gravel"
   ],
   "results": [
     {

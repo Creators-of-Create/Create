@@ -16,7 +16,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -68,7 +68,7 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 
 	@Override
 	public void remove() {
-		if (!level.isClientSide)
+		if (!level.isClientSide())
 			disassemble();
 		super.remove();
 	}
@@ -91,9 +91,9 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 		}
 
 		float angleBefore = angle;
-		running = compound.getBoolean("Running");
-		angle = compound.getFloat("Angle");
-		sequencedAngleLimit = compound.contains("SequencedAngleLimit") ? compound.getDouble("SequencedAngleLimit") : -1;
+		running = compound.getBooleanOr("Running", false);
+		angle = compound.getFloatOr("Angle", 0);
+		sequencedAngleLimit = compound.contains("SequencedAngleLimit") ? compound.getDoubleOr("SequencedAngleLimit", -1) : -1;
 		lastException = AssemblyException.read(compound, registries);
 		super.read(compound, registries, clientPacket);
 		if (!clientPacket)
@@ -143,7 +143,7 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 		float speed = convertToAngular(isWindmill() ? getGeneratedSpeed() : getSpeed());
 		if (getSpeed() == 0)
 			speed = 0;
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			speed *= ServerSpeedProvider.get();
 			speed += clientAngleDiff / 3f;
 		}
@@ -229,10 +229,10 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 		super.tick();
 
 		prevAngle = angle;
-		if (level.isClientSide)
+		if (level.isClientSide())
 			clientAngleDiff /= 2;
 
-		if (!level.isClientSide && assembleNextTick) {
+		if (!level.isClientSide() && assembleNextTick) {
 			assembleNextTick = false;
 			if (running) {
 				boolean canDisassemble = movementMode.get() == RotationMode.ROTATE_PLACE
@@ -276,7 +276,7 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		if (movedContraption != null && !level.isClientSide)
+		if (movedContraption != null && !level.isClientSide())
 			sendData();
 	}
 
@@ -302,7 +302,7 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 		setChanged();
 		BlockPos anchor = worldPosition.relative(blockState.getValue(BearingBlock.FACING));
 		movedContraption.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			this.running = true;
 			sendData();
 		}
@@ -310,7 +310,7 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 
 	@Override
 	public void onStall() {
-		if (!level.isClientSide)
+		if (!level.isClientSide())
 			sendData();
 	}
 

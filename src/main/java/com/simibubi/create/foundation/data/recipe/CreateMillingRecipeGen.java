@@ -13,6 +13,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -62,24 +63,24 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 
 	BONE = create(() -> Items.BONE, b -> b.duration(100)
 		.output(Items.BONE_MEAL, 3)
-		.output(.25f, Items.WHITE_DYE, 1)
+		.output(.25f, dye(DyeColor.WHITE), 1)
 		.output(.25f, Items.BONE_MEAL, 3)),
 
 	CACTUS = create(() -> Blocks.CACTUS, b -> b.duration(50)
-		.output(Items.GREEN_DYE, 2)
-		.output(.1f, Items.GREEN_DYE, 1)),
+		.output(dye(DyeColor.GREEN), 2)
+		.output(.1f, dye(DyeColor.GREEN), 1)),
 
 	SEA_PICKLE = create(() -> Blocks.SEA_PICKLE, b -> b.duration(50)
-		.output(Items.LIME_DYE, 2)
-		.output(.1f, Items.GREEN_DYE)),
+		.output(dye(DyeColor.LIME), 2)
+		.output(.1f, dye(DyeColor.GREEN))),
 
 	BONE_MEAL = create(() -> Items.BONE_MEAL, b -> b.duration(70)
-		.output(Items.WHITE_DYE, 2)
-		.output(.1f, Items.LIGHT_GRAY_DYE, 1)),
+		.output(dye(DyeColor.WHITE), 2)
+		.output(.1f, dye(DyeColor.LIGHT_GRAY), 1)),
 
 	COCOA_BEANS = create(() -> Items.COCOA_BEANS, b -> b.duration(70)
-		.output(Items.BROWN_DYE, 2)
-		.output(.1f, Items.BROWN_DYE, 1)),
+		.output(dye(DyeColor.BROWN), 2)
+		.output(.1f, dye(DyeColor.BROWN), 1)),
 
 	SADDLE = create(() -> Items.SADDLE, b -> b.duration(200)
 		.output(Items.LEATHER, 2)
@@ -90,119 +91,119 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		.output(.1f, Items.SUGAR)),
 
 	BEETROOT = create(() -> Items.BEETROOT, b -> b.duration(70)
-		.output(Items.RED_DYE, 2)
+		.output(dye(DyeColor.RED), 2)
 		.output(.1f, Items.BEETROOT_SEEDS)),
 
 	INK_SAC = create(() -> Items.INK_SAC, b -> b.duration(100)
-		.output(Items.BLACK_DYE, 2)
-		.output(.1f, Items.GRAY_DYE)),
+		.output(dye(DyeColor.BLACK), 2)
+		.output(.1f, dye(DyeColor.GRAY))),
 
 	CHARCOAL = create(() -> Items.CHARCOAL, b -> b.duration(100)
-		.output(Items.BLACK_DYE, 1)
-		.output(.1f, Items.GRAY_DYE, 2)),
+		.output(dye(DyeColor.BLACK), 1)
+		.output(.1f, dye(DyeColor.GRAY), 2)),
 
 	COAL = create(() -> Items.COAL, b -> b.duration(100)
-		.output(Items.BLACK_DYE, 2)
-		.output(.1f, Items.GRAY_DYE, 1)),
+		.output(dye(DyeColor.BLACK), 2)
+		.output(.1f, dye(DyeColor.GRAY), 1)),
 
 	LAPIS_LAZULI = create(() -> Items.LAPIS_LAZULI, b -> b.duration(100)
-		.output(Items.BLUE_DYE, 2)
-		.output(.1f, Items.BLUE_DYE)),
+		.output(dye(DyeColor.BLUE), 2)
+		.output(.1f, dye(DyeColor.BLUE))),
 
 	AZURE_BLUET = create(() -> Blocks.AZURE_BLUET, b -> b.duration(50)
-		.output(Items.LIGHT_GRAY_DYE, 2)
-		.output(.1f, Items.WHITE_DYE, 2)),
+		.output(dye(DyeColor.LIGHT_GRAY), 2)
+		.output(.1f, dye(DyeColor.WHITE), 2)),
 
 	BLUE_ORCHID = create(() -> Blocks.BLUE_ORCHID, b -> b.duration(50)
-		.output(Items.LIGHT_BLUE_DYE, 2)
-		.output(.05f, Items.LIGHT_GRAY_DYE, 1)),
+		.output(dye(DyeColor.LIGHT_BLUE), 2)
+		.output(.05f, dye(DyeColor.LIGHT_GRAY), 1)),
 
 	FERN = create(() -> Blocks.FERN, b -> b.duration(50)
-		.output(Items.GREEN_DYE)
+		.output(dye(DyeColor.GREEN))
 		.output(.1f, Items.WHEAT_SEEDS)),
 
 	LARGE_FERN = create(() -> Blocks.LARGE_FERN, b -> b.duration(50)
-		.output(Items.GREEN_DYE, 2)
-		.output(.5f, Items.GREEN_DYE)
+		.output(dye(DyeColor.GREEN), 2)
+		.output(.5f, dye(DyeColor.GREEN))
 		.output(.1f, Items.WHEAT_SEEDS)),
 
 	LILAC = create(() -> Blocks.LILAC, b -> b.duration(100)
-		.output(Items.MAGENTA_DYE, 3)
-		.output(.25f, Items.MAGENTA_DYE)
-		.output(.25f, Items.PURPLE_DYE)),
+		.output(dye(DyeColor.MAGENTA), 3)
+		.output(.25f, dye(DyeColor.MAGENTA))
+		.output(.25f, dye(DyeColor.PURPLE))),
 
 	PEONY = create(() -> Blocks.PEONY, b -> b.duration(100)
-		.output(Items.PINK_DYE, 3)
-		.output(.25f, Items.MAGENTA_DYE)
-		.output(.25f, Items.PINK_DYE)),
+		.output(dye(DyeColor.PINK), 3)
+		.output(.25f, dye(DyeColor.MAGENTA))
+		.output(.25f, dye(DyeColor.PINK))),
 
 	ALLIUM = create(() -> Blocks.ALLIUM, b -> b.duration(50)
-		.output(Items.MAGENTA_DYE, 2)
-		.output(.1f, Items.PURPLE_DYE, 2)
-		.output(.1f, Items.PINK_DYE)),
+		.output(dye(DyeColor.MAGENTA), 2)
+		.output(.1f, dye(DyeColor.PURPLE), 2)
+		.output(.1f, dye(DyeColor.PINK))),
 
 	LILY_OF_THE_VALLEY = create(() -> Blocks.LILY_OF_THE_VALLEY, b -> b.duration(50)
-		.output(Items.WHITE_DYE, 2)
-		.output(.1f, Items.LIME_DYE)
-		.output(.1f, Items.WHITE_DYE)),
+		.output(dye(DyeColor.WHITE), 2)
+		.output(.1f, dye(DyeColor.LIME))
+		.output(.1f, dye(DyeColor.WHITE))),
 
 	ROSE_BUSH = create(() -> Blocks.ROSE_BUSH, b -> b.duration(50)
-		.output(Items.RED_DYE, 3)
-		.output(.05f, Items.GREEN_DYE, 2)
-		.output(.25f, Items.RED_DYE, 2)),
+		.output(dye(DyeColor.RED), 3)
+		.output(.05f, dye(DyeColor.GREEN), 2)
+		.output(.25f, dye(DyeColor.RED), 2)),
 
 	SUNFLOWER = create(() -> Blocks.SUNFLOWER, b -> b.duration(100)
-		.output(Items.YELLOW_DYE, 3)
-		.output(.25f, Items.ORANGE_DYE)
-		.output(.25f, Items.YELLOW_DYE)),
+		.output(dye(DyeColor.YELLOW), 3)
+		.output(.25f, dye(DyeColor.ORANGE))
+		.output(.25f, dye(DyeColor.YELLOW))),
 
 	OXEYE_DAISY = create(() -> Blocks.OXEYE_DAISY, b -> b.duration(50)
-		.output(Items.LIGHT_GRAY_DYE, 2)
-		.output(.2f, Items.WHITE_DYE)
-		.output(.05f, Items.YELLOW_DYE)),
+		.output(dye(DyeColor.LIGHT_GRAY), 2)
+		.output(.2f, dye(DyeColor.WHITE))
+		.output(.05f, dye(DyeColor.YELLOW))),
 
 	POPPY = create(() -> Blocks.POPPY, b -> b.duration(50)
-		.output(Items.RED_DYE, 2)
-		.output(.05f, Items.GREEN_DYE)),
+		.output(dye(DyeColor.RED), 2)
+		.output(.05f, dye(DyeColor.GREEN))),
 
 	DANDELION = create(() -> Blocks.DANDELION, b -> b.duration(50)
-		.output(Items.YELLOW_DYE, 2)
-		.output(.05f, Items.YELLOW_DYE)),
+		.output(dye(DyeColor.YELLOW), 2)
+		.output(.05f, dye(DyeColor.YELLOW))),
 
 	CORNFLOWER = create(() -> Blocks.CORNFLOWER, b -> b.duration(50)
-		.output(Items.BLUE_DYE, 2)),
+		.output(dye(DyeColor.BLUE), 2)),
 
 	WITHER_ROSE = create(() -> Blocks.WITHER_ROSE, b -> b.duration(50)
-		.output(Items.BLACK_DYE, 2)
-		.output(.1f, Items.BLACK_DYE)),
+		.output(dye(DyeColor.BLACK), 2)
+		.output(.1f, dye(DyeColor.BLACK))),
 
 	ORANGE_TULIP = create(() -> Blocks.ORANGE_TULIP, b -> b.duration(50)
-		.output(Items.ORANGE_DYE, 2)
-		.output(.1f, Items.LIME_DYE)),
+		.output(dye(DyeColor.ORANGE), 2)
+		.output(.1f, dye(DyeColor.LIME))),
 
 	RED_TULIP = create(() -> Blocks.RED_TULIP, b -> b.duration(50)
-		.output(Items.RED_DYE, 2)
-		.output(.1f, Items.LIME_DYE)),
+		.output(dye(DyeColor.RED), 2)
+		.output(.1f, dye(DyeColor.LIME))),
 
 	WHITE_TULIP = create(() -> Blocks.WHITE_TULIP, b -> b.duration(50)
-		.output(Items.WHITE_DYE, 2)
-		.output(.1f, Items.LIME_DYE)),
+		.output(dye(DyeColor.WHITE), 2)
+		.output(.1f, dye(DyeColor.LIME))),
 
 	PINK_TULIP = create(() -> Blocks.PINK_TULIP, b -> b.duration(50)
-		.output(Items.PINK_DYE, 2)
-		.output(.1f, Items.LIME_DYE)),
+		.output(dye(DyeColor.PINK), 2)
+		.output(.1f, dye(DyeColor.LIME))),
 
 	PINK_PETALS = create(() -> Blocks.PINK_PETALS, b -> b.duration(50)
-		.output(Items.PINK_DYE, 2)
-		.output(.1f, Items.LIME_DYE)),
+		.output(dye(DyeColor.PINK), 2)
+		.output(.1f, dye(DyeColor.LIME))),
 
 	PITCHER_PLANT = create(() -> Blocks.PITCHER_PLANT, b -> b.duration(50)
-		.output(Items.CYAN_DYE, 4)
-		.output(.1f, Items.PURPLE_DYE)),
+		.output(dye(DyeColor.CYAN), 4)
+		.output(.1f, dye(DyeColor.PURPLE))),
 
 	TORCHFLOWER = create(() -> Blocks.TORCHFLOWER, b -> b.duration(50)
-		.output(Items.ORANGE_DYE, 2)
-		.output(.1f, Items.GREEN_DYE)),
+		.output(dye(DyeColor.ORANGE), 2)
+		.output(.1f, dye(DyeColor.GREEN))),
 
 	TALL_GRASS = create(() -> Blocks.TALL_GRASS, b -> b.duration(100)
 		.output(.5f, Items.WHEAT_SEEDS)),
@@ -235,70 +236,70 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 
 	ATMO_GILIA = create(Mods.ATM.recipeId("gilia"), b -> b.duration(50)
 		.require(Mods.ATM, "gilia")
-		.output(Items.PURPLE_DYE, 2)
-		.output(.1f, Items.MAGENTA_DYE, 2)
-		.output(.1f, Items.PINK_DYE)
+		.output(dye(DyeColor.PURPLE), 2)
+		.output(.1f, dye(DyeColor.MAGENTA), 2)
+		.output(.1f, dye(DyeColor.PINK))
 		.whenModLoaded(Mods.ATM.getId())),
 
 	ATMO_HOT_BRUSH = create(Mods.ATM.recipeId("hot_monkey_brush"), b -> b.duration(50)
 		.require(Mods.ATM, "hot_monkey_brush")
-		.output(Items.ORANGE_DYE, 2)
-		.output(.05f, Items.RED_DYE)
-		.output(.05f, Items.YELLOW_DYE)
+		.output(dye(DyeColor.ORANGE), 2)
+		.output(.05f, dye(DyeColor.RED))
+		.output(.05f, dye(DyeColor.YELLOW))
 		.whenModLoaded(Mods.ATM.getId())),
 
 	ATMO_SCALDING_BRUSH = create(Mods.ATM.recipeId("scalding_monkey_brush"), b -> b.duration(50)
 		.require(Mods.ATM, "scalding_monkey_brush")
-		.output(Items.RED_DYE, 2)
-		.output(.1f, Items.RED_DYE, 2)
-		.output(.1f, Items.ORANGE_DYE)
+		.output(dye(DyeColor.RED), 2)
+		.output(.1f, dye(DyeColor.RED), 2)
+		.output(.1f, dye(DyeColor.ORANGE))
 		.whenModLoaded(Mods.ATM.getId())),
 
 	ATMO_WARM_BRUSH = create(Mods.ATM.recipeId("warm_monkey_brush"), b -> b.duration(50)
 		.require(Mods.ATM, "warm_monkey_brush")
-		.output(Items.YELLOW_DYE, 2)
-		.output(.1f, Items.YELLOW_DYE, 2)
-		.output(.1f, Items.ORANGE_DYE)
+		.output(dye(DyeColor.YELLOW), 2)
+		.output(.1f, dye(DyeColor.YELLOW), 2)
+		.output(.1f, dye(DyeColor.ORANGE))
 		.whenModLoaded(Mods.ATM.getId())),
 
 	ATMO_YUCCA_FLOWER = create(Mods.ATM.recipeId("yucca_flower"), b -> b.duration(50)
 		.require(Mods.ATM, "yucca_flower")
-		.output(Items.LIGHT_GRAY_DYE, 2)
-		.output(.05f, Items.WHITE_DYE)
+		.output(dye(DyeColor.LIGHT_GRAY), 2)
+		.output(.05f, dye(DyeColor.WHITE))
 		.whenModLoaded(Mods.ATM.getId())),
 
 	ATMO_TALL_YUCCA_FLOWER = create(Mods.ATM.recipeId("tall_yucca_flower"), b -> b.duration(50)
 		.require(Mods.ATM, "tall_yucca_flower")
-		.output(Items.LIGHT_GRAY_DYE, 3)
-		.output(0.25f, Items.LIGHT_GRAY_DYE, 2)
-		.output(.05f, Items.WHITE_DYE, 2)
+		.output(dye(DyeColor.LIGHT_GRAY), 3)
+		.output(0.25f, dye(DyeColor.LIGHT_GRAY), 2)
+		.output(.05f, dye(DyeColor.WHITE), 2)
 		.whenModLoaded(Mods.ATM.getId())),
 
 	ATMO_FIRETHORN = create(Mods.ATM.recipeId("firethorn"), b -> b.duration(50)
 		.require(Mods.ATM, "firethorn")
-		.output(Items.RED_DYE, 2)
-		.output(.1f, Items.ORANGE_DYE, 2)
-		.output(.1f, Items.GREEN_DYE)
+		.output(dye(DyeColor.RED), 2)
+		.output(.1f, dye(DyeColor.ORANGE), 2)
+		.output(.1f, dye(DyeColor.GREEN))
 		.whenModLoaded(Mods.ATM.getId())),
 
 	ATMO_FORSYTHIA = create(Mods.ATM.recipeId("forsythia"), b -> b.duration(50)
 		.require(Mods.ATM, "forsythia")
-		.output(Items.YELLOW_DYE, 2)
-		.output(.1f, Items.LIME_DYE, 2)
-		.output(.1f, Items.YELLOW_DYE)
+		.output(dye(DyeColor.YELLOW), 2)
+		.output(.1f, dye(DyeColor.LIME), 2)
+		.output(.1f, dye(DyeColor.YELLOW))
 		.whenModLoaded(Mods.ATM.getId())),
 
 	ATMO_CACTUS = create(Mods.ATM.recipeId("barrel_cactus"), b -> b.duration(50)
 		.require(Mods.ATM, "barrel_cactus")
-		.output(Items.ORANGE_DYE, 2)
-		.output(.1f, Items.GREEN_DYE, 3)
+		.output(dye(DyeColor.ORANGE), 2)
+		.output(.1f, dye(DyeColor.GREEN), 3)
 		.whenModLoaded(Mods.ATM.getId())),
 
 	ATMO_HYACINTH = create(Mods.ATM.recipeId("water_hyacinth"), b -> b.duration(50)
 		.require(Mods.ATM, "water_hyacinth")
-		.output(Items.PURPLE_DYE, 3)
-		.output(0.25f, Items.LIME_DYE, 2)
-		.output(.05f, Items.BROWN_DYE, 2)
+		.output(dye(DyeColor.PURPLE), 3)
+		.output(0.25f, dye(DyeColor.LIME), 2)
+		.output(.05f, dye(DyeColor.BROWN), 2)
 		.whenModLoaded(Mods.ATM.getId())),
 
 	ATMO_SAND_1 = moddedSandstone(Mods.ATM, "arid"),
@@ -308,70 +309,70 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 
 	AUTUM_CROCUS = create(Mods.AUTUM.recipeId("autumn_crocus"), b -> b.duration(50)
 		.require(Mods.AUTUM, "autumn_crocus")
-		.output(Items.MAGENTA_DYE, 2)
-		.output(.1f, Items.PINK_DYE, 2)
-		.output(.1f, Items.PURPLE_DYE)
+		.output(dye(DyeColor.MAGENTA), 2)
+		.output(.1f, dye(DyeColor.PINK), 2)
+		.output(.1f, dye(DyeColor.PURPLE))
 		.whenModLoaded(Mods.AUTUM.getId())),
 
 	// Biomes O' Plenty
 	BOP_HYDRANGEA = bopFlower("blue_hydrangea", List.of(1f, .05f, .25f),
-		List.of(Items.LIGHT_BLUE_DYE, Items.GREEN_DYE, Items.LIGHT_BLUE_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.LIGHT_BLUE), dye(DyeColor.GREEN), dye(DyeColor.LIGHT_BLUE)), List.of(3, 2, 2)),
 
 	BOP_GOLDENROD = bopFlower("goldenrod", List.of(1f, .05f, .25f),
-		List.of(Items.YELLOW_DYE, Items.YELLOW_DYE, Items.GREEN_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.YELLOW), dye(DyeColor.YELLOW), dye(DyeColor.GREEN)), List.of(3, 2, 2)),
 
 	BOP_BLOSSOM = bopFlower("burning_blossom", List.of(1f, .1f),
-		List.of(Items.ORANGE_DYE, Items.LIME_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.ORANGE), dye(DyeColor.LIME)), List.of(2, 1)),
 
 	BOP_GLOWFLOWER = bopFlower("glowflower", List.of(1f, .1f),
-		List.of(Items.CYAN_DYE, Items.WHITE_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.CYAN), dye(DyeColor.WHITE)), List.of(2, 1)),
 
 	BOP_LAVENDER = bopFlower("lavender", List.of(1f, .05f),
-		List.of(Items.PURPLE_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BOP_TALL_LAVENDER = bopFlower("tall_lavender", List.of(1f, 0.25f, .05f),
-		List.of(Items.PURPLE_DYE, Items.PURPLE_DYE, Items.GREEN_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.PURPLE), dye(DyeColor.GREEN)), List.of(3, 2, 2)),
 
 	BOP_WHITE_LAVENDER = bopFlower("white_lavender", List.of(1f, .05f),
-		List.of(Items.WHITE_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.WHITE), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BOP_TALL_WHITE_LAVENDER = bopFlower("tall_white_lavender", List.of(1f, 0.25f, .05f),
-		List.of(Items.WHITE_DYE, Items.LIGHT_BLUE_DYE, Items.GREEN_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.WHITE), dye(DyeColor.LIGHT_BLUE), dye(DyeColor.GREEN)), List.of(3, 2, 2)),
 
 	BOP_COSMOS = bopFlower("orange_cosmos", List.of(1f, .1f),
-		List.of(Items.ORANGE_DYE, Items.LIME_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.ORANGE), dye(DyeColor.LIME)), List.of(2, 1)),
 
 	BOP_DAFFODIL = bopFlower("pink_daffodil", List.of(1f, .25f, .05f),
-		List.of(Items.PINK_DYE, Items.MAGENTA_DYE, Items.CYAN_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.MAGENTA), dye(DyeColor.CYAN)), List.of(2, 1, 1)),
 
 	BOP_HIBISCUS = bopFlower("pink_hibiscus", List.of(1f, .25f, .1f),
-		List.of(Items.PINK_DYE, Items.YELLOW_DYE, Items.GREEN_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.YELLOW), dye(DyeColor.GREEN)), List.of(2, 1, 1)),
 
 	BOP_ROSE = bopFlower("rose", List.of(1f, .05f),
-		List.of(Items.RED_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.RED), dye(DyeColor.GREEN)), List.of(2, 1)),
 
-	BOP_VIOLET = bopFlower("violet", 1f, Items.PURPLE_DYE, 2),
+	BOP_VIOLET = bopFlower("violet", 1f, dye(DyeColor.PURPLE), 2),
 
 	BOP_WILDFLOWER = bopFlower("wildflower", List.of(1f, .1f),
-		List.of(Items.MAGENTA_DYE, Items.LIME_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.MAGENTA), dye(DyeColor.LIME)), List.of(2, 1)),
 
-	BOP_PETALS = bopFlower("white_petals", 1f, Items.WHITE_DYE, 2),
+	BOP_PETALS = bopFlower("white_petals", 1f, dye(DyeColor.WHITE), 2),
 
 	BOP_IRIS = bopFlower("icy_iris", List.of(1f, .05f, .25f),
-		List.of(Items.LIGHT_BLUE_DYE, Items.LIGHT_GRAY_DYE, Items.LIGHT_BLUE_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.LIGHT_BLUE), dye(DyeColor.LIGHT_GRAY), dye(DyeColor.LIGHT_BLUE)), List.of(3, 2, 2)),
 
-	BOP_LILY = bopFlower("wilted_lily", 1f, Items.GRAY_DYE, 2),
+	BOP_LILY = bopFlower("wilted_lily", 1f, dye(DyeColor.GRAY), 2),
 
-	BOP_ENDBLOOM = bopFlower("endbloom", 1f, Items.LIGHT_GRAY_DYE, 2),
+	BOP_ENDBLOOM = bopFlower("endbloom", 1f, dye(DyeColor.LIGHT_GRAY), 2),
 
 	BOP_WATERLILY = bopFlower("waterlily", List.of(1f, .05f),
-		List.of(Items.RED_DYE, Items.PINK_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.RED), dye(DyeColor.PINK)), List.of(2, 1)),
 
 	BOP_CACTUS = bopFlower("tiny_cactus", List.of(1f, 0.1f),
-		List.of(Items.GREEN_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.GREEN), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BOP_CATTAIL = bopFlower("cattail", List.of(1f, .05f, .25f),
-		List.of(Items.BROWN_DYE, Items.GREEN_DYE, Items.BROWN_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.BROWN), dye(DyeColor.GREEN), dye(DyeColor.BROWN)), List.of(3, 2, 2)),
 
 	BOP_SAND_1 = moddedSandstone(Mods.BOP, "white"),
 	BOP_SAND_2 = moddedSandstone(Mods.BOP, "orange"),
@@ -385,170 +386,170 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 
 	BB_BUTTERCUP = create(Mods.BB.recipeId("buttercup"), b -> b.duration(50)
 		.require(Mods.BB, "buttercup")
-		.output(Items.YELLOW_DYE, 2)
-		.output(.1f, Items.LIME_DYE)
+		.output(dye(DyeColor.YELLOW), 2)
+		.output(.1f, dye(DyeColor.LIME))
 		.whenModLoaded(Mods.BB.getId())),
 
 	BB_PINK_CLOVER = create(Mods.BB.recipeId("pink_clover"), b -> b.duration(50)
 		.require(Mods.BB, "pink_clover")
-		.output(Items.PINK_DYE, 2)
-		.output(.1f, Items.LIME_DYE)
+		.output(dye(DyeColor.PINK), 2)
+		.output(.1f, dye(DyeColor.LIME))
 		.whenModLoaded(Mods.BB.getId())),
 
 	BB_WHITE_CLOVER = create(Mods.BB.recipeId("white_clover"), b -> b.duration(50)
 		.require(Mods.BB, "white_clover")
-		.output(Items.WHITE_DYE, 2)
-		.output(.1f, Items.LIME_DYE)
+		.output(dye(DyeColor.WHITE), 2)
+		.output(.1f, dye(DyeColor.LIME))
 		.whenModLoaded(Mods.BB.getId())),
 
 	// Oh The Biomes We've Gone
 
 	BWG_ALLIUM_BUSH = bwgFlower("allium_flower_bush", List.of(1f, .05f, .25f),
-		List.of(Items.PURPLE_DYE, Items.GREEN_DYE, Items.MAGENTA_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.GREEN), dye(DyeColor.MAGENTA)), List.of(3, 2, 2)),
 
 	BWG_BELLFLOWER = bwgFlower("alpine_bellflower", List.of(1f, .1f, .1f),
-		List.of(Items.PURPLE_DYE, Items.BLUE_DYE, Items.GREEN_DYE), List.of(2, 2, 1)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.BLUE), dye(DyeColor.GREEN)), List.of(2, 2, 1)),
 
 	BWG_AMARANTH = bwgFlower("amaranth", List.of(1f, .05f, .25f),
-		List.of(Items.RED_DYE, Items.GREEN_DYE, Items.RED_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.RED), dye(DyeColor.GREEN), dye(DyeColor.RED)), List.of(3, 2, 2)),
 
 	BWG_ANGELICA = bwgFlower("angelica", List.of(1f, .1f),
-		List.of(Items.WHITE_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.WHITE), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_BEGONIA = bwgFlower("begonia", List.of(1f, .1f),
-		List.of(Items.RED_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.RED), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_BISTORT = bwgFlower("bistort", List.of(1f, .1f, .1f),
-		List.of(Items.PINK_DYE, Items.RED_DYE, Items.GREEN_DYE), List.of(2, 2, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.RED), dye(DyeColor.GREEN)), List.of(2, 2, 1)),
 
 	BWG_BLACK_ROSE = bwgFlower("black_rose", List.of(1f, .1f),
-		List.of(Items.BLACK_DYE, Items.BLACK_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.BLACK), dye(DyeColor.BLACK)), List.of(2, 1)),
 
 	BWG_BLUE_SAGE = bwgFlower("blue_sage", List.of(1f, .1f),
-		List.of(Items.BLUE_DYE, Items.CYAN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.BLUE), dye(DyeColor.CYAN)), List.of(2, 1)),
 
 	BWG_CALIFORNIA_POPPY = bwgFlower("california_poppy", List.of(1f, .05f),
-		List.of(Items.ORANGE_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.ORANGE), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_CROCUS = bwgFlower("crocus", List.of(1f, .1f, .1f),
-		List.of(Items.PURPLE_DYE, Items.BLUE_DYE, Items.GREEN_DYE), List.of(2, 2, 1)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.BLUE), dye(DyeColor.GREEN)), List.of(2, 2, 1)),
 
 	BWG_CYAN_AMARANTH = bwgFlower("cyan_amaranth", List.of(1f, .05f, .25f),
-		List.of(Items.CYAN_DYE, Items.GREEN_DYE, Items.CYAN_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.CYAN), dye(DyeColor.GREEN), dye(DyeColor.CYAN)), List.of(3, 2, 2)),
 
 	BWG_CYAN_ROSE = bwgFlower("cyan_rose", List.of(1f, .1f),
-		List.of(Items.CYAN_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.CYAN), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_CYAN_TULIP = bwgFlower("cyan_tulip", List.of(1f, .1f),
-		List.of(Items.CYAN_DYE, Items.LIME_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.CYAN), dye(DyeColor.LIME)), List.of(2, 1)),
 
 	BWG_DAFFODIL = bwgFlower("daffodil", List.of(1f, .1f, .1f),
-		List.of(Items.PINK_DYE, Items.GREEN_DYE, Items.MAGENTA_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.GREEN), dye(DyeColor.MAGENTA)), List.of(2, 1, 1)),
 
 	BWG_DELPHINIUM = bwgFlower("delphinium", List.of(1f, .1f),
-		List.of(Items.BLUE_DYE, Items.BLUE_DYE), List.of(3, 1)),
+		List.of(dye(DyeColor.BLUE), dye(DyeColor.BLUE)), List.of(3, 1)),
 
 	BWG_FAIRY_SLIPPER = bwgFlower("fairy_slipper", List.of(1f, .1f, .1f),
-		List.of(Items.MAGENTA_DYE, Items.PINK_DYE, Items.YELLOW_DYE), List.of(2, 2, 1)),
+		List.of(dye(DyeColor.MAGENTA), dye(DyeColor.PINK), dye(DyeColor.YELLOW)), List.of(2, 2, 1)),
 
 	BWG_FIRECRACKER_BUSH = bwgFlower("firecracker_flower_bush", List.of(1f, .05f, .25f),
-		List.of(Items.PINK_DYE, Items.GREEN_DYE, Items.RED_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.GREEN), dye(DyeColor.RED)), List.of(3, 2, 2)),
 
 	BWG_FOXGLOVE = bwgFlower("foxglove", List.of(1f, .25f, .25f),
-		List.of(Items.MAGENTA_DYE, Items.PINK_DYE, Items.YELLOW_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.MAGENTA), dye(DyeColor.PINK), dye(DyeColor.YELLOW)), List.of(2, 1, 1)),
 
 	BWG_GREEN_TULIP = bwgFlower("green_tulip", List.of(1f, .1f),
-		List.of(Items.LIME_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.LIME), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_GUZMANIA = bwgFlower("guzmania", List.of(1f, .25f, .25f),
-		List.of(Items.MAGENTA_DYE, Items.PINK_DYE, Items.YELLOW_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.MAGENTA), dye(DyeColor.PINK), dye(DyeColor.YELLOW)), List.of(2, 1, 1)),
 
 	BWG_HYDRANGEA = bwgFlower("hydrangea_bush", List.of(1f, .1f, .1f),
-		List.of(Items.PURPLE_DYE, Items.BLUE_DYE, Items.WHITE_DYE), List.of(2, 2, 1)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.BLUE), dye(DyeColor.WHITE)), List.of(2, 2, 1)),
 
 	BWG_INCAN_LILY = bwgFlower("incan_lily", List.of(1f, .1f, .1f),
-		List.of(Items.ORANGE_DYE, Items.GREEN_DYE, Items.RED_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.ORANGE), dye(DyeColor.GREEN), dye(DyeColor.RED)), List.of(2, 1, 1)),
 
 	BWG_IRIS = bwgFlower("iris", List.of(1f, .05f),
-		List.of(Items.PURPLE_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_ORCHID = bwgFlower("japanese_orchid", List.of(1f, .05f),
-		List.of(Items.PINK_DYE, Items.WHITE_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.WHITE)), List.of(2, 1)),
 
 	BWG_PURPLE_SAGE = bwgFlower("purple_sage", List.of(1f, .1f),
-		List.of(Items.PURPLE_DYE, Items.MAGENTA_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.MAGENTA)), List.of(2, 1)),
 
 	BWG_KOVAN = bwgFlower("kovan_flower", List.of(1f, .2f, .05f),
-		List.of(Items.RED_DYE, Items.LIME_DYE, Items.GREEN_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.RED), dye(DyeColor.LIME), dye(DyeColor.GREEN)), List.of(2, 1, 1)),
 
 	BWG_LAZARUS_BELLFLOWER = bwgFlower("lazarus_bellflower", List.of(1f, .1f),
-		List.of(Items.MAGENTA_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.MAGENTA), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_LOLLIPOP = bwgFlower("lollipop_flower", List.of(1f, .25f, .05f),
-		List.of(Items.YELLOW_DYE, Items.YELLOW_DYE, Items.GREEN_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.YELLOW), dye(DyeColor.YELLOW), dye(DyeColor.GREEN)), List.of(2, 1, 1)),
 
 	BWG_MAGENTA_AMARANTH = bwgFlower("magenta_amaranth", List.of(1f, .05f, .25f),
-		List.of(Items.MAGENTA_DYE, Items.GREEN_DYE, Items.MAGENTA_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.MAGENTA), dye(DyeColor.GREEN), dye(DyeColor.MAGENTA)), List.of(3, 2, 2)),
 
 	BWG_MAGENTA_TULIP = bwgFlower("magenta_tulip", List.of(1f, .1f),
-		List.of(Items.MAGENTA_DYE, Items.LIME_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.MAGENTA), dye(DyeColor.LIME)), List.of(2, 1)),
 
 	BWG_ORANGE_AMARANTH = bwgFlower("orange_amaranth", List.of(1f, .05f, .25f),
-		List.of(Items.ORANGE_DYE, Items.GREEN_DYE, Items.ORANGE_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.ORANGE), dye(DyeColor.GREEN), dye(DyeColor.ORANGE)), List.of(3, 2, 2)),
 
 	BWG_DAISY = bwgFlower("orange_daisy", List.of(1f, .2f, .05f),
-		List.of(Items.ORANGE_DYE, Items.YELLOW_DYE, Items.LIME_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.ORANGE), dye(DyeColor.YELLOW), dye(DyeColor.LIME)), List.of(2, 1, 1)),
 
 	BWG_OSIRIA_ROSE = bwgFlower("osiria_rose", List.of(1f, .1f),
-		List.of(Items.PINK_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_PEACH_LEATHER = bwgFlower("peach_leather_flower", List.of(1f, .25f),
-		List.of(Items.PINK_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_PINK_ALLIUM = bwgFlower("pink_allium", List.of(1f, .1f, .1f),
-		List.of(Items.MAGENTA_DYE, Items.PINK_DYE, Items.PURPLE_DYE), List.of(2, 2, 1)),
+		List.of(dye(DyeColor.MAGENTA), dye(DyeColor.PINK), dye(DyeColor.PURPLE)), List.of(2, 2, 1)),
 
 	BWG_PINK_ALLIUM_BUSH = bwgFlower("pink_allium_flower_bush", List.of(1f, .05f, .25f),
-		List.of(Items.PURPLE_DYE, Items.GREEN_DYE, Items.MAGENTA_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.GREEN), dye(DyeColor.MAGENTA)), List.of(3, 2, 2)),
 
 	BWG_PINK_ANEMONE = bwgFlower("pink_anemone", List.of(1f, .1f),
-		List.of(Items.PINK_DYE, Items.PURPLE_DYE), List.of(2, 2)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.PURPLE)), List.of(2, 2)),
 
 	BWG_PINK_DAFODIL = bwgFlower("pink_daffodil", List.of(1f, .1f, .1f),
-		List.of(Items.PINK_DYE, Items.GREEN_DYE, Items.WHITE_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.GREEN), dye(DyeColor.WHITE)), List.of(2, 1, 1)),
 
 	BWG_PROTEA = bwgFlower("protea_flower", List.of(1f, .1f, .05f),
-		List.of(Items.MAGENTA_DYE, Items.LIME_DYE, Items.PURPLE_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.MAGENTA), dye(DyeColor.LIME), dye(DyeColor.PURPLE)), List.of(2, 1, 1)),
 
 	BWG_PURPLE_AMARANTH = bwgFlower("purple_amaranth", List.of(1f, .05f, .25f),
-		List.of(Items.PURPLE_DYE, Items.GREEN_DYE, Items.PURPLE_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.GREEN), dye(DyeColor.PURPLE)), List.of(3, 2, 2)),
 
 	BWG_PURPLE_TULIP = bwgFlower("purple_tulip", List.of(1f, .1f),
-		List.of(Items.PURPLE_DYE, Items.LIME_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.LIME)), List.of(2, 1)),
 
 	BWG_RICHEA = bwgFlower("richea", List.of(1f, .1f, .05f),
-		List.of(Items.MAGENTA_DYE, Items.PINK_DYE, Items.YELLOW_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.MAGENTA), dye(DyeColor.PINK), dye(DyeColor.YELLOW)), List.of(2, 1, 1)),
 
 	BWG_ROSE = bwgFlower("rose", List.of(1f, .1f),
-		List.of(Items.RED_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.RED), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_SILVER_VASE = bwgFlower("silver_vase_flower", List.of(1f, .1f, .05f),
-		List.of(Items.PINK_DYE, Items.GREEN_DYE, Items.WHITE_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.GREEN), dye(DyeColor.WHITE)), List.of(2, 1, 1)),
 
 	BWG_SNOWDROPS = bwgFlower("snowdrops", List.of(1f, .1f, .1f),
-		List.of(Items.WHITE_DYE, Items.LIME_DYE, Items.WHITE_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.WHITE), dye(DyeColor.LIME), dye(DyeColor.WHITE)), List.of(2, 1, 1)),
 
 	BWG_TALL_ALLIUM = bwgFlower("tall_allium", List.of(1f, .05f, .25f),
-		List.of(Items.PURPLE_DYE, Items.PURPLE_DYE, Items.MAGENTA_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.PURPLE), dye(DyeColor.MAGENTA)), List.of(3, 2, 2)),
 
 	BWG_TALL_PINK_ALLIUM = bwgFlower("tall_pink_allium", List.of(1f, .05f, .25f),
-		List.of(Items.PINK_DYE, Items.PINK_DYE, Items.MAGENTA_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.PINK), dye(DyeColor.MAGENTA)), List.of(3, 2, 2)),
 
 	BWG_VIOLET_LEATHER = bwgFlower("violet_leather_flower", List.of(1f, .25f),
-		List.of(Items.BLUE_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.BLUE), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_WHITE_ANEMONE = bwgFlower("white_anemone", List.of(1f, .1f),
-		List.of(Items.WHITE_DYE, Items.LIGHT_GRAY_DYE), List.of(2, 2)),
+		List.of(dye(DyeColor.WHITE), dye(DyeColor.LIGHT_GRAY)), List.of(2, 2)),
 
 	BWG_PUFFBALL = create(Mods.BWG.recipeId("white_puffball_cap"), b -> b.duration(150)
 		.require(Mods.BWG, "white_puffball_cap")
@@ -556,49 +557,49 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 		.whenModLoaded(Mods.BWG.getId())),
 
 	BWG_WHITE_SAGE = bwgFlower("white_sage", List.of(1f, .1f),
-		List.of(Items.WHITE_DYE, Items.GRAY_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.WHITE), dye(DyeColor.GRAY)), List.of(2, 1)),
 
 	BWG_WINTER_CYCLAMEN = bwgFlower("winter_cyclamen", List.of(1f, .1f),
-		List.of(Items.CYAN_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.CYAN), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_WINTER_ROSE = bwgFlower("winter_rose", List.of(1f, .1f),
-		List.of(Items.WHITE_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.WHITE), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_WINTER_SCILLA = bwgFlower("winter_scilla", List.of(1f, .1f),
-		List.of(Items.LIGHT_BLUE_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.LIGHT_BLUE), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_YELLOW_DAFFODIL = bwgFlower("yellow_daffodil", List.of(1f, .1f, .1f),
-		List.of(Items.YELLOW_DYE, Items.GREEN_DYE, Items.PINK_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.YELLOW), dye(DyeColor.GREEN), dye(DyeColor.PINK)), List.of(2, 1, 1)),
 
 	BWG_YELLOW_TULIP = bwgFlower("yellow_tulip", List.of(1f, .1f),
-		List.of(Items.YELLOW_DYE, Items.LIME_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.YELLOW), dye(DyeColor.LIME)), List.of(2, 1)),
 
 	BWG_WHITE_ALLIUM = bwgFlower("white_allium", List.of(1f, .1f, .1f),
-		List.of(Items.WHITE_DYE, Items.LIGHT_GRAY_DYE, Items.GRAY_DYE), List.of(2, 2, 1)),
+		List.of(dye(DyeColor.WHITE), dye(DyeColor.LIGHT_GRAY), dye(DyeColor.GRAY)), List.of(2, 2, 1)),
 
 	BWG_TALL_WHITE_ALLIUM = bwgFlower("tall_white_allium", List.of(1f, .05f, .25f),
-		List.of(Items.WHITE_DYE, Items.WHITE_DYE, Items.LIGHT_GRAY_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.WHITE), dye(DyeColor.WHITE), dye(DyeColor.LIGHT_GRAY)), List.of(3, 2, 2)),
 
 	BWG_WHITE_ALLIUM_BUSH = bwgFlower("white_allium_flower_bush", List.of(1f, .05f, .25f),
-		List.of(Items.WHITE_DYE, Items.GREEN_DYE, Items.LIGHT_GRAY_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.WHITE), dye(DyeColor.GREEN), dye(DyeColor.LIGHT_GRAY)), List.of(3, 2, 2)),
 
 	BWG_BLUE_ROSE_BUSH = bwgFlower("blue_rose_bush", List.of(1f, .05f, .25f),
-		List.of(Items.BLUE_DYE, Items.GREEN_DYE, Items.BLUE_DYE), List.of(3, 2, 2)),
+		List.of(dye(DyeColor.BLUE), dye(DyeColor.GREEN), dye(DyeColor.BLUE)), List.of(3, 2, 2)),
 
 	BWG_HORSEWEED = bwgFlower("horseweed", List.of(1f, 0.25f),
-		List.of(Items.GREEN_DYE, Items.BROWN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.GREEN), dye(DyeColor.BROWN)), List.of(2, 1)),
 
 	BWG_WINTER_SUCCULENT = bwgFlower("winter_succulent", List.of(1f, 0.25f),
-		List.of(Items.GREEN_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.GREEN), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_MINI_CACTUS = bwgFlower("mini_cactus", List.of(1f),
-		List.of(Items.GREEN_DYE), List.of(2)),
+		List.of(dye(DyeColor.GREEN)), List.of(2)),
 
 	BWG_PRICKLY_PEAR_CACTUS = bwgFlower("prickly_pear_cactus", List.of(1f, 0.25f),
-		List.of(Items.GREEN_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.GREEN), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	BWG_GOLDEN_SPINED_CACTUS = bwgFlower("golden_spined_cactus", List.of(1f, 0.25f),
-		List.of(Items.GREEN_DYE, Items.YELLOW_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.GREEN), dye(DyeColor.YELLOW)), List.of(2, 1)),
 
 	BWG_SAND_1 = moddedSandstone(Mods.BWG, "black"),
 	BWG_SAND_2 = moddedSandstone(Mods.BWG, "white"),
@@ -610,64 +611,64 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	// Environmental
 
 	ENV_BIRD_OF_PARADISE = envFlower("bird_of_paradise", List.of(1f, .25f, .25f),
-		List.of(Items.ORANGE_DYE, Items.BLUE_DYE, Items.RED_DYE), List.of(3, 1, 1)),
+		List.of(dye(DyeColor.ORANGE), dye(DyeColor.BLUE), dye(DyeColor.RED)), List.of(3, 1, 1)),
 
 	ENV_BLUE_DELPHINIUM = envFlower("blue_delphinium", List.of(1f,.1f),
-		List.of(Items.LIGHT_BLUE_DYE, Items.LIGHT_BLUE_DYE), List.of(3,1)),
+		List.of(dye(DyeColor.LIGHT_BLUE), dye(DyeColor.LIGHT_BLUE)), List.of(3,1)),
 
 	ENV_BLUEBELL = envFlower("bluebell", List.of(1f),
-		List.of(Items.BLUE_DYE), List.of(2)),
+		List.of(dye(DyeColor.BLUE)), List.of(2)),
 
 	ENV_CARTWHEEL = envFlower("cartwheel", List.of(1f, .1f),
-		List.of(Items.PINK_DYE, Items.ORANGE_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.ORANGE)), List.of(2, 1)),
 
 	ENV_DIANTHUS = envFlower("dianthus", List.of(1f,.1f),
-		List.of(Items.LIME_DYE, Items.LIME_DYE), List.of(2,1)),
+		List.of(dye(DyeColor.LIME), dye(DyeColor.LIME)), List.of(2,1)),
 
 	ENV_MAGENTA_HIBISCUS = envFlower("magenta_hibiscus", List.of(1f, .1f),
-		List.of(Items.MAGENTA_DYE, Items.MAGENTA_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.MAGENTA), dye(DyeColor.MAGENTA)), List.of(2, 1)),
 
 	ENV_ORANGE_HIBISCUS = envFlower("orange_hibiscus", List.of(1f, .1f),
-		List.of(Items.ORANGE_DYE, Items.ORANGE_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.ORANGE), dye(DyeColor.ORANGE)), List.of(2, 1)),
 
 	ENV_PINK_DELPHINIUM = envFlower("pink_delphinium", List.of(1f, .1f),
-		List.of(Items.PINK_DYE, Items.PINK_DYE), List.of(3, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.PINK)), List.of(3, 1)),
 
 	ENV_PINK_HIBISCUS = envFlower("pink_hibiscus", List.of(1f, .1f),
-		List.of(Items.PINK_DYE, Items.PINK_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.PINK)), List.of(2, 1)),
 
 	ENV_PURPLE_DELPHINIUM = envFlower("purple_delphinium", List.of(1f, .1f),
-		List.of(Items.PURPLE_DYE, Items.PURPLE_DYE), List.of(3, 1)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.PURPLE)), List.of(3, 1)),
 
 	ENV_PURPLE_HIBISCUS = envFlower("purple_hibiscus", List.of(1f, .1f),
-		List.of(Items.PURPLE_DYE, Items.PURPLE_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.PURPLE)), List.of(2, 1)),
 
 	ENV_RED_HIBISCUS = envFlower("red_hibiscus", List.of(1f, .1f),
-		List.of(Items.RED_DYE, Items.RED_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.RED), dye(DyeColor.RED)), List.of(2, 1)),
 
 	ENV_RED_LOTUS = envFlower("red_lotus_flower", List.of(1f, .1f),
-		List.of(Items.RED_DYE, Items.RED_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.RED), dye(DyeColor.RED)), List.of(2, 1)),
 
 	ENV_VIOLET = envFlower("violet", List.of(1f, .1f),
-		List.of(Items.PURPLE_DYE, Items.PURPLE_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.PURPLE)), List.of(2, 1)),
 
 	ENV_WHITE_DELPHINIUM = envFlower("white_delphinium", List.of(1f, .1f),
-		List.of(Items.WHITE_DYE, Items.WHITE_DYE), List.of(3, 1)),
+		List.of(dye(DyeColor.WHITE), dye(DyeColor.WHITE)), List.of(3, 1)),
 
 	ENV_WHITE_LOTUS_FLOWER = envFlower("white_lotus_flower", List.of(1f,.1f),
-		List.of(Items.WHITE_DYE, Items.WHITE_DYE), List.of(2,1)),
+		List.of(dye(DyeColor.WHITE), dye(DyeColor.WHITE)), List.of(2,1)),
 
 	ENV_YELLOW_HIBISCUS = envFlower("yellow_hibiscus", List.of(1f, .1f),
-		List.of(Items.YELLOW_DYE, Items.YELLOW_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.YELLOW), dye(DyeColor.YELLOW)), List.of(2, 1)),
 
 	ENV_TASSELFLOWER = envFlower("tasselflower", List.of(1f, .1f),
-		List.of(Items.ORANGE_DYE, Items.GREEN_DYE), List.of(2,1)),
+		List.of(dye(DyeColor.ORANGE), dye(DyeColor.GREEN)), List.of(2,1)),
 
 	// Duidcraft
 	DC_LAVENDER = create(Mods.DRUIDCRAFT.recipeId("lavender"), b -> b.duration(50)
 		.require(Mods.DRUIDCRAFT, "lavender")
-		.output(Items.PURPLE_DYE, 2)
-		.output(.1f, Items.PURPLE_DYE)
+		.output(dye(DyeColor.PURPLE), 2)
+		.output(.1f, dye(DyeColor.PURPLE))
 		.whenModLoaded(Mods.DRUIDCRAFT.getId())),
 
 	// Supplementaries
@@ -682,7 +683,7 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 	TIC_NERCOTIC_BONE = create(Mods.TIC.recipeId("nercotic_bone"), b -> b.duration(100)
 		.require(Mods.TIC, "necrotic_bone")
 		.output(Items.BONE_MEAL, 3)
-		.output(.25f, Items.BLACK_DYE)
+		.output(.25f, dye(DyeColor.BLACK))
 		.output(.25f, Items.BONE_MEAL, 3)
 		.whenModLoaded(Mods.TIC.getId())),
 
@@ -690,155 +691,155 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 
 	UA_FLOWERING_RUSH = create(Mods.UA.recipeId("flowering_rush"), b -> b.duration(50)
 		.require(Mods.UA, "flowering_rush")
-		.output(Items.PINK_DYE, 3)
-		.output(.25f, Items.PINK_DYE, 2)
+		.output(dye(DyeColor.PINK), 3)
+		.output(.25f, dye(DyeColor.PINK), 2)
 		.whenModLoaded(Mods.UA.getId())),
 
 	UA_PINK_SEAROCKET = create(Mods.UA.recipeId("pink_searocket"), b -> b.duration(50)
 		.require(Mods.UA, "pink_searocket")
-		.output(Items.PINK_DYE, 2)
-		.output(.1f, Items.GREEN_DYE)
+		.output(dye(DyeColor.PINK), 2)
+		.output(.1f, dye(DyeColor.GREEN))
 		.whenModLoaded(Mods.UA.getId())),
 
 	UA_WHITE_SEAROCKET = create(Mods.UA.recipeId("white_searocket"), b -> b.duration(50)
 		.require(Mods.UA, "white_searocket")
-		.output(Items.WHITE_DYE, 2)
-		.output(.1f, Items.GREEN_DYE)
+		.output(dye(DyeColor.WHITE), 2)
+		.output(.1f, dye(DyeColor.GREEN))
 		.whenModLoaded(Mods.UA.getId())),
 
 	// Regions Unexplored
 
 	RU_ALPHA_DANDELION = ruFlower("alpha_dandelion", List.of(1f, 0.05f),
-		List.of(Items.YELLOW_DYE, Items.YELLOW_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.YELLOW), dye(DyeColor.YELLOW)), List.of(2, 1)),
 
 	RU_ALPHA_ROSE = ruFlower("alpha_rose", List.of(1f, 0.05f),
-		List.of(Items.RED_DYE, Items.RED_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.RED), dye(DyeColor.RED)), List.of(2, 1)),
 
 	RU_ASTER = ruFlower("aster", List.of(1f, 0.2f, 0.05f),
-		List.of(Items.LIGHT_BLUE_DYE, Items.WHITE_DYE, Items.LIGHT_GRAY_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.LIGHT_BLUE), dye(DyeColor.WHITE), dye(DyeColor.LIGHT_GRAY)), List.of(2, 1, 1)),
 
 	RU_BLACK_SNOWBELLE = ruFlower("black_snowbelle", List.of(1f),
-		List.of(Items.BLACK_DYE), List.of(2)),
+		List.of(dye(DyeColor.BLACK)), List.of(2)),
 
 	RU_BLEEDING_HEART = ruFlower("bleeding_heart", List.of(1f, 0.1f),
-		List.of(Items.MAGENTA_DYE, Items.PINK_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.MAGENTA), dye(DyeColor.PINK)), List.of(2, 1)),
 
 	RU_BLUE_LUPINE = ruFlower("blue_lupine", List.of(1f),
-		List.of(Items.BLUE_DYE), List.of(2)),
+		List.of(dye(DyeColor.BLUE)), List.of(2)),
 
 	RU_BLUE_SNOWBELLE = ruFlower("blue_snowbelle", List.of(1f),
-		List.of(Items.BLUE_DYE), List.of(2)),
+		List.of(dye(DyeColor.BLUE)), List.of(2)),
 
 	RU_BROWN_SNOWBELLE = ruFlower("brown_snowbelle", List.of(1f),
-		List.of(Items.BROWN_DYE), List.of(2)),
+		List.of(dye(DyeColor.BROWN)), List.of(2)),
 
 	RU_CACTUS_FLOWER = ruFlower("cactus_flower", List.of(1f, 0.2f, 0.1f),
-		List.of(Items.MAGENTA_DYE, Items.PURPLE_DYE, Items.GREEN_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.MAGENTA), dye(DyeColor.PURPLE), dye(DyeColor.GREEN)), List.of(2, 1, 1)),
 
 	RU_CYAN_SNOWBELLE = ruFlower("cyan_snowbelle", List.of(1f),
-		List.of(Items.CYAN_DYE), List.of(2)),
+		List.of(dye(DyeColor.CYAN)), List.of(2)),
 
 	RU_DAISY = ruFlower("daisy", List.of(1f, 0.2f, 0.05f),
-		List.of(Items.LIGHT_GRAY_DYE, Items.WHITE_DYE, Items.YELLOW_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.LIGHT_GRAY), dye(DyeColor.WHITE), dye(DyeColor.YELLOW)), List.of(2, 1, 1)),
 
 	RU_DAY_LILY = ruFlower("day_lily", List.of(1f, 0.1f, 0.1f),
-		List.of(Items.ORANGE_DYE, Items.LIME_DYE, Items.RED_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.ORANGE), dye(DyeColor.LIME), dye(DyeColor.RED)), List.of(2, 1, 1)),
 
 	RU_DORCEL = ruFlower("dorcel", List.of(1f, 0.1f),
-		List.of(Items.BLACK_DYE, Items.BROWN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.BLACK), dye(DyeColor.BROWN)), List.of(2, 1)),
 
 	RU_FELICIA_DAISY = ruFlower("felicia_daisy", List.of(1f, 0.2f, 0.05f),
-		List.of(Items.LIGHT_BLUE_DYE, Items.BLUE_DYE, Items.WHITE_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.LIGHT_BLUE), dye(DyeColor.BLUE), dye(DyeColor.WHITE)), List.of(2, 1, 1)),
 
 	RU_FIREWEED = ruFlower("fireweed", List.of(1f),
-		List.of(Items.MAGENTA_DYE), List.of(2)),
+		List.of(dye(DyeColor.MAGENTA)), List.of(2)),
 
 	RU_GLITERING_BLOOM = ruFlower("glistering_bloom", List.of(1f, 0.25f, 0.25f),
-		List.of(Items.PINK_DYE, Items.MAGENTA_DYE, Items.LIGHT_BLUE_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.MAGENTA), dye(DyeColor.LIGHT_BLUE)), List.of(2, 1, 1)),
 
 	RU_GRAY_SNOWBELLE = ruFlower("gray_snowbelle", List.of(1f),
-		List.of(Items.GRAY_DYE), List.of(2)),
+		List.of(dye(DyeColor.GRAY)), List.of(2)),
 
 	RU_GREEN_SNOWBELLE = ruFlower("green_snowbelle", List.of(1f),
-		List.of(Items.GREEN_DYE), List.of(2)),
+		List.of(dye(DyeColor.GREEN)), List.of(2)),
 
 	RU_HIBISCUS = ruFlower("hibiscus", List.of(1f, 0.2f),
-		List.of(Items.YELLOW_DYE, Items.RED_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.YELLOW), dye(DyeColor.RED)), List.of(2, 1)),
 
 	RU_HYSSOP = ruFlower("hyssop", List.of(1f, 0.1f, 0.1f),
-		List.of(Items.PURPLE_DYE, Items.MAGENTA_DYE, Items.GREEN_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.PURPLE), dye(DyeColor.MAGENTA), dye(DyeColor.GREEN)), List.of(2, 1, 1)),
 
 	RU_LIGHT_BLUE_SNOWBELLE = ruFlower("light_blue_snowbelle", List.of(1f),
-		List.of(Items.LIGHT_BLUE_DYE), List.of(2)),
+		List.of(dye(DyeColor.LIGHT_BLUE)), List.of(2)),
 
 	RU_LIGHT_GRAY_SNOWBELLE = ruFlower("light_gray_snowbelle", List.of(1f),
-		List.of(Items.LIGHT_GRAY_DYE), List.of(2)),
+		List.of(dye(DyeColor.LIGHT_GRAY)), List.of(2)),
 
 	RU_LIME_SNOWBELLE = ruFlower("lime_snowbelle", List.of(1f),
-		List.of(Items.LIME_DYE), List.of(2)),
+		List.of(dye(DyeColor.LIME)), List.of(2)),
 
 	RU_MAGENTA_SNOWBELLE = ruFlower("magenta_snowbelle", List.of(1f),
-		List.of(Items.MAGENTA_DYE), List.of(2)),
+		List.of(dye(DyeColor.MAGENTA)), List.of(2)),
 
 	RU_MALLOW = ruFlower("mallow", List.of(1f, 0.1f),
-		List.of(Items.ORANGE_DYE, Items.LIME_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.ORANGE), dye(DyeColor.LIME)), List.of(2, 1)),
 
 	RU_ORANGE_CONEFLOWER = ruFlower("orange_coneflower", List.of(1f),
-		List.of(Items.ORANGE_DYE), List.of(2)),
+		List.of(dye(DyeColor.ORANGE)), List.of(2)),
 
 	RU_ORANGE_SNOWBELLE = ruFlower("orange_snowbelle", List.of(1f),
-		List.of(Items.ORANGE_DYE), List.of(2)),
+		List.of(dye(DyeColor.ORANGE)), List.of(2)),
 
 	RU_PINK_LUPINE = ruFlower("pink_lupine", List.of(1f),
-		List.of(Items.PINK_DYE), List.of(2)),
+		List.of(dye(DyeColor.PINK)), List.of(2)),
 
 	RU_PINK_SNOWBELLE = ruFlower("pink_snowbelle", List.of(1f),
-		List.of(Items.PINK_DYE), List.of(2)),
+		List.of(dye(DyeColor.PINK)), List.of(2)),
 
 	RU_POPPY_BUSH = ruFlower("poppy_bush", List.of(1f, 0.1f),
-		List.of(Items.RED_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.RED), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	RU_PURPLE_CONEFLOWER = ruFlower("purple_coneflower", List.of(1f),
-		List.of(Items.PURPLE_DYE), List.of(2)),
+		List.of(dye(DyeColor.PURPLE)), List.of(2)),
 
 	RU_PURPLE_LUPINE = ruFlower("purple_lupine", List.of(1f),
-		List.of(Items.PURPLE_DYE), List.of(2)),
+		List.of(dye(DyeColor.PURPLE)), List.of(2)),
 
 	RU_PURPLE_SNOWBELLE = ruFlower("purple_snowbelle", List.of(1f),
-		List.of(Items.PURPLE_DYE), List.of(2)),
+		List.of(dye(DyeColor.PURPLE)), List.of(2)),
 
 	RU_RED_LUPINE = ruFlower("red_lupine", List.of(1f),
-		List.of(Items.RED_DYE), List.of(2)),
+		List.of(dye(DyeColor.RED)), List.of(2)),
 
 	RU_RED_SNOWBELLE = ruFlower("red_snowbelle", List.of(1f),
-		List.of(Items.RED_DYE), List.of(2)),
+		List.of(dye(DyeColor.RED)), List.of(2)),
 
 	RU_SALMON_POPPY_BUSH = ruFlower("salmon_poppy_bush", List.of(1f, 0.1f),
-		List.of(Items.PINK_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.PINK), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	RU_TASSEL = ruFlower("tassel", List.of(1f, 0.2f, 0.05f),
-		List.of(Items.LIGHT_GRAY_DYE, Items.WHITE_DYE, Items.YELLOW_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.LIGHT_GRAY), dye(DyeColor.WHITE), dye(DyeColor.YELLOW)), List.of(2, 1, 1)),
 
 	RU_TSUBAKI = ruFlower("tsubaki", List.of(1f, 0.1f),
-		List.of(Items.RED_DYE, Items.GREEN_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.RED), dye(DyeColor.GREEN)), List.of(2, 1)),
 
 	RU_WARATAH = ruFlower("waratah", List.of(1f, 0.2f, 0.1f),
-		List.of(Items.RED_DYE, Items.RED_DYE, Items.GREEN_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.RED), dye(DyeColor.RED), dye(DyeColor.GREEN)), List.of(2, 1, 1)),
 
 	RU_WHITE_SNOWBELLE = ruFlower("white_snowbelle", List.of(1f),
-		List.of(Items.WHITE_DYE), List.of(2)),
+		List.of(dye(DyeColor.WHITE)), List.of(2)),
 
 	RU_WHITE_TRILLIUM = ruFlower("white_trillium", List.of(1f, 0.2f, 0.05f),
-		List.of(Items.LIGHT_GRAY_DYE, Items.WHITE_DYE, Items.YELLOW_DYE), List.of(2, 1, 1)),
+		List.of(dye(DyeColor.LIGHT_GRAY), dye(DyeColor.WHITE), dye(DyeColor.YELLOW)), List.of(2, 1, 1)),
 
 	RU_WILTING_TRILLIUM = ruFlower("wilting_trillium", List.of(1f, 0.1f),
-		List.of(Items.BROWN_DYE, Items.LIGHT_GRAY_DYE), List.of(2, 1)),
+		List.of(dye(DyeColor.BROWN), dye(DyeColor.LIGHT_GRAY)), List.of(2, 1)),
 
 	RU_YELLOW_LUPINE = ruFlower("yellow_lupine", List.of(1f),
-		List.of(Items.YELLOW_DYE), List.of(2)),
+		List.of(dye(DyeColor.YELLOW)), List.of(2)),
 
 	RU_YELLOW_SNOWBELLE = ruFlower("yellow_snowbelle", List.of(1f),
-		List.of(Items.YELLOW_DYE), List.of(2));
+		List.of(dye(DyeColor.YELLOW)), List.of(2));
 
 	GeneratedRecipe bopFlower(String input, List<Float> chances,
 							  List<Item> dyes, List<Integer> amounts) {
@@ -959,5 +960,9 @@ public final class CreateMillingRecipeGen extends MillingRecipeGen {
 
 	public CreateMillingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		super(output, registries, Create.ID);
+	}
+
+	private static Item dye(DyeColor color) {
+		return Items.DYE.pick(color);
 	}
 }

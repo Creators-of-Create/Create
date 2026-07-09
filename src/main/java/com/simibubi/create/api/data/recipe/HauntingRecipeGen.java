@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.kinetics.fan.processing.HauntingRecipe;
 
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.crafting.Ingredient;

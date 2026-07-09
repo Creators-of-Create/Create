@@ -10,14 +10,15 @@ import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
+import com.simibubi.create.foundation.utility.LegacyDirectionBridge;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.NbtUtils;
@@ -27,7 +28,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class PortableStorageInterfaceMovement implements MovementBehaviour {
 
@@ -37,7 +37,7 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 	@Override
 	public Vec3 getActiveAreaOffset(MovementContext context) {
 		return Vec3.atLowerCornerOf(context.state.getValue(PortableStorageInterfaceBlock.FACING)
-			.getNormal())
+			.getUnitVec3i())
 			.scale(1.85f);
 	}
 
@@ -54,7 +54,6 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		if (!VisualizationManager.supportsVisualization(context.world))
@@ -72,14 +71,14 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 
 	@Override
 	public void tick(MovementContext context) {
-		if (context.world.isClientSide)
+		if (context.world.isClientSide())
 			getAnimation(context).tickChaser();
 
 		boolean onCarriage = context.contraption instanceof CarriageContraption;
 		if (onCarriage && context.motion.length() > 1 / 4f)
 			return;
 
-		if (context.world.isClientSide) {
+		if (context.world.isClientSide()) {
 			BlockPos pos = BlockPos.containing(context.position);
 			if (!findInterface(context, pos))
 				reset(context);
@@ -138,15 +137,15 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 		if (psi.isPowered())
 			return false;
 
-		context.data.put(_workingPos_, NbtUtils.writeBlockPos(psi.getBlockPos()));
-		if (!context.world.isClientSide) {
+		context.data.put(_workingPos_, com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(psi.getBlockPos()));
+		if (!context.world.isClientSide()) {
 			Vec3 diff = VecHelper.getCenterOf(psi.getBlockPos())
 				.subtract(context.position);
-			diff = VecHelper.project(diff, Vec3.atLowerCornerOf(currentFacing.getNormal()));
+			diff = VecHelper.project(diff, Vec3.atLowerCornerOf(currentFacing.getUnitVec3i()));
 			float distance = (float) (diff.length() + 1.85f - 1);
 			psi.startTransferringTo(context.contraption, distance);
 		} else {
-			context.data.put(_clientPrevPos_, NbtUtils.writeBlockPos(pos));
+			context.data.put(_clientPrevPos_, com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(pos));
 			if (context.contraption instanceof CarriageContraption || context.contraption.entity.isStalled()
 				|| context.motion.lengthSqr() == 0)
 				getAnimation(context).chase(psi.getConnectionDistance() / 2, 0.25f, Chaser.LINEAR);
@@ -201,10 +200,10 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 
 	private Optional<Direction> getCurrentFacingIfValid(MovementContext context) {
 		Vec3 directionVec = Vec3.atLowerCornerOf(context.state.getValue(PortableStorageInterfaceBlock.FACING)
-			.getNormal());
+			.getUnitVec3i());
 		directionVec = context.rotation.apply(directionVec);
-		Direction facingFromVector = Direction.getNearest(directionVec.x, directionVec.y, directionVec.z);
-		if (directionVec.distanceTo(Vec3.atLowerCornerOf(facingFromVector.getNormal())) > 1 / 2f)
+		Direction facingFromVector = LegacyDirectionBridge.nearest(directionVec.x, directionVec.y, directionVec.z, Direction.NORTH);
+		if (directionVec.distanceTo(Vec3.atLowerCornerOf(facingFromVector.getUnitVec3i())) > 1 / 2f)
 			return Optional.empty();
 		return Optional.of(facingFromVector);
 	}

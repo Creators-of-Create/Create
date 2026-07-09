@@ -7,10 +7,10 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,7 @@ public class SpeedControllerRenderer extends SmartBlockEntityRenderer<SpeedContr
 		MultiBufferSource buffer, int light, int overlay) {
 		super.renderSafe(blockEntity, partialTicks, ms, buffer, light, overlay);
 
-		VertexConsumer builder = buffer.getBuffer(Sheets.solidBlockSheet());
+		VertexConsumer builder = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 		if (!VisualizationManager.supportsVisualization(blockEntity.getLevel())) {
 			KineticBlockEntityRenderer.renderRotatingBuffer(blockEntity, getRotatedModel(blockEntity), ms, builder, light);
 		}
@@ -47,7 +47,7 @@ public class SpeedControllerRenderer extends SmartBlockEntityRenderer<SpeedContr
 		bracket.translate(0, 1, 0);
 		bracket.rotateCentered(
 				(float) (alongX ? Math.PI : Math.PI / 2), Direction.UP);
-		bracket.light(LevelRenderer.getLightColor(world, pos.above()));
+		bracket.light(com.simibubi.create.foundation.render.LegacyLightTexture.getLightColor(world, pos.above()));
 		bracket.renderInto(ms, builder);
 	}
 

@@ -18,14 +18,13 @@ import com.simibubi.create.content.trains.display.FlapDisplaySection;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.IntAttached;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.IntAttached;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public abstract class ValueListDisplaySource extends DisplaySource {
 
@@ -153,17 +152,15 @@ public abstract class ValueListDisplaySource extends DisplaySource {
 
 	protected boolean shortenNumbers(DisplayLinkContext context) {
 		return context.sourceConfig()
-			.getInt("Format") == 0;
+			.getIntOr("Format", 0) == 0;
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
 		if (isFirstLine)
 			addFullNumberConfig(builder);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	protected void addFullNumberConfig(ModularGuiLineBuilder builder) {
 		builder.addSelectionScrollInput(0, 75,
 			(si, l) -> si.forOptions(CreateLang.translatedOptions("display_source.value_list", "shortened", "full_number"))

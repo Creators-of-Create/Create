@@ -4,10 +4,11 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 
-import net.createmod.catnip.command.CatnipCommands;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.impl.command.CatnipCommands;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.server.permissions.PermissionProviderCheck;
 
 public class AllCommands {
 	// Client Commands
@@ -16,7 +17,7 @@ public class AllCommands {
 		LiteralCommandNode<CommandSourceStack> util = buildClientUtilityCommands();
 
 		LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("create")
-			.requires(cs -> cs.hasPermission(0))
+			.requires(hasPermission(0))
 			// general purpose
 			.then(ToggleDebugCommand.register())
 			.then(FabulousWarningCommand.register())
@@ -45,7 +46,7 @@ public class AllCommands {
 		LiteralCommandNode<CommandSourceStack> util = buildUtilityCommands();
 
 		LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("create")
-			.requires(cs -> cs.hasPermission(0))
+			.requires(hasPermission(0))
 			// general purpose
 			.then(DumpRailwaysCommand.register())
 			.then(DebugInfoCommand.register())
@@ -75,5 +76,15 @@ public class AllCommands {
 			//.then(DebugHatsCommand.register())
 			.build();
 
+	}
+
+	public static PermissionProviderCheck<CommandSourceStack> hasPermission(int level) {
+		return switch (level) {
+			case 0 -> Commands.hasPermission(Commands.LEVEL_ALL);
+			case 1 -> Commands.hasPermission(Commands.LEVEL_MODERATORS);
+			case 2 -> Commands.hasPermission(Commands.LEVEL_GAMEMASTERS);
+			case 3 -> Commands.hasPermission(Commands.LEVEL_ADMINS);
+			default -> Commands.hasPermission(Commands.LEVEL_OWNERS);
+		};
 	}
 }

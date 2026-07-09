@@ -3,9 +3,7 @@
   "category": "building",
   "group": "cut_limestone_slab",
   "key": {
-    "X": {
-      "item": "create:cut_limestone"
-    }
+    "X": "create:cut_limestone"
   },
   "pattern": [
     "XXX"

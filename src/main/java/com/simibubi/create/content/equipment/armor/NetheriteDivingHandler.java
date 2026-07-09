@@ -6,7 +6,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -57,12 +56,12 @@ public final class NetheriteDivingHandler {
 	}
 
 	public static boolean isNetheriteArmor(ItemStack stack) {
-		return stack.getItem() instanceof ArmorItem && stack.has(DataComponents.FIRE_RESISTANT);
+		return stack.has(DataComponents.EQUIPPABLE) && stack.has(DataComponents.DAMAGE_RESISTANT);
 	}
 
 	public static void setBit(LivingEntity entity, EquipmentSlot slot) {
 		CompoundTag nbt = entity.getPersistentData();
-		byte bits = nbt.getByte(NETHERITE_DIVING_BITS_KEY);
+		byte bits = nbt.getByteOr(NETHERITE_DIVING_BITS_KEY, (byte) 0);
 		if ((bits & 0b1111) == 0b1111) {
 			return;
 		}
@@ -81,7 +80,7 @@ public final class NetheriteDivingHandler {
 			return;
 		}
 
-		byte bits = nbt.getByte(NETHERITE_DIVING_BITS_KEY);
+		byte bits = nbt.getByteOr(NETHERITE_DIVING_BITS_KEY, (byte) 0);
 		boolean prevFullSet = (bits & 0b1111) == 0b1111;
 		bits &= ~(1 << slot.getIndex());
 		nbt.putByte(NETHERITE_DIVING_BITS_KEY, bits);

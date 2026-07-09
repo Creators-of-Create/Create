@@ -10,12 +10,12 @@ import com.simibubi.create.content.kinetics.base.IRotate.StressImpact;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.TooltipHelper;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
-import net.createmod.catnip.lang.LangBuilder;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.lang.LangBuilder;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -138,7 +138,7 @@ public class StressGaugeBlockEntity extends GaugeBlockEntity {
 		}
 
 		if (!worldPosition.equals(lastSent))
-			CatnipServices.NETWORK.sendToServer(new GaugeObservedPacket(lastSent = worldPosition));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new GaugeObservedPacket(lastSent = worldPosition));
 
 		return true;
 	}

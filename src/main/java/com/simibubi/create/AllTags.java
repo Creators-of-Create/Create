@@ -17,12 +17,12 @@ import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.data.recipe.CommonMetal;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -40,14 +40,14 @@ import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
 public class AllTags {
 	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
 	@Deprecated(since = "6.0.7", forRemoval = true)
-	public static <T> TagKey<T> optionalTag(Registry<T> registry, ResourceLocation id) {
+	public static <T> TagKey<T> optionalTag(Registry<T> registry, Identifier id) {
 		return TagKey.create(registry.key(), id);
 	}
 
 	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
 	@Deprecated(since = "6.0.7", forRemoval = true)
 	public static <T> TagKey<T> commonTag(Registry<T> registry, String path) {
-		return optionalTag(registry, ResourceLocation.fromNamespaceAndPath("c", path));
+		return optionalTag(registry, Identifier.fromNamespaceAndPath("c", path));
 	}
 
 	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
@@ -82,11 +82,11 @@ public class AllTags {
 			this.id = id;
 		}
 
-		public ResourceLocation id(String path) {
-			return ResourceLocation.fromNamespaceAndPath(this.id, path);
+		public Identifier id(String path) {
+			return Identifier.fromNamespaceAndPath(this.id, path);
 		}
 
-		public ResourceLocation id(Enum<?> entry, @Nullable String pathOverride) {
+		public Identifier id(Enum<?> entry, @Nullable String pathOverride) {
 			return this.id(pathOverride != null ? pathOverride : Lang.asId(entry.name()));
 		}
 	}
@@ -323,7 +323,8 @@ public class AllTags {
 		}
 
 		public boolean matches(EntityType<?> type) {
-			return type.is(tag);
+			return BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(type)
+				.is(tag);
 		}
 
 		public boolean matches(Entity entity) {
@@ -349,8 +350,8 @@ public class AllTags {
 		}
 
 		public boolean matches(RecipeSerializer<?> recipeSerializer) {
-			ResourceKey<RecipeSerializer<?>> key = BuiltInRegistries.RECIPE_SERIALIZER.getResourceKey(recipeSerializer).orElseThrow();
-			return BuiltInRegistries.RECIPE_SERIALIZER.getHolder(key).orElseThrow().is(tag);
+			return BuiltInRegistries.RECIPE_SERIALIZER.wrapAsHolder(recipeSerializer)
+				.is(tag);
 		}
 	}
 

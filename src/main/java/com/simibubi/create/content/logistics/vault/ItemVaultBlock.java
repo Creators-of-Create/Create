@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -95,8 +96,8 @@ public class ItemVaultBlock extends Block implements IWrenchable, IBE<ItemVaultB
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean pIsMoving) {
-		if (state.hasBlockEntity() && (state.getBlock() != newState.getBlock() || !newState.hasBlockEntity())) {
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean pIsMoving) {
+		if (state.hasBlockEntity()) {
 			BlockEntity be = world.getBlockEntity(pos);
 			if (!(be instanceof ItemVaultBlockEntity vaultBE))
 				return;
@@ -104,6 +105,7 @@ public class ItemVaultBlock extends Block implements IWrenchable, IBE<ItemVaultB
 			world.removeBlockEntity(pos);
 			ConnectivityHandler.splitMulti(vaultBE);
 		}
+		super.affectNeighborsAfterRemoval(state, world, pos, pIsMoving);
 	}
 
 	public static boolean isVault(BlockState state) {
@@ -156,7 +158,7 @@ public class ItemVaultBlock extends Block implements IWrenchable, IBE<ItemVaultB
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
+	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos, Direction direction) {
 		return ItemHelper.calcRedstoneFromBlockEntity(this, pLevel, pPos);
 	}
 

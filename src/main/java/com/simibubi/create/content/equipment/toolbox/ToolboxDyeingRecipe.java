@@ -2,10 +2,12 @@ package com.simibubi.create.content.equipment.toolbox;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.mojang.serialization.MapCodec;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -18,9 +20,13 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 
 public class ToolboxDyeingRecipe extends CustomRecipe {
+	public static final MapCodec<ToolboxDyeingRecipe> CODEC =
+		MapCodec.unit(() -> new ToolboxDyeingRecipe(CraftingBookCategory.MISC));
+	public static final StreamCodec<RegistryFriendlyByteBuf, ToolboxDyeingRecipe> STREAM_CODEC =
+		StreamCodec.unit(new ToolboxDyeingRecipe(CraftingBookCategory.MISC));
+	public static final RecipeSerializer<ToolboxDyeingRecipe> SERIALIZER = new RecipeSerializer<>(CODEC, STREAM_CODEC);
 
 	public ToolboxDyeingRecipe(CraftingBookCategory category) {
-		super(category);
 	}
 
 	@Override
@@ -49,7 +55,7 @@ public class ToolboxDyeingRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
+	public ItemStack assemble(CraftingInput input) {
 		ItemStack toolbox = ItemStack.EMPTY;
 		DyeColor color = DyeColor.BROWN;
 
@@ -76,14 +82,13 @@ public class ToolboxDyeingRecipe extends CustomRecipe {
 		return dyedToolbox;
 	}
 
-	@Override
 	public boolean canCraftInDimensions(int width, int height) {
 		return width * height >= 2;
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
-		return AllRecipeTypes.TOOLBOX_DYEING.getSerializer();
+	public RecipeSerializer<ToolboxDyeingRecipe> getSerializer() {
+		return SERIALIZER;
 	}
 
 }

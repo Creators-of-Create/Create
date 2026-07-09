@@ -4,11 +4,10 @@ import com.simibubi.create.AllPackets;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public record GantryContraptionUpdatePacket(int entityID, double coord, double motion, double sequenceLimit) implements ClientboundPacketPayload {
 	public static final StreamCodec<ByteBuf, GantryContraptionUpdatePacket> STREAM_CODEC = StreamCodec.composite(
@@ -20,8 +19,7 @@ public record GantryContraptionUpdatePacket(int entityID, double coord, double m
 	);
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void handle(LocalPlayer player) {
+	public void handle(Player player) {
 		GantryContraptionEntity.handlePacket(this);
 	}
 

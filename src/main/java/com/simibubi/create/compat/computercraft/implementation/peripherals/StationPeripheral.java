@@ -17,15 +17,15 @@ import com.simibubi.create.content.trains.schedule.Schedule;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.content.trains.station.TrainEditPacket;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.StringHelper;
 
 import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.lua.MethodResult;
-import net.createmod.catnip.data.Glob;
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.data.Glob;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CollectionTag;
 import net.minecraft.nbt.CompoundTag;
@@ -230,18 +230,19 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 		byte type = tag.getId();
 
 		if (type == Tag.TAG_BYTE && key != null && key.equals("Count"))
-			return ((NumericTag) tag).getAsByte();
+			return ((NumericTag) tag).byteValue();
 		else if (type == Tag.TAG_BYTE)
-			return ((NumericTag) tag).getAsByte() != 0;
+			return ((NumericTag) tag).byteValue() != 0;
 		else if (type == Tag.TAG_SHORT || type == Tag.TAG_INT || type == Tag.TAG_LONG)
-			return ((NumericTag) tag).getAsLong();
+			return ((NumericTag) tag).longValue();
 		else if (type == Tag.TAG_FLOAT || type == Tag.TAG_DOUBLE)
-			return ((NumericTag) tag).getAsDouble();
+			return ((NumericTag) tag).doubleValue();
 		else if (type == Tag.TAG_STRING)
-			return tag.getAsString();
+			return tag.asString()
+				.orElse("");
 		else if (type == Tag.TAG_LIST || type == Tag.TAG_BYTE_ARRAY || type == Tag.TAG_INT_ARRAY || type == Tag.TAG_LONG_ARRAY) {
 			CreateLuaTable list = new CreateLuaTable();
-			CollectionTag<?> listTag = (CollectionTag<?>) tag;
+			CollectionTag listTag = (CollectionTag) tag;
 
 			for (int i = 0; i < listTag.size(); i++) {
 				list.put(i + 1, fromNBTTag(null, listTag.get(i)));
@@ -253,7 +254,7 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 			CreateLuaTable table = new CreateLuaTable();
 			CompoundTag compoundTag = (CompoundTag) tag;
 
-			for (String compoundKey : compoundTag.getAllKeys()) {
+			for (String compoundKey : compoundTag.keySet()) {
 				table.put(
 					StringHelper.camelCaseToSnakeCase(compoundKey),
 					fromNBTTag(compoundKey, compoundTag.get(compoundKey))

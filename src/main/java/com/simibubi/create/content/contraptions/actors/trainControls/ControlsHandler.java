@@ -10,7 +10,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.CreateLang;
 
@@ -40,8 +40,8 @@ public class ControlsHandler {
 		entityRef = new WeakReference<>(entity);
 		controlsPos = controllerLocalPos;
 
-		Minecraft.getInstance().player.displayClientMessage(
-			CreateLang.translateDirect("contraption.controls.start_controlling", entity.getContraptionName()), true);
+		Minecraft.getInstance().player.sendSystemMessage(
+			CreateLang.translateDirect("contraption.controls.start_controlling", entity.getContraptionName()));
 	}
 
 	public static void stopControlling() {
@@ -50,7 +50,7 @@ public class ControlsHandler {
 		AbstractContraptionEntity abstractContraptionEntity = entityRef.get();
 
 		if (!currentlyPressed.isEmpty() && abstractContraptionEntity != null)
-			CatnipServices.NETWORK.sendToServer(new ControlsInputPacket(currentlyPressed, false,
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ControlsInputPacket(currentlyPressed, false,
 				abstractContraptionEntity.getId(), controlsPos, false));
 
 		packetCooldown = 0;
@@ -58,8 +58,7 @@ public class ControlsHandler {
 		controlsPos = null;
 		currentlyPressed.clear();
 
-		Minecraft.getInstance().player.displayClientMessage(CreateLang.translateDirect("contraption.controls.stop_controlling"),
-			true);
+		Minecraft.getInstance().player.sendSystemMessage(CreateLang.translateDirect("contraption.controls.stop_controlling"));
 	}
 
 	public static void tick() {
@@ -70,11 +69,10 @@ public class ControlsHandler {
 			packetCooldown--;
 
 		if (entity.isRemoved() || InputConstants.isKeyDown(Minecraft.getInstance()
-			.getWindow()
 			.getWindow(), GLFW.GLFW_KEY_ESCAPE)) {
 			BlockPos pos = controlsPos;
 			stopControlling();
-			CatnipServices.NETWORK.sendToServer(new ControlsInputPacket(currentlyPressed, false, entity.getId(), pos, true));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ControlsInputPacket(currentlyPressed, false, entity.getId(), pos, true));
 			return;
 		}
 
@@ -92,13 +90,13 @@ public class ControlsHandler {
 
 		// Released Keys
 		if (!releasedKeys.isEmpty()) {
-			CatnipServices.NETWORK.sendToServer(new ControlsInputPacket(releasedKeys, false, entity.getId(), controlsPos, false));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ControlsInputPacket(releasedKeys, false, entity.getId(), controlsPos, false));
 //			AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .5f, true);
 		}
 
 		// Newly Pressed Keys
 		if (!newKeys.isEmpty()) {
-			CatnipServices.NETWORK.sendToServer(new ControlsInputPacket(newKeys, true, entity.getId(), controlsPos, false));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ControlsInputPacket(newKeys, true, entity.getId(), controlsPos, false));
 			packetCooldown = PACKET_RATE;
 //			AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .75f, true);
 		}
@@ -106,7 +104,7 @@ public class ControlsHandler {
 		// Keepalive Pressed Keys
 		if (packetCooldown == 0) {
 //			if (!pressedKeys.isEmpty()) {
-			CatnipServices.NETWORK.sendToServer(new ControlsInputPacket(pressedKeys, true, entity.getId(), controlsPos, false));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ControlsInputPacket(pressedKeys, true, entity.getId(), controlsPos, false));
 				packetCooldown = PACKET_RATE;
 //			}
 		}

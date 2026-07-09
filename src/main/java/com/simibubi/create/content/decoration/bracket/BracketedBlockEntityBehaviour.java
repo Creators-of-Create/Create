@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -47,7 +47,7 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
 		reRender = true;
 		blockEntity.notifyUpdate();
 		Level world = getWorld();
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return;
 		blockEntity.getBlockState()
 			.updateNeighbourShapes(world, getPos(), 3);
@@ -68,7 +68,7 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
 
 		BlockState removed = this.bracket;
 		Level world = getWorld();
-		if (!world.isClientSide)
+		if (!world.isClientSide())
 			world.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, getPos(), Block.getId(bracket));
 		this.bracket = null;
 		reRender = true;
@@ -77,7 +77,7 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
 			return removed;
 		}
 		blockEntity.notifyUpdate();
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return removed;
 		blockEntity.getBlockState()
 			.updateNeighbourShapes(world, getPos(), 3);
@@ -130,7 +130,7 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
 	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		if (nbt.contains("Bracket")) {
 			bracket = null;
-			BlockState readBlockState = NbtUtils.readBlockState(blockEntity.blockHolderGetter(), nbt.getCompound("Bracket"));
+			BlockState readBlockState = NbtUtils.readBlockState(blockEntity.blockHolderGetter(), nbt.getCompoundOrEmpty("Bracket"));
 			if (isBracketValid(readBlockState))
 				bracket = readBlockState;
 		}

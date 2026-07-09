@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.sound;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.sounds.SoundEvent;

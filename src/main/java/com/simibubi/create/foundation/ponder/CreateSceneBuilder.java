@@ -28,24 +28,24 @@ import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 import com.simibubi.create.foundation.ponder.element.ExpandedParrotElement;
 import com.simibubi.create.foundation.ponder.instruction.AnimateBlockEntityInstruction;
 
-import net.createmod.catnip.data.FunctionalHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.ParrotElement;
-import net.createmod.ponder.api.element.ParrotPose;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.level.PonderLevel;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.Selection;
-import net.createmod.ponder.foundation.PonderScene;
-import net.createmod.ponder.foundation.PonderSceneBuilder;
-import net.createmod.ponder.foundation.element.ElementLinkImpl;
-import net.createmod.ponder.foundation.instruction.CreateParrotInstruction;
+import net.createmod.catnip.api.data.FunctionalHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.ParrotElement;
+import net.createmod.ponder.api.client.element.ParrotPose;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.level.PonderLevel;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.Selection;
+import net.createmod.ponder.api.client.scene.PonderScene;
+import net.createmod.ponder.api.client.scene.PonderSceneBuilder;
+import net.createmod.ponder.impl.client.element.ElementLinkImpl;
+import net.createmod.ponder.impl.client.instruction.CreateParrotInstruction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.entity.animal.parrot.Parrot;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -227,11 +227,11 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 
 		public void modifyKineticSpeed(Selection selection, UnaryOperator<Float> speedFunc) {
 			modifyBlockEntityNBT(selection, SpeedGaugeBlockEntity.class, nbt -> {
-				float newSpeed = speedFunc.apply(nbt.getFloat("Speed"));
+				float newSpeed = speedFunc.apply(nbt.getFloatOr("Speed", 0));
 				nbt.putFloat("Value", SpeedGaugeBlockEntity.getDialTarget(newSpeed));
 			});
 			modifyBlockEntityNBT(selection, KineticBlockEntity.class, nbt -> {
-				nbt.putFloat("Speed", speedFunc.apply(nbt.getFloat("Speed")));
+				nbt.putFloat("Speed", speedFunc.apply(nbt.getFloatOr("Speed", 0)));
 			});
 		}
 
@@ -241,7 +241,7 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 
 		public void setFilterData(Selection selection, Class<? extends BlockEntity> teType, ItemStack filter) {
 			modifyBlockEntityNBT(selection, teType, nbt -> {
-				nbt.put("Filter", filter.saveOptional(world().getHolderLookupProvider()));
+				nbt.put("Filter", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(filter, world().getHolderLookupProvider()));
 			});
 		}
 
@@ -250,7 +250,7 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 			modifyBlockEntityNBT(scene.getSceneBuildingUtil().select().position(armLocation), ArmBlockEntity.class,
 				compound -> {
 					NBTHelper.writeEnum(compound, "Phase", phase);
-					compound.put("HeldItem", heldItem.saveOptional(world().getHolderLookupProvider()));
+					compound.put("HeldItem", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(heldItem, world().getHolderLookupProvider()));
 					compound.putInt("TargetPointIndex", targetedPoint);
 					compound.putFloat("MovementProgress", 0);
 				});

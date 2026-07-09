@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "minecraft:oxidized_copper"
-    },
-    {
-      "tag": "minecraft:axes"
-    }
+    "minecraft:oxidized_copper",
+    "#minecraft:axes"
   ],
   "keep_held_item": true,
   "results": [

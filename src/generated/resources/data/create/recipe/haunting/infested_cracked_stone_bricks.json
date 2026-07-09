@@ -1,9 +1,7 @@
 {
   "type": "create:haunting",
   "ingredients": [
-    {
-      "item": "minecraft:cracked_stone_bricks"
-    }
+    "minecraft:cracked_stone_bricks"
   ],
   "results": [
     {

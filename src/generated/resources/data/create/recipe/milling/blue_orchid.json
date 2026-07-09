@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:blue_orchid"
-    }
+    "minecraft:blue_orchid"
   ],
   "processing_time": 50,
   "results": [

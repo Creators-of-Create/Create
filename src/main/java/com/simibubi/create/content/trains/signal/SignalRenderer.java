@@ -11,11 +11,11 @@ import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRender
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.render.CachedBuffers;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.minecraft.util.LightCoordsUtil;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -37,15 +37,15 @@ public class SignalRenderer extends SafeBlockEntityRenderer<SignalBlockEntity> {
 		SignalState signalState = be.getState();
 		OverlayState overlayState = be.getOverlay();
 
-		float renderTime = AnimationTickHolder.getRenderTime(be.getLevel());
+		float renderTime = AnimationTickHolder.getRenderTime();
 		if (signalState.isRedLight(renderTime))
 			CachedBuffers.partial(AllPartialModels.SIGNAL_ON, blockState)
-				.light(LightTexture.FULL_BLOCK)
-				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+				.light(LightCoordsUtil.pack(15, 0))
+				.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 		else
 			CachedBuffers.partial(AllPartialModels.SIGNAL_OFF, blockState)
 				.light(light)
-				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+				.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 
 		BlockPos pos = be.getBlockPos();
 		TrackTargetingBehaviour<SignalBoundary> target = be.edgePoint;

@@ -1,9 +1,7 @@
 {
   "type": "create:splashing",
   "ingredients": [
-    {
-      "tag": "c:glass_blocks"
-    }
+    "#c:glass_blocks"
   ],
   "results": [
     {

@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "#": {
-      "item": "create:scoria"
-    },
-    "D": {
-      "tag": "c:dyes/black"
-    }
+    "#": "create:scoria",
+    "D": "#c:dyes/black"
   },
   "pattern": [
     "###",

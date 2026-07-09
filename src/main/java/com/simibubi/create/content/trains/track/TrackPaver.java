@@ -10,9 +10,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -40,7 +40,7 @@ public class TrackPaver {
 
 		if (defaultBlockState.getBlock() instanceof GirderBlock)
 			for (Direction d : Iterate.horizontalDirections)
-				if (Vec3.atLowerCornerOf(d.getNormal())
+				if (Vec3.atLowerCornerOf(d.getUnitVec3i())
 					.equals(direction))
 					defaultBlockState = defaultBlockState.setValue(GirderBlock.TOP, false)
 						.setValue(GirderBlock.BOTTOM, false)

@@ -5,7 +5,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -18,6 +18,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -40,11 +42,11 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos,
-		boolean isMoving) {
-		if (level.isClientSide)
+	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, Orientation orientation, boolean isMoving) {
+		if (level.isClientSide())
 			return;
 
+		BlockPos fromPos = orientation == null ? pos : pos.relative(orientation.getFront());
 		Direction blockFacing = state.getValue(FACING);
 		if (fromPos.equals(pos.relative(blockFacing.getOpposite()))) {
 			if (!canSurvive(state, level, pos)) {
@@ -67,9 +69,9 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 		Direction attachedFace = state.getValue(RedstoneLinkBlock.FACING)
 			.getOpposite();
 		BlockPos attachedPos = pos.relative(attachedFace);
-		level.blockUpdated(pos, level.getBlockState(pos)
+		level.updateNeighborsAt(pos, level.getBlockState(pos)
 			.getBlock());
-		level.blockUpdated(attachedPos, level.getBlockState(attachedPos)
+		level.updateNeighborsAt(attachedPos, level.getBlockState(attachedPos)
 			.getBlock());
 	}
 
@@ -81,12 +83,12 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 	}
 
 	@Override
-	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
-		IBE.onRemove(pState, pLevel, pPos, pNewState);
+protected void affectNeighborsAfterRemoval(BlockState pState, ServerLevel pLevel, BlockPos pPos, boolean pMovedByPiston) {
+		IBE.onRemove(pState, pLevel, pPos, Blocks.AIR.defaultBlockState());
 	}
 
 	public void updateTransmittedSignal(BlockState state, Level level, BlockPos pos) {
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		if (state.getValue(RECEIVER))
 			return;
@@ -163,7 +165,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 	}
 
 	public InteractionResult toggleMode(BlockState state, Level level, BlockPos pos) {
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return InteractionResult.SUCCESS;
 
 		return onBlockEntityUse(level, pos, be -> {

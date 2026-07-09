@@ -15,6 +15,7 @@ import com.simibubi.create.Create;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 
 /**
@@ -51,7 +52,9 @@ public class RecipeFinder {
 
 	private static List<RecipeHolder<? extends Recipe<?>>> startSearch(Level level, Predicate<? super RecipeHolder<? extends Recipe<?>>> conditions) {
 		List<RecipeHolder<? extends Recipe<?>>> recipes = new ArrayList<>();
-		for (RecipeHolder<? extends Recipe<?>> r : level.getRecipeManager().getRecipes())
+		if (!(level.recipeAccess() instanceof RecipeManager recipeManager))
+			return recipes;
+		for (RecipeHolder<? extends Recipe<?>> r : recipeManager.getRecipes())
 			if (conditions.test(r))
 				recipes.add(r);
 		return recipes;

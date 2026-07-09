@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "minecraft:oxidized_copper_door"
-    },
-    {
-      "item": "minecraft:honeycomb_block"
-    }
+    "minecraft:oxidized_copper_door",
+    "minecraft:honeycomb_block"
   ],
   "keep_held_item": true,
   "results": [

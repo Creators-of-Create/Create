@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:emerald_ore"
-    }
+    "minecraft:emerald_ore"
   ],
   "processing_time": 350,
   "results": [

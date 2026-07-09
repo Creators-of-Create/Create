@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.utility;
 
-import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.api.data.Couple;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 

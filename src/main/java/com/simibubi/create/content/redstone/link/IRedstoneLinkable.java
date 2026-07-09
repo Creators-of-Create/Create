@@ -2,7 +2,7 @@ package com.simibubi.create.content.redstone.link;
 
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler.Frequency;
 
-import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.api.data.Couple;
 import net.minecraft.core.BlockPos;
 
 public interface IRedstoneLinkable {

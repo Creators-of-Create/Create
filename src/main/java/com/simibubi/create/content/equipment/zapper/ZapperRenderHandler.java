@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllSoundEvents;
 
-import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.api.client.outliner.Outliner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleTypes;
@@ -64,7 +64,7 @@ public class ZapperRenderHandler extends ShootableGadgetRenderHandler {
 	}
 
 	public void addBeam(LaserBeam beam) {
-		RandomSource random = Minecraft.getInstance().level.random;
+		RandomSource random = Minecraft.getInstance().level.getRandom();
 		double x = beam.end.x;
 		double y = beam.end.y;
 		double z = beam.end.z;

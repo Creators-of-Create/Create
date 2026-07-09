@@ -18,7 +18,7 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -91,7 +91,7 @@ public class SignalBlockEntity extends SmartBlockEntity implements Transformable
 		super.read(tag, registries, clientPacket);
 		state = NBTHelper.readEnum(tag, "State", SignalState.class);
 		overlay = NBTHelper.readEnum(tag, "Overlay", OverlayState.class);
-		lastReportedPower = tag.getBoolean("Power");
+		lastReportedPower = tag.getBooleanOr("Power", false);
 		invalidateRenderBoundingBox();
 	}
 
@@ -114,7 +114,7 @@ public class SignalBlockEntity extends SmartBlockEntity implements Transformable
 	@Override
 	public void tick() {
 		super.tick();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 
 		SignalBoundary boundary = getSignal();

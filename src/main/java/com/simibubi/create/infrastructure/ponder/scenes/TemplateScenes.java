@@ -2,8 +2,8 @@ package com.simibubi.create.infrastructure.ponder.scenes;
 
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
 import net.minecraft.core.Direction;
 
 public class TemplateScenes {

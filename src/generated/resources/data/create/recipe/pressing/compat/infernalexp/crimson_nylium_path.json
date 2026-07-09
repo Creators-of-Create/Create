@@ -7,9 +7,7 @@
   ],
   "type": "create:pressing",
   "ingredients": [
-    {
-      "item": "minecraft:crimson_nylium"
-    }
+    "minecraft:crimson_nylium"
   ],
   "results": [
     {

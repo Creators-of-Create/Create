@@ -8,7 +8,7 @@ import com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -17,9 +17,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -29,13 +30,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import net.neoforged.neoforge.common.Tags;
 
 public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implements IBE<MechanicalPistonBlockEntity> {
 
@@ -64,29 +64,29 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!player.mayBuild())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (player.isShiftKeyDown())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-		if (!stack.is(Tags.Items.SLIMEBALLS)) {
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
+		if (!stack.is(Items.SLIME_BALL)) {
 			if (stack.isEmpty()) {
 				withBlockEntityDo(level, pos, be -> be.assembleNextTick = true);
-				return ItemInteractionResult.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		}
 		if (state.getValue(STATE) != PistonState.RETRACTED)
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		Direction direction = state.getValue(FACING);
 		if (hitResult.getDirection() != direction)
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (((MechanicalPistonBlock) state.getBlock()).isSticky)
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-		if (level.isClientSide) {
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
+		if (level.isClientSide()) {
 			Vec3 vec = hitResult.getLocation();
 			level.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 		AllSoundEvents.SLIME_ADDED.playOnServer(level, pos, .5f, 1);
 		if (!player.isCreative())
@@ -94,16 +94,14 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 		level.setBlockAndUpdate(pos, AllBlocks.STICKY_MECHANICAL_PISTON.getDefaultState()
 			.setValue(FACING, direction)
 			.setValue(AXIS_ALONG_FIRST_COORDINATE, state.getValue(AXIS_ALONG_FIRST_COORDINATE)));
-		return ItemInteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos,
+	protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, Orientation orientation,
 		boolean isMoving) {
 		Direction direction = state.getValue(FACING);
-		if (!fromPos.equals(pos.relative(direction.getOpposite())))
-			return;
-		if (!level.isClientSide && !level.getBlockTicks()
+		if (!level.isClientSide() && !level.getBlockTicks()
 			.willTickThisTick(pos, this))
 			level.scheduleTick(pos, this, 1);
 	}

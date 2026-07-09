@@ -13,15 +13,15 @@ import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRender
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SpriteShiftEntry;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SpriteShiftEntry;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.minecraft.util.LightCoordsUtil;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -64,7 +64,7 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 			heatLevel = HeatLevel.FADING;
 
 		Level level = context.world;
-		float horizontalAngle = AngleHelper.rad(headAngle.getValue(AnimationTickHolder.getPartialTicks(level)));
+		float horizontalAngle = AngleHelper.rad(headAngle.getValue(AnimationTickHolder.getPartialTicks()));
 		boolean drawGoggles = context.blockEntityData.contains("Goggles");
 		boolean drawHat = conductor || context.blockEntityData.contains("TrainHat");
 		int hashCode = context.hashCode();
@@ -79,7 +79,7 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 									 boolean canDrawFlame, boolean drawGoggles, PartialModel drawHat, int hashCode) {
 
 		boolean blockAbove = animation > 0.125f;
-		float time = AnimationTickHolder.getRenderTime(level);
+		float time = AnimationTickHolder.getRenderTime();
 		float renderTick = time + (hashCode % 13) * 16f;
 		float offsetMult = heatLevel.isAtLeast(HeatLevel.FADING) ? 64 : 16;
 		float offset = Mth.sin((float) ((renderTick / 16f) % (2 * Math.PI))) / offsetMult;
@@ -95,7 +95,7 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 		if (modelTransform != null)
 			blazeBuffer.transform(modelTransform);
 		blazeBuffer.translate(0, headY, 0);
-		draw(blazeBuffer, horizontalAngle, ms, bufferSource.getBuffer(RenderType.solid()));
+		draw(blazeBuffer, horizontalAngle, ms, bufferSource.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 
 		if (drawGoggles) {
 			PartialModel gogglesModel = blazeModel == AllPartialModels.BLAZE_INERT
@@ -105,7 +105,7 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 			if (modelTransform != null)
 				gogglesBuffer.transform(modelTransform);
 			gogglesBuffer.translate(0, headY + 8 / 16f, 0);
-			draw(gogglesBuffer, horizontalAngle, ms, bufferSource.getBuffer(RenderType.solid()));
+			draw(gogglesBuffer, horizontalAngle, ms, bufferSource.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 		}
 
 		if (drawHat != null) {
@@ -114,18 +114,18 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 				hatBuffer.transform(modelTransform);
 			hatBuffer.translate(0, headY, 0);
 			if (blazeModel == AllPartialModels.BLAZE_INERT) {
-				hatBuffer.translateY(0.5f)
+				hatBuffer.translate(0, 0.5f, 0)
 						.center()
 						.scale(0.75f)
 						.uncenter();
 			} else {
-				hatBuffer.translateY(0.75f);
+				hatBuffer.translate(0, 0.75f, 0);
 			}
-			VertexConsumer cutout = bufferSource.getBuffer(RenderType.cutoutMipped());
+			VertexConsumer cutout = bufferSource.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped());
 			hatBuffer
 					.rotateCentered(horizontalAngle + Mth.PI, Direction.UP)
 					.translate(0.5f, 0, 0.5f)
-					.light(LightTexture.FULL_BRIGHT)
+					.light(LightCoordsUtil.FULL_BRIGHT)
 					.renderInto(ms, cutout);
 		}
 
@@ -139,15 +139,15 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 			if (modelTransform != null)
 				rodsBuffer.transform(modelTransform);
 			rodsBuffer.translate(0, offset1 + animation + .125f, 0)
-					.light(LightTexture.FULL_BRIGHT)
-					.renderInto(ms, bufferSource.getBuffer(RenderType.solid()));
+					.light(LightCoordsUtil.FULL_BRIGHT)
+					.renderInto(ms, bufferSource.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 
 			SuperByteBuffer rodsBuffer2 = CachedBuffers.partial(rodsModel2, blockState);
 			if (modelTransform != null)
 				rodsBuffer2.transform(modelTransform);
 			rodsBuffer2.translate(0, offset2 + animation - 3 / 16f, 0)
-					.light(LightTexture.FULL_BRIGHT)
-					.renderInto(ms, bufferSource.getBuffer(RenderType.solid()));
+					.light(LightCoordsUtil.FULL_BRIGHT)
+					.renderInto(ms, bufferSource.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 		}
 
 		if (canDrawFlame && blockAbove) {
@@ -179,7 +179,7 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 				flameBuffer.transform(modelTransform);
 			flameBuffer.shiftUVScrolling(spriteShift, (float) uScroll, (float) vScroll);
 
-			VertexConsumer cutout = bufferSource.getBuffer(RenderType.cutoutMipped());
+			VertexConsumer cutout = bufferSource.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped());
 			draw(flameBuffer, horizontalAngle, ms, cutout);
 		}
 
@@ -199,7 +199,7 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 
 	private static void draw(SuperByteBuffer buffer, float horizontalAngle, PoseStack ms, VertexConsumer vc) {
 		buffer.rotateCentered(horizontalAngle, Direction.UP)
-				.light(LightTexture.FULL_BRIGHT)
+				.light(LightCoordsUtil.FULL_BRIGHT)
 				.renderInto(ms, vc);
 	}
 }

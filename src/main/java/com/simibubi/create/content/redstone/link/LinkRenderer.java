@@ -14,12 +14,12 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.outliner.Outliner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -83,7 +83,7 @@ public class LinkRenderer {
 		if (be == null || be.isRemoved())
 			return;
 
-		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+		Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
 		float max = AllConfigs.client().filterItemRenderDistance.getF();
 		if (!be.isVirtual() && cameraEntity != null && cameraEntity.position()
 			.distanceToSqr(VecHelper.getCenterOf(be.getBlockPos())) > (max * max))

@@ -1,13 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "tag": "create:valve_handles"
-    }
+    "#create:valve_handles"
   ],
   "result": {
-    "count": 1,
     "id": "create:copper_valve_handle"
   }
 }

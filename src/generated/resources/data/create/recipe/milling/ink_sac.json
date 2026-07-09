@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:ink_sac"
-    }
+    "minecraft:ink_sac"
   ],
   "processing_time": 100,
   "results": [

@@ -19,23 +19,23 @@ import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.simibubi.create.foundation.block.connected.RotatedPillarCTBehaviour;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
+import com.tterrag.registrate.providers.generators.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import com.tterrag.registrate.providers.generators.ModelFile;
 
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import com.tterrag.registrate.providers.generators.ConfiguredModel;
 
 public class PaletteBlockPattern {
 
@@ -80,7 +80,6 @@ public class PaletteBlockPattern {
 	private NonNullFunction<NonNullSupplier<Block>, NonNullBiConsumer<DataGenContext<Block, ? extends Block>, RegistrateRecipeProvider>> additionalRecipes;
 	private PaletteBlockPartial<? extends Block>[] partials;
 
-	@OnlyIn(Dist.CLIENT)
 	private RenderType renderType;
 
 	private static PaletteBlockPattern create(String name, PatternNameType nameType,
@@ -161,46 +160,56 @@ public class PaletteBlockPattern {
 	// Model generators
 
 	public IBlockStateProvider cubeAll(String variant) {
-		ResourceLocation all = toLocation(variant, textures[0]);
+		Identifier all = toLocation(variant, textures[0]);
 		return (ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
 			.cubeAll(createName(variant), all));
 	}
 
 	public IBlockStateProvider cubeBottomTop(String variant) {
-		ResourceLocation side = toLocation(variant, textures[0]);
-		ResourceLocation bottom = toLocation(variant, textures[1]);
-		ResourceLocation top = toLocation(variant, textures[2]);
+		Identifier side = toLocation(variant, textures[0]);
+		Identifier bottom = toLocation(variant, textures[1]);
+		Identifier top = toLocation(variant, textures[2]);
 		return (ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
-			.cubeBottomTop(createName(variant), side, bottom, top));
+			.withExistingParent(createName(variant), prov.mcLoc("block/cube_bottom_top"))
+			.texture("side", side)
+			.texture("bottom", bottom)
+			.texture("top", top));
 	}
 
 	public IBlockStateProvider pillar(String variant) {
-		ResourceLocation side = toLocation(variant, textures[0]);
-		ResourceLocation end = toLocation(variant, textures[1]);
+		Identifier side = toLocation(variant, textures[0]);
+		Identifier end = toLocation(variant, textures[1]);
 
-		return (ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
-			.forAllStatesExcept(state -> {
+		return (ctx, prov) -> {
+			String name = createName(variant);
+			ModelFile vertical = prov.models()
+				.cubeColumn(name, side, end);
+			ModelFile horizontal = prov.models()
+				.withExistingParent(name + "_horizontal", prov.mcLoc("block/cube_column_horizontal"))
+				.texture("side", side)
+				.texture("end", end);
+			prov.getVariantBuilder(ctx.getEntry())
+				.forAllStatesExcept(state -> {
 				Axis axis = state.getValue(BlockStateProperties.AXIS);
 				if (axis == Axis.Y)
 					return ConfiguredModel.builder()
-						.modelFile(prov.models()
-							.cubeColumn(createName(variant), side, end))
+						.modelFile(vertical)
 						.uvLock(false)
 						.build();
 				return ConfiguredModel.builder()
-					.modelFile(prov.models()
-						.cubeColumnHorizontal(createName(variant) + "_horizontal", side, end))
+					.modelFile(horizontal)
 					.uvLock(false)
 					.rotationX(90)
 					.rotationY(axis == Axis.X ? 90 : 0)
 					.build();
-			}, BlockStateProperties.WATERLOGGED, ConnectedPillarBlock.NORTH, ConnectedPillarBlock.SOUTH,
+				}, BlockStateProperties.WATERLOGGED, ConnectedPillarBlock.NORTH, ConnectedPillarBlock.SOUTH,
 				ConnectedPillarBlock.EAST, ConnectedPillarBlock.WEST);
+		};
 	}
 
 	public IBlockStateProvider cubeColumn(String variant) {
-		ResourceLocation side = toLocation(variant, textures[0]);
-		ResourceLocation end = toLocation(variant, textures[1]);
+		Identifier side = toLocation(variant, textures[0]);
+		Identifier end = toLocation(variant, textures[1]);
 		return (ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
 			.cubeColumn(createName(variant), side, end));
 	}
@@ -219,16 +228,16 @@ public class PaletteBlockPattern {
 		return nameType == SUFFIX ? String.format(formatString, variant, id) : String.format(formatString, id, variant);
 	}
 
-	protected static ResourceLocation toLocation(String variant, String texture) {
+	protected static Identifier toLocation(String variant, String texture) {
 		return Create.asResource(
 			String.format(TEXTURE_LOCATION, texture, variant + (texture.equals("cut") ? "_" : "_cut_") + texture));
 	}
 
 	protected static CTSpriteShiftEntry ct(String variant, CTs texture) {
-		ResourceLocation resLoc = texture.srcFactory.apply(variant);
-		ResourceLocation resLocTarget = texture.targetFactory.apply(variant);
+		Identifier resLoc = texture.srcFactory.apply(variant);
+		Identifier resLocTarget = texture.targetFactory.apply(variant);
 		return CTSpriteShifter.getCT(texture.type, resLoc,
-			ResourceLocation.fromNamespaceAndPath(resLocTarget.getNamespace(), resLocTarget.getPath() + "_connected"));
+			Identifier.fromNamespaceAndPath(resLocTarget.getNamespace(), resLocTarget.getPath() + "_connected"));
 	}
 
 	@FunctionalInterface
@@ -238,7 +247,7 @@ public class PaletteBlockPattern {
 
 	@FunctionalInterface
 	static interface IBlockStateProvider
-		extends NonNullBiConsumer<DataGenContext<Block, ? extends Block>, RegistrateBlockstateProvider> {
+		extends NonNullBiConsumer<DataGenContext<Block, ? extends Block>, RegistrateBlockModelGenerator> {
 	}
 
 	enum PatternNameType {
@@ -256,15 +265,15 @@ public class PaletteBlockPattern {
 		;
 
 		public CTType type;
-		private Function<String, ResourceLocation> srcFactory;
-		private Function<String, ResourceLocation> targetFactory;
+		private Function<String, Identifier> srcFactory;
+		private Function<String, Identifier> targetFactory;
 
-		private CTs(CTType type, Function<String, ResourceLocation> factory) {
+		private CTs(CTType type, Function<String, Identifier> factory) {
 			this(type, factory, factory);
 		}
 
-		private CTs(CTType type, Function<String, ResourceLocation> srcFactory,
-			Function<String, ResourceLocation> targetFactory) {
+		private CTs(CTType type, Function<String, Identifier> srcFactory,
+			Function<String, Identifier> targetFactory) {
 			this.type = type;
 			this.srcFactory = srcFactory;
 			this.targetFactory = targetFactory;

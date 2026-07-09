@@ -8,13 +8,13 @@ import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides.Clipbo
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.CommonComponents;
@@ -337,7 +337,7 @@ public class DisplayScenes {
 		scene.world().flashDisplayLink(linkPos);
 		scene.idle(50);
 
-		scene.overlay().showControls(target, Pointing.RIGHT, 40).withItem(new ItemStack(Items.PINK_DYE))
+		scene.overlay().showControls(target, Pointing.RIGHT, 40).withItem(new ItemStack(Items.DYE.pink()))
 			.rightClick();
 		scene.idle(6);
 		scene.world().dyeDisplayBoard(board, 0, DyeColor.PINK);
@@ -350,7 +350,7 @@ public class DisplayScenes {
 			.placeNearTarget();
 		scene.idle(25);
 
-		scene.overlay().showControls(target.add(0, -.5f, 0), Pointing.RIGHT, 40).withItem(new ItemStack(Items.LIME_DYE))
+		scene.overlay().showControls(target.add(0, -.5f, 0), Pointing.RIGHT, 40).withItem(new ItemStack(Items.DYE.lime()))
 			.rightClick();
 		scene.idle(6);
 		scene.world().dyeDisplayBoard(board, 1, DyeColor.LIME);

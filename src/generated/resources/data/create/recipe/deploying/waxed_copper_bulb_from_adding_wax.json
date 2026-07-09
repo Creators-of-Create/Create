@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "minecraft:copper_bulb"
-    },
-    {
-      "item": "minecraft:honeycomb_block"
-    }
+    "minecraft:copper_bulb",
+    "minecraft:honeycomb_block"
   ],
   "keep_held_item": true,
   "results": [

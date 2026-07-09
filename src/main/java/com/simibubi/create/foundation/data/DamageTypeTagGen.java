@@ -2,8 +2,6 @@ package com.simibubi.create.foundation.data;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.simibubi.create.AllDamageTypes;
 import com.simibubi.create.Create;
 
@@ -13,11 +11,10 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageType;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class DamageTypeTagGen extends TagsProvider<DamageType> {
-	public DamageTypeTagGen(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
-		super(output, Registries.DAMAGE_TYPE, lookupProvider, Create.ID, existingFileHelper);
+	public DamageTypeTagGen(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+		super(output, Registries.DAMAGE_TYPE, lookupProvider, Create.ID);
 	}
 
 	@Override

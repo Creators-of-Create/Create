@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:sandstone"
-    }
+    "minecraft:sandstone"
   ],
   "processing_time": 150,
   "results": [

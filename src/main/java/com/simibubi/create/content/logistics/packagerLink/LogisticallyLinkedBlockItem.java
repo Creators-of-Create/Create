@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.packagerLink;
 
-import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.LegacyBlockEntityDataComponentBridge;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -19,16 +21,14 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class LogisticallyLinkedBlockItem extends BlockItem {
 
@@ -47,41 +47,42 @@ public class LogisticallyLinkedBlockItem extends BlockItem {
 
 	@Nullable
 	public static UUID networkFromStack(ItemStack pStack) {
-		CompoundTag tag = pStack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).copyTag();
-		if (!tag.hasUUID("Freq"))
+		CompoundTag tag = LegacyBlockEntityDataComponentBridge.get(pStack);
+		if (!tag.contains("Freq"))
 			return null;
-		return tag.getUUID("Freq");
+		return LegacyNbtUtilsBridge.loadUUID(tag.get("Freq"));
 	}
 
 	@Override
 	public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext tooltipContext,
-								@NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
-		super.appendHoverText(stack, tooltipContext, tooltipComponents, tooltipFlag);
+								@NotNull TooltipDisplay tooltipDisplay, @NotNull Consumer<Component> tooltipComponents,
+								@NotNull TooltipFlag tooltipFlag) {
+		super.appendHoverText(stack, tooltipContext, tooltipDisplay, tooltipComponents, tooltipFlag);
 
-		CompoundTag tag = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).copyTag();
-		if (!tag.hasUUID("Freq"))
+		CompoundTag tag = LegacyBlockEntityDataComponentBridge.get(stack);
+		if (!tag.contains("Freq"))
 			return;
 
-		CreateLang.translate("logistically_linked.tooltip")
+		tooltipComponents.accept(CreateLang.translate("logistically_linked.tooltip")
 			.style(ChatFormatting.GOLD)
-			.addTo(tooltipComponents);
+			.component());
 
-		CreateLang.translate("logistically_linked.tooltip_clear")
+		tooltipComponents.accept(CreateLang.translate("logistically_linked.tooltip_clear")
 			.style(ChatFormatting.GRAY)
-			.addTo(tooltipComponents);
+			.component());
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+	public InteractionResult use(Level level, Player player, InteractionHand usedHand) {
 		ItemStack stack = player.getItemInHand(usedHand);
 		if (isTuned(stack)) {
-			if (level.isClientSide) {
+			if (level.isClientSide()) {
 				level.playSound(player, player.blockPosition(), SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.75f, 1.0f);
 			} else {
-				player.displayClientMessage(CreateLang.translateDirect("logistically_linked.cleared"), true);
+				player.sendSystemMessage(CreateLang.translateDirect("logistically_linked.cleared"));
 				stack.remove(DataComponents.BLOCK_ENTITY_DATA);
 			}
-			return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+			return InteractionResult.SUCCESS.heldItemTransformedTo(stack);
 		} else {
 			return super.use(level, player, usedHand);
 		}
@@ -104,7 +105,7 @@ public class LogisticallyLinkedBlockItem extends BlockItem {
 		boolean tuned = isTuned(stack);
 
 		if (link != null) {
-			if (level.isClientSide)
+			if (level.isClientSide())
 				return InteractionResult.SUCCESS;
 			if (!link.mayInteractMessage(player))
 				return InteractionResult.SUCCESS;
@@ -114,22 +115,21 @@ public class LogisticallyLinkedBlockItem extends BlockItem {
 		}
 
 		InteractionResult useOn = super.useOn(pContext);
-		if (level.isClientSide || useOn == InteractionResult.FAIL)
+		if (level.isClientSide() || useOn == InteractionResult.FAIL)
 			return useOn;
 
-		player.displayClientMessage(tuned ? CreateLang.translateDirect("logistically_linked.connected")
-			: CreateLang.translateDirect("logistically_linked.new_network_started"), true);
+		player.sendSystemMessage(tuned ? CreateLang.translateDirect("logistically_linked.connected")
+			: CreateLang.translateDirect("logistically_linked.new_network_started"));
 		return useOn;
 	}
 
 	public static void assignFrequency(ItemStack stack, Player player, UUID frequency) {
-		CompoundTag tag = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).copyTag();
-		tag.putUUID("Freq", frequency);
+		CompoundTag tag = LegacyBlockEntityDataComponentBridge.get(stack);
+		tag.put("Freq", LegacyNbtUtilsBridge.createUUID(frequency));
 
-		player.displayClientMessage(CreateLang.translateDirect("logistically_linked.tuned"), true);
+		player.sendSystemMessage(CreateLang.translateDirect("logistically_linked.tuned"));
 
-		BlockEntity.addEntityType(tag, ((IBE<?>) ((BlockItem) stack.getItem()).getBlock()).getBlockEntityType());
-		stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tag));
+		LegacyBlockEntityDataComponentBridge.set(stack, ((IBE<?>) ((BlockItem) stack.getItem()).getBlock()).getBlockEntityType(), tag);
 	}
 
 }

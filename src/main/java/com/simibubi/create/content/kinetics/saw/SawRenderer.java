@@ -13,21 +13,22 @@ import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
+import com.simibubi.create.foundation.utility.LegacyDirectionBridge;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.render.ItemRenderer;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -87,12 +88,12 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 		}
 		superBuffer.color(0xFFFFFF)
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+			.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped()));
 	}
 
 	protected void renderShaft(SawBlockEntity be, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		KineticBlockEntityRenderer.renderRotatingBuffer(be, getRotatedModel(be), ms,
-			buffer.getBuffer(RenderType.solid()), light);
+			buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()), light);
 	}
 
 	protected void renderItems(SawBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
@@ -140,8 +141,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 			if (stack.isEmpty())
 				continue;
 
-			ItemRenderer itemRenderer = Minecraft.getInstance()
-				.getItemRenderer();
+			ItemRenderer itemRenderer = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer();
 			BakedModel modelWithOverrides = itemRenderer.getModel(stack, be.getLevel(), null, 0);
 			boolean blockItem = modelWithOverrides.isGui3d();
 
@@ -193,10 +193,10 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 		Direction facing = state.getValue(SawBlock.FACING);
 
 		Vec3 facingVec = Vec3.atLowerCornerOf(context.state.getValue(SawBlock.FACING)
-			.getNormal());
+			.getUnitVec3i());
 		facingVec = context.rotation.apply(facingVec);
 
-		Direction closestToFacing = Direction.getNearest(facingVec.x, facingVec.y, facingVec.z);
+		Direction closestToFacing = LegacyDirectionBridge.nearest(facingVec.x, facingVec.y, facingVec.z, Direction.NORTH);
 
 		boolean horizontal = closestToFacing.getAxis()
 			.isHorizontal();
@@ -228,9 +228,9 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 		}
 
 		superBuffer.uncenter()
-			.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+			.light(com.simibubi.create.foundation.render.LegacyLightTexture.getLightColor(renderWorld, context.localPos))
 			.useLevelLight(context.world, matrices.getWorld())
-			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.cutoutMipped()));
+			.renderInto(matrices.getViewProjection(), buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped()));
 	}
 
 }

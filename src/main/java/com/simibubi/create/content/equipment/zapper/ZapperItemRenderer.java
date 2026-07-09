@@ -8,8 +8,8 @@ import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRendere
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.resources.model.BakedModel;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
@@ -35,17 +35,14 @@ public abstract class ZapperItemRenderer extends CustomRenderedItemModelRenderer
 		ms.pushPose();
 		ms.translate(-0.3F, -0.45F, -0.0F);
 		ms.scale(0.25F, 0.25F, 0.25F);
-		BakedModel modelForState = Minecraft.getInstance()
-			.getBlockRenderer()
+		BakedModel modelForState = com.simibubi.create.foundation.render.LegacyBlockRendererBridge.getBlockRenderer()
 			.getBlockModel(state);
 
 		if (state.getBlock() instanceof CrossCollisionBlock)
-			modelForState = Minecraft.getInstance()
-				.getItemRenderer()
+			modelForState = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer()
 				.getModel(new ItemStack(state.getBlock()), null, null, 0);
 
-		Minecraft.getInstance()
-			.getItemRenderer()
+		com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer()
 			.render(new ItemStack(state.getBlock()), ItemDisplayContext.NONE, false, ms, buffer, light, overlay,
 				modelForState);
 		ms.popPose();

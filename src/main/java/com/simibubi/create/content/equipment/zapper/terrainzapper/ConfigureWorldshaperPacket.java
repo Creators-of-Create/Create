@@ -4,8 +4,8 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.equipment.zapper.ConfigureZapperPacket;
 import com.simibubi.create.content.equipment.zapper.PlacementPatterns;
 
-import net.createmod.catnip.codecs.stream.CatnipLargerStreamCodecs;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import net.createmod.catnip.api.data.codec.stream.CatnipLargerStreamCodecs;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

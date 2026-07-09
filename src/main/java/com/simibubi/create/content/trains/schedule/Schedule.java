@@ -22,9 +22,9 @@ import com.simibubi.create.content.trains.schedule.destination.DestinationInstru
 import com.simibubi.create.content.trains.schedule.destination.FetchPackagesInstruction;
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -33,7 +33,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class Schedule {
 	public static final StreamCodec<RegistryFriendlyByteBuf, Schedule> STREAM_CODEC = StreamCodec.composite(
@@ -43,9 +43,9 @@ public class Schedule {
 			Schedule::new
 	);
 
-	public static List<Pair<ResourceLocation, Supplier<? extends ScheduleInstruction>>> INSTRUCTION_TYPES =
+	public static List<Pair<Identifier, Supplier<? extends ScheduleInstruction>>> INSTRUCTION_TYPES =
 		new ArrayList<>();
-	public static List<Pair<ResourceLocation, Supplier<? extends ScheduleWaitCondition>>> CONDITION_TYPES =
+	public static List<Pair<Identifier, Supplier<? extends ScheduleWaitCondition>>> CONDITION_TYPES =
 		new ArrayList<>();
 
 	static {
@@ -73,7 +73,7 @@ public class Schedule {
 		CONDITION_TYPES.add(Pair.of(Create.asResource(name), factory));
 	}
 
-	public static <T> List<? extends Component> getTypeOptions(List<Pair<ResourceLocation, T>> list) {
+	public static <T> List<? extends Component> getTypeOptions(List<Pair<Identifier, T>> list) {
 		String langSection = list.equals(INSTRUCTION_TYPES) ? "instruction." : "condition.";
 		return list.stream()
 			.map(Pair::getFirst)
@@ -108,10 +108,10 @@ public class Schedule {
 
 	public static Schedule fromTag(HolderLookup.Provider registries, CompoundTag tag) {
 		Schedule schedule = new Schedule();
-		schedule.entries = NBTHelper.readCompoundList(tag.getList("Entries", Tag.TAG_COMPOUND), t -> ScheduleEntry.fromTag(registries, t));
-		schedule.cyclic = tag.getBoolean("Cyclic");
+		schedule.entries = NBTHelper.readCompoundList(tag.getListOrEmpty("Entries"), t -> ScheduleEntry.fromTag(registries, t));
+		schedule.cyclic = tag.getBooleanOr("Cyclic", true);
 		if (tag.contains("Progress"))
-			schedule.savedProgress = tag.getInt("Progress");
+			schedule.savedProgress = tag.getIntOr("Progress", 0);
 		return schedule;
 	}
 

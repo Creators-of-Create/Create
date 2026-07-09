@@ -14,13 +14,14 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.item.LegacyItemTransferAdapter;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -39,6 +40,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,7 +48,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
@@ -75,9 +76,9 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-			Capabilities.ItemHandler.BLOCK,
+			Capabilities.Item.BLOCK,
 			AllBlockEntityTypes.CRUSHING_WHEEL_CONTROLLER.get(),
-			(be, context) -> be.inventory
+			(be, context) -> new LegacyItemTransferAdapter(be.inventory)
 		);
 	}
 
@@ -112,7 +113,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 		if (crushingspeed == 0)
 			return;
 
-		if (level.isClientSide)
+		if (level.isClientSide())
 			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> this.tickAudio());
 
 		float speed = crushingspeed * 4;
@@ -138,7 +139,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 			inventory.remainingTime -= processingSpeed;
 			spawnParticles(inventory.getStackInSlot(0));
 
-			if (level.isClientSide)
+			if (level.isClientSide())
 				return;
 
 			if (inventory.remainingTime < 20 && !inventory.appliedRecipe) {
@@ -190,7 +191,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 				ItemEntity entityIn = new ItemEntity(level, outPos.x, outPos.y, outPos.z, stack);
 				entityIn.setDeltaMovement(outSpeed);
 				entityIn.getPersistentData()
-					.put("BypassCrushingWheel", NbtUtils.writeBlockPos(worldPosition));
+					.put("BypassCrushingWheel", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(worldPosition));
 				level.addFreshEntity(entityIn);
 			}
 			inventory.clear();
@@ -223,7 +224,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 				// crushers,
 				, facing.getAxis() == Axis.Z ? movement : zMotion)); // Or they'll only get their feet crushed.
 
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 
 		if (!(processingEntity instanceof ItemEntity itemEntity)) {
@@ -264,7 +265,6 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public void tickAudio() {
 		float pitch = Mth.clamp((crushingspeed / 256f) + .45f, .85f, 1f);
 		if (entityUUID == null && inventory.getStackInSlot(0)
@@ -291,9 +291,9 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 			particleData = new BlockParticleOption(ParticleTypes.BLOCK, ((BlockItem) stack.getItem()).getBlock()
 				.defaultBlockState());
 		else
-			particleData = new ItemParticleOption(ParticleTypes.ITEM, stack);
+			particleData = new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(stack));
 
-		RandomSource r = level.random;
+		RandomSource r = level.getRandom();
 		for (int i = 0; i < 4; i++)
 			level.addParticle(particleData, worldPosition.getX() + r.nextFloat(), worldPosition.getY() + r.nextFloat(),
 				worldPosition.getZ() + r.nextFloat(), 0, 0, 0);
@@ -309,14 +309,14 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 			inventory.clear();
 			for (int roll = 0; roll < rolls; roll++) {
 				List<ItemStack> rolledResults = recipe.get().value()
-					.rollResults(level.random);
+					.rollResults(level.getRandom());
 				for (ItemStack stack : rolledResults) {
 					ItemHelper.addToList(stack, list);
 				}
 			}
-			if (input.hasCraftingRemainingItem()) {
-				ItemHelper.addToList(input.getCraftingRemainingItem(), list);
-			}
+			ItemStackTemplate craftingRemainder = input.getCraftingRemainder();
+			if (craftingRemainder != null)
+				ItemHelper.addToList(craftingRemainder.create(), list);
 			for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
 				inventory.setStackInSlot(slot + 1, list.get(slot));
 		} else {
@@ -335,7 +335,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 	@Override
 	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		if (hasEntity())
-			compound.put("Entity", NbtUtils.createUUID(entityUUID));
+			compound.put("Entity", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.createUUID(entityUUID));
 		compound.put("Inventory", inventory.serializeNBT(registries));
 		compound.putFloat("Speed", crushingspeed);
 		super.write(compound, registries, clientPacket);
@@ -345,11 +345,11 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
 		if (compound.contains("Entity") && !isOccupied()) {
-			entityUUID = NbtUtils.loadUUID(NBTHelper.getINBT(compound, "Entity"));
+			entityUUID = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.loadUUID(NBTHelper.getINBT(compound, "Entity"));
 			this.searchForEntity = true;
 		}
-		crushingspeed = compound.getFloat("Speed");
-		inventory.deserializeNBT(registries, compound.getCompound("Inventory"));
+		crushingspeed = compound.getFloatOr("Speed", 0);
+		inventory.deserializeNBT(registries, compound.getCompoundOrEmpty("Inventory"));
 	}
 
 	@Override

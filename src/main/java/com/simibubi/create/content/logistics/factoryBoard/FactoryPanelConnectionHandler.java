@@ -9,10 +9,10 @@ import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.outliner.Outliner;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.outliner.Outliner;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -45,7 +45,7 @@ public class FactoryPanelConnectionHandler {
 		FactoryPanelBehaviour at = FactoryPanelBehaviour.at(level, connectingFrom);
 		if (panel.getPanelPosition()
 			.equals(connectingFrom) || at == null) {
-			player.displayClientMessage(Component.empty(), true);
+			player.sendSystemMessage(Component.empty());
 			connectingFrom = null;
 			connectingFromBox = null;
 			return true;
@@ -53,9 +53,9 @@ public class FactoryPanelConnectionHandler {
 
 		String checkForIssues = checkForIssues(at, panel);
 		if (checkForIssues != null) {
-			player.displayClientMessage(CreateLang.translate(checkForIssues)
+			player.sendSystemMessage(CreateLang.translate(checkForIssues)
 				.style(ChatFormatting.RED)
-				.component(), true);
+				.component());
 			connectingFrom = null;
 			connectingFromBox = null;
 			AllSoundEvents.DENY.playAt(player.level(), player.blockPosition(), 1, 1, false);
@@ -65,14 +65,14 @@ public class FactoryPanelConnectionHandler {
 		ItemStack filterFrom = panel.getFilter();
 		ItemStack filterTo = at.getFilter();
 
-		CatnipServices.NETWORK.sendToServer(new FactoryPanelConnectionPacket(panel.getPanelPosition(), connectingFrom, false));
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new FactoryPanelConnectionPacket(panel.getPanelPosition(), connectingFrom, false));
 
-		player.displayClientMessage(CreateLang.translate("factory_panel.panels_connected", filterFrom.getHoverName()
+		player.sendSystemMessage(CreateLang.translate("factory_panel.panels_connected", filterFrom.getHoverName()
 			.getString(),
 			filterTo.getHoverName()
 				.getString())
 			.style(ChatFormatting.GREEN)
-			.component(), true);
+			.component());
 
 		connectingFrom = null;
 		connectingFromBox = null;
@@ -158,7 +158,7 @@ public class FactoryPanelConnectionHandler {
 			.closerThan(mc.player.blockPosition(), 16) || at == null) {
 			connectingFrom = null;
 			connectingFromBox = null;
-			mc.player.displayClientMessage(Component.empty(), true);
+			mc.player.sendSystemMessage(Component.empty());
 			return;
 		}
 
@@ -167,10 +167,9 @@ public class FactoryPanelConnectionHandler {
 			.colored(AnimationTickHolder.getTicks() % 16 > 8 ? 0x38b764 : 0xa7f070)
 			.lineWidth(1 / 16f);
 
-		mc.player.displayClientMessage(
+		mc.player.sendSystemMessage(
 			CreateLang.translate(relocating ? "factory_panel.click_to_relocate" : "factory_panel.click_second_panel")
-				.component(),
-			true);
+				.component());
 
 		if (!relocating)
 			return;
@@ -182,7 +181,7 @@ public class FactoryPanelConnectionHandler {
 
 		Vec3 offsetPos = bhr.getLocation()
 			.add(Vec3.atLowerCornerOf(bhr.getDirection()
-				.getNormal())
+				.getUnitVec3i())
 				.scale(1 / 32f));
 		BlockPos pos = BlockPos.containing(offsetPos);
 		BlockState blockState = at.blockEntity.getBlockState();
@@ -218,14 +217,14 @@ public class FactoryPanelConnectionHandler {
 			if (mc.player.isShiftKeyDown())
 				validRelocationTarget = null;
 			if (validRelocationTarget != null)
-				CatnipServices.NETWORK.sendToServer(new FactoryPanelConnectionPacket(validRelocationTarget, connectingFrom, true));
+				net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new FactoryPanelConnectionPacket(validRelocationTarget, connectingFrom, true));
 
 			connectingFrom = null;
 			connectingFromBox = null;
 
 			if (validRelocationTarget == null)
-				mc.player.displayClientMessage(CreateLang.translate("factory_panel.relocation_aborted")
-					.component(), true);
+				mc.player.sendSystemMessage(CreateLang.translate("factory_panel.relocation_aborted")
+					.component());
 
 			relocating = false;
 			validRelocationTarget = null;
@@ -242,9 +241,9 @@ public class FactoryPanelConnectionHandler {
 				FactoryPanelBehaviour at = FactoryPanelBehaviour.at(mc.level, connectingFrom);
 				String checkForIssues = checkForIssues(at, behaviour);
 				if (checkForIssues != null) {
-					mc.player.displayClientMessage(CreateLang.translate(checkForIssues)
+					mc.player.sendSystemMessage(CreateLang.translate(checkForIssues)
 						.style(ChatFormatting.RED)
-						.component(), true);
+						.component());
 					connectingFrom = null;
 					connectingFromBox = null;
 					AllSoundEvents.DENY.playAt(mc.level, mc.player.blockPosition(), 1, 1, false);
@@ -265,14 +264,14 @@ public class FactoryPanelConnectionHandler {
 					bestPosition = panelPosition;
 				}
 
-				CatnipServices.NETWORK.sendToServer(new FactoryPanelConnectionPacket(bestPosition, connectingFrom, false));
+				net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new FactoryPanelConnectionPacket(bestPosition, connectingFrom, false));
 
-				mc.player.displayClientMessage(CreateLang
+				mc.player.sendSystemMessage(CreateLang
 					.translate("factory_panel.link_connected", blockEntity.getBlockState()
 						.getBlock()
 						.getName())
 					.style(ChatFormatting.GREEN)
-					.component(), true);
+					.component());
 
 				connectingFrom = null;
 				connectingFromBox = null;
@@ -290,8 +289,8 @@ public class FactoryPanelConnectionHandler {
 			return false;
 		connectingFrom = null;
 		connectingFromBox = null;
-		mc.player.displayClientMessage(CreateLang.translate("factory_panel.connection_aborted")
-			.component(), true);
+		mc.player.sendSystemMessage(CreateLang.translate("factory_panel.connection_aborted")
+			.component());
 		return true;
 	}
 

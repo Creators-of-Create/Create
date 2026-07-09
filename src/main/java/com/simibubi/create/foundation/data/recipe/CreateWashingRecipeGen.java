@@ -22,7 +22,7 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -42,7 +42,7 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 	GeneratedRecipe
 
 		WOOL = create("wool", b -> b.require(ItemTags.WOOL)
-		.output(Items.WHITE_WOOL)),
+		.output(Items.WOOL.white())),
 
 	STAINED_GLASS = create("stained_glass", b -> b.require(Tags.Items.GLASS_BLOCKS)
 		.output(Items.GLASS)),
@@ -124,7 +124,7 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CommonMetal metal) {
 		for (Mods mod : metal.mods) {
 			String metalName = metal.getName(mod);
-			ResourceLocation nugget = mod.nuggetOf(metalName);
+			Identifier nugget = mod.nuggetOf(metalName);
 			create(mod.getId() + "/" + crushed.getId()
 					.getPath(),
 				b -> b.withItemIngredients(Ingredient.of(crushed::get))

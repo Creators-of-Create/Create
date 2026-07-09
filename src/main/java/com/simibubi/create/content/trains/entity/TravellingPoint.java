@@ -24,8 +24,8 @@ import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
@@ -431,16 +431,16 @@ public class TravellingPoint {
 			return new TravellingPoint(null, null, null, 0, false);
 
 		Couple<TrackNode> locs = tag.contains("Nodes")
-			? Couple.deserializeEach(tag.getList("Nodes", Tag.TAG_COMPOUND), c -> TrackNodeLocation.read(c, dimensions))
+			? Couple.deserializeEach(tag.getListOrEmpty("Nodes"), c -> TrackNodeLocation.read(c, dimensions))
 				.map(graph::locateNode)
 			: Couple.create(null, null);
 
 		if (locs.either(Objects::isNull))
 			return new TravellingPoint(null, null, null, 0, false);
 
-		double position = tag.getDouble("Position");
+		double position = tag.getDoubleOr("Position", 0);
 		return new TravellingPoint(locs.getFirst(), locs.getSecond(), graph.getConnectionsFrom(locs.getFirst())
-			.get(locs.getSecond()), position, tag.getBoolean("UpsideDown"));
+			.get(locs.getSecond()), position, tag.getBooleanOr("UpsideDown", false));
 	}
 
 }

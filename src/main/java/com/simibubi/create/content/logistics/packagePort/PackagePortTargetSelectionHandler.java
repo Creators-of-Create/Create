@@ -6,10 +6,10 @@ import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.outliner.Outliner;
-import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.outliner.Outliner;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -39,7 +39,7 @@ public class PackagePortTargetSelectionHandler {
 
 		if (validateDiff(exactPositionOfTarget, pos) == null) {
 			activePackageTarget.relativePos = activePackageTarget.relativePos.subtract(pos);
-			CatnipServices.NETWORK.sendToServer(new PackagePortPlacementPacket(activePackageTarget, pos));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new PackagePortPlacementPacket(activePackageTarget, pos));
 		}
 
 		activePackageTarget = null;
@@ -152,7 +152,7 @@ public class PackagePortTargetSelectionHandler {
 	}
 
 	public static void animateConnection(Minecraft mc, Vec3 source, Vec3 target, Color color) {
-		DustParticleOptions data = new DustParticleOptions(color.asVectorF(), 1);
+		DustParticleOptions data = new DustParticleOptions(color.getRGB(), 1);
 		ClientLevel world = mc.level;
 		double totalFlyingTicks = 10;
 		int segments = (((int) totalFlyingTicks) / 3) + 1;

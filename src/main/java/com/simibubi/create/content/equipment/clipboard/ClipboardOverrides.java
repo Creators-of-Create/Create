@@ -6,21 +6,19 @@ import com.mojang.serialization.Codec;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.Create;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateItemModelProvider;
+import com.tterrag.registrate.providers.generators.RegistrateItemModelGenerator;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.lang.Lang;
-import net.minecraft.client.renderer.item.ItemProperties;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
-import net.neoforged.neoforge.client.model.generators.ModelFile.UncheckedModelFile;
+import com.tterrag.registrate.providers.generators.ItemModelBuilder;
+import com.tterrag.registrate.providers.generators.ModelFile.UncheckedModelFile;
 
 public class ClipboardOverrides {
 
@@ -31,7 +29,7 @@ public class ClipboardOverrides {
 		public static final StreamCodec<ByteBuf, ClipboardType> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(ClipboardType.class);
 
 		public final String file;
-		public static ResourceLocation ID = Create.asResource("clipboard_type");
+		public static Identifier ID = Create.asResource("clipboard_type");
 
 		ClipboardType(String file) {
 			this.file = file;
@@ -43,15 +41,12 @@ public class ClipboardOverrides {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static void registerModelOverridesClient(ClipboardBlockItem item) {
-		ItemProperties.register(item, ClipboardType.ID, (pStack, pLevel, pEntity, pSeed) ->
-			pStack.getOrDefault(AllDataComponents.CLIPBOARD_CONTENT, ClipboardContent.EMPTY).type().ordinal()
-		);
+		// 26.2 resolves item model variants from item model definitions instead of runtime predicates.
 	}
 
 	public static ItemModelBuilder addOverrideModels(DataGenContext<Item, ClipboardBlockItem> c,
-		RegistrateItemModelProvider p) {
+		RegistrateItemModelGenerator p) {
 		ItemModelBuilder builder = p.generated(c::get);
 		for (ClipboardType type : ClipboardType.values()) {
 			int i = type.ordinal();

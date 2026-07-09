@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:torchflower"
-    }
+    "minecraft:torchflower"
   ],
   "processing_time": 50,
   "results": [

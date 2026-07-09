@@ -1,9 +1,7 @@
 {
   "type": "create:cutting",
   "ingredients": [
-    {
-      "item": "create:andesite_alloy"
-    }
+    "create:andesite_alloy"
   ],
   "processing_time": 200,
   "results": [

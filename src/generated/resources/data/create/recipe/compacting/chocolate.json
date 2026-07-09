@@ -2,9 +2,9 @@
   "type": "create:compacting",
   "ingredients": [
     {
-      "type": "neoforge:single",
+      "type": "neoforge:simple",
       "amount": 250,
-      "fluid": "create:chocolate"
+      "ingredient": "create:chocolate"
     }
   ],
   "results": [

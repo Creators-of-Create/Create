@@ -77,11 +77,11 @@ public class DefaultMountedDispenseBehavior implements MountedDispenseBehavior {
 		}
 
 		ItemEntity entity = new ItemEntity(level, x, y, z, stack);
-		double d3 = level.random.nextDouble() * 0.1 + 0.2;
+		double d3 = level.getRandom().nextDouble() * 0.1 + 0.2;
 		entity.setDeltaMovement(
-			level.random.nextGaussian() * 0.0075 * speed + facing.x() * d3 + context.motion.x,
-			level.random.nextGaussian() * 0.0075 * speed + facing.y() * d3 + context.motion.y,
-			level.random.nextGaussian() * 0.0075 * speed + facing.z() * d3 + context.motion.z
+			level.getRandom().nextGaussian() * 0.0075 * speed + facing.x() * d3 + context.motion.x,
+			level.getRandom().nextGaussian() * 0.0075 * speed + facing.y() * d3 + context.motion.y,
+			level.getRandom().nextGaussian() * 0.0075 * speed + facing.z() * d3 + context.motion.z
 		);
 		level.addFreshEntity(entity);
 	}

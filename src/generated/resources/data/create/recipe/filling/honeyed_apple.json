@@ -1,13 +1,11 @@
 {
   "type": "create:filling",
   "ingredients": [
+    "minecraft:apple",
     {
-      "item": "minecraft:apple"
-    },
-    {
-      "type": "neoforge:tag",
+      "type": "neoforge:simple",
       "amount": 250,
-      "tag": "c:honey"
+      "ingredient": "#c:honey"
     }
   ],
   "results": [

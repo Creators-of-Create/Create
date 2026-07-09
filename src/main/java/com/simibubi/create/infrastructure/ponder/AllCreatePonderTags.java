@@ -6,10 +6,10 @@ import com.simibubi.create.Create;
 import com.simibubi.create.compat.Mods;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
-import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
+import net.createmod.ponder.api.client.registration.PonderTagRegistrationHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.Blocks;
 
 public class AllCreatePonderTags {
 
-	public static final ResourceLocation
+	public static final Identifier
 
 	KINETIC_RELAYS = loc("kinetic_relays"),
 	KINETIC_SOURCES = loc("kinetic_sources"),
@@ -40,11 +40,11 @@ public class AllCreatePonderTags {
 	DISPLAY_TARGETS = loc("display_targets"),
 	THRESHOLD_SWITCH_TARGETS = loc("threshold_switch_targets");
 
-	private static ResourceLocation loc(String id) {
+	private static Identifier loc(String id) {
 		return Create.asResource(id);
 	}
 
-	public static void register(PonderTagRegistrationHelper<ResourceLocation> helper) {
+	public static void register(PonderTagRegistrationHelper<Identifier> helper) {
 
 		PonderTagRegistrationHelper<RegistryEntry<?, ?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
@@ -316,7 +316,7 @@ public class AllCreatePonderTags {
 				.add(AllBlocks.SAIL_FRAME);
 
 		itemHelper.addToTag(SAILS)
-				.add(Blocks.WHITE_WOOL);
+				.add(Blocks.WOOL.white());
 
 		HELPER.addToTag(REDSTONE)
 				.add(AllBlocks.SMART_OBSERVER)
@@ -421,7 +421,7 @@ public class AllCreatePonderTags {
 			.add(Blocks.BARREL);
 
 		Mods.COMPUTERCRAFT.executeIfInstalled(() -> () -> {
-			Block computer = BuiltInRegistries.BLOCK.get(Mods.COMPUTERCRAFT.rl("computer_advanced"));
+			Block computer = BuiltInRegistries.BLOCK.getValue(Mods.COMPUTERCRAFT.rl("computer_advanced"));
 			if (computer != Blocks.AIR)
 				itemHelper.addToTag(DISPLAY_SOURCES).add(computer);
 		});

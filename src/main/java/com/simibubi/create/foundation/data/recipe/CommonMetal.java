@@ -16,10 +16,10 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.createmod.catnip.lang.Lang;
-import net.minecraft.Util;
+import net.createmod.catnip.api.lang.Lang;
+import net.minecraft.util.Util;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -127,11 +127,11 @@ public enum CommonMetal {
 
 
 	private static TagKey<Item> itemTag(String path) {
-		return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", path));
+		return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", path));
 	}
 
 	private static TagKey<Block> blockTag(String path) {
-		return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", path));
+		return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("c", path));
 	}
 
 	public record ItemLikeTag(TagKey<Item> items, TagKey<Block> blocks) {

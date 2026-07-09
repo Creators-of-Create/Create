@@ -1,10 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:storage_blocks/zinc"
-    }
+    "#c:storage_blocks/zinc"
   ],
   "result": {
     "count": 9,

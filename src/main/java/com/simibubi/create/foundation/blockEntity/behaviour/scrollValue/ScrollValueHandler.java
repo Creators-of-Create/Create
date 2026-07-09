@@ -1,11 +1,10 @@
 package com.simibubi.create.foundation.blockEntity.behaviour.scrollValue;
 
 
-import net.createmod.catnip.animation.PhysicalFloat;
+import net.createmod.catnip.api.animation.PhysicalFloat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class ScrollValueHandler {
 
@@ -19,7 +18,6 @@ public class ScrollValueHandler {
 		return wrenchCog.getValue(partialTicks) + Mth.lerp(partialTicks, lastPassiveScroll, passiveScroll);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static void tick() {
 		if (!Minecraft.getInstance()
 			.isPaused()) {

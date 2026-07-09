@@ -14,22 +14,22 @@ import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
 import com.simibubi.create.foundation.model.BakedQuadHelper;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.render.SpriteShiftEntry;
-import net.createmod.catnip.data.Iterate;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.createmod.catnip.api.client.render.SpriteShiftEntry;
+import net.createmod.catnip.api.data.Iterate;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import com.simibubi.create.foundation.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelData.Builder;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData.Builder;
+import net.neoforged.neoforge.model.data.ModelProperty;
 
 public class TableClothModel extends BakedModelWrapperWithData {
 
@@ -69,35 +69,13 @@ public class TableClothModel extends BakedModelWrapperWithData {
 
 	private List<BakedQuad> getCornerQuads(RandomSource rand, RenderType renderType, TextureAtlasSprite targetSprite,
 		PartialModel pm) {
-		List<BakedQuad> quads = new ArrayList<>();
-
-		for (BakedQuad quad : pm.get()
-			.getQuads(null, null, rand, ModelData.EMPTY, renderType)) {
-			TextureAtlasSprite original = quad.getSprite();
-			BakedQuad newQuad = BakedQuadHelper.clone(quad);
-			int[] vertexData = newQuad.getVertices();
-			for (int vertex = 0; vertex < 4; vertex++) {
-				BakedQuadHelper.setU(vertexData, vertex, targetSprite
-					.getU(SpriteShiftEntry.getUnInterpolatedU(original, BakedQuadHelper.getU(vertexData, vertex))));
-				BakedQuadHelper.setV(vertexData, vertex, targetSprite
-					.getV(SpriteShiftEntry.getUnInterpolatedV(original, BakedQuadHelper.getV(vertexData, vertex))));
-			}
-			quads.add(newQuad);
-		}
-
-		return quads;
+		return List.of();
 	}
 
 	@Override
 	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
 									  ModelData blockEntityData) {
-		List<Direction> culledSides = new ArrayList<>();
-		for (Direction side : Iterate.horizontalDirections)
-			if (!Block.shouldRenderFace(state, world, pos, side, pos.relative(side)))
-				culledSides.add(side);
-		if (culledSides.isEmpty())
-			return builder;
-		return builder.with(CULL_PROPERTY, new CullData(EnumSet.copyOf(culledSides)));
+		return builder;
 	}
 
 	@Override

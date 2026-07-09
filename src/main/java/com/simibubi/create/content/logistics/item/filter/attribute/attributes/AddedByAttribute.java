@@ -35,7 +35,7 @@ public record AddedByAttribute(String modId) implements ItemAttribute {
 	@Override
 	public boolean appliesTo(ItemStack stack, Level world) {
 		return modId.equals(stack.getItem()
-			.getCreatorModId(stack));
+			.getCreatorModId(world.registryAccess(), stack));
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public record AddedByAttribute(String modId) implements ItemAttribute {
 		@Override
 		public List<ItemAttribute> getAllAttributes(ItemStack stack, Level level) {
 			String id = stack.getItem()
-				.getCreatorModId(stack);
+				.getCreatorModId(level.registryAccess(), stack);
 			return id == null ? Collections.emptyList() : List.of(new AddedByAttribute(id));
 		}
 

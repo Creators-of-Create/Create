@@ -12,7 +12,7 @@ import com.simibubi.create.content.kinetics.transmission.SplitShaftBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -59,7 +59,7 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 			if (nbt.isEmpty())
 				return null;
 			return new SequenceContext(NBTHelper.readEnum(nbt, "Mode", SequencerInstructions.class),
-				nbt.getDouble("Value"));
+				nbt.getDoubleOr("Value", 0));
 		}
 
 	}
@@ -96,7 +96,7 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 
 		if (isIdle())
 			return;
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		if (currentInstructionDuration < 0)
 			return;
@@ -215,12 +215,12 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		currentInstruction = compound.getInt("InstructionIndex");
-		currentInstructionDuration = compound.getInt("InstructionDuration");
-		currentInstructionProgress = compound.getFloat("InstructionProgress");
-		poweredPreviously = compound.getBoolean("PrevPowered");
-		timer = compound.getInt("Timer");
-		instructions = Instruction.deserializeAll(compound.getList("Instructions", Tag.TAG_COMPOUND));
+		currentInstruction = compound.getIntOr("InstructionIndex", 0);
+		currentInstructionDuration = compound.getIntOr("InstructionDuration", 0);
+		currentInstructionProgress = compound.getFloatOr("InstructionProgress", 0);
+		poweredPreviously = compound.getBooleanOr("PrevPowered", false);
+		timer = compound.getIntOr("Timer", 0);
+		instructions = Instruction.deserializeAll(compound.getListOrEmpty("Instructions"));
 		super.read(compound, registries, clientPacket);
 	}
 

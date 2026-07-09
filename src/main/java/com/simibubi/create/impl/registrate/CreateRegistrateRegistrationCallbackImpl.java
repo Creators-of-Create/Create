@@ -11,7 +11,7 @@ import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class CreateRegistrateRegistrationCallbackImpl {
 	// Intentionally not a synchronized map, since all safe accesses have to be synchronized anyway.
@@ -37,7 +37,7 @@ public class CreateRegistrateRegistrationCallbackImpl {
 		}
 	}
 
-	public static <R, T extends R> void register(ResourceKey<? extends Registry<R>> registry, ResourceLocation id, NonNullConsumer<? super T> callback) {
+	public static <R, T extends R> void register(ResourceKey<? extends Registry<R>> registry, Identifier id, NonNullConsumer<? super T> callback) {
 		CallbackImpl<R, T> callbackImpl = new CallbackImpl<>(registry, id, callback);
 
 		Either<List<CallbackImpl<?, ?>>, CreateRegistrate> either;
@@ -53,7 +53,7 @@ public class CreateRegistrateRegistrationCallbackImpl {
 		either.ifRight(callbackImpl::addToRegistrate);
 	}
 
-	private record CallbackImpl<R, T extends R>(ResourceKey<? extends Registry<R>> registry, ResourceLocation id, NonNullConsumer<? super T> callback) {
+	private record CallbackImpl<R, T extends R>(ResourceKey<? extends Registry<R>> registry, Identifier id, NonNullConsumer<? super T> callback) {
 		// Helper method so javac doesn't explode on the generic types.
 		// Otherwise, IntelliJ does type inference better than javac,
 		// and everything becomes illegible with generic erasure casts.

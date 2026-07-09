@@ -19,10 +19,10 @@ import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
@@ -179,12 +179,12 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 	}
 
 	@Override
-	public void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	public void renderForeground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		ItemStack stack = menu.ghostInventory.getStackInSlot(1);
-		PoseStack matrixStack = graphics.pose();
+		PoseStack matrixStack = new PoseStack();
 		matrixStack.pushPose();
 		matrixStack.translate(0, 0, 150);
-		graphics.renderItemDecorations(font, stack, leftPos + 16, topPos + 62,
+		graphics.itemDecorations(font, stack, leftPos + 16, topPos + 62,
 			String.valueOf(selectedAttributes.size() - 1));
 		matrixStack.popPose();
 
@@ -200,13 +200,13 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 	}
 
 	@Override
-	protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+	protected void renderTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
 			if (this.hoveredSlot.index == 37) {
-				graphics.renderComponentTooltip(font, selectedAttributes, mouseX, mouseY);
+				graphics.setComponentTooltipForNextFrame(font, selectedAttributes, mouseX, mouseY);
 				return;
 			}
-			graphics.renderTooltip(font, this.hoveredSlot.getItem(), mouseX, mouseY);
+			graphics.setTooltipForNextFrame(font, this.hoveredSlot.getItem(), mouseX, mouseY);
 		}
 		super.renderTooltip(graphics, mouseX, mouseY);
 	}
@@ -229,7 +229,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 		addInverted.active = false;
 		ItemAttribute itemAttribute = attributesOfItem.get(index);
 		CompoundTag tag = ItemAttribute.saveStatic(itemAttribute, Minecraft.getInstance().level.registryAccess());
-		CatnipServices.NETWORK.sendToServer(new FilterScreenPacket(inverted ? Option.ADD_INVERTED_TAG : Option.ADD_TAG, tag));
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new FilterScreenPacket(inverted ? Option.ADD_INVERTED_TAG : Option.ADD_TAG, tag));
 		menu.appendSelectedAttribute(itemAttribute, inverted);
 		if (menu.selectedAttributes.size() == 1)
 			selectedAttributes.set(0, selectedT.plainCopy()

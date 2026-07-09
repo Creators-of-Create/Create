@@ -7,10 +7,10 @@ import java.util.function.Consumer;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.TooltipArea;
 
-import net.createmod.catnip.gui.UIRenderHelper;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Pair;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.gui.UIRenderHelper;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Pair;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
@@ -30,14 +30,18 @@ public class ModularGuiLine {
 		speechBubble = false;
 	}
 
-	public void renderWidgetBG(int guiLeft, GuiGraphics graphics) {
+	public void renderWidgetBG(int guiLeft, GuiGraphicsExtractor graphics) {
+		renderWidgetBG(guiLeft, 0, graphics);
+	}
+
+	public void renderWidgetBG(int guiLeft, int y, GuiGraphicsExtractor graphics) {
 		boolean first = true;
 
 		if (!customBoxes.isEmpty()) {
 			for (Couple<Integer> couple : customBoxes) {
 				int x = couple.getFirst() + guiLeft;
 				int width = couple.getSecond();
-				box(graphics, x, width, first & speechBubble);
+				box(graphics, x, y, width, first & speechBubble);
 				first = false;
 			}
 			return;
@@ -57,18 +61,18 @@ public class ModularGuiLine {
 				width += 9;
 			}
 
-			box(graphics, x, width, first & speechBubble);
+			box(graphics, x, y, width, first & speechBubble);
 			first = false;
 		}
 	}
 
-	private void box(GuiGraphics graphics, int x, int width, boolean b) {
-		UIRenderHelper.drawStretched(graphics, x, 0, width, 18, 0, AllGuiTextures.DATA_AREA);
+	private void box(GuiGraphicsExtractor graphics, int x, int y, int width, boolean b) {
+		UIRenderHelper.drawStretched(graphics, x, y, width, 18, AllGuiTextures.DATA_AREA);
 		if (b)
-			AllGuiTextures.DATA_AREA_SPEECH.render(graphics, x - 3, 0);
+			AllGuiTextures.DATA_AREA_SPEECH.render(graphics, x - 3, y);
 		else
-			AllGuiTextures.DATA_AREA_START.render(graphics, x, 0);
-		AllGuiTextures.DATA_AREA_END.render(graphics, x + width - 2, 0);
+			AllGuiTextures.DATA_AREA_START.render(graphics, x, y);
+		AllGuiTextures.DATA_AREA_END.render(graphics, x + width - 2, y);
 	}
 
 	public void saveValues(CompoundTag data) {
@@ -89,9 +93,9 @@ public class ModularGuiLine {
 			AbstractWidget w = pair.getFirst();
 			String key = pair.getSecond();
 			if (w instanceof EditBox eb)
-				eb.setValue(data.getString(key));
+				eb.setValue(data.getStringOr(key, ""));
 			if (w instanceof ScrollInput si)
-				si.setState(data.getInt(key));
+				si.setState(data.getIntOr(key, 0));
 
 			if (w instanceof TooltipArea)
 				addRenderableOnly.accept((T) w);

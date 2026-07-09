@@ -17,8 +17,9 @@ import com.simibubi.create.content.kinetics.speedController.SpeedControllerBlock
 import com.simibubi.create.content.kinetics.speedController.SpeedControllerBlockEntity;
 import com.simibubi.create.content.kinetics.transmission.SplitShaftBlockEntity;
 import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.foundation.utility.LegacyDirectionBridge;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -52,7 +53,7 @@ public class RotationPropagator {
 
 		final BlockPos diff = to.getBlockPos()
 			.subtract(from.getBlockPos());
-		final Direction direction = Direction.getNearest(diff.getX(), diff.getY(), diff.getZ());
+		final Direction direction = LegacyDirectionBridge.nearest(diff.getX(), diff.getY(), diff.getZ(), Direction.NORTH);
 		final Level world = from.getLevel();
 
 		boolean alignedAxes = true;
@@ -204,7 +205,7 @@ public class RotationPropagator {
 	 * @param pos
 	 */
 	public static void handleAdded(Level worldIn, BlockPos pos, KineticBlockEntity addedTE) {
-		if (worldIn.isClientSide)
+		if (worldIn.isClientSide())
 			return;
 		if (!worldIn.isLoaded(pos))
 			return;
@@ -307,7 +308,7 @@ public class RotationPropagator {
 	 * @param removedBE
 	 */
 	public static void handleRemoved(Level worldIn, BlockPos pos, KineticBlockEntity removedBE) {
-		if (worldIn.isClientSide)
+		if (worldIn.isClientSide())
 			return;
 		if (removedBE == null)
 			return;

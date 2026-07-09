@@ -7,8 +7,8 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -38,8 +38,8 @@ public class AnalogLeverBlockEntity extends SmartBlockEntity implements IHaveGog
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		state = compound.getInt("State");
-		lastChange = compound.getInt("ChangeTimer");
+		state = compound.getIntOr("State", 0);
+		lastChange = compound.getIntOr("ChangeTimer", 0);
 		clientState.chase(state, 0.2f, Chaser.EXP);
 		super.read(compound, registries, clientPacket);
 	}
@@ -52,7 +52,7 @@ public class AnalogLeverBlockEntity extends SmartBlockEntity implements IHaveGog
 			if (lastChange == 0)
 				updateOutput();
 		}
-		if (level.isClientSide)
+		if (level.isClientSide())
 			clientState.tickChaser();
 	}
 

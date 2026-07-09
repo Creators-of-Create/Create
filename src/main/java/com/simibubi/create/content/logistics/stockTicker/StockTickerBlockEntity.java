@@ -28,11 +28,10 @@ import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -52,7 +51,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -83,9 +81,9 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-			Capabilities.ItemHandler.BLOCK,
+			Capabilities.Item.BLOCK,
 			AllBlockEntityTypes.STOCK_TICKER.get(),
-			(be, context) -> be.receivedPayments
+			(be, context) -> new com.simibubi.create.foundation.item.LegacyItemTransferAdapter(be.receivedPayments)
 		);
 
 		if (Mods.COMPUTERCRAFT.isLoaded()) {
@@ -111,7 +109,7 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 
 	public void refreshClientStockSnapshot() {
 		ticksSinceLastUpdate = 0;
-		CatnipServices.NETWORK.sendToServer(new LogisticalStockRequestPacket(worldPosition));
+		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> StockTickerClient.refreshStockSnapshot(worldPosition));
 	}
 
 	public IItemHandler getReceivedPaymentsHandler() {
@@ -163,12 +161,14 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.write(tag, registries, clientPacket);
 		tag.putString("PreviousAddress", previouslyUsedAddress);
-		tag.put("ReceivedPayments", receivedPayments.serializeNBT(registries));
+		tag.put("ReceivedPayments", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.serializeHandler(receivedPayments, registries));
 		tag.put("Categories", NBTHelper.writeItemList(categories, registries));
 		tag.put("HiddenCategories", NBTHelper.writeCompoundList(hiddenCategoriesByPlayer.entrySet(), e -> {
 			CompoundTag c = new CompoundTag();
-			c.putUUID("Id", e.getKey());
-			c.putIntArray("Indices", e.getValue());
+			c.put("Id", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.createUUID(e.getKey()));
+			c.putIntArray("Indices", e.getValue().stream()
+				.mapToInt(Integer::intValue)
+				.toArray());
 			return c;
 		}));
 
@@ -179,19 +179,20 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
-		previouslyUsedAddress = tag.getString("PreviousAddress");
-		receivedPayments.deserializeNBT(registries, tag.getCompound("ReceivedPayments"));
-		categories = NBTHelper.readItemList(tag.getList("Categories", Tag.TAG_COMPOUND), registries);
+		previouslyUsedAddress = tag.getStringOr("PreviousAddress", "");
+		com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.deserializeHandler(receivedPayments, registries, tag.getCompoundOrEmpty("ReceivedPayments"));
+		categories = NBTHelper.readItemList(tag.getListOrEmpty("Categories"), registries);
 		categories.removeIf(stack -> !stack.isEmpty() && !(stack.getItem() instanceof FilterItem));
 		hiddenCategoriesByPlayer.clear();
 
-		NBTHelper.iterateCompoundList(tag.getList("HiddenCategories", Tag.TAG_COMPOUND),
-			c -> hiddenCategoriesByPlayer.put(c.getUUID("Id"), IntStream.of(c.getIntArray("Indices"))
+		NBTHelper.iterateCompoundList(tag.getListOrEmpty("HiddenCategories"),
+			c -> hiddenCategoriesByPlayer.put(com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.loadUUID(c.get("Id")),
+				IntStream.of(c.getIntArray("Indices").orElse(new int[0]))
 				.boxed()
 				.toList()));
 
 		if (clientPacket)
-			activeLinks = tag.getInt("ActiveLinks");
+			activeLinks = tag.getIntOr("ActiveLinks", 0);
 	}
 
 	public void receiveStockPacket(List<BigItemStack> stacks, boolean endOfTransmission) {
@@ -244,11 +245,12 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		if (receivedPayments.isEmpty())
 			return false;
-		if (!behaviour.mayAdministrate(Minecraft.getInstance().player))
+		if (level == null || !level.isClientSide())
+			return false;
+		if (!StockTickerClient.mayAdministrate(this))
 			return false;
 
 		CreateLang.translate("stock_ticker.contains_payments")
@@ -260,7 +262,7 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 			summary.add(receivedPayments.getStackInSlot(i));
 		for (BigItemStack entry : summary.getStacksByCount())
 			CreateLang.builder()
-				.text(Component.translatable(entry.stack.getDescriptionId())
+				.text(entry.stack.getHoverName()
 					.getString() + " x" + entry.count)
 				.style(ChatFormatting.GREEN)
 				.forGoggles(tooltip);

@@ -10,9 +10,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "tag": "c:storage_blocks/raw_aluminum"
-    }
+    "#c:storage_blocks/raw_aluminum"
   ],
   "processing_time": 400,
   "results": [

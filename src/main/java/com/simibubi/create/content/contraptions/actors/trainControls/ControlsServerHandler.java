@@ -10,8 +10,8 @@ import java.util.UUID;
 
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 
-import net.createmod.catnip.data.IntAttached;
-import net.createmod.catnip.data.WorldAttached;
+import net.createmod.catnip.api.data.IntAttached;
+import net.createmod.catnip.api.data.WorldAttached;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;

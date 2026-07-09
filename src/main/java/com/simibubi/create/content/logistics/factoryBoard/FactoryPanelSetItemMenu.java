@@ -13,7 +13,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
@@ -42,7 +41,6 @@ public class FactoryPanelSetItemMenu extends GhostItemMenu<FactoryPanelBehaviour
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	protected FactoryPanelBehaviour createOnClient(RegistryFriendlyByteBuf extraData) {
 		FactoryPanelPosition pos = FactoryPanelPosition.STREAM_CODEC.decode(extraData);
 		return FactoryPanelBehaviour.at(Minecraft.getInstance().level, pos);
@@ -62,7 +60,7 @@ public class FactoryPanelSetItemMenu extends GhostItemMenu<FactoryPanelBehaviour
 	@Override
 	protected void saveData(FactoryPanelBehaviour contentHolder) {
 		if (!contentHolder.setFilter(ghostInventory.getStackInSlot(0))) {
-			player.displayClientMessage(CreateLang.translateDirect("logistics.filter.invalid_item"), true);
+			player.sendOverlayMessage(CreateLang.translateDirect("logistics.filter.invalid_item"));
 			AllSoundEvents.DENY.playOnServer(player.level(), player.blockPosition(), 1, 1);
 			return;
 		}

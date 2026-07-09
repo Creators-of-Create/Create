@@ -4,8 +4,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.elevator.ElevatorContraption;
+import com.simibubi.create.foundation.utility.LegacyDirectionBridge;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.NbtUtils;
@@ -19,7 +20,7 @@ public class ContactMovementBehaviour implements MovementBehaviour {
 	@Override
 	public Vec3 getActiveAreaOffset(MovementContext context) {
 		return Vec3.atLowerCornerOf(context.state.getValue(RedstoneContactBlock.FACING)
-			.getNormal())
+			.getUnitVec3i())
 			.scale(.65f);
 	}
 
@@ -28,7 +29,7 @@ public class ContactMovementBehaviour implements MovementBehaviour {
 		BlockState block = context.state;
 		Level world = context.world;
 
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return;
 		if (context.firstMovement)
 			return;
@@ -39,9 +40,9 @@ public class ContactMovementBehaviour implements MovementBehaviour {
 			return;
 
 		Vec3 contact = Vec3.atLowerCornerOf(block.getValue(RedstoneContactBlock.FACING)
-			.getNormal());
+			.getUnitVec3i());
 		contact = context.rotation.apply(contact);
-		Direction direction = Direction.getNearest(contact.x, contact.y, contact.z);
+		Direction direction = LegacyDirectionBridge.nearest(contact.x, contact.y, contact.z, Direction.NORTH);
 
 		if (visitedState.getValue(RedstoneContactBlock.FACING) != direction.getOpposite())
 			return;
@@ -51,7 +52,7 @@ public class ContactMovementBehaviour implements MovementBehaviour {
 		if (AllBlocks.ELEVATOR_CONTACT.has(visitedState) && context.contraption instanceof ElevatorContraption ec)
 			ec.broadcastFloorData(world, pos);
 
-		context.data.put("lastContact", NbtUtils.writeBlockPos(pos));
+		context.data.put("lastContact", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(pos));
 		return;
 	}
 

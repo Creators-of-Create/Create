@@ -36,13 +36,13 @@ import com.simibubi.create.content.redstone.displayLink.source.TrainStatusDispla
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 
 public class AllDisplaySources {
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
@@ -51,10 +51,10 @@ public class AllDisplaySources {
 		.associate(Blocks.RESPAWN_ANCHOR)
 		.register();
 	public static final RegistryEntry<DisplaySource, ScoreboardDisplaySource> SCOREBOARD = REGISTRATE.displaySource("scoreboard", ScoreboardDisplaySource::new)
-		.associate(BlockEntityType.COMMAND_BLOCK)
+		.associate(BlockEntityTypes.COMMAND_BLOCK)
 		.register();
 	public static final RegistryEntry<DisplaySource, EnchantPowerDisplaySource> ENCHANT_POWER = REGISTRATE.displaySource("enchant_power", EnchantPowerDisplaySource::new)
-		.associate(BlockEntityType.ENCHANTING_TABLE)
+		.associate(BlockEntityTypes.ENCHANTING_TABLE)
 		.register();
 	public static final RegistryEntry<DisplaySource, RedstonePowerDisplaySource> REDSTONE_POWER = REGISTRATE.displaySource("redstone_power", RedstonePowerDisplaySource::new)
 		.associate(Blocks.TARGET)
@@ -94,13 +94,10 @@ public class AllDisplaySources {
 
 			List<String> types = List.of("wired_modem_full", "computer_normal", "computer_advanced", "computer_command");
 			for (String name : types) {
-				ResourceLocation id = Mods.COMPUTERCRAFT.rl(name);
-				if (BuiltInRegistries.BLOCK_ENTITY_TYPE.containsKey(id)) {
-					BlockEntityType<?> type = BuiltInRegistries.BLOCK_ENTITY_TYPE.get(id);
-					DisplaySource.BY_BLOCK_ENTITY.add(type, source);
-				} else {
-					Create.LOGGER.warn("Could not find block entity type {}. Outdated compat?", id);
-				}
+				Identifier id = Mods.COMPUTERCRAFT.rl(name);
+				BuiltInRegistries.BLOCK_ENTITY_TYPE.get(id).ifPresentOrElse(type -> {
+					DisplaySource.BY_BLOCK_ENTITY.add(type.value(), source);
+				}, () -> Create.LOGGER.warn("Could not find block entity type {}. Outdated compat?", id));
 			}
 		})
 		.register();

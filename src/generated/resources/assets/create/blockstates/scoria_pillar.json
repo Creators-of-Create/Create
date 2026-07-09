@@ -1,14 +1,194 @@
 {
   "variants": {
-    "axis=x": {
+    "axis=x,east=false,north=false,south=false,west=false": {
       "model": "create:block/scoria_pillar_horizontal",
       "x": 90,
       "y": 90
     },
-    "axis=y": {
+    "axis=x,east=false,north=false,south=false,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=false,north=false,south=true,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=false,north=false,south=true,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=false,north=true,south=false,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=false,north=true,south=false,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=false,north=true,south=true,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=false,north=true,south=true,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=true,north=false,south=false,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=true,north=false,south=false,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=true,north=false,south=true,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=true,north=false,south=true,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=true,north=true,south=false,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=true,north=true,south=false,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=true,north=true,south=true,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,east=true,north=true,south=true,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,east=false,north=false,south=false,west=false": {
       "model": "create:block/scoria_pillar"
     },
-    "axis=z": {
+    "axis=y,east=false,north=false,south=false,west=true": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=false,north=false,south=true,west=false": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=false,north=false,south=true,west=true": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=false,north=true,south=false,west=false": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=false,north=true,south=false,west=true": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=false,north=true,south=true,west=false": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=false,north=true,south=true,west=true": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=true,north=false,south=false,west=false": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=true,north=false,south=false,west=true": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=true,north=false,south=true,west=false": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=true,north=false,south=true,west=true": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=true,north=true,south=false,west=false": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=true,north=true,south=false,west=true": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=true,north=true,south=true,west=false": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=y,east=true,north=true,south=true,west=true": {
+      "model": "create:block/scoria_pillar"
+    },
+    "axis=z,east=false,north=false,south=false,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=false,north=false,south=false,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=false,north=false,south=true,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=false,north=false,south=true,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=false,north=true,south=false,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=false,north=true,south=false,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=false,north=true,south=true,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=false,north=true,south=true,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=true,north=false,south=false,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=true,north=false,south=false,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=true,north=false,south=true,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=true,north=false,south=true,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=true,north=true,south=false,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=true,north=true,south=false,west=true": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=true,north=true,south=true,west=false": {
+      "model": "create:block/scoria_pillar_horizontal",
+      "x": 90
+    },
+    "axis=z,east=true,north=true,south=true,west=true": {
       "model": "create:block/scoria_pillar_horizontal",
       "x": 90
     }

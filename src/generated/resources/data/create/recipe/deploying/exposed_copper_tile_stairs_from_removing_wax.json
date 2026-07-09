@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "create:waxed_exposed_copper_tile_stairs"
-    },
-    {
-      "tag": "minecraft:axes"
-    }
+    "create:waxed_exposed_copper_tile_stairs",
+    "#minecraft:axes"
   ],
   "keep_held_item": true,
   "results": [

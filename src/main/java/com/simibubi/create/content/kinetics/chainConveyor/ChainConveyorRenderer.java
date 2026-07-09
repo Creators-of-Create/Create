@@ -16,21 +16,21 @@ import com.simibubi.create.foundation.render.RenderTypes;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.util.LightCoordsUtil;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -39,7 +39,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConveyorBlockEntity> {
 
-	public static final ResourceLocation CHAIN_LOCATION = ResourceLocation.withDefaultNamespace("textures/block/chain.png");
+	public static final Identifier CHAIN_LOCATION = Identifier.withDefaultNamespace("textures/block/chain.png");
 	public static final int MIP_DISTANCE = 48;
 
 	public ChainConveyorRenderer(Context context) {
@@ -60,7 +60,7 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 		CachedBuffers.partial(AllPartialModels.CHAIN_CONVEYOR_WHEEL, be.getBlockState())
 			.light(light)
 			.overlay(overlay)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+			.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped()));
 
 		for (ChainConveyorPackage box : be.loopingPackages)
 			renderBox(be, ms, buffer, overlay, pos, box, partialTicks);
@@ -89,11 +89,11 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 		BlockPos containingPos = BlockPos.containing(position);
 		Level level = be.getLevel();
 		BlockState blockState = be.getBlockState();
-		int light = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, containingPos),
+		int light = LightCoordsUtil.pack(level.getBrightness(LightLayer.BLOCK, containingPos),
 			level.getBrightness(LightLayer.SKY, containingPos));
 
 		if (physicsData.modelKey == null) {
-			ResourceLocation key = BuiltInRegistries.ITEM.getKey(box.item.getItem());
+			Identifier key = BuiltInRegistries.ITEM.getKey(box.item.getItem());
 			if (key == BuiltInRegistries.ITEM.getDefaultKey())
 				return;
 			physicsData.modelKey = key;
@@ -127,13 +127,13 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 
 			buf.light(light)
 				.overlay(overlay)
-				.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+				.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped()));
 		}
 	}
 
 	private void renderChains(ChainConveyorBlockEntity be, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
-		float time = AnimationTickHolder.getRenderTime(be.getLevel()) / (360f / Math.abs(be.getSpeed()));
+		float time = AnimationTickHolder.getRenderTime() / (360f / Math.abs(be.getSpeed()));
 		time %= 1;
 		if (time < 0)
 			time += 1;
@@ -165,7 +165,7 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 				guard.uncenter();
 				guard.light(light)
 					.overlay(overlay)
-					.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+					.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped()));
 			}
 
 			ms.pushPose();
@@ -178,13 +178,13 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 			chain.translate(0, 8 / 16f, 0);
 			chain.uncenter();
 
-			int light1 = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, tilePos),
+			int light1 = LightCoordsUtil.pack(level.getBrightness(LightLayer.BLOCK, tilePos),
 				level.getBrightness(LightLayer.SKY, tilePos));
-			int light2 = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, tilePos.offset(blockPos)),
+			int light2 = LightCoordsUtil.pack(level.getBrightness(LightLayer.BLOCK, tilePos.offset(blockPos)),
 				level.getBrightness(LightLayer.SKY, tilePos.offset(blockPos)));
 
 			boolean far = Minecraft.getInstance().level == be.getLevel() && !Minecraft.getInstance()
-				.getBlockEntityRenderDispatcher().camera.getPosition()
+				.gameRenderer.mainCamera().position()
 					.closerThan(Vec3.atCenterOf(tilePos)
 						.add(blockPos.getX() / 2f, blockPos.getY() / 2f, blockPos.getZ() / 2f), MIP_DISTANCE);
 
@@ -248,12 +248,10 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 			.setNormal(pNormal, 0.0F, 1.0F, 0.0F);
 	}
 
-	@Override
 	public int getViewDistance() {
 		return 256;
 	}
 
-	@Override
 	public boolean shouldRenderOffScreen(ChainConveyorBlockEntity be) {
 		return true;
 	}
@@ -265,7 +263,7 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 
 	@Override
 	protected RenderType getRenderType(ChainConveyorBlockEntity be, BlockState state) {
-		return RenderType.cutoutMipped();
+		return com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped();
 	}
 
 }

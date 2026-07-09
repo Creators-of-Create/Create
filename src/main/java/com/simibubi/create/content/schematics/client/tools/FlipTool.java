@@ -3,9 +3,9 @@ package com.simibubi.create.content.schematics.client.tools;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllSpecialTextures;
 
-import net.createmod.catnip.render.SuperRenderTypeBuffer;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.outliner.AABBOutline;
+import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.outliner.AABBOutline;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -60,7 +60,7 @@ public class FlipTool extends PlacementToolBase {
 		AABB bounds = schematicHandler.getBounds();
 
 		Vec3 directionVec = Vec3.atLowerCornerOf(Direction.get(AxisDirection.POSITIVE, facing.getAxis())
-			.getNormal());
+			.getUnitVec3i());
 		Vec3 boundsSize = new Vec3(bounds.getXsize(), bounds.getYsize(), bounds.getZsize());
 		Vec3 vec = boundsSize.multiply(directionVec);
 		bounds = bounds.contract(vec.x, vec.y, vec.z)

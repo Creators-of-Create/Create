@@ -3,16 +3,15 @@ package com.simibubi.create.content.equipment.symmetryWand;
 import java.util.List;
 
 import com.simibubi.create.AllPackets;
-import net.createmod.catnip.net.base.ClientboundPacketPayload;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public record SymmetryEffectPacket(BlockPos mirror, List<BlockPos> positions) implements ClientboundPacketPayload {
 	public static final StreamCodec<ByteBuf, SymmetryEffectPacket> STREAM_CODEC = StreamCodec.composite(
@@ -27,11 +26,10 @@ public record SymmetryEffectPacket(BlockPos mirror, List<BlockPos> positions) im
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void handle(LocalPlayer player) {
+	public void handle(Player player) {
 		if (player.position().distanceTo(Vec3.atLowerCornerOf(mirror)) > 100)
 			return;
 		for (BlockPos to : positions)
-			SymmetryHandler.drawEffect(mirror, to);
+			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> SymmetryWandClient.drawEffect(mirror, to));
 	}
 }

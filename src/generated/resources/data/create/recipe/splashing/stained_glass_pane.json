@@ -1,9 +1,7 @@
 {
   "type": "create:splashing",
   "ingredients": [
-    {
-      "tag": "c:glass_panes"
-    }
+    "#c:glass_panes"
   ],
   "results": [
     {

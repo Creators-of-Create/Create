@@ -13,7 +13,7 @@ import com.simibubi.create.content.equipment.clipboard.ClipboardEntry;
 import com.simibubi.create.content.trains.schedule.DestinationSuggestions;
 import com.simibubi.create.foundation.utility.TickBasedCache;
 
-import net.createmod.catnip.data.IntAttached;
+import net.createmod.catnip.api.data.IntAttached;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;

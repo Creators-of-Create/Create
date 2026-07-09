@@ -5,44 +5,6 @@
   "on_entity_hit": {
     "type": "create:food_effects",
     "food_property": {
-      "effects": [
-        {
-          "effect": {
-            "amplifier": 1,
-            "duration": 1200,
-            "id": "minecraft:poison",
-            "neoforge:cures": [
-              "protected_by_totem",
-              "honey",
-              "milk"
-            ],
-            "show_icon": true
-          }
-        },
-        {
-          "effect": {
-            "amplifier": 2,
-            "duration": 300,
-            "id": "minecraft:hunger",
-            "neoforge:cures": [
-              "protected_by_totem",
-              "milk"
-            ],
-            "show_icon": true
-          }
-        },
-        {
-          "effect": {
-            "duration": 300,
-            "id": "minecraft:nausea",
-            "neoforge:cures": [
-              "protected_by_totem",
-              "milk"
-            ],
-            "show_icon": true
-          }
-        }
-      ],
       "nutrition": 1,
       "saturation": 0.2
     },

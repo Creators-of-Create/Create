@@ -1,9 +1,7 @@
 {
   "type": "create:haunting",
   "ingredients": [
-    {
-      "item": "minecraft:potato"
-    }
+    "minecraft:potato"
   ],
   "results": [
     {

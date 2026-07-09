@@ -1,10 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "C": {
-      "tag": "c:nuggets/copper"
-    }
+    "C": "#c:nuggets/copper"
   },
   "pattern": [
     "CCC",
@@ -12,7 +9,6 @@
     "CCC"
   ],
   "result": {
-    "count": 1,
     "id": "minecraft:copper_ingot"
   }
 }

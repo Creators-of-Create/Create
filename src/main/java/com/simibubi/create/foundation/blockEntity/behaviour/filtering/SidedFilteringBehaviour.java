@@ -12,8 +12,8 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform.Sided;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -77,8 +77,8 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 
 	@Override
 	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
-		NBTHelper.iterateCompoundList(nbt.getList("Filters", Tag.TAG_COMPOUND), compound -> {
-			Direction face = Direction.from3DDataValue(compound.getInt("Side"));
+		NBTHelper.iterateCompoundList(nbt.getListOrEmpty("Filters"), compound -> {
+			Direction face = Direction.from3DDataValue(compound.getIntOr("Side", 0));
 			if (sidedFilters.containsKey(face))
 				sidedFilters.get(face)
 					.read(compound, registries, clientPacket);

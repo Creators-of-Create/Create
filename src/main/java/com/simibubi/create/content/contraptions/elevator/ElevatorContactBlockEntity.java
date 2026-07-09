@@ -8,8 +8,8 @@ import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -70,19 +70,19 @@ public class ElevatorContactBlockEntity extends SmartBlockEntity {
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
 
-		shortName = tag.getString("ShortName");
-		longName = tag.getString("LongName");
+		shortName = tag.getStringOr("ShortName", "");
+		longName = tag.getStringOr("LongName", "");
 
 		if (tag.contains("LastReportedCurrentFloor"))
-			lastReportedCurrentFloor = tag.getString("LastReportedCurrentFloor");
+			lastReportedCurrentFloor = tag.getStringOr("LastReportedCurrentFloor", "");
 
 		if (clientPacket)
 			return;
-		activateBlock = tag.getBoolean("Activate");
+		activateBlock = tag.getBooleanOr("Activate", false);
 		if (!tag.contains("ColumnTarget"))
 			return;
 
-		int target = tag.getInt("ColumnTarget");
+		int target = tag.getIntOr("ColumnTarget", 0);
 		boolean active = tag.contains("ColumnActive");
 
 		if (columnCoords == null) {

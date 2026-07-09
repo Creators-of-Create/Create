@@ -8,17 +8,18 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -74,15 +75,15 @@ public class ChainDriveBlock extends RotatedPillarKineticBlock
 				continue;
 			BlockPos pos = context.getClickedPos();
 			BlockPos offset = pos.relative(facing);
-			state = updateShape(state, facing, context.getLevel()
-				.getBlockState(offset), context.getLevel(), pos, offset);
+			state = updateShape(state, context.getLevel(), context.getLevel(), pos, facing, offset,
+				context.getLevel().getBlockState(offset), context.getLevel().getRandom());
 		}
 		return state;
 	}
 
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction face, BlockState neighbour, LevelAccessor worldIn,
-		BlockPos currentPos, BlockPos facingPos) {
+	public BlockState updateShape(BlockState stateIn, LevelReader level, ScheduledTickAccess ticks, BlockPos currentPos,
+		Direction face, BlockPos facingPos, BlockState neighbour, RandomSource random) {
 		Part part = stateIn.getValue(PART);
 		Axis axis = stateIn.getValue(AXIS);
 		boolean connectionAlongFirst = stateIn.getValue(CONNECTED_ALONG_FIRST_COORDINATE);
@@ -153,8 +154,8 @@ public class ChainDriveBlock extends RotatedPillarKineticBlock
 				continue;
 			BlockPos pos = context.getClickedPos();
 			BlockPos offset = pos.relative(facing);
-			newState = updateShape(newState, facing, context.getLevel()
-				.getBlockState(offset), context.getLevel(), pos, offset);
+			newState = updateShape(newState, context.getLevel(), context.getLevel(), pos, facing, offset,
+				context.getLevel().getBlockState(offset), context.getLevel().getRandom());
 		}
 //		newState.updateNeighbors(context.getWorld(), context.getPos(), 1 | 2);
 		return newState;

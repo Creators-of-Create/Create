@@ -3,9 +3,7 @@
   "category": "building",
   "group": "polished_cut_asurine_slab",
   "key": {
-    "X": {
-      "item": "create:polished_cut_asurine"
-    }
+    "X": "create:polished_cut_asurine"
   },
   "pattern": [
     "XXX"

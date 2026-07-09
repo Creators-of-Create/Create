@@ -1,17 +1,22 @@
 package com.simibubi.create.content.decoration.steamWhistle;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
+import com.tterrag.registrate.providers.generators.ModelFile;
 
 public class WhistleGenerator extends SpecialBlockStateGen {
+
+	private final Map<Identifier, ModelFile> poweredModels = new HashMap<>();
 
 	@Override
 	protected int getXRotation(BlockState state) {
@@ -24,7 +29,7 @@ public class WhistleGenerator extends SpecialBlockStateGen {
 	}
 
 	@Override
-	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
+	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockModelGenerator prov,
 		BlockState state) {
 		String wall = state.getValue(WhistleBlock.WALL) ? "wall" : "floor";
 		String size = state.getValue(WhistleBlock.SIZE)
@@ -33,10 +38,10 @@ public class WhistleGenerator extends SpecialBlockStateGen {
 		ModelFile model = AssetLookup.partialBaseModel(ctx, prov, size, wall);
 		if (!powered)
 			return model;
-		ResourceLocation parentLocation = model.getLocation();
-		return prov.models()
-			.withExistingParent(parentLocation.getPath() + "_powered", parentLocation)
-			.texture("2", Create.asResource("block/copper_redstone_plate_powered"));
+		Identifier parentLocation = model.getLocation();
+		return poweredModels.computeIfAbsent(parentLocation, location -> prov.models()
+			.withExistingParent(location.getPath() + "_powered", location)
+			.texture("2", Create.asResource("block/copper_redstone_plate_powered")));
 	}
 
 }

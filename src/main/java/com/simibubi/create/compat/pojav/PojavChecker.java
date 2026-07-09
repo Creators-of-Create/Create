@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;
 
@@ -65,7 +65,7 @@ public class PojavChecker {
 
 	public static void onScreenInit(ScreenEvent.Init.Post event) {
 		if (!screenShown && event.getScreen() instanceof TitleScreen titleScreen) {
-			Minecraft.getInstance().setScreen(new PojavWarningScreen(titleScreen));
+			Minecraft.getInstance().setScreenAndShow(new PojavWarningScreen(titleScreen));
 			screenShown = true;
 		}
 	}

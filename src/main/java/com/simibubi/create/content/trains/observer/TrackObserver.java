@@ -12,6 +12,7 @@ import com.simibubi.create.content.trains.signal.SignalPropagator;
 import com.simibubi.create.content.trains.signal.SingleBlockEntityEdgePoint;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -85,10 +86,10 @@ public class TrackObserver extends SingleBlockEntityEdgePoint {
 	@Override
 	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean migration, DimensionPalette dimensions) {
 		super.read(nbt, registries, migration, dimensions);
-		activated = nbt.getInt("Activated");
-		filter = FilterItemStack.of(registries, nbt.getCompound("Filter"));
+		activated = nbt.getIntOr("Activated", 0);
+		filter = FilterItemStack.of(registries, nbt.getCompoundOrEmpty("Filter"));
 		if (nbt.contains("TrainId"))
-			currentTrain = nbt.getUUID("TrainId");
+			currentTrain = LegacyNbtUtilsBridge.getUUID(nbt, "TrainId");
 	}
 
 	@Override
@@ -102,7 +103,7 @@ public class TrackObserver extends SingleBlockEntityEdgePoint {
 		nbt.putInt("Activated", activated);
 		nbt.put("Filter", filter.serializeNBT(registries));
 		if (currentTrain != null)
-			nbt.putUUID("TrainId", currentTrain);
+			LegacyNbtUtilsBridge.putUUID(nbt, "TrainId", currentTrain);
 	}
 
 	@Override

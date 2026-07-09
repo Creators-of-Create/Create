@@ -1,6 +1,6 @@
 package com.simibubi.create.content.equipment.symmetryWand;
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 
 import org.joml.Vector3f;
 
@@ -19,9 +19,9 @@ import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.gui.AbstractSimiScreen;
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.gui.AbstractSimiScreen;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -121,12 +121,12 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
 		background.render(graphics, x, y);
-		graphics.drawString(font, wand.getHoverName(),
+		graphics.text(font, wand.getHoverName(),
 			x + (background.getWidth() - font.width(wand.getHoverName())) / 2, y + 4, 0x592424, false);
 
 		renderBlock(graphics, x, y);
@@ -137,25 +137,14 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 			.render(graphics);
 	}
 
-	protected void renderBlock(GuiGraphics graphics, int x, int y) {
-		PoseStack ms = graphics.pose();
-
-		ms.pushPose();
-		ms.translate(x + 26, y + 39, 20);
-		ms.scale(16, 16, 16);
-		ms.mulPose(Axis.of(new Vector3f(.3f, 1f, 0f)).rotationDegrees(-22.5f));
-		currentElement.applyModelTransform(ms);
-		// RenderSystem.multMatrix(ms.peek().getModel());
-		GuiGameElement.of(currentElement.getModel())
-			.render(graphics);
-
-		ms.popPose();
+	protected void renderBlock(GuiGraphicsExtractor graphics, int x, int y) {
+		// TODO 26.2: Rebuild symmetry mirror GUI preview on the GUI extractor PIP model path.
 	}
 
 	@Override
 	public void removed() {
 		SymmetryWandItem.configureSettings(wand, currentElement);
-		CatnipServices.NETWORK.sendToServer(new ConfigureSymmetryWandPacket(hand, currentElement));
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ConfigureSymmetryWandPacket(hand, currentElement));
 	}
 
 }

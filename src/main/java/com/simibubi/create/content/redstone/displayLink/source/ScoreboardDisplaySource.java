@@ -7,7 +7,7 @@ import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.IntAttached;
+import net.createmod.catnip.api.data.IntAttached;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -25,7 +25,7 @@ public class ScoreboardDisplaySource extends ValueListDisplaySource {
 			return Stream.empty();
 
 		String name = context.sourceConfig()
-			.getString("Objective");
+			.getStringOr("Objective", "");
 
 		return showScoreboard(sLevel, name, maxRows);
 	}

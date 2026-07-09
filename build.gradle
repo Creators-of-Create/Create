@@ -15,7 +15,13 @@ String gitHash = calculateGitHash() + (hasUnstaged() ? "-modified" : "")
 group = "com.simibubi.create"
 version = mod_version + (dev && buildNumber != null ? "-${buildNumber}" : "")
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+tasks.withType(net.neoforged.nfrtgradle.NeoFormRuntimeTask).configureEach {
+    javaExecutable.set(javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(25)
+    }.map { it.executablePath.asFile.absolutePath })
+}
 
 println("Java: ${System.getProperty("java.version")}, JVM: ${System.getProperty("java.vm.version")} (${System.getProperty("java.vendor")}), Arch: ${System.getProperty("os.arch")}")
 
@@ -75,7 +81,7 @@ neoForge {
         }
 
         data {
-            data()
+            clientData()
 
             programArguments.addAll(
                 "--mod", mod_id as String,
@@ -92,6 +98,9 @@ neoForge {
 }
 
 repositories {
+    if (project.hasProperty("create.useMavenLocal")) {
+        mavenLocal()
+    }
     maven { url = "https://maven.createmod.net" } // Ponder, Flywheel
     maven { url = "https://maven.ithundxr.dev/snapshots" } // Registrate
     maven { url = "https://maven.blamejared.com" } // JEI, Vazkii's Mods
@@ -146,8 +155,10 @@ dependencies {
 
     localImplementation("mezz.jei:jei-$minecraft_version-neoforge:$jei_version")
 
-    compileOnly("top.theillusivec4.curios:curios-neoforge:$curios_version+$minecraft_version:api")
-    localRuntimeOnly("top.theillusivec4.curios:curios-neoforge:$curios_version+$minecraft_version")
+    if (curios_enable.toBoolean()) {
+        compileOnly("top.theillusivec4.curios:curios-neoforge:$curios_version:api")
+        localRuntimeOnly("top.theillusivec4.curios:curios-neoforge:$curios_version")
+    }
 
     compileOnly("maven.modrinth:sodium:mc$minecraft_version-$sodium_version-neoforge")
 
@@ -157,29 +168,52 @@ dependencies {
         localRuntimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cc_tweaked_version")
     }
 
-    compileOnly("maven.modrinth:farmers-delight:${farmers_delight_version}")
     if (farmers_delight_enable.toBoolean()) {
+        compileOnly("maven.modrinth:farmers-delight:${farmers_delight_version}")
         localImplementation("maven.modrinth:farmers-delight:${farmers_delight_version}")
     }
 
-    localRuntimeOnly("dev.architectury:architectury-neoforge:13d.0.8")
-    localImplementation("dev.ftb.mods:ftb-chunks-neoforge:2101.1.1")
-    localImplementation("dev.ftb.mods:ftb-teams-neoforge:2101.1.0")
-    localImplementation("dev.ftb.mods:ftb-library-neoforge:2101.1.3")
-
-    localImplementation("maven.modrinth:journeymap:1.21.1-6.0.0-beta.54+neoforge")
-    localImplementation("info.journeymap:journeymap-api-neoforge:2.0.0-1.21.1-20260205.200232-15") {
-        exclude(group: "curse.maven") // Pulls in a old version of journey map which is for forge
+    if (ftb_enable.toBoolean()) {
+        localRuntimeOnly("dev.architectury:architectury-neoforge:13d.0.8")
+        localImplementation("dev.ftb.mods:ftb-chunks-neoforge:2101.1.1")
+        localImplementation("dev.ftb.mods:ftb-teams-neoforge:2101.1.0")
+        localImplementation("dev.ftb.mods:ftb-library-neoforge:2101.1.3")
     }
 
-    compileOnly("xaero.lib:xaerolib-neoforge-1.21:1.0.42")
-    compileOnly("curse.maven:xaeros-world-map-317780:7401095")
+    if (journeymap_enable.toBoolean()) {
+        localImplementation("maven.modrinth:journeymap:1.21.1-6.0.0-beta.54+neoforge")
+        localImplementation("info.journeymap:journeymap-api-neoforge:2.0.0-1.21.1-20260205.200232-15") {
+            exclude(group: "curse.maven") // Pulls in a old version of journey map which is for forge
+        }
+    }
+
+    if (xaero_enable.toBoolean()) {
+        compileOnly("xaero.lib:xaerolib-neoforge-1.21:1.0.42")
+        compileOnly("curse.maven:xaeros-world-map-317780:7401095")
+    }
 }
 
 sourceSets.main {
     java {
+        if (!curios_enable.toBoolean()) {
+            exclude("com/simibubi/create/compat/curios/**")
+        }
         if (!cc_tweaked_enable.toBoolean()) {
             exclude("com/simibubi/create/compat/computercraft/implementation/**")
+        }
+        if (!farmers_delight_enable.toBoolean()) {
+            exclude("com/simibubi/create/compat/farmersdelight/**")
+        }
+        if (!ftb_enable.toBoolean()) {
+            exclude("com/simibubi/create/compat/ftb/**")
+            exclude("com/simibubi/create/compat/trainmap/FTBChunksTrainMap.java")
+        }
+        if (!journeymap_enable.toBoolean()) {
+            exclude("com/simibubi/create/compat/trainmap/JourneyTrainMap.java")
+        }
+        if (!xaero_enable.toBoolean()) {
+            exclude("com/simibubi/create/compat/trainmap/XaeroTrainMap.java")
+            exclude("com/simibubi/create/foundation/mixin/compat/xaeros/**")
         }
     }
 

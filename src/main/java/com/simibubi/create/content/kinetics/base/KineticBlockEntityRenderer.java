@@ -1,24 +1,25 @@
 package com.simibubi.create.content.kinetics.base;
 
-import org.apache.commons.lang3.ArrayUtils;
+import java.util.Set;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.KineticDebugger;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
+import com.simibubi.create.foundation.render.LegacyRenderTypes;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.render.SuperByteBufferCache;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.SuperByteBufferCache;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -27,19 +28,18 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-import net.neoforged.neoforge.client.ChunkRenderTypeSet;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 
 public class KineticBlockEntityRenderer<T extends KineticBlockEntity> extends SafeBlockEntityRenderer<T> {
 
 	public static final SuperByteBufferCache.Compartment<BlockState> KINETIC_BLOCK = new SuperByteBufferCache.Compartment<>();
 	public static boolean rainbowMode = false;
 
-	protected static final RenderType[] REVERSED_CHUNK_BUFFER_LAYERS = RenderType.chunkBufferLayers().toArray(RenderType[]::new);
-
-	static {
-		ArrayUtils.reverse(REVERSED_CHUNK_BUFFER_LAYERS);
-	}
+	protected static final RenderType[] REVERSED_CHUNK_BUFFER_LAYERS = new RenderType[] {
+		LegacyRenderTypes.translucent(),
+		LegacyRenderTypes.cutoutMipped(),
+		LegacyRenderTypes.solid()
+	};
 
 	public KineticBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
 	}
@@ -60,13 +60,12 @@ public class KineticBlockEntityRenderer<T extends KineticBlockEntity> extends Sa
 
 	protected RenderType getRenderType(T be, BlockState state) {
 		// TODO: this is not very clean
-		BakedModel model = Minecraft.getInstance()
-			.getBlockRenderer().getBlockModel(state);
-		ChunkRenderTypeSet typeSet = model.getRenderTypes(state, RandomSource.create(42L), ModelData.EMPTY);
+		BakedModel model = com.simibubi.create.foundation.render.LegacyBlockRendererBridge.getBlockRenderer().getBlockModel(state);
+		Set<RenderType> typeSet = model.getRenderTypes(state, RandomSource.create(42L), ModelData.EMPTY);
 		for (RenderType type : REVERSED_CHUNK_BUFFER_LAYERS)
 			if (typeSet.contains(type))
 				return type;
-		return RenderType.cutoutMipped();
+		return LegacyRenderTypes.cutoutMipped();
 	}
 
 	protected SuperByteBuffer getRotatedModel(T be, BlockState state) {
@@ -85,7 +84,7 @@ public class KineticBlockEntityRenderer<T extends KineticBlockEntity> extends Sa
 	}
 
 	public static float getAngleForBe(KineticBlockEntity be, final BlockPos pos, Axis axis) {
-		float time = AnimationTickHolder.getRenderTime(be.getLevel());
+		float time = AnimationTickHolder.getRenderTime();
 		float offset = getRotationOffsetForPosition(be, pos, axis);
 		float angle = ((time * be.getSpeed() * 3f / 10 + offset) % 360) / 180 * (float) Math.PI;
 		return angle;

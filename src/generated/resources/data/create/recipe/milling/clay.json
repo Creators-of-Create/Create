@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:clay"
-    }
+    "minecraft:clay"
   ],
   "processing_time": 50,
   "results": [

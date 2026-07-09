@@ -90,7 +90,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -98,6 +98,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -113,7 +114,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 @ParametersAreNonnullByDefault
 public class CreateJEI implements IModPlugin {
 
-	private static final ResourceLocation ID = Create.asResource("jei_plugin");
+	private static final Identifier ID = Create.asResource("jei_plugin");
 
 	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
 	private IIngredientManager ingredientManager;
@@ -190,7 +191,7 @@ public class CreateJEI implements IModPlugin {
 			autoShapeless = builder(BasinRecipe.class)
 				.enableWhen(AllConfigs.server().recipes.allowShapelessInMixer)
 				.addAllRecipesIf(r -> r.value() instanceof CraftingRecipe && !(r.value() instanceof ShapedRecipe)
-						&& r.value().getIngredients()
+						&& CreateRecipeCategory.getIngredients(r.value())
 						.size() > 1
 						&& !MechanicalPressBlockEntity.canCompress(r.value()) && !AllRecipeTypes.shouldIgnoreInAutomation(r),
 					BasinRecipe::convertShapeless)
@@ -290,7 +291,7 @@ public class CreateJEI implements IModPlugin {
 			autoShaped = builder(CraftingRecipe.class)
 				.enableWhen(AllConfigs.server().recipes.allowRegularCraftingInCrafter)
 				.addAllRecipesIf(r -> r.value() instanceof CraftingRecipe && !(r.value() instanceof ShapedRecipe)
-					&& r.value().getIngredients()
+					&& CreateRecipeCategory.getIngredients(r.value())
 					.size() == 1
 					&& !AllRecipeTypes.shouldIgnoreInAutomation(r))
 				.addTypedRecipesIf(() -> RecipeType.CRAFTING,
@@ -327,7 +328,7 @@ public class CreateJEI implements IModPlugin {
 
 	@Override
 	@NotNull
-	public ResourceLocation getPluginUid() {
+	public Identifier getPluginUid() {
 		return ID;
 	}
 
@@ -387,7 +388,7 @@ public class CreateJEI implements IModPlugin {
 
 			if (potionContents.hasEffects()) {
 				Set<Holder<MobEffect>> effectSet = new HashSet<>();
-				potionContents.forEachEffect(mei -> effectSet.add(mei.getEffect()));
+				potionContents.forEachEffect(mei -> effectSet.add(mei.getEffect()), 1);
 				if (!visitedEffects.add(effectSet))
 					continue;
 }
@@ -418,7 +419,7 @@ public class CreateJEI implements IModPlugin {
 		}
 
 		@Override
-		public CreateRecipeCategory<T> build(ResourceLocation id, Factory<T> factory) {
+		public CreateRecipeCategory<T> build(Identifier id, Factory<T> factory) {
 			CreateRecipeCategory<T> category = super.build(id, factory);
 			allCategories.add(category);
 			return category;
@@ -426,8 +427,10 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	public static void consumeAllRecipes(Consumer<? super RecipeHolder<?>> consumer) {
+		if (Minecraft.getInstance().getSingleplayerServer() == null)
+			return;
 		Minecraft.getInstance()
-			.getConnection()
+			.getSingleplayerServer()
 			.getRecipeManager()
 			.getRecipes()
 			.forEach(consumer);
@@ -435,9 +438,13 @@ public class CreateJEI implements IModPlugin {
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static <T extends Recipe<?>> void consumeTypedRecipes(Consumer<RecipeHolder<?>> consumer, RecipeType<?> type) {
-		List<? extends RecipeHolder<?>> map = Minecraft.getInstance()
-			.getConnection()
-			.getRecipeManager().getAllRecipesFor((RecipeType) type);
+		if (Minecraft.getInstance().getSingleplayerServer() == null)
+			return;
+		List<? extends RecipeHolder<?>> map = List.copyOf(Minecraft.getInstance()
+			.getSingleplayerServer()
+			.getRecipeManager()
+			.recipeMap()
+			.byType((RecipeType) type));
 		if (!map.isEmpty())
 			map.forEach(consumer);
 	}
@@ -455,26 +462,25 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	public static boolean doInputsMatch(Recipe<?> recipe1, Recipe<?> recipe2) {
-		if (recipe1.getIngredients()
+		List<Ingredient> recipe1Ingredients = CreateRecipeCategory.getIngredients(recipe1);
+		List<Ingredient> recipe2Ingredients = CreateRecipeCategory.getIngredients(recipe2);
+		if (recipe1Ingredients
 			.isEmpty()
-			|| recipe2.getIngredients()
+			|| recipe2Ingredients
 			.isEmpty()) {
 			return false;
 		}
-		ItemStack[] matchingStacks = recipe1.getIngredients()
-			.getFirst()
-			.getItems();
-		if (matchingStacks.length == 0) {
+		List<ItemStack> matchingStacks = CreateRecipeCategory.getItemStacks(recipe1Ingredients.getFirst());
+		if (matchingStacks.isEmpty()) {
 			return false;
 		}
-		return recipe2.getIngredients()
+		return recipe2Ingredients
 			.getFirst()
-			.test(matchingStacks[0]);
+			.test(matchingStacks.getFirst());
 	}
 
 	public static boolean doOutputsMatch(Recipe<?> recipe1, Recipe<?> recipe2) {
-		RegistryAccess registryAccess = Minecraft.getInstance().level.registryAccess();
-		return ItemHelper.sameItem(recipe1.getResultItem(registryAccess), recipe2.getResultItem(registryAccess));
+		return ItemHelper.sameItem(CreateRecipeCategory.getResultItem(recipe1), CreateRecipeCategory.getResultItem(recipe2));
 	}
 
 	@Override

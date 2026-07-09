@@ -4,7 +4,7 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllPackets;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
 import io.netty.buffer.ByteBuf;
@@ -41,13 +41,13 @@ public record ToolboxDisposeAllPacket(BlockPos toolboxPos) implements Serverboun
 			return;
 
 		CompoundTag compound = player.getPersistentData()
-				.getCompound("CreateToolboxData");
+				.getCompoundOrEmpty("CreateToolboxData");
 		MutableBoolean sendData = new MutableBoolean(false);
 
 		toolbox.inventory.inLimitedMode(inventory -> {
 			for (int i = 0; i < 36; i++) {
 				String key = String.valueOf(i);
-				if (compound.contains(key) && NBTHelper.readBlockPos(compound.getCompound(key), "Pos")
+				if (compound.contains(key) && NBTHelper.readBlockPos(compound.getCompoundOrEmpty(key), "Pos")
 					.equals(toolboxPos)) {
 					ToolboxHandler.unequip(player, i, true);
 					sendData.setTrue();

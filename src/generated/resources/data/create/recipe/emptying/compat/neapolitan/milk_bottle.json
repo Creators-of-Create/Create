@@ -8,7 +8,7 @@
   "type": "create:emptying",
   "ingredients": [
     {
-      "type": "neoforge:compound",
+      "neoforge:ingredient_type": "neoforge:compound",
       "ingredients": [
         {
           "item": "farmersdelight:milk_bottle"

@@ -13,11 +13,11 @@ import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.simibubi.create.AllBlocks;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -32,7 +32,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -100,18 +100,18 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	public BezierConnection(CompoundTag compound, BlockPos localTo) {
-		this(Couple.deserializeEach(compound.getList("Positions", Tag.TAG_COMPOUND), t -> NBTHelper.readBlockPos(t, "Pos"))
+		this(Couple.deserializeEach(compound.getListOrEmpty("Positions"), t -> NBTHelper.readBlockPos(t, "Pos"))
 			.map(b -> b.offset(localTo)),
-			Couple.deserializeEach(compound.getList("Starts", Tag.TAG_COMPOUND), VecHelper::readNBTCompound)
+			Couple.deserializeEach(compound.getListOrEmpty("Starts"), VecHelper::readNBTCompound)
 				.map(v -> v.add(Vec3.atLowerCornerOf(localTo))),
-			Couple.deserializeEach(compound.getList("Axes", Tag.TAG_COMPOUND), VecHelper::readNBTCompound),
-			Couple.deserializeEach(compound.getList("Normals", Tag.TAG_COMPOUND), VecHelper::readNBTCompound),
-			compound.getBoolean("Primary"), compound.getBoolean("Girder"),
-			TrackMaterial.deserialize(compound.getString("Material")));
+			Couple.deserializeEach(compound.getListOrEmpty("Axes"), VecHelper::readNBTCompound),
+			Couple.deserializeEach(compound.getListOrEmpty("Normals"), VecHelper::readNBTCompound),
+			compound.getBooleanOr("Primary", false), compound.getBooleanOr("Girder", false),
+			TrackMaterial.deserialize(compound.getStringOr("Material", TrackMaterial.ANDESITE.id.toString())));
 
 		if (compound.contains("Smoothing"))
 			smoothing =
-				Couple.deserializeEach(compound.getList("Smoothing", Tag.TAG_COMPOUND), NBTHelper::intFromCompound);
+				Couple.deserializeEach(compound.getListOrEmpty("Smoothing"), NBTHelper::intFromCompound);
 	}
 
 	public CompoundTag write(BlockPos localTo) {
@@ -123,7 +123,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		compound.putBoolean("Primary", primary);
 		compound.put("Positions", tePositions.serializeEach(t -> {
 			CompoundTag tag = new CompoundTag();
-			tag.put("Pos", NbtUtils.writeBlockPos(t));
+			tag.put("Pos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(t));
 			return tag;
 		}));
 		compound.put("Starts", starts.serializeEach(VecHelper::writeNBTCompound));
@@ -280,14 +280,14 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	public void spawnItems(Level level) {
-		if (!level.getGameRules()
-			.getBoolean(GameRules.RULE_DOBLOCKDROPS))
+		if (level instanceof ServerLevel serverLevel && !serverLevel.getGameRules()
+			.get(GameRules.BLOCK_DROPS))
 			return;
 		Vec3 origin = Vec3.atLowerCornerOf(bePositions.getFirst());
 		for (Segment segment : this) {
 			if (segment.index % 2 != 0 || segment.index == getSegmentCount())
 				continue;
-			Vec3 v = VecHelper.offsetRandomly(segment.position, level.random, .125f)
+			Vec3 v = VecHelper.offsetRandomly(segment.position, level.getRandom(), .125f)
 				.add(origin);
 			ItemEntity entity = new ItemEntity(level, v.x, v.y, v.z, getMaterial().asStack());
 			entity.setDefaultPickUpDelay();

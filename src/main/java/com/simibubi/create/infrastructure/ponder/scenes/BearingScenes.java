@@ -7,14 +7,14 @@ import com.simibubi.create.content.contraptions.bearing.SailBlock;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -596,7 +596,7 @@ public class BearingScenes {
 		scene.idle(10);
 
 		scene.world().setBlock(util.grid().at(3, 3, 0), Blocks.STONE_BRICK_WALL.defaultBlockState()
-			.setValue(WallBlock.SOUTH_WALL, WallSide.TALL), false);
+			.setValue(WallBlock.SOUTH, WallSide.TALL), false);
 		ElementLink<WorldSectionElement> minuteHand =
 			scene.world().showIndependentSection(util.select().fromTo(3, 3, 0, 3, 6, 0), Direction.SOUTH);
 		scene.world().configureCenterOfRotation(minuteHand, util.vector().centerOf(bearingPos));
@@ -693,7 +693,7 @@ public class BearingScenes {
 			scene.rotateCameraY(-30);
 			scene.idle(10);
 			scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 1), Direction.NORTH), Pointing.RIGHT, 30)
-				.withItem(new ItemStack(Items.BLUE_DYE));
+				.withItem(new ItemStack(Items.DYE.blue()));
 			scene.idle(7);
 			scene.world().setBlock(util.grid().at(2, 3, 1), AllBlocks.DYED_SAILS.get(DyeColor.BLUE)
 				.getDefaultState()
@@ -707,7 +707,7 @@ public class BearingScenes {
 				.placeNearTarget();
 			scene.idle(20);
 			scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 1), Direction.NORTH), Pointing.RIGHT, 30)
-				.withItem(new ItemStack(Items.BLUE_DYE));
+				.withItem(new ItemStack(Items.DYE.blue()));
 			scene.idle(7);
 			scene.world().replaceBlocks(util.select().fromTo(2, 2, 1, 2, 4, 1), AllBlocks.DYED_SAILS.get(DyeColor.BLUE)
 				.getDefaultState()

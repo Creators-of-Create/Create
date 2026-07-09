@@ -12,7 +12,6 @@
       "translate": "advancement.create.contraption_actors.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:mechanical_harvester"
     },
     "title": {

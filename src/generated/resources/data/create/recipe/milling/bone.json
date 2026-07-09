@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:bone"
-    }
+    "minecraft:bone"
   ],
   "processing_time": 100,
   "results": [

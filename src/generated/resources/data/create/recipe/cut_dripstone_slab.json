@@ -3,9 +3,7 @@
   "category": "building",
   "group": "cut_dripstone_slab",
   "key": {
-    "X": {
-      "item": "create:cut_dripstone"
-    }
+    "X": "create:cut_dripstone"
   },
   "pattern": [
     "XXX"

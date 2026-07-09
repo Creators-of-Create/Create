@@ -10,25 +10,25 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.Create;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.providers.generators.RegistrateBlockModelGenerator;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
 
-import net.neoforged.neoforge.client.model.generators.ModelFile;
+import com.tterrag.registrate.providers.generators.ModelFile;
 
 public class MetalBarsGen {
 
-	public static <P extends IronBarsBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> barsBlockState(
+	public static <P extends IronBarsBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockModelGenerator> barsBlockState(
 		String name, boolean specialEdge) {
 		return (c, p) -> {
 
@@ -111,10 +111,10 @@ public class MetalBarsGen {
 		};
 	}
 
-	private static ModelFile barsSubModel(RegistrateBlockstateProvider p, String name, String suffix,
+	private static ModelFile barsSubModel(RegistrateBlockModelGenerator p, String name, String suffix,
 										  boolean specialEdge) {
-		ResourceLocation barsTexture = p.modLoc("block/bars/" + name + "_bars");
-		ResourceLocation edgeTexture = specialEdge ? p.modLoc("block/bars/" + name + "_bars_edge") : barsTexture;
+		Identifier barsTexture = p.modLoc("block/bars/" + name + "_bars");
+		Identifier edgeTexture = specialEdge ? p.modLoc("block/bars/" + name + "_bars_edge") : barsTexture;
 		return p.models()
 			.withExistingParent(name + "_" + suffix, p.modLoc("block/bars/" + suffix))
 			.texture("bars", barsTexture)
@@ -125,17 +125,17 @@ public class MetalBarsGen {
 	public static BlockEntry<IronBarsBlock> createBars(String name, boolean specialEdge,
 													   Supplier<DataIngredient> ingredient, MapColor color) {
 		return Create.registrate().block(name + "_bars", IronBarsBlock::new)
-			.addLayer(() -> RenderType::cutoutMipped)
+			.addLayer(() -> com.simibubi.create.foundation.render.LegacyRenderTypes::cutoutMipped)
 			.initialProperties(() -> Blocks.IRON_BARS)
 			.properties(p -> p.sound(SoundType.COPPER)
 				.mapColor(color))
 			.tag(AllBlockTags.WRENCH_PICKUP.tag)
 			.tag(AllBlockTags.FAN_TRANSPARENT.tag)
 			.transform(TagGen.pickaxeOnly())
-			.blockstate(barsBlockState(name, specialEdge))
+			.blockstate(() -> barsBlockState(name, specialEdge))
 			.item()
-			.model((c, p) -> {
-				ResourceLocation barsTexture = p.modLoc("block/bars/" + name + "_bars");
+			.model(() -> (c, p) -> {
+				Identifier barsTexture = p.modLoc("block/bars/" + name + "_bars");
 				p.generated(c, barsTexture);
 			})
 			.recipe((c, p) -> p.stonecutting(ingredient.get(), RecipeCategory.DECORATIONS, c::get, 4))

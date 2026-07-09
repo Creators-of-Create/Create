@@ -13,8 +13,8 @@ import java.util.function.BiFunction;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -131,7 +131,7 @@ public class SoundScapes {
 	}
 
 	protected static BlockPos getCameraPos() {
-		Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
+		Entity renderViewEntity = Minecraft.getInstance().getCameraEntity();
 		if (renderViewEntity == null)
 			return BlockPos.ZERO;
 		return renderViewEntity.blockPosition();

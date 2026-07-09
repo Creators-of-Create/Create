@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "tag": "c:raw_materials/zinc"
-    }
+    "#c:raw_materials/zinc"
   ],
   "processing_time": 400,
   "results": [

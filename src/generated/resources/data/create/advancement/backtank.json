@@ -12,7 +12,6 @@
       "translate": "advancement.create.backtank.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:copper_backtank"
     },
     "title": {

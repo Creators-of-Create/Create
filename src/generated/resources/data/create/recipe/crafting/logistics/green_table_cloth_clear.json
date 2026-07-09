@@ -1,13 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "item": "create:green_table_cloth"
-    }
+    "create:green_table_cloth"
   ],
   "result": {
-    "count": 1,
     "id": "create:green_table_cloth"
   }
 }

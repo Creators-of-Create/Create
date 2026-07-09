@@ -36,7 +36,7 @@ public class AnimatedContainerBehaviour<M extends MenuBase<? extends SmartBlockE
 	public void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
 		if (clientPacket)
-			openCount = compound.getInt("OpenCount");
+			openCount = compound.getIntOr("OpenCount", 0);
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class AnimatedContainerBehaviour<M extends MenuBase<? extends SmartBlockE
 
 	void updateOpenCount() {
 		Level level = getWorld();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		if (openCount == 0)
 			return;
@@ -79,7 +79,7 @@ public class AnimatedContainerBehaviour<M extends MenuBase<? extends SmartBlockE
 	public void startOpen(Player player) {
 		if (player.isSpectator())
 			return;
-		if (getWorld().isClientSide)
+		if (getWorld().isClientSide())
 			return;
 		if (openCount < 0)
 			openCount = 0;
@@ -92,7 +92,7 @@ public class AnimatedContainerBehaviour<M extends MenuBase<? extends SmartBlockE
 	public void stopOpen(Player player) {
 		if (player.isSpectator())
 			return;
-		if (getWorld().isClientSide)
+		if (getWorld().isClientSide())
 			return;
 		openCount--;
 		if (openCount == 0 && openChanged != null)

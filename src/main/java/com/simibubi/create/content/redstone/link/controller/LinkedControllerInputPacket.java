@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.AllPackets;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -46,7 +46,7 @@ public class LinkedControllerInputPacket extends LinkedControllerPacketBase {
 
 	@Override
 	protected void handleItem(ServerPlayer player, ItemStack heldItem) {
-		Level world = player.getCommandSenderWorld();
+		Level world = player.level();
 		UUID uniqueID = player.getUUID();
 		BlockPos pos = player.blockPosition();
 

@@ -11,7 +11,7 @@ import com.simibubi.create.api.contraption.storage.item.MountedItemStorage;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.logistics.filter.FilterItemStack;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -69,7 +69,7 @@ public class MovementContext {
 		double length = -motion.length();
 		if (disabled)
 			return 0;
-		if (world.isClientSide && contraption.stalled)
+		if (world.isClientSide() && contraption.stalled)
 			return 700;
 		if (Math.abs(length) < 1 / 512f)
 			return 0;
@@ -78,13 +78,13 @@ public class MovementContext {
 
 	public static MovementContext readNBT(Level world, StructureBlockInfo info, CompoundTag nbt, Contraption contraption) {
 		MovementContext context = new MovementContext(world, info, contraption);
-		context.motion = VecHelper.readNBT(nbt.getList("Motion", Tag.TAG_DOUBLE));
-		context.relativeMotion = VecHelper.readNBT(nbt.getList("RelativeMotion", Tag.TAG_DOUBLE));
+		context.motion = VecHelper.readNBT(nbt.getListOrEmpty("Motion"));
+		context.relativeMotion = VecHelper.readNBT(nbt.getListOrEmpty("RelativeMotion"));
 		if (nbt.contains("Position"))
-			context.position = VecHelper.readNBT(nbt.getList("Position", Tag.TAG_DOUBLE));
-		context.stall = nbt.getBoolean("Stall");
-		context.firstMovement = nbt.getBoolean("FirstMovement");
-		context.data = nbt.getCompound("Data");
+			context.position = VecHelper.readNBT(nbt.getListOrEmpty("Position"));
+		context.stall = nbt.getBooleanOr("Stall", false);
+		context.firstMovement = nbt.getBooleanOr("FirstMovement", true);
+		context.data = nbt.getCompoundOrEmpty("Data");
 		return context;
 	}
 
@@ -102,7 +102,7 @@ public class MovementContext {
 	public FilterItemStack getFilterFromBE() {
 		if (filter != null)
 			return filter;
-		return filter = FilterItemStack.of(world.registryAccess(), blockEntityData.getCompound("Filter"));
+		return filter = FilterItemStack.of(world.registryAccess(), blockEntityData.getCompoundOrEmpty("Filter"));
 	}
 
 	@Nullable

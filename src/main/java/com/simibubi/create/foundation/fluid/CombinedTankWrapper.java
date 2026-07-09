@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.fluid;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.EmptyFluidHandler;
@@ -108,7 +108,7 @@ public class CombinedTankWrapper implements IFluidHandler {
 			resource.shrink(amount);
 
 			if (!drainedFromCurrent.isEmpty() && (drained.isEmpty() || FluidStack.isSameFluidSameComponents(drainedFromCurrent, drained)))
-				drained = new FluidStack(drainedFromCurrent.getFluidHolder(), amount + drained.getAmount(),
+				drained = new FluidStack(drainedFromCurrent.typeHolder(), amount + drained.getAmount(),
 					drainedFromCurrent.getComponentsPatch());
 			if (resource.isEmpty())
 				break;
@@ -127,7 +127,7 @@ public class CombinedTankWrapper implements IFluidHandler {
 			maxDrain -= amount;
 
 			if (!drainedFromCurrent.isEmpty() && (drained.isEmpty() || FluidStack.isSameFluidSameComponents(drainedFromCurrent, drained)))
-				drained = new FluidStack(drainedFromCurrent.getFluidHolder(), amount + drained.getAmount(),
+				drained = new FluidStack(drainedFromCurrent.typeHolder(), amount + drained.getAmount(),
 					drainedFromCurrent.getComponentsPatch());
 			if (maxDrain == 0)
 				break;

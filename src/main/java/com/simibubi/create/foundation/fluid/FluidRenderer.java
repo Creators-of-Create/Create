@@ -1,29 +1,22 @@
 package com.simibubi.create.foundation.fluid;
 
-import java.util.function.Function;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.render.FluidRenderHelper;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.client.render.FluidRenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 
-@OnlyIn(Dist.CLIENT)
 public class FluidRenderer {
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
 		boolean inbound, MultiBufferSource buffer, PoseStack ms, int light) {
@@ -33,14 +26,11 @@ public class FluidRenderer {
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
 		boolean inbound, VertexConsumer builder, PoseStack ms, int light) {
 		Fluid fluid = fluidStack.getFluid();
-		IClientFluidTypeExtensions clientFluid = IClientFluidTypeExtensions.of(fluid);
 		FluidType fluidAttributes = fluid.getFluidType();
-		Function<ResourceLocation, TextureAtlasSprite> spriteAtlas = Minecraft.getInstance()
-			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
-		TextureAtlasSprite flowTexture = spriteAtlas.apply(clientFluid.getFlowingTexture(fluidStack));
-		TextureAtlasSprite stillTexture = spriteAtlas.apply(clientFluid.getStillTexture(fluidStack));
+		TextureAtlasSprite flowTexture = FluidRenderProperties.getFlowingTexture(fluidStack);
+		TextureAtlasSprite stillTexture = FluidRenderProperties.getStillTexture(fluidStack);
 
-		int color = clientFluid.getTintColor(fluidStack);
+		int color = FluidRenderProperties.getTintColor(fluidStack);
 		int blockLightIn = (light >> 4) & 0xF;
 		int luminosity = Math.max(blockLightIn, fluidAttributes.getLightLevel(fluidStack));
 		light = (light & 0xF00000) | luminosity << 4;
@@ -71,14 +61,14 @@ public class FluidRenderer {
 		}
 
 		if (progress != 1)
-			FluidRenderHelper.renderStillTiledFace(Direction.DOWN, hMin, hMin, hMax, hMax, yMin, builder, ms, light, color, stillTexture);
+			FluidRenderHelper.renderStillTiledFace(Direction.DOWN, hMin, hMin, hMax, hMax, yMin, builder, ms.last(), light, color, stillTexture);
 
 		ms.popPose();
 	}
 
 	public static void renderFlowingTiledFace(Direction dir, float left, float down, float right, float up,
 		float depth, VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture) {
-		FluidRenderHelper.renderTiledFace(dir, left, down, right, up, depth, builder, ms, light, color, texture, 0.5f);
+		FluidRenderHelper.renderTiledFace(dir, left, down, right, up, depth, builder, ms.last(), light, color, texture, 0.5f);
 	}
 
 }

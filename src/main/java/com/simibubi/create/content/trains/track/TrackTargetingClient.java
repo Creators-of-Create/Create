@@ -11,7 +11,7 @@ import com.simibubi.create.content.trains.track.TrackTargetingBehaviour.Rendered
 import com.simibubi.create.content.trains.track.TrackTargetingBlockItem.OverlapResult;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.render.SuperRenderTypeBuffer;
+import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -116,7 +116,7 @@ public class TrackTargetingClient {
 
 		Minecraft mc = Minecraft.getInstance();
 		BlockPos pos = lastHovered;
-		int light = LevelRenderer.getLightColor(mc.level, pos);
+		int light = com.simibubi.create.foundation.render.LegacyLightTexture.getLightColor(mc.level, pos);
 		AxisDirection direction = lastDirection ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE;
 
 		RenderedTrackOverlayType type = lastType == EdgePointType.SIGNAL ? RenderedTrackOverlayType.SIGNAL

@@ -5,14 +5,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.foundation.particle.ICustomParticleData;
 
-import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class FluidParticleData implements ParticleOptions, ICustomParticleData<FluidParticleData> {
@@ -29,11 +27,8 @@ public class FluidParticleData implements ParticleOptions, ICustomParticleData<F
 		this.fluid = fluid;
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public ParticleProvider<FluidParticleData> getFactory() {
-		return (data, world, x, y, z, vx, vy, vz) -> FluidStackParticle.create(data.type, world, data.fluid, x, y, z,
-			vx, vy, vz);
+	public FluidStack getFluid() {
+		return fluid;
 	}
 
 	@Override

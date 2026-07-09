@@ -6,8 +6,9 @@ import java.util.Map;
 
 import com.google.common.base.Strings;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.LegacyComponentSerializationBridge;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -132,7 +133,7 @@ public class FlapDisplaySection {
 		if (wideFlaps)
 			NBTHelper.putMarker(tag, "Wide");
 		if (component != null)
-			tag.putString("Text", Component.Serializer.toJson(component, registries));
+			tag.putString("Text", LegacyComponentSerializationBridge.toJson(component, registries));
 		if (sendTransition)
 			NBTHelper.putMarker(tag, "Transition");
 		sendTransition = false;
@@ -140,8 +141,8 @@ public class FlapDisplaySection {
 	}
 
 	public static FlapDisplaySection load(CompoundTag tag, HolderLookup.Provider registries) {
-		float width = tag.getFloat("Width");
-		String cycle = tag.getString("Cycle");
+		float width = tag.getFloatOr("Width", 0);
+		String cycle = tag.getStringOr("Cycle", "alphabet");
 		boolean singleFlap = tag.contains("SingleFlap");
 		boolean hasGap = tag.contains("Gap");
 
@@ -153,18 +154,18 @@ public class FlapDisplaySection {
 		if (!tag.contains("Text"))
 			return section;
 
-		section.component = Component.Serializer.fromJson(tag.getString("Text"), registries);
-		section.refresh(tag.getBoolean("Transition"));
+		section.component = LegacyComponentSerializationBridge.fromJson(tag.getStringOr("Text", ""), registries);
+		section.refresh(tag.getBooleanOr("Transition", false));
 		return section;
 	}
 
 	public void update(CompoundTag tag, HolderLookup.Provider registries) {
-		String text = tag.getString("Text");
+		String text = tag.getStringOr("Text", "");
 		if (!text.isEmpty())
-			component = Component.Serializer.fromJson(text, registries);
+			component = LegacyComponentSerializationBridge.fromJson(text, registries);
 		if (cyclingOptions == null)
 			cyclingOptions = getFlapCycle(cycle);
-		refresh(tag.getBoolean("Transition"));
+		refresh(tag.getBooleanOr("Transition", false));
 	}
 
 	public boolean renderCharsIndividually() {

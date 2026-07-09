@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.simibubi.create.content.contraptions.StructureTransform;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.PipeBlock;

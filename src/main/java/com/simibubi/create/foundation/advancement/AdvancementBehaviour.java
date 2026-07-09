@@ -8,6 +8,7 @@ import java.util.UUID;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -99,14 +100,14 @@ public class AdvancementBehaviour extends BlockEntityBehaviour {
 	public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		super.write(nbt, registries, clientPacket);
 		if (playerId != null)
-			nbt.putUUID("Owner", playerId);
+			LegacyNbtUtilsBridge.putUUID(nbt, "Owner", playerId);
 	}
 
 	@Override
 	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(nbt, registries, clientPacket);
 		if (nbt.contains("Owner"))
-			playerId = nbt.getUUID("Owner");
+			playerId = LegacyNbtUtilsBridge.getUUID(nbt, "Owner");
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public class AccumulatedItemCountDisplaySource extends NumericSingleLineDisplayS
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
 		return Component.literal(String.valueOf(context.sourceConfig()
-			.getInt("Collected")));
+			.getIntOr("Collected", 0)));
 	}
 
 	public void itemReceived(DisplayLinkBlockEntity be, int amount) {
@@ -23,7 +23,7 @@ public class AccumulatedItemCountDisplaySource extends NumericSingleLineDisplayS
 			return;
 
 		int collected = be.getSourceConfig()
-			.getInt("Collected");
+			.getIntOr("Collected", 0);
 		be.getSourceConfig()
 			.putInt("Collected", collected + amount);
 		be.updateGatheredData();

@@ -5,8 +5,9 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -14,7 +15,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +33,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.ItemAbility;
 
 public class LitBlazeBurnerBlock extends Block implements IWrenchable {
@@ -53,27 +53,27 @@ public class LitBlazeBurnerBlock extends Block implements IWrenchable {
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (stack.getItem() instanceof ShovelItem || stack.getItem().canPerformAction(stack, EXTINGUISH_FLAME_ACTION)) {
 			level.playSound(player, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.5f, 2);
-			if (level.isClientSide)
-				return ItemInteractionResult.SUCCESS;
+			if (level.isClientSide())
+				return InteractionResult.SUCCESS;
 			stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
 			level.setBlockAndUpdate(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		if (state.getValue(FLAME_TYPE) == FlameType.REGULAR) {
 			if (stack.is(ItemTags.SOUL_FIRE_BASE_BLOCKS)) {
-				level.playSound(player, pos, SoundEvents.SOUL_SAND_PLACE, SoundSource.BLOCKS, 1.0f, level.random.nextFloat() * 0.4F + 0.8F);
-				if (level.isClientSide)
-					return ItemInteractionResult.SUCCESS;
+				level.playSound(player, pos, SoundEvents.SOUL_SAND_PLACE, SoundSource.BLOCKS, 1.0f, level.getRandom().nextFloat() * 0.4F + 0.8F);
+				if (level.isClientSide())
+					return InteractionResult.SUCCESS;
 				level.setBlockAndUpdate(pos, defaultBlockState().setValue(FLAME_TYPE, FlameType.SOUL));
-				return ItemInteractionResult.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 		}
 
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
 	@Override
@@ -83,13 +83,11 @@ public class LitBlazeBurnerBlock extends Block implements IWrenchable {
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos,
-									   Player player) {
+	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
 		return AllItems.EMPTY_BLAZE_BURNER.asStack();
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
 		world.addAlwaysVisibleParticle(ParticleTypes.LARGE_SMOKE, true,
 			(double) pos.getX() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1),
@@ -129,7 +127,7 @@ public class LitBlazeBurnerBlock extends Block implements IWrenchable {
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState state, Level p_180641_2_, BlockPos p_180641_3_) {
+	public int getAnalogOutputSignal(BlockState state, Level p_180641_2_, BlockPos p_180641_3_, Direction direction) {
 		return state.getValue(FLAME_TYPE) == FlameType.REGULAR ? 1 : 2;
 	}
 

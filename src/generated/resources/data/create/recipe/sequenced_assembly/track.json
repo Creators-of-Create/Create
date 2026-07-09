@@ -1,8 +1,6 @@
 {
   "type": "create:sequenced_assembly",
-  "ingredient": {
-    "tag": "create:sleepers"
-  },
+  "ingredient": "#create:sleepers",
   "results": [
     {
       "id": "create:track"
@@ -12,17 +10,14 @@
     {
       "type": "create:deploying",
       "ingredients": [
+        "create:incomplete_track",
         {
-          "item": "create:incomplete_track"
-        },
-        [
-          {
-            "tag": "c:nuggets/iron"
-          },
-          {
-            "tag": "c:nuggets/zinc"
-          }
-        ]
+          "neoforge:ingredient_type": "neoforge:compound",
+          "children": [
+            "#c:nuggets/iron",
+            "#c:nuggets/zinc"
+          ]
+        }
       ],
       "results": [
         {
@@ -33,17 +28,14 @@
     {
       "type": "create:deploying",
       "ingredients": [
+        "create:incomplete_track",
         {
-          "item": "create:incomplete_track"
-        },
-        [
-          {
-            "tag": "c:nuggets/iron"
-          },
-          {
-            "tag": "c:nuggets/zinc"
-          }
-        ]
+          "neoforge:ingredient_type": "neoforge:compound",
+          "children": [
+            "#c:nuggets/iron",
+            "#c:nuggets/zinc"
+          ]
+        }
       ],
       "results": [
         {
@@ -54,9 +46,7 @@
     {
       "type": "create:pressing",
       "ingredients": [
-        {
-          "item": "create:incomplete_track"
-        }
+        "create:incomplete_track"
       ],
       "results": [
         {

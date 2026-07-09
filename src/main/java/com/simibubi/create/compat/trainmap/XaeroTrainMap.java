@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.FormattedText;
@@ -29,7 +29,7 @@ public class XaeroTrainMap {
 	private static boolean encounteredException = false;
 
 	public static void tick() {
-		if (!AllConfigs.client().showTrainMapOverlay.get() || !isMapOpen(Minecraft.getInstance().screen)) {
+		if (!AllConfigs.client().showTrainMapOverlay.get() || !isMapOpen(Minecraft.getInstance().gui.screen())) {
 			if (requesting)
 				TrainMapSyncClient.stopRequesting();
 			requesting = false;
@@ -46,7 +46,7 @@ public class XaeroTrainMap {
 
 		Minecraft mc = Minecraft.getInstance();
 		try {
-			if (!(mc.screen instanceof GuiMap))
+			if (!(mc.gui.screen() instanceof GuiMap))
 				return;
 		} catch (Throwable e) {
 			Create.LOGGER.error("Failed to handle mouseClick for Xaero's World Map train map integration:", e);
@@ -63,7 +63,7 @@ public class XaeroTrainMap {
 	}
 
 	// Called by XaeroFullscreenMapMixin, guarded by try-catch
-	public static void onRender(GuiGraphics graphics, GuiMap screen, int mX, int mY, float pt) {
+	public static void onRender(GuiGraphicsExtractor graphics, GuiMap screen, int mX, int mY, float pt) {
 		double x = ((XaeroFullscreenMapAccessor) screen).create$getCameraX();
 		double z = ((XaeroFullscreenMapAccessor) screen).create$getCameraZ();
 		double mapScale = ((XaeroFullscreenMapAccessor) screen).create$getScale();
@@ -108,7 +108,7 @@ public class XaeroTrainMap {
 			RemovedGuiUtils.drawHoveringText(graphics, tooltip, mX, mY, screen.width, screen.height, 256, mc.font);
 	}
 
-	private static boolean renderToggleWidgetAndTooltip(GuiGraphics graphics, GuiMap screen, int mouseX,
+	private static boolean renderToggleWidgetAndTooltip(GuiGraphicsExtractor graphics, GuiMap screen, int mouseX,
 														int mouseY) {
 		TrainMapManager.renderToggleWidget(graphics, 3, 30);
 		if (!TrainMapManager.isToggleWidgetHovered(mouseX, mouseY, 3, 30))

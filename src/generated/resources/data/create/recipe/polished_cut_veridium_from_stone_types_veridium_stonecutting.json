@@ -1,10 +1,7 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "tag": "create:stone_types/veridium"
-  },
+  "ingredient": "#create:stone_types/veridium",
   "result": {
-    "count": 1,
     "id": "create:polished_cut_veridium"
   }
 }

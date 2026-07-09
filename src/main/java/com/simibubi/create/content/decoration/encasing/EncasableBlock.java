@@ -6,7 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -22,7 +22,7 @@ public interface EncasableBlock {
 	/**
 	 * This method should be called in the {@link Block#useItemOn(ItemStack, BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)} method.
 	 */
-	default ItemInteractionResult tryEncase(BlockState state, Level level, BlockPos pos, ItemStack heldItem, Player player, InteractionHand hand,
+	default InteractionResult tryEncase(BlockState state, Level level, BlockPos pos, ItemStack heldItem, Player player, InteractionHand hand,
 											BlockHitResult ray) {
 		List<Block> encasedVariants = EncasingRegistry.getVariants(state.getBlock());
 		for (Block block : encasedVariants) {
@@ -30,15 +30,15 @@ public interface EncasableBlock {
 				if (encased.getCasing().asItem() != heldItem.getItem())
 					continue;
 
-				if (level.isClientSide)
-					return ItemInteractionResult.SUCCESS;
+				if (level.isClientSide())
+					return InteractionResult.SUCCESS;
 
 				encased.handleEncasing(state, level, pos, heldItem, player, hand, ray);
 				playEncaseSound(level, pos);
-				return ItemInteractionResult.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 		}
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
 	default void playEncaseSound(Level level, BlockPos pos) {

@@ -1,19 +1,13 @@
 {
   "type": "create:compacting",
   "ingredients": [
+    "minecraft:flint",
+    "minecraft:flint",
+    "minecraft:calcite",
     {
-      "item": "minecraft:flint"
-    },
-    {
-      "item": "minecraft:flint"
-    },
-    {
-      "item": "minecraft:calcite"
-    },
-    {
-      "type": "neoforge:single",
+      "type": "neoforge:simple",
       "amount": 100,
-      "fluid": "minecraft:lava"
+      "ingredient": "minecraft:lava"
     }
   ],
   "results": [

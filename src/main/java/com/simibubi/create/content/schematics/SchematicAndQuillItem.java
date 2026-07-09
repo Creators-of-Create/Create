@@ -4,16 +4,17 @@ import java.util.Iterator;
 
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
+import com.simibubi.create.foundation.utility.LegacyBlockEntityTagBridge;
 
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -32,8 +33,8 @@ public class SchematicAndQuillItem extends Item {
 		String structureVoid = RegisteredObjectsHelper.getKeyOrThrow(Blocks.STRUCTURE_VOID)
 			.toString();
 
-		NBTHelper.iterateCompoundList(nbt.getList("palette", 10), c -> {
-			if (c.contains("Name") && c.getString("Name")
+		NBTHelper.iterateCompoundList(nbt.getListOrEmpty("palette"), c -> {
+			if (c.contains("Name") && c.getStringOr("Name", "")
 				.equals(structureVoid)) {
 				c.putString("Name", air);
 			}
@@ -41,23 +42,22 @@ public class SchematicAndQuillItem extends Item {
 	}
 
 	public static void clampGlueBoxes(Level level, AABB aabb, CompoundTag nbt) {
-		ListTag listtag = nbt.getList("entities", 10)
+		ListTag listtag = nbt.getListOrEmpty("entities")
 			.copy();
 
 		for (Iterator<Tag> iterator = listtag.iterator(); iterator.hasNext();) {
 			Tag tag = iterator.next();
 			if (!(tag instanceof CompoundTag compoundtag))
 				continue;
-			if (compoundtag.contains("nbt") && ResourceLocation.parse(compoundtag.getCompound("nbt")
-				.getString("id")).equals(AllEntityTypes.SUPER_GLUE.getId())) {
+			if (compoundtag.contains("nbt") && Identifier.parse(compoundtag.getCompoundOrEmpty("nbt")
+				.getStringOr("id", "")).equals(AllEntityTypes.SUPER_GLUE.getId())) {
 				iterator.remove();
 			}
 		}
 
 		for (SuperGlueEntity entity : SuperGlueEntity.collectCropped(level, aabb)) {
 			Vec3 vec3 = new Vec3(entity.getX() - aabb.minX, entity.getY() - aabb.minY, entity.getZ() - aabb.minZ);
-			CompoundTag compoundtag = new CompoundTag();
-			entity.save(compoundtag);
+			CompoundTag compoundtag = LegacyBlockEntityTagBridge.output(level.registryAccess(), entity::save);
 			BlockPos blockpos = BlockPos.containing(vec3);
 
 			CompoundTag entityTag = new CompoundTag();

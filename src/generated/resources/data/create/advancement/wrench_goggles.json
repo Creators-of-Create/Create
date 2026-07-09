@@ -29,7 +29,6 @@
       "translate": "advancement.create.wrench_goggles.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:wrench"
     },
     "title": {

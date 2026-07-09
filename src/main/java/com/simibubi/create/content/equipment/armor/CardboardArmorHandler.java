@@ -1,7 +1,5 @@
 package com.simibubi.create.content.equipment.armor;
 
-import java.util.UUID;
-
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
 import net.minecraft.server.level.ServerLevel;
@@ -93,14 +91,15 @@ public class CardboardArmorHandler {
 		}
 
 		if (entity instanceof NeutralMob nMob && entity.level() instanceof ServerLevel sl) {
-			UUID uuid = nMob.getPersistentAngerTarget();
-			if (uuid != null && testForStealth(sl.getEntity(uuid)))
+			var angerTarget = nMob.getPersistentAngerTarget();
+			LivingEntity angryAt = angerTarget == null ? null : net.minecraft.world.entity.EntityReference.getLivingEntity(angerTarget, sl);
+			if (testForStealth(angryAt))
 				nMob.stopBeingAngry();
 		}
 
 		if (testForStealth(mob.getLastHurtByMob())) {
 			mob.setLastHurtByMob(null);
-			mob.setLastHurtByPlayer(null);
+			mob.setLastHurtByPlayer((Player) null, 0);
 		}
 	}
 

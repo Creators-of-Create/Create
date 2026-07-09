@@ -12,7 +12,7 @@ import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 
@@ -37,7 +37,7 @@ public class PackagerVisual<T extends PackagerBlockEntity> extends AbstractBlock
 		Direction facing = blockState.getValue(PackagerBlock.FACING)
 			.getOpposite();
 
-		var lowerCorner = Vec3.atLowerCornerOf(facing.getNormal());
+		var lowerCorner = Vec3.atLowerCornerOf(facing.getUnitVec3i());
 		hatch.setIdentityTransform()
 			.translate(getVisualPosition())
 			.translate(lowerCorner
@@ -72,7 +72,7 @@ public class PackagerVisual<T extends PackagerBlockEntity> extends AbstractBlock
 			Direction facing = blockState.getValue(PackagerBlock.FACING)
 				.getOpposite();
 
-			var lowerCorner = Vec3.atLowerCornerOf(facing.getNormal());
+			var lowerCorner = Vec3.atLowerCornerOf(facing.getUnitVec3i());
 
 			tray.setIdentityTransform()
 				.translate(getVisualPosition())

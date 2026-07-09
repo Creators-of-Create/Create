@@ -3,9 +3,7 @@
   "category": "building",
   "group": "small_limestone_brick_slab",
   "key": {
-    "X": {
-      "item": "create:small_limestone_bricks"
-    }
+    "X": "create:small_limestone_bricks"
   },
   "pattern": [
     "XXX"

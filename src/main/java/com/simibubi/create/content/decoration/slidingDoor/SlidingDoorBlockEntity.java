@@ -5,8 +5,8 @@ import java.util.List;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -34,7 +34,7 @@ public class SlidingDoorBlockEntity extends SmartBlockEntity {
 		if (deferUpdate && !level.isClientSide()) {
 			deferUpdate = false;
 			BlockState blockState = getBlockState();
-			blockState.handleNeighborChanged(level, worldPosition, Blocks.AIR, worldPosition, false);
+			blockState.handleNeighborChanged(level, worldPosition, Blocks.AIR, null, false);
 		}
 
 		super.tick();

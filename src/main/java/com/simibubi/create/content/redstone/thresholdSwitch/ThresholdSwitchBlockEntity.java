@@ -20,7 +20,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.inventory.TankManipu
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryTrackerBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.math.BlockFace;
+import net.createmod.catnip.api.math.BlockFace;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -77,15 +77,15 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		onWhenAbove = compound.getInt("OnAboveAmount");
-		offWhenBelow = compound.getInt("OffBelowAmount");
-		currentLevel = compound.getInt("CurrentAmount");
-		currentMinLevel = compound.getInt("CurrentMinAmount");
-		currentMaxLevel = compound.getInt("CurrentMaxAmount");
-		inStacks = compound.getBoolean("InStacks");
-		redstoneState = compound.getBoolean("Powered");
-		inverted = compound.getBoolean("Inverted");
-		poweredAfterDelay = compound.getBoolean("PoweredAfterDelay");
+		onWhenAbove = compound.getIntOr("OnAboveAmount", 128);
+		offWhenBelow = compound.getIntOr("OffBelowAmount", 64);
+		currentLevel = compound.getIntOr("CurrentAmount", -1);
+		currentMinLevel = compound.getIntOr("CurrentMinAmount", 0);
+		currentMaxLevel = compound.getIntOr("CurrentMaxAmount", 0);
+		inStacks = compound.getBooleanOr("InStacks", false);
+		redstoneState = compound.getBooleanOr("Powered", false);
+		inverted = compound.getBooleanOr("Inverted", false);
+		poweredAfterDelay = compound.getBooleanOr("PoweredAfterDelay", false);
 		super.read(compound, registries, clientPacket);
 	}
 
@@ -242,7 +242,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 	}
 
 	private boolean isSuitableInventory(BlockEntity be) {
-		return be != null && !(be instanceof StockTickerBlockEntity || level.getCapability(Capabilities.ItemHandler.BLOCK, be.getBlockPos(), null, be, null) instanceof ProcessingInventory);
+		return be != null && !(be instanceof StockTickerBlockEntity || level.getCapability(Capabilities.Item.BLOCK, be.getBlockPos(), null, be, null) instanceof ProcessingInventory);
 	}
 
 	private BlockPos getTargetPos() {
@@ -293,7 +293,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		updateCurrentLevel();
 	}
@@ -335,7 +335,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 
 	public void updatePowerAfterDelay() {
 		poweredAfterDelay = shouldBePowered();
-		level.blockUpdated(worldPosition, getBlockState().getBlock());
+		level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
 		sendData();
 	}
 

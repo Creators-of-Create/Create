@@ -18,7 +18,7 @@ import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 

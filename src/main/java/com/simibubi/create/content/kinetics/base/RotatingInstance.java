@@ -6,7 +6,7 @@ import org.joml.Vector3f;
 import dev.engine_room.flywheel.api.instance.InstanceHandle;
 import dev.engine_room.flywheel.api.instance.InstanceType;
 import dev.engine_room.flywheel.lib.instance.ColoredLitOverlayInstance;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;

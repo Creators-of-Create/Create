@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions;
 
-import net.createmod.catnip.levelWrappers.WrappedLevel;
+import net.createmod.catnip.api.level.wrapper.WrappedLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -55,7 +55,7 @@ public class ContraptionWorld extends WrappedLevel {
 	}
 
 	@Override
-	public int getMinBuildHeight() {
+	public int getMinY() {
 		return minY;
 	}
 }

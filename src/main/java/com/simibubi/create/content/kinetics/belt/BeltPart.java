@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.belt;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.util.StringRepresentable;
 
 public enum BeltPart implements StringRepresentable {

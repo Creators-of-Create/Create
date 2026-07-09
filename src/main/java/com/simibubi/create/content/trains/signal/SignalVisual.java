@@ -19,8 +19,8 @@ import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleTickableVisual;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.minecraft.client.renderer.LightTexture;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -72,7 +72,7 @@ public class SignalVisual extends AbstractBlockEntityVisual<SignalBlockEntity> i
 		{
 			SignalState signalState = blockEntity.getState();
 
-			float renderTime = AnimationTickHolder.getRenderTime(blockEntity.getLevel());
+			float renderTime = AnimationTickHolder.getRenderTime();
 			boolean isRedLight = signalState.isRedLight(renderTime);
 
 			if (isRedLight != previousIsRedLight) {
@@ -86,7 +86,7 @@ public class SignalVisual extends AbstractBlockEntityVisual<SignalBlockEntity> i
 				.translate(getVisualPosition());
 
 			if (isRedLight)
-				signalLight.light(LightTexture.FULL_BLOCK);
+				signalLight.light(LightCoordsUtil.pack(15, 0));
 
 			signalLight.setChanged();
 

@@ -19,9 +19,9 @@ import com.simibubi.create.foundation.data.WindowGen;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -42,9 +42,9 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<TransparentBlock> TILED_GLASS = REGISTRATE.block("tiled_glass", TransparentBlock::new)
 		.initialProperties(() -> Blocks.GLASS)
-		.addLayer(() -> RenderType::cutout)
+		.addLayer(() -> com.simibubi.create.foundation.render.LegacyRenderTypes::cutout)
 		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_BLOCKS_COLORLESS), RecipeCategory.BUILDING_BLOCKS, c))
-		.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/"))
+		.blockstate(() -> (c, p) -> BlockStateGen.cubeAll(c, p, "palettes/"))
 		.loot((t, g) -> t.dropWhenSilkTouch(g))
 		.tag(Tags.Blocks.GLASS_BLOCKS_COLORLESS, BlockTags.IMPERMEABLE)
 		.item()
@@ -61,7 +61,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<GlassPaneBlock> TILED_GLASS_PANE =
 		WindowGen.standardGlassPane("tiled_glass", TILED_GLASS, Create.asResource("block/palettes/tiled_glass"),
-			ResourceLocation.withDefaultNamespace("block/glass_pane_top"), () -> RenderType::cutoutMipped);
+			Identifier.withDefaultNamespace("block/glass_pane_top"), () -> com.simibubi.create.foundation.render.LegacyRenderTypes::cutoutMipped);
 
 	public static final BlockEntry<ConnectedGlassPaneBlock> FRAMED_GLASS_PANE =
 		framedGlassPane("framed_glass", FRAMED_GLASS, () -> AllSpriteShifts.FRAMED_GLASS),
@@ -72,7 +72,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<WindowBlock> OAK_WINDOW = woodenWindowBlock(WoodType.OAK, Blocks.OAK_PLANKS),
 		SPRUCE_WINDOW = woodenWindowBlock(WoodType.SPRUCE, Blocks.SPRUCE_PLANKS),
-		BIRCH_WINDOW = woodenWindowBlock(WoodType.BIRCH, Blocks.BIRCH_PLANKS, () -> RenderType::translucent, true),
+		BIRCH_WINDOW = woodenWindowBlock(WoodType.BIRCH, Blocks.BIRCH_PLANKS, () -> com.simibubi.create.foundation.render.LegacyRenderTypes::translucent, true),
 		JUNGLE_WINDOW = woodenWindowBlock(WoodType.JUNGLE, Blocks.JUNGLE_PLANKS),
 		ACACIA_WINDOW = woodenWindowBlock(WoodType.ACACIA, Blocks.ACACIA_PLANKS),
 		DARK_OAK_WINDOW = woodenWindowBlock(WoodType.DARK_OAK, Blocks.DARK_OAK_PLANKS),
@@ -83,19 +83,19 @@ public class AllPaletteBlocks {
 		BAMBOO_WINDOW = woodenWindowBlock(WoodType.BAMBOO, Blocks.BAMBOO_PLANKS),
 		ORNATE_IRON_WINDOW =
 			customWindowBlock("ornate_iron_window", () -> Items.IRON_NUGGET, () -> AllSpriteShifts.ORNATE_IRON_WINDOW,
-				() -> RenderType::cutout, false, () -> MapColor.TERRACOTTA_LIGHT_GRAY),
+				() -> com.simibubi.create.foundation.render.LegacyRenderTypes::cutout, false, () -> MapColor.TERRACOTTA_LIGHT_GRAY),
 		INDUSTRIAL_IRON_WINDOW = customWindowBlock("industrial_iron_window", AllBlocks.INDUSTRIAL_IRON_BLOCK,
-			() -> AllSpriteShifts.INDUSTRIAL_IRON_WINDOW, () -> RenderType::cutout, false, () -> MapColor.COLOR_GRAY),
+			() -> AllSpriteShifts.INDUSTRIAL_IRON_WINDOW, () -> com.simibubi.create.foundation.render.LegacyRenderTypes::cutout, false, () -> MapColor.COLOR_GRAY),
 		WEATHERED_IRON_WINDOW = WindowGen
 			.randomisedWindowBlock("weathered_iron_window", AllBlocks.WEATHERED_IRON_BLOCK,
-				() -> RenderType::translucent, true, () -> MapColor.TERRACOTTA_LIGHT_GRAY)
+				() -> com.simibubi.create.foundation.render.LegacyRenderTypes::translucent, true, () -> MapColor.TERRACOTTA_LIGHT_GRAY)
 			.onRegister(CreateRegistrate.connectedTextures(() -> new WeatheredIronWindowCTBehaviour()))
 			.register();
 
 	public static final BlockEntry<ConnectedGlassPaneBlock> OAK_WINDOW_PANE =
 		woodenWindowPane(WoodType.OAK, OAK_WINDOW),
 		SPRUCE_WINDOW_PANE = woodenWindowPane(WoodType.SPRUCE, SPRUCE_WINDOW),
-		BIRCH_WINDOW_PANE = woodenWindowPane(WoodType.BIRCH, BIRCH_WINDOW, () -> RenderType::translucent),
+		BIRCH_WINDOW_PANE = woodenWindowPane(WoodType.BIRCH, BIRCH_WINDOW, () -> com.simibubi.create.foundation.render.LegacyRenderTypes::translucent),
 		JUNGLE_WINDOW_PANE = woodenWindowPane(WoodType.JUNGLE, JUNGLE_WINDOW),
 		ACACIA_WINDOW_PANE = woodenWindowPane(WoodType.ACACIA, ACACIA_WINDOW),
 		DARK_OAK_WINDOW_PANE = woodenWindowPane(WoodType.DARK_OAK, DARK_OAK_WINDOW),
@@ -105,11 +105,11 @@ public class AllPaletteBlocks {
 		CHERRY_WINDOW_PANE = woodenWindowPane(WoodType.CHERRY, CHERRY_WINDOW),
 		BAMBOO_WINDOW_PANE = woodenWindowPane(WoodType.BAMBOO, BAMBOO_WINDOW),
 		ORNATE_IRON_WINDOW_PANE = customWindowPane("ornate_iron_window", ORNATE_IRON_WINDOW,
-			() -> AllSpriteShifts.ORNATE_IRON_WINDOW, () -> RenderType::cutoutMipped).register(),
+			() -> AllSpriteShifts.ORNATE_IRON_WINDOW, () -> com.simibubi.create.foundation.render.LegacyRenderTypes::cutoutMipped).register(),
 		INDUSTRIAL_IRON_WINDOW_PANE = customWindowPane("industrial_iron_window", INDUSTRIAL_IRON_WINDOW,
-			() -> AllSpriteShifts.INDUSTRIAL_IRON_WINDOW, () -> RenderType::cutoutMipped).register(),
+			() -> AllSpriteShifts.INDUSTRIAL_IRON_WINDOW, () -> com.simibubi.create.foundation.render.LegacyRenderTypes::cutoutMipped).register(),
 		WEATHERED_IRON_WINDOW_PANE =
-			customWindowPane("weathered_iron_window", WEATHERED_IRON_WINDOW, null, () -> RenderType::translucent)
+			customWindowPane("weathered_iron_window", WEATHERED_IRON_WINDOW, null, () -> com.simibubi.create.foundation.render.LegacyRenderTypes::translucent)
 				.onRegister(CreateRegistrate.connectedTextures(() -> new WeatheredIronWindowPaneCTBehaviour()))
 				.register();
 

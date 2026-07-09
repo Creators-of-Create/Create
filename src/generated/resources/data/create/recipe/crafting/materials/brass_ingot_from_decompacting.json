@@ -1,10 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:storage_blocks/brass"
-    }
+    "#c:storage_blocks/brass"
   ],
   "result": {
     "count": 9,

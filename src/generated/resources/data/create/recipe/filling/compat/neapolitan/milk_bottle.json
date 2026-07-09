@@ -7,13 +7,11 @@
   ],
   "type": "create:filling",
   "ingredients": [
+    "minecraft:glass_bottle",
     {
-      "item": "minecraft:glass_bottle"
-    },
-    {
-      "type": "neoforge:tag",
+      "type": "neoforge:simple",
       "amount": 250,
-      "tag": "c:milk"
+      "ingredient": "#c:milk"
     }
   ],
   "results": [

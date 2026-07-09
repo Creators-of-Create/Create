@@ -1,12 +1,8 @@
 {
   "type": "create:item_application",
   "ingredients": [
-    {
-      "tag": "c:stripped_logs"
-    },
-    {
-      "tag": "c:ingots/copper"
-    }
+    "#c:stripped_logs",
+    "#c:ingots/copper"
   ],
   "results": [
     {

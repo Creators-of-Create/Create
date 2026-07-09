@@ -11,21 +11,11 @@
   "type": "create:pressing",
   "ingredients": [
     [
-      {
-        "item": "minecraft:dirt"
-      },
-      {
-        "item": "minecraft:coarse_dirt"
-      },
-      {
-        "item": "minecraft:rooted_dirt"
-      },
-      {
-        "item": "minecraft:mycelium"
-      },
-      {
-        "item": "minecraft:podzol"
-      }
+      "minecraft:dirt",
+      "minecraft:coarse_dirt",
+      "minecraft:rooted_dirt",
+      "minecraft:mycelium",
+      "minecraft:podzol"
     ]
   ],
   "results": [

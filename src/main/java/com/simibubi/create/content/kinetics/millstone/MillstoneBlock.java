@@ -5,14 +5,15 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.KineticBlock;
 import com.simibubi.create.content.kinetics.simpleRelays.ICogWheel;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.item.LegacyItemHandlerAdapter;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -49,11 +50,11 @@ public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEn
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!stack.isEmpty())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-		if (level.isClientSide)
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
+		if (level.isClientSide())
+			return InteractionResult.SUCCESS;
 
 		withBlockEntityDo(level, pos, millstone -> {
 			boolean emptyOutput = true;
@@ -80,14 +81,14 @@ public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEn
 			millstone.sendData();
 		});
 
-		return ItemInteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
-		super.updateEntityAfterFallOn(worldIn, entityIn);
+	public void fallOn(Level worldIn, BlockState state, BlockPos pos, Entity entityIn, double fallDistance) {
+		super.fallOn(worldIn, state, pos, entityIn, fallDistance);
 
-		if (entityIn.level().isClientSide)
+		if (entityIn.level().isClientSide())
 			return;
 		if (!(entityIn instanceof ItemEntity itemEntity))
 			return;
@@ -95,14 +96,14 @@ public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEn
 			return;
 
 		MillstoneBlockEntity millstone = null;
-		for (BlockPos pos : Iterate.hereAndBelow(entityIn.blockPosition()))
+		for (BlockPos targetPos : Iterate.hereAndBelow(entityIn.blockPosition()))
 			if (millstone == null)
-				millstone = getBlockEntity(worldIn, pos);
+				millstone = getBlockEntity(worldIn, targetPos);
 
 		if (millstone == null)
 			return;
 
-		IItemHandler capability = millstone.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, millstone.getBlockPos(), null);
+		IItemHandler capability = LegacyItemHandlerAdapter.of(millstone.getLevel().getCapability(Capabilities.Item.BLOCK, millstone.getBlockPos(), null));
 		if (capability == null)
 			return;
 

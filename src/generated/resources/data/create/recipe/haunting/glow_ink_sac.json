@@ -1,9 +1,7 @@
 {
   "type": "create:haunting",
   "ingredients": [
-    {
-      "item": "minecraft:ink_sac"
-    }
+    "minecraft:ink_sac"
   ],
   "results": [
     {

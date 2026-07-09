@@ -7,11 +7,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.google.common.cache.Cache;
 import com.simibubi.create.foundation.utility.TickBasedCache;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.data.WorldAttached;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.data.WorldAttached;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
@@ -37,7 +37,7 @@ public class ChainConveyorPackage {
 		public float yaw;
 		public float prevYaw;
 		public boolean flipped;
-		public ResourceLocation modelKey;
+		public Identifier modelKey;
 
 		public WeakReference<ChainConveyorBlockEntity> beReference;
 
@@ -95,15 +95,16 @@ public class ChainConveyorPackage {
 	public CompoundTag write(HolderLookup.Provider registries) {
 		CompoundTag compoundTag = new CompoundTag();
 		compoundTag.putFloat("Position", chainPosition);
-		compoundTag.put("Item", item.saveOptional(registries));
+		compoundTag.put("Item", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(item, registries));
 		return compoundTag;
 	}
 
 	public static ChainConveyorPackage read(CompoundTag compoundTag, HolderLookup.Provider registries) {
-		float pos = compoundTag.getFloat("Position");
-		ItemStack item = ItemStack.parseOptional(registries, compoundTag.getCompound("Item"));
+		float pos = compoundTag.getFloatOr("Position", 0);
+		ItemStack item = com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.parseOptional(registries,
+			compoundTag.getCompound("Item"));
 		if (compoundTag.contains("NetID"))
-			return new ChainConveyorPackage(pos, item, compoundTag.getInt("NetID"));
+			return new ChainConveyorPackage(pos, item, compoundTag.getIntOr("NetID", 0));
 		return new ChainConveyorPackage(pos, item);
 	}
 

@@ -4,7 +4,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.AllItems;
@@ -23,8 +22,8 @@ public abstract class LavaSwimmingMixin extends Entity {
 		super(type, level);
 	}
 
-	@Inject(method = "travel(Lnet/minecraft/world/phys/Vec3;)V", slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInLava()Z")), at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", shift = Shift.AFTER, ordinal = 0))
-	private void create$onLavaTravel(Vec3 travelVector, CallbackInfo ci) {
+	@Inject(method = "travelInLava(Lnet/minecraft/world/phys/Vec3;DZD)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", shift = Shift.AFTER))
+	private void create$onLavaTravel(Vec3 travelVector, double gravity, boolean falling, double fluidHeight, CallbackInfo ci) {
 		ItemStack bootsStack = DivingBootsItem.getWornItem(this);
 		if (AllItems.NETHERITE_DIVING_BOOTS.isIn(bootsStack))
 			setDeltaMovement(getDeltaMovement().multiply(DivingBootsItem.getMovementMultiplier((LivingEntity) (Object) this)));

@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:cactus"
-    }
+    "minecraft:cactus"
   ],
   "processing_time": 50,
   "results": [

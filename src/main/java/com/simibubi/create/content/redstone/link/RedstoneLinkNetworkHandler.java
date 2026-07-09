@@ -11,8 +11,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.simibubi.create.Create;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.levelWrappers.WorldHelper;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.level.WorldHelper;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

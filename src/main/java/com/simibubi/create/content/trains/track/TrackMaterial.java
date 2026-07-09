@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +19,7 @@ import com.simibubi.create.Create;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -27,10 +27,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class TrackMaterial {
-	public static final Map<ResourceLocation, TrackMaterial> ALL = new HashMap<>();
+	public static final Map<Identifier, TrackMaterial> ALL = new HashMap<>();
 
 	public static final TrackMaterial ANDESITE = make(Create.asResource("andesite"))
 			.lang("Andesite")
@@ -39,33 +38,31 @@ public class TrackMaterial {
 			.defaultModels()
 			.build();
 
-	public final ResourceLocation id;
+	public final Identifier id;
 	public final String langName;
 	public final NonNullSupplier<NonNullSupplier<? extends TrackBlock>> trackBlock;
 	public final Ingredient sleeperIngredient;
 	public final Ingredient railsIngredient;
-	public final ResourceLocation particle;
+	public final Identifier particle;
 	public final TrackType trackType;
 
 	@Nullable
 	private final TrackMaterial.TrackType.TrackBlockFactory customFactory;
 
-	@OnlyIn(Dist.CLIENT)
 	protected TrackModelHolder modelHolder;
 
-	@OnlyIn(Dist.CLIENT)
 	public TrackModelHolder getModelHolder() {
 		return modelHolder;
 	}
 
-	public TrackMaterial(ResourceLocation id, String langName, NonNullSupplier<NonNullSupplier<? extends TrackBlock>> trackBlock,
-						 ResourceLocation particle, Ingredient sleeperIngredient, Ingredient railsIngredient,
+	public TrackMaterial(Identifier id, String langName, NonNullSupplier<NonNullSupplier<? extends TrackBlock>> trackBlock,
+						 Identifier particle, Ingredient sleeperIngredient, Ingredient railsIngredient,
 						 TrackType trackType, Supplier<Supplier<TrackModelHolder>> modelHolder) {
 		this(id, langName, trackBlock, particle, sleeperIngredient, railsIngredient, trackType, modelHolder, null);
 	}
 
-	public TrackMaterial(ResourceLocation id, String langName, NonNullSupplier<NonNullSupplier<? extends TrackBlock>> trackBlock,
-						 ResourceLocation particle, Ingredient sleeperIngredient, Ingredient railsIngredient,
+	public TrackMaterial(Identifier id, String langName, NonNullSupplier<NonNullSupplier<? extends TrackBlock>> trackBlock,
+						 Identifier particle, Ingredient sleeperIngredient, Ingredient railsIngredient,
 						 TrackType trackType, Supplier<Supplier<TrackModelHolder>> modelHolder,
 						 @Nullable TrackType.TrackBlockFactory customFactory) {
 		this.id = id;
@@ -134,7 +131,7 @@ public class TrackMaterial {
 		if (serializedName.isBlank()) // Data migrating from 0.5
 			return ANDESITE;
 
-		ResourceLocation id = ResourceLocation.tryParse(serializedName);
+		Identifier id = Identifier.tryParse(serializedName);
 		if (ALL.containsKey(id))
 			return ALL.get(id);
 
@@ -150,10 +147,10 @@ public class TrackMaterial {
 
 		public static final TrackType STANDARD = new TrackType(Create.asResource("standard"), TrackBlock::new);
 
-		public final ResourceLocation id;
+		public final Identifier id;
 		protected final TrackBlockFactory factory;
 
-		public TrackType(ResourceLocation id, TrackBlockFactory factory) {
+		public TrackType(Identifier id, TrackBlockFactory factory) {
 			this.id = id;
 			this.factory = factory;
 		}
@@ -165,7 +162,6 @@ public class TrackMaterial {
 		return TrackMaterial.ANDESITE;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public record TrackModelHolder(PartialModel tie, PartialModel leftSegment, PartialModel rightSegment) {
 		static final TrackModelHolder DEFAULT = new TrackModelHolder(AllPartialModels.TRACK_TIE,
 			AllPartialModels.TRACK_SEGMENT_LEFT, AllPartialModels.TRACK_SEGMENT_RIGHT);

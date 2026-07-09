@@ -1,23 +1,12 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "item": "create:railway_casing"
-    },
+    "create:railway_casing",
     [
-      {
-        "item": "minecraft:stone_pressure_plate"
-      },
-      {
-        "item": "minecraft:polished_blackstone_pressure_plate"
-      },
-      {
-        "item": "minecraft:heavy_weighted_pressure_plate"
-      },
-      {
-        "item": "minecraft:light_weighted_pressure_plate"
-      }
+      "minecraft:stone_pressure_plate",
+      "minecraft:polished_blackstone_pressure_plate",
+      "minecraft:heavy_weighted_pressure_plate",
+      "minecraft:light_weighted_pressure_plate"
     ]
   ],
   "result": {

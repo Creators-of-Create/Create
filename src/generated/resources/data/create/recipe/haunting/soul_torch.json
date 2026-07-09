@@ -1,9 +1,7 @@
 {
   "type": "create:haunting",
   "ingredients": [
-    {
-      "item": "minecraft:torch"
-    }
+    "minecraft:torch"
   ],
   "results": [
     {

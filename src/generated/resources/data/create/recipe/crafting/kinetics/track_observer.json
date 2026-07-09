@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "item": "create:railway_casing"
-    },
-    {
-      "tag": "minecraft:wooden_pressure_plates"
-    }
+    "create:railway_casing",
+    "#minecraft:wooden_pressure_plates"
   ],
   "result": {
     "count": 2,

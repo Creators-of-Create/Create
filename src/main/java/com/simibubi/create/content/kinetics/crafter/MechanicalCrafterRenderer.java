@@ -15,14 +15,14 @@ import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRender
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.math.Pointing;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -43,7 +43,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 		ms.pushPose();
 		Direction facing = be.getBlockState()
 			.getValue(HORIZONTAL_FACING);
-		Vec3 vec = Vec3.atLowerCornerOf(facing.getNormal())
+		Vec3 vec = Vec3.atLowerCornerOf(facing.getUnitVec3i())
 			.scale(.58)
 			.add(.5, .5, .5);
 
@@ -51,7 +51,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 			Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(be.getBlockState());
 			float progress =
 				Mth.clamp((1000 - be.countDown + be.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
-			vec = vec.add(Vec3.atLowerCornerOf(targetDirection.getNormal())
+			vec = vec.add(Vec3.atLowerCornerOf(targetDirection.getUnitVec3i())
 				.scale(progress * .75f));
 		}
 
@@ -74,8 +74,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 				ms.pushPose();
 				ms.translate(0, 0, -1 / 256f);
 				ms.mulPose(Axis.YP.rotationDegrees(180));
-				Minecraft.getInstance()
-					.getItemRenderer()
+				com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer()
 					.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 				ms.popPose();
 			}
@@ -125,8 +124,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 				TransformStack.of(ms)
 					.rotateYDegrees(180)
 					.translate(0, 0, (x + y * 3 + offset * 9) / 1024f );
-				Minecraft.getInstance()
-					.getItemRenderer()
+				com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer()
 					.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 				ms.popPose();
 			});
@@ -154,8 +152,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 						return;
 					ms.pushPose();
 					ms.mulPose(Axis.YP.rotationDegrees(180));
-					Minecraft.getInstance()
-						.getItemRenderer()
+					com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer()
 						.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 					ms.popPose();
 				});
@@ -167,7 +164,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 	public void renderFast(MechanicalCrafterBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light) {
 		BlockState blockState = be.getBlockState();
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 
 		if (!VisualizationManager.supportsVisualization(be.getLevel())) {
 			SuperByteBuffer superBuffer = CachedBuffers.partial(AllPartialModels.SHAFTLESS_COGWHEEL, blockState);

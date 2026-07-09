@@ -1,12 +1,8 @@
 {
   "type": "create:item_application",
   "ingredients": [
-    {
-      "item": "create:brass_casing"
-    },
-    {
-      "tag": "c:plates/obsidian"
-    }
+    "create:brass_casing",
+    "#c:plates/obsidian"
   ],
   "results": [
     {

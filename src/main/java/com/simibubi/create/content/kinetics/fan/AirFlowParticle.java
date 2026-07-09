@@ -1,21 +1,20 @@
 package com.simibubi.create.content.kinetics.fan;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -26,7 +25,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 
 	protected AirFlowParticle(ClientLevel world, IAirCurrentSource source, double x, double y, double z,
 							  SpriteSet sprite) {
-		super(world, x, y, z, sprite, world.random.nextFloat() * .5f);
+		super(world, x, y, z, sprite, world.getRandom().nextFloat() * .5f);
 		this.source = source;
 		this.quadSize *= 0.75F;
 		this.lifetime = 40;
@@ -39,11 +38,6 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		this.zo = this.z;
 		setColor(0xEEEEEE);
 		setAlpha(.25f);
-	}
-
-	@NotNull
-	public ParticleRenderType getRenderType() {
-		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}
 
 	@Override
@@ -64,7 +58,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 				return;
 			}
 
-			Vec3 directionVec = Vec3.atLowerCornerOf(airCurrent.direction.getNormal());
+			Vec3 directionVec = Vec3.atLowerCornerOf(airCurrent.direction.getUnitVec3i());
 			Vec3 motion = directionVec.scale(1 / 8f);
 			if (!source.getAirCurrent().pushing)
 				motion = motion.scale(-1);
@@ -107,9 +101,10 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		return source.getAirCurrent().getTypeAt((float) distance);
 	}
 
-	public int getLightColor(float partialTick) {
+	@Override
+	public int getLightCoords(float partialTick) {
 		BlockPos blockpos = BlockPos.containing(this.x, this.y, this.z);
-		return this.level.isLoaded(blockpos) ? LevelRenderer.getLightColor(level, blockpos) : 0;
+		return this.level.isLoaded(blockpos) ? com.simibubi.create.foundation.render.LegacyLightTexture.getLightColor(level, blockpos) : 0;
 	}
 
 	private void selectSprite(int index) {
@@ -125,7 +120,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 
 		@Override
 		public Particle createParticle(AirFlowParticleData data, ClientLevel worldIn, double x, double y, double z,
-									   double xSpeed, double ySpeed, double zSpeed) {
+									   double xSpeed, double ySpeed, double zSpeed, RandomSource random) {
 			BlockEntity be = worldIn.getBlockEntity(new BlockPos(data.posX, data.posY, data.posZ));
 			if (!(be instanceof IAirCurrentSource))
 				be = null;

@@ -5,6 +5,7 @@ import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehavi
 import com.simibubi.create.content.kinetics.drill.CobbleGenOptimisation.CobbleGenBlockConfiguration;
 import com.simibubi.create.content.logistics.chute.ChuteBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.item.LegacyItemHandlerAdapter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,7 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities.Item;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
@@ -73,7 +74,7 @@ public class DrillBlockEntity extends BlockBreakingKineticBlockEntity {
 			for (ItemStack stack : Block.getDrops(stateToBreak, sl, breakingPos, null))
 				inv.handleInsertion(stack, Direction.UP, false);
 		else if (blockEntityBelow instanceof HopperBlockEntity hbe) {
-			IItemHandler handler = level.getCapability(ItemHandler.BLOCK, hbe.getBlockPos(), null);
+			IItemHandler handler = LegacyItemHandlerAdapter.of(level.getCapability(Item.BLOCK, hbe.getBlockPos(), null));
 			if (handler != null)
 				for (ItemStack stack : Block.getDrops(stateToBreak, sl, breakingPos, null))
 					ItemHandlerHelper.insertItemStacked(handler, stack, false);

@@ -18,9 +18,9 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -35,7 +35,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
 
@@ -128,7 +127,7 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 
 		shaft.update(worldPosition, conveyedSpeedLevel, efficiency);
 
-		if (!level.isClientSide)
+		if (!level.isClientSide())
 			return;
 
 		CatnipServices.PLATFORM.executeOnClientOnly(() -> this::spawnParticles);
@@ -143,7 +142,6 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	protected AABB createRenderBoundingBox() {
 		return super.createRenderBoundingBox().inflate(2);
 	}
@@ -186,7 +184,6 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 		return level.getBlockState(getBlockPos().relative(dir)).is(AllBlocks.FLUID_TANK.get());
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private void spawnParticles() {
 		Float targetAngle = getTargetAngle();
 		PoweredShaftBlockEntity ste = target.get();
@@ -224,14 +221,14 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 
 		Direction facing = SteamEngineBlock.getFacing(getBlockState());
 
-		Vec3 offset = VecHelper.rotate(new Vec3(0, 0, 1).add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+		Vec3 offset = VecHelper.rotate(new Vec3(0, 0, 1).add(VecHelper.offsetRandomly(Vec3.ZERO, level.getRandom(), 1)
 			.multiply(1, 1, 0)
 			.normalize()
 			.scale(.5f)), AngleHelper.verticalAngle(facing), Axis.X);
 		offset = VecHelper.rotate(offset, AngleHelper.horizontalAngle(facing), Axis.Y);
 		Vec3 v = offset.scale(.5f)
 			.add(Vec3.atCenterOf(worldPosition));
-		Vec3 m = offset.subtract(Vec3.atLowerCornerOf(facing.getNormal())
+		Vec3 m = offset.subtract(Vec3.atLowerCornerOf(facing.getUnitVec3i())
 			.scale(.75f));
 		level.addParticle(new SteamJetParticleData(1), v.x, v.y, v.z, m.x, m.y, m.z);
 
@@ -239,7 +236,6 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 	}
 
 	@Nullable
-	@OnlyIn(Dist.CLIENT)
 	public Float getTargetAngle() {
 		float angle = 0;
 		BlockState blockState = getBlockState();

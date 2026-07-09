@@ -5,22 +5,20 @@ import com.simibubi.create.AllSpecialTextures;
 
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
-import net.createmod.catnip.outliner.Outliner;
-import net.minecraft.client.player.LocalPlayer;
+import net.createmod.catnip.api.client.outliner.Outliner;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.phys.shapes.Shapes;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public record HighlightPacket(BlockPos pos) implements ClientboundPacketPayload {
 	public static final StreamCodec<ByteBuf, HighlightPacket> STREAM_CODEC = BlockPos.STREAM_CODEC.map(HighlightPacket::new, p -> p.pos);
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void handle(LocalPlayer player) {
-		if (!player.clientLevel.isLoaded(pos)) {
+	public void handle(Player player) {
+		if (!player.level().hasChunkAt(pos)) {
 			return;
 		}
 

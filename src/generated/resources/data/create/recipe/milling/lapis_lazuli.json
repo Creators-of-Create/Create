@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:lapis_lazuli"
-    }
+    "minecraft:lapis_lazuli"
   ],
   "processing_time": 100,
   "results": [

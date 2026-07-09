@@ -10,12 +10,13 @@ import com.simibubi.create.content.logistics.funnel.BeltFunnelBlock;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.lang.Lang;
-import net.createmod.catnip.levelWrappers.WrappedLevel;
+import net.createmod.catnip.api.lang.Lang;
+import net.createmod.catnip.api.level.wrapper.WrappedLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -33,6 +35,7 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -104,13 +107,13 @@ public class BeltTunnelBlock extends Block implements IBE<BeltTunnelBlockEntity>
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor worldIn,
-		BlockPos currentPos, BlockPos facingPos) {
+	public BlockState updateShape(BlockState state, LevelReader worldIn, ScheduledTickAccess ticks,
+		BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random) {
 		if (facing.getAxis()
 			.isVertical())
 			return state;
-		if (!(worldIn instanceof WrappedLevel) && !worldIn.isClientSide())
-			withBlockEntityDo(worldIn, currentPos, BeltTunnelBlockEntity::updateTunnelConnections);
+		if (worldIn instanceof LevelAccessor levelAccessor && !(worldIn instanceof WrappedLevel) && !levelAccessor.isClientSide())
+			withBlockEntityDo(levelAccessor, currentPos, BeltTunnelBlockEntity::updateTunnelConnections);
 		BlockState tunnelState = getTunnelState(worldIn, currentPos);
 		if (tunnelState.getValue(HORIZONTAL_AXIS) == state.getValue(HORIZONTAL_AXIS)) {
 			if (hasWindow(tunnelState) == hasWindow(state))
@@ -198,7 +201,7 @@ public class BeltTunnelBlock extends Block implements IBE<BeltTunnelBlockEntity>
 		Shape shape = state.getValue(SHAPE);
 		shape = shape == Shape.CLOSED ? Shape.WINDOW : Shape.CLOSED;
 		Level world = context.getLevel();
-		if (!world.isClientSide)
+		if (!world.isClientSide())
 			world.setBlock(context.getClickedPos(), state.setValue(SHAPE, shape), Block.UPDATE_CLIENTS);
 		return InteractionResult.SUCCESS;
 	}
@@ -212,16 +215,14 @@ public class BeltTunnelBlock extends Block implements IBE<BeltTunnelBlockEntity>
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+	protected void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, Orientation orientation,
 		boolean isMoving) {
-		if (worldIn.isClientSide)
+		if (worldIn.isClientSide())
 			return;
 
-		if (fromPos.equals(pos.below())) {
-			if (!canSurvive(state, worldIn, pos)) {
-				worldIn.destroyBlock(pos, true);
-				return;
-			}
+		if (!canSurvive(state, worldIn, pos)) {
+			worldIn.destroyBlock(pos, true);
+			return;
 		}
 	}
 

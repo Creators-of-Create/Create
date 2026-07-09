@@ -7,16 +7,17 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBehaviour;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelConnectionHandler;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.utility.LegacyBlockEntityDataComponentBridge;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.outliner.Outliner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class LogisticallyLinkedClientHandler {
@@ -34,11 +35,11 @@ public class LogisticallyLinkedClientHandler {
 			|| !LogisticallyLinkedBlockItem.isTuned(mainHandItem))
 			return;
 
-		CompoundTag tag = mainHandItem.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).copyTag();
-		if (!tag.hasUUID("Freq"))
+		CompoundTag tag = LegacyBlockEntityDataComponentBridge.get(mainHandItem);
+		if (!tag.contains("Freq"))
 			return;
 
-		UUID uuid = tag.getUUID("Freq");
+		UUID uuid = LegacyNbtUtilsBridge.loadUUID(tag.get("Freq"));
 		previouslyHeldFrequency = uuid;
 
 		for (LogisticallyLinkedBehaviour behaviour : LogisticallyLinkedBehaviour.getAllPresent(uuid, false, true)) {
@@ -47,7 +48,7 @@ public class LogisticallyLinkedClientHandler {
 				.getShape(player.level(), be.getBlockPos());
 			if (shape.isEmpty())
 				continue;
-			if (!player.canInteractWithBlock(be.getBlockPos(), 64))
+			if (player.distanceToSqr(Vec3.atCenterOf(be.getBlockPos())) > 64 * 64)
 				continue;
 			for (int i = 0; i < shape.toAabbs()
 				.size(); i++) {

@@ -18,7 +18,6 @@
       "translate": "advancement.create.precision_mechanism.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:precision_mechanism"
     },
     "title": {

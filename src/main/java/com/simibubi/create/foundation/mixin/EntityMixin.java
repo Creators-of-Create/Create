@@ -27,7 +27,7 @@ public abstract class EntityMixin {
 
 	@ModifyReturnValue(method = "fireImmune()Z", at = @At("RETURN"))
 	private boolean create$onFireImmune(boolean original) {
-		return ((Entity) (Object) this).getPersistentData().getBoolean(NetheriteDivingHandler.FIRE_IMMUNE_KEY) || original;
+		return ((Entity) (Object) this).getPersistentData().getBooleanOr(NetheriteDivingHandler.FIRE_IMMUNE_KEY, false) || original;
 	}
 
 	@ModifyExpressionValue(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getOnPosLegacy()Lnet/minecraft/core/BlockPos;"))

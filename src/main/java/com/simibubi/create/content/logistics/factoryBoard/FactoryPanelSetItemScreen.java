@@ -10,8 +10,8 @@ import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -45,7 +45,7 @@ public class FactoryPanelSetItemScreen extends AbstractSimiContainerScreen<Facto
 	}
 
 	@Override
-	protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+	protected void renderBg(GuiGraphicsExtractor pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
 		int x = getGuiLeft();
 		int y = getGuiTop();
 		AllGuiTextures.FACTORY_GAUGE_SET_ITEM.render(pGuiGraphics, x - 5, y);
@@ -54,7 +54,7 @@ public class FactoryPanelSetItemScreen extends AbstractSimiContainerScreen<Facto
 		ItemStack stack = AllBlocks.FACTORY_GAUGE.asStack();
 		Component title = CreateLang.translate("gui.factory_panel.place_item_to_monitor")
 			.component();
-		pGuiGraphics.drawString(font, title, x + imageWidth / 2 - font.width(title) / 2 - 5, y + 4, 0x3D3C48, false);
+		pGuiGraphics.text(font, title, x + imageWidth / 2 - font.width(title) / 2 - 5, y + 4, 0x3D3C48, false);
 
 		GuiGameElement.of(stack)
 			.scale(3)

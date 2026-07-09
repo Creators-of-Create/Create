@@ -7,11 +7,11 @@ import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import com.simibubi.create.foundation.render.ItemRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +22,7 @@ public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer {
 	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer,
 		ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		Minecraft mc = Minecraft.getInstance();
-		ItemRenderer itemRenderer = mc.getItemRenderer();
+		ItemRenderer itemRenderer = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer();
 		LocalPlayer player = mc.player;
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
@@ -74,7 +74,7 @@ public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer {
 			}
 		}
 
-		itemRenderer.render(stack, ItemDisplayContext.NONE, false, ms, buffer, light, overlay, model.getOriginalModel());
+		renderer.render(model.getOriginalModel(), light);
 
 		ms.popPose();
 	}

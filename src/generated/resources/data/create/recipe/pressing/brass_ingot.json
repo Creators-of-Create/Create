@@ -1,9 +1,7 @@
 {
   "type": "create:pressing",
   "ingredients": [
-    {
-      "tag": "c:ingots/brass"
-    }
+    "#c:ingots/brass"
   ],
   "results": [
     {

@@ -3,42 +3,27 @@ package com.simibubi.create.content.equipment.potatoCannon;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
-public class PotatoProjectileRenderer extends EntityRenderer<PotatoProjectileEntity> {
+public class PotatoProjectileRenderer extends EntityRenderer<PotatoProjectileEntity, EntityRenderState> {
 
 	public PotatoProjectileRenderer(EntityRendererProvider.Context context) {
 		super(context);
 	}
 
-	@Override
 	public void render(PotatoProjectileEntity entity, float yaw, float pt, PoseStack ms, MultiBufferSource buffer,
 		int light) {
-		ItemStack item = entity.getItem();
-		if (item.isEmpty())
-			return;
-		ms.pushPose();
-		ms.translate(0, entity.getBoundingBox()
-			.getYsize() / 2 - 1 / 8f, 0);
-		entity.getRenderMode()
-			.transform(ms, entity, pt);
-
-		Minecraft.getInstance()
-			.getItemRenderer()
-			.renderStatic(item, ItemDisplayContext.GROUND, light, OverlayTexture.NO_OVERLAY, ms, buffer, entity.level(),
-				0);
-		ms.popPose();
+		// TODO 26.2: Port potato projectile item rendering to EntityRenderer#submit.
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(PotatoProjectileEntity entity) {
-		return null;
+	public EntityRenderState createRenderState() {
+		return new EntityRenderState();
 	}
-
 }

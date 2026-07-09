@@ -11,7 +11,7 @@ import dev.engine_room.flywheel.lib.material.SimpleMaterial;
 import dev.engine_room.flywheel.lib.model.QuadMesh;
 import dev.engine_room.flywheel.lib.model.SingleMeshModel;
 import dev.engine_room.flywheel.lib.util.RendererReloadCache;
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
@@ -76,7 +76,7 @@ public class FluidMesh {
 
 			int vertex = 0;
 
-			float shrink = texture.uvShrinkRatio() * 0.25f * textureScale;
+			float shrink = 0;
 			float centerU = texture.getU0() + (texture.getU1() - texture.getU0()) * 0.5f;
 			float centerV = texture.getV0() + (texture.getV1() - texture.getV0()) * 0.5f;
 
@@ -148,7 +148,7 @@ public class FluidMesh {
 
 			float textureScale = 1 / 32f;
 
-			float shrink = texture.uvShrinkRatio() * 0.25f * textureScale;
+			float shrink = 0;
 			float centerU = texture.getU0() + (texture.getU1() - texture.getU0()) * 0.5f;
 
 			float radius = PIPE_RADIUS;

@@ -14,6 +14,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -22,7 +23,7 @@ import net.minecraft.world.item.DyeColor;
 public class DebugHatsCommand {
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("debugHats")
-			.requires(cs -> cs.hasPermission(4))
+			.requires(AllCommands.hasPermission(4))
 			.then(Commands.argument("pos", BlockPosArgument.blockPos())
 				.executes((ctx) -> {
 					BlockPos origin = BlockPosArgument.getLoadedBlockPos(ctx, "pos");
@@ -30,12 +31,12 @@ public class DebugHatsCommand {
 					for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
 						ServerLevel level = ctx.getSource().getLevel();
 
-						Entity entity = entityType.create(level);
+						Entity entity = entityType.create(level, EntitySpawnReason.COMMAND);
 						if (entity instanceof LivingEntity) {
 							level.setBlockAndUpdate(pos, AllBlocks.SEATS.get(DyeColor.RED).getDefaultState());
 							level.setBlockAndUpdate(pos.east(), AllBlocks.STOCK_TICKER.getDefaultState().setValue(StockTickerBlock.FACING, Direction.EAST));
 
-							entity.moveTo(pos.getCenter());
+							entity.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 
 							if (entity instanceof Mob mob)
 								mob.setNoAi(true);

@@ -15,10 +15,11 @@
     },
     {
       "apply": {
-        "model": "create:block/industrial_iron_window_pane_noside"
+        "model": "create:block/industrial_iron_window_pane_side",
+        "y": 90
       },
       "when": {
-        "north": "false"
+        "east": "true"
       }
     },
     {
@@ -27,15 +28,6 @@
       },
       "when": {
         "south": "true"
-      }
-    },
-    {
-      "apply": {
-        "model": "create:block/industrial_iron_window_pane_noside_alt",
-        "y": 90
-      },
-      "when": {
-        "south": "false"
       }
     },
     {
@@ -49,20 +41,10 @@
     },
     {
       "apply": {
-        "model": "create:block/industrial_iron_window_pane_noside",
-        "y": 270
+        "model": "create:block/industrial_iron_window_pane_noside"
       },
       "when": {
-        "west": "false"
-      }
-    },
-    {
-      "apply": {
-        "model": "create:block/industrial_iron_window_pane_side",
-        "y": 90
-      },
-      "when": {
-        "east": "true"
+        "north": "false"
       }
     },
     {
@@ -71,6 +53,24 @@
       },
       "when": {
         "east": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/industrial_iron_window_pane_noside_alt",
+        "y": 90
+      },
+      "when": {
+        "south": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "create:block/industrial_iron_window_pane_noside",
+        "y": 270
+      },
+      "when": {
+        "west": "false"
       }
     }
   ]

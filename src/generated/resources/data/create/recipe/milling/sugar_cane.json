@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:sugar_cane"
-    }
+    "minecraft:sugar_cane"
   ],
   "processing_time": 50,
   "results": [

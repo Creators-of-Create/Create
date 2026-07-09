@@ -12,13 +12,14 @@ import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.LegacyBlockEntityDataComponentBridge;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,13 +28,12 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -80,7 +80,7 @@ public class RedstoneRequesterBlock extends Block implements IBE<RedstoneRequest
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState pBlockState, Level pLevel, BlockPos pPos) {
+	public int getAnalogOutputSignal(BlockState pBlockState, Level pLevel, BlockPos pPos, Direction direction) {
 		RedstoneRequesterBlockEntity req = getBlockEntity(pLevel, pPos);
 		return req != null && req.lastRequestSucceeded ? 15 : 0;
 	}
@@ -99,17 +99,16 @@ public class RedstoneRequesterBlock extends Block implements IBE<RedstoneRequest
 
 		String targetDim = player.level()
 			.dimension()
-			.location()
+			.identifier()
 			.toString();
 		AutoRequestData autoRequestData = new AutoRequestData(order, address, be.getBlockPos(), targetDim, false);
 
 		autoRequestData.writeToItem(BlockPos.ZERO, stack);
 
 		if (isRequester) {
-			CompoundTag beTag = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY).copyTag();
-			beTag.putUUID("Freq", be.behaviour.freqId);
-			BlockEntity.addEntityType(beTag, AllBlockEntityTypes.REDSTONE_REQUESTER.get());
-			stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(beTag));
+			CompoundTag beTag = LegacyBlockEntityDataComponentBridge.get(stack);
+			beTag.put("Freq", LegacyNbtUtilsBridge.createUUID(be.behaviour.freqId));
+			LegacyBlockEntityDataComponentBridge.set(stack, AllBlockEntityTypes.REDSTONE_REQUESTER.get(), beTag);
 		}
 
 		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
@@ -148,8 +147,7 @@ public class RedstoneRequesterBlock extends Block implements IBE<RedstoneRequest
 	}
 
 	@Override
-	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pNeighborBlock,
-		BlockPos pNeighborPos, boolean pMovedByPiston) {
+	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pNeighborBlock, Orientation orientation, boolean pMovedByPiston) {
 		if (pLevel.isClientSide())
 			return;
 		pLevel.setBlockAndUpdate(pPos, pState.setValue(POWERED, pLevel.hasNeighborSignal(pPos)));

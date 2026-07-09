@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntityTicker;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -35,9 +35,9 @@ public interface IBE<T extends BlockEntity> extends EntityBlock {
 			.orElse(InteractionResult.PASS);
 	}
 
-	default ItemInteractionResult onBlockEntityUseItemOn(BlockGetter world, BlockPos pos, Function<T, ItemInteractionResult> action) {
+	default InteractionResult onBlockEntityUseItemOn(BlockGetter world, BlockPos pos, Function<T, InteractionResult> action) {
 		return getBlockEntityOptional(world, pos).map(action)
-				.orElse(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
+				.orElse(InteractionResult.TRY_WITH_EMPTY_HAND);
 	}
 
 	/**

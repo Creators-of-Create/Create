@@ -3,9 +3,7 @@
   "category": "building",
   "group": "small_andesite_brick_slab",
   "key": {
-    "X": {
-      "item": "create:small_andesite_bricks"
-    }
+    "X": "create:small_andesite_bricks"
   },
   "pattern": [
     "XXX"

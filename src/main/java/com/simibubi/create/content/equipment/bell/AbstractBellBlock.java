@@ -13,6 +13,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -40,9 +41,8 @@ public abstract class AbstractBellBlock<BE extends AbstractBellBlockEntity> exte
 	}
 
 	@Override
-	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos,
-		boolean pIsMoving) {
-		if (pLevel.isClientSide)
+	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, Orientation orientation, boolean pIsMoving) {
+		if (pLevel.isClientSide())
 			return;
 		boolean shouldPower = pLevel.hasNeighborSignal(pPos);
 		if (shouldPower == pState.getValue(POWERED))
@@ -70,7 +70,7 @@ public abstract class AbstractBellBlock<BE extends AbstractBellBlockEntity> exte
 
 	protected boolean ring(Level world, BlockPos pos, Direction direction, Player player) {
 		BE be = getBlockEntity(world, pos);
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return true;
 		if (be == null || !be.ring(world, pos, direction))
 			return false;

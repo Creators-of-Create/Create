@@ -11,8 +11,8 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
-import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.client.player.LocalPlayer;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -21,7 +21,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public abstract class HonkPacket implements CustomPacketPayload {
 	protected final UUID trainId;
@@ -52,8 +51,7 @@ public abstract class HonkPacket implements CustomPacketPayload {
 		}
 
 		@Override
-		@OnlyIn(Dist.CLIENT)
-		public void handle(LocalPlayer player) {
+		public void handle(Player player) {
 			Train train = Create.RAILWAYS.sided(null).trains.get(trainId);
 			if (train == null)
 				return;

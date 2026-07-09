@@ -8,7 +8,7 @@ import com.simibubi.create.api.registry.SimpleRegistry;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
@@ -44,10 +44,10 @@ public class TagProviderImpl<K, V> implements SimpleRegistry.Provider<K, V> {
 
 	// eye of the beholder? check the nametag, buddy
 	public static Holder<BlockEntityType<?>> getBeHolder(BlockEntityType<?> type) {
-		ResourceLocation key = BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(type);
+		Identifier key = BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(type);
 		if (key == null)
 			throw new IllegalStateException("Unregistered BlockEntityType: " + type);
 
-		return BuiltInRegistries.BLOCK_ENTITY_TYPE.getHolder(key).orElseThrow();
+		return BuiltInRegistries.BLOCK_ENTITY_TYPE.get(key).orElseThrow();
 	}
 }

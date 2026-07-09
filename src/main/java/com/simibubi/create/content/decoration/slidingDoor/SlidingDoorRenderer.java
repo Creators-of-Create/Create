@@ -6,13 +6,13 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -43,10 +43,10 @@ public class SlidingDoorRenderer extends SafeBlockEntityRenderer<SlidingDoorBloc
 		float value = be.animation.getValue(partialTicks);
 		float value2 = Mth.clamp(value * 10, 0, 1);
 
-		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
-		Vec3 offset = Vec3.atLowerCornerOf(movementDirection.getNormal())
+		VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped());
+		Vec3 offset = Vec3.atLowerCornerOf(movementDirection.getUnitVec3i())
 			.scale(value * value * 13 / 16f)
-			.add(Vec3.atLowerCornerOf(facing.getNormal())
+			.add(Vec3.atLowerCornerOf(facing.getUnitVec3i())
 				.scale(value2 * 1 / 32f));
 
 		if (((SlidingDoorBlock) blockState.getBlock()).isFoldingDoor()) {
@@ -59,7 +59,7 @@ public class SlidingDoorRenderer extends SafeBlockEntityRenderer<SlidingDoorBloc
 				float f = flip ? -1 : 1;
 
 				partial.translate(0, -1 / 512f, 0)
-					.translate(Vec3.atLowerCornerOf(facing.getNormal())
+					.translate(Vec3.atLowerCornerOf(facing.getUnitVec3i())
 						.scale(value2 * 1 / 32f));
 				partial.rotateCentered(
 					Mth.DEG_TO_RAD * AngleHelper.horizontalAngle(facing.getClockWise()), Direction.UP);

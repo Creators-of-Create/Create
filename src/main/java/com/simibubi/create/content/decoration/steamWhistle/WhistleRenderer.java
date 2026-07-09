@@ -6,11 +6,11 @@ import com.simibubi.create.content.decoration.steamWhistle.WhistleBlock.WhistleS
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -35,7 +35,7 @@ public class WhistleRenderer extends SafeBlockEntityRenderer<WhistleBlockEntity>
 
 		float offset = be.animation.getValue(partialTicks);
 		if (be.animation.getChaseTarget() > 0 && be.animation.getValue() > 0.5f) {
-			float wiggleProgress = (AnimationTickHolder.getTicks(be.getLevel()) + partialTicks) / 8f;
+			float wiggleProgress = (AnimationTickHolder.getTicks() + partialTicks) / 8f;
 			offset -= Math.sin(wiggleProgress * (2 * Mth.PI) * (4 - size.ordinal())) / 16f;
 		}
 
@@ -45,7 +45,7 @@ public class WhistleRenderer extends SafeBlockEntityRenderer<WhistleBlockEntity>
 			.uncenter()
 			.translate(0, offset * 4 / 16f, 0)
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+			.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 	}
 
 }

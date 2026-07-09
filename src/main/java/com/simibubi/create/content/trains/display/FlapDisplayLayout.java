@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -43,8 +43,8 @@ public class FlapDisplayLayout {
 
 	public void read(CompoundTag tag, HolderLookup.Provider registries) {
 		String prevKey = layoutKey;
-		layoutKey = tag.getString("Key");
-		ListTag sectionsTag = tag.getList("Sections", Tag.TAG_COMPOUND);
+		layoutKey = tag.getStringOr("Key", "Default");
+		ListTag sectionsTag = tag.getListOrEmpty("Sections");
 
 		if (!prevKey.equals(layoutKey)) {
 			sections = NBTHelper.readCompoundList(sectionsTag, i -> FlapDisplaySection.load(i, registries));

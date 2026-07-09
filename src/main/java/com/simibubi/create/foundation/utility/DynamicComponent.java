@@ -14,7 +14,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.ResolutionContext;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -51,12 +53,8 @@ public class DynamicComponent {
 	}
 
 	public void read(BlockPos pos, CompoundTag nbt, HolderLookup.Provider registries) {
-		rawCustomText = getJsonFromString(nbt.getString("RawCustomText"));
-		try {
-			parsedCustomText = Component.Serializer.fromJson(nbt.getString("CustomText"), registries);
-		} catch (JsonParseException e) {
-			parsedCustomText = null;
-		}
+		rawCustomText = getJsonFromString(nbt.getStringOr("RawCustomText", ""));
+		parsedCustomText = LegacyComponentSerializationBridge.fromJson(nbt.getStringOr("CustomText", ""), registries);
 	}
 
 	public void write(CompoundTag nbt, HolderLookup.Provider registries) {
@@ -64,7 +62,7 @@ public class DynamicComponent {
 			return;
 
 		nbt.putString("RawCustomText", rawCustomText.toString());
-		nbt.putString("CustomText", Component.Serializer.toJson(parsedCustomText, registries));
+		nbt.putString("CustomText", LegacyComponentSerializationBridge.toJson(parsedCustomText, registries));
 	}
 
 	public static JsonElement getJsonFromString(String string) {
@@ -79,9 +77,9 @@ public class DynamicComponent {
 		if (!(level instanceof ServerLevel serverLevel))
 			return null;
 		try {
-			return ComponentUtils.updateForEntity(getCommandSource(serverLevel, pos),
-				Component.Serializer.fromJson(customText, level.registryAccess()), null, 0);
-		} catch (JsonParseException | CommandSyntaxException e) {
+			return ComponentUtils.resolve(ResolutionContext.create(getCommandSource(serverLevel, pos)),
+				LegacyComponentSerializationBridge.fromJson(customText.toString(), level.registryAccess()), 0);
+		} catch (CommandSyntaxException e) {
 			return null;
 		}
 	}
@@ -91,14 +89,14 @@ public class DynamicComponent {
 		if (!(level instanceof ServerLevel serverLevel))
 			return null;
 		try {
-			return ComponentUtils.updateForEntity(getCommandSource(serverLevel, pos), customText, null, 0);
-		} catch (JsonParseException | CommandSyntaxException e) {
+			return ComponentUtils.resolve(ResolutionContext.create(getCommandSource(serverLevel, pos)), customText, 0);
+		} catch (CommandSyntaxException e) {
 			return null;
 		}
 	}
 
 	public static CommandSourceStack getCommandSource(ServerLevel level, BlockPos pos) {
-		return new CommandSourceStack(CommandSource.NULL, Vec3.atCenterOf(pos), Vec2.ZERO, level, 2, Create.ID,
+		return new CommandSourceStack(CommandSource.NULL, Vec3.atCenterOf(pos), Vec2.ZERO, level, PermissionSet.ALL_PERMISSIONS, Create.ID,
 			Component.literal(Create.ID), level.getServer(), null);
 	}
 

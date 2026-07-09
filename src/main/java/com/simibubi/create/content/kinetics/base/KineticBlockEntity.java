@@ -29,9 +29,9 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
-import net.createmod.catnip.lang.FontHelper.Palette;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.client.lang.FontHelper.Palette;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -51,7 +51,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation {
 
@@ -84,7 +83,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 
 	@Override
 	public void initialize() {
-		if (hasNetwork() && !level.isClientSide) {
+		if (hasNetwork() && !level.isClientSide()) {
 			KineticNetwork network = getOrCreateNetwork();
 			if (!network.initialized)
 				network.initFromTE(capacity, stress, networkSize);
@@ -96,7 +95,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 
 	@Override
 	public void tick() {
-		if (!level.isClientSide && needsSpeedUpdate())
+		if (!level.isClientSide() && needsSpeedUpdate())
 			attachKinetics();
 
 		super.tick();
@@ -104,7 +103,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 
 		preventSpeedUpdate = 0;
 
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> this.tickAudio());
 			return;
 		}
@@ -198,7 +197,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 
 	@Override
 	public void remove() {
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			if (hasNetwork())
 				getOrCreateNetwork().remove(this);
 			detachKinetics();
@@ -216,7 +215,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 			compound.putBoolean("NeedsSpeedUpdate", true);
 
 		if (hasSource())
-			compound.put("Source", NbtUtils.writeBlockPos(source));
+			compound.put("Source", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(source));
 
 		if (hasNetwork()) {
 			CompoundTag networkTag = new CompoundTag();
@@ -251,21 +250,21 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 			return;
 		}
 
-		speed = compound.getFloat("Speed");
-		sequenceContext = SequenceContext.fromNBT(compound.getCompound("Sequence"));
+		speed = compound.getFloatOr("Speed", 0);
+		sequenceContext = SequenceContext.fromNBT(compound.getCompoundOrEmpty("Sequence"));
 
 		source = null;
 		if (compound.contains("Source"))
 			source = NBTHelper.readBlockPos(compound, "Source");
 
 		if (compound.contains("Network")) {
-			CompoundTag networkTag = compound.getCompound("Network");
-			network = networkTag.getLong("Id");
-			stress = networkTag.getFloat("Stress");
-			capacity = networkTag.getFloat("Capacity");
-			networkSize = networkTag.getInt("Size");
-			lastStressApplied = networkTag.getFloat("AddedStress");
-			lastCapacityProvided = networkTag.getFloat("AddedCapacity");
+			CompoundTag networkTag = compound.getCompoundOrEmpty("Network");
+			network = networkTag.getLongOr("Id", 0);
+			stress = networkTag.getFloatOr("Stress", 0);
+			capacity = networkTag.getFloatOr("Capacity", 0);
+			networkSize = networkTag.getIntOr("Size", 0);
+			lastStressApplied = networkTag.getFloatOr("AddedStress", 0);
+			lastCapacityProvided = networkTag.getFloatOr("AddedCapacity", 0);
 			overStressed = capacity < stress && StressImpact.isEnabled();
 		}
 
@@ -306,7 +305,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 
 	public void setSource(BlockPos source) {
 		this.source = source;
-		if (level == null || level.isClientSide)
+		if (level == null || level.isClientSide())
 			return;
 
 		BlockEntity blockEntity = level.getBlockEntity(source);
@@ -379,7 +378,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	}
 
 	public static void switchToBlockState(Level world, BlockPos pos, BlockState state) {
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return;
 
 		BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -596,7 +595,6 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 			CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> VisualizationHelper.queueUpdate(this));
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public void tickAudio() {
 		float componentSpeed = Math.abs(getSpeed());
 		if (componentSpeed == 0)

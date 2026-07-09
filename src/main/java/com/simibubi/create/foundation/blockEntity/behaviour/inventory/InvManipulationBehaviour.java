@@ -10,6 +10,7 @@ import com.simibubi.create.content.logistics.packager.IdentifiedInventory;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.item.LegacyItemHandlerAdapter;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 
@@ -19,6 +20,8 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItemHandler, InvManipulationBehaviour> {
 
@@ -58,8 +61,14 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 	}
 
 	@Override
-	protected BlockCapability<IItemHandler, Direction> capability() {
-		return Capabilities.ItemHandler.BLOCK;
+	protected BlockCapability<?, Direction> capability() {
+		return Capabilities.Item.BLOCK;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	protected IItemHandler adaptCapability(Object capability) {
+		return LegacyItemHandlerAdapter.of((ResourceHandler<ItemResource>) capability);
 	}
 
 	public ItemStack extract() {
@@ -74,7 +83,7 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 		boolean shouldSimulate = simulateNext;
 		simulateNext = false;
 
-		if (getWorld().isClientSide)
+		if (getWorld().isClientSide())
 			return ItemStack.EMPTY;
 		IItemHandler inventory = targetCapability;
 		if (inventory == null)

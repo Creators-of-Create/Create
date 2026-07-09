@@ -4,10 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.math.AngleHelper;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -41,7 +41,7 @@ public class DeskBellRenderer extends SmartBlockEntityRenderer<DeskBellBlockEnti
 			.translate(0, f * -.75f / 16f, 0)
 			.light(light)
 			.overlay(overlay)
-			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+			.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 
 		CachedBuffers.partial(AllPartialModels.DESK_BELL_BELL, blockState)
 			.center()
@@ -55,7 +55,7 @@ public class DeskBellRenderer extends SmartBlockEntityRenderer<DeskBellBlockEnti
 			.uncenter()
 			.light(light)
 			.overlay(overlay)
-			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+			.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 	}
 
 }

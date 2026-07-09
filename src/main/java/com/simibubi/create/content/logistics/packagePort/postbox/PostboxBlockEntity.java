@@ -12,9 +12,9 @@ import com.simibubi.create.content.trains.station.GlobalPackagePort;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -47,9 +47,9 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-			Capabilities.ItemHandler.BLOCK,
+			Capabilities.Item.BLOCK,
 			AllBlockEntityTypes.PACKAGE_POSTBOX.get(),
-			(be, context) -> be.itemHandler
+			(be, context) -> new com.simibubi.create.foundation.item.LegacyItemTransferAdapter(be.itemHandler)
 		);
 	}
 
@@ -62,7 +62,7 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		if (!level.isClientSide && !isVirtual()) {
+		if (!level.isClientSide() && !isVirtual()) {
 			if (sendParticles)
 				sendData();
 			return;
@@ -125,7 +125,7 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 	}
 
 	private void saveOfflineBuffer() {
-		if (level == null || level.isClientSide)
+		if (level == null || level.isClientSide())
 			return;
 
 		GlobalStation station = trackedGlobalStation.get();

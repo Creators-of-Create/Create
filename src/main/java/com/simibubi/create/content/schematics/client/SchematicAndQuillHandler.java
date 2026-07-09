@@ -16,11 +16,11 @@ import com.simibubi.create.foundation.utility.CreatePaths;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.gui.ScreenOpener;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.outliner.Outliner;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.gui.ScreenOpener;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.outliner.Outliner;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -58,9 +58,9 @@ public class SchematicAndQuillHandler {
 			return true;
 
 		AABB bb = new AABB(Vec3.atLowerCornerOf(firstPos), Vec3.atLowerCornerOf(secondPos));
-		Vec3i vec = selectedFace.getNormal();
-		Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera()
-			.getPosition();
+		Vec3i vec = selectedFace.getUnitVec3i();
+		Vec3 projectedView = Minecraft.getInstance().gameRenderer.mainCamera()
+			.position();
 		if (bb.contains(projectedView))
 			delta *= -1;
 
@@ -167,8 +167,8 @@ public class SchematicAndQuillHandler {
 		if (secondPos != null) {
 			AABB bb = new AABB(Vec3.atLowerCornerOf(firstPos), Vec3.atLowerCornerOf(secondPos)).expandTowards(1, 1, 1)
 				.inflate(.45f);
-			Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera()
-				.getPosition();
+			Vec3 projectedView = Minecraft.getInstance().gameRenderer.mainCamera()
+				.position();
 			boolean inside = bb.contains(projectedView);
 			PredicateTraceResult result =
 				RaycastHelper.rayTraceUntil(player, 70, pos -> inside ^ bb.contains(VecHelper.getCenterOf(pos)));
@@ -201,7 +201,7 @@ public class SchematicAndQuillHandler {
 
 	private boolean isPresent() {
 		return Minecraft.getInstance() != null && Minecraft.getInstance().level != null
-			&& Minecraft.getInstance().screen == null;
+			&& Minecraft.getInstance().gui.screen() == null;
 	}
 
 	public void saveSchematic(String string, boolean convertImmediately) {
@@ -226,7 +226,7 @@ public class SchematicAndQuillHandler {
 		try {
 			if (!ClientSchematicLoader.validateSizeLimitation(Files.size(file)))
 				return;
-			CatnipServices.NETWORK.sendToServer(new InstantSchematicPacket(result.fileName(), result.origin(), result.bounds()));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new InstantSchematicPacket(result.fileName(), result.origin(), result.bounds()));
 		} catch (IOException e) {
 			Create.LOGGER.error("Error instantly uploading Schematic file: " + file, e);
 		}

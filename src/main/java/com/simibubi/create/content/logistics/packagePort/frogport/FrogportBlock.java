@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.packagePort.frogport;
 
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -10,8 +10,10 @@ import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.IBE;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -21,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
@@ -62,7 +65,7 @@ public class FrogportBlock extends Block implements IBE<FrogportBlockEntity>, IW
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		return onBlockEntityUseItemOn(level, pos, be -> be.use(player));
 	}
 
@@ -77,8 +80,8 @@ public class FrogportBlock extends Block implements IBE<FrogportBlockEntity>, IW
 	}
 
 	@Override
-	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
-		IBE.onRemove(pState, pLevel, pPos, pNewState);
+protected void affectNeighborsAfterRemoval(BlockState pState, ServerLevel pLevel, BlockPos pPos, boolean pMovedByPiston) {
+		IBE.onRemove(pState, pLevel, pPos, Blocks.AIR.defaultBlockState());
 	}
 
 	@Override
@@ -92,7 +95,7 @@ public class FrogportBlock extends Block implements IBE<FrogportBlockEntity>, IW
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
+	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos, Direction direction) {
 		return getBlockEntityOptional(pLevel, pPos).map(pbe -> pbe.getComparatorOutput())
 			.orElse(0);
 	}

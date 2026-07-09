@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:short_grass"
-    }
+    "minecraft:short_grass"
   ],
   "processing_time": 50,
   "results": [

@@ -15,26 +15,29 @@ import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockE
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.ParrotElement;
-import net.createmod.ponder.api.element.ParrotPose;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.level.PonderLevel;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
-import net.createmod.ponder.foundation.element.ElementLinkImpl;
-import net.createmod.ponder.foundation.element.ParrotElementImpl;
-import net.createmod.ponder.foundation.instruction.CreateParrotInstruction;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.ParrotElement;
+import net.createmod.ponder.api.client.element.ParrotPose;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.level.PonderLevel;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
+import net.createmod.ponder.impl.client.element.ElementLinkImpl;
+import net.createmod.ponder.impl.client.element.ParrotElementImpl;
+import net.createmod.ponder.impl.client.instruction.CreateParrotInstruction;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -117,7 +120,7 @@ public class FrogAndConveyorScenes {
 			.showSection(conv2S, Direction.DOWN);
 		scene.idle(20);
 
-		ItemStack chainItem = new ItemStack(Items.CHAIN);
+		ItemStack chainItem = new ItemStack(Items.IRON_CHAIN);
 		scene.overlay()
 			.showControls(util.vector()
 				.topOf(conv1), Pointing.DOWN, 117)
@@ -321,54 +324,9 @@ public class FrogAndConveyorScenes {
 		}
 
 		@Override
-		protected void renderLast(PonderLevel world, MultiBufferSource buffer, GuiGraphics graphics, float fade,
-								  float pt) {
-			PoseStack poseStack = graphics.pose();
-			EntityRenderDispatcher entityrenderermanager = Minecraft.getInstance()
-				.getEntityRenderDispatcher();
-
-			if (entity == null) {
-				entity = pose.create(world);
-				entity.setYRot(entity.yRotO = 180);
-			}
-
-			if (wrench == null) {
-				wrench = new ItemEntity(world, 0, 0, 0, AllItems.WRENCH.asStack());
-				wrench.setYRot(wrench.yRotO = 180);
-			}
-
-			double lx = Mth.lerp(pt, entity.xo, entity.getX());
-			double ly = Mth.lerp(pt, entity.yo, entity.getY());
-			double lz = Mth.lerp(pt, entity.zo, entity.getZ());
-			float angle = AngleHelper.angleLerp(pt, entity.yRotO, entity.getYRot());
-
-			poseStack.pushPose();
-			poseStack.translate(location.x, location.y, location.z);
-			poseStack.translate(lx, ly, lz);
-			poseStack.mulPose(Axis.YP.rotationDegrees(angle));
-
-			poseStack.translate(0, 1.5f, 0);
-			poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.sin((world.scene.getCurrentTime() + pt) * 0.2f) * 10));
-			poseStack.translate(0, -1.5f, 0);
-
-			poseStack.pushPose();
-			poseStack.mulPose(Axis.YP.rotationDegrees(90));
-			poseStack.mulPose(Axis.XP.rotationDegrees(90));
-			poseStack.mulPose(Axis.ZP.rotationDegrees(90));
-			poseStack.scale(1.5f, 1.5f, 1.5f);
-			poseStack.translate(-0.1, 0.2, -0.6);
-			BakedModel bakedmodel = Minecraft.getInstance()
-				.getItemRenderer()
-				.getModel(wrench.getItem(), world, null, 0);
-			Minecraft.getInstance()
-				.getItemRenderer()
-				.render(wrench.getItem(), ItemDisplayContext.GROUND, false, poseStack, buffer,
-					lightCoordsFromFade(fade), OverlayTexture.NO_OVERLAY, bakedmodel);
-			poseStack.popPose();
-
-			entity.flapSpeed = 2;
-			entityrenderermanager.render(entity, 0, 0, 0, 0, pt, poseStack, buffer, lightCoordsFromFade(fade));
-			poseStack.popPose();
+		protected void renderLast(PonderLevel world, MultiBufferSource buffer, SubmitNodeCollector queue, Camera camera,
+								  CameraRenderState cameraRenderState, PoseStack poseStack, float fade, float pt) {
+			super.renderLast(world, buffer, queue, camera, cameraRenderState, poseStack, fade, pt);
 		}
 
 	}

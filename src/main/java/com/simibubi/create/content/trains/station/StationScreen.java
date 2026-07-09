@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.render.LegacyRenderSystemBridge;
+import org.joml.Matrix3x2fStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.compat.Mods;
@@ -19,17 +19,18 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.gui.UIRenderHelper;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.client.gui.UIRenderHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -71,21 +72,20 @@ public class StationScreen extends AbstractStationScreen {
 		Consumer<String> onTextChanged;
 
 		onTextChanged = s -> nameBox.setX(nameBoxX(s, nameBox));
-		nameBox = new EditBox(new NoShadowFontWrapper(font), x + 23, y + 4, background.getWidth() - 20, 10,
+		nameBox = new EditBox(font, x + 23, y + 4, background.getWidth() - 20, 10,
 			Component.literal(station.name));
 		nameBox.setBordered(false);
 		nameBox.setMaxLength(25);
 		nameBox.setTextColor(0x592424);
 		nameBox.setValue(station.name);
 		nameBox.setFocused(false);
-		nameBox.mouseClicked(0, 0, 0);
 		nameBox.setResponder(onTextChanged);
 		nameBox.setX(nameBoxX(nameBox.getValue(), nameBox));
 		addRenderableWidget(nameBox);
 
 		Runnable assemblyCallback = () -> {
 			switchingToAssemblyMode = true;
-			minecraft.setScreen(new AssemblyScreen(blockEntity, station));
+			minecraft.gui.setScreen(new AssemblyScreen(blockEntity, station));
 		};
 
 		newTrainButton = new WideIconButton(x + 84, y + 65, AllGuiTextures.I_NEW_TRAIN);
@@ -102,7 +102,7 @@ public class StationScreen extends AbstractStationScreen {
 		dropScheduleButton.active = false;
 		dropScheduleButton.visible = false;
 		dropScheduleButton.withCallback(() ->
-				CatnipServices.NETWORK.sendToServer(StationEditPacket.dropSchedule(blockEntity.getBlockPos())));
+				net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(StationEditPacket.dropSchedule(blockEntity.getBlockPos())));
 		addRenderableWidget(dropScheduleButton);
 
 		colorTypeScroll = new ScrollInput(x + 166, y + 17, 22, 14).titled(CreateLang.translateDirect("station.train_map_color"));
@@ -125,7 +125,6 @@ public class StationScreen extends AbstractStationScreen {
 		trainNameBox.setMaxLength(35);
 		trainNameBox.setTextColor(0xC6C6C6);
 		trainNameBox.setFocused(false);
-		trainNameBox.mouseClicked(0, 0, 0);
 		trainNameBox.setResponder(onTextChanged);
 		trainNameBox.active = false;
 
@@ -274,7 +273,7 @@ public class StationScreen extends AbstractStationScreen {
 	}
 
 	@Override
-	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		super.renderWindow(graphics, mouseX, mouseY, partialTicks);
 		int x = guiLeft;
 		int y = guiTop;
@@ -284,55 +283,55 @@ public class StationScreen extends AbstractStationScreen {
 		if (!nameBox.isFocused())
 			AllGuiTextures.STATION_EDIT_NAME.render(graphics, nameBoxX(text, nameBox) + font.width(text) + 5, y + 1);
 
-		graphics.renderItem(AllBlocks.TRAIN_DOOR.asStack(), x + 14, y + 103);
+		graphics.item(AllBlocks.TRAIN_DOOR.asStack(), x + 14, y + 103);
 
 		Train train = displayedTrain.get();
 		if (train == null) {
 			MutableComponent header = CreateLang.translateDirect("station.idle");
-			graphics.drawString(font, header, x + 97 - font.width(header) / 2, y + 47, 0x7A7A7A, false);
+			graphics.text(font, header, x + 97 - font.width(header) / 2, y + 47, 0x7A7A7A, false);
 			return;
 		}
 
 		float position = trainPosition.getValue(partialTicks);
 
-		PoseStack ms = graphics.pose();
-		ms.pushPose();
-		RenderSystem.enableBlend();
-		ms.translate(position, 0, 0);
+		Matrix3x2fStack ms = graphics.pose();
+		ms.pushMatrix();
+		LegacyRenderSystemBridge.enableBlend();
+		ms.translate(position, 0);
 		TrainIconType icon = train.icon;
 		int offset = 0;
 
 		List<Carriage> carriages = train.carriages;
 		for (int i = carriages.size() - 1; i > 0; i--) {
-			RenderSystem.setShaderColor(1, 1, 1, Math.min(1f,
+			LegacyRenderSystemBridge.setShaderColor(1, 1, 1, Math.min(1f,
 				Math.min((position + offset - 10) / 30f, (background.getWidth() - 40 - position - offset) / 30f)));
 			Carriage carriage = carriages.get(blockEntity.trainBackwards ? carriages.size() - i - 1 : i);
 			offset += icon.render(carriage.bogeySpacing, graphics, x + offset, y + 20) + 1;
 		}
 
-		RenderSystem.setShaderColor(1, 1, 1,
+		LegacyRenderSystemBridge.setShaderColor(1, 1, 1,
 			Math.min(1f, Math.min((position + offset - 10) / 30f, (background.getWidth() - 40 - position - offset) / 30f)));
 		offset += icon.render(TrainIconType.ENGINE, graphics, x + offset, y + 20);
-		RenderSystem.disableBlend();
-		ms.popPose();
+		LegacyRenderSystemBridge.disableBlend();
+		ms.popMatrix();
 
-		RenderSystem.setShaderColor(1, 1, 1, 1);
+		LegacyRenderSystemBridge.setShaderColor(1, 1, 1, 1);
 
 		AllGuiTextures.STATION_TEXTBOX_TOP.render(graphics, x + 21, y + 42);
 		UIRenderHelper.drawStretched(graphics, x + 21, y + 60, 150, 26, 0, AllGuiTextures.STATION_TEXTBOX_MIDDLE);
 		AllGuiTextures.STATION_TEXTBOX_BOTTOM.render(graphics, x + 21, y + 86);
 
-		ms.pushPose();
-		ms.translate(Mth.clamp(position + offset - 13, 25, 159), 0, 0);
+		ms.pushMatrix();
+		ms.translate(Mth.clamp(position + offset - 13, 25, 159), 0);
 		AllGuiTextures.STATION_TEXTBOX_SPEECH.render(graphics, x, y + 38);
-		ms.popPose();
+		ms.popMatrix();
 
 		text = trainNameBox.getValue();
 		if (!trainNameBox.isFocused()) {
 			int buttonX = nameBoxX(text, trainNameBox) + font.width(text) + 5;
 			AllGuiTextures.STATION_EDIT_TRAIN_NAME.render(graphics, Math.min(buttonX, guiLeft + 156), y + 44);
 			if (font.width(text) > trainNameBox.getWidth())
-				graphics.drawString(font, "...", guiLeft + 26, guiTop + 47, 0xa6a6a6);
+				graphics.text(font, "...", guiLeft + 26, guiTop + 47, 0xa6a6a6);
 		}
 
 		if (!mapModsPresent())
@@ -353,7 +352,8 @@ public class StationScreen extends AbstractStationScreen {
 			int sheetX = col * 16 + colorCol * 128;
 			int sheetY = row * 16 + colorRow * 64;
 
-			graphics.blit(sprite.location, positionX, positionY, sheetX, sheetY, 16, 16, sprite.getWidth(), sprite.getHeight());
+			graphics.blit(RenderPipelines.GUI_TEXTURED, sprite.location, positionX, positionY, sheetX, sheetY, 16, 16,
+				sprite.getWidth(), sprite.getHeight());
 		}
 	}
 
@@ -404,13 +404,13 @@ public class StationScreen extends AbstractStationScreen {
 		Train train = displayedTrain.get();
 		if (train != null && !trainNameBox.getValue()
 			.equals(train.name.getString()))
-			CatnipServices.NETWORK.sendToServer(new TrainEditPacket.Serverbound(train.id, trainNameBox.getValue(), train.icon.getId(), train.mapColorIndex));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new TrainEditPacket.Serverbound(train.id, trainNameBox.getValue(), train.icon.getId(), train.mapColorIndex));
 	}
 
 	private void syncStationName() {
 		if (!nameBox.getValue()
 			.equals(station.name))
-			CatnipServices.NETWORK.sendToServer(
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(
 					StationEditPacket.configure(blockEntity.getBlockPos(), false, nameBox.getValue(), doorControl));
 	}
 
@@ -419,13 +419,13 @@ public class StationScreen extends AbstractStationScreen {
 		super.removed();
 		if (nameBox == null || trainNameBox == null)
 			return;
-		CatnipServices.NETWORK.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), switchingToAssemblyMode,
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), switchingToAssemblyMode,
 				nameBox.getValue(), doorControl));
 		Train train = displayedTrain.get();
 		if (train == null)
 			return;
 		if (!switchingToAssemblyMode)
-			CatnipServices.NETWORK.sendToServer(
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(
 					new TrainEditPacket.Serverbound(train.id, trainNameBox.getValue(), train.icon.getId(), train.mapColorIndex));
 		else
 			blockEntity.imminentTrain = null;

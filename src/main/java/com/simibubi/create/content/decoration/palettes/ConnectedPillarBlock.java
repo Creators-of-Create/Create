@@ -1,6 +1,6 @@
 package com.simibubi.create.content.decoration.palettes;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -11,6 +11,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -99,8 +101,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction pDirection, BlockState pNeighborState,
-		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+	public BlockState updateShape(BlockState state, LevelReader pLevel, ScheduledTickAccess ticks, BlockPos pCurrentPos, Direction pDirection, BlockPos pNeighborPos, BlockState pNeighborState, RandomSource random) {
 		if (!canConnect(state, pNeighborState))
 			return setConnection(state, pDirection, false);
 		if (pDirection.getAxis() == state.getValue(AXIS))
@@ -114,8 +115,8 @@ public class ConnectedPillarBlock extends LayeredBlock {
 	}
 
 	@Override
-	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-		if (pIsMoving || pNewState.getBlock() == this)
+	protected void affectNeighborsAfterRemoval(BlockState pState, ServerLevel pLevel, BlockPos pPos, boolean pIsMoving) {
+		if (pIsMoving)
 			return;
 		for (Direction d : Iterate.directionsInAxis(pState.getValue(AXIS))) {
 			BlockPos relative = pPos.relative(d);

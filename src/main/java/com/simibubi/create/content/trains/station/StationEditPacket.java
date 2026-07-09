@@ -4,7 +4,7 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.decoration.slidingDoor.DoorControl;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
 import io.netty.buffer.ByteBuf;
 
 import net.minecraft.core.BlockPos;

@@ -5,13 +5,13 @@ import java.util.concurrent.CompletableFuture;
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
 
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.PackOutput.Target;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
@@ -31,7 +31,7 @@ public class CreateWikiBlockInfoProvider implements DataProvider {
 			.filter(b -> RegisteredObjectsHelper.getKeyOrThrow(b).getNamespace().equals(Create.ID))
 			.map(block -> {
 				BlockState state = block.defaultBlockState();
-				ResourceLocation id = RegisteredObjectsHelper.getKeyOrThrow(block);
+				Identifier id = RegisteredObjectsHelper.getKeyOrThrow(block);
 
 				JsonObject element = new JsonObject();
 

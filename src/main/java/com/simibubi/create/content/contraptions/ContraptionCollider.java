@@ -29,9 +29,10 @@ import com.simibubi.create.foundation.collision.OrientedBB;
 import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.foundation.utility.LegacyDirectionBridge;
 
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -63,7 +64,6 @@ import net.minecraft.world.phys.shapes.Shapes.DoubleLineConsumer;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class ContraptionCollider {
 
@@ -75,7 +75,7 @@ public class ContraptionCollider {
 	private static Map<AbstractContraptionEntity, Map<Player, Double>> remoteSafetyLocks = new WeakHashMap<>();
 
 	static void collideEntities(AbstractContraptionEntity contraptionEntity) {
-		Level world = contraptionEntity.getCommandSenderWorld();
+		Level world = contraptionEntity.level();
 		Contraption contraption = contraptionEntity.getContraption();
 		AABB bounds = contraptionEntity.getBoundingBox();
 
@@ -296,7 +296,7 @@ public class ContraptionCollider {
 				entity.fallDistance = 0;
 				for (Entity rider : entity.getIndirectPassengers())
 					if (getPlayerType(rider) == PlayerType.CLIENT)
-						CatnipServices.NETWORK.sendToServer(new ClientMotionPacket(rider.getDeltaMovement(), true, 0));
+						net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ClientMotionPacket(rider.getDeltaMovement(), true, 0));
 				boolean canWalk = bounce != 0 || slide == 0;
 				if (canWalk || !rotation.hasVerticalRotation()) {
 					if (canWalk)
@@ -320,7 +320,7 @@ public class ContraptionCollider {
 			float limbSwing = Mth.sqrt((float) (d0 * d0 + d1 * d1)) * 4.0F;
 			if (limbSwing > 1.0F)
 				limbSwing = 1.0F;
-			CatnipServices.NETWORK.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
 
 			if (entity.onGround() && contraption instanceof TranslatingContraption) {
 				safetyLock.setLeft(new WeakReference<>(contraptionEntity));
@@ -332,7 +332,6 @@ public class ContraptionCollider {
 
 	private static int packetCooldown = 0;
 
-	@OnlyIn(Dist.CLIENT)
 	private static void saveClientPlayerFromClipping(AbstractContraptionEntity contraptionEntity,
 		Vec3 contraptionMotion) {
 		LocalPlayer entity = Minecraft.getInstance().player;
@@ -350,7 +349,7 @@ public class ContraptionCollider {
 			if (packetCooldown > 0)
 				packetCooldown--;
 			if (packetCooldown == 0) {
-				CatnipServices.NETWORK.sendToServer(new ContraptionColliderLockPacketRequest(contraptionEntity.getId(), currentDiff));
+				net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ContraptionColliderLockPacketRequest(contraptionEntity.getId(), currentDiff));
 				packetCooldown = 3;
 			}
 		}
@@ -371,7 +370,6 @@ public class ContraptionCollider {
 			safetyLock.setLeft(null);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static void lockPacketReceived(int contraptionId, int remotePlayerId, double suggestedOffset) {
 		ClientLevel level = Minecraft.getInstance().level;
 		if (!(level.getEntity(contraptionId) instanceof ControlledContraptionEntity contraptionEntity))
@@ -382,7 +380,6 @@ public class ContraptionCollider {
 			.put(player, suggestedOffset);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private static void saveRemotePlayerFromClipping(Player entity, AbstractContraptionEntity contraptionEntity,
 		Vec3 contraptionMotion) {
 		if (entity.isPassenger())
@@ -396,7 +393,6 @@ public class ContraptionCollider {
 				locksOnThisContraption.remove(entity);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private static boolean savePlayerFromClipping(Player entity, AbstractContraptionEntity contraptionEntity,
 		Vec3 contraptionMotion, double yStartOffset) {
 		AABB bb = entity.getBoundingBox()
@@ -462,7 +458,7 @@ public class ContraptionCollider {
 			return entityMotion;
 
 		if (playerType == PlayerType.CLIENT) {
-			CatnipServices.NETWORK.sendToServer(new TrainCollisionPacket((int) (damage * 16), contraptionEntity.getId()));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new TrainCollisionPacket((int) (damage * 16), contraptionEntity.getId()));
 			world.playSound((Player) entity, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT,
 				SoundSource.NEUTRAL, 1, .75f);
 		} else {
@@ -567,14 +563,13 @@ public class ContraptionCollider {
 	private static PlayerType getPlayerType(Entity entity) {
 		if (!(entity instanceof Player))
 			return PlayerType.NONE;
-		if (!entity.level().isClientSide)
+		if (!entity.level().isClientSide())
 			return PlayerType.SERVER;
 		MutableBoolean isClient = new MutableBoolean(false);
 		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> isClient.setValue(isClientPlayerEntity(entity)));
 		return isClient.booleanValue() ? PlayerType.CLIENT : PlayerType.REMOTE;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private static boolean isClientPlayerEntity(Entity entity) {
 		return entity instanceof LocalPlayer;
 	}
@@ -611,7 +606,7 @@ public class ContraptionCollider {
 		if (!contraptionEntity.supportsTerrainCollision())
 			return false;
 
-		Level world = contraptionEntity.getCommandSenderWorld();
+		Level world = contraptionEntity.level();
 		Vec3 motion = contraptionEntity.getDeltaMovement();
 		TranslatingContraption contraption = (TranslatingContraption) contraptionEntity.getContraption();
 		AABB bounds = contraptionEntity.getBoundingBox();
@@ -625,7 +620,7 @@ public class ContraptionCollider {
 		if (motion.equals(Vec3.ZERO))
 			return false;
 
-		Direction movementDirection = Direction.getNearest(motion.x, motion.y, motion.z);
+		Direction movementDirection = LegacyDirectionBridge.nearest(motion.x, motion.y, motion.z, Direction.NORTH);
 
 		// Blocks in the world
 		if (movementDirection.getAxisDirection() == AxisDirection.POSITIVE)

@@ -1,13 +1,11 @@
 {
   "type": "create:filling",
   "ingredients": [
+    "minecraft:glass_bottle",
     {
-      "item": "minecraft:glass_bottle"
-    },
-    {
-      "type": "neoforge:single",
+      "type": "neoforge:simple",
       "amount": 250,
-      "fluid": "create:tea"
+      "ingredient": "create:tea"
     }
   ],
   "results": [

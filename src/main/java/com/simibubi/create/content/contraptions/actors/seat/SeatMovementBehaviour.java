@@ -7,7 +7,7 @@ import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.SlabBlock;
@@ -32,7 +32,7 @@ public class SeatMovementBehaviour implements MovementBehaviour {
 		AbstractContraptionEntity contraptionEntity = context.contraption.entity;
 		if (contraptionEntity == null)
 			return;
-		int index = context.data.getInt("SeatIndex");
+		int index = context.data.getIntOr("SeatIndex", -1);
 		if (index == -1)
 			return;
 

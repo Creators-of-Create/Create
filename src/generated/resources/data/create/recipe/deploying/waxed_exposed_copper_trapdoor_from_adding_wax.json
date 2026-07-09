@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "minecraft:exposed_copper_trapdoor"
-    },
-    {
-      "item": "minecraft:honeycomb_block"
-    }
+    "minecraft:exposed_copper_trapdoor",
+    "minecraft:honeycomb_block"
   ],
   "keep_held_item": true,
   "results": [

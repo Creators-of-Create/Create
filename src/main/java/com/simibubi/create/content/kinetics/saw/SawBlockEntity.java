@@ -23,14 +23,15 @@ import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.item.LegacyItemTransferAdapter;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.recipe.RecipeConditions;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
 import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.math.VecHelper;
-import net.minecraft.MethodsReturnNonnullByDefault;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -40,7 +41,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -49,9 +50,11 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
 import net.minecraft.world.level.block.BambooStalkBlock;
 import net.minecraft.world.level.block.Block;
@@ -60,6 +63,7 @@ import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.ChorusPlantBlock;
 import net.minecraft.world.level.block.KelpBlock;
 import net.minecraft.world.level.block.KelpPlantBlock;
+import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -68,17 +72,17 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 @ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements Clearable {
 	private static final Object cuttingRecipesKey = new Object();
 	public static final Supplier<RecipeType<?>> woodcuttingRecipeType =
-		Suppliers.memoize(() -> BuiltInRegistries.RECIPE_TYPE.get(ResourceLocation.fromNamespaceAndPath("druidcraft", "woodcutting")));
+		Suppliers.memoize(() -> BuiltInRegistries.RECIPE_TYPE.get(Identifier.fromNamespaceAndPath("druidcraft", "woodcutting"))
+			.map(holder -> holder.value())
+			.orElse(null));
 
 	public ProcessingInventory inventory;
 	private int recipeIndex;
@@ -96,11 +100,11 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-				Capabilities.ItemHandler.BLOCK,
+				Capabilities.Item.BLOCK,
 				AllBlockEntityTypes.SAW.get(),
 				(be, context) -> {
 					if (context != Direction.DOWN)
-						return be.inventory;
+						return new LegacyItemTransferAdapter(be.inventory);
 					return null;
 				}
 		);
@@ -123,17 +127,17 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 
 		if (!clientPacket || playEvent.isEmpty())
 			return;
-		compound.put("PlayEvent", playEvent.saveOptional(registries));
+		compound.put("PlayEvent", LegacyItemStackNbtBridge.saveOptional(playEvent, registries));
 		playEvent = ItemStack.EMPTY;
 	}
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
-		inventory.deserializeNBT(registries, compound.getCompound("Inventory"));
-		recipeIndex = compound.getInt("RecipeIndex");
+		inventory.deserializeNBT(registries, compound.getCompoundOrEmpty("Inventory"));
+		recipeIndex = compound.getIntOr("RecipeIndex", 0);
 		if (compound.contains("PlayEvent"))
-			playEvent = ItemStack.parseOptional(registries, compound.getCompound("PlayEvent"));
+			playEvent = LegacyItemStackNbtBridge.parseOptional(registries, compound.get("PlayEvent"));
 	}
 
 	@Override
@@ -142,7 +146,6 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void tickAudio() {
 		super.tickAudio();
 		if (getSpeed() == 0)
@@ -188,7 +191,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 			spawnParticles(inventory.getStackInSlot(0));
 
 		if (inventory.remainingTime < 5 && !inventory.appliedRecipe) {
-			if (level.isClientSide && !isVirtual())
+			if (level.isClientSide() && !isVirtual())
 				return;
 			playEvent = inventory.getStackInSlot(0);
 			applyRecipe();
@@ -200,7 +203,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 		}
 
 		Vec3 itemMovement = getItemMovementVec();
-		Direction itemMovementFacing = Direction.getNearest(itemMovement.x, itemMovement.y, itemMovement.z);
+		Direction itemMovementFacing = Direction.getApproximateNearest(itemMovement.x, itemMovement.y, itemMovement.z);
 		if (inventory.remainingTime > 0)
 			return;
 		inventory.remainingTime = 0;
@@ -228,7 +231,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 			boolean changed = false;
 			if (!behaviour.canInsertFromSide(itemMovementFacing))
 				return;
-			if (level.isClientSide && !isVirtual())
+			if (level.isClientSide() && !isVirtual())
 				return;
 			for (int slot = 0; slot < inventory.getSlots(); slot++) {
 				ItemStack stack = inventory.getStackInSlot(slot);
@@ -294,9 +297,9 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 			particleData = new BlockParticleOption(ParticleTypes.BLOCK, ((BlockItem) stack.getItem()).getBlock()
 				.defaultBlockState());
 		else
-			particleData = new ItemParticleOption(ParticleTypes.ITEM, stack);
+			particleData = new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(stack));
 
-		RandomSource r = level.random;
+		RandomSource r = level.getRandom();
 		Vec3 v = VecHelper.getCenterOf(this.worldPosition)
 			.add(0, 5 / 16f, 0);
 		for (int i = 0; i < 10; i++) {
@@ -315,11 +318,11 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 			particleData = new BlockParticleOption(ParticleTypes.BLOCK, ((BlockItem) stack.getItem()).getBlock()
 				.defaultBlockState());
 		else {
-			particleData = new ItemParticleOption(ParticleTypes.ITEM, stack);
+			particleData = new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(stack));
 			speed = .125f;
 		}
 
-		RandomSource r = level.random;
+		RandomSource r = level.getRandom();
 		Vec3 vec = getItemMovementVec();
 		Vec3 pos = VecHelper.getCenterOf(this.worldPosition);
 		float offset = inventory.recipeDuration != 0 ? (float) (inventory.remainingTime) / inventory.recipeDuration : 0;
@@ -367,16 +370,21 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 		for (int roll = 0; roll < rolls; roll++) {
 			List<ItemStack> results = new LinkedList<>();
 			if (recipe instanceof CuttingRecipe)
-				results = ((CuttingRecipe) recipe).rollResults(level.random);
-			else if (recipe instanceof StonecutterRecipe || recipe.getType() == woodcuttingRecipeType.get())
-				results.add(recipe.getResultItem(level.registryAccess())
-					.copy());
+				results = ((CuttingRecipe) recipe).rollResults(level.getRandom());
+			else if (recipe instanceof StonecutterRecipe stonecutter)
+				results.add(stonecutter.assemble(new SingleRecipeInput(input)));
+			else if (recipe.getType() == woodcuttingRecipeType.get()) {
+				@SuppressWarnings("unchecked")
+				Recipe<SingleRecipeInput> singleRecipe = (Recipe<SingleRecipeInput>) recipe;
+				results.add(singleRecipe.assemble(new SingleRecipeInput(input)));
+			}
 
 			for (ItemStack stack : results) {
 				ItemHelper.addToList(stack, list);
 			}
-			if (input.hasCraftingRemainingItem())
-				ItemHelper.addToList(input.getCraftingRemainingItem(), list);
+			ItemStackTemplate craftingRemainder = input.getCraftingRemainder();
+			if (craftingRemainder != null)
+				ItemHelper.addToList(craftingRemainder.create(), list);
 		}
 
 		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
@@ -410,7 +418,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 			return;
 		if (!entity.isAlive())
 			return;
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 
 		inventory.clear();
@@ -427,7 +435,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 			return;
 		if (inventory.isEmpty())
 			return;
-		if (level.isClientSide && !isVirtual())
+		if (level.isClientSide() && !isVirtual())
 			return;
 
 		List<RecipeHolder<? extends Recipe<?>>> recipes = getRecipes();
@@ -507,7 +515,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 	}
 
 	public static boolean isSawable(BlockState stateToBreak) {
-		if (stateToBreak.is(BlockTags.SAPLINGS))
+		if (stateToBreak.getBlock() instanceof SaplingBlock)
 			return false;
 		if (TreeCutter.isLog(stateToBreak) || (stateToBreak.is(BlockTags.LEAVES)))
 			return true;

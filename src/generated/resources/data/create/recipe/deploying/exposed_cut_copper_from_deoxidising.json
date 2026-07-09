@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "minecraft:weathered_cut_copper"
-    },
-    {
-      "tag": "minecraft:axes"
-    }
+    "minecraft:weathered_cut_copper",
+    "#minecraft:axes"
   ],
   "keep_held_item": true,
   "results": [

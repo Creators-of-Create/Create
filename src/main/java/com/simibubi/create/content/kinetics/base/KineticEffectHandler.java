@@ -2,7 +2,7 @@ package com.simibubi.create.content.kinetics.base;
 
 import com.simibubi.create.content.kinetics.base.IRotate.SpeedLevel;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ParticleOptions;
@@ -28,7 +28,7 @@ public class KineticEffectHandler {
 	public void tick() {
 		Level world = kte.getLevel();
 
-		if (world.isClientSide) {
+		if (world.isClientSide()) {
 			if (overStressedTime > 0)
 				if (--overStressedTime == 0)
 					if (kte.isOverStressed()) {
@@ -59,9 +59,9 @@ public class KineticEffectHandler {
 		Level world = kte.getLevel();
 		if (world == null)
 			return;
-		if (!world.isClientSide)
+		if (!world.isClientSide())
 			return;
-		RandomSource r = world.random;
+		RandomSource r = world.getRandom();
 		for (int i = 0; i < amount; i++) {
 			Vec3 motion = VecHelper.offsetRandomly(Vec3.ZERO, r, maxMotion);
 			Vec3 position = VecHelper.getCenterOf(kte.getBlockPos());

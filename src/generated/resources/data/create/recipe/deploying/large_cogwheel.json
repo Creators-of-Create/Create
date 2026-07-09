@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "create:cogwheel"
-    },
-    {
-      "tag": "minecraft:planks"
-    }
+    "create:cogwheel",
+    "#minecraft:planks"
   ],
   "results": [
     {

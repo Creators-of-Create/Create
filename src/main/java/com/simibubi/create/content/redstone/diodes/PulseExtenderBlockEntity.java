@@ -23,7 +23,7 @@ public class PulseExtenderBlockEntity extends BrassDiodeBlockEntity {
 		}
 		
 		if (state == 1) {
-			if (powering && !level.isClientSide)
+			if (powering && !level.isClientSide())
 				level.setBlockAndUpdate(worldPosition, getBlockState().setValue(POWERING, false));
 			if (!powered)
 				state = 0;

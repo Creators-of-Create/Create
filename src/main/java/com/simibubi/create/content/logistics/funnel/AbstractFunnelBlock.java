@@ -19,7 +19,9 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,6 +30,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.redstone.Orientation;
 
 public abstract class AbstractFunnelBlock extends Block
 	implements IBE<FunnelBlockEntity>, IWrenchable, ProperWaterloggedBlock {
@@ -52,9 +55,11 @@ public abstract class AbstractFunnelBlock extends Block
 	}
 
 	@Override
-	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
-								  LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
-		updateWater(pLevel, pState, pCurrentPos);
+	public BlockState updateShape(BlockState pState, LevelReader pLevel, ScheduledTickAccess ticks,
+								  BlockPos pCurrentPos, Direction pDirection, BlockPos pNeighborPos,
+								  BlockState pNeighborState, RandomSource random) {
+		if (pLevel instanceof LevelAccessor levelAccessor)
+			updateWater(levelAccessor, pState, pCurrentPos);
 		return pState;
 	}
 
@@ -69,13 +74,13 @@ public abstract class AbstractFunnelBlock extends Block
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos,
+	protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, Orientation orientation,
 								boolean isMoving) {
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		InvManipulationBehaviour behaviour = BlockEntityBehaviour.get(level, pos, InvManipulationBehaviour.TYPE);
 		if (behaviour != null)
-			behaviour.onNeighborChanged(fromPos);
+			behaviour.onNeighborChanged(pos);
 		if (!level.getBlockTicks()
 			.willTickThisTick(pos, this))
 			level.scheduleTick(pos, this, 1);
@@ -132,9 +137,9 @@ public abstract class AbstractFunnelBlock extends Block
 	protected abstract Direction getFacing(BlockState state);
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.getBlock() != newState.getBlock() && !isFunnel(newState) || !newState.hasBlockEntity())
-			IBE.onRemove(state, world, pos, newState);
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
+		IBE.onRemove(state, world, pos, Blocks.AIR.defaultBlockState());
+		super.affectNeighborsAfterRemoval(state, world, pos, isMoving);
 	}
 
 	@Override

@@ -11,8 +11,8 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -47,7 +47,7 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity implements Clear
 	}
 
 	private void onFilterChanged(ItemStack newFilter) {
-		if (!level.isClientSide)
+		if (!level.isClientSide())
 			FluidPropagator.propagateChangedPipe(level, worldPosition, getBlockState());
 	}
 

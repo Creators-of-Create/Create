@@ -46,16 +46,18 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBoard;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatter;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge;
+import com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.codecs.CatnipCodecUtils;
-import net.createmod.catnip.codecs.CatnipCodecs;
-import net.createmod.catnip.gui.ScreenOpener;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.data.codec.CatnipCodecUtils;
+import net.createmod.catnip.api.data.codec.CatnipCodecs;
+import net.createmod.catnip.api.client.gui.ScreenOpener;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -76,14 +78,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackLinkedSet;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.Tags.Items;
 
 public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuProvider {
@@ -151,7 +152,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	}
 
 	@Nullable
-	public static FactoryPanelBehaviour at(BlockAndTintGetter world, FactoryPanelConnection connection) {
+	public static FactoryPanelBehaviour at(BlockGetter world, FactoryPanelConnection connection) {
 		Object cached = connection.cachedSource.get();
 		if (cached instanceof FactoryPanelBehaviour fbe && !fbe.blockEntity.isRemoved())
 			return fbe;
@@ -161,7 +162,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	}
 
 	@Nullable
-	public static FactoryPanelBehaviour at(BlockAndTintGetter world, FactoryPanelPosition pos) {
+	public static FactoryPanelBehaviour at(BlockGetter world, FactoryPanelPosition pos) {
 		if (world instanceof Level l && !l.isLoaded(pos.pos()))
 			return null;
 		if (!(world.getBlockEntity(pos.pos()) instanceof FactoryPanelBlockEntity fpbe))
@@ -173,7 +174,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	}
 
 	@Nullable
-	public static FactoryPanelSupportBehaviour linkAt(BlockAndTintGetter world, FactoryPanelConnection connection) {
+	public static FactoryPanelSupportBehaviour linkAt(BlockGetter world, FactoryPanelConnection connection) {
 		Object cached = connection.cachedSource.get();
 		if (cached instanceof FactoryPanelSupportBehaviour fpsb && !fpsb.blockEntity.isRemoved())
 			return fpsb;
@@ -183,7 +184,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	}
 
 	@Nullable
-	public static FactoryPanelSupportBehaviour linkAt(BlockAndTintGetter world, FactoryPanelPosition pos) {
+	public static FactoryPanelSupportBehaviour linkAt(BlockGetter world, FactoryPanelPosition pos) {
 		if (world instanceof Level l && !l.isLoaded(pos.pos()))
 			return null;
 		return BlockEntityBehaviour.get(world, pos.pos(), FactoryPanelSupportBehaviour.TYPE);
@@ -271,9 +272,9 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		}
 
 		// Tell player
-		player.displayClientMessage(CreateLang.translate("factory_panel.relocated")
+		player.sendOverlayMessage(CreateLang.translate("factory_panel.relocated")
 			.style(ChatFormatting.GREEN)
-			.component(), true);
+			.component());
 		player.level()
 			.playSound(null, newPos.pos(), SoundEvents.COPPER_BREAK, SoundSource.BLOCKS, 1.0f, 1.0f);
 	}
@@ -386,7 +387,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		promisedSatisfied = shouldPromiseSatisfy;
 		lastReportedUnloadedLinks = unloadedLinkCount;
 		waitingForNetwork = shouldWait;
-		if (!getWorld().isClientSide)
+		if (!getWorld().isClientSide())
 			blockEntity.sendData();
 		if (notifyOutputs)
 			notifyRedstoneOutputs();
@@ -580,13 +581,13 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	public void onShortInteract(Player player, InteractionHand hand, Direction side, BlockHitResult hitResult) {
 		// Network is protected
 		if (!Create.LOGISTICS.mayInteract(network, player)) {
-			player.displayClientMessage(CreateLang.translate("logistically_linked.protected")
+			player.sendOverlayMessage(CreateLang.translate("logistically_linked.protected")
 				.style(ChatFormatting.RED)
-				.component(), true);
+				.component());
 			return;
 		}
 
-		boolean isClientSide = player.level().isClientSide;
+		boolean isClientSide = player.level().isClientSide();
 
 		// Wrench cycles through arrow bending
 		if (targeting.size() + targetedByLinks.size() > 0 && player.getItemInHand(hand).is(Items.TOOLS_WRENCH)) {
@@ -620,8 +621,8 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 
 			char[] boxes = "\u25a1\u25a1\u25a1\u25a1".toCharArray();
 			boxes[sharedMode] = '\u25a0';
-			player.displayClientMessage(CreateLang.translate("factory_panel.cycled_arrow_path", new String(boxes))
-				.component(), true);
+			player.sendOverlayMessage(CreateLang.translate("factory_panel.cycled_arrow_path", new String(boxes))
+				.component());
 			if (notifySelf)
 				blockEntity.notifyUpdate();
 
@@ -809,10 +810,10 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 			return;
 
 		CompoundTag panelTag = new CompoundTag();
-		panelTag.put("Filter", getFilter().saveOptional(registries));
+		panelTag.put("Filter", LegacyItemStackNbtBridge.saveOptional(getFilter(), registries));
 		panelTag.putBoolean("UpTo", upTo);
 		panelTag.putInt("FilterAmount", count);
-		panelTag.putUUID("Freq", network);
+		LegacyNbtUtilsBridge.putUUID(panelTag, "Freq", network);
 		panelTag.putString("RecipeAddress", recipeAddress);
 		panelTag.putInt("PromiseClearingInterval", -1);
 		panelTag.putInt("RecipeOutput", 1);
@@ -845,7 +846,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		panelTag.putString("RecipeAddress", recipeAddress);
 		panelTag.putInt("RecipeOutput", recipeOutput);
 		panelTag.putInt("PromiseClearingInterval", promiseClearingInterval);
-		panelTag.putUUID("Freq", network);
+		LegacyNbtUtilsBridge.putUUID(panelTag, "Freq", network);
 		panelTag.put("Craft", NBTHelper.writeItemList(activeCraftingArrangement, registries));
 
 		if (panelBE().restocker && !clientPacket)
@@ -856,27 +857,27 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 
 	@Override
 	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
-		CompoundTag panelTag = nbt.getCompound(CreateLang.asId(slot.name()));
+		CompoundTag panelTag = nbt.getCompoundOrEmpty(CreateLang.asId(slot.name()));
 		if (panelTag.isEmpty()) {
 			active = false;
 			return;
 		}
 
 		active = true;
-		filter = FilterItemStack.of(registries, panelTag.getCompound("Filter"));
-		count = panelTag.getInt("FilterAmount");
-		upTo = panelTag.getBoolean("UpTo");
-		timer = panelTag.getInt("Timer");
-		lastReportedLevelInStorage = panelTag.getInt("LastLevel");
-		lastReportedPromises = panelTag.getInt("LastPromised");
-		lastReportedUnloadedLinks = panelTag.getInt("LastUnloadedLinks");
-		satisfied = panelTag.getBoolean("Satisfied");
-		promisedSatisfied = panelTag.getBoolean("PromisedSatisfied");
-		waitingForNetwork = panelTag.getBoolean("Waiting");
-		redstonePowered = panelTag.getBoolean("RedstonePowered");
-		promiseClearingInterval = panelTag.getInt("PromiseClearingInterval");
-		if (panelTag.hasUUID("Freq"))
-			network = panelTag.getUUID("Freq");
+		filter = FilterItemStack.of(registries, panelTag.getCompoundOrEmpty("Filter"));
+		count = panelTag.getIntOr("FilterAmount", 0);
+		upTo = panelTag.getBooleanOr("UpTo", false);
+		timer = panelTag.getIntOr("Timer", 0);
+		lastReportedLevelInStorage = panelTag.getIntOr("LastLevel", 0);
+		lastReportedPromises = panelTag.getIntOr("LastPromised", 0);
+		lastReportedUnloadedLinks = panelTag.getIntOr("LastUnloadedLinks", 0);
+		satisfied = panelTag.getBooleanOr("Satisfied", false);
+		promisedSatisfied = panelTag.getBooleanOr("PromisedSatisfied", false);
+		waitingForNetwork = panelTag.getBooleanOr("Waiting", false);
+		redstonePowered = panelTag.getBooleanOr("RedstonePowered", false);
+		promiseClearingInterval = panelTag.getIntOr("PromiseClearingInterval", -1);
+		if (LegacyNbtUtilsBridge.hasUUID(panelTag, "Freq"))
+			network = LegacyNbtUtilsBridge.getUUID(panelTag, "Freq");
 
 		targeting.clear();
 		targeting.addAll(CatnipCodecUtils.decode(CatnipCodecs.set(FactoryPanelPosition.CODEC), registries, panelTag.get("Targeting")).orElse(Set.of()));
@@ -889,12 +890,12 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		CatnipCodecUtils.decode(Codec.list(FactoryPanelConnection.CODEC), registries, panelTag.get("TargetedByLinks")).orElse(List.of())
 			.forEach(c -> targetedByLinks.put(c.from.pos(), c));
 
-		activeCraftingArrangement = NBTHelper.readItemList(panelTag.getList("Craft", Tag.TAG_COMPOUND), registries);
-		recipeAddress = panelTag.getString("RecipeAddress");
-		recipeOutput = panelTag.getInt("RecipeOutput");
+		activeCraftingArrangement = NBTHelper.readItemList(panelTag.getListOrEmpty("Craft"), registries);
+		recipeAddress = panelTag.getStringOr("RecipeAddress", "");
+		recipeOutput = panelTag.getIntOr("RecipeOutput", 1);
 
-		if (nbt.getBoolean("Restocker") && !clientPacket) {
-			restockerPromises = RequestPromiseQueue.read(panelTag.getCompound("Promises"), registries, () -> {
+		if (nbt.getBooleanOr("Restocker", false) && !clientPacket) {
+			restockerPromises = RequestPromiseQueue.read(panelTag.getCompoundOrEmpty("Promises"), registries, () -> {
 			});
 			promisePrimedForMarkDirty = false;
 		}
@@ -936,7 +937,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		blockEntity.sendData();
 		playFeedbackSound(this);
 		resetTimerSlightly();
-		if (!getWorld().isClientSide)
+		if (!getWorld().isClientSide())
 			notifyRedstoneOutputs();
 	}
 
@@ -1059,7 +1060,6 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		};
 	}
 
-	@OnlyIn(value = Dist.CLIENT)
 	public void displayScreen(Player player) {
 		if (player instanceof LocalPlayer)
 			ScreenOpener.open(new FactoryPanelScreen(this));

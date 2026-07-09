@@ -3,9 +3,7 @@
   "category": "building",
   "group": "cut_calcite_slab",
   "key": {
-    "X": {
-      "item": "create:cut_calcite"
-    }
+    "X": "create:cut_calcite"
   },
   "pattern": [
     "XXX"

@@ -28,11 +28,11 @@ public class RecipeConditions {
 	}
 
 	public static Predicate<RecipeHolder<? extends Recipe<?>>> firstIngredientMatches(ItemStack stack) {
-		return r -> !r.value().getIngredients().isEmpty() && r.value().getIngredients().get(0).test(stack);
+		return r -> !r.value().placementInfo().ingredients().isEmpty() && r.value().placementInfo().ingredients().get(0).test(stack);
 	}
 
 	public static Predicate<RecipeHolder<? extends Recipe<?>>> outputMatchesFilter(FilteringBehaviour filtering) {
-		return r -> filtering.test(r.value().getResultItem(filtering.getWorld().registryAccess()));
+		return r -> false;
 
 	}
 

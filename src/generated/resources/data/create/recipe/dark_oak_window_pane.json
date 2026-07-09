@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "create:dark_oak_window"
-    }
+    "#": "create:dark_oak_window"
   },
   "pattern": [
     "###",

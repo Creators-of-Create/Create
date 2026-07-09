@@ -8,8 +8,8 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -43,7 +43,7 @@ public class FluidValveBlockEntity extends KineticBlockEntity {
 		super.tick();
 		pointer.tickChaser();
 
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 
 		BlockState blockState = getBlockState();
@@ -74,7 +74,7 @@ public class FluidValveBlockEntity extends KineticBlockEntity {
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
-		pointer.readNBT(compound.getCompound("Pointer"), clientPacket);
+		pointer.readNBT(compound.getCompoundOrEmpty("Pointer"), clientPacket);
 	}
 
 	@Override

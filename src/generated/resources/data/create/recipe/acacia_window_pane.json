@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "create:acacia_window"
-    }
+    "#": "create:acacia_window"
   },
   "pattern": [
     "###",

@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.mojang.serialization.Codec;
 
-import net.createmod.catnip.codecs.CatnipCodecUtils;
+import net.createmod.catnip.api.data.codec.CatnipCodecUtils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;

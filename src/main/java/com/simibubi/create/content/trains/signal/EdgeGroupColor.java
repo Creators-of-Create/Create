@@ -1,8 +1,8 @@
 package com.simibubi.create.content.trains.signal;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.network.codec.StreamCodec;
 
 public enum EdgeGroupColor {

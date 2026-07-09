@@ -3,9 +3,7 @@
   "category": "building",
   "group": "small_veridium_brick_slab",
   "key": {
-    "X": {
-      "item": "create:small_veridium_bricks"
-    }
+    "X": "create:small_veridium_bricks"
   },
   "pattern": [
     "XXX"

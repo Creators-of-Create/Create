@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "create:deepslate_zinc_ore"
-    }
+    "create:deepslate_zinc_ore"
   ],
   "processing_time": 350,
   "results": [

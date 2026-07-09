@@ -12,7 +12,6 @@
       "translate": "advancement.create.track_signal.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:track_signal"
     },
     "title": {

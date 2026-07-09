@@ -6,13 +6,13 @@ import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Register a callback for when an entry is added to any {@link CreateRegistrate} instance
  */
 public class CreateRegistrateRegistrationCallback {
-	public static <R, T extends R> void register(ResourceKey<? extends Registry<R>> registry, ResourceLocation id, NonNullConsumer<? super T> callback) {
+	public static <R, T extends R> void register(ResourceKey<? extends Registry<R>> registry, Identifier id, NonNullConsumer<? super T> callback) {
 		CreateRegistrateRegistrationCallbackImpl.<R, T>register(registry, id, callback);
 	}
 

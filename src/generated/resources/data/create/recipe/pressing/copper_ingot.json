@@ -1,9 +1,7 @@
 {
   "type": "create:pressing",
   "ingredients": [
-    {
-      "tag": "c:ingots/copper"
-    }
+    "#c:ingots/copper"
   ],
   "results": [
     {

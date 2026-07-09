@@ -12,7 +12,6 @@
       "translate": "advancement.create.copper_casing.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:copper_casing"
     },
     "title": {

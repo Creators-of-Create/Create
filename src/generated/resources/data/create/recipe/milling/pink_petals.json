@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:pink_petals"
-    }
+    "minecraft:pink_petals"
   ],
   "processing_time": 50,
   "results": [

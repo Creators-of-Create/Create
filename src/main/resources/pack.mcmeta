@@ -1,6 +1,15 @@
 {
   "pack": {
     "description": "Create Resources",
-    "pack_format": 15
+    "pack_format": 88,
+    "min_format": 88,
+    "max_format": 88
+  },
+  "overlays": {
+    "entries": []
+  },
+  "neoforge": {
+    "data_pack_format": 107,
+    "data_pack_format_minor": 1
   }
 }

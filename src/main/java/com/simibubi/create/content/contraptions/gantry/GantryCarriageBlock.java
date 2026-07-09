@@ -7,20 +7,24 @@ import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.gantry.GantryShaftBlock;
 import com.simibubi.create.foundation.block.IBE;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -56,14 +60,14 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!player.mayBuild() || player.isShiftKeyDown())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (stack.isEmpty()) {
 			withBlockEntityDo(level, pos, be -> be.checkValidGantryShaft());
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
 	@Override
@@ -77,16 +81,15 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos updatePos,
-								boolean p_220069_6_) {
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, Orientation orientation, boolean p_220069_6_) {
+		BlockPos updatePos = orientation == null ? pos : pos.relative(orientation.getFront());
 		if (updatePos.equals(pos.relative(state.getValue(FACING)
 			.getOpposite())) && !canSurvive(state, world, pos))
 			world.destroyBlock(pos, true);
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState otherState, LevelAccessor world,
-								  BlockPos pos, BlockPos p_196271_6_) {
+	public BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess ticks, BlockPos pos, Direction direction, BlockPos p_196271_6_, BlockState otherState, RandomSource random) {
 		if (state.getValue(FACING) != direction.getOpposite())
 			return state;
 		return cycleAxisIfNecessary(state, direction, otherState);

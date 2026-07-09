@@ -9,10 +9,9 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.api.client.gui.ScreenOpener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -20,7 +19,7 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.world.item.ItemStack;
 
@@ -36,19 +35,18 @@ public class OpenCreateMenuButton extends Button {
 	}
 
 	@Override
-	public void renderString(GuiGraphics graphics, Font pFont, int pColor) {
+	protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		ItemStack icon = AllItems.GOGGLES.asStack();
-		BakedModel bakedmodel = Minecraft.getInstance()
-			.getItemRenderer()
+		BakedModel bakedmodel = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer()
 			.getModel(icon, Minecraft.getInstance().level, Minecraft.getInstance().player, 0);
 		if (bakedmodel == null)
 			return;
 		
-		graphics.renderItem(icon, getX() + 2, getY() + 2);
+		graphics.item(icon, getX() + 2, getY() + 2);
 	}
 
 	public static void click(Button b) {
-		ScreenOpener.open(new CreateMainMenuScreen(Minecraft.getInstance().screen));
+		ScreenOpener.open(new CreateMainMenuScreen(Minecraft.getInstance().gui.screen()));
 	}
 
 	public record SingleMenuRow(String leftTextKey, String rightTextKey) {

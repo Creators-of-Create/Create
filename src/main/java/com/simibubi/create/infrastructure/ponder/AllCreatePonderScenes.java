@@ -63,12 +63,12 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
-import net.minecraft.resources.ResourceLocation;
+import net.createmod.ponder.api.client.registration.PonderSceneRegistrationHelper;
+import net.minecraft.resources.Identifier;
 
 public class AllCreatePonderScenes {
 
-	public static void register(PonderSceneRegistrationHelper<ResourceLocation> helper) {
+	public static void register(PonderSceneRegistrationHelper<Identifier> helper) {
 		PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
 		HELPER.forComponents(AllBlocks.SHAFT)

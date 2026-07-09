@@ -19,15 +19,15 @@ import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.levelWrappers.SchematicLevel;
-import net.createmod.catnip.outliner.AABBOutline;
-import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.catnip.render.SuperRenderTypeBuffer;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.level.wrapper.SchematicLevel;
+import net.createmod.catnip.api.client.outliner.AABBOutline;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -48,7 +48,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class SchematicHandler implements LayeredDraw.Layer {
+public class SchematicHandler implements GuiLayer {
 
 	private String displayedSchematic;
 	private SchematicTransformation transformation;
@@ -70,7 +70,6 @@ public class SchematicHandler implements LayeredDraw.Layer {
 	public SchematicHandler() {
 		overlay = new SchematicHotbarSlotOverlay();
 		currentTool = ToolType.DEPLOY;
-		selectionScreen = new ToolSelectionScreen(ImmutableList.of(ToolType.DEPLOY), this::equip);
 		transformation = new SchematicTransformation();
 	}
 
@@ -157,8 +156,8 @@ public class SchematicHandler implements LayeredDraw.Layer {
 				blockEntity.setLevel(w);
 			fixControllerBlockEntities(w);
 		} catch (Exception e) {
-			Minecraft.getInstance().player.displayClientMessage(CreateLang.translate("schematic.error")
-				.component(), false);
+			Minecraft.getInstance().player.sendSystemMessage(CreateLang.translate("schematic.error")
+				.component());
 			Create.LOGGER.error("Failed to load Schematic for Previewing", e);
 			return;
 		}
@@ -253,15 +252,15 @@ public class SchematicHandler implements LayeredDraw.Layer {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+	public void render(GuiGraphicsExtractor GuiGraphicsExtractor, DeltaTracker deltaTracker) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.options.hideGui || !active)
+		if (!active)
 			return;
 		if (activeSchematicItem != null)
-			this.overlay.renderOn(guiGraphics, activeHotbarSlot);
+			this.overlay.renderOn(GuiGraphicsExtractor, activeHotbarSlot);
 		currentTool.getTool()
-			.renderOverlay(mc.gui, guiGraphics, deltaTracker.getGameTimeDeltaPartialTick(false), guiGraphics.guiWidth(), guiGraphics.guiHeight());
-		selectionScreen.renderPassive(guiGraphics, deltaTracker.getGameTimeDeltaPartialTick(false));
+			.renderOverlay(mc.gui, GuiGraphicsExtractor, deltaTracker.getGameTimeDeltaPartialTick(false), GuiGraphicsExtractor.guiWidth(), GuiGraphicsExtractor.guiHeight());
+		selectionScreen.renderPassive(GuiGraphicsExtractor, deltaTracker.getGameTimeDeltaPartialTick(false));
 	}
 
 	public boolean onMouseInput(int button, boolean pressed) {
@@ -319,7 +318,7 @@ public class SchematicHandler implements LayeredDraw.Layer {
 			return null;
 
 		activeSchematicItem = stack;
-		activeHotbarSlot = player.getInventory().selected;
+		activeHotbarSlot = player.getInventory().getSelectedSlot();
 		return stack;
 	}
 
@@ -344,7 +343,7 @@ public class SchematicHandler implements LayeredDraw.Layer {
 	public void sync() {
 		if (activeSchematicItem == null)
 			return;
-		CatnipServices.NETWORK.sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(),
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(),
 			transformation.getAnchor(), deployed));
 	}
 
@@ -386,7 +385,7 @@ public class SchematicHandler implements LayeredDraw.Layer {
 	}
 
 	public void printInstantly() {
-		CatnipServices.NETWORK.sendToServer(new SchematicPlacePacket(activeSchematicItem.copy()));
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new SchematicPlacePacket(activeSchematicItem.copy()));
 		activeSchematicItem.set(AllDataComponents.SCHEMATIC_DEPLOYED, false);
 		SchematicInstances.clearHash(activeSchematicItem);
 		active = false;

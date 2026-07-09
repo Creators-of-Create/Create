@@ -20,7 +20,7 @@ public class CarriageEntityHandler {
 			return;
 		SectionPos newPos = event.getNewPos();
 		Level level = entity.level();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		if (!isActiveChunk(level, newPos.center()))
 			cce.leftTickingChunks = true;
@@ -30,7 +30,7 @@ public class CarriageEntityHandler {
 		if (!entity.isAlive())
 			return;
 		Level level = entity.level();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		if (!isActiveChunk(level, entity.blockPosition()))
 			entity.leftTickingChunks = true;

@@ -7,15 +7,15 @@ import java.util.Optional;
 
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.model.data.ModelProperty;
 
 public class TrackBlockEntityTilt {
 

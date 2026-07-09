@@ -19,21 +19,20 @@ import com.simibubi.create.foundation.render.ShadowRenderHelper;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SpriteShiftEntry;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.levelWrappers.WrappedLevel;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.ponder.api.level.PonderLevel;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SpriteShiftEntry;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.level.wrapper.WrappedLevel;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.ponder.api.client.level.PonderLevel;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.render.ItemRenderer;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -48,7 +47,6 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 
 	public BeltRenderer(BlockEntityRendererProvider.Context context) {}
 
-	@Override
 	public boolean shouldRenderOffScreen(BeltBlockEntity be) {
 		return be.isController();
 	}
@@ -78,8 +76,8 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 
 			PoseStack localTransforms = new PoseStack();
 			var msr = TransformStack.of(localTransforms);
-			VertexConsumer vb = buffer.getBuffer(RenderType.solid());
-			float renderTick = AnimationTickHolder.getRenderTime(be.getLevel());
+			VertexConsumer vb = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
+			float renderTick = AnimationTickHolder.getRenderTime();
 
 			msr.center()
 					.rotateYDegrees(AngleHelper.horizontalAngle(facing) + (upward ? 180 : 0) + (sideways ? 270 : 0))
@@ -202,7 +200,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 		ms.pushPose();
 
 		Direction beltFacing = be.getBeltFacing();
-		Vec3i directionVec = beltFacing.getNormal();
+		Vec3i directionVec = beltFacing.getUnitVec3i();
 		Vec3 beltStartOffset = Vec3.atLowerCornerOf(directionVec)
 			.scale(-.5)
 			.add(.5, 15 / 16f, .5);
@@ -228,7 +226,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 		int overlay, Direction beltFacing, Vec3i directionVec, BeltSlope slope, int verticality, boolean slopeAlongX,
 		boolean onContraption, TransportedItemStack transported, Vec3 beltStartOffset) {
 		Minecraft mc = Minecraft.getInstance();
-		ItemRenderer itemRenderer = mc.getItemRenderer();
+		ItemRenderer itemRenderer = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer();
 		MutableBlockPos mutablePos = new MutableBlockPos();
 
 		float offset = Mth.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
@@ -279,7 +277,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 		} else {
 			int segment = (int) Math.floor(offset);
 			mutablePos.set(be.getBlockPos()).move(directionVec.getX() * segment, verticality * segment, directionVec.getZ() * segment);
-			stackLight = LevelRenderer.getLightColor(be.getLevel(), mutablePos);
+			stackLight = com.simibubi.create.foundation.render.LegacyLightTexture.getLightColor(be.getLevel(), mutablePos);
 		}
 
 		boolean renderUpright = BeltHelper.isItemUpright(transported.stack);
@@ -310,7 +308,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 		}
 
 		if (renderUpright) {
-			Vec3 cameraPosition = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+			Vec3 cameraPosition = Minecraft.getInstance().gameRenderer.mainCamera().position();
 			Vec3 vectorForOffset = BeltHelper.getVectorForOffset(be, offset);
 			Vec3 diff = vectorForOffset.subtract(cameraPosition);
 			float yRot = (float) (Mth.atan2(diff.x, diff.z) + Math.PI);

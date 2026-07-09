@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "create:waxed_oxidized_copper_tiles"
-    },
-    {
-      "tag": "minecraft:axes"
-    }
+    "create:waxed_oxidized_copper_tiles",
+    "#minecraft:axes"
   ],
   "keep_held_item": true,
   "results": [

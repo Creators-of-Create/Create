@@ -76,12 +76,12 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 		if (isPassive())
 			return;
 
-		if (level.isClientSide)
+		if (level.isClientSide())
 			clientOffsetDiff *= .75f;
 
 		if (waitingForSpeedChange) {
 			if (movedContraption != null) {
-				if (level.isClientSide) {
+				if (level.isClientSide()) {
 					float syncSpeed = clientOffsetDiff / 2f;
 					offset += syncSpeed;
 					movedContraption.setContraptionMotion(toMotionVector(syncSpeed));
@@ -92,7 +92,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 			return;
 		}
 
-		if (!level.isClientSide && assembleNextTick) {
+		if (!level.isClientSide() && assembleNextTick) {
 			assembleNextTick = false;
 			if (running) {
 				if (getSpeed() == 0)
@@ -152,7 +152,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 		int extensionRange = getExtensionRange();
 		if (offset <= 0 || offset >= extensionRange) {
 			offset = offset <= 0 ? 0 : extensionRange;
-			if (!level.isClientSide) {
+			if (!level.isClientSide()) {
 				moveAndCollideContraption();
 				resetContraptionToOffset();
 				tryDisassemble();
@@ -172,7 +172,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		if (movedContraption != null && !level.isClientSide)
+		if (movedContraption != null && !level.isClientSide())
 			sendData();
 	}
 
@@ -213,7 +213,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 	@Override
 	public void remove() {
 		this.remove = true;
-		if (!level.isClientSide)
+		if (!level.isClientSide())
 			disassemble();
 		super.remove();
 	}
@@ -239,11 +239,11 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 		boolean forceMovement = compound.contains("ForceMovement");
 		float offsetBefore = offset;
 
-		running = compound.getBoolean("Running");
-		waitingForSpeedChange = compound.getBoolean("Waiting");
-		offset = compound.getFloat("Offset");
+		running = compound.getBooleanOr("Running", false);
+		waitingForSpeedChange = compound.getBooleanOr("Waiting", false);
+		offset = compound.getFloatOr("Offset", 0);
 		sequencedOffsetLimit =
-			compound.contains("SequencedOffsetLimit") ? compound.getDouble("SequencedOffsetLimit") : -1;
+			compound.contains("SequencedOffsetLimit") ? compound.getDoubleOr("SequencedOffsetLimit", -1) : -1;
 		lastException = AssemblyException.read(compound, registries);
 		super.read(compound, registries, clientPacket);
 
@@ -316,7 +316,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 	}
 
 	protected void collided() {
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			waitingForSpeedChange = true;
 			return;
 		}
@@ -338,7 +338,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 
 	public float getMovementSpeed() {
 		float movementSpeed = Mth.clamp(convertToLinear(getSpeed()), -.49f, .49f) + clientOffsetDiff / 2f;
-		if (level.isClientSide)
+		if (level.isClientSide())
 			movementSpeed *= ServerSpeedProvider.get();
 		if (sequencedOffsetLimit >= 0)
 			movementSpeed = (float) Mth.clamp(movementSpeed, -sequencedOffsetLimit, sequencedOffsetLimit);
@@ -351,7 +351,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 
 	@Override
 	public void onStall() {
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			forceMove = true;
 			sendData();
 		}
@@ -370,7 +370,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 	@Override
 	public void attach(ControlledContraptionEntity contraption) {
 		this.movedContraption = contraption;
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			this.running = true;
 			sendData();
 		}

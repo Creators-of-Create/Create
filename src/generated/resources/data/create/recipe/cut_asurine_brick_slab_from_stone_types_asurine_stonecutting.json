@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "tag": "create:stone_types/asurine"
-  },
+  "ingredient": "#create:stone_types/asurine",
   "result": {
     "count": 2,
     "id": "create:cut_asurine_brick_slab"

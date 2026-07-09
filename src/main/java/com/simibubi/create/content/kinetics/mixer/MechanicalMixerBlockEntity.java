@@ -16,12 +16,13 @@ import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
+import com.simibubi.create.foundation.item.LegacyItemHandlerAdapter;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.HolderLookup;
@@ -33,6 +34,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -43,7 +45,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 
@@ -107,8 +108,8 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		running = compound.getBoolean("Running");
-		runningTicks = compound.getInt("Ticks");
+		running = compound.getBooleanOr("Running", false);
+		runningTicks = compound.getIntOr("Ticks", 0);
 		super.read(compound, registries, clientPacket);
 
 		if (clientPacket && hasLevel())
@@ -135,7 +136,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 
 		float speed = Math.abs(getSpeed());
 		if (running && level != null) {
-			if (level.isClientSide && runningTicks == 20)
+			if (level.isClientSide() && runningTicks == 20)
 				renderParticles();
 
 			if (getSpeed() == 0 || !isSpeedRequirementFulfilled()) {
@@ -145,7 +146,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 					runningTicks++;
 			}
 
-			if ((!level.isClientSide || isVirtual()) && runningTicks == 20) {
+			if ((!level.isClientSide() || isVirtual()) && runningTicks == 20) {
 				if (processingTicks < 0) {
 					float recipeSpeed = 1;
 					if (currentRecipe instanceof StandardProcessingRecipe) {
@@ -195,7 +196,8 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 				ItemStack stackInSlot = inv.getItem(slot);
 				if (stackInSlot.isEmpty())
 					continue;
-				ItemParticleOption data = new ItemParticleOption(ParticleTypes.ITEM, stackInSlot);
+				ItemParticleOption data =
+					new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(stackInSlot));
 				spillParticle(data);
 			}
 		}
@@ -213,13 +215,13 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 	}
 
 	protected void spillParticle(ParticleOptions data) {
-		float angle = level.random.nextFloat() * 360;
+		float angle = level.getRandom().nextFloat() * 360;
 		Vec3 offset = new Vec3(0, 0, 0.25f);
 		offset = VecHelper.rotate(offset, angle, Axis.Y);
 		Vec3 target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y)
 			.add(0, .25f, 0);
 		Vec3 center = offset.add(VecHelper.getCenterOf(worldPosition));
-		target = VecHelper.offsetRandomly(target.subtract(offset), level.random, 1 / 128f);
+		target = VecHelper.offsetRandomly(target.subtract(offset), level.getRandom(), 1 / 128f);
 		level.addParticle(data, center.x, center.y - 1.75f, center.z, target.x, target.y, target.z);
 	}
 
@@ -238,7 +240,8 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 		if (basin.isEmpty())
 			return matchingRecipes;
 
-		IItemHandler availableItems = level.getCapability(Capabilities.ItemHandler.BLOCK, basinBlockEntity.getBlockPos(), null);
+		IItemHandler availableItems =
+			LegacyItemHandlerAdapter.of(level.getCapability(Capabilities.Item.BLOCK, basinBlockEntity.getBlockPos(), null));
 		if (availableItems == null)
 			return matchingRecipes;
 
@@ -262,7 +265,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 	protected boolean matchStaticFilters(RecipeHolder<? extends Recipe<?>> recipe) {
 		Recipe<?> r = recipe.value();
 		return ((r instanceof CraftingRecipe && !(r instanceof ShapedRecipe)
-			&& AllConfigs.server().recipes.allowShapelessInMixer.get() && r.getIngredients()
+			&& AllConfigs.server().recipes.allowShapelessInMixer.get() && r.placementInfo().ingredients()
 			.size() > 1
 			&& !MechanicalPressBlockEntity.canCompress(r)) && !AllRecipeTypes.shouldIgnoreInAutomation(recipe)
 			|| r.getType() == AllRecipeTypes.MIXING.getType());
@@ -307,7 +310,6 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void tickAudio() {
 		super.tickAudio();
 

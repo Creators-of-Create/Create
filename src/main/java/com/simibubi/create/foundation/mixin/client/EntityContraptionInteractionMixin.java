@@ -26,6 +26,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.Entity.MovementEmission;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
@@ -93,10 +94,10 @@ public abstract class EntityContraptionInteractionMixin {
 	}
 
 	// involves block step sounds on contraptions
-	// injecting before `!blockstate1.isAir(this.world, blockpos)`
+	// injecting before `!supportingState.isAir()`
 	// `if (this.moveDist > this.nextStep && !blockstate1.isAir())
-	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z", ordinal = 0))
-	private void create$contraptionStepSounds(MoverType mover, Vec3 movement, CallbackInfo ci) {
+	@Inject(method = "applyMovementEmissionAndPlaySound(Lnet/minecraft/world/entity/Entity$MovementEmission;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z", ordinal = 0))
+	private void create$contraptionStepSounds(MovementEmission emission, Vec3 movement, BlockPos effectPos, BlockState effectState, CallbackInfo ci) {
 		Vec3 worldPos = position.add(0, -0.2, 0);
 		MutableBoolean stepped = new MutableBoolean(false);
 
@@ -112,7 +113,7 @@ public abstract class EntityContraptionInteractionMixin {
 	// involves client-side view bobbing animation on contraptions
 	@Inject(method = "move", at = @At(value = "TAIL"))
 	private void create$onMove(MoverType mover, Vec3 movement, CallbackInfo ci) {
-		if (!level.isClientSide)
+		if (!level.isClientSide())
 			return;
 		Entity self = (Entity) (Object) this;
 		if (self.onGround())
@@ -155,7 +156,7 @@ public abstract class EntityContraptionInteractionMixin {
 				&& state.getRenderShape() != RenderShape.INVISIBLE) {
 				Vec3 speed = self.getDeltaMovement();
 				level.addParticle(
-					new BlockParticleOption(ParticleTypes.BLOCK, state).setPos(particlePos),
+					new BlockParticleOption(ParticleTypes.BLOCK, state),
 					self.getX() + ((double) random.nextFloat() - 0.5D) * (double) dimensions.width(),
 					self.getY() + 0.1D,
 					self.getZ() + ((double) random.nextFloat() - 0.5D) * (double) dimensions.height(),

@@ -8,8 +8,10 @@ import java.util.stream.Stream;
 import com.google.common.collect.Streams;
 import com.simibubi.create.content.equipment.bell.SoulParticle.ExpandingPerimeterData;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -81,7 +83,7 @@ public class SoulPulseEffect {
 	}
 
 	public static boolean canSpawnSoulAt(Level world, BlockPos at, boolean ignoreLight) {
-		EntityType<?> dummy = EntityType.ZOMBIE;
+		EntityType<?> dummy = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.withDefaultNamespace("zombie"));
 		double dummyWidth = 0.2, dummyHeight = 0.75;
 		double w2 = dummyWidth / 2;
 
@@ -95,7 +97,7 @@ public class SoulPulseEffect {
 	}
 
 	public void spawnParticles(Level world, BlockPos at) {
-		if (world == null || !world.isClientSide)
+		if (world == null || !world.isClientSide())
 			return;
 
 		Vec3 p = Vec3.atLowerCornerOf(at);

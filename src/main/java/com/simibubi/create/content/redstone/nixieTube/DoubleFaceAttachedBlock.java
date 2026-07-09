@@ -54,7 +54,7 @@ public class DoubleFaceAttachedBlock extends HorizontalDirectionalBlock {
 					.setValue(FACING, pContext.getHorizontalDirection());
 			} else {
 				Vec3 n = Vec3.atLowerCornerOf(direction.getClockWise()
-					.getNormal());
+					.getUnitVec3i());
 				DoubleAttachFace face = DoubleAttachFace.WALL;
 				if (pContext.getPlayer() != null) {
 					Vec3 lookAngle = pContext.getPlayer()

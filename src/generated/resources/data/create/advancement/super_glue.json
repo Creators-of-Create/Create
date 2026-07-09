@@ -12,7 +12,6 @@
       "translate": "advancement.create.super_glue.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:super_glue"
     },
     "title": {

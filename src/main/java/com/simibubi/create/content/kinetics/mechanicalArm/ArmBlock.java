@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.mechanicalArm;
 
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
@@ -23,6 +23,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -63,8 +64,7 @@ public class ArmBlock extends KineticBlock implements IBE<ArmBlockEntity>, ICogW
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_,
-		BlockPos p_220069_5_, boolean p_220069_6_) {
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, Orientation orientation, boolean p_220069_6_) {
 		withBlockEntityDo(world, pos, ArmBlockEntity::redstoneUpdate);
 	}
 
@@ -84,14 +84,14 @@ public class ArmBlock extends KineticBlock implements IBE<ArmBlockEntity>, ICogW
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (AllItems.GOGGLES.isIn(stack)) {
-			ItemInteractionResult gogglesResult = onBlockEntityUseItemOn(level, pos, ate -> {
+			InteractionResult gogglesResult = onBlockEntityUseItemOn(level, pos, ate -> {
 				if (ate.goggles)
-					return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+					return InteractionResult.TRY_WITH_EMPTY_HAND;
 				ate.goggles = true;
 				ate.notifyUpdate();
-				return ItemInteractionResult.SUCCESS;
+				return InteractionResult.SUCCESS;
 			});
 			if (gogglesResult.consumesAction())
 				return gogglesResult;
@@ -102,7 +102,7 @@ public class ArmBlock extends KineticBlock implements IBE<ArmBlockEntity>, ICogW
 			if (be.heldItem.isEmpty())
 				return;
 			success.setTrue();
-			if (level.isClientSide)
+			if (level.isClientSide())
 				return;
 			player.getInventory().placeItemBackInInventory(be.heldItem);
 			be.heldItem = ItemStack.EMPTY;
@@ -111,7 +111,7 @@ public class ArmBlock extends KineticBlock implements IBE<ArmBlockEntity>, ICogW
 			be.sendData();
 		});
 
-		return success.booleanValue() ? ItemInteractionResult.SUCCESS : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return success.booleanValue() ? InteractionResult.SUCCESS : InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
 }

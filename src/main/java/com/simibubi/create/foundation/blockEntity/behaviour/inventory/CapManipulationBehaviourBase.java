@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 
-import net.createmod.catnip.math.BlockFace;
+import net.createmod.catnip.api.math.BlockFace;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -38,7 +38,12 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		filter = Predicates.alwaysTrue();
 	}
 
-	protected abstract BlockCapability<T, Direction> capability();
+	protected abstract BlockCapability<?, Direction> capability();
+
+	@SuppressWarnings("unchecked")
+	protected T adaptCapability(Object capability) {
+		return (T) capability;
+	}
 
 	@Override
 	public void initialize() {
@@ -143,8 +148,8 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		BlockEntity invBE = world.getBlockEntity(pos);
 		if (!filter.test(invBE))
 			return;
-		BlockCapability<T, Direction> capability = capability();
-		targetCapability = world.getCapability(capability, pos, bypassSided ? null : targetBlockFace.getFace());
+		BlockCapability<?, Direction> capability = capability();
+		targetCapability = adaptCapability(world.getCapability(capability, pos, bypassSided ? null : targetBlockFace.getFace()));
 	}
 
 	@FunctionalInterface

@@ -1,12 +1,8 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    {
-      "item": "minecraft:waxed_weathered_cut_copper_slab"
-    },
-    {
-      "tag": "minecraft:axes"
-    }
+    "minecraft:waxed_weathered_cut_copper_slab",
+    "#minecraft:axes"
   ],
   "keep_held_item": true,
   "results": [

@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:poppy"
-    }
+    "minecraft:poppy"
   ],
   "processing_time": 50,
   "results": [

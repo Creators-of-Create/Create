@@ -12,7 +12,6 @@
       "translate": "advancement.create.water_supply.desc"
     },
     "icon": {
-      "count": 1,
       "id": "minecraft:water_bucket"
     },
     "title": {

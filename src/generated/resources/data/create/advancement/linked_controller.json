@@ -12,7 +12,6 @@
       "translate": "advancement.create.linked_controller.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:linked_controller"
     },
     "title": {

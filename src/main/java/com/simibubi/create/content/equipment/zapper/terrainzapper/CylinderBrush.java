@@ -10,7 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;

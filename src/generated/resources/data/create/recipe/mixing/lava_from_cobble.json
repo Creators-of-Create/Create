@@ -2,9 +2,7 @@
   "type": "create:mixing",
   "heat_requirement": "superheated",
   "ingredients": [
-    {
-      "tag": "c:cobblestones"
-    }
+    "#c:cobblestones"
   ],
   "results": [
     {

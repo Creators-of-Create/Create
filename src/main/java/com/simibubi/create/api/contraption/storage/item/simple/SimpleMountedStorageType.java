@@ -8,13 +8,14 @@ import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
+import com.simibubi.create.foundation.item.LegacyItemHandlerAdapter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities.Item;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
@@ -33,7 +34,7 @@ public abstract class SimpleMountedStorageType<T extends SimpleMountedStorage> e
 	}
 
 	protected IItemHandler getHandler(Level level, BlockEntity be) {
-		IItemHandler handler = level.getCapability(ItemHandler.BLOCK, be.getBlockPos(), null);
+		IItemHandler handler = LegacyItemHandlerAdapter.modifiable(level.getCapability(Item.BLOCK, be.getBlockPos(), null));
 		// make sure the handler is modifiable so new contents can be moved over on disassembly
 		return handler instanceof IItemHandlerModifiable modifiable ? modifiable : null;
 	}

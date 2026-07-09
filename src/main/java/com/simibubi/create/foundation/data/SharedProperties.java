@@ -1,10 +1,8 @@
 package com.simibubi.create.foundation.data;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-@MethodsReturnNonnullByDefault
 public class SharedProperties {
 
 	public static Block wooden() {
@@ -20,7 +18,7 @@ public class SharedProperties {
 	}
 
 	public static Block copperMetal() {
-		return Blocks.COPPER_BLOCK;
+		return Blocks.COPPER_BLOCK.weathering().unaffected();
 	}
 
 	public static Block netheriteMetal() {

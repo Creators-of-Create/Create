@@ -1,12 +1,8 @@
 {
   "type": "create:item_application",
   "ingredients": [
-    {
-      "tag": "c:stripped_woods"
-    },
-    {
-      "item": "create:andesite_alloy"
-    }
+    "#c:stripped_woods",
+    "create:andesite_alloy"
   ],
   "results": [
     {

@@ -8,16 +8,18 @@ import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -30,7 +32,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -49,28 +50,24 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements IBE<Pulle
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		super.onRemove(state, worldIn, pos, newState, isMoving);
-		if (state.is(newState.getBlock()))
-			return;
-		if (worldIn.isClientSide)
-			return;
-		BlockState below = worldIn.getBlockState(pos.below());
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
+		super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
+		BlockState below = level.getBlockState(pos.below());
 		if (below.getBlock() instanceof RopeBlockBase)
-			worldIn.destroyBlock(pos.below(), true);
+			level.destroyBlock(pos.below(), true);
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!player.mayBuild())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (player.isShiftKeyDown())
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 		if (stack.isEmpty()) {
             withBlockEntityDo(level, pos, be -> be.assembleNextTick = true);
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
 	@Override
@@ -101,26 +98,23 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements IBE<Pulle
 		}
 
 		@Override
-		public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos,
-										   Player player) {
+		protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
 			return AllBlocks.ROPE_PULLEY.asStack();
 		}
 
 		@Override
-		public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-			if (!isMoving && (!state.hasProperty(BlockStateProperties.WATERLOGGED) || !newState.hasProperty(BlockStateProperties.WATERLOGGED) || state.getValue(BlockStateProperties.WATERLOGGED) == newState.getValue(BlockStateProperties.WATERLOGGED))) {
-				onRopeBroken(worldIn, pos.above());
-				if (!worldIn.isClientSide) {
-					BlockState above = worldIn.getBlockState(pos.above());
-					BlockState below = worldIn.getBlockState(pos.below());
+		protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
+			super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
+			if (!movedByPiston) {
+				onRopeBroken(level, pos.above());
+				{
+					BlockState above = level.getBlockState(pos.above());
+					BlockState below = level.getBlockState(pos.below());
 					if (above.getBlock() instanceof RopeBlockBase)
-						worldIn.destroyBlock(pos.above(), true);
+						level.destroyBlock(pos.above(), true);
 					if (below.getBlock() instanceof RopeBlockBase)
-						worldIn.destroyBlock(pos.below(), true);
+						level.destroyBlock(pos.below(), true);
 				}
-			}
-			if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
-				worldIn.removeBlockEntity(pos);
 			}
 		}
 
@@ -137,10 +131,11 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements IBE<Pulle
 		}
 
 		@Override
-		public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
-									  LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
+		protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
+										 Direction direction, BlockPos neighbourPos, BlockState neighbourState,
+										 RandomSource random) {
 			if (state.getValue(BlockStateProperties.WATERLOGGED))
-				world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+				ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
 			return state;
 		}
 

@@ -3,9 +3,7 @@
   "category": "building",
   "group": "cut_diorite_slab",
   "key": {
-    "X": {
-      "item": "create:cut_diorite"
-    }
+    "X": "create:cut_diorite"
   },
   "pattern": [
     "XXX"

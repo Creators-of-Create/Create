@@ -2,7 +2,7 @@ package com.simibubi.create.content.kinetics.turntable;
 
 import com.simibubi.create.AllBlocks;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

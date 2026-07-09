@@ -6,7 +6,7 @@ import java.util.Vector;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -140,7 +140,7 @@ public class Instruction {
 	static Instruction deserialize(CompoundTag tag) {
 		Instruction instruction = new Instruction(NBTHelper.readEnum(tag, "Type", SequencerInstructions.class));
 		instruction.speedModifier = NBTHelper.readEnum(tag, "Modifier", InstructionSpeedModifiers.class);
-		instruction.value = tag.getInt("Value");
+		instruction.value = tag.getIntOr("Value", 0);
 		return instruction;
 	}
 

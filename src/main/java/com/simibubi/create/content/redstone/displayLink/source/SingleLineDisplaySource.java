@@ -17,7 +17,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public abstract class SingleLineDisplaySource extends DisplaySource {
 
@@ -26,13 +25,11 @@ public abstract class SingleLineDisplaySource extends DisplaySource {
 	protected abstract boolean allowsLabeling(DisplayLinkContext context);
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
 		if (isFirstLine && allowsLabeling(context))
 			addLabelingTextBox(builder);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	protected void addLabelingTextBox(ModularGuiLineBuilder builder) {
 		builder.addTextInput(0, 137, (e, t) -> {
 			e.setValue("");
@@ -51,7 +48,7 @@ public abstract class SingleLineDisplaySource extends DisplaySource {
 
 		if (allowsLabeling(context)) {
 			String label = context.sourceConfig()
-				.getString("Label");
+				.getStringOr("Label", "");
 			if (!label.isEmpty()) {
                 line = Component.literal(label + " ").append(line);
             }
@@ -65,7 +62,7 @@ public abstract class SingleLineDisplaySource extends DisplaySource {
 
 		if (allowsLabeling(context)) {
 			String label = context.sourceConfig()
-				.getString("Label");
+				.getStringOr("Label", "");
 			if (!label.isEmpty()) {
                 return ImmutableList.of(ImmutableList.of(Component.literal(label + " "), provideLine(context, stats)));
             }
@@ -87,7 +84,7 @@ public abstract class SingleLineDisplaySource extends DisplaySource {
 		}
 
 		String label = context.sourceConfig()
-			.getString("Label");
+			.getStringOr("Label", "");
 
 		if (label.isEmpty()) {
 			if (!layout.isLayout(layoutKey))

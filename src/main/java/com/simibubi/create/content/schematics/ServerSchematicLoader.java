@@ -86,7 +86,7 @@ public class ServerSchematicLoader {
 	}
 
 	public void handleNewUpload(ServerPlayer player, String schematic, long size, BlockPos pos) {
-		String playerName = player.getGameProfile().getName();
+		String playerName = player.getName().getString();
 
 		Path baseDir = CreatePaths.UPLOADED_SCHEMATICS_DIR;
 		Path playerPath = baseDir.resolve(playerName).normalize();
@@ -116,7 +116,7 @@ public class ServerSchematicLoader {
 
 		try {
 			// Validate Referenced Block
-			SchematicTableBlockEntity table = getTable(player.getCommandSenderWorld(), pos);
+			SchematicTableBlockEntity table = getTable(player.level(), pos);
 			if (table == null)
 				return;
 
@@ -168,8 +168,8 @@ public class ServerSchematicLoader {
 	}
 
 	public void handleWriteRequest(ServerPlayer player, String schematic, byte[] data) {
-		String playerSchematicId = player.getGameProfile()
-			.getName() + "/" + schematic;
+		String playerSchematicId = player.getName()
+			.getString() + "/" + schematic;
 
 		if (activeUploads.containsKey(playerSchematicId)) {
 			SchematicUploadEntry entry = activeUploads.get(playerSchematicId);
@@ -235,8 +235,8 @@ public class ServerSchematicLoader {
 	}
 
 	public void handleFinishedUpload(ServerPlayer player, String schematic) {
-		String playerSchematicId = player.getGameProfile()
-			.getName() + "/" + schematic;
+		String playerSchematicId = player.getName()
+			.getString() + "/" + schematic;
 
 		if (activeUploads.containsKey(playerSchematicId)) {
 			try {
@@ -257,8 +257,8 @@ public class ServerSchematicLoader {
 				if (table == null)
 					return;
 				table.finishUpload();
-				table.inventory.setStackInSlot(1, SchematicItem.create(world, schematic, player.getGameProfile()
-					.getName()));
+				table.inventory.setStackInSlot(1, SchematicItem.create(world, schematic, player.getName()
+					.getString()));
 
 			} catch (IOException e) {
 				Create.LOGGER.error("Exception Thrown when finishing Upload: {}", playerSchematicId, e);
@@ -268,7 +268,7 @@ public class ServerSchematicLoader {
 
 	public void handleInstantSchematic(ServerPlayer player, String schematic, Level world, BlockPos pos,
 									   BlockPos bounds) {
-		String playerName = player.getGameProfile().getName();
+		String playerName = player.getName().getString();
 
 		Path baseDir = CreatePaths.UPLOADED_SCHEMATICS_DIR;
 		Path playerPath = baseDir.resolve(playerName).normalize();

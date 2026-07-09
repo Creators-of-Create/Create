@@ -31,15 +31,15 @@ import com.simibubi.create.content.kinetics.saw.CuttingRecipe;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe.Serializer;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeSerializer;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import com.simibubi.create.foundation.recipe.ItemCopyingRecipe;
 
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -47,7 +47,6 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
-import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraft.world.level.Level;
 
 import net.neoforged.bus.api.IEventBus;
@@ -72,17 +71,18 @@ public enum AllRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	EMPTYING(EmptyingRecipe::new),
 	ITEM_APPLICATION(ManualApplicationRecipe::new),
 
-	MECHANICAL_CRAFTING(MechanicalCraftingRecipe.Serializer::new),
-	SEQUENCED_ASSEMBLY(SequencedAssemblyRecipeSerializer::new),
+	MECHANICAL_CRAFTING(MechanicalCraftingRecipe.Serializer::create),
+	SEQUENCED_ASSEMBLY(SequencedAssemblyRecipeSerializer::create),
 
-	TOOLBOX_DYEING(() -> new SimpleCraftingRecipeSerializer<>(ToolboxDyeingRecipe::new), () -> RecipeType.CRAFTING, false),
-	ITEM_COPYING(() -> new SimpleCraftingRecipeSerializer<>(ItemCopyingRecipe::new), () -> RecipeType.CRAFTING, false);
+	TOOLBOX_DYEING(() -> ToolboxDyeingRecipe.SERIALIZER, () -> RecipeType.CRAFTING, false),
+	ITEM_COPYING(() -> ItemCopyingRecipe.SERIALIZER, () -> RecipeType.CRAFTING, false);
 
 	public static final Predicate<RecipeHolder<?>> CAN_BE_AUTOMATED = r -> !r.id()
+			.identifier()
 			.getPath()
 			.endsWith("_manual_only");
 
-	public final ResourceLocation id;
+	public final Identifier id;
 	public final Supplier<RecipeSerializer<?>> serializerSupplier;
 	private final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> serializerObject;
 	@Nullable
@@ -119,12 +119,12 @@ public enum AllRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	}
 
 	AllRecipeTypes(StandardProcessingRecipe.Factory<?> processingFactory) {
-		this(() -> new Serializer<>(processingFactory));
+		this(() -> StandardProcessingRecipe.Serializer.create(processingFactory));
 		isProcessingRecipe = true;
 	}
 
 	AllRecipeTypes(ProcessingRecipe.Factory<ItemApplicationRecipeParams, ? extends ItemApplicationRecipe> itemApplicationFactory) {
-		this(() -> new ItemApplicationRecipe.Serializer<>(itemApplicationFactory));
+		this(() -> ItemApplicationRecipe.Serializer.create(itemApplicationFactory));
 		isProcessingRecipe = true;
 	}
 
@@ -136,7 +136,7 @@ public enum AllRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	}
 
 	@Override
-	public ResourceLocation getId() {
+	public Identifier getId() {
 		return id;
 	}
 
@@ -153,7 +153,10 @@ public enum AllRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	}
 
 	public <I extends RecipeInput, R extends Recipe<I>> Optional<RecipeHolder<R>> find(I inv, Level world) {
-		return world.getRecipeManager()
+		MinecraftServer server = world.getServer();
+		if (server == null)
+			return Optional.empty();
+		return server.getRecipeManager()
 			.getRecipeFor(getType(), inv, world);
 	}
 

@@ -12,6 +12,9 @@ import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+import com.simibubi.create.foundation.fluid.LegacyFluidIngredientBridge;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerItemAdapter;
+import com.simibubi.create.foundation.fluid.LazyComponentFluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
 
@@ -22,19 +25,18 @@ import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.runtime.IIngredientManager;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-import net.neoforged.neoforge.capabilities.Capabilities.FluidHandler;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
-import net.neoforged.neoforge.fluids.crafting.DataComponentFluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 @ParametersAreNonnullByDefault
@@ -52,19 +54,19 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 			if (PotionFluidHandler.isPotionItem(stack)) {
 				FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
 				Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
-				ResourceLocation id = Create.asResource("potions");
+				Identifier id = Create.asResource("potions");
 				SizedFluidIngredient fluidIngredient = new SizedFluidIngredient(
-					DataComponentFluidIngredient.of(false, fluidFromPotionItem), fluidFromPotionItem.getAmount());
+					LazyComponentFluidIngredient.of(false, fluidFromPotionItem), fluidFromPotionItem.getAmount());
 				FillingRecipe recipe = new StandardProcessingRecipe.Builder<>(FillingRecipe::new, id)
 						.withItemIngredients(bottle)
 					.withFluidIngredients(fluidIngredient)
 						.withSingleItemOutput(stack)
 						.build();
-				consumer.accept(new RecipeHolder<>(id, recipe));
+				consumer.accept(new RecipeHolder<>(recipeKey(id), recipe));
 				continue;
 			}
 
-			IFluidHandlerItem capability = stack.getCapability(FluidHandler.ITEM);
+			IFluidHandlerItem capability = LegacyFluidHandlerItemAdapter.of(stack.copy());
 			if (capability == null)
 				continue;
 
@@ -78,7 +80,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 					continue;
 
 				ItemStack copy = stack.copy();
-				IFluidHandlerItem fhi = copy.getCapability(FluidHandler.ITEM);
+				IFluidHandlerItem fhi = LegacyFluidHandlerItemAdapter.of(copy);
 				if (fhi != null) {
 					if (!GenericItemFilling.isFluidHandlerValid(copy, fhi))
 						continue;
@@ -91,19 +93,19 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 					if (container.isEmpty())
 						continue;
 
-					Ingredient bucket = Ingredient.of(stack);
-					ResourceLocation itemName = RegisteredObjectsHelper.getKeyOrThrow(stack.getItem());
-					ResourceLocation fluidName = RegisteredObjectsHelper.getKeyOrThrow(fluidCopy.getFluid());
-					ResourceLocation id = Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()
+					Ingredient bucket = DataComponentIngredient.of(false, stack);
+					Identifier itemName = RegisteredObjectsHelper.getKeyOrThrow(stack.getItem());
+					Identifier fluidName = RegisteredObjectsHelper.getKeyOrThrow(fluidCopy.getFluid());
+					Identifier id = Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()
 							+ "_with_" + fluidName.getNamespace() + "_" + fluidName.getPath());
 					SizedFluidIngredient fluidIngredient = new SizedFluidIngredient(
-						DataComponentFluidIngredient.of(false, fluidCopy), fluidCopy.getAmount());
+						LazyComponentFluidIngredient.of(false, fluidCopy), fluidCopy.getAmount());
 					FillingRecipe recipe = new StandardProcessingRecipe.Builder<>(FillingRecipe::new, id)
 							.withItemIngredients(bucket)
 						.withFluidIngredients(fluidIngredient)
 							.withSingleItemOutput(container)
 							.build();
-					consumer.accept(new RecipeHolder<>(id, recipe));
+					consumer.accept(new RecipeHolder<>(recipeKey(id), recipe));
 				}
 			}
 		}
@@ -125,11 +127,10 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 	}
 
 	@Override
-	public void draw(FillingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+	public void draw(FillingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29);
-		spout.withFluids(Arrays.asList(recipe.getRequiredFluid()
-				.getFluids()))
+		spout.withFluids(LegacyFluidIngredientBridge.getFluids(recipe.getRequiredFluid()))
 			.draw(graphics, getBackground().getWidth() / 2 - 13, 22);
 	}
 

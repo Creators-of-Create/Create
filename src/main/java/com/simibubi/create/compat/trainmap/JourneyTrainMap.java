@@ -19,7 +19,7 @@ import journeymap.api.v2.client.util.UIState;
 import journeymap.api.v2.common.event.FullscreenEventRegistry;
 import journeymap.client.ui.fullscreen.Fullscreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.FormattedText;
@@ -46,7 +46,7 @@ public class JourneyTrainMap implements IClientPlugin {
 	}
 
 	public static void tick() {
-		if (!AllConfigs.client().showTrainMapOverlay.get() || !(Minecraft.getInstance().screen instanceof Fullscreen)) {
+		if (!AllConfigs.client().showTrainMapOverlay.get() || !(Minecraft.getInstance().gui.screen() instanceof Fullscreen)) {
 			if (requesting)
 				TrainMapSyncClient.stopRequesting();
 			requesting = false;
@@ -59,7 +59,7 @@ public class JourneyTrainMap implements IClientPlugin {
 
 	public static void mouseClick(Pre event) {
 		Minecraft mc = Minecraft.getInstance();
-		if (!(mc.screen instanceof Fullscreen screen))
+		if (!(mc.gui.screen() instanceof Fullscreen screen))
 			return;
 
 		Window window = mc.getWindow();
@@ -70,9 +70,9 @@ public class JourneyTrainMap implements IClientPlugin {
 			event.setCanceled(true);
 	}
 
-	// GuiGraphics graphics, Fullscreen screen, double x, double z, int mX, int mY, float pt
+	// GuiGraphicsExtractor graphics, Fullscreen screen, double x, double z, int mX, int mY, float pt
 	public static void onRender(FullscreenRenderEvent event) {
-		GuiGraphics graphics = event.getGraphics();
+		GuiGraphicsExtractor graphics = event.getGraphics();
 		IFullscreen fullscreen = event.getFullscreen();
 		Screen screen = fullscreen.getScreen();
 		double x = fullscreen.getCenterBlockX(true);
@@ -124,7 +124,7 @@ public class JourneyTrainMap implements IClientPlugin {
 			RemovedGuiUtils.drawHoveringText(graphics, tooltip, mX, mY, screen.width, screen.height, 256, mc.font);
 	}
 
-	private static boolean renderToggleWidgetAndTooltip(GuiGraphics graphics, Screen screen, int mouseX,
+	private static boolean renderToggleWidgetAndTooltip(GuiGraphicsExtractor graphics, Screen screen, int mouseX,
 		int mouseY) {
 		TrainMapManager.renderToggleWidget(graphics, 3, 30);
 		if (!TrainMapManager.isToggleWidgetHovered(mouseX, mouseY, 3, 30))

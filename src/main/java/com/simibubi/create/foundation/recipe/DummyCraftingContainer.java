@@ -54,7 +54,6 @@ public class DummyCraftingContainer extends TransientCraftingContainer {
 	@Override
 	public void clearContent() {}
 
-	@Override
 	public void fillStackedContents(@NotNull StackedContents helper) {}
 
 	private static NonNullList<ItemStack> createInventory(IItemHandler itemHandler, int[] extractedItemsFromSlot) {

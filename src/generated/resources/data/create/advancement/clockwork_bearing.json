@@ -11,7 +11,6 @@
       "translate": "advancement.create.clockwork_bearing.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:clockwork_bearing"
     },
     "title": {

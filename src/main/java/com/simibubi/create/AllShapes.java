@@ -10,7 +10,7 @@ import java.util.function.BiFunction;
 import com.simibubi.create.content.logistics.chute.ChuteShapes;
 import com.simibubi.create.content.trains.track.TrackVoxelShapes;
 
-import net.createmod.catnip.math.VoxelShaper;
+import net.createmod.catnip.api.math.VoxelShaper;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.Block;

@@ -15,7 +15,6 @@ import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBeha
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity;
 
-import dan200.computercraft.api.detail.VanillaDetailRegistries;
 import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
@@ -34,8 +33,8 @@ public class StockTickerPeripheral extends SyncedPeripheral<StockTickerBlockEnti
 			i++;
 			Map<String, Object> details = new HashMap<>(
 				detailed.isPresent() && detailed.get()
-					? VanillaDetailRegistries.ITEM_STACK.getDetails(entry.stack)
-					: VanillaDetailRegistries.ITEM_STACK.getBasicDetails(entry.stack));
+					? ComputerUtil.getDetails(entry.stack)
+					: ComputerUtil.getBasicDetails(entry.stack));
 			details.put("count", entry.count);
 			result.put(i, details);
 		}

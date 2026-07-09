@@ -9,22 +9,22 @@ import com.simibubi.create.content.contraptions.minecart.capability.MinecartCont
 import com.simibubi.create.content.kinetics.KineticDebugger;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.outliner.Outliner;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.outliner.Outliner;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -51,9 +51,7 @@ public class CouplingRenderer {
 		if (carts.getFirst() == null || carts.getSecond() == null)
 			return;
 
-		Couple<Integer> lightValues =
-			carts.map(c -> LevelRenderer.getLightColor(world, BlockPos.containing(c.getBoundingBox()
-				.getCenter())));
+		Couple<Integer> lightValues = carts.map(c -> LightCoordsUtil.FULL_BRIGHT);
 
 		Vec3 center = carts.getFirst()
 			.position()
@@ -64,7 +62,7 @@ public class CouplingRenderer {
 		Couple<CartEndpoint> transforms = carts.map(c -> getSuitableCartEndpoint(c, center));
 
 		BlockState renderState = Blocks.AIR.defaultBlockState();
-		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 		SuperByteBuffer attachment = CachedBuffers.partial(AllPartialModels.COUPLING_ATTACHMENT, renderState);
 		SuperByteBuffer ring = CachedBuffers.partial(AllPartialModels.COUPLING_RING, renderState);
 		SuperByteBuffer connector = CachedBuffers.partial(AllPartialModels.COUPLING_CONNECTOR, renderState);
@@ -135,32 +133,10 @@ public class CouplingRenderer {
 		Vec3 frontVec = positionVec.add(VecHelper.rotate(new Vec3(.5, 0, 0), 180 - yaw, Direction.Axis.Y));
 		Vec3 backVec = positionVec.add(VecHelper.rotate(new Vec3(-.5, 0, 0), 180 - yaw, Direction.Axis.Y));
 
-		Vec3 railVecOfPos = cart.getPos(xIn, yIn, zIn);
 		boolean flip = false;
-
-		if (railVecOfPos != null) {
-			frontVec = cart.getPosOffs(xIn, yIn, zIn, (double) 0.3F);
-			backVec = cart.getPosOffs(xIn, yIn, zIn, (double) -0.3F);
-			if (frontVec == null)
-				frontVec = railVecOfPos;
-			if (backVec == null)
-				backVec = railVecOfPos;
-
-			x += railVecOfPos.x;
-			y += (frontVec.y + backVec.y) / 2;
-			z += railVecOfPos.z;
-
-			Vec3 endPointDiff = backVec.add(-frontVec.x, -frontVec.y, -frontVec.z);
-			if (endPointDiff.length() != 0.0D) {
-				endPointDiff = endPointDiff.normalize();
-				yaw = (float) (Math.atan2(endPointDiff.z, endPointDiff.x) * 180.0D / Math.PI);
-				pitch = (float) (Math.atan(endPointDiff.y) * 73.0D);
-			}
-		} else {
-			x += xIn;
-			y += yIn;
-			z += zIn;
-		}
+		x += xIn;
+		y += yIn;
+		z += zIn;
 
 		final float offsetMagnitude = 13 / 16f;
 		boolean isBackFaceCloser = frontVec.distanceToSqr(centerOfCoupling) > backVec.distanceToSqr(centerOfCoupling);

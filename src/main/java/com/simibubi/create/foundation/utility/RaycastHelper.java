@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
+import com.simibubi.create.foundation.utility.LegacyDirectionBridge;
+
 import java.util.function.Predicate;
 
 import net.minecraft.core.BlockPos;
@@ -56,7 +58,7 @@ public class RaycastHelper {
 		MutableBlockPos currentPos = new BlockPos(x, y, z).mutable();
 
 		if (predicate.test(currentPos))
-			return new PredicateTraceResult(currentPos.immutable(), Direction.getNearest(dx - x, dy - y, dz - z));
+			return new PredicateTraceResult(currentPos.immutable(), LegacyDirectionBridge.nearest(dx - x, dy - y, dz - z, Direction.NORTH));
 
 		int remainingDistance = 200;
 

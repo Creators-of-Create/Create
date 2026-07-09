@@ -42,7 +42,7 @@ public class HauntedBellBlock extends AbstractBellBlock<HauntedBellBlockEntity> 
 
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (oldState.getBlock() != this && !world.isClientSide)
+		if (oldState.getBlock() != this && !world.isClientSide())
 			withBlockEntityDo(world, pos, hbte -> {
 				hbte.effectTicks = HauntedBellBlockEntity.EFFECT_TICKS;
 				hbte.sendData();

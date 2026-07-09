@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.advancement;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -11,25 +13,27 @@ import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.advancements.triggers.InventoryChangeTrigger;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.triggers.ItemUsedOnLocationTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
 public class CreateAdvancement {
 
-	static final ResourceLocation BACKGROUND = Create.asResource("textures/gui/advancements.png");
+	static final Identifier BACKGROUND = Create.asResource("textures/gui/advancements.png");
 	static final String LANG = "advancement." + Create.ID + ".";
 	static final String SECRET_SUFFIX = "\n\u00A77(Hidden Advancement)";
 
@@ -71,7 +75,8 @@ public class CreateAdvancement {
 	public boolean isAlreadyAwardedTo(Player player) {
 		if (!(player instanceof ServerPlayer sp))
 			return true;
-		AdvancementHolder advancement = sp.getServer()
+		AdvancementHolder advancement = sp.level()
+			.getServer()
 			.getAdvancements()
 			.get(Create.asResource(id));
 		if (advancement == null)
@@ -94,10 +99,12 @@ public class CreateAdvancement {
 		if (parent != null)
 			mcBuilder.parent(parent.datagenResult);
 
+		createBuilder.addDeferredTriggers(registries);
+
 		if (createBuilder.func != null)
 			createBuilder.icon(createBuilder.func.apply(registries));
 
-		mcBuilder.display(createBuilder.icon, Component.translatable(titleKey()),
+		mcBuilder.display(ItemStackTemplate.fromStack(createBuilder.icon), Component.translatable(titleKey()),
 			Component.translatable(descriptionKey()).withStyle(s -> s.withColor(0xDBA213)),
 			id.equals("root") ? BACKGROUND : null, createBuilder.type.advancementType, createBuilder.type.toast,
 			createBuilder.type.announce, createBuilder.type.hide);
@@ -140,7 +147,9 @@ public class CreateAdvancement {
 		private boolean externalTrigger;
 		private int keyIndex;
 		private ItemStack icon;
+		private ItemLike iconItem;
 		private Function<Provider, ItemStack> func;
+		private List<Function<Provider, Criterion<?>>> deferredTriggers = new ArrayList<>();
 
 		Builder special(TaskType type) {
 			this.type = type;
@@ -153,15 +162,18 @@ public class CreateAdvancement {
 		}
 
 		Builder icon(ItemProviderEntry<?, ?> item) {
-			return icon(item.asStack());
+			return icon((ItemLike) item);
 		}
 
 		Builder icon(ItemLike item) {
-			return icon(new ItemStack(item));
+			iconItem = item;
+			func = $ -> new ItemStack(item);
+			return this;
 		}
 
 		Builder icon(ItemStack stack) {
 			icon = stack;
+			iconItem = stack.getItem();
 			return this;
 		}
 
@@ -185,21 +197,20 @@ public class CreateAdvancement {
 		}
 
 		Builder whenIconCollected() {
-			return externalTrigger(InventoryChangeTrigger.TriggerInstance.hasItems(icon.getItem()));
+			return whenItemCollected(iconItem);
 		}
 
 		Builder whenItemCollected(ItemProviderEntry<?, ?> item) {
-			return whenItemCollected(item.asStack()
-				.getItem());
+			return whenItemCollected((ItemLike) item);
 		}
 
 		Builder whenItemCollected(ItemLike itemProvider) {
-			return externalTrigger(InventoryChangeTrigger.TriggerInstance.hasItems(itemProvider));
+			return externalTrigger($ -> InventoryChangeTrigger.TriggerInstance.hasItems(itemProvider));
 		}
 
 		Builder whenItemCollected(TagKey<Item> tag) {
-			return externalTrigger(InventoryChangeTrigger.TriggerInstance
-				.hasItems(ItemPredicate.Builder.item().of(tag).build()));
+			return externalTrigger(registries -> InventoryChangeTrigger.TriggerInstance
+				.hasItems(ItemPredicate.Builder.item().of(registries.lookupOrThrow(Registries.ITEM), tag).build()));
 		}
 
 		Builder awardedForFree() {
@@ -211,6 +222,20 @@ public class CreateAdvancement {
 			externalTrigger = true;
 			keyIndex++;
 			return this;
+		}
+
+		Builder externalTrigger(Function<Provider, Criterion<?>> trigger) {
+			deferredTriggers.add(trigger);
+			externalTrigger = true;
+			return this;
+		}
+
+		void addDeferredTriggers(Provider registries) {
+			for (Function<Provider, Criterion<?>> trigger : deferredTriggers) {
+				mcBuilder.addCriterion(String.valueOf(keyIndex), trigger.apply(registries));
+				keyIndex++;
+			}
+			deferredTriggers.clear();
 		}
 
 	}

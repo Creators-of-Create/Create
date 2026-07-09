@@ -1,9 +1,7 @@
 {
   "type": "create:splashing",
   "ingredients": [
-    {
-      "tag": "minecraft:wool"
-    }
+    "#minecraft:wool"
   ],
   "results": [
     {

@@ -14,31 +14,26 @@ import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.render.ShadedBlockSbbBuilder;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.render.SuperByteBufferCache;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.render.ShadedBlockSbbBuilder;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.SuperByteBufferCache;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-import net.neoforged.neoforge.client.model.data.ModelData;
-
-public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> extends EntityRenderer<C> {
+public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> extends EntityRenderer<C, EntityRenderState> {
 	public static final SuperByteBufferCache.Compartment<Pair<Contraption, RenderType>> CONTRAPTION = new SuperByteBufferCache.Compartment<>();
 	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
@@ -51,43 +46,16 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 	}
 
 	private static SuperByteBuffer buildStructureBuffer(Contraption contraption, VirtualRenderWorld renderWorld, RenderType layer) {
-		BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
-		ModelBlockRenderer renderer = dispatcher.getModelRenderer();
 		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
-
-		PoseStack poseStack = objects.poseStack;
-		RandomSource random = objects.random;
-		var clientContraption = contraption.getOrCreateClientContraptionLazy();
-		RenderedBlocks blocks = clientContraption.getRenderedBlocks();
-
 		ShadedBlockSbbBuilder sbbBuilder = objects.sbbBuilder;
 		sbbBuilder.begin();
-
-		ModelBlockRenderer.enableCaching();
-		for (BlockPos pos : blocks.positions()) {
-			BlockState state = blocks.lookup().apply(pos);
-			if (state.getRenderShape() == RenderShape.MODEL) {
-				BakedModel model = dispatcher.getBlockModel(state);
-				ModelData modelData = renderWorld.getModelData(pos);
-				modelData = model.getModelData(renderWorld, pos, state, modelData);
-				long randomSeed = state.getSeed(pos);
-				random.setSeed(randomSeed);
-				if (model.getRenderTypes(state, random, modelData).contains(layer)) {
-					poseStack.pushPose();
-					poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
-					renderer.tesselateBlock(renderWorld, model, state, pos, poseStack, sbbBuilder, true, random, randomSeed, OverlayTexture.NO_OVERLAY, modelData, layer);
-					poseStack.popPose();
-				}
-			}
-		}
-		ModelBlockRenderer.clearCache();
-
+		// TODO 26.2: Port contraption block buffering to BlockStateModel/SubmitNodeCollector.
 		return sbbBuilder.end();
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(C entity) {
-		return null;
+	public EntityRenderState createRenderState() {
+		return new EntityRenderState();
 	}
 
 	@Override
@@ -103,44 +71,9 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 		return super.shouldRender(entity, frustum, cameraX, cameraY, cameraZ);
 	}
 
-	@Override
 	public void render(C entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffers,
 		int overlay) {
-		super.render(entity, yaw, partialTicks, poseStack, buffers, overlay);
-
-		Contraption contraption = entity.getContraption();
-		if (contraption == null) {
-			return;
-		}
-
-		Level level = entity.level();
-		ClientContraption clientContraption = contraption.getOrCreateClientContraptionLazy();
-		VirtualRenderWorld renderWorld = clientContraption.getRenderLevel();
-		ContraptionMatrices matrices = clientContraption.getMatrices();
-		matrices.setup(poseStack, entity);
-
-		if (!VisualizationManager.supportsVisualization(level)) {
-			for (RenderType renderType : RenderType.chunkBufferLayers()) {
-				SuperByteBuffer sbb = getBuffer(contraption, renderWorld, renderType);
-				if (!sbb.isEmpty()) {
-					VertexConsumer vc = buffers.getBuffer(renderType);
-					sbb.transform(matrices.getModel())
-						.useLevelLight(level, matrices.getWorld())
-						.renderInto(poseStack, vc);
-				}
-			}
-		}
-
-		var adjustRenderedBlockEntities = clientContraption.getAndAdjustShouldRenderBlockEntities();
-
-		clientContraption.scratchErroredBlockEntities.clear();
-
-		BlockEntityRenderHelper.renderBlockEntities(clientContraption.renderedBlockEntityView, adjustRenderedBlockEntities, clientContraption.scratchErroredBlockEntities, renderWorld, level, matrices.getModelViewProjection(), matrices.getLight(), buffers, AnimationTickHolder.getPartialTicks());
-
-		clientContraption.shouldRenderBlockEntities.andNot(clientContraption.scratchErroredBlockEntities);
-		renderActors(level, renderWorld, contraption, matrices, buffers);
-
-		matrices.clear();
+		// TODO 26.2: Port contraption rendering to EntityRenderer#submit.
 	}
 
 	private static void renderActors(Level level, VirtualRenderWorld renderWorld, Contraption c,
@@ -170,7 +103,7 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 
 	private static class ThreadLocalObjects {
 		public final PoseStack poseStack = new PoseStack();
-		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
+		public final RandomSource random = RandomSource.createThreadLocalInstance();
 		public final ShadedBlockSbbBuilder sbbBuilder = ShadedBlockSbbBuilder.create();
 	}
 }

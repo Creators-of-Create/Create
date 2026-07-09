@@ -33,19 +33,19 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.item.SmartInventory;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.CampfireCookingRecipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
@@ -57,6 +57,7 @@ import net.minecraft.world.level.block.entity.CampfireBlockEntity;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.items.IItemHandler;
@@ -361,9 +362,11 @@ public class AllArmInteractionPointTypes {
 		@Override
 		public ItemStack insert(ArmBlockEntity armBlockEntity, ItemStack stack, boolean simulate) {
 			ItemStack input = stack.copy();
-			InteractionResultHolder<ItemStack> res =
+			InteractionResult res =
 				BlazeBurnerBlock.tryInsert(cachedState, level, pos, input, false, false, simulate);
-			ItemStack remainder = res.getObject();
+			ItemStack remainder = res instanceof InteractionResult.Success success && success.heldItemTransformedTo() != null
+				? success.heldItemTransformedTo()
+				: ItemStack.EMPTY;
 			if (input.isEmpty()) {
 				return remainder;
 			} else {
@@ -388,7 +391,7 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return super.getInteractionPositionVector().add(Vec3.atLowerCornerOf(getInteractionDirection().getNormal())
+			return super.getInteractionPositionVector().add(Vec3.atLowerCornerOf(getInteractionDirection().getUnitVec3i())
 				.scale(.5f));
 		}
 
@@ -427,7 +430,7 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return super.getInteractionPositionVector().add(Vec3.atLowerCornerOf(getInteractionDirection().getNormal())
+			return super.getInteractionPositionVector().add(Vec3.atLowerCornerOf(getInteractionDirection().getUnitVec3i())
 				.scale(.65f));
 		}
 
@@ -460,7 +463,7 @@ public class AllArmInteractionPointTypes {
 		@Override
 		protected Vec3 getInteractionPositionVector() {
 			Direction funnelFacing = FunnelBlock.getFunnelFacing(cachedState);
-			Vec3i normal = funnelFacing != null ? funnelFacing.getNormal() : Vec3i.ZERO;
+			Vec3i normal = funnelFacing != null ? funnelFacing.getUnitVec3i() : Vec3i.ZERO;
 			return VecHelper.getCenterOf(pos)
 				.add(Vec3.atLowerCornerOf(normal)
 					.scale(-.15f));
@@ -516,8 +519,11 @@ public class AllArmInteractionPointTypes {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
 			if (!(blockEntity instanceof CampfireBlockEntity campfireBE))
 				return stack;
-			Optional<RecipeHolder<CampfireCookingRecipe>> recipe = campfireBE.getCookableRecipe(stack);
-			if (recipe.isEmpty())
+			if (!(level instanceof ServerLevel serverLevel))
+				return stack;
+			if (serverLevel.recipeAccess()
+				.getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleRecipeInput(stack), serverLevel)
+				.isEmpty())
 				return stack;
 			if (simulate) {
 				boolean hasSpace = false;
@@ -534,9 +540,7 @@ public class AllArmInteractionPointTypes {
 				return remainder;
 			}
 			ItemStack remainder = stack.copy();
-			campfireBE.placeFood(null, remainder, recipe.get().value()
-				.getCookingTime());
-			return remainder;
+			return campfireBE.placeFood(serverLevel, null, remainder) ? remainder : stack;
 		}
 	}
 

@@ -18,12 +18,11 @@ import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.gametest.framework.GameTest;
-import net.minecraft.gametest.framework.GameTestAssertException;
+import com.simibubi.create.infrastructure.gametest.legacy.GameTest;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +32,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.material.Fluids;
@@ -217,8 +216,9 @@ public class TestFluids {
 
 	@GameTest(template = "waterwheel_materials", timeoutTicks = CreateGameTestHelper.FIFTEEN_SECONDS)
 	public static void waterwheelMaterials(CreateGameTestHelper helper) {
-		List<Item> planks = BuiltInRegistries.BLOCK.getOrCreateTag(BlockTags.PLANKS).stream()
-				.map(Holder::value).map(ItemLike::asItem).collect(Collectors.toCollection(ArrayList::new));
+		List<Item> planks = new ArrayList<>();
+		BuiltInRegistries.BLOCK.getTagOrEmpty(BlockTags.PLANKS)
+			.forEach(holder -> planks.add(holder.value().asItem()));
 		List<BlockPos> chests = List.of(new BlockPos(6, 4, 2), new BlockPos(6, 4, 3));
 		List<BlockPos> deployers = chests.stream().map(pos -> pos.below(2)).toList();
 		helper.runAfterDelay(3, () -> chests.forEach(chest ->
@@ -233,7 +233,7 @@ public class TestFluids {
 		helper.succeedWhen(() -> {
 			Item plank = planks.get(0);
 			if (!(plank instanceof BlockItem blockItem))
-				throw new GameTestAssertException(BuiltInRegistries.ITEM.getKey(plank) + " is not a BlockItem");
+				throw helper.assertionException(BuiltInRegistries.ITEM.getKey(plank) + " is not a BlockItem");
 			Block block = blockItem.getBlock();
 
 			WaterWheelBlockEntity smallWheelBe = helper.getBlockEntity(AllBlockEntityTypes.WATER_WHEEL.get(), smallWheel);
@@ -318,8 +318,8 @@ public class TestFluids {
 		BlockPos firstSeat = new BlockPos(4, 2, 1);
 		BlockPos secondSeat = firstSeat.south(2);
 
-		Zombie firstZombie = helper.spawn(EntityType.ZOMBIE, firstSeat);
-		Zombie secondZombie = helper.spawn(EntityType.ZOMBIE, secondSeat);
+		Zombie firstZombie = helper.spawn(EntityTypes.ZOMBIE, firstSeat);
+		Zombie secondZombie = helper.spawn(EntityTypes.ZOMBIE, secondSeat);
 
 		helper.pullLever(effects);
 
@@ -353,7 +353,7 @@ public class TestFluids {
 			// lava
 			helper.assertBlockPresent(Blocks.LAVA_CAULDRON, 3, 2, 1);
 			// water
-			helper.assertBlockProperty(farmland, FarmBlock.MOISTURE, 7);
+			helper.assertBlockProperty(farmland, FarmlandBlock.MOISTURE, 7);
 			helper.assertBlockPresent(Blocks.MUD, farmland.east(1));
 			helper.assertBlockPresent(Blocks.MUD, farmland.east(2));
 			helper.assertBlockPresent(Blocks.MUD, farmland.east(3));

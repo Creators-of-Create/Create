@@ -1,9 +1,7 @@
 {
   "type": "create:splashing",
   "ingredients": [
-    {
-      "item": "minecraft:magma_block"
-    }
+    "minecraft:magma_block"
   ],
   "results": [
     {

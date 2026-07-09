@@ -6,7 +6,7 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.schematics.SchematicInstances;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;

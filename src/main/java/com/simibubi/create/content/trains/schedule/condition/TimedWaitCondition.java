@@ -15,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 
@@ -90,7 +89,6 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		builder.addScrollInput(0, 31, (i, l) -> {
 			i.titled(CreateLang.translateDirect("generic.duration"))
@@ -108,7 +106,7 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 
 	@Override
 	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
-		int time = tag.getInt("Time");
+		int time = tag.getIntOr("Time", 0);
 		int ticksUntilDeparture = totalWaitTicks() - time;
 		boolean showInMinutes = ticksUntilDeparture >= 20 * 60;
 		int num =

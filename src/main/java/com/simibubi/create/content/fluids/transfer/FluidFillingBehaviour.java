@@ -14,14 +14,15 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import it.unimi.dsi.fastutil.PriorityQueue;
 import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.math.BBHelper;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.math.BBHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -134,8 +135,8 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		int maxRange = maxRange();
 		int maxRangeSq = maxRange * maxRange;
 		int maxBlocks = maxBlocks();
-		boolean evaporate = world.dimensionType()
-			.ultraWarm() && FluidHelper.isTag(fluid, FluidTags.WATER);
+		boolean evaporate = world.environmentAttributes()
+			.getValue(EnvironmentAttributes.WATER_EVAPORATES, root) && FluidHelper.isTag(fluid, FluidTags.WATER);
 		boolean canPlaceSources = AllConfigs.server().fluids.fluidFillPlaceFluidSourceBlocks.get();
 
 		if ((!fillInfinite() && infinite) || evaporate || !canPlaceSources) {
@@ -152,7 +153,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 				int j = root.getY();
 				int k = root.getZ();
 				world.playSound(null, i, j, k, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
-					2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
+					2.6F + (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.8F);
 			} else if (!canPlaceSources)
 				blockEntity.award(AllAdvancements.HOSE_PULLEY);
 			return true;

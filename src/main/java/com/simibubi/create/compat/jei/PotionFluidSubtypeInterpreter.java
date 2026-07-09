@@ -41,9 +41,4 @@ public class PotionFluidSubtypeInterpreter implements ISubtypeInterpreter<FluidS
 				.append(effect);
 		return stringBuilder.toString();
 	}
-
-	@Override
-	public String getLegacyStringSubtypeInfo(FluidStack ingredient, UidContext context) {
-		return "";
-	}
 }

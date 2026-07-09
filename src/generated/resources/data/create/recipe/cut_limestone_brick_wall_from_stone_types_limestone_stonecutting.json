@@ -1,10 +1,7 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "tag": "create:stone_types/limestone"
-  },
+  "ingredient": "#create:stone_types/limestone",
   "result": {
-    "count": 1,
     "id": "create:cut_limestone_brick_wall"
   }
 }

@@ -3,8 +3,8 @@ package com.simibubi.create.infrastructure.config;
 
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperRequestScreen.SearchSyncMode;
 
-import net.createmod.catnip.config.ConfigBase;
-import net.createmod.catnip.config.ui.ConfigAnnotations;
+import net.createmod.catnip.api.client.config.ConfigAnnotations;
+import net.createmod.catnip.api.config.ConfigBase;
 
 public class CClient extends ConfigBase {
 

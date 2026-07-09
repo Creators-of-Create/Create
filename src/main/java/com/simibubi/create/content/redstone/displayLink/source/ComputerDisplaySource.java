@@ -17,10 +17,10 @@ public class ComputerDisplaySource extends DisplaySource {
 	@Override
 	public List<MutableComponent> provideText(DisplayLinkContext context, DisplayTargetStats stats) {
 		List<MutableComponent> components = new ArrayList<>();
-		ListTag tag = context.sourceConfig().getList("ComputerSourceList", Tag.TAG_STRING);
+		ListTag tag = context.sourceConfig().getListOrEmpty("ComputerSourceList");
 
 		for (int i = 0; i < tag.size(); i++) {
-			components.add(Component.literal(tag.getString(i)));
+			components.add(Component.literal(tag.getStringOr(i, "")));
 		}
 
 		return components;

@@ -11,12 +11,14 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.ComparatorUtil;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.particle.AirParticleData;
+import com.simibubi.create.foundation.utility.LegacyComponentSerializationBridge;
 
-import net.createmod.catnip.codecs.CatnipCodecUtils;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.data.codec.CatnipCodecUtils;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap.Builder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.particles.ParticleTypes;
@@ -49,12 +51,12 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 
 	public static Component getDefaultName(BlockState state) {
 		if (AllBlocks.NETHERITE_BACKTANK.has(state)) {
-			AllItems.NETHERITE_BACKTANK.get()
-				.getDescription();
+			return AllItems.NETHERITE_BACKTANK.asStack()
+				.getHoverName();
 		}
 
-		return AllItems.COPPER_BACKTANK.get()
-			.getDescription();
+		return AllItems.COPPER_BACKTANK.asStack()
+			.getHoverName();
 	}
 
 	@Override
@@ -87,9 +89,9 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 		}
 
 		int max = BacktankUtil.maxAir(capacityEnchantLevel);
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			Vec3 centerOf = VecHelper.getCenterOf(worldPosition);
-			Vec3 v = VecHelper.offsetRandomly(centerOf, level.random, .65f);
+			Vec3 v = VecHelper.offsetRandomly(centerOf, level.getRandom(), .65f);
 			Vec3 m = centerOf.subtract(v);
 			if (airLevel != max)
 				level.addParticle(new AirParticleData(1, .05f), v.x, v.y, v.z, m.x, m.y, m.z);
@@ -103,7 +105,7 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 		float abs = Math.abs(getSpeed());
 		int increment = Mth.clamp(((int) abs - 100) / 20, 1, 5);
 		airLevel = Math.min(max, airLevel + increment);
-		if (getComparatorOutput() != prevComparatorLevel && !level.isClientSide)
+		if (getComparatorOutput() != prevComparatorLevel && !level.isClientSide())
 			level.updateNeighbourForOutputSignal(worldPosition, state.getBlock());
 		if (airLevel == max)
 			sendData();
@@ -123,7 +125,7 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 		compound.putInt("CapacityEnchantment", capacityEnchantLevel);
 
 		if (this.customName != null)
-			compound.putString("CustomName", Component.Serializer.toJson(this.customName, registries));
+			compound.putString("CustomName", LegacyComponentSerializationBridge.toJson(this.customName, registries));
 
 		compound.put("Components", CatnipCodecUtils.encode(DataComponentPatch.CODEC, registries, componentPatch)
 			.orElse(new CompoundTag()));
@@ -133,20 +135,22 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
 		int prev = airLevel;
-		airLevel = compound.getInt("Air");
-		airLevelTimer = compound.getInt("Timer");
-		capacityEnchantLevel = compound.getInt("CapacityEnchantment");
+		airLevel = compound.getIntOr("Air", 0);
+		airLevelTimer = compound.getIntOr("Timer", 0);
+		capacityEnchantLevel = compound.getIntOr("CapacityEnchantment", 0);
 
-		if (compound.contains("CustomName", 8))
-			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"), registries);
+		if (compound.contains("CustomName"))
+			this.customName =
+				LegacyComponentSerializationBridge.fromJson(compound.getStringOr("CustomName", ""), registries);
 
-		componentPatch = CatnipCodecUtils.decode(DataComponentPatch.CODEC, registries, compound.getCompound("Components")).orElse(DataComponentPatch.EMPTY);
+		componentPatch = CatnipCodecUtils.decode(DataComponentPatch.CODEC, registries,
+			compound.getCompoundOrEmpty("Components")).orElse(DataComponentPatch.EMPTY);
 		if (prev != 0 && prev != airLevel && airLevel == BacktankUtil.maxAir(capacityEnchantLevel) && clientPacket)
 			playFilledEffect();
 	}
 
 	@Override
-	protected void applyImplicitComponents(DataComponentInput componentInput) {
+	protected void applyImplicitComponents(DataComponentGetter componentInput) {
 		setAirLevel(componentInput.getOrDefault(AllDataComponents.BACKTANK_AIR, 0));
 	}
 

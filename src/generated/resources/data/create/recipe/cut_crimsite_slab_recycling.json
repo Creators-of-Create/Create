@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "item": "create:cut_crimsite_slab"
-    },
-    {
-      "item": "create:cut_crimsite_slab"
-    }
+    "create:cut_crimsite_slab",
+    "create:cut_crimsite_slab"
   ],
   "result": {
-    "count": 1,
     "id": "create:cut_crimsite"
   }
 }

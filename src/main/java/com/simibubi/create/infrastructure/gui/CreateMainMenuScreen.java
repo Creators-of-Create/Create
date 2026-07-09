@@ -1,8 +1,7 @@
 package com.simibubi.create.infrastructure.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.render.GlStateManager;
+import com.simibubi.create.foundation.render.LegacyRenderSystemBridge;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateBuildInfo;
@@ -10,37 +9,41 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.config.ui.BaseConfigScreen;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.gui.AbstractSimiScreen;
-import net.createmod.catnip.gui.ScreenOpener;
-import net.createmod.catnip.gui.element.BoxElement;
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.createmod.catnip.lang.FontHelper;
-import net.createmod.catnip.lang.FontHelper.Palette;
-import net.createmod.catnip.theme.Color;
-import net.createmod.ponder.foundation.ui.PonderTagIndexScreen;
+import net.createmod.catnip.api.client.config.BaseConfigScreen;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.client.gui.AbstractSimiScreen;
+import net.createmod.catnip.api.client.gui.ScreenOpener;
+import net.createmod.catnip.api.client.gui.element.BoxElement;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.createmod.catnip.api.client.lang.FontHelper;
+import net.createmod.catnip.api.client.lang.FontHelper.Palette;
+import net.createmod.catnip.api.theme.Color;
+import net.createmod.ponder.impl.client.gui.PonderTagIndexScreen;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.Util;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.CubeMap;
-import net.minecraft.client.renderer.PanoramaRenderer;
+import com.simibubi.create.foundation.render.PanoramaRenderer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
+
+import org.joml.Matrix3x2fStack;
 
 public class CreateMainMenuScreen extends AbstractSimiScreen {
 
 	public static final CubeMap PANORAMA_RESOURCES =
 		new CubeMap(Create.asResource("textures/gui/title/background/panorama"));
-	public static final ResourceLocation PANORAMA_OVERLAY_TEXTURES =
-		ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama_overlay.png");
+	public static final Identifier PANORAMA_OVERLAY_TEXTURES =
+		Identifier.withDefaultNamespace("textures/gui/title/background/panorama_overlay.png");
 	public static final PanoramaRenderer PANORAMA = new PanoramaRenderer(PANORAMA_RESOURCES);
 
 	private static final Component CURSEFORGE_TOOLTIP;
@@ -63,88 +66,75 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	protected final Screen parent;
 	protected boolean returnOnClose;
 
-	private PanoramaRenderer vanillaPanorama;
 	private long firstRenderTime;
 	private Button gettingStarted;
 
 	public CreateMainMenuScreen(Screen parent) {
 		this.parent = parent;
 		returnOnClose = true;
-		if (parent instanceof TitleScreen)
-			vanillaPanorama = Screen.PANORAMA;
-		else
-			vanillaPanorama = new PanoramaRenderer(TitleScreen.CUBE_MAP);
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		if (firstRenderTime == 0L)
 			this.firstRenderTime = Util.getMillis();
-		super.render(graphics, mouseX, mouseY, partialTicks);
-	}
-
-	@Override
-	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		float f = (float) (Util.getMillis() - this.firstRenderTime) / 1000.0F;
 		float alpha = Mth.clamp(f, 0.0F, 1.0F);
-		float elapsedPartials = minecraft.getTimer().getGameTimeDeltaPartialTick(false);
 
 		if (parent instanceof TitleScreen) {
-			if (alpha < 1)
-				vanillaPanorama.render(graphics, this.width, this.height, 1, elapsedPartials);
-			PANORAMA.render(graphics, this.width, this.height, 1, elapsedPartials);
+			PANORAMA.render(graphics, this.width, this.height, 1, partialTicks);
 
-			RenderSystem.enableBlend();
-			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
+			LegacyRenderSystemBridge.enableBlend();
+			LegacyRenderSystemBridge.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			graphics.blit(PANORAMA_OVERLAY_TEXTURES, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
+			graphics.blit(RenderPipelines.GUI_TEXTURED, PANORAMA_OVERLAY_TEXTURES, 0, 0, 0.0F, 0.0F, this.width,
+				this.height, 16, 128, 16, 128);
+		} else {
+			graphics.fill(0, 0, width, height, 0xff101010);
 		}
 
-		RenderSystem.enableDepthTest();
+		LegacyRenderSystemBridge.enableDepthTest();
 
-		PoseStack ms = graphics.pose();
+		Matrix3x2fStack ms = graphics.pose();
 
 		for (int side : Iterate.positiveAndNegative) {
-			ms.pushPose();
-			ms.translate(width / 2, 60, 200);
-			ms.scale(24 * side, 24 * side, 32);
-			ms.translate(-1.75 * ((alpha * alpha) / 2f + .5f), .25f, 0);
-			TransformStack.of(ms)
-				.rotateXDegrees(45);
+			ms.pushMatrix();
+			ms.translate(width / 2f, 60);
+			ms.scale(24 * side, 24 * side);
+			ms.translate((float) (-1.75 * ((alpha * alpha) / 2f + .5f)), .25f);
 			GuiGameElement.of(AllBlocks.LARGE_COGWHEEL.getDefaultState())
 				.rotateBlock(0, Util.getMillis() / 32f * side, 0)
 				.render(graphics);
-			ms.translate(-1, 0, -1);
+			ms.translate(-1, 0);
 			GuiGameElement.of(AllBlocks.COGWHEEL.getDefaultState())
 				.rotateBlock(0, Util.getMillis() / -16f * side + 22.5f, 0)
 				.render(graphics);
-			ms.popPose();
+			ms.popMatrix();
 		}
 
-		RenderSystem.enableBlend();
+		LegacyRenderSystemBridge.enableBlend();
 
-		ms.pushPose();
-		ms.translate(width / 2 - 32, 32, -10);
-		ms.pushPose();
-		ms.scale(0.25f, 0.25f, 0.25f);
+		ms.pushMatrix();
+		ms.translate(width / 2f - 32, 32);
+		ms.pushMatrix();
+		ms.scale(0.25f, 0.25f);
 		AllGuiTextures.LOGO.render(graphics, 0, 0);
-		ms.popPose();
+		ms.popMatrix();
 		new BoxElement().withBackground(0x88_000000)
 			.flatBorder(new Color(0x01_000000))
-			.at(-32, 56, 100)
+			.at(-32, 56)
 			.withBounds(128, 11)
 			.render(graphics);
-		ms.popPose();
+		ms.popMatrix();
 
-		ms.pushPose();
-		ms.translate(0, 0, 200);
-		graphics.drawCenteredString(font, Component.literal(Create.NAME).withStyle(ChatFormatting.BOLD)
+		ms.pushMatrix();
+		graphics.centeredText(font, Component.literal(Create.NAME).withStyle(ChatFormatting.BOLD)
 				.append(
 					Component.literal(" v" + CreateBuildInfo.VERSION).withStyle(ChatFormatting.BOLD, ChatFormatting.WHITE)),
 			width / 2, 89, 0xFF_E4BB67);
-		ms.popPose();
+		ms.popMatrix();
 
-		RenderSystem.disableDepthTest();
+		LegacyRenderSystemBridge.disableDepthTest();
 	}
 
 	protected void init() {
@@ -191,18 +181,18 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindowForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindowForeground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		super.renderWindowForeground(graphics, mouseX, mouseY, partialTicks);
-		renderables.forEach(w -> w.render(graphics, mouseX, mouseY, partialTicks));
+		renderables.forEach(w -> w.extractRenderState(graphics, mouseX, mouseY, partialTicks));
 
 		if (parent instanceof TitleScreen) {
 			if (mouseX < gettingStarted.getX() || mouseX > gettingStarted.getX() + 98)
 				return;
 			if (mouseY < gettingStarted.getY() || mouseY > gettingStarted.getY() + 20)
 				return;
-			graphics.renderComponentTooltip(font,
+			graphics.setComponentTooltipForNextFrame(font,
 				FontHelper.cutTextComponent(CreateLang.translateDirect("menu.only_ingame"), Palette.ALL_GRAY), mouseX,
-				mouseY);
+				mouseY, ItemStack.EMPTY);
 		}
 	}
 
@@ -217,7 +207,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 			if (p_213069_2_)
 				Util.getPlatform()
 					.openUri(url);
-			this.minecraft.setScreen(this);
+			this.minecraft.gui.setScreen(this);
 		}, url, true));
 	}
 
@@ -238,14 +228,13 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		}
 
 		@Override
-		protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pt) {
-			super.renderWidget(graphics, pMouseX, pMouseY, pt);
-			PoseStack pPoseStack = graphics.pose();
-			pPoseStack.pushPose();
-			pPoseStack.translate(getX() + width / 2 - (icon.getWidth() * scale) / 2, getY() + height / 2 - (icon.getHeight() * scale) / 2, 0);
-			pPoseStack.scale(scale, scale, 1);
+		protected void extractContents(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pt) {
+			Matrix3x2fStack pPoseStack = graphics.pose();
+			pPoseStack.pushMatrix();
+			pPoseStack.translate(getX() + width / 2f - (icon.getWidth() * scale) / 2f, getY() + height / 2f - (icon.getHeight() * scale) / 2f);
+			pPoseStack.scale(scale, scale);
 			icon.render(graphics, 0, 0);
-			pPoseStack.popPose();
+			pPoseStack.popMatrix();
 		}
 	}
 

@@ -8,24 +8,24 @@ import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.render.LegacyRenderSystemBridge;
+import org.joml.Matrix3x2fStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.gui.AbstractSimiScreen;
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.client.gui.AbstractSimiScreen;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
@@ -58,7 +58,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		float fade = Mth.clamp((ticksOpen + AnimationTickHolder.getPartialTicks()) / 10f, 1 / 512f, 1);
 
 		hoveredSlot = -1;
@@ -77,9 +77,9 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 		if (renderCenterSlot && distance <= 150)
 			hoveredSlot = UNEQUIP;
 
-		PoseStack ms = graphics.pose();
-		ms.pushPose();
-		ms.translate(width / 2, height / 2, 0);
+		Matrix3x2fStack ms = graphics.pose();
+		ms.pushMatrix();
+		ms.translate(width / 2, height / 2);
 		Component tip = null;
 
 		if (state == State.DETACH) {
@@ -88,50 +88,49 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			if (hoveredX > -20 && hoveredX < 20 && hoveredY > -80 && hoveredY < -20)
 				hoveredSlot = UNEQUIP;
 
-			ms.pushPose();
+			ms.pushMatrix();
 			AllGuiTextures.TOOLBELT_INACTIVE_SLOT.render(graphics, -12, -12);
 			GuiGameElement.of(AllBlocks.TOOLBOXES.get(DyeColor.BROWN)
 				.asStack())
 				.at(-9, -9)
 				.render(graphics);
 
-			ms.translate(0, -40 + (10 * (1 - fade) * (1 - fade)), 0);
+			ms.translate(0, -40 + (10 * (1 - fade) * (1 - fade)));
 			AllGuiTextures.TOOLBELT_SLOT.render(graphics, -12, -12);
-			ms.translate(-0.5, 0.5, 0);
+			ms.translate(-0.5f, 0.5f);
 			AllIcons.I_DISABLE.render(graphics, -9, -9);
-			ms.translate(0.5, -0.5, 0);
+			ms.translate(0.5f, -0.5f);
 			if (!scrollMode && hoveredSlot == UNEQUIP) {
 				AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.render(graphics, -13, -13);
 				tip = CreateLang.translateDirect("toolbox.detach")
 					.withStyle(ChatFormatting.GOLD);
 			}
-			ms.popPose();
+			ms.popMatrix();
 
 		} else {
 
 			if (hoveredX > 60 && hoveredX < 100 && hoveredY > -20 && hoveredY < 20)
 				hoveredSlot = DEPOSIT;
 
-			ms.pushPose();
-			ms.translate(80 + (-5 * (1 - fade) * (1 - fade)), 0, 0);
+			ms.pushMatrix();
+			ms.translate(80 + (-5 * (1 - fade) * (1 - fade)), 0);
 			AllGuiTextures.TOOLBELT_SLOT.render(graphics, -12, -12);
-			ms.translate(-0.5, 0.5, 0);
+			ms.translate(-0.5f, 0.5f);
 			AllIcons.I_TOOLBOX.render(graphics, -9, -9);
-			ms.translate(0.5, -0.5, 0);
+			ms.translate(0.5f, -0.5f);
 			if (!scrollMode && hoveredSlot == DEPOSIT) {
 				AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.render(graphics, -13, -13);
 				tip = CreateLang.translateDirect(state == State.SELECT_BOX ? "toolbox.depositAll" : "toolbox.depositBox")
 					.withStyle(ChatFormatting.GOLD);
 			}
-			ms.popPose();
+			ms.popMatrix();
 
 			for (int slot = 0; slot < 8; slot++) {
-				ms.pushPose();
-				TransformStack.of(ms)
-					.rotateZDegrees(slot * 45 - 45)
-					.translate(0, -40 + (10 * (1 - fade) * (1 - fade)), 0)
-					.rotateZDegrees(-slot * 45 + 45);
-				ms.translate(-12, -12, 0);
+				ms.pushMatrix();
+				ms.rotate((float) Math.toRadians(slot * 45 - 45));
+				ms.translate(0, -40 + (10 * (1 - fade) * (1 - fade)));
+				ms.rotate((float) Math.toRadians(-slot * 45 + 45));
+				ms.translate(-12, -12);
 
 				if (state == State.SELECT_ITEM || state == State.SELECT_ITEM_UNEQUIP) {
 					ToolboxInventory inv = selectedBox.inventory;
@@ -173,11 +172,11 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 				}
 
-				ms.popPose();
+				ms.popMatrix();
 			}
 
 			if (renderCenterSlot) {
-				ms.pushPose();
+				ms.pushMatrix();
 				AllGuiTextures.TOOLBELT_SLOT.render(graphics, -12, -12);
 				(scrollMode ? AllIcons.I_REFRESH : AllIcons.I_FLIP).render(graphics, -9, -9);
 				if (!scrollMode && UNEQUIP == hoveredSlot) {
@@ -186,10 +185,10 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 						.getHoverName())
 						.withStyle(ChatFormatting.GOLD);
 				}
-				ms.popPose();
+				ms.popMatrix();
 			}
 		}
-		ms.popPose();
+		ms.popMatrix();
 
 		if (tip != null) {
 			int i1 = (int) (fade * 255.0F);
@@ -197,23 +196,23 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 				i1 = 255;
 
 			if (i1 > 8) {
-				ms.pushPose();
-				ms.translate((float) (width / 2), (float) (height - 68), 0.0F);
-				RenderSystem.enableBlend();
-				RenderSystem.defaultBlendFunc();
+				ms.pushMatrix();
+				ms.translate((float) (width / 2), (float) (height - 68));
+				LegacyRenderSystemBridge.enableBlend();
+				LegacyRenderSystemBridge.defaultBlendFunc();
 				int k1 = 16777215;
 				int k = i1 << 24 & -16777216;
 				int l = font.width(tip);
-				graphics.drawString(font, tip, Math.round(-l / 2f), -4, k1 | k, false);
-				RenderSystem.disableBlend();
-				ms.popPose();
+				graphics.text(font, tip, Math.round(-l / 2f), -4, k1 | k, false);
+				LegacyRenderSystemBridge.disableBlend();
+				ms.popMatrix();
 			}
 		}
 
 	}
 
 	@Override
-	public void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+	public void renderBackground(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
 		Color color = BACKGROUND_COLOR
 				.scaleAlpha(Math.min(1, (ticksOpen + AnimationTickHolder.getPartialTicks()) / 20f));
 
@@ -236,9 +235,9 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			if (state == State.DETACH)
 				return;
 			else if (state == State.SELECT_BOX)
-				toolboxes.forEach(be -> CatnipServices.NETWORK.sendToServer(new ToolboxDisposeAllPacket(be.getBlockPos())));
+				toolboxes.forEach(be -> net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ToolboxDisposeAllPacket(be.getBlockPos())));
 			else
-				CatnipServices.NETWORK.sendToServer(new ToolboxDisposeAllPacket(selectedBox.getBlockPos()));
+				net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ToolboxDisposeAllPacket(selectedBox.getBlockPos()));
 			return;
 		}
 
@@ -247,14 +246,14 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 		if (state == State.DETACH) {
 			if (selected == UNEQUIP)
-				CatnipServices.NETWORK.sendToServer(
-					new ToolboxEquipPacket(null, selected, minecraft.player.getInventory().selected));
+				net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(
+					new ToolboxEquipPacket(null, selected, minecraft.player.getInventory().getSelectedSlot()));
 			return;
 		}
 
 		if (selected == UNEQUIP)
-			CatnipServices.NETWORK.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
-				minecraft.player.getInventory().selected));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
+				minecraft.player.getInventory().getSelectedSlot()));
 
 		if (selected < 0)
 			return;
@@ -266,8 +265,8 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			.isEmpty())
 			return;
 
-		CatnipServices.NETWORK.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
-			minecraft.player.getInventory().selected));
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
+			minecraft.player.getInventory().getSelectedSlot()));
 	}
 
 	@Override
@@ -339,8 +338,8 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 			if (state == State.SELECT_ITEM_UNEQUIP && selected == UNEQUIP) {
 				if (toolboxes.size() > 1) {
-					CatnipServices.NETWORK.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
-						minecraft.player.getInventory().selected));
+					net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
+						minecraft.player.getInventory().getSelectedSlot()));
 					state = State.SELECT_BOX;
 					return true;
 				}
@@ -357,8 +356,9 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 	@Override
 	public boolean keyPressed(int code, int scanCode, int modifiers) {
 		KeyMapping[] hotbarBinds = minecraft.options.keyHotbarSlots;
+		KeyEvent event = new KeyEvent(code, scanCode, modifiers);
 		for (int i = 0; i < hotbarBinds.length && i < 8; i++) {
-			if (hotbarBinds[i].matches(code, scanCode)) {
+			if (hotbarBinds[i].matches(event)) {
 
 				if (state == State.SELECT_ITEM || state == State.SELECT_ITEM_UNEQUIP) {
 					ToolboxInventory inv = selectedBox.inventory;
@@ -384,7 +384,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 	@Override
 	public boolean keyReleased(int code, int scanCode, int modifiers) {
-		InputConstants.Key mouseKey = InputConstants.getKey(code, scanCode);
+		InputConstants.Key mouseKey = InputConstants.getKey(new KeyEvent(code, scanCode, modifiers));
 		if (AllKeys.TOOLBELT.getKeybind()
 			.isActiveAndMatches(mouseKey)) {
 			onClose();

@@ -12,7 +12,6 @@
       "translate": "advancement.create.glass_pipe.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:fluid_pipe"
     },
     "title": {

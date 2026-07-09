@@ -20,7 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -29,6 +29,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
@@ -71,7 +72,7 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
 		return AllBlocks.LARGE_WATER_WHEEL.asStack();
 	}
 
@@ -92,16 +93,16 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!stillValid(level, pos, state, false))
-			return ItemInteractionResult.FAIL;
+			return InteractionResult.FAIL;
 		if (!(level.getBlockEntity(getMaster(level, pos, state)) instanceof WaterWheelBlockEntity wwt))
-			return ItemInteractionResult.FAIL;
+			return InteractionResult.FAIL;
 		return wwt.applyMaterialIfValid(stack);
 	}
 
 	@Override
-	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+	protected void affectNeighborsAfterRemoval(BlockState pState, ServerLevel pLevel, BlockPos pPos, boolean pIsMoving) {
 		if (stillValid(pLevel, pPos, pState, false))
 			pLevel.destroyBlock(getMaster(pLevel, pPos, pState), true);
 	}
@@ -117,13 +118,12 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 	}
 
 	@Override
-	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
-								  BlockPos pCurrentPos, BlockPos pFacingPos) {
+	public BlockState updateShape(BlockState pState, LevelReader pLevel, ScheduledTickAccess ticks, BlockPos pCurrentPos, Direction pFacing, BlockPos pFacingPos, BlockState pFacingState, RandomSource random) {
 		if (stillValid(pLevel, pCurrentPos, pState, false)) {
 			BlockPos masterPos = getMaster(pLevel, pCurrentPos, pState);
-			if (!pLevel.getBlockTicks()
+			if (!ticks.getBlockTicks()
 				.hasScheduledTick(masterPos, AllBlocks.LARGE_WATER_WHEEL.get()))
-				pLevel.scheduleTick(masterPos, AllBlocks.LARGE_WATER_WHEEL.get(), 1);
+				ticks.scheduleTick(masterPos, AllBlocks.LARGE_WATER_WHEEL.get(), 1);
 			return pState;
 		}
 		if (!(pLevel instanceof Level level) || level.isClientSide())
@@ -182,7 +182,7 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 				BlockPos targetPos = bhr.getBlockPos();
 				WaterWheelStructuralBlock waterWheelStructuralBlock = AllBlocks.WATER_WHEEL_STRUCTURAL.get();
 				if (waterWheelStructuralBlock.stillValid(level, targetPos, state, false))
-					manager.crack(WaterWheelStructuralBlock.getMaster(level, targetPos, state), bhr.getDirection());
+					return true;
 				return true;
 			}
 			return IClientBlockExtensions.super.addHitEffects(state, level, target, manager);

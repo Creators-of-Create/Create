@@ -22,12 +22,14 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.item.LegacyItemHandlerAdapter;
 import com.simibubi.create.foundation.mixin.accessor.GameTestHelperAccessor;
 
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -166,7 +168,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 	 * Get the block entity of the expected type. If the type does not match, this fails the test.
 	 */
 	public <T extends BlockEntity> T getBlockEntity(BlockEntityType<T> type, BlockPos pos) {
-		BlockEntity be = getBlockEntity(pos);
+		BlockEntity be = getLevel().getBlockEntity(absolutePos(pos));
 		BlockEntityType<?> actualType = be == null ? null : be.getType();
 		if (actualType != type) {
 			String actualId = actualType == null ? "null" : RegisteredObjectsHelper.getKeyOrThrow(actualType).toString();
@@ -247,10 +249,10 @@ public class CreateGameTestHelper extends GameTestHelper {
 	// transfer - fluids
 
 	public IFluidHandler fluidStorageAt(BlockPos pos) {
-		BlockEntity be = getBlockEntity(pos);
+		BlockEntity be = getLevel().getBlockEntity(absolutePos(pos));
 		if (be == null)
 			fail("BlockEntity not present");
-		IFluidHandler handler = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+		IFluidHandler handler = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 		if (handler == null)
 			fail("handler not present");
 		return handler;
@@ -315,10 +317,10 @@ public class CreateGameTestHelper extends GameTestHelper {
 	// transfer - items
 
 	public IItemHandler itemStorageAt(BlockPos pos) {
-		BlockEntity be = getBlockEntity(pos);
+		BlockEntity be = getLevel().getBlockEntity(absolutePos(pos));
 		if (be == null)
 			fail("BlockEntity not present");
-		IItemHandler handler = be.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, be.getBlockPos(), null);
+		IItemHandler handler = LegacyItemHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Item.BLOCK, be.getBlockPos(), null));
 		if (handler == null)
 			fail("handler not present");
 		return handler;

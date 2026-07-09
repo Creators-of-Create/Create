@@ -1,9 +1,7 @@
 {
   "type": "create:splashing",
   "ingredients": [
-    {
-      "item": "create:industrial_iron_block"
-    }
+    "create:industrial_iron_block"
   ],
   "results": [
     {

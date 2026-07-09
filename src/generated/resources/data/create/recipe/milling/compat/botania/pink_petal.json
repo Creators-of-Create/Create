@@ -7,9 +7,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "tag": "botania:petals/pink"
-    }
+    "#botania:petals/pink"
   ],
   "processing_time": 50,
   "results": [

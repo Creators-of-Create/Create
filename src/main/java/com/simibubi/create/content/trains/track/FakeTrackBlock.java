@@ -18,6 +18,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -33,7 +35,7 @@ public class FakeTrackBlock extends Block implements EntityBlock, ProperWaterlog
 
 	public FakeTrackBlock(Properties p_49795_) {
 		super(p_49795_.randomTicks()
-			.noCollission()
+			.noCollision()
 			.noOcclusion());
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
@@ -45,13 +47,13 @@ public class FakeTrackBlock extends Block implements EntityBlock, ProperWaterlog
 
 	@Override
 	public RenderShape getRenderShape(BlockState pState) {
-		return RenderShape.ENTITYBLOCK_ANIMATED;
+		return RenderShape.MODEL;
 	}
 
 	@Override
 	public @Nullable PathType getBlockPathType(BlockState state, BlockGetter level, BlockPos pos,
 											   @Nullable Mob mob) {
-		return PathType.DAMAGE_OTHER;
+		return PathType.DAMAGE_CAUTIOUS;
 	}
 
 	@Override
@@ -65,9 +67,8 @@ public class FakeTrackBlock extends Block implements EntityBlock, ProperWaterlog
 	}
 
 	@Override
-	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
-		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
-		updateWater(pLevel, pState, pCurrentPos);
+	public BlockState updateShape(BlockState pState, LevelReader pLevel, ScheduledTickAccess ticks, BlockPos pCurrentPos, Direction pDirection, BlockPos pNeighborPos, BlockState pNeighborState, RandomSource random) {
+		updateWater(ticks, pLevel, pState, pCurrentPos);
 		return pState;
 	}
 

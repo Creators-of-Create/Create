@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:spruce_planks"
-    },
-    "X": {
-      "tag": "c:glass_blocks/colorless"
-    }
+    "#": "minecraft:spruce_planks",
+    "X": "#c:glass_blocks/colorless"
   },
   "pattern": [
     " # ",

@@ -3,7 +3,7 @@ package com.simibubi.create.content.processing.burner;
 import dev.engine_room.flywheel.api.instance.InstanceHandle;
 import dev.engine_room.flywheel.api.instance.InstanceType;
 import dev.engine_room.flywheel.lib.instance.TransformedInstance;
-import net.createmod.catnip.render.SpriteShiftEntry;
+import net.createmod.catnip.api.client.render.SpriteShiftEntry;
 
 public class ScrollTransformedInstance extends TransformedInstance {
 	public float speedU;

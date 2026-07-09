@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class FillLevelDisplaySource extends PercentOrProgressBarDisplaySource {
 
@@ -23,7 +22,7 @@ public class FillLevelDisplaySource extends PercentOrProgressBarDisplaySource {
 	@Override
 	protected boolean progressBarActive(DisplayLinkContext context) {
 		return context.sourceConfig()
-			.getInt("Mode") != 0;
+			.getIntOr("Mode", 0) != 0;
 	}
 
 	@Override
@@ -32,7 +31,6 @@ public class FillLevelDisplaySource extends PercentOrProgressBarDisplaySource {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
 		super.initConfigurationWidgets(context, builder, isFirstLine);
 		if (isFirstLine)

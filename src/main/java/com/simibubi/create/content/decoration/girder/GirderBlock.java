@@ -19,9 +19,9 @@ import com.simibubi.create.content.trains.track.TrackBlock;
 import com.simibubi.create.content.trains.track.TrackShape;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.placement.IPlacementHelper;
-import net.createmod.catnip.placement.PlacementHelpers;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.placement.IPlacementHelper;
+import net.createmod.catnip.api.placement.PlacementHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -32,16 +32,16 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.LanternBlock;
@@ -67,7 +67,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenchable {
 
-	private static final int placementHelperId = PlacementHelpers.register(new GirderPlacementHelper());
+	private static final IPlacementHelper PLACEMENT_HELPER = PlacementHelpers.register(new GirderPlacementHelper());
 
 	public static final BooleanProperty X = BooleanProperty.create("x");
 	public static final BooleanProperty Z = BooleanProperty.create("z");
@@ -97,9 +97,9 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (player == null)
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
 
 		if (AllBlocks.SHAFT.isIn(stack)) {
 			KineticBlockEntity.switchToBlockState(level, pos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()
@@ -110,27 +110,27 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 					.getAxis() == Axis.Z ? Axis.Z : Axis.X));
 
 			level.playSound(null, pos, SoundEvents.NETHERITE_BLOCK_HIT, SoundSource.BLOCKS, 0.5f, 1.25f);
-			if (!level.isClientSide && !player.isCreative()) {
+			if (!level.isClientSide() && !player.isCreative()) {
 				stack.shrink(1);
 				if (stack.isEmpty())
 					player.setItemInHand(hand, ItemStack.EMPTY);
 			}
 
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		if (AllItems.WRENCH.isIn(stack) && !player.isShiftKeyDown()) {
 			if (GirderWrenchBehavior.handleClick(level, pos, state, hitResult))
-				return ItemInteractionResult.sidedSuccess(level.isClientSide);
-			return ItemInteractionResult.FAIL;
+				return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER);
+			return InteractionResult.FAIL;
 		}
 
-		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
+		IPlacementHelper helper = PLACEMENT_HELPER;
 		if (helper.matchesItem(stack))
 			return helper.getOffset(player, level, state, pos, hitResult)
 				.placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
 
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
 	@Override
@@ -150,10 +150,9 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world,
-		BlockPos pos, BlockPos neighbourPos) {
+	public BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess ticks, BlockPos pos, Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
 		if (state.getValue(WATERLOGGED))
-			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+			ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		Axis axis = direction.getAxis();
 
 		if (direction.getAxis() != Axis.Y) {
@@ -198,7 +197,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		return state.setValue(WATERLOGGED, ifluidstate.getType() == Fluids.WATER);
 	}
 
-	public static BlockState updateState(LevelAccessor level, BlockPos pos, BlockState state, Direction d) {
+	public static BlockState updateState(BlockGetter level, BlockPos pos, BlockState state, Direction d) {
 		Axis axis = d.getAxis();
 		Property<Boolean> updateProperty = axis == Axis.X ? X : axis == Axis.Z ? Z : d == Direction.UP ? TOP : BOTTOM;
 		BlockState sideState = level.getBlockState(pos.relative(d));
@@ -233,7 +232,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		return state;
 	}
 
-	public static boolean isFacingBracket(BlockAndTintGetter level, BlockPos pos, Direction d) {
+	public static boolean isFacingBracket(BlockGetter level, BlockPos pos, Direction d) {
 		BlockEntity blockEntity = level.getBlockEntity(pos.relative(d));
 		if (!(blockEntity instanceof SmartBlockEntity sbe))
 			return false;
@@ -246,7 +245,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		return bracket.getValue(BracketBlock.FACING) == d;
 	}
 
-	public static BlockState updateVerticalProperty(LevelAccessor level, BlockPos pos, BlockState state,
+	public static BlockState updateVerticalProperty(BlockGetter level, BlockPos pos, BlockState state,
 		Property<Boolean> updateProperty, BlockState sideState, Direction d) {
 		boolean canAttach = false;
 
@@ -311,7 +310,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		return false;
 	}
 
-	public static boolean isConnected(BlockAndTintGetter world, BlockPos pos, BlockState state, Direction side) {
+	public static boolean isConnected(BlockGetter world, BlockPos pos, BlockState state, Direction side) {
 		Axis axis = side.getAxis();
 		if (state.getBlock() instanceof GirderBlock && !state.getValue(axis == Axis.X ? X : Z))
 			return false;

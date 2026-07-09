@@ -9,20 +9,20 @@ import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.
 import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
 import com.simibubi.create.foundation.model.BakedQuadHelper;
 
-import net.createmod.catnip.data.Iterate;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.createmod.catnip.api.data.Iterate;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import com.simibubi.create.foundation.model.BakedQuad;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelData.Builder;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData.Builder;
+import net.neoforged.neoforge.model.data.ModelProperty;
 
 public class CTModel extends BakedModelWrapperWithData {
 
@@ -47,7 +47,7 @@ public class CTModel extends BakedModelWrapperWithData {
 		for (Direction face : Iterate.directions) {
 			BlockState actualState = world.getBlockState(pos);
 			if (!behaviour.buildContextForOccludedDirections()
-				&& !Block.shouldRenderFace(state, world, pos, face, mutablePos.setWithOffset(pos, face))
+				&& !Block.shouldRenderFace(world, pos, state, world.getBlockState(mutablePos.setWithOffset(pos, face)), face)
 				&& !(actualState.getBlock()instanceof CopycatBlock ufb
 					&& !ufb.canFaceBeOccluded(actualState, face)))
 				continue;

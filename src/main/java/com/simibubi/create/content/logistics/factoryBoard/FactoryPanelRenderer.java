@@ -11,12 +11,12 @@ import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRende
 import com.simibubi.create.foundation.render.RenderTypes;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.theme.Color;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.theme.Color;
+import net.minecraft.util.LightCoordsUtil;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -61,9 +61,9 @@ public class FactoryPanelRenderer extends SmartBlockEntityRenderer<FactoryPanelB
 			.rotateCentered(xRot, Direction.EAST)
 			.rotateCentered(Mth.PI, Direction.UP)
 			.translate(behaviour.slot.xOffset * .5, 0, behaviour.slot.yOffset * .5)
-			.light(glow > 0.125f ? LightTexture.FULL_BRIGHT : light)
+			.light(glow > 0.125f ? LightCoordsUtil.FULL_BRIGHT : light)
 			.overlay(overlay)
-			.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
+			.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.translucent()));
 
 		if (glow < .125f)
 			return;
@@ -77,7 +77,7 @@ public class FactoryPanelRenderer extends SmartBlockEntityRenderer<FactoryPanelB
 			.rotateCentered(xRot, Direction.EAST)
 			.rotateCentered(Mth.PI, Direction.UP)
 			.translate(behaviour.slot.xOffset * .5, 0, behaviour.slot.yOffset * .5)
-			.light(LightTexture.FULL_BRIGHT)
+			.light(LightCoordsUtil.FULL_BRIGHT)
 			.color(color, color, color, 255)
 			.overlay(overlay)
 			.renderInto(ms, buffer.getBuffer(RenderTypes.additive()));
@@ -157,7 +157,7 @@ public class FactoryPanelRenderer extends SmartBlockEntityRenderer<FactoryPanelB
 			connectionSprite.color(color)
 				.light(light)
 				.overlay(overlay)
-				.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+				.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped()));
 
 			if (pathReversed) {
 				currentX += direction.getStepX() * .5;

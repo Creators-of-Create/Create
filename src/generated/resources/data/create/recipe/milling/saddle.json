@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:saddle"
-    }
+    "minecraft:saddle"
   ],
   "processing_time": 200,
   "results": [

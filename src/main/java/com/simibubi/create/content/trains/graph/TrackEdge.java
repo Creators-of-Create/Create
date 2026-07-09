@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.content.trains.track.TrackMaterial;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
@@ -245,8 +245,8 @@ public class TrackEdge {
 		DimensionPalette dimensions) {
 		TrackEdge trackEdge =
 			new TrackEdge(node1, node2, tag.contains("Positions") ? new BezierConnection(tag, BlockPos.ZERO) : null,
-					TrackMaterial.deserialize(tag.getString("Material")));
-		trackEdge.edgeData = EdgeData.read(tag.getCompound("Signals"), trackEdge, graph, dimensions);
+					TrackMaterial.deserialize(tag.getStringOr("Material", TrackMaterial.ANDESITE.id.toString())));
+		trackEdge.edgeData = EdgeData.read(tag.getCompoundOrEmpty("Signals"), trackEdge, graph, dimensions);
 		return trackEdge;
 	}
 

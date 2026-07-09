@@ -2,8 +2,9 @@ package com.simibubi.create.content.kinetics.drill;
 
 import java.util.HashMap;
 
-import net.createmod.catnip.levelWrappers.WrappedLevel;
+import net.createmod.catnip.api.level.wrapper.WrappedLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -50,7 +51,7 @@ public class CobbleGenLevel extends WrappedLevel {
 	public void levelEvent(int type, BlockPos pos, int data) {}
 
 	@Override
-	public void levelEvent(Player player, int type, BlockPos pos, int data) {}
+	public void levelEvent(Entity player, int type, BlockPos pos, int data) {}
 
 	@Override
 	public void blockEvent(BlockPos pos, Block block, int eventID, int eventParam) {}

@@ -14,7 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -23,6 +23,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -53,12 +55,12 @@ public class ChainConveyorBlock extends KineticBlock implements IBE<ChainConveyo
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-		if (!level.isClientSide() && stack.is(Items.CHAIN))
-			return ItemInteractionResult.SUCCESS;
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (!level.isClientSide() && stack.is(Items.IRON_CHAIN))
+			return InteractionResult.SUCCESS;
 		if (AllBlocks.PACKAGE_FROGPORT.isIn(stack))
-			return ItemInteractionResult.SUCCESS;
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			return InteractionResult.SUCCESS;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
 	@Override
@@ -91,7 +93,7 @@ public class ChainConveyorBlock extends KineticBlock implements IBE<ChainConveyo
 				int chainCost = ChainConveyorBlockEntity.getChainCost(targetPos);
 				while (chainCost > 0) {
 					player.getInventory()
-						.placeItemBackInInventory(new ItemStack(Items.CHAIN, Math.min(chainCost, 64)));
+						.placeItemBackInInventory(new ItemStack(Items.IRON_CHAIN, Math.min(chainCost, 64)));
 					chainCost -= 64;
 				}
 			}
@@ -120,8 +122,8 @@ public class ChainConveyorBlock extends KineticBlock implements IBE<ChainConveyo
 	}
 
 	@Override
-	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-		IBE.onRemove(pState, pLevel, pPos, pNewState);
+	protected void affectNeighborsAfterRemoval(BlockState pState, ServerLevel pLevel, BlockPos pPos, boolean pIsMoving) {
+		IBE.onRemove(pState, pLevel, pPos, Blocks.AIR.defaultBlockState());
 	}
 
 	@Override

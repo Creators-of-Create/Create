@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:nether_quartz_ore"
-    }
+    "minecraft:nether_quartz_ore"
   ],
   "processing_time": 350,
   "results": [

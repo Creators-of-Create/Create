@@ -27,10 +27,10 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
-import net.createmod.catnip.codecs.CatnipCodecUtils;
-import net.createmod.catnip.data.IntAttached;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.data.codec.CatnipCodecUtils;
+import net.createmod.catnip.api.data.IntAttached;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -43,7 +43,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
@@ -115,7 +115,7 @@ public class TableClothBlockEntity extends SmartBlockEntity implements Transform
 
 	public void notifyShopUpdate() {
 		if (level instanceof ServerLevel serverLevel)
-			CatnipServices.NETWORK.sendToClientsTrackingChunk(serverLevel, new ChunkPos(worldPosition), new ShopUpdatePacket(worldPosition));
+			CatnipServices.NETWORK.sendToClientsTrackingChunk(serverLevel, ChunkPos.containing(worldPosition), new ShopUpdatePacket(worldPosition));
 	}
 
 	@Override
@@ -124,7 +124,7 @@ public class TableClothBlockEntity extends SmartBlockEntity implements Transform
 		BlockPos relativePos = worldPosition.relative(facing);
 		sideOccluded = AllBlockTags.TABLE_CLOTHS.matches(level.getBlockState(relativePos))
 			|| Block.isFaceFull(level.getBlockState(relativePos.below())
-			.getOcclusionShape(level, relativePos.below()), facing.getOpposite());
+			.getOcclusionShape(), facing.getOpposite());
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class TableClothBlockEntity extends SmartBlockEntity implements Transform
 		return !requestData.encodedRequest().isEmpty();
 	}
 
-	public ItemInteractionResult use(Player player, BlockHitResult ray) {
+	public InteractionResult use(Player player, BlockHitResult ray) {
 		if (isShop())
 			return useShop(player);
 
@@ -144,22 +144,22 @@ public class TableClothBlockEntity extends SmartBlockEntity implements Transform
 
 		if (heldItem.isEmpty()) {
 			if (manuallyAddedItems.isEmpty())
-				return ItemInteractionResult.SUCCESS;
+				return InteractionResult.SUCCESS;
 			player.setItemInHand(InteractionHand.MAIN_HAND, manuallyAddedItems.remove(manuallyAddedItems.size() - 1));
 			level.playSound(null, worldPosition, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.5f, 1f);
 
 			if (manuallyAddedItems.isEmpty() && !computerBehaviour.hasAttachedComputer()) {
 				level.setBlock(worldPosition, getBlockState().setValue(TableClothBlock.HAS_BE, false), Block.UPDATE_ALL);
 				if (level instanceof ServerLevel serverLevel)
-					CatnipServices.NETWORK.sendToClientsTrackingChunk(serverLevel, new ChunkPos(worldPosition), new RemoveBlockEntityPacket(worldPosition));
+					CatnipServices.NETWORK.sendToClientsTrackingChunk(serverLevel, ChunkPos.containing(worldPosition), new RemoveBlockEntityPacket(worldPosition));
 			} else
 				notifyUpdate();
 
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		if (manuallyAddedItems.size() >= 4)
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 
 		level.playSound(null, worldPosition, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.5f, 1f);
 		manuallyAddedItems.add(heldItem.copyWithCount(1));
@@ -169,7 +169,7 @@ public class TableClothBlockEntity extends SmartBlockEntity implements Transform
 		if (heldItem.isEmpty())
 			player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 		notifyUpdate();
-		return ItemInteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	public boolean targetsPriceTag(Player player, BlockHitResult ray) {
@@ -178,7 +178,7 @@ public class TableClothBlockEntity extends SmartBlockEntity implements Transform
 				.subtract(Vec3.atLowerCornerOf(worldPosition)));
 	}
 
-	public ItemInteractionResult useShop(Player player) {
+	public InteractionResult useShop(Player player) {
 		ItemStack itemInHand = player.getItemInHand(InteractionHand.MAIN_HAND);
 		ItemStack prevListItem = ItemStack.EMPTY;
 		boolean addOntoList = false;
@@ -205,14 +205,14 @@ public class TableClothBlockEntity extends SmartBlockEntity implements Transform
 			CreateLang.translate("stock_keeper.shopping_list_empty_hand")
 				.sendStatus(player);
 			AllSoundEvents.DENY.playOnServer(level, worldPosition, 0.5f, 1);
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		if (getPaymentItem().isEmpty()) {
 			CreateLang.translate("stock_keeper.no_price_set")
 				.sendStatus(player);
 			AllSoundEvents.DENY.playOnServer(level, worldPosition, 0.5f, 1);
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		UUID tickerID = null;
@@ -227,7 +227,7 @@ public class TableClothBlockEntity extends SmartBlockEntity implements Transform
 				.style(ChatFormatting.RED)
 				.sendStatus(player);
 			AllSoundEvents.DENY.playOnServer(level, worldPosition, 0.5f, 1);
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		if (stockLevel == 0) {
@@ -244,7 +244,7 @@ public class TableClothBlockEntity extends SmartBlockEntity implements Transform
 						.placeItemBackInInventory(prevListItem);
 			}
 
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		ShoppingList list = new ShoppingList(new ArrayList<>(), owner, tickerID);
@@ -290,7 +290,7 @@ public class TableClothBlockEntity extends SmartBlockEntity implements Transform
 			player.getInventory()
 				.placeItemBackInInventory(newListItem);
 
-		return ItemInteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	public int getStockLevelForTrade(@Nullable ShoppingList otherPurchases) {
@@ -331,17 +331,17 @@ public class TableClothBlockEntity extends SmartBlockEntity implements Transform
 		tag.putInt("Facing", facing.get2DDataValue());
 		tag.put("RequestData", CatnipCodecUtils.encode(AutoRequestData.CODEC, registries, requestData).orElseThrow());
 		if (owner != null)
-			tag.putUUID("OwnerUUID", owner);
+			tag.put("OwnerUUID", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.createUUID(owner));
 	}
 
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
-		manuallyAddedItems = NBTHelper.readItemList(tag.getList("Items", Tag.TAG_COMPOUND), registries);
+		manuallyAddedItems = NBTHelper.readItemList(tag.getListOrEmpty("Items"), registries);
 		requestData = CatnipCodecUtils.decode(AutoRequestData.CODEC, registries, tag.get("RequestData"))
 			.orElse(new AutoRequestData());
-		owner = tag.contains("OwnerUUID") ? tag.getUUID("OwnerUUID") : null;
-		facing = Direction.from2DDataValue(Mth.positiveModulo(tag.getInt("Facing"), 4));
+		owner = tag.contains("OwnerUUID") ? com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.loadUUID(tag.get("OwnerUUID")) : null;
+		facing = Direction.from2DDataValue(Mth.positiveModulo(tag.getIntOr("Facing", 0), 4));
 	}
 
 	@Override

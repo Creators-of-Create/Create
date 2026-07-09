@@ -15,12 +15,14 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.fluid.LegacyFluidTransferAdapter;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
+import com.simibubi.create.foundation.utility.LegacyFluidNbtBridge;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -82,12 +84,12 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-				Capabilities.FluidHandler.BLOCK,
+				Capabilities.Fluid.BLOCK,
 				AllBlockEntityTypes.FLUID_TANK.get(),
 				(be, context) -> {
 					if (be.fluidCapability == null)
 						be.refreshCapability();
-					return be.fluidCapability;
+					return be.fluidCapability == null ? null : new LegacyFluidTransferAdapter(be.fluidCapability);
 				}
 		);
 	}
@@ -98,7 +100,7 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 
 	protected void updateConnectivity() {
 		updateConnectivity = false;
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		if (!isController())
 			return;
@@ -155,7 +157,7 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 	public void initialize() {
 		super.initialize();
 		sendData();
-		if (level.isClientSide)
+		if (level.isClientSide())
 			invalidateRenderBoundingBox();
 	}
 
@@ -193,7 +195,7 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 			}
 		}
 
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			setChanged();
 			sendData();
 		}
@@ -207,7 +209,7 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 	}
 
 	protected void setLuminosity(int luminosity) {
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		if (this.luminosity == luminosity)
 			return;
@@ -235,7 +237,7 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 	}
 
 	public void removeController(boolean keepFluids) {
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return;
 		updateConnectivity = true;
 		if (!keepFluids)
@@ -355,7 +357,7 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 
 	@Override
 	public void setController(BlockPos controller) {
-		if (level.isClientSide && !isVirtual())
+		if (level.isClientSide() && !isVirtual())
 			return;
 		if (controller.equals(this.controller))
 			return;
@@ -404,7 +406,7 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 		if (controllerBE.boiler.addToGoggleTooltip(tooltip, isPlayerSneaking, controllerBE.getTotalTankSize()))
 			return true;
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
-			level.getCapability(Capabilities.FluidHandler.BLOCK, controllerBE.getBlockPos(), null));
+			level.getCapability(Capabilities.Fluid.BLOCK, controllerBE.getBlockPos(), null));
 	}
 
 	@Override
@@ -417,7 +419,7 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 		int prevLum = luminosity;
 
 		updateConnectivity = compound.contains("Uninitialized");
-		luminosity = compound.getInt("Luminosity");
+		luminosity = compound.getIntOr("Luminosity", 0);
 
 		lastKnownPos = null;
 		if (compound.contains("LastKnownPos"))
@@ -428,17 +430,17 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 			controller = NBTHelper.readBlockPos(compound, "Controller");
 
 		if (isController()) {
-			window = compound.getBoolean("Window");
-			width = compound.getInt("Size");
-			height = compound.getInt("Height");
+			window = compound.getBooleanOr("Window", false);
+			width = compound.getIntOr("Size", 1);
+			height = compound.getIntOr("Height", 1);
 			tankInventory.setCapacity(getTotalTankSize() * getCapacityMultiplier());
 
-			tankInventory.readFromNBT(registries, compound.getCompound("TankContent"));
+			LegacyFluidNbtBridge.deserializeTank(tankInventory, registries, compound.getCompoundOrEmpty("TankContent"));
 			if (tankInventory.getSpace() < 0)
 				tankInventory.drain(-tankInventory.getSpace(), FluidAction.EXECUTE);
 		}
 
-		boiler.read(compound.getCompound("Boiler"), width * width * height);
+		boiler.read(compound.getCompoundOrEmpty("Boiler"), width * width * height);
 
 		if (compound.contains("ForceFluidLevel") || fluidLevel == null)
 			fluidLevel = LerpedFloat.linear()
@@ -483,12 +485,12 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 			compound.putBoolean("Uninitialized", true);
 		compound.put("Boiler", boiler.write());
 		if (lastKnownPos != null)
-			compound.put("LastKnownPos", NbtUtils.writeBlockPos(lastKnownPos));
+			compound.put("LastKnownPos", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(lastKnownPos));
 		if (!isController())
-			compound.put("Controller", NbtUtils.writeBlockPos(controller));
+			compound.put("Controller", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(controller));
 		if (isController()) {
 			compound.putBoolean("Window", window);
-			compound.put("TankContent", tankInventory.writeToNBT(registries, new CompoundTag()));
+			compound.put("TankContent", LegacyFluidNbtBridge.serializeTank(tankInventory, registries));
 			compound.putInt("Size", width);
 			compound.putInt("Height", height);
 		}

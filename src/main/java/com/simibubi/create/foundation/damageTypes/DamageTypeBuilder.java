@@ -35,7 +35,7 @@ public class DamageTypeBuilder {
 	}
 
 	public DamageTypeBuilder simpleMsgId() {
-		return msgId(key.location().getNamespace() + "." + key.location().getPath());
+		return msgId(key.identifier().getNamespace() + "." + key.identifier().getPath());
 	}
 
 	/**

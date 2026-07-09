@@ -8,10 +8,10 @@ import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
+import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.lang.Lang;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -19,7 +19,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public enum DoorControl {
 
@@ -46,12 +45,11 @@ public enum DoorControl {
 		};
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static Pair<ScrollInput, Label> createWidget(int x, int y, Consumer<DoorControl> callback,
 		DoorControl initial) {
 
 		DoorControl playerFacing = NONE;
-		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+		Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
 		if (cameraEntity != null) {
 			Direction direction = cameraEntity.getDirection();
 			if (direction == Direction.EAST)

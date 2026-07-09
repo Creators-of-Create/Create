@@ -8,25 +8,25 @@ import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
+import com.simibubi.create.foundation.model.QuadTransformers;
 
-import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import com.simibubi.create.foundation.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.neoforged.neoforge.client.model.QuadTransformers;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelData.Builder;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData.Builder;
+import net.neoforged.neoforge.model.data.ModelProperty;
 
 public abstract class CopycatModel extends BakedModelWrapperWithData {
 
@@ -58,7 +58,7 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 			pos, material, ModelData.EMPTY);
 		builder.with(WRAPPED_DATA_PROPERTY, wrappedData);
 
-		boolean isEmissive = material.emissiveRendering(world, pos);
+		boolean isEmissive = material.emissiveRendering();
 		builder.with(IS_EMISSIVE_PROPERTY, isEmissive);
 
 		return builder;
@@ -81,15 +81,15 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 
 			if (!copycatBlock.canFaceBeOccluded(state, face))
 				continue;
-			if (!Block.shouldRenderFace(material, level, pos, face, neighbourPos))
+			if (!Block.shouldRenderFace(level, pos, material, level.getBlockState(neighbourPos), face))
 				occlusionData.occlude(face);
-		}
+	}
 	}
 
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand) {
 		return getCroppedQuads(state, side, rand, getMaterial(ModelData.EMPTY), ModelData.EMPTY,
-			RenderType.cutoutMipped());
+			com.simibubi.create.foundation.render.LegacyRenderTypes.cutoutMipped());
 	}
 
 	@Override
@@ -111,8 +111,7 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 		ModelData wrappedData = data.get(WRAPPED_DATA_PROPERTY);
 		if (wrappedData == null)
 			wrappedData = ModelData.EMPTY;
-		if (renderType != null && !Minecraft.getInstance()
-			.getBlockRenderer()
+		if (renderType != null && !com.simibubi.create.foundation.render.LegacyBlockRendererBridge.getBlockRenderer()
 			.getBlockModel(material)
 			.getRenderTypes(material, rand, wrappedData)
 			.contains(renderType))
@@ -166,8 +165,7 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 	}
 
 	public static BakedModel getModelOf(BlockState state) {
-		return Minecraft.getInstance()
-			.getBlockRenderer()
+		return com.simibubi.create.foundation.render.LegacyBlockRendererBridge.getBlockRenderer()
 			.getBlockModel(state);
 	}
 

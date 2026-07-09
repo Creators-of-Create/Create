@@ -13,11 +13,13 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.lang.FontHelper.Palette;
+import net.createmod.catnip.api.client.lang.FontHelper.Palette;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -50,13 +52,13 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 	}
 
 	public static boolean canFillBuilder(String translationKey) {
-		return I18n.exists(translationKey);
+		return !I18n.get(translationKey).equals(translationKey);
 	}
 
 	public static void fillBuilder(Builder builder, String translationKey) {
 		// Summary
 		String summaryKey = translationKey + ".summary";
-		if (I18n.exists(summaryKey)) {
+		if (canFillBuilder(summaryKey)) {
 			builder.addSummary(I18n.get(summaryKey));
 		}
 
@@ -64,7 +66,7 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 		for (int i = 1; i < 100; i++) {
 			String conditionKey = translationKey + ".condition" + i;
 			String behaviourKey = translationKey + ".behaviour" + i;
-			if (!I18n.exists(conditionKey))
+			if (!canFillBuilder(conditionKey))
 				break;
 			builder.addBehaviour(I18n.get(conditionKey), I18n.get(behaviourKey));
 		}
@@ -73,7 +75,7 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 		for (int i = 1; i < 100; i++) {
 			String controlKey = translationKey + ".control" + i;
 			String actionKey = translationKey + ".action" + i;
-			if (!I18n.exists(controlKey))
+			if (!canFillBuilder(controlKey))
 				break;
 			builder.addAction(I18n.get(controlKey), I18n.get(actionKey));
 		}
@@ -101,13 +103,23 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 	}
 
 	public ImmutableList<Component> getCurrentLines() {
-		if (Screen.hasShiftDown()) {
+		if (hasShiftDown()) {
 			return linesOnShift;
-		} else if (Screen.hasControlDown()) {
+		} else if (hasControlDown()) {
 			return linesOnCtrl;
 		} else {
 			return lines;
 		}
+	}
+
+	private static boolean hasShiftDown() {
+		return InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT)
+			|| InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_RIGHT_SHIFT);
+	}
+
+	private static boolean hasControlDown() {
+		return InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_CONTROL)
+			|| InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_RIGHT_CONTROL);
 	}
 
 	public static class Builder {

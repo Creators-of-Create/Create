@@ -4,13 +4,15 @@ import java.util.List;
 
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.lang.LangBuilder;
+import net.createmod.catnip.api.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 
 // TODO: 1.21.1+ - Move into api package
 /**
@@ -73,6 +75,62 @@ public non-sealed interface IHaveGoggleInformation extends IHaveCustomOverlayIco
 
 		CreateLang.translate("gui.goggles.fluid_container.capacity")
 			.add(CreateLang.number(handler.getTankCapacity(0))
+				.add(mb)
+				.style(ChatFormatting.GOLD))
+			.style(ChatFormatting.GRAY)
+			.forGoggles(tooltip, 1);
+
+		return true;
+	}
+
+	default boolean containedFluidTooltip(List<Component> tooltip, boolean isPlayerSneaking,
+										  ResourceHandler<FluidResource> handler) {
+		if (handler == null)
+			return false;
+
+		if (handler.size() == 0)
+			return false;
+
+		LangBuilder mb = CreateLang.translate("generic.unit.millibuckets");
+		CreateLang.translate("gui.goggles.fluid_container")
+			.forGoggles(tooltip);
+
+		boolean isEmpty = true;
+		for (int i = 0; i < handler.size(); i++) {
+			FluidResource resource = handler.getResource(i);
+			if (resource.isEmpty())
+				continue;
+
+			int amount = handler.getAmountAsInt(i);
+			FluidStack fluidStack = resource.toStack(amount);
+			CreateLang.fluidName(fluidStack)
+				.style(ChatFormatting.GRAY)
+				.forGoggles(tooltip, 1);
+
+			CreateLang.builder()
+				.add(CreateLang.number(amount)
+					.add(mb)
+					.style(ChatFormatting.GOLD))
+				.text(ChatFormatting.GRAY, " / ")
+				.add(CreateLang.number(handler.getCapacityAsInt(i, resource))
+					.add(mb)
+					.style(ChatFormatting.DARK_GRAY))
+				.forGoggles(tooltip, 1);
+
+			isEmpty = false;
+		}
+
+		if (handler.size() > 1) {
+			if (isEmpty)
+				tooltip.remove(tooltip.size() - 1);
+			return true;
+		}
+
+		if (!isEmpty)
+			return true;
+
+		CreateLang.translate("gui.goggles.fluid_container.capacity")
+			.add(CreateLang.number(handler.getCapacityAsInt(0, FluidResource.EMPTY))
 				.add(mb)
 				.style(ChatFormatting.GOLD))
 			.style(ChatFormatting.GRAY)

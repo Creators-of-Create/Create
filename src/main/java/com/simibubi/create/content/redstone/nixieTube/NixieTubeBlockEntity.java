@@ -19,7 +19,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.utility.DynamicComponent;
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
-import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.api.data.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -111,12 +111,12 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		if (!level.isClientSide)
+		if (!level.isClientSide())
 			return;
 
 		signalState = null;
 		if (computerBehaviour.hasAttachedComputer()) {
-			if (level.isClientSide && cachedSignalTE.get() != null) {
+			if (level.isClientSide() && cachedSignalTE.get() != null) {
 				cachedSignalTE = new WeakReference<>(null);
 			}
 			return;
@@ -141,7 +141,7 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void initialize() {
-		if (level.isClientSide)
+		if (level.isClientSide())
 			updateDisplayedStrings();
 	}
 
@@ -220,7 +220,7 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 
 			if (component.isValid()) {
 				customText = Optional.of(component);
-				nixieIndex = nbt.getInt("CustomTextIndex");
+				nixieIndex = nbt.getIntOr("CustomTextIndex", 0);
 			} else {
 				customText = Optional.empty();
 				nixieIndex = 0;
@@ -231,10 +231,11 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 		}
 
 		if (customText.isEmpty())
-			redstoneStrength = nbt.getInt("RedstoneStrength");
+			redstoneStrength = nbt.getIntOr("RedstoneStrength", 0);
 		if (clientPacket || isVirtual()) {
 			if (nbt.contains("ComputerSignal")) {
-				byte[] encodedComputerSignal = nbt.getByteArray("ComputerSignal");
+				byte[] encodedComputerSignal = nbt.getByteArray("ComputerSignal")
+					.orElse(new byte[0]);
 				if (computerSignal == null)
 					computerSignal = new ComputerSignal();
 				computerSignal.decode(encodedComputerSignal);

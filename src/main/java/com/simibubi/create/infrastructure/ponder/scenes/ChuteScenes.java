@@ -9,14 +9,14 @@ import com.simibubi.create.content.logistics.chute.ChuteBlock.Shape;
 import com.simibubi.create.content.logistics.chute.SmartChuteBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.EntityElement;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.EntityElement;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -43,7 +43,7 @@ public class ChuteScenes {
 		scene.world().moveSection(top, util.vector().of(0, 0, -1), 0);
 		scene.idle(20);
 
-		ItemStack stack = new ItemStack(Items.COPPER_BLOCK);
+		ItemStack stack = new ItemStack(Items.COPPER_BLOCK.weathering().unaffected());
 		scene.world().createItemEntity(util.vector().centerOf(util.grid().at(3, 3, 2)), util.vector().of(0, -0.1, 0), stack);
 		scene.idle(20);
 		ElementLink<EntityElement> remove =
@@ -134,7 +134,7 @@ public class ChuteScenes {
 		for (int i = 0; i < 3; i++) {
 			remove = scene.world().createItemEntity(util.vector().centerOf(util.grid().at(2, 6, 3)
 				.relative(offset)), util.vector().of(0, 0.1, 0)
-					.add(Vec3.atLowerCornerOf(offset.getNormal())
+					.add(Vec3.atLowerCornerOf(offset.getUnitVec3i())
 						.scale(-.1)),
 													stack);
 			scene.idle(12);
@@ -183,7 +183,7 @@ public class ChuteScenes {
 
 		scene.world().showSection(util.select().fromTo(2, 2, 2, 4, 1, 5)
 			.add(util.select().position(3, 0, 5)), Direction.DOWN);
-		ItemStack stack = new ItemStack(Items.COPPER_BLOCK);
+		ItemStack stack = new ItemStack(Items.COPPER_BLOCK.weathering().unaffected());
 		scene.world().createItemOnBelt(util.grid().at(4, 1, 2), Direction.EAST, stack);
 		scene.idle(10);
 		scene.rotateCameraY(60);

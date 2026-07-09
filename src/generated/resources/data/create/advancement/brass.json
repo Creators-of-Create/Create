@@ -19,7 +19,6 @@
       "translate": "advancement.create.brass.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:brass_ingot"
     },
     "title": {

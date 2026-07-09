@@ -8,8 +8,8 @@ import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSpecialTextures;
 
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.client.outliner.Outliner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;

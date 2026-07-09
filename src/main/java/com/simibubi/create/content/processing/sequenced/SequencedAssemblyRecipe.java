@@ -11,34 +11,31 @@ import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.foundation.utility.CreateLang;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
 public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
-	protected SequencedAssemblyRecipeSerializer serializer;
+	protected RecipeSerializer<SequencedAssemblyRecipe> serializer;
 
 	protected Ingredient ingredient;
 	protected List<SequencedRecipe<?>> sequence;
@@ -47,7 +44,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 
 	public final List<ProcessingOutput> resultPool;
 
-	public SequencedAssemblyRecipe(SequencedAssemblyRecipeSerializer serializer) {
+	public SequencedAssemblyRecipe(RecipeSerializer<SequencedAssemblyRecipe> serializer) {
 		this.serializer = serializer;
 		sequence = new ArrayList<>();
 		resultPool = new ArrayList<>();
@@ -72,33 +69,39 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 
 	public static <R extends ProcessingRecipe<?, ?>> Optional<RecipeHolder<R>> getRecipe(Level level, ItemStack item,
 																						 RecipeType<R> type, Class<R> recipeClass) {
-		List<RecipeHolder<SequencedAssemblyRecipe>> all = level.getRecipeManager()
-			.getAllRecipesFor(AllRecipeTypes.SEQUENCED_ASSEMBLY.getType());
+		MinecraftServer server = level.getServer();
+		if (server == null)
+			return Optional.empty();
+		List<RecipeHolder<SequencedAssemblyRecipe>> all = getSequencedAssemblyRecipes(server);
 		for (RecipeHolder<SequencedAssemblyRecipe> sequencedAssemblyRecipe : all) {
-			if (!sequencedAssemblyRecipe.value().appliesTo(sequencedAssemblyRecipe.id(), item))
+			Identifier id = sequencedAssemblyRecipe.id().identifier();
+			if (!sequencedAssemblyRecipe.value().appliesTo(id, item))
 				continue;
 			SequencedRecipe<?> nextRecipe = sequencedAssemblyRecipe.value().getNextRecipe(item);
 			ProcessingRecipe<?, ?> recipe = nextRecipe.getRecipe();
 			if (recipe.getType() != type || !recipeClass.isInstance(recipe))
 				continue;
-			recipe.enforceNextResult(() -> sequencedAssemblyRecipe.value().advance(sequencedAssemblyRecipe.id(), item, level.random));
+			recipe.enforceNextResult(() -> sequencedAssemblyRecipe.value().advance(id, item, level.getRandom()));
 			return Optional.of(new RecipeHolder<>(sequencedAssemblyRecipe.id(), recipeClass.cast(recipe)));
 		}
 		return Optional.empty();
 	}
 
 	public static <R extends ProcessingRecipe<?, ?>> List<RecipeHolder<R>> getRecipes(Level level, ItemStack item, RecipeType<R> type, Class<R> recipeClass, Predicate<? super RecipeHolder<R>> recipeFilter) {
-		List<RecipeHolder<SequencedAssemblyRecipe>> all = level.getRecipeManager()
-			.getAllRecipesFor(AllRecipeTypes.SEQUENCED_ASSEMBLY.getType());
+		MinecraftServer server = level.getServer();
+		if (server == null)
+			return List.of();
+		List<RecipeHolder<SequencedAssemblyRecipe>> all = getSequencedAssemblyRecipes(server);
 
 		List<RecipeHolder<R>> result = new ArrayList<>();
 
 		for (RecipeHolder<SequencedAssemblyRecipe> holder : all) {
-			if (holder.value().appliesTo(holder.id(), item)) {
+			Identifier id = holder.id().identifier();
+			if (holder.value().appliesTo(id, item)) {
 				ProcessingRecipe<?, ?> recipe = holder.value().getNextRecipe(item).getRecipe();
 
 				if (recipe.getType() == type && recipeClass.isInstance(recipe)) {
-					recipe.enforceNextResult(() -> holder.value().advance(holder.id(), item, level.random));
+					recipe.enforceNextResult(() -> holder.value().advance(id, item, level.getRandom()));
 					R castedRecipe = recipeClass.cast(recipe);
 					RecipeHolder<R> h = new RecipeHolder<>(holder.id(), castedRecipe);
 					if (recipeFilter.test(h))
@@ -110,7 +113,18 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 		return result;
 	}
 
-	private ItemStack advance(ResourceLocation id, ItemStack input, RandomSource random) {
+	@SuppressWarnings("unchecked")
+	private static List<RecipeHolder<SequencedAssemblyRecipe>> getSequencedAssemblyRecipes(MinecraftServer server) {
+		RecipeType<SequencedAssemblyRecipe> type = AllRecipeTypes.SEQUENCED_ASSEMBLY.getType();
+		return server.getRecipeManager()
+			.getRecipes()
+			.stream()
+			.filter(holder -> holder.value().getType() == type)
+			.map(holder -> (RecipeHolder<SequencedAssemblyRecipe>) (RecipeHolder<?>) holder)
+			.toList();
+	}
+
+	private ItemStack advance(Identifier id, ItemStack input, RandomSource random) {
 		int step = getStep(input);
 		if ((step + 1) / sequence.size() >= loops)
 			return rollResult(random);
@@ -143,11 +157,11 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 		return ItemStack.EMPTY;
 	}
 
-	private boolean appliesTo(ResourceLocation id, ItemStack input) {
+	private boolean appliesTo(Identifier id, ItemStack input) {
 		// First, check if the item is already in the middle of a sequenced assembly recipe
 		if (input.has(AllDataComponents.SEQUENCED_ASSEMBLY)) {
 			//noinspection DataFlowIssue
-			return getTransitionalItem().getItem() == input.getItem() && input
+			return getTransitionalItemItem() == input.getItem() && input
 				.get(AllDataComponents.SEQUENCED_ASSEMBLY)
 				.id().equals(id);
 		}
@@ -159,7 +173,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 		return sequence.get(getStep(input) % sequence.size());
 	}
 
-	private int getStep(ItemStack input) {
+	int getStep(ItemStack input) {
 		if (!input.has(AllDataComponents.SEQUENCED_ASSEMBLY))
 			return 0;
 		//noinspection DataFlowIssue
@@ -172,16 +186,14 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 	}
 
 	@Override
-	public ItemStack assemble(RecipeWrapper input, HolderLookup.Provider registries) {
+	public ItemStack assemble(RecipeWrapper input) {
 		return ItemStack.EMPTY;
 	}
 
-	@Override
 	public boolean canCraftInDimensions(int width, int height) {
 		return false;
 	}
 
-	@Override
 	public ItemStack getResultItem(HolderLookup.Provider registries) {
 		return resultPool.getFirst().getStack();
 	}
@@ -194,7 +206,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 	}
 
 	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<? extends Recipe<RecipeWrapper>> getSerializer() {
 		return serializer;
 	}
 
@@ -204,52 +216,28 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 	}
 
 	@Override
-	public RecipeType<?> getType() {
-		return AllRecipeTypes.SEQUENCED_ASSEMBLY.getType();
+	public boolean showNotification() {
+		return false;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public static void addToTooltip(ItemTooltipEvent event) {
-		ItemStack stack = event.getItemStack();
-		if (!stack.has(AllDataComponents.SEQUENCED_ASSEMBLY))
-			return;
-		SequencedAssembly sequencedAssembly = stack.get(AllDataComponents.SEQUENCED_ASSEMBLY);
-		@SuppressWarnings({"RedundantCast", "DataFlowIssue"}) // The java compiler thinks `byKey` returns an Optional<RecipeHolder<?>>
-		Optional<RecipeHolder<? extends Recipe<?>>> optionalRecipe =
-			(Optional<RecipeHolder<?>>) Minecraft.getInstance().level.getRecipeManager()
-				.byKey(sequencedAssembly.id());
-		if (optionalRecipe.isEmpty())
-			return;
-		Recipe<?> recipe = optionalRecipe.get().value();
-		if (!(recipe instanceof SequencedAssemblyRecipe sequencedAssemblyRecipe))
-			return;
+	@Override
+	public String group() {
+		return "";
+	}
 
-		int length = sequencedAssemblyRecipe.sequence.size();
-		int step = sequencedAssemblyRecipe.getStep(stack);
-		int total = length * sequencedAssemblyRecipe.loops;
-		List<Component> tooltip = event.getToolTip();
-		tooltip.add(CommonComponents.EMPTY);
-		tooltip.add(CreateLang.translateDirect("recipe.sequenced_assembly")
-			.withStyle(ChatFormatting.GRAY));
-		tooltip.add(CreateLang.translateDirect("recipe.assembly.progress", step, total)
-			.withStyle(ChatFormatting.DARK_GRAY));
+	@Override
+	public PlacementInfo placementInfo() {
+		return PlacementInfo.NOT_PLACEABLE;
+	}
 
-		int remaining = total - step;
-		for (int i = 0; i < length; i++) {
-			if (i >= remaining)
-				break;
-			SequencedRecipe<?> sequencedRecipe = sequencedAssemblyRecipe.sequence.get((i + step) % length);
-			Component textComponent = sequencedRecipe.getAsAssemblyRecipe()
-				.getDescriptionForAssembly();
-			if (i == 0)
-				tooltip.add(CreateLang.translateDirect("recipe.assembly.next", textComponent)
-					.withStyle(ChatFormatting.AQUA));
-			else {
-				tooltip.add(Component.literal("-> ").append(textComponent)
-					.withStyle(ChatFormatting.DARK_AQUA));
-			}
-		}
+	@Override
+	public RecipeBookCategory recipeBookCategory() {
+		return RecipeBookCategories.CRAFTING_MISC;
+	}
 
+	@Override
+	public RecipeType<? extends Recipe<RecipeWrapper>> getType() {
+		return AllRecipeTypes.SEQUENCED_ASSEMBLY.getType();
 	}
 
 	public Ingredient getIngredient() {
@@ -264,15 +252,19 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 		return transitionalItem.getStack();
 	}
 
-	public record SequencedAssembly(ResourceLocation id, int step, float progress) {
+	public Item getTransitionalItemItem() {
+		return transitionalItem.getItem();
+	}
+
+	public record SequencedAssembly(Identifier id, int step, float progress) {
 		public static final Codec<SequencedAssembly> CODEC = RecordCodecBuilder.create(i -> i.group(
-			ResourceLocation.CODEC.fieldOf("id").forGetter(SequencedAssembly::id),
+			Identifier.CODEC.fieldOf("id").forGetter(SequencedAssembly::id),
 			Codec.INT.fieldOf("step").forGetter(SequencedAssembly::step),
 			Codec.FLOAT.fieldOf("progress").forGetter(SequencedAssembly::progress)
 		).apply(i, SequencedAssembly::new));
 
 		public static final StreamCodec<ByteBuf, SequencedAssembly> STREAM_CODEC = StreamCodec.composite(
-			ResourceLocation.STREAM_CODEC, SequencedAssembly::id,
+			Identifier.STREAM_CODEC, SequencedAssembly::id,
 			ByteBufCodecs.INT, SequencedAssembly::step,
 			ByteBufCodecs.FLOAT, SequencedAssembly::progress,
 			SequencedAssembly::new

@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.actors.psi;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.foundation.fluid.LegacyFluidTransferAdapter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -23,9 +24,9 @@ public class PortableFluidInterfaceBlockEntity extends PortableStorageInterfaceB
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(
-				Capabilities.FluidHandler.BLOCK,
+				Capabilities.Fluid.BLOCK,
 				AllBlockEntityTypes.PORTABLE_FLUID_INTERFACE.get(),
-				(be, context) -> be.capability
+				(be, context) -> new LegacyFluidTransferAdapter(be.capability)
 		);
 	}
 

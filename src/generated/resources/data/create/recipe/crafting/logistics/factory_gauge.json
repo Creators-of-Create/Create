@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
-    {
-      "item": "create:stock_link"
-    },
-    {
-      "item": "create:precision_mechanism"
-    }
+    "create:stock_link",
+    "create:precision_mechanism"
   ],
   "result": {
     "count": 2,

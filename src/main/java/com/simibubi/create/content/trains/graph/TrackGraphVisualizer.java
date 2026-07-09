@@ -14,9 +14,9 @@ import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;
 import com.simibubi.create.content.trains.track.BezierConnection;
 
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.outliner.Outliner;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.client.outliner.Outliner;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
@@ -26,7 +26,7 @@ public class TrackGraphVisualizer {
 
 	public static void visualiseSignalEdgeGroups(TrackGraph graph) {
 		Minecraft mc = Minecraft.getInstance();
-		Entity cameraEntity = mc.cameraEntity;
+		Entity cameraEntity = mc.getCameraEntity();
 		if (cameraEntity == null)
 			return;
 		AABB box = graph.getBounds(mc.level).box;
@@ -213,7 +213,7 @@ public class TrackGraphVisualizer {
 
 	public static void debugViewGraph(TrackGraph graph, boolean extended) {
 		Minecraft mc = Minecraft.getInstance();
-		Entity cameraEntity = mc.cameraEntity;
+		Entity cameraEntity = mc.getCameraEntity();
 		if (cameraEntity == null)
 			return;
 		AABB box = graph.getBounds(mc.level).box;

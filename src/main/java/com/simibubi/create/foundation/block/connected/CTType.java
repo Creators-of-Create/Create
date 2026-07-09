@@ -3,10 +3,10 @@ package com.simibubi.create.foundation.block.connected;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.ContextRequirement;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface CTType {
-	ResourceLocation getId();
+	Identifier getId();
 
 	int getSheetSize();
 

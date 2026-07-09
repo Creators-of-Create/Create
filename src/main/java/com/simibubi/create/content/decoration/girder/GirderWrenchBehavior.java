@@ -9,12 +9,12 @@ import org.jetbrains.annotations.Nullable;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.outliner.Outliner;
-import net.createmod.catnip.placement.IPlacementHelper;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.client.outliner.Outliner;
+import net.createmod.catnip.api.placement.IPlacementHelper;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -30,11 +30,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class GirderWrenchBehavior {
 
-	@OnlyIn(Dist.CLIENT)
 	public static void tick() {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player == null || mc.level == null || !(mc.hitResult instanceof BlockHitResult result))
@@ -60,7 +58,7 @@ public class GirderWrenchBehavior {
 
 		Vec3 center = VecHelper.getCenterOf(pos);
 		Vec3 edge = center.add(Vec3.atLowerCornerOf(dirPair.getFirst()
-			.getNormal())
+			.getUnitVec3i())
 			.scale(0.4));
 		Direction.Axis[] axes = Arrays.stream(Iterate.axes)
 			.filter(axis -> axis != dirPair.getFirst()
@@ -70,26 +68,26 @@ public class GirderWrenchBehavior {
 		double normalMultiplier = dirPair.getSecond() == Action.PAIR ? 4 : 1;
 		Vec3 corner1 = edge
 			.add(Vec3.atLowerCornerOf(Direction.fromAxisAndDirection(axes[0], Direction.AxisDirection.POSITIVE)
-				.getNormal())
+				.getUnitVec3i())
 				.scale(0.3))
 			.add(Vec3.atLowerCornerOf(Direction.fromAxisAndDirection(axes[1], Direction.AxisDirection.POSITIVE)
-				.getNormal())
+				.getUnitVec3i())
 				.scale(0.3))
 			.add(Vec3.atLowerCornerOf(dirPair.getFirst()
-				.getNormal())
+				.getUnitVec3i())
 				.scale(0.1 * normalMultiplier));
 
 		normalMultiplier = dirPair.getSecond() == Action.HORIZONTAL ? 9 : 2;
 		Vec3 corner2 = edge
 			.add(Vec3.atLowerCornerOf(Direction.fromAxisAndDirection(axes[0], Direction.AxisDirection.NEGATIVE)
-				.getNormal())
+				.getUnitVec3i())
 				.scale(0.3))
 			.add(Vec3.atLowerCornerOf(Direction.fromAxisAndDirection(axes[1], Direction.AxisDirection.NEGATIVE)
-				.getNormal())
+				.getUnitVec3i())
 				.scale(0.3))
 			.add(Vec3.atLowerCornerOf(dirPair.getFirst()
 				.getOpposite()
-				.getNormal())
+				.getUnitVec3i())
 				.scale(0.1 * normalMultiplier));
 
 		Outliner.getInstance().showAABB("girderWrench", new AABB(corner1, corner2))
@@ -163,7 +161,7 @@ public class GirderWrenchBehavior {
 		Pair<Direction, Action> dirPair = getDirectionAndAction(result, level, pos);
 		if (dirPair == null)
 			return false;
-		if (level.isClientSide)
+		if (level.isClientSide())
 			return true;
 		if (!state.getValue(GirderBlock.X) && !state.getValue(GirderBlock.Z))
 			return false;

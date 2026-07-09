@@ -20,7 +20,7 @@ public class TeaEffectHandler implements OpenPipeEffectHandler {
 
 		List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, LivingEntity::isAffectedByPotions);
 		for (LivingEntity entity : entities) {
-			entity.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 21, 0, false, false, false));
+			entity.addEffect(new MobEffectInstance(MobEffects.HASTE, 21, 0, false, false, false));
 		}
 	}
 }

@@ -18,14 +18,15 @@ import com.simibubi.create.content.fluids.pump.PumpBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -136,7 +137,7 @@ public class FluidPropagator {
 
 	public static Direction validateNeighbourChange(BlockState state, Level world, BlockPos pos, Block otherBlock,
 		BlockPos neighborPos, boolean isMoving) {
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return null;
 		// calling getblockstate() as otherBlock param seems to contain the block which
 		// was replaced
@@ -204,7 +205,7 @@ public class FluidPropagator {
 		if (blockEntity == null || blockEntity.getLevel() == null)
 			return false;
 		IFluidHandler capability =
-			blockEntity.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, blockEntity.getBlockPos(), side);
+			LegacyFluidHandlerAdapter.of(blockEntity.getLevel().getCapability(Capabilities.Fluid.BLOCK, blockEntity.getBlockPos(), side));
 		return capability != null;
 	}
 

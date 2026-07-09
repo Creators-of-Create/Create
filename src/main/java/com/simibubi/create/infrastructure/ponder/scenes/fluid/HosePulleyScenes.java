@@ -9,13 +9,14 @@ import com.simibubi.create.content.fluids.hosePulley.HosePulleyFluidHandler;
 import com.simibubi.create.content.fluids.pump.PumpBlock;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter;
 
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
@@ -126,7 +127,7 @@ public class HosePulleyScenes {
 		}
 
 		scene.world().modifyBlockEntity(util.grid().at(1, 5, 1), HosePulleyBlockEntity.class, be -> {
-			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 			if (ifh != null)
 				ifh.fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE);
 		});
@@ -230,7 +231,7 @@ public class HosePulleyScenes {
 		scene.world().showSectionAndMerge(cogs, Direction.NORTH, hoselink);
 		scene.world().showSectionAndMerge(pipes, Direction.WEST, hoselink);
 		scene.world().modifyBlockEntity(util.grid().at(1, 6, 1), HosePulleyBlockEntity.class, be -> {
-			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 			if (ifh != null)
 				ifh.fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE);
 		});
@@ -346,7 +347,7 @@ public class HosePulleyScenes {
 
 		scene.idle(40);
 		scene.world().modifyBlockEntity(util.grid().at(1, 3, 2), HosePulleyBlockEntity.class, be -> {
-			IFluidHandler ifh = be.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), null);
+			IFluidHandler ifh = LegacyFluidHandlerAdapter.of(be.getLevel().getCapability(Capabilities.Fluid.BLOCK, be.getBlockPos(), null));
 			if (ifh != null)
 				ifh.fill(new FluidStack(Fluids.WATER, 1000), FluidAction.EXECUTE);
 		});

@@ -4,12 +4,10 @@ import java.util.function.Supplier;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-@MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class BottomlessItemHandler extends ItemStackHandler {
 

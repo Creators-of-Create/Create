@@ -13,7 +13,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -24,14 +24,14 @@ import net.neoforged.neoforge.items.IItemHandler;
 public class DropperMovementBehaviour implements MovementBehaviour {
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
-		if (context.world.isClientSide)
+		if (context.world.isClientSide())
 			return;
 
 		MountedItemStorage storage = context.getItemStorage();
 		if (storage == null)
 			return;
 
-		int slot = getSlot(storage, context.world.random, context.contraption.getStorage().getAllItems());
+		int slot = getSlot(storage, context.world.getRandom(), context.contraption.getStorage().getAllItems());
 		if (slot == -1) {
 			// all slots empty
 			failDispense(context, pos);

@@ -8,17 +8,17 @@ import com.simibubi.create.content.kinetics.mechanicalArm.ArmBlockEntity.Phase;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
+import com.simibubi.create.foundation.render.ItemRenderer;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -43,13 +43,12 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 		if (usingFlywheel && !hasItem)
 			return;
 
-		ItemRenderer itemRenderer = Minecraft.getInstance()
-			.getItemRenderer();
+		ItemRenderer itemRenderer = com.simibubi.create.foundation.render.LegacyItemRendererBridge.getItemRenderer();
 
 		BakedModel bakedModel = itemRenderer.getModel(item, be.getLevel(), null, 0);
 		boolean isBlockItem = hasItem && (item.getItem() instanceof BlockItem) && bakedModel.isGui3d();
 
-		VertexConsumer builder = buffer.getBuffer(be.goggles ? RenderType.cutout() : RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(be.goggles ? com.simibubi.create.foundation.render.LegacyRenderTypes.cutout() : com.simibubi.create.foundation.render.LegacyRenderTypes.solid());
 		BlockState blockState = be.getBlockState();
 
 		PoseStack msLocal = new PoseStack();
@@ -64,7 +63,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 
 		boolean rave = be.phase == Phase.DANCING && be.getSpeed() != 0;
 		if (rave) {
-			float renderTick = AnimationTickHolder.getRenderTime(be.getLevel()) + (be.hashCode() % 64);
+			float renderTick = AnimationTickHolder.getRenderTime() + (be.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
 			lowerArmAngle = Mth.lerp((Mth.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = Mth.lerp((Mth.sin(renderTick / 8) + 1) / 4, -45, 95);
@@ -192,7 +191,6 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 		msr.rotateYDegrees(baseAngle);
 	}
 
-	@Override
 	public boolean shouldRenderOffScreen(ArmBlockEntity be) {
 		return true;
 	}

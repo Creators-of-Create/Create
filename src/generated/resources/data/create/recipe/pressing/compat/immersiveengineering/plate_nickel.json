@@ -7,9 +7,7 @@
   ],
   "type": "create:pressing",
   "ingredients": [
-    {
-      "tag": "c:ingots/nickel"
-    }
+    "#c:ingots/nickel"
   ],
   "results": [
     {

@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.render.LegacyRenderSystemBridge;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBehaviour.ValueSettings;
@@ -16,11 +16,14 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.gui.AbstractSimiScreen;
-import net.createmod.catnip.gui.UIRenderHelper;
-import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.gui.AbstractSimiScreen;
+import net.createmod.catnip.api.client.gui.UIRenderHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -82,7 +85,7 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 		double guiScale = minecraft.getWindow()
 			.getGuiScale();
 		GLFW.glfwSetCursorPos(minecraft.getWindow()
-			.getWindow(), coordinateOfValue.x * guiScale, coordinateOfValue.y * guiScale);
+			.handle(), coordinateOfValue.x * guiScale, coordinateOfValue.y * guiScale);
 	}
 
 	public ValueSettings getClosestCoordinate(int mouseX, int mouseY) {
@@ -131,7 +134,7 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 		int milestoneCount = board.maxValue() / board.milestoneInterval() + 1;
@@ -164,8 +167,8 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 
 		if (fadeInWidth > fattestLabel) {
 			int textX = x - 11 - fatTipOffset + bgWidth / 2;
-			graphics.drawString(font, title, textX - font.width(title) / 2, y - 14, 0xdddddd, false);
-			graphics.drawString(font, tip, textX - font.width(tip) / 2, y + windowHeight + additionalHeight - 27,
+			graphics.text(font, title, textX - font.width(title) / 2, y - 14, 0xdddddd, false);
+			graphics.text(font, tip, textX - font.width(tip) / 2, y + windowHeight + additionalHeight - 27,
 				0xdddddd, false);
 		}
 
@@ -185,7 +188,7 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 					UIRenderHelper.drawCropped(graphics, valueBarX + w, y + 1,
 						Math.min(AllGuiTextures.VALUE_SETTINGS_BAR.getWidth() - 1, valueBarWidth - w), 8, zLevel,
 						AllGuiTextures.VALUE_SETTINGS_BAR);
-				graphics.drawString(font, component, x, y + 1, 0x442000, false);
+				graphics.text(font, component, x, y + 1, 0x442000, false);
 			}
 
 			int milestoneX = valueBarX;
@@ -236,11 +239,11 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 
 		if (cursorIcon != null) {
 			AllGuiTextures.VALUE_SETTINGS_CURSOR_ICON.render(graphics, cursorX - 2, cursorY - 3);
-			RenderSystem.setShaderColor(0.265625f, 0.125f, 0, 1);
+			LegacyRenderSystemBridge.setShaderColor(0.265625f, 0.125f, 0, 1);
 			cursorIcon.render(graphics, cursorX + 1, cursorY - 1);
-			RenderSystem.setShaderColor(1, 1, 1, 1);
+			LegacyRenderSystemBridge.setShaderColor(1, 1, 1, 1);
 			if (fadeInWidth > fattestLabel)
-				graphics.drawString(font, cursorText, x - 11 - fatTipOffset + (bgWidth - font.width(cursorText)) / 2,
+				graphics.text(font, cursorText, x - 11 - fatTipOffset + (bgWidth - font.width(cursorText)) / 2,
 					originalY + windowHeight + additionalHeight - 40, 0xFBDC7D, false);
 			return;
 		}
@@ -250,10 +253,10 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 			AllGuiTextures.VALUE_SETTINGS_CURSOR);
 		AllGuiTextures.VALUE_SETTINGS_CURSOR_RIGHT.render(graphics, cursorX + cursorWidth, cursorY);
 
-		graphics.drawString(font, cursorText, cursorX + 2, cursorY + 3, 0x442000, false);
+		graphics.text(font, cursorText, cursorX + 2, cursorY + 3, 0x442000, false);
 	}
 
-	protected void renderBrassFrame(GuiGraphics graphics, int x, int y, int w, int h) {
+	protected void renderBrassFrame(GuiGraphicsExtractor graphics, int x, int y, int w, int h) {
 		AllGuiTextures.BRASS_FRAME_TL.render(graphics, x, y);
 		AllGuiTextures.BRASS_FRAME_TR.render(graphics, x + w - 4, y);
 		AllGuiTextures.BRASS_FRAME_BL.render(graphics, x, y + h - 4);
@@ -274,7 +277,7 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	public void renderBackground(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+	public void renderBackground(@NotNull GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
 		int a = ((int) (0x50 * Math.min(1, (ticksOpen + AnimationTickHolder.getPartialTicks()) / 20f))) << 24;
 		graphics.fillGradient(0, 0, this.width, this.height, 0x101010 | a, 0x101010 | a);
 	}
@@ -300,7 +303,7 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 
 	@Override
 	public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers) {
-		if (minecraft.options.keyUse.matches(pKeyCode, pScanCode)) {
+		if (minecraft.options.keyUse.matches(new KeyEvent(pKeyCode, pScanCode, pModifiers))) {
 			Window window = minecraft.getWindow();
 			double x = minecraft.mouseHandler.xpos() * window.getGuiScaledWidth() / window.getScreenWidth();
 			double y = minecraft.mouseHandler.ypos() * window.getGuiScaledHeight() / window.getScreenHeight();
@@ -312,7 +315,7 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 
 	@Override
 	public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
-		if (minecraft.options.keyUse.matchesMouse(pButton)) {
+		if (minecraft.options.keyUse.matchesMouse(new MouseButtonEvent(pMouseX, pMouseY, new MouseButtonInfo(pButton, 0)))) {
 			saveAndClose(pMouseX, pMouseY);
 			return true;
 		}
@@ -322,7 +325,7 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 	protected void saveAndClose(double pMouseX, double pMouseY) {
 		ValueSettings closest = getClosestCoordinate((int) pMouseX, (int) pMouseY);
 		// FIXME: value settings may be face-sensitive on future components
-		CatnipServices.NETWORK.sendToServer(new ValueSettingsPacket(pos, closest.row(), closest.value(), null, null, Direction.UP,
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ValueSettingsPacket(pos, closest.row(), closest.value(), null, null, Direction.UP,
 				AllKeys.ctrlDown(), netId));
 		onClose();
 	}

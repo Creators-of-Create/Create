@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "create:crimson_window"
-    }
+    "#": "create:crimson_window"
   },
   "pattern": [
     "###",

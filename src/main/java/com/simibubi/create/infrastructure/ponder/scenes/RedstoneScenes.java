@@ -19,14 +19,14 @@ import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlock;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
-import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.PonderPalette;
-import net.createmod.ponder.api.element.ElementLink;
-import net.createmod.ponder.api.element.ParrotPose;
-import net.createmod.ponder.api.element.WorldSectionElement;
-import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
+import net.createmod.catnip.api.math.Pointing;
+import net.createmod.ponder.api.client.PonderPalette;
+import net.createmod.ponder.api.client.element.ElementLink;
+import net.createmod.ponder.api.client.element.ParrotPose;
+import net.createmod.ponder.api.client.element.WorldSectionElement;
+import net.createmod.ponder.api.client.scene.SceneBuilder;
+import net.createmod.ponder.api.client.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.client.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -642,7 +642,7 @@ public class RedstoneScenes {
 			final int index = i;
 			scene.world().modifyBlockEntityNBT(util.select().position(3 - i, 1, 3), NixieTubeBlockEntity.class, nbt -> {
 				nbt.putString("RawCustomText", component.getString());
-				nbt.putString("CustomText", Component.Serializer.toJson(component, scene.world().getHolderLookupProvider()));
+				nbt.putString("CustomText", com.simibubi.create.foundation.utility.LegacyComponentSerializationBridge.toJson(component, scene.world().getHolderLookupProvider()));
 				nbt.putInt("CustomTextIndex", index);
 			});
 		}
@@ -662,7 +662,7 @@ public class RedstoneScenes {
 		scene.idle(90);
 
 		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(3, 1, 3), Direction.UP), Pointing.DOWN, 30)
-			.withItem(new ItemStack(Items.BLUE_DYE));
+			.withItem(new ItemStack(Items.DYE.blue()));
 		scene.idle(7);
 		scene.world().setBlocks(util.select().fromTo(1, 1, 3, 3, 1, 3), AllBlocks.NIXIE_TUBES.get(DyeColor.BLUE)
 			.getDefaultState()
@@ -786,30 +786,30 @@ public class RedstoneScenes {
 		scene.idle(7);
 		scene.overlay().showControls(backSlot, Pointing.DOWN, 30).withItem(sapling);
 		scene.world().modifyBlockEntityNBT(link1Select, RedstoneLinkBlockEntity.class,
-			nbt -> nbt.put("FrequencyLast", iron.saveOptional(scene.world().getHolderLookupProvider())));
+			nbt -> nbt.put("FrequencyLast", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(iron, scene.world().getHolderLookupProvider())));
 		scene.idle(7);
 		scene.world().modifyBlockEntityNBT(link1Select, RedstoneLinkBlockEntity.class,
-			nbt -> nbt.put("FrequencyFirst", sapling.saveOptional(scene.world().getHolderLookupProvider())));
+			nbt -> nbt.put("FrequencyFirst", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(sapling, scene.world().getHolderLookupProvider())));
 		scene.idle(20);
 
 		scene.overlay().showControls(bottom2Slot, Pointing.UP, 30).withItem(iron);
 		scene.idle(7);
 		scene.overlay().showControls(top2Slot, Pointing.DOWN, 30).withItem(sapling);
 		scene.world().modifyBlockEntityNBT(link2Select, RedstoneLinkBlockEntity.class,
-			nbt -> nbt.put("FrequencyLast", iron.saveOptional(scene.world().getHolderLookupProvider())));
+			nbt -> nbt.put("FrequencyLast", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(iron, scene.world().getHolderLookupProvider())));
 		scene.idle(7);
 		scene.world().modifyBlockEntityNBT(link2Select, RedstoneLinkBlockEntity.class,
-			nbt -> nbt.put("FrequencyFirst", sapling.saveOptional(scene.world().getHolderLookupProvider())));
+			nbt -> nbt.put("FrequencyFirst", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(sapling, scene.world().getHolderLookupProvider())));
 		scene.idle(20);
 
 		scene.overlay().showControls(bottom3Slot, Pointing.UP, 30).withItem(gold);
 		scene.idle(7);
 		scene.overlay().showControls(top3Slot, Pointing.DOWN, 30).withItem(sapling);
 		scene.world().modifyBlockEntityNBT(link3Select, RedstoneLinkBlockEntity.class,
-			nbt -> nbt.put("FrequencyLast", gold.saveOptional(scene.world().getHolderLookupProvider())));
+			nbt -> nbt.put("FrequencyLast", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(gold, scene.world().getHolderLookupProvider())));
 		scene.idle(7);
 		scene.world().modifyBlockEntityNBT(link3Select, RedstoneLinkBlockEntity.class,
-			nbt -> nbt.put("FrequencyFirst", sapling.saveOptional(scene.world().getHolderLookupProvider())));
+			nbt -> nbt.put("FrequencyFirst", com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.saveOptional(sapling, scene.world().getHolderLookupProvider())));
 		scene.idle(20);
 
 		scene.world().toggleRedstonePower(redstone);

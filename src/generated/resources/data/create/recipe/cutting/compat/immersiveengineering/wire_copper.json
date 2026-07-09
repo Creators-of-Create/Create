@@ -7,9 +7,7 @@
   ],
   "type": "create:cutting",
   "ingredients": [
-    {
-      "tag": "c:plates/copper"
-    }
+    "#c:plates/copper"
   ],
   "processing_time": 50,
   "results": [

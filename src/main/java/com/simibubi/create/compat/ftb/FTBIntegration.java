@@ -2,7 +2,7 @@ package com.simibubi.create.compat.ftb;
 
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 
-import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.api.client.gui.AbstractSimiScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ScreenEvent;

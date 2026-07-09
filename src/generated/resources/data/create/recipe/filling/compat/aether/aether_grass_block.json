@@ -8,7 +8,7 @@
   "type": "create:filling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
+      "neoforge:ingredient_type": "neoforge:compound",
       "ingredients": [
         {
           "item": "aether:aether_dirt"
@@ -16,9 +16,9 @@
       ]
     },
     {
-      "type": "neoforge:single",
+      "type": "neoforge:simple",
       "amount": 500,
-      "fluid": "minecraft:water"
+      "ingredient": "minecraft:water"
     }
   ],
   "results": [

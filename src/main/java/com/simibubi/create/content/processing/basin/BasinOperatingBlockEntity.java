@@ -10,6 +10,8 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.simple.DeferralBehaviour;
+import com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter;
+import com.simibubi.create.foundation.item.LegacyItemHandlerAdapter;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
 import com.simibubi.create.foundation.recipe.trie.AbstractVariant;
 import com.simibubi.create.foundation.recipe.trie.RecipeTrie;
@@ -23,8 +25,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.neoforged.neoforge.capabilities.Capabilities.FluidHandler;
-import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities.Fluid;
+import net.neoforged.neoforge.capabilities.Capabilities.Item;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
@@ -73,7 +75,7 @@ public abstract class BasinOperatingBlockEntity extends KineticBlockEntity {
 			return true;
 		if (isRunning())
 			return true;
-		if (level == null || level.isClientSide)
+		if (level == null || level.isClientSide())
 			return true;
 		Optional<BasinBlockEntity> basin = getBasin();
 		if (!basin.filter(BasinBlockEntity::canContinueProcessing)
@@ -139,8 +141,8 @@ public abstract class BasinOperatingBlockEntity extends KineticBlockEntity {
 		List<Recipe<?>> list = new ArrayList<>();
 		try {
 
-			IItemHandler availableItems = level.getCapability(ItemHandler.BLOCK, basin.getBlockPos(), null);
-			IFluidHandler availableFluids = level.getCapability(FluidHandler.BLOCK, basin.getBlockPos(), null);
+			IItemHandler availableItems = LegacyItemHandlerAdapter.of(level.getCapability(Item.BLOCK, basin.getBlockPos(), null));
+			IFluidHandler availableFluids = LegacyFluidHandlerAdapter.of(level.getCapability(Fluid.BLOCK, basin.getBlockPos(), null));
 
 			// no point even searching, since no recipe will ever match
 			if (availableItems == null && availableFluids == null) {
@@ -162,7 +164,7 @@ public abstract class BasinOperatingBlockEntity extends KineticBlockEntity {
 					list.add(r.value());
 		}
 
-		list.sort((r1, r2) -> r2.getIngredients().size() - r1.getIngredients().size());
+		list.sort((r1, r2) -> r2.placementInfo().ingredients().size() - r1.placementInfo().ingredients().size());
 
 		return list;
 	}

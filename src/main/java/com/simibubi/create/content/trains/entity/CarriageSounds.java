@@ -3,11 +3,11 @@ package com.simibubi.create.content.trains.entity;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSoundEvents.SoundEntry;
 import com.simibubi.create.content.trains.entity.Carriage.DimensionalCarriageEntity;
-import com.simibubi.create.foundation.mixin.accessor.GuiAccessor;
+import com.simibubi.create.foundation.mixin.accessor.HudAccessor;
 
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.data.Couple;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.SubtitleOverlay;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
@@ -57,7 +57,7 @@ public class CarriageSounds {
 
 	public void tick(DimensionalCarriageEntity dce) {
 		Minecraft mc = Minecraft.getInstance();
-		Entity camEntity = mc.cameraEntity;
+		Entity camEntity = mc.getCameraEntity();
 		if (camEntity == null)
 			return;
 
@@ -271,7 +271,7 @@ public class CarriageSounds {
 	}
 
 	static class LoopingSound extends AbstractTickableSoundInstance {
-		private static final SubtitleOverlay OVERLAY = ((GuiAccessor) Minecraft.getInstance().gui).create$getSubtitleOverlay();
+		private static final SubtitleOverlay OVERLAY = ((HudAccessor) Minecraft.getInstance().gui.hud).create$getSubtitleOverlay();
 
 		private final boolean repeatSubtitle;
 		private final WeighedSoundEvents weighedSoundEvents = this.resolve(Minecraft.getInstance().getSoundManager());

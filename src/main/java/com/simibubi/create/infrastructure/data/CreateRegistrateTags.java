@@ -18,7 +18,11 @@ import com.tterrag.registrate.providers.RegistrateTagsProvider;
 
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -33,10 +37,12 @@ public class CreateRegistrateTags {
 
 	private static final Block[] SHULKER_BOXES = {
 		Blocks.SHULKER_BOX,
-		Blocks.WHITE_SHULKER_BOX, Blocks.ORANGE_SHULKER_BOX, Blocks.MAGENTA_SHULKER_BOX, Blocks.LIGHT_BLUE_SHULKER_BOX,
-		Blocks.YELLOW_SHULKER_BOX, Blocks.LIME_SHULKER_BOX, Blocks.PINK_SHULKER_BOX, Blocks.GRAY_SHULKER_BOX,
-		Blocks.LIGHT_GRAY_SHULKER_BOX, Blocks.CYAN_SHULKER_BOX, Blocks.PURPLE_SHULKER_BOX, Blocks.BLUE_SHULKER_BOX,
-		Blocks.BROWN_SHULKER_BOX, Blocks.GREEN_SHULKER_BOX, Blocks.RED_SHULKER_BOX, Blocks.BLACK_SHULKER_BOX
+		Blocks.DYED_SHULKER_BOX.white(), Blocks.DYED_SHULKER_BOX.orange(), Blocks.DYED_SHULKER_BOX.magenta(),
+		Blocks.DYED_SHULKER_BOX.lightBlue(), Blocks.DYED_SHULKER_BOX.yellow(), Blocks.DYED_SHULKER_BOX.lime(),
+		Blocks.DYED_SHULKER_BOX.pink(), Blocks.DYED_SHULKER_BOX.gray(), Blocks.DYED_SHULKER_BOX.lightGray(),
+		Blocks.DYED_SHULKER_BOX.cyan(), Blocks.DYED_SHULKER_BOX.purple(), Blocks.DYED_SHULKER_BOX.blue(),
+		Blocks.DYED_SHULKER_BOX.brown(), Blocks.DYED_SHULKER_BOX.green(), Blocks.DYED_SHULKER_BOX.red(),
+		Blocks.DYED_SHULKER_BOX.black()
 	};
 
 	public static void addGenerators() {
@@ -65,7 +71,7 @@ public class CreateRegistrateTags {
 
 		prov.tag(AllBlockTags.COPYCAT_DENY.tag)
 			.addTag(BlockTags.CAULDRONS)
-			.addTag(BlockTags.SAPLINGS)
+			.addTag(BlockTags.create(Identifier.withDefaultNamespace("saplings")))
 			.addTag(BlockTags.CLIMBABLE);
 
 		prov.tag(AllBlockTags.FAN_PROCESSING_CATALYSTS_HAUNTING.tag)
@@ -79,10 +85,7 @@ public class CreateRegistrateTags {
 		prov.tag(AllBlockTags.FAN_TRANSPARENT.tag)
 			.add(Blocks.IRON_BARS)
 			.add(Blocks.MANGROVE_ROOTS)
-			.add(Blocks.COPPER_GRATE, Blocks.EXPOSED_COPPER_GRATE, Blocks.WEATHERED_COPPER_GRATE,
-				Blocks.OXIDIZED_COPPER_GRATE, Blocks.WAXED_COPPER_GRATE, Blocks.WAXED_EXPOSED_COPPER_GRATE,
-				Blocks.WAXED_WEATHERED_COPPER_GRATE, Blocks.WAXED_OXIDIZED_COPPER_GRATE
-			)
+			.add(Blocks.COPPER_GRATE.asList().toArray(Block[]::new))
 			.addTag(BlockTags.CAMPFIRES)
 			.addTag(BlockTags.FENCES)
 			.addTag(BlockTags.LEAVES);
@@ -208,12 +211,12 @@ public class CreateRegistrateTags {
 
 		prov.tag(ItemTags.TRIMMABLE_ARMOR)
 			.remove(
-				AllItems.COPPER_DIVING_BOOTS.getId(),
-				AllItems.COPPER_BACKTANK.getId(),
-				AllItems.COPPER_DIVING_HELMET.getId(),
-				AllItems.NETHERITE_DIVING_BOOTS.getId(),
-				AllItems.NETHERITE_BACKTANK.getId(),
-				AllItems.NETHERITE_DIVING_HELMET.getId()
+				itemKey(AllItems.COPPER_DIVING_BOOTS.getId()),
+				itemKey(AllItems.COPPER_BACKTANK.getId()),
+				itemKey(AllItems.COPPER_DIVING_HELMET.getId()),
+				itemKey(AllItems.NETHERITE_DIVING_BOOTS.getId()),
+				itemKey(AllItems.NETHERITE_BACKTANK.getId()),
+				itemKey(AllItems.NETHERITE_DIVING_HELMET.getId())
 			);
 
 		prov.tag(ItemTags.DURABILITY_ENCHANTABLE)
@@ -263,6 +266,10 @@ public class CreateRegistrateTags {
 		return toReturn;
 	}
 
+	private static ResourceKey<Item> itemKey(Identifier id) {
+		return ResourceKey.create(Registries.ITEM, id);
+	}
+
 	private static void genFluidTags(RegistrateTagsProvider<Fluid> provIn) {
 		CreateTagsProvider<Fluid> prov = new CreateTagsProvider<>(provIn, Fluid::builtInRegistryHolder);
 
@@ -280,7 +287,7 @@ public class CreateRegistrateTags {
 		CreateTagsProvider<EntityType<?>> prov = new CreateTagsProvider<>(provIn, EntityType::builtInRegistryHolder);
 
 		prov.tag(AllEntityTags.BLAZE_BURNER_CAPTURABLE.tag)
-			.add(EntityType.BLAZE);
+			.add(EntityTypes.BLAZE);
 
 		prov.tag(AllEntityTags.IGNORE_SEAT.tag)
 			.addTag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED);

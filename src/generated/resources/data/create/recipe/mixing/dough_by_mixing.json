@@ -1,13 +1,11 @@
 {
   "type": "create:mixing",
   "ingredients": [
+    "#c:flours/wheat",
     {
-      "tag": "c:flours/wheat"
-    },
-    {
-      "type": "neoforge:single",
+      "type": "neoforge:simple",
       "amount": 1000,
-      "fluid": "minecraft:water"
+      "ingredient": "minecraft:water"
     }
   ],
   "results": [

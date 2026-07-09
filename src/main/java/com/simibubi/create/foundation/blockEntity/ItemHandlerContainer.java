@@ -94,11 +94,9 @@ public class ItemHandlerContainer implements Container {
 		return false;
 	}
 
-	@Override
 	public void startOpen(Player player) {
 	}
 
-	@Override
 	public void stopOpen(Player player) {
 	}
 }

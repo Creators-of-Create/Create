@@ -5,21 +5,21 @@ import java.util.List;
 
 import com.simibubi.create.content.decoration.bracket.BracketedBlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.model.BakedModelWrapper;
 
 import net.createmod.ponder.render.VirtualRenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import com.simibubi.create.foundation.model.BakedQuad;
+import com.simibubi.create.foundation.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.neoforged.neoforge.client.model.BakedModelWrapper;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelProperty;
 
 public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 
@@ -61,8 +61,7 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 
 		public void putBracket(BlockState state) {
 			if (state != null) {
-				this.bracket = Minecraft.getInstance()
-					.getBlockRenderer()
+				this.bracket = com.simibubi.create.foundation.render.LegacyBlockRendererBridge.getBlockRenderer()
 					.getBlockModel(state);
 			}
 		}

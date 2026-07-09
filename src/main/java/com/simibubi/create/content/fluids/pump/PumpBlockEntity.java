@@ -23,14 +23,14 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.math.BlockFace;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.math.BlockFace;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -64,7 +64,7 @@ public class PumpBlockEntity extends KineticBlockEntity {
 	public void tick() {
 		super.tick();
 
-		if (level.isClientSide && !isVirtual())
+		if (level.isClientSide() && !isVirtual())
 			return;
 
 		if (scheduleFlip) {
@@ -90,7 +90,7 @@ public class PumpBlockEntity extends KineticBlockEntity {
 			return;
 		if (speed != 0)
 			award(AllAdvancements.PUMP);
-		if (level.isClientSide && !isVirtual())
+		if (level.isClientSide() && !isVirtual())
 			return;
 
 		updatePressureChange();
@@ -112,7 +112,7 @@ public class PumpBlockEntity extends KineticBlockEntity {
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
-		if (compound.getBoolean("Reversed"))
+		if (compound.getBooleanOr("Reversed", false))
 			scheduleFlip = true;
 	}
 
@@ -288,7 +288,7 @@ public class PumpBlockEntity extends KineticBlockEntity {
 
 		// fluid handler endpoint
 		if (blockEntity != null) {
-			IFluidHandler capability = blockEntity.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, blockEntity.getBlockPos(), face.getOpposite());
+			IFluidHandler capability = com.simibubi.create.foundation.fluid.LegacyFluidHandlerAdapter.of(blockEntity.getLevel().getCapability(Capabilities.Fluid.BLOCK, blockEntity.getBlockPos(), face.getOpposite()));
 			if (capability != null)
 				return true;
 		}

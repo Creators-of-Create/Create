@@ -11,7 +11,6 @@
       "translate": "advancement.create.factory_gauge.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:factory_gauge"
     },
     "title": {

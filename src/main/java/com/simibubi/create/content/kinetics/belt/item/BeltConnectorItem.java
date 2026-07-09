@@ -17,7 +17,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -40,11 +40,6 @@ public class BeltConnectorItem extends BlockItem {
 		super(AllBlocks.BELT.get(), properties);
 	}
 
-	@Override
-	public String getDescriptionId() {
-		return getOrCreateDescriptionId();
-	}
-
 	@NotNull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
@@ -60,7 +55,7 @@ public class BeltConnectorItem extends BlockItem {
 		BlockPos pos = context.getClickedPos();
 		boolean validAxis = validateAxis(world, pos);
 
-		if (world.isClientSide)
+		if (world.isClientSide())
 			return validAxis ? InteractionResult.SUCCESS : InteractionResult.FAIL;
 
 		BlockPos firstPulley = null;
@@ -93,14 +88,14 @@ public class BeltConnectorItem extends BlockItem {
 				.isEmpty()) {
 				heldStack.remove(AllDataComponents.BELT_FIRST_SHAFT);
 				playerEntity.getCooldowns()
-					.addCooldown(this, 5);
+					.addCooldown(heldStack, 5);
 			}
 			return InteractionResult.SUCCESS;
 		}
 
 		heldStack.set(AllDataComponents.BELT_FIRST_SHAFT, pos);
 		playerEntity.getCooldowns()
-			.addCooldown(this, 5);
+			.addCooldown(heldStack, 5);
 		return InteractionResult.SUCCESS;
 	}
 

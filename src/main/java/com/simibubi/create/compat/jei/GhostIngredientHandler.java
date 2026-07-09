@@ -13,13 +13,11 @@ import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
-import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.MethodsReturnNonnullByDefault;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-@MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class GhostIngredientHandler<T extends GhostItemMenu<?>>
 	implements IGhostIngredientHandler<AbstractSimiContainerScreen<T>> {
@@ -85,7 +83,7 @@ public class GhostIngredientHandler<T extends GhostItemMenu<?>>
 				return;
 
 			// sync new filter contents with server
-			CatnipServices.NETWORK.sendToServer(new GhostItemSubmitPacket(stack, slotIndex));
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new GhostItemSubmitPacket(stack, slotIndex));
 		}
 	}
 }

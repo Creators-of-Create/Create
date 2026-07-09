@@ -7,11 +7,10 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.network.chat.Component;
 
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -47,6 +46,7 @@ import net.minecraft.world.item.CreativeModeTab.Output;
 import net.minecraft.world.item.CreativeModeTab.TabVisibility;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -89,10 +89,11 @@ public class AllCreativeModeTabs {
 			MutableObject<Predicate<Item>> isItem3d = new MutableObject<>(item -> false);
 			if (CatnipServices.PLATFORM.getEnv().isClient())
 				isItem3d.setValue(item -> {
-					ItemRenderer itemRenderer = Minecraft.getInstance()
-						.getItemRenderer();
-					BakedModel model = itemRenderer.getModel(new ItemStack(item), null, null, 0);
-					return model.isGui3d();
+					ItemStackRenderState renderState = new ItemStackRenderState();
+					Minecraft.getInstance()
+						.getItemModelResolver()
+						.updateForTopItem(renderState, new ItemStack(item), ItemDisplayContext.GUI, null, null, 0);
+					return renderState.usesBlockLight() || renderState.isOversizedInGui();
 				});
 			IS_ITEM_3D_PREDICATE = isItem3d.getValue();
 		}

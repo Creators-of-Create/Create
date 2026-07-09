@@ -9,8 +9,8 @@ import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
@@ -110,11 +110,11 @@ public class TrainMigration {
 
 	public static TrainMigration read(CompoundTag tag, DimensionPalette dimensions) {
 		TrainMigration trainMigration = new TrainMigration();
-		trainMigration.curve = tag.getBoolean("Curve");
-		trainMigration.fallback = VecHelper.readNBT(tag.getList("Fallback", Tag.TAG_DOUBLE));
-		trainMigration.positionOnOldEdge = tag.getDouble("Position");
+		trainMigration.curve = tag.getBooleanOr("Curve", false);
+		trainMigration.fallback = VecHelper.readNBT(tag.getListOrEmpty("Fallback"));
+		trainMigration.positionOnOldEdge = tag.getDoubleOr("Position", 0);
 		trainMigration.locations =
-			Couple.deserializeEach(tag.getList("Nodes", Tag.TAG_COMPOUND), c -> TrackNodeLocation.read(c, dimensions));
+			Couple.deserializeEach(tag.getListOrEmpty("Nodes"), c -> TrackNodeLocation.read(c, dimensions));
 		return trainMigration;
 	}
 

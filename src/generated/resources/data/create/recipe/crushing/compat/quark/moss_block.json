@@ -7,9 +7,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:moss_block"
-    }
+    "minecraft:moss_block"
   ],
   "processing_time": 50,
   "results": [

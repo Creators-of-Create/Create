@@ -7,11 +7,11 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.math.VecHelper;
+import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
@@ -73,13 +73,13 @@ public class CuckooClockBlockEntity extends KineticBlockEntity {
 			return;
 
 
-		boolean isNatural = level.dimensionType().natural();
-		int dayTime = (int) ((level.getDayTime() * (isNatural ? 1 : 24)) % 24000);
+		boolean isNatural = level.dimensionType().hasSkyLight();
+		int dayTime = (int) ((level.getDefaultClockTime() * (isNatural ? 1 : 24)) % 24000);
 		int hours = (dayTime / 1000 + 6) % 24;
 		int minutes = (dayTime % 1000) * 60 / 1000;
 
 		if (!isNatural) {
-			if (level.isClientSide) {
+			if (level.isClientSide()) {
 				moveHands(hours, minutes);
 
 				if (AnimationTickHolder.getTicks() % 6 == 0)
@@ -90,7 +90,7 @@ public class CuckooClockBlockEntity extends KineticBlockEntity {
 			return;
 		}
 
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			if (animationType == Animation.NONE) {
 				if (hours == 12 && minutes < 5)
 					startAnimation(Animation.PIG);
@@ -113,7 +113,7 @@ public class CuckooClockBlockEntity extends KineticBlockEntity {
 			}
 		}
 
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			moveHands(hours, minutes);
 
 			if (animationType == Animation.NONE) {
@@ -137,7 +137,7 @@ public class CuckooClockBlockEntity extends KineticBlockEntity {
 					playSound(SoundEvents.NOTE_BLOCK_CHIME.value(), 2, 0.793701f);
 
 				if (value > 30 && isSurprise) {
-					Vec3 pos = VecHelper.offsetRandomly(VecHelper.getCenterOf(this.worldPosition), level.random, .5f);
+					Vec3 pos = VecHelper.offsetRandomly(VecHelper.getCenterOf(this.worldPosition), level.getRandom(), .5f);
 					level.addParticle(ParticleTypes.LARGE_SMOKE, pos.x, pos.y, pos.z, 0, 0, 0);
 				}
 				if (value == 40 && isSurprise)
@@ -149,7 +149,7 @@ public class CuckooClockBlockEntity extends KineticBlockEntity {
 						playSound(SoundEvents.CHEST_OPEN, 1 / 16f, 2f);
 					if (value == phase) {
 						if (animationType == Animation.PIG)
-							playSound(SoundEvents.PIG_AMBIENT, 1 / 4f, 1f);
+							playSound(SoundEvents.PIG_AMBIENT_BABY.value(), 1 / 4f, 1f);
 						else
 							playSound(SoundEvents.CREEPER_HURT, 1 / 4f, 3f);
 					}

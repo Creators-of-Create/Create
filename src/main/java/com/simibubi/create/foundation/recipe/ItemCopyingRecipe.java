@@ -3,11 +3,13 @@ package com.simibubi.create.foundation.recipe;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.mojang.serialization.MapCodec;
 
-import net.createmod.catnip.data.IntAttached;
-import net.minecraft.core.HolderLookup;
+import net.createmod.catnip.api.data.IntAttached;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
@@ -17,6 +19,12 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 
 public class ItemCopyingRecipe extends CustomRecipe {
+	public static final MapCodec<ItemCopyingRecipe> CODEC =
+		MapCodec.unit(() -> new ItemCopyingRecipe(CraftingBookCategory.MISC));
+	public static final StreamCodec<RegistryFriendlyByteBuf, ItemCopyingRecipe> STREAM_CODEC =
+		StreamCodec.unit(new ItemCopyingRecipe(CraftingBookCategory.MISC));
+	public static final RecipeSerializer<ItemCopyingRecipe> SERIALIZER = new RecipeSerializer<>(CODEC, STREAM_CODEC);
+
 	public interface SupportsItemCopying {
 		default ItemStack createCopy(ItemStack original, int count) {
 			ItemStack copyWithCount = original.copyWithCount(count);
@@ -37,7 +45,6 @@ public class ItemCopyingRecipe extends CustomRecipe {
 	}
 
 	public ItemCopyingRecipe(CraftingBookCategory category) {
-		super(category);
 	}
 
 	@Override
@@ -46,7 +53,7 @@ public class ItemCopyingRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
+	public ItemStack assemble(CraftingInput input) {
 		IntAttached<ItemStack> copyCheck = copyCheck(input);
 		if (copyCheck == null)
 			return ItemStack.EMPTY;
@@ -97,8 +104,8 @@ public class ItemCopyingRecipe extends CustomRecipe {
 		return IntAttached.with(copyTargets, itemToCopy);
 	}
 
-	public RecipeSerializer<?> getSerializer() {
-		return AllRecipeTypes.ITEM_COPYING.getSerializer();
+	public RecipeSerializer<ItemCopyingRecipe> getSerializer() {
+		return SERIALIZER;
 	}
 
 	public boolean canCraftInDimensions(int width, int height) {

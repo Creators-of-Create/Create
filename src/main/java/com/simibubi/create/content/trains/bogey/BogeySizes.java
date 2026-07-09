@@ -12,14 +12,14 @@ import org.jetbrains.annotations.UnmodifiableView;
 
 import com.simibubi.create.Create;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class BogeySizes {
-	private static final Map<ResourceLocation, BogeySize> BOGEY_SIZES = new HashMap<>();
+	private static final Map<Identifier, BogeySize> BOGEY_SIZES = new HashMap<>();
 	private static final List<BogeySize> SORTED_INCREASING = new ArrayList<>();
 	private static final List<BogeySize> SORTED_DECREASING = new ArrayList<>();
 	@UnmodifiableView
-	private static final Map<ResourceLocation, BogeySize> BOGEY_SIZES_VIEW = Collections.unmodifiableMap(BOGEY_SIZES);
+	private static final Map<Identifier, BogeySize> BOGEY_SIZES_VIEW = Collections.unmodifiableMap(BOGEY_SIZES);
 	@UnmodifiableView
 	private static final List<BogeySize> SORTED_INCREASING_VIEW = Collections.unmodifiableList(SORTED_INCREASING);
 	@UnmodifiableView
@@ -37,7 +37,7 @@ public final class BogeySizes {
 	}
 
 	public static void register(BogeySize size) {
-		ResourceLocation id = size.id();
+		Identifier id = size.id();
 		if (BOGEY_SIZES.containsKey(id)) {
 			throw new IllegalArgumentException();
 		}
@@ -50,7 +50,7 @@ public final class BogeySizes {
 	}
 
 	@UnmodifiableView
-	public static Map<ResourceLocation, BogeySize> all() {
+	public static Map<Identifier, BogeySize> all() {
 		return BOGEY_SIZES_VIEW;
 	}
 
@@ -68,7 +68,7 @@ public final class BogeySizes {
 	public static void init() {
 	}
 
-	public record BogeySize(ResourceLocation id, float wheelRadius) {
+	public record BogeySize(Identifier id, float wheelRadius) {
 		public BogeySize nextBySize() {
 			List<BogeySize> values = allSortedIncreasing();
 			int ordinal = values.indexOf(this);

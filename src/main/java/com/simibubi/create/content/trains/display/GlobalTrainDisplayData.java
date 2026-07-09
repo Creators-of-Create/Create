@@ -9,7 +9,7 @@ import java.util.Map;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.Train;
 
-import net.createmod.catnip.data.Glob;
+import net.createmod.catnip.api.data.Glob;
 
 import net.minecraft.network.chat.MutableComponent;
 

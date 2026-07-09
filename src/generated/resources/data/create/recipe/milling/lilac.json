@@ -1,9 +1,7 @@
 {
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "minecraft:lilac"
-    }
+    "minecraft:lilac"
   ],
   "processing_time": 100,
   "results": [

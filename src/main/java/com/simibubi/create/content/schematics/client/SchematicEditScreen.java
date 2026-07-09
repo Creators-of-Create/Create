@@ -13,9 +13,9 @@ import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.gui.AbstractSimiScreen;
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.minecraft.client.gui.GuiGraphics;
+import net.createmod.catnip.api.client.gui.AbstractSimiScreen;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.NbtUtils;
@@ -82,7 +82,6 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 			widget.setBordered(false);
 			widget.setTextColor(0xFFFFFF);
 			widget.setFocused(false);
-			widget.mouseClicked(0, 0, 0);
 			widget.setFilter(s -> {
 				if (s.isEmpty() || s.equals("-"))
 					return true;
@@ -111,8 +110,8 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 				.ordinal())
 			.writingTo(labelM);
 
-		addRenderableWidgets(xInput, yInput, zInput);
-		addRenderableWidgets(labelR, labelM, rotationArea, mirrorArea);
+		addRenderableWidgets(List.of(xInput, yInput, zInput));
+		addRenderableWidgets(List.of(labelR, labelM, rotationArea, mirrorArea));
 
 		confirmButton =
 			new IconButton(x + background.getWidth() - 33, y + background.getHeight() - 26, AllIcons.I_CONFIRM);
@@ -124,7 +123,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 
 	@Override
 	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
-		if (isPaste(code)) {
+		if (hasControlDown() && code == org.lwjgl.glfw.GLFW.GLFW_KEY_V) {
 			String coords = minecraft.keyboardHandler.getClipboard();
 			if (coords != null && !coords.isEmpty()) {
 				coords.replaceAll(" ", "");
@@ -152,13 +151,13 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
 		background.render(graphics, x, y);
 		String title = handler.getCurrentSchematicName();
-		graphics.drawString(font, title, x + (background.getWidth() - 8 - font.width(title)) / 2, y + 4, 0x505050, false);
+		graphics.text(font, title, x + (background.getWidth() - 8 - font.width(title)) / 2, y + 4, 0x505050, false);
 
 		GuiGameElement.of(AllItems.SCHEMATIC.asStack())
 			.<GuiGameElement.GuiRenderBuilder>at(x + background.getWidth() + 6, y + background.getHeight() - 40, -200)

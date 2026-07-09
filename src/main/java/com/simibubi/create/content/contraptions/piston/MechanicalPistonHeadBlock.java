@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -52,8 +54,7 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos,
-									   Player player) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
         return AllBlocks.PISTON_EXTENSION_POLE.asStack();
     }
 
@@ -100,10 +101,9 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
-                                          LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
+    public BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess ticks, BlockPos pos, Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
         if (state.getValue(BlockStateProperties.WATERLOGGED))
-            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         return state;
     }
 

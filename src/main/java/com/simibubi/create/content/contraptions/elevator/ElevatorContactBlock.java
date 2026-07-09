@@ -19,9 +19,7 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import net.createmod.catnip.gui.ScreenOpener;
-import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.client.player.LocalPlayer;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -29,7 +27,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -37,8 +35,10 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -48,9 +48,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class ElevatorContactBlock extends WrenchableDirectionalBlock
 	implements IBE<ElevatorContactBlockEntity>, SpecialBlockItemRequirement {
@@ -107,9 +104,8 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 	}
 
 	@Override
-	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos,
-		boolean pIsMoving) {
-		if (pLevel.isClientSide)
+	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, Orientation orientation, boolean pIsMoving) {
+		if (pLevel.isClientSide())
 			return;
 
 		boolean isPowered = pState.getValue(POWERED);
@@ -156,6 +152,12 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 			pLevel.scheduleTick(pPos, this, 1);
 	}
 
+	public void scheduleActivation(ScheduledTickAccess ticks, BlockPos pPos) {
+		if (!ticks.getBlockTicks()
+			.hasScheduledTick(pPos, this))
+			ticks.scheduleTick(pPos, this, 1);
+	}
+
 	@Override
 	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRand) {
 		boolean wasPowering = pState.getValue(POWERING);
@@ -178,13 +180,12 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 	}
 
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn,
-		BlockPos currentPos, BlockPos facingPos) {
+	public BlockState updateShape(BlockState stateIn, LevelReader worldIn, ScheduledTickAccess ticks, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random) {
 		if (facing != stateIn.getValue(FACING))
 			return stateIn;
 		boolean hasValidContact = RedstoneContactBlock.hasValidContact(worldIn, currentPos, facing);
 		if (stateIn.getValue(POWERING) != hasValidContact)
-			scheduleActivation(worldIn, currentPos);
+			scheduleActivation(ticks, currentPos);
 		return stateIn;
 	}
 
@@ -199,7 +200,7 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+	public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
 		return AllBlocks.REDSTONE_CONTACT.asStack();
 	}
 
@@ -236,18 +237,11 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (player != null && AllItems.WRENCH.isIn(stack))
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> withBlockEntityDo(level, pos, be -> this.displayScreen(be, player)));
-		return ItemInteractionResult.SUCCESS;
-	}
-
-	@OnlyIn(value = Dist.CLIENT)
-	protected void displayScreen(ElevatorContactBlockEntity be, Player player) {
-		if (player instanceof LocalPlayer)
-			ScreenOpener
-				.open(new ElevatorContactScreen(be.getBlockPos(), be.shortName, be.longName, be.doorControls.mode));
+			return InteractionResult.TRY_WITH_EMPTY_HAND;
+		CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> withBlockEntityDo(level, pos, be -> ElevatorContactClient.displayScreen(be, player)));
+		return InteractionResult.SUCCESS;
 	}
 
 	public static int getLight(BlockState state) {

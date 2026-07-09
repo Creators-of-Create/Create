@@ -2,9 +2,7 @@
   "type": "create:mixing",
   "heat_requirement": "heated",
   "ingredients": [
-    {
-      "item": "create:bar_of_chocolate"
-    }
+    "create:bar_of_chocolate"
   ],
   "results": [
     {

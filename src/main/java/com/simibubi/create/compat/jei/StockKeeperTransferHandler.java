@@ -12,6 +12,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllMenuTypes;
+import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.stockTicker.CraftableBigItemStack;
@@ -30,8 +31,7 @@ import mezz.jei.common.transfer.RecipeTransferOperationsResult;
 import mezz.jei.common.transfer.RecipeTransferUtil;
 import mezz.jei.library.transfer.RecipeTransferErrorMissingSlots;
 import mezz.jei.library.transfer.RecipeTransferErrorTooltip;
-import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.MethodsReturnNonnullByDefault;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
@@ -44,7 +44,6 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 @ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class StockKeeperTransferHandler implements IUniversalRecipeTransferHandler<StockKeeperRequestMenu> {
 	private IJeiHelpers helpers;
 
@@ -83,7 +82,7 @@ public class StockKeeperTransferHandler implements IUniversalRecipeTransferHandl
 
 		Recipe<?> recipe = recipeHolder.value();
 
-		if (recipe.getIngredients().size() > 9)
+		if (CreateRecipeCategory.getIngredients(recipe).size() > 9)
 			return RecipeTransferErrorInternal.INSTANCE;
 
 		for (CraftableBigItemStack cbis : screen.recipesToOrder)
@@ -124,7 +123,7 @@ public class StockKeeperTransferHandler implements IUniversalRecipeTransferHandl
 		if (!doTransfer)
 			return null;
 
-		ItemStack result = recipe.getResultItem(player.level().registryAccess());
+		ItemStack result = CreateRecipeCategory.getResultItem(recipe);
 		if (result.isEmpty())
 			return new RecipeTransferErrorTooltip(CreateLang.translate("gui.stock_keeper.recipe_result_empty").component());
 

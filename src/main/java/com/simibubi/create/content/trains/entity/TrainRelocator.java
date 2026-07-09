@@ -32,10 +32,10 @@ import com.simibubi.create.content.trains.track.TrackBlockOutline.BezierPointSel
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.outliner.Outliner;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.platform.CatnipServices;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.client.outliner.Outliner;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -52,7 +52,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.InputEvent;
 
 public class TrainRelocator {
@@ -71,7 +70,6 @@ public class TrainRelocator {
 		return relocatingTrain != null;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static void onClicked(InputEvent.InteractionKeyMappingTriggered event) {
 		if (relocatingTrain == null)
 			return;
@@ -83,10 +81,10 @@ public class TrainRelocator {
 		if (player.isSpectator())
 			return;
 
-		if (!player.canInteractWithBlock(relocatingOrigin, 24) || player.isShiftKeyDown()) {
+		if (player.distanceToSqr(Vec3.atCenterOf(relocatingOrigin)) > 24 * 24 || player.isShiftKeyDown()) {
 			relocatingTrain = null;
-			player.displayClientMessage(CreateLang.translateDirect("train.relocate.abort")
-				.withStyle(ChatFormatting.RED), true);
+			player.sendSystemMessage(CreateLang.translateDirect("train.relocate.abort")
+				.withStyle(ChatFormatting.RED));
 			return;
 		}
 
@@ -105,7 +103,6 @@ public class TrainRelocator {
 	}
 
 	@Nullable
-	@OnlyIn(Dist.CLIENT)
 	public static Boolean relocateClient(Train relocating, boolean simulate) {
 		Minecraft mc = Minecraft.getInstance();
 		HitResult hitResult = mc.hitResult;
@@ -154,7 +151,7 @@ public class TrainRelocator {
 		boolean result = relocate(relocating, mc.level, blockPos, hoveredBezier, direction, lookAngle, true);
 		if (!simulate && result) {
 			relocating.carriages.forEach(c -> c.forEachPresentEntity(e -> e.nonDamageTicks = 10));
-			CatnipServices.NETWORK.sendToServer(new TrainRelocationPacket(relocatingTrain, blockPos, lookAngle,
+			net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new TrainRelocationPacket(relocatingTrain, blockPos, lookAngle,
 				relocatingEntityId, direction, hoveredBezier));
 		}
 
@@ -214,7 +211,7 @@ public class TrainRelocator {
 			blockingIndex.increment();
 		});
 
-		if (level.isClientSide && simulate && !recordedVecs.isEmpty()) {
+		if (level.isClientSide() && simulate && !recordedVecs.isEmpty()) {
 			toVisualise = new ArrayList<>();
 			toVisualise.add(recordedVecs.get(0));
 		}
@@ -225,7 +222,7 @@ public class TrainRelocator {
 			boolean blocking = i >= blockingIndex.intValue() - 1;
 			boolean collided =
 				!blocked.booleanValue() && train.findCollidingTrain(level, vec1, vec2, level.dimension()) != null;
-			if (level.isClientSide && simulate)
+			if (level.isClientSide() && simulate)
 				toVisualise.add(vec2);
 			if (collided || blocking)
 				return false;
@@ -268,7 +265,6 @@ public class TrainRelocator {
 		return true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static void visualise(Train train, int i, Vec3 v1, Vec3 v2, boolean valid) {
 		Outliner.getInstance().showLine(Pair.of(train, i), v1.add(0, -.825f, 0), v2.add(0, -.825f, 0))
 			.colored(valid ? 0x95CD41 : 0xEA5C2B)
@@ -276,7 +272,6 @@ public class TrainRelocator {
 			.lineWidth(i % 2 == 1 ? 1 / 6f : 1 / 4f);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static void clientTick() {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
@@ -299,34 +294,34 @@ public class TrainRelocator {
 			if (entity instanceof AbstractContraptionEntity ce && Math.abs(ce.getPosition(0)
 				.subtract(ce.getPosition(1))
 				.lengthSqr()) > 1 / 1024d) {
-				player.displayClientMessage(CreateLang.translateDirect("train.cannot_relocate_moving")
-					.withStyle(ChatFormatting.RED), true);
+				player.sendSystemMessage(CreateLang.translateDirect("train.cannot_relocate_moving")
+					.withStyle(ChatFormatting.RED));
 				relocatingTrain = null;
 				return;
 			}
 
 			if (!AllItems.WRENCH.isIn(player.getMainHandItem())) {
-				player.displayClientMessage(CreateLang.translateDirect("train.relocate.abort")
-					.withStyle(ChatFormatting.RED), true);
+				player.sendSystemMessage(CreateLang.translateDirect("train.relocate.abort")
+					.withStyle(ChatFormatting.RED));
 				relocatingTrain = null;
 				return;
 			}
 
-			if (!player.canInteractWithBlock(relocatingOrigin, 24)) {
-				player.displayClientMessage(CreateLang.translateDirect("train.relocate.too_far")
-					.withStyle(ChatFormatting.RED), true);
+			if (player.distanceToSqr(Vec3.atCenterOf(relocatingOrigin)) > 24 * 24) {
+				player.sendSystemMessage(CreateLang.translateDirect("train.relocate.too_far")
+					.withStyle(ChatFormatting.RED));
 				return;
 			}
 
 			Boolean success = relocateClient(relocating, true);
 			if (success == null) {
-				player.displayClientMessage(CreateLang.translateDirect("train.relocate", relocating.name), true);
+				player.sendSystemMessage(CreateLang.translateDirect("train.relocate", relocating.name));
 			} else if (success) {
-				player.displayClientMessage(CreateLang.translateDirect("train.relocate.valid")
-					.withStyle(ChatFormatting.GREEN), true);
+				player.sendSystemMessage(CreateLang.translateDirect("train.relocate.valid")
+					.withStyle(ChatFormatting.GREEN));
 			} else {
-				player.displayClientMessage(CreateLang.translateDirect("train.relocate.invalid")
-					.withStyle(ChatFormatting.RED), true);
+				player.sendSystemMessage(CreateLang.translateDirect("train.relocate.invalid")
+					.withStyle(ChatFormatting.RED));
 			}
 			return;
 		}
@@ -353,7 +348,6 @@ public class TrainRelocator {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static boolean carriageWrenched(Vec3 vec3, CarriageContraptionEntity entity) {
 		Train train = getTrainFromEntity(entity);
 		if (train == null)
@@ -364,7 +358,6 @@ public class TrainRelocator {
 		return true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static boolean addToTooltip(List<Component> tooltip, boolean shiftKeyDown) {
 		Train train = getTrainFromEntity(hoveredEntity.get());
 		if (train != null && train.derailed) {
@@ -374,7 +367,6 @@ public class TrainRelocator {
 		return false;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	private static Train getRelocating(LevelAccessor level) {
 		return relocatingTrain == null ? null : Create.RAILWAYS.sided(level).trains.get(relocatingTrain);
 	}

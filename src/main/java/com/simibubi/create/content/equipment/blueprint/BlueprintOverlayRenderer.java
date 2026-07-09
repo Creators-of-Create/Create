@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.render.LegacyRenderSystemBridge;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.BlueprintCraftingInventory;
 import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.BlueprintSection;
@@ -21,16 +21,16 @@ import com.simibubi.create.content.logistics.tableCloth.TableClothBlockEntity;
 import com.simibubi.create.content.trains.track.TrackPlacement.PlacementInfo;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.data.Couple;
+import net.createmod.catnip.api.data.Iterate;
+import net.createmod.catnip.api.data.Pair;
+import net.createmod.catnip.api.client.gui.element.GuiGameElement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -42,6 +42,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.EntityHitResult;
@@ -54,7 +55,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 // TODO - Split up into specific overlays
 public class BlueprintOverlayRenderer {
 
-	public static final LayeredDraw.Layer OVERLAY = BlueprintOverlayRenderer::renderOverlay;
+	public static final GuiLayer OVERLAY = BlueprintOverlayRenderer::renderOverlay;
 
 	static boolean active;
 	static boolean empty;
@@ -173,7 +174,7 @@ public class BlueprintOverlayRenderer {
 
 	private static boolean canAfford(Player player, BigItemStack entry) {
 		int itemsPresent = 0;
-		for (int i = 0; i < player.getInventory().items.size(); i++) {
+		for (int i = 0; i < player.getInventory().getNonEquipmentItems().size(); i++) {
 			ItemStack item = player.getInventory()
 				.getItem(i);
 			if (item.isEmpty() || !ItemStack.isSameItemSameComponents(item, entry.stack))
@@ -259,10 +260,11 @@ public class BlueprintOverlayRenderer {
 			if (success) {
 				CraftingContainer craftingInventory = new BlueprintCraftingInventory(craftingGrid);
 				if (!recipe.isPresent())
-					recipe = mc.level.getRecipeManager()
-						.getRecipeFor(RecipeType.CRAFTING, craftingInventory.asCraftInput(), mc.level);
+					recipe = getRecipeManager(mc)
+						.flatMap(recipeManager -> recipeManager.getRecipeFor(RecipeType.CRAFTING,
+							craftingInventory.asCraftInput(), mc.level));
 				ItemStack resultFromRecipe = recipe.filter(r -> r.value().matches(craftingInventory.asCraftInput(), mc.level))
-					.map(r -> r.value().assemble(craftingInventory.asCraftInput(), mc.level.registryAccess()))
+					.map(r -> r.value().assemble(craftingInventory.asCraftInput()))
 					.orElse(ItemStack.EMPTY);
 
 				if (resultFromRecipe.isEmpty()) {
@@ -317,9 +319,9 @@ public class BlueprintOverlayRenderer {
 		}
 	}
 
-	public static void renderOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+	public static void renderOverlay(GuiGraphicsExtractor GuiGraphicsExtractor, DeltaTracker deltaTracker) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.options.hideGui || mc.screen != null)
+		if (mc.gui.hud.isHidden() || mc.gui.screen() != null)
 			return;
 
 		if (!active || empty)
@@ -336,29 +338,28 @@ public class BlueprintOverlayRenderer {
 			w += 30;
 		}
 
-		int x = (guiGraphics.guiWidth() - w) / 2;
-		int y = guiGraphics.guiHeight() - 100;
+		int x = (GuiGraphicsExtractor.guiWidth() - w) / 2;
+		int y = GuiGraphicsExtractor.guiHeight() - 100;
 
 		if (shopContext != null) {
-			TooltipRenderUtil.renderTooltipBackground(guiGraphics, x - 2, y + 1, w + 4, 19, 0, 0x55_000000, 0x55_000000, 0,
-				0);
+			GuiGraphicsExtractor.fill(x - 2, y + 1, x + w + 2, y + 20, 0x55000000);
 
-			AllGuiTextures.TRADE_OVERLAY.render(guiGraphics, guiGraphics.guiWidth() / 2 - 48, y - 19);
+			AllGuiTextures.TRADE_OVERLAY.render(GuiGraphicsExtractor, GuiGraphicsExtractor.guiWidth() / 2 - 48, y - 19);
 			if (shopContext.purchases() > 0) {
-				guiGraphics.renderItem(AllItems.SHOPPING_LIST.asStack(), guiGraphics.guiWidth() / 2 + 20, y - 20);
-				guiGraphics.drawString(mc.font, Component.literal("x" + shopContext.purchases()), guiGraphics.guiWidth() / 2 + 20 + 16,
+				GuiGraphicsExtractor.item(AllItems.SHOPPING_LIST.asStack(), GuiGraphicsExtractor.guiWidth() / 2 + 20, y - 20);
+				GuiGraphicsExtractor.text(mc.font, Component.literal("x" + shopContext.purchases()), GuiGraphicsExtractor.guiWidth() / 2 + 20 + 16,
 					y - 20 + 4, 0xff_eeeeee, true);
 			}
 		}
 
 		// Ingredients
 		for (Pair<ItemStack, Boolean> pair : ingredients) {
-			RenderSystem.enableBlend();
-			(pair.getSecond() ? AllGuiTextures.HOTSLOT_ACTIVE : AllGuiTextures.HOTSLOT).render(guiGraphics, x, y);
+			LegacyRenderSystemBridge.enableBlend();
+			(pair.getSecond() ? AllGuiTextures.HOTSLOT_ACTIVE : AllGuiTextures.HOTSLOT).render(GuiGraphicsExtractor, x, y);
 			ItemStack itemStack = pair.getFirst();
 			String count = shopContext != null && !shopContext.checkout() || pair.getSecond() ? null
 				: ChatFormatting.GOLD.toString() + itemStack.getCount();
-			drawItemStack(guiGraphics, mc, x, y, itemStack, count);
+			drawItemStack(GuiGraphicsExtractor, mc, x, y, itemStack, count);
 			x += 21;
 		}
 
@@ -367,26 +368,26 @@ public class BlueprintOverlayRenderer {
 
 		// Arrow
 		x += 5;
-		RenderSystem.enableBlend();
+		LegacyRenderSystemBridge.enableBlend();
 		if (invalidShop)
-			AllGuiTextures.HOTSLOT_ARROW_BAD.render(guiGraphics, x, y + 4);
+			AllGuiTextures.HOTSLOT_ARROW_BAD.render(GuiGraphicsExtractor, x, y + 4);
 		else
-			AllGuiTextures.HOTSLOT_ARROW.render(guiGraphics, x, y + 4);
+			AllGuiTextures.HOTSLOT_ARROW.render(GuiGraphicsExtractor, x, y + 4);
 		x += 25;
 
 		// Outputs
 		if (results.isEmpty()) {
-			AllGuiTextures.HOTSLOT.render(guiGraphics, x, y);
+			AllGuiTextures.HOTSLOT.render(GuiGraphicsExtractor, x, y);
 			GuiGameElement.of(Items.BARRIER)
 				.at(x + 3, y + 3)
-				.render(guiGraphics);
+				.render(GuiGraphicsExtractor);
 		} else {
 			for (ItemStack result : results) {
 				AllGuiTextures slot = resultCraftable ? AllGuiTextures.HOTSLOT_SUPER_ACTIVE : AllGuiTextures.HOTSLOT;
 				if (!invalidShop && shopContext != null && shopContext.stockLevel() > shopContext.purchases())
 					slot = AllGuiTextures.HOTSLOT_ACTIVE;
-				slot.render(guiGraphics, resultCraftable ? x - 1 : x, resultCraftable ? y - 1 : y);
-				drawItemStack(guiGraphics, mc, x, y, result, null);
+				slot.render(GuiGraphicsExtractor, resultCraftable ? x - 1 : x, resultCraftable ? y - 1 : y);
+				drawItemStack(GuiGraphicsExtractor, mc, x, y, result, null);
 				x += 21;
 			}
 		}
@@ -403,22 +404,22 @@ public class BlueprintOverlayRenderer {
 						cycle++;
 						continue;
 					}
-					if ((mc.gui.getGuiTicks() / 40) % cycle != i)
+					if ((AnimationTickHolder.getTicks() / 40) % cycle != i)
 						continue;
-					guiGraphics.renderComponentTooltip(mc.gui.getFont(), tooltipLines, mc.getWindow()
+					GuiGraphicsExtractor.setComponentTooltipForNextFrame(mc.font, tooltipLines, mc.getWindow()
 							.getGuiScaledWidth(),
 						mc.getWindow()
 							.getGuiScaledHeight());
 				}
 		}
 
-		RenderSystem.disableBlend();
+		LegacyRenderSystemBridge.disableBlend();
 	}
 
-	public static void drawItemStack(GuiGraphics graphics, Minecraft mc, int x, int y, ItemStack itemStack,
+	public static void drawItemStack(GuiGraphicsExtractor graphics, Minecraft mc, int x, int y, ItemStack itemStack,
 									 String count) {
 		if (itemStack.getItem() instanceof FilterItem) {
-			int step = AnimationTickHolder.getTicks(mc.level) / 10;
+			int step = AnimationTickHolder.getTicks() / 10;
 			ItemStack[] itemsMatchingFilter = getItemsMatchingFilter(itemStack);
 			if (itemsMatchingFilter.length > 0)
 				itemStack = itemsMatchingFilter[step % itemsMatchingFilter.length];
@@ -427,7 +428,7 @@ public class BlueprintOverlayRenderer {
 		GuiGameElement.of(itemStack)
 			.at(x + 3, y + 3)
 			.render(graphics);
-		graphics.renderItemDecorations(mc.font, itemStack, x + 3, y + 3, count);
+		graphics.itemDecorations(mc.font, itemStack, x + 3, y + 3, count);
 	}
 
 	private static ItemStack[] getItemsMatchingFilter(ItemStack filter) {
@@ -438,6 +439,14 @@ public class BlueprintOverlayRenderer {
 
 			return new ItemStack[0];
 		});
+	}
+
+	private static Optional<RecipeManager> getRecipeManager(Minecraft mc) {
+		if (mc.level.recipeAccess() instanceof RecipeManager recipeManager)
+			return Optional.of(recipeManager);
+		if (mc.getSingleplayerServer() != null)
+			return Optional.of(mc.getSingleplayerServer().getRecipeManager());
+		return Optional.empty();
 	}
 
 }

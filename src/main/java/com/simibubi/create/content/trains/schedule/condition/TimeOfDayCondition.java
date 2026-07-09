@@ -12,19 +12,19 @@ import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class TimeOfDayCondition extends ScheduleWaitCondition {
 
@@ -38,7 +38,7 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 		int maxTickDiff = 40;
 		int targetHour = intData("Hour");
 		int targetMinute = intData("Minute");
-		int dayTime = (int) (level.getDayTime() % getRotation());
+		int dayTime = (int) (level.getOverworldClockTime() % getRotation());
 		int targetTicks =
 			(int) ((((targetHour + 18) % 24) * 1000 + Math.ceil(targetMinute / 60f * 1000)) % getRotation());
 		int diff = dayTime - targetTicks;
@@ -93,23 +93,21 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	public ResourceLocation getId() {
+	public Identifier getId() {
 		return Create.asResource("time_of_day");
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public boolean renderSpecialIcon(GuiGraphics graphics, int x, int y) {
+	public boolean renderSpecialIcon(GuiGraphicsExtractor graphics, int x, int y) {
 		int displayHr = (intData("Hour") + 12) % 24;
 		float progress = (displayHr * 60f + intData("Minute")) / (24 * 60);
-		ResourceLocation location =
-			ResourceLocation.withDefaultNamespace("textures/item/clock_" + twoDigits(Mth.clamp((int) (progress * 64), 0, 63)) + ".png");
-		graphics.blit(location, x, y, 0, 0, 0, 16, 16, 16, 16);
+		Identifier location =
+			Identifier.withDefaultNamespace("textures/item/clock_" + twoDigits(Mth.clamp((int) (progress * 64), 0, 63)) + ".png");
+		graphics.blit(RenderPipelines.GUI_TEXTURED, location, x, y, 0, 0, 16, 16, 16, 16);
 		return true;
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		MutableObject<ScrollInput> minuteInput = new MutableObject<>();
 		MutableObject<ScrollInput> hourInput = new MutableObject<>();
@@ -170,7 +168,7 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
 		int targetHour = intData("Hour");
 		int targetMinute = intData("Minute");
-		int dayTime = (int) (level.getDayTime() % getRotation());
+		int dayTime = (int) (level.getOverworldClockTime() % getRotation());
 		int targetTicks =
 			(int) ((((targetHour + 18) % 24) * 1000 + Math.ceil(targetMinute / 60f * 1000)) % getRotation());
 		int diff = targetTicks - dayTime;
@@ -178,7 +176,7 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 		if (diff < 0)
 			diff += getRotation();
 
-		int departureTime = (int) (level.getDayTime() + diff) % 24000;
+		int departureTime = (int) (level.getOverworldClockTime() + diff) % 24000;
 		int departingHour = (departureTime / 1000 + 6) % 24;
 		int departingMinute = (departureTime % 1000) * 60 / 1000;
 

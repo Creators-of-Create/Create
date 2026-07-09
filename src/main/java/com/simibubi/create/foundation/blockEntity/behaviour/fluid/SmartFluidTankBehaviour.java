@@ -10,9 +10,9 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.api.nbt.NBTHelper;
+import net.createmod.catnip.api.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat.Chaser;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -88,7 +88,7 @@ public class SmartFluidTankBehaviour extends BlockEntityBehaviour {
 	@Override
 	public void initialize() {
 		super.initialize();
-		if (getWorld().isClientSide)
+		if (getWorld().isClientSide())
 			return;
 		forEach(ts -> {
 			ts.fluidLevel.forceNextSync();
@@ -181,7 +181,7 @@ public class SmartFluidTankBehaviour extends BlockEntityBehaviour {
 	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(nbt, registries, clientPacket);
 		MutableInt index = new MutableInt(0);
-		NBTHelper.iterateCompoundList(nbt.getList(getType().getName() + "Tanks", Tag.TAG_COMPOUND), c -> {
+		NBTHelper.iterateCompoundList(nbt.getListOrEmpty(getType().getName() + "Tanks"), c -> {
 			if (index.intValue() >= tanks.length)
 				return;
 			tanks[index.intValue()].readNBT(c, registries, clientPacket);
@@ -242,7 +242,7 @@ public class SmartFluidTankBehaviour extends BlockEntityBehaviour {
 			if (!blockEntity.hasLevel())
 				return;
 			fluidLevel.chase(tank.getFluidAmount() / (float) tank.getCapacity(), .25, Chaser.EXP);
-			if (!getWorld().isClientSide)
+			if (!getWorld().isClientSide())
 				sendDataLazily();
 			if (blockEntity.isVirtual() && !tank.getFluid()
 				.isEmpty())
@@ -263,14 +263,14 @@ public class SmartFluidTankBehaviour extends BlockEntityBehaviour {
 
 		public CompoundTag writeNBT(HolderLookup.Provider registries) {
 			CompoundTag compound = new CompoundTag();
-			compound.put("TankContent", tank.writeToNBT(registries, new CompoundTag()));
+			compound.put("TankContent", com.simibubi.create.foundation.utility.LegacyFluidNbtBridge.serializeTank(tank, registries));
 			compound.put("Level", fluidLevel.writeNBT());
 			return compound;
 		}
 
 		public void readNBT(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-			tank.readFromNBT(registries, compound.getCompound("TankContent"));
-			fluidLevel.readNBT(compound.getCompound("Level"), clientPacket);
+			com.simibubi.create.foundation.utility.LegacyFluidNbtBridge.deserializeTank(tank, registries, compound.getCompoundOrEmpty("TankContent"));
+			fluidLevel.readNBT(compound.getCompoundOrEmpty("Level"), clientPacket);
 			if (!tank.getFluid()
 				.isEmpty())
 				renderedFluid = tank.getFluid();

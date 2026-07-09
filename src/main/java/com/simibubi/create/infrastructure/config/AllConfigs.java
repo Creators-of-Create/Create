@@ -9,7 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.api.stress.BlockStressValues;
 
-import net.createmod.catnip.config.ConfigBase;
+import net.createmod.catnip.api.config.ConfigBase;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;

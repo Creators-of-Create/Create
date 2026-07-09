@@ -7,7 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.processing.basin.BasinBlock;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 
-import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.api.math.VecHelper;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,7 @@ public class BasinFluidParticle extends FluidStackParticle {
 		xd = 0;
 		yd = 0;
 		zd = 0;
-		yOffset = world.random.nextFloat() * 1 / 32f;
+		yOffset = world.getRandom().nextFloat() * 1 / 32f;
 		y += yOffset;
 		quadSize = 0;
 		lifetime = 60;
@@ -81,17 +81,6 @@ public class BasinFluidParticle extends FluidStackParticle {
 			x = currentPos.x;
 			z = currentPos.z;
 		}
-	}
-
-	@Override
-	public void render(VertexConsumer vb, Camera info, float pt) {
-		Quaternionf rotation = info.rotation();
-		Quaternionf prevRotation = new Quaternionf(rotation);
-		rotation.set(-1, 0, 0, 1);
-		rotation.normalize();
-		super.render(vb, info, pt);
-		rotation.set(0, 0, 0, 1);
-		rotation.mul(prevRotation);
 	}
 
 	@Override

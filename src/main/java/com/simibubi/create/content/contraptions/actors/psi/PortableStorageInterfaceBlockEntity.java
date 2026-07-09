@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import net.createmod.catnip.animation.LerpedFloat;
+import net.createmod.catnip.api.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -77,7 +77,7 @@ public abstract class PortableStorageInterfaceBlockEntity extends SmartBlockEnti
 
 		if (keepAlive > 0) {
 			keepAlive--;
-			if (keepAlive == 0 && !level.isClientSide) {
+			if (keepAlive == 0 && !level.isClientSide()) {
 				stopTransferring();
 				transferTimer = ANIMATION - 1;
 				sendData();
@@ -88,7 +88,7 @@ public abstract class PortableStorageInterfaceBlockEntity extends SmartBlockEnti
 		transferTimer = Math.min(transferTimer, ANIMATION * 2 + timeUnit);
 
 		boolean timerCanDecrement = transferTimer > ANIMATION || transferTimer > 0 && keepAlive == 0
-			&& (isVirtual() || !level.isClientSide || transferTimer != ANIMATION);
+			&& (isVirtual() || !level.isClientSide() || transferTimer != ANIMATION);
 
 		if (timerCanDecrement && (!isVirtual() || transferTimer != ANIMATION)) {
 			transferTimer--;
@@ -99,7 +99,7 @@ public abstract class PortableStorageInterfaceBlockEntity extends SmartBlockEnti
 		}
 
 		boolean isConnected = isConnected();
-		if (wasConnected != isConnected && !level.isClientSide)
+		if (wasConnected != isConnected && !level.isClientSide())
 			setChanged();
 
 		float progress = 0;
@@ -121,10 +121,10 @@ public abstract class PortableStorageInterfaceBlockEntity extends SmartBlockEnti
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
-		transferTimer = compound.getInt("Timer");
-		distance = compound.getFloat("Distance");
+		transferTimer = compound.getIntOr("Timer", 0);
+		distance = compound.getFloatOr("Distance", 0);
 		boolean poweredPreviously = powered;
-		powered = compound.getBoolean("Powered");
+		powered = compound.getBooleanOr("Powered", false);
 		if (clientPacket && powered != poweredPreviously && !powered)
 			notifyContraptions();
 	}

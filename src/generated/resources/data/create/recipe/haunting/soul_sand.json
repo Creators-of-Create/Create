@@ -1,9 +1,7 @@
 {
   "type": "create:haunting",
   "ingredients": [
-    {
-      "tag": "minecraft:sand"
-    }
+    "#minecraft:sand"
   ],
   "results": [
     {

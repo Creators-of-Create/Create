@@ -12,7 +12,6 @@
       "translate": "advancement.create.water_wheel.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:water_wheel"
     },
     "title": {

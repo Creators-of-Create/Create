@@ -1,9 +1,7 @@
 {
   "type": "create:haunting",
   "ingredients": [
-    {
-      "tag": "c:gems/lapis"
-    }
+    "#c:gems/lapis"
   ],
   "results": [
     {

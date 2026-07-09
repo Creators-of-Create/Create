@@ -15,7 +15,7 @@ import net.neoforged.neoforge.server.command.EnumArgument;
 public class CameraAngleCommand {
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("angle")
-			.requires(cs -> cs.hasPermission(2))
+			.requires(AllCommands.hasPermission(2))
 			.then(Commands.argument("players", EntityArgument.players())
 				.then(Commands.literal("yaw")
 					.then(Commands.argument("degrees", FloatArgumentType.floatArg())

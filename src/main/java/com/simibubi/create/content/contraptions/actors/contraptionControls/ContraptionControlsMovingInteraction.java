@@ -18,11 +18,12 @@ import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.entity.Train;
 
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
@@ -101,7 +102,9 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 
 		if (!(contraptionEntity instanceof CarriageContraptionEntity cce))
 			return true;
-		if (!filter.is(ItemTags.DOORS))
+		if (!(filter.getItem() instanceof BlockItem blockItem) || !blockItem.getBlock()
+			.defaultBlockState()
+			.is(BlockTags.DOORS))
 			return true;
 
 		// Special case: Doors are toggled on all carriages of a train
@@ -139,7 +142,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 		if (efs.currentTargetY == contraption.clientYTarget)
 			return true;
 
-		CatnipServices.NETWORK.sendToServer(new ElevatorTargetFloorPacket(contraptionEntity, efs.currentTargetY));
+		net.createmod.catnip.api.client.network.ClientNetworkHelper.INSTANCE.sendToServer(new ElevatorTargetFloorPacket(contraptionEntity, efs.currentTargetY));
 		if (contraption.getBlockEntityClientSide(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
 			cbe.pressButton();
 		return true;

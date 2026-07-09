@@ -12,7 +12,6 @@
       "translate": "advancement.create.train_whistle.desc"
     },
     "icon": {
-      "count": 1,
       "id": "create:steam_whistle"
     },
     "title": {

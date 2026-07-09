@@ -1,7 +1,7 @@
 package com.simibubi.create.content.processing.sequenced;
 
 import com.simibubi.create.AllDataComponents;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 

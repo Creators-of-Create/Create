@@ -8,6 +8,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.api.data.recipe.ProcessingRecipeGen;
+import com.tterrag.registrate.util.DataIngredient;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
@@ -31,7 +32,7 @@ import net.neoforged.neoforge.fluids.FluidType;
  *
  * @see com.simibubi.create.infrastructure.data.CreateDatagen
  */
-public final class CreateRecipeProvider extends RecipeProvider {
+public final class CreateRecipeProvider extends RecipeProvider.Runner {
 
 	static final List<ProcessingRecipeGen<?, ?, ?>> GENERATORS = new ArrayList<>();
 	static final int BUCKET = FluidType.BUCKET_VOLUME;
@@ -42,7 +43,16 @@ public final class CreateRecipeProvider extends RecipeProvider {
 	}
 
 	@Override
-	protected void buildRecipes(RecipeOutput recipeOutput) {
+	protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
+		return new RecipeProvider(registries, output) {
+			@Override
+			protected void buildRecipes() {}
+		};
+	}
+
+	@Override
+	public String getName() {
+		return "Create's Recipes";
 	}
 
 	public static void registerAllProcessing(DataGenerator gen, PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
@@ -227,7 +237,12 @@ public final class CreateRecipeProvider extends RecipeProvider {
 		}
 
 		static Ingredient netherite() {
-			return Ingredient.of(Tags.Items.INGOTS_NETHERITE);
+			return tag(Tags.Items.INGOTS_NETHERITE);
+		}
+
+		static Ingredient tag(TagKey<Item> tag) {
+			return DataIngredient.tag(tag)
+				.toVanilla();
 		}
 
 	}

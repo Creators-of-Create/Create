@@ -1,9 +1,7 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "minecraft:nether_wart_block"
-    }
+    "minecraft:nether_wart_block"
   ],
   "processing_time": 150,
   "results": [

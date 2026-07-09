@@ -9,6 +9,7 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -36,13 +37,10 @@ public abstract class AbstractSimpleShaftBlock extends AbstractShaftBlock implem
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		boolean wasWaterLogged = state.hasProperty(WATERLOGGED) &&
-				newState.hasProperty(WATERLOGGED) &&
-				(state.getValue(WATERLOGGED) != newState.getValue(WATERLOGGED));
-		if (state != newState && !isMoving && !wasWaterLogged)
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
+		if (!isMoving)
 			removeBracket(world, pos, true).ifPresent(stack -> Block.popResource(world, pos, stack));
-		super.onRemove(state, world, pos, newState, isMoving);
+		super.affectNeighborsAfterRemoval(state, world, pos, isMoving);
 	}
 
 	@Override

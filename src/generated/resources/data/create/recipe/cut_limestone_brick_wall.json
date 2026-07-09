@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "X": {
-      "item": "create:cut_limestone_bricks"
-    }
+    "X": "create:cut_limestone_bricks"
   },
   "pattern": [
     "XXX",

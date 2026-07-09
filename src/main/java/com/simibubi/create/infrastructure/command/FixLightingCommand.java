@@ -8,17 +8,16 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
-import net.neoforged.neoforge.common.NeoForgeConfig;
-
 public class FixLightingCommand {
 	static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("fixLighting")
-			.requires(cs -> cs.hasPermission(0))
+			.requires(AllCommands.hasPermission(0))
 			.executes(ctx -> {
-				NeoForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.set(true);
-				Minecraft.getInstance().levelRenderer.allChanged();
+				Minecraft mc = Minecraft.getInstance();
+				if (mc.level != null)
+					mc.levelRenderer.invalidateCompiledGeometry(mc.level, mc.options, mc.gameRenderer.mainCamera(), mc.getBlockColors());
 
-				ctx.getSource().sendSuccess(() -> Component.literal("NeoForge's experimental block rendering pipeline is now enabled."), true);
+				ctx.getSource().sendSuccess(() -> Component.literal("Lighting renderer refreshed."), true);
 				return Command.SINGLE_SUCCESS;
 			});
 	}

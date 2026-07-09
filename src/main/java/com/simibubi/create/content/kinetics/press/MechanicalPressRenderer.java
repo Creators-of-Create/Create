@@ -7,10 +7,10 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.MultiBufferSource;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -20,7 +20,6 @@ public class MechanicalPressRenderer extends KineticBlockEntityRenderer<Mechanic
 		super(context);
 	}
 
-	@Override
 	public boolean shouldRenderOffScreen(MechanicalPressBlockEntity be) {
 		return true;
 	}
@@ -42,7 +41,7 @@ public class MechanicalPressRenderer extends KineticBlockEntityRenderer<Mechanic
 			blockState.getValue(HORIZONTAL_FACING));
 		headRender.translate(0, -renderedHeadOffset, 0)
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+			.renderInto(ms, buffer.getBuffer(com.simibubi.create.foundation.render.LegacyRenderTypes.solid()));
 	}
 
 	@Override
