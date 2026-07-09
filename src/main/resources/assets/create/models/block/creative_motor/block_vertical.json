@@ -96,7 +96,7 @@
 				"south": {"uv": [10, 6, 16, 10], "texture": "#6"},
 				"west": {"uv": [10, 6, 16, 10], "texture": "#6"},
 				"up": {"uv": [10, 0, 16, 6], "texture": "#6"},
-				"down": {"uv": [14, 4, 20, 10], "rotation": 180, "texture": "#6"}
+				"down": {"uv": [10, 4, 16, 10], "rotation": 180, "texture": "#6"}
 			}
 		},
 		{

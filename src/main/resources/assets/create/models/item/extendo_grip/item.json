@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"3": "create:block/mechanical_press_pole",
+		"3": "create:item/mechanical_press_pole",
 		"4": "create:item/extendo_grip",
 		"particle": "#4"
 	},
@@ -27,8 +27,8 @@
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 5.5, 12]},
 			"faces": {
 				"north": {"uv": [14, 6, 15, 12], "texture": "#4"},
-				"east": {"uv": [14, 6, 17, 12], "texture": "#4"},
-				"west": {"uv": [14, 6, 17, 12], "texture": "#4"},
+				"east": {"uv": [13, 6, 16, 12], "texture": "#4"},
+				"west": {"uv": [13, 6, 16, 12], "texture": "#4"},
 				"down": {"uv": [14, 6, 15, 9], "texture": "#4"}
 			}
 		},
@@ -37,7 +37,7 @@
 			"to": [10, 11, 13],
 			"rotation": {"angle": 0, "axis": "y", "origin": [9, 8.5, 9.5]},
 			"faces": {
-				"north": {"uv": [14, 0, 18, 3], "rotation": 180, "texture": "#4"},
+				"north": {"uv": [12, 0, 16, 3], "rotation": 180, "texture": "#4"},
 				"east": {"uv": [10, 3, 16, 6], "texture": "#4"},
 				"south": {"uv": [12, 0, 16, 3], "rotation": 180, "texture": "#4"},
 				"west": {"uv": [10, 3, 16, 6], "rotation": 180, "texture": "#4"},
