@@ -84,7 +84,7 @@ public class TrackNodeLocation extends Vec3i {
 	}
 
 	public static TrackNodeLocation read(CompoundTag tag, DimensionPalette dimensions) {
-		TrackNodeLocation location = fromPackedPos(tag.contains("Pos") ? NBTHelper.readBlockPos(tag, "Pos")
+		TrackNodeLocation location = fromPackedPos(tag.contains("Pos") ? com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(tag, "Pos")
 			: new BlockPos(tag.getIntOr("X", 0), tag.getIntOr("Y", 0), tag.getIntOr("Z", 0)));
 		if (dimensions != null)
 			location.dimension = dimensions.decode(tag.getIntOr("D", -1));

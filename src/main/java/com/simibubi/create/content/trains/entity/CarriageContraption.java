@@ -218,7 +218,7 @@ public class CarriageContraption extends Contraption {
 				nbt.getBooleanOr("BackBlazeConductor", false));
 		conductorSeats.clear();
 		NBTHelper.iterateCompoundList(nbt.getListOrEmpty("ConductorSeats"),
-			c -> conductorSeats.put(NBTHelper.readBlockPos(c, "Pos"),
+			c -> conductorSeats.put(com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(c, "Pos"),
 				Couple.create(c.getBooleanOr("Forward", false), c.getBooleanOr("Backward", false))));
 		soundQueue.deserialize(nbt);
 		super.readNBT(world, nbt, spawnData);

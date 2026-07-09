@@ -207,7 +207,7 @@ public abstract class ProcessingRecipe<I extends RecipeInput, P extends Processi
 
 	@Override
 	public PlacementInfo placementInfo() {
-		return PlacementInfo.NOT_PLACEABLE;
+		return ingredients.isEmpty() ? PlacementInfo.NOT_PLACEABLE : PlacementInfo.create(ingredients);
 	}
 
 	@Override

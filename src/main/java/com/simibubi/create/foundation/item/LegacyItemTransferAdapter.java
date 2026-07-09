@@ -61,7 +61,7 @@ public class LegacyItemTransferAdapter extends SnapshotJournal<List<ItemStack>> 
 		if (inserted <= 0)
 			return 0;
 		updateSnapshots(transaction);
-		return amount - handler.insertItem(index, stack.copyWithCount(inserted), false).getCount();
+		return inserted - handler.insertItem(index, stack.copyWithCount(inserted), false).getCount();
 	}
 
 	@Override

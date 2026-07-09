@@ -50,6 +50,8 @@ public class HosePulleyBlockEntity extends KineticBlockEntity {
 				Capabilities.Fluid.BLOCK,
 				AllBlockEntityTypes.HOSE_PULLEY.get(),
 				(be, context) -> {
+					if (be.handler == null)
+						return null;
 					if (context == null || HosePulleyBlock.hasPipeTowards(be.level, be.worldPosition, be.getBlockState(), context))
 						return new com.simibubi.create.foundation.fluid.LegacyFluidTransferAdapter(be.handler);
 					return null;
@@ -82,6 +84,10 @@ public class HosePulleyBlockEntity extends KineticBlockEntity {
 	}
 
 	protected void onTankContentsChanged(FluidStack contents) {}
+
+	public HosePulleyFluidHandler getFluidHandler() {
+		return handler;
+	}
 
 	@Override
 	public void onSpeedChanged(float previousSpeed) {

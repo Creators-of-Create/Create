@@ -25,6 +25,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -82,8 +83,11 @@ public class ItemHelper {
 	}
 
 	public static <T extends IBE<? extends BlockEntity>> int calcRedstoneFromBlockEntity(T ibe, Level level, BlockPos pos) {
-		// TODO 26.2: migrate inventory redstone checks to NeoForge's ResourceHandler<ItemResource> capability.
-		return 0;
+		BlockEntity blockEntity = ibe.getBlockEntity(level, pos);
+		if (blockEntity == null)
+			return 0;
+		IItemHandler inv = LegacyItemHandlerAdapter.of(level.getCapability(Capabilities.Item.BLOCK, pos, null, blockEntity, null));
+		return calcRedstoneFromInventory(inv);
 	}
 
 	public static int calcRedstoneFromInventory(@Nullable IItemHandler inv) {

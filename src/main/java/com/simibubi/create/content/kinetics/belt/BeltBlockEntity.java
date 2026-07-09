@@ -25,9 +25,11 @@ import com.simibubi.create.content.kinetics.belt.transport.BeltMovementHandler.T
 import com.simibubi.create.content.kinetics.belt.transport.BeltTunnelInteractionHandler;
 import com.simibubi.create.content.kinetics.belt.transport.ItemHandlerBeltSegment;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
+import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryTrackerBehaviour;
+import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
@@ -39,6 +41,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -84,7 +87,16 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 	}
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-		// TODO 26.2: port belt automation from IItemHandler to NeoForge's ResourceHandler<ItemResource> item capability.
+		event.registerBlockEntity(
+			Capabilities.Item.BLOCK,
+			AllBlockEntityTypes.BELT.get(),
+			(be, context) -> {
+				if (be.level == null || be.level.isClientSide())
+					return null;
+				be.initializeItemHandler();
+				return be.itemHandler == null ? null : new com.simibubi.create.foundation.item.LegacyItemTransferAdapter(be.itemHandler);
+			}
+		);
 	}
 
 	@Override
@@ -100,6 +112,8 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 	@Override
 	public void tick() {
 		// Init belt
+		if (!level.isClientSide())
+			validateBeltController();
 		if (beltLength == 0)
 			BeltBlock.initBelt(level, worldPosition);
 
@@ -109,6 +123,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 			return;
 
 		initializeItemHandler();
+		collectDroppedItems();
 
 		// Move Items
 		if (!isController())
@@ -173,6 +188,37 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 		invalidateCapabilities();
 	}
 
+	private void collectDroppedItems() {
+		if (level.isClientSide() || itemHandler == null || getSpeed() == 0)
+			return;
+		BlockState state = getBlockState();
+		if (!BeltBlock.canTransportObjects(state))
+			return;
+		if (BeltTunnelInteractionHandler.getTunnelOnPosition(level, worldPosition) != null)
+			return;
+
+		AABB pickupArea = new AABB(worldPosition).inflate(.125f, .5f, .125f)
+			.move(0, .5f, 0);
+		for (Entity entity : level.getEntitiesOfClass(Entity.class, pickupArea,
+			entity -> entity.isAlive() && (entity instanceof ItemEntity || entity instanceof PackageEntity))) {
+			if (entity.getDeltaMovement().y > 0)
+				continue;
+			ItemStack asItem = ItemHelper.fromItemEntity(entity);
+			if (asItem.isEmpty())
+				continue;
+			Vec3 targetLocation = Vec3.atCenterOf(worldPosition)
+				.add(0, 5 / 16f, 0);
+			if (!PackageEntity.centerPackage(entity, targetLocation))
+				continue;
+
+			ItemStack remainder = itemHandler.insertItem(0, asItem, false);
+			if (remainder.isEmpty())
+				entity.discard();
+			else if (entity instanceof ItemEntity itemEntity && remainder.getCount() != itemEntity.getItem().getCount())
+				itemEntity.setItem(remainder);
+		}
+	}
+
 	@Override
 	public void clearContent() {
 		if (inventory != null) {
@@ -222,10 +268,12 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 
 		if (!wasMoved) {
 			if (!isController())
-				controller = NBTHelper.readBlockPos(compound, "Controller");
+				controller = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "Controller");
 			trackerUpdateTag = compound;
 			index = compound.getIntOr("Index", 0);
 			beltLength = compound.getIntOr("Length", 0);
+			if (!isController() && !isSavedControllerNearCurrentBlock(controller, beltLength))
+				clearBeltTopology();
 		}
 
 		if (isController())
@@ -290,6 +338,35 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 
 	public void setController(BlockPos controller) {
 		this.controller = controller;
+		itemHandler = null;
+		invalidateCapabilities();
+	}
+
+	private void validateBeltController() {
+		if (controller == null || isController())
+			return;
+		if (isSavedControllerNearCurrentBlock(controller, beltLength) && level.isLoaded(controller)
+			&& AllBlocks.BELT.has(level.getBlockState(controller)))
+			return;
+		clearBeltTopology();
+	}
+
+	private void clearBeltTopology() {
+		controller = null;
+		inventory = null;
+		itemHandler = null;
+		index = 0;
+		beltLength = 0;
+		invalidateCapabilities();
+	}
+
+	private boolean isSavedControllerNearCurrentBlock(BlockPos savedController, int savedLength) {
+		if (savedController == null)
+			return true;
+		int maxReach = Math.max(1, savedLength) + 2;
+		return Math.abs(savedController.getX() - worldPosition.getX()) <= maxReach
+			&& Math.abs(savedController.getY() - worldPosition.getY()) <= maxReach
+			&& Math.abs(savedController.getZ() - worldPosition.getZ()) <= maxReach;
 	}
 
 	public BlockPos getController() {

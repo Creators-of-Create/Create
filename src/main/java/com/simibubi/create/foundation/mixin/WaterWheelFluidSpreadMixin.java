@@ -20,26 +20,43 @@ import net.minecraft.world.level.material.FluidState;
 
 @Mixin(FlowingFluid.class)
 public class WaterWheelFluidSpreadMixin {
+	@Inject(method = "canPassThroughWall", at = @At("HEAD"), cancellable = true)
+	private static void create$canPassThroughWallOnWaterWheel(Direction direction, BlockGetter level, BlockPos sourcePos,
+		BlockState sourceState, BlockPos targetPos, BlockState targetState, CallbackInfoReturnable<Boolean> cir) {
+
+		create$blockWheelFlow(direction, level, sourcePos, targetPos, cir);
+	}
+
 	@Inject(method = "canPassThrough(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)Z", at = @At("HEAD"), cancellable = true)
 	protected void create$canPassThroughOnWaterWheel(BlockGetter pLevel, Fluid pFluid, BlockPos pFromPos, BlockState p_75967_,
 		Direction pDirection, BlockPos p_75969_, BlockState p_75970_, FluidState p_75971_,
 		CallbackInfoReturnable<Boolean> cir) {
 
+		create$blockWheelFlow(pDirection, pLevel, pFromPos, p_75969_, cir);
+	}
+
+	private static void create$blockWheelFlow(Direction pDirection, BlockGetter pLevel, BlockPos pFromPos,
+		BlockPos p_75969_, CallbackInfoReturnable<Boolean> cir) {
+
 		if (pDirection.getAxis() == Axis.Y)
 			return;
 
-		BlockPos belowPos = pFromPos.below();
-		BlockState belowState = pLevel.getBlockState(belowPos);
+		if (create$blocksHorizontalWheelFlow(pLevel, pFromPos.below(), pDirection)
+			|| create$blocksHorizontalWheelFlow(pLevel, p_75969_.below(), pDirection))
+			cir.setReturnValue(false);
+	}
+
+	private static boolean create$blocksHorizontalWheelFlow(BlockGetter level, BlockPos pos, Direction direction) {
+		BlockState belowState = level.getBlockState(pos);
 
 		if (AllBlocks.WATER_WHEEL_STRUCTURAL.has(belowState)) {
 			if (AllBlocks.WATER_WHEEL_STRUCTURAL.get()
-				.stillValid(pLevel, belowPos, belowState, false))
-				belowState = pLevel.getBlockState(WaterWheelStructuralBlock.getMaster(pLevel, belowPos, belowState));
-		} else if (!AllBlocks.WATER_WHEEL.has(belowState))
-			return;
+				.stillValid(level, pos, belowState, false))
+				belowState = level.getBlockState(WaterWheelStructuralBlock.getMaster(level, pos, belowState));
+		} else if (!AllBlocks.WATER_WHEEL.has(belowState) && !AllBlocks.LARGE_WATER_WHEEL.has(belowState))
+			return false;
 
-		if (belowState.getBlock() instanceof IRotate irotate
-			&& irotate.getRotationAxis(belowState) == pDirection.getAxis())
-			cir.setReturnValue(false);
+		return belowState.getBlock() instanceof IRotate irotate
+			&& irotate.getRotationAxis(belowState) == direction.getAxis();
 	}
 }

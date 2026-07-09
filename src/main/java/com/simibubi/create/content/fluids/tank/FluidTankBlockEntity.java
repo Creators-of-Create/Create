@@ -421,13 +421,20 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 		updateConnectivity = compound.contains("Uninitialized");
 		luminosity = compound.getIntOr("Luminosity", 0);
 
+		BlockPos savedLastKnownPos = null;
 		lastKnownPos = null;
-		if (compound.contains("LastKnownPos"))
-			lastKnownPos = NBTHelper.readBlockPos(compound, "LastKnownPos");
+		if (compound.contains("LastKnownPos")) {
+			savedLastKnownPos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "LastKnownPos");
+			lastKnownPos = savedLastKnownPos;
+		}
+		if (!isSavedTankPositionNearCurrentBlock(lastKnownPos))
+			lastKnownPos = worldPosition;
 
 		controller = null;
 		if (compound.contains("Controller"))
-			controller = NBTHelper.readBlockPos(compound, "Controller");
+			controller = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "Controller");
+		if (!isSavedTankPositionNearCurrentBlock(controller))
+			controller = migrateSavedTankController(savedLastKnownPos, controller);
 
 		if (isController()) {
 			window = compound.getBooleanOr("Window", false);
@@ -522,6 +529,33 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 
 	public FluidTank getTankInventory() {
 		return tankInventory;
+	}
+
+	private boolean isSavedTankPositionNearCurrentBlock(@Nullable BlockPos savedPos) {
+		if (savedPos == null)
+			return true;
+		int maxReach = Math.max(getMaxHeight(), MAX_SIZE) + 2;
+		return abs(savedPos.getX() - worldPosition.getX()) <= maxReach
+			&& abs(savedPos.getY() - worldPosition.getY()) <= maxReach
+			&& abs(savedPos.getZ() - worldPosition.getZ()) <= maxReach;
+	}
+
+	@Nullable
+	private BlockPos migrateSavedTankController(@Nullable BlockPos savedLastKnownPos, @Nullable BlockPos savedController) {
+		if (savedLastKnownPos == null || savedController == null) {
+			updateConnectivity = true;
+			return null;
+		}
+
+		BlockPos migratedController = worldPosition.offset(
+			savedController.getX() - savedLastKnownPos.getX(),
+			savedController.getY() - savedLastKnownPos.getY(),
+			savedController.getZ() - savedLastKnownPos.getZ());
+		if (isSavedTankPositionNearCurrentBlock(migratedController))
+			return migratedController;
+
+		updateConnectivity = true;
+		return null;
 	}
 
 	public int getTotalTankSize() {

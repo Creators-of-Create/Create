@@ -101,7 +101,7 @@ public class ArrivalSoundQueue {
 		CompoundTag tag = tagIn.getCompoundOrEmpty("SoundQueue");
 		offset = tag.getIntOr("Offset", 0);
 		NBTHelper.iterateCompoundList(tag.getListOrEmpty("Sources"),
-			c -> add(c.getIntOr("Tick", 0), NBTHelper.readBlockPos(c, "Pos")));
+			c -> add(c.getIntOr("Tick", 0), com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(c, "Pos")));
 	}
 
 	public void add(int offset, BlockPos localPos) {

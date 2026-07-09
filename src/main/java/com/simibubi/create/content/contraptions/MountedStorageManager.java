@@ -256,7 +256,7 @@ public class MountedStorageManager {
 
 		try {
 			NBTHelper.iterateCompoundList(nbt.getListOrEmpty("items"), tag -> {
-				BlockPos pos = NBTHelper.readBlockPos(tag, "pos");
+				BlockPos pos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(tag, "pos");
 				CompoundTag data = tag.getCompoundOrEmpty("storage");
 				// TODO - Use CatnipCodecUtils
 				MountedItemStorage.CODEC.decode(registryOps, data)
@@ -266,7 +266,7 @@ public class MountedStorageManager {
 			});
 
 			NBTHelper.iterateCompoundList(nbt.getListOrEmpty("fluids"), tag -> {
-				BlockPos pos = NBTHelper.readBlockPos(tag, "pos");
+				BlockPos pos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(tag, "pos");
 				CompoundTag data = tag.getCompoundOrEmpty("storage");
 				// TODO - Use CatnipCodecUtils
 				MountedFluidStorage.CODEC.decode(registryOps, data)
@@ -441,7 +441,7 @@ public class MountedStorageManager {
 
 	private void readLegacy(HolderLookup.Provider registries, CompoundTag nbt) {
 		NBTHelper.iterateCompoundList(nbt.getListOrEmpty("Storage"), tag -> {
-			BlockPos pos = NBTHelper.readBlockPos(tag, "Pos");
+			BlockPos pos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(tag, "Pos");
 			CompoundTag data = tag.getCompoundOrEmpty("Data");
 
 			if (data.contains("Toolbox")) {
@@ -464,7 +464,7 @@ public class MountedStorageManager {
 		});
 
 		NBTHelper.iterateCompoundList(nbt.getListOrEmpty("FluidStorage"), tag -> {
-			BlockPos pos = NBTHelper.readBlockPos(tag, "Pos");
+			BlockPos pos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(tag, "Pos");
 			CompoundTag data = tag.getCompoundOrEmpty("Data");
 
 			if (data.contains("Bottomless")) {

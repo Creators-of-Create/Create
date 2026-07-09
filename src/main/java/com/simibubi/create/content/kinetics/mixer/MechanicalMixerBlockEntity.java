@@ -258,6 +258,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 					matchingRecipes.add(mixingRecipe);
 		}
 
+		sortMatchingRecipes(matchingRecipes, basinBlockEntity);
 		return matchingRecipes;
 	}
 

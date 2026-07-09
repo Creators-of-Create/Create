@@ -254,8 +254,11 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 		sequenceContext = SequenceContext.fromNBT(compound.getCompoundOrEmpty("Sequence"));
 
 		source = null;
-		if (compound.contains("Source"))
-			source = NBTHelper.readBlockPos(compound, "Source");
+		boolean invalidSavedSource = false;
+		if (compound.contains("Source")) {
+			source = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "Source");
+			invalidSavedSource = !isSavedSourceNearCurrentBlock(source);
+		}
 
 		if (compound.contains("Network")) {
 			CompoundTag networkTag = compound.getCompoundOrEmpty("Network");
@@ -266,6 +269,12 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 			lastStressApplied = networkTag.getFloatOr("AddedStress", 0);
 			lastCapacityProvided = networkTag.getFloatOr("AddedCapacity", 0);
 			overStressed = capacity < stress && StressImpact.isEnabled();
+		}
+
+		if (invalidSavedSource) {
+			clearKineticNetworkState();
+			sequenceContext = null;
+			updateSpeed = true;
 		}
 
 		super.read(compound, registries, clientPacket);
@@ -279,6 +288,12 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 
 	public float getGeneratedSpeed() {
 		return 0;
+	}
+
+	private boolean isSavedSourceNearCurrentBlock(BlockPos savedSource) {
+		return Math.abs(savedSource.getX() - worldPosition.getX()) <= 32
+			&& Math.abs(savedSource.getY() - worldPosition.getY()) <= 32
+			&& Math.abs(savedSource.getZ() - worldPosition.getZ()) <= 32;
 	}
 
 	public boolean isSource() {
@@ -484,6 +499,19 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	}
 
 	public void clearKineticInformation() {
+		clearKineticNetworkState();
+	}
+
+	public void resetKineticNetworkState() {
+		if (hasNetwork() && level != null && !level.isClientSide())
+			getOrCreateNetwork().remove(this);
+		clearKineticNetworkState();
+		updateSpeed = true;
+		networkDirty = false;
+		preventSpeedUpdate = 0;
+	}
+
+	private void clearKineticNetworkState() {
 		speed = 0;
 		source = null;
 		network = null;

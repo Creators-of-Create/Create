@@ -240,7 +240,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements TransformableB
 			boundLocation = Pair.of(
 				ResourceKey.create(Registries.DIMENSION,
 					Identifier.parse(tag.getStringOr("BoundDimension", "minecraft:overworld"))),
-				NBTHelper.readBlockPos(tag, "BoundLocation"));
+				com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(tag, "BoundLocation"));
 	}
 
 	@Override

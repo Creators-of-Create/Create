@@ -101,7 +101,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IB
 //			((ItemEntity) entityIn).setPickUpDelay(10);
 		CompoundTag data = entityIn.getPersistentData();
 		if (data.contains("BypassCrushingWheel")) {
-			if (pos.equals(NBTHelper.readBlockPos(data, "BypassCrushingWheel")))
+			if (pos.equals(com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(data, "BypassCrushingWheel")))
 				return;
 		}
 		if (be.isOccupied())
@@ -184,7 +184,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IB
 			return standardShape;
 
 		CompoundTag data = entity.getPersistentData();
-		if (pos.equals(NBTHelper.readBlockPos(data, "BypassCrushingWheel")))
+		if (pos.equals(com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(data, "BypassCrushingWheel")))
 			if (state.getValue(FACING) != Direction.UP) // Allow output items to land on top of the block rather
 				return Shapes.empty();					// than falling back through.
 

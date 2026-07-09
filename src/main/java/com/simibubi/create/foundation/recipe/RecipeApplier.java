@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.SingleItemRecipe;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 
 public class RecipeApplier {
@@ -53,15 +55,18 @@ public class RecipeApplier {
 
 					stacks.add(stack);
 				}
-				ItemStack remainder = stackIn.getItem().getCraftingRemainder().create();
+				var craftingRemainder = stackIn.getItem().getCraftingRemainder();
+				ItemStack remainder = craftingRemainder == null ? ItemStack.EMPTY : craftingRemainder.create();
 				if (returnProcessingRemainder && !remainder.isEmpty()) {
 					ItemHelper.addToList(remainder, stacks);
 				}
 
 			}
+		} else if (recipe instanceof SingleItemRecipe singleItemRecipe) {
+			ItemStack out = singleItemRecipe.assemble(new SingleRecipeInput(stackIn));
+			stacks = out.isEmpty() ? new ArrayList<>() : ItemHelper.multipliedOutput(stackIn, out);
 		} else {
-			ItemStack out = ItemStack.EMPTY;
-			stacks = ItemHelper.multipliedOutput(stackIn, out);
+			stacks = new ArrayList<>();
 		}
 
 		return stacks;

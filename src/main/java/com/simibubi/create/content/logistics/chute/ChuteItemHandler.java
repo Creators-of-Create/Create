@@ -5,9 +5,9 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
-public class ChuteItemHandler implements IItemHandler {
+public class ChuteItemHandler implements IItemHandlerModifiable {
 
 	private ChuteBlockEntity blockEntity;
 
@@ -52,6 +52,11 @@ public class ChuteItemHandler implements IItemHandler {
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
 		return true;
+	}
+
+	@Override
+	public void setStackInSlot(int slot, ItemStack stack) {
+		blockEntity.setItem(stack.copy());
 	}
 
 }

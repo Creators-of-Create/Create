@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.content.fluids.hosePulley.HosePulleyBlockEntity;
 import com.simibubi.create.content.fluids.hosePulley.HosePulleyFluidHandler;
 import com.simibubi.create.content.fluids.pipes.valve.FluidValveBlock;
 import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
@@ -64,14 +65,11 @@ public class TestFluids {
 					.forEach(pos -> helper.assertBlockPresent(Blocks.AIR, pos));
 			// check nothing left in pulley
 			BlockPos pulleyPos = new BlockPos(4, 7, 3);
-			IFluidHandler storage = helper.fluidStorageAt(pulleyPos);
-			if (storage instanceof HosePulleyFluidHandler hose) {
-				IFluidHandler internalTank = hose.getInternalTank();
-				if (!internalTank.drain(1, FluidAction.SIMULATE).isEmpty())
-					helper.fail("Pulley not empty");
-			} else {
-				helper.fail("Not a pulley");
-			}
+			HosePulleyBlockEntity pulley = helper.getBlockEntity(AllBlockEntityTypes.HOSE_PULLEY.get(), pulleyPos);
+			HosePulleyFluidHandler hose = pulley.getFluidHandler();
+			IFluidHandler internalTank = hose.getInternalTank();
+			if (!internalTank.drain(1, FluidAction.SIMULATE).isEmpty())
+				helper.fail("Pulley not empty");
 		});
 	}
 

@@ -63,7 +63,7 @@ public class LogisticsNetwork {
 		NBTHelper.iterateCompoundList(tag.getListOrEmpty("Links"), nbt -> {
 			network.totalLinks.add(GlobalPos.of(nbt.contains("Dim")
 				? ResourceKey.create(Registries.DIMENSION, NBTHelper.readIdentifier(nbt, "Dim"))
-				: Level.OVERWORLD, NBTHelper.readBlockPos(nbt, "Pos")));
+				: Level.OVERWORLD, com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(nbt, "Pos")));
 		});
 
 		network.owner = tag.contains("Owner") ? com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.loadUUID(tag.get("Owner")) : null;

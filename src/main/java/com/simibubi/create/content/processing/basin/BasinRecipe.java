@@ -84,10 +84,9 @@ public class BasinRecipe extends StandardProcessingRecipe<RecipeInput> {
 		List<ItemStack> recipeOutputItems = new ArrayList<>();
 		List<FluidStack> recipeOutputFluids = new ArrayList<>();
 
-		PlacementInfo placementInfo = recipe.placementInfo();
-		List<Ingredient> ingredients = placementInfo.isImpossibleToPlace()
-			? new LinkedList<>()
-			: new LinkedList<>(placementInfo.ingredients());
+		List<Ingredient> ingredients = recipe instanceof ProcessingRecipe<?, ?> processingRecipe
+			? new LinkedList<>(processingRecipe.getIngredients())
+			: ingredientsFromPlacement(recipe.placementInfo());
 		List<SizedFluidIngredient> fluidIngredients =
 			isBasinRecipe ? ((BasinRecipe) recipe).getFluidIngredients() : Collections.emptyList();
 
@@ -175,11 +174,19 @@ public class BasinRecipe extends StandardProcessingRecipe<RecipeInput> {
 				}
 			}
 
-			if (!basin.acceptOutputs(recipeOutputItems, recipeOutputFluids, simulate))
+			if (!basin.acceptOutputs(recipeOutputItems, recipeOutputFluids, simulate)
+				&& (!simulate || !recipeOutputItems.isEmpty()
+					|| !basin.canAcceptInternalFluidOutputsAfterExtraction(recipeOutputFluids, extractedFluidsFromTank)))
 				return false;
 		}
 
 		return true;
+	}
+
+	private static List<Ingredient> ingredientsFromPlacement(PlacementInfo placementInfo) {
+		return placementInfo.isImpossibleToPlace()
+			? new LinkedList<>()
+			: new LinkedList<>(placementInfo.ingredients());
 	}
 
 	public static RecipeHolder<BasinRecipe> convertShapeless(RecipeHolder<?> recipe) {

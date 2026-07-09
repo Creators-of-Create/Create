@@ -22,6 +22,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.StructureUtils;
 import com.simibubi.create.infrastructure.gametest.legacy.TestFunction;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.StructureBlockEntity;
 
 /**
@@ -107,7 +108,14 @@ public class CreateTestFunction {
 		return (helper) -> {
 			try {
 				method.invoke(null, helper);
-			} catch (IllegalAccessException | InvocationTargetException e) {
+			} catch (InvocationTargetException e) {
+				Throwable cause = e.getCause();
+				if (cause instanceof RuntimeException runtimeException)
+					throw runtimeException;
+				if (cause instanceof Error error)
+					throw error;
+				throw new RuntimeException(cause);
+			} catch (IllegalAccessException e) {
 				throw new RuntimeException(e);
 			}
 		};
@@ -115,11 +123,17 @@ public class CreateTestFunction {
 
 	public static Consumer<GameTestHelper> run(String fullName, @NotNull Consumer<GameTestHelper> helper) {
 		return consumer -> {
-			helper.andThen(gameTestHelper -> {
-				// give structure block test info
-				StructureBlockEntity be = gameTestHelper.getBlockEntity(BlockPos.ZERO, StructureBlockEntity.class);
-				be.getPersistentData().putString("CreateTestFunction", fullName);
-			}).accept(CreateGameTestHelper.of(consumer));
+			CreateGameTestHelper createHelper = CreateGameTestHelper.of(consumer);
+			writeTestMetadata(fullName, createHelper);
+			createHelper.rebuildLegacyKineticNetworks();
+			helper.accept(createHelper);
 		};
+	}
+
+	private static void writeTestMetadata(String fullName, CreateGameTestHelper createHelper) {
+		BlockEntity be = createHelper.getLevel()
+			.getBlockEntity(createHelper.minecraftAbsolutePos(BlockPos.ZERO));
+		if (be instanceof StructureBlockEntity structureBlock)
+			structureBlock.getPersistentData().putString("CreateTestFunction", fullName);
 	}
 }

@@ -125,7 +125,7 @@ public class ToolboxHandlerClient {
 
 		if (equipped) {
 			CompoundTag slotData = compound.getCompoundOrEmpty(slotKey);
-			BlockPos pos = NBTHelper.readBlockPos(slotData, "Pos");
+			BlockPos pos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(slotData, "Pos");
 			double max = ToolboxHandler.getMaxRange(player);
 			boolean canReachToolbox = ToolboxHandler.distance(player.position(), pos) < max * max;
 
@@ -179,7 +179,7 @@ public class ToolboxHandlerClient {
 			String key = String.valueOf(slot);
 			if (!compound.contains(key))
 				continue;
-			BlockPos pos = NBTHelper.readBlockPos(compound.getCompoundOrEmpty(key), "Pos");
+			BlockPos pos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound.getCompoundOrEmpty(key), "Pos");
 			double max = ToolboxHandler.getMaxRange(player);
 			boolean selected = player.getInventory().getSelectedSlot() == slot;
 			int offset = selected ? 1 : 0;

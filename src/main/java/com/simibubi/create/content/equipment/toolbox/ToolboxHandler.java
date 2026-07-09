@@ -61,7 +61,7 @@ public class ToolboxHandler {
 				continue;
 
 			CompoundTag data = compound.getCompoundOrEmpty(key);
-			BlockPos pos = NBTHelper.readBlockPos(data, "Pos");
+			BlockPos pos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(data, "Pos");
 			int slot = data.getIntOr("Slot", 0);
 
 			if (!world.isLoaded(pos))
@@ -122,7 +122,7 @@ public class ToolboxHandler {
 			return;
 
 		CompoundTag prevData = compound.getCompoundOrEmpty(key);
-		BlockPos prevPos = NBTHelper.readBlockPos(prevData, "Pos");
+		BlockPos prevPos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(prevData, "Pos");
 		int prevSlot = prevData.getIntOr("Slot", 0);
 
 		BlockEntity prevBlockEntity = world.getBlockEntity(prevPos);

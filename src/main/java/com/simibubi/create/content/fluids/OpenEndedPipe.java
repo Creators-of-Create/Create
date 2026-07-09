@@ -253,7 +253,7 @@ public class OpenEndedPipe extends FlowSource {
 				return 0;
 
 			FluidStack containedFluidStack = getFluid();
-			boolean hasBlockState = FluidHelper.hasBlockState(containedFluidStack.getFluid());
+			boolean hasBlockState = FluidHelper.hasBlockState(resource.getFluid());
 
 			if (!containedFluidStack.isEmpty() && !FluidStack.isSameFluidSameComponents(containedFluidStack, resource))
 				setFluid(FluidStack.EMPTY);
@@ -265,7 +265,7 @@ public class OpenEndedPipe extends FlowSource {
 				resource = FluidHelper.copyStackWithAmount(resource, 1);
 
 			int fill = super.fill(resource, action);
-			if (action.simulate())
+			if (action.simulate() || fill == 0)
 				return fill;
 
 			if (effectHandler != null && !resource.isEmpty()) {
@@ -276,7 +276,7 @@ public class OpenEndedPipe extends FlowSource {
 			}
 
 			if (getFluidAmount() == 1000 || !hasBlockState)
-				if (provideFluidToSpace(containedFluidStack, false))
+				if (provideFluidToSpace(getFluid().copy(), false))
 					setFluid(FluidStack.EMPTY);
 			return fill;
 		}

@@ -99,7 +99,7 @@ public class PoweredShaftBlockEntity extends GeneratingKineticBlockEntity {
 		engineEfficiency = 0;
 
 		if (compound.contains("EnginePos")) {
-			enginePos = NBTHelper.readBlockPos(compound, "EnginePos");
+			enginePos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "EnginePos");
 			engineEfficiency = compound.getFloatOr("EnginePower", 0);
 			capacityKey = BuiltInRegistries.BLOCK.get(Identifier.parse(compound.getStringOr("EngineType", "minecraft:air")))
 				.map(holder -> holder.value())

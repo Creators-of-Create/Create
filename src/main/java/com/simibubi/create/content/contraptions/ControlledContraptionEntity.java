@@ -80,7 +80,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	protected void readAdditional(CompoundTag compound, boolean spawnPacket) {
 		super.readAdditional(compound, spawnPacket);
 		if (compound.contains("ControllerRelative"))
-			controllerPos = NBTHelper.readBlockPos(compound, "ControllerRelative").offset(blockPosition());
+			controllerPos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "ControllerRelative").offset(blockPosition());
 		if (compound.contains("Axis"))
 			rotationAxis = NBTHelper.readEnum(compound, "Axis", Axis.class);
 		angle = compound.getFloatOr("Angle", 0);

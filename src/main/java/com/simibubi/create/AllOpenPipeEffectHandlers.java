@@ -10,6 +10,7 @@ import com.simibubi.create.impl.effect.WaterEffectHandler;
 
 import net.minecraft.tags.FluidTags;
 
+import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.Tags;
 
 public class AllOpenPipeEffectHandlers {
@@ -17,6 +18,7 @@ public class AllOpenPipeEffectHandlers {
 		OpenPipeEffectHandler.REGISTRY.registerProvider(SimpleRegistry.Provider.forFluidTag(FluidTags.WATER, new WaterEffectHandler()));
 		OpenPipeEffectHandler.REGISTRY.registerProvider(SimpleRegistry.Provider.forFluidTag(FluidTags.LAVA, new LavaEffectHandler()));
 		OpenPipeEffectHandler.REGISTRY.registerProvider(SimpleRegistry.Provider.forFluidTag(Tags.Fluids.MILK, new MilkEffectHandler()));
+		OpenPipeEffectHandler.REGISTRY.register(NeoForgeMod.MILK.get(), new MilkEffectHandler());
 		OpenPipeEffectHandler.REGISTRY.register(AllFluids.POTION.getSource(), new PotionEffectHandler());
 		OpenPipeEffectHandler.REGISTRY.register(AllFluids.TEA.getSource(), new TeaEffectHandler());
 	}

@@ -32,8 +32,8 @@ public class StationMarker {
 	}
 
 	public static StationMarker load(CompoundTag tag, HolderLookup.Provider registries) {
-		BlockPos source = NBTHelper.readBlockPos(tag, "source");
-		BlockPos target = NBTHelper.readBlockPos(tag, "target");
+		BlockPos source = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(tag, "source");
+		BlockPos target = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(tag, "target");
 		Component name = Component.literal(tag.getStringOr("name", ""));
 		if (name.getString()
 			.isEmpty())

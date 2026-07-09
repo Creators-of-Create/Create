@@ -69,7 +69,7 @@ public class ItemStackComponentizationFixMixin {
 
 		// MatchedAttribute's won't be fixed, it's not really possible to write a fixer for that
 		if (stack.is("create:attribute_filter")) {
-			create$moveTagToEnumComponent(stack, "WhitelistMode", "create:filter_items", AttributeFilterWhitelistMode.class);
+			create$moveTagToEnumComponent(stack, "WhitelistMode", "create:attribute_filter_whitelist_mode", AttributeFilterWhitelistMode.class);
 		}
 
 		if (stack.is("create:clipboard")) {

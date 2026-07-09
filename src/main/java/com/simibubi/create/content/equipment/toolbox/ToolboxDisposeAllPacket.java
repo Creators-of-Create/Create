@@ -47,7 +47,7 @@ public record ToolboxDisposeAllPacket(BlockPos toolboxPos) implements Serverboun
 		toolbox.inventory.inLimitedMode(inventory -> {
 			for (int i = 0; i < 36; i++) {
 				String key = String.valueOf(i);
-				if (compound.contains(key) && NBTHelper.readBlockPos(compound.getCompoundOrEmpty(key), "Pos")
+				if (compound.contains(key) && com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound.getCompoundOrEmpty(key), "Pos")
 					.equals(toolboxPos)) {
 					ToolboxHandler.unequip(player, i, true);
 					sendData.setTrue();

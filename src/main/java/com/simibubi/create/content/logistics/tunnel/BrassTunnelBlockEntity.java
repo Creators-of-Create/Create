@@ -103,6 +103,12 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 	}
 
 	@Override
+	public void resetCachedBeltCapability() {
+		super.resetCachedBeltCapability();
+		beltCapability = null;
+	}
+
+	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		behaviours.add(selectionMode = new ScrollOptionBehaviour<>(SelectionMode.class,
@@ -640,7 +646,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		for (boolean filtered : Iterate.trueAndFalse) {
 			distributionTargets.set(filtered, NBTHelper
 				.readCompoundList(compound.getListOrEmpty(filtered ? "FilteredTargets" : "Targets"), nbt -> {
-					BlockPos pos = NBTHelper.readBlockPos(nbt, "Pos");
+					BlockPos pos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(nbt, "Pos");
 					Direction face = Direction.from3DDataValue(nbt.getIntOr("Face", 0));
 					return Pair.of(pos, face);
 				}));

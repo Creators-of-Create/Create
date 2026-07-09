@@ -161,7 +161,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (!context.data.contains("ReferencePos"))
 			return;
 
-		BlockPos referencePos = NBTHelper.readBlockPos(context.data, "ReferencePos");
+		BlockPos referencePos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(context.data, "ReferencePos");
 		for (BlockPos otherPos : getPositionsToBreak(context, referencePos))
 			if (!otherPos.equals(pos))
 				destroyBlock(context, otherPos);

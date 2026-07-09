@@ -261,6 +261,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		reset();
 		rootPos = root;
 		affectedArea = BoundingBox.fromCorners(rootPos, rootPos);
+		isValid = checkValid(getWorld(), rootPos);
 		if (isValid)
 			frontier.add(new BlockPosEntry(root, 0));
 	}
@@ -360,6 +361,8 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	public FluidStack getDrainableFluid(BlockPos rootPos) {
+		if (fluid == null && (this.rootPos == null || !Objects.equals(rootPos, this.rootPos) && !isSearching()))
+			rebuildContext(rootPos);
 		return fluid == null || isSearching() || !pullNext(rootPos, true) ? FluidStack.EMPTY
 			: new FluidStack(fluid, 1000);
 	}

@@ -227,7 +227,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 
 	@Override
 	public PlacementInfo placementInfo() {
-		return PlacementInfo.NOT_PLACEABLE;
+		return ingredient == null || ingredient.isEmpty() ? PlacementInfo.NOT_PLACEABLE : PlacementInfo.create(ingredient);
 	}
 
 	@Override

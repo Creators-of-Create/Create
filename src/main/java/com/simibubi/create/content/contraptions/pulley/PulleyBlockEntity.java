@@ -295,10 +295,10 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 		BlockPos prevMirrorParent = mirrorParent;
 		mirrorParent = null;
 		if (compound.contains("MirrorParent"))
-			mirrorParent = NBTHelper.readBlockPos(compound, "MirrorParent");
+			mirrorParent = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "MirrorParent");
 		mirrorChildren = null;
 		if (compound.contains("MirrorChildren"))
-			mirrorChildren = NBTHelper.readCompoundList(compound.getListOrEmpty("MirrorChildren"), t -> NBTHelper.readBlockPos(t, "Pos"));
+			mirrorChildren = NBTHelper.readCompoundList(compound.getListOrEmpty("MirrorChildren"), t -> com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(t, "Pos"));
 
 		if (mirrorParent != null) {
 			offset = 0;

@@ -12,8 +12,8 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntArrayTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.LongTag;
 import net.minecraft.nbt.NumericTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
@@ -22,15 +22,36 @@ public final class LegacyNbtUtilsBridge {
 	private LegacyNbtUtilsBridge() {}
 
 	public static Tag writeBlockPos(BlockPos pos) {
-		return LongTag.valueOf(pos.asLong());
+		ListTag tag = new ListTag();
+		tag.add(IntTag.valueOf(pos.getX()));
+		tag.add(IntTag.valueOf(pos.getY()));
+		tag.add(IntTag.valueOf(pos.getZ()));
+		return tag;
+	}
+
+	public static BlockPos readBlockPos(CompoundTag tag, String key) {
+		return readBlockPos(tag.get(key));
 	}
 
 	public static BlockPos readBlockPos(Tag tag) {
+		if (tag == null)
+			return BlockPos.ZERO;
 		if (tag instanceof NumericTag numericTag)
 			return BlockPos.of(numericTag.longValue());
 		if (tag instanceof CompoundTag compoundTag)
 			return new BlockPos(compoundTag.getIntOr("X", 0), compoundTag.getIntOr("Y", 0), compoundTag.getIntOr("Z", 0));
+		if (tag instanceof IntArrayTag intArrayTag) {
+			int[] pos = intArrayTag.getAsIntArray();
+			if (pos.length >= 3)
+				return new BlockPos(pos[0], pos[1], pos[2]);
+		}
+		if (tag instanceof ListTag listTag && listTag.size() >= 3)
+			return new BlockPos(readInt(listTag.get(0)), readInt(listTag.get(1)), readInt(listTag.get(2)));
 		return BlockPos.ZERO;
+	}
+
+	private static int readInt(Tag tag) {
+		return tag instanceof NumericTag numericTag ? numericTag.intValue() : 0;
 	}
 
 	public static IntArrayTag createUUID(UUID uuid) {

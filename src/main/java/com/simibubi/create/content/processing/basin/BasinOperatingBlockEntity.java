@@ -1,12 +1,14 @@
 package com.simibubi.create.content.processing.basin;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.simple.DeferralBehaviour;
@@ -27,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import net.neoforged.neoforge.capabilities.Capabilities.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities.Item;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
@@ -164,9 +167,38 @@ public abstract class BasinOperatingBlockEntity extends KineticBlockEntity {
 					list.add(r.value());
 		}
 
-		list.sort((r1, r2) -> r2.placementInfo().ingredients().size() - r1.placementInfo().ingredients().size());
+		sortMatchingRecipes(list, basin);
 
 		return list;
+	}
+
+	protected static void sortMatchingRecipes(List<Recipe<?>> recipes, BasinBlockEntity basin) {
+		recipes.sort(Comparator.comparingInt((Recipe<?> recipe) -> fluidOutputIngredientMatches(recipe, basin))
+			.thenComparingInt(BasinOperatingBlockEntity::ingredientCount)
+			.reversed());
+	}
+
+	private static int fluidOutputIngredientMatches(Recipe<?> recipe, BasinBlockEntity basin) {
+		if (!(recipe instanceof BasinRecipe basinRecipe))
+			return 0;
+
+		IFluidHandler output = basin.outputTank.getCapability();
+		int matches = 0;
+		for (SizedFluidIngredient ingredient : basinRecipe.getFluidIngredients()) {
+			for (int tank = 0; tank < output.getTanks(); tank++) {
+				if (!ingredient.test(output.getFluidInTank(tank)))
+					continue;
+				matches++;
+				break;
+			}
+		}
+		return matches;
+	}
+
+	private static int ingredientCount(Recipe<?> recipe) {
+		if (recipe instanceof ProcessingRecipe<?, ?> processingRecipe)
+			return processingRecipe.getIngredients().size();
+		return recipe.placementInfo().ingredients().size();
 	}
 
 	protected abstract void onBasinRemoved();

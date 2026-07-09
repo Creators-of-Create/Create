@@ -565,7 +565,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 		earlyTargetTime = 0;
 		if (compound.contains("EarlyTarget")) {
 			earlyTarget = Pair.of(VecHelper.readNBT(compound.getListOrEmpty("EarlyTarget")),
-					NBTHelper.readBlockPos(compound, "EarlyTargetPos"));
+					com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "EarlyTargetPos"));
 			earlyTargetTime = compound.getFloatOr("EarlyTargetTime", 0);
 		}
 

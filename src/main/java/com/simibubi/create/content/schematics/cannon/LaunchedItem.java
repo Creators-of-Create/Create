@@ -85,7 +85,7 @@ public abstract class LaunchedItem {
 	abstract void place(Level world);
 
 	void readNBT(CompoundTag c, HolderLookup.Provider registries, HolderGetter<Block> holderGetter) {
-		target = NBTHelper.readBlockPos(c, "Target");
+		target = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(c, "Target");
 		ticksRemaining = c.getIntOr("TicksLeft", 0);
 		totalTicks = c.getIntOr("TotalTicks", 0);
 		stack = LegacyItemStackNbtBridge.parseOptional(registries, c.getCompound("Stack"));

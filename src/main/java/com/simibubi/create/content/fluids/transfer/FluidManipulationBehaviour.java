@@ -104,6 +104,8 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 		if (affectedArea != null)
 			scheduleUpdatesInAffectedArea();
 		affectedArea = null;
+		rootPos = null;
+		counterpartActed = false;
 		setValidationTimer();
 		frontier.clear();
 		visited.clear();
@@ -243,11 +245,32 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 	public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
 		infinite = nbt.contains("Infinite");
 		if (nbt.contains("LastPos"))
-			rootPos = NBTHelper.readBlockPos(nbt, "LastPos");
+			rootPos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(nbt, "LastPos");
 		if (nbt.contains("AffectedAreaFrom") && nbt.contains("AffectedAreaTo"))
-			affectedArea = BoundingBox.fromCorners(NBTHelper.readBlockPos(nbt, "AffectedAreaFrom"),
-				NBTHelper.readBlockPos(nbt, "AffectedAreaTo"));
+			affectedArea = BoundingBox.fromCorners(com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(nbt, "AffectedAreaFrom"),
+				com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(nbt, "AffectedAreaTo"));
+		if (!isSavedFluidPositionNearCurrentBlock(rootPos)
+			|| affectedArea != null && (!isSavedFluidPositionNearCurrentBlock(new BlockPos(affectedArea.minX(), affectedArea.minY(), affectedArea.minZ()))
+				|| !isSavedFluidPositionNearCurrentBlock(new BlockPos(affectedArea.maxX(), affectedArea.maxY(), affectedArea.maxZ())))) {
+			rootPos = null;
+			affectedArea = null;
+			counterpartActed = false;
+			frontier.clear();
+			visited.clear();
+			infinite = false;
+			setValidationTimer();
+		}
 		super.read(nbt, registries, clientPacket);
+	}
+
+	private boolean isSavedFluidPositionNearCurrentBlock(BlockPos savedPos) {
+		if (savedPos == null)
+			return true;
+		int maxReach = maxRange() + 8;
+		BlockPos currentPos = blockEntity.getBlockPos();
+		return Math.abs(savedPos.getX() - currentPos.getX()) <= maxReach
+			&& Math.abs(savedPos.getY() - currentPos.getY()) <= maxReach
+			&& Math.abs(savedPos.getZ() - currentPos.getZ()) <= maxReach;
 	}
 
 	public enum BottomlessFluidMode implements Predicate<Fluid> {

@@ -6,10 +6,10 @@ import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
-public class ItemDrainItemHandler implements IItemHandler {
+public class ItemDrainItemHandler implements IItemHandlerModifiable {
 
 	private ItemDrainBlockEntity blockEntity;
 	private Direction side;
@@ -76,6 +76,19 @@ public class ItemDrainItemHandler implements IItemHandler {
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
 		return true;
+	}
+
+	@Override
+	public void setStackInSlot(int slot, ItemStack stack) {
+		if (stack.isEmpty()) {
+			blockEntity.heldItem = null;
+			blockEntity.notifyUpdate();
+			return;
+		}
+		TransportedItemStack heldItem = new TransportedItemStack(stack.copy());
+		heldItem.prevBeltPosition = 0;
+		blockEntity.setHeldItem(heldItem, side.getOpposite());
+		blockEntity.notifyUpdate();
 	}
 
 }

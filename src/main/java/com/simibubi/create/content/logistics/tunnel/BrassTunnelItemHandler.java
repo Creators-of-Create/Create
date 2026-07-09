@@ -5,8 +5,9 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
-public class BrassTunnelItemHandler implements IItemHandler {
+public class BrassTunnelItemHandler implements IItemHandlerModifiable {
 
 	private BrassTunnelBlockEntity blockEntity;
 
@@ -58,6 +59,11 @@ public class BrassTunnelItemHandler implements IItemHandler {
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
 		return true;
+	}
+
+	@Override
+	public void setStackInSlot(int slot, ItemStack stack) {
+		blockEntity.setStackToDistribute(stack.copy(), null);
 	}
 
 }

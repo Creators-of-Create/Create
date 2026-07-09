@@ -73,7 +73,7 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 			com.simibubi.create.foundation.utility.LegacyItemStackNbtBridge.deserializeHandler(port.offlineBuffer,
 				registries, c.getCompoundOrEmpty("OfflineBuffer"));
 			port.primed = c.getBooleanOr("Primed", false);
-			connectedPorts.put(NBTHelper.readBlockPos(c, "Pos"), port);
+			connectedPorts.put(com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(c, "Pos"), port);
 		});
 	}
 

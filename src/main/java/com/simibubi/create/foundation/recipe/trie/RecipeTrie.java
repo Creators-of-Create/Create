@@ -15,6 +15,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.fluid.LegacyFluidIngredientBridge;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -185,7 +186,10 @@ public class RecipeTrie<R extends Recipe<?>> {
 		private <R1 extends R> AbstractRecipe<R1> createRecipe(R1 recipe) {
 			Set<AbstractIngredient> ingredients = new HashSet<>();
 
-			for (Ingredient ingredient : recipe.placementInfo().ingredients()) {
+			List<Ingredient> recipeIngredients = recipe instanceof ProcessingRecipe<?, ?> processingRecipe
+				? processingRecipe.getIngredients()
+				: recipe.placementInfo().ingredients();
+			for (Ingredient ingredient : recipeIngredients) {
 				if (ingredient.isEmpty()) {
 					ingredients.add(AbstractIngredient.Universal.INSTANCE);
 					continue;

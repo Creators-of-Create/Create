@@ -36,6 +36,12 @@ public final class LegacyFluidNbtBridge {
 	}
 
 	public static FluidStack parseOptional(HolderLookup.Provider registries, Tag tag) {
+		if (tag instanceof CompoundTag compound) {
+			FluidStack legacyStack = parseLegacyOptional(registries, compound);
+			if (!legacyStack.isEmpty())
+				return legacyStack;
+		}
+
 		return FluidStack.OPTIONAL_CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), tag)
 			.result()
 			.orElse(FluidStack.EMPTY);
@@ -53,6 +59,37 @@ public final class LegacyFluidNbtBridge {
 	}
 
 	public static void deserializeTank(FluidTank tank, HolderLookup.Provider registries, CompoundTag tag) {
+		FluidStack legacyStack = parseLegacyOptional(registries, tag);
+		if (!legacyStack.isEmpty()) {
+			tank.setFluid(legacyStack);
+			return;
+		}
+
 		tank.deserialize(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
+	}
+
+	private static FluidStack parseLegacyOptional(HolderLookup.Provider registries, CompoundTag tag) {
+		FluidStack nested = parseOptional(registries, tag.get("Fluid"));
+		if (!nested.isEmpty())
+			return nested;
+
+		if (tag.contains("FluidName")) {
+			CompoundTag migrated = new CompoundTag();
+			migrated.putString("id", tag.getStringOr("FluidName", ""));
+			migrated.putInt("amount", tag.getIntOr("Amount", 0));
+			return FluidStack.OPTIONAL_CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), migrated)
+				.result()
+				.orElse(FluidStack.EMPTY);
+		}
+
+		if (tag.contains("id") && tag.contains("Amount") && !tag.contains("amount")) {
+			CompoundTag migrated = tag.copy();
+			migrated.putInt("amount", tag.getIntOr("Amount", 0));
+			return FluidStack.OPTIONAL_CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), migrated)
+				.result()
+				.orElse(FluidStack.EMPTY);
+		}
+
+		return FluidStack.EMPTY;
 	}
 }

@@ -5,9 +5,9 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
-public class ItemHandlerBeltSegment implements IItemHandler {
+public class ItemHandlerBeltSegment implements IItemHandlerModifiable {
 
 	private final BeltInventory beltInventory;
 	int offset;
@@ -75,6 +75,21 @@ public class ItemHandlerBeltSegment implements IItemHandler {
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
 		return true;
+	}
+
+	@Override
+	public void setStackInSlot(int slot, ItemStack stack) {
+		TransportedItemStack current = this.beltInventory.getStackAtOffset(offset);
+		if (current != null)
+			this.beltInventory.toRemove.add(current);
+		if (!stack.isEmpty()) {
+			TransportedItemStack newStack = new TransportedItemStack(stack.copy());
+			newStack.insertedAt = offset;
+			newStack.beltPosition = offset + .5f;
+			newStack.prevBeltPosition = newStack.beltPosition;
+			this.beltInventory.addItem(newStack);
+		}
+		this.beltInventory.belt.notifyUpdate();
 	}
 
 }

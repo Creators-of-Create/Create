@@ -76,6 +76,11 @@ public class BeltTunnelBlockEntity extends SmartBlockEntity {
 		);
 	}
 
+	public void resetCachedBeltCapability() {
+		cap = null;
+		invalidateCapabilities();
+	}
+
 	@Override
 	public void invalidate() {
 		super.invalidate();

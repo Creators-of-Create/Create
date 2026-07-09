@@ -100,7 +100,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	public BezierConnection(CompoundTag compound, BlockPos localTo) {
-		this(Couple.deserializeEach(compound.getListOrEmpty("Positions"), t -> NBTHelper.readBlockPos(t, "Pos"))
+		this(Couple.deserializeEach(compound.getListOrEmpty("Positions"), t -> com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(t, "Pos"))
 			.map(b -> b.offset(localTo)),
 			Couple.deserializeEach(compound.getListOrEmpty("Starts"), VecHelper::readNBTCompound)
 				.map(v -> v.add(Vec3.atLowerCornerOf(localTo))),

@@ -62,11 +62,11 @@ public class SchematicPrinter {
 
 	public void fromTag(CompoundTag compound, boolean clientPacket) {
 		if (compound.contains("CurrentPos"))
-			currentPos = NBTHelper.readBlockPos(compound, "CurrentPos");
+			currentPos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "CurrentPos");
 		if (clientPacket) {
 			schematicLoaded = false;
 			if (compound.contains("Anchor")) {
-				schematicAnchor = NBTHelper.readBlockPos(compound, "Anchor");
+				schematicAnchor = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "Anchor");
 				schematicLoaded = true;
 			}
 		}
@@ -74,7 +74,7 @@ public class SchematicPrinter {
 		printingEntityIndex = compound.getIntOr("EntityProgress", -1);
 		printStage = PrintStage.valueOf(compound.getStringOr("PrintStage", PrintStage.BLOCKS.name()));
 		compound.getListOrEmpty("DeferredBlocks").stream()
-			.map(p -> NBTHelper.readBlockPos((CompoundTag) p, "Pos"))
+			.map(p -> com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos((CompoundTag) p, "Pos"))
 			.collect(Collectors.toCollection(() -> deferredBlocks));
 	}
 

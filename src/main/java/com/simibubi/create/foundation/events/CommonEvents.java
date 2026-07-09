@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.actors.trainControls.ControlsSer
 import com.simibubi.create.content.contraptions.chassis.StickerBlockEntity;
 import com.simibubi.create.content.contraptions.minecart.CouplingPhysics;
 import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
+import com.simibubi.create.content.contraptions.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.equipment.toolbox.ToolboxBlockEntity;
 import com.simibubi.create.content.equipment.toolbox.ToolboxHandler;
 import com.simibubi.create.content.equipment.wrench.WrenchItem;
@@ -50,6 +51,7 @@ import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity;
 import com.simibubi.create.content.logistics.vault.ItemVaultBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
+import com.simibubi.create.content.redstone.rail.ControllerRailBlock;
 import com.simibubi.create.content.redstone.link.controller.LinkedControllerServerHandler;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.content.trains.entity.CarriageEntityHandler;
@@ -66,15 +68,18 @@ import com.simibubi.create.foundation.utility.TickBasedCache;
 import com.simibubi.create.infrastructure.command.AllCommands;
 
 import net.createmod.catnip.api.data.WorldAttached;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -150,6 +155,25 @@ public class CommonEvents {
 			ContraptionHandler.entitiesWhoJustDismountedGetSentToTheRightLocation(livingEntity, level);
 			ToolboxHandler.entityTick(livingEntity, level);
 		}
+	}
+
+	@SubscribeEvent
+	public static void onEntityTickPost(EntityTickEvent.Post event) {
+		if (event.getEntity() instanceof AbstractMinecart minecart)
+			dispatchCreateRailPass(minecart);
+	}
+
+	private static void dispatchCreateRailPass(AbstractMinecart minecart) {
+		Level level = minecart.level();
+		if (level.isClientSide())
+			return;
+
+		BlockPos railPos = minecart.getCurrentBlockPosOrRailBelow();
+		BlockState railState = level.getBlockState(railPos);
+		if (railState.getBlock() instanceof CartAssemblerBlock assembler)
+			assembler.onMinecartPass(railState, level, railPos, minecart);
+		if (railState.getBlock() instanceof ControllerRailBlock controllerRail)
+			controllerRail.onMinecartPass(railState, level, railPos, minecart);
 	}
 
 	@SubscribeEvent

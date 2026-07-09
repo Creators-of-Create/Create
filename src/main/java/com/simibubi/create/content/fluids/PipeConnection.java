@@ -298,6 +298,16 @@ public class PipeConnection {
 		resetNetwork();
 	}
 
+	public void resetRuntimeState() {
+		this.pressure.replace(f -> 0f);
+		this.source = Optional.empty();
+		this.previousSource = Optional.empty();
+		this.flow = Optional.empty();
+		this.particleSplashNextTick = false;
+		resetNetwork();
+		this.network = Optional.empty();
+	}
+
 	public FluidStack provideOutboundFlow() {
 		if (!hasFlow())
 			return FluidStack.EMPTY;

@@ -142,9 +142,9 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 	}
 
 	private static ItemStack getCraftingRemainder(ItemStack stack) {
-		return stack.getItem()
-			.getCraftingRemainder()
-			.create();
+		var craftingRemainder = stack.getItem()
+			.getCraftingRemainder();
+		return craftingRemainder == null ? ItemStack.EMPTY : craftingRemainder.create();
 	}
 
 	public static void spawnParticles(Vec3 location, ItemStack polishedStack, Level world) {

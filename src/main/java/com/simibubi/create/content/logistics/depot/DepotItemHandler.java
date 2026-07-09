@@ -3,9 +3,9 @@ package com.simibubi.create.content.logistics.depot;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
-public class DepotItemHandler implements IItemHandler {
+public class DepotItemHandler implements IItemHandlerModifiable {
 
 	private static final int MAIN_SLOT = 0;
 	private DepotBehaviour behaviour;
@@ -67,6 +67,20 @@ public class DepotItemHandler implements IItemHandler {
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
 		return slot == MAIN_SLOT && behaviour.isItemValid(stack);
+	}
+
+	@Override
+	public void setStackInSlot(int slot, ItemStack stack) {
+		if (slot == MAIN_SLOT) {
+			if (stack.isEmpty())
+				behaviour.heldItem = null;
+			else
+				behaviour.setCenteredHeldItem(new TransportedItemStack(stack.copy()));
+			behaviour.incoming.clear();
+			behaviour.blockEntity.notifyUpdate();
+			return;
+		}
+		behaviour.processingOutputBuffer.setStackInSlot(slot - 1, stack.copy());
 	}
 
 }

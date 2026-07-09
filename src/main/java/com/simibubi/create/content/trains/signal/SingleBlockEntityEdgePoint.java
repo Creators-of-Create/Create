@@ -52,7 +52,7 @@ public abstract class SingleBlockEntityEdgePoint extends TrackEdgePoint {
 		super.read(nbt, registries, migration, dimensions);
 		if (migration)
 			return;
-		blockEntityPos = NBTHelper.readBlockPos(nbt, "BlockEntityPos");
+		blockEntityPos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(nbt, "BlockEntityPos");
 		blockEntityDimension = dimensions.decode(nbt.getIntOr("BlockEntityDimension", -1));
 	}
 

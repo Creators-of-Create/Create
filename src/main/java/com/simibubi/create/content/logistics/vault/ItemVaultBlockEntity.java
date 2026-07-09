@@ -272,11 +272,11 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 
 		lastKnownPos = null;
 		if (compound.contains("LastKnownPos"))
-			lastKnownPos = NBTHelper.readBlockPos(compound, "LastKnownPos");
+			lastKnownPos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "LastKnownPos");
 
 		controller = null;
 		if (compound.contains("Controller"))
-			controller = NBTHelper.readBlockPos(compound, "Controller");
+			controller = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "Controller");
 
 		if (isController()) {
 			radius = compound.getIntOr("Size", 0);

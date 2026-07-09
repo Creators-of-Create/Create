@@ -703,14 +703,14 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
 		if (clientPacket && compound.contains("DestroyEffect") && level != null)
-			spawnDestroyParticles(NBTHelper.readBlockPos(compound, "DestroyEffect"));
+			spawnDestroyParticles(com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "DestroyEffect"));
 
 		int sizeBefore = connections.size();
 		connections.clear();
 		CatnipCodecUtils.decode(CatnipCodecs.set(BlockPos.CODEC), registries, compound.get("Connections")).ifPresent(connections::addAll);
 		travellingPackages.clear();
 		NBTHelper.iterateCompoundList(compound.getListOrEmpty("TravellingPackages"),
-			c -> travellingPackages.put(NBTHelper.readBlockPos(c, "Target"),
+			c -> travellingPackages.put(com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(c, "Target"),
 				NBTHelper.readCompoundList(c.getListOrEmpty("Packages"), t -> ChainConveyorPackage.read(t, registries))));
 		loopingPackages = NBTHelper.readCompoundList(compound.getListOrEmpty("LoopingPackages"),
 			t -> ChainConveyorPackage.read(t, registries));

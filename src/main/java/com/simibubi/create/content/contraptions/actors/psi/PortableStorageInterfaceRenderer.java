@@ -92,7 +92,7 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 		if (!context.data.contains(_workingPos_))
 			return null;
 
-		BlockPos pos = NBTHelper.readBlockPos(context.data, _workingPos_);
+		BlockPos pos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(context.data, _workingPos_);
 		BlockEntity blockEntity = context.world.getBlockEntity(pos);
 		if (!(blockEntity instanceof PortableStorageInterfaceBlockEntity psi))
 			return null;

@@ -273,7 +273,7 @@ public class SignalBoundary extends TrackEdgePoint {
 			if (nbt.contains("Tiles" + i)) {
 				boolean first = i == 1;
 				NBTHelper.iterateCompoundList(nbt.getListOrEmpty("Tiles" + i), c -> blockEntities.get(first)
-					.put(NBTHelper.readBlockPos(c, "Pos"), c.getBooleanOr("Power", false)));
+					.put(com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(c, "Pos"), c.getBooleanOr("Power", false)));
 			}
 
 		for (int i = 1; i <= 2; i++)

@@ -71,7 +71,7 @@ public class ContactMovementBehaviour implements MovementBehaviour {
 		if (!context.data.contains("lastContact"))
 			return;
 
-		BlockPos last = NBTHelper.readBlockPos(context.data, "lastContact");
+		BlockPos last = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(context.data, "lastContact");
 		context.data.remove("lastContact");
 		BlockState blockState = context.world.getBlockState(last);
 

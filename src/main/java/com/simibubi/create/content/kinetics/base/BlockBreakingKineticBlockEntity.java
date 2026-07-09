@@ -72,7 +72,7 @@ public abstract class BlockBreakingKineticBlockEntity extends KineticBlockEntity
 		ticksUntilNextProgress = compound.getIntOr("NextTick", 0);
 		breakingPos = null;
 		if (compound.contains("Breaking"))
-			breakingPos = NBTHelper.readBlockPos(compound, "Breaking");
+			breakingPos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(compound, "Breaking");
 		super.read(compound, registries, clientPacket);
 	}
 

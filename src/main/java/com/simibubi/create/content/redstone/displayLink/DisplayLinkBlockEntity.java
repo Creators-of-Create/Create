@@ -176,7 +176,7 @@ public class DisplayLinkBlockEntity extends LinkWithBulbBlockEntity  implements 
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
-		targetOffset = NBTHelper.readBlockPos(tag, "TargetOffset");
+		targetOffset = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(tag, "TargetOffset");
 		targetLine = tag.getIntOr("TargetLine", 0);
 
 		if (clientPacket && tag.contains("TargetType"))

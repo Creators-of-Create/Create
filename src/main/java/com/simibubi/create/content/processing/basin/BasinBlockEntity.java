@@ -543,6 +543,50 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		return acceptOutputsInner;
 	}
 
+	boolean canAcceptInternalFluidOutputsAfterExtraction(List<FluidStack> outputFluids, int[] extractedFluidsFromTank) {
+		if (outputFluids.isEmpty())
+			return true;
+
+		IFluidHandler targetTank = outputTank.getCapability();
+		List<FluidStack> simulatedTanks = new ArrayList<>(targetTank.getTanks());
+		for (int tank = 0; tank < targetTank.getTanks(); tank++) {
+			FluidStack stack = targetTank.getFluidInTank(tank)
+				.copy();
+			if (tank < extractedFluidsFromTank.length)
+				stack.shrink(extractedFluidsFromTank[tank]);
+			simulatedTanks.add(stack.isEmpty() ? FluidStack.EMPTY : stack);
+		}
+
+		for (FluidStack outputFluid : outputFluids) {
+			int remaining = outputFluid.getAmount();
+			for (int pass = 0; pass < 2 && remaining > 0; pass++) {
+				for (int tank = 0; tank < simulatedTanks.size() && remaining > 0; tank++) {
+					FluidStack tankFluid = simulatedTanks.get(tank);
+					if (pass == 0 && !FluidStack.isSameFluidSameComponents(tankFluid, outputFluid))
+						continue;
+					if (pass == 1 && !tankFluid.isEmpty())
+						continue;
+
+					int capacity = targetTank.getTankCapacity(tank);
+					int filled = Math.min(remaining, capacity - tankFluid.getAmount());
+					if (filled <= 0)
+						continue;
+
+					remaining -= filled;
+					if (tankFluid.isEmpty())
+						simulatedTanks.set(tank, outputFluid.copyWithAmount(filled));
+					else
+						tankFluid.grow(filled);
+				}
+			}
+
+			if (remaining > 0)
+				return false;
+		}
+
+		return true;
+	}
+
 	private boolean acceptOutputsInner(List<ItemStack> outputItems, List<FluidStack> outputFluids, boolean simulate) {
 		BlockState blockState = getBlockState();
 		if (!(blockState.getBlock() instanceof BasinBlock))

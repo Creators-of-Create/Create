@@ -687,7 +687,7 @@ public abstract class Contraption {
 		CompoundTag nbt = structureBlockInfo.nbt();
 		BlockPos controllerPos = localPos;
 		if (nbt.contains("Controller"))
-			controllerPos = toLocalPos(NBTHelper.readBlockPos(nbt, "Controller"));
+			controllerPos = toLocalPos(com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(nbt, "Controller"));
 		nbt.put("Controller", com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.writeBlockPos(controllerPos));
 
 		if (updateTags.containsKey(localPos))
@@ -740,11 +740,11 @@ public abstract class Contraption {
 			if (!tag.contains("Controller") && !tag.contains("Parts"))
 				return;
 
-			BlockPos controllerPos = NBTHelper.readBlockPos(tag, "Controller");
+			BlockPos controllerPos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(tag, "Controller");
 				tag.getListOrEmpty("Parts")
 					.forEach(part -> {
 						CompoundTag cPart = (CompoundTag) part;
-						BlockPos partPos = cPart.contains("Pos") ? NBTHelper.readBlockPos(cPart, "Pos")
+						BlockPos partPos = cPart.contains("Pos") ? com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(cPart, "Pos")
 							: new BlockPos(cPart.getIntOr("X", 0), cPart.getIntOr("Y", 0), cPart.getIntOr("Z", 0));
 						StructureBlockInfo partInfo = this.blocks.get(partPos);
 						capturedMultiblocks.put(controllerPos, partInfo);
@@ -757,7 +757,7 @@ public abstract class Contraption {
 		nbt.getListOrEmpty("Actors")
 			.forEach(c -> {
 				CompoundTag comp = (CompoundTag) c;
-				StructureBlockInfo info = this.blocks.get(NBTHelper.readBlockPos(comp, "Pos"));
+				StructureBlockInfo info = this.blocks.get(com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(comp, "Pos"));
 				if (info == null)
 					return;
 				MovementContext context = MovementContext.readNBT(world, info, comp, this);
@@ -774,7 +774,7 @@ public abstract class Contraption {
 
 		seats.clear();
 		NBTHelper.iterateCompoundList(nbt.getListOrEmpty("Seats"),
-			c -> seats.add(c.contains("Pos") ? NBTHelper.readBlockPos(c, "Pos")
+			c -> seats.add(c.contains("Pos") ? com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(c, "Pos")
 				: new BlockPos(c.getIntOr("X", 0), c.getIntOr("Y", 0), c.getIntOr("Z", 0))));
 
 		seatMapping.clear();
@@ -789,7 +789,7 @@ public abstract class Contraption {
 
 		interactors.clear();
 		NBTHelper.iterateCompoundList(nbt.getListOrEmpty("Interactors"), c -> {
-			BlockPos pos = NBTHelper.readBlockPos(c, "Pos");
+			BlockPos pos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(c, "Pos");
 			StructureBlockInfo structureBlockInfo = getBlocks().get(pos);
 			if (structureBlockInfo == null)
 				return;
@@ -803,7 +803,7 @@ public abstract class Contraption {
 
 		stalled = nbt.getBooleanOr("Stalled", false);
 		hasUniversalCreativeCrate = nbt.getBooleanOr("BottomlessSupply", false);
-		anchor = NBTHelper.readBlockPos(nbt, "Anchor");
+		anchor = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(nbt, "Anchor");
 	}
 
 	public CompoundTag writeNBT(HolderLookup.Provider registries, boolean spawnPacket) {
@@ -1005,7 +1005,7 @@ public abstract class Contraption {
 	}
 
 	private static StructureBlockInfo legacyReadStructureBlockInfo(CompoundTag blockListEntry, HolderGetter<Block> holderGetter) {
-		return new StructureBlockInfo(NBTHelper.readBlockPos(blockListEntry, "Pos"),
+		return new StructureBlockInfo(com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(blockListEntry, "Pos"),
 			NbtUtils.readBlockState(holderGetter, blockListEntry.getCompoundOrEmpty("Block")),
 			blockListEntry.contains("Data") ? blockListEntry.getCompoundOrEmpty("Data") : null);
 	}

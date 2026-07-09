@@ -227,6 +227,15 @@ public abstract class FluidTransportBehaviour extends BlockEntityBehaviour {
 		blockEntity.sendData();
 	}
 
+	public void resetFluidNetworkState() {
+		interfaces = null;
+		phase = UpdatePhase.WAIT_FOR_PUMPS;
+		createConnectionData();
+		interfaces.values()
+			.forEach(PipeConnection::resetRuntimeState);
+		blockEntity.sendData();
+	}
+
 	private void createConnectionData() {
 		if (interfaces != null)
 			return;

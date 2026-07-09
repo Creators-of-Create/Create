@@ -108,7 +108,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 
 		Level world = context.world;
 		int id = data.getIntOr("BreakerId", 0);
-		BlockPos breakingPos = NBTHelper.readBlockPos(data, "BreakingPos");
+		BlockPos breakingPos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(data, "BreakingPos");
 
 		data.remove("Progress");
 		data.remove("TicksUntilNextProgress");
@@ -138,7 +138,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 			return;
 		}
 
-		BlockPos pos = NBTHelper.readBlockPos(data, "LastPos");
+		BlockPos pos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(data, "LastPos");
 		data.remove("WaitingTicks");
 		data.remove("LastPos");
 		context.stall = false;
@@ -165,7 +165,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 		}
 
 		Level world = context.world;
-		BlockPos breakingPos = NBTHelper.readBlockPos(data, "BreakingPos");
+		BlockPos breakingPos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(data, "BreakingPos");
 		int destroyProgress = data.getIntOr("Progress", 0);
 		int id = data.getIntOr("BreakerId", 0);
 		BlockState stateToBreak = world.getBlockState(breakingPos);

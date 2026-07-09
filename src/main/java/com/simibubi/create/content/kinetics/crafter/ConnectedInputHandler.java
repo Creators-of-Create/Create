@@ -117,12 +117,61 @@ public class ConnectedInputHandler {
 
 	public static void initAndAddAll(Level world, MechanicalCrafterBlockEntity crafter, Collection<BlockPos> positions) {
 		crafter.input = new ConnectedInput();
+		BlockPos controllerPos = crafter.getBlockPos();
 		positions.forEach(splitPos -> {
+			if (splitPos.equals(controllerPos))
+				return;
 			modifyAndUpdate(world, splitPos, input -> {
-				input.attachTo(crafter.getBlockPos(), splitPos);
-				crafter.input.data.add(splitPos.subtract(crafter.getBlockPos()));
+				input.attachTo(controllerPos, splitPos);
+				crafter.input.data.add(splitPos.subtract(controllerPos));
 			});
 		});
+		crafter.setChanged();
+		crafter.connectivityChanged();
+	}
+
+	public static void rebuildConnectedInputs(Level world, Collection<BlockPos> positions) {
+		Set<BlockPos> remaining = positions.stream()
+			.filter(pos -> AllBlocks.MECHANICAL_CRAFTER.has(world.getBlockState(pos)))
+			.collect(Collectors.toSet());
+
+		while (!remaining.isEmpty()) {
+			BlockPos controllerPos = remaining.iterator()
+				.next();
+			List<BlockPos> group = new ArrayList<>();
+			List<BlockPos> frontier = new LinkedList<>();
+			frontier.add(controllerPos);
+			remaining.remove(controllerPos);
+
+			while (!frontier.isEmpty()) {
+				BlockPos current = frontier.remove(0);
+				group.add(current);
+				BlockState currentState = world.getBlockState(current);
+				Direction facing = currentState.getValue(HORIZONTAL_FACING);
+				for (Direction direction : Iterate.directions) {
+					if (direction.getAxis() == facing.getAxis())
+						continue;
+					BlockPos next = current.relative(direction);
+					if (!remaining.contains(next))
+						continue;
+					BlockState nextState = world.getBlockState(next);
+					if (!AllBlocks.MECHANICAL_CRAFTER.has(nextState))
+						continue;
+					if (nextState.getValue(HORIZONTAL_FACING) != facing)
+						continue;
+					remaining.remove(next);
+					frontier.add(next);
+				}
+			}
+
+			group.sort(Comparator.comparingInt((BlockPos pos) -> pos.getY())
+				.reversed()
+				.thenComparingInt(BlockPos::getX)
+				.thenComparingInt(BlockPos::getZ));
+			MechanicalCrafterBlockEntity controller = CrafterHelper.getCrafter(world, group.get(0));
+			if (controller != null)
+				initAndAddAll(world, controller, group);
+		}
 	}
 
 	public static void connectControllers(Level world, MechanicalCrafterBlockEntity crafter1,

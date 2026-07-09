@@ -20,6 +20,7 @@ import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackH
 import com.simibubi.create.content.kinetics.fan.AirCurrent;
 import com.simibubi.create.content.kinetics.fan.EncasedFanBlock;
 import com.simibubi.create.content.kinetics.fan.EncasedFanBlockEntity;
+import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.content.logistics.funnel.FunnelBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -27,6 +28,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryTrackerBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
+import com.simibubi.create.foundation.item.LegacyItemHandlerAdapter;
 import com.simibubi.create.foundation.particle.AirParticleData;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -63,6 +65,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 @ParametersAreNonnullByDefault
 /*
@@ -90,7 +94,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 	VersionedInventoryTrackerBehaviour invVersionTracker;
 
-	private final EnumMap<Direction, BlockCapabilityCache<IItemHandler, @Nullable Direction>> capCaches = new EnumMap<>(Direction.class);
+	private final EnumMap<Direction, BlockCapabilityCache<ResourceHandler<ItemResource>, Direction>> capCaches = new EnumMap<>(Direction.class);
 
 	public ChuteBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -251,6 +255,28 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		}
 	}
 
+	private void findEntitiesAbove() {
+		if (!getItem().isEmpty() || level == null || level.isClientSide())
+			return;
+		if (!canActivate() || !canDirectlyInsertCached())
+			return;
+		AABB searchArea = new AABB(worldPosition)
+			.move(0, .75f, 0)
+			.inflate(.25f, .25f, .25f);
+		for (ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class, searchArea)) {
+			if (!itemEntity.isAlive())
+				continue;
+			ItemStack entityItem = itemEntity.getItem();
+			if (!canAcceptItem(entityItem))
+				continue;
+			if (!PackageEntity.centerPackage(itemEntity, Vec3.atBottomCenterOf(worldPosition.above())))
+				continue;
+			setItem(entityItem.copy(), 1);
+			itemEntity.discard();
+			break;
+		}
+	}
+
 	private void extractFromBelt(float itemSpeed) {
 		if (itemSpeed <= 0 || level == null || level.isClientSide())
 			return;
@@ -278,6 +304,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		if (entitySearchCooldown-- <= 0 && item.isEmpty()) {
 			entitySearchCooldown = 5;
 			findEntities(itemSpeed);
+			findEntitiesAbove();
 		}
 
 		extractFromBelt(itemSpeed);
@@ -508,8 +535,20 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			if (side != Direction.DOWN || !(be instanceof SmartChuteBlockEntity) || getItemMotion() > 0)
 				return null;
 		}
-		// TODO 26.2: replace legacy IItemHandler lookup with ResourceHandler<ItemResource> lookup/adaptation.
-		return null;
+		if (level instanceof ServerLevel serverLevel) {
+			BlockCapabilityCache<ResourceHandler<ItemResource>, Direction> cache = capCaches.computeIfAbsent(side,
+				direction -> BlockCapabilityCache.create(
+					Capabilities.Item.BLOCK,
+					serverLevel,
+					this.worldPosition.relative(direction),
+					direction.getOpposite(),
+					() -> !isRemoved(),
+					() -> capCaches.remove(direction)
+				));
+			return LegacyItemHandlerAdapter.of(cache.getCapability());
+		}
+
+		return LegacyItemHandlerAdapter.of(level.getCapability(Capabilities.Item.BLOCK, pos, side.getOpposite()));
 	}
 
 	public void setItem(ItemStack stack) {

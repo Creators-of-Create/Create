@@ -1,21 +1,37 @@
 package com.simibubi.create.infrastructure.gametest;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsMovement;
 import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsMovingInteraction;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.content.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.fluids.transfer.FluidDrainingBehaviour;
+import com.simibubi.create.content.fluids.transfer.FluidFillingBehaviour;
+import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.content.kinetics.belt.BeltBlock;
+import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
+import com.simibubi.create.content.kinetics.crafter.ConnectedInputHandler;
+import com.simibubi.create.content.logistics.tunnel.BeltTunnelBlockEntity;
 import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity.SelectionMode;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
@@ -36,6 +52,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -45,13 +62,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -69,6 +89,8 @@ public class CreateGameTestHelper extends GameTestHelper {
 	public static final int FIFTEEN_SECONDS = 15 * TICKS_PER_SECOND;
 	public static final int TWENTY_SECONDS = 20 * TICKS_PER_SECOND;
 	public static final int THIRTY_SECONDS = 30 * TICKS_PER_SECOND;
+	private static final Vec3 LEGACY_TEST_COORDINATE_OFFSET = new Vec3(0, -1, 0);
+	private final Map<BlockPos, BlockState> legacyLeverStates = new HashMap<>();
 
 	private CreateGameTestHelper(GameTestInfo testInfo) {
 		super(testInfo);
@@ -83,7 +105,179 @@ public class CreateGameTestHelper extends GameTestHelper {
 		return helper;
 	}
 
+	/**
+	 * Create's legacy GameTests were authored relative to the old structure block origin.
+	 * Minecraft 26.2 exposes positions relative to the test structure start corner, one block higher.
+	 */
+	@Override
+	public BlockPos absolutePos(@NotNull BlockPos pos) {
+		return super.absolutePos(pos.below());
+	}
+
+	@Override
+	public BlockPos relativePos(@NotNull BlockPos pos) {
+		return super.relativePos(pos).above();
+	}
+
+	@Override
+	public Vec3 absoluteVec(@NotNull Vec3 pos) {
+		return super.absoluteVec(pos.add(LEGACY_TEST_COORDINATE_OFFSET));
+	}
+
+	@Override
+	public Vec3 relativeVec(@NotNull Vec3 pos) {
+		return super.relativeVec(pos).subtract(LEGACY_TEST_COORDINATE_OFFSET);
+	}
+
+	BlockPos minecraftAbsolutePos(BlockPos pos) {
+		return super.absolutePos(pos);
+	}
+
+	/**
+	 * Legacy GameTest templates carry saved kinetic networks from their authoring world.
+	 * Rebuild them against the freshly placed 26.2 test structure before assertions run.
+	 */
+	public void rebuildLegacyKineticNetworks() {
+		captureLegacyLeverStates();
+
+		List<KineticBlockEntity> kinetics = legacyStructurePositions()
+			.map(getLevel()::getBlockEntity)
+			.filter(KineticBlockEntity.class::isInstance)
+			.map(KineticBlockEntity.class::cast)
+			.toList();
+
+		for (KineticBlockEntity kinetic : kinetics)
+			kinetic.resetKineticNetworkState();
+
+		rebuildLegacyBeltTopologies();
+		rebuildLegacyCrafterInputs();
+		rebuildLegacyTunnelCapabilities();
+		rebuildLegacyFluidNetworks();
+		resetLegacyFluidManipulators();
+
+		kinetics.stream()
+			.filter(GeneratingKineticBlockEntity.class::isInstance)
+			.map(GeneratingKineticBlockEntity.class::cast)
+			.forEach(GeneratingKineticBlockEntity::updateGeneratedRotation);
+	}
+
+	private void rebuildLegacyBeltTopologies() {
+		Set<BlockPos> visited = new HashSet<>();
+		legacyStructurePositions()
+			.filter(pos -> AllBlocks.BELT.has(getLevel().getBlockState(pos)))
+			.forEach(pos -> {
+				if (visited.contains(pos))
+					return;
+				BlockPos controller = findBeltController(pos);
+				if (controller == null)
+					return;
+				List<BlockPos> beltChain = BeltBlock.getBeltChain(getLevel(), controller);
+				if (beltChain.size() < 2)
+					return;
+
+				for (int index = 0; index < beltChain.size(); index++) {
+					BlockPos beltPos = beltChain.get(index);
+					BlockEntity blockEntity = getLevel().getBlockEntity(beltPos);
+					if (!(blockEntity instanceof BeltBlockEntity belt))
+						continue;
+
+					belt.setController(controller);
+					belt.beltLength = beltChain.size();
+					belt.index = index;
+					belt.setChanged();
+					visited.add(beltPos);
+				}
+			});
+	}
+
+	private void rebuildLegacyTunnelCapabilities() {
+		legacyStructurePositions()
+			.map(getLevel()::getBlockEntity)
+			.filter(BeltTunnelBlockEntity.class::isInstance)
+			.map(BeltTunnelBlockEntity.class::cast)
+			.forEach(tunnel -> {
+				tunnel.updateTunnelConnections();
+				tunnel.resetCachedBeltCapability();
+			});
+	}
+
+	private void rebuildLegacyFluidNetworks() {
+		legacyStructurePositions()
+			.map(pos -> BlockEntityBehaviour.get(getLevel(), pos, FluidTransportBehaviour.TYPE))
+			.filter(behaviour -> behaviour != null)
+			.forEach(FluidTransportBehaviour::resetFluidNetworkState);
+	}
+
+	private void resetLegacyFluidManipulators() {
+		legacyStructurePositions()
+			.forEach(pos -> {
+				FluidFillingBehaviour filling =
+					BlockEntityBehaviour.get(getLevel(), pos, FluidFillingBehaviour.TYPE);
+				if (filling != null)
+					filling.reset();
+				FluidDrainingBehaviour draining =
+					BlockEntityBehaviour.get(getLevel(), pos, FluidDrainingBehaviour.TYPE);
+				if (draining != null)
+					draining.reset();
+			});
+	}
+
+	private void rebuildLegacyCrafterInputs() {
+		ConnectedInputHandler.rebuildConnectedInputs(getLevel(), legacyStructurePositions().toList());
+	}
+
+	private Stream<BlockPos> legacyStructurePositions() {
+		AABB bounds = getRelativeBounds();
+		BlockPos min = absolutePos(new BlockPos(Mth.floor(bounds.minX), Mth.floor(bounds.minY), Mth.floor(bounds.minZ)));
+		BlockPos max = absolutePos(new BlockPos(Mth.floor(bounds.maxX - 1.0E-6), Mth.floor(bounds.maxY - 1.0E-6),
+			Mth.floor(bounds.maxZ - 1.0E-6)));
+		return BlockPos.betweenClosedStream(min, max);
+	}
+
+	private void captureLegacyLeverStates() {
+		legacyLeverStates.clear();
+		legacyStructurePositions()
+			.filter(pos -> getLevel().getBlockState(pos).is(Blocks.LEVER))
+			.forEach(pos -> legacyLeverStates.put(pos.immutable(), getLevel().getBlockState(pos)));
+	}
+
+	private BlockPos findBeltController(BlockPos pos) {
+		int limit = 1000;
+		BlockPos currentPos = pos;
+		while (limit-- > 0) {
+			BlockState currentState = getLevel().getBlockState(currentPos);
+			if (!AllBlocks.BELT.has(currentState))
+				return null;
+			BlockPos nextSegmentPosition = BeltBlock.nextSegmentPosition(currentState, currentPos, false);
+			if (nextSegmentPosition == null)
+				return currentPos;
+			if (!getLevel().isLoaded(nextSegmentPosition))
+				return null;
+			currentPos = nextSegmentPosition;
+		}
+		return null;
+	}
+
 	// blocks
+
+	@Override
+	public void pullLever(BlockPos leverPos) {
+		restoreLegacyLeverIfNeeded(leverPos);
+		super.pullLever(leverPos);
+	}
+
+	private void restoreLegacyLeverIfNeeded(BlockPos leverPos) {
+		BlockPos absolutePos = absolutePos(leverPos);
+		if (getLevel().getBlockState(absolutePos).is(Blocks.LEVER))
+			return;
+		BlockState legacyState = legacyLeverStates.get(absolutePos);
+		if (legacyState == null)
+			legacyState = Blocks.LEVER.defaultBlockState()
+				.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.FLOOR)
+				.setValue(FaceAttachedHorizontalDirectionalBlock.FACING, Direction.SOUTH)
+				.setValue(LeverBlock.POWERED, true);
+		getLevel().setBlock(absolutePos, legacyState, 2);
+	}
 
 	/**
 	 * Flip the direction of any block with the {@link BlockStateProperties#FACING} property.

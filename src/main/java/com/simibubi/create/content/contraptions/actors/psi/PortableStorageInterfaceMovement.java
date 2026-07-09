@@ -91,7 +91,7 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 			return;
 		}
 
-		BlockPos pos = NBTHelper.readBlockPos(context.data, _workingPos_);
+		BlockPos pos = com.simibubi.create.foundation.utility.LegacyNbtUtilsBridge.readBlockPos(context.data, _workingPos_);
 		Vec3 target = VecHelper.getCenterOf(pos);
 
 		if (!context.stall && !onCarriage

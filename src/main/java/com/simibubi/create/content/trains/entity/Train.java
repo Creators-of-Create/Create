@@ -1138,8 +1138,8 @@ public class Train {
 
 				stack = fuelItems.extractItem(slot, 1, false);
 				fuelTicks += burnTime * stack.getCount();
-				ItemStack containerItem = stack.getCraftingRemainder()
-					.create();
+				var craftingRemainder = stack.getCraftingRemainder();
+				ItemStack containerItem = craftingRemainder == null ? ItemStack.EMPTY : craftingRemainder.create();
 				if (!containerItem.isEmpty())
 					ItemHandlerHelper.insertItemStacked(fuelItems, containerItem, false);
 				return;
