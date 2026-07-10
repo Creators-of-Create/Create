@@ -255,6 +255,8 @@ public class OpenEndedPipe extends FlowSource {
 			if (action.simulate())
 				return fill;
 
+			containedFluidStack = getFluid();
+			hasBlockState = FluidHelper.hasBlockState(containedFluidStack.getFluid());
 			if (effectHandler != null && !resource.isEmpty()) {
 				// resource should be copied before giving it to the handler.
 				// if hasBlockState is false, it was already copied above.
