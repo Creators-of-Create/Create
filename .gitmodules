@@ -1,0 +1,4 @@
+[submodule "Flywheel"]
+	path = Flywheel
+	url = https://github.com/Engine-Room/Flywheel.git
+	branch = 1.16/dev
