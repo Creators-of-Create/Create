@@ -201,6 +201,7 @@ import com.simibubi.create.content.redstone.diodes.PulseRepeaterBlockEntity;
 import com.simibubi.create.content.redstone.diodes.PulseTimerBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.LinkBulbRenderer;
+import com.simibubi.create.content.redstone.entityObserver.EntityObserverBlockEntity;
 import com.simibubi.create.content.redstone.link.RedstoneLinkBlockEntity;
 import com.simibubi.create.content.redstone.link.controller.LecternControllerBlockEntity;
 import com.simibubi.create.content.redstone.link.controller.LecternControllerRenderer;
@@ -341,7 +342,7 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.HAND_CRANK)
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<ValveHandleBlockEntity> VALVE_HANDLE = REGISTRATE
 		.blockEntity("valve_handle", ValveHandleBlockEntity::new)
 		.visual(() -> ValveHandleVisual::new)
@@ -794,7 +795,7 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.ANALOG_LEVER)
 		.renderer(() -> AnalogLeverRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<PlacardBlockEntity> PLACARD = REGISTRATE
 		.blockEntity("placard", PlacardBlockEntity::new)
 		.validBlocks(AllBlocks.PLACARD)
@@ -874,6 +875,12 @@ public class AllBlockEntityTypes {
 		.renderer(() -> SmartBlockEntityRenderer::new)
 		.register();
 
+	public static final BlockEntityEntry<EntityObserverBlockEntity> ENTITY_OBSERVER = REGISTRATE
+		.blockEntity("entity_observer", EntityObserverBlockEntity::new)
+		.validBlocks(AllBlocks.ENTITY_OBSERVER)
+		.renderer(() -> SmartBlockEntityRenderer::new)
+		.register();
+
 	public static final BlockEntityEntry<PulseExtenderBlockEntity> PULSE_EXTENDER = REGISTRATE
 		.blockEntity("pulse_extender", PulseExtenderBlockEntity::new)
 		.visual(() -> BrassDiodeVisual::new, false)
@@ -940,7 +947,7 @@ public class AllBlockEntityTypes {
 		.validBlocksDeferred(TrackMaterial::allBlocks)
 		.renderer(() -> TrackRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<FakeTrackBlockEntity> FAKE_TRACK = REGISTRATE
 		.blockEntity("fake_track", FakeTrackBlockEntity::new)
 		.validBlocks(AllBlocks.FAKE_TRACK)
@@ -991,7 +998,7 @@ public class AllBlockEntityTypes {
 		.renderer(() -> TrackObserverRenderer::new)
 		.validBlocks(AllBlocks.TRACK_OBSERVER)
 		.register();
-	
+
 	public static final BlockEntityEntry<ClipboardBlockEntity> CLIPBOARD = REGISTRATE
 		.blockEntity("clipboard", ClipboardBlockEntity::new)
 		.validBlocks(AllBlocks.CLIPBOARD)

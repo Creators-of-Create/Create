@@ -1,4 +1,4 @@
-// 1.21.1	2026-03-06T13:40:00.170210212	Registrate Provider for create [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2026-07-19T13:01:25.681753905	Registrate Provider for create [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -240,6 +240,7 @@ f7f5df9086c71688cbdb5d05c394dc5acb8fb338 assets/create/blockstates/elevator_cont
 2fa96f480365dcbd867635eaa665d1ad5936ca65 assets/create/blockstates/encased_chain_drive.json
 d47bc65703e9582cc710e6408fb565e16d3514a6 assets/create/blockstates/encased_fan.json
 651f9fdb11f56d887d131be8f936f508d0b2fc1d assets/create/blockstates/encased_fluid_pipe.json
+adaddbfa7b7738a05c5dd00f52c13a5e5767003b assets/create/blockstates/entity_observer.json
 489ad4daeaed702d231a3f175f7b66846f5789a6 assets/create/blockstates/experience_block.json
 74c8a72db3dd3fa919e29baaa8c5865f13490461 assets/create/blockstates/exposed_copper_shingle_slab.json
 4e0b5a9be15f0c2861f5f6bd71bd9c2a4db2a21d assets/create/blockstates/exposed_copper_shingle_stairs.json
@@ -642,8 +643,8 @@ b0d8f08968763a5f74e5cd5644377a76a9f39753 assets/create/blockstates/yellow_toolbo
 fe8c497aacc641c2f01cec90bba9f19e59cc2ed2 assets/create/blockstates/yellow_valve_handle.json
 e819e93fdcbe9fd9c050a052d2718ff3b3539365 assets/create/blockstates/zinc_block.json
 64121dcb216381c83b4fe28aa361ea07c24c9ad0 assets/create/blockstates/zinc_ore.json
-cfc04c8bcd7c2935a5b658166cb755299679b729 assets/create/lang/en_ud.json
-2157d86a90660702b4581768ef9e8e6385c53eb5 assets/create/lang/en_us.json
+1475234ff986a00e5236ddd6815ee4d97eb883de assets/create/lang/en_ud.json
+43b163d4a29b03f31fd3e1c71eacf46b4868d58e assets/create/lang/en_us.json
 a97e1060e00ae701a02e39cd4ef8054cf345fac4 assets/create/models/block/acacia_window.json
 103e032c0b1a0a6a27c67da8c91179a564bd281c assets/create/models/block/acacia_window_pane_noside.json
 fb00b627abda76ad4fea867ca57dbfadd24fffa3 assets/create/models/block/acacia_window_pane_noside_alt.json
@@ -2142,6 +2143,7 @@ d6c1c5ff9506a60fbdde4580dad39d97fc1832d3 assets/create/models/item/elevator_pull
 badd4326fac0b0a1590a2e9bce7c2cdd4e4562f3 assets/create/models/item/empty_schematic.json
 5daa4b49db850923319916aaa9842c33f99e0a00 assets/create/models/item/encased_chain_drive.json
 7ec3ed4aaab72d76f6414447bbb3ad7887adf61f assets/create/models/item/encased_fan.json
+2d4e708713189fe7e2fd55ca3f30bb7cf9b83eb2 assets/create/models/item/entity_observer.json
 3e1fdcc80fd68199b1890bcc830f78c48e7c0e43 assets/create/models/item/experience_block.json
 9775e83414c0febb5c5b832437b0580e91bcbff3 assets/create/models/item/experience_nugget.json
 721c8ac46bf23abec2bbf4cff6dbfdf96cc569a6 assets/create/models/item/exposed_copper_shingle_slab.json
@@ -3638,6 +3640,7 @@ e4c0fa9229143078e12da226804e3e92e49a31a3 data/create/loot_table/blocks/elevator_
 dfe0af3ff61ed2b3082e49c745d8a3e0c5973f4b data/create/loot_table/blocks/encased_chain_drive.json
 a2e9a8a10b7fc730c1d7c8db3b529e7a37b683f5 data/create/loot_table/blocks/encased_fan.json
 7ede9f64839f51e6a2eb05b08577d2873f281401 data/create/loot_table/blocks/encased_fluid_pipe.json
+ab8641e64fe20ec04868b223f014b7d59fc3b722 data/create/loot_table/blocks/entity_observer.json
 4869211639326efaabd1aba1067bfbb3ab012884 data/create/loot_table/blocks/experience_block.json
 9dbd37ef5ff549f10475101205c1a9d4a44140bc data/create/loot_table/blocks/exposed_copper_shingle_slab.json
 d2c9abd9260eb82ea1c2eeae5e2d6abd0b4d3ce8 data/create/loot_table/blocks/exposed_copper_shingle_stairs.json
@@ -4893,8 +4896,8 @@ ebd7b09daf2f64c0c04d821696b0e145683d8693 data/minecraft/tags/block/combination_s
 f8bd9b33238ab9f2f2a83b63bf0c52fbf705b452 data/minecraft/tags/block/impermeable.json
 eb080d6f0f7a4fa5e723010e1fcfa781e4d30249 data/minecraft/tags/block/inside_step_sound_blocks.json
 515a1c773e617dd7e38aa1b893acc7db2dd30e08 data/minecraft/tags/block/lush_ground_replaceable.json
-435e59881e2d9a8cae6c23fc6ce6d43111d40277 data/minecraft/tags/block/mineable/axe.json
-47df6c90d9474d7a708063b0207e520ad01f1998 data/minecraft/tags/block/mineable/pickaxe.json
+914755f2162b27889f4972c4c343a13053c167c5 data/minecraft/tags/block/mineable/axe.json
+950bb88d7539adcea1e61f2bb22bca0e30cd67ec data/minecraft/tags/block/mineable/pickaxe.json
 515a1c773e617dd7e38aa1b893acc7db2dd30e08 data/minecraft/tags/block/moss_replaceable.json
 0c13aae0eeb99e89febe8dbe5e002af2ff843a9e data/minecraft/tags/block/needs_iron_tool.json
 3cb2a92cbdf32ed5978f740dc378d363306c3e84 data/minecraft/tags/block/needs_stone_tool.json

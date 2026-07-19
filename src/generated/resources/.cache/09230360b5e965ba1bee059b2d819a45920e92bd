@@ -1,4 +1,4 @@
-// 1.21.1	2025-11-02T10:48:42.61324115	Create's Wiki Block Info Provider
+// 1.21.1	2026-07-19T13:01:25.699353107	Create's Wiki Block Info Provider
 f7c5a556b1485698a47e098a98b9568110bd2907 data/create/.wiki/block_info/acacia_window.json
 242ad940aee145de757a2baead60e779cb269340 data/create/.wiki/block_info/acacia_window_pane.json
 316dde19f6eb5e8a28675870f6e727eb0bdfcfe2 data/create/.wiki/block_info/adjustable_chain_gearshift.json
@@ -240,6 +240,7 @@ e0b89caf7a560c75cb5bd98ba7bbdf76620ac228 data/create/.wiki/block_info/elevator_p
 316dde19f6eb5e8a28675870f6e727eb0bdfcfe2 data/create/.wiki/block_info/encased_chain_drive.json
 316dde19f6eb5e8a28675870f6e727eb0bdfcfe2 data/create/.wiki/block_info/encased_fan.json
 44ff927e10096a9e038344509b5dfbfc0ba2514a data/create/.wiki/block_info/encased_fluid_pipe.json
+316dde19f6eb5e8a28675870f6e727eb0bdfcfe2 data/create/.wiki/block_info/entity_observer.json
 b856a1a87bf6b4f674d88a56363fce5b64ff10fc data/create/.wiki/block_info/experience_block.json
 e08896c876723ba9c2678e5fa9b341ff907da7af data/create/.wiki/block_info/exposed_copper_shingle_slab.json
 e08896c876723ba9c2678e5fa9b341ff907da7af data/create/.wiki/block_info/exposed_copper_shingle_stairs.json
