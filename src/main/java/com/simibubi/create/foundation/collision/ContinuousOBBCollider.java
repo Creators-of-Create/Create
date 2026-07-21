@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.collision.CollisionList.Populate;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.Nullable;
+
 public class ContinuousOBBCollider {
 
 	static final Vec3 uA0 = new Vec3(1, 0, 0);
@@ -148,7 +150,8 @@ public class ContinuousOBBCollider {
 						collisionResponseX += mf.stepSeparationAxis.x * sep;
 						collisionResponseY += mf.stepSeparationAxis.y * sep;
 						collisionResponseZ += mf.stepSeparationAxis.z * sep;
-					} else {
+					} else if (mf.axis != null) {
+						// TODO: Instead of checking if null, ensure it can never be null?
 						double sep = ContinuousSeparationManifold.withSignedEpsilon(mf.separation);
 						collisionResponseX += mf.axis.x * sep;
 						collisionResponseY += mf.axis.y * sep;
@@ -158,10 +161,13 @@ public class ContinuousOBBCollider {
 				}
 
 				if (timeOfImpact >= 0 && temporalResponse > timeOfImpact) {
-					double scale = ContinuousSeparationManifold.withSignedEpsilon(mf.normalSeparation);
-					normalX = mf.normalAxis.x * scale;
-					normalY = mf.normalAxis.y * scale;
-					normalZ = mf.normalAxis.z * scale;
+					// TODO: Instead of checking if null, ensure it can never be null?
+					if (mf.normalAxis != null) {
+						double scale = ContinuousSeparationManifold.withSignedEpsilon(mf.normalSeparation);
+						normalX = mf.normalAxis.x * scale;
+						normalY = mf.normalAxis.y * scale;
+						normalZ = mf.normalAxis.z * scale;
+					}
 
 					locationX = mf.collisionX;
 					locationY = mf.collisionY;
@@ -210,8 +216,10 @@ public class ContinuousOBBCollider {
 		final Vec3 stepSeparationAxis;
 		double stepSeparation;
 
+		@Nullable
 		Vec3 normalAxis;
 		double normalSeparation;
+		@Nullable
 		Vec3 axis;
 		double separation;
 
@@ -274,10 +282,12 @@ public class ContinuousOBBCollider {
 				}
 			}
 
+			// possible solution?
+			//   if (-(diff) <= abs(this.separation) || this.axis == null) {
 			if (distance != 0 && -(diff) <= abs(this.separation)) {
 				this.axis = axis;
 				this.separation = separation;
-				double scale = signum(TL) * (axisOfObjA ? -rA : -rB) - signum(separation) * 0.125;
+				double scale = sTL * (axisOfObjA ? -rA : -rB) - signum(separation) * 0.125;
 
 				collisionX = axis.x * scale;
 				collisionY = axis.y * scale;
