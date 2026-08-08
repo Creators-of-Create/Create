@@ -183,7 +183,9 @@ public class BeltBlock extends HorizontalKineticBlock
 
 	@Override
 	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-		if (!canTransportObjects(state))
+		boolean canTransportObjects = canTransportObjects(state);
+		boolean canTransportEntities = canTransportEntities(state);
+		if (!canTransportObjects && !canTransportEntities)
 			return;
 		if (entityIn instanceof Player player) {
 			if (player.isShiftKeyDown() && !AllItems.CARDBOARD_BOOTS.isIn(player.getItemBySlot(EquipmentSlot.FEET)))
@@ -200,6 +202,8 @@ public class BeltBlock extends HorizontalKineticBlock
 			return;
 		ItemStack asItem = ItemHelper.fromItemEntity(entityIn);
 		if (!asItem.isEmpty()) {
+			if (!canTransportObjects)
+				return;
 			if (worldIn.isClientSide)
 				return;
 			if (entityIn.getDeltaMovement().y > 0)
@@ -222,6 +226,8 @@ public class BeltBlock extends HorizontalKineticBlock
 			});
 			return;
 		}
+		if (!canTransportEntities)
+			return;
 
 		BeltBlockEntity controller = BeltHelper.getControllerBE(worldIn, pos);
 		if (controller == null || controller.passengers == null)
@@ -241,6 +247,13 @@ public class BeltBlock extends HorizontalKineticBlock
 			return false;
 		BeltSlope slope = state.getValue(SLOPE);
 		return slope != BeltSlope.VERTICAL && !slope.isSideways();
+	}
+
+	public static boolean canTransportEntities(BlockState state) {
+		if (!AllBlocks.BELT.has(state))
+			return false;
+		BeltSlope slope = state.getValue(SLOPE);
+		return slope != BeltSlope.VERTICAL && slope != BeltSlope.SIDEWAYS;
 	}
 
 	@Override

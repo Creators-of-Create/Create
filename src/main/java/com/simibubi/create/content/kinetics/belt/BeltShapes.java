@@ -241,7 +241,7 @@ public class BeltShapes {
 
 		if (slope == BeltSlope.VERTICAL)
 			return Shapes.empty();
-		if (slope.isSideways())
+		if (slope == BeltSlope.SIDEWAYS)
 			return Shapes.empty();
 
 		if (slope == BeltSlope.HORIZONTAL) {

@@ -64,8 +64,8 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 				return;
 
 			BeltSlope beltSlope = blockState.getValue(BeltBlock.SLOPE);
-			BeltPart part = blockState.getValue(BeltBlock.PART);
 			Direction facing = blockState.getValue(BeltBlock.HORIZONTAL_FACING);
+			BeltPart part = BeltHelper.getBeltPartForRendering(beltSlope, blockState.getValue(BeltBlock.PART));
 			AxisDirection axisDirection = facing.getAxisDirection();
 
 			boolean downward = beltSlope == BeltSlope.DOWNWARD;
@@ -92,12 +92,12 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 				start = end;
 				end = b;
 			}
-
 			DyeColor color = be.color.orElse(null);
 
 			for (boolean bottom : Iterate.trueAndFalse) {
 
-				PartialModel beltPartial = getBeltPartial(diagonal, start, end, bottom);
+				PartialModel beltPartial = getBeltPartial(diagonal, beltSlope == BeltSlope.DIAGONAL_SIDEWAYS,
+					start, end, bottom);
 
 				SuperByteBuffer beltBuffer = CachedBuffers.partial(beltPartial, blockState)
 					.light(light);
@@ -170,12 +170,15 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 				: bottom ? AllSpriteShifts.BELT_OFFSET : AllSpriteShifts.BELT;
 	}
 
-	public static PartialModel getBeltPartial(boolean diagonal, boolean start, boolean end, boolean bottom) {
+	public static PartialModel getBeltPartial(boolean diagonal, boolean diagonalSideways, boolean start, boolean end,
+		boolean bottom) {
 		if (diagonal) {
 			if (start)
-				return AllPartialModels.BELT_DIAGONAL_START;
+				return diagonalSideways ? AllPartialModels.BELT_DIAGONAL_SIDEWAYS_START
+					: AllPartialModels.BELT_DIAGONAL_START;
 			if (end)
-				return AllPartialModels.BELT_DIAGONAL_END;
+				return diagonalSideways ? AllPartialModels.BELT_DIAGONAL_SIDEWAYS_END
+					: AllPartialModels.BELT_DIAGONAL_END;
 			return AllPartialModels.BELT_DIAGONAL_MIDDLE;
 		} else if (bottom) {
 			if (start)

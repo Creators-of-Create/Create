@@ -128,4 +128,14 @@ public class BeltHelper {
 		return z > 0 ? Direction.SOUTH : Direction.WEST;
 	}
 
+	public static BeltPart getBeltPartForRendering(BeltSlope slope, BeltPart part) {
+		if (slope != BeltSlope.DIAGONAL_SIDEWAYS)
+			return part;
+		if (part == BeltPart.START)
+			return BeltPart.END;
+		if (part == BeltPart.END)
+			return BeltPart.START;
+		return part;
+	}
+
 }

@@ -97,8 +97,6 @@ public class BeltConnectorHandler {
 						for (int k = -1; k <= 1; k++) {
 							if (axis.choose(i, j, k) != 0)
 								continue;
-							if (axis == Axis.Y && i != 0 && k != 0)
-								continue;
 							if (i == 0 && j == 0 && k == 0)
 								continue;
 							validDiffs.add(new Vec3(i, j, k));
@@ -114,9 +112,6 @@ public class BeltConnectorHandler {
 				}
 				step = validDiffs.get(closestIndex);
 			}
-
-			if (axis == Axis.Y && step.x != 0 && step.z != 0)
-				return;
 
 			step = new Vec3(Math.signum(step.x), Math.signum(step.y), Math.signum(step.z));
 			for (float f = 0; f < length; f += .0625f) {

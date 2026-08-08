@@ -18,6 +18,7 @@ import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
+import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.render.SpriteShiftEntry;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.Direction;
@@ -39,17 +40,18 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
         super(context, blockEntity, partialTick);
 
 
-		BeltPart part = blockState.getValue(BeltBlock.PART);
+		BeltSlope slope = blockState.getValue(BeltBlock.SLOPE);
+		BeltPart part = BeltHelper.getBeltPartForRendering(slope, blockState.getValue(BeltBlock.PART));
 		boolean start = part == BeltPart.START;
 		boolean end = part == BeltPart.END;
 		DyeColor color = blockEntity.color.orElse(null);
 
-		boolean diagonal = blockState.getValue(BeltBlock.SLOPE)
-			.isDiagonal();
+		boolean diagonal = slope.isDiagonal();
 		belts = new ScrollInstance[diagonal ? 1 : 2];
 
 		for (boolean bottom : Iterate.trueAndFalse) {
-            PartialModel beltPartial = BeltRenderer.getBeltPartial(diagonal, start, end, bottom);
+			PartialModel beltPartial = BeltRenderer.getBeltPartial(diagonal,
+				slope == BeltSlope.DIAGONAL_SIDEWAYS, start, end, bottom);
             SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
 
             Instancer<ScrollInstance> beltModel = instancerProvider().instancer(AllInstanceTypes.SCROLLING, Models.partial(beltPartial));
@@ -155,7 +157,10 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
         float rotY = facing.toYRot() + ((diagonal ^ alongX) && !downward ? 180 : 0) + (sideways && alongZ ? 180 : 0) + (vertical && alongX ? 90 : 0);
         float rotZ = (sideways ? 90 : 0) + (vertical && alongX ? 90 : 0);
 
-        Quaternionf q = new Quaternionf().rotationXYZ(rotX * Mth.DEG_TO_RAD, rotY * Mth.DEG_TO_RAD, rotZ * Mth.DEG_TO_RAD);
+        Quaternionf q = beltSlope == BeltSlope.DIAGONAL_SIDEWAYS
+            ? new Quaternionf().rotationY((AngleHelper.horizontalAngle(facing) + 270) * Mth.DEG_TO_RAD)
+                .rotateZ(90 * Mth.DEG_TO_RAD)
+            : new Quaternionf().rotationXYZ(rotX * Mth.DEG_TO_RAD, rotY * Mth.DEG_TO_RAD, rotZ * Mth.DEG_TO_RAD);
 
 		key.setSpriteShift(spriteShift, 1f, (diagonal ? SCROLL_FACTOR_DIAGONAL : SCROLL_FACTOR_OTHERWISE))
 				.position(getVisualPosition())
