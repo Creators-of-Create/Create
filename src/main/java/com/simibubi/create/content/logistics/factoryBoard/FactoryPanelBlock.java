@@ -48,7 +48,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -290,8 +289,8 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 	@Override
 	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
 										CollisionContext pContext) {
-		if (pContext instanceof EntityCollisionContext ecc && ecc.getEntity() == null)
-			return getShape(pState, pLevel, pPos, pContext);
+		// Factory panels are purely visual; entities and pathfinding should treat them
+		// like grass/torches, not like a 2px step that mobs try to hop over.
 		return Shapes.empty();
 	}
 
