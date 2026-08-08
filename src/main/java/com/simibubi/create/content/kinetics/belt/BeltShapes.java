@@ -71,6 +71,7 @@ public class BeltShapes {
 	private static final VoxelShape
 			SLOPE_DESC_PART = makeSlopePart(false),
 			SLOPE_ASC_PART = makeSlopePart(true),
+			DIAGONAL_SIDEWAYS_PART = makeDiagonalSideways(),
 			SIDEWAYS_FULL_PART = makeSidewaysFull(),
 			SIDEWAYS_END_PART = makeSidewaysEnding(),
 			FLAT_FULL_PART = makeFlatFull(),
@@ -96,6 +97,8 @@ public class BeltShapes {
 			SIDE_FULL = VoxelShaper.forHorizontalAxis(SIDEWAYS_FULL_PART, Axis.Z),
 			SIDE_END = VoxelShaper.forHorizontal(compose(SIDEWAYS_END_PART, SIDEWAYS_FULL_PART), Direction.SOUTH),
 			SIDE_START = VoxelShaper.forHorizontal(compose(SIDEWAYS_FULL_PART, SIDEWAYS_END_PART), Direction.SOUTH);
+
+	private static final VoxelShaper DIAGONAL_SIDE = VoxelShaper.forHorizontal(DIAGONAL_SIDEWAYS_PART, Direction.SOUTH);
 
 	//Sloped Shapes
 	private static final VoxelShaper
@@ -157,6 +160,15 @@ public class BeltShapes {
 		return box(3,1,0,13,15,16);
 	}
 
+	private static VoxelShape makeDiagonalSideways() {
+		VoxelShape result = Shapes.empty();
+		for (int z = 0; z < 16; z++) {
+			int x = 15 - z;
+			result = Shapes.or(result, box(Math.max(0, x - 5), 1, z, Math.min(16, x + 6), 15, z + 1));
+		}
+		return result;
+	}
+
 	public static VoxelShape getShape(BlockState state) {
 		if (cache.containsKey(state))
 			return cache.get(state);
@@ -203,6 +215,9 @@ public class BeltShapes {
 			return (part == BeltPart.START ? SIDE_START : SIDE_END).get(facing);
 		}
 
+		if (slope == BeltSlope.DIAGONAL_SIDEWAYS)
+			return DIAGONAL_SIDE.get(facing);
+
 		//slope
 		if (part == BeltPart.MIDDLE || part == BeltPart.PULLEY)
 			return (slope == BeltSlope.DOWNWARD ? SLOPE_DESC : SLOPE_ASC).get(facing);
@@ -226,7 +241,7 @@ public class BeltShapes {
 
 		if (slope == BeltSlope.VERTICAL)
 			return Shapes.empty();
-		if (slope == BeltSlope.SIDEWAYS)
+		if (slope.isSideways())
 			return Shapes.empty();
 
 		if (slope == BeltSlope.HORIZONTAL) {

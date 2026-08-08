@@ -125,7 +125,7 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
         Direction dir = blockState.getValue(BeltBlock.HORIZONTAL_FACING)
                                   .getClockWise();
 
-		if (blockState.getValue(BeltBlock.SLOPE) == BeltSlope.SIDEWAYS)
+		if (blockState.getValue(BeltBlock.SLOPE).isSideways())
             dir = Direction.UP;
 
         return dir;
@@ -135,7 +135,7 @@ public class BeltVisual extends KineticBlockEntityVisual<BeltBlockEntity> {
 		BeltSlope beltSlope = blockState.getValue(BeltBlock.SLOPE);
 		Direction facing = blockState.getValue(BeltBlock.HORIZONTAL_FACING);
 		boolean diagonal = beltSlope.isDiagonal();
-		boolean sideways = beltSlope == BeltSlope.SIDEWAYS;
+		boolean sideways = beltSlope.isSideways();
 		boolean vertical = beltSlope == BeltSlope.VERTICAL;
 		boolean upward = beltSlope == BeltSlope.UPWARD;
 		boolean alongX = facing.getAxis() == Direction.Axis.X;

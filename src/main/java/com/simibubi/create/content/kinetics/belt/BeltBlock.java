@@ -42,6 +42,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -125,7 +126,7 @@ public class BeltBlock extends HorizontalKineticBlock
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		if (state.getValue(SLOPE) == BeltSlope.SIDEWAYS)
+		if (state.getValue(SLOPE).isSideways())
 			return Axis.Y;
 		return state.getValue(HORIZONTAL_FACING)
 			.getClockWise()
@@ -239,7 +240,7 @@ public class BeltBlock extends HorizontalKineticBlock
 		if (!AllBlocks.BELT.has(state))
 			return false;
 		BeltSlope slope = state.getValue(SLOPE);
-		return slope != BeltSlope.VERTICAL && slope != BeltSlope.SIDEWAYS;
+		return slope != BeltSlope.VERTICAL && !slope.isSideways();
 	}
 
 	@Override
@@ -310,6 +311,10 @@ public class BeltBlock extends HorizontalKineticBlock
 			KineticBlockEntity.switchToBlockState(level, pos, state.setValue(PART, BeltPart.PULLEY));
 			return ItemInteractionResult.SUCCESS;
 		}
+
+		if (state.getValue(SLOPE) == BeltSlope.DIAGONAL_SIDEWAYS
+			&& (AllBlocks.BRASS_CASING.isIn(stack) || AllBlocks.ANDESITE_CASING.isIn(stack)))
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
 		if (AllBlocks.BRASS_CASING.isIn(stack)) {
 			withBlockEntityDo(level, pos, be -> be.setCasingType(CasingType.BRASS));
@@ -584,8 +589,9 @@ public class BeltBlock extends HorizontalKineticBlock
 			return null;
 		if (slope == BeltSlope.VERTICAL)
 			return pos.above(direction.getAxisDirection() == AxisDirection.POSITIVE ? offset : -offset);
-		pos = pos.relative(direction, offset);
-		if (slope != BeltSlope.HORIZONTAL && slope != BeltSlope.SIDEWAYS)
+		Vec3i beltVector = BeltHelper.getBeltVector(direction, slope);
+		pos = pos.offset(beltVector.getX() * offset, 0, beltVector.getZ() * offset);
+		if (slope != BeltSlope.HORIZONTAL && !slope.isSideways())
 			return pos.above(slope == BeltSlope.UPWARD ? offset : -offset);
 		return pos;
 	}
@@ -631,6 +637,9 @@ public class BeltBlock extends HorizontalKineticBlock
 	}
 
 	public BlockState transform(BlockState state, StructureTransform transform) {
+		if (state.getValue(SLOPE) == BeltSlope.DIAGONAL_SIDEWAYS)
+			return transformDiagonalSideways(state, transform);
+
 		if (transform.mirror != null) {
 			state = mirror(state, transform.mirror);
 		}
@@ -639,6 +648,38 @@ public class BeltBlock extends HorizontalKineticBlock
 			return rotate(state, transform.rotation);
 		}
 		return transformInner(state, transform);
+	}
+
+	private BlockState transformDiagonalSideways(BlockState state, StructureTransform transform) {
+		Vec3 beltVector = transform.applyWithoutOffsetUncentered(BeltHelper.getBeltVector(state));
+		Direction shaftDirection = Direction.get(AxisDirection.POSITIVE, getRotationAxis(state));
+		Vec3 shaftVector = transform.applyWithoutOffsetUncentered(Vec3.atLowerCornerOf(shaftDirection.getNormal()));
+
+		int x = (int) Math.round(beltVector.x);
+		int y = (int) Math.round(beltVector.y);
+		int z = (int) Math.round(beltVector.z);
+		Axis shaftAxis = Direction.getNearest(shaftVector.x, shaftVector.y, shaftVector.z)
+			.getAxis();
+
+		BeltSlope slope;
+		Direction facing;
+		if (x != 0 && z != 0) {
+			slope = BeltSlope.DIAGONAL_SIDEWAYS;
+			facing = BeltHelper.getDiagonalFacing(x, z);
+		} else if (y != 0 && (x != 0 || z != 0)) {
+			slope = y > 0 ? BeltSlope.UPWARD : BeltSlope.DOWNWARD;
+			facing = Direction.getNearest(x, 0, z);
+		} else if (y != 0) {
+			slope = BeltSlope.VERTICAL;
+			Axis facingAxis = shaftAxis == Axis.X ? Axis.Z : Axis.X;
+			facing = Direction.get(y > 0 ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE, facingAxis);
+		} else {
+			slope = shaftAxis == Axis.Y ? BeltSlope.SIDEWAYS : BeltSlope.HORIZONTAL;
+			facing = Direction.getNearest(x, 0, z);
+		}
+
+		return state.setValue(SLOPE, slope)
+			.setValue(HORIZONTAL_FACING, facing);
 	}
 
 	protected BlockState transformInner(BlockState state, StructureTransform transform) {

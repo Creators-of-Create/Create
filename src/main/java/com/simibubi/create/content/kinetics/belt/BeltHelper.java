@@ -7,6 +7,7 @@ import com.simibubi.create.AllTags.AllItemTags;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.util.Mth;
@@ -71,10 +72,9 @@ public class BeltHelper {
 
 	public static BlockPos getPositionForOffset(BeltBlockEntity controller, int offset) {
 		BlockPos pos = controller.getBlockPos();
-		Vec3i vec = controller.getBeltFacing()
-			.getNormal();
 		BeltSlope slope = controller.getBlockState()
 			.getValue(BeltBlock.SLOPE);
+		Vec3i vec = getBeltVector(controller.getBeltFacing(), slope);
 		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 
 		return pos.offset(offset * vec.getX(), Mth.clamp(offset, 0, controller.beltLength - 1) * verticality,
@@ -90,8 +90,7 @@ public class BeltHelper {
 			verticalMovement = 0;
 		verticalMovement = verticalMovement * (Math.min(offset, controller.beltLength - .5f) - .5f);
 		Vec3 vec = VecHelper.getCenterOf(controller.getBlockPos());
-		Vec3 horizontalMovement = Vec3.atLowerCornerOf(controller.getBeltFacing()
-			.getNormal())
+		Vec3 horizontalMovement = Vec3.atLowerCornerOf(getBeltVector(controller.getBeltFacing(), slope))
 			.scale(offset - .5f);
 
 		if (slope == BeltSlope.VERTICAL)
@@ -105,13 +104,28 @@ public class BeltHelper {
 	public static Vec3 getBeltVector(BlockState state) {
 		BeltSlope slope = state.getValue(BeltBlock.SLOPE);
 		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
-		Vec3 horizontalMovement = Vec3.atLowerCornerOf(state.getValue(BeltBlock.HORIZONTAL_FACING)
-			.getNormal());
+		Direction facing = state.getValue(BeltBlock.HORIZONTAL_FACING);
+		Vec3 horizontalMovement = Vec3.atLowerCornerOf(getBeltVector(facing, slope));
 		if (slope == BeltSlope.VERTICAL)
-			return new Vec3(0, state.getValue(BeltBlock.HORIZONTAL_FACING)
+			return new Vec3(0, facing
 				.getAxisDirection()
 				.getStep(), 0);
 		return new Vec3(0, verticality, 0).add(horizontalMovement);
+	}
+
+	public static Vec3i getBeltVector(Direction facing, BeltSlope slope) {
+		Vec3i facingNormal = facing.getNormal();
+		if (slope != BeltSlope.DIAGONAL_SIDEWAYS)
+			return facingNormal;
+		Vec3i clockwiseNormal = facing.getClockWise()
+			.getNormal();
+		return facingNormal.offset(clockwiseNormal);
+	}
+
+	public static Direction getDiagonalFacing(int x, int z) {
+		if (x > 0)
+			return z > 0 ? Direction.EAST : Direction.NORTH;
+		return z > 0 ? Direction.SOUTH : Direction.WEST;
 	}
 
 }

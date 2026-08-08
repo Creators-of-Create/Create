@@ -70,10 +70,10 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 
 			boolean downward = beltSlope == BeltSlope.DOWNWARD;
 			boolean upward = beltSlope == BeltSlope.UPWARD;
-			boolean diagonal = downward || upward;
+			boolean diagonal = beltSlope.isDiagonal();
 			boolean start = part == BeltPart.START;
 			boolean end = part == BeltPart.END;
-			boolean sideways = beltSlope == BeltSlope.SIDEWAYS;
+			boolean sideways = beltSlope.isSideways();
 			boolean alongX = facing.getAxis() == Direction.Axis.X;
 
 			PoseStack localTransforms = new PoseStack();
