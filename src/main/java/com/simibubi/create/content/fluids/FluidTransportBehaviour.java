@@ -40,10 +40,12 @@ public abstract class FluidTransportBehaviour extends BlockEntityBehaviour {
 
 	public Map<Direction, PipeConnection> interfaces;
 	public UpdatePhase phase;
+	public boolean scheduleUpdate;
 
 	public FluidTransportBehaviour(SmartBlockEntity be) {
 		super(be);
 		phase = UpdatePhase.WAIT_FOR_PUMPS;
+		scheduleUpdate = false;
 	}
 
 	public boolean canPullFluidFrom(FluidStack fluid, BlockState state, Direction direction) {
@@ -67,6 +69,13 @@ public abstract class FluidTransportBehaviour extends BlockEntityBehaviour {
 
 		if (interfaces == null)
 			return;
+
+		if (onServer && scheduleUpdate) {
+			FluidPropagator.propagateChangedPipe(world, pos, blockEntity.getBlockState());
+			scheduleUpdate = false;
+			return;
+		}
+
 		Collection<PipeConnection> connections = interfaces.values();
 
 		// Do not provide a lone pipe connection with its own flow input
@@ -159,6 +168,9 @@ public abstract class FluidTransportBehaviour extends BlockEntityBehaviour {
 
 		interfaces.values()
 			.forEach(connection -> connection.deserializeNBT(nbt, registries, blockEntity.getBlockPos(), clientPacket));
+
+		if (nbt.contains("ScheduleUpdate"))
+			scheduleUpdate = nbt.getBoolean("ScheduleUpdate");
 	}
 
 	@Override
@@ -171,6 +183,9 @@ public abstract class FluidTransportBehaviour extends BlockEntityBehaviour {
 
 		interfaces.values()
 			.forEach(connection -> connection.serializeNBT(nbt, registries, clientPacket));
+
+		if (scheduleUpdate)
+			nbt.putBoolean("ScheduleUpdate", true);
 	}
 
 	public FluidStack getProvidedOutwardFluid(Direction side) {
