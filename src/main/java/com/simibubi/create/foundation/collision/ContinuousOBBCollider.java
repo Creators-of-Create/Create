@@ -141,6 +141,9 @@ public class ContinuousOBBCollider {
 
 				double timeOfImpact = mf.getTimeOfImpact();
 				boolean isTemporal = timeOfImpact > 0 && timeOfImpact < 1;
+				Vec3 responseAxis = mf.axis != null ? mf.axis
+					: (mf.normalAxis != null ? mf.normalAxis : mf.stepSeparationAxis);
+				Vec3 responseNormal = mf.normalAxis != null ? mf.normalAxis : responseAxis;
 
 				if (!isTemporal && mf.isDiscreteCollision) {
 					if (mf.stepSeparation <= entityMaxStep) {
@@ -150,18 +153,18 @@ public class ContinuousOBBCollider {
 						collisionResponseZ += mf.stepSeparationAxis.z * sep;
 					} else {
 						double sep = ContinuousSeparationManifold.withSignedEpsilon(mf.separation);
-						collisionResponseX += mf.axis.x * sep;
-						collisionResponseY += mf.axis.y * sep;
-						collisionResponseZ += mf.axis.z * sep;
+						collisionResponseX += responseAxis.x * sep;
+						collisionResponseY += responseAxis.y * sep;
+						collisionResponseZ += responseAxis.z * sep;
 					}
 					timeOfImpact = 0;
 				}
 
 				if (timeOfImpact >= 0 && temporalResponse > timeOfImpact) {
 					double scale = ContinuousSeparationManifold.withSignedEpsilon(mf.normalSeparation);
-					normalX = mf.normalAxis.x * scale;
-					normalY = mf.normalAxis.y * scale;
-					normalZ = mf.normalAxis.z * scale;
+					normalX = responseNormal.x * scale;
+					normalY = responseNormal.y * scale;
+					normalZ = responseNormal.z * scale;
 
 					locationX = mf.collisionX;
 					locationY = mf.collisionY;
@@ -247,7 +250,7 @@ public class ContinuousOBBCollider {
 				earliestCollisionExitTime = Math.min(exitTime, earliestCollisionExitTime);
 			}
 
-			if (axisOfObjA && distance != 0 && -(diff) <= abs(normalSeparation)) {
+			if (axisOfObjA && -(diff) <= abs(normalSeparation)) {
 				normalAxis = axis;
 				normalSeparation = separation;
 			}
@@ -274,7 +277,7 @@ public class ContinuousOBBCollider {
 				}
 			}
 
-			if (distance != 0 && -(diff) <= abs(this.separation)) {
+			if (-(diff) <= abs(this.separation)) {
 				this.axis = axis;
 				this.separation = separation;
 				double scale = signum(TL) * (axisOfObjA ? -rA : -rB) - signum(separation) * 0.125;
