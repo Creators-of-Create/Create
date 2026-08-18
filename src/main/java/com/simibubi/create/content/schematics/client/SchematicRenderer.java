@@ -15,17 +15,20 @@ import net.createmod.catnip.render.ShadedBlockSbbBuilder;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.material.FluidState;
 
 import net.neoforged.neoforge.client.model.data.ModelData;
 
@@ -34,6 +37,7 @@ public class SchematicRenderer {
 	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
 	private final Map<RenderType, SuperByteBuffer> bufferCache = new LinkedHashMap<>(getLayerCount());
+	private final Map<RenderType, SuperByteBuffer> fluidBufferCache = new LinkedHashMap<>(getLayerCount());
 	private boolean changed;
 	protected final SchematicLevel schematic;
 	private final BlockPos anchor;
@@ -67,6 +71,7 @@ public class SchematicRenderer {
 		bufferCache.forEach((layer, buffer) -> {
 			buffer.renderInto(ms, buffers.getBuffer(layer));
 		});
+		fluidBufferCache.forEach((layer, buffer) -> buffer.renderInto(ms, buffers.getBuffer(layer)));
 		scratchErroredBlockEntities.clear();
 		BlockEntityRenderHelper.renderBlockEntities(renderedBlockEntities, shouldRenderBlockEntities, scratchErroredBlockEntities, null, schematic, ms, null, buffers, AnimationTickHolder.getPartialTicks());
 
@@ -76,11 +81,15 @@ public class SchematicRenderer {
 
 	protected void redraw() {
 		bufferCache.clear();
+		fluidBufferCache.clear();
 
 		for (RenderType layer : RenderType.chunkBufferLayers()) {
 			SuperByteBuffer buffer = drawLayer(layer);
 			if (!buffer.isEmpty())
 				bufferCache.put(layer, buffer);
+			SuperByteBuffer fluidBuffer = drawFluidLayer(layer);
+			if (!fluidBuffer.isEmpty())
+				fluidBufferCache.put(layer, fluidBuffer);
 		}
 	}
 
@@ -128,6 +137,35 @@ public class SchematicRenderer {
 		return sbbBuilder.end();
 	}
 
+	protected SuperByteBuffer drawFluidLayer(RenderType layer) {
+		BlockRenderDispatcher dispatcher = Minecraft.getInstance()
+			.getBlockRenderer();
+		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
+		PoseStack poseStack = objects.poseStack;
+		BlockPos.MutableBlockPos mutableBlockPos = objects.mutableBlockPos;
+		BoundingBox bounds = schematic.getBounds();
+		FluidSbbBuilder builder = objects.fluidSbbBuilder;
+		builder.begin();
+
+		schematic.renderMode = true;
+		for (BlockPos localPos : BlockPos.betweenClosed(bounds.minX(), bounds.minY(), bounds.minZ(), bounds.maxX(),
+			bounds.maxY(), bounds.maxZ())) {
+			BlockPos worldPos = mutableBlockPos.setWithOffset(localPos, anchor);
+			BlockState state = schematic.getBlockState(worldPos);
+			FluidState fluid = state.getFluidState();
+			if (fluid.isEmpty() || ItemBlockRenderTypes.getRenderLayer(fluid) != layer)
+				continue;
+			poseStack.pushPose();
+			poseStack.translate(localPos.getX() - SectionPos.sectionRelative(worldPos.getX()),
+				localPos.getY() - SectionPos.sectionRelative(worldPos.getY()),
+				localPos.getZ() - SectionPos.sectionRelative(worldPos.getZ()));
+			dispatcher.renderLiquid(worldPos, schematic, builder, state, fluid);
+			poseStack.popPose();
+		}
+		schematic.renderMode = false;
+		return builder.end();
+	}
+
 	private static int getLayerCount() {
 		return RenderType.chunkBufferLayers()
 			.size();
@@ -138,6 +176,7 @@ public class SchematicRenderer {
 		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
 		public final BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 		public final ShadedBlockSbbBuilder sbbBuilder = ShadedBlockSbbBuilder.create();
+		public final FluidSbbBuilder fluidSbbBuilder = FluidSbbBuilder.create(poseStack);
 	}
 
 }

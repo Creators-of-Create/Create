@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirtPathBlock;
 import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SeaPickleBlock;
 import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.TurtleEggBlock;
@@ -37,15 +38,25 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+
+import net.neoforged.neoforge.fluids.FluidType;
 
 public class ItemRequirement {
-	public static final ItemRequirement NONE = new ItemRequirement(Collections.emptyList());
-	public static final ItemRequirement INVALID = new ItemRequirement(Collections.emptyList());
+	public static final ItemRequirement NONE = new ItemRequirement(Collections.emptyList(), Collections.emptyList());
+	public static final ItemRequirement INVALID = new ItemRequirement(Collections.emptyList(), Collections.emptyList());
 
 	protected List<StackRequirement> requiredItems;
+	protected List<FluidRequirement> requiredFluids;
 
 	public ItemRequirement(List<StackRequirement> requiredItems) {
+		this(requiredItems, Collections.emptyList());
+	}
+
+	public ItemRequirement(List<StackRequirement> requiredItems, List<FluidRequirement> requiredFluids) {
 		this.requiredItems = requiredItems;
+		this.requiredFluids = requiredFluids;
 	}
 
 	public ItemRequirement(StackRequirement stackRequirement) {
@@ -90,6 +101,15 @@ public class ItemRequirement {
 			}
 		}
 
+		FluidState fluidState = state.getFluidState();
+		if (!fluidState.isEmpty() && fluidState.isSource()) {
+			if (requirement.isInvalid() && (block instanceof LiquidBlock || block.asItem() == Items.AIR))
+				requirement = NONE;
+			if (!requirement.isInvalid())
+				requirement = requirement.union(new ItemRequirement(Collections.emptyList(),
+					List.of(new FluidRequirement(fluidState.getType(), FluidType.BUCKET_VOLUME))));
+		}
+
 		return requirement;
 	}
 
@@ -97,6 +117,8 @@ public class ItemRequirement {
 		Block block = state.getBlock();
 		if (block == Blocks.AIR)
 			return NONE;
+		if (block instanceof LiquidBlock)
+			return INVALID;
 
 		Item item = block.asItem();
 		if (item == Items.AIR)
@@ -173,6 +195,24 @@ public class ItemRequirement {
 		return requiredItems;
 	}
 
+	public List<FluidRequirement> getRequiredFluids() {
+		return requiredFluids;
+	}
+
+	public boolean hasFluidRequirements() {
+		return !requiredFluids.isEmpty();
+	}
+
+	public boolean isPureFluid() {
+		return requiredItems.isEmpty() && !requiredFluids.isEmpty();
+	}
+
+	public ItemRequirement onlyFluids() {
+		if (isInvalid() || requiredFluids.isEmpty())
+			return isInvalid() ? INVALID : NONE;
+		return new ItemRequirement(Collections.emptyList(), requiredFluids);
+	}
+
 	public ItemRequirement union(ItemRequirement other) {
 		if (this.isInvalid() || other.isInvalid())
 			return INVALID;
@@ -181,8 +221,16 @@ public class ItemRequirement {
 		if (other.isEmpty())
 			return this;
 
-		return new ItemRequirement(Stream.concat(requiredItems.stream(), other.requiredItems.stream())
-			.collect(Collectors.toList()));
+		return new ItemRequirement(
+			Stream.concat(requiredItems.stream(), other.requiredItems.stream()).collect(Collectors.toList()),
+			Stream.concat(requiredFluids.stream(), other.requiredFluids.stream()).collect(Collectors.toList()));
+	}
+
+	public record FluidRequirement(Fluid fluid, int amount) {
+		public FluidRequirement {
+			if (amount <= 0)
+				throw new IllegalArgumentException("Fluid requirement amount must be positive");
+		}
 	}
 
 	public enum ItemUseType {

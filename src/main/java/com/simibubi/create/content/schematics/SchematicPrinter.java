@@ -24,9 +24,11 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
@@ -40,7 +42,7 @@ import net.minecraft.world.level.material.Fluids;
 public class SchematicPrinter {
 
 	public enum PrintStage {
-		BLOCKS, DEFERRED_BLOCKS, ENTITIES
+		BLOCKS, CONTAINED_FLUID_BLOCKS, DEFERRED_BLOCKS, FREE_FLUIDS, ENTITIES
 	}
 
 	private boolean schematicLoaded;
@@ -51,12 +53,16 @@ public class SchematicPrinter {
 	private BlockPos currentPos;
 	private int printingEntityIndex;
 	private PrintStage printStage;
+	private List<BlockPos> containedFluidBlocks;
 	private List<BlockPos> deferredBlocks;
+	private List<BlockPos> freeFluids;
 
 	public SchematicPrinter() {
 		printingEntityIndex = -1;
 		printStage = PrintStage.BLOCKS;
+		containedFluidBlocks = new LinkedList<>();
 		deferredBlocks = new LinkedList<>();
+		freeFluids = new LinkedList<>();
 	}
 
 	public void fromTag(CompoundTag compound, boolean clientPacket) {
@@ -72,9 +78,9 @@ public class SchematicPrinter {
 
 		printingEntityIndex = compound.getInt("EntityProgress");
 		printStage = PrintStage.valueOf(compound.getString("PrintStage"));
-		compound.getList("DeferredBlocks", 10).stream()
-			.map(p -> NBTHelper.readBlockPos((CompoundTag) p, "Pos"))
-			.collect(Collectors.toCollection(() -> deferredBlocks));
+		readPositions(compound, "ContainedFluidBlocks", containedFluidBlocks);
+		readPositions(compound, "DeferredBlocks", deferredBlocks);
+		readPositions(compound, "FreeFluids", freeFluids);
 	}
 
 	public void write(CompoundTag compound) {
@@ -84,13 +90,27 @@ public class SchematicPrinter {
 			compound.put("Anchor", NbtUtils.writeBlockPos(schematicAnchor));
 		compound.putInt("EntityProgress", printingEntityIndex);
 		compound.putString("PrintStage", printStage.name());
-		ListTag tagDeferredBlocks = new ListTag();
-		for (BlockPos p : deferredBlocks) {
-			CompoundTag tag = new CompoundTag();
-			tag.put("Pos", NbtUtils.writeBlockPos(p));
-			tagDeferredBlocks.add(tag);
+		writePositions(compound, "ContainedFluidBlocks", containedFluidBlocks);
+		writePositions(compound, "DeferredBlocks", deferredBlocks);
+		writePositions(compound, "FreeFluids", freeFluids);
+	}
+
+	private static void readPositions(CompoundTag compound, String key, List<BlockPos> positions) {
+		positions.clear();
+		compound.getList(key, 10)
+			.stream()
+			.map(p -> NBTHelper.readBlockPos((CompoundTag) p, "Pos"))
+			.collect(Collectors.toCollection(() -> positions));
+	}
+
+	private static void writePositions(CompoundTag compound, String key, List<BlockPos> positions) {
+		ListTag listTag = new ListTag();
+		for (BlockPos p : positions) {
+			CompoundTag positionTag = new CompoundTag();
+			positionTag.put("Pos", NbtUtils.writeBlockPos(p));
+			listTag.add(positionTag);
 		}
-		compound.put("DeferredBlocks", tagDeferredBlocks);
+		compound.put(key, listTag);
 	}
 
 	public void loadSchematic(ItemStack blueprint, Level originalWorld, boolean processNBT) {
@@ -125,7 +145,9 @@ public class SchematicPrinter {
 
 		printingEntityIndex = -1;
 		printStage = PrintStage.BLOCKS;
+		containedFluidBlocks.clear();
 		deferredBlocks.clear();
+		freeFluids.clear();
 		BoundingBox bounds = blockReader.getBounds();
 		currentPos = new BlockPos(bounds.minX() - 1, bounds.minY(), bounds.minZ());
 		schematicLoaded = true;
@@ -139,7 +161,9 @@ public class SchematicPrinter {
 		blockReader = null;
 		printingEntityIndex = -1;
 		printStage = PrintStage.BLOCKS;
+		containedFluidBlocks.clear();
 		deferredBlocks.clear();
+		freeFluids.clear();
 	}
 
 	public boolean isLoaded() {
@@ -236,6 +260,13 @@ public class SchematicPrinter {
 			return false;
 		if (toReplace == state && !mergeTEs)
 			return false;
+		if (printStage == PrintStage.FREE_FLUIDS && toReplace.getBlock() == state.getBlock() && !state.getFluidState()
+			.isEmpty() && toReplace.getFluidState()
+			.isSource() && toReplace.getFluidState()
+			.getType()
+			.isSame(state.getFluidState()
+				.getType()))
+			return false;
 		if (toReplace.getDestroySpeed(world, pos) == -1
 			|| (toReplaceOther != null && toReplaceOther.getDestroySpeed(world, pos) == -1))
 			return false;
@@ -244,7 +275,7 @@ public class SchematicPrinter {
 		return predicate.shouldPlace(pos, state, blockEntity, toReplace, toReplaceOther, isNormalCube);
 	}
 
-	public ItemRequirement getCurrentRequirement() {
+	public ItemRequirement getCurrentRequirement(Level world) {
 		if (printStage == PrintStage.ENTITIES)
 			return ItemRequirement.of(blockReader.getEntityList().get(printingEntityIndex));
 
@@ -257,7 +288,18 @@ public class SchematicPrinter {
 			if (blockEntity != null && data != null)
 				blockEntity.loadWithComponents(data, blockReader.registryAccess());
 		}
-		return ItemRequirement.of(blockState, blockEntity);
+		ItemRequirement requirement = ItemRequirement.of(blockState, blockEntity);
+		if (printStage == PrintStage.CONTAINED_FLUID_BLOCKS && isMatchingDryState(world.getBlockState(target),
+			blockState))
+			return requirement.onlyFluids();
+		return requirement;
+	}
+
+	private static boolean isMatchingDryState(BlockState existing, BlockState required) {
+		if (!required.hasProperty(BlockStateProperties.WATERLOGGED)
+			|| !required.getValue(BlockStateProperties.WATERLOGGED))
+			return false;
+		return existing == required.setValue(BlockStateProperties.WATERLOGGED, false);
 	}
 
 	public int markAllBlockRequirements(MaterialChecklist checklist, Level world, PlacementPredicate predicate) {
@@ -274,6 +316,8 @@ public class SchematicPrinter {
 			if (!shouldPlaceBlock(world, predicate, relPos))
 				continue;
 			ItemRequirement requirement = ItemRequirement.of(required, requiredBE);
+			if (isMatchingDryState(world.getBlockState(relPos), required))
+				requirement = requirement.onlyFluids();
 			if (requirement.isEmpty())
 				continue;
 			if (requirement.isInvalid())
@@ -300,16 +344,30 @@ public class SchematicPrinter {
 
 		do {
 			if (printStage == PrintStage.BLOCKS) {
-				while (tryAdvanceCurrentPos()) {
-					deferredBlocks.add(currentPos);
+				while (tryAdvanceCurrentPos()) {}
+			}
+
+			if (printStage == PrintStage.CONTAINED_FLUID_BLOCKS) {
+				if (containedFluidBlocks.isEmpty()) {
+					printStage = PrintStage.DEFERRED_BLOCKS;
+				} else {
+					currentPos = containedFluidBlocks.remove(0);
 				}
 			}
 
 			if (printStage == PrintStage.DEFERRED_BLOCKS) {
 				if (deferredBlocks.isEmpty()) {
-					printStage = PrintStage.ENTITIES;
+					printStage = PrintStage.FREE_FLUIDS;
 				} else {
 					currentPos = deferredBlocks.remove(0);
+				}
+			}
+
+			if (printStage == PrintStage.FREE_FLUIDS) {
+				if (freeFluids.isEmpty()) {
+					printStage = PrintStage.ENTITIES;
+				} else {
+					currentPos = freeFluids.remove(0);
 				}
 			}
 
@@ -340,11 +398,26 @@ public class SchematicPrinter {
 
 		// End of blocks reached
 		if (currentPos.getY() > bounds.getYSpan()) {
-			printStage = PrintStage.DEFERRED_BLOCKS;
+			printStage = PrintStage.CONTAINED_FLUID_BLOCKS;
 			return false;
 		}
 
-		return shouldDeferBlock(blockReader.getBlockState(getCurrentTarget()));
+		BlockState state = blockReader.getBlockState(getCurrentTarget());
+		if (!state.getFluidState()
+			.isEmpty() && state.getFluidState()
+			.isSource()) {
+			if (state.getBlock() instanceof LiquidBlock || state.getBlock()
+				.asItem() == Items.AIR)
+				freeFluids.add(currentPos);
+			else
+				containedFluidBlocks.add(currentPos);
+			return true;
+		}
+		if (shouldDeferBlock(state)) {
+			deferredBlocks.add(currentPos);
+			return true;
+		}
+		return false;
 	}
 
 	public static boolean shouldDeferBlock(BlockState state) {
