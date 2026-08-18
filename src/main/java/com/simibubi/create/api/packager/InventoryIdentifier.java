@@ -28,6 +28,14 @@ public interface InventoryIdentifier {
 	 */
 	boolean contains(BlockFace face);
 
+	/***
+	 * Override this method if necessary to obtain more context.
+	 * @return true if the given face is part of the inventory this identifier represents
+	 */
+	default boolean contains(Level level, BlockFace face) {
+		return contains(face);
+	}
+
 	/**
 	 * Get the InventoryIdentifier for the given BlockFace, if present.
 	 */

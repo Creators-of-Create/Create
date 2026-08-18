@@ -58,6 +58,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -657,8 +658,9 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 			return false;
 
 		if (inventory.identifier() != null) {
+			Level targetLevel = this.targetInventory.getWorld();
 			BlockFace face = this.targetInventory.getTarget().getOpposite();
-			return inventory.identifier().contains(face);
+			return inventory.identifier().contains(targetLevel, face);
 		} else {
 			return isSameInventoryFallback(targetHandler, inventory.handler());
 		}
