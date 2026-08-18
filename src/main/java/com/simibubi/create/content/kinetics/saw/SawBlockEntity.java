@@ -53,15 +53,9 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
-import net.minecraft.world.level.block.BambooStalkBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.ChorusPlantBlock;
-import net.minecraft.world.level.block.KelpBlock;
-import net.minecraft.world.level.block.KelpPlantBlock;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -513,19 +507,9 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 			return true;
 		if (TreeCutter.isRoot(stateToBreak))
 			return true;
+		if (TreeCutter.isVerticalPlant(stateToBreak))
+			return true;
 		Block block = stateToBreak.getBlock();
-		if (block instanceof BambooStalkBlock)
-			return true;
-		if (block.equals(Blocks.PUMPKIN) || block.equals(Blocks.MELON))
-			return true;
-		if (block instanceof CactusBlock)
-			return true;
-		if (block instanceof SugarCaneBlock)
-			return true;
-		if (block instanceof KelpPlantBlock)
-			return true;
-		if (block instanceof KelpBlock)
-			return true;
 		if (block instanceof ChorusPlantBlock)
 			return true;
 		if (TreeCutter.canDynamicTreeCutFrom(block))

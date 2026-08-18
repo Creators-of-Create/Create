@@ -1,0 +1,33 @@
+{
+  "values": [
+    "minecraft:mushroom_stem",
+    {
+      "id": "quark:glow_shroom_stem",
+      "required": false
+    },
+    {
+      "id": "undergarden:indigo_mushroom_stem",
+      "required": false
+    },
+    {
+      "id": "undergarden:blood_mushroom_stem",
+      "required": false
+    },
+    {
+      "id": "undergarden:ink_mushroom_stem",
+      "required": false
+    },
+    {
+      "id": "undergarden:veil_mushroom_stem",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:white_mushroom_stem",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:brown_mushroom_stem",
+      "required": false
+    }
+  ]
+}
