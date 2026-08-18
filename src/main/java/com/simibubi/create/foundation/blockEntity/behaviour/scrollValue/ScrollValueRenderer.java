@@ -47,6 +47,11 @@ public class ScrollValueRenderer {
 			if (!(blockEntityBehaviour instanceof ScrollValueBehaviour behaviour))
 				continue;
 
+			if (behaviour instanceof SidedScrollValueBehavior<?> sidedScrollValueBehavior) {
+				behaviour = sidedScrollValueBehavior.get(face);
+				if (behaviour == null)
+					continue;
+			}
 			if (!behaviour.isActive()) {
 				Outliner.getInstance().remove(behaviour);
 				continue;
