@@ -782,7 +782,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 			return blockState;
 
 		return AllBlocks.SHAFT.getDefaultState()
-			.setValue(AbstractSimpleShaftBlock.AXIS, slope == BeltSlope.SIDEWAYS ? Axis.Y
+			.setValue(AbstractSimpleShaftBlock.AXIS, slope.isSideways() ? Axis.Y
 				: facing.getClockWise()
 					.getAxis());
 	}
