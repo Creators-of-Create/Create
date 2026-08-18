@@ -1,0 +1,238 @@
+package com.simibubi.create.content.redstone.entityObserver;
+
+import java.util.List;
+
+import com.simibubi.create.content.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.fluids.PipeConnection.Flow;
+import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorPackage;
+import com.simibubi.create.content.redstone.DirectedDirectionalBlock;
+import com.simibubi.create.content.redstone.FilteredDetectorFilterSlot;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.CapManipulationBehaviourBase.InterfaceProvider;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.TankManipulationBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryTrackerBehaviour;
+
+import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.math.BlockFace;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Clearable;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.MinecartChest;
+import net.minecraft.world.phys.AABB;
+
+public class EntityObserverBlockEntity extends SmartBlockEntity implements Clearable {
+	private static final int DEFAULT_DELAY = 6;
+	private FilteringBehaviour filtering;
+	private InvManipulationBehaviour observedInventory;
+	private TankManipulationBehaviour observedTank;
+
+	private VersionedInventoryTrackerBehaviour invVersionTracker;
+	private boolean sustainSignal;
+
+	public int turnOffTicks = 0;
+
+	public EntityObserverBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
+		setLazyTickRate(20);
+	}
+
+	@Override
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		behaviours.add(filtering = new FilteringBehaviour(this, new FilteredDetectorFilterSlot(false))
+			.withCallback($ -> invVersionTracker.reset()));
+		behaviours.add(invVersionTracker = new VersionedInventoryTrackerBehaviour(this));
+
+		InterfaceProvider towardBlockFacing =
+			(w, p, s) -> new BlockFace(p, DirectedDirectionalBlock.getTargetDirection(s));
+
+		behaviours.add(observedInventory = new InvManipulationBehaviour(this, towardBlockFacing).bypassSidedness());
+		behaviours.add(observedTank = new TankManipulationBehaviour(this, towardBlockFacing).bypassSidedness());
+	}
+
+	private boolean checkEntities(BlockPos targetPos) {
+		if (level == null)
+			return false;
+
+		AABB scanBox = new AABB(targetPos);
+		List<Entity> entities = level.getEntitiesOfClass(Entity.class, scanBox, e -> true);
+
+		boolean noFilter = filtering.getFilter().isEmpty();
+
+		for (Entity entity : entities) {
+			if (noFilter)
+				return true;
+
+			if (entity instanceof ItemEntity itemEntity) {
+				if (filtering.test(itemEntity.getItem()))
+					return true;
+				continue;
+			}
+
+			if (entity instanceof MinecartChest chestMinecart) {
+				if (matchesEntityItem(chestMinecart))
+					return true;
+				for (int slot = 0; slot < chestMinecart.getContainerSize(); slot++) {
+					ItemStack stack = chestMinecart.getItem(slot);
+					if (!stack.isEmpty() && filtering.test(stack))
+						return true;
+				}
+				continue;
+			}
+
+			if (entity instanceof AbstractMinecart minecart) {
+				if (matchesEntityItem(minecart))
+					return true;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean matchesEntityItem(Entity entity) {
+		ItemStack representative = entity.getPickResult();
+		return representative != null && !representative.isEmpty() && filtering.test(representative);
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+
+		if (level.isClientSide())
+			return;
+
+		BlockState state = getBlockState();
+		if (turnOffTicks > 0) {
+			turnOffTicks--;
+			if (turnOffTicks == 0)
+				level.scheduleTick(worldPosition, state.getBlock(), 1);
+		}
+
+		if (!isActive())
+			return;
+
+		BlockPos targetPos = worldPosition.relative(EntityObserverBlock.getTargetDirection(state));
+		if (checkEntities(targetPos)) {
+			activate(3);
+			return;
+		}
+
+		Block block = level.getBlockState(targetPos)
+			.getBlock();
+
+		// Detect items on belt
+		TransportedItemStackHandlerBehaviour behaviour =
+			BlockEntityBehaviour.get(level, targetPos, TransportedItemStackHandlerBehaviour.TYPE);
+		if (behaviour != null) {
+			behaviour.handleCenteredProcessingOnAllItems(.45f, stack -> {
+				if (!filtering.test(stack.stack) || turnOffTicks == 6)
+					return TransportedResult.doNothing();
+				activate();
+				return TransportedResult.doNothing();
+			});
+			return;
+		}
+
+		// Detect fluids in pipe
+		FluidTransportBehaviour fluidBehaviour =
+			BlockEntityBehaviour.get(level, targetPos, FluidTransportBehaviour.TYPE);
+		if (fluidBehaviour != null) {
+			for (Direction side : Iterate.directions) {
+				Flow flow = fluidBehaviour.getFlow(side);
+				if (flow == null || !flow.inbound || !flow.complete)
+					continue;
+				if (!filtering.test(flow.fluid))
+					continue;
+				activate();
+				return;
+			}
+			return;
+		}
+
+		// Detect packages looping on a chain conveyor
+		if (level.getBlockEntity(targetPos) instanceof ChainConveyorBlockEntity ccbe) {
+			for (ChainConveyorPackage box : ccbe.getLoopingPackages())
+				if (filtering.test(box.item)) {
+					activate();
+					return;
+				}
+			return;
+		}
+
+		if (observedInventory.hasInventory()) {
+			boolean skipInv = invVersionTracker.stillWaiting(observedInventory);
+			invVersionTracker.awaitNewVersion(observedInventory);
+
+			if (skipInv && sustainSignal)
+				turnOffTicks = DEFAULT_DELAY;
+
+			if (!skipInv) {
+				sustainSignal = false;
+				if (!observedInventory.simulate()
+					.extract()
+					.isEmpty()) {
+					sustainSignal = true;
+					activate();
+					return;
+				}
+			}
+		}
+
+		if (!observedTank.simulate()
+			.extractAny()
+			.isEmpty()) {
+			activate();
+			return;
+		}
+	}
+
+	public void activate() {
+		activate(DEFAULT_DELAY);
+	}
+
+	public void activate(int ticks) {
+		BlockState state = getBlockState();
+		turnOffTicks = ticks;
+		if (state.getValue(EntityObserverBlock.POWERED))
+			return;
+		level.setBlockAndUpdate(worldPosition, state.setValue(EntityObserverBlock.POWERED, true));
+		level.updateNeighborsAt(worldPosition, state.getBlock());
+	}
+
+	private boolean isActive() {
+		return true;
+	}
+
+	@Override
+	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		compound.putInt("TurnOff", turnOffTicks);
+		super.write(compound, registries, clientPacket);
+	}
+
+	@Override
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		super.read(compound, registries, clientPacket);
+		turnOffTicks = compound.getInt("TurnOff");
+	}
+
+	@Override
+	public void clearContent() {
+		filtering.setFilter(ItemStack.EMPTY);
+	}
+}

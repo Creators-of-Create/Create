@@ -1,0 +1,26 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "create:block/entity_observer",
+		"2": "create:block/entity_observer_front",
+		"4": "create:block/entity_observer_top",
+		"6": "create:block/entity_observer_bottom",
+		"7": "create:block/entity_observer_side",
+		"particle": "create:block/entity_observer"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#7"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#7"},
+				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#4"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#6"}
+			}
+		}
+	]
+}

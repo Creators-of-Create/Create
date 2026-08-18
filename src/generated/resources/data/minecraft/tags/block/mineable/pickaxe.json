@@ -128,6 +128,7 @@
     "create:andesite_tunnel",
     "create:brass_tunnel",
     "create:content_observer",
+    "create:entity_observer",
     "create:stockpile_switch",
     "create:creative_crate",
     "create:item_vault",
