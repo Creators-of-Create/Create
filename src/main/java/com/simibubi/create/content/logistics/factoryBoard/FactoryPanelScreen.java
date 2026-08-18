@@ -66,6 +66,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 	private BigItemStack outputConfig;
 	private List<BigItemStack> inputConfig;
 	private List<FactoryPanelConnection> connections;
+	private int craft_time;
 
 	private CraftingRecipe availableCraftingRecipe;
 	private boolean craftingActive;
@@ -89,6 +90,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 				return b == null ? new BigItemStack(ItemStack.EMPTY, 0) : new BigItemStack(b.getFilter(), c.amount);
 			})
 			.toList();
+		craft_time = behaviour.craft_time;
 
 		searchForCraftingRecipe();
 
@@ -218,6 +220,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 			activateCraftingButton.withCallback(() -> {
 				craftingActive = !craftingActive;
 				init();
+				craft_time=1;
 				if (craftingActive) {
 					outputConfig.count = availableCraftingRecipe.getResultItem(minecraft.level.registryAccess())
 						.getCount();
@@ -262,7 +265,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 		int slot = 0;
 		if (craftingActive) {
 			for (BigItemStack itemStack : craftingIngredients)
-				renderInputItem(graphics, slot++, itemStack, mouseX, mouseY);
+				renderInputItem(graphics, slot++, itemStack, mouseX, mouseY, craft_time);
 		} else {
 			for (BigItemStack itemStack : inputConfig)
 				renderInputItem(graphics, slot++, itemStack, mouseX, mouseY);
@@ -291,7 +294,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 			int outputX = x + 160;
 			int outputY = y + 48;
 			graphics.renderItem(outputConfig.stack, outputX, outputY);
-			graphics.renderItemDecorations(font, behaviour.getFilter(), outputX, outputY, outputConfig.count + "");
+			graphics.renderItemDecorations(font, behaviour.getFilter(), outputX, outputY, outputConfig.count*craft_time + "");
 
 			if (mouseX >= outputX - 1 && mouseX < outputX - 1 + 18 && mouseY >= outputY - 1
 				&& mouseY < outputY - 1 + 18) {
@@ -423,13 +426,13 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 
 	//
 
-	private void renderInputItem(GuiGraphics graphics, int slot, BigItemStack itemStack, int mouseX, int mouseY) {
+	private void renderInputItem(GuiGraphics graphics, int slot, BigItemStack itemStack, int mouseX, int mouseY, int override_number) {
 		int inputX = guiLeft + (restocker ? 88 : 68 + (slot % 3 * 20));
 		int inputY = guiTop + (restocker ? 12 : 28) + (slot / 3 * 20);
 
 		graphics.renderItem(itemStack.stack, inputX, inputY);
-		if (!craftingActive && !restocker && !itemStack.stack.isEmpty())
-			graphics.renderItemDecorations(font, itemStack.stack, inputX, inputY, itemStack.count + "");
+		if ((!craftingActive || override_number != 0) && !restocker && !itemStack.stack.isEmpty())
+			graphics.renderItemDecorations(font, itemStack.stack, inputX, inputY, (override_number==0?itemStack.count:override_number)+"");
 
 		if (mouseX < inputX - 2 || mouseX >= inputX - 2 + 20 || mouseY < inputY - 2 || mouseY >= inputY - 2 + 20)
 			return;
@@ -491,6 +494,10 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 					.style(ChatFormatting.ITALIC)
 					.component()),
 			mouseX, mouseY);
+	}
+
+	private void renderInputItem(GuiGraphics graphics, int slot, BigItemStack itemStack, int mouseX, int mouseY){
+		renderInputItem(graphics,slot,itemStack,mouseX,mouseY,0);
 	}
 
 	private void showAddressBoxTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
@@ -601,33 +608,42 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 		if (addressBox.mouseScrolled(mouseX, mouseY, scrollX, scrollY))
 			return true;
 
-		if (craftingActive)
-			return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
-
-		for (int i = 0; i < inputConfig.size(); i++) {
-			int inputX = x + 68 + (i % 3 * 20);
-			int inputY = y + 26 + (i / 3 * 20);
-			if (mouseX >= inputX && mouseX < inputX + 16 && mouseY >= inputY && mouseY < inputY + 16) {
-				BigItemStack itemStack = inputConfig.get(i);
-				if (itemStack.stack.isEmpty())
+		if (craftingActive){
+			if (!restocker) {
+				int outputX = x + 160;
+				int outputY = y + 48;
+				if (mouseX >= outputX && mouseX < outputX + 16 && mouseY >= outputY && mouseY < outputY + 16) {
+					craft_time = Mth.clamp((int) (craft_time + Math.signum(scrollY) * (hasShiftDown() ? 10 : 1)), 1, 64);
 					return true;
-				itemStack.count =
-					Mth.clamp((int) (itemStack.count + Math.signum(scrollY) * (hasShiftDown() ? 10 : 1)), 1, 64);
-				return true;
+				}
 			}
 		}
+		else {
 
-		if (!restocker) {
-			int outputX = x + 160;
-			int outputY = y + 48;
-			if (mouseX >= outputX && mouseX < outputX + 16 && mouseY >= outputY && mouseY < outputY + 16) {
-				BigItemStack itemStack = outputConfig;
-				itemStack.count =
-					Mth.clamp((int) (itemStack.count + Math.signum(scrollY) * (hasShiftDown() ? 10 : 1)), 1, 64);
-				return true;
+			for (int i = 0; i < inputConfig.size(); i++) {
+				int inputX = x + 68 + (i % 3 * 20);
+				int inputY = y + 26 + (i / 3 * 20);
+				if (mouseX >= inputX && mouseX < inputX + 16 && mouseY >= inputY && mouseY < inputY + 16) {
+					BigItemStack itemStack = inputConfig.get(i);
+					if (itemStack.stack.isEmpty())
+						return true;
+					itemStack.count =
+						Mth.clamp((int) (itemStack.count + Math.signum(scrollY) * (hasShiftDown() ? 10 : 1)), 1, 64);
+					return true;
+				}
+			}
+
+			if (!restocker) {
+				int outputX = x + 160;
+				int outputY = y + 48;
+				if (mouseX >= outputX && mouseX < outputX + 16 && mouseY >= outputY && mouseY < outputY + 16) {
+					BigItemStack itemStack = outputConfig;
+					itemStack.count =
+						Mth.clamp((int) (itemStack.count + Math.signum(scrollY) * (hasShiftDown() ? 10 : 1)), 1, 64);
+					return true;
+				}
 			}
 		}
-
 		return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
 	}
 
@@ -658,7 +674,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 		String address = addressBox.getValue();
 
 		FactoryPanelConfigurationPacket packet = new FactoryPanelConfigurationPacket(pos, address, inputs,
-			craftingArrangement, outputConfig.count, promiseExp, toRemove, clearPromises, sendReset, sendRedstoneReset);
+			craftingArrangement, outputConfig.count, promiseExp, toRemove, clearPromises, sendReset, sendRedstoneReset, craft_time);
 		CatnipServices.NETWORK.sendToServer(packet);
 	}
 
