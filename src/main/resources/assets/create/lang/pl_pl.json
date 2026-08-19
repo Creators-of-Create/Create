@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Pokaż ustawienia drukowania",
   "create.gui.schematicannon.slot.gunpowder": "Dodaj prochu, aby załadować armatę",
   "create.gui.schematicannon.slot.listPrinter": "Umieść tu notatnik lub książkę, aby wydrukować listę",
-  "create.gui.schematicannon.slot.schematic": "Daj tu swój schemat. Upewnij się, że jest postawiony w odpowiednim miejscu.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Daj tu swój schemat. Upewnij się, że jest postawiony w odpowiednim miejscu.",
   "create.gui.schematicannon.title": "Schematoarmata",
   "create.gui.scrollInput.defaultTitle": "Wybierz opcję:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Przewiń, aby dostosować ilość",

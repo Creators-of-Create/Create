@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Показати налаштування друку",
   "create.gui.schematicannon.slot.gunpowder": "Додайте пороху, щоби заправити гармату",
   "create.gui.schematicannon.slot.listPrinter": "Покладіть сюди гортач чи книгу, щоби надрукувати список предметів для намітку",
-  "create.gui.schematicannon.slot.schematic": "Покладіть ваше креслення сюди. Переконайтеся, що наміток розміщено у визначеному місці.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Покладіть ваше креслення сюди. Переконайтеся, що наміток розміщено у визначеному місці.",
   "create.gui.schematicannon.title": "Наміткова гармата",
   "create.gui.scrollInput.defaultTitle": "Зробіть вибір:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Прокручуйте, щоб вказати кількість",

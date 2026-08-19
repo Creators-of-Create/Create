@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Toon Printer Instellingen",
   "create.gui.schematicannon.slot.gunpowder": "Voeg buskruit toe om het kanon te voeden",
   "create.gui.schematicannon.slot.listPrinter": "Plaats hier een Klembord of Boek om een Materiallijst voor je Bouwtekening te printen",
-  "create.gui.schematicannon.slot.schematic": "Voeg hier je Bouwtekening toe. Zorg ervoor dat deze op een specifieke locatie wordt gezet.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Voeg hier je Bouwtekening toe. Zorg ervoor dat deze op een specifieke locatie wordt gezet.",
   "create.gui.schematicannon.title": "Bouwtekeningkanon",
   "create.gui.scrollInput.defaultTitle": "Kies een optie:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Scroll om het aantal aan te passen",

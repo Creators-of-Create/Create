@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Vis utskriverinnstillinger",
   "create.gui.schematicannon.slot.gunpowder": "Legg til krutt for å drive kanonen",
   "create.gui.schematicannon.slot.listPrinter": "Plasser en utklippstavle eller en bok her for å lage en sjekkliste for byggeplanen",
-  "create.gui.schematicannon.slot.schematic": "Plasser byggeplanen her. Pass på at strukturen blir plassert på en spesifik posisjon.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Plasser byggeplanen her. Pass på at strukturen blir plassert på en spesifik posisjon.",
   "create.gui.schematicannon.title": "Byggekanon",
   "create.gui.scrollInput.defaultTitle": "Velg et alternativ:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Rull for å justere mengde",
