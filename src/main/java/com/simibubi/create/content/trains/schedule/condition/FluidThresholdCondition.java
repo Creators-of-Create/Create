@@ -31,7 +31,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 
 	@Override
 	protected Component getUnit() {
-		return Component.literal("b");
+		return Component.literal(inBuckets() ? "b" : "mB");
 	}
 
 	@Override
@@ -43,6 +43,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	protected boolean test(Level level, Train train, CompoundTag context) {
 		Ops operator = getOperator();
 		int target = getThreshold();
+		boolean buckets = inBuckets();
 
 		int foundFluid = 0;
 		for (Carriage carriage : train.carriages) {
@@ -55,8 +56,9 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 			}
 		}
 
-		requestStatusToUpdate(foundFluid / 1000, context);
-		return operator.test(foundFluid, target * 1000);
+		int valueMult = buckets ? 1000 : 1;
+		requestStatusToUpdate(foundFluid / valueMult, context);
+		return operator.test(foundFluid, target * valueMult);
 	}
 
 	@Override
@@ -88,7 +90,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 			CreateLang.translateDirect("schedule.condition.threshold.train_holds",
 				CreateLang.translateDirect("schedule.condition.threshold." + Lang.asId(getOperator().name()))),
 			CreateLang.translateDirect("schedule.condition.threshold.x_units_of_item", getThreshold(),
-				CreateLang.translateDirect("schedule.condition.threshold.buckets"),
+				CreateLang.translateDirect("schedule.condition.threshold." + (inBuckets() ? "buckets" : "millibuckets")),
 				compareStack.isEmpty() ? CreateLang.translateDirect("schedule.condition.threshold.anything")
 					: compareStack.isFilterItem()
 						? CreateLang.translateDirect("schedule.condition.threshold.matching_content")
@@ -106,6 +108,10 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 		return compareStack.item();
 	}
 
+	private boolean inBuckets() {
+		return intData("Measure") == 0;
+	}
+
 	@Override
 	public ResourceLocation getId() {
 		return Create.asResource("fluid_threshold");
@@ -116,8 +122,9 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		super.initConfigurationWidgets(builder);
 		builder.addSelectionScrollInput(71, 50, (i, l) -> {
-			i.forOptions(ImmutableList.of(CreateLang.translateDirect("schedule.condition.threshold.buckets")))
-				.titled(null);
+			i.forOptions(ImmutableList.of(CreateLang.translateDirect("schedule.condition.threshold.buckets"),
+				CreateLang.translateDirect("schedule.condition.threshold.millibuckets")))
+				.titled(CreateLang.translateDirect("schedule.condition.threshold.fluid_measure"));
 		}, "Measure");
 	}
 
@@ -128,7 +135,8 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
             return Component.empty();
 		int offset = getOperator() == Ops.LESS ? -1 : getOperator() == Ops.GREATER ? 1 : 0;
 		return CreateLang.translateDirect("schedule.condition.threshold.status", lastDisplaySnapshot,
-			Math.max(0, getThreshold() + offset), CreateLang.translateDirect("schedule.condition.threshold.buckets"));
+			Math.max(0, getThreshold() + offset),
+			CreateLang.translateDirect("schedule.condition.threshold." + (inBuckets() ? "buckets" : "millibuckets")));
 	}
 
 }
