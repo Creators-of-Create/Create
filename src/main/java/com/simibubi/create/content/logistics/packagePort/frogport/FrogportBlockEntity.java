@@ -408,6 +408,13 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 	}
 
 	@Override
+	public void destroy() {
+		super.destroy();
+		if(animatedPackage != null)
+			drop(animatedPackage);
+	}
+
+	@Override
 	public void invalidate() {
 		super.invalidate();
 		computerBehaviour.removePeripheral();
