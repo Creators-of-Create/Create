@@ -127,7 +127,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		if (isPaste(code)) {
 			String coords = minecraft.keyboardHandler.getClipboard();
 			if (coords != null && !coords.isEmpty()) {
-				coords.replaceAll(" ", "");
+				coords = coords.replaceAll(" ", "");
 				String[] split = coords.split(",");
 				if (split.length == 3) {
 					boolean valid = true;
