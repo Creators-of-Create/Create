@@ -137,6 +137,8 @@ public class RedstoneRequesterPeripheral extends SyncedPeripheral<RedstoneReques
 						count = (countObj instanceof Number) ? ((Number) countObj).intValue() : 1;
 						if (count > 256)
 							throw new LuaException("Count for item " + itemName + " exceeds 256");
+						if (count < 1)
+							throw new LuaException("Count for item " + itemName + " must be positive");
 					}
 					ResourceLocation resourceLocation = ResourceLocation.tryParse(itemName);
 					ItemLike item = BuiltInRegistries.ITEM.get(resourceLocation);
