@@ -4,6 +4,8 @@ import static com.simibubi.create.infrastructure.gametest.CreateGameTestHelper.F
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.content.kinetics.fan.AirCurrent;
+import com.simibubi.create.content.kinetics.fan.EncasedFanBlockEntity;
 import com.simibubi.create.content.redstone.thresholdSwitch.ThresholdSwitchBlockEntity;
 import com.simibubi.create.content.schematics.SchematicExport;
 import com.simibubi.create.content.schematics.SchematicItem;
@@ -14,6 +16,7 @@ import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
 import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -113,6 +116,38 @@ public class TestMisc {
 		helper.succeedWhen(() -> {
 			helper.assertSecondsPassed(9);
 			helper.assertEntityPresent(EntityType.ZOMBIE, lava);
+		});
+	}
+
+	@GameTest(template = "fan_air_current_passthrough")
+	public static void fanAirCurrentPassthrough(CreateGameTestHelper helper) {
+		BlockPos fan = new BlockPos(1, 2, 1);
+		
+		helper.succeedWhen(() -> {
+			EncasedFanBlockEntity fanEntity = helper.getBlockEntity(
+				AllBlockEntityTypes.ENCASED_FAN.get(), fan);
+			
+			AirCurrent airCurrent = fanEntity.getAirCurrent();
+			
+			if (airCurrent.maxDistance <= 2) {
+				helper.fail("Air current stopped at the 1st drill block (facing up Y+)");
+			}
+
+			if (airCurrent.maxDistance <= 4) {
+				helper.fail("Air current stopped at the 2nd drill block (facing east X+)");
+			}
+
+			if (airCurrent.maxDistance <= 6) {
+				helper.fail("Air current stopped at the 3rd drill block (facing west X-)");
+			}
+			
+			if (airCurrent.maxDistance <= 8) {
+				helper.fail("Air current stopped at the 4th drill block (facing down Y-)");
+			}
+
+			if (airCurrent.maxDistance >= 10) {
+				helper.fail("Air current should be blocked by drill facing towards it (Z-), but it wasn't, maxDistance: " + airCurrent.maxDistance);
+			}
 		});
 	}
 }
