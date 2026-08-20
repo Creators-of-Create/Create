@@ -54,19 +54,34 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 		this.milestoneSize = iconMode ? 8 : 4;
 	}
 
+	float getScale(int max) {
+		if (max <= 256) {
+			return  max > 128 ? 1 : 2;
+		}
+
+		// same thing as
+		// 257~512  -> 0.5
+		// 513~1024 -> 0.25
+		// 1025~2048 -> 0.125
+		// ...
+
+		// 127: exponent offset, 8: 2^8 = 256
+		// -1: offset for being power of 2 inclusive, 23: mantissa offset
+		return Float.intBitsToFloat((127 - Integer.SIZE + 8 + Integer.numberOfLeadingZeros(max - 1)) << 23);
+	}
+
 	@Override
 	protected void init() {
 		int maxValue = board.maxValue();
 		maxLabelWidth = 0;
 		int milestoneCount = maxValue / board.milestoneInterval() + 1;
-		int scale = maxValue > 128 ? 1 : 2;
 
 		for (Component component : board.rows())
 			maxLabelWidth = Math.max(maxLabelWidth, font.width(component));
 		if (iconMode)
 			maxLabelWidth = -18;
 
-		valueBarWidth = (maxValue + 1) * scale + 1 + milestoneCount * milestoneSize;
+		valueBarWidth = (int) ((maxValue + 1) * getScale(maxValue) + 1 + milestoneCount * milestoneSize);
 		int width = (maxLabelWidth + 14) + (valueBarWidth + 10);
 		int height = (board.rows()
 			.size() * 11);
@@ -116,9 +131,8 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 	}
 
 	public Vec2 getCoordinateOfValue(int row, int column) {
-		int scale = board.maxValue() > 128 ? 1 : 2;
 		float xOut =
-			guiLeft + ((Math.max(1, column) - 1) / board.milestoneInterval()) * milestoneSize + column * scale + 1.5f;
+			guiLeft + ((Math.max(1, column) - 1) / board.milestoneInterval()) * milestoneSize + column * getScale(board.maxValue()) + 1.5f;
 		xOut += maxLabelWidth + 14 + 4;
 
 		if (column % board.milestoneInterval() == 0)
@@ -135,7 +149,6 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 		int milestoneCount = board.maxValue() / board.milestoneInterval() + 1;
-		int scale = board.maxValue() > 128 ? 1 : 2;
 
 		Component title = board.title();
         Component tip =
@@ -194,7 +207,7 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 					AllGuiTextures.VALUE_SETTINGS_WIDE_MILESTONE.render(graphics, milestoneX, y + 1);
 				else
 					AllGuiTextures.VALUE_SETTINGS_MILESTONE.render(graphics, milestoneX, y + 1);
-				milestoneX += milestoneSize + board.milestoneInterval() * scale;
+				milestoneX += (int) (milestoneSize + board.milestoneInterval() * getScale(board.maxValue()));
 			}
 
 			y += 11;
