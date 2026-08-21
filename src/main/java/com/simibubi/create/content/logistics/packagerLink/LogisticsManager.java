@@ -109,26 +109,29 @@ public class LogisticsManager {
 		Iterable<LogisticallyLinkedBehaviour> allAvailableLinks = LogisticallyLinkedBehaviour.getAllPresent(freqId,
 			true);
 
-		// Group links by InventoryIdentifier and randomly select one from each group
-		Map<InventoryIdentifier, List<LogisticallyLinkedBehaviour>> linksByInventory = new HashMap<>();
+		// Select one link per inventory, preserving priority order (allAvailableLinks is sorted by redstonePower)
+		// Links tied on priority for the same inventory are load-balanced randomly.
+		Map<InventoryIdentifier, Integer> inventoryLinkIndex = new HashMap<>();
+		Map<InventoryIdentifier, Integer> inventoryTieCount = new HashMap<>();
 		List<LogisticallyLinkedBehaviour> availableLinks = new ArrayList<>();
 
-		// Group links by their inventory identifier
 		for (LogisticallyLinkedBehaviour link : allAvailableLinks) {
 			InventoryIdentifier inventoryId = getInventoryIdentifierFromLink(link);
 			if (inventoryId != null) {
-				linksByInventory.computeIfAbsent(inventoryId, k -> new ArrayList<>()).add(link);
+				Integer existingIndex = inventoryLinkIndex.get(inventoryId);
+				if (existingIndex == null) {
+					inventoryLinkIndex.put(inventoryId, availableLinks.size());
+					inventoryTieCount.put(inventoryId, 1);
+					availableLinks.add(link);
+				} else if (availableLinks.get(existingIndex).redstonePower == link.redstonePower) {
+					// Tied priority — reservoir sample to load-balance randomly
+					int count = inventoryTieCount.merge(inventoryId, 1, Integer::sum);
+					if (r.nextInt(count) == 0)
+						availableLinks.set(existingIndex, link);
+				}
+				// else: lower priority (higher redstonePower), skip
 			} else {
-				// Links without inventory identifier are added directly
 				availableLinks.add(link);
-			}
-		}
-
-		// Randomly select one link from each inventory group
-		for (List<LogisticallyLinkedBehaviour> linkGroup : linksByInventory.values()) {
-			if (!linkGroup.isEmpty()) {
-				LogisticallyLinkedBehaviour selectedLink = linkGroup.get(r.nextInt(linkGroup.size()));
-				availableLinks.add(selectedLink);
 			}
 		}
 
