@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.GlUtil;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateBuildInfo;
-import com.simibubi.create.compat.pojav.PojavChecker;
+import com.simibubi.create.compat.pojav.AndroidChecker;
 import com.simibubi.create.foundation.mixin.accessor.SystemReportAccessor;
 import com.simibubi.create.infrastructure.debugInfo.element.DebugInfoSection;
 import com.simibubi.create.infrastructure.debugInfo.element.InfoElement;
@@ -89,7 +89,7 @@ public class DebugInformation {
 				.put("OpenGL Renderer", GlUtil::getRenderer)
 				.put("OpenGL Version", GlUtil::getOpenGLVersion)
 				.put("Graphics Mode", () -> Minecraft.getInstance().options.graphicsMode().get().name().toLowerCase(Locale.ROOT))
-				.put("PojavLauncher Detected", () -> String.valueOf(PojavChecker.IS_PRESENT))
+				.put("PojavLauncher Detected", () -> String.valueOf(AndroidChecker.IS_PRESENT))
 				.buildTo(DebugInformation::registerClientInfo);
 		});
 
