@@ -78,12 +78,13 @@ public class LogisticsManager {
 	}
 
 	public static boolean broadcastPackageRequest(UUID freqId, RequestType type, PackageOrderWithCrafts order,
-												  @Nullable IdentifiedInventory ignoredHandler, String address) {
+		@Nullable IdentifiedInventory ignoredHandler, String address) {
 		if (order.isEmpty())
 			return false;
 
-		Multimap<PackagerBlockEntity, PackagingRequest> requests = findPackagersForRequest(freqId, order,
-			ignoredHandler, address);
+		// Redirect to internal logic to support specialized execution strategies
+		Multimap<PackagerBlockEntity, PackagingRequest> requests = findPackagersInternal(freqId, order,
+			ignoredHandler, address, type);
 
 		// Check if packagers have accumulated too many packages already
 		for (PackagerBlockEntity packager : requests.keySet())
@@ -96,12 +97,37 @@ public class LogisticsManager {
 	}
 
 	public static Multimap<PackagerBlockEntity, PackagingRequest> findPackagersForRequest(UUID freqId,
-																						  PackageOrderWithCrafts order, @Nullable IdentifiedInventory ignoredHandler, String address) {
-		List<BigItemStack> stacks = new ArrayList<>();
+		PackageOrderWithCrafts order, @Nullable IdentifiedInventory ignoredHandler, String address) {
+		return findPackagersInternal(freqId, order, ignoredHandler, address, RequestType.PLAYER);
+	}
 
-		for (BigItemStack stack : order.stacks())
-			if (!stack.stack.isEmpty() && stack.count > 0)
-				stacks.add(stack);
+	private static Multimap<PackagerBlockEntity, PackagingRequest> findPackagersInternal(UUID freqId,
+		PackageOrderWithCrafts order, @Nullable IdentifiedInventory ignoredHandler, String address, RequestType type) {
+
+		List<BigItemStack> stacksToProcess = new ArrayList<>();
+
+		// Redstone requests aggregate items to prevent container contention and stale cache issues
+		if (type == RequestType.REDSTONE) {
+			for (BigItemStack originalStack : order.stacks()) {
+				if (originalStack.stack.isEmpty() || originalStack.count <= 0)
+					continue;
+
+				boolean merged = false;
+				for (BigItemStack existing : stacksToProcess) {
+					if (ItemStack.isSameItemSameComponents(existing.stack, originalStack.stack)) {
+						existing.count += originalStack.count;
+						merged = true;
+						break;
+					}
+				}
+				if (!merged)
+					stacksToProcess.add(new BigItemStack(originalStack.stack, originalStack.count));
+			}
+		} else {
+			for (BigItemStack stack : order.stacks())
+				if (!stack.stack.isEmpty() && stack.count > 0)
+					stacksToProcess.add(stack);
+		}
 
 		Multimap<PackagerBlockEntity, PackagingRequest> requests = HashMultimap.create();
 
@@ -126,10 +152,8 @@ public class LogisticsManager {
 
 		// Randomly select one link from each inventory group
 		for (List<LogisticallyLinkedBehaviour> linkGroup : linksByInventory.values()) {
-			if (!linkGroup.isEmpty()) {
-				LogisticallyLinkedBehaviour selectedLink = linkGroup.get(r.nextInt(linkGroup.size()));
-				availableLinks.add(selectedLink);
-			}
+			if (!linkGroup.isEmpty())
+				availableLinks.add(linkGroup.get(r.nextInt(linkGroup.size())));
 		}
 
 		List<LogisticallyLinkedBehaviour> usedLinks = new ArrayList<>();
@@ -141,10 +165,10 @@ public class LogisticsManager {
 		// Packages from future orders should not be merged in the packager queue
 		int orderId = r.nextInt();
 
-		for (int i = 0; i < stacks.size(); i++) {
-			BigItemStack entry = stacks.get(i);
+		for (int i = 0; i < stacksToProcess.size(); i++) {
+			BigItemStack entry = stacksToProcess.get(i);
 			int remainingCount = entry.count;
-			boolean finalEntry = i == stacks.size() - 1;
+			boolean finalEntry = i == stacksToProcess.size() - 1;
 			ItemStack requestedItem = entry.stack;
 
 			for (LogisticallyLinkedBehaviour link : availableLinks) {
@@ -157,17 +181,19 @@ public class LogisticsManager {
 				// Only send context and craftingContext with first package
 				Pair<PackagerBlockEntity, PackagingRequest> request = link.processRequest(requestedItem, remainingCount,
 					address, linkIndex, isFinalLink, orderId, context, ignoredHandler);
+
 				if (request == null)
 					continue;
 
 				requests.put(request.getFirst(), request.getSecond());
+				int processedCount = request.getSecond().getCount();
 
-				int processedCount = request.getSecond()
-					.getCount();
-				if (processedCount > 0 && usedIndex == -1) {
-					context = null;
-					usedLinks.add(link);
-					finalLinkTracker = isFinalLink;
+				if (processedCount > 0) {
+					context = null; // Context is only required for the very first successful package
+					if (usedIndex == -1) {
+						usedLinks.add(link);
+						finalLinkTracker = isFinalLink;
+					}
 				}
 
 				remainingCount -= processedCount;
@@ -183,7 +209,6 @@ public class LogisticsManager {
 
 	@Nullable
 	private static InventoryIdentifier getInventoryIdentifierFromLink(LogisticallyLinkedBehaviour link) {
-
 		if (!(link.blockEntity instanceof PackagerLinkBlockEntity plbe)) {
 			return null;
 		}
@@ -194,8 +219,7 @@ public class LogisticsManager {
 		}
 
 		IdentifiedInventory identifiedInventory = packager.targetInventory.getIdentifiedInventory();
-		InventoryIdentifier result = identifiedInventory != null ? identifiedInventory.identifier() : null;
-		return result;
+		return identifiedInventory != null ? identifiedInventory.identifier() : null;
 	}
 
 	public static void performPackageRequests(Multimap<PackagerBlockEntity, PackagingRequest> requests) {
