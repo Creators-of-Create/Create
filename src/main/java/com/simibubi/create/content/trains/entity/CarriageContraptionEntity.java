@@ -203,6 +203,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		carriage.forEachPresentEntity(cce -> {
 			cce.contraption.getBlocks()
 				.put(localPos, newInfo);
+			cce.contraption.markCollidersDirty();
 			CatnipServices.NETWORK.sendToClientsTrackingEntity(cce,
 				new ContraptionBlockChangedPacket(cce.getId(), localPos, newInfo.state()));
 		});
