@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
@@ -45,7 +47,6 @@ public class BoilerData {
 
 	static final int SAMPLE_RATE = 5;
 
-	private static final int waterSupplyPerLevel = 10;
 	private static final float passiveEngineEfficiency = 1 / 8f;
 
 	// pooled water supply
@@ -120,7 +121,7 @@ public class BoilerData {
 		}
 
 		if (controller instanceof CreativeFluidTankBlockEntity)
-			waterSupply = waterSupplyPerLevel * 20;
+			waterSupply = AllConfigs.server().fluids.steamEngineWaterPerLevel.get() * 20;
 
 		if (getActualHeat(controller.getTotalTankSize()) == 18)
 			controller.award(AllAdvancements.STEAM_ENGINE_MAXED);
@@ -163,7 +164,7 @@ public class BoilerData {
 	}
 
 	public int getMaxHeatLevelForWaterSupply() {
-		return (int) Math.min(18, Mth.ceil(waterSupply) / waterSupplyPerLevel);
+		return (int) Math.min(18, Mth.ceil(waterSupply) / AllConfigs.server().fluids.steamEngineWaterPerLevel.get());
 	}
 
 	public boolean isPassive() {
@@ -221,7 +222,7 @@ public class BoilerData {
 				.add(CreateLang.translate("generic.unit.millibuckets"))
 				.add(CreateLang.text(" / ")
 					.style(ChatFormatting.GRAY))
-				.add(CreateLang.translate("boiler.per_tick", CreateLang.number(waterSupplyPerLevel)
+				.add(CreateLang.translate("boiler.per_tick", CreateLang.number(AllConfigs.server().fluids.steamEngineWaterPerLevel.get())
 						.add(CreateLang.translate("generic.unit.millibuckets")))
 					.style(ChatFormatting.DARK_GRAY))
 				.forGoggles(tooltip, 1);
