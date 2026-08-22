@@ -21,6 +21,7 @@ import com.simibubi.create.content.trains.station.GlobalStation;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -381,6 +382,7 @@ public class ScheduleRuntime {
 	}
 
 	public CompoundTag write(HolderLookup.Provider registries) {
+		normalizeConditionState();
 		CompoundTag tag = new CompoundTag();
 		tag.putInt("CurrentEntry", currentEntry);
 		tag.putBoolean("AutoSchedule", isAutoSchedule);
@@ -406,7 +408,11 @@ public class ScheduleRuntime {
 		state = NBTHelper.readEnum(tag, "State", State.class);
 		for (int i : tag.getIntArray("ConditionProgress"))
 			conditionProgress.add(i);
-		NBTHelper.iterateCompoundList(tag.getList("ConditionContext", Tag.TAG_COMPOUND), conditionContext::add);
+		final ListTag savedConditionContext = tag.getList("ConditionContext", Tag.TAG_COMPOUND);
+		final int expectedConditionCount = getActiveConditions().size();
+		for (int i = 0; i < Math.min(expectedConditionCount, savedConditionContext.size()); i++)
+			conditionContext.add(savedConditionContext.getCompound(i));
+		normalizeConditionState();
 
 		int[] readTransits = tag.getIntArray("TransitTimes");
 		if (schedule != null) {
@@ -415,6 +421,29 @@ public class ScheduleRuntime {
 				for (int i = 0; i < readTransits.length; i++)
 					predictionTicks.set(i, readTransits[i]);
 		}
+	}
+
+	private void normalizeConditionState() {
+		final List<List<ScheduleWaitCondition>> activeConditions = getActiveConditions();
+		final int expectedSize = activeConditions.size();
+		if (conditionProgress.size() > expectedSize)
+			conditionProgress.subList(expectedSize, conditionProgress.size()).clear();
+		if (conditionContext.size() > expectedSize)
+			conditionContext.subList(expectedSize, conditionContext.size()).clear();
+
+		while (conditionProgress.size() < expectedSize)
+			conditionProgress.add(0);
+		while (conditionContext.size() < expectedSize)
+			conditionContext.add(new CompoundTag());
+
+		for (int i = 0; i < expectedSize; i++)
+			conditionProgress.set(i, Mth.clamp(conditionProgress.get(i), 0, activeConditions.get(i).size()));
+	}
+
+	private List<List<ScheduleWaitCondition>> getActiveConditions() {
+		if (state == State.POST_TRANSIT && schedule != null && currentEntry >= 0 && currentEntry < schedule.entries.size())
+			return schedule.entries.get(currentEntry).conditions;
+		return List.of();
 	}
 
 	public ItemStack returnSchedule(HolderLookup.Provider registries) {
