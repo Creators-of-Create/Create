@@ -118,7 +118,7 @@ public class DeliverPackagesInstruction extends ScheduleInstruction {
 		if (best == null) {
 			if (anyMatch)
 				train.status.failedNavigation();
-			runtime.startCooldown();
+			runtime.startNavigationFailureCooldown();
 			return null;
 		}
 
