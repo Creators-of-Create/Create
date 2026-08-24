@@ -33,6 +33,9 @@ public class StockKeeperCategoryHidingPacket extends BlockEntityConfigurationPac
 
 	@Override
 	protected void applySettings(ServerPlayer player, StockTickerBlockEntity be) {
+		if (!be.behaviour.mayInteract(player))
+			return;
+
 		if (indices.isEmpty()) {
 			be.hiddenCategoriesByPlayer.remove(player.getUUID());
 		} else {

@@ -32,6 +32,9 @@ public class StockKeeperCategoryEditPacket extends BlockEntityConfigurationPacke
 
 	@Override
 	protected void applySettings(ServerPlayer player, StockTickerBlockEntity be) {
+		if (!be.behaviour.mayInteract(player))
+			return;
+
 		be.categories = schedule;
 		be.notifyUpdate();
 	}
