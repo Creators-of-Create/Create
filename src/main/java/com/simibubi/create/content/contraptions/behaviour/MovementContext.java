@@ -25,6 +25,7 @@ public class MovementContext {
 	public Vec3 position;
 	public Vec3 motion;
 	public Vec3 relativeMotion;
+	public boolean realMotionIsZero;
 	public UnaryOperator<Vec3> rotation;
 
 	public Level world;
