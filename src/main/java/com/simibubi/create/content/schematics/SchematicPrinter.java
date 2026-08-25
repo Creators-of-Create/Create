@@ -254,8 +254,10 @@ public class SchematicPrinter {
 		if (blockState.hasBlockEntity()) {
 			blockEntity = ((EntityBlock) blockState.getBlock()).newBlockEntity(target, blockState);
 			CompoundTag data = BlockHelper.prepareBlockEntityData(blockReader, blockState, blockReader.getBlockEntity(target));
-			if (blockEntity != null && data != null)
+			if (blockEntity != null && data != null) {
 				blockEntity.loadWithComponents(data, blockReader.registryAccess());
+				blockEntity.setLevel(blockReader);
+			}
 		}
 		return ItemRequirement.of(blockState, blockEntity);
 	}
