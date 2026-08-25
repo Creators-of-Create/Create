@@ -390,26 +390,26 @@ public class BlueprintOverlayRenderer {
 				x += 21;
 			}
 		}
-
+	
 		if (shopContext != null && !shopContext.checkout()) {
-			int cycle = 0;
-			for (boolean count : Iterate.trueAndFalse)
-				for (int i = 0; i < results.size(); i++) {
-					ItemStack result = results.get(i);
-					List<Component> tooltipLines = result.getTooltipLines(TooltipContext.of(mc.level), mc.player, TooltipFlag.NORMAL);
-					if (tooltipLines.size() <= 1)
-						continue;
-					if (count) {
-						cycle++;
-						continue;
-					}
-					if ((mc.gui.getGuiTicks() / 40) % cycle != i)
-						continue;
-					guiGraphics.renderComponentTooltip(mc.gui.getFont(), tooltipLines, mc.getWindow()
-							.getGuiScaledWidth(),
-						mc.getWindow()
-							.getGuiScaledHeight());
-				}
+			List<List<Component>> resultTooltips = new ArrayList<>();
+
+			for (ItemStack result : results) {
+				List<Component> tooltipLines =
+					result.getTooltipLines(TooltipContext.of(mc.level), mc.player, TooltipFlag.NORMAL);
+				if (tooltipLines.size() > 1)
+					resultTooltips.add(tooltipLines);
+			}
+
+			if (!resultTooltips.isEmpty()) {
+				int index = (mc.gui.getGuiTicks() / 40) % resultTooltips.size();
+				guiGraphics.renderComponentTooltip(
+					mc.gui.getFont(),
+					resultTooltips.get(index),
+					mc.getWindow().getGuiScaledWidth(),
+					mc.getWindow().getGuiScaledHeight()
+				);
+			}
 		}
 
 		RenderSystem.disableBlend();
