@@ -7,6 +7,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.fluids.spout.SpoutBlockEntity;
+import com.simibubi.create.content.kinetics.belt.AllBeltCasingTypes.LegacyCasingType;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltPart;
@@ -425,7 +426,7 @@ public class BeltScenes {
 		scene.idle(7);
 		scene.world().modifyBlock(beltPos2, s -> s.setValue(BeltBlock.CASING, true), true);
 		scene.world().modifyBlockEntityNBT(util.select().position(beltPos2), BeltBlockEntity.class, nbt -> {
-			NBTHelper.writeEnum(nbt, "Casing", BeltBlockEntity.CasingType.ANDESITE);
+			NBTHelper.writeEnum(nbt, "Casing", LegacyCasingType.ANDESITE); //Schematic has legacy NBT
 		});
 		scene.idle(20);
 
@@ -460,7 +461,7 @@ public class BeltScenes {
 			scene.idle(4);
 			scene.world().modifyBlock(pos, s -> s.setValue(BeltBlock.CASING, true), true);
 			scene.world().modifyBlockEntityNBT(util.select().position(pos), BeltBlockEntity.class, nbt -> {
-				NBTHelper.writeEnum(nbt, "Casing", BeltBlockEntity.CasingType.ANDESITE);
+				NBTHelper.writeEnum(nbt, "Casing", LegacyCasingType.ANDESITE); //Schematic has legacy NBT
 			});
 		}
 		for (BlockPos pos : brassBelts) {
