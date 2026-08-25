@@ -65,15 +65,6 @@ public class FilterMenu extends AbstractFilterMenu {
 		super.saveData(filterItem);
 		filterItem.set(AllDataComponents.FILTER_ITEMS_RESPECT_NBT, respectNBT);
 		filterItem.set(AllDataComponents.FILTER_ITEMS_BLACKLIST, blacklist);
-
-		if (respectNBT || blacklist)
-			return;
-		for (int i = 0; i < ghostInventory.getSlots(); i++)
-			if (!ghostInventory.getStackInSlot(i)
-				.isEmpty())
-				return;
-		filterItem.remove(AllDataComponents.FILTER_ITEMS_RESPECT_NBT);
-		filterItem.remove(AllDataComponents.FILTER_ITEMS_BLACKLIST);
 	}
 
 }
