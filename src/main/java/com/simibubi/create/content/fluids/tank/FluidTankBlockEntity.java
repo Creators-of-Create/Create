@@ -508,8 +508,8 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 	public void writeSafe(CompoundTag compound, HolderLookup.Provider registries) {
 		if (isController()) {
 			compound.putBoolean("Window", window);
-			compound.putInt("Size", width);
-			compound.putInt("Height", height);
+			compound.putInt("Size", 1);
+			compound.putInt("Height", 1);
 		}
 	}
 
