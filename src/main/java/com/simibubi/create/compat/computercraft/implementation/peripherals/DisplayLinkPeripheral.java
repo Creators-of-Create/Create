@@ -32,7 +32,7 @@ public class DisplayLinkPeripheral extends SyncedPeripheral<DisplayLinkBlockEnti
 	@LuaFunction
 	public final void setCursorPos(int x, int y) throws LuaException {
 		if (x < 1 || y < 1)
-			throw new LuaException("cursor position must be larger then 0");
+			throw new LuaException("cursor position must be larger than 0");
 
 		cursorX.set(x - 1);
 		cursorY.set(y - 1);
