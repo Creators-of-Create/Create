@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.world.level.block.DirectionalBlock;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -424,6 +426,7 @@ public class DeployerHandler {
 		List<ItemEntity> drops = new ArrayList<>(4);
 		CAPTURED_BLOCK_DROPS.put(pos, drops);
 		try {
+
 			InteractionResult result = BlockHelper.invokeUse(state, world, player, hand, ray);
 			for (ItemEntity itemEntity : drops)
 				player.getInventory().placeItemBackInInventory(itemEntity.getItem());
