@@ -2615,6 +2615,8 @@ public class AllBlocks {
 				.ignitedByLava())
 			.transform(axeOnly())
 			.blockstate(BlockStateGen.horizontalAxisBlockProvider(false))
+			.tag(Tags.Blocks.STORAGE_BLOCKS)
+			.tag(AllBlockTags.CARDBOARD_STORAGE_BLOCKS.tag)
 			.loot((r, b) -> r.add(b, LootTable.lootTable()
 				.withPool(LootPool.lootPool()
 					.setRolls(ConstantValue.exactly(1.0F))
@@ -2627,6 +2629,8 @@ public class AllBlocks {
 					.when(((BlockLootSubProviderAccessor) r).create$hasSilkTouch().invert())))))
 			.item()
 			.burnTime(4000)
+			.tag(AllItemTags.CARDBOARD_STORAGE_BLOCKS.tag)
+			.tag(Tags.Items.STORAGE_BLOCKS)
 			.build()
 			.lang("Bound Block of Cardboard")
 			.register();
