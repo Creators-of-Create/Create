@@ -398,14 +398,17 @@ public class AllItems {
 
 	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =
 		REGISTRATE.item("minecart_contraption", MinecartContraptionItem::rideable)
+			.properties(p -> p.stacksTo(1))
 			.register();
 
 	public static final ItemEntry<MinecartContraptionItem> FURNACE_MINECART_CONTRAPTION =
 		REGISTRATE.item("furnace_minecart_contraption", MinecartContraptionItem::furnace)
+			.properties(p -> p.stacksTo(1))
 			.register();
 
 	public static final ItemEntry<MinecartContraptionItem> CHEST_MINECART_CONTRAPTION =
 		REGISTRATE.item("chest_minecart_contraption", MinecartContraptionItem::chest)
+			.properties(p -> p.stacksTo(1))
 			.register();
 
 	// Curiosities
