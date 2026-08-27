@@ -10,14 +10,12 @@ import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class MechanicalMixerBlock extends KineticBlock implements IBE<MechanicalMixerBlockEntity>, ICogWheel {
@@ -33,11 +31,7 @@ public class MechanicalMixerBlock extends KineticBlock implements IBE<Mechanical
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if (context instanceof EntityCollisionContext
-			&& ((EntityCollisionContext) context).getEntity() instanceof Player)
-			return AllShapes.CASING_14PX.get(Direction.DOWN);
-
-		return AllShapes.MECHANICAL_PROCESSOR_SHAPE;
+		return AllShapes.CASING_14PX.get(Direction.DOWN);
 	}
 
 	@Override

@@ -264,8 +264,6 @@ public class AllShapes {
 		HEATER_BLOCK_SPECIAL_COLLISION_SHAPE = shape(0, 0, 0, 16, 4, 16).build(),
 		CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 16, 16), SEAT = cuboid(0, 0, 0, 16, 8, 16),
 		SEAT_COLLISION = cuboid(0, 0, 0, 16, 6, 16), SEAT_COLLISION_PLAYERS = cuboid(0, 0, 0, 16, 3, 16),
-		MECHANICAL_PROCESSOR_SHAPE = shape(Shapes.block()).erase(4, 0, 4, 12, 16, 12)
-			.build(),
 		TURNTABLE_SHAPE = shape(1, 4, 1, 15, 8, 15).add(5, 0, 5, 11, 4, 11)
 			.build(),
 		CRATE_BLOCK_SHAPE = cuboid(1, 0, 1, 15, 14, 15),
