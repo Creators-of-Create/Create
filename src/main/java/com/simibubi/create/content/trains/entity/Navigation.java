@@ -434,6 +434,10 @@ public class Navigation {
 			train.status.foundConductor();
 		}
 
+		// clean up old reservation after switching to new destination
+		if (this.destination != pathTo.destination && this.destination != null)
+			this.destination.cancelReservation(train);
+
 		this.destination = pathTo.destination;
 		return cost;
 	}
