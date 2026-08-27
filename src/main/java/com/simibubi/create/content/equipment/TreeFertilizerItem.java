@@ -1,6 +1,7 @@
 package com.simibubi.create.content.equipment;
 
 
+import net.createmod.catnip.data.WorldAttached;
 import net.createmod.catnip.levelWrappers.PlacementSimulationServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -17,6 +18,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class TreeFertilizerItem extends Item {
+	private static final WorldAttached<TreesDreamWorld> DREAM_WORLD_CACHE = new WorldAttached<>(
+		level -> new TreesDreamWorld((ServerLevel) level));
 
 	public TreeFertilizerItem(Properties properties) {
 		super(properties);
@@ -39,7 +42,12 @@ public class TreeFertilizerItem extends Item {
 			}
 
 			BlockPos saplingPos = context.getClickedPos();
-			TreesDreamWorld world = new TreesDreamWorld((ServerLevel) context.getLevel(), saplingPos);
+
+			TreesDreamWorld world = DREAM_WORLD_CACHE.get(context.getLevel());
+			world.clear();
+
+			BlockState stateUnderSapling = context.getLevel().getBlockState(saplingPos.below());
+			world.setSoil(stateUnderSapling);
 
 			for (BlockPos pos : BlockPos.betweenClosed(-1, 0, -1, 1, 0, 1)) {
 				if (context.getLevel()
@@ -91,17 +99,19 @@ public class TreeFertilizerItem extends Item {
 	}
 
 	private static class TreesDreamWorld extends PlacementSimulationServerLevel {
-		private final BlockState soil;
+		private BlockState soil;
 
-		protected TreesDreamWorld(ServerLevel wrapped, BlockPos saplingPos) {
+		protected TreesDreamWorld(ServerLevel wrapped) {
 			super(wrapped);
-			BlockState stateUnderSapling = wrapped.getBlockState(saplingPos.below());
+		}
 
+		public void setSoil(BlockState soil) {
 			// Tree features don't seem to succeed with mud as soil
-			if (stateUnderSapling.is(BlockTags.DIRT))
-				stateUnderSapling = Blocks.DIRT.defaultBlockState();
+			if (soil.is(BlockTags.DIRT)) {
+				soil = Blocks.DIRT.defaultBlockState();
+			}
 
-			soil = stateUnderSapling;
+			this.soil = soil;
 		}
 
 		@Override
