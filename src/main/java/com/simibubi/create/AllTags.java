@@ -129,6 +129,7 @@ public class AllTags {
 		ANDESITE_ALLOY_STORAGE_BLOCKS(COMMON, "storage_blocks/andesite_alloy"),
 
 		CORALS,
+		SOLID_CROPS,
 
 		SLIMY_LOGS(TIC),
 		NON_DOUBLE_DOOR(QUARK),
