@@ -257,6 +257,8 @@ public class SmartFluidTankBehaviour extends BlockEntityBehaviour {
 			return fluidLevel;
 		}
 
+		public SmartFluidTank getTank() { return tank; }
+
 		public float getTotalUnits(float partialTicks) {
 			return fluidLevel.getValue(partialTicks) * tank.getCapacity();
 		}

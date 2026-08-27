@@ -1,0 +1,269 @@
+package com.simibubi.create.content.processing.basin;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.simibubi.create.AllMountedStorageTypes;
+import com.simibubi.create.api.contraption.storage.SyncedMountedStorage;
+import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorage;
+
+import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
+import com.simibubi.create.foundation.fluid.SmartFluidTank;
+
+import net.createmod.catnip.animation.LerpedFloat;
+import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+
+import net.neoforged.neoforge.fluids.FluidStack;
+
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
+
+public class BasinMountedFluidStorage extends MountedFluidStorage implements SyncedMountedStorage {
+	public static final MapCodec<BasinMountedFluidStorage> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+		MountedBasinTankHalf.CODEC.fieldOf("inputTank").forGetter(BasinMountedFluidStorage::inputTank),
+		MountedBasinTankHalf.CODEC.fieldOf("outputTank").forGetter(BasinMountedFluidStorage::outputTank)
+	).apply(i, BasinMountedFluidStorage::new));
+
+	protected BasinMountedFluidStorage(MountedBasinTankHalf input, MountedBasinTankHalf output) {
+		super(AllMountedStorageTypes.BASIN_FLUID.get());
+
+		this.inputTankHalf = input;
+
+		this.outputTankHalf = output;
+
+		this.bothTanks = new CombinedTankWrapper(input, output);
+	}
+
+	final MountedBasinTankHalf inputTankHalf;
+	final MountedBasinTankHalf outputTankHalf;
+	final CombinedTankWrapper bothTanks;
+
+	private boolean dirty;
+
+	public MountedBasinTankHalf inputTank() {
+		return this.inputTankHalf;
+	}
+
+	public MountedBasinTankHalf outputTank() {
+		return this.outputTankHalf;
+	}
+
+	@Override
+	public boolean isDirty() { return this.dirty; }
+
+	@Override
+	public void markClean() { this.dirty = false; }
+
+	public void markDirty() { this.dirty = true; }
+
+	@Override
+	public void afterSync(Contraption contraption, BlockPos localPos) {}
+
+	public void tickChasers() {
+		this.inputTankHalf.tickChasers();
+		this.outputTankHalf.tickChasers();
+	}
+
+	public float getTotalFluidUnits(float partialTicks) {
+		float fluidUnits = this.inputTankHalf.getTotalUnits(partialTicks) +
+						   this.outputTankHalf.getTotalUnits(partialTicks);
+		int totalRendered = this.inputTankHalf.getRenderedFluids() +
+							this.outputTankHalf.getRenderedFluids();
+
+		if (totalRendered == 0) return 0;
+		if (fluidUnits < 1) return 0;
+		return fluidUnits;
+	}
+
+	@Override
+	public void unmount(Level level, BlockState state, BlockPos pos, @Nullable BlockEntity be) {
+		if (be instanceof BasinBlockEntity basin) {
+			basin.applyTanks(this.inputTankHalf, this.outputTankHalf);
+		}
+	}
+
+	@Override
+	public int getTanks() {
+		return this.bothTanks.getTanks();
+	}
+
+	@Override
+	@NotNull
+	public FluidStack getFluidInTank(int tank) {
+		return this.bothTanks.getFluidInTank(tank);
+	}
+
+	@Override
+	public int getTankCapacity(int tank) {
+		return 1000;
+	}
+
+	@Override
+	public boolean isFluidValid(int tank, @NotNull FluidStack fluidStack) {
+		return this.bothTanks.isFluidValid(tank, fluidStack);
+	}
+
+	@Override
+	public int fill(@NotNull FluidStack fluidStack, @NotNull FluidAction fluidAction) {
+		return this.inputTankHalf.fill(fluidStack, fluidAction);
+	}
+
+	@Override
+	@NotNull
+	public FluidStack drain(@NotNull FluidStack fluidStack, @NotNull FluidAction fluidAction) {
+		return this.bothTanks.drain(fluidStack, fluidAction);
+	}
+
+	@Override
+	@NotNull
+	public FluidStack drain(int tank, @NotNull FluidAction fluidAction) {
+		return this.bothTanks.drain(tank, fluidAction);
+	}
+
+	public static class MountedBasinTankHalf extends CombinedTankWrapper {
+		public static final MapCodec<MountedBasinTankHalf> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+			Codec.BOOL.fieldOf("insertionAllowed").forGetter(MountedBasinTankHalf::insertionAllowed),
+			FluidStack.OPTIONAL_CODEC.fieldOf("firstTank").forGetter(MountedBasinTankHalf::firstStack),
+			FluidStack.OPTIONAL_CODEC.fieldOf("secondTank").forGetter(MountedBasinTankHalf::secondStack),
+			Codec.FLOAT.fieldOf("previousFirstValue").forGetter(MountedBasinTankHalf::previousFirstValue),
+			Codec.FLOAT.fieldOf("previousSecondValue").forGetter(MountedBasinTankHalf::previousSecondValue)
+		).apply(i, MountedBasinTankHalf::fromStacks));
+
+ 		private final boolean insertionAllowed;
+		private final LerpedFloat firstLevel;
+		private final LerpedFloat secondLevel;
+
+		private float previousFirstValue;
+		private float previousSecondValue;
+		private float currentFirstValue;
+		private float currentSecondValue;
+		private Consumer<FluidStack> updateCallback;
+
+		public MountedBasinTankHalf(boolean insertionAllowed, IFluidHandler firstTank, IFluidHandler secondTank) {
+			super(firstTank, secondTank);
+
+			previousFirstValue = 0;
+			previousSecondValue = 0;
+
+			firstLevel = LerpedFloat.linear()
+				.startWithValue(0)
+				.chase(0, .25, Chaser.EXP);
+
+			secondLevel = LerpedFloat.linear()
+				.startWithValue(0)
+				.chase(0, .25, Chaser.EXP);
+
+			this.insertionAllowed = insertionAllowed;
+			enforceVariety();
+		}
+
+		public static MountedBasinTankHalf fromStacks(boolean insertionAllowed, FluidStack first, FluidStack second, float previousFirstValue, float previousSecondValue) {
+			SmartFluidTank firstTank = new SmartFluidTank(getTankCapacity(), s -> {});
+			SmartFluidTank secondTank = new SmartFluidTank(getTankCapacity(), s -> {});
+
+			MountedBasinTankHalf tankHalf = new MountedBasinTankHalf(insertionAllowed, firstTank, secondTank);
+			tankHalf.fillTank(0, first.copy());
+			tankHalf.fillTank(1, second.copy());
+
+			float firstFill = first.getAmount() / (float) getTankCapacity();
+			float secondFill = second.getAmount() / (float) getTankCapacity();
+
+//			LogUtils.getLogger().info("first: {} -> {}", previousFirstValue, firstFill);
+//			LogUtils.getLogger().info("second: {} -> {}", previousSecondValue, secondFill);
+
+			tankHalf.currentFirstValue = firstFill;
+			tankHalf.currentSecondValue = secondFill;
+
+			tankHalf.firstLevel.setValue(previousFirstValue);
+			tankHalf.secondLevel.setValue(previousSecondValue);
+			tankHalf.firstLevel.chase(firstFill, .25, Chaser.EXP);
+			tankHalf.secondLevel.chase(secondFill, .25, Chaser.EXP);
+
+			firstTank.setUpdateCallback(tankHalf::onFluidStackChanged);
+			secondTank.setUpdateCallback(tankHalf::onFluidStackChanged);
+
+			return tankHalf;
+		}
+
+		public void onFluidStackChanged(FluidStack stack) {
+			this.previousFirstValue = this.currentFirstValue;
+			this.previousSecondValue = this.currentSecondValue;
+			this.currentFirstValue = firstStack().getAmount() / (float) getTankCapacity();
+			this.currentSecondValue = secondStack().getAmount() / (float) getTankCapacity();
+
+			if (this.updateCallback != null) this.updateCallback.accept(stack);
+		}
+
+		public void tickChasers() {
+			firstLevel.tickChaser();
+			secondLevel.tickChaser();
+		}
+
+		public int getRenderedFluids() {
+			int total = 0;
+			for (int i = 0; i < this.getTanks(); i++) {
+				if (!this.getFluidInTank(i).isEmpty()) total++;
+			}
+
+			return total;
+		}
+
+		public float previousFirstValue() {
+			return this.previousFirstValue;
+		}
+
+		public float previousSecondValue() {
+			return this.previousSecondValue;
+		}
+
+		public FluidStack firstStack() {
+			return this.getFluidInTank(0);
+		}
+
+		public FluidStack secondStack() {
+			return this.getFluidInTank(1);
+		}
+
+		public float getTotalUnits(float partialTicks, int tank) {
+			if (tank == 0) return firstLevel.getValue(partialTicks) * 1000;
+			else return secondLevel.getValue(partialTicks) * 1000;
+		}
+
+		public float getTotalUnits(float partialTicks) {
+			return firstLevel.getValue(partialTicks) * 1000 +
+				  secondLevel.getValue(partialTicks) * 1000;
+		}
+
+		public void setUpdateCallback(Consumer<FluidStack> updateCallback) {
+			this.updateCallback = updateCallback;
+		}
+
+		public static int getTankCapacity() {
+			return 1000;
+		}
+
+		public boolean insertionAllowed() {
+			return insertionAllowed;
+		}
+
+		private void fillTank(int tank, FluidStack stack) {
+			this.getHandlerFromIndex(tank).fill(stack, FluidAction.EXECUTE);
+		}
+
+		@Override
+		public int fill(FluidStack resource, FluidAction action) {
+			if (!insertionAllowed)
+				return 0;
+			return super.fill(resource, action);
+		}
+	}
+}

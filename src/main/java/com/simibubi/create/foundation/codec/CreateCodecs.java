@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.codec;
 
 import java.util.function.Function;
 
+import com.simibubi.create.content.processing.basin.BasinInventory;
+
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 
 import com.mojang.serialization.Codec;
@@ -32,6 +34,10 @@ public class CreateCodecs {
 
 	public static final Codec<ItemStackHandler> ITEM_STACK_HANDLER = Codec.lazyInitialized(() -> ItemSlots.CODEC.xmap(
 		slots -> slots.toHandler(ItemStackHandler::new), ItemSlots::fromHandler
+	));
+
+	public static final Codec<BasinInventory> BASIN_INVENTORY = Codec.lazyInitialized(() -> ItemSlots.CODEC.xmap(
+		slots -> slots.toHandler(BasinInventory::new), ItemSlots::fromHandler
 	));
 
 	public static Codec<Integer> boundedIntStr(int min) {
