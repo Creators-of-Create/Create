@@ -111,7 +111,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 		super.addBehaviours(behaviours);
 		filtering = new FilteringBehaviour(this, new SawFilterSlot()).forRecipes();
 		behaviours.add(filtering);
-		behaviours.add(new DirectBeltInputBehaviour(this).allowingBeltFunnelsWhen(this::canProcess));
+		behaviours.add(new DirectBeltInputBehaviour(this).allowingBeltFunnelsWhen(this::canProcess).considerOccupiedWhen((d) -> !inventory.isEmpty()));
 		registerAwardables(behaviours, AllAdvancements.SAW_PROCESSING);
 	}
 
