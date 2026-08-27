@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.google.common.collect.ImmutableSet;
 
 import org.jetbrains.annotations.ApiStatus;
 
@@ -52,6 +55,11 @@ public class RuntimeDataGenerator {
 		.put(Mods.ARS_N.asResource("blue_archwood"), Mods.ARS_N.asResource("archwood")) // Generate recipes for planks -> everything else
 		//.put(Mods.UUE.asResource("chorus_cane"), Mods.UUE.asResource("chorus_nest")) // Has a weird setup with both normal and stripped planks, that it already provides cutting recipes for
 		.put(Mods.DD.asResource("blooming"), Mods.DD.asResource("bloom"))
+		.build();
+	// e.g. quark:azalea_planks_stairs, botania:livingwood_planks_slab
+	private static final Set<String> USES_PLANKS_IN_STAIRS_OR_SLAB_ID = ImmutableSet.<String>builder()
+		.add(Mods.Q.getId())
+		.add(Mods.BTN.getId())
 		.build();
 
 	public static void insertIntoPack(DynamicPack dynamicPack) {
@@ -108,8 +116,9 @@ public class RuntimeDataGenerator {
 			base = MISMATCHED_WOOD_NAMES.getOrDefault(base, base);
 			ResourceLocation nonStrippedId = matched_name.withSuffix(type).withPrefix(prefix).withSuffix(suffix);
 			ResourceLocation planksId = base.withSuffix("_planks");
-			ResourceLocation stairsId = base.withSuffix(base.getNamespace().equals(Mods.BTN.getId()) ? "_planks_stairs" : "_stairs");
-			ResourceLocation slabId = base.withSuffix(base.getNamespace().equals(Mods.BTN.getId()) ? "_planks_slab" : "_slab");
+			boolean usesPlanksForStairsOrSlabs = USES_PLANKS_IN_STAIRS_OR_SLAB_ID.contains(base.getNamespace());
+			ResourceLocation stairsId = base.withSuffix(usesPlanksForStairsOrSlabs ? "_planks_stairs" : "_stairs");
+			ResourceLocation slabId = base.withSuffix(usesPlanksForStairsOrSlabs ? "_planks_slab" : "_slab");
 			ResourceLocation fenceId = base.withSuffix("_fence");
 			ResourceLocation fenceGateId = base.withSuffix("_fence_gate");
 			ResourceLocation doorId = base.withSuffix("_door");
