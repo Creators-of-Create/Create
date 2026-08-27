@@ -29,7 +29,7 @@ public class BeltTunnelInteractionHandler {
 	public static boolean flapTunnelsAndCheckIfStuck(BeltInventory beltInventory, TransportedItemStack current,
 													 float nextOffset) {
 
-		int currentSegment = (int) current.beltPosition;
+		int currentSegment = (beltInventory.beltMovementPositive && current.beltPosition <= .0f) ? -1 : (int) current.beltPosition;
 		int upcomingSegment = (int) nextOffset;
 
 		Direction movementFacing = beltInventory.belt.getMovementFacing();
