@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -43,6 +44,14 @@ public abstract class AbstractSimpleShaftBlock extends AbstractShaftBlock implem
 		if (state != newState && !isMoving && !wasWaterLogged)
 			removeBracket(world, pos, true).ifPresent(stack -> Block.popResource(world, pos, stack));
 		super.onRemove(state, world, pos, newState, isMoving);
+	}
+
+	@Override
+	public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+		if (!world.isClientSide() && player.isCreative()) {
+			removeBracket(world, pos, true);
+		}
+		return super.playerWillDestroy(world, pos, state, player);
 	}
 
 	@Override

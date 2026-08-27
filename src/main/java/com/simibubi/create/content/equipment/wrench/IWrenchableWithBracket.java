@@ -28,6 +28,12 @@ public interface IWrenchableWithBracket extends IWrenchable {
 		return IWrenchable.super.onWrenched(state, context);
 	}
 
+	@Override
+	default InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
+		tryRemoveBracket(context);
+		return IWrenchable.super.onSneakWrenched(state, context);
+	}
+
 	default boolean tryRemoveBracket(UseOnContext context) {
 		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();

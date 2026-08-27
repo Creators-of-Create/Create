@@ -58,6 +58,14 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 	}
 
 	@Override
+	public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+		if (!world.isClientSide() && player.isCreative()) {
+			removeBracket(world, pos, true);
+		}
+		return super.playerWillDestroy(world, pos, state, player);
+	}
+
+	@Override
 	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		if (!AllBlocks.COPPER_CASING.isIn(stack))
 			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
