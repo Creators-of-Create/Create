@@ -159,9 +159,29 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 		float xMax = 2 / 16f;
 		final float yMin = 2 / 16f;
 		final float yMax = yMin + 12 / 16f * fluidLevel;
-		final float zMin = 2 / 16f;
-		final float zMax = 14 / 16f;
+		float zMin = 2 / 16f;
+		float zMax = 2 / 16f;
 
+		int totalFluids = basin.getTotalRenderedFluids(partialTicks);
+		int rows = Mth.ceil(Math.sqrt(totalFluids));
+		int columns = Mth.ceil((float) totalFluids / rows);
+		float []totalUnitsPerRow = new float[rows];
+
+		int i = 0;
+		for (SmartFluidTankBehaviour behaviour : tanks) {
+			if (behaviour == null)
+				continue;
+			for (TankSegment tankSegment : behaviour.getTanks()){
+				if(tankSegment.getRenderedFluid().isEmpty())
+					continue;
+				if(tankSegment.getTotalUnits(partialTicks) < 1)
+					continue;
+				totalUnitsPerRow[i / columns] += tankSegment.getTotalUnits(partialTicks);
+				i++;
+			}
+		}
+
+		i = 0;
 		for (SmartFluidTankBehaviour behaviour : tanks) {
 			if (behaviour == null)
 				continue;
@@ -173,12 +193,22 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 				if (units < 1)
 					continue;
 
-				float partial = Mth.clamp(units / totalUnits, 0, 1);
-				xMax += partial * 12 / 16f;
+				if(i % columns == 0){
+					float partialZ = Mth.clamp( totalUnitsPerRow[i / columns] / totalUnits, 0, 1);
+					zMin = zMax;
+					zMax += partialZ * 12/16f;
+					xMin = 2/16f;
+					xMax = 2/16f;
+				}
+
+				float partialX = Mth.clamp(units / totalUnitsPerRow[i / columns], 0, 1);
+				xMax += partialX * 12 / 16f;
+
 				NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(renderedFluid, xMin, yMin, zMin, xMax, yMax, zMax,
 					buffer, ms, light, false, false);
 
 				xMin = xMax;
+				i++;
 			}
 		}
 
