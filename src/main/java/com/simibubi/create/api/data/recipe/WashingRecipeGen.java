@@ -33,7 +33,7 @@ public abstract class WashingRecipeGen extends StandardProcessingRecipeGen<Splas
 	}
 
 	protected GeneratedRecipe simpleModded(DatagenMod mod, String input, String output) {
-		return create(mod.getId() + "/" + output, b -> b.require(mod, input)
+		return create(mod.recipeId(output), b -> b.require(mod, input)
 			.output(mod, output).whenModLoaded(mod.getId()));
 	}
 

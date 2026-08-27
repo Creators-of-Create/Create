@@ -85,12 +85,12 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 		.output(AllItems.DOUGH.get())),
 
 	// Atmospheric
-	ATMO_SAND = create("atmospheric/arid_sand", b -> b.require(Mods.ATM, "arid_sand")
+	ATMO_SAND = create(Mods.ATM.recipeId("arid_sand"), b -> b.require(Mods.ATM, "arid_sand")
 		.output(.25f, Items.CLAY_BALL, 1)
 		.output(0.05f, Mods.ATM, "aloe_kernels", 1)
 		.whenModLoaded(Mods.ATM.getId())),
 
-	ATMO_RED_SAND = create("atmospheric/red_arid_sand", b -> b.require(Mods.ATM, "red_arid_sand")
+	ATMO_RED_SAND = create(Mods.ATM.recipeId("red_arid_sand"), b -> b.require(Mods.ATM, "red_arid_sand")
 		.output(.125f, Items.CLAY_BALL, 4)
 		.output(0.05f, Mods.ATM, "aloe_kernels", 1)
 		.whenModLoaded(Mods.ATM.getId())),
@@ -125,8 +125,7 @@ public final class CreateWashingRecipeGen extends WashingRecipeGen {
 		for (Mods mod : metal.mods) {
 			String metalName = metal.getName(mod);
 			ResourceLocation nugget = mod.nuggetOf(metalName);
-			create(mod.getId() + "/" + crushed.getId()
-					.getPath(),
+			create(mod.recipeId(crushed.getId().getPath()),
 				b -> b.withItemIngredients(Ingredient.of(crushed::get))
 					.output(1, nugget, 9)
 					.whenModLoaded(mod.getId()));
