@@ -161,6 +161,9 @@ public class CreateRegistrateTags {
 		prov.tag(AllBlockTags.PLOUGH_BLACKLIST.tag)
 			.addTag(BlockTags.PORTALS);
 
+		prov.tag(AllBlockTags.WATER_WHEEL_PLANKS.tag)
+			.addTag(BlockTags.PLANKS);
+
 		// COMPAT
 
 		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE, List.of(
@@ -170,6 +173,12 @@ public class CreateRegistrateTags {
 
 		TagGen.addOptional(prov.tag(AllBlockTags.ROOTS.tag), Mods.TF,
 			List.of("root", "liveroot_block", "mangrove_root"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.WATER_WHEEL_PLANKS.tag), Mods.AET, List.of(
+			"skyroot_planks"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.WATER_WHEEL_PLANKS.tag), Mods.D_AET, List.of(
+			"cruderoot_planks", "roseroot_planks", "sunroot_planks", "yagroot_planks", "conberry_planks"));
 	}
 
 	private static void genItemTags(RegistrateTagsProvider<Item> provIn) {
