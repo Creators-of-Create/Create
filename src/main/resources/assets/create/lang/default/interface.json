@@ -530,6 +530,8 @@
 
 	"create.gui.package_port.send_only": "Only send packages",
 	"create.gui.package_port.send_and_receive": "Send and receive packages",
+  "create.gui.package_port.explicit_fetch": "Only send packages when Retrieve Package instruction is used",
+  "create.gui.package_port.explicit_deliver": "Only receive packages when Deliver Package instruction is used",
 	"create.gui.package_port.catch_packages": "Catch packages addressed to...",
 	"create.gui.package_port.catch_packages_wildcard": "Use * as a text wildcard",
 	"create.gui.package_port.catch_packages_empty": "Leave empty to match non-addressed",
@@ -798,9 +800,12 @@
 	"create.schedule.instruction.throttle_edit_box_1": "Affects the top speed of the Train",
 
 	"create.schedule.instruction.package_delivery": "Deliver Package",
-	"create.schedule.instruction.package_delivery.summary": "Deliver first package in cargo",
+	"create.schedule.instruction.package_delivery.summary": "Deliver a package addressed to:",
 	"create.schedule.instruction.package_delivery.summary_1": "Drives to the station with",
 	"create.schedule.instruction.package_delivery.summary_2": "the correct postbox",
+  "create.schedule.instruction.delivery_address_filter_edit_box": "Deliver Packages with this Address",
+  "create.schedule.instruction.delivery_address_filter_edit_box_1": "Use * as a text wildcard",
+  "create.schedule.instruction.delivery_address_filter_edit_box_2": "Train may navigate anywhere to deliver it",
 
 	"create.schedule.instruction.package_retrieval": "Retrieve Package",
 	"create.schedule.instruction.package_retrieval.summary": "Fetch a package addressed to:",
