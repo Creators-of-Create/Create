@@ -10,6 +10,7 @@ public class GlobalPackagePort {
 	public ItemStackHandler offlineBuffer = new ItemStackHandler(18);
 	public boolean primed = false;
 	private boolean restoring = false;
+	public boolean acceptsPackages = true;
 
 	public void restoreOfflineBuffer(IItemHandlerModifiable inventory) {
 		if (!primed) return;
