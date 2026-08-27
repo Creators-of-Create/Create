@@ -9,10 +9,6 @@
       "required": false
     },
     {
-      "id": "galosphere:lumiere_slab",
-      "required": false
-    },
-    {
       "id": "galosphere:smooth_lumiere",
       "required": false
     },
@@ -21,19 +17,11 @@
       "required": false
     },
     {
-      "id": "galosphere:smooth_lumiere_slab",
-      "required": false
-    },
-    {
       "id": "galosphere:lumiere_bricks",
       "required": false
     },
     {
       "id": "galosphere:lumiere_brick_stairs",
-      "required": false
-    },
-    {
-      "id": "galosphere:lumiere_brick_slab",
       "required": false
     },
     {
