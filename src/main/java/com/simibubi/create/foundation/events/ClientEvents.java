@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllBiomeTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
@@ -329,7 +330,9 @@ public class ClientEvents {
 
 		ItemStack divingHelmet = DivingHelmetItem.getWornItem(entity);
 		if (!divingHelmet.isEmpty()) {
-			if (FluidHelper.isWater(fluid)) {
+			boolean shouldScaleWaterFog = !level.getBiome(blockPos)
+				.is(AllBiomeTags.WITHOUT_DIVING_HELMET_FOG_SCALING.tag);
+			if (FluidHelper.isWater(fluid) && shouldScaleWaterFog) {
 				event.scaleFarPlaneDistance(6.25f);
 				event.setCanceled(true);
 				return;
