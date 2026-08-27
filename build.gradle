@@ -114,6 +114,12 @@ repositories {
         }
     }
     maven { url "https://chocolateminecraft.com/maven" } // Xaero
+    maven {
+        url = "https://api.modrinth.org/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 configurations {
@@ -151,6 +157,8 @@ dependencies {
 
     compileOnly("top.theillusivec4.curios:curios-neoforge:$curios_version+$minecraft_version:api")
     localRuntimeOnly("top.theillusivec4.curios:curios-neoforge:$curios_version+$minecraft_version")
+
+    localRuntimeOnly("maven.modrinth:polymorph:VEburL70")
 
     compileOnly("maven.modrinth:sodium:mc$minecraft_version-$sodium_version-neoforge")
 

@@ -67,7 +67,7 @@ public class PackageRepackageHelper {
 		if (orderContext != null) {
 			List<BigItemStack> packagesSplitByRecipe = repackBasedOnRecipes(summary, orderContext, address, r);
 			exportingPackages.addAll(packagesSplitByRecipe);
-			
+
 			if (packagesSplitByRecipe.isEmpty())
 				for (BigItemStack stack : orderContext.stacks())
 					orderedStacks.add(new BigItemStack(stack.stack, stack.count));
@@ -175,7 +175,7 @@ public class PackageRepackageHelper {
 	protected List<BigItemStack> repackBasedOnRecipes(InventorySummary summary, PackageOrderWithCrafts order, String address, RandomSource r) {
 		if (order.orderedCrafts().isEmpty())
 			return List.of();
-		
+
 		List<BigItemStack> packages = new ArrayList<>();
 		for (CraftingEntry craftingEntry : order.orderedCrafts()) {
 			int packagesToCreate = 0;
@@ -189,19 +189,19 @@ public class PackageRepackageHelper {
 				}
 				packagesToCreate++;
 			}
-			
+
 			ItemStackHandler target = new ItemStackHandler(PackageItem.SLOTS);
 			List<BigItemStack> stacks = craftingEntry.pattern().stacks();
 			for (int currentSlot = 0; currentSlot < Math.min(stacks.size(), target.getSlots()); currentSlot++)
 				target.setStackInSlot(currentSlot, stacks.get(currentSlot).stack.copyWithCount(1));
-			
+
 			ItemStack box = PackageItem.containing(target);
 			PackageItem.setOrder(box, r.nextInt(), 0, true, 0, true,
 				PackageOrderWithCrafts.singleRecipe(craftingEntry.pattern()
-					.stacks()));
+					.stacks(), craftingEntry.suggestedResult()));
 			packages.add(new BigItemStack(box, packagesToCreate));
 		}
-		
+
 		return packages;
 	}
 

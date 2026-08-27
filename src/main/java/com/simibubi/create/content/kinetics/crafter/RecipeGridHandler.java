@@ -3,6 +3,7 @@ package com.simibubi.create.content.kinetics.crafter;
 import static com.simibubi.create.content.kinetics.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -139,22 +140,41 @@ public class RecipeGridHandler {
 		return AllBlocks.MECHANICAL_CRAFTER.has(state);
 	}
 
+	@Deprecated
 	public static ItemStack tryToApplyRecipe(Level world, GroupedItems items) {
+		return tryToApplyRecipe(world, items, ItemStack.EMPTY);
+	}
+
+	public static ItemStack tryToApplyRecipe(Level world, GroupedItems items, ItemStack suggestedResult) {
 		items.calcStats();
 		CraftingInput craftingInput = MechanicalCraftingInput.of(items);
-		ItemStack result = null;
+		List<ItemStack> potentialResults = null;
 		RegistryAccess registryAccess = world.registryAccess();
+
 		if (AllConfigs.server().recipes.allowRegularCraftingInCrafter.get())
-			result = world.getRecipeManager()
-				.getRecipeFor(RecipeType.CRAFTING, craftingInput, world)
+			potentialResults = world.getRecipeManager()
+				.getRecipesFor(RecipeType.CRAFTING, craftingInput, world)
+				.stream()
 				.filter(r -> isRecipeAllowed(r, craftingInput))
 				.map(r -> r.value().assemble(craftingInput, registryAccess))
-				.orElse(null);
-		if (result == null)
-			result = AllRecipeTypes.MECHANICAL_CRAFTING.find(craftingInput, world)
+				.toList();
+
+		if (potentialResults == null || potentialResults.isEmpty())
+			potentialResults = AllRecipeTypes.MECHANICAL_CRAFTING.find(craftingInput, world)
 				.map(r -> r.value().assemble(craftingInput, registryAccess))
+				.map(Collections::singletonList)
 				.orElse(null);
-		return result;
+
+		if (potentialResults == null) {
+			return null;
+		}
+
+		for (ItemStack result : potentialResults) {
+			if (result.getItem() == suggestedResult.getItem()) //TODO: Maybe compare ItemStack count/metadata?
+				return result;
+		}
+
+		return potentialResults.getFirst();
 	}
 
 	public static boolean isRecipeAllowed(RecipeHolder<CraftingRecipe> recipe, CraftingInput craftingInput) {
