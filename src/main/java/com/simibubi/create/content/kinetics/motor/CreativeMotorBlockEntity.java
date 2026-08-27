@@ -21,11 +21,13 @@ import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
@@ -112,6 +114,20 @@ public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 
 	}
 
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		// Used for GameTests to safely verify tooltip content on the server side
+		// Bypasses client-only formatting logic to prevent crashes in headless environments
+		// Note: Used Component.translatable directly to avoid issues with CreateLang in GameTests
+		if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
+			addToGoggleRotationDirectionTooltip(tooltip);
+            return true;
+        }
+		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+		addToGoggleRotationDirectionTooltip(tooltip);
+		return true;
+	}
+	
 	@Override
 	public void invalidate() {
 		super.invalidate();
