@@ -8,12 +8,7 @@
   "type": "create:pressing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "betterendforge:pink_moss"
-        }
-      ]
+      "item": "betterendforge:pink_moss"
     }
   ],
   "results": [

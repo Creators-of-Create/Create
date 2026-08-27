@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomesoplenty:blue_hydrangea"
-        }
-      ]
+      "item": "biomesoplenty:blue_hydrangea"
     }
   ],
   "processing_time": 50,

@@ -8,12 +8,7 @@
   "type": "create:cutting",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "netherexp:cerebrage_claret_hyphae"
-        }
-      ]
+      "item": "netherexp:cerebrage_claret_hyphae"
     }
   ],
   "processing_time": 50,

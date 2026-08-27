@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:fairy_slipper"
-        }
-      ]
+      "item": "biomeswevegone:fairy_slipper"
     }
   ],
   "processing_time": 50,

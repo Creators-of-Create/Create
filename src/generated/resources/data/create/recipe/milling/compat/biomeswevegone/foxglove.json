@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:foxglove"
-        }
-      ]
+      "item": "biomeswevegone:foxglove"
     }
   ],
   "processing_time": 50,

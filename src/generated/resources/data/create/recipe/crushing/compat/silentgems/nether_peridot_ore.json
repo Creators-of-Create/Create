@@ -8,12 +8,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "silentgems:nether_peridot_ore"
-        }
-      ]
+      "item": "silentgems:nether_peridot_ore"
     }
   ],
   "processing_time": 350,

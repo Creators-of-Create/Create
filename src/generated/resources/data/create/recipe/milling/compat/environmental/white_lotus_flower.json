@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "environmental:white_lotus_flower"
-        }
-      ]
+      "item": "environmental:white_lotus_flower"
     }
   ],
   "processing_time": 50,

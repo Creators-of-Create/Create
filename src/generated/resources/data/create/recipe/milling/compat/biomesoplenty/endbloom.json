@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomesoplenty:endbloom"
-        }
-      ]
+      "item": "biomesoplenty:endbloom"
     }
   ],
   "processing_time": 50,

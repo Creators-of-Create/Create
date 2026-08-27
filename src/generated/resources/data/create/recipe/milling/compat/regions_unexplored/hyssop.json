@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:hyssop"
-        }
-      ]
+      "item": "regions_unexplored:hyssop"
     }
   ],
   "processing_time": 50,

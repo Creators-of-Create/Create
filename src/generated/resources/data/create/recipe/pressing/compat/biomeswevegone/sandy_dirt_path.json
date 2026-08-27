@@ -8,12 +8,7 @@
   "type": "create:pressing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:sandy_dirt"
-        }
-      ]
+      "item": "biomeswevegone:sandy_dirt"
     }
   ],
   "results": [

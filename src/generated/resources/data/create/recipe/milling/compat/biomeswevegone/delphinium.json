@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:delphinium"
-        }
-      ]
+      "item": "biomeswevegone:delphinium"
     }
   ],
   "processing_time": 50,

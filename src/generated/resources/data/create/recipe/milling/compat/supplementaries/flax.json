@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "supplementaries:flax"
-        }
-      ]
+      "item": "supplementaries:flax"
     }
   ],
   "processing_time": 150,

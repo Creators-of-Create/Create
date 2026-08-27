@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:aster"
-        }
-      ]
+      "item": "regions_unexplored:aster"
     }
   ],
   "processing_time": 50,

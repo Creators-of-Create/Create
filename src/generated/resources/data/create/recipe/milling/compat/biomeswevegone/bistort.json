@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:bistort"
-        }
-      ]
+      "item": "biomeswevegone:bistort"
     }
   ],
   "processing_time": 50,

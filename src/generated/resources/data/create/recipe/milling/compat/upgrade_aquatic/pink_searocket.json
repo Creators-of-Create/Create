@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "upgrade_aquatic:pink_searocket"
-        }
-      ]
+      "item": "upgrade_aquatic:pink_searocket"
     }
   ],
   "processing_time": 50,

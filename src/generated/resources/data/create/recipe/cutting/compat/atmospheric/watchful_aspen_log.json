@@ -8,12 +8,7 @@
   "type": "create:cutting",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "atmospheric:watchful_aspen_log"
-        }
-      ]
+      "item": "atmospheric:watchful_aspen_log"
     }
   ],
   "processing_time": 50,

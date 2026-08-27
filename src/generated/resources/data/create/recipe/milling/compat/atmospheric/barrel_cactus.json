@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "atmospheric:barrel_cactus"
-        }
-      ]
+      "item": "atmospheric:barrel_cactus"
     }
   ],
   "processing_time": 50,

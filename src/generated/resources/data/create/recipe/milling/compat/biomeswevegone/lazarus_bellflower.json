@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:lazarus_bellflower"
-        }
-      ]
+      "item": "biomeswevegone:lazarus_bellflower"
     }
   ],
   "processing_time": 50,

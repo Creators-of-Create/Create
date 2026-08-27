@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomesoplenty:pink_daffodil"
-        }
-      ]
+      "item": "biomesoplenty:pink_daffodil"
     }
   ],
   "processing_time": 50,

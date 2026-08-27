@@ -8,12 +8,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "silentgems:end_ruby_ore"
-        }
-      ]
+      "item": "silentgems:end_ruby_ore"
     }
   ],
   "processing_time": 350,

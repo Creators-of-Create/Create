@@ -8,12 +8,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "minecraft:netherrack"
-        }
-      ]
+      "item": "minecraft:netherrack"
     }
   ],
   "processing_time": 350,

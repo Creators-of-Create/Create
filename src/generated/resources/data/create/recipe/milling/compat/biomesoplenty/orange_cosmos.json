@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomesoplenty:orange_cosmos"
-        }
-      ]
+      "item": "biomesoplenty:orange_cosmos"
     }
   ],
   "processing_time": 50,

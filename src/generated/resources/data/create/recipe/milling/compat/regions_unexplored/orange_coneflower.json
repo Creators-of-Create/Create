@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:orange_coneflower"
-        }
-      ]
+      "item": "regions_unexplored:orange_coneflower"
     }
   ],
   "processing_time": 50,
