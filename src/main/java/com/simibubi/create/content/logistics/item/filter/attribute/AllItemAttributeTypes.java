@@ -7,6 +7,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
+import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.item.filter.attribute.attributes.AddedByAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.attributes.BookAuthorAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.attributes.BookCopyAttribute;
@@ -17,6 +18,7 @@ import com.simibubi.create.content.logistics.item.filter.attribute.attributes.In
 import com.simibubi.create.content.logistics.item.filter.attribute.attributes.InTagAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.attributes.ItemNameAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.attributes.ShulkerFillLevelAttribute;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
@@ -62,6 +64,7 @@ public class AllItemAttributeTypes {
 		SMOKABLE = singleton("smokable", (s, w) -> testRecipe(s, w, RecipeType.SMOKING)),
 		BLASTABLE = singleton("blastable", (s, w) -> testRecipe(s, w, RecipeType.BLASTING)),
 		COMPOSTABLE = singleton("compostable", s -> ComposterBlock.getValue(s) > 0),
+		PACKAGED_INGREDIENTS = singleton("packaged_ingredients", s -> PackageItem.isPackage(s) && PackageOrderWithCrafts.hasCraftingInformation(PackageItem.getOrderContext(s))),
 
 	IN_TAG = register("in_tag", new InTagAttribute.Type()),
 		IN_ITEM_GROUP = register("in_item_group", new InItemGroupAttribute.Type()),
