@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -33,51 +34,38 @@ public class ConnectivityHandler {
 	public static <T extends BlockEntity & IMultiBlockEntityContainer> void formMulti(T be) {
 		SearchCache<T> cache = new SearchCache<>();
 		List<T> frontier = new ArrayList<>();
-		frontier.add(be);
-		formMulti(be.getType(), be.getLevel(), cache, frontier);
-	}
+		BlockEntityType<?> type = be.getType();
+		BlockGetter level = be.getLevel();
 
-	private static <T extends BlockEntity & IMultiBlockEntityContainer> void formMulti(BlockEntityType<?> type,
-																					   BlockGetter level, SearchCache<T> cache, List<T> frontier) {
-		PriorityQueue<Pair<Integer, T>> creationQueue = makeCreationQueue();
+		if (level==null)return;
+
+		PriorityQueue<Pair<Sizing, T>> creationQueue = new PriorityQueue<>(
+			(one, two) -> two.getKey().volume - one.getKey().volume
+		);
 		Set<BlockPos> visited = new HashSet<>();
-		Direction.Axis mainAxis = frontier.get(0)
-			.getMainConnectionAxis();
+		Direction.Axis mainAxis = be.getMainConnectionAxis();
 
-		// essentially, if it's a vertical multi then the search won't be restricted by
-		// Y
+		BlockPos pos = be.getBlockPos();
+		int maxWidth = be.getMaxWidth();
+
+		// essentially, if it's a vertical multi then the search won't be restricted by Y
 		// alternately, a horizontal multi search shouldn't be restricted by X or Z
-		int minX = (mainAxis == Direction.Axis.Y ? Integer.MAX_VALUE : Integer.MIN_VALUE);
-		int minY = (mainAxis != Direction.Axis.Y ? Integer.MAX_VALUE : Integer.MIN_VALUE);
-		int minZ = (mainAxis == Direction.Axis.Y ? Integer.MAX_VALUE : Integer.MIN_VALUE);
+		int minX = (mainAxis == Direction.Axis.Y ? pos.getX() - maxWidth : Integer.MIN_VALUE);
+		int minY = (mainAxis != Direction.Axis.Y ? pos.getY() - maxWidth : Integer.MIN_VALUE);
+		int minZ = (mainAxis == Direction.Axis.Y ? pos.getZ() - maxWidth : Integer.MIN_VALUE);
 
-		for (T be : frontier) {
-			BlockPos pos = be.getBlockPos();
-			minX = Math.min(pos.getX(), minX);
-			minY = Math.min(pos.getY(), minY);
-			minZ = Math.min(pos.getZ(), minZ);
-		}
-		if (mainAxis == Direction.Axis.Y)
-			minX -= frontier.get(0)
-				.getMaxWidth();
-		if (mainAxis != Direction.Axis.Y)
-			minY -= frontier.get(0)
-				.getMaxWidth();
-		if (mainAxis == Direction.Axis.Y)
-			minZ -= frontier.get(0)
-				.getMaxWidth();
-
+		frontier.add(be);
 		while (!frontier.isEmpty()) {
-			T part = frontier.remove(0);
+			T part = frontier.removeFirst();
 			BlockPos partPos = part.getBlockPos();
 			if (visited.contains(partPos))
 				continue;
 
 			visited.add(partPos);
 
-			int amount = tryToFormNewMulti(part, cache, true);
-			if (amount > 1) {
-				creationQueue.add(Pair.of(amount, part));
+			Sizing size = getSizing(part, cache);
+			if (size.volume > 1) {
+				creationQueue.add(Pair.of(size, part));
 			}
 
 			for (Direction.Axis axis : Iterate.axes) {
@@ -99,290 +87,271 @@ public class ConnectivityHandler {
 		visited.clear();
 
 		while (!creationQueue.isEmpty()) {
-			Pair<Integer, T> next = creationQueue.poll();
+			Pair<Sizing, T> next = creationQueue.poll();
+			Sizing size = next.getKey();
 			T toCreate = next.getValue();
 			if (visited.contains(toCreate.getBlockPos()))
 				continue;
 
 			visited.add(toCreate.getBlockPos());
-			tryToFormNewMulti(toCreate, cache, false);
+			assembleMultiWithSize(toCreate, size, cache);
 		}
 	}
 
-	private static <T extends BlockEntity & IMultiBlockEntityContainer> int tryToFormNewMulti(T be, SearchCache<T> cache,
-																							  boolean simulate) {
-		int bestWidth = 1;
-		int bestAmount = -1;
-		if (!be.isController())
-			return 0;
-
-		int radius = be.getMaxWidth();
-		for (int w = 1; w <= radius; w++) {
-			int amount = tryToFormNewMultiOfWidth(be, w, cache, true);
-			if (amount < bestAmount)
-				continue;
-			bestWidth = w;
-			bestAmount = amount;
-		}
-
-		if (!simulate) {
-			int beWidth = be.getWidth();
-			if (beWidth == bestWidth && beWidth * beWidth * be.getHeight() == bestAmount)
-				return bestAmount;
-
-			splitMultiAndInvalidate(be, cache, false);
-			if (be instanceof IMultiBlockEntityContainer.Fluid ifluid && ifluid.hasTank())
-				ifluid.setTankSize(0, bestAmount);
-
-			tryToFormNewMultiOfWidth(be, bestWidth, cache, false);
-
-			be.preventConnectivityUpdate();
-			be.setWidth(bestWidth);
-			be.setHeight(bestAmount / bestWidth / bestWidth);
-			be.notifyMultiUpdated();
-		}
-		return bestAmount;
-	}
-
-	private static <T extends BlockEntity & IMultiBlockEntityContainer> int tryToFormNewMultiOfWidth(T be, int width,
-																									 SearchCache<T> cache, boolean simulate) {
-		int amount = 0;
-		int height = 0;
+	private static <T extends BlockEntity & IMultiBlockEntityContainer> void assembleMultiWithSize(
+		T be, Sizing size, SearchCache<T> cache
+	) {
 		BlockEntityType<?> type = be.getType();
 		Level level = be.getLevel();
-		if (level == null)
-			return 0;
 		BlockPos origin = be.getBlockPos();
+		Direction.Axis axis = be.getMainConnectionAxis();
 
-		// optional fluid handling
-		IFluidTank beTank = null;
-		FluidStack fluid = FluidStack.EMPTY;
+		if (level == null) return;
+
+		if (be.getWidth() == size.width && be.getHeight() == size.height)
+			return;
+
+		splitMultiAndInvalidate(be, cache);
+		if (be instanceof IMultiBlockEntityContainer.Fluid ifluid && ifluid.hasTank())
+			ifluid.setTankSize(0, size.volume);
+
+		//optional fluid handling
+		IFluidTank beTank;
+		FluidStack fluid;
 		if (be instanceof IMultiBlockEntityContainer.Fluid ifluid && ifluid.hasTank()) {
 			beTank = ifluid.getTank(0);
 			fluid = beTank.getFluid();
+		} else {
+			fluid = FluidStack.EMPTY;
+			beTank = null;
 		}
+
+		forEachPosition(origin, axis, size.width, size.height, (pos) -> {
+			T part = partAt(type, level, pos);
+			if (part == null || part == be)
+				return;
+
+			if (part instanceof IMultiBlockEntityContainer.Fluid ifluidPart && ifluidPart.hasTank()) {
+				IFluidTank tankAt = ifluidPart.getTank(0);
+				FluidStack fluidAt = tankAt.drain(tankAt.getCapacity(), IFluidHandler.FluidAction.EXECUTE);
+				if (!fluidAt.isEmpty()) {
+					// making this generic would be a rather large mess, unfortunately
+					if (beTank != null && fluid.isEmpty()
+						&& beTank instanceof CreativeFluidTankBlockEntity.CreativeSmartFluidTank) {
+						((CreativeFluidTankBlockEntity.CreativeSmartFluidTank) beTank)
+							.setContainedFluid(fluidAt);
+					}
+					if (be instanceof IMultiBlockEntityContainer.Fluid ifluidBE && ifluidBE.hasTank() && beTank != null) {
+						beTank.fill(fluidAt, IFluidHandler.FluidAction.EXECUTE);
+					}
+				}
+			}
+
+			splitMultiAndInvalidate(part, cache);
+			part.setController(origin);
+			part.preventConnectivityUpdate();
+			cache.put(pos, be);
+			part.setHeight(size.height);
+			part.setWidth(size.width);
+			part.notifyMultiUpdated();
+		});
+		be.preventConnectivityUpdate();
+		be.setWidth(size.width);
+		be.setHeight(size.height);
+		be.notifyMultiUpdated();
+	}
+
+	private static <T extends BlockEntity & IMultiBlockEntityContainer> Sizing getSizing (
+		T be, SearchCache<T> cache
+	) {
+		Sizing bestFit = new Sizing(0, 0, 0);
+		Level level = be.getLevel();
+		if (level == null || !be.isController()) {
+			return bestFit;
+		}
+
+		BlockEntityType<?> type = be.getType();
+		BlockPos origin = be.getBlockPos();
 		Direction.Axis axis = be.getMainConnectionAxis();
 
-		Search:
-		for (int yOffset = 0; yOffset < be.getMaxLength(axis, width); yOffset++) {
-			for (int xOffset = 0; xOffset < width; xOffset++) {
-				for (int zOffset = 0; zOffset < width; zOffset++) {
-					BlockPos pos = switch (axis) {
-						case X -> origin.offset(yOffset, xOffset, zOffset);
-						case Y -> origin.offset(xOffset, yOffset, zOffset);
-						case Z -> origin.offset(xOffset, zOffset, yOffset);
-					};
-					Optional<T> part = cache.getOrCache(type, level, pos);
-					if (part.isEmpty())
-						break Search;
+		// optional fluid handling
+		FluidStack fluid = FluidStack.EMPTY;
+		if (be instanceof IMultiBlockEntityContainer.Fluid ifluid && ifluid.hasTank()) {
+			fluid = ifluid.getTank(0).getFluid();
+		}
 
-					T controller = part.get();
-					int otherWidth = controller.getWidth();
-					if (otherWidth > width)
-						break Search;
-					if (otherWidth == width && controller.getHeight() == be.getMaxLength(axis, width))
-						break Search;
+		for (int width = 1; width <= be.getMaxWidth(); width++) {
+			int height = 0;
 
-					Direction.Axis conAxis = controller.getMainConnectionAxis();
-					if (axis != conAxis)
-						break Search;
+			int maxLength = be.getMaxLength(axis, width);
 
-					BlockPos conPos = controller.getBlockPos();
-					if (!conPos.equals(origin)) {
-						if (axis == Direction.Axis.Y) { // vertical multi, like a FluidTank
-							if (conPos.getX() < origin.getX())
-								break Search;
-							if (conPos.getZ() < origin.getZ())
-								break Search;
-							if (conPos.getX() + otherWidth > origin.getX() + width)
-								break Search;
-							if (conPos.getZ() + otherWidth > origin.getZ() + width)
-								break Search;
-						} else { // horizontal multi, like an ItemVault
-							if (axis == Direction.Axis.Z && conPos.getX() < origin.getX())
-								break Search;
-							if (conPos.getY() < origin.getY())
-								break Search;
-							if (axis == Direction.Axis.X && conPos.getZ() < origin.getZ())
-								break Search;
-							if (axis == Direction.Axis.Z && conPos.getX() + otherWidth > origin.getX() + width)
-								break Search;
-							if (conPos.getY() + otherWidth > origin.getY() + width)
-								break Search;
-							if (axis == Direction.Axis.X && conPos.getZ() + otherWidth > origin.getZ() + width)
-								break Search;
-						}
-					}
-					if (controller instanceof IMultiBlockEntityContainer.Fluid ifluidCon && ifluidCon.hasTank()) {
-						FluidStack otherFluid = ifluidCon.getFluid(0);
-						if (!fluid.isEmpty() && !otherFluid.isEmpty() && !FluidStack.isSameFluidSameComponents(fluid, otherFluid))
+			Search:
+			for (int yOffset = 0; yOffset < maxLength; yOffset++) {
+				for (int xOffset = 0; xOffset < width; xOffset++) {
+					for (int zOffset = 0; zOffset < width; zOffset++) {
+						BlockPos pos = switch (axis) {
+							case X -> origin.offset(yOffset, xOffset, zOffset);
+							case Y -> origin.offset(xOffset, yOffset, zOffset);
+							case Z -> origin.offset(xOffset, zOffset, yOffset);
+						};
+
+						Optional<T> part = cache.getOrCache(type, level, pos);
+						if (part.isEmpty()) {
 							break Search;
-					}
-				}
-			}
-			amount += width * width;
-			height++;
-		}
+						}
 
-		if (simulate)
-			return amount;
+						T controller = part.get();
+						if(!sizedAlignedBounded(controller, origin, axis, width, maxLength)) {
+							break Search;
+						}
 
-		Object extraData = be.getExtraData();
-
-		for (int yOffset = 0; yOffset < height; yOffset++) {
-			for (int xOffset = 0; xOffset < width; xOffset++) {
-				for (int zOffset = 0; zOffset < width; zOffset++) {
-					BlockPos pos = switch (axis) {
-						case X -> origin.offset(yOffset, xOffset, zOffset);
-						case Y -> origin.offset(xOffset, yOffset, zOffset);
-						case Z -> origin.offset(xOffset, zOffset, yOffset);
-					};
-					T part = partAt(type, level, pos);
-					if (part == null)
-						continue;
-					if (part == be)
-						continue;
-
-					extraData = be.modifyExtraData(extraData);
-
-					if (part instanceof IMultiBlockEntityContainer.Fluid ifluidPart && ifluidPart.hasTank()) {
-						IFluidTank tankAt = ifluidPart.getTank(0);
-						FluidStack fluidAt = tankAt.getFluid();
-						if (!fluidAt.isEmpty()) {
-							// making this generic would be a rather large mess, unfortunately
-							if (beTank != null && fluid.isEmpty()
-								&& beTank instanceof CreativeFluidTankBlockEntity.CreativeSmartFluidTank) {
-								((CreativeFluidTankBlockEntity.CreativeSmartFluidTank) beTank)
-									.setContainedFluid(fluidAt);
-							}
-							if (be instanceof IMultiBlockEntityContainer.Fluid ifluidBE && ifluidBE.hasTank()
-								&& beTank != null) {
-								beTank.fill(fluidAt, IFluidHandler.FluidAction.EXECUTE);
+						if (controller instanceof IMultiBlockEntityContainer.Fluid ifluidCon && ifluidCon.hasTank()) {
+							FluidStack otherFluid = ifluidCon.getFluid(0);
+							if (!fluid.isEmpty() && !otherFluid.isEmpty() && !FluidStack.isSameFluidSameComponents(fluid, otherFluid)) {
+								break Search;
 							}
 						}
-						tankAt.drain(tankAt.getCapacity(), IFluidHandler.FluidAction.EXECUTE);
 					}
-
-					splitMultiAndInvalidate(part, cache, false);
-					part.setController(origin);
-					part.preventConnectivityUpdate();
-					cache.put(pos, be);
-					part.setHeight(height);
-					part.setWidth(width);
-					part.notifyMultiUpdated();
 				}
+				height++;
+			}
+
+			Sizing size = new Sizing(width, height);
+			if (size.volume < bestFit.volume)
+				continue;
+			bestFit = size;
+		}
+
+		return bestFit;
+	}
+
+	private static <T extends BlockEntity & IMultiBlockEntityContainer> boolean sizedAlignedBounded (
+		T controller, BlockPos origin, Direction.Axis axis, int width, int maxLength
+	) {
+		BlockPos conPos = controller.getBlockPos();
+		int otherWidth = controller.getWidth();
+		//check size
+		if (otherWidth > width) {
+			return false;
+		}
+		if (otherWidth == width && controller.getHeight() == maxLength) {
+			return false;
+		}
+		//check alignment
+		if (axis != controller.getMainConnectionAxis()) {
+			return false;
+		}
+		//check if within bounds
+		if (conPos.equals(origin))
+			return true; //return early if equivalent
+		if (axis != Direction.Axis.Y) {
+			if (conPos.getY() < origin.getY() ||
+				conPos.getY() + otherWidth > origin.getY() + width) {
+				return false;
 			}
 		}
-		be.setExtraData(extraData);
-		return amount;
+		if (axis != Direction.Axis.X) {
+			if (conPos.getX() < origin.getX() ||
+				conPos.getX() + otherWidth > origin.getX() + width) {
+				return false;
+			}
+		}
+		if (axis != Direction.Axis.Z) {
+			if (conPos.getZ() < origin.getZ() ||
+				conPos.getZ() + otherWidth > origin.getZ() + width) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public static <T extends BlockEntity & IMultiBlockEntityContainer> void splitMulti(T be) {
-		splitMultiAndInvalidate(be, null, false);
+		splitMultiAndInvalidate(be, null);
 	}
 
-	// tryReconnect helps whenever only a few tanks have been removed
-	private static <T extends BlockEntity & IMultiBlockEntityContainer> void splitMultiAndInvalidate(T be,
-																									 @Nullable SearchCache<T> cache, boolean tryReconnect) {
+	private static <T extends BlockEntity & IMultiBlockEntityContainer> void splitMultiAndInvalidate(
+		T be, @Nullable SearchCache<T> cache
+	) {
 		Level level = be.getLevel();
 		if (level == null)
 			return;
 
-		be = be.getControllerBE();
-		if (be == null)
+		T controller = be.getControllerBE();
+		if (controller == null)
 			return;
 
-		int height = be.getHeight();
-		int width = be.getWidth();
+		int height = controller.getHeight();
+		int width = controller.getWidth();
 		if (width == 1 && height == 1)
 			return;
 
-		BlockPos origin = be.getBlockPos();
-		List<T> frontier = new ArrayList<>();
-		Direction.Axis axis = be.getMainConnectionAxis();
+		BlockPos origin = controller.getBlockPos();
+		Direction.Axis axis = controller.getMainConnectionAxis();
+		BlockEntityType<?> type = controller.getType();
 
 		// fluid handling, if present
-		FluidStack toDistribute = FluidStack.EMPTY;
-		int maxCapacity = 0;
-		if (be instanceof IMultiBlockEntityContainer.Fluid ifluidBE && ifluidBE.hasTank()) {
+		FluidStack toDistribute;
+		int maxCapacity;
+		if (controller instanceof IMultiBlockEntityContainer.Fluid ifluidBE && ifluidBE.hasTank()) {
 			toDistribute = ifluidBE.getFluid(0);
 			maxCapacity = ifluidBE.getTankSize(0);
-			if (!toDistribute.isEmpty() && !be.isRemoved())
+			if (!toDistribute.isEmpty() && !controller.isRemoved())
 				toDistribute.shrink(maxCapacity);
 			ifluidBE.setTankSize(0, 1);
+		} else {
+			maxCapacity = 0;
+			toDistribute = FluidStack.EMPTY;
 		}
 
-		for (int yOffset = 0; yOffset < height; yOffset++) {
-			for (int xOffset = 0; xOffset < width; xOffset++) {
-				for (int zOffset = 0; zOffset < width; zOffset++) {
+		forEachPosition(origin, axis, width, height, (pos) -> {
+			T partAt = partAt(type, level, pos);
+			if (partAt == null)
+				return;
+			if (!partAt.getController().equals(origin))
+				return;
 
-					BlockPos pos = switch (axis) {
-						case X -> origin.offset(yOffset, xOffset, zOffset);
-						case Y -> origin.offset(xOffset, yOffset, zOffset);
-						case Z -> origin.offset(xOffset, zOffset, yOffset);
-					};
+			T controllerBE = partAt.getControllerBE();
+			partAt.setExtraData((controllerBE == null ? null : controllerBE.getExtraData()));
+			partAt.removeController(true);
 
-					T partAt = partAt(be.getType(), level, pos);
-					if (partAt == null)
-						continue;
-					if (!partAt.getController()
-						.equals(origin))
-						continue;
-
-					T controllerBE = partAt.getControllerBE();
-					partAt.setExtraData((controllerBE == null ? null : controllerBE.getExtraData()));
-					partAt.removeController(true);
-
-					if (!toDistribute.isEmpty() && partAt != be) {
-						FluidStack copy = toDistribute.copy();
-						IFluidTank tank =
-							(partAt instanceof IMultiBlockEntityContainer.Fluid ifluidPart ? ifluidPart.getTank(0) : null);
-						// making this generic would be a rather large mess, unfortunately
-						if (tank instanceof CreativeFluidTankBlockEntity.CreativeSmartFluidTank creativeTank) {
-							if (creativeTank.isEmpty())
-								creativeTank.setContainedFluid(toDistribute);
-						} else {
-							int split = Math.min(maxCapacity, toDistribute.getAmount());
-							copy.setAmount(split);
-							toDistribute.shrink(split);
-							if (tank != null)
-								tank.fill(copy, IFluidHandler.FluidAction.EXECUTE);
-						}
-					}
-					if (tryReconnect) {
-						frontier.add(partAt);
-						partAt.preventConnectivityUpdate();
-					}
-					if (cache != null)
-						cache.put(pos, partAt);
+			if (!toDistribute.isEmpty() && partAt != be) {
+				FluidStack copy = toDistribute.copy();
+				IFluidTank tank =
+					(partAt instanceof IMultiBlockEntityContainer.Fluid ifluidPart ? ifluidPart.getTank(0) : null);
+				// making this generic would be a rather large mess, unfortunately
+				if (tank instanceof CreativeFluidTankBlockEntity.CreativeSmartFluidTank creativeTank) {
+					if (creativeTank.isEmpty())
+						creativeTank.setContainedFluid(toDistribute);
+				} else {
+					int split = Math.min(maxCapacity, toDistribute.getAmount());
+					copy.setAmount(split);
+					toDistribute.shrink(split);
+					if (tank != null)
+						tank.fill(copy, IFluidHandler.FluidAction.EXECUTE);
 				}
 			}
-		}
+			if (cache != null)
+				cache.put(pos, partAt);
+		});
 
-		if (be instanceof IMultiBlockEntityContainer.Inventory inv && inv.hasInventory())
-			be.getLevel().invalidateCapabilities(be.getBlockPos());
-		if (be instanceof IMultiBlockEntityContainer.Fluid fluid && fluid.hasTank())
-			be.getLevel().invalidateCapabilities(be.getBlockPos());
-
-		if (tryReconnect)
-			formMulti(be.getType(), level, cache == null ? new SearchCache<>() : cache, frontier);
-	}
-
-	private static <T extends BlockEntity & IMultiBlockEntityContainer> PriorityQueue<Pair<Integer, T>> makeCreationQueue() {
-		return new PriorityQueue<>((one, two) -> two.getKey() - one.getKey());
+		if (be instanceof IMultiBlockEntityContainer.Inventory inv && inv.hasInventory()||
+			be instanceof IMultiBlockEntityContainer.Fluid fluid && fluid.hasTank())
+			level.invalidateCapabilities(be.getBlockPos());
 	}
 
 	@Nullable
-	public static <T extends BlockEntity & IMultiBlockEntityContainer> T partAt(BlockEntityType<?> type, BlockGetter level,
-																				BlockPos pos) {
+	public static <T extends BlockEntity & IMultiBlockEntityContainer> T partAt(
+		BlockEntityType<?> type, BlockGetter level, BlockPos pos
+	) {
 		BlockEntity be = level.getBlockEntity(pos);
 		if (be != null && be.getType() == type && !be.isRemoved())
 			return checked(be);
 		return null;
 	}
 
-	public static <T extends BlockEntity & IMultiBlockEntityContainer> boolean isConnected(BlockGetter level, BlockPos pos,
-																						   BlockPos other) {
+	public static <T extends BlockEntity & IMultiBlockEntityContainer> boolean isConnected(
+		BlockGetter level, BlockPos pos, BlockPos other
+	) {
 		T one = checked(level.getBlockEntity(pos));
 		T two = checked(level.getBlockEntity(other));
 		if (one == null || two == null)
@@ -397,6 +366,20 @@ public class ConnectivityHandler {
 		if (be instanceof IMultiBlockEntityContainer)
 			return (T) be;
 		return null;
+	}
+
+	private static void forEachPosition (
+		BlockPos origin, Direction.Axis axis, int width, int height, Consumer<BlockPos> func
+	) {
+		for (int Y = 0; Y < height; Y++) { for (int X = 0; X < width; X++) { for (int Z = 0; Z < width; Z++) {
+			BlockPos pos = switch (axis) {
+				case X -> origin.offset(Y, X, Z);
+				case Y -> origin.offset(X, Y, Z);
+				case Z -> origin.offset(X, Z, Y);
+			};
+
+			func.accept(pos);
+		} } }
 	}
 
 	private static class SearchCache<T extends BlockEntity & IMultiBlockEntityContainer> {
@@ -434,6 +417,12 @@ public class ConnectivityHandler {
 			}
 			put(pos, controller);
 			return Optional.of(controller);
+		}
+	}
+
+	private record Sizing(int width, int height, int volume) {
+		public Sizing(int width, int height) {
+			this(width, height, width*width*height);
 		}
 	}
 }
