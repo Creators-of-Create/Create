@@ -49,7 +49,7 @@ public record TrainRelocationPacket(UUID trainId, BlockPos pos, Vec3 lookAngle, 
 				.getString() + " could not relocate Train ";
 
 		if (train == null || !(entity instanceof CarriageContraptionEntity cce)) {
-			Create.LOGGER.warn(messagePrefix + train.id.toString()
+			Create.LOGGER.warn(messagePrefix + trainId.toString()
 					.substring(0, 5) + ": not present on server");
 			return;
 		}
