@@ -174,12 +174,13 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 
 		BlockState newState = state.getToolModifiedState(context, ItemAbilities.AXE_SCRAPE, false);
 		if (newState != null) {
-			AllSoundEvents.SANDING_LONG.play(level, player, pos, 1, 1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
+			AllSoundEvents.SANDPAPER_SCRAPE.play(level, player, pos, 1,
+				1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
 			level.levelEvent(player, LevelEvent.PARTICLES_SCRAPE, pos, 0); // Spawn particles
 		} else {
 			newState = state.getToolModifiedState(context, ItemAbilities.AXE_WAX_OFF, false);
 			if (newState != null) {
-				AllSoundEvents.SANDING_LONG.play(level, player, pos, 1,
+				AllSoundEvents.SANDPAPER_WAX_OFF.play(level, player, pos, 1,
 					1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
 				level.levelEvent(player, LevelEvent.PARTICLES_WAX_OFF, pos, 0); // Spawn particles
 			}
@@ -224,7 +225,7 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 
 	@Override
 	public SoundEvent getEatingSound() {
-		return AllSoundEvents.SANDING_SHORT.getMainEvent();
+		return AllSoundEvents.SANDPAPER_POLISH.getMainEvent();
 	}
 
 	@Override
