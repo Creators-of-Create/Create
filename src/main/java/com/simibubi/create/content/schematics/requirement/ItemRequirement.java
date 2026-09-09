@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.minecraft.core.component.DataComponentType;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.api.schematic.requirement.SchematicRequirementRegistries;
@@ -211,6 +213,28 @@ public class ItemRequirement {
 		@Override
 		public boolean matches(ItemStack other) {
 			return ItemStack.isSameItemSameComponents(stack, other);
+		}
+	}
+
+	public static class PartialStrictNbtStackRequirement extends StrictNbtStackRequirement {
+		private final List<DataComponentType<?>> ignoredComponents;
+
+		public PartialStrictNbtStackRequirement(ItemStack stack, ItemUseType usage, List<DataComponentType<?>> ignoredComponents) {
+			super(copyWithoutIgnoredComponents(stack, ignoredComponents), usage);
+			this.ignoredComponents = ignoredComponents;
+		}
+
+		@Override
+		public boolean matches(ItemStack other) {
+			return super.matches(copyWithoutIgnoredComponents(other, ignoredComponents));
+		}
+
+		private static ItemStack copyWithoutIgnoredComponents(ItemStack stack, List<DataComponentType<?>> components) {
+			ItemStack ret = stack.copy();
+			for (DataComponentType<?> component : components) {
+				ret.remove(component);
+			}
+			return ret;
 		}
 	}
 }
