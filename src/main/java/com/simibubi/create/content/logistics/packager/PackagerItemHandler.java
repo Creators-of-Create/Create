@@ -40,10 +40,7 @@ public class PackagerItemHandler implements IItemHandlerModifiable {
 		if (!blockEntity.unwrapBox(stack, true))
 			return stack;
 		if (!simulate) {
-			// If the real unpack fails (e.g. target inventory filled up), the box must
-			// not be consumed, or it would vanish without its contents being placed.
-			if (!blockEntity.unwrapBox(stack, false))
-				return stack;
+			blockEntity.unwrapBox(stack, false);
 			blockEntity.triggerStockCheck();
 		}
 		return stack.copyWithCount(stack.getCount() - 1);

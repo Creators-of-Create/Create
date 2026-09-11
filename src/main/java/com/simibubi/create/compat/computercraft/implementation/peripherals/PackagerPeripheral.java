@@ -93,13 +93,6 @@ public class PackagerPeripheral extends SyncedPeripheral<PackagerBlockEntity> {
 		return new PackageLuaObject(blockEntity, box);
 	}
 
-	/**
-	 * Push the package held by the packager (always in slot 1) into another inventory on the same wired network.
-	 *
-	 * @param computer The computer calling this method (injected by CC:Tweaked)
-	 * @param toName   The name of the peripheral to push to
-	 * @param toSlot   An optional slot in the target inventory to place the package in
-	 */
 	@LuaFunction(mainThread = true)
 	public final int pushPackage(IComputerAccess computer, String toName, Optional<Integer> toSlot) throws LuaException {
 		IItemHandler from = blockEntity.inventory;
@@ -115,13 +108,6 @@ public class PackagerPeripheral extends SyncedPeripheral<PackagerBlockEntity> {
 		return moveItem(from, 0, to, toSlot.orElse(0) - 1, Integer.MAX_VALUE);
 	}
 
-	/**
-	 * Pull a package from another inventory on the same wired network into the packager, to be unpacked.
-	 *
-	 * @param computer The computer calling this method (injected by CC:Tweaked)
-	 * @param fromName The name of the peripheral to pull from
-	 * @param fromSlot The slot in the source inventory holding the package
-	 */
 	@LuaFunction(mainThread = true)
 	public final int pullPackage(IComputerAccess computer, String fromName, int fromSlot) throws LuaException {
 		IPeripheral source = computer.getAvailablePeripheral(fromName);
@@ -138,9 +124,6 @@ public class PackagerPeripheral extends SyncedPeripheral<PackagerBlockEntity> {
 		return moveItem(from, fromSlot - 1, to, -1, Integer.MAX_VALUE);
 	}
 
-	/**
-	 * Resolve the item handler exposed by another peripheral on the network, mirroring CC:Tweaked's own logic.
-	 */
 	@Nullable
 	private static IItemHandler extractHandler(IPeripheral peripheral) {
 		Object target = peripheral.getTarget();
