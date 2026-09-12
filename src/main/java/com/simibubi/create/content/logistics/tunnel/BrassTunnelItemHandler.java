@@ -2,16 +2,22 @@ package com.simibubi.create.content.logistics.tunnel;
 
 import com.simibubi.create.foundation.item.ItemHelper;
 
+import net.minecraft.world.Clearable;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.neoforge.items.IItemHandler;
 
-public class BrassTunnelItemHandler implements IItemHandler {
+public class BrassTunnelItemHandler implements IItemHandler, Clearable {
 
 	private BrassTunnelBlockEntity blockEntity;
 
 	public BrassTunnelItemHandler(BrassTunnelBlockEntity be) {
 		this.blockEntity = be;
+	}
+
+	@Override
+	public void clearContent() {
+		blockEntity.stackToDistribute = ItemStack.EMPTY;
 	}
 
 	@Override
