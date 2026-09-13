@@ -67,7 +67,7 @@ public class TreeFertilizerItem extends Item {
 
 				// Don't drop blocks that are: unchanged, the same as the fertilized sapling,
 				// or normally replaceable by trees without dropping an item
-				boolean shouldDrop = !(oldState.getBlock() == state.getBlock() ||
+				boolean shouldDrop = !(oldState.getBlock() == block ||
 					oldState.getBlock() == newState.getBlock() ||
 					oldState.is(BlockTags.REPLACEABLE_BY_TREES) ||
 					oldState.is(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH) ||
