@@ -1,0 +1,30 @@
+{
+  "values": [
+    "minecraft:pumpkin",
+    "minecraft:melon",
+    {
+      "id": "undergarden:gloomgourd",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:pale_pumpkin",
+      "required": false
+    },
+    {
+      "id": "unusualend:warped_squash",
+      "required": false
+    },
+    {
+      "id": "deep_aether:blue_squash",
+      "required": false
+    },
+    {
+      "id": "deep_aether:green_squash",
+      "required": false
+    },
+    {
+      "id": "deep_aether:purple_squash",
+      "required": false
+    }
+  ]
+}
