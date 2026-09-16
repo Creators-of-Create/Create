@@ -543,7 +543,7 @@ public final class CreateStandardRecipeGen extends BaseRecipeProvider {
 	MECHANICAL_CRAFTER = create(AllBlocks.MECHANICAL_CRAFTER).returns(3)
 		.unlockedBy(I::brassCasing)
 		.viaShaped(b -> b.define('B', I.electronTube())
-			.define('R', Blocks.CRAFTING_TABLE)
+			.define('R', Tags.Items.PLAYER_WORKSTATIONS_CRAFTING_TABLES)
 			.define('C', I.brassCasing())
 			.pattern("B")
 			.pattern("C")
