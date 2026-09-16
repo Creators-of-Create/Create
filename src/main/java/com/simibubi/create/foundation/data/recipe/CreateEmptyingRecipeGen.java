@@ -45,7 +45,7 @@ public final class CreateEmptyingRecipeGen extends EmptyingRecipeGen {
 		.output(Fluids.LAVA, 250)
 		.whenModLoaded(Mods.AM.getId())),
 
-	NEO_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Mods.FD, "milk_bottle")
+	NEA_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Mods.NEA, "milk_bottle")
 		.output(NeoForgeMod.MILK.get(), 250)
 		.output(Items.GLASS_BOTTLE)
 		.whenModLoaded(Mods.NEA.getId()))

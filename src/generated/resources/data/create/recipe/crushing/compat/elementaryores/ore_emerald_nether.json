@@ -8,12 +8,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "elementaryores:ore_emerald_nether"
-        }
-      ]
+      "item": "elementaryores:ore_emerald_nether"
     }
   ],
   "processing_time": 350,

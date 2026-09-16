@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "environmental:bluebell"
-        }
-      ]
+      "item": "environmental:bluebell"
     }
   ],
   "processing_time": 50,

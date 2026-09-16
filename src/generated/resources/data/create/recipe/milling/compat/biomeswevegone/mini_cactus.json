@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:mini_cactus"
-        }
-      ]
+      "item": "biomeswevegone:mini_cactus"
     }
   ],
   "processing_time": 50,

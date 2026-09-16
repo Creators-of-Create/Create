@@ -15,7 +15,10 @@ String gitHash = calculateGitHash() + (hasUnstaged() ? "-modified" : "")
 group = "com.simibubi.create"
 version = mod_version + (dev && buildNumber != null ? "-${buildNumber}" : "")
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+}
 
 println("Java: ${System.getProperty("java.version")}, JVM: ${System.getProperty("java.vm.version")} (${System.getProperty("java.vendor")}), Arch: ${System.getProperty("os.arch")}")
 
@@ -234,6 +237,12 @@ sourceSets.main.resources.srcDir(generateModMetadata)
 neoForge.ideSyncTask(generateModMetadata)
 
 publishing {
+    publications {
+        register("mavenJava", MavenPublication) {
+            from(components.java)
+        }
+    }
+
     repositories {
         maven {
             url = "https://maven.createmod.net"
@@ -241,12 +250,6 @@ publishing {
                 username = providers.environmentVariable("MAVEN_USERNAME").orNull
                 password = providers.environmentVariable("MAVEN_PASSWORD").orNull
             }
-        }
-    }
-
-    publications {
-        register("mavenJava", MavenPublication) {
-            from(components.java)
         }
     }
 }
