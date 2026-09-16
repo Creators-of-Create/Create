@@ -60,12 +60,9 @@ public class PackageFilterMenu extends AbstractFilterMenu {
 	@Override
 	protected void saveData(ItemStack filterItem) {
 		super.saveData(filterItem);
-		if (address.isBlank())
-			filterItem.remove(AllDataComponents.PACKAGE_ADDRESS);
-		else
-			filterItem.set(AllDataComponents.PACKAGE_ADDRESS, address);
+		filterItem.set(AllDataComponents.PACKAGE_ADDRESS, address);
 	}
-	
+
 	@Override
 	public ItemStack quickMoveStack(Player playerIn, int index) {
 		return ItemStack.EMPTY;
