@@ -566,30 +566,7 @@ public class BlueprintEntity extends HangingEntity
 
 	@Override
 	public boolean canPlayerUse(Player player) {
-		AABB box = getBoundingBox();
-
-		double dx = 0;
-		if (box.minX > player.getX()) {
-			dx = box.minX - player.getX();
-		} else if (player.getX() > box.maxX) {
-			dx = player.getX() - box.maxX;
-		}
-
-		double dy = 0;
-		if (box.minY > player.getY()) {
-			dy = box.minY - player.getY();
-		} else if (player.getY() > box.maxY) {
-			dy = player.getY() - box.maxY;
-		}
-
-		double dz = 0;
-		if (box.minZ > player.getZ()) {
-			dz = box.minZ - player.getZ();
-		} else if (player.getZ() > box.maxZ) {
-			dz = player.getZ() - box.maxZ;
-		}
-
-		return (dx * dx + dy * dy + dz * dz) <= 64.0D;
+		return player.canInteractWithEntity(this, 8);
 	}
 
 }

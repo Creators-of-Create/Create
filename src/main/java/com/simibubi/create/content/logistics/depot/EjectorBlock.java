@@ -100,7 +100,7 @@ public class EjectorBlock extends HorizontalKineticBlock implements IBE<EjectorB
 	@Override
 	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
 		super.updateEntityAfterFallOn(worldIn, entityIn);
-		BlockPos position = entityIn.blockPosition();
+		BlockPos position = entityIn.getOnPosLegacy();
 		if (!AllBlocks.WEIGHTED_EJECTOR.has(worldIn.getBlockState(position)))
 			return;
 		if (!entityIn.isAlive())

@@ -8,7 +8,7 @@
   "type": "create:emptying",
   "ingredients": [
     {
-      "item": "farmersdelight:milk_bottle"
+      "item": "neapolitan:milk_bottle"
     }
   ],
   "results": [
