@@ -8,12 +8,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "druidcraft:amber_ore"
-        }
-      ]
+      "item": "druidcraft:amber_ore"
     }
   ],
   "processing_time": 300,

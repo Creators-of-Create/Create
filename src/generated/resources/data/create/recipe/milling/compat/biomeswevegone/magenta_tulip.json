@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:magenta_tulip"
-        }
-      ]
+      "item": "biomeswevegone:magenta_tulip"
     }
   ],
   "processing_time": 50,

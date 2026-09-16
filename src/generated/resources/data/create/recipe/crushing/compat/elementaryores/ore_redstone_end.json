@@ -8,12 +8,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "elementaryores:ore_redstone_end"
-        }
-      ]
+      "item": "elementaryores:ore_redstone_end"
     }
   ],
   "processing_time": 350,

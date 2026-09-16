@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:alpha_dandelion"
-        }
-      ]
+      "item": "regions_unexplored:alpha_dandelion"
     }
   ],
   "processing_time": 50,

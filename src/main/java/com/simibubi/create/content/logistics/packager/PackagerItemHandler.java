@@ -48,7 +48,7 @@ public class PackagerItemHandler implements IItemHandlerModifiable {
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		if (blockEntity.animationTicks != 0)
+		if (amount == 0 || blockEntity.animationTicks != 0)
 			return ItemStack.EMPTY;
 		ItemStack box = blockEntity.heldBox;
 		if (!simulate)

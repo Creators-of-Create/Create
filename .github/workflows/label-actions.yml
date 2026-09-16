@@ -15,7 +15,7 @@ jobs:
   action:
     runs-on: ubuntu-latest
     steps:
-      - uses: dessant/label-actions@102faf474a544be75fbaf4df54e73d3c515a0e65 # Depend on an exact commit
+      - uses: dessant/label-actions@65225c179d3b2502f6eda7b3d15101a3f412366b # Depend on an exact commit
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           config-path: '.github/config/label-actions.yml'

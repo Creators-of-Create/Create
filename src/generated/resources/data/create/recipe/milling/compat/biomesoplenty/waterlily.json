@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomesoplenty:waterlily"
-        }
-      ]
+      "item": "biomesoplenty:waterlily"
     }
   ],
   "processing_time": 50,

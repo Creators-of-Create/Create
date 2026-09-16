@@ -96,8 +96,7 @@ public class ArmInteractionPointHandler {
 		int removed = 0;
 		for (Iterator<ArmInteractionPoint> iterator = currentSelection.iterator(); iterator.hasNext(); ) {
 			ArmInteractionPoint point = iterator.next();
-			if (point.getPos()
-				.closerThan(pos, ArmBlockEntity.getRange()))
+			if (point.getPos().closerThan(pos, ArmBlockEntity.getRange()))
 				continue;
 			iterator.remove();
 			removed++;

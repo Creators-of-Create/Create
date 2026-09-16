@@ -8,12 +8,7 @@
   "type": "create:cutting",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:brimwood_log_magma"
-        }
-      ]
+      "item": "regions_unexplored:brimwood_log_magma"
     }
   ],
   "processing_time": 50,

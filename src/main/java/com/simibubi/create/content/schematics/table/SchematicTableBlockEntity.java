@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class SchematicTableBlockEntity extends SmartBlockEntity implements MenuProvider, IInteractionChecker, Clearable {
+public class SchematicTableBlockEntity extends SmartBlockEntity implements MenuProvider, Clearable {
 	public SchematicTableInventory inventory;
 	public boolean isUploading;
 	public String uploadingSchematic;
@@ -114,15 +114,6 @@ public class SchematicTableBlockEntity extends SmartBlockEntity implements MenuP
 	@Override
 	public Component getDisplayName() {
 		return CreateLang.translateDirect("gui.schematicTable.title");
-	}
-
-	@Override
-	public boolean canPlayerUse(Player player) {
-		if (level == null || level.getBlockEntity(worldPosition) != this) {
-			return false;
-		}
-		return player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D,
-			worldPosition.getZ() + 0.5D) <= 64.0D;
 	}
 
 	@Override
