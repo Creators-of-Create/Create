@@ -12,8 +12,8 @@
             "duration": 400,
             "id": "minecraft:regeneration",
             "neoforge:cures": [
-              "protected_by_totem",
-              "milk"
+              "milk",
+              "protected_by_totem"
             ],
             "show_icon": true
           }
@@ -23,8 +23,8 @@
             "duration": 6000,
             "id": "minecraft:resistance",
             "neoforge:cures": [
-              "protected_by_totem",
-              "milk"
+              "milk",
+              "protected_by_totem"
             ],
             "show_icon": true
           }
@@ -34,8 +34,8 @@
             "duration": 6000,
             "id": "minecraft:fire_resistance",
             "neoforge:cures": [
-              "protected_by_totem",
-              "milk"
+              "milk",
+              "protected_by_totem"
             ],
             "show_icon": true
           }
@@ -46,8 +46,8 @@
             "duration": 2400,
             "id": "minecraft:absorption",
             "neoforge:cures": [
-              "protected_by_totem",
-              "milk"
+              "milk",
+              "protected_by_totem"
             ],
             "show_icon": true
           }

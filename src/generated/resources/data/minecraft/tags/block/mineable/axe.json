@@ -88,6 +88,7 @@
     "create:mechanical_arm",
     "create:railway_casing",
     "create:content_observer",
+    "create:entity_observer",
     "create:stockpile_switch",
     "create:creative_crate",
     "create:white_postbox",

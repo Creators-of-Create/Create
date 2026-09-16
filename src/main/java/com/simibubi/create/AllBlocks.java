@@ -228,6 +228,8 @@ import com.simibubi.create.content.redstone.diodes.ToggleLatchBlock;
 import com.simibubi.create.content.redstone.diodes.ToggleLatchGenerator;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockItem;
+import com.simibubi.create.content.redstone.entityObserver.EntityObserverBlock;
+import com.simibubi.create.content.redstone.entityObserver.EntityObserverGenerator;
 import com.simibubi.create.content.redstone.link.RedstoneLinkBlock;
 import com.simibubi.create.content.redstone.link.RedstoneLinkGenerator;
 import com.simibubi.create.content.redstone.link.controller.LecternControllerBlock;
@@ -1805,6 +1807,24 @@ public class AllBlocks {
 			.transform(displaySource(AllDisplaySources.LIST_FLUIDS))
 			.transform(displaySource(AllDisplaySources.READ_PACKAGE_ADDRESS))
 			.lang("Smart Observer")
+			.item()
+			.transform(customItemModel("_", "block"))
+			.register();
+
+	public static final BlockEntry<EntityObserverBlock> ENTITY_OBSERVER =
+		REGISTRATE.block("entity_observer", EntityObserverBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_BROWN)
+				.noOcclusion())
+			.properties(p -> p.isRedstoneConductor(($1, $2, $3) -> false))
+			.transform(axeOrPickaxe())
+			.blockstate(new EntityObserverGenerator()::generate)
+			.transform(displaySource(AllDisplaySources.COUNT_ITEMS))
+			.transform(displaySource(AllDisplaySources.LIST_ITEMS))
+			.transform(displaySource(AllDisplaySources.COUNT_FLUIDS))
+			.transform(displaySource(AllDisplaySources.LIST_FLUIDS))
+			.transform(displaySource(AllDisplaySources.READ_PACKAGE_ADDRESS))
+			.lang("Entity Observer")
 			.item()
 			.transform(customItemModel("_", "block"))
 			.register();
