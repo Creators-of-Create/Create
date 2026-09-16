@@ -218,12 +218,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		if (transformedVector == null)
 			return;
 
-		float offset = -1 / 8f;
-		if (passenger instanceof AbstractContraptionEntity)
-			offset = 0.0f;
 		callback.accept(passenger, transformedVector.x,
-			transformedVector.y - passenger.getVehicleAttachmentPoint(this).y
-				+ offset + 1.0E-4D, transformedVector.z);
+			transformedVector.y - passenger.getVehicleAttachmentPoint(this).y + 1.0E-4D, transformedVector.z);
 	}
 
 	public Vec3 getPassengerPosition(Entity passenger, float partialTicks) {
