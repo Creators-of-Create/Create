@@ -1501,6 +1501,8 @@
   "create.item_attributes.max_enchanted.inverted": "is not galed at greatest layer",
   "create.item_attributes.not_stackable": "cannot be heaped",
   "create.item_attributes.not_stackable.inverted": "can heap",
+  "create.item_attributes.packaged_ingredients": "holds Packed Anworks",
+  "create.item_attributes.packaged_ingredients.inverted": "does not hold Packed Anworks",
   "create.item_attributes.placeable": "is layenly",
   "create.item_attributes.placeable.inverted": "is not layenly",
   "create.item_attributes.renamed": "has a bespoke name",

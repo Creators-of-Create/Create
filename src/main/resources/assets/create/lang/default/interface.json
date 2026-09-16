@@ -571,6 +571,8 @@
 	"create.item_attributes.blastable.inverted": "cannot be Smelted in a Blast Furnace",
 	"create.item_attributes.compostable": "can be composted",
 	"create.item_attributes.compostable.inverted": "cannot be composted",
+	"create.item_attributes.packaged_ingredients": "contains Packaged Ingredients",
+	"create.item_attributes.packaged_ingredients.inverted": "does not contain Packaged Ingredients",
 
 	"create.item_attributes.shulker_level": "is shulker %1$s",
 	"create.item_attributes.shulker_level.inverted": "is shulker not %1$s",

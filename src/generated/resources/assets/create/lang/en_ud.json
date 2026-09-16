@@ -1510,6 +1510,8 @@
   "create.item_attributes.max_enchanted.inverted": "ןǝʌǝן xɐɯ ʇɐ pǝʇuɐɥɔuǝ ʇou sı",
   "create.item_attributes.not_stackable": "ʞɔɐʇs ʇouuɐɔ",
   "create.item_attributes.not_stackable.inverted": "pǝʞɔɐʇs ǝq uɐɔ",
+  "create.item_attributes.packaged_ingredients": "sʇuǝıpǝɹbuI pǝbɐʞɔɐԀ suıɐʇuoɔ",
+  "create.item_attributes.packaged_ingredients.inverted": "sʇuǝıpǝɹbuI pǝbɐʞɔɐԀ uıɐʇuoɔ ʇou sǝop",
   "create.item_attributes.placeable": "ǝןqɐǝɔɐןd sı",
   "create.item_attributes.placeable.inverted": "ǝןqɐǝɔɐןd ʇou sı",
   "create.item_attributes.renamed": "ǝɯɐu ɯoʇsnɔ ɐ sɐɥ",

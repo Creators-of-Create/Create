@@ -1510,6 +1510,8 @@
   "create.item_attributes.max_enchanted.inverted": "is not enchanted at max level",
   "create.item_attributes.not_stackable": "cannot stack",
   "create.item_attributes.not_stackable.inverted": "can be stacked",
+  "create.item_attributes.packaged_ingredients": "contains Packaged Ingredients",
+  "create.item_attributes.packaged_ingredients.inverted": "does not contain Packaged Ingredients",
   "create.item_attributes.placeable": "is placeable",
   "create.item_attributes.placeable.inverted": "is not placeable",
   "create.item_attributes.renamed": "has a custom name",
