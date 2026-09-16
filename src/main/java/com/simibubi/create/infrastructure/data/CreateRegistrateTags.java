@@ -283,6 +283,7 @@ public class CreateRegistrateTags {
 			.add(EntityType.BLAZE);
 
 		prov.tag(AllEntityTags.IGNORE_SEAT.tag)
+			// .add(EntityType.SHULKER)
 			.addTag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED);
 	}
 }

@@ -552,10 +552,10 @@ public abstract class Contraption {
 		getSeats().add(local);
 		List<SeatEntity> seatsEntities = world.getEntitiesOfClass(SeatEntity.class, new AABB(pos));
 		if (!seatsEntities.isEmpty()) {
-			SeatEntity seat = seatsEntities.get(0);
+			SeatEntity seat = seatsEntities.getFirst();
 			List<Entity> passengers = seat.getPassengers();
 			if (!passengers.isEmpty())
-				initialPassengers.put(local, passengers.get(0));
+				initialPassengers.put(local, passengers.getFirst());
 		}
 	}
 
@@ -1267,7 +1267,7 @@ public abstract class Contraption {
 			if (!(world.getBlockState(seatPos)
 				.getBlock() instanceof SeatBlock))
 				continue;
-			if (SeatBlock.isSeatOccupied(world, seatPos))
+			if (SeatBlock.isOccupiedBySeat(world, seatPos))
 				continue;
 			SeatBlock.sitDown(world, seatPos, seatedEntity);
 		}
