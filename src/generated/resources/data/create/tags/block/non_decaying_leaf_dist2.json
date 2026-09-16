@@ -1,0 +1,29 @@
+{
+  "values": [
+    "minecraft:red_mushroom_block",
+    {
+      "id": "deep_aether:lightcap_mushroom_block",
+      "required": false
+    },
+    {
+      "id": "biomesoplenty:glowshroom_block",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:allium_petal_block",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:pink_allium_petal_block",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:white_allium_petal_block",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:rose_petal_block",
+      "required": false
+    }
+  ]
+}

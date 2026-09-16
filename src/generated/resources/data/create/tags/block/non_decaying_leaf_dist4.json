@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "undergarden:blood_mushroom_cap",
+      "required": false
+    },
+    {
+      "id": "undergarden:engorged_blood_mushroom_cap",
+      "required": false
+    },
+    {
+      "id": "undergarden:ink_mushroom_cap",
+      "required": false
+    },
+    {
+      "id": "biomeswevegone:weeping_milkcap_mushroom_block",
+      "required": false
+    }
+  ]
+}
