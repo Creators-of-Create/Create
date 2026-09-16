@@ -27,6 +27,7 @@ import net.minecraft.world.item.component.ItemContainerContents;
 
 import net.neoforged.neoforge.items.ItemStackHandler;
 
+// TODO - This should use NonNullList<ItemStack>
 public class ToolboxInventory extends ItemStackHandler {
 	public static final int STACKS_PER_COMPARTMENT = 4;
 	public static final Codec<ToolboxInventory> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -258,7 +259,7 @@ public class ToolboxInventory extends ItemStackHandler {
 	public final boolean equals(Object o) {
 		if (!(o instanceof ToolboxInventory that)) return false;
 
-		return settling == that.settling && limitedMode == that.limitedMode && filters.equals(that.filters)
+		return settling == that.settling && limitedMode == that.limitedMode && ItemStack.listMatches(filters, that.filters)
 			&& Objects.equals(blockEntity, that.blockEntity);
 	}
 

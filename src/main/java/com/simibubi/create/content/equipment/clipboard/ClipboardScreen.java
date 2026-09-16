@@ -157,13 +157,12 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		frameTick++;
 
 		if (targetedBlock != null) {
-			if (!minecraft.player.blockPosition()
-				.closerThan(targetedBlock, 10)) {
-				removed();
+			if (!minecraft.player.canInteractWithBlock(targetedBlock, 10)) {
+				minecraft.setScreen(null);
 				return;
 			}
 			if (!AllBlocks.CLIPBOARD.has(minecraft.level.getBlockState(targetedBlock))) {
-				removed();
+				minecraft.setScreen(null);
 				return;
 			}
 		}
@@ -366,11 +365,12 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		content = content.setPages(pages);
 		content = content.setType(ClipboardType.WRITTEN);
 
-		if (pages.isEmpty()) {
-			content = null;
+		ClipboardContent toSend = null;
+		if (!pages.isEmpty()) {
+			toSend = content;
 		}
 
-		CatnipServices.NETWORK.sendToServer(new ClipboardEditPacket(targetSlot, content, targetedBlock));
+		CatnipServices.NETWORK.sendToServer(new ClipboardEditPacket(targetSlot, toSend, targetedBlock));
 	}
 
 	@Override

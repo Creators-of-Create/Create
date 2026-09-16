@@ -14,11 +14,7 @@ public class TurntableHandler {
 
 	public static void gameRenderFrame(DeltaTracker deltaTracker) {
 		Minecraft mc = Minecraft.getInstance();
-
-		assert mc.player != null;
-		assert mc.level != null;
-
-		BlockPos pos = mc.player.blockPosition();
+		BlockPos pos = mc.player.getOnPos();
 
 		if (mc.gameMode == null)
 			return;

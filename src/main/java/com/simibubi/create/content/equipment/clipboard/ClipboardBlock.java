@@ -2,6 +2,16 @@ package com.simibubi.create.content.equipment.clipboard;
 
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
+
+import com.simibubi.create.content.schematics.requirement.ItemRequirement;
+
+import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
+
+import com.simibubi.create.content.schematics.requirement.ItemRequirement.PartialStrictNbtStackRequirement;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
@@ -47,8 +57,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
+import org.jetbrains.annotations.Nullable;
+
 public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock
-	implements IBE<ClipboardBlockEntity>, IWrenchable, ProperWaterloggedBlock {
+	implements IBE<ClipboardBlockEntity>, IWrenchable, ProperWaterloggedBlock, SpecialBlockItemRequirement {
 
 	public static final BooleanProperty WRITTEN = BooleanProperty.create("written");
 
@@ -192,5 +204,15 @@ public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock
 	@Override
 	protected @NotNull MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
 		return CODEC;
+	}
+
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state, @Nullable BlockEntity blockEntity) {
+		ItemStack clipboardStack = new ItemStack(AllBlocks.CLIPBOARD.asItem());
+		if (blockEntity instanceof ClipboardBlockEntity clipboard) {
+			clipboardStack.applyComponents(clipboard.components());
+		}
+		return new ItemRequirement(List.of(new PartialStrictNbtStackRequirement(clipboardStack, ItemUseType.CONSUME,
+			List.of(AllDataComponents.CLIPBOARD_CONTENT))));
 	}
 }

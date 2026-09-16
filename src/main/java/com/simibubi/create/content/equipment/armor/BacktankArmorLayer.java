@@ -46,7 +46,7 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			return;
 
 		boolean hasGlint = entity.getItemBySlot(BacktankItem.SLOT).hasFoil();
-		VertexConsumer vc = ItemRenderer.getFoilBuffer(buffer, Sheets.cutoutBlockSheet(), false, true);
+		VertexConsumer vc = ItemRenderer.getFoilBuffer(buffer, Sheets.cutoutBlockSheet(), false, hasGlint);
 		BlockState renderedState = item.getBlock().defaultBlockState()
 			.setValue(BacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
 		SuperByteBuffer backtank = CachedBuffers.block(renderedState);

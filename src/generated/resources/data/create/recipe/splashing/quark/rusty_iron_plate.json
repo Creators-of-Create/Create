@@ -8,12 +8,7 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "quark:iron_plate"
-        }
-      ]
+      "item": "quark:iron_plate"
     }
   ],
   "results": [

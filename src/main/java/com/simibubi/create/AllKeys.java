@@ -6,9 +6,9 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.InputConstants;
 
+import net.createmod.catnip.client.ConflictSafeKeyMapping;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -24,6 +24,9 @@ public enum AllKeys {
 	TOOLBELT("toolbelt", GLFW.GLFW_KEY_LEFT_ALT, "Access Nearby Toolboxes"),
 	ROTATE_MENU("rotate_menu", GLFW.GLFW_KEY_UNKNOWN, "Open Block Rotation Menu"),
 
+	SHIFT_MODIFIER("shift_modifier", GLFW.GLFW_KEY_LEFT_SHIFT, "Shift Modifier", true),
+	CTRL_MODIFIER("ctrl_modifier", GLFW.GLFW_KEY_LEFT_CONTROL, "Ctrl Modifier", true),
+	ALT_MODIFIER("alt_modifier", GLFW.GLFW_KEY_LEFT_ALT, "Alt Modifier", true),
 	;
 
 	private KeyMapping keybind;
@@ -31,16 +34,22 @@ public enum AllKeys {
 	private final String translation;
 	private final int key;
 	private final boolean modifiable;
+	private final boolean conflictSafe;
 
 	AllKeys(int defaultKey) {
 		this("", defaultKey, "");
 	}
 
 	AllKeys(String description, int defaultKey, String translation) {
+		this(description, defaultKey, translation, false);
+	}
+
+	AllKeys(String description, int defaultKey, String translation, boolean conflictSafe) {
 		this.description = Create.ID + ".keyinfo." + description;
 		this.key = defaultKey;
 		this.modifiable = !description.isEmpty();
 		this.translation = translation;
+		this.conflictSafe = conflictSafe;
 	}
 
 	public static void provideLang(BiConsumer<String, String> consumer) {
@@ -52,7 +61,11 @@ public enum AllKeys {
 	@SubscribeEvent
 	public static void register(RegisterKeyMappingsEvent event) {
 		for (AllKeys key : values()) {
-			key.keybind = new KeyMapping(key.description, key.key, Create.NAME);
+			if (key.conflictSafe) {
+				key.keybind = new ConflictSafeKeyMapping(key.description, key.key, Create.NAME);
+			} else {
+				key.keybind = new KeyMapping(key.description, key.key, Create.NAME);
+			}
 			if (!key.modifiable)
 				continue;
 
@@ -103,15 +116,15 @@ public enum AllKeys {
 	}
 
 	public static boolean ctrlDown() {
-		return Screen.hasControlDown();
+		return isKeyDown(CTRL_MODIFIER.keybind.getKey().getValue());
 	}
 
 	public static boolean shiftDown() {
-		return Screen.hasShiftDown();
+		return isKeyDown(SHIFT_MODIFIER.keybind.getKey().getValue());
 	}
 
 	public static boolean altDown() {
-		return Screen.hasAltDown();
+		return isKeyDown(ALT_MODIFIER.keybind.getKey().getValue());
 	}
 
 }

@@ -8,12 +8,7 @@
   "type": "create:pressing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "betterendforge:crystal_moss"
-        }
-      ]
+      "item": "betterendforge:crystal_moss"
     }
   ],
   "results": [

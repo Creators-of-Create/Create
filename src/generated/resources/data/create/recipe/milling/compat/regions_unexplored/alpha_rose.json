@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:alpha_rose"
-        }
-      ]
+      "item": "regions_unexplored:alpha_rose"
     }
   ],
   "processing_time": 50,

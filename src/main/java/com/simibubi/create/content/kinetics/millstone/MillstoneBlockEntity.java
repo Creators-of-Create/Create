@@ -137,6 +137,7 @@ public class MillstoneBlockEntity extends KineticBlockEntity implements Clearabl
 	@Override
 	public void clearContent() {
 		((ItemStackHandlerAccessor) inputInv).create$getStacks().clear();
+		((ItemStackHandlerAccessor) outputInv).create$getStacks().clear();
 	}
 
 	@Override

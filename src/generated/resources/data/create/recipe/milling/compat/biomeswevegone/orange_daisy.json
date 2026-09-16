@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:orange_daisy"
-        }
-      ]
+      "item": "biomeswevegone:orange_daisy"
     }
   ],
   "processing_time": 50,

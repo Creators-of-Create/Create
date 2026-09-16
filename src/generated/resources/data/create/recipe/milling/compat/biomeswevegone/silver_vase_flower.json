@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:silver_vase_flower"
-        }
-      ]
+      "item": "biomeswevegone:silver_vase_flower"
     }
   ],
   "processing_time": 50,

@@ -14,6 +14,7 @@
     "CustomItemUseEffectsMixin",
     "EnchantedCountIncreaseFunctionMixin",
     "EntityMixin",
+    "Ingredient$ValueMixin",
     "ItemStackMixin",
     "LavaSwimmingMixin",
     "MapItemSavedDataMixin",
