@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "upgrade_aquatic:flowering_rush"
-        }
-      ]
+      "item": "upgrade_aquatic:flowering_rush"
     }
   ],
   "processing_time": 50,

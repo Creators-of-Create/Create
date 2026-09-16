@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "druidcraft:lavender"
-        }
-      ]
+      "item": "druidcraft:lavender"
     }
   ],
   "processing_time": 50,

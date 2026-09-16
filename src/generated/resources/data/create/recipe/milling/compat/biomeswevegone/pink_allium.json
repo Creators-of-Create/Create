@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:pink_allium"
-        }
-      ]
+      "item": "biomeswevegone:pink_allium"
     }
   ],
   "processing_time": 50,

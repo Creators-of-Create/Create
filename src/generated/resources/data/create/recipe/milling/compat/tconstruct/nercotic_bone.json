@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "tconstruct:necrotic_bone"
-        }
-      ]
+      "item": "tconstruct:necrotic_bone"
     }
   ],
   "processing_time": 100,

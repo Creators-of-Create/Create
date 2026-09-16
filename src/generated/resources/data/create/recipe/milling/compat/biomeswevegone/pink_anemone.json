@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:pink_anemone"
-        }
-      ]
+      "item": "biomeswevegone:pink_anemone"
     }
   ],
   "processing_time": 50,

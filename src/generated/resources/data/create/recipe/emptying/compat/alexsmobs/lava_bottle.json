@@ -8,12 +8,7 @@
   "type": "create:emptying",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "alexsmobs:lava_bottle"
-        }
-      ]
+      "item": "alexsmobs:lava_bottle"
     }
   ],
   "results": [
