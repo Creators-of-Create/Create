@@ -27,7 +27,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SmartObserverBlockEntity extends SmartBlockEntity implements Clearable {
@@ -81,9 +83,17 @@ public class SmartObserverBlockEntity extends SmartBlockEntity implements Cleara
 			.getBlock();
 
 		if (!filtering.getFilter()
-			.isEmpty() && block.asItem() != null && filtering.test(new ItemStack(block))) {
-			activate(3);
-			return;
+			.isEmpty() && block.asItem() != null) {
+			ItemStack stack = new ItemStack(block);
+			if (block instanceof ShulkerBoxBlock
+				&& level.getBlockEntity(targetPos) instanceof ShulkerBoxBlockEntity shulkerBoxBlockEntity
+				&& !shulkerBoxBlockEntity.isEmpty()) {
+				stack.applyComponents(shulkerBoxBlockEntity.collectComponents());
+			}
+			if (filtering.test(stack)) {
+				activate(3);
+				return;
+			}
 		}
 
 		// Detect items on belt
