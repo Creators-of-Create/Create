@@ -2,6 +2,8 @@ package com.simibubi.create.content.legacy;
 
 import com.simibubi.create.AllDataComponents;
 
+import net.minecraft.core.component.DataComponentMap;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllItems;
@@ -43,6 +45,10 @@ public class ChromaticCompoundItem extends Item {
 
 	public int getLight(ItemStack stack) {
 		return stack.getOrDefault(AllDataComponents.CHROMATIC_COMPOUND_COLLECTING_LIGHT, 0);
+	}
+
+	public int getLight(DataComponentMap components) {
+		return components.getOrDefault(AllDataComponents.CHROMATIC_COMPOUND_COLLECTING_LIGHT, 0);
 	}
 
 	@Override
@@ -218,8 +224,9 @@ public class ChromaticCompoundItem extends Item {
 			.getBlockPos()))
 			return false;
 
+		DataComponentMap components = itemStack.getComponents();
 		ItemStack newStack = stack.split(1);
-		newStack.set(AllDataComponents.CHROMATIC_COMPOUND_COLLECTING_LIGHT, getLight(itemStack) + 1);
+		newStack.set(AllDataComponents.CHROMATIC_COMPOUND_COLLECTING_LIGHT, getLight(components) + 1);
 		ItemEntity newEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), newStack);
 		newEntity.setDeltaMovement(entity.getDeltaMovement());
 		newEntity.setDefaultPickUpDelay();
