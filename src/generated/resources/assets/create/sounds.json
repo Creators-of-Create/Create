@@ -469,6 +469,33 @@
     ],
     "subtitle": "create.subtitle.sanding_short"
   },
+  "sandpaper_polish": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "create:sanding_short"
+      }
+    ],
+    "subtitle": "create.subtitle.sandpaper_polish"
+  },
+  "sandpaper_scrape": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "create:sanding_long"
+      }
+    ],
+    "subtitle": "create.subtitle.sandpaper_scrape"
+  },
+  "sandpaper_wax_off": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "create:sanding_long"
+      }
+    ],
+    "subtitle": "create.subtitle.sandpaper_wax_off"
+  },
   "saw_activate_stone": {
     "sounds": [
       {

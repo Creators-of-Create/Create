@@ -375,6 +375,22 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 			.build();
 
+	public static final SoundEntry
+		SANDPAPER_POLISH = create("sandpaper_polish").subtitle("Sandpaper polishes")
+			.playExisting(SANDING_SHORT::getMainEvent, 1, 1)
+			.category(SoundSource.BLOCKS)
+			.build(),
+
+		SANDPAPER_SCRAPE = create("sandpaper_scrape").subtitle("Sandpaper scrapes")
+			.playExisting(SANDING_LONG::getMainEvent, 1, 1)
+			.category(SoundSource.BLOCKS)
+			.build(),
+
+		SANDPAPER_WAX_OFF = create("sandpaper_wax_off").subtitle("Sandpaper removes wax")
+			.playExisting(SANDING_LONG::getMainEvent, 1, 1)
+			.category(SoundSource.BLOCKS)
+			.build();
+
 	private static SoundEntryBuilder create(String name) {
 		return create(Create.asResource(name));
 	}
