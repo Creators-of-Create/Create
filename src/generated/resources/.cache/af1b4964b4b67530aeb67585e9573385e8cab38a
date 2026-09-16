@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-24T17:37:29.5757416	Registrate Provider for create [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2026-06-23T21:20:35.3982276	Registrate Provider for create [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -4804,9 +4804,9 @@ a970ecabfefc20e8911762495da0d5cf1f99c636 data/create/tags/item/stone_types/crims
 8ee57ecfa4e4e5c67b61ef4dd18c1e2715bbe9d8 data/create/tags/item/stone_types/deepslate.json
 f5532145f210fdd0ab12c253d6deabbc8d1601ef data/create/tags/item/stone_types/diorite.json
 23aebee6c6614fdf94804f2a227476523844b888 data/create/tags/item/stone_types/dripstone.json
-5b13401dc5dd5e7d960e855fa091a785b173c48e data/create/tags/item/stone_types/galosphere/allurite.json
-d1254fa8710b3a2cf71847a5e4fd687b27b88c26 data/create/tags/item/stone_types/galosphere/amethyst.json
-e130fd23b642d640f314ec90cc6106669810e650 data/create/tags/item/stone_types/galosphere/lumiere.json
+d4f800a19979308dc10bb5eb1fd737d0323d7afb data/create/tags/item/stone_types/galosphere/allurite.json
+c1d3ac47b5d0302f4a13df83adc88e8584d8799c data/create/tags/item/stone_types/galosphere/amethyst.json
+c094828e2ede1df84e69a8dcebddfbdd5caf2083 data/create/tags/item/stone_types/galosphere/lumiere.json
 683700c751c964e47707d836986f8415fbf609d5 data/create/tags/item/stone_types/granite.json
 00f8eb75e9cd1a19fd21800d03f671cc58dbbbe7 data/create/tags/item/stone_types/limestone.json
 00af13f6cea72fb3da0d33e06c16a643ec21b327 data/create/tags/item/stone_types/ochrum.json
