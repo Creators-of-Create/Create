@@ -1,15 +1,17 @@
 package com.simibubi.create.content.contraptions.actors.seat;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.google.common.base.Optional;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTags.AllEntityTags;
+import com.simibubi.create.content.logistics.box.PackageEntity;
+import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -17,16 +19,20 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -89,7 +95,7 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 	public void updateEntityAfterFallOn(BlockGetter reader, Entity entity) {
 		BlockPos pos = entity.blockPosition();
 		if (entity instanceof Player || !(entity instanceof LivingEntity) || !canBePickedUp(entity)
-			|| isSeatOccupied(entity.level(), pos)) {
+			|| isOccupiedBySeat(entity.level(), pos)) {
 			if (entity.isSuppressingBounce()) {
 				super.updateEntityAfterFallOn(reader, entity);
 				return;
@@ -130,55 +136,94 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 
 	@Override
 	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-		if (player.isShiftKeyDown() || player instanceof FakePlayer)
+		if (player instanceof FakePlayer)
 			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		DyeColor color = DyeColor.getColor(stack);
-		if (color != null && color != this.color) {
-			if (level.isClientSide)
+		Optional<Entity> rider = Optional.empty();
+
+		if (!player.isShiftKeyDown()) {
+			DyeColor color = DyeColor.getColor(stack);
+			if (color != null && color != this.color) {
+				if (level.isClientSide)
+					return ItemInteractionResult.SUCCESS;
+				BlockState newState = BlockHelper.copyProperties(state, AllBlocks.SEATS.get(color)
+					.getDefaultState());
+				level.setBlockAndUpdate(pos, newState);
 				return ItemInteractionResult.SUCCESS;
-			BlockState newState = BlockHelper.copyProperties(state, AllBlocks.SEATS.get(color)
-				.getDefaultState());
-			level.setBlockAndUpdate(pos, newState);
-			return ItemInteractionResult.SUCCESS;
+			}
+
+			if (level instanceof ServerLevel sl) {
+				if (stack.getItem() instanceof SpawnEggItem sei) {
+					EntityType<?> entitytype = sei.getType(stack);
+					Entity entity = entitytype.spawn(sl, stack, player, pos, MobSpawnType.SPAWN_EGG, false, false);
+					if (entity != null) {
+						rider = Optional.of(entity);
+						if (!player.isCreative())
+							stack.shrink(1);
+					}
+				}
+
+				if (stack.getItem() instanceof PackageItem) {
+					PackageEntity packageEntity = new PackageEntity(level, pos.getX(), pos.getY(), pos.getZ());
+					packageEntity.setBox(stack.copy());
+					if (level.addFreshEntity(packageEntity)) {
+						rider = Optional.of(packageEntity);
+						if (!player.isCreative())
+							stack.shrink(1);
+					}
+				}
+			}
+
+			rider = rider.or(() -> getLeashed(level, player))
+						 .or(() -> Optional.of(player).filter((p) -> !p.isPassenger()));
+
+			if (rider.isEmpty())
+				return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		}
 
 		List<SeatEntity> seats = level.getEntitiesOfClass(SeatEntity.class, new AABB(pos));
 		if (!seats.isEmpty()) {
-			SeatEntity seatEntity = seats.get(0);
+			SeatEntity seatEntity = seats.getFirst();
 			List<Entity> passengers = seatEntity.getPassengers();
-			if (!passengers.isEmpty() && passengers.get(0) instanceof Player)
-				return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-			if (!level.isClientSide) {
-				seatEntity.ejectPassengers();
-				player.startRiding(seatEntity);
+
+			if (!passengers.isEmpty()) {
+				Entity passenger = passengers.getFirst();
+				if (passenger instanceof Player)
+					return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+
+				if (!level.isClientSide) {
+					passenger.stopRiding();
+					if (passenger instanceof LivingEntity le)
+						le.knockback(0.3F, Mth.sin(player.getYRot() * Mth.DEG_TO_RAD), -Mth.cos(player.getYRot() * Mth.DEG_TO_RAD));
+
+					rider.ifPresent(entity -> entity.startRiding(seatEntity));
+					return ItemInteractionResult.SUCCESS;
+				}
 			}
-			return ItemInteractionResult.SUCCESS;
 		}
 
 		if (level.isClientSide)
 			return ItemInteractionResult.SUCCESS;
-		sitDown(level, pos, getLeashed(level, player).or(player));
+
+		rider.ifPresent((e) -> sitDown(level, pos, e));
 		return ItemInteractionResult.SUCCESS;
 	}
 
-	public static boolean isSeatOccupied(Level world, BlockPos pos) {
+	public static boolean isOccupiedBySeat(Level world, BlockPos pos) {
 		return !world.getEntitiesOfClass(SeatEntity.class, new AABB(pos))
 			.isEmpty();
 	}
 
-	public static Optional<Entity> getLeashed(Level level, Player player) {
-		List<Entity> entities = player.level().getEntities((Entity) null, player.getBoundingBox()
+	public static Optional<Entity> getLeashed(Level level, Entity entity) {
+		List<Entity> entities = level.getEntities((Entity) null, entity.getBoundingBox()
 			.inflate(10), e -> true);
 		for (Entity e : entities)
-			if (e instanceof Mob mob && mob.getLeashHolder() == player && SeatBlock.canBePickedUp(e))
+			if (e instanceof Mob mob && mob.getLeashHolder() == entity && SeatBlock.canBePickedUp(e))
 				return Optional.of(mob);
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 	public static boolean canBePickedUp(Entity passenger) {
-		if (passenger instanceof Shulker)
-			return false;
 		if (passenger instanceof Player)
 			return false;
 		if (AllEntityTags.IGNORE_SEAT.matches(passenger))
@@ -194,7 +239,8 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 		if (level.isClientSide)
 			return;
 		SeatEntity seat = new SeatEntity(level);
-		seat.setPos(pos.getX() + .5, pos.getY(), pos.getZ() + .5);
+		// The + .5D should be added along with the SeatEntity size change if allowed.
+		seat.setPos(pos.getX() + .5, pos.getY() /*+ .5*/, pos.getZ() + .5);
 		level.addFreshEntity(seat);
 		entity.startRiding(seat, true);
 		if (entity instanceof TamableAnimal ta)

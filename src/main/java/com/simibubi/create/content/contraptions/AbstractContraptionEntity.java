@@ -56,6 +56,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
@@ -205,6 +206,11 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	@Override
+	protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
+		return Vec3.ZERO;
+	}
+
+	@Override
 	public void positionRider(Entity passenger, MoveFunction callback) {
 		if (!hasPassenger(passenger))
 			return;
@@ -216,7 +222,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		if (passenger instanceof AbstractContraptionEntity)
 			offset = 0.0f;
 		callback.accept(passenger, transformedVector.x,
-			transformedVector.y + SeatEntity.getCustomEntitySeatOffset(passenger) + offset, transformedVector.z);
+			transformedVector.y - passenger.getVehicleAttachmentPoint(this).y
+				+ offset + 1.0E-4D, transformedVector.z);
 	}
 
 	public Vec3 getPassengerPosition(Entity passenger, float partialTicks) {
@@ -232,20 +239,17 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 					.subtract(.5f, 1, .5f);
 		}
 
-		AABB bb = passenger.getBoundingBox();
-		double ySize = bb.getYsize();
 		BlockPos seat = contraption.getSeatOf(id);
 		if (seat == null)
 			return null;
 
-		Vec3 transformedVector = toGlobalVector(Vec3.atLowerCornerOf(seat)
-			.add(.5,
-				-passenger.getVehicleAttachmentPoint(this).y + ySize + .125
-					- SeatEntity.getCustomEntitySeatOffset(passenger),
-				.5),
-			partialTicks).add(VecHelper.getCenterOf(BlockPos.ZERO))
-				.subtract(0.5, ySize, 0.5);
-		return transformedVector;
+		Vec3 localPos = Vec3.atLowerCornerOf(seat).add(VecHelper.getCenterOf(BlockPos.ZERO));
+
+		// TODO: maybe a datamap for custom seat height for seats across different mods? (the + 0.5D in localPos should also be removed for this)
+		// if (contraption.getBlocks().get(seat).state().getBlock() instanceof SeatBlock)
+		// 	localPos = localPos.add(0, 0.5D, 0);
+
+		return toGlobalVector(localPos, partialTicks);
 	}
 
 	@Override
@@ -323,7 +327,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		if (level().isClientSide)
 			return true;
 		addSittingPassenger(SeatBlock.getLeashed(level(), player)
-			.or(player), indexOfSeat);
+			.orElse(player), indexOfSeat);
 		return true;
 	}
 

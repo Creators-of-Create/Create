@@ -291,7 +291,8 @@ public class PackageItem extends Item {
 		ItemStackHandler contents = getContents(box);
 		ItemStack particle = box.copy();
 
-		playerIn.setItemInHand(handIn, box.getCount() <= 1 ? ItemStack.EMPTY : box.copyWithCount(box.getCount() - 1));
+		if (!playerIn.isCreative())
+			playerIn.setItemInHand(handIn, box.getCount() <= 1 ? ItemStack.EMPTY : box.copyWithCount(box.getCount() - 1));
 
 		if (!worldIn.isClientSide()) {
 			for (int i = 0; i < contents.getSlots(); i++) {
@@ -335,8 +336,11 @@ public class PackageItem extends Item {
 
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
-		if (context.getPlayer().isShiftKeyDown()) {
-			return open(context.getLevel(), context.getPlayer(), context.getHand()).getResult();
+		Level level = context.getLevel();
+		Player player = context.getPlayer();
+
+		if (player != null && player.isShiftKeyDown()) {
+			return open(level, player, context.getHand()).getResult();
 		}
 
 		Vec3 point = context.getClickLocation();
@@ -354,16 +358,16 @@ public class PackageItem extends Item {
 
 		AABB scanBB = new AABB(point, point).inflate(r, 0, r)
 			.expandTowards(0, h, 0);
-		Level world = context.getLevel();
-		if (!world.getEntities(AllEntityTypes.PACKAGE.get(), scanBB, e -> true)
+		if (!level.getEntities(AllEntityTypes.PACKAGE.get(), scanBB, e -> true)
 			.isEmpty())
 			return super.useOn(context);
 
-		PackageEntity packageEntity = new PackageEntity(world, point.x, point.y, point.z);
+		PackageEntity packageEntity = new PackageEntity(level, point.x, point.y, point.z);
 		ItemStack itemInHand = context.getItemInHand();
 		packageEntity.setBox(itemInHand.copy());
-		world.addFreshEntity(packageEntity);
-		itemInHand.shrink(1);
+		if (level.addFreshEntity(packageEntity) && !player.isCreative())
+			itemInHand.shrink(1);
+
 		return InteractionResult.SUCCESS;
 	}
 
