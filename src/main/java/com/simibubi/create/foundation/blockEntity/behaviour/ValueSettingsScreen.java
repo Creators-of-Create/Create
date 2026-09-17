@@ -42,9 +42,10 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 	private int milestoneSize;
 	private int soundCoolDown;
 	private int netId;
+	private Direction face;
 
 	public ValueSettingsScreen(BlockPos pos, ValueSettingsBoard board, ValueSettings valueSettings,
-		Consumer<ValueSettings> onHover, int netId) {
+		Consumer<ValueSettings> onHover, int netId, Direction face) {
 		this.pos = pos;
 		this.board = board;
 		this.initialSettings = valueSettings;
@@ -52,6 +53,7 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 		this.netId = netId;
 		this.iconMode = board.formatter() instanceof ScrollOptionSettingsFormatter;
 		this.milestoneSize = iconMode ? 8 : 4;
+		this.face = face;
 	}
 
 	@Override
@@ -321,8 +323,7 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 
 	protected void saveAndClose(double pMouseX, double pMouseY) {
 		ValueSettings closest = getClosestCoordinate((int) pMouseX, (int) pMouseY);
-		// FIXME: value settings may be face-sensitive on future components
-		CatnipServices.NETWORK.sendToServer(new ValueSettingsPacket(pos, closest.row(), closest.value(), null, null, Direction.UP,
+		CatnipServices.NETWORK.sendToServer(new ValueSettingsPacket(pos, closest.row(), closest.value(), null, null, face,
 				AllKeys.ctrlDown(), netId));
 		onClose();
 	}

@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.SidedScrollValueBehavior;
+
 import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.theme.Color;
@@ -85,6 +87,9 @@ public class ValueSettingsClient implements LayeredDraw.Layer {
 			cancelInteraction();
 			return;
 		}
+
+		if (valueSettingBehaviour instanceof SidedScrollValueBehavior<?> sided) valueSettingBehaviour = sided.get(interactHeldFace);
+
 		if (!mc.options.keyUse.isDown()) {
 			CatnipServices.NETWORK.sendToServer(new ValueSettingsPacket(interactHeldPos, 0, 0, interactHeldHand, blockHitResult,
 					interactHeldFace, false, valueSettingBehaviour.netId()));
@@ -99,7 +104,7 @@ public class ValueSettingsClient implements LayeredDraw.Layer {
 			return;
 		ScreenOpener.open(new ValueSettingsScreen(interactHeldPos,
 			valueSettingBehaviour.createBoard(player, blockHitResult), valueSettingBehaviour.getValueSettings(),
-			valueSettingBehaviour::newSettingHovered, valueSettingBehaviour.netId()));
+			valueSettingBehaviour::newSettingHovered, valueSettingBehaviour.netId(), interactHeldFace));
 		interactHeldTicks = -1;
 	}
 
