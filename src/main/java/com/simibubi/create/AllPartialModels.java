@@ -35,6 +35,8 @@ public class AllPartialModels {
 		BELT_MIDDLE_BOTTOM = block("belt/middle_bottom"), BELT_END_BOTTOM = block("belt/end_bottom"),
 		BELT_DIAGONAL_START = block("belt/diagonal_start"), BELT_DIAGONAL_MIDDLE = block("belt/diagonal_middle"),
 		BELT_DIAGONAL_END = block("belt/diagonal_end"),
+		BELT_DIAGONAL_SIDEWAYS_START = block("belt/diagonal_sideways_start"),
+		BELT_DIAGONAL_SIDEWAYS_END = block("belt/diagonal_sideways_end"),
 		ANDESITE_BELT_COVER_X = block("belt_cover/andesite_belt_cover_x"),
 		BRASS_BELT_COVER_X = block("belt_cover/brass_belt_cover_x"),
 		ANDESITE_BELT_COVER_Z = block("belt_cover/andesite_belt_cover_z"),

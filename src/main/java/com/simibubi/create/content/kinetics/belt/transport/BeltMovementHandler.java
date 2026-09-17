@@ -10,6 +10,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.equipment.armor.CardboardArmorHandler;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
+import com.simibubi.create.content.kinetics.belt.BeltHelper;
 import com.simibubi.create.content.kinetics.belt.BeltPart;
 import com.simibubi.create.content.kinetics.belt.BeltSlope;
 
@@ -87,8 +88,6 @@ public class BeltMovementHandler {
 		}
 
 		// Too slow
-		boolean notHorizontal = beltBE.getBlockState()
-			.getValue(BeltBlock.SLOPE) != BeltSlope.HORIZONTAL;
 		if (Math.abs(beltBE.getSpeed()) < 1)
 			return;
 
@@ -104,23 +103,37 @@ public class BeltMovementHandler {
 		final Direction beltFacing = blockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
 		final BeltSlope slope = blockState.getValue(BeltBlock.SLOPE);
 		final Axis axis = beltFacing.getAxis();
+		final boolean diagonalSideways = slope == BeltSlope.DIAGONAL_SIDEWAYS;
+		final boolean sloped = slope == BeltSlope.UPWARD || slope == BeltSlope.DOWNWARD;
 		float movementSpeed = beltBE.getBeltMovementSpeed();
 		final Direction movementDirection = Direction.get(axis == Axis.X ? NEGATIVE : POSITIVE, axis);
 
-		Vec3i centeringDirection = Direction.get(POSITIVE, beltFacing.getClockWise()
-				.getAxis())
-			.getNormal();
-		Vec3 movement = Vec3.atLowerCornerOf(movementDirection.getNormal())
-			.scale(movementSpeed);
-
-		double diffCenter =
-			axis == Axis.Z ? (pos.getX() + .5f - entityIn.getX()) : (pos.getZ() + .5f - entityIn.getZ());
+		Vec3 centeringDirection;
+		Vec3 movement;
+		double diffCenter;
+		if (diagonalSideways) {
+			Vec3i beltVector = BeltHelper.getBeltVector(beltFacing, slope);
+			movement = Vec3.atLowerCornerOf(beltVector)
+				.scale(beltBE.getDirectionAwareBeltMovementSpeed());
+			centeringDirection = new Vec3(-beltVector.getZ(), 0, beltVector.getX()).normalize();
+			Vec3 offsetFromCenter = entityIn.position()
+				.subtract(Vec3.atCenterOf(pos));
+			diffCenter = offsetFromCenter.dot(centeringDirection);
+		} else {
+			centeringDirection = Vec3.atLowerCornerOf(Direction.get(POSITIVE, beltFacing.getClockWise()
+					.getAxis())
+				.getNormal());
+			movement = Vec3.atLowerCornerOf(movementDirection.getNormal())
+				.scale(movementSpeed);
+			diffCenter =
+				axis == Axis.Z ? (pos.getX() + .5f - entityIn.getX()) : (pos.getZ() + .5f - entityIn.getZ());
+		}
 		if (Math.abs(diffCenter) > 48 / 64f)
 			return;
 
 		BeltPart part = blockState.getValue(BeltBlock.PART);
 		float top = 13 / 16f;
-		boolean onSlope = notHorizontal && (part == BeltPart.MIDDLE || part == BeltPart.PULLEY
+		boolean onSlope = sloped && (part == BeltPart.MIDDLE || part == BeltPart.PULLEY
 			|| part == (slope == BeltSlope.UPWARD ? BeltPart.END : BeltPart.START) && entityIn.getY() - pos.getY() < top
 			|| part == (slope == BeltSlope.UPWARD ? BeltPart.START : BeltPart.END)
 			&& entityIn.getY() - pos.getY() > top);
@@ -139,7 +152,8 @@ public class BeltMovementHandler {
 		if (movingDown)
 			movement = movement.add(0, -Math.abs(axis.choose(movement.x, movement.y, movement.z)), 0);
 
-		Vec3 centering = Vec3.atLowerCornerOf(centeringDirection).scale(diffCenter * Math.min(Math.abs(movementSpeed), .1f) * 4);
+		Vec3 centering = centeringDirection.scale((diagonalSideways ? -diffCenter : diffCenter)
+			* Math.min(Math.abs(movementSpeed), .1f) * 4);
 
 		if (!(entityIn instanceof LivingEntity livingEntity) || livingEntity.zza == 0 && livingEntity.xxa == 0)
 			movement = movement.add(centering);
