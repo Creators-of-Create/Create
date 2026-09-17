@@ -4,6 +4,7 @@ import com.simibubi.create.compat.Mods;
 
 import com.simibubi.create.compat.farmersdelight.FarmersDelightCompat;
 
+import net.minecraft.world.level.block.CaveVines;
 import net.minecraft.world.level.block.MushroomBlock;
 
 import org.jetbrains.annotations.Nullable;
@@ -91,8 +92,10 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 		MutableBoolean seedSubtracted = new MutableBoolean(notCropButCuttable);
 		BlockState state = stateVisited;
 		BlockHelper.destroyBlockAs(world, pos, null, item, effectChance, stack -> {
-			if (AllConfigs.server().kinetics.harvesterReplants.get() && !seedSubtracted.getValue()
-				&& ItemHelper.sameItem(stack, new ItemStack(state.getBlock()))) {
+			if (AllConfigs.server().kinetics.harvesterReplants.get()
+				&& !seedSubtracted.getValue()
+				&& ItemHelper.sameItem(stack, new ItemStack(state.getBlock()))
+			    && !ItemHelper.sameItem(stack, new ItemStack(Items.GLOW_BERRIES))) {
 				stack.shrink(1);
 				seedSubtracted.setTrue();
 			}
@@ -106,6 +109,13 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 	public boolean isValidCrop(Level world, BlockPos pos, BlockState state) {
 		boolean harvestPartial = AllConfigs.server().kinetics.harvestPartiallyGrown.get();
 		boolean replant = AllConfigs.server().kinetics.harvesterReplants.get();
+
+		if (state.getBlock() instanceof CaveVines) {
+			if (harvestPartial)
+				return true;
+			return state.getValue(BlockStateProperties.BERRIES);
+		}
+
 
 		if (state.getBlock() instanceof CropBlock crop) {
 			if (harvestPartial)
@@ -144,6 +154,8 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 			return true;
 		if (state.getBlock() instanceof CocoaBlock)
 			return state.getValue(CocoaBlock.AGE) == CocoaBlock.MAX_AGE;
+		if (state.getBlock() instanceof CaveVines)
+			return false;
 
 		if (state.getCollisionShape(world, pos)
 			.isEmpty()) {
@@ -174,15 +186,25 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 	}
 
 	private BlockState cutCrop(Level world, BlockPos pos, BlockState state) {
-		if (!AllConfigs.server().kinetics.harvesterReplants.get()) {
-			if (state.getFluidState()
-				.isEmpty())
-				return Blocks.AIR.defaultBlockState();
-			return state.getFluidState()
-				.createLegacyBlock();
-		}
+		boolean replant = AllConfigs.server().kinetics.harvesterReplants.get();
+		boolean harvestPartial = AllConfigs.server().kinetics.harvestPartiallyGrown.get();
 
 		Block block = state.getBlock();
+
+		if (block instanceof CaveVines) {
+			if (harvestPartial || !replant)
+				return removeBlockKeepingFluid(state);
+
+			if (state.hasProperty(BlockStateProperties.BERRIES))
+				return state.setValue(BlockStateProperties.BERRIES, false);
+
+			return state;
+		}
+
+		if (!replant) {
+			return removeBlockKeepingFluid(state);
+		}
+
 		if (block instanceof CropBlock crop) {
 			BlockState newState = crop.getStateForAge(0);
 			if (!newState.is(block))
@@ -194,11 +216,7 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 			return state.setValue(BlockStateProperties.AGE_3, Integer.valueOf(1));
 		}
 		if (AllBlockTags.SUGAR_CANE_VARIANTS.matches(block) || block instanceof GrowingPlantBlock) {
-			if (state.getFluidState()
-				.isEmpty())
-				return Blocks.AIR.defaultBlockState();
-			return state.getFluidState()
-				.createLegacyBlock();
+			return removeBlockKeepingFluid(state);
 		}
 		if (state.getCollisionShape(world, pos)
 			.isEmpty() || block instanceof CocoaBlock) {
@@ -212,9 +230,14 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 			}
 		}
 
+		return removeBlockKeepingFluid(state);
+	}
+
+	private BlockState removeBlockKeepingFluid(BlockState state) {
 		if (state.getFluidState()
 			.isEmpty())
 			return Blocks.AIR.defaultBlockState();
+
 		return state.getFluidState()
 			.createLegacyBlock();
 	}
