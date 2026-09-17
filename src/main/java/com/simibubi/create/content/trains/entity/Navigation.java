@@ -681,7 +681,7 @@ public class Navigation {
 				if (signalData.hasPoints()) {
 					for (TrackEdgePoint point : signalData.getPoints()) {
 						if (point instanceof GlobalStation station) {
-							if (station.canApproachFrom(node2) && stationTest.test(distance, penalty, reachedVia,
+							if (station.canApproachFrom(node2) && stationTest.test(distance, distance + penalty, reachedVia,
 									Pair.of(Couple.create(node1, node2), edge), station))
 								return;
 						}
