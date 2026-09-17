@@ -26,6 +26,7 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -60,7 +61,7 @@ public class DrillBlock extends DirectionalKineticBlock implements IBE<DrillBloc
 
 	@Override
 	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-		if (entityIn instanceof ItemEntity)
+		if (entityIn instanceof ItemEntity || entityIn instanceof ExperienceOrb)
 			return;
 		if (!new AABB(pos).deflate(.1f)
 			.intersects(entityIn.getBoundingBox()))
