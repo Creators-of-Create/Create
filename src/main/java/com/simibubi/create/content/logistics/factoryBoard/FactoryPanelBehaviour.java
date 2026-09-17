@@ -190,29 +190,18 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	}
 
 	public void moveTo(FactoryPanelPosition newPos, ServerPlayer player) {
+		if (!Create.LOGISTICS.mayInteract(network, player))
+			return;
+		if (!mayModifyConnectedPanels(player))
+			return;
+		if (!canMoveTo(newPos))
+			return;
+
 		Level level = getWorld();
 		BlockState existingState = level.getBlockState(newPos.pos());
-
-		// Check if target pos is valid
-		if (FactoryPanelBehaviour.at(level, newPos) != null)
-			return;
 		boolean isAddedToOtherGauge = AllBlocks.FACTORY_GAUGE.has(existingState);
-		if (!existingState.isAir() && !isAddedToOtherGauge)
-			return;
-		if (isAddedToOtherGauge && existingState != blockEntity.getBlockState())
-			return;
 		if (!isAddedToOtherGauge)
 			level.setBlock(newPos.pos(), blockEntity.getBlockState(), Block.UPDATE_ALL);
-
-		for (BlockPos blockPos : targetedByLinks.keySet())
-			if (!blockPos.closerThan(newPos.pos(), 24))
-				return;
-		for (FactoryPanelPosition blockPos : targetedBy.keySet())
-			if (!blockPos.pos().closerThan(newPos.pos(), 24))
-				return;
-		for (FactoryPanelPosition blockPos : targeting)
-			if (!blockPos.pos().closerThan(newPos.pos(), 24))
-				return;
 
 		// Disconnect links
 		for (BlockPos pos : targetedByLinks.keySet()) {
@@ -276,6 +265,62 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 			.component(), true);
 		player.level()
 			.playSound(null, newPos.pos(), SoundEvents.COPPER_BREAK, SoundSource.BLOCKS, 1.0f, 1.0f);
+	}
+
+	private boolean canMoveTo(FactoryPanelPosition newPos) {
+		Level level = getWorld();
+		BlockState currentState = blockEntity.getBlockState();
+		BlockState existingState = level.getBlockState(newPos.pos());
+
+		if (FactoryPanelBehaviour.at(level, newPos) != null)
+			return false;
+		boolean isAddedToOtherGauge = AllBlocks.FACTORY_GAUGE.has(existingState);
+		if (!existingState.isAir() && !isAddedToOtherGauge)
+			return false;
+		if (isAddedToOtherGauge && existingState != currentState)
+			return false;
+
+		BlockPos diff = newPos.pos()
+			.subtract(getPos());
+		Direction facing = FactoryPanelBlock.connectedDirection(currentState);
+		if (facing.getAxis()
+			.choose(diff.getX(), diff.getY(), diff.getZ()) != 0)
+			return false;
+		if (!AllBlocks.FACTORY_GAUGE.get()
+			.canSurvive(currentState, level, newPos.pos()))
+			return false;
+		if (AllBlocks.PACKAGER.has(level.getBlockState(newPos.pos()
+			.relative(facing.getOpposite()))))
+			return false;
+
+		for (BlockPos blockPos : targetedByLinks.keySet())
+			if (!blockPos.closerThan(newPos.pos(), 24))
+				return false;
+		for (FactoryPanelPosition blockPos : targetedBy.keySet())
+			if (!blockPos.pos()
+				.closerThan(newPos.pos(), 24))
+				return false;
+		for (FactoryPanelPosition blockPos : targeting)
+			if (!blockPos.pos()
+				.closerThan(newPos.pos(), 24))
+				return false;
+
+		return true;
+	}
+
+	private boolean mayModifyConnectedPanels(ServerPlayer player) {
+		Level level = getWorld();
+		for (FactoryPanelPosition position : targeting) {
+			FactoryPanelBehaviour at = at(level, position);
+			if (at != null && !Create.LOGISTICS.mayInteract(at.network, player))
+				return false;
+		}
+		for (FactoryPanelPosition position : targetedBy.keySet()) {
+			FactoryPanelBehaviour at = at(level, position);
+			if (at != null && !Create.LOGISTICS.mayInteract(at.network, player))
+				return false;
+		}
+		return true;
 	}
 
 	private void moveToSlot(PanelSlot slot) {

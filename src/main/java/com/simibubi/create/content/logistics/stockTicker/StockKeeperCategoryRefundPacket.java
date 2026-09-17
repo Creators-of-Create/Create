@@ -31,9 +31,21 @@ public class StockKeeperCategoryRefundPacket extends BlockEntityConfigurationPac
 
 	@Override
 	protected void applySettings(ServerPlayer player, StockTickerBlockEntity be) {
-		if (!filter.isEmpty() && filter.getItem() instanceof FilterItem)
+		if (!be.behaviour.mayInteract(player))
+			return;
+		if (filter.isEmpty() || !(filter.getItem() instanceof FilterItem))
+			return;
+
+		for (int i = 0; i < be.categories.size(); i++) {
+			ItemStack category = be.categories.get(i);
+			if (!ItemStack.isSameItemSameComponents(category, filter))
+				continue;
+			be.categories.remove(i);
+			be.notifyUpdate();
 			player.getInventory()
-				.placeItemBackInInventory(filter);
+				.placeItemBackInInventory(category.copy());
+			return;
+		}
 	}
 
 }

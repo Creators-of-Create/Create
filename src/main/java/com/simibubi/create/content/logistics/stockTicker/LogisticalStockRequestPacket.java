@@ -23,6 +23,9 @@ public class LogisticalStockRequestPacket extends BlockEntityConfigurationPacket
 
 	@Override
 	protected void applySettings(ServerPlayer player, StockCheckingBlockEntity be) {
+		if (!be.behaviour.mayInteract(player))
+			return;
+
 		be.getRecentSummary()
 			.divideAndSendTo(player, pos);
 	}

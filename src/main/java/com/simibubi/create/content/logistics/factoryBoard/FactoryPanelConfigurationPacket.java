@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.createmod.catnip.codecs.stream.CatnipLargerStreamCodecs;
@@ -68,9 +69,20 @@ public class FactoryPanelConfigurationPacket extends BlockEntityConfigurationPac
 
 	@Override
 	protected void applySettings(ServerPlayer player, FactoryPanelBlockEntity be) {
-		FactoryPanelBehaviour behaviour = be.panels.get(position.slot());
+		FactoryPanelBehaviour behaviour = FactoryPanelBehaviour.at(be.getLevel(), position);
 		if (behaviour == null)
 			return;
+		if (!Create.LOGISTICS.mayInteract(behaviour.network, player))
+			return;
+		if (reset && !mayModifyConnectedPanels(player, behaviour))
+			return;
+
+		FactoryPanelBehaviour source = null;
+		if (removeConnection != null) {
+			source = FactoryPanelBehaviour.at(be.getLevel(), removeConnection);
+			if (source != null && !Create.LOGISTICS.mayInteract(source.network, player))
+				return;
+		}
 
 		behaviour.recipeAddress = reset ? "" : address;
 		behaviour.recipeOutput = reset ? 1 : outputAmount;
@@ -102,7 +114,6 @@ public class FactoryPanelConfigurationPacket extends BlockEntityConfigurationPac
 
 		if (removeConnection != null) {
 			behaviour.targetedBy.remove(removeConnection);
-			FactoryPanelBehaviour source = FactoryPanelBehaviour.at(be.getLevel(), removeConnection);
 			if (source != null) {
 				source.targeting.remove(behaviour.getPanelPosition());
 				source.blockEntity.sendData();
@@ -113,5 +124,19 @@ public class FactoryPanelConfigurationPacket extends BlockEntityConfigurationPac
 			behaviour.forceClearPromises = true;
 
 		be.notifyUpdate();
+	}
+
+	private static boolean mayModifyConnectedPanels(ServerPlayer player, FactoryPanelBehaviour behaviour) {
+		for (FactoryPanelConnection connection : behaviour.targetedBy.values()) {
+			FactoryPanelBehaviour source = FactoryPanelBehaviour.at(behaviour.getWorld(), connection);
+			if (source != null && !Create.LOGISTICS.mayInteract(source.network, player))
+				return false;
+		}
+		for (FactoryPanelPosition position : behaviour.targeting) {
+			FactoryPanelBehaviour target = FactoryPanelBehaviour.at(behaviour.getWorld(), position);
+			if (target != null && !Create.LOGISTICS.mayInteract(target.network, player))
+				return false;
+		}
+		return true;
 	}
 }

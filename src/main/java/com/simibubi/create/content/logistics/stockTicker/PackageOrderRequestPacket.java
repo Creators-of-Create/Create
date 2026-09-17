@@ -41,6 +41,9 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 
 	@Override
 	protected void applySettings(ServerPlayer player, StockTickerBlockEntity be) {
+		if (!be.behaviour.mayInteract(player))
+			return;
+
 		if (encodeRequester) {
 			if (!order.isEmpty())
 				AllSoundEvents.CONFIRM.playOnServer(be.getLevel(), pos);
