@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.simibubi.create.foundation.utility.VisitedItemStackTracker;
+
+import com.simibubi.create.foundation.utility.VisitedItemStackTracker.SlotAmountRecord;
+
 import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -182,70 +186,64 @@ public class ItemHelper {
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, ExtractionCountMode mode, int amount,
 									boolean simulate) {
-		ItemStack extracting = ItemStack.EMPTY;
-		boolean amountRequired = mode == ExtractionCountMode.EXACTLY;
-		boolean checkHasEnoughItems = amountRequired;
-		boolean hasEnoughItems = !checkHasEnoughItems;
-		boolean potentialOtherMatch = false;
-		int maxExtractionCount = amount;
+		if (mode == ItemHelper.ExtractionCountMode.EXACTLY) {
+			VisitedItemStackTracker tracker = new VisitedItemStackTracker();
+			for (int i = 0; i < inv.getSlots(); i++) {
+				ItemStack stackIn = inv.getStackInSlot(i);
+				if (stackIn.isEmpty() || stackIn.getMaxStackSize() < amount)
+					continue;
 
-		Extraction:
-		do {
-			extracting = ItemStack.EMPTY;
+				ItemStack extracted = inv.extractItem(i, Math.min(stackIn.getCount(), amount), true);
+				if (extracted.isEmpty() || !test.test(extracted))
+					continue;
 
-			for (int slot = 0; slot < inv.getSlots(); slot++) {
-				ItemStack slotStack = inv.getStackInSlot(slot);
-				if (slotStack.isEmpty())
+				VisitedItemStackTracker.SlotAmountRecord slotRecord = tracker.update(extracted.copy(), i);
+				if (slotRecord.totalAmount >= amount) {
+					ItemStack result = extracted.copyWithCount(amount);
+					if (!simulate) {
+						for (int slot: slotRecord.slots) {
+							int extractAmount = Math.min(inv.getStackInSlot(slot).getCount(), amount);
+							amount -= inv.extractItem(slot, extractAmount, false).getCount();
+						}
+					}
+					return result;
+				}
+			}
+		} else {
+			VisitedItemStackTracker.SlotAmountRecord slotRecord = new SlotAmountRecord();
+			ItemStack result = ItemStack.EMPTY;
+			int maxExtractAmount = amount;
+			for (int i = 0; i < inv.getSlots(); i++) {
+				ItemStack stackIn = inv.getStackInSlot(i);
+				if (stackIn.isEmpty() || (!result.isEmpty() && !ItemStack.isSameItemSameComponents(result, stackIn)))
 					continue;
-				int amountToExtractFromThisSlot =
-					Math.min(maxExtractionCount - extracting.getCount(), slotStack.getMaxStackSize());
-				ItemStack stack = inv.extractItem(slot, amountToExtractFromThisSlot, true);
 
-				if (stack.isEmpty())
+				ItemStack extracted = inv.extractItem(i, Math.min(stackIn.getCount(), maxExtractAmount), true);
+				if (extracted.isEmpty() || !test.test(extracted))
 					continue;
-				if (!test.test(stack))
-					continue;
-				if (!extracting.isEmpty() && !canItemStackAmountsStack(stack, extracting)) {
-					potentialOtherMatch = true;
-					continue;
+
+				if (result.isEmpty()) {
+					result = extracted.copy();
+					maxExtractAmount = Math.min(amount, extracted.getMaxStackSize());
 				}
 
-				if (extracting.isEmpty())
-					extracting = stack.copy();
-				else
-					extracting.grow(stack.getCount());
-
-				if (!simulate && hasEnoughItems)
-					inv.extractItem(slot, stack.getCount(), false);
-
-				if (extracting.getCount() >= maxExtractionCount) {
-					if (checkHasEnoughItems) {
-						hasEnoughItems = true;
-						checkHasEnoughItems = false;
-						continue Extraction;
-					} else {
-						break Extraction;
+				slotRecord.add(i, extracted.getCount());
+				if (slotRecord.totalAmount >= maxExtractAmount)
+					break;
+			}
+			if (!result.isEmpty()) {
+				amount = Math.min(slotRecord.totalAmount, maxExtractAmount);
+				result.setCount(amount);
+				if (!simulate) {
+					for (int slot: slotRecord.slots) {
+						int extractAmount = Math.min(inv.getStackInSlot(slot).getCount(), amount);
+						amount -= inv.extractItem(slot, extractAmount, false).getCount();
 					}
 				}
+				return result;
 			}
-
-			if (!extracting.isEmpty() && !hasEnoughItems && potentialOtherMatch) {
-				ItemStack blackListed = extracting.copy();
-				test = test.and(i -> !ItemStack.isSameItemSameComponents(i, blackListed));
-				continue;
-			}
-
-			if (checkHasEnoughItems)
-				checkHasEnoughItems = false;
-			else
-				break Extraction;
-
-		} while (true);
-
-		if (amountRequired && extracting.getCount() < amount)
-			return ItemStack.EMPTY;
-
-		return extracting;
+		}
+		return ItemStack.EMPTY;
 	}
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test,
