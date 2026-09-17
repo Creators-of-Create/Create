@@ -3,6 +3,10 @@ package com.simibubi.create.content.fluids;
 import java.lang.ref.WeakReference;
 import java.util.function.Predicate;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.ICapabilityProvider;
@@ -63,6 +67,8 @@ public abstract class FlowSource {
 	public void manageSource(Level world, BlockEntity networkBE) {
 	}
 
+	public abstract boolean isValid(Level world);
+
 	public void whileFlowPresent(Level world, boolean pulling) {}
 
 	public @Nullable ICapabilityProvider<IFluidHandler> provideHandler() {
@@ -106,6 +112,13 @@ public abstract class FlowSource {
 		}
 
 		@Override
+		public boolean isValid(Level world) {
+			if (fluidHandlerCache == null)
+				return false;
+			return world.getGameTime() % 40 != 0 || fluidHandlerCache.getCapability() != null;
+		}
+
+		@Override
 		@Nullable
 		public ICapabilityProvider<IFluidHandler> provideHandler() {
 			return fluidHandlerCache;
@@ -136,6 +149,13 @@ public abstract class FlowSource {
 		}
 
 		@Override
+		public boolean isValid(Level world) {
+			if (cached == null)
+				return false;
+			return world.getGameTime() % 40 != 0 || FluidPropagator.getPipe(world, location.getConnectedPos()) != null;
+		}
+
+		@Override
 		public FluidStack provideFluid(Predicate<FluidStack> extractionPredicate) {
 			if (cached == null || cached.get() == null)
 				return FluidStack.EMPTY;
@@ -162,6 +182,20 @@ public abstract class FlowSource {
 			return false;
 		}
 
+		@Override
+		public boolean isValid(Level world) {
+			if (world.getGameTime() % 40 == 0) {
+				BlockPos relative = location.getConnectedPos();
+				if (world.getChunk(relative.getX() >> 4, relative.getZ() >> 4, ChunkStatus.FULL, false) == null)
+					return true;
+				if (FluidPropagator.isOpenEnd(world, location.getPos(), location.getFace()))
+					return false;
+				if (FluidPropagator.hasFluidCapability(world, relative, location.getFace().getOpposite()))
+					return false;
+				return FluidPropagator.getPipe(world, location.getPos()) == null;
+			}
+			return true;
+		}
 	}
 
 }
