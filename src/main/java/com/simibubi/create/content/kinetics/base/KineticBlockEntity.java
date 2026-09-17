@@ -33,6 +33,7 @@ import net.createmod.catnip.lang.FontHelper.Palette;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,9 +50,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.loading.FMLEnvironment;
 
 public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation {
 
@@ -466,6 +468,54 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 
 		return true;
 
+	}
+
+	protected void addToGoggleRotationDirectionTooltip(List<Component> tooltip) {
+		float speed = getSpeed();
+		// If the block isn't generating its own speed and is currently at 0, returns
+		if (speed == 0) speed = getGeneratedSpeed();
+		if (speed == 0) return;
+
+		// Used for GameTests to safely verify tooltip content on the server side
+		// Bypasses client-only formatting logic to prevent crashes in headless environments
+		// Note: Used Component.translatable directly to avoid issues with CreateLang in GameTests
+		if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
+            tooltip.add(Component.translatable("create.gui.goggles.rotation_direction"));
+			if (speed > 0) {
+				tooltip.add(Component.translatable("create.gui.goggles.rotation_direction.clockwise"));
+			} else {
+				tooltip.add(Component.translatable("create.gui.goggles.rotation_direction.counter_clockwise"));
+			}
+            return;
+        }
+
+		float apparentSpeed = speed;
+		BlockState state = getBlockState();
+		if (state.getBlock() instanceof IRotate rotatingBlock) {
+			Axis rotationAxis = rotatingBlock.getRotationAxis(state);
+			Vec3 axisVector = switch (rotationAxis) {
+				case X -> new Vec3(1, 0, 0);
+				case Y -> new Vec3(0, 1, 0);
+				case Z -> new Vec3(0, 0, 1);
+			};
+
+			Vec3 lookVector = Minecraft.getInstance().player.getLookAngle();
+			double dot = axisVector.dot(lookVector);
+
+			// Invert apparent direction if player is looking against the rotation axis
+			if (Math.abs(dot) > 0.001)
+				apparentSpeed = (float) (speed * Math.signum(dot));
+		}
+
+		CreateLang.translate("gui.goggles.rotation_direction")
+			.style(GRAY)
+			.forGoggles(tooltip);
+
+		CreateLang.translate(apparentSpeed > 0
+				? "gui.goggles.rotation_direction.clockwise"
+				: "gui.goggles.rotation_direction.counter_clockwise")
+			.style(apparentSpeed > 0 ? ChatFormatting.GREEN : ChatFormatting.BLUE)
+			.forGoggles(tooltip, 1);
 	}
 
 	protected void addStressImpactStats(List<Component> tooltip, float stressAtBase) {

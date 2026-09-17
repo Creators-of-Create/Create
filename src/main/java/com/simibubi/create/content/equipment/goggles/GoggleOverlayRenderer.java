@@ -60,6 +60,14 @@ public class GoggleOverlayRenderer {
 	public static int hoverTicks = 0;
 	public static BlockPos lastHovered = null;
 
+	public static boolean goggleOverlayEnabled = true;
+
+	public static void toggleGoggleOverlay() {
+
+		if (GogglesItem.isWearingGoggles(Minecraft.getInstance().player))
+			goggleOverlayEnabled = !goggleOverlayEnabled;
+	}
+
 	public static void renderOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
@@ -106,7 +114,10 @@ public class GoggleOverlayRenderer {
 		if (be instanceof IHaveCustomOverlayIcon customOverlayIcon)
 			item = customOverlayIcon.getIcon(isShifting);
 
-		if (hasGoggleInformation && wearingGoggles) {
+
+		boolean showGoggleInfo = wearingGoggles && goggleOverlayEnabled;
+
+		if (hasGoggleInformation && showGoggleInfo) {
 			IHaveGoggleInformation gte = (IHaveGoggleInformation) be;
 			goggleAddedInformation = gte.addToGoggleTooltip(tooltip, isShifting);
 		}
@@ -142,7 +153,7 @@ public class GoggleOverlayRenderer {
 
 		// check for piston poles if goggles are worn
 		BlockState state = world.getBlockState(pos);
-		if (wearingGoggles && AllBlocks.PISTON_EXTENSION_POLE.has(state)) {
+		if (showGoggleInfo && AllBlocks.PISTON_EXTENSION_POLE.has(state)) {
 			Direction[] directions = Iterate.directionsInAxis(state.getValue(PistonExtensionPoleBlock.FACING)
 				.getAxis());
 			int poles = 1;

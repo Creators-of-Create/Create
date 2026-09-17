@@ -1,13 +1,17 @@
 package com.simibubi.create.content.kinetics.gantry;
 
+import java.util.List;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.gantry.GantryCarriageBlock;
 import com.simibubi.create.content.contraptions.gantry.GantryCarriageBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -105,6 +109,14 @@ public class GantryShaftBlockEntity extends KineticBlockEntity {
 		if (!AllBlocks.GANTRY_SHAFT.has(blockState))
 			return 0;
 		return Mth.clamp(convertToLinear(-getSpeed()), -.49f, .49f);
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		CreateLang.translate("tooltip.gantry_shaft.header")
+			.forGoggles(tooltip);
+		addToGoggleRotationDirectionTooltip(tooltip);
+		return getSpeed() != 0;
 	}
 
 	@Override
