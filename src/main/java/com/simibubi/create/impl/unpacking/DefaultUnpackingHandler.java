@@ -51,8 +51,8 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 				if (toInsert.isEmpty())
 					continue;
 
-				if (targetInv.insertItem(slot, toInsert, true)
-					.getCount() == toInsert.getCount())
+				int countAfterInsert = targetInv.insertItem(slot, toInsert, true).getCount();
+				if (countAfterInsert == toInsert.getCount())
 					continue;
 
 				if (itemInSlot.isEmpty()) {
@@ -64,15 +64,13 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 						items.set(boxSlot, ItemStack.EMPTY);
 
 					itemInSlot = toInsert;
-					targetInv.insertItem(slot, toInsert, simulate);
 					continue;
 				}
 
 				if (!ItemStack.isSameItemSameComponents(toInsert, itemInSlot))
 					continue;
 
-				int insertedAmount = toInsert.getCount() - targetInv.insertItem(slot, toInsert, simulate)
-					.getCount();
+				int insertedAmount = toInsert.getCount() - countAfterInsert;
 				int slotLimit = Math.min(itemInSlot.getMaxStackSize(), targetInv.getSlotLimit(slot));
 				int insertableAmountWithPreviousItems =
 					Math.min(toInsert.getCount(), slotLimit - itemInSlot.getCount() - itemsAddedToSlot);
