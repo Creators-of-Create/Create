@@ -48,6 +48,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 	public int currentLevel;
 	public int currentMaxLevel;
 	public boolean inStacks;
+	public boolean inBuckets;
 
 	private boolean redstoneState;
 	private boolean inverted;
@@ -83,6 +84,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 		currentMinLevel = compound.getInt("CurrentMinAmount");
 		currentMaxLevel = compound.getInt("CurrentMaxAmount");
 		inStacks = compound.getBoolean("InStacks");
+		inBuckets = compound.getBoolean("InBuckets");
 		redstoneState = compound.getBoolean("Powered");
 		inverted = compound.getBoolean("Inverted");
 		poweredAfterDelay = compound.getBoolean("PoweredAfterDelay");
@@ -102,6 +104,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 		compound.putInt("CurrentMinAmount", currentMinLevel);
 		compound.putInt("CurrentMaxAmount", currentMaxLevel);
 		compound.putBoolean("InStacks", inStacks);
+		compound.putBoolean("InBuckets", inBuckets);
 		compound.putBoolean("Powered", redstoneState);
 		compound.putBoolean("PoweredAfterDelay", poweredAfterDelay);
 		super.write(compound, registries, clientPacket);
