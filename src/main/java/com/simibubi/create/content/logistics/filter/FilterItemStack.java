@@ -43,6 +43,7 @@ public class FilterItemStack {
 	private static void trimFilterComponents(ItemStack filter) {
 		filter.remove(DataComponents.ENCHANTMENTS);
 		filter.remove(DataComponents.ATTRIBUTE_MODIFIERS);
+		filter.remove(DataComponents.FOOD); // Prevent schematics from abusing the food using_converts_to component
 	}
 
 	public boolean isEmpty() {

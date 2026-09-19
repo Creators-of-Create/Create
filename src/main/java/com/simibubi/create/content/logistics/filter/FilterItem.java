@@ -82,7 +82,9 @@ public abstract class FilterItem extends Item implements MenuProvider, SupportsI
 				});
 			return InteractionResultHolder.success(heldItem);
 		}
-		return InteractionResultHolder.pass(heldItem);
+		else {
+			return super.use(world, player, hand);
+		}
 	}
 
 	@Override
