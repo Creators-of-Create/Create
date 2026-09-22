@@ -1015,6 +1015,10 @@ public class StationBlockEntity extends SmartBlockEntity implements Transformabl
 		if (globalPackagePort == null) {
 			globalPackagePort = new GlobalPackagePort();
 			globalPackagePort.address = ppbe.addressFilter;
+			if (ppbe instanceof PostboxBlockEntity pbe) {
+				globalPackagePort.explicitFetch = pbe.explicitFetch;
+				globalPackagePort.explicitDeliver = pbe.explicitDeliver;
+			}
 			station.connectedPorts.put(ppbe.getBlockPos(), globalPackagePort);
 		} else {
 			globalPackagePort.restoreOfflineBuffer(ppbe.inventory);

@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.packagePort;
 
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlockEntity;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import io.netty.buffer.ByteBuf;
@@ -14,16 +15,22 @@ public class PackagePortConfigurationPacket extends BlockEntityConfigurationPack
 	    BlockPos.STREAM_CODEC, packet -> packet.pos,
 		ByteBufCodecs.STRING_UTF8, packet -> packet.newFilter,
 	    ByteBufCodecs.BOOL, packet -> packet.acceptPackages,
+		ByteBufCodecs.BOOL, packet -> packet.explicitFetch,
+		ByteBufCodecs.BOOL, packet -> packet.explicitDeliver,
 	    PackagePortConfigurationPacket::new
 	);
 
 	private final String newFilter;
 	private final boolean acceptPackages;
+	private final boolean explicitFetch;
+	private final boolean explicitDeliver;
 
-	public PackagePortConfigurationPacket(BlockPos pos, String newFilter, boolean acceptPackages) {
+	public PackagePortConfigurationPacket(BlockPos pos, String newFilter, boolean acceptPackages, boolean explicitFetch, boolean explicitDeliver) {
 		super(pos);
 		this.newFilter = newFilter;
 		this.acceptPackages = acceptPackages;
+		this.explicitFetch = explicitFetch;
+		this.explicitDeliver = explicitDeliver;
 	}
 
 	@Override
@@ -33,8 +40,17 @@ public class PackagePortConfigurationPacket extends BlockEntityConfigurationPack
 
 	@Override
 	protected void applySettings(ServerPlayer player, PackagePortBlockEntity be) {
-		if (be.addressFilter.equals(newFilter) && be.acceptsPackages == acceptPackages)
+		boolean isSame = be.addressFilter.equals(newFilter) && be.acceptsPackages == acceptPackages;
+		if(be instanceof PostboxBlockEntity postbox)
+			isSame = isSame && postbox.explicitFetch == explicitFetch && postbox.explicitDeliver == explicitDeliver;
+		if(isSame)
 			return;
+
+		if(be instanceof PostboxBlockEntity postbox){
+			postbox.explicitFetch = explicitFetch;
+			postbox.explicitDeliver = explicitDeliver;
+		}
+
 		be.addressFilter = newFilter;
 		be.acceptsPackages = acceptPackages;
 		be.filterChanged();
