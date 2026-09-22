@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import net.minecraft.world.level.Level;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.api.event.BlockEntityBehaviourEvent;
@@ -38,6 +40,7 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
 	private boolean firstNbtRead = true;
 	protected int lazyTickRate;
 	protected int lazyTickCounter;
+	protected long lastTick;
 	private boolean chunkUnloaded;
 
 	// Used for simulating this BE in a client-only setting
@@ -81,11 +84,17 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
 			lazyTickCounter = lazyTickRate;
 			lazyTick();
 		}
+		if (getLevel() != null) lastTick = getLevel().getGameTime();
 
 		forEachBehaviour(BlockEntityBehaviour::tick);
 	}
 
 	public void lazyTick() {}
+
+	public boolean isTicking() {
+		Level level = getLevel();
+		return level != null && level.getGameTime() - lastTick < 10;
+	}
 
 	/**
 	 * Hook only these in future subclasses of STE
