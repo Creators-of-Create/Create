@@ -1,5 +1,7 @@
 package com.simibubi.create.api.registry;
 
+import com.simibubi.create.content.kinetics.belt.BeltCasingType;
+
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import com.mojang.serialization.MapCodec;
@@ -43,6 +45,7 @@ public class CreateBuiltInRegistries {
 	public static final Registry<MapCodec<? extends PotatoProjectileRenderMode>> POTATO_PROJECTILE_RENDER_MODE = simple(CreateRegistries.POTATO_PROJECTILE_RENDER_MODE);
 	public static final Registry<MapCodec<? extends PotatoProjectileEntityHitAction>> POTATO_PROJECTILE_ENTITY_HIT_ACTION = simple(CreateRegistries.POTATO_PROJECTILE_ENTITY_HIT_ACTION);
 	public static final Registry<MapCodec<? extends PotatoProjectileBlockHitAction>> POTATO_PROJECTILE_BLOCK_HIT_ACTION = simple(CreateRegistries.POTATO_PROJECTILE_BLOCK_HIT_ACTION);
+	public static final Registry<BeltCasingType> BELT_CASING_TYPE = withIntrusiveHolders(CreateRegistries.BELT_CASING_TYPE);
 
 	private static <T> Registry<T> simple(ResourceKey<Registry<T>> key) {
 		return register(key, false, () -> {});

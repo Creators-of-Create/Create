@@ -33,6 +33,8 @@ import com.simibubi.create.content.decoration.encasing.EncasedCTBehaviour;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorMovementBehaviour;
 import com.simibubi.create.content.kinetics.base.RotatedPillarKineticBlock;
+import com.simibubi.create.content.kinetics.belt.AllBeltCasingTypes;
+import com.simibubi.create.content.kinetics.belt.BeltCasingType;
 import com.simibubi.create.content.kinetics.crank.ValveHandleBlock;
 import com.simibubi.create.content.kinetics.simpleRelays.encased.EncasedCogCTBehaviour;
 import com.simibubi.create.content.kinetics.simpleRelays.encased.EncasedCogwheelBlock;
@@ -63,6 +65,8 @@ import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
@@ -339,7 +343,7 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends BeltTunnelBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> beltTunnel(
-		String type, ResourceLocation particleTexture) {
+		String type, ResourceLocation particleTexture, Supplier<BeltCasingType> beltCasingType) {
 		String prefix = "block/tunnel/" + type + "_tunnel";
 		String funnel_prefix = "block/funnel/" + type + "_funnel";
 		return b -> b.initialProperties(SharedProperties::stone)
@@ -364,7 +368,7 @@ public class BuilderTransformers {
 						.rotationY(state.getValue(BeltTunnelBlock.HORIZONTAL_AXIS) == Axis.X ? 0 : 90)
 						.build();
 				}))
-			.item(BeltTunnelItem::new)
+			.item((t, p) -> new BeltTunnelItem(t, p, beltCasingType))
 			.model((c, p) -> {
 				p.withExistingParent("item/" + type + "_tunnel", p.modLoc("block/belt_tunnel/item"))
 					.texture("top", p.modLoc(prefix + "_top"))
