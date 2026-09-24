@@ -1,0 +1,9 @@
+{
+  "values": [
+    "minecraft:hopper",
+    {
+      "id": "farmersdelight:basket",
+      "required": false
+    }
+  ]
+}
