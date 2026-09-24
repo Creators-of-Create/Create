@@ -9,6 +9,8 @@ import com.simibubi.create.content.trains.schedule.hat.TrainHatInfoReloadListene
 import com.simibubi.create.foundation.mixin.accessor.AgeableListModelAccessor;
 import com.simibubi.create.foundation.mixin.accessor.EntityRenderDispatcherAccessor;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.render.CachedBuffers;
@@ -38,6 +40,9 @@ public class CreateHatArmorLayer<T extends LivingEntity, M extends EntityModel<T
 
 	public void render(PoseStack ms, MultiBufferSource buffer, int light, LivingEntity entity, float limbSwing, float limbSwingAmount,
 					   float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+		if (!AllConfigs.client().renderHatLayer.get())
+			return;
+
 		PartialModel hat = EntityHats.getHatFor(entity);
 		if (hat == null)
 			return;
