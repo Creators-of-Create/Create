@@ -176,6 +176,7 @@ public class BuilderTransformers {
 			.item()
 			.tag(ItemTags.DOORS)
 			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
+			.tag(AllItemTags.TRAIN_CONTROLLED.tag)
 			.model((c, p) -> p.blockSprite(c, p.modLoc("item/" + type + "_door")))
 			.build();
 	}
