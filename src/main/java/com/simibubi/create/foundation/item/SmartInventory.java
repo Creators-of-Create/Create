@@ -16,6 +16,8 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
+import org.jetbrains.annotations.Nullable;
+
 public class SmartInventory extends ItemHandlerContainer
 	implements IItemHandlerModifiable, INBTSerializable<CompoundTag> {
 
@@ -25,19 +27,19 @@ public class SmartInventory extends ItemHandlerContainer
 	protected SyncedStackHandler wrapped;
 	protected int stackSize;
 
-	public SmartInventory(int slots, SyncedBlockEntity be) {
+	public SmartInventory(int slots, @Nullable SyncedBlockEntity be) {
 		this(slots, be, 64, false);
 	}
 
-	public SmartInventory(int slots, SyncedBlockEntity be, BiPredicate<Integer, ItemStack> isValid) {
+	public SmartInventory(int slots, @Nullable SyncedBlockEntity be, BiPredicate<Integer, ItemStack> isValid) {
 		this(slots, be, 64, false, isValid);
 	}
 
-	public SmartInventory(int slots, SyncedBlockEntity be, int stackSize, boolean stackNonStackables) {
+	public SmartInventory(int slots, @Nullable SyncedBlockEntity be, int stackSize, boolean stackNonStackables) {
 		this(new SyncedStackHandler(slots, be, stackNonStackables, stackSize), stackSize, stackNonStackables);
 	}
 
-	public SmartInventory(int slots, SyncedBlockEntity be, int stackSize, boolean stackNonStackables, BiPredicate<Integer, ItemStack> isValid) {
+	public SmartInventory(int slots, @Nullable SyncedBlockEntity be, int stackSize, boolean stackNonStackables, BiPredicate<Integer, ItemStack> isValid) {
 		this(new SyncedStackHandler(slots, be, stackNonStackables, stackSize, isValid), stackSize, stackNonStackables);
 	}
 
@@ -145,18 +147,18 @@ public class SmartInventory extends ItemHandlerContainer
 
 	protected static class SyncedStackHandler extends ItemStackHandler {
 
-		private SyncedBlockEntity blockEntity;
+		private @Nullable SyncedBlockEntity blockEntity;
 		private boolean stackNonStackables;
 		private int stackSize;
 		private BiPredicate<Integer, ItemStack> isValid = super::isItemValid;
 		private Consumer<Integer> updateCallback;
 
-		public SyncedStackHandler(int slots, SyncedBlockEntity be, boolean stackNonStackables, int stackSize, BiPredicate<Integer, ItemStack> isValid) {
+		public SyncedStackHandler(int slots, @Nullable SyncedBlockEntity be, boolean stackNonStackables, int stackSize, BiPredicate<Integer, ItemStack> isValid) {
 			this(slots, be, stackNonStackables, stackSize);
 			this.isValid = isValid;
 		}
 
-		public SyncedStackHandler(int slots, SyncedBlockEntity be, boolean stackNonStackables, int stackSize) {
+		public SyncedStackHandler(int slots, @Nullable SyncedBlockEntity be, boolean stackNonStackables, int stackSize) {
 			super(slots);
 			this.blockEntity = be;
 			this.stackNonStackables = stackNonStackables;
@@ -168,7 +170,8 @@ public class SmartInventory extends ItemHandlerContainer
 			super.onContentsChanged(slot);
 			if (updateCallback != null)
 				updateCallback.accept(slot);
-			blockEntity.notifyUpdate();
+			if (blockEntity != null)
+				blockEntity.notifyUpdate();
 		}
 
 		@Override

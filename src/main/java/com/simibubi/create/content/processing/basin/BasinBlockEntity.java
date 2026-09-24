@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import com.simibubi.create.content.processing.basin.BasinMountedFluidStorage.MountedBasinTankHalf;
+import com.simibubi.create.foundation.utility.InventoryUtil;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -800,6 +803,21 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			cachedHeatLevel = getHeatLevelOf(level.getBlockState(getBlockPos().below(1)));
 		}
 		return cachedHeatLevel;
+	}
+
+	public void applyInventories(BasinInventory inputInventory, SmartInventory outputInventory) {
+		InventoryUtil.copyInventoryToFrom(this.inputInventory, inputInventory);
+		InventoryUtil.copyInventoryToFrom(this.outputInventory, outputInventory);
+	}
+
+	public void applyTanks(MountedBasinTankHalf inputTank, MountedBasinTankHalf outputTank) {
+		TankSegment[] inputSegments = this.inputTank.getTanks();
+		inputSegments[0].getTank().setFluid(inputTank.firstStack());
+		inputSegments[1].getTank().setFluid(inputTank.secondStack());
+
+		TankSegment[] outputSegments = this.outputTank.getTanks();
+		outputSegments[0].getTank().setFluid(outputTank.firstStack());
+		outputSegments[1].getTank().setFluid(outputTank.secondStack());
 	}
 
 	static class BasinValueBox extends ValueBoxTransform.Sided {

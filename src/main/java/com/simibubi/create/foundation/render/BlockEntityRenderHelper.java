@@ -56,18 +56,9 @@ public class BlockEntityRenderHelper {
 				.translate(pos);
 
 			try {
-				int realLevelLight = LevelRenderer.getLightColor(realLevel, getLightPos(lightTransform, pos));
-
-				int light;
-				if (renderLevel != null) {
-					renderLevel.setExternalLight(realLevelLight);
-					light = LevelRenderer.getLightColor(renderLevel, pos);
-				} else {
-					light = realLevelLight;
-				}
+				int light = getLight(realLevel, renderLevel, pos, lightTransform);
 
 				renderer.render(blockEntity, pt, ms, buffer, light, OverlayTexture.NO_OVERLAY);
-
 			} catch (Exception e) {
 				// Prevent this BE from causing more issues in the future.
 				erroredBEsOut.set(i);
@@ -85,7 +76,18 @@ public class BlockEntityRenderHelper {
 		}
 	}
 
-	private static BlockPos getLightPos(@Nullable Matrix4f lightTransform, BlockPos contraptionPos) {
+	public static int getLight(Level realLevel, VirtualRenderWorld renderLevel, BlockPos pos, @Nullable Matrix4f lightTransform) {
+		int realLevelLight = LevelRenderer.getLightColor(realLevel, getLightPos(lightTransform, pos));
+
+		if (renderLevel != null) {
+			renderLevel.setExternalLight(realLevelLight);
+			return LevelRenderer.getLightColor(renderLevel, pos);
+		}
+
+		return realLevelLight;
+	}
+
+	public static BlockPos getLightPos(@Nullable Matrix4f lightTransform, BlockPos contraptionPos) {
 		if (lightTransform != null) {
 			Vector4f lightVec = new Vector4f(contraptionPos.getX() + .5f, contraptionPos.getY() + .5f, contraptionPos.getZ() + .5f, 1);
 			lightVec.mul(lightTransform);
