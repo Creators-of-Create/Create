@@ -234,8 +234,11 @@ public class Navigation {
 
 		double targetDistance = waitingForSignal != null ? distanceToSignal : distanceToDestination;
 
-		// always overshoot to ensure the travelling point crosses the target
-		targetDistance += 0.25d;
+		// Always overshoot for signals to ensure the travelling point crosses them
+		// don't overshoot for stations - frontSignalListener handles stopping
+		if (waitingForSignal != null) {
+			targetDistance += 0.25d;
+		}
 
 		// dont leave until green light
 		if (targetDistance > 1 / 32f && train.getCurrentStation() != null) {
