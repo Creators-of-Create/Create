@@ -3366,5 +3366,6 @@
   "tag.item.c.plates.aluminum": "Aluminium Plates",
   "tag.item.c.raw_materials.aluminum": "Raw Aluminium Ores",
   "tag.item.c.storage_blocks.aluminum": "Aluminium Storage Blocks",
-  "tag.item.c.storage_blocks.raw_aluminum": "Raw Aluminium Storage Blocks"
+  "tag.item.c.storage_blocks.raw_aluminum": "Raw Aluminium Storage Blocks",
+  "tag.item.create.pressurized_air_sources": "Pressurised Air Sources"
 }
