@@ -19,6 +19,9 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class ReplaceInCommandBlocksCommand {
 
+	// Matches the limit vanilla's command block editor enforces on its input
+	private static final int MAX_COMMAND_LENGTH = 32500;
+
 	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("replaceInCommandBlocks")
 			.requires(cs -> cs.hasPermission(2))
@@ -40,6 +43,7 @@ public class ReplaceInCommandBlocksCommand {
 								  String replaceWith) {
 		ServerLevel world = source.getLevel();
 		MutableInt blocks = new MutableInt(0);
+		MutableInt skipped = new MutableInt(0);
 		BlockPos.betweenClosedStream(from, to)
 			.forEach(pos -> {
 				BlockState blockState = world.getBlockState(pos);
@@ -50,12 +54,27 @@ public class ReplaceInCommandBlocksCommand {
 					return;
 				BaseCommandBlock commandBlockLogic = cb.getCommandBlock();
 				String command = commandBlockLogic.getCommand();
+				String replaced = command.replaceAll(toReplace, replaceWith);
+
+				// Without this, a repeating command block replacing a string with a longer string
+				// containing it grows its own command every tick until the game runs out of memory
+				if (replaced.length() > MAX_COMMAND_LENGTH) {
+					skipped.increment();
+					return;
+				}
+
 				if (command.indexOf(toReplace) != -1)
 					blocks.increment();
-				commandBlockLogic.setCommand(command.replaceAll(toReplace, replaceWith));
+				commandBlockLogic.setCommand(replaced);
 				cb.setChanged();
 				world.sendBlockUpdated(pos, blockState, blockState, 2);
 			});
+		int skippedValue = skipped.intValue();
+		if (skippedValue > 0)
+			source.sendSuccess(() -> {
+				return Component.literal("Skipped " + skippedValue + " blocks, their command would have exceeded "
+					+ MAX_COMMAND_LENGTH + " characters.");
+			}, true);
 		int intValue = blocks.intValue();
 		if (intValue == 0) {
 			source.sendSuccess(() -> {
