@@ -2,10 +2,10 @@ package com.simibubi.create;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -32,7 +32,9 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 
 public class AllSoundEvents {
 
-	public static final Map<ResourceLocation, SoundEntry> ALL = new HashMap<>();
+	// Add-ons publish into this map from their own mod constructors, which FML runs in
+	// parallel with Create's, so iteration in prepare() must tolerate concurrent writes
+	public static final Map<ResourceLocation, SoundEntry> ALL = new ConcurrentHashMap<>();
 
 	public static final SoundEntry
 		SCHEMATICANNON_LAUNCH_BLOCK = create("schematicannon_launch_block").subtitle("Schematicannon fires")
