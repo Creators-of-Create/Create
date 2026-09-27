@@ -21,6 +21,10 @@ import net.minecraft.world.item.DyeColor;
 
 public class AllPartialModels {
 
+	@Deprecated
+	///@deprecated Use {@link AllPartialModels#VALVE_HANDLES.get(Create.asResource("copper_valve_handle")}
+	public static final PartialModel VALVE_HANDLE = block("valve_handle");
+
 	public static final PartialModel
 
 	SCHEMATICANNON_CONNECTOR = block("schematicannon/connector"), SCHEMATICANNON_PIPE = block("schematicannon/pipe"),
@@ -42,7 +46,6 @@ public class AllPartialModels {
 
 		ENCASED_FAN_INNER = block("encased_fan/propeller"), HAND_CRANK_HANDLE = block("hand_crank/handle"),
 		HAND_CRANK_BASE = block("hand_crank/block"),
-//		VALVE_HANDLE = block("valve_handle"),
 		MECHANICAL_PRESS_HEAD = block("mechanical_press/head"), MECHANICAL_MIXER_POLE = block("mechanical_mixer/pole"),
 		MECHANICAL_MIXER_HEAD = block("mechanical_mixer/head"),
 		MECHANICAL_CRAFTER_LID = block("mechanical_crafter/lid"),
