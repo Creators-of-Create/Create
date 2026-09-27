@@ -19,9 +19,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 
+import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
+
 public class AllPartialModels {
 
-	@Deprecated
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
+	@Deprecated(since = "6.0.12", forRemoval = true)
 	///@deprecated Use {@link AllPartialModels#VALVE_HANDLES.get(Create.asResource("copper_valve_handle")}
 	public static final PartialModel VALVE_HANDLE = block("valve_handle");
 
