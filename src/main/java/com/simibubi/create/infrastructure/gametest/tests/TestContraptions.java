@@ -10,7 +10,6 @@ import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.bearing.MechanicalBearingBlockEntity;
 import com.simibubi.create.content.contraptions.elevator.ElevatorPulleyBlockEntity;
 import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGearshiftBlock;
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour;
 import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
 import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
@@ -197,12 +196,15 @@ public class TestContraptions {
 
 	@GameTest(template = "rope_pulley_light_blocks", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void ropePulleyLightBlocks(CreateGameTestHelper helper) {
-		BlockPos motor = new BlockPos(0, 12, 1);
-		helper.runAtTickTime(1, () -> helper.getBehavior(motor, ScrollValueBehaviour.TYPE).setValue(128));
-		helper.runAtTickTime(80, () -> helper.getBehavior(motor, ScrollValueBehaviour.TYPE).setValue(0));
+		BlockPos lever = new BlockPos(1, 9, 1);
+		BlockPos rope = new BlockPos(2, 5, 1);
+		BlockPos plank = new BlockPos(2, 2, 1);
+		helper.pullLever(lever);
 		helper.succeedWhen(() -> {
-			helper.assertBlockPresent(AllBlocks.ROPE.get(), new BlockPos(1, 7, 1));
-			helper.assertBlockPresent(Blocks.OAK_PLANKS, new BlockPos(1, 2, 1));
+			helper.assertSecondsPassed(5);
+			helper.powerLever(lever); // disassemble contraption
+			helper.assertBlockPresent(AllBlocks.ROPE.get(), rope);
+			helper.assertBlockPresent(Blocks.OAK_PLANKS, plank);
 		});
 	}
 
