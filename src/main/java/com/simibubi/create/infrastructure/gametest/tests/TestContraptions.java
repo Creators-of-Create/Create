@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.bearing.MechanicalBearingBlockEntity;
 import com.simibubi.create.content.contraptions.elevator.ElevatorPulleyBlockEntity;
 import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGearshiftBlock;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour;
 import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
 import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
@@ -191,6 +192,17 @@ public class TestContraptions {
 				// all done, disassemble
 				helper.getBlockEntity(AllBlockEntityTypes.ELEVATOR_PULLEY.get(), pulley).clicked();
 			}
+		});
+	}
+
+	@GameTest(template = "rope_pulley_light_blocks", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
+	public static void ropePulleyLightBlocks(CreateGameTestHelper helper) {
+		BlockPos motor = new BlockPos(0, 12, 1);
+		helper.runAtTickTime(1, () -> helper.getBehavior(motor, ScrollValueBehaviour.TYPE).setValue(128));
+		helper.runAtTickTime(80, () -> helper.getBehavior(motor, ScrollValueBehaviour.TYPE).setValue(0));
+		helper.succeedWhen(() -> {
+			helper.assertBlockPresent(AllBlocks.ROPE.get(), new BlockPos(1, 7, 1));
+			helper.assertBlockPresent(Blocks.OAK_PLANKS, new BlockPos(1, 2, 1));
 		});
 	}
 
