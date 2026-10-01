@@ -37,11 +37,11 @@ public record RadialWrenchMenuSubmitPacket(BlockPos blockPos, BlockState newStat
 		if (!oldState.is(newState.getBlock()))
 			return;
 
-		if (RadialWrenchMenu.BLOCK_BLACKLIST.contains(RegisteredObjectsHelper.getKeyOrThrow(newState.getBlock())))
+		if (RadialWrenchRegistry.BLOCK_BLACKLIST.contains(RegisteredObjectsHelper.getKeyOrThrow(newState.getBlock())))
 			return;
 
 		for (Property<?> p : oldState.getProperties())
-			if (oldState.getValue(p) != newState.getValue(p) && !RadialWrenchMenu.VALID_PROPERTIES.containsKey(p))
+			if (oldState.getValue(p) != newState.getValue(p) && !RadialWrenchRegistry.VALID_PROPERTIES.containsKey(p))
 				return;
 
 		BlockState updatedState = Block.updateFromNeighbourShapes(newState, level, blockPos);
