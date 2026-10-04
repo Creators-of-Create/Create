@@ -358,14 +358,7 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 	}
 
 	private static int getPower(Level level, BlockState state, BlockPos pos) {
-		int power = 0;
-		for (Direction direction : Iterate.directions)
-			power = Math.max(level.getSignal(pos.relative(direction), direction), power);
-		for (Direction direction : Iterate.directions) {
-			if (state.getValue(FACING).getOpposite() != direction)
-				power = Math.max(level.getSignal(pos.relative(direction), Direction.UP), power);
-		}
-		return power;
+		return level.getBestNeighborSignal(pos);
 	}
 
 	@Override
