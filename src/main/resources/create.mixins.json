@@ -52,6 +52,8 @@
     "datafixer.V1460Mixin"
   ],
   "client": [
+    "client.SubMenuConfigScreenMixin",
+    "client.ConfigScreenListMixin",
     "accessor.AgeableListModelAccessor",
     "accessor.EntityRenderDispatcherAccessor",
     "accessor.FontAccessor",
