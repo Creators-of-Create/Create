@@ -63,6 +63,7 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 	}
 
 	public void transmit(int strength) {
+		if(transmittedSignal == strength) return;
 		transmittedSignal = strength;
 		if (link != null)
 			link.notifySignalChange();
