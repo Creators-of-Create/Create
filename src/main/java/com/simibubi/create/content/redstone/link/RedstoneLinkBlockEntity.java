@@ -2,10 +2,6 @@ package com.simibubi.create.content.redstone.link;
 
 import java.util.List;
 
-import net.minecraft.core.HolderLookup;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelSupportBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -14,9 +10,12 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 
@@ -71,6 +70,10 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		if (hasLevel() && !getLevel().isClientSide && !initialized) {
+			initialize();
+		}
+
 		compound.putBoolean("Transmitter", transmitter);
 		compound.putInt("Receive", getSignal());
 		compound.putBoolean("ReceivedChanged", receivedSignalChanged);
@@ -83,6 +86,10 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 		transmitter = compound.getBoolean("Transmitter");
 		super.read(compound, registries, clientPacket);
 
+		if (hasLevel() && !getLevel().isClientSide && !initialized) {
+			initialize();
+		}
+
 		signal = compound.getInt("Receive");
 		receivedSignalChanged = compound.getBoolean("ReceivedChanged");
 		if (level == null || level.isClientSide || !link.newPosition)
@@ -91,7 +98,7 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void tick() {
-		super.tick();
+		//super.tick();
 
 		if (isTransmitterBlock() != transmitter) {
 			transmitter = isTransmitterBlock();
