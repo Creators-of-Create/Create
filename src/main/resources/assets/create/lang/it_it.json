@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Mostra impostazioni stampante",
   "create.gui.schematicannon.slot.gunpowder": "Aggiungi polvere da sparo per alimentare il cannone",
   "create.gui.schematicannon.slot.listPrinter": "Piazza qui un libro o un blocco note per stampare la lista di materiali richiesti dal progetto",
-  "create.gui.schematicannon.slot.schematic": "Aggiungi qui il tuo progetto. Assicurati che sia piazzato in una posizione specifica.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Aggiungi qui il tuo progetto. Assicurati che sia piazzato in una posizione specifica.",
   "create.gui.schematicannon.title": "Spara-progetti",
   "create.gui.scrollInput.defaultTitle": "Scegli un'opzione:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Scorri per regolare il valore",

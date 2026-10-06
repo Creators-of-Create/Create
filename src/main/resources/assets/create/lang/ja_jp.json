@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "プリンターの設定を表示する",
   "create.gui.schematicannon.slot.gunpowder": "火薬を燃料として概略図砲に入れてください。",
   "create.gui.schematicannon.slot.listPrinter": "クリップボードか本をここに入れると概略図の材料チェックリストを印刷します。",
-  "create.gui.schematicannon.slot.schematic": "概略図をここに入れてください。特定の場所に配置されていることを確認してください。",
+  "create.gui.schematicannon.slot.schematicEnabled": "概略図をここに入れてください。特定の場所に配置されていることを確認してください。",
   "create.gui.schematicannon.title": "概略図砲",
   "create.gui.scrollInput.defaultTitle": "オプションを選択:",
   "create.gui.scrollInput.scrollToAdjustAmount": "スクロールして調整",

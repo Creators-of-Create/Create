@@ -487,7 +487,8 @@
 
 	"create.gui.schematicannon.slot.gunpowder": "Add gunpowder to fuel the cannon",
 	"create.gui.schematicannon.slot.listPrinter": "Place a Clipboard or Book here to print a Checklist for your Schematic",
-	"create.gui.schematicannon.slot.schematic": "Add your Schematic here. Make sure it is deployed at a specific location.",
+  "create.gui.schematicannon.slot.schematicDisabled": "The cannon can hold only one Schematic. Remove the Schematic on the other slot.",
+	"create.gui.schematicannon.slot.schematicEnabled": "Add your Schematic here. Make sure it is deployed at a specific location.",
 
 	"create.gui.schematicannon.option.skipMissing.description": "If the cannon cannot find a required Block for placement, it will continue at the next Location.",
 	"create.gui.schematicannon.option.skipBlockEntities.description": "The cannon will avoid replacing data holding blocks such as Chests.",
@@ -1008,7 +1009,6 @@
 	"create.track_signal.cannot_change_mode": "Unable to switch mode of this Signal",
 	"create.track_signal.mode_change.entry_signal": "-> Allow passage if section unoccupied",
 	"create.track_signal.mode_change.cross_signal": "-> Allow passage if section fully traversable",
-	"create.track_signal.mode_controlled_by_computer": "Signal mode is controlled by computer",
 
 	"create.contraption.controls.start_controlling": "Now controlling: %1$s",
 	"create.contraption.controls.stop_controlling": "Stopped controlling contraption",
@@ -1262,9 +1262,7 @@
 	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up",
 	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world",
 
-  "enchantment.create.capacity": "Capacity",
 	"enchantment.create.capacity.desc": "Increases Backtank air capacity.",
-  "enchantment.create.potato_recovery": "Potato Recovery",
 	"enchantment.create.potato_recovery.desc": "Potato Cannon projectiles have a chance to be reused.",
 
 	"create.bogey.style.updated_style": "Updated style",

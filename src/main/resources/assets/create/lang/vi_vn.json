@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Hiện cài đặt in",
   "create.gui.schematicannon.slot.gunpowder": "Thêm bột thuốc súng để nạp nhiên liệu cho pháo",
   "create.gui.schematicannon.slot.listPrinter": "Đặt Bảng nhớ hoặc Sách ở đây để in ra Danh sách vật phẩm cho Sơ đồ",
-  "create.gui.schematicannon.slot.schematic": "Đặt Sơ đồ ở đây. Chắc chắn rằng nó đã được đặt vị trí.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Đặt Sơ đồ ở đây. Chắc chắn rằng nó đã được đặt vị trí.",
   "create.gui.schematicannon.title": "Pháo xây dựng",
   "create.gui.scrollInput.defaultTitle": "Chọn:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Cuộn để thay đổi số lượng",

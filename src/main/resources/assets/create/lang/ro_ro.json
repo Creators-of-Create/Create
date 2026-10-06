@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Afișează setări imprimantă",
   "create.gui.schematicannon.slot.gunpowder": "Adaugă praf de pușcă pentru a alimenta tunul",
   "create.gui.schematicannon.slot.listPrinter": "Plasează un clipboard sau o carte aici pentru a tipări o listă de verificare pentru schema ta",
-  "create.gui.schematicannon.slot.schematic": "Adaugă schema aici. Asigură-te că este amplasată la o locație specifică.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Adaugă schema aici. Asigură-te că este amplasată la o locație specifică.",
   "create.gui.schematicannon.title": "Tun de schemă",
   "create.gui.scrollInput.defaultTitle": "Alege o opțiune:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Derulează pentru a regla cantitatea",

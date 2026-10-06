@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Zeige Drucker Einstellungen",
   "create.gui.schematicannon.slot.gunpowder": "Füge Schwarzpulver hinzu um die Kanone zu betreiben",
   "create.gui.schematicannon.slot.listPrinter": "Platzieren Sie ein Klemmbrett oder Buch hier, um eine Checkliste für Ihr Schema auszudrucken",
-  "create.gui.schematicannon.slot.schematic": "Füge Bauplan hier hinzu. Stelle sicher dass er an einer spezifischen Position bereitgestellt wird.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Füge Bauplan hier hinzu. Stelle sicher dass er an einer spezifischen Position bereitgestellt wird.",
   "create.gui.schematicannon.title": "Bauplankanone",
   "create.gui.scrollInput.defaultTitle": "Wähle eine Option:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Mausrad um Betrag anzupassen",

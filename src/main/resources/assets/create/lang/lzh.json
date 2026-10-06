@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "示炮置設",
   "create.gui.schematicannon.slot.gunpowder": "添火藥以為炮之用",
   "create.gui.schematicannon.slot.listPrinter": "置錄事板或書冊於此，以印營造式樣之物帳",
-  "create.gui.schematicannon.slot.schematic": "置君之營造式樣於此。務使其已部署於特定之位",
+  "create.gui.schematicannon.slot.schematicEnabled": "置君之營造式樣於此。務使其已部署於特定之位",
   "create.gui.schematicannon.title": "營造砲",
   "create.gui.scrollInput.defaultTitle": "請擇其一：",
   "create.gui.scrollInput.scrollToAdjustAmount": "滾輪以調其數",

@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Show Thrutcher Settings",
   "create.gui.schematicannon.slot.gunpowder": "Eke gundust to fire the greatgun",
   "create.gui.schematicannon.slot.listPrinter": "Lay a Shearboard or Book here to thrutch a Ticklist for your Buildsheet",
-  "create.gui.schematicannon.slot.schematic": "Eke your Buildsheet here. Make wis it is stelled at an outright stow.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Eke your Buildsheet here. Make wis it is stelled at an outright stow.",
   "create.gui.schematicannon.title": "Buildsheet Greatgun",
   "create.gui.scrollInput.defaultTitle": "Choose a Kire:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Shrithe to Tweak Deal",

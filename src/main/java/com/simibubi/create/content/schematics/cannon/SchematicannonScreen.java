@@ -45,7 +45,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 	private final String _slotGunpowder = "gui.schematicannon.slot.gunpowder";
 	private final String _slotListPrinter = "gui.schematicannon.slot.listPrinter";
-	private final String _slotSchematic = "gui.schematicannon.slot.schematic";
+	private final String _slotSchematicEnabled = "gui.schematicannon.slot.schematicEnabled";
+	private final String _slotSchematicDisabled = "gui.schematicannon.slot.schematicDisabled";
 
 	private final Component optionEnabled = CreateLang.translateDirect("gui.schematicannon.optionEnabled");
 	private final Component optionDisabled = CreateLang.translateDirect("gui.schematicannon.optionDisabled");
@@ -356,10 +357,12 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		}
 
 		if (hoveredSlot != null && !hoveredSlot.hasItem()) {
-			if (hoveredSlot.index == 0)
+			if (hoveredSlot.index == 0) {
+				boolean enabled = be.inventory.getStackInSlot(1).isEmpty();
 				graphics.renderComponentTooltip(font,
-					TooltipHelper.cutTextComponent(CreateLang.translateDirect(_slotSchematic), Palette.GRAY_AND_BLUE), mouseX,
-					mouseY);
+					TooltipHelper.cutTextComponent(CreateLang.translateDirect(enabled ? _slotSchematicEnabled :_slotSchematicDisabled),
+							Palette.GRAY_AND_BLUE), mouseX, mouseY);
+				}
 			if (hoveredSlot.index == 2)
 				graphics.renderComponentTooltip(font,
 					TooltipHelper.cutTextComponent(CreateLang.translateDirect(_slotListPrinter), Palette.GRAY_AND_BLUE),

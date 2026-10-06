@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Show Printer Settings",
   "create.gui.schematicannon.slot.gunpowder": "Add gunpowder to fuel the cannon",
   "create.gui.schematicannon.slot.listPrinter": "Place a Clipboard or Book here to print a Checklist for your Schematic",
-  "create.gui.schematicannon.slot.schematic": "Add your Schematic here. Make sure it is deployed at a specific location.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Add your Schematic here. Make sure it is deployed at a specific location.",
   "create.gui.schematicannon.title": "Schematicannon",
   "create.gui.scrollInput.defaultTitle": "Choose an Option:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Scroll to Adjust Amount",

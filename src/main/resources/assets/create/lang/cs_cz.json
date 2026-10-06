@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Zobrazit nastavení tiskárny",
   "create.gui.schematicannon.slot.gunpowder": "Přidejte do děla střelný prach",
   "create.gui.schematicannon.slot.listPrinter": "Umístěte zde psací podložku nebo knihu k vytisknutí kontrolního seznamu vašich schémat",
-  "create.gui.schematicannon.slot.schematic": "Sem přidejte své schéma. Ujistěte se, že je nastaveno na konkrétním místě.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Sem přidejte své schéma. Ujistěte se, že je nastaveno na konkrétním místě.",
   "create.gui.schematicannon.title": "Schématikanón",
   "create.gui.scrollInput.defaultTitle": "Vyber možnost:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Posouváním kolečkem nastavíte množství",

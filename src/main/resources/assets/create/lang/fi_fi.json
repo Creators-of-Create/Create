@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Näytä tulostimen asetukset",
   "create.gui.schematicannon.slot.gunpowder": "Lisää ruuti tykin polttoaineeksi",
   "create.gui.schematicannon.slot.listPrinter": "Aseta tehtävälista tai kirja tähän tulostaaksesi tehtävälistan pohjapiirrustustasi varten",
-  "create.gui.schematicannon.slot.schematic": "Aseta pohjapiirrustuksesi tähän. Varmista, että se on asetettu tiettyyn paikkaan.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Aseta pohjapiirrustuksesi tähän. Varmista, että se on asetettu tiettyyn paikkaan.",
   "create.gui.schematicannon.title": "Piirroskanuuna",
   "create.gui.scrollInput.defaultTitle": "Valitse vaihtoehto:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Vieritä muuttaaksesi määrää",

@@ -1269,7 +1269,7 @@
   "create.gui.schematicannon.showOptions": "הצג את הגדרות המדפסת",
   "create.gui.schematicannon.slot.gunpowder": "הוסף אבקת שריפה כדי לתדלק את התותח",
   "create.gui.schematicannon.slot.listPrinter": "הנח לוח או ספר כדי להדפיס רשימה עבור השרטוט שלך",
-  "create.gui.schematicannon.slot.schematic": "הוסף את הסכמטיקות שלך כאן. ודא שהוא פרוס במקום ספציפי.",
+  "create.gui.schematicannon.slot.schematicEnabled": "הוסף את הסכמטיקות שלך כאן. ודא שהוא פרוס במקום ספציפי.",
   "create.gui.schematicannon.title": "שרטותותח",
   "create.gui.scrollInput.defaultTitle": "בחר אפשרות:",
   "create.gui.scrollInput.scrollToAdjustAmount": "גלול אל התאם כמות",

@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "顯示藍圖加農炮設定",
   "create.gui.schematicannon.slot.gunpowder": "向藍圖加農炮裝填火藥以提供動力",
   "create.gui.schematicannon.slot.listPrinter": "在此處放置剪貼板或書以列印藍圖所需的材料清單",
-  "create.gui.schematicannon.slot.schematic": "在此處放置你的藍圖，務必確保其已被部署在特定位置",
+  "create.gui.schematicannon.slot.schematicEnabled": "在此處放置你的藍圖，務必確保其已被部署在特定位置",
   "create.gui.schematicannon.title": "藍圖加農炮",
   "create.gui.scrollInput.defaultTitle": "選擇一個選項：",
   "create.gui.scrollInput.scrollToAdjustAmount": "滾動修改數量",

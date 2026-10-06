@@ -1109,7 +1109,7 @@
   "create.gui.schematicannon.showOptions": "o lukin e nasin ante pi ilo sitelen",
   "create.gui.schematicannon.slot.gunpowder": "ilo pana li wile e ko pi pakala seli",
   "create.gui.schematicannon.slot.listPrinter": "o pana e lipu supa anu lipu suli lon ni. lipu sona pi lipu pali sina li kama pali.",
-  "create.gui.schematicannon.slot.schematic": "o pana e lipu pali sina lon ni. lipu pali o pana lon ma pi wile sina.",
+  "create.gui.schematicannon.slot.schematicEnabled": "o pana e lipu pali sina lon ni. lipu pali o pana lon ma pi wile sina.",
   "create.gui.schematicannon.title": "ilo pali pi lipu pali",
   "create.gui.scrollInput.defaultTitle": "o wile e ante:",
   "create.gui.sequenced_gearshift.instruction.await": "alasa",
