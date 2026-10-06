@@ -21,8 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 
 	private boolean receivedSignalChanged;
-	private int receivedSignal;
-	private int transmittedSignal;
+	private int signal;
 	private LinkBehaviour link;
 	private boolean transmitter;
 
@@ -35,7 +34,7 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(panelSupport = new FactoryPanelSupportBehaviour(this, () -> link != null && link.isListening(),
-			() -> receivedSignal > 0, () -> AllBlocks.REDSTONE_LINK.get()
+			() -> signal > 0, () -> AllBlocks.REDSTONE_LINK.get()
 				.updateTransmittedSignal(getBlockState(), level, worldPosition)));
 	}
 
@@ -49,32 +48,33 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 		Pair<ValueBoxTransform, ValueBoxTransform> slots =
 			ValueBoxTransform.Dual.makeSlots(RedstoneLinkFrequencySlot::new);
 		link = transmitter ? LinkBehaviour.transmitter(this, slots, this::getSignal)
-			: LinkBehaviour.receiver(this, slots, this::setSignal);
+			: LinkBehaviour.receiver(this, slots, this::getSignal, this::setSignal);
 	}
 
 	public int getSignal() {
-		return transmittedSignal;
+		return signal;
 	}
 
 	public void setSignal(int power) {
-		if (receivedSignal != power)
+		if (signal != power)
 			receivedSignalChanged = true;
-		receivedSignal = power;
+		signal = power;
 	}
 
 	public void transmit(int strength) {
-		if(transmittedSignal == strength) return;
-		transmittedSignal = strength;
+		if(signal == strength) return;
+		int oldSignal = signal;
+		signal = strength;
 		if (link != null)
-			link.notifySignalChange();
+			link.notifySignalChange(oldSignal);
 	}
 
 	@Override
 	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putBoolean("Transmitter", transmitter);
-		compound.putInt("Receive", getReceivedSignal());
+		compound.putInt("Receive", getSignal());
 		compound.putBoolean("ReceivedChanged", receivedSignalChanged);
-		compound.putInt("Transmit", transmittedSignal);
+		compound.putInt("Transmit", signal);
 		super.write(compound, registries, clientPacket);
 	}
 
@@ -83,10 +83,10 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 		transmitter = compound.getBoolean("Transmitter");
 		super.read(compound, registries, clientPacket);
 
-		receivedSignal = compound.getInt("Receive");
+		signal = compound.getInt("Receive");
 		receivedSignalChanged = compound.getBoolean("ReceivedChanged");
 		if (level == null || level.isClientSide || !link.newPosition)
-			transmittedSignal = compound.getInt("Transmit");
+			signal = compound.getInt("Transmit");
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 		if (!AllBlocks.REDSTONE_LINK.has(blockState))
 			return;
 
-		if ((getReceivedSignal() > 0) != blockState.getValue(RedstoneLinkBlock.POWERED)) {
+		if ((getSignal() > 0) != blockState.getValue(RedstoneLinkBlock.POWERED)) {
 			receivedSignalChanged = true;
 			level.setBlockAndUpdate(worldPosition, blockState.cycle(RedstoneLinkBlock.POWERED));
 		}
@@ -144,8 +144,12 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 		return !getBlockState().getValue(RedstoneLinkBlock.RECEIVER);
 	}
 
+	/**
+	 * Call {@link RedstoneLinkBlockEntity#getSignal()} instead
+	 */
+	@Deprecated(forRemoval = true)
 	public int getReceivedSignal() {
-		return receivedSignal;
+		return signal;
 	}
 
 }

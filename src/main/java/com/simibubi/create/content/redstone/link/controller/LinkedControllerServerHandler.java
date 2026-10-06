@@ -74,9 +74,9 @@ public class LinkedControllerServerHandler {
 			Create.REDSTONE_LINK_NETWORK_HANDLER.addToNetwork(world, entry);
 			list.add(entry);
 
-			for (IRedstoneLinkable linkable : Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(world, entry))
-				if (linkable instanceof LinkBehaviour lb && lb.isListening())
-					AllAdvancements.LINKED_CONTROLLER.awardTo(world.getPlayerByUUID(uniqueID));
+			if(!Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(world, entry).getReceivers().isEmpty()) {
+				AllAdvancements.LINKED_CONTROLLER.awardTo(world.getPlayerByUUID(uniqueID));
+			}
 		}
 	}
 
@@ -111,6 +111,11 @@ public class LinkedControllerServerHandler {
 
 		@Override
 		public void setReceivedStrength(int power) {
+		}
+
+		@Override
+		public int getReceivedStrength() {
+			return 0;
 		}
 
 		@Override

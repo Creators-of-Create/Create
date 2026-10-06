@@ -3,7 +3,6 @@ package com.simibubi.create.content.redstone.link;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,26 +19,25 @@ import net.minecraft.world.level.LevelAccessor;
 
 public class RedstoneLinkNetworkHandler {
 
-	static final Map<LevelAccessor, Map<Couple<Frequency>, Set<IRedstoneLinkable>>> connections =
-		new IdentityHashMap<>();
+	static final Map<LevelAccessor, Map<Couple<RedstoneLinkNetworkHandler.Frequency>, RedstoneLinkNetwork>> connections = new IdentityHashMap<>();
 
 	public final AtomicInteger globalPowerVersion = new AtomicInteger();
 
 	public static class Frequency {
+
 		public static final Frequency EMPTY = new Frequency(ItemStack.EMPTY);
 		private static final Map<Item, Frequency> simpleFrequencies = new IdentityHashMap<>();
-		private ItemStack stack;
-		private Item item;
-		private int color;
+		final private ItemStack stack;
+		final private Item item;
+		final private int color;
 
 		public static Frequency of(ItemStack stack) {
-			if (stack.isEmpty())
-				return EMPTY;
-			if (stack.getComponents().isEmpty())
-				return simpleFrequencies.computeIfAbsent(stack.getItem(), $ -> new Frequency(stack));
+			if (stack.isEmpty()) return EMPTY;
+			if (stack.getComponents().isEmpty()) return simpleFrequencies.computeIfAbsent(stack.getItem(), $ -> new Frequency(stack));
 			return new Frequency(stack);
 		}
 
+		@SuppressWarnings("DataFlowIssue")
 		private Frequency(ItemStack stack) {
 			this.stack = stack;
 			item = stack.getItem();
@@ -57,105 +55,135 @@ public class RedstoneLinkNetworkHandler {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			return obj instanceof Frequency ? ((Frequency) obj).item == item && ((Frequency) obj).color == color
-				: false;
+			if (this == obj) return true;
+			return obj instanceof Frequency && ((Frequency) obj).item == item && ((Frequency) obj).color == color;
 		}
-
 	}
 
-	public void onLoadWorld(LevelAccessor world) {
+	public void onLoadWorld(final LevelAccessor world) {
 		connections.put(world, new HashMap<>());
-		Create.LOGGER.debug("Prepared Redstone Network Space for " + WorldHelper.getDimensionID(world));
+		Create.LOGGER.debug("Prepared Redstone Network Space for {}", WorldHelper.getDimensionID(world));
 	}
 
-	public void onUnloadWorld(LevelAccessor world) {
+	public void onUnloadWorld(final LevelAccessor world) {
 		connections.remove(world);
-		Create.LOGGER.debug("Removed Redstone Network Space for " + WorldHelper.getDimensionID(world));
+		Create.LOGGER.debug("Removed Redstone Network Space for {}", WorldHelper.getDimensionID(world));
 	}
 
-	public Set<IRedstoneLinkable> getNetworkOf(LevelAccessor world, IRedstoneLinkable actor) {
-		Map<Couple<Frequency>, Set<IRedstoneLinkable>> networksInWorld = networksIn(world);
+	public RedstoneLinkNetwork getNetworkOf(final LevelAccessor world, final IRedstoneLinkable actor) {
+		final Map<Couple<RedstoneLinkNetworkHandler.Frequency>, RedstoneLinkNetwork> networksInWorld = connections.get(world);
 		Couple<Frequency> key = actor.getNetworkKey();
-		if (!networksInWorld.containsKey(key))
-			networksInWorld.put(key, new LinkedHashSet<>());
+		if (!networksInWorld.containsKey(key)) networksInWorld.put(key, new RedstoneLinkNetwork());
 		return networksInWorld.get(key);
 	}
 
-	public void addToNetwork(LevelAccessor world, IRedstoneLinkable actor) {
-		getNetworkOf(world, actor).add(actor);
-		updateNetworkOf(world, actor);
-	}
-
-	public void removeFromNetwork(LevelAccessor world, IRedstoneLinkable actor) {
-		Set<IRedstoneLinkable> network = getNetworkOf(world, actor);
-		network.remove(actor);
-		if (network.isEmpty()) {
-			networksIn(world).remove(actor.getNetworkKey());
-			return;
+	public void addToNetwork(final LevelAccessor world, final IRedstoneLinkable actor) {
+		final RedstoneLinkNetwork network = getNetworkOf(world, actor);
+		if (actor.isListening()) {
+			network.getReceivers().add(actor);
+			updateReceiver(getNetworkOf(world, actor), actor);
+		} else {
+			network.getTransmitters().add(actor);
+			handleTransmitterAdd(getNetworkOf(world, actor), actor);
 		}
-		updateNetworkOf(world, actor);
 	}
 
-	public void updateNetworkOf(LevelAccessor world, IRedstoneLinkable actor) {
-		Set<IRedstoneLinkable> network = getNetworkOf(world, actor);
-		globalPowerVersion.incrementAndGet();
-		int power = 0;
+	public void removeFromNetwork(final LevelAccessor world, final IRedstoneLinkable actor) {
+		final RedstoneLinkNetwork network = getNetworkOf(world, actor);
+		if (actor.isListening()) {
+			network.getReceivers().remove(actor);
+		} else {
+			network.getTransmitters().remove(actor);
+			handleTransmitterRemove(network, actor);
+		}
+	}
 
-		for (Iterator<IRedstoneLinkable> iterator = network.iterator(); iterator.hasNext(); ) {
-			IRedstoneLinkable other = iterator.next();
+	public void transmitterSignalChanged(final LevelAccessor world, final IRedstoneLinkable actor, final int oldSignal) {
+		final int power = actor.getTransmittedStrength();
+		final boolean isIncrease = oldSignal < power;
+		final RedstoneLinkNetwork network = getNetworkOf(world, actor);
+
+		for (Iterator<IRedstoneLinkable> iterator = network.getReceivers().iterator(); iterator.hasNext(); ) {
+			final IRedstoneLinkable other = iterator.next();
 			if (!other.isAlive()) {
 				iterator.remove();
 				continue;
 			}
 
-			if (!withinRange(actor, other))
+			// Receiver is either already receiving a higher or equal signal or wasn't powered by this transmitter to begin with, so we can continue early
+			if ((isIncrease && other.getReceivedStrength() >= power) || (!isIncrease && other.getReceivedStrength() != oldSignal) || !withinRange(actor, other)) {
 				continue;
-
-			if (power < 15)
-				power = Math.max(other.getTransmittedStrength(), power);
+			}
+			updateReceiver(network, other);
 		}
+	}
 
-		if (actor instanceof LinkBehaviour linkBehaviour) {
-			// fix one-to-one loading order problem
-			if (linkBehaviour.isListening()) {
-				linkBehaviour.newPosition = true;
-				linkBehaviour.setReceivedStrength(power);
+	private void updateReceiver(final RedstoneLinkNetwork network, final IRedstoneLinkable actor) {
+		int power = 0;
+		for (Iterator<IRedstoneLinkable> iterator = network.getTransmitters().iterator(); iterator.hasNext(); ) {
+			final IRedstoneLinkable other = iterator.next();
+			if (!other.isAlive()) {
+				iterator.remove();
+				continue;
+			}
+
+			if (!withinRange(actor, other)) continue;
+
+			power = Math.max(other.getTransmittedStrength(), power);
+			if (power >= 15) {
+				break;
 			}
 		}
+		actor.setReceivedStrength(power);
+	}
 
-		for (IRedstoneLinkable other : network) {
-			if (other != actor && other.isListening() && withinRange(actor, other))
-				other.setReceivedStrength(power);
+	private void handleTransmitterAdd(final RedstoneLinkNetwork network, final IRedstoneLinkable actor) {
+		if (actor.getTransmittedStrength() == 0) return;
+		final int power = actor.getTransmittedStrength();
+
+		for (Iterator<IRedstoneLinkable> iterator = network.getReceivers().iterator(); iterator.hasNext(); ) {
+			final IRedstoneLinkable other = iterator.next();
+			if (!other.isAlive()) {
+				iterator.remove();
+				continue;
+			}
+
+			// Receiver already receiving higher or equal strength, so we can continue early
+			if (power <= other.getReceivedStrength() || !withinRange(actor, other)) continue;
+			updateReceiver(network, other);
+		}
+	}
+
+	private void handleTransmitterRemove(final RedstoneLinkNetwork network, final IRedstoneLinkable actor) {
+		if (actor.getTransmittedStrength() == 0) return;
+		final int power = actor.getTransmittedStrength();
+
+		for (Iterator<IRedstoneLinkable> iterator = network.getReceivers().iterator(); iterator.hasNext(); ) {
+			final IRedstoneLinkable other = iterator.next();
+			if (!other.isAlive()) {
+				iterator.remove();
+				continue;
+			}
+
+			// Transmitter was definitely not source, so we can continue early
+			if (power > other.getReceivedStrength() || !withinRange(actor, other)) continue;
+			updateReceiver(network, other);
 		}
 	}
 
 	public static boolean withinRange(IRedstoneLinkable from, IRedstoneLinkable to) {
-		if (from == to)
-			return true;
-		return from.getLocation()
-			.closerThan(to.getLocation(), AllConfigs.server().logistics.linkRange.get());
-	}
-
-	public Map<Couple<Frequency>, Set<IRedstoneLinkable>> networksIn(LevelAccessor world) {
-		if (!connections.containsKey(world)) {
-			Create.LOGGER.warn("Tried to Access unprepared network space of " + WorldHelper.getDimensionID(world));
-			return new HashMap<>();
-		}
-		return connections.get(world);
+		if (from == to) return true;
+		return from.getLocation().closerThan(to.getLocation(), AllConfigs.server().logistics.linkRange.get());
 	}
 
 	public boolean hasAnyLoadedPower(Couple<Frequency> frequency) {
-		for (Map<Couple<Frequency>, Set<IRedstoneLinkable>> map : connections.values()) {
-			Set<IRedstoneLinkable> set = map.get(frequency);
-			if (set == null || set.isEmpty())
-				continue;
-			for (IRedstoneLinkable link : set)
-				if (link.getTransmittedStrength() > 0)
-					return true;
+		for (final Map<Couple<Frequency>, RedstoneLinkNetwork> map : connections.values()) {
+			final Set<IRedstoneLinkable> set = map.get(frequency).getTransmitters();
+			if (set.isEmpty()) continue;
+			for (IRedstoneLinkable link : set) {
+				if (link.getTransmittedStrength() > 0) return true;
+			}
 		}
 		return false;
 	}
-
 }

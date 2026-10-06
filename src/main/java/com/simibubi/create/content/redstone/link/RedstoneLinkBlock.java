@@ -127,7 +127,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 	public int getSignal(BlockState state, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		if (!state.getValue(RECEIVER))
 			return 0;
-		return getBlockEntityOptional(blockAccess, pos).map(RedstoneLinkBlockEntity::getReceivedSignal)
+		return getBlockEntityOptional(blockAccess, pos).map(RedstoneLinkBlockEntity::getSignal)
 			.orElse(0);
 	}
 
