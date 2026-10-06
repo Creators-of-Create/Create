@@ -19,7 +19,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 
-	private boolean receivedSignalChanged;
 	private int signal;
 	private LinkBehaviour link;
 	private boolean transmitter;
@@ -55,17 +54,16 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 	}
 
 	public void setSignal(int power) {
-		if (signal != power)
-			receivedSignalChanged = true;
+		if (signal == power) return;
 		signal = power;
+		updateSelfAndAttached(getBlockState());
 	}
 
 	public void transmit(int strength) {
-		if(signal == strength) return;
+		if (signal == strength) return;
 		int oldSignal = signal;
 		signal = strength;
-		if (link != null)
-			link.notifySignalChange(oldSignal);
+		if (link != null) link.notifySignalChange(oldSignal);
 	}
 
 	@Override
@@ -76,7 +74,6 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 
 		compound.putBoolean("Transmitter", transmitter);
 		compound.putInt("Receive", getSignal());
-		compound.putBoolean("ReceivedChanged", receivedSignalChanged);
 		compound.putInt("Transmit", signal);
 		super.write(compound, registries, clientPacket);
 	}
@@ -91,7 +88,6 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 		}
 
 		signal = compound.getInt("Receive");
-		receivedSignalChanged = compound.getBoolean("ReceivedChanged");
 		if (level == null || level.isClientSide || !link.newPosition)
 			signal = compound.getInt("Transmit");
 	}
@@ -108,24 +104,6 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 			link.copyItemsFrom(prevlink);
 			attachBehaviourLate(link);
 		}
-
-		if (transmitter)
-			return;
-		if (level.isClientSide)
-			return;
-
-		BlockState blockState = getBlockState();
-		if (!AllBlocks.REDSTONE_LINK.has(blockState))
-			return;
-
-		if ((getSignal() > 0) != blockState.getValue(RedstoneLinkBlock.POWERED)) {
-			receivedSignalChanged = true;
-			level.setBlockAndUpdate(worldPosition, blockState.cycle(RedstoneLinkBlock.POWERED));
-		}
-
-		if (receivedSignalChanged) {
-			updateSelfAndAttached(blockState);
-		}
 	}
 
 	@Override
@@ -136,14 +114,14 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 	}
 
 	public void updateSelfAndAttached(BlockState blockState) {
-		Direction attachedFace = blockState.getValue(RedstoneLinkBlock.FACING)
-			.getOpposite();
-		BlockPos attachedPos = worldPosition.relative(attachedFace);
-		level.blockUpdated(worldPosition, level.getBlockState(worldPosition)
-			.getBlock());
-		level.blockUpdated(attachedPos, level.getBlockState(attachedPos)
-			.getBlock());
-		receivedSignalChanged = false;
+		Direction attachedFace = blockState.getValue(RedstoneLinkBlock.FACING).getOpposite();
+		BlockPos attachedPos = this.worldPosition.relative(attachedFace);
+		if ((getSignal() > 0) != blockState.getValue(RedstoneLinkBlock.POWERED)) {
+			level.setBlockAndUpdate(worldPosition, blockState.cycle(RedstoneLinkBlock.POWERED));
+		} else {
+			level.blockUpdated(worldPosition, blockState.getBlock());
+		}
+		level.blockUpdated(attachedPos, level.getBlockState(attachedPos).getBlock());
 		panelSupport.notifyPanels();
 	}
 
