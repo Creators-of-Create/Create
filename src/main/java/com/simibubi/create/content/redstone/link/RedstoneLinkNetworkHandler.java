@@ -81,10 +81,10 @@ public class RedstoneLinkNetworkHandler {
 		final RedstoneLinkNetwork network = getNetworkOf(world, actor);
 		if (actor.isListening()) {
 			network.getReceivers().add(actor);
-			updateReceiver(getNetworkOf(world, actor), actor);
+			updateReceiver(network, actor);
 		} else {
 			network.getTransmitters().add(actor);
-			handleTransmitterAdd(getNetworkOf(world, actor), actor);
+			handleTransmitterAdd(network, actor);
 		}
 	}
 
@@ -166,7 +166,7 @@ public class RedstoneLinkNetworkHandler {
 			}
 
 			// Transmitter was definitely not source, so we can continue early
-			if (power > other.getReceivedStrength() || !withinRange(actor, other)) continue;
+			if (power != other.getReceivedStrength() || !withinRange(actor, other)) continue;
 			updateReceiver(network, other);
 		}
 	}
