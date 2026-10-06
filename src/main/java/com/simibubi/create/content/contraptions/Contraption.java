@@ -8,12 +8,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.SequencedMap;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -143,7 +145,7 @@ public abstract class Contraption {
 	public boolean disassembled;
 
 	// TODO: SoA to reduce map lookups.
-	protected Map<BlockPos, StructureBlockInfo> blocks;
+	protected SequencedMap<BlockPos, StructureBlockInfo> blocks;
 	protected Map<BlockPos, CompoundTag> updateTags;
 	public Object2BooleanMap<BlockPos> isLegacy;
 	protected List<MutablePair<StructureBlockInfo, MovementContext>> actors;
@@ -182,7 +184,7 @@ public abstract class Contraption {
 	protected ContraptionWorld collisionLevel;
 
 	public Contraption() {
-		blocks = new HashMap<>();
+		blocks = new LinkedHashMap<>();
 		updateTags = new HashMap<>();
 		isLegacy = new Object2BooleanArrayMap<>();
 		seats = new ArrayList<>();
@@ -1022,7 +1024,7 @@ public abstract class Contraption {
 			minimisedGlue.add(null);
 
 		for (boolean brittles : Iterate.trueAndFalse) {
-			for (Iterator<StructureBlockInfo> iterator = blocks.values()
+			for (Iterator<StructureBlockInfo> iterator = blocks.reversed().values()
 				.iterator(); iterator.hasNext(); ) {
 				StructureBlockInfo block = iterator.next();
 				if (brittles != BlockMovementChecks.isBrittle(block.state()))
@@ -1070,7 +1072,7 @@ public abstract class Contraption {
 				superglue.add(bb);
 		}
 
-		for (StructureBlockInfo block : blocks.values()) {
+		for (StructureBlockInfo block : blocks.reversed().values()) {
 			BlockPos add = block.pos().offset(anchor)
 				.offset(offset);
 //			if (!shouldUpdateAfterMovement(block))
