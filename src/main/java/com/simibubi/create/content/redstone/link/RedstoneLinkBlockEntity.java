@@ -69,7 +69,9 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 	@Override
 	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		if (hasLevel() && !getLevel().isClientSide && !initialized) {
+			initialized = true;
 			initialize();
+			recreateLink();
 		}
 
 		compound.putBoolean("Transmitter", transmitter);
@@ -84,6 +86,7 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 		super.read(compound, registries, clientPacket);
 
 		if (hasLevel() && !getLevel().isClientSide && !initialized) {
+			initialized = true;
 			initialize();
 		}
 
@@ -92,18 +95,13 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 			signal = compound.getInt("Transmit");
 	}
 
-	@Override
-	public void tick() {
-		//super.tick();
-
-		if (isTransmitterBlock() != transmitter) {
-			transmitter = isTransmitterBlock();
-			LinkBehaviour prevlink = link;
-			removeBehaviour(LinkBehaviour.TYPE);
-			createLink();
-			link.copyItemsFrom(prevlink);
-			attachBehaviourLate(link);
-		}
+	public void recreateLink(){
+		transmitter = isTransmitterBlock();
+		LinkBehaviour prevlink = link;
+		removeBehaviour(LinkBehaviour.TYPE);
+		createLink();
+		link.copyItemsFrom(prevlink);
+		attachBehaviourLate(link);
 	}
 
 	@Override
