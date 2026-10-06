@@ -80,7 +80,9 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	@Override
 	protected void readAdditional(CompoundTag compound, boolean spawnPacket) {
 		super.readAdditional(compound, spawnPacket);
-		if (compound.contains("ControllerRelative"))
+		if (compound.contains("ControllerPos"))
+			controllerPos = NBTHelper.readBlockPos(compound, "ControllerPos");
+		else if (compound.contains("ControllerRelative"))
 			controllerPos = NBTHelper.readBlockPos(compound, "ControllerRelative").offset(blockPosition());
 		if (compound.contains("Axis"))
 			rotationAxis = NBTHelper.readEnum(compound, "Axis", Axis.class);
@@ -90,7 +92,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	@Override
 	protected void writeAdditional(CompoundTag compound, HolderLookup.Provider registries, boolean spawnPacket) {
 		super.writeAdditional(compound, registries, spawnPacket);
-		compound.put("ControllerRelative", NbtUtils.writeBlockPos(controllerPos.subtract(blockPosition())));
+		compound.put("ControllerPos", NbtUtils.writeBlockPos(controllerPos));
 		if (rotationAxis != null)
 			NBTHelper.writeEnum(compound, "Axis", rotationAxis);
 		compound.putFloat("Angle", angle);
