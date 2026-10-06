@@ -18,6 +18,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -156,6 +158,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 			level.setBlock(pos, state.cycle(RECEIVER)
 				.setValue(POWERED, blockPowered), Block.UPDATE_ALL);
 			be.transmit(wasReceiver ? 0 : getPower(level, state, pos));
+			be.recreateLink();
 			return InteractionResult.SUCCESS;
 		});
 	}
@@ -215,4 +218,8 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 		return AllBlockEntityTypes.REDSTONE_LINK.get();
 	}
 
+	@Override
+	public <S extends BlockEntity> BlockEntityTicker<S> getTicker(final Level p_153212_, final BlockState p_153213_, final BlockEntityType<S> p_153214_) {
+		return null;
+	}
 }

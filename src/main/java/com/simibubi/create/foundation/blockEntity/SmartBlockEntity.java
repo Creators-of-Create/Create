@@ -34,7 +34,7 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
 	implements PartialSafeNBT, IInteractionChecker, SpecialBlockEntityItemRequirement, VirtualBlockEntity {
 
 	private final Map<BehaviourType<?>, BlockEntityBehaviour> behaviours = new Reference2ObjectArrayMap<>();
-	private boolean initialized = false;
+	protected boolean initialized = false;
 	private boolean firstNbtRead = true;
 	protected int lazyTickRate;
 	protected int lazyTickCounter;
