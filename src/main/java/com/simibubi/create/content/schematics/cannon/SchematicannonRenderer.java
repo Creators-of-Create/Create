@@ -8,6 +8,8 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForBelt;
 import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForBlockState;
 import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForEntity;
+import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForFluid;
+import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
@@ -181,6 +183,10 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 					.getBlockRenderer()
 					.renderSingleBlock(state, ms, buffer, light, overlay,
 						VirtualRenderHelper.VIRTUAL_DATA, null);
+			} else if (launched instanceof ForFluid fluid) {
+				float scale = .3f;
+				ms.scale(scale, scale, scale);
+				FluidRenderer.renderFluidStream(fluid.fluid, Direction.DOWN, .5f, 1, false, buffer, ms, light);
 			} else if (launched instanceof ForEntity) {
 				// Render the item
 				float scale = 1.2f;

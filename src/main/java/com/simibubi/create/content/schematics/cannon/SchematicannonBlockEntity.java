@@ -1,10 +1,14 @@
 package com.simibubi.create.content.schematics.cannon;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +25,9 @@ import com.simibubi.create.content.kinetics.belt.BeltPart;
 import com.simibubi.create.content.kinetics.belt.BeltSlope;
 import com.simibubi.create.content.kinetics.simpleRelays.AbstractSimpleShaftBlock;
 import com.simibubi.create.content.schematics.SchematicPrinter;
+import com.simibubi.create.content.schematics.SchematicPrinter.PrintStage;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
+import com.simibubi.create.content.schematics.requirement.ItemRequirement.FluidRequirement;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -58,6 +64,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -66,11 +73,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.wrapper.EmptyItemHandler;
@@ -90,14 +103,17 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	// Printer
 	public SchematicPrinter printer;
 	public ItemStack missingItem;
+	public FluidStack missingFluid;
 	public boolean positionNotLoaded;
 	public boolean hasCreativeCrate;
 	private int printerCooldown;
 	private int skipsLeft;
 	private boolean blockSkipped;
+	private boolean waitingForStageBarrier;
 
 	public BlockPos previousTarget;
 	public LinkedHashSet<IItemHandler> attachedInventories;
+	public LinkedHashSet<IFluidHandler> attachedFluidInventories;
 	public List<LaunchedItem> flyingBlocks;
 	public MaterialChecklist checklist;
 
@@ -113,6 +129,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	// Settings
 	public int replaceMode;
 	public boolean skipMissing;
+	public boolean skipMissingFluid;
 	public boolean replaceBlockEntities;
 
 	// Render
@@ -123,6 +140,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		super(type, pos, state);
 		setLazyTickRate(30);
 		attachedInventories = new LinkedHashSet<>();
+		attachedFluidInventories = new LinkedHashSet<>();
 		flyingBlocks = new LinkedList<>();
 		inventory = new SchematicannonInventory(this);
 		statusMsg = "idle";
@@ -135,6 +153,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	public void findInventories() {
 		hasCreativeCrate = false;
 		attachedInventories.clear();
+		attachedFluidInventories.clear();
 		for (Direction facing : Iterate.directions) {
 
 			if (!level.isLoaded(worldPosition.relative(facing)))
@@ -151,6 +170,10 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 					attachedInventories.add(capability);
 				}
 			}
+			IFluidHandler fluidCapability = level.getCapability(Capabilities.FluidHandler.BLOCK,
+				worldPosition.relative(facing), facing.getOpposite());
+			if (fluidCapability != null)
+				attachedFluidInventories.add(fluidCapability);
 		}
 	}
 
@@ -179,12 +202,15 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		if (compound.contains("MissingItem")) {
 			ItemStack.parse(registries, compound.getCompound("MissingItem")).ifPresent(i -> missingItem = i);
 		}
+		missingFluid = FluidStack.parseOptional(registries, compound.getCompound("MissingFluid"));
+		waitingForStageBarrier = compound.getBoolean("WaitingForStageBarrier");
 
 		// Settings
 		SchematicannonOptions options = CatnipCodecUtils.decode(SchematicannonOptions.CODEC, registries, compound.getCompound("Options"))
-			.orElse(new SchematicannonOptions(2, false, false));
+			.orElse(new SchematicannonOptions(2, false, false, false));
 		replaceMode = options.replaceMode;
 		skipMissing = options.skipMissing;
+		skipMissingFluid = options.skipMissingFluid;
 		replaceBlockEntities = options.replaceBlockEntities;
 
 		// Printer & Flying Blocks
@@ -253,9 +279,13 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 
 		if (missingItem != null)
 			compound.put("MissingItem", missingItem.saveOptional(registries));
+		if (missingFluid != null && !missingFluid.isEmpty())
+			compound.put("MissingFluid", missingFluid.saveOptional(registries));
+		compound.putBoolean("WaitingForStageBarrier", waitingForStageBarrier);
 
 		// Settings
-		Tag options = CatnipCodecUtils.encode(SchematicannonOptions.CODEC, registries, new SchematicannonOptions(replaceMode, skipMissing, replaceBlockEntities)).orElseThrow();
+		Tag options = CatnipCodecUtils.encode(SchematicannonOptions.CODEC, registries,
+			new SchematicannonOptions(replaceMode, skipMissing, skipMissingFluid, replaceBlockEntities)).orElseThrow();
 		compound.put("Options", options);
 
 		// Printer & Flying Blocks
@@ -334,7 +364,8 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 			return;
 		}
 
-		if (state == State.PAUSED && !positionNotLoaded && missingItem == null && remainingFuel > 0)
+		if (state == State.PAUSED && !positionNotLoaded && missingItem == null
+			&& (missingFluid == null || missingFluid.isEmpty()) && remainingFuel > 0)
 			return;
 
 		// Initialize Printer
@@ -362,16 +393,31 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 
 		if (hasCreativeCrate) {
 			remainingFuel = 0;
-			if (missingItem != null) {
+			if (missingItem != null || missingFluid != null && !missingFluid.isEmpty()) {
 				missingItem = null;
+				missingFluid = FluidStack.EMPTY;
 				state = State.RUNNING;
 			}
 		}
 
 		// Update Target
-		if (missingItem == null && !positionNotLoaded) {
+		if (waitingForStageBarrier) {
+			if (!flyingBlocks.isEmpty()) {
+				statusMsg = "waitingForStructure";
+				return;
+			}
+			waitingForStageBarrier = false;
+		} else if (missingItem == null && (missingFluid == null || missingFluid.isEmpty()) && !positionNotLoaded) {
+			PrintStage previousStage = printer.getPrintStage();
 			if (!printer.advanceCurrentPos()) {
 				finishedPrinting();
+				return;
+			}
+			if (previousStage != printer.getPrintStage() && printer.getPrintStage() == PrintStage.FREE_FLUIDS
+				&& !flyingBlocks.isEmpty()) {
+				waitingForStageBarrier = true;
+				statusMsg = "waitingForStructure";
+				sendUpdate = true;
 				return;
 			}
 			sendUpdate = true;
@@ -391,7 +437,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		}
 
 		// Get item requirement
-		ItemRequirement requirement = printer.getCurrentRequirement();
+		ItemRequirement requirement = printer.getCurrentRequirement(level);
 		if (requirement.isInvalid() || !printer.shouldPlaceCurrent(level, this::shouldPlace)) {
 			sendUpdate = !statusMsg.equals("searching");
 			statusMsg = "searching";
@@ -399,39 +445,108 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 			return;
 		}
 
-		// Find item
+		// Find resources
 		List<ItemRequirement.StackRequirement> requiredItems = requirement.getRequiredItems();
+		List<FluidRequirement> requiredFluids = requirement.getRequiredFluids();
+		Map<Fluid, Integer> fluidAmounts = new LinkedHashMap<>();
+		for (FluidRequirement required : requiredFluids)
+			fluidAmounts.merge(required.fluid(), required.amount(), Integer::sum);
+		boolean provideFluid = true;
+		for (Map.Entry<Fluid, Integer> required : fluidAmounts.entrySet()) {
+			FluidStack stack = new FluidStack(required.getKey(), required.getValue());
+			if (required.getKey()
+				.getFluidType()
+				.canBePlacedInLevel(level, printer.getCurrentTarget(), stack))
+				continue;
+			if (requirement.isPureFluid()) {
+				statusMsg = "skippingFluid";
+				blockSkipped = true;
+				return;
+			}
+			provideFluid = false;
+		}
 		if (!requirement.isEmpty()) {
+			ItemRequirement.StackRequirement missingItemRequirement = null;
 			for (ItemRequirement.StackRequirement required : requiredItems) {
 				if (!grabItemsFromAttachedInventories(required, true)) {
-					if (skipMissing) {
-						statusMsg = "skipping";
-						blockSkipped = true;
-						if (missingItem != null) {
-							missingItem = null;
-							state = State.RUNNING;
-						}
-						return;
-					}
+					missingItemRequirement = required;
+					break;
+				}
+			}
 
-					missingItem = required.stack;
-					state = State.PAUSED;
-					statusMsg = "missingBlock";
+			if (missingItemRequirement != null) {
+				if (skipMissing) {
+					statusMsg = "skipping";
+					blockSkipped = true;
+					resetMissingState();
 					return;
 				}
+				missingItem = missingItemRequirement.stack;
+				missingFluid = FluidStack.EMPTY;
+				state = State.PAUSED;
+				statusMsg = "missingBlock";
+				return;
+			}
+
+			FluidRequirement missingFluidRequirement = null;
+			if (provideFluid) {
+				for (Map.Entry<Fluid, Integer> required : fluidAmounts.entrySet()) {
+					if (!grabFluidFromAttachedInventories(required.getKey(), required.getValue(), true)) {
+						missingFluidRequirement = new FluidRequirement(required.getKey(), required.getValue());
+						break;
+					}
+				}
+			}
+			if (missingFluidRequirement != null) {
+				if (!skipMissingFluid) {
+					missingItem = null;
+					missingFluid =
+						new FluidStack(missingFluidRequirement.fluid(), missingFluidRequirement.amount());
+					state = State.PAUSED;
+					statusMsg = "missingFluid";
+					return;
+				}
+				if (requirement.isPureFluid()) {
+					statusMsg = "skippingFluid";
+					blockSkipped = true;
+					resetMissingState();
+					return;
+				}
+				provideFluid = false;
 			}
 
 			for (ItemRequirement.StackRequirement required : requiredItems)
 				grabItemsFromAttachedInventories(required, false);
+			if (provideFluid) {
+				for (Map.Entry<Fluid, Integer> required : fluidAmounts.entrySet()) {
+					if (grabFluidFromAttachedInventories(required.getKey(), required.getValue(), false))
+						continue;
+					missingFluid = new FluidStack(required.getKey(), required.getValue());
+					state = State.PAUSED;
+					statusMsg = "missingFluid";
+					return;
+				}
+			}
 		}
 
 		// Success
 		state = State.RUNNING;
 		ItemStack icon = requirement.isEmpty() || requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0).stack;
+		FluidStack fluidPayload = FluidStack.EMPTY;
+		if (provideFluid && !fluidAmounts.isEmpty()) {
+			Map.Entry<Fluid, Integer> firstFluid = fluidAmounts.entrySet()
+				.iterator()
+				.next();
+			fluidPayload = new FluidStack(firstFluid.getKey(), firstFluid.getValue());
+		}
+		FluidStack launchedFluid = fluidPayload;
 		printer.handleCurrentTarget((target, blockState, blockEntity) -> {
 			// Launch block
 			statusMsg = blockState.getBlock() != Blocks.AIR ? "placing" : "clearing";
-			launchBlockOrBelt(target, icon, blockState, blockEntity);
+			if (printer.getPrintStage() == PrintStage.FREE_FLUIDS)
+				launchFluid(target, launchedFluid);
+			else
+				launchBlockOrBelt(target, icon, blockState, blockEntity, launchedFluid);
 		}, (target, entity) -> {
 			// Launch entity
 			statusMsg = "placing";
@@ -442,6 +557,15 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		remainingFuel -= 1;
 		sendUpdate = true;
 		missingItem = null;
+		missingFluid = FluidStack.EMPTY;
+	}
+
+	private void resetMissingState() {
+		if (missingItem != null || missingFluid != null && !missingFluid.isEmpty()) {
+			missingItem = null;
+			missingFluid = FluidStack.EMPTY;
+			state = State.RUNNING;
+		}
 	}
 
 	public int getShotsPerGunpowder() {
@@ -582,6 +706,142 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		return success;
 	}
 
+	protected boolean grabFluidFromAttachedInventories(Fluid fluid, int amount, boolean simulate) {
+		if (hasCreativeCrate)
+			return true;
+		FluidDrainPlan plan = planFluidDrain(fluid, amount);
+		if (plan == null)
+			return false;
+		if (simulate)
+			return true;
+		return executeFluidDrainPlan(plan);
+	}
+
+	@Nullable
+	private FluidDrainPlan planFluidDrain(Fluid fluid, int amount) {
+		attachedFluidInventories.removeIf(Objects::isNull);
+		attachedInventories.removeIf(Objects::isNull);
+		int remaining = amount;
+		List<TankDrain> tankDrains = new ArrayList<>();
+		List<ItemDrain> itemDrains = new ArrayList<>();
+
+		for (IFluidHandler handler : attachedFluidInventories) {
+			for (int tank = 0; tank < handler.getTanks(); tank++) {
+				FluidStack stored = handler.getFluidInTank(tank);
+				if (stored.isEmpty() || !stored.getFluid()
+					.isSame(fluid))
+					continue;
+				FluidStack request = stored.copyWithAmount(Math.min(remaining, stored.getAmount()));
+				FluidStack drained = handler.drain(request, FluidAction.SIMULATE);
+				if (drained.isEmpty() || !FluidStack.isSameFluidSameComponents(request, drained))
+					continue;
+				FluidStack plannedDrain = drained.copyWithAmount(Math.min(remaining, drained.getAmount()));
+				tankDrains.add(new TankDrain(handler, plannedDrain));
+				remaining -= plannedDrain.getAmount();
+				if (remaining == 0)
+					return new FluidDrainPlan(tankDrains, itemDrains);
+			}
+		}
+
+		for (IItemHandler inventory : attachedInventories) {
+			for (int slot = 0; slot < inventory.getSlots(); slot++) {
+				ItemStack inSlot = inventory.getStackInSlot(slot);
+				ItemStack extracted = inventory.extractItem(slot, 1, true);
+				if (extracted.isEmpty())
+					continue;
+				Optional<IFluidHandlerItem> fluidHandler = FluidUtil.getFluidHandler(extracted.copy());
+				if (fluidHandler.isEmpty())
+					continue;
+				FluidStack available = fluidHandler.get()
+					.drain(Integer.MAX_VALUE, FluidAction.SIMULATE);
+				if (available.isEmpty() || !available.getFluid()
+					.isSame(fluid))
+					continue;
+				FluidStack request = available.copyWithAmount(Math.min(remaining, available.getAmount()));
+				FluidStack drained = fluidHandler.get()
+					.drain(request, FluidAction.SIMULATE);
+				if (drained.isEmpty() || !drained.getFluid()
+					.isSame(fluid))
+					continue;
+				int drainAmount = Math.min(remaining, drained.getAmount());
+				fluidHandler.get()
+					.drain(drained.copyWithAmount(drainAmount), FluidAction.EXECUTE);
+				ItemStack resultContainer = fluidHandler.get()
+					.getContainer();
+				if (!canReturnContainer(inventory, slot, inSlot.getCount(), resultContainer))
+					continue;
+				itemDrains.add(new ItemDrain(inventory, slot, drained.copyWithAmount(drainAmount)));
+				remaining -= drainAmount;
+				if (remaining == 0)
+					return new FluidDrainPlan(tankDrains, itemDrains);
+			}
+		}
+
+		return null;
+	}
+
+	private boolean canReturnContainer(IItemHandler source, int sourceSlot, int sourceCount, ItemStack container) {
+		if (container.isEmpty())
+			return true;
+		if (sourceCount == 1 && source.isItemValid(sourceSlot, container)
+			&& container.getCount() <= source.getSlotLimit(sourceSlot))
+			return true;
+		for (IItemHandler inventory : attachedInventories)
+			if (ItemHandlerHelper.insertItem(inventory, container.copy(), true)
+				.isEmpty())
+				return true;
+		return false;
+	}
+
+	private boolean executeFluidDrainPlan(FluidDrainPlan plan) {
+		for (TankDrain planned : plan.tanks()) {
+			FluidStack drained = planned.handler()
+				.drain(planned.fluid(), FluidAction.EXECUTE);
+			if (drained.getAmount() != planned.fluid()
+				.getAmount() || !FluidStack.isSameFluidSameComponents(drained, planned.fluid()))
+				return false;
+		}
+		for (ItemDrain planned : plan.items()) {
+			ItemStack extracted = planned.inventory()
+				.extractItem(planned.slot(), 1, false);
+			Optional<IFluidHandlerItem> fluidHandler = FluidUtil.getFluidHandler(extracted);
+			if (fluidHandler.isEmpty())
+				return false;
+			FluidStack drained = fluidHandler.get()
+				.drain(planned.fluid(), FluidAction.EXECUTE);
+			ItemStack resultContainer = fluidHandler.get()
+				.getContainer();
+			if (drained.getAmount() != planned.fluid()
+				.getAmount() || !FluidStack.isSameFluidSameComponents(drained, planned.fluid())) {
+				insertOrEjectContainer(planned.inventory(), extracted);
+				return false;
+			}
+			insertOrEjectContainer(planned.inventory(), resultContainer);
+		}
+		return true;
+	}
+
+	private void insertOrEjectContainer(IItemHandler preferredInventory, ItemStack container) {
+		if (container.isEmpty())
+			return;
+		ItemStack remainder = ItemHandlerHelper.insertItem(preferredInventory, container, false);
+		for (IItemHandler inventory : attachedInventories) {
+			if (remainder.isEmpty())
+				return;
+			if (inventory == preferredInventory)
+				continue;
+			remainder = ItemHandlerHelper.insertItem(inventory, remainder, false);
+		}
+		if (!remainder.isEmpty())
+			Block.popResource(level, worldPosition.above(), remainder);
+	}
+
+	private record FluidDrainPlan(List<TankDrain> tanks, List<ItemDrain> items) {}
+
+	private record TankDrain(IFluidHandler handler, FluidStack fluid) {}
+
+	private record ItemDrain(IItemHandler inventory, int slot, FluidStack fluid) {}
+
 	public void finishedPrinting() {
 		if (replaceMode == ConfigureSchematicannonPacket.Option.REPLACE_EMPTY.ordinal())
 			printer.sendBlockUpdates(level);
@@ -598,6 +858,8 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	protected void resetPrinter() {
 		printer.resetSchematic();
 		missingItem = null;
+		missingFluid = FluidStack.EMPTY;
+		waitingForStageBarrier = false;
 		sendUpdate = true;
 		schematicProgress = 0;
 		blocksPlaced = 0;
@@ -787,7 +1049,8 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 					.getAxis());
 	}
 
-	protected void launchBlockOrBelt(BlockPos target, ItemStack icon, BlockState blockState, BlockEntity blockEntity) {
+	protected void launchBlockOrBelt(BlockPos target, ItemStack icon, BlockState blockState, BlockEntity blockEntity,
+									 FluidStack containedFluid) {
 		if (AllBlocks.BELT.has(blockState)) {
 			blockState = stripBeltIfNotLast(blockState);
 			if (blockEntity instanceof BeltBlockEntity bbe && AllBlocks.BELT.has(blockState)) {
@@ -808,12 +1071,12 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 				}
 				launchBelt(target, blockState, bbe.beltLength, casings);
 			} else if (blockState != Blocks.AIR.defaultBlockState())
-				launchBlock(target, icon, blockState, null);
+				launchBlock(target, icon, blockState, null, containedFluid);
 			return;
 		}
 
 		CompoundTag data = BlockHelper.prepareBlockEntityData(level, blockState, blockEntity);
-		launchBlock(target, icon, blockState, data);
+		launchBlock(target, icon, blockState, data, containedFluid);
 	}
 
 	protected void launchBelt(BlockPos target, BlockState state, int length, CasingType[] casings) {
@@ -824,9 +1087,21 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	}
 
 	protected void launchBlock(BlockPos target, ItemStack stack, BlockState state, @Nullable CompoundTag data) {
+		launchBlock(target, stack, state, data, FluidStack.EMPTY);
+	}
+
+	protected void launchBlock(BlockPos target, ItemStack stack, BlockState state, @Nullable CompoundTag data,
+							   FluidStack containedFluid) {
 		if (!state.isAir())
 			blocksPlaced++;
-		flyingBlocks.add(new LaunchedItem.ForBlockState(this.getBlockPos(), target, stack, state, data));
+		flyingBlocks.add(
+			new LaunchedItem.ForBlockState(this.getBlockPos(), target, stack, state, data, containedFluid));
+		playFiringSound();
+	}
+
+	protected void launchFluid(BlockPos target, FluidStack fluid) {
+		blocksPlaced++;
+		flyingBlocks.add(new LaunchedItem.ForFluid(this.getBlockPos(), target, fluid));
 		playFiringSound();
 	}
 
@@ -853,6 +1128,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	public void updateChecklist() {
 		checklist.required.clear();
 		checklist.damageRequired.clear();
+		checklist.requiredFluids.clear();
 		checklist.blocksNotLoaded = false;
 
 		if (printer.isLoaded() && !printer.isErrored()) {
@@ -862,6 +1138,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		}
 
 		checklist.gathered.clear();
+		checklist.gatheredFluids.clear();
 		findInventories();
 		for (IItemHandler cap : attachedInventories) {
 			if (cap == null)
@@ -872,7 +1149,13 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 					.isEmpty())
 					continue;
 				checklist.collect(stackInSlot);
+				FluidUtil.getFluidContained(stackInSlot)
+					.ifPresent(fluid -> checklist.collect(fluid.copyWithAmount(fluid.getAmount() * stackInSlot.getCount())));
 			}
+		}
+		for (IFluidHandler handler : attachedFluidInventories) {
+			for (int tank = 0; tank < handler.getTanks(); tank++)
+				checklist.collect(handler.getFluidInTank(tank));
 		}
 		sendUpdate = true;
 	}
@@ -895,32 +1178,37 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	@Override
 	protected void applyImplicitComponents(DataComponentInput componentInput) {
 		SchematicannonOptions options = componentInput.getOrDefault(AllDataComponents.SCHEMATICANNON_OPTIONS,
-				new SchematicannonOptions(2, true, false));
+				new SchematicannonOptions(2, true, false, false));
 		replaceMode = options.replaceMode;
 		skipMissing = options.skipMissing;
+		skipMissingFluid = options.skipMissingFluid;
 		replaceBlockEntities = options.replaceBlockEntities;
 	}
 
 	@Override
 	protected void collectImplicitComponents(Builder components) {
 		components.set(AllDataComponents.SCHEMATICANNON_OPTIONS,
-			new SchematicannonOptions(replaceMode, skipMissing, replaceBlockEntities));
+			new SchematicannonOptions(replaceMode, skipMissing, skipMissingFluid, replaceBlockEntities));
 	}
 
 	public enum State {
 		STOPPED, PAUSED, RUNNING;
 	}
 
-	public record SchematicannonOptions(int replaceMode, boolean skipMissing, boolean replaceBlockEntities) {
+	public record SchematicannonOptions(int replaceMode, boolean skipMissing, boolean skipMissingFluid,
+										boolean replaceBlockEntities) {
 		public static final Codec<SchematicannonOptions> CODEC = RecordCodecBuilder.create(i -> i.group(
 				Codec.INT.fieldOf("replace_mode").forGetter(SchematicannonOptions::replaceMode),
 				Codec.BOOL.fieldOf("skip_missing").forGetter(SchematicannonOptions::skipMissing),
+				Codec.BOOL.optionalFieldOf("skip_missing_fluid", false)
+					.forGetter(SchematicannonOptions::skipMissingFluid),
 				Codec.BOOL.fieldOf("replace_block_entities").forGetter(SchematicannonOptions::replaceBlockEntities)
 		).apply(i, SchematicannonOptions::new));
 
 		public static final StreamCodec<ByteBuf, SchematicannonOptions> STREAM_CODEC = StreamCodec.composite(
 				ByteBufCodecs.INT, SchematicannonOptions::replaceMode,
 				ByteBufCodecs.BOOL, SchematicannonOptions::skipMissing,
+				ByteBufCodecs.BOOL, SchematicannonOptions::skipMissingFluid,
 				ByteBufCodecs.BOOL, SchematicannonOptions::replaceBlockEntities,
 				SchematicannonOptions::new
 		);

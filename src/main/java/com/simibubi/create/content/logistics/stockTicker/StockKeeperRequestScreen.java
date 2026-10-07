@@ -85,6 +85,9 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.phys.AABB;
 
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+
 public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockKeeperRequestMenu> {
 	public static class CategoryEntry {
 		boolean hidden;
@@ -176,7 +179,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			boolean anyItems = false;
 			for (List<ClipboardEntry> list : clipboardItem)
 				for (ClipboardEntry entry : list)
-					if (!entry.icon.isEmpty()) {
+					if (!entry.isIconEmpty()) {
 						anyItems = true;
 						break;
 					}
@@ -1530,11 +1533,40 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		InventorySummary availableItems = blockEntity.getLastClientsideStockSnapshotAsSummary();
 		for (List<ClipboardEntry> list : clipboardItem) {
 			for (ClipboardEntry entry : list) {
-				ItemStack stack = entry.icon;
-				int toOrder = Math.min(entry.itemAmount, availableItems.getCountOf(stack));
-				if (toOrder == 0)
+				Optional<ItemStack> itemIcon = entry.icon.left()
+					.filter(stack -> !stack.isEmpty());
+				if (itemIcon.isPresent()) {
+					ItemStack stack = itemIcon.get();
+					int toOrder = Math.min(entry.itemAmount, availableItems.getCountOf(stack));
+					if (toOrder > 0)
+						itemsToOrder.add(new BigItemStack(stack, toOrder));
 					continue;
-				itemsToOrder.add(new BigItemStack(stack, toOrder));
+				}
+				entry.icon.right()
+					.filter(fluid -> !fluid.isEmpty())
+					.ifPresent(fluid -> {
+						long remaining = entry.itemAmount;
+						for (BigItemStack available : availableItems.getStacksByCount()) {
+							if (remaining <= 0)
+								break;
+
+							ItemStack container = available.stack.copyWithCount(1);
+							FluidStack contained = FluidUtil.getFluidContained(container)
+								.orElse(FluidStack.EMPTY);
+							if (contained.isEmpty() || !contained.getFluid()
+								.isSame(fluid.getFluid()))
+								continue;
+
+							int amountPerContainer = contained.getAmount();
+							long containersNeeded = (remaining + amountPerContainer - 1L) / amountPerContainer;
+							int toOrder = (int) Math.min(containersNeeded, available.count);
+							if (toOrder <= 0)
+								continue;
+
+							itemsToOrder.add(new BigItemStack(container, toOrder));
+							remaining -= (long) amountPerContainer * toOrder;
+						}
+					});
 			}
 		}
 	}

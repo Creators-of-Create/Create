@@ -19,15 +19,21 @@ import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.network.Filterable;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.WrittenBookContent;
+import net.minecraft.world.level.material.Fluid;
+
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
 
 public class MaterialChecklist {
 
@@ -37,6 +43,8 @@ public class MaterialChecklist {
 	public Object2IntMap<Item> gathered = new Object2IntArrayMap<>();
 	public Object2IntMap<Item> required = new Object2IntArrayMap<>();
 	public Object2IntMap<Item> damageRequired = new Object2IntArrayMap<>();
+	public Object2IntMap<Fluid> gatheredFluids = new Object2IntArrayMap<>();
+	public Object2IntMap<Fluid> requiredFluids = new Object2IntArrayMap<>();
 	public boolean blocksNotLoaded;
 
 	public void warnBlockNotLoaded() {
@@ -55,6 +63,8 @@ public class MaterialChecklist {
 			if (stack.usage == ItemUseType.CONSUME)
 				putOrIncrement(required, stack.stack);
 		}
+		for (ItemRequirement.FluidRequirement fluid : requirement.getRequiredFluids())
+			requiredFluids.put(fluid.fluid(), requiredFluids.getOrDefault(fluid.fluid(), 0) + fluid.amount());
 	}
 
 	private void putOrIncrement(Object2IntMap<Item> map, ItemStack stack) {
@@ -74,6 +84,13 @@ public class MaterialChecklist {
 				gathered.put(item, gathered.getInt(item) + stack.getCount());
 			else
 				gathered.put(item, stack.getCount());
+	}
+
+	public void collect(FluidStack stack) {
+		Fluid fluid = stack.getFluid();
+		if (!requiredFluids.containsKey(fluid))
+			return;
+		gatheredFluids.put(fluid, gatheredFluids.getOrDefault(fluid, 0) + stack.getAmount());
 	}
 
 	public ItemStack createWrittenBook() {
@@ -126,6 +143,24 @@ public class MaterialChecklist {
 			textComponent.append(entry(new ItemStack(item), amount, true, true));
 		}
 
+		List<Fluid> completedFluids = new ArrayList<>();
+		for (Fluid fluid : sortedFluids()) {
+			int amount = requiredFluids.getInt(fluid) - gatheredFluids.getOrDefault(fluid, 0);
+			if (amount <= 0) {
+				completedFluids.add(fluid);
+				continue;
+			}
+			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
+				itemsWritten = 0;
+				textComponent.append(Component.literal("\n >>>")
+					.withStyle(ChatFormatting.BLUE));
+				pages.add(Filterable.passThrough(textComponent));
+				textComponent = Component.empty();
+			}
+			itemsWritten++;
+			textComponent.append(fluidEntry(fluid, amount, true, true));
+		}
+
 		for (Item item : completed) {
 			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
 				itemsWritten = 0;
@@ -137,6 +172,18 @@ public class MaterialChecklist {
 
 			itemsWritten++;
 			textComponent.append(entry(new ItemStack(item), getRequiredAmount(item), false, true));
+		}
+
+		for (Fluid fluid : completedFluids) {
+			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
+				itemsWritten = 0;
+				textComponent.append(Component.literal("\n >>>")
+					.withStyle(ChatFormatting.DARK_GREEN));
+				pages.add(Filterable.passThrough(textComponent));
+				textComponent = Component.empty();
+			}
+			itemsWritten++;
+			textComponent.append(fluidEntry(fluid, requiredFluids.getInt(fluid), false, true));
 		}
 
 		pages.add(Filterable.passThrough(textComponent));
@@ -204,6 +251,25 @@ public class MaterialChecklist {
 				.displayItem(new ItemStack(item), amount));
 		}
 
+		List<Fluid> completedFluids = new ArrayList<>();
+		for (Fluid fluid : sortedFluids()) {
+			int amount = requiredFluids.getInt(fluid) - gatheredFluids.getOrDefault(fluid, 0);
+			if (amount <= 0) {
+				completedFluids.add(fluid);
+				continue;
+			}
+			if (itemsWritten == MAX_ENTRIES_PER_CLIPBOARD_PAGE) {
+				itemsWritten = 0;
+				currentPage.add(new ClipboardEntry(false, Component.literal(">>>")
+					.withStyle(ChatFormatting.DARK_GRAY)));
+				pages.add(currentPage);
+				currentPage = new ArrayList<>();
+			}
+			itemsWritten++;
+			currentPage.add(new ClipboardEntry(false, fluidEntry(fluid, amount, true, false))
+				.displayItem(new FluidStack(fluid, FluidType.BUCKET_VOLUME), amount));
+		}
+
 		for (Item item : completed) {
 			if (itemsWritten == MAX_ENTRIES_PER_CLIPBOARD_PAGE) {
 				itemsWritten = 0;
@@ -216,6 +282,20 @@ public class MaterialChecklist {
 			itemsWritten++;
 			currentPage.add(new ClipboardEntry(true, entry(new ItemStack(item), getRequiredAmount(item), false, false))
 				.displayItem(new ItemStack(item), 0));
+		}
+
+		for (Fluid fluid : completedFluids) {
+			if (itemsWritten == MAX_ENTRIES_PER_CLIPBOARD_PAGE) {
+				itemsWritten = 0;
+				currentPage.add(new ClipboardEntry(true, Component.literal(">>>")
+					.withStyle(ChatFormatting.DARK_GREEN)));
+				pages.add(currentPage);
+				currentPage = new ArrayList<>();
+			}
+			itemsWritten++;
+			currentPage.add(new ClipboardEntry(true,
+				fluidEntry(fluid, requiredFluids.getInt(fluid), false, false))
+				.displayItem(new FluidStack(fluid, FluidType.BUCKET_VOLUME), 0));
 		}
 
 		pages.add(currentPage);
@@ -249,6 +329,43 @@ public class MaterialChecklist {
 		return tc.append(Component.literal("\n" + " x" + amount)
 			.withStyle(ChatFormatting.BLACK))
 			.append(Component.literal(" | " + stacks + "\u25A4 +" + remainder + (forBook ? "\n" : ""))
+				.withStyle(ChatFormatting.GRAY));
+	}
+
+	private List<Fluid> sortedFluids() {
+		List<Fluid> fluids = new ArrayList<>(requiredFluids.keySet());
+		fluids.sort((first, second) -> first.getFluidType()
+			.getDescription()
+			.getString()
+			.compareToIgnoreCase(second.getFluidType()
+				.getDescription()
+				.getString()));
+		return fluids;
+	}
+
+	private MutableComponent fluidEntry(Fluid fluid, int amount, boolean unfinished, boolean forBook) {
+		ResourceLocation id = BuiltInRegistries.FLUID.getKey(fluid);
+		MutableComponent name = fluid.getFluidType()
+			.getDescription()
+			.copy()
+			.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+				fluid.getFluidType()
+					.getDescription()
+					.copy()
+					.append("\n")
+					.append(Component.literal(id.toString())
+						.withStyle(ChatFormatting.DARK_GRAY)))));
+		MutableComponent text = Component.empty()
+			.append(name);
+		if (!unfinished && forBook)
+			text.append(" \u2714");
+		if (!unfinished || forBook)
+			text.withStyle(unfinished ? ChatFormatting.BLUE : ChatFormatting.DARK_GREEN);
+		int buckets = amount / FluidType.BUCKET_VOLUME;
+		int remainder = amount % FluidType.BUCKET_VOLUME;
+		return text.append(Component.literal("\n x" + amount + " mB")
+				.withStyle(ChatFormatting.BLACK))
+			.append(Component.literal(" | " + buckets + " B +" + remainder + " mB" + (forBook ? "\n" : ""))
 				.withStyle(ChatFormatting.GRAY));
 	}
 

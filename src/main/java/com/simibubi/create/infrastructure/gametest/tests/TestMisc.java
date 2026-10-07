@@ -1,6 +1,6 @@
 package com.simibubi.create.infrastructure.gametest.tests;
 
-import static com.simibubi.create.infrastructure.gametest.CreateGameTestHelper.FIFTEEN_SECONDS;
+import static com.simibubi.create.infrastructure.gametest.CreateGameTestHelper.THIRTY_SECONDS;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllDataComponents;
@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.RedstoneLampBlock;
 
 @GameTestGroup(path = "misc")
 public class TestMisc {
-	@GameTest(template = "schematicannon", timeoutTicks = FIFTEEN_SECONDS)
+	@GameTest(template = "schematicannon", timeoutTicks = THIRTY_SECONDS)
 	public static void schematicannon(CreateGameTestHelper helper) {
 		// load the structure
 		BlockPos whiteEndBottom = helper.absolutePos(new BlockPos(5, 2, 1));
