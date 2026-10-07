@@ -130,6 +130,7 @@ public class AllTags {
 
 		CORALS,
 		SOLID_CROPS,
+		WATER_WHEEL_PLANKS,
 
 		SLIMY_LOGS(TIC),
 		NON_DOUBLE_DOOR(QUARK),
