@@ -164,7 +164,7 @@ public class FluidHelper {
 			FluidStack fluid = capability.getFluidInTank(i);
 			if (fluid.isEmpty())
 				continue;
-			int requiredAmountForItem = GenericItemFilling.getRequiredAmountForItem(world, heldItem, fluid.copy());
+			int requiredAmountForItem = GenericItemFilling.getRequiredAmountForItem(world, heldItem.copyWithCount(1), fluid.copy());
 			if (requiredAmountForItem == -1)
 				continue;
 			if (requiredAmountForItem > fluid.getAmount())
