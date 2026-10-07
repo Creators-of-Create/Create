@@ -28,6 +28,7 @@ import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -59,7 +60,8 @@ public class DepotBehaviour extends BlockEntityBehaviour implements Clearable {
 
 	public DepotBehaviour(SmartBlockEntity be) {
 		super(be);
-		maxStackSize = () -> heldItem != null ? heldItem.stack.getMaxStackSize() : 64;
+		maxStackSize = () -> heldItem != null ?
+			heldItem.stack.getOrDefault(DataComponents.MAX_STACK_SIZE, 64) : 64;
 		canAcceptItems = () -> true;
 		canFunnelsPullFrom = $ -> true;
 		acceptedItems = $ -> true;
@@ -273,8 +275,8 @@ public class DepotBehaviour extends BlockEntityBehaviour implements Clearable {
 		int cumulativeStackSize = getPresentStackSize();
 		for (TransportedItemStack transportedItemStack : incoming)
 			cumulativeStackSize += transportedItemStack.stack.getCount();
-		int fromGetter =
-			Math.min(maxStackSize.get() == 0 ? 64 : maxStackSize.get(), getHeldItemStack().getMaxStackSize());
+		int fromGetter = Math.min(maxStackSize.get() == 0 ? 64 : maxStackSize.get(),
+			getHeldItemStack().getOrDefault(DataComponents.MAX_STACK_SIZE, 64));
 		return (fromGetter) - cumulativeStackSize;
 	}
 
