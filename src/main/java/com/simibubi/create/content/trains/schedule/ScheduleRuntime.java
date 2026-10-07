@@ -57,7 +57,9 @@ public class ScheduleRuntime {
 	public boolean displayLinkUpdateRequested;
 
 	private static final int INTERVAL = 40;
+	private static final int MAX_NAVIGATION_RETRY_INTERVAL = INTERVAL * 8;
 	private int cooldown;
+	private int consecutiveNavigationFailures;
 
 	public ScheduleRuntime(Train train) {
 		this.train = train;
@@ -66,6 +68,14 @@ public class ScheduleRuntime {
 
 	public void startCooldown() {
 		cooldown = INTERVAL;
+		consecutiveNavigationFailures = 0;
+	}
+
+	public void startNavigationFailureCooldown() {
+		int retryInterval = INTERVAL << Math.min(consecutiveNavigationFailures, 3);
+		int retryJitter = Math.floorMod(train.id.hashCode(), INTERVAL);
+		cooldown = Math.min(retryInterval, MAX_NAVIGATION_RETRY_INTERVAL) + retryJitter;
+		consecutiveNavigationFailures = Math.min(consecutiveNavigationFailures + 1, 3);
 	}
 
 	public void destinationReached() {
@@ -128,6 +138,7 @@ public class ScheduleRuntime {
 		if (nextPath == null)
 			return;
 
+		consecutiveNavigationFailures = 0;
 		train.status.successfulNavigation();
 		if (nextPath.destination == train.getCurrentStation()) {
 			state = State.IN_TRANSIT;
@@ -230,6 +241,8 @@ public class ScheduleRuntime {
 		conditionProgress = new ArrayList<>();
 		conditionContext = new ArrayList<>();
 		predictionTicks = new ArrayList<>();
+		cooldown = 0;
+		consecutiveNavigationFailures = 0;
 	}
 
 	public Collection<TrainDeparturePrediction> submitPredictions() {
