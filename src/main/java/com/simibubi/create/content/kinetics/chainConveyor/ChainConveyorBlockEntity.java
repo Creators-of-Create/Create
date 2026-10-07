@@ -89,7 +89,17 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 
 	@Override
 	protected AABB createRenderBoundingBox() {
-		return new AABB(worldPosition).inflate(connections.isEmpty() ? 3 : 64);
+		if (connections.isEmpty())
+			return new AABB(worldPosition).inflate(3);
+
+		Vec3 origin = Vec3.atLowerCornerOf(worldPosition);
+		AABB bounds = new AABB(origin, origin);
+		boolean reversed = getSpeed() < 0;
+		for (BlockPos connection : connections) {
+			ConnectionStats stats = calculateConnectionStats(connection, worldPosition, reversed);
+			bounds = bounds.minmax(new AABB(stats.start(), stats.end()));
+		}
+		return bounds.inflate(3);
 	}
 
 	@Override
@@ -487,12 +497,11 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 		physicsData.yaw = AngleHelper.angleLerp(.25, physicsData.yaw, box.yaw);
 	}
 
-	private void calculateConnectionStats(BlockPos connection) {
-		boolean reversed = getSpeed() < 0;
+	static ConnectionStats calculateConnectionStats(BlockPos connection, BlockPos worldPosition, boolean reversed) {
 		float offBranchDistance = 35f;
 		float direction = Mth.RAD_TO_DEG * (float) Mth.atan2(connection.getX(), connection.getZ());
-		float angle = wrapAngle(direction - offBranchDistance * (reversed ? -1 : 1));
-		float oppositeAngle = wrapAngle(angle + 180 + 2 * offBranchDistance * (reversed ? -1 : 1));
+		float angle = normalizeAngle(direction - offBranchDistance * (reversed ? -1 : 1));
+		float oppositeAngle = normalizeAngle(angle + 180 + 2 * offBranchDistance * (reversed ? -1 : 1));
 
 		Vec3 start = Vec3.atBottomCenterOf(worldPosition)
 			.add(VecHelper.rotate(new Vec3(0, 0, 1.25), angle, Axis.Y))
@@ -503,7 +512,12 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 			.add(0, 6 / 16f, 0);
 
 		float length = (float) start.distanceTo(end);
-		connectionStats.put(connection, new ConnectionStats(angle, length, start, end));
+		return new ConnectionStats(angle, length, start, end);
+	}
+
+	private void calculateConnectionStats(BlockPos connection) {
+		boolean reversed = getSpeed() < 0;
+		connectionStats.put(connection, calculateConnectionStats(connection, worldPosition, reversed));
 	}
 
 	public boolean addConnectionTo(BlockPos target) {
@@ -723,6 +737,10 @@ public class ChainConveyorBlockEntity extends KineticBlockEntity implements Tran
 	}
 
 	public float wrapAngle(float angle) {
+		return normalizeAngle(angle);
+	}
+
+	private static float normalizeAngle(float angle) {
 		angle %= 360;
 		if (angle < 0)
 			angle += 360;
