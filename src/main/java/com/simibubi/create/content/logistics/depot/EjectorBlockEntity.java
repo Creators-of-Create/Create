@@ -9,6 +9,10 @@ import org.jetbrains.annotations.Nullable;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.api.behaviour.transport.DirectItemInsertion;
+import com.simibubi.create.api.behaviour.transport.DirectItemReceiver.Context;
+import com.simibubi.create.api.behaviour.transport.DirectItemReceiver.Result;
+import com.simibubi.create.api.behaviour.transport.DirectItemReceiver.Status;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
@@ -433,13 +437,13 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 			}
 		}
 
-		DirectBeltInputBehaviour targetOpenInv = getTargetOpenInv();
-
 		// Do not eject if target cannot accept held item
-		if (targetOpenInv != null && depotBehaviour.heldItem != null
-			&& targetOpenInv.handleInsertion(held, Direction.UP, true)
-				.getCount() == held.getCount())
-			return;
+		if (depotBehaviour.heldItem != null) {
+			float totalTime = Math.max(3, (float) launcher.getTotalFlyingTicks());
+			Result result = insertAtTarget(held, getLaunchedItemLocation(totalTime), true);
+			if (result.status() == Status.REJECT)
+				return;
+		}
 
 		activate();
 		notifyUpdate();
@@ -451,17 +455,15 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 		if (intAttached.getSecond() == trackedItem)
 			trackedItem = null;
 
-		DirectBeltInputBehaviour targetOpenInv = getTargetOpenInv();
-		if (targetOpenInv != null) {
-			ItemStack remainder = targetOpenInv.handleInsertion(intAttached.getValue(), Direction.UP, false);
-			intAttached.setSecond(remainder);
-		}
+		Vec3 ejectVec = earlyTarget != null ? earlyTarget.getFirst() : getLaunchedItemLocation(maxTime);
+		Result result = insertAtTarget(intAttached.getValue(), ejectVec, false);
+		if (result.status() == Status.ACCEPT)
+			intAttached.setSecond(result.remainder());
 
 		if (intAttached.getValue()
 			.isEmpty())
 			return;
 
-		Vec3 ejectVec = earlyTarget != null ? earlyTarget.getFirst() : getLaunchedItemLocation(maxTime);
 		Vec3 ejectMotionVec = getLaunchedItemMotion(maxTime);
 		ItemEntity item = new ItemEntity(level, ejectVec.x, ejectVec.y, ejectVec.z, intAttached.getValue());
 		item.setDeltaMovement(ejectMotionVec);
@@ -470,10 +472,19 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 	}
 
 	public DirectBeltInputBehaviour getTargetOpenInv() {
-		BlockPos targetPos = earlyTarget != null ? earlyTarget.getSecond()
+		return BlockEntityBehaviour.get(level, getInsertionTargetPosition(), DirectBeltInputBehaviour.TYPE);
+	}
+
+	protected Result insertAtTarget(ItemStack stack, Vec3 location, boolean simulate) {
+		BlockPos targetPos = getInsertionTargetPosition();
+		Context context = new Context(level, targetPos, location, Direction.UP, this);
+		return DirectItemInsertion.tryInsert(context, stack, simulate);
+	}
+
+	protected BlockPos getInsertionTargetPosition() {
+		return earlyTarget != null ? earlyTarget.getSecond()
 			: worldPosition.above(launcher.getVerticalDistance())
 				.relative(getFacing(), Math.max(1, launcher.getHorizontalDistance()));
-		return BlockEntityBehaviour.get(level, targetPos, DirectBeltInputBehaviour.TYPE);
 	}
 
 	public Vec3 getLaunchedItemLocation(float time) {
