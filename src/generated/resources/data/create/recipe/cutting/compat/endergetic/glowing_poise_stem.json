@@ -8,12 +8,7 @@
   "type": "create:cutting",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "endergetic:glowing_poise_stem"
-        }
-      ]
+      "item": "endergetic:glowing_poise_stem"
     }
   ],
   "processing_time": 50,

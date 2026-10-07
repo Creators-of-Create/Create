@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:crocus"
-        }
-      ]
+      "item": "biomeswevegone:crocus"
     }
   ],
   "processing_time": 50,

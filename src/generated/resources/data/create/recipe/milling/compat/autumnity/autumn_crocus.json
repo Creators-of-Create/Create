@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "autumnity:autumn_crocus"
-        }
-      ]
+      "item": "autumnity:autumn_crocus"
     }
   ],
   "processing_time": 50,

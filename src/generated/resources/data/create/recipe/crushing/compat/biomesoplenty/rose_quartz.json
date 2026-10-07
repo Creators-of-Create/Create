@@ -8,12 +8,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomesoplenty:rose_quartz_cluster"
-        }
-      ]
+      "item": "biomesoplenty:rose_quartz_cluster"
     }
   ],
   "processing_time": 150,

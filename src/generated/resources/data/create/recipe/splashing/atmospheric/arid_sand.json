@@ -8,12 +8,7 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "atmospheric:arid_sand"
-        }
-      ]
+      "item": "atmospheric:arid_sand"
     }
   ],
   "results": [

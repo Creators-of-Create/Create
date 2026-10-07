@@ -252,13 +252,10 @@ public class CreateRegistrateTags {
 		ArrayList<String> toReturn = new ArrayList<>();
 		toReturn.add(material + "_block");
 		toReturn.add(material + "_stairs");
-		toReturn.add(material + "_slab");
 		toReturn.add("smooth_" + material);
 		toReturn.add("smooth_" + material + "_stairs");
-		toReturn.add("smooth_" + material + "_slab");
 		toReturn.add(material + "_bricks");
 		toReturn.add(material + "_brick_stairs");
-		toReturn.add(material + "_brick_slab");
 		toReturn.add("chiseled_" + material);
 		return toReturn;
 	}

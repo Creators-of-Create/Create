@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "atmospheric:arid_sandstone"
-        }
-      ]
+      "item": "atmospheric:arid_sandstone"
     }
   ],
   "processing_time": 150,

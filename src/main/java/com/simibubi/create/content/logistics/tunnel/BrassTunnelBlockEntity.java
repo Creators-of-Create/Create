@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.simibubi.create.foundation.mixin.accessor.ItemStackHandlerAccessor;
 import net.minecraft.world.Clearable;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
@@ -739,7 +738,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 
 	@Override
 	public void clearContent() {
-		((ItemStackHandlerAccessor) tunnelCapability).create$getStacks().clear();
+		((BrassTunnelItemHandler) tunnelCapability).clearContent();
 	}
 
 	@Override

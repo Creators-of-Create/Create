@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:winter_cyclamen"
-        }
-      ]
+      "item": "biomeswevegone:winter_cyclamen"
     }
   ],
   "processing_time": 50,

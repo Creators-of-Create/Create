@@ -8,12 +8,7 @@
   "type": "create:pressing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:lush_dirt"
-        }
-      ]
+      "item": "biomeswevegone:lush_dirt"
     }
   ],
   "results": [

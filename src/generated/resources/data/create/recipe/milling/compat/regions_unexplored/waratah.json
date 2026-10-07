@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:waratah"
-        }
-      ]
+      "item": "regions_unexplored:waratah"
     }
   ],
   "processing_time": 50,
