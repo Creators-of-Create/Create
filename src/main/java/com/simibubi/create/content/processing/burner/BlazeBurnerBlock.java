@@ -36,6 +36,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FlintAndSteelItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
@@ -154,6 +155,16 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
 				if (level.isClientSide)
 					return ItemInteractionResult.SUCCESS;
 				stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
+				level.setBlockAndUpdate(pos, AllBlocks.LIT_BLAZE_BURNER.getDefaultState());
+				return ItemInteractionResult.SUCCESS;
+			}
+			if (stack.is(Items.FIRE_CHARGE)) {
+				level.playSound(player,pos,SoundEvents.FIRECHARGE_USE,SoundSource.BLOCKS,1.0f,(level.random.nextFloat() - level.random.nextFloat()) * 0.2F + 1.0F);
+				if (level.isClientSide)
+					return ItemInteractionResult.SUCCESS;
+                if (player == null || !player.isCreative()) {
+                    stack.shrink(1);
+                }
 				level.setBlockAndUpdate(pos, AllBlocks.LIT_BLAZE_BURNER.getDefaultState());
 				return ItemInteractionResult.SUCCESS;
 			}
