@@ -8,12 +8,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "silentgems:heliodor_ore"
-        }
-      ]
+      "item": "silentgems:heliodor_ore"
     }
   ],
   "processing_time": 350,

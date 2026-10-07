@@ -8,12 +8,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:peat_dirt"
-        }
-      ]
+      "item": "regions_unexplored:peat_dirt"
     },
     {
       "type": "neoforge:single",

@@ -8,12 +8,7 @@
   "type": "create:cutting",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "atmospheric:crustose_wood"
-        }
-      ]
+      "item": "atmospheric:crustose_wood"
     }
   ],
   "processing_time": 50,

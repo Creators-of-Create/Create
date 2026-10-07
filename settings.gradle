@@ -16,4 +16,4 @@ if (file("Ponder").exists()) {
     }
 }
 
-rootProject.name = "Create"
+rootProject.name = "$mod_id-$minecraft_version"

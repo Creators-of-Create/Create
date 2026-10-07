@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.mixin;
 
 import java.util.function.BiFunction;
 
+import com.simibubi.create.content.equipment.clipboard.ClipboardBlockItem;
+
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -14,8 +16,6 @@ import com.simibubi.create.content.equipment.clipboard.ClipboardContent;
 
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.PatchedDataComponentMap;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
@@ -23,12 +23,9 @@ import net.minecraft.world.level.ItemLike;
 @Deprecated(since = "6.0.7", forRemoval = true)
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
-	@Unique
-	private static final ResourceLocation create$CLIPBOARD_ID = ResourceLocation.fromNamespaceAndPath("create", "clipboard");
-
 	@Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;verifyComponentsAfterLoad(Lnet/minecraft/world/item/ItemStack;)V"))
 	private void create$migrateOldClipboardComponents(ItemLike item, int count, PatchedDataComponentMap components, CallbackInfo ci) {
-		if (!BuiltInRegistries.ITEM.getKey(item.asItem()).equals(create$CLIPBOARD_ID))
+		if (!(item.asItem() instanceof ClipboardBlockItem) || components.isPatchEmpty() || components.has(AllDataComponents.CLIPBOARD_CONTENT))
 			return;
 
 		ClipboardContent content = ClipboardContent.EMPTY;

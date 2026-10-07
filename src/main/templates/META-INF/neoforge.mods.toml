@@ -9,7 +9,6 @@ modId = "${mod_id}"
 version = "${mod_version}"
 displayName = "${mod_name}"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/create"
-updateJSONURL = "https://api.modrinth.com/updates/create/forge_updates.json?neoforge=only"
 logoFile = "icon.png"
 authors = "${mod_author}"
 description = '''${mod_description}'''

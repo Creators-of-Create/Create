@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "environmental:bird_of_paradise"
-        }
-      ]
+      "item": "environmental:bird_of_paradise"
     }
   ],
   "processing_time": 50,

@@ -9,6 +9,7 @@ Create 6.0.10
     - Sync only from Recipe Viewers
     - Sync only to Recipe Viewers
     - Sync from and to Recipe Viewers
+- Add keybinds for ctrl, shift and alt modifiers #10187
 
 #### Optimizations
 
@@ -36,6 +37,28 @@ Create 6.0.10
 - Fix VirtualRenderWorld not marking block entities as removed #9821
 - Fix rendered items in stockkeeper screens not having the correct count on the item itself #9403
 - Fix dough being tagged incorrectly #9831
+- Fix players using lectern controllers with their feet height rather than their eye height #9922
+- Fix the count of filtering behaviours being set to 1 when the item has been removed #9777
+- Fix schedules not stacking after copy #9886
+- Fix mechanical mixers that are mixing at a slower than required speed still playing an animation and continuing to mix #6249
+- Fix threshold switches detecting the wrong amount of items for chutes, smart chutes #9488
+- Fix basins not spawning fluid particles #9808
+- Fix exception in displaylink computercraft-api, when setting the cursor position to negative value #9984
+- Fix ItemStackMixin trying to migrate clipboard components on all item stacks
+- Fix fluid crashes by ensuring cache is only called when valid #10016
+- Fix harvesters harvesting vanilla mushrooms on rich soil #9940
+- Fix rendering jitter when walking ontop of belts and depots #9931
+- Fix items disappearing during belt transfers when chunks unload #9882
+- Fix outdated environmental compat #4710 #7301
+- Fix hand crank rotation visuals #8828
+- Fix outdated BWG/Silent Gems compat #9500
+- Fix placed clipboards causing a crash when you are too far away from the block #10185
+- Fix multiple create blocks and entities not respecting block and entity reach attributes
+
+#### API Changes
+
+- Add seats tags #9907
+- Add Plough blacklist and whitelist tags #7162
 
 ------------------------------------------------------
 Create 6.0.9

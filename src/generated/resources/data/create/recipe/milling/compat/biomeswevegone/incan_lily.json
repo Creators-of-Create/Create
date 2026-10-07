@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:incan_lily"
-        }
-      ]
+      "item": "biomeswevegone:incan_lily"
     }
   ],
   "processing_time": 50,

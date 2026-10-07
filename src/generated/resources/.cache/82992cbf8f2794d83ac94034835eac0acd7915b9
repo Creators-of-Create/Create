@@ -1,4 +1,4 @@
-// 1.21.1	2026-03-01T00:30:11.9425136	Create's Standard Recipes
+// 1.21.1	2026-03-24T14:39:21.4588957	Create's Standard Recipes
 489f0a3e3d8571c4897f49eada95a23290a472dc data/create/advancement/recipes/combat/crafting/appliances/netherite_backtank.json
 b024ae44179c47b9be8fa35acc763c22b7b01b2e data/create/advancement/recipes/combat/crafting/appliances/netherite_backtank_from_netherite.json
 41d2909fcf45f9098c0ee306810c16168d4e8ae4 data/create/advancement/recipes/combat/crafting/appliances/netherite_diving_boots.json
@@ -396,7 +396,7 @@ edd8c96cf678e73311fc2ec014955717f6f53f0e data/create/recipe/crafting/kinetics/la
 1ae9597208cabc0d81a342841f4aab2c9fd13073 data/create/recipe/crafting/kinetics/linear_chassis_from_conversion.json
 858fa718c4a0a7bae1d5980fd373a69b8df3bea1 data/create/recipe/crafting/kinetics/mechanical_arm.json
 bcdf958dd6d49aff2d9c80c00753a754cebdf89e data/create/recipe/crafting/kinetics/mechanical_bearing.json
-6f9c9679f1cca7887ee479714f3f614b7b2ae507 data/create/recipe/crafting/kinetics/mechanical_crafter.json
+741c0d7444599bd7f974529c0a132cafa5967f83 data/create/recipe/crafting/kinetics/mechanical_crafter.json
 4bb1abfbc2a62b4b5e1ecaa526042eb742834f0d data/create/recipe/crafting/kinetics/mechanical_drill.json
 9be89f9077035420bbc87fe1052abc3e6e0f81f3 data/create/recipe/crafting/kinetics/mechanical_harvester.json
 cd7e6aa0b650ea867b4ec091090e86eab2c321a5 data/create/recipe/crafting/kinetics/mechanical_mixer.json

@@ -26,7 +26,7 @@ public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntit
 		Level world = player.level();
 		if (!world.isLoaded(this.pos))
 			return;
-		if (!this.pos.closerThan(player.blockPosition(), maxRange()))
+		if (!player.canInteractWithBlock(this.pos, maxRange()))
 			return;
 		BlockEntity blockEntity = world.getBlockEntity(this.pos);
 		if (blockEntity instanceof SyncedBlockEntity) {

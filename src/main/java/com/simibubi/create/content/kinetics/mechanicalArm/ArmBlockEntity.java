@@ -3,6 +3,8 @@ package com.simibubi.create.content.kinetics.mechanicalArm;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.world.Clearable;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.Create;
@@ -51,7 +53,7 @@ import net.minecraft.world.level.chunk.ChunkSource;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class ArmBlockEntity extends KineticBlockEntity implements TransformableBlockEntity {
+public class ArmBlockEntity extends KineticBlockEntity implements TransformableBlockEntity, Clearable {
 
 	// Server
 	List<ArmInteractionPoint> inputs;
@@ -655,6 +657,11 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
 		public String getTranslationKey() {
 			return translationKey;
 		}
+	}
+
+	@Override
+	public void clearContent() {
+		heldItem = ItemStack.EMPTY;
 	}
 
 	private static class Client {

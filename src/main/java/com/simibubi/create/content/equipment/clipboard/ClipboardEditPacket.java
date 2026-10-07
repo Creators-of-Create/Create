@@ -37,7 +37,7 @@ public record ClipboardEditPacket(int hotbarSlot, @Nullable ClipboardContent cli
 			Level world = sender.level();
 			if (!world.isLoaded(targetedBlock))
 				return;
-			if (!targetedBlock.closerThan(sender.blockPosition(), 20))
+			if (!sender.canInteractWithBlock(targetedBlock, 20))
 				return;
 			if (world.getBlockEntity(targetedBlock) instanceof ClipboardBlockEntity cbe) {
 				PatchedDataComponentMap map = new PatchedDataComponentMap(cbe.components());

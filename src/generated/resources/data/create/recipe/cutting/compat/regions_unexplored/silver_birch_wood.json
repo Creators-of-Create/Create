@@ -8,12 +8,7 @@
   "type": "create:cutting",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:silver_birch_wood"
-        }
-      ]
+      "item": "regions_unexplored:silver_birch_wood"
     }
   ],
   "processing_time": 50,
