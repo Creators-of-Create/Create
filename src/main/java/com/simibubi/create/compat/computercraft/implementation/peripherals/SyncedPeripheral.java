@@ -55,6 +55,12 @@ public abstract class SyncedPeripheral<T extends SmartBlockEntity> implements IP
 		CatnipServices.NETWORK.sendToAllClients(new AttachedComputerPacket(blockEntity.getBlockPos(), hasAttachedComputer));
 	}
 
+	@NotNull
+	@Override
+	public Object getTarget() {
+		return blockEntity;
+	}
+
 	@Override
 	public boolean equals(@Nullable IPeripheral other) {
 		return this == other;
