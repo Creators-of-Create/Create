@@ -30,6 +30,7 @@ public class FactoryPanelConfigurationPacket extends BlockEntityConfigurationPac
 		ByteBufCodecs.BOOL, packet -> packet.clearPromises,
 		ByteBufCodecs.BOOL, packet -> packet.reset,
 		ByteBufCodecs.BOOL, packet -> packet.redstoneReset,
+		ByteBufCodecs.INT, packet -> packet.craft_time,
 		FactoryPanelConfigurationPacket::new
 	);
 
@@ -43,11 +44,12 @@ public class FactoryPanelConfigurationPacket extends BlockEntityConfigurationPac
 	private final boolean clearPromises;
 	private final boolean reset;
 	private final boolean redstoneReset;
+	private final int craft_time;
 
 	public FactoryPanelConfigurationPacket(FactoryPanelPosition position, String address,
 		Map<FactoryPanelPosition, Integer> inputAmounts, List<ItemStack> craftingArrangement, int outputAmount,
 		int promiseClearingInterval, @Nullable FactoryPanelPosition removeConnection, boolean clearPromises,
-		boolean reset, boolean sendRedstoneReset) {
+		boolean reset, boolean sendRedstoneReset, int craft_time) {
 		super(position.pos());
 		this.position = position;
 		this.address = address;
@@ -59,6 +61,7 @@ public class FactoryPanelConfigurationPacket extends BlockEntityConfigurationPac
 		this.clearPromises = clearPromises;
 		this.reset = reset;
 		this.redstoneReset = sendRedstoneReset;
+		this.craft_time = craft_time;
 	}
 
 	@Override
@@ -76,6 +79,9 @@ public class FactoryPanelConfigurationPacket extends BlockEntityConfigurationPac
 		behaviour.recipeOutput = reset ? 1 : outputAmount;
 		behaviour.promiseClearingInterval = reset ? -1 : promiseClearingInterval;
 		behaviour.activeCraftingArrangement = reset ? List.of() : craftingArrangement;
+		behaviour.craft_time = craft_time;
+
+
 
 		if (reset) {
 			behaviour.forceClearPromises = true;
