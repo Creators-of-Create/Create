@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import com.simibubi.create.content.trains.track.BezierConnection.BezierPixel;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags;
@@ -367,10 +368,10 @@ public class TrackBlockEntity extends SmartBlockEntity implements TransformableB
 	}
 
 	public void manageFakeTracksAlong(BezierConnection bc, boolean remove) {
-		Map<Pair<Integer, Integer>, Double> yLevels = bc.rasterise();
+		Map<Pair<Integer, Integer>, BezierPixel> bcPixels = bc.rasterise();
 
-		for (Entry<Pair<Integer, Integer>, Double> entry : yLevels.entrySet()) {
-			double yValue = entry.getValue();
+		for (Entry<Pair<Integer, Integer>, BezierPixel> entry : bcPixels.entrySet()) {
+			double yValue = entry.getValue().yLevel;
 			int floor = Mth.floor(yValue);
 			BlockPos targetPos = new BlockPos(entry.getKey()
 				.getFirst(), floor,
