@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "atmospheric:warm_monkey_brush"
-        }
-      ]
+      "item": "atmospheric:warm_monkey_brush"
     }
   ],
   "processing_time": 50,

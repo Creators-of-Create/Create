@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomesoplenty:wildflower"
-        }
-      ]
+      "item": "biomesoplenty:wildflower"
     }
   ],
   "processing_time": 50,

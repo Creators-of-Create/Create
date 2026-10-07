@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:day_lily"
-        }
-      ]
+      "item": "regions_unexplored:day_lily"
     }
   ],
   "processing_time": 50,

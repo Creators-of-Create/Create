@@ -13,7 +13,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 public abstract class MenuBase<T> extends AbstractContainerMenu {
-
 	public Player player;
 	public Inventory playerInventory;
 	public T contentHolder;
@@ -68,8 +67,8 @@ public abstract class MenuBase<T> extends AbstractContainerMenu {
 	public boolean stillValid(Player player) {
 		if (contentHolder == null)
 			return false;
-		if (contentHolder instanceof IInteractionChecker)
-			return ((IInteractionChecker) contentHolder).canPlayerUse(player);
+		if (contentHolder instanceof IInteractionChecker interactionChecker)
+			return interactionChecker.canPlayerUse(player);
 		return true;
 	}
 

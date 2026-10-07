@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomesoplenty:icy_iris"
-        }
-      ]
+      "item": "biomesoplenty:icy_iris"
     }
   ],
   "processing_time": 50,

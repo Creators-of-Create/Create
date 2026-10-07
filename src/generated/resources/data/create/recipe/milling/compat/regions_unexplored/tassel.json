@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:tassel"
-        }
-      ]
+      "item": "regions_unexplored:tassel"
     }
   ],
   "processing_time": 50,

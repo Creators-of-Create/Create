@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "buzzier_bees:pink_clover"
-        }
-      ]
+      "item": "buzzier_bees:pink_clover"
     }
   ],
   "processing_time": 50,

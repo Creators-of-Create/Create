@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.world.Clearable;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
@@ -57,7 +58,7 @@ import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
-public class TableClothBlockEntity extends SmartBlockEntity implements TransformableBlockEntity {
+public class TableClothBlockEntity extends SmartBlockEntity implements TransformableBlockEntity, Clearable {
 
 	public AbstractComputerBehaviour computerBehaviour;
 
@@ -365,6 +366,11 @@ public class TableClothBlockEntity extends SmartBlockEntity implements Transform
 	public void invalidate() {
 		super.invalidate();
 		computerBehaviour.removePeripheral();
+	}
+
+	@Override
+	public void clearContent() {
+		manuallyAddedItems.clear();
 	}
 
 	public void transform(BlockEntity blockEntity, StructureTransform transform) {

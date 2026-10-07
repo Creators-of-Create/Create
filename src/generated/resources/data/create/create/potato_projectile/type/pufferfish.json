@@ -12,9 +12,9 @@
             "duration": 1200,
             "id": "minecraft:poison",
             "neoforge:cures": [
+              "milk",
               "protected_by_totem",
-              "honey",
-              "milk"
+              "honey"
             ],
             "show_icon": true
           }
@@ -25,8 +25,8 @@
             "duration": 300,
             "id": "minecraft:hunger",
             "neoforge:cures": [
-              "protected_by_totem",
-              "milk"
+              "milk",
+              "protected_by_totem"
             ],
             "show_icon": true
           }
@@ -36,8 +36,8 @@
             "duration": 300,
             "id": "minecraft:nausea",
             "neoforge:cures": [
-              "protected_by_totem",
-              "milk"
+              "milk",
+              "protected_by_totem"
             ],
             "show_icon": true
           }

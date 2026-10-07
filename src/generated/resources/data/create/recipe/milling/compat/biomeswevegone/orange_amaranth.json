@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:orange_amaranth"
-        }
-      ]
+      "item": "biomeswevegone:orange_amaranth"
     }
   ],
   "processing_time": 50,

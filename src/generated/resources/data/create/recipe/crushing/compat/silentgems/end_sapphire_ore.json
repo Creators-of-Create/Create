@@ -8,12 +8,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "silentgems:end_sapphire_ore"
-        }
-      ]
+      "item": "silentgems:end_sapphire_ore"
     }
   ],
   "processing_time": 350,

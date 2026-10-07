@@ -11,12 +11,7 @@
       "tag": "c:dusts/redstone"
     },
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "ae2:charged_certus_quartz_crystal"
-        }
-      ]
+      "item": "ae2:charged_certus_quartz_crystal"
     },
     {
       "tag": "c:gems/quartz"
