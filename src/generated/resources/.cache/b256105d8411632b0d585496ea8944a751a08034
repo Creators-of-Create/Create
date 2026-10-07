@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-24T17:37:29.5600187	Create's Processing Recipes
+// 1.21.1	2026-09-17T01:16:07.0726496	Create's Processing Recipes
 cb988d3be6b4a28e4d13dc73d61eed3670520e8e data/create/recipe/compacting/andesite_from_flint.json
 d97f4e06363879d033b2151995a5d4f19ad7ef3a data/create/recipe/compacting/blaze_cake.json
 7879a7ba9019a2938363449d3a0e13013a4ad606 data/create/recipe/compacting/chocolate.json
@@ -419,7 +419,7 @@ e6858f2544f5419b2bcd1c1ea3adb7276a8520f6 data/create/recipe/deploying/weathered_
 c7f7d1b135507fe1365bce9cbee200cf00b5786c data/create/recipe/emptying/builders_tea.json
 e0af426db1996cd551b174f6954ed78dfeb50049 data/create/recipe/emptying/compat/alexsmobs/lava_bottle.json
 e4d758d0b9b1421c22b662b2cbaab6c6e1ed849f data/create/recipe/emptying/compat/farmersdelight/milk_bottle.json
-018b43e1a5b3ceacbbe813ff26b3aea9e4f9f796 data/create/recipe/emptying/compat/neapolitan/milk_bottle.json
+1785eaabadba926fc65224c1c0a3211620ec7c3e data/create/recipe/emptying/compat/neapolitan/milk_bottle.json
 7aa973ac3c046d9eece53d723c72dc123feec522 data/create/recipe/emptying/honey_bottle.json
 726cde8bd9c0a7288d603edc6f26adfcf4012864 data/create/recipe/filling/blaze_cake.json
 3074896b1df13733a4d4ef742a3e5a015950cc78 data/create/recipe/filling/builders_tea.json
@@ -789,7 +789,6 @@ c36bd86b07162784efb66d4af42132c7e404890e data/create/recipe/splashing/endergetic
 f1671090fd5c11f9e4b390772872c3c7834deda7 data/create/recipe/splashing/endergetic/petrified_overworld_corrock.json
 a12e8ddcbc026debdead65d1689505157aa05ec9 data/create/recipe/splashing/endergetic/petrified_overworld_corrock_block.json
 fc6e0962f478df97086410970000371eb40ac762 data/create/recipe/splashing/endergetic/petrified_overworld_corrock_crown.json
-7504e03b64dfb3a99167ecf9f091b7fc530d0890 data/create/recipe/splashing/galosphere/crushed_raw_silver.json
 6dae0cf835cefc3905e064fabcb53618469b5d37 data/create/recipe/splashing/gravel.json
 1d141cd4d39f11e68b45e86e58091fed4e4ffd5c data/create/recipe/splashing/ic2/crushed_raw_aluminum.json
 c61fc25edea0e0bb47783a66cd629f68742ca443 data/create/recipe/splashing/ic2/crushed_raw_silver.json
