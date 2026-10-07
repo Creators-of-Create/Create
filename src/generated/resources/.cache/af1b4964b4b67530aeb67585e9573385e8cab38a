@@ -4769,6 +4769,7 @@ f400870b8dbcd14238be3ec99c419093073ba3a6 data/create/tags/block/postboxes.json
 79418bd729cef417b322cef9b491e7ae83317d61 data/create/tags/block/seats.json
 7d783d948cc49503fb645045fe9ef48906b74341 data/create/tags/block/simple_mounted_storage.json
 e9f4eef0275a0d859c0e75baecdec89561c5875c data/create/tags/block/single_block_inventories.json
+f111f4db28bd2db435b17f94d18f440224c5ed21 data/create/tags/block/solid_crops.json
 f02fc9781e8f0ae33ed3b98cf4f46ba6927c7ff8 data/create/tags/block/sugar_cane_variants.json
 8a6ad3c63fb0c436ec8109f39358213930effd5a data/create/tags/block/table_cloths.json
 5def5088f7fd31b80e6f28c1c4ea146aa9d7d15b data/create/tags/block/toolboxes.json

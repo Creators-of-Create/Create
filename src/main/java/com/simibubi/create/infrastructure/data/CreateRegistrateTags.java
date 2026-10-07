@@ -161,6 +161,9 @@ public class CreateRegistrateTags {
 		prov.tag(AllBlockTags.PLOUGH_BLACKLIST.tag)
 			.addTag(BlockTags.PORTALS);
 
+		prov.tag(AllBlockTags.SOLID_CROPS.tag)
+			.add(Blocks.PUMPKIN, Blocks.MELON);
+
 		prov.tag(AllBlockTags.WATER_WHEEL_PLANKS.tag)
 			.addTag(BlockTags.PLANKS);
 
@@ -173,6 +176,18 @@ public class CreateRegistrateTags {
 
 		TagGen.addOptional(prov.tag(AllBlockTags.ROOTS.tag), Mods.TF,
 			List.of("root", "liveroot_block", "mangrove_root"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.SOLID_CROPS.tag), Mods.UG, List.of(
+			"gloomgourd"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.SOLID_CROPS.tag), Mods.BWG, List.of(
+			"pale_pumpkin"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.SOLID_CROPS.tag), Mods.UUE, List.of(
+			"warped_squash"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.SOLID_CROPS.tag), Mods.D_AET, List.of(
+			"blue_squash", "green_squash", "purple_squash"));
 
 		TagGen.addOptional(prov.tag(AllBlockTags.WATER_WHEEL_PLANKS.tag), Mods.AET, List.of(
 			"skyroot_planks"));
