@@ -9,6 +9,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.lwjgl.glfw.GLFW;
 
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.gui.TickableGuiEventListener;

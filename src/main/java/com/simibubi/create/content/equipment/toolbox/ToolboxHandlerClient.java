@@ -12,7 +12,8 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.AllPackets;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 
 import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.nbt.NBTHelper;
@@ -186,7 +187,7 @@ public class ToolboxHandlerClient {
 			double max = ToolboxHandler.getMaxRange(player);
 			boolean selected = player.getInventory().selected == slot;
 			int offset = selected ? 1 : 0;
-			AllGuiTextures texture = ToolboxHandler.distance(player.position(), pos) < max * max
+			GuiRenderableTexture texture = ToolboxHandler.distance(player.position(), pos) < max * max
 				? selected ? TOOLBELT_SELECTED_ON : TOOLBELT_HOTBAR_ON
 				: selected ? TOOLBELT_SELECTED_OFF : TOOLBELT_HOTBAR_OFF;
 			texture.render(guiGraphics, x + 20 * slot - offset, y + offset);

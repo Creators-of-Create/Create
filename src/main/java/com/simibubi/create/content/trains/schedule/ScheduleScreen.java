@@ -25,6 +25,7 @@ import com.simibubi.create.content.trains.schedule.destination.DestinationInstru
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ModularGuiLine;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
@@ -106,7 +107,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 
 	@Override
 	protected void init() {
-		AllGuiTextures bg = AllGuiTextures.SCHEDULE;
+		GuiRenderableTexture bg = AllGuiTextures.SCHEDULE;
 		setWindowSize(bg.getWidth(), bg.getHeight());
 		super.init();
 		clearWidgets();
@@ -488,9 +489,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 								   float partialTicks) {
 		int zLevel = 0;
 
-		AllGuiTextures light = AllGuiTextures.SCHEDULE_CARD_LIGHT;
-		AllGuiTextures medium = AllGuiTextures.SCHEDULE_CARD_MEDIUM;
-		AllGuiTextures dark = AllGuiTextures.SCHEDULE_CARD_DARK;
+		GuiRenderableTexture light = AllGuiTextures.SCHEDULE_CARD_LIGHT;
+		GuiRenderableTexture medium = AllGuiTextures.SCHEDULE_CARD_MEDIUM;
+		GuiRenderableTexture dark = AllGuiTextures.SCHEDULE_CARD_DARK;
 
 		int cardWidth = CARD_WIDTH;
 		int cardHeader = CARD_HEADER;
@@ -615,11 +616,11 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 
-		AllGuiTextures left =
+		GuiRenderableTexture left =
 			clean ? AllGuiTextures.SCHEDULE_CONDITION_LEFT_CLEAN : AllGuiTextures.SCHEDULE_CONDITION_LEFT;
-		AllGuiTextures middle = AllGuiTextures.SCHEDULE_CONDITION_MIDDLE;
-		AllGuiTextures item = AllGuiTextures.SCHEDULE_CONDITION_ITEM;
-		AllGuiTextures right = AllGuiTextures.SCHEDULE_CONDITION_RIGHT;
+		GuiRenderableTexture middle = AllGuiTextures.SCHEDULE_CONDITION_MIDDLE;
+		GuiRenderableTexture item = AllGuiTextures.SCHEDULE_CONDITION_ITEM;
+		GuiRenderableTexture right = AllGuiTextures.SCHEDULE_CONDITION_RIGHT;
 
 		matrixStack.translate(x, y, 0);
 		UIRenderHelper.drawStretched(graphics, 0, 0, fieldSize, 16, 0, middle);

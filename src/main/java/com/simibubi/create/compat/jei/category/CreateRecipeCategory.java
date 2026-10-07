@@ -28,6 +28,7 @@ import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -203,7 +204,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		}
 	}
 
-	protected static IDrawable asDrawable(AllGuiTextures texture) {
+	protected static IDrawable asDrawable(GuiRenderableTexture texture) {
 		return new IDrawable() {
 			@Override
 			public int getWidth() {

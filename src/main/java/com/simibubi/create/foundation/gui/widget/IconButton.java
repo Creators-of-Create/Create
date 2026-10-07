@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.gui.widget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 
 import net.createmod.catnip.gui.element.ScreenElement;
 import net.createmod.catnip.gui.widget.AbstractSimiWidget;
@@ -29,7 +30,7 @@ public class IconButton extends AbstractSimiWidget {
 		if (visible) {
 			isHovered = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
 
-			AllGuiTextures button = !active ? AllGuiTextures.BUTTON_DISABLED
+			GuiRenderableTexture button = !active ? AllGuiTextures.BUTTON_DISABLED
 				: isHovered && AllKeys.isMouseButtonDown(0) ? AllGuiTextures.BUTTON_DOWN
 					: isHovered ? AllGuiTextures.BUTTON_HOVER
 						: green ? AllGuiTextures.BUTTON_GREEN : AllGuiTextures.BUTTON;
@@ -40,8 +41,8 @@ public class IconButton extends AbstractSimiWidget {
 		}
 	}
 
-	protected void drawBg(GuiGraphics graphics, AllGuiTextures button) {
-		graphics.blit(button.location, getX(), getY(), button.getStartX(), button.getStartY(), button.getWidth(),
+	protected void drawBg(GuiGraphics graphics, GuiRenderableTexture button) {
+		graphics.blit(button.getLocation(), getX(), getY(), button.getStartX(), button.getStartY(), button.getWidth(),
 			button.getHeight());
 	}
 

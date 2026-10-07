@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.gui.widget;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 
 import net.createmod.catnip.gui.widget.AbstractSimiWidget;
 import net.minecraft.client.gui.GuiGraphics;
@@ -21,7 +22,7 @@ public class Indicator extends AbstractSimiWidget {
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks ) {
 		if (!visible)
 			return;
-		AllGuiTextures toDraw;
+		GuiRenderableTexture toDraw;
 		switch (state) {
 			case ON: toDraw = AllGuiTextures.INDICATOR_WHITE; break;
 			case OFF: toDraw = AllGuiTextures.INDICATOR; break;

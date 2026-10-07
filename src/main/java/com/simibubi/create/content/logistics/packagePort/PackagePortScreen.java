@@ -9,6 +9,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockEntity;
 import com.simibubi.create.content.trains.station.NoShadowFontWrapper;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
@@ -28,7 +29,7 @@ import net.minecraft.world.item.ItemStack;
 public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMenu> {
 
 	private boolean frogMode;
-	private AllGuiTextures background;
+	private GuiRenderableTexture background;
 
 	private EditBox addressBox;
 	private IconButton confirmButton;
@@ -115,7 +116,7 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 		int x = getGuiLeft();
 		int y = getGuiTop();
 
-		AllGuiTextures header = frogMode ? AllGuiTextures.FROGPORT_HEADER : AllGuiTextures.POSTBOX_HEADER;
+		GuiRenderableTexture header = frogMode ? AllGuiTextures.FROGPORT_HEADER : AllGuiTextures.POSTBOX_HEADER;
 		header.render(graphics, x, y - header.getHeight());
 		background.render(graphics, x, y);
 
