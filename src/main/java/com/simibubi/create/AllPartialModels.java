@@ -19,7 +19,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 
+import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
+
 public class AllPartialModels {
+
+	@ScheduledForRemoval(inVersion = "1.21.1+ Port")
+	@Deprecated(since = "6.0.12", forRemoval = true)
+	///@deprecated Use {@link AllPartialModels#VALVE_HANDLES.get(Create.asResource("copper_valve_handle")}
+	public static final PartialModel VALVE_HANDLE = block("valve_handle");
 
 	public static final PartialModel
 
@@ -42,7 +49,6 @@ public class AllPartialModels {
 
 		ENCASED_FAN_INNER = block("encased_fan/propeller"), HAND_CRANK_HANDLE = block("hand_crank/handle"),
 		HAND_CRANK_BASE = block("hand_crank/block"),
-		VALVE_HANDLE = block("valve_handle"),
 		MECHANICAL_PRESS_HEAD = block("mechanical_press/head"), MECHANICAL_MIXER_POLE = block("mechanical_mixer/pole"),
 		MECHANICAL_MIXER_HEAD = block("mechanical_mixer/head"),
 		MECHANICAL_CRAFTER_LID = block("mechanical_crafter/lid"),
@@ -245,6 +251,7 @@ public class AllPartialModels {
 	public static final Map<Direction, PartialModel> METAL_GIRDER_BRACKETS = new EnumMap<>(Direction.class);
 	public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new EnumMap<>(DyeColor.class);
 	public static final Map<DyeColor, PartialModel> DYED_VALVE_HANDLES = new EnumMap<>(DyeColor.class);
+	public static final Map<ResourceLocation, PartialModel> VALVE_HANDLES = new HashMap<>();
 	public static final Map<ResourceLocation, Couple<PartialModel>> FOLDING_DOORS = new HashMap<>();
 	public static final List<PartialModel> CONTRAPTION_CONTROLS_INDICATOR = new ArrayList<>();
 
@@ -255,6 +262,8 @@ public class AllPartialModels {
 	public static final Map<GantryShaftKey, PartialModel> GANTRY_SHAFTS = new HashMap<>();
 
 	static {
+		VALVE_HANDLES.put(Create.asResource("copper_valve_handle"), block("valve_handle"));
+
 		for (FluidTransportBehaviour.AttachmentTypes.ComponentPartials type : FluidTransportBehaviour.AttachmentTypes.ComponentPartials
 			.values()) {
 			Map<Direction, PartialModel> map = new HashMap<>();
