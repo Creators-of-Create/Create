@@ -160,7 +160,7 @@ public class FluidNetwork {
 
 //		drawDebugOutlines();
 
-		if (source == null)
+		if (source == null || source.getCapability() == null)
 			source = sourceSupplier.get();
 		if (source == null)
 			return;
