@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -23,7 +24,6 @@ import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.item.BlockItem;
@@ -87,13 +87,13 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 	}
 
 	public ItemInteractionResult applyMaterialIfValid(ItemStack stack) {
-		if (!(stack.getItem()instanceof BlockItem blockItem))
+		if (!(stack.getItem() instanceof BlockItem blockItem))
 			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		BlockState material = blockItem.getBlock()
 			.defaultBlockState();
 		if (material == this.material)
 			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-		if (!material.is(BlockTags.PLANKS))
+		if (!AllBlockTags.WATER_WHEEL_PLANKS.matches(material))
 			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		if (level.isClientSide() && !isVirtual())
 			return ItemInteractionResult.SUCCESS;
