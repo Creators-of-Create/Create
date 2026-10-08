@@ -129,7 +129,11 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 		super.unload();
 		if (getWorld().isClientSide)
 			return;
-		getHandler().removeFromNetwork(getWorld(), this);
+		if (blockEntity.isChunkUnloaded()) {
+			getHandler().markUnloaded(getWorld(), this);
+		} else {
+			getHandler().removeFromNetwork(getWorld(), this);
+		}
 	}
 
 	@Override
