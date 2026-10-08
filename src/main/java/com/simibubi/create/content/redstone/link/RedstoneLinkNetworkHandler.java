@@ -1,6 +1,5 @@
 package com.simibubi.create.content.redstone.link;
 
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -13,13 +12,14 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.levelWrappers.WorldHelper;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 
 public class RedstoneLinkNetworkHandler {
 
-	static final Map<LevelAccessor, Map<Couple<RedstoneLinkNetworkHandler.Frequency>, RedstoneLinkNetwork>> connections = new IdentityHashMap<>();
+	static final Map<LevelAccessor, RedstoneLinkNetworkHandlerSavedData> connections = new IdentityHashMap<>();
 
 	public final AtomicInteger globalPowerVersion = new AtomicInteger();
 
@@ -61,7 +61,10 @@ public class RedstoneLinkNetworkHandler {
 	}
 
 	public void onLoadWorld(final LevelAccessor world) {
-		connections.put(world, new HashMap<>());
+		if (world instanceof ServerLevel serverLevel) {
+			connections.put(world, serverLevel.getDataStorage().computeIfAbsent(RedstoneLinkNetworkHandlerSavedData.factory(), "create_redstone_link_network"));
+		}
+
 		Create.LOGGER.debug("Prepared Redstone Network Space for {}", WorldHelper.getDimensionID(world));
 	}
 
@@ -71,19 +74,17 @@ public class RedstoneLinkNetworkHandler {
 	}
 
 	public RedstoneLinkNetwork getNetworkOf(final LevelAccessor world, final IRedstoneLinkable actor) {
-		final Map<Couple<RedstoneLinkNetworkHandler.Frequency>, RedstoneLinkNetwork> networksInWorld = connections.get(world);
-		Couple<Frequency> key = actor.getNetworkKey();
-		if (!networksInWorld.containsKey(key)) networksInWorld.put(key, new RedstoneLinkNetwork());
-		return networksInWorld.get(key);
+		return connections.get(world).getNetwork(actor.getNetworkKey());
 	}
 
 	public void addToNetwork(final LevelAccessor world, final IRedstoneLinkable actor) {
 		final RedstoneLinkNetwork network = getNetworkOf(world, actor);
 		if (actor.isListening()) {
-			network.getReceivers().add(actor);
+			network.addReceiver(actor);
 			updateReceiver(network, actor);
 		} else {
-			network.getTransmitters().add(actor);
+			globalPowerVersion.incrementAndGet();
+			network.addTransmitter(actor);
 			handleTransmitterAdd(network, actor);
 		}
 	}
@@ -93,12 +94,24 @@ public class RedstoneLinkNetworkHandler {
 		if (actor.isListening()) {
 			network.getReceivers().remove(actor);
 		} else {
+			globalPowerVersion.incrementAndGet();
 			network.getTransmitters().remove(actor);
 			handleTransmitterRemove(network, actor);
 		}
 	}
 
+	public void markUnloaded(final LevelAccessor world, final IRedstoneLinkable actor) {
+		if (actor.isListening()) {
+			removeFromNetwork(world, actor);
+		} else {
+			final RedstoneLinkNetwork network = getNetworkOf(world, actor);
+			network.markUnloaded(actor);
+			connections.get(world).setDirty();
+		}
+	}
+
 	public void transmitterSignalChanged(final LevelAccessor world, final IRedstoneLinkable actor, final int oldSignal) {
+		globalPowerVersion.incrementAndGet();
 		final int power = actor.getTransmittedStrength();
 		final boolean isIncrease = oldSignal < power;
 		final RedstoneLinkNetwork network = getNetworkOf(world, actor);
@@ -177,8 +190,8 @@ public class RedstoneLinkNetworkHandler {
 	}
 
 	public boolean hasAnyLoadedPower(Couple<Frequency> frequency) {
-		for (final Map<Couple<Frequency>, RedstoneLinkNetwork> map : connections.values()) {
-			final Set<IRedstoneLinkable> set = map.get(frequency).getTransmitters();
+		for (final RedstoneLinkNetworkHandlerSavedData savedData : connections.values()) {
+			final Set<IRedstoneLinkable> set = savedData.getNetwork(frequency).getTransmitters();
 			if (set.isEmpty()) continue;
 			for (IRedstoneLinkable link : set) {
 				if (link.getTransmittedStrength() > 0) return true;
