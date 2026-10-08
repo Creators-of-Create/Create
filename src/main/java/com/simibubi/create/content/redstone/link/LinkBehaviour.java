@@ -56,8 +56,9 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 	}
 
 	public static LinkBehaviour receiver(SmartBlockEntity be, Pair<ValueBoxTransform, ValueBoxTransform> slots,
-		IntConsumer signalCallback) {
+		IntSupplier transmission, IntConsumer signalCallback) {
 		LinkBehaviour behaviour = new LinkBehaviour(be, slots);
+		behaviour.transmission = transmission;
 		behaviour.signalCallback = signalCallback;
 		behaviour.mode = Mode.RECEIVE;
 		return behaviour;
@@ -100,8 +101,13 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 		signalCallback.accept(networkPower);
 	}
 
-	public void notifySignalChange() {
-		Create.REDSTONE_LINK_NETWORK_HANDLER.updateNetworkOf(getWorld(), this);
+	@Override
+	public int getReceivedStrength() {
+		return transmission.getAsInt();
+	}
+
+	public void notifySignalChange(int oldSignal) {
+		getHandler().transmitterSignalChanged(getWorld(), this, oldSignal);
 	}
 
 	@Override
@@ -123,7 +129,11 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 		super.unload();
 		if (getWorld().isClientSide)
 			return;
-		getHandler().removeFromNetwork(getWorld(), this);
+		if (blockEntity.isChunkUnloaded()) {
+			getHandler().markUnloaded(getWorld(), this);
+		} else {
+			getHandler().removeFromNetwork(getWorld(), this);
+		}
 	}
 
 	@Override
