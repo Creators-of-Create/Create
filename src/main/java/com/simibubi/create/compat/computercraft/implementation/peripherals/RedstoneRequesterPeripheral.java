@@ -50,7 +50,7 @@ public class RedstoneRequesterPeripheral extends SyncedPeripheral<RedstoneReques
 		PackageOrder order = new PackageOrder(orderStacks);
 		CraftingEntry orderContext = new CraftingEntry(new PackageOrder(orderStacks.stream()
 			.map(stack -> new BigItemStack(stack.stack.copyWithCount(1)))
-			.toList()), count);
+			.toList()), count, ItemStack.EMPTY);
 
 		this.blockEntity.encodedRequest = new PackageOrderWithCrafts(order, List.of(orderContext));
 		this.blockEntity.notifyUpdate();

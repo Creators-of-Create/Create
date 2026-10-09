@@ -62,6 +62,7 @@ public enum CrafterUnpackingHandler implements UnpackingHandler {
 				}
 			}
 		}
+		crafter.setSuggestedResult(orderContext.orderedCrafts().getFirst().suggestedResult());
 
 		// if anything is still non-empty insertion failed
 		for (ItemStack item : items) {
