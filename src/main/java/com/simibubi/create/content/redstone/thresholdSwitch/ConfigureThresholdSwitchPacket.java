@@ -17,6 +17,7 @@ public class ConfigureThresholdSwitchPacket extends BlockEntityConfigurationPack
 			ByteBufCodecs.INT, packet -> packet.onAbove,
 			ByteBufCodecs.BOOL, packet -> packet.invert,
 			ByteBufCodecs.BOOL, packet -> packet.inStacks,
+			ByteBufCodecs.BOOL, packet -> packet.inBuckets,
 			ConfigureThresholdSwitchPacket::new
 	);
 
@@ -24,13 +25,15 @@ public class ConfigureThresholdSwitchPacket extends BlockEntityConfigurationPack
 	private final int onAbove;
 	private final boolean invert;
 	private final boolean inStacks;
+	private final boolean inBuckets;
 
-	public ConfigureThresholdSwitchPacket(BlockPos pos, int offBelow, int onAbove, boolean invert, boolean inStacks) {
+	public ConfigureThresholdSwitchPacket(BlockPos pos, int offBelow, int onAbove, boolean invert, boolean inStacks, boolean inBuckets) {
 		super(pos);
 		this.offBelow = offBelow;
 		this.onAbove = onAbove;
 		this.invert = invert;
 		this.inStacks = inStacks;
+		this.inBuckets = inBuckets;
 	}
 
 	@Override
@@ -39,6 +42,7 @@ public class ConfigureThresholdSwitchPacket extends BlockEntityConfigurationPack
 		be.onWhenAbove = onAbove;
 		be.setInverted(invert);
 		be.inStacks = inStacks;
+		be.inBuckets = inBuckets;
 	}
 
 	@Override
