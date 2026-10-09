@@ -156,6 +156,14 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 	}
 
 	@Override
+	public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+		if (!world.isClientSide() && player.isCreative()) {
+			removeBracket(world, pos, true);
+		}
+		return super.playerWillDestroy(world, pos, state, player);
+	}
+
+	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (world.isClientSide)
 			return;
