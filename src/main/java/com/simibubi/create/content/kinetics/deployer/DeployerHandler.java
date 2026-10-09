@@ -61,9 +61,11 @@ import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.TurtleEggBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
@@ -404,6 +406,20 @@ public class DeployerHandler {
 			world.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 			world.setBlock(posUp, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
 		} else {
+			if (blockstate.getBlock() instanceof TurtleEggBlock) {
+				int eggs = blockstate.getValue(TurtleEggBlock.EGGS);
+				if (eggs > 1) {
+					// destroy eggs one by one instead of removing the whole block at once
+					world.setBlock(pos, blockstate.setValue(TurtleEggBlock.EGGS, eggs - 1), 2);
+					world.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(blockstate));
+					if (canHarvest) {
+						Block.getDrops(blockstate, world, pos, blockEntity, player, prevHeldItem)
+							.forEach(item -> player.getInventory().placeItemBackInInventory(item));
+						blockstate.spawnAfterBreak(world, pos, prevHeldItem, true);
+					}
+					return true;
+				}
+			}
 			if (!blockstate.onDestroyedByPlayer(world, pos, player, canHarvest, world.getFluidState(pos)))
 				return true;
 		}
