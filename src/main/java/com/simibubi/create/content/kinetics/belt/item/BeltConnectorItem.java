@@ -267,4 +267,9 @@ public class BeltConnectorItem extends BlockItem {
 		return true;
 	}
 
+	@Override
+	public boolean isFoil(ItemStack stack) {
+		return stack.has(AllDataComponents.BELT_FIRST_SHAFT);
+	}
+
 }
