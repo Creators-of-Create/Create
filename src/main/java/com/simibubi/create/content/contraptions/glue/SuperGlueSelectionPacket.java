@@ -8,11 +8,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-
-import java.util.Set;
 
 public record SuperGlueSelectionPacket(BlockPos from, BlockPos to) implements ServerboundPacketPayload {
 	public static final StreamCodec<ByteBuf, SuperGlueSelectionPacket> STREAM_CODEC = StreamCodec.composite(
@@ -28,10 +24,7 @@ public record SuperGlueSelectionPacket(BlockPos from, BlockPos to) implements Se
 		if (!to.closerThan(from, 25))
 			return;
 
-		Set<BlockPos> group = SuperGlueSelectionHelper.searchGlueGroup(player.level(), from, to, false);
-		if (group == null)
-			return;
-		if (!group.contains(to))
+		if (!SuperGlueSelectionHelper.isGlueGroupConnected(player.level(), from, to, false))
 			return;
 		if (!SuperGlueSelectionHelper.collectGlueFromInventory(player, 1, true))
 			return;

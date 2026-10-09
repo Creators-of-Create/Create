@@ -157,10 +157,7 @@ public class SuperGlueSelectionHandler {
 						.disableLineNormals()
 						.lineWidth(1 / 16f);
 
-				Outliner.getInstance().showCluster(clusterOutlineSlot, currentCluster)
-					.colored(0x4D9162)
-					.disableLineNormals()
-					.lineWidth(1 / 64f);
+				Outliner.getInstance().keep(clusterOutlineSlot);
 			}
 
 			return;
@@ -171,6 +168,11 @@ public class SuperGlueSelectionHandler {
 		Set<BlockPos> cluster = SuperGlueSelectionHelper.searchGlueGroup(mc.level, firstPos, hoveredPos, true);
 		currentCluster = cluster;
 		glueRequired = 1;
+		if (cluster != null)
+			Outliner.getInstance().showCluster(clusterOutlineSlot, cluster)
+				.colored(0x4D9162)
+				.disableLineNormals()
+				.lineWidth(1 / 64f);
 	}
 
 	private boolean isGlue(ItemStack stack) {
