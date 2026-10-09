@@ -114,6 +114,8 @@ public class ChainConveyorInteractionHandler {
 	private static boolean isActive() {
 		Minecraft mc = Minecraft.getInstance();
 		ItemStack mainHandItem = mc.player.getMainHandItem();
+		if (mc.player.isSpectator())
+			return false;
 		return mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches) || AllBlocks.PACKAGE_FROGPORT.isIn(mainHandItem)
 			|| PackageItem.isPackage(mainHandItem);
 	}
@@ -124,6 +126,9 @@ public class ChainConveyorInteractionHandler {
 
 		Minecraft mc = Minecraft.getInstance();
 		ItemStack mainHandItem = mc.player.getMainHandItem();
+
+		if (mc.player.isSpectator())
+			return false;
 
 		if (mc.player.isHolding(AllItemTags.CHAIN_RIDEABLE::matches)) {
 			ItemStack offHandItem = mc.player.getOffhandItem();
