@@ -82,6 +82,7 @@ public enum CommonMetal {
 
 	public final ItemLikeTag ores;
 	public final TagKey<Item> rawOres;
+	public final TagKey<Item> crushedOres;
 	public final ItemLikeTag rawStorageBlocks;
 	public final TagKey<Item> ingots;
 	public final ItemLikeTag storageBlocks;
@@ -100,6 +101,7 @@ public enum CommonMetal {
 
 		this.ores = new ItemLikeTag("ores/" + this.name);
 		this.rawOres = itemTag("raw_materials/" + this.name);
+		this.crushedOres = itemTag("crushed_raw_materials/" + this.name);
 		this.rawStorageBlocks = new ItemLikeTag("storage_blocks/raw_" + this.name);
 		this.ingots = itemTag("ingots/" + this.name);
 		this.storageBlocks = new ItemLikeTag("storage_blocks/" + this.name);

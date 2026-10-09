@@ -5,6 +5,7 @@
     "create:andesite_alloy_block",
     "create:brass_block",
     "create:cardboard_block",
+    "create:bound_cardboard_block",
     "create:experience_block"
   ]
 }

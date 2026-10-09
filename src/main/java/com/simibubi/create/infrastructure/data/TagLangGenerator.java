@@ -172,6 +172,7 @@ public class TagLangGenerator {
 			translate(metal.nuggets, name + " Nuggets");
 			translate(metal.plates, name + " Plates");
 		}
+		translate(AllItemTags.ANDESITE_ALLOY_INGOTS, "Andesite Alloy Ingots");
 	}
 
 	protected static String keyFor(TagKey<?> tag) {
