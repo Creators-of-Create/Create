@@ -21,6 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -88,6 +89,26 @@ public class CreateAdvancement {
 			throw new UnsupportedOperationException(
 				"Advancement " + id + " uses external Triggers, it cannot be awarded directly");
 		builtinTrigger.trigger(sp);
+	}
+
+	public static boolean awardVanilla(ServerPlayer sp, ResourceLocation id) {
+		// Check if the advancement exists
+		AdvancementHolder advancement = sp.getServer()
+			.getAdvancements()
+			.get(id);
+		if (advancement == null)
+			return false;
+
+		// Check if the advancement is already awarded
+		PlayerAdvancements advancements = sp.getAdvancements();
+		var progress = advancements.getOrStartProgress(advancement);
+		if (progress.isDone())
+			return false;
+
+		// Award the advancement by granting the remaining criteria of the vanilla advancement
+		for (String criterion : progress.getRemainingCriteria())
+			advancements.award(advancement, criterion);
+		return true;
 	}
 
 	void save(Consumer<AdvancementHolder> t, HolderLookup.Provider registries) {
