@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -44,7 +46,7 @@ public class AddressEditBox extends EditBox {
 		setBordered(false);
 		setFocused(false);
 		mouseClicked(0, 0, 0);
-		setMaxLength(25);
+		setMaxLength(AllConfigs.client().maxAddressLength.get());
 	}
 
 	@Override
