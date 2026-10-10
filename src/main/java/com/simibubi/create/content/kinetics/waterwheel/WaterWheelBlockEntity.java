@@ -22,6 +22,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.Vec3i;
+import net.minecraft.network.chat.Component;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
@@ -225,4 +226,10 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 		return Mth.clamp(flowScore, -1, 1) * 8 / getSize();
 	}
 
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+		addToGoggleRotationDirectionTooltip(tooltip);
+		return true;
+	}
 }

@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.actors.roller;
 import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.logistics.filter.FilterItem;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
@@ -17,9 +19,12 @@ import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.lang.Lang;
 import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.EntityBlock;
@@ -31,7 +36,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class RollerBlockEntity extends SmartBlockEntity {
+public class RollerBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
 
 	// For simulations such as Ponder
 	private float manuallyAnimatedSpeed;
@@ -142,6 +147,51 @@ public class RollerBlockEntity extends SmartBlockEntity {
 				otherRoller.acceptSharedValues(mode.getValue(), filtering.getFilter());
 			}
 		}
+	}
+
+	
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		CreateLang.translate("tooltip.mechanical_roller.header")
+			.forGoggles(tooltip);
+		
+		boolean hasFilter = addFilterTooltip(tooltip);
+		if (!hasFilter) {
+			tooltip.remove(0);
+			return false;
+		}
+		return true;
+	}
+
+	private boolean addFilterTooltip(List<Component> tooltip) {
+		// Get filter blocks and items
+		ItemStack filterStack = filtering == null ? ItemStack.EMPTY : filtering.getFilter();
+		// Verify if the roller has a filter
+		if (filterStack.isEmpty())
+			return false;
+
+		tooltip.add(CommonComponents.EMPTY);
+		List<Component> filterSummary;
+
+		CreateLang.translate("gui.filter.allow_item")
+			.style(ChatFormatting.GOLD)
+			.forGoggles(tooltip);
+		filterSummary = List.of(Component.literal("- ").append(filterStack.getHoverName())
+			.withStyle(ChatFormatting.GRAY));
+
+		// If the filter summary is not empty, add it to the tooltip
+		if (!filterSummary.isEmpty()) {
+			// Add the filter type (allow or deny) in the goggles tooltip format
+			CreateLang.builder()
+				.add(filterSummary.get(0))
+				.forGoggles(tooltip);
+			// Add the filter blocks and items in the goggles tooltip format
+			for (int i = 1; i < filterSummary.size(); i++)
+				CreateLang.builder()
+					.add(filterSummary.get(i))
+					.forGoggles(tooltip, 1);
+		}
+		return true;
 	}
 
 	static enum RollingMode implements INamedIconOptions {
