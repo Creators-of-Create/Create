@@ -183,8 +183,6 @@ public class FilterItemStack {
 
 		@Override
 		public boolean test(Level world, ItemStack stack, boolean matchNBT) {
-			if (attributeTests.isEmpty())
-				return super.test(world, stack, matchNBT);
 			for (Pair<ItemAttribute, Boolean> test : attributeTests) {
 				ItemAttribute attribute = test.getFirst();
 				boolean inverted = test.getSecond();
@@ -234,8 +232,7 @@ public class FilterItemStack {
 
 		@Override
 		public boolean test(Level world, ItemStack stack, boolean matchNBT) {
-			return (filterString.isBlank() && super.test(world, stack, matchNBT))
-				|| PackageItem.isPackage(stack) && PackageItem.matchAddress(stack, filterString);
+			return PackageItem.isPackage(stack) && PackageItem.matchAddress(stack, filterString);
 		}
 
 		@Override

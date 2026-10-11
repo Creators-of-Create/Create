@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.minecraft.world.Clearable;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +57,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 
-public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHaveGoggleInformation {
+public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHaveGoggleInformation, Clearable {
 
 	SidedFilteringBehaviour filtering;
 
@@ -733,6 +734,11 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 	public void invalidate() {
 		super.invalidate();
 		invalidateCapabilities();
+	}
+
+	@Override
+	public void clearContent() {
+		((BrassTunnelItemHandler) tunnelCapability).clearContent();
 	}
 
 	@Override

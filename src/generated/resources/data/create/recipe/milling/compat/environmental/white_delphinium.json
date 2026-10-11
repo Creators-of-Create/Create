@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "environmental:white_delphinium"
-        }
-      ]
+      "item": "environmental:white_delphinium"
     }
   ],
   "processing_time": 50,

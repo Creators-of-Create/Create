@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:brown_snowbelle"
-        }
-      ]
+      "item": "regions_unexplored:brown_snowbelle"
     }
   ],
   "processing_time": 50,

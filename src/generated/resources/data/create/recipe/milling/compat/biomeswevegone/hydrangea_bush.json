@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:hydrangea_bush"
-        }
-      ]
+      "item": "biomeswevegone:hydrangea_bush"
     }
   ],
   "processing_time": 50,

@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:golden_spined_cactus"
-        }
-      ]
+      "item": "biomeswevegone:golden_spined_cactus"
     }
   ],
   "processing_time": 50,

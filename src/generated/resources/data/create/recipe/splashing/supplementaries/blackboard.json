@@ -8,12 +8,7 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "supplementaries:blackboard"
-        }
-      ]
+      "item": "supplementaries:blackboard"
     }
   ],
   "results": [

@@ -161,6 +161,12 @@ public class CreateRegistrateTags {
 		prov.tag(AllBlockTags.PLOUGH_BLACKLIST.tag)
 			.addTag(BlockTags.PORTALS);
 
+		prov.tag(AllBlockTags.SOLID_CROPS.tag)
+			.add(Blocks.PUMPKIN, Blocks.MELON);
+
+		prov.tag(AllBlockTags.WATER_WHEEL_PLANKS.tag)
+			.addTag(BlockTags.PLANKS);
+
 		// COMPAT
 
 		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE, List.of(
@@ -170,6 +176,24 @@ public class CreateRegistrateTags {
 
 		TagGen.addOptional(prov.tag(AllBlockTags.ROOTS.tag), Mods.TF,
 			List.of("root", "liveroot_block", "mangrove_root"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.SOLID_CROPS.tag), Mods.UG, List.of(
+			"gloomgourd"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.SOLID_CROPS.tag), Mods.BWG, List.of(
+			"pale_pumpkin"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.SOLID_CROPS.tag), Mods.UUE, List.of(
+			"warped_squash"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.SOLID_CROPS.tag), Mods.D_AET, List.of(
+			"blue_squash", "green_squash", "purple_squash"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.WATER_WHEEL_PLANKS.tag), Mods.AET, List.of(
+			"skyroot_planks"));
+
+		TagGen.addOptional(prov.tag(AllBlockTags.WATER_WHEEL_PLANKS.tag), Mods.D_AET, List.of(
+			"cruderoot_planks", "roseroot_planks", "sunroot_planks", "yagroot_planks", "conberry_planks"));
 	}
 
 	private static void genItemTags(RegistrateTagsProvider<Item> provIn) {
@@ -252,13 +276,10 @@ public class CreateRegistrateTags {
 		ArrayList<String> toReturn = new ArrayList<>();
 		toReturn.add(material + "_block");
 		toReturn.add(material + "_stairs");
-		toReturn.add(material + "_slab");
 		toReturn.add("smooth_" + material);
 		toReturn.add("smooth_" + material + "_stairs");
-		toReturn.add("smooth_" + material + "_slab");
 		toReturn.add(material + "_bricks");
 		toReturn.add(material + "_brick_stairs");
-		toReturn.add(material + "_brick_slab");
 		toReturn.add("chiseled_" + material);
 		return toReturn;
 	}

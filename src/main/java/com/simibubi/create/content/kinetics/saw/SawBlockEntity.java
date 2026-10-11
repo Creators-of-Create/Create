@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.kinetics.base.BlockBreakingKineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.logistics.box.PackageItem;
@@ -516,7 +517,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 		Block block = stateToBreak.getBlock();
 		if (block instanceof BambooStalkBlock)
 			return true;
-		if (block.equals(Blocks.PUMPKIN) || block.equals(Blocks.MELON))
+		if (AllBlockTags.SOLID_CROPS.matches(block))
 			return true;
 		if (block instanceof CactusBlock)
 			return true;

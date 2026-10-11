@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:guzmania"
-        }
-      ]
+      "item": "biomeswevegone:guzmania"
     }
   ],
   "processing_time": 50,

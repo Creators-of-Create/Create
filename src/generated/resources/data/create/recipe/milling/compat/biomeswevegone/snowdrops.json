@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:snowdrops"
-        }
-      ]
+      "item": "biomeswevegone:snowdrops"
     }
   ],
   "processing_time": 50,

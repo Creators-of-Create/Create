@@ -8,12 +8,7 @@
   "type": "create:filling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:silt_dirt"
-        }
-      ]
+      "item": "regions_unexplored:silt_dirt"
     },
     {
       "type": "neoforge:single",

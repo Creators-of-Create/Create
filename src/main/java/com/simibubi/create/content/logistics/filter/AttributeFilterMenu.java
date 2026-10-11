@@ -140,11 +140,6 @@ public class AttributeFilterMenu extends AbstractFilterMenu {
 			attributes.add(new ItemAttribute.ItemAttributeEntry(at.attribute(), at.inverted()));
 		});
 		filterItem.set(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, attributes);
-
-		if (attributes.isEmpty() && whitelistMode == AttributeFilterWhitelistMode.WHITELIST_DISJ) {
-			filterItem.remove(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES);
-			filterItem.remove(AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE);
-		}
 	}
 
 }

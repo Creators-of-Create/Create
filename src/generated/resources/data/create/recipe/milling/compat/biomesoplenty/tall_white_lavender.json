@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomesoplenty:tall_white_lavender"
-        }
-      ]
+      "item": "biomesoplenty:tall_white_lavender"
     }
   ],
   "processing_time": 50,

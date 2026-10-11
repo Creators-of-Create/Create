@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "environmental:tasselflower"
-        }
-      ]
+      "item": "environmental:tasselflower"
     }
   ],
   "processing_time": 50,

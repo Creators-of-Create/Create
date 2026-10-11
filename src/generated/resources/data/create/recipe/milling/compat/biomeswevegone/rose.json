@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:rose"
-        }
-      ]
+      "item": "biomeswevegone:rose"
     }
   ],
   "processing_time": 50,

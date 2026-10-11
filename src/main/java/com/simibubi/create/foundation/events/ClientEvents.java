@@ -308,6 +308,11 @@ public class ClientEvents {
 		CameraDistanceModifier.zoomOut();
 	}
 
+	@SubscribeEvent
+	public static void onLogOut(ClientPlayerNetworkEvent.LoggingOut event) {
+		CameraDistanceModifier.reset();
+	}
+
 	protected static boolean isGameActive() {
 		return !(Minecraft.getInstance().level == null || Minecraft.getInstance().player == null);
 	}

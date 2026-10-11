@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomesoplenty:goldenrod"
-        }
-      ]
+      "item": "biomesoplenty:goldenrod"
     }
   ],
   "processing_time": 50,

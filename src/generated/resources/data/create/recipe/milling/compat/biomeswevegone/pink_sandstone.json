@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:pink_sandstone"
-        }
-      ]
+      "item": "biomeswevegone:pink_sandstone"
     }
   ],
   "processing_time": 150,

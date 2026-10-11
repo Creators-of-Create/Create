@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.Unbreakable;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
@@ -65,7 +67,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 			return;
 
 		UseOnContext ctx = new UseOnContext(player, InteractionHand.MAIN_HAND, ray);
-		new ItemStack(Items.DIAMOND_HOE).useOn(ctx);
+		player.getMainHandItem().useOn(ctx);
 	}
 
 	@Override
@@ -141,7 +143,9 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 	private PloughFakePlayer getPlayer(MovementContext context) {
 		if (!(context.temporaryData instanceof PloughFakePlayer) && context.world != null) {
 			PloughFakePlayer player = new PloughFakePlayer((ServerLevel) context.world);
-			player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_HOE));
+			ItemStack heldItem = new ItemStack(Items.DIAMOND_HOE);
+			heldItem.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
+			player.setItemInHand(InteractionHand.MAIN_HAND, heldItem);
 			context.temporaryData = player;
 		}
 		return (PloughFakePlayer) context.temporaryData;

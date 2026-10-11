@@ -1,4 +1,4 @@
-// 1.21.1	2026-07-02T01:24:45.8417277	Registrate Provider for create [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2026-06-23T21:20:35.3982276	Registrate Provider for create [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -4769,12 +4769,14 @@ f400870b8dbcd14238be3ec99c419093073ba3a6 data/create/tags/block/postboxes.json
 79418bd729cef417b322cef9b491e7ae83317d61 data/create/tags/block/seats.json
 7d783d948cc49503fb645045fe9ef48906b74341 data/create/tags/block/simple_mounted_storage.json
 e9f4eef0275a0d859c0e75baecdec89561c5875c data/create/tags/block/single_block_inventories.json
+f111f4db28bd2db435b17f94d18f440224c5ed21 data/create/tags/block/solid_crops.json
 f02fc9781e8f0ae33ed3b98cf4f46ba6927c7ff8 data/create/tags/block/sugar_cane_variants.json
 8a6ad3c63fb0c436ec8109f39358213930effd5a data/create/tags/block/table_cloths.json
 5def5088f7fd31b80e6f28c1c4ea146aa9d7d15b data/create/tags/block/toolboxes.json
 2589b135c0e96ad29076569e144528fe32ea5b39 data/create/tags/block/tracks.json
 1b6977d9a399cf6ee042e3f8f5e64e4d3cda5489 data/create/tags/block/tree_attachments.json
 da739ad2160e7df4e0e5cc89587670ce5e9450c3 data/create/tags/block/valve_handles.json
+26d55d02888ede32eb9a03de999b47388f5e7ff4 data/create/tags/block/water_wheel_planks.json
 72143286fb5cb372a0696550e2eac76ca50e6fbc data/create/tags/block/windmill_sails.json
 a109dab3eeeae64b2eb909ae1b5027716c5dd271 data/create/tags/block/wrench_pickup.json
 76c0522664726c09461ad4565b6fba80b4f816b2 data/create/tags/entity_type/blaze_burner_capturable.json
@@ -4804,9 +4806,9 @@ a970ecabfefc20e8911762495da0d5cf1f99c636 data/create/tags/item/stone_types/crims
 8ee57ecfa4e4e5c67b61ef4dd18c1e2715bbe9d8 data/create/tags/item/stone_types/deepslate.json
 f5532145f210fdd0ab12c253d6deabbc8d1601ef data/create/tags/item/stone_types/diorite.json
 23aebee6c6614fdf94804f2a227476523844b888 data/create/tags/item/stone_types/dripstone.json
-5b13401dc5dd5e7d960e855fa091a785b173c48e data/create/tags/item/stone_types/galosphere/allurite.json
-d1254fa8710b3a2cf71847a5e4fd687b27b88c26 data/create/tags/item/stone_types/galosphere/amethyst.json
-e130fd23b642d640f314ec90cc6106669810e650 data/create/tags/item/stone_types/galosphere/lumiere.json
+d4f800a19979308dc10bb5eb1fd737d0323d7afb data/create/tags/item/stone_types/galosphere/allurite.json
+c1d3ac47b5d0302f4a13df83adc88e8584d8799c data/create/tags/item/stone_types/galosphere/amethyst.json
+c094828e2ede1df84e69a8dcebddfbdd5caf2083 data/create/tags/item/stone_types/galosphere/lumiere.json
 683700c751c964e47707d836986f8415fbf609d5 data/create/tags/item/stone_types/granite.json
 00f8eb75e9cd1a19fd21800d03f671cc58dbbbe7 data/create/tags/item/stone_types/limestone.json
 00af13f6cea72fb3da0d33e06c16a643ec21b327 data/create/tags/item/stone_types/ochrum.json

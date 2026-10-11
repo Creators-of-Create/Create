@@ -1,0 +1,29 @@
+{
+  "values": [
+    "#minecraft:planks",
+    {
+      "id": "aether:skyroot_planks",
+      "required": false
+    },
+    {
+      "id": "deep_aether:cruderoot_planks",
+      "required": false
+    },
+    {
+      "id": "deep_aether:roseroot_planks",
+      "required": false
+    },
+    {
+      "id": "deep_aether:sunroot_planks",
+      "required": false
+    },
+    {
+      "id": "deep_aether:yagroot_planks",
+      "required": false
+    },
+    {
+      "id": "deep_aether:conberry_planks",
+      "required": false
+    }
+  ]
+}

@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:windswept_sandstone"
-        }
-      ]
+      "item": "biomeswevegone:windswept_sandstone"
     }
   ],
   "processing_time": 150,

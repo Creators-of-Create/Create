@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "regions_unexplored:hibiscus"
-        }
-      ]
+      "item": "regions_unexplored:hibiscus"
     }
   ],
   "processing_time": 50,

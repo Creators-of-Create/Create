@@ -8,12 +8,7 @@
   "type": "create:haunting",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "farmersdelight:tomato"
-        }
-      ]
+      "item": "farmersdelight:tomato"
     }
   ],
   "results": [

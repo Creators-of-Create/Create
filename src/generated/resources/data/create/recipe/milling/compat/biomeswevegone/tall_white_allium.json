@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:tall_white_allium"
-        }
-      ]
+      "item": "biomeswevegone:tall_white_allium"
     }
   ],
   "processing_time": 50,

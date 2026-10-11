@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomeswevegone:angelica"
-        }
-      ]
+      "item": "biomeswevegone:angelica"
     }
   ],
   "processing_time": 50,

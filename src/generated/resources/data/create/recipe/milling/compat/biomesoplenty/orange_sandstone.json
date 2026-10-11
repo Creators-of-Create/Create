@@ -8,12 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "type": "neoforge:compound",
-      "ingredients": [
-        {
-          "item": "biomesoplenty:orange_sandstone"
-        }
-      ]
+      "item": "biomesoplenty:orange_sandstone"
     }
   ],
   "processing_time": 150,
