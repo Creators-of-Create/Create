@@ -10,13 +10,12 @@ import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.processing.basin.BasinBlock;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.particle.ItemParticleData;
 
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
@@ -276,7 +275,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 			Vec3 motion = VecHelper.offsetRandomly(Vec3.ZERO, level.random, .125f)
 				.multiply(1, 0, 1);
 			motion = motion.add(0, amount != 1 ? 0.125f : 1 / 16f, 0);
-			level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), pos.x, pos.y - .25f, pos.z, motion.x,
+			level.addParticle(new ItemParticleData(stack), pos.x, pos.y - .25f, pos.z, motion.x,
 				motion.y, motion.z);
 		}
 	}
@@ -288,7 +287,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 		for (int i = 0; i < 20; i++) {
 			Vec3 motion = VecHelper.offsetRandomly(Vec3.ZERO, level.random, .175f)
 				.multiply(1, 0, 1);
-			level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z, motion.x,
+			level.addParticle(new ItemParticleData(stack), pos.x, pos.y, pos.z, motion.x,
 				motion.y + .25f, motion.z);
 		}
 	}
