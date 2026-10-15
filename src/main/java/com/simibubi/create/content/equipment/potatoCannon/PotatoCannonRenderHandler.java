@@ -3,13 +3,12 @@ package com.simibubi.create.content.equipment.potatoCannon;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.equipment.zapper.ShootableGadgetRenderHandler;
 import com.simibubi.create.foundation.particle.AirParticleData;
+import com.simibubi.create.foundation.particle.ItemParticleData;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -35,7 +34,7 @@ public class PotatoCannonRenderHandler extends ShootableGadgetRenderHandler {
 		ClientLevel world = Minecraft.getInstance().level;
 		for (int i = 0; i < 2; i++) {
 			Vec3 m = VecHelper.offsetRandomly(motion.scale(0.1f), world.random, .025f);
-			world.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), location.x, location.y, location.z, m.x,
+			world.addParticle(new ItemParticleData(stack), location.x, location.y, location.z, m.x,
 				m.y, m.z);
 
 			Vec3 m2 = VecHelper.offsetRandomly(motion.scale(2f), world.random, .5f);

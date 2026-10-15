@@ -28,6 +28,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedI
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.particle.AirParticleData;
+import com.simibubi.create.foundation.particle.ItemParticleData;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -40,8 +41,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -576,7 +575,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			Vec3 p = VecHelper.getCenterOf(worldPosition);
 			p = VecHelper.offsetRandomly(p, level.random, .5f);
 			Vec3 m = Vec3.ZERO;
-			level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, item), p.x, p.y, p.z, m.x, m.y, m.z);
+			level.addParticle(new ItemParticleData(item), p.x, p.y, p.z, m.x, m.y, m.z);
 		}
 	}
 

@@ -25,6 +25,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.particle.ItemParticleData;
 import com.simibubi.create.foundation.recipe.RecipeConditions;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
 import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
@@ -35,10 +36,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -290,13 +287,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 		if (stack == null || stack.isEmpty())
 			return;
 
-		ParticleOptions particleData = null;
-		if (stack.getItem() instanceof BlockItem)
-			particleData = new BlockParticleOption(ParticleTypes.BLOCK, ((BlockItem) stack.getItem()).getBlock()
-				.defaultBlockState());
-		else
-			particleData = new ItemParticleOption(ParticleTypes.ITEM, stack);
-
+		ItemParticleData particleData = new ItemParticleData(stack);
 		RandomSource r = level.random;
 		Vec3 v = VecHelper.getCenterOf(this.worldPosition)
 			.add(0, 5 / 16f, 0);
@@ -310,16 +301,8 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 		if (stack == null || stack.isEmpty())
 			return;
 
-		ParticleOptions particleData = null;
-		float speed = 1;
-		if (stack.getItem() instanceof BlockItem)
-			particleData = new BlockParticleOption(ParticleTypes.BLOCK, ((BlockItem) stack.getItem()).getBlock()
-				.defaultBlockState());
-		else {
-			particleData = new ItemParticleOption(ParticleTypes.ITEM, stack);
-			speed = .125f;
-		}
-
+		ItemParticleData particleData = new ItemParticleData(stack);
+		float speed = .125f;
 		RandomSource r = level.random;
 		Vec3 vec = getItemMovementVec();
 		Vec3 pos = VecHelper.getCenterOf(this.worldPosition);
