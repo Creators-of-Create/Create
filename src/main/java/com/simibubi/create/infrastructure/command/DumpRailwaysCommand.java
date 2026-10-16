@@ -81,11 +81,11 @@ public class DumpRailwaysCommand {
 			chat.accept("Nearest Graphs: ", orange);
 			chat.accept("", white);
 			for (TrackGraph graph : nearest) {
-				chat.accept(graph.id.toString()
-					.substring(0, 5) + " with "
-					+ graph.getNodes()
-					.size()
-					+ " Nodes", white);
+				String fullGraphId = graph.id.toString();
+				Component graphLine = Component.literal("") // literal is necessary or append doesn't work
+					.append(createClickableUuid(fullGraphId, white))
+					.append(Component.literal(" with " + graph.getNodes().size() + " Nodes").withColor(white));
+				chatRaw.accept(graphLine);
 				Collection<SignalBoundary> signals = graph.getPoints(EdgePointType.SIGNAL);
 				if (!signals.isEmpty())
 					chat.accept(" -> " + signals.size() + " Signals", blue);
@@ -111,16 +111,23 @@ public class DumpRailwaysCommand {
 			chat.accept("Nearest Trains: ", orange);
 			chat.accept("", white);
 			for (Train train : nearestTrains) {
-				chat.accept(String.format("┬%1$s: %2$s, %3$d Wagons",
-					train.id.toString().substring(0, 5),
-					train.name.getString(),
-					train.carriages.size()
-				), bright);
+				// Create the train header with clickable UUID
+				String fullUuid = train.id.toString();
+				Component trainHeader = Component.literal("┬").withColor(bright)
+					.append(createClickableUuid(fullUuid, bright))
+					.append(Component.literal(String.format(": %s, %d Wagons",
+						train.name.getString(),
+						train.carriages.size()
+					)).withColor(bright));
+				chatRaw.accept(trainHeader);
 				if (train.derailed)
 					chat.accept("├─Derailed", orange);
-				else if (train.graph != null)
-					chat.accept("├─On Track: " + train.graph.id.toString()
-						.substring(0, 5), blue);
+				else if (train.graph != null) {
+					String graphId = train.graph.id.toString();
+					Component trackLine = Component.literal("├─On Track: ").withColor(blue)
+						.append(createClickableUuid(graphId, blue));
+					chatRaw.accept(trackLine);
+				}
 				LivingEntity owner = train.getOwner(level);
 				if (owner != null)
 					chat.accept("├─Owned by " + owner.getName()
@@ -148,7 +155,7 @@ public class DumpRailwaysCommand {
 					chat.accept("├─In %1$s near [%2$s]".formatted(key.location(), train.getPositionInDimension(key).get().toShortString()), darkerBlue)
 				);
 				chatRaw.accept(createTeleportButton(train));
-
+				chatRaw.accept(createScheduleButton(train));
 				chatRaw.accept(createDeleteButton(train));
 				chat.accept("", white);
 			}
@@ -159,6 +166,18 @@ public class DumpRailwaysCommand {
 		}
 
 		chat.accept("-+--------------------------------+-", white);
+	}
+
+	private static Component createClickableUuid(String fullUuid, int color) {
+		String shortUuid = fullUuid.length() >= 5 ? fullUuid.substring(0, 5) : fullUuid;
+		return ComponentUtils.wrapInSquareBrackets(
+			Component.literal(shortUuid)
+				.withStyle(style -> style
+					.withColor(color)
+					.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, fullUuid))
+					.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+						Component.literal("Click to copy full UUID:\n" + fullUuid))))
+		);
 	}
 
 	private static Component createDeleteButton(Train train) {
@@ -184,6 +203,20 @@ public class DumpRailwaysCommand {
 						.withColor(darkBlue)
 						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/c train tp " + train.id.toString()))
 						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to teleport to ").append(train.name)));
+				}
+			)
+		);
+	}
+
+	private static Component createScheduleButton(Train train) {
+		return Component.literal("├─").withStyle(style -> style.withColor(darkBlue)).append(
+			ComponentUtils.wrapInSquareBrackets(
+				Component.literal("Schedule").withStyle(style -> style.withColor(orange))
+			).withStyle(style -> {
+					return style
+						.withColor(darkBlue)
+						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/c train schedule " + train.id.toString()))
+						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to view schedule of ").append(train.name)));
 				}
 			)
 		);
