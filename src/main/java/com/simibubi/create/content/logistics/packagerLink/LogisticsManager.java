@@ -111,23 +111,43 @@ public class LogisticsManager {
 
 		// Group links by InventoryIdentifier and randomly select one from each group
 		Map<InventoryIdentifier, List<LogisticallyLinkedBehaviour>> linksByInventory = new HashMap<>();
-		List<LogisticallyLinkedBehaviour> availableLinks = new ArrayList<>();
+		List<List<LogisticallyLinkedBehaviour>> availableLinkGroups = new ArrayList<>();
 
 		// Group links by their inventory identifier
 		for (LogisticallyLinkedBehaviour link : allAvailableLinks) {
 			InventoryIdentifier inventoryId = getInventoryIdentifierFromLink(link);
 			if (inventoryId != null) {
-				linksByInventory.computeIfAbsent(inventoryId, k -> new ArrayList<>()).add(link);
+				List<LogisticallyLinkedBehaviour> listGroup = linksByInventory.get(inventoryId);
+				if (listGroup == null) {
+					listGroup = new ArrayList<>();
+					listGroup.add(link);
+					linksByInventory.put(inventoryId, listGroup);
+				}
+				listGroup.add(link);
+				availableLinkGroups.add(listGroup);
 			} else {
 				// Links without inventory identifier are added directly
-				availableLinks.add(link);
+				List<LogisticallyLinkedBehaviour> listGroup = new ArrayList<>();
+				listGroup.add(link);
+				availableLinkGroups.add(listGroup);
 			}
 		}
 
+		List<LogisticallyLinkedBehaviour> availableLinks = new ArrayList<>();
+
 		// Randomly select one link from each inventory group
-		for (List<LogisticallyLinkedBehaviour> linkGroup : linksByInventory.values()) {
-			if (!linkGroup.isEmpty()) {
-				LogisticallyLinkedBehaviour selectedLink = linkGroup.get(r.nextInt(linkGroup.size()));
+		for (List<LogisticallyLinkedBehaviour> linkGroup : availableLinkGroups) {
+			if (linkGroup.size() == 1) {
+				availableLinks.add(linkGroup.getFirst());
+			} else {
+				int priority = linkGroup.getFirst().redstonePower;
+				List<LogisticallyLinkedBehaviour> priorityLinkGroup = new ArrayList<>();
+				for (LogisticallyLinkedBehaviour link : linkGroup) {
+					if (link.redstonePower == priority) {
+						priorityLinkGroup.add(link);
+					}
+				}
+				LogisticallyLinkedBehaviour selectedLink = priorityLinkGroup.get(r.nextInt(priorityLinkGroup.size()));
 				availableLinks.add(selectedLink);
 			}
 		}
