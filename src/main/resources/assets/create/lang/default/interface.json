@@ -224,6 +224,8 @@
 	"create.logistics.filter.up_to": "Up to",
 	"create.logistics.filter.exactly": "Exactly",
 	"create.logistics.filter.requires_item_in_inventory": "Requires %1$s item in Inventory",
+  
+  "create.logistics.stock_ticker.requires_items_in_inventory": "Not enough %1$s items in Inventory",
 
 	"create.logistics.creative_crate.supply": "Infinite Supply",
 	"create.logistics.train_observer.cargo_filter": "Cargo Filter",

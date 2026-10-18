@@ -15,6 +15,7 @@ import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
+import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.filter.FilterItem;
 import com.simibubi.create.content.logistics.filter.FilterItemStack;
@@ -45,6 +46,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -56,8 +58,9 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
-public class StockTickerBlockEntity extends StockCheckingBlockEntity implements IHaveHoveringInformation, Clearable {
+public class StockTickerBlockEntity extends StockCheckingBlockEntity implements IHaveHoveringInformation, Clearable, ClipboardCloneable {
 	public AbstractComputerBehaviour computerBehaviour;
 
 	// Player-interface Feature
@@ -315,5 +318,91 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity implements 
 		public Component getDisplayName() {
 			return Component.empty();
 		}
+	}
+
+	@Override
+	public String getClipboardKey() {
+		return "StockTicker";
+	}
+
+  
+	@Override
+	public boolean writeToClipboard(HolderLookup.Provider registries, CompoundTag tag, Direction side) {
+		tag.put("Categories", NBTHelper.writeItemList(categories, registries));
+		return true;
+	}
+
+  
+	@Override
+	public boolean readFromClipboard(HolderLookup.Provider registries, CompoundTag tag, Player player, Direction side, boolean simulate) {
+		if (!tag.contains("Categories"))
+			return false;
+		if (simulate)
+			return true;
+
+    // Read categories from the tag
+    List<ItemStack> newCategories = NBTHelper.readItemList(tag.getList("Categories", Tag.TAG_COMPOUND), registries);
+
+    // Apply the new categories if the player is in creative mode
+    if (player.isCreative()) {
+      categories = newCategories;
+      hiddenCategoriesByPlayer.clear();
+      notifyUpdate();
+      return true;
+    }
+
+    // Diff the new categories with the existing ones
+    Map<Item, Integer> counts = new HashMap<>();
+    newCategories.forEach(s -> counts.merge(s.getItem(),  s.getCount(), Integer::sum));
+    categories   .forEach(s -> counts.merge(s.getItem(), -s.getCount(), Integer::sum));
+
+    // Check if the player has enough items in their inventory to cover the new categories
+    InvWrapper inv = new InvWrapper(player.getInventory());
+    
+    for (Map.Entry<Item,Integer> e : counts.entrySet()) {
+      if (e.getValue() <= 0) continue;
+
+      if (!ItemHelper.extract(inv, inv_stack -> inv_stack.getItem() == e.getKey(),
+          e.getValue(), true).isEmpty())
+        continue;
+
+      player.displayClientMessage(CreateLang
+        .translate("logistics.stock_ticker.requires_items_in_inventory", e.getKey().getDescription()
+          .copy()
+          .withStyle(ChatFormatting.WHITE))
+        .style(ChatFormatting.RED)
+        .component(), true);
+      AllSoundEvents.DENY.playOnServer(player.level(), player.blockPosition(), 1, 1);
+      return false;
+    }
+
+    // Take the items from the player's inventory
+    for (Map.Entry<Item,Integer> e : counts.entrySet()) {
+      for (boolean preferStacksWithoutData : Iterate.trueAndFalse) {
+        while (e.getValue() > 0) {
+          if (ItemHelper.extract(inv, stack -> stack.getItem() == e.getKey() && preferStacksWithoutData == stack.isComponentsPatchEmpty(),
+              1, false)
+            .isEmpty())
+            break; 
+          e.setValue(e.getValue() - 1);
+        }
+      }
+    }
+    
+    // Add extra items to the player's inventory
+    for (Map.Entry<Item,Integer> e : counts.entrySet()) {
+      if (e.getValue() < 0) {
+        player.getInventory()
+          .placeItemBackInInventory(new ItemStack(e.getKey(), -e.getValue()));
+        continue;
+      }
+    }
+    
+    // Apply the new categories and clear hidden categories
+    categories = newCategories;
+    hiddenCategoriesByPlayer.clear();
+    notifyUpdate();
+
+    return true;
 	}
 }
