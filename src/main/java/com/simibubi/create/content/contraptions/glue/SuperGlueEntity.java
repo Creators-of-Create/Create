@@ -164,7 +164,7 @@ public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, 
 
 	@Override
 	public boolean ignoreExplosion(Explosion explosion) {
-		return true; // Fix lag related to large explosions, since honey glue cannot be hurt (consequence of above method)
+		return true;
 	}
 
 	@Override
