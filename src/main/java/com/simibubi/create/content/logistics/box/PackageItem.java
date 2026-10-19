@@ -3,6 +3,9 @@ package com.simibubi.create.content.logistics.box;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -55,6 +58,9 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class PackageItem extends Item {
 	public static final int SLOTS = 9;
+
+	private static final int ADDRESS_PATTERN_CACHE_LIMIT = 1024;
+	private static final Map<String, Pattern> ADDRESS_PATTERNS = new ConcurrentHashMap<>();
 
 	public PackageStyle style;
 
@@ -188,8 +194,20 @@ public class PackageItem extends Item {
 			return true;
 		if (address.equals(boxAddress))
 			return true;
-		return address.matches(Glob.toRegexPattern(boxAddress, "")) ||
-			boxAddress.matches(Glob.toRegexPattern(address, ""));
+		return addressPattern(boxAddress).matcher(address).matches() ||
+			addressPattern(address).matcher(boxAddress).matches();
+	}
+
+	private static Pattern addressPattern(String address) {
+		Pattern pattern = ADDRESS_PATTERNS.get(address);
+		if (pattern == null) {
+			if (ADDRESS_PATTERNS.size() >= ADDRESS_PATTERN_CACHE_LIMIT) {
+				ADDRESS_PATTERNS.clear();
+			}
+			pattern = Pattern.compile(Glob.toRegexPattern(address, ""));
+			ADDRESS_PATTERNS.put(address, pattern);
+		}
+		return pattern;
 	}
 
 	public static String getAddress(ItemStack box) {
