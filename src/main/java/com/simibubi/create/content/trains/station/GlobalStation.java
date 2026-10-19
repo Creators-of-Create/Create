@@ -2,6 +2,7 @@ package com.simibubi.create.content.trains.station;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,6 +17,11 @@ import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.signal.SingleBlockEntityEdgePoint;
+import com.simibubi.create.content.trains.schedule.Schedule;
+import com.simibubi.create.content.trains.schedule.ScheduleEntry;
+import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
+import com.simibubi.create.content.trains.schedule.destination.DeliverPackagesInstruction;
+import com.simibubi.create.content.trains.schedule.destination.FetchPackagesInstruction;
 
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
@@ -72,6 +78,8 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 			port.address = c.getString("Address");
 			port.offlineBuffer.deserializeNBT(registries, c.getCompound("OfflineBuffer"));
 			port.primed = c.getBoolean("Primed");
+			port.explicitFetch = c.getBoolean("ExplicitFetch");
+			port.explicitDeliver = c.getBoolean("ExplicitDeliver");
 			connectedPorts.put(NBTHelper.readBlockPos(c, "Pos"), port);
 		});
 	}
@@ -96,6 +104,8 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 			c.putString("Address", e.getValue().address);
 			c.put("OfflineBuffer", e.getValue().offlineBuffer.serializeNBT(registries));
 			c.putBoolean("Primed", e.getValue().primed);
+			c.putBoolean("ExplicitFetch", e.getValue().explicitFetch);
+			c.putBoolean("ExplicitDeliver", e.getValue().explicitDeliver);
 			c.put("Pos", NbtUtils.writeBlockPos(e.getKey()));
 			return c;
 		}));
@@ -171,6 +181,17 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 		Level level = server.getLevel(getBlockEntityDimension());
 
+		ScheduleEntry scheduleEntry = getCurrentScheduleStep(train);
+		FetchPackagesInstruction fetchInstruction = null;
+		DeliverPackagesInstruction deliverInstruction = null;
+
+		if (scheduleEntry != null){
+			if (scheduleEntry.instruction instanceof FetchPackagesInstruction instruction)
+				fetchInstruction = instruction;
+			else if (scheduleEntry.instruction instanceof DeliverPackagesInstruction instruction)
+				deliverInstruction = instruction;
+		}
+
 		for (Carriage carriage : train.carriages) {
 			IItemHandlerModifiable carriageInventory = carriage.storage.getAllItems();
 			if (carriageInventory == null)
@@ -195,6 +216,12 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 						continue;
 					if (PackageItem.matchAddress(stack, port.address))
 						continue;
+					if(port.explicitFetch){
+						if(fetchInstruction == null)
+							continue;
+						if (!PackageItem.getAddress(stack).matches(fetchInstruction.getFilterForRegex()))
+							continue;
+					}
 
 					ItemStack result = ItemHandlerHelper.insertItemStacked(carriageInventory, stack, false);
 					if (box != null)
@@ -227,6 +254,12 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 
 					if (!PackageItem.matchAddress(stack, port.address))
 						continue;
+					if(port.explicitDeliver){
+						if(deliverInstruction == null)
+							continue;
+						if (!PackageItem.getAddress(stack).matches(deliverInstruction.getFilterForRegex()))
+							continue;
+					}
 
 					IItemHandler postboxInventory = port.offlineBuffer;
 					if (level != null && level.isLoaded(pos)
@@ -258,4 +291,19 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 		}
 	}
 
+	private ScheduleEntry getCurrentScheduleStep(Train train){
+		ScheduleRuntime runtime = train.runtime;
+		if (runtime == null)
+			return null;
+		Schedule schedule = runtime.getSchedule();
+		if (schedule == null)
+			return null;
+		List<ScheduleEntry> entries = schedule.entries;
+		if (entries == null)
+			return null;
+		int currentEntry = runtime.currentEntry;
+		if (currentEntry < 0 || currentEntry >= entries.size())
+			return null;
+		return entries.get(currentEntry);
+	}
 }

@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockEntity;
+import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlockEntity;
 import com.simibubi.create.content.trains.station.NoShadowFontWrapper;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -34,6 +35,9 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 	private IconButton confirmButton;
 	private IconButton dontAcceptPackages;
 	private IconButton acceptPackages;
+
+	private IconButton explicitFetchButton;
+	private IconButton explicitDeliverButton;
 
 	private ItemStack icon;
 
@@ -94,6 +98,24 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 		dontAcceptPackages.setToolTip(CreateLang.translateDirect("gui.package_port.send_only"));
 		addRenderableWidget(dontAcceptPackages);
 
+		if(!frogMode){
+			explicitFetchButton = new IconButton(x + 79, y + background.getHeight() - 24, AllIcons.I_EXPLICIT_FETCH);
+			explicitFetchButton.withCallback(() -> {
+				explicitFetchButton.green = !explicitFetchButton.green;
+			});
+			explicitFetchButton.green = ((PostboxBlockEntity) menu.contentHolder).explicitFetch;
+			explicitFetchButton.setToolTip(CreateLang.translateDirect("gui.package_port.explicit_fetch"));
+			addRenderableWidget(explicitFetchButton);
+
+			explicitDeliverButton = new IconButton(x + 79 + 18, y + background.getHeight() - 24, AllIcons.I_EXPLICIT_DELIVER);
+			explicitDeliverButton.withCallback(() -> {
+				explicitDeliverButton.green = !explicitDeliverButton.green;
+			});
+			explicitDeliverButton.green = ((PostboxBlockEntity) menu.contentHolder).explicitDeliver;
+			explicitDeliverButton.setToolTip(CreateLang.translateDirect("gui.package_port.explicit_deliver"));
+			addRenderableWidget(explicitDeliverButton);
+		}
+
 		containerTick();
 
 		extraAreas = ImmutableList.of(new Rect2i(x + background.getWidth(), y + background.getHeight() - 50, 70, 60));
@@ -107,6 +129,10 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 	protected void containerTick() {
 		acceptPackages.visible = menu.contentHolder.target != null;
 		dontAcceptPackages.visible = menu.contentHolder.target != null;
+		if(!frogMode) {
+			explicitFetchButton.visible = menu.contentHolder.target != null;
+			explicitDeliverButton.visible = menu.contentHolder.target != null;
+		}
 		super.containerTick();
 	}
 
@@ -177,8 +203,12 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 
 	@Override
 	public void removed() {
-		CatnipServices.NETWORK.sendToServer(new PackagePortConfigurationPacket(menu.contentHolder.getBlockPos(), addressBox.getValue(),
-				acceptPackages.green));
+		if(frogMode)
+			CatnipServices.NETWORK.sendToServer(new PackagePortConfigurationPacket(menu.contentHolder.getBlockPos(), addressBox.getValue(),
+				acceptPackages.green, false, false));
+		else
+			CatnipServices.NETWORK.sendToServer(new PackagePortConfigurationPacket(menu.contentHolder.getBlockPos(), addressBox.getValue(),
+				acceptPackages.green, explicitFetchButton.green, explicitDeliverButton.green));
 		super.removed();
 	}
 
