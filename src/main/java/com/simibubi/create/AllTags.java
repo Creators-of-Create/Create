@@ -92,6 +92,7 @@ public class AllTags {
 	}
 
 	public enum AllBlockTags {
+		BASIN_COMPATIBLE,
 		BRITTLE,
 		CASING,
 		COPYCAT_ALLOW,

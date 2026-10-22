@@ -2,6 +2,7 @@ package com.simibubi.create.content.processing.basin;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
@@ -216,7 +217,7 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 			BlockEntityBehaviour.get(world, output, DirectBeltInputBehaviour.TYPE);
 		if (directBeltInputBehaviour != null)
 			return directBeltInputBehaviour.canInsertFromSide(direction);
-		return false;
+		return world.getBlockState(output).is(AllBlockTags.BASIN_COMPATIBLE.tag);
 	}
 
 	@Override
