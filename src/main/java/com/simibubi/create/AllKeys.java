@@ -103,7 +103,9 @@ public enum AllKeys {
 		return codeMatches && modifierMatches;
 	}
 
+	//added a small check, to avoid crashes. 
 	public static boolean isKeyDown(int key) {
+		if (key == GLFW.GLFW_KEY_UNKNOWN) return false;
 		return InputConstants.isKeyDown(Minecraft.getInstance()
 			.getWindow()
 			.getWindow(), key);
