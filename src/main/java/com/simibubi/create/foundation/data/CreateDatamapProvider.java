@@ -9,14 +9,19 @@ import com.simibubi.create.api.data.datamaps.Fillable;
 import com.simibubi.create.api.registry.CreateDataMaps;
 import com.simibubi.create.foundation.block.CopperRegistries;
 
+import com.tterrag.registrate.util.entry.FluidEntry;
+
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+
+import net.minecraft.world.level.material.Fluid;
 
 import net.neoforged.neoforge.common.data.DataMapProvider;
 import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
@@ -38,8 +43,13 @@ public class CreateDatamapProvider extends DataMapProvider {
 
 		final Builder<Fillable, Item> fillables = builder(CreateDataMaps.FILLABLE);
 		add(fillables, BuiltInRegistries.ITEM.wrapAsHolder(Items.GLASS_BOTTLE), new Fillable(Map.of(
-			BuiltInRegistries.FLUID.getResourceKey(AllFluids.TEA.getSource()).orElseThrow(), new Fillable.Entry(250, AllItems.BUILDERS_TEA.getKey())
+			getSourceKey(AllFluids.TEA), new Fillable.Entry(250, AllItems.BUILDERS_TEA.getKey()),
+			getSourceKey(AllFluids.HONEY), new Fillable.Entry(250, BuiltInRegistries.ITEM.wrapAsHolder(Items.HONEY_BOTTLE).getKey())
 		)));
+	}
+
+	public static ResourceKey<Fluid> getSourceKey(FluidEntry<?> fluidEntry) {
+		return BuiltInRegistries.FLUID.getResourceKey(fluidEntry.getSource()).orElseThrow();
 	}
 
 	public static <T, I> void add(Builder<T, I> b, Holder<I> now, T after) {
