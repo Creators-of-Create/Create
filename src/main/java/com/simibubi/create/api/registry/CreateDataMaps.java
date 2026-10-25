@@ -51,7 +51,7 @@ public class CreateDataMaps {
 	 * </p>
 	 */
 	public static final AdvancedDataMapType<Item, Fillable, Fillable.Remover> FILLABLE = AdvancedDataMapType
-		.builder(Create.asResource("container_filling"), Registries.ITEM, Fillable.CODEC)
+		.builder(Create.asResource("fillables"), Registries.ITEM, Fillable.CODEC)
 		.merger(new Fillable.Merger())
 		.remover(Fillable.Remover.CODEC)
 		.build();

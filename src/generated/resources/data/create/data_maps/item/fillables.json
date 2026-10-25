@@ -2,6 +2,10 @@
   "values": {
     "minecraft:glass_bottle": {
       "fill_with": {
+        "create:honey": {
+          "amount": 250,
+          "result": "minecraft:honey_bottle"
+        },
         "create:tea": {
           "amount": 250,
           "result": "create:builders_tea"
