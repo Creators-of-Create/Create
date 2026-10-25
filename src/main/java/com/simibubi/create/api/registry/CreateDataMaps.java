@@ -3,10 +3,14 @@ package com.simibubi.create.api.registry;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.data.datamaps.BlazeBurnerFuel;
 
+import com.simibubi.create.api.data.datamaps.Fillable;
+
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 
+import net.neoforged.neoforge.registries.datamaps.AdvancedDataMapType;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
+import net.neoforged.neoforge.registries.datamaps.DataMapValueRemover;
 import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
 
 /**
@@ -39,6 +43,18 @@ public class CreateDataMaps {
 	 */
 	public static final DataMapType<Item, BlazeBurnerFuel> SUPERHEATED_BLAZE_BURNER_FUELS = DataMapType.builder(
 		Create.asResource("superheated_blaze_burner_fuels"), Registries.ITEM, BlazeBurnerFuel.CODEC).build();
+
+	/**
+	 * The {@linkplain Item} data map for filling container items with modded fluids.
+	 * <p>
+	 * The location of this data map is {@code create/data_maps/fluid/container_filling.json}, and the values are objects with 1 field:
+	 * </p>
+	 */
+	public static final AdvancedDataMapType<Item, Fillable, Fillable.Remover> FILLABLE = AdvancedDataMapType
+		.builder(Create.asResource("container_filling"), Registries.ITEM, Fillable.CODEC)
+		.merger(new Fillable.Merger())
+		.remover(Fillable.Remover.CODEC)
+		.build();
 
 	private CreateDataMaps() {
 		throw new AssertionError("This class should not be instantiated");

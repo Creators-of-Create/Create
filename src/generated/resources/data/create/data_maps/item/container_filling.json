@@ -1,0 +1,12 @@
+{
+  "values": {
+    "minecraft:glass_bottle": {
+      "fill_with": {
+        "create:tea": {
+          "amount": 250,
+          "result": "create:builders_tea"
+        }
+      }
+    }
+  }
+}
