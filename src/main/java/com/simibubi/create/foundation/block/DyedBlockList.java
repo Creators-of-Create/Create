@@ -10,21 +10,19 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 
+import org.jetbrains.annotations.NotNull;
+
 public class DyedBlockList<T extends Block> implements Iterable<BlockEntry<T>> {
 
-	private static final int COLOR_AMOUNT = DyeColor.values().length;
-
-	private final BlockEntry<?>[] values = new BlockEntry<?>[COLOR_AMOUNT];
-
-	public DyedBlockList(Function<DyeColor, BlockEntry<? extends T>> filler) {
-		for (DyeColor color : DyeColor.values()) {
-			values[color.ordinal()] = filler.apply(color);
-		}
-	}
+	private final BlockEntry<T>[] values;
 
 	@SuppressWarnings("unchecked")
+	public DyedBlockList(Function<DyeColor, BlockEntry<? extends T>> filler) {
+		values = Arrays.stream(DyeColor.values()).map(filler).toArray(BlockEntry[]::new);
+	}
+
 	public BlockEntry<T> get(DyeColor color) {
-		return (BlockEntry<T>) values[color.ordinal()];
+		return values[color.ordinal()];
 	}
 
 	public boolean contains(Block block) {
@@ -36,12 +34,11 @@ public class DyedBlockList<T extends Block> implements Iterable<BlockEntry<T>> {
 		return false;
 	}
 
-	@SuppressWarnings("unchecked")
 	public BlockEntry<T>[] toArray() {
-		return (BlockEntry<T>[]) Arrays.copyOf(values, values.length);
+		return Arrays.copyOf(values, values.length);
 	}
 
-	@Override
+	@Override @NotNull
 	public Iterator<BlockEntry<T>> iterator() {
 		return new Iterator<>() {
 			private int index = 0;
@@ -51,12 +48,11 @@ public class DyedBlockList<T extends Block> implements Iterable<BlockEntry<T>> {
 				return index < values.length;
 			}
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public BlockEntry<T> next() {
 				if (!hasNext())
 					throw new NoSuchElementException();
-				return (BlockEntry<T>) values[index++];
+				return values[index++];
 			}
 		};
 	}
