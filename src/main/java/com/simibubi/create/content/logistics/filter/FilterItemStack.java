@@ -123,7 +123,6 @@ public class FilterItemStack {
 
 		public ListFilterItemStack(ItemStack filter) {
 			super(filter);
-			boolean hasFilterItems = filter.has(AllDataComponents.FILTER_ITEMS);
 
 			containedItems = new ArrayList<>();
 			ItemStackHandler items = ((ListFilterItem) filter.getItem()).getFilterItemHandler(filter);
@@ -133,8 +132,8 @@ public class FilterItemStack {
 					containedItems.add(FilterItemStack.of(stackInSlot));
 			}
 
-			shouldRespectNBT = hasFilterItems && filter.getOrDefault(AllDataComponents.FILTER_ITEMS_RESPECT_NBT, false);
-			isBlacklist = hasFilterItems && filter.getOrDefault(AllDataComponents.FILTER_ITEMS_BLACKLIST, false);
+			shouldRespectNBT = filter.getOrDefault(AllDataComponents.FILTER_ITEMS_RESPECT_NBT, false);
+			isBlacklist = filter.getOrDefault(AllDataComponents.FILTER_ITEMS_BLACKLIST, false);
 		}
 
 		@Override
