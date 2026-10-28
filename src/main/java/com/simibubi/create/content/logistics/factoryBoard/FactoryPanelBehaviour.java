@@ -37,6 +37,7 @@ import com.simibubi.create.content.logistics.packagerLink.RequestPromise;
 import com.simibubi.create.content.logistics.packagerLink.RequestPromiseQueue;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts.CraftingEntry;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -109,6 +110,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	public boolean forceClearPromises;
 	public UUID network;
 	public boolean active;
+	public int craft_time;
 
 	public boolean redstonePowered;
 
@@ -451,14 +453,14 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 			InventorySummary summary = LogisticsManager.getSummaryOfNetwork(network, true);
 
 			for (ItemStackConnections connections : entry.getValue().values()) {
-				if (connections.totalAmount == 0 || connections.item.isEmpty() || summary.getCountOf(connections.item) < connections.totalAmount) {
+				if (connections.totalAmount == 0 || connections.item.isEmpty() || summary.getCountOf(connections.item) < connections.totalAmount*craft_time) {
 					for (FactoryPanelConnection connection : connections)
 						sendEffect(connection.from, false);
 					failed = true;
 					continue;
 				}
 
-				BigItemStack stack = new BigItemStack(connections.item, connections.totalAmount);
+				BigItemStack stack = new BigItemStack(connections.item, connections.totalAmount*craft_time);
 				toRequest.put(network, stack);
 				for (FactoryPanelConnection connection : connections)
 					sendEffect(connection.from, true);
@@ -475,9 +477,9 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 
 		// Panel may enforce item arrangement
 		if (!activeCraftingArrangement.isEmpty())
-			craftingContext = PackageOrderWithCrafts.singleRecipe(activeCraftingArrangement.stream()
-				.map(stack -> new BigItemStack(stack.copyWithCount(1)))
-				.toList());
+			craftingContext = new PackageOrderWithCrafts(PackageOrder.empty(), List.of(new CraftingEntry(new PackageOrder(activeCraftingArrangement.stream()
+			.map(stack -> new BigItemStack(stack.copyWithCount(1)))
+			.toList()), craft_time)));
 
 		// Collect request distributions
 		for (Entry<UUID, Collection<BigItemStack>> entry : asMap.entrySet()) {
@@ -501,7 +503,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		// Keep the output promise
 		RequestPromiseQueue promises = Create.LOGISTICS.getQueuedPromises(network);
 		if (promises != null)
-			promises.add(new RequestPromise(new BigItemStack(getFilter(), recipeOutput)));
+			promises.add(new RequestPromise(new BigItemStack(getFilter(), recipeOutput*craft_time)));
 
 		panelBE.advancements.awardPlayer(AllAdvancements.FACTORY_GAUGE);
 	}
@@ -835,6 +837,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		panelTag.putInt("LastLevel", lastReportedLevelInStorage);
 		panelTag.putInt("LastPromised", lastReportedPromises);
 		panelTag.putInt("LastUnloadedLinks", lastReportedUnloadedLinks);
+		panelTag.putInt("CraftTime",craft_time);
 		panelTag.putBoolean("Satisfied", satisfied);
 		panelTag.putBoolean("PromisedSatisfied", promisedSatisfied);
 		panelTag.putBoolean("Waiting", waitingForNetwork);
@@ -867,6 +870,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		count = panelTag.getInt("FilterAmount");
 		upTo = panelTag.getBoolean("UpTo");
 		timer = panelTag.getInt("Timer");
+		craft_time = panelTag.getInt("CraftTime");
 		lastReportedLevelInStorage = panelTag.getInt("LastLevel");
 		lastReportedPromises = panelTag.getInt("LastPromised");
 		lastReportedUnloadedLinks = panelTag.getInt("LastUnloadedLinks");
