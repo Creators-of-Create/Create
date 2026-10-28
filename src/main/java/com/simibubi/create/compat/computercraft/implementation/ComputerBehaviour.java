@@ -99,8 +99,6 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
 			return () -> new TableClothShopPeripheral(tcbe);
 		if (be instanceof StickerBlockEntity sbe)
 			return () -> new StickerPeripheral(sbe);
-		if (be instanceof StationBlockEntity sbe)
-			return () -> new StationPeripheral(sbe);
 		if (be instanceof TrackObserverBlockEntity tobe)
 			return () -> new TrackObserverPeripheral(tobe);
 

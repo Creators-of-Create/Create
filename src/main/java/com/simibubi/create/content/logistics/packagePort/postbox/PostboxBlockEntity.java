@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.logistics.packagePort.PackagePortBlockEntity;
@@ -12,6 +13,7 @@ import com.simibubi.create.content.trains.station.GlobalPackagePort;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
+import dan200.computercraft.api.peripheral.PeripheralCapability;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
 import net.createmod.catnip.nbt.NBTHelper;
@@ -51,6 +53,14 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 			AllBlockEntityTypes.PACKAGE_POSTBOX.get(),
 			(be, context) -> be.itemHandler
 		);
+
+		if (Mods.COMPUTERCRAFT.isLoaded()) {
+			event.registerBlockEntity(
+					PeripheralCapability.get(),
+					AllBlockEntityTypes.PACKAGE_POSTBOX.get(),
+					(be, context) -> be.computerBehaviour.getPeripheralCapability()
+			);
+		}
 	}
 
 	@Override
