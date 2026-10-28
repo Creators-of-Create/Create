@@ -11,6 +11,8 @@ public interface IRedstoneLinkable {
 
 	public void setReceivedStrength(int power);
 
+	public int getReceivedStrength();
+
 	public boolean isListening();
 
 	public boolean isAlive();

@@ -7,6 +7,7 @@ import com.simibubi.create.infrastructure.gametest.tests.TestFluids;
 import com.simibubi.create.infrastructure.gametest.tests.TestItems;
 import com.simibubi.create.infrastructure.gametest.tests.TestMisc;
 import com.simibubi.create.infrastructure.gametest.tests.TestProcessing;
+import com.simibubi.create.infrastructure.gametest.tests.TestRedstoneLinks;
 import com.simibubi.create.infrastructure.gametest.tests.TestRegressions;
 
 import net.minecraft.gametest.framework.GameTestGenerator;
@@ -24,7 +25,8 @@ public class CreateGameTests {
 			TestItems.class,
 			TestMisc.class,
 			TestProcessing.class,
-			TestRegressions.class
+			TestRegressions.class,
+			TestRedstoneLinks.class
 	};
 
 	@SubscribeEvent
