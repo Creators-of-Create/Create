@@ -92,10 +92,7 @@ public class InventorySummary {
 			}
 		}
 
-		if (stack.getCount() > stack.getMaxStackSize())
-			stack = stack.copyWithCount(1);
-
-		BigItemStack newEntry = new BigItemStack(stack, count);
+		BigItemStack newEntry = new BigItemStack(stack.copyWithCount(1), count);
 		stacks.add(newEntry);
 	}
 
