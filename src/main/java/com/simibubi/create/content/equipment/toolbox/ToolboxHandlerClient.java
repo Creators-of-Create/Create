@@ -77,7 +77,7 @@ public class ToolboxHandlerClient {
 			result = entity.getPickedResult(hitResult);
 		}
 
-		if (result.isEmpty())
+		if (result == null || result.isEmpty())
 			return false;
 
 		for (ToolboxBlockEntity toolboxBlockEntity : toolboxes) {
