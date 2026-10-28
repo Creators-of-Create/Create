@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.world.level.Explosion;
+
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 
 import org.jetbrains.annotations.NotNull;
@@ -158,6 +160,11 @@ public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, 
 	@Override
 	public boolean hurt(DamageSource source, float amount) {
 		return false;
+	}
+
+	@Override
+	public boolean ignoreExplosion(Explosion explosion) {
+		return true;
 	}
 
 	@Override
