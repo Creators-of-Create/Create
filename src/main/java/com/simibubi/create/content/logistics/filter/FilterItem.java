@@ -123,6 +123,15 @@ public abstract class FilterItem extends Item implements MenuProvider, SupportsI
 		return true;
 	}
 
+	/**
+	 * For safe printing of filters via schematic
+	 * @return The components stored on your filter item that are used in determining whether something matches the filter
+	 */
+	public List<DataComponentType<?>> getComponentTypes() {
+		// TODO 6.1.0 make abstract
+		return List.of(getComponentType());
+	}
+
 	public abstract DataComponentType<?> getComponentType();
 
 	public abstract FilterItemStack makeStackWrapper(ItemStack filter);

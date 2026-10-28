@@ -68,6 +68,11 @@ public class AttributeFilterItem extends FilterItem {
 	}
 
 	@Override
+	public List<DataComponentType<?>> getComponentTypes() {
+		return List.of(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE);
+	}
+
+	@Override
 	public DataComponentType<?> getComponentType() {
 		return AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES;
 	}
