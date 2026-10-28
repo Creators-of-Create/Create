@@ -3,7 +3,9 @@ package com.simibubi.create.content.logistics.factoryBoard;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -123,7 +125,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	public FactoryPanelBehaviour(FactoryPanelBlockEntity be, PanelSlot slot) {
 		super(be, new FactoryPanelSlotPositioning(slot));
 		this.slot = slot;
-		this.targetedBy = new HashMap<>();
+		this.targetedBy = new LinkedHashMap<>();
 		this.targetedByLinks = new HashMap<>();
 		this.targeting = new HashSet<>();
 		this.count = 0;
@@ -428,6 +430,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		boolean failed = false;
 
 		Map<UUID, Map<ItemStack, ItemStackConnections>> consolidated = new HashMap<>();
+		List<ItemStack> connectionOrder = new ArrayList<>();
 
 		for (FactoryPanelConnection connection : targetedBy.values()) {
 			FactoryPanelBehaviour source = at(getWorld(), connection);
@@ -435,7 +438,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 				return;
 
 			ItemStack item = source.getFilter();
-
+			connectionOrder.add(item);
 
 			Map<ItemStack, ItemStackConnections> networkItemCounts = consolidated.computeIfAbsent(source.network, $ -> new Object2ObjectOpenCustomHashMap<>(ItemStackLinkedSet.TYPE_AND_TAG));
 			networkItemCounts.computeIfAbsent(item, $ -> new ItemStackConnections(item));
@@ -481,8 +484,17 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 
 		// Collect request distributions
 		for (Entry<UUID, Collection<BigItemStack>> entry : asMap.entrySet()) {
+			ArrayList<BigItemStack> orderedItems = new ArrayList<>(entry.getValue());
+			// If all requests from the same network sort them using connection order
+			if (consolidated.size() == 1) {
+				Map<ItemStack, Integer> orderMap = new Object2ObjectOpenCustomHashMap<>(ItemStackLinkedSet.TYPE_AND_TAG);
+				for (int i = 0; i < connectionOrder.size(); i++) orderMap.putIfAbsent(connectionOrder.get(i), i);
+
+				orderedItems.sort(Comparator.comparingInt(bigStack -> orderMap.getOrDefault(bigStack.stack, Integer.MAX_VALUE)));
+			}
+
 			PackageOrderWithCrafts order =
-				new PackageOrderWithCrafts(new PackageOrder(new ArrayList<>(entry.getValue())), craftingContext.orderedCrafts());
+				new PackageOrderWithCrafts(new PackageOrder(orderedItems), craftingContext.orderedCrafts());
 			Multimap<PackagerBlockEntity, PackagingRequest> request =
 				LogisticsManager.findPackagersForRequest(entry.getKey(), order, null, recipeAddress);
 			requests.add(request);
@@ -667,7 +679,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	public void disable() {
 		destroy();
 		active = false;
-		targetedBy = new HashMap<>();
+		targetedBy = new LinkedHashMap<>();
 		targeting = new HashSet<>();
 		count = 0;
 		satisfied = false;
