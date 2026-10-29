@@ -23,12 +23,14 @@ import com.simibubi.create.content.contraptions.ContraptionHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.Vec3;
@@ -55,7 +57,7 @@ public abstract class EntityContraptionInteractionMixin {
 	protected abstract float nextStep();
 
 	@Shadow
-	protected abstract void playStepSound(BlockPos pos, BlockState state);
+	public abstract void playSound(SoundEvent sound, float volume, float pitch);
 
 	@Unique
 	private Stream<AbstractContraptionEntity> create$getIntersectionContraptionsStream() {
@@ -101,7 +103,8 @@ public abstract class EntityContraptionInteractionMixin {
 		MutableBoolean stepped = new MutableBoolean(false);
 
 		create$forCollision(worldPos, (contraption, state, pos) -> {
-			playStepSound(pos, state);
+			SoundType soundtype = state.getSoundType();
+			playSound(soundtype.getStepSound(), soundtype.getVolume() * 0.15F, soundtype.getPitch());
 			stepped.setTrue();
 		});
 
