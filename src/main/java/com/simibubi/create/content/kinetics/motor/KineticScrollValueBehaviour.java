@@ -23,12 +23,11 @@ public class KineticScrollValueBehaviour extends ScrollValueBehaviour {
 
 	@Override
 	public ValueSettingsBoard createBoard(Player player, BlockHitResult hitResult) {
-		ImmutableList<Component> rows = ImmutableList.of(Component.literal("\u27f3")
-			.withStyle(ChatFormatting.BOLD),
-			Component.literal("\u27f2")
-				.withStyle(ChatFormatting.BOLD));
+		ImmutableList<Component> rows = ImmutableList.of(
+			Component.literal("\u27f3").withStyle(ChatFormatting.BOLD),
+			Component.literal("\u27f2").withStyle(ChatFormatting.BOLD));
 		ValueSettingsFormatter formatter = new ValueSettingsFormatter(this::formatSettings);
-		return new ValueSettingsBoard(label, 256, 32, rows, formatter);
+		return new ValueSettingsBoard(label, max, max / 8, rows, formatter);
 	}
 
 	@Override
