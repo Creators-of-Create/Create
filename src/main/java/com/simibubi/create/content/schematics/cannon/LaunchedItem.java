@@ -22,12 +22,19 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public abstract class LaunchedItem {
 
@@ -75,8 +82,15 @@ public abstract class LaunchedItem {
 	}
 
 	public static LaunchedItem fromNBT(CompoundTag c, HolderLookup.Provider registries, HolderGetter<Block> holderGetter) {
-		LaunchedItem launched = c.contains("Length") ? new LaunchedItem.ForBelt()
-			: c.contains("BlockState") ? new LaunchedItem.ForBlockState() : new LaunchedItem.ForEntity();
+		LaunchedItem launched = switch (c.getString("Kind")) {
+			case "belt" -> new LaunchedItem.ForBelt();
+			case "block" -> new LaunchedItem.ForBlockState();
+			case "fluid" -> new LaunchedItem.ForFluid();
+			case "entity" -> new LaunchedItem.ForEntity();
+			default -> c.contains("Length") ? new LaunchedItem.ForBelt()
+				: c.contains("BlockState") ? new LaunchedItem.ForBlockState()
+				: c.contains("Fluid") ? new LaunchedItem.ForFluid() : new LaunchedItem.ForEntity();
+		};
 		launched.readNBT(c, registries, holderGetter);
 		return launched;
 	}
@@ -93,18 +107,29 @@ public abstract class LaunchedItem {
 	public static class ForBlockState extends LaunchedItem {
 		public BlockState state;
 		public CompoundTag data;
+		public FluidStack containedFluid;
 
-		ForBlockState() {}
+		ForBlockState() {
+			containedFluid = FluidStack.EMPTY;
+		}
 
 		public ForBlockState(BlockPos start, BlockPos target, ItemStack stack, BlockState state, CompoundTag data) {
 			super(start, target, stack);
 			this.state = state;
 			this.data = data;
+			this.containedFluid = FluidStack.EMPTY;
+		}
+
+		public ForBlockState(BlockPos start, BlockPos target, ItemStack stack, BlockState state, CompoundTag data,
+							 FluidStack containedFluid) {
+			this(start, target, stack, state, data);
+			this.containedFluid = containedFluid.copy();
 		}
 
 		@Override
 		public CompoundTag serializeNBT(HolderLookup.Provider registries) {
 			CompoundTag serializeNBT = super.serializeNBT(registries);
+			serializeNBT.putString("Kind", "block");
 			serializeNBT.put("BlockState", NbtUtils.writeBlockState(state));
 			if (data != null) {
 				data.remove("x");
@@ -113,6 +138,8 @@ public abstract class LaunchedItem {
 				data.remove("id");
 				serializeNBT.put("Data", data);
 			}
+			if (!containedFluid.isEmpty())
+				serializeNBT.put("ContainedFluid", containedFluid.saveOptional(registries));
 			return serializeNBT;
 		}
 
@@ -123,13 +150,70 @@ public abstract class LaunchedItem {
 			if (nbt.contains("Data", Tag.TAG_COMPOUND)) {
 				data = nbt.getCompound("Data");
 			}
+			containedFluid = FluidStack.parseOptional(registries, nbt.getCompound("ContainedFluid"));
 		}
 
 		@Override
 		void place(Level world) {
-			BlockHelper.placeSchematicBlock(world, state, target, stack, data);
+			BlockState placementState = dryStateIfFluidWillBeHandledSeparately(state);
+			BlockHelper.placeSchematicBlock(world, placementState, target, stack, data);
+			if (!containedFluid.isEmpty())
+				placeFluid(world, target, containedFluid, false);
 		}
 
+	}
+
+	public static class ForFluid extends LaunchedItem {
+		public FluidStack fluid;
+
+		ForFluid() {
+			fluid = FluidStack.EMPTY;
+		}
+
+		public ForFluid(BlockPos start, BlockPos target, FluidStack fluid) {
+			super(start, target, ItemStack.EMPTY);
+			this.fluid = fluid.copy();
+		}
+
+		@Override
+		public CompoundTag serializeNBT(HolderLookup.Provider registries) {
+			CompoundTag tag = super.serializeNBT(registries);
+			tag.putString("Kind", "fluid");
+			tag.put("Fluid", fluid.saveOptional(registries));
+			return tag;
+		}
+
+		@Override
+		void readNBT(CompoundTag tag, HolderLookup.Provider registries, HolderGetter<Block> holderGetter) {
+			super.readNBT(tag, registries, holderGetter);
+			fluid = FluidStack.parseOptional(registries, tag.getCompound("Fluid"));
+		}
+
+		@Override
+		void place(Level world) {
+			placeFluid(world, target, fluid, true);
+		}
+	}
+
+	private static boolean placeFluid(Level world, BlockPos target, FluidStack fluid, boolean replaceTarget) {
+		if (fluid.isEmpty())
+			return false;
+		if (replaceTarget && !world.getBlockState(target)
+			.isAir())
+			world.setBlock(target, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+		FluidTank source = new FluidTank(fluid.getAmount());
+		source.setFluid(fluid.copy());
+		boolean placed = FluidUtil.tryPlaceFluid(null, world, InteractionHand.MAIN_HAND, target, source, fluid);
+		if (!placed)
+			world.updateNeighborsAt(target, world.getBlockState(target)
+				.getBlock());
+		return placed;
+	}
+
+	private static BlockState dryStateIfFluidWillBeHandledSeparately(BlockState state) {
+		if (state.hasProperty(BlockStateProperties.WATERLOGGED) && state.getValue(BlockStateProperties.WATERLOGGED))
+			return state.setValue(BlockStateProperties.WATERLOGGED, false);
+		return state;
 	}
 
 	public static class ForBelt extends ForBlockState {
@@ -141,6 +225,7 @@ public abstract class LaunchedItem {
 		@Override
 		public CompoundTag serializeNBT(HolderLookup.Provider registries) {
 			CompoundTag serializeNBT = super.serializeNBT(registries);
+			serializeNBT.putString("Kind", "belt");
 			serializeNBT.putInt("Length", length);
 			serializeNBT.putIntArray("Casing", Arrays.stream(casings)
 				.map(CasingType::ordinal)
@@ -221,6 +306,7 @@ public abstract class LaunchedItem {
 		@Override
 		public CompoundTag serializeNBT(HolderLookup.Provider registries) {
 			CompoundTag serializeNBT = super.serializeNBT(registries);
+			serializeNBT.putString("Kind", "entity");
 			if (entity != null)
 				serializeNBT.put("Entity", entity.serializeNBT(registries));
 			return serializeNBT;

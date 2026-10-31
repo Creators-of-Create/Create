@@ -38,6 +38,9 @@ public record ConfigureSchematicannonPacket(Option option, boolean set) implemen
 			case SKIP_MISSING:
 				be.skipMissing = this.set;
 				break;
+			case SKIP_FLUID:
+				be.skipMissingFluid = this.set;
+				break;
 			case SKIP_BLOCK_ENTITIES:
 				be.replaceBlockEntities = this.set;
 				break;
@@ -62,7 +65,8 @@ public record ConfigureSchematicannonPacket(Option option, boolean set) implemen
 	}
 
 	public enum Option {
-		DONT_REPLACE, REPLACE_SOLID, REPLACE_ANY, REPLACE_EMPTY, SKIP_MISSING, SKIP_BLOCK_ENTITIES, PLAY, PAUSE, STOP;
+		DONT_REPLACE, REPLACE_SOLID, REPLACE_ANY, REPLACE_EMPTY, SKIP_MISSING, SKIP_FLUID, SKIP_BLOCK_ENTITIES,
+		PLAY, PAUSE, STOP;
 
 		public static final StreamCodec<ByteBuf, Option> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(Option.class);
 	}
