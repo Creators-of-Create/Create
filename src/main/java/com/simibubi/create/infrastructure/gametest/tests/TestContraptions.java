@@ -194,6 +194,20 @@ public class TestContraptions {
 		});
 	}
 
+	@GameTest(template = "rope_pulley_light_blocks", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
+	public static void ropePulleyLightBlocks(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(1, 9, 1);
+		BlockPos rope = new BlockPos(2, 5, 1);
+		BlockPos plank = new BlockPos(2, 2, 1);
+		helper.pullLever(lever);
+		helper.succeedWhen(() -> {
+			helper.assertSecondsPassed(5);
+			helper.powerLever(lever); // disassemble contraption
+			helper.assertBlockPresent(AllBlocks.ROPE.get(), rope);
+			helper.assertBlockPresent(Blocks.OAK_PLANKS, plank);
+		});
+	}
+
 	@GameTest(template = "roller_filling")
 	public static void rollerFilling(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(7, 6, 1);

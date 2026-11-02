@@ -199,8 +199,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 				if (offset > 0) {
 					BlockPos magnetPos = worldPosition.below((int) offset);
 					FluidState ifluidstate = level.getFluidState(magnetPos);
-					if (level.getBlockState(magnetPos)
-						.getDestroySpeed(level, magnetPos) != -1) {
+					if (canPlaceRopeAt(magnetPos)) {
 
 						level.destroyBlock(magnetPos, level.getBlockState(magnetPos)
 							.getCollisionShape(level, magnetPos)
@@ -217,8 +216,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 				for (boolean destroyPass : Iterate.trueAndFalse) {
 					for (int i = 1; i <= ((int) offset) - 1; i++) {
 						BlockPos ropePos = worldPosition.below(i);
-						if (level.getBlockState(ropePos)
-							.getDestroySpeed(level, ropePos) == -1)
+						if (!canPlaceRopeAt(ropePos))
 							continue;
 
 						if (destroyPass) {
@@ -263,6 +261,11 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 
 		}
 		return Vec3.ZERO;
+	}
+
+	private boolean canPlaceRopeAt(BlockPos pos) {
+		BlockState state = level.getBlockState(pos);
+		return state.getDestroySpeed(level, pos) != -1 || state.canBeReplaced();
 	}
 
 	@Override
