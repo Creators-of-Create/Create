@@ -1,6 +1,6 @@
 package com.simibubi.create.content.trains.station;
 
-import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 
 import net.createmod.catnip.gui.element.ScreenElement;
@@ -13,9 +13,9 @@ public class WideIconButton extends IconButton {
 	}
 
 	@Override
-	protected void drawBg(GuiGraphics graphics, AllGuiTextures button) {
+	protected void drawBg(GuiGraphics graphics, GuiRenderableTexture button) {
 		super.drawBg(graphics, button);
-		graphics.blit(button.location, getX() + 9, getY(), button.getStartX() + 1, button.getStartY(), button.getWidth() - 1, button.getHeight());
+		graphics.blit(button.getLocation(), getX() + 9, getY(), button.getStartX() + 1, button.getStartY(), button.getWidth() - 1, button.getHeight());
 	}
 
 }

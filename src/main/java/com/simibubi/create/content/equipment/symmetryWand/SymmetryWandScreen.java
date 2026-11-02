@@ -12,6 +12,7 @@ import com.simibubi.create.content.equipment.symmetryWand.mirror.PlaneMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.SymmetryMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.TriplePlaneMirror;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
@@ -30,7 +31,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class SymmetryWandScreen extends AbstractSimiScreen {
 
-	private AllGuiTextures background;
+	private GuiRenderableTexture background;
 
 	private ScrollInput areaType;
 	private Label labelType;

@@ -13,6 +13,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
@@ -68,7 +69,7 @@ public class StockKeeperCategoryScreen extends AbstractSimiContainerScreen<Stock
 
 	@Override
 	protected void init() {
-		AllGuiTextures bg = AllGuiTextures.STOCK_KEEPER_CATEGORY;
+		GuiRenderableTexture bg = AllGuiTextures.STOCK_KEEPER_CATEGORY;
 		setWindowSize(bg.getWidth(), bg.getHeight() * slices + AllGuiTextures.STOCK_KEEPER_CATEGORY_HEADER.getHeight()
 			+ AllGuiTextures.STOCK_KEEPER_CATEGORY_FOOTER.getHeight());
 		super.init();

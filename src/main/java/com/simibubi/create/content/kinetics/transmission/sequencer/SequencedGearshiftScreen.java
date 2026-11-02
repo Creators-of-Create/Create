@@ -5,6 +5,7 @@ import java.util.Vector;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.computercraft.ComputerScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
@@ -21,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
 	private final ItemStack renderedItem = AllBlocks.SEQUENCED_GEARSHIFT.asStack();
-	private final AllGuiTextures background = AllGuiTextures.SEQUENCER;
+	private final GuiRenderableTexture background = AllGuiTextures.SEQUENCER;
 	private IconButton confirmButton;
 	private SequencedGearshiftBlockEntity be;
 
@@ -143,14 +144,14 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		background.render(graphics, x, y);
 
 		for (int row = 0; row < instructions.capacity(); row++) {
-			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
+			GuiRenderableTexture toDraw = AllGuiTextures.SEQUENCER_EMPTY;
 			int yOffset = toDraw.getHeight() * row;
 
 			toDraw.render(graphics, x, y + 16 + yOffset);
 		}
 
 		for (int row = 0; row < instructions.capacity(); row++) {
-			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
+			GuiRenderableTexture toDraw = AllGuiTextures.SEQUENCER_EMPTY;
 			int yOffset = toDraw.getHeight() * row;
 			if (row >= instructions.size()) {
 				toDraw.render(graphics, x, y + 16 + yOffset);
@@ -176,7 +177,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	}
 
 	private void renderAdditional(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop,
-								  AllGuiTextures background) {
+								  GuiRenderableTexture background) {
 		GuiGameElement.of(renderedItem).<GuiGameElement
 				.GuiRenderBuilder>at(guiLeft + background.getWidth() + 6, guiTop + background.getHeight() - 56, 100)
 			.scale(5)

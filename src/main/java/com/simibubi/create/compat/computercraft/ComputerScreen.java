@@ -2,6 +2,7 @@ package com.simibubi.create.compat.computercraft;
 
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -18,7 +19,7 @@ import java.util.function.Supplier;
 
 public class ComputerScreen extends AbstractSimiScreen {
 
-	private final AllGuiTextures background = AllGuiTextures.COMPUTER;
+	private final GuiRenderableTexture background = AllGuiTextures.COMPUTER;
 
 	private final Supplier<Component> displayTitle;
 	private final RenderWindowFunction additional;
@@ -89,7 +90,7 @@ public class ComputerScreen extends AbstractSimiScreen {
 	@FunctionalInterface
 	public interface RenderWindowFunction {
 
-		void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background);
+		void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, GuiRenderableTexture background);
 
 	}
 

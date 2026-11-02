@@ -2,6 +2,7 @@ package com.simibubi.create.compat.jei.category;
 
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.crafting.SmokingRecipe;
@@ -14,7 +15,7 @@ public class FanSmokingCategory extends ProcessingViaFanCategory<SmokingRecipe> 
 	}
 
 	@Override
-	protected AllGuiTextures getBlockShadow() {
+	protected GuiRenderableTexture getBlockShadow() {
 		return AllGuiTextures.JEI_LIGHT;
 	}
 

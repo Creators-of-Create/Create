@@ -25,6 +25,7 @@ import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CClient;
@@ -277,8 +278,8 @@ public class TrainMapManager {
 					+ (Math.atan2(diff.z, diff.x) * Mth.RAD_TO_DEG + 90 + (station.isPrimary(node) ? 180 : 0)) / 45),
 					8);
 
-				AllGuiTextures sprite = AllGuiTextures.TRAINMAP_STATION_ORTHO;
-				AllGuiTextures highlightSprite = AllGuiTextures.TRAINMAP_STATION_ORTHO_HIGHLIGHT;
+				GuiRenderableTexture sprite = AllGuiTextures.TRAINMAP_STATION_ORTHO;
+				GuiRenderableTexture highlightSprite = AllGuiTextures.TRAINMAP_STATION_ORTHO_HIGHLIGHT;
 				if (rotation % 2 != 0) {
 					sprite = AllGuiTextures.TRAINMAP_STATION_DIAGO;
 					highlightSprite = AllGuiTextures.TRAINMAP_STATION_DIAGO_HIGHLIGHT;
@@ -378,7 +379,7 @@ public class TrainMapManager {
 					rotation =
 						Mth.positiveModulo((AnimationTickHolder.getTicks() / 8 + i * 3) * (i % 2 == 0 ? 1 : -1), 8);
 
-				AllGuiTextures sprite = AllGuiTextures.TRAINMAP_SPRITES;
+				GuiRenderableTexture sprite = AllGuiTextures.TRAINMAP_SPRITES;
 
 				int slices = 2;
 
@@ -421,7 +422,7 @@ public class TrainMapManager {
 					int sheetX = col * 16 + colorCol * 128;
 					int sheetY = row * 16 + colorRow * 64;
 
-					graphics.blit(sprite.location, positionX, positionY, sheetX, sheetY, 16, 16, sprite.getWidth(),
+					graphics.blit(sprite.getLocation(), positionX, positionY, sheetX, sheetY, 16, 16, sprite.getWidth(),
 						sprite.getHeight());
 				}
 

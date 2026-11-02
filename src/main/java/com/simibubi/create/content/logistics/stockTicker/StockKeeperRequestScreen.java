@@ -38,6 +38,7 @@ import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerRenderer;
 import com.simibubi.create.content.trains.station.NoShadowFontWrapper;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -100,10 +101,10 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		}
 	}
 
-	private static final AllGuiTextures NUMBERS = AllGuiTextures.NUMBERS;
-	private static final AllGuiTextures HEADER = AllGuiTextures.STOCK_KEEPER_REQUEST_HEADER;
-	private static final AllGuiTextures BODY = AllGuiTextures.STOCK_KEEPER_REQUEST_BODY;
-	private static final AllGuiTextures FOOTER = AllGuiTextures.STOCK_KEEPER_REQUEST_FOOTER;
+	private static final GuiRenderableTexture NUMBERS = AllGuiTextures.NUMBERS;
+	private static final GuiRenderableTexture HEADER = AllGuiTextures.STOCK_KEEPER_REQUEST_HEADER;
+	private static final GuiRenderableTexture BODY = AllGuiTextures.STOCK_KEEPER_REQUEST_BODY;
+	private static final GuiRenderableTexture FOOTER = AllGuiTextures.STOCK_KEEPER_REQUEST_FOOTER;
 
 	StockTickerBlockEntity blockEntity;
 	public LerpedFloat itemScroll = LerpedFloat.linear()
@@ -733,8 +734,8 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			int barY = y + 15;
 			ms.pushPose();
 			ms.translate(0, (currentScroll * rowHeight) / totalH * (windowH - 2), 0);
-			AllGuiTextures pad = AllGuiTextures.STOCK_KEEPER_REQUEST_SCROLL_PAD;
-			graphics.blit(pad.location, barX, barY, pad.getWidth(), barSize, pad.getStartX(), pad.getStartY(),
+			GuiRenderableTexture pad = AllGuiTextures.STOCK_KEEPER_REQUEST_SCROLL_PAD;
+			graphics.blit(pad.getLocation(), barX, barY, pad.getWidth(), barSize, pad.getStartX(), pad.getStartY(),
 				pad.getWidth(), pad.getHeight(), 256, 256);
 			AllGuiTextures.STOCK_KEEPER_REQUEST_SCROLL_TOP.render(graphics, barX, barY);
 			if (barSize > 16)
@@ -937,7 +938,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			}
 
 			RenderSystem.enableBlend();
-			graphics.blit(NUMBERS.location, 14 + x, 10, 0, NUMBERS.getStartX() + xOffset, NUMBERS.getStartY(),
+			graphics.blit(NUMBERS.getLocation(), 14 + x, 10, 0, NUMBERS.getStartX() + xOffset, NUMBERS.getStartY(),
 				spriteWidth, NUMBERS.getHeight(), 256, 256);
 			x += spriteWidth - 1;
 		}
