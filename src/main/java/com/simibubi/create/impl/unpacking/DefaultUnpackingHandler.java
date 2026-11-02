@@ -48,39 +48,32 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 
 			for (int boxSlot = 0; boxSlot < items.size(); boxSlot++) {
 				ItemStack toInsert = items.get(boxSlot);
+
 				if (toInsert.isEmpty())
 					continue;
 
-				if (targetInv.insertItem(slot, toInsert, true)
-					.getCount() == toInsert.getCount())
+				if (!itemInSlot.isEmpty() && !ItemStack.isSameItemSameComponents(toInsert, itemInSlot))
 					continue;
 
-				if (itemInSlot.isEmpty()) {
-					int maxStackSize = targetInv.getSlotLimit(slot);
-					if (maxStackSize < toInsert.getCount()) {
-						toInsert.shrink(maxStackSize);
-						toInsert = toInsert.copyWithCount(maxStackSize);
-					} else
-						items.set(boxSlot, ItemStack.EMPTY);
+				int simulatedAmount = itemsAddedToSlot + toInsert.getCount();
+				ItemStack simulatedStack = toInsert.copyWithCount(simulatedAmount);
+				int totalInsertable = simulatedAmount - targetInv.insertItem(slot, simulatedStack, true).getCount();
 
-					itemInSlot = toInsert;
-					targetInv.insertItem(slot, toInsert, simulate);
-					continue;
-				}
+				int added = Math.min(toInsert.getCount(),
+					Math.max(0, totalInsertable - itemsAddedToSlot)
+				);
 
-				if (!ItemStack.isSameItemSameComponents(toInsert, itemInSlot))
+				if (added == 0)
 					continue;
 
-				int insertedAmount = toInsert.getCount() - targetInv.insertItem(slot, toInsert, simulate)
-					.getCount();
-				int slotLimit = Math.min(itemInSlot.getMaxStackSize(), targetInv.getSlotLimit(slot));
-				int insertableAmountWithPreviousItems =
-					Math.min(toInsert.getCount(), slotLimit - itemInSlot.getCount() - itemsAddedToSlot);
+				if (itemInSlot.isEmpty())
+					itemInSlot = toInsert.copy();
 
-				int added = Math.min(insertedAmount, Math.max(0, insertableAmountWithPreviousItems));
 				itemsAddedToSlot += added;
 
-				items.set(boxSlot, toInsert.copyWithCount(toInsert.getCount() - added));
+				int remaining = toInsert.getCount() - added;
+
+				items.set(boxSlot, remaining == 0 ? ItemStack.EMPTY : toInsert.copyWithCount(remaining));
 			}
 		}
 
