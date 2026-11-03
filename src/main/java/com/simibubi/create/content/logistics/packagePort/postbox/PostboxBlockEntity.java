@@ -38,6 +38,9 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 
 	private boolean sendParticles;
 
+	public boolean explicitFetch;
+	public boolean explicitDeliver;
+
 	public AbstractComputerBehaviour computerBehaviour;
 
 	public PostboxBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -120,12 +123,16 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 		if (clientPacket && sendParticles)
 			NBTHelper.putMarker(tag, "Particles");
 		sendParticles = false;
+		tag.putBoolean("ExplicitFetch", explicitFetch);
+		tag.putBoolean("ExplicitDeliver", explicitDeliver);
 	}
 
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(tag, registries, clientPacket);
 		sendParticles = clientPacket && tag.contains("Particles");
+		explicitFetch = tag.getBoolean("ExplicitFetch");
+		explicitDeliver = tag.getBoolean("ExplicitDeliver");
 	}
 
 	@Override
@@ -147,6 +154,8 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 			return;
 
 		globalPackagePort.saveOfflineBuffer(inventory);
+		globalPackagePort.explicitFetch = explicitFetch;
+		globalPackagePort.explicitDeliver = explicitDeliver;
 	}
 
 	@Override

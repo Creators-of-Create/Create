@@ -11,6 +11,9 @@ public class GlobalPackagePort {
 	public boolean primed = false;
 	private boolean restoring = false;
 
+	public boolean explicitFetch = false;
+	public boolean explicitDeliver = false;
+
 	public void restoreOfflineBuffer(IItemHandlerModifiable inventory) {
 		if (!primed) return;
 
