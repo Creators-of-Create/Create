@@ -103,6 +103,7 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements 
 	private EdgeInteractionBehaviour connectivity;
 
 	private ItemStack scriptedResult = ItemStack.EMPTY;
+	private ItemStack suggestedResult = ItemStack.EMPTY;
 
 	public MechanicalCrafterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -194,6 +195,8 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements 
 		compound.putInt("CountDown", countDown);
 		compound.putBoolean("Cover", covered);
 
+		compound.put("SuggestedResult", suggestedResult.saveOptional(registries));
+
 		super.write(compound, registries, clientPacket);
 
 		if (clientPacket && reRender) {
@@ -218,6 +221,8 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements 
 				this.phase = phase;
 		countDown = compound.getInt("CountDown");
 		covered = compound.getBoolean("Cover");
+		suggestedResult = ItemStack.parseOptional(registries, compound.getCompound("SuggestedResult"));
+
 		super.read(compound, registries, clientPacket);
 		if (!clientPacket)
 			return;
@@ -284,7 +289,7 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements 
 				}
 
 				ItemStack result =
-					isVirtual() ? scriptedResult : RecipeGridHandler.tryToApplyRecipe(level, groupedItems);
+					isVirtual() ? scriptedResult : RecipeGridHandler.tryToApplyRecipe(level, groupedItems, suggestedResult);
 
 				if (result != null) {
 					List<ItemStack> containers = new ArrayList<>();
@@ -307,6 +312,7 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements 
 					}
 
 					phase = Phase.CRAFTING;
+					suggestedResult = ItemStack.EMPTY;
 					countDown = 2000;
 					sendData();
 					return;
@@ -328,6 +334,10 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements 
 				if (targetingCrafter == null) {
 					ejectWholeGrid();
 					return;
+				}
+
+				if (targetingCrafter.suggestedResult.isEmpty()) {
+					targetingCrafter.setSuggestedResult(suggestedResult);
 				}
 
 				boolean empty = groupedItems.onlyEmptyItems();
@@ -473,6 +483,7 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements 
 			dropItem(ejectPos, inventory.getItem(0));
 		phase = Phase.IDLE;
 		groupedItems = new GroupedItems();
+		suggestedResult = ItemStack.EMPTY;
 		inventory.setStackInSlot(0, ItemStack.EMPTY);
 		sendData();
 	}
@@ -558,6 +569,10 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements 
 
 	public void setScriptedResult(ItemStack scriptedResult) {
 		this.scriptedResult = scriptedResult;
+	}
+
+	public void setSuggestedResult(ItemStack suggestedResult) {
+		this.suggestedResult = suggestedResult;
 	}
 
 	public ConnectedInput getInput() {
