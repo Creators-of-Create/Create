@@ -9,6 +9,9 @@ import com.simibubi.create.content.logistics.chute.ChuteBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.foundation.utility.CreateLang;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -20,6 +23,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.loading.FMLEnvironment;
 
 @MethodsReturnNonnullByDefault
 public class EncasedFanBlockEntity extends KineticBlockEntity implements IAirCurrentSource {
@@ -149,6 +154,65 @@ public class EncasedFanBlockEntity extends KineticBlockEntity implements IAirCur
 		}
 
 		airCurrent.tick();
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+
+		Direction flowDirection = getAirFlowDirection();
+		Direction facing = getBlockState().getValue(EncasedFanBlock.FACING);
+		boolean blowingOutward = false;
+		if (flowDirection != null)
+			blowingOutward = flowDirection == facing;
+
+		// Used for GameTests to safely verify tooltip content on the server side
+		// Bypasses client-only formatting logic to prevent crashes in headless environments
+		// Note: Used Component.translatable directly to avoid issues with CreateLang in GameTests
+		if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
+            tooltip.add(Component.translatable("create.tooltip.encased_fan.header"));
+
+            if (flowDirection == null) {
+                tooltip.add(Component.translatable("create.tooltip.encased_fan.not_spinning"));
+                return true;
+            }
+            tooltip.add(Component.translatable("create.tooltip.encased_fan.direction"));
+            tooltip.add(Component.translatable(blowingOutward
+					? "create.tooltip.encased_fan.outward"
+					: "create.tooltip.encased_fan.inward"));
+			tooltip.add(Component.translatable("create.tooltip.encased_fan.range"));
+			return true;
+        }		
+
+		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+		
+		CreateLang.translate("tooltip.encased_fan.header")
+			.forGoggles(tooltip);
+
+		if (flowDirection == null) {
+			CreateLang.translate("tooltip.encased_fan.not_spinning")
+				.style(ChatFormatting.DARK_GRAY)
+				.forGoggles(tooltip, 1);
+			return true;
+		}
+
+		CreateLang.translate("tooltip.encased_fan.direction")
+			.style(ChatFormatting.GRAY)
+			.text(": ")
+			.add(CreateLang.translate(blowingOutward
+					? "tooltip.encased_fan.outward"
+					: "tooltip.encased_fan.inward")
+				.style(blowingOutward ? ChatFormatting.GREEN : ChatFormatting.BLUE))
+			.forGoggles(tooltip, 1);
+
+
+		CreateLang.translate("tooltip.encased_fan.range")
+			.style(ChatFormatting.GRAY)
+			.text(": ")
+			.add(CreateLang.text(String.format("%.1f", airCurrent.maxDistance))
+				.style(ChatFormatting.AQUA))
+			.forGoggles(tooltip, 1);
+
+		return true;
 	}
 
 }

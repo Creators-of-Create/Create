@@ -14,6 +14,7 @@ import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -147,4 +148,10 @@ public class WindmillBearingBlockEntity extends MechanicalBearingBlockEntity {
 
 	}
 
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+		addToGoggleRotationDirectionTooltip(tooltip);
+		return true;
+	}
 }

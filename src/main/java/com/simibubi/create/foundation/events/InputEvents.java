@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.elevator.ElevatorControlsHandler;
 import com.simibubi.create.content.contraptions.wrench.RadialWrenchHandler;
+import com.simibubi.create.content.equipment.goggles.GoggleInputHandler;
 import com.simibubi.create.content.equipment.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorConnectionHandler;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorInteractionHandler;
@@ -41,6 +42,7 @@ public class InputEvents {
 		CreateClient.SCHEMATIC_HANDLER.onKeyInput(key, pressed);
 		ToolboxHandlerClient.onKeyInput(key, pressed);
 		RadialWrenchHandler.onKeyInput(key, pressed);
+		GoggleInputHandler.onKeyInput(key, pressed);
 	}
 
 	@SubscribeEvent

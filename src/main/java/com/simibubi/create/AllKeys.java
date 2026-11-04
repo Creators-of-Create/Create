@@ -27,6 +27,8 @@ public enum AllKeys {
 	SHIFT_MODIFIER("shift_modifier", GLFW.GLFW_KEY_LEFT_SHIFT, "Shift Modifier", true),
 	CTRL_MODIFIER("ctrl_modifier", GLFW.GLFW_KEY_LEFT_CONTROL, "Ctrl Modifier", true),
 	ALT_MODIFIER("alt_modifier", GLFW.GLFW_KEY_LEFT_ALT, "Alt Modifier", true),
+
+	TOGGLE_GOGGLES("toggle_goggles", GLFW.GLFW_KEY_UNKNOWN, "Toggle Engineer's Goggles"),
 	;
 
 	private KeyMapping keybind;

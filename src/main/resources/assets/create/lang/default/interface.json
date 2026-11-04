@@ -251,6 +251,9 @@
 	"create.gui.goggles.basin_contents": "Basin Contents:",
 	"create.gui.goggles.fluid_container": "Fluid Container Info:",
 	"create.gui.goggles.fluid_container.capacity": "Capacity: ",
+	"create.gui.goggles.rotation_direction": "Rotation Direction: ",
+	"create.gui.goggles.rotation_direction.clockwise": "\u27f3 Clockwise",
+	"create.gui.goggles.rotation_direction.counter_clockwise": "\u27f2 Counter-Clockwise",
 
 	"create.gui.assembly.exception": "This Contraption was unable to assemble:",
 	"create.gui.assembly.exception.unmovableBlock": "Unmovable Block (%4$s) at [%1$s,%2$s,%3$s]",
@@ -519,6 +522,8 @@
 	"create.materialChecklist": "Material Checklist",
 	"create.materialChecklist.blocksNotLoaded": "* Disclaimer *\n\nMaterial List may be inaccurate due to relevant chunks not being loaded.",
 
+	"create.gui.filter.empty": "Empty Filter",
+	"create.gui.filter.allow_item": "Allow Item",
 	"create.gui.filter.deny_list": "Deny-List",
 	"create.gui.filter.deny_list.description": "Items pass if they do NOT match any of the above. An empty Deny-List accepts everything.",
 	"create.gui.filter.allow_list": "Allow-List",
@@ -628,6 +633,32 @@
 	"create.tooltip.keyShift": "Shift",
 	"create.tooltip.keyCtrl": "Ctrl",
 
+	"create.tooltip.blaze_burner.empty": "No fuel",
+	"create.tooltip.blaze_burner.fuel_capacity": "Fuel Capacity",
+	"create.tooltip.blaze_burner.fuel_level.high": "High",
+	"create.tooltip.blaze_burner.fuel_level.medium": "Medium",
+	"create.tooltip.blaze_burner.fuel_level.low": "Low",
+	"create.tooltip.blaze_burner.header": "Blaze Burner Information",
+	"create.tooltip.blaze_burner.infinite": "Infinite",
+	"create.tooltip.blaze_burner.remaining": "Remaining Burn Time",
+
+	"create.tooltip.cogwheel.header": "Cogwheel Information",
+	"create.tooltip.gantry_shaft.header": "Gantry Shaft Information",
+	"create.tooltip.shaft.header": "Shaft Information",
+
+	"create.tooltip.pulse.until_next_pulse": "Time Until Next Pulse",
+	"create.tooltip.pulse_timer.header": "Pulse Timer Information",
+	"create.tooltip.pulse_repeater.header": "Pulse Repeater Information",
+	"create.tooltip.pulse_extender.header": "Pulse Extender Information",
+	"create.tooltip.pulse_extender.remaining": "Remaining Pulse Time",
+
+	"create.tooltip.encased_fan.header": "Encased Fan:",
+	"create.tooltip.encased_fan.not_spinning": "Not spinning",
+	"create.tooltip.encased_fan.direction": "Direction",
+	"create.tooltip.encased_fan.outward": "Outward",
+	"create.tooltip.encased_fan.inward": "Inward",
+	"create.tooltip.encased_fan.range": "Range",
+
 	"create.tooltip.speedRequirement": "Speed Requirement:",
 	"create.tooltip.speedRequirement.none": "None",
 	"create.tooltip.speedRequirement.slow": "Slow",
@@ -688,6 +719,13 @@
   "create.tooltip.deployer.using": "Mode: Use",
   "create.tooltip.deployer.punching": "Mode: Attack",
   "create.tooltip.deployer.contains": "Item: %1$s x%2$s",
+
+	"create.tooltip.brass_funnel.header": "Brass Funel Information",
+	"create.tooltip.item_hatch.header": "Item Hatch Information",
+	"create.tooltip.mechanical_roller.header": "Mechanical Roller Information",
+	"create.tooltip.smart_fluid_pipe.header": "Smart Fluid Pipe Information",
+	"create.tooltip.smart_observer.header": "Smart Observer Information",
+	"create.tooltip.threshold_switch.header": "Threshold Switch Information",
 
 	"create.tooltip.brass_tunnel.contains": "Currently distributing:",
 	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
