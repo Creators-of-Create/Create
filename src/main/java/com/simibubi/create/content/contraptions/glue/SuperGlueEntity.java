@@ -69,7 +69,7 @@ public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, 
 				if (glueEntity.contains(blockPos) && glueEntity.contains(targetPos))
 					return true;
 		for (SuperGlueEntity glueEntity : level.getEntitiesOfClass(SuperGlueEntity.class,
-			span(blockPos, targetPos).inflate(16))) {
+			span(blockPos, targetPos))) {
 			if (!glueEntity.contains(blockPos) || !glueEntity.contains(targetPos))
 				continue;
 			if (cached != null)
@@ -112,7 +112,10 @@ public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, 
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {}
 
 	public static boolean isValidFace(Level world, BlockPos pos, Direction direction) {
-		BlockState state = world.getBlockState(pos);
+		return isValidFace(world, pos, world.getBlockState(pos), direction);
+	}
+
+	public static boolean isValidFace(Level world, BlockPos pos, BlockState state, Direction direction) {
 		if (BlockMovementChecks.isBlockAttachedTowards(state, world, pos, direction))
 			return true;
 		if (!BlockMovementChecks.isMovementNecessary(state, world, pos))
@@ -123,7 +126,10 @@ public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, 
 	}
 
 	public static boolean isSideSticky(Level world, BlockPos pos, Direction direction) {
-		BlockState state = world.getBlockState(pos);
+		return isSideSticky(world.getBlockState(pos), direction);
+	}
+
+	public static boolean isSideSticky(BlockState state, Direction direction) {
 		if (AllBlocks.STICKY_MECHANICAL_PISTON.has(state))
 			return state.getValue(DirectionalKineticBlock.FACING) == direction;
 
