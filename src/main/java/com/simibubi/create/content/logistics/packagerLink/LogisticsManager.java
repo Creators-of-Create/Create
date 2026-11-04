@@ -83,7 +83,7 @@ public class LogisticsManager {
 			return false;
 
 		Multimap<PackagerBlockEntity, PackagingRequest> requests = findPackagersForRequest(freqId, order,
-			ignoredHandler, address);
+			ignoredHandler, address, null);
 
 		// Check if packagers have accumulated too many packages already
 		for (PackagerBlockEntity packager : requests.keySet())
@@ -95,8 +95,16 @@ public class LogisticsManager {
 		return true;
 	}
 
-	public static Multimap<PackagerBlockEntity, PackagingRequest> findPackagersForRequest(UUID freqId,
-																						  PackageOrderWithCrafts order, @Nullable IdentifiedInventory ignoredHandler, String address) {
+	public static class CrossNetworkData {
+		public boolean hasOrderId = false;
+		public int OrderId = 0;
+		public int usedLinks = 0;
+		public MutableBoolean finalLinkTracker;
+		public PackageOrderWithCrafts firstContextTracker;
+	}
+
+	public static Multimap<PackagerBlockEntity, PackagingRequest> findPackagersForRequest(
+		UUID freqId, PackageOrderWithCrafts order, @Nullable IdentifiedInventory ignoredHandler, String address, @Nullable CrossNetworkData data) {
 		List<BigItemStack> stacks = new ArrayList<>();
 
 		for (BigItemStack stack : order.stacks())
@@ -137,9 +145,27 @@ public class LogisticsManager {
 
 		// First box needs to carry the order specifics for successful defrag
 		PackageOrderWithCrafts context = order;
+		if (data != null) {
+			if (data.firstContextTracker == null) {
+				data.firstContextTracker = order;
+			} else {
+				data.firstContextTracker.stacks().addAll(order.stacks());
+				context = null;
+			}
+		}
 
 		// Packages from future orders should not be merged in the packager queue
 		int orderId = r.nextInt();
+		int linkIndexOffset = 0;
+		if (data != null) {
+			if (data.hasOrderId) {
+				orderId = data.OrderId;
+			} else {
+				data.OrderId = orderId;
+				data.hasOrderId = true;
+			}
+			linkIndexOffset = data.usedLinks;
+		}
 
 		for (int i = 0; i < stacks.size(); i++) {
 			BigItemStack entry = stacks.get(i);
@@ -156,7 +182,7 @@ public class LogisticsManager {
 
 				// Only send context and craftingContext with first package
 				Pair<PackagerBlockEntity, PackagingRequest> request = link.processRequest(requestedItem, remainingCount,
-					address, linkIndex, isFinalLink, orderId, context, ignoredHandler);
+					address, linkIndex + linkIndexOffset, isFinalLink, orderId, context, ignoredHandler);
 				if (request == null)
 					continue;
 
@@ -168,6 +194,9 @@ public class LogisticsManager {
 					context = null;
 					usedLinks.add(link);
 					finalLinkTracker = isFinalLink;
+					if (data != null && data.finalLinkTracker != null) {
+						data.finalLinkTracker.setFalse();
+					}
 				}
 
 				remainingCount -= processedCount;
@@ -178,6 +207,12 @@ public class LogisticsManager {
 				break;
 			}
 		}
+
+		if (data != null) {
+			data.finalLinkTracker = finalLinkTracker;
+			data.usedLinks += usedLinks.size();
+		}
+
 		return requests;
 	}
 
