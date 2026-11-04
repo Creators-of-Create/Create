@@ -34,6 +34,8 @@ public class CClient extends ConfigBase {
 		Comments.ignoreFabulousWarning);
 	public final ConfigBool rotateWhenSeated = b(true, "rotateWhenSeated",
 		Comments.rotatewhenSeated);
+	public final ConfigBool translateTags = b(false, "translateTags",
+		Comments.translateTags);
 
 	// custom fluid fog
 	public final ConfigGroup fluidFogSettings = group(1, "fluidFogSettings", Comments.fluidFogSettings);
@@ -122,6 +124,7 @@ public class CClient extends ConfigBase {
 		};
 		static String ignoreFabulousWarning = "Setting this to true will prevent Create from sending you a warning when playing with Fabulous graphics enabled";
 		static String rotatewhenSeated = "Disable to prevent being rotated while seated on a Moving Contraption";
+		static String translateTags = "Translate tags in attribute filters when possible";
 		static String overlay = "Settings for the Goggle Overlay";
 		static String overlayOffset = "Offset the overlay from goggle- and hover- information by this many pixels on the respective axis; Use /create overlay";
 		static String overlayCustomColor = "Enable this to use your custom colors for the Goggle- and Hover- Overlay";
