@@ -491,6 +491,23 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		return totalUnits;
 	}
 
+	public int getTotalRenderedFluids(float partialTicks){
+		int renderedFluids = 0;
+		for (SmartFluidTankBehaviour behaviour : getTanks()) {
+			if (behaviour == null)
+				continue;
+			for (TankSegment tankSegment : behaviour.getTanks()) {
+				if (tankSegment.getRenderedFluid().isEmpty())
+					continue;
+				if(tankSegment.getTotalUnits(partialTicks) < 1)
+					continue;
+				renderedFluids++;
+			}
+		}
+		return renderedFluids;
+	}
+
+
 	private Optional<BasinOperatingBlockEntity> getOperator() {
 		if (level == null)
 			return Optional.empty();
