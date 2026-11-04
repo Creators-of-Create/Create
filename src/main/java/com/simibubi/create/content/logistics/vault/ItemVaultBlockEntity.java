@@ -5,6 +5,7 @@ import java.util.List;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.api.packager.InventoryIdentifier;
+import com.simibubi.create.api.schematic.nbt.PartialSafeNBT;
 import com.simibubi.create.foundation.ICapabilityProvider;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -39,7 +40,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBlockEntityContainer.Inventory, Clearable {
+public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBlockEntityContainer.Inventory, Clearable, PartialSafeNBT {
 	protected ICapabilityProvider<IItemHandler> itemCapability = null;
 	protected InventoryIdentifier invId;
 
@@ -312,6 +313,14 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 		if (!clientPacket) {
 			compound.putString("StorageType", "CombinedInv");
 			compound.put("Inventory", inventory.serializeNBT(registries));
+		}
+	}
+
+	@Override
+	public void writeSafe(CompoundTag compound, HolderLookup.Provider registries) {
+		if (isController()) {
+			compound.putInt("Size", 1);
+			compound.putInt("Length", 1);
 		}
 	}
 
