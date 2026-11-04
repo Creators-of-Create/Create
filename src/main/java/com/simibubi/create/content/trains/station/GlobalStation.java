@@ -121,8 +121,11 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 	}
 
 	public void reserveFor(Train train) {
+		if (train == null) return;
+
 		Train nearestTrain = getNearestTrain();
 		if (nearestTrain == null
+			|| nearestTrain.getCurrentStation() != this //distanceToDestination invalid for stale nearestTrain weakReference
 			|| nearestTrain.navigation.distanceToDestination > train.navigation.distanceToDestination)
 			this.nearestTrain = new WeakReference<>(train);
 	}
