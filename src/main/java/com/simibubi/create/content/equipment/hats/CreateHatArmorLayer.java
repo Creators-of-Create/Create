@@ -8,6 +8,7 @@ import com.simibubi.create.content.trains.schedule.hat.TrainHatInfo;
 import com.simibubi.create.content.trains.schedule.hat.TrainHatInfoReloadListener;
 import com.simibubi.create.foundation.mixin.accessor.AgeableListModelAccessor;
 import com.simibubi.create.foundation.mixin.accessor.EntityRenderDispatcherAccessor;
+import com.simibubi.create.foundation.mixin.accessor.RabbitModelAccessor;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
@@ -15,6 +16,7 @@ import net.createmod.catnip.render.CachedBuffers;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
+import net.minecraft.client.model.RabbitModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.ModelPart.Cube;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -64,6 +66,16 @@ public class CreateHatArmorLayer<T extends LivingEntity, M extends EntityModel<T
 			}
 		} else if (entityModel instanceof HierarchicalModel<?> model) {
 			partsToHead.addAll(TrainHatInfo.getAdjustedPart(info, model.root(), "head"));
+		} else if (entityModel instanceof RabbitModel<?> model) {
+			if (model.young) {
+				ms.scale(0.56666666F, 0.56666666F, 0.56666666F);
+				ms.translate(0.0F, 1.375F, 0.125F);
+			} else {
+				ms.scale(0.6F, 0.6F, 0.6F);
+				ms.translate(0.0F, 1.0F, 0.0F);
+			}
+			ModelPart head = ((RabbitModelAccessor) model).create$getHead();
+			partsToHead.addAll(TrainHatInfo.getAdjustedPart(info, head, "head"));
 		}
 
 		if (!partsToHead.isEmpty()) {
@@ -105,7 +117,7 @@ public class CreateHatArmorLayer<T extends LivingEntity, M extends EntityModel<T
 
 		EntityModel<?> model = livingRenderer.getModel();
 
-		if (!(model instanceof HierarchicalModel) && !(model instanceof AgeableListModel))
+		if (!(model instanceof HierarchicalModel) && !(model instanceof AgeableListModel) && !(model instanceof RabbitModel<?>))
 			return;
 
 		CreateHatArmorLayer<?, ?> layer = new CreateHatArmorLayer<>(livingRenderer);
