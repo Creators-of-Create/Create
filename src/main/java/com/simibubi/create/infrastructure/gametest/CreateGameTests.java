@@ -3,6 +3,7 @@ package com.simibubi.create.infrastructure.gametest;
 import java.util.Collection;
 
 import com.simibubi.create.infrastructure.gametest.tests.TestContraptions;
+import com.simibubi.create.infrastructure.gametest.tests.TestCopperWax;
 import com.simibubi.create.infrastructure.gametest.tests.TestFluids;
 import com.simibubi.create.infrastructure.gametest.tests.TestItems;
 import com.simibubi.create.infrastructure.gametest.tests.TestMisc;
@@ -20,6 +21,7 @@ import net.neoforged.neoforge.event.RegisterGameTestsEvent;
 public class CreateGameTests {
 	private static final Class<?>[] testHolders = {
 			TestContraptions.class,
+			TestCopperWax.class,
 			TestFluids.class,
 			TestItems.class,
 			TestMisc.class,
