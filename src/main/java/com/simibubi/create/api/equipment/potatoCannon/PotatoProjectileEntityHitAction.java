@@ -9,7 +9,6 @@ import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.EntityHitResult;
 
-// TODO: 1.21.1+ - Move into api package
 public interface PotatoProjectileEntityHitAction {
 	Codec<PotatoProjectileEntityHitAction> CODEC = CreateBuiltInRegistries.POTATO_PROJECTILE_ENTITY_HIT_ACTION.byNameCodec()
 		.dispatch(PotatoProjectileEntityHitAction::codec, Function.identity());
