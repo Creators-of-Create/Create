@@ -16,8 +16,8 @@ public class PloughBlock extends AttachedActorBlock {
 
 	public static final MapCodec<PloughBlock> CODEC = simpleCodec(PloughBlock::new);
 
-	public PloughBlock(Properties p_i48377_1_) {
-		super(p_i48377_1_);
+	public PloughBlock(Properties properties) {
+		super(properties);
 	}
 
 	/**
