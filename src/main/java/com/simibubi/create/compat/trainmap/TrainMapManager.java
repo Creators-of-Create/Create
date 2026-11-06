@@ -22,8 +22,11 @@ import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
+import com.simibubi.create.content.trains.signal.EdgeGroupColor;
+import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.track.BezierConnection;
+import com.simibubi.create.content.trains.track.BezierConnection.BezierPixel;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -68,7 +71,7 @@ public class TrainMapManager {
 	}
 
 	public static List<FormattedText> renderAndPick(GuiGraphics graphics, int mouseX, int mouseY,
-		boolean linearFiltering, Rect2i bounds) {
+													boolean linearFiltering, Rect2i bounds) {
 		Object hoveredElement = null;
 
 		int offScreenMargin = 32;
@@ -85,13 +88,23 @@ public class TrainMapManager {
 			.endBatch();
 
 		if (hoveredElement instanceof GlobalStation station) {
-            return List.of(Component.literal(station.name));
-        }
+			return List.of(Component.literal(station.name));
+		}
 
 		if (hoveredElement instanceof Train train)
 			return listTrainDetails(train);
 
 		return null;
+	}
+
+	public static EdgeGroupColor getEdgeGroupColor(TrackGraph graph, TrackEdge edge, double position) {
+		UUID groupId = edge.getEdgeData().getGroupAtPosition(graph, position);
+		if (groupId == null)
+			return EdgeGroupColor.WHITE;
+		SignalEdgeGroup edgeGroup = CreateClient.RAILWAYS.signalEdgeGroups.get(groupId);
+		if (edgeGroup == null)
+			return EdgeGroupColor.WHITE;
+		return edgeGroup.color;
 	}
 
 	public static void renderToggleWidget(GuiGraphics graphics, int x, int y) {
@@ -145,40 +158,40 @@ public class TrainMapManager {
 
 		if (!trainEntry.ownerName.isBlank())
 			CreateLang.translate("train_map.train_owned_by", trainEntry.ownerName)
-					.color(blue)
-					.addTo(output);
+				.color(blue)
+				.addTo(output);
 
 		switch (state) {
 
-		case CONDUCTOR_MISSING:
-			CreateLang.translate("train_map.conductor_missing")
-				.color(orange)
-				.addTo(output);
-			return output;
-		case DERAILED:
-			CreateLang.translate("train_map.derailed")
-				.color(orange)
-				.addTo(output);
-			return output;
-		case NAVIGATION_FAILED:
-			CreateLang.translate("train_map.navigation_failed")
-				.color(orange)
-				.addTo(output);
-			return output;
-		case SCHEDULE_INTERRUPTED:
-			CreateLang.translate("train_map.schedule_interrupted")
-				.color(orange)
-				.addTo(output);
-			return output;
-		case RUNNING_MANUALLY:
-			CreateLang.translate("train_map.player_controlled")
-				.color(blue)
-				.addTo(output);
-			break;
+			case CONDUCTOR_MISSING:
+				CreateLang.translate("train_map.conductor_missing")
+					.color(orange)
+					.addTo(output);
+				return output;
+			case DERAILED:
+				CreateLang.translate("train_map.derailed")
+					.color(orange)
+					.addTo(output);
+				return output;
+			case NAVIGATION_FAILED:
+				CreateLang.translate("train_map.navigation_failed")
+					.color(orange)
+					.addTo(output);
+				return output;
+			case SCHEDULE_INTERRUPTED:
+				CreateLang.translate("train_map.schedule_interrupted")
+					.color(orange)
+					.addTo(output);
+				return output;
+			case RUNNING_MANUALLY:
+				CreateLang.translate("train_map.player_controlled")
+					.color(blue)
+					.addTo(output);
+				break;
 
-		case RUNNING:
-		default:
-			break;
+			case RUNNING:
+			default:
+				break;
 		}
 
 		String currentStation = trainEntry.targetStationName;
@@ -187,12 +200,12 @@ public class TrainMapManager {
 		if (!currentStation.isBlank()) {
 			if (targetStationDistance == 0)
 				CreateLang.translate("train_map.train_at_station", currentStation)
-						.color(darkBlue)
-						.addTo(output);
+					.color(darkBlue)
+					.addTo(output);
 			else
 				CreateLang.translate("train_map.train_moving_to_station", currentStation, targetStationDistance)
-						.color(darkBlue)
-						.addTo(output);
+					.color(darkBlue)
+					.addTo(output);
 		}
 
 		if (signalState != SignalState.NOT_WAITING) {
@@ -213,8 +226,8 @@ public class TrainMapManager {
 					Train trainWaitingFor = CreateClient.RAILWAYS.trains.get(waitingFor);
 					if (trainWaitingFor != null) {
 						CreateLang.translate("train_map.for_other_train", trainWaitingFor.name.getString())
-								.color(blue)
-								.addTo(output);
+							.color(blue)
+							.addTo(output);
 						trainFound = true;
 					}
 				}
@@ -242,7 +255,7 @@ public class TrainMapManager {
 	}
 
 	private static Object drawPoints(GuiGraphics graphics, int mouseX, int mouseY, Object hoveredElement,
-		Rect2i bounds) {
+									 Rect2i bounds) {
 		PoseStack pose = graphics.pose();
 		RenderSystem.enableDepthTest();
 
@@ -274,7 +287,7 @@ public class TrainMapManager {
 				Vec3 diff = edge.getDirectionAt(tLength)
 					.normalize();
 				int rotation = Mth.positiveModulo(Mth.floor(0.5
-					+ (Math.atan2(diff.z, diff.x) * Mth.RAD_TO_DEG + 90 + (station.isPrimary(node) ? 180 : 0)) / 45),
+						+ (Math.atan2(diff.z, diff.x) * Mth.RAD_TO_DEG + 90 + (station.isPrimary(node) ? 180 : 0)) / 45),
 					8);
 
 				AllGuiTextures sprite = AllGuiTextures.TRAINMAP_STATION_ORTHO;
@@ -310,7 +323,7 @@ public class TrainMapManager {
 	}
 
 	private static Object drawTrains(GuiGraphics graphics, int mouseX, int mouseY, Object hoveredElement,
-		Rect2i bounds) {
+									 Rect2i bounds) {
 		PoseStack pose = graphics.pose();
 		RenderSystem.enableDepthTest();
 		RenderSystem.enableBlend();
@@ -469,18 +482,23 @@ public class TrainMapManager {
 		int darkerColorShadow = 0xFF_4A2754;
 
 		switch (map.trackingTheme) {
-		case GREY:
-			mainColor = 0xFF_A8B5B5;
-			darkerColor = 0xFF_776E6C;
-			darkerColorShadow = 0xFF_56504E;
-			break;
-		case WHITE:
-			mainColor = 0xFF_E8F9F9;
-			darkerColor = 0xFF_889595;
-			darkerColorShadow = 0xFF_56504E;
-			break;
-		default:
-			break;
+			case GREY:
+				mainColor = 0xFF_A8B5B5;
+				darkerColor = 0xFF_776E6C;
+				darkerColorShadow = 0xFF_56504E;
+				break;
+			case WHITE:
+				mainColor = 0xFF_E8F9F9;
+				darkerColor = 0xFF_889595;
+				darkerColorShadow = 0xFF_56504E;
+				break;
+			case GREEN:
+				mainColor = 0xFF_8ACF8F;
+				darkerColor = 0xFF_558A4F;
+				darkerColorShadow = 0xFF_385A34;
+				break;
+			default:
+				break;
 		}
 
 		List<Couple<Integer>> collisions = new ObjectArrayList<>();
@@ -494,11 +512,13 @@ public class TrainMapManager {
 	}
 
 	private static void renderPhase(TrainMapRenderer map, List<Couple<Integer>> collisions, int mainColor,
-		int darkerColor, int phase) {
+									int darkerColor, int phase) {
 		int outlineColor = 0xFF_000000;
 
 		int portalFrameColor = 0xFF_4C2D5B;
 		int portalColor = 0xFF_FF7FD6;
+
+		boolean isSectionTheme = map.trackingTheme == CClient.TrainMapTheme.SECTION;
 
 		for (TrackGraph graph : CreateClient.RAILWAYS.trackNetworks.values()) {
 			for (TrackNodeLocation nodeLocation : graph.getNodes()) {
@@ -596,6 +616,12 @@ public class TrainMapManager {
 									continue;
 								}
 
+								if (isSectionTheme) {
+									EdgeGroupColor groupColor = getEdgeGroupColor(graph, edge, s * Mth.SQRT_OF_TWO);
+									mainColor = groupColor.getBGR();
+									darkerColor = groupColor.getDarkerBGR();
+								}
+
 								int alphaAt = map.alphaAt(x, z);
 								if (alphaAt > 0 && alphaAt != a)
 									collisions.add(Couple.create(x, z));
@@ -632,6 +658,12 @@ public class TrainMapManager {
 						double yStep = (y2 - y1) / diff;
 
 						for (int s = 0; s <= diff; s++) {
+							if (isSectionTheme) {
+								EdgeGroupColor groupColor = getEdgeGroupColor(graph, edge, s);
+								mainColor = groupColor.getBGR();
+								darkerColor = groupColor.getDarkerBGR();
+							}
+
 							int alphaAt = map.alphaAt(x, z);
 							if (alphaAt > 0 && alphaAt != a)
 								collisions.add(Couple.create(x, z));
@@ -650,19 +682,26 @@ public class TrainMapManager {
 						continue;
 
 					BlockPos origin = turn.bePositions.getFirst();
-					Map<Pair<Integer, Integer>, Double> rasterise = turn.rasterise();
+					Map<Pair<Integer, Integer>, BezierPixel> rasterise = turn.rasterise();
 
 					for (boolean antialias : Iterate.falseAndTrue) {
-						for (Entry<Pair<Integer, Integer>, Double> offset : rasterise.entrySet()) {
-							Pair<Integer, Integer> xz = offset.getKey();
+						for (Entry<Pair<Integer, Integer>, BezierPixel> bcPixel : rasterise.entrySet()) {
+							Pair<Integer, Integer> xz = bcPixel.getKey();
 							int x = origin.getX() + xz.getFirst();
-							int y = Mth.floor(origin.getY() + offset.getValue() + 0.5);
+							int y = Mth.floor(origin.getY() + bcPixel.getValue().yLevel + 0.5);
 							int z = origin.getZ() + xz.getSecond();
 
 							if (phase == PHASE_BACKGROUND) {
 								map.setPixels(x - 1, z, x + 1, z, outlineColor);
 								map.setPixels(x, z - 1, x, z + 1, outlineColor);
 								continue;
+							}
+
+							if (isSectionTheme) {
+								EdgeGroupColor groupColor =
+									getEdgeGroupColor(graph, edge, bcPixel.getValue().position);
+								mainColor = groupColor.getBGR();
+								darkerColor = groupColor.getDarkerBGR();
 							}
 
 							int a = mapYtoAlpha(y);
@@ -678,12 +717,21 @@ public class TrainMapManager {
 								continue;
 							}
 
-							boolean mainColorBelowLeft =
-								map.is(x + 1, z + 1, mainColor) && Math.abs(map.alphaAt(x + 1, z + 1) - a) <= 1;
-							boolean mainColorBelowRight =
-								map.is(x - 1, z + 1, mainColor) && Math.abs(map.alphaAt(x - 1, z + 1) - a) <= 1;
+							boolean mainColorBelow = false;
+							for (int xDelta : Iterate.positiveAndNegative) {
+								if (Math.abs(map.alphaAt(x + xDelta, z + 1) - a) > 1)
+									continue;
 
-							if (mainColorBelowLeft || mainColorBelowRight) {
+								int colorBelow = map.getPixel(x + xDelta, z + 1) & 0xFFFFFF;
+								mainColorBelow |= colorBelow == (mainColor & 0xFFFFFF);
+
+								if (isSectionTheme) {
+									for (EdgeGroupColor groupColor : EdgeGroupColor.values())
+										mainColorBelow |= colorBelow == (groupColor.getBGR() & 0xFFFFFF);
+								}
+							}
+
+							if (mainColorBelow) {
 								int alphaAt = map.alphaAt(x, z + 1);
 								if (alphaAt > 0 && alphaAt != a)
 									collisions.add(Couple.create(x, z));
@@ -710,7 +758,7 @@ public class TrainMapManager {
 	}
 
 	private static void highlightYDifferences(TrainMapRenderer map, List<Couple<Integer>> collisions, int mainColor,
-		int darkerColor, int mainColorShadow, int darkerColorShadow) {
+											  int darkerColor, int mainColorShadow, int darkerColorShadow) {
 		for (Couple<Integer> couple : collisions) {
 			int x = couple.getFirst();
 			int z = couple.getSecond();
