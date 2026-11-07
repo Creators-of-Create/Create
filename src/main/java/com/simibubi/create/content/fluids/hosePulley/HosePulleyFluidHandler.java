@@ -39,7 +39,7 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 		}
 
 		if (action.simulate())
-			return diff <= 0 ? resource.getAmount() : internalTank.fill(remaining, action);
+			return diff <= 0 ? resource.getAmount() : internalTank.fill(resource, action);
 		if (diff <= 0) {
 			internalTank.drain(-diff, FluidAction.EXECUTE);
 			return resource.getAmount();
