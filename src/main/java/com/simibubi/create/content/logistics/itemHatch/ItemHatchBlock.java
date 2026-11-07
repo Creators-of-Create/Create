@@ -122,7 +122,7 @@ public class ItemHatchBlock extends HorizontalDirectionalBlock
 				continue;
 			if (depositItemInHand && i != inventory.selected)
 				continue;
-			ItemStack item = inventory.getItem(i);
+			ItemStack item = depositItemInHand ? stack : inventory.getItem(i);
 			if (item.isEmpty())
 				continue;
 			if (!item.getItem()
@@ -136,9 +136,14 @@ public class ItemHatchBlock extends HorizontalDirectionalBlock
 			if (remainder.getCount() == item.getCount())
 				continue;
 
-			ItemStack extracted = inventory.removeItem(i, item.getCount() - remainder.getCount());
+			ItemStack extracted = depositItemInHand ? stack.copy() : inventory.removeItem(i, item.getCount() - remainder.getCount());
 			remainder = ItemHandlerHelper.insertItemStacked(targetInv, extracted, false);
 			anyInserted = true;
+
+			if(depositItemInHand) {
+				stack.setCount(remainder.getCount());
+				remainder.setCount(0); // clear it because we already set the count and don't want to duplicate it
+			}
 
 			// remainder might not be empty in itemhandler edge cases
 			if (!remainder.isEmpty())
