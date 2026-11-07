@@ -161,8 +161,10 @@ public class PumpBlockEntity extends KineticBlockEntity {
 					BlockFace blockFace = new BlockFace(currentPos, face);
 					BlockPos connectedPos = blockFace.getConnectedPos();
 
-					if (!level.isLoaded(connectedPos))
+					if (!level.isLoaded(connectedPos)) {
+						pipe.scheduleUpdate = true;
 						continue;
+					}
 					if (blockFace.isEquivalent(start))
 						continue;
 					if (hasReachedValidEndpoint(level, blockFace, pull)) {
