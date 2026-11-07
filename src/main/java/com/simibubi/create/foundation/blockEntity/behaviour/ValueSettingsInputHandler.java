@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.SidedFilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.SidedScrollValueBehavior;
 import com.simibubi.create.foundation.utility.AdventureUtil;
 
 import net.createmod.catnip.platform.CatnipServices;
@@ -55,6 +56,11 @@ public class ValueSettingsInputHandler {
 			BlockHitResult ray = event.getHitVec();
 			if (ray == null)
 				return;
+			if (behaviour instanceof SidedScrollValueBehavior<?> sidedBehavior) {
+				behaviour = sidedBehavior.get(ray.getDirection());
+				if (behaviour == null)
+					continue;
+			}
 			if (behaviour instanceof SidedFilteringBehaviour) {
 				behaviour = ((SidedFilteringBehaviour) behaviour).get(ray.getDirection());
 				if (behaviour == null)

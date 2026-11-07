@@ -24,6 +24,9 @@ public class AllIcons implements ScreenElement {
 	public static final ResourceLocation ICON_ATLAS = Create.asResource("textures/gui/icons.png");
 	public static final int ICON_ATLAS_SIZE = 256;
 
+	public final ResourceLocation iconAtlas;
+	public final int iconAtlasSize;
+
 	private static int x = 0, y = -1;
 	private int iconX;
 	private int iconY;
@@ -170,9 +173,15 @@ public class AllIcons implements ScreenElement {
 		I_MOVE_GAUGE = next();
 	;
 
-	public AllIcons(int x, int y) {
+	private AllIcons(int x, int y) {
+		this(x, y, ICON_ATLAS, ICON_ATLAS_SIZE);
+	}
+
+	public AllIcons(int x, int y, ResourceLocation atlas, int atlasSize) {
 		iconX = x * 16;
 		iconY = y * 16;
+		iconAtlas = atlas;
+		iconAtlasSize = atlasSize;
 	}
 
 	private static AllIcons next() {
@@ -185,18 +194,18 @@ public class AllIcons implements ScreenElement {
 
 	@OnlyIn(Dist.CLIENT)
 	public void bind() {
-		RenderSystem.setShaderTexture(0, ICON_ATLAS);
+		RenderSystem.setShaderTexture(0, iconAtlas);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void render(GuiGraphics graphics, int x, int y) {
-		graphics.blit(ICON_ATLAS, x, y, 0, iconX, iconY, 16, 16, 256, 256);
+		graphics.blit(iconAtlas, x, y, 0, iconX, iconY, 16, 16, iconAtlasSize, iconAtlasSize);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void render(PoseStack ms, MultiBufferSource buffer, int color) {
-		VertexConsumer builder = buffer.getBuffer(RenderType.text(ICON_ATLAS));
+		VertexConsumer builder = buffer.getBuffer(RenderType.text(iconAtlas));
 		Matrix4f matrix = ms.last().pose();
 		Color rgb = new Color(color);
 		int light = LightTexture.FULL_BRIGHT;
@@ -206,10 +215,10 @@ public class AllIcons implements ScreenElement {
 		Vec3 vec3 = new Vec3(1, 1, 0);
 		Vec3 vec4 = new Vec3(1, 0, 0);
 
-		float u1 = iconX * 1f / ICON_ATLAS_SIZE;
-		float u2 = (iconX + 16) * 1f / ICON_ATLAS_SIZE;
-		float v1 = iconY * 1f / ICON_ATLAS_SIZE;
-		float v2 = (iconY + 16) * 1f / ICON_ATLAS_SIZE;
+		float u1 = iconX * 1f / iconAtlasSize;
+		float u2 = (iconX + 16) * 1f / iconAtlasSize;
+		float v1 = iconY * 1f / iconAtlasSize;
+		float v2 = (iconY + 16) * 1f / iconAtlasSize;
 
 		vertex(builder, matrix, vec1, rgb, u1, v1, light);
 		vertex(builder, matrix, vec2, rgb, u1, v2, light);
