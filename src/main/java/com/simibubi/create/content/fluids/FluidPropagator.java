@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.simibubi.create.content.fluids.pipes.IAxisPipe;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllTags.AllBlockTags;
@@ -213,8 +215,8 @@ public class FluidPropagator {
 		if (state.getBlock() instanceof PumpBlock)
 			return state.getValue(PumpBlock.FACING)
 				.getAxis();
-		if (state.getBlock() instanceof AxisPipeBlock)
-			return state.getValue(AxisPipeBlock.AXIS);
+		if (state.getBlock() instanceof IAxisPipe axisPipe)
+			return axisPipe.getAxis(state);
 		if (!FluidPipeBlock.isPipe(state))
 			return null;
 		Axis axisFound = null;
