@@ -2,8 +2,6 @@ package com.simibubi.create.content.kinetics.deployer;
 
 import java.util.UUID;
 
-import net.minecraft.nbt.CompoundTag;
-
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllItems;
@@ -24,15 +22,15 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 
 	@Override
-	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
-		AbstractContraptionEntity contraptionEntity) {
+	public boolean handlePlayerInteraction(Player player, InteractionHand hand, BlockPos localPos,
+										   AbstractContraptionEntity contraptionEntity) {
 		MutablePair<StructureBlockInfo, MovementContext> actor = contraptionEntity.getContraption()
 			.getActorAt(localPos);
 		if (actor == null || actor.right == null)
 			return false;
 
 		MovementContext ctx = actor.right;
-		ItemStack heldStack = player.getItemInHand(activeHand);
+		ItemStack heldStack = player.getItemInHand(hand);
 		if (heldStack.getItem()
 			.equals(AllItems.WRENCH.get())) {
 			DeployerBlockEntity.Mode mode = NBTHelper.readEnum(ctx.blockEntityData, "Mode", DeployerBlockEntity.Mode.class);
@@ -59,7 +57,7 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 				return false;
 
 			ItemStack deployerItem = fake.getMainHandItem();
-			player.setItemInHand(activeHand, deployerItem.copy());
+			player.setItemInHand(hand, deployerItem.copy());
 			fake.setItemInHand(InteractionHand.MAIN_HAND, heldStack.copy());
 			ctx.blockEntityData.put("HeldItem", heldStack.saveOptional(player.registryAccess()));
 			ctx.data.put("HeldItem", heldStack.saveOptional(player.registryAccess()));
