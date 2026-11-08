@@ -15,8 +15,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 public abstract class SimpleBlockMovingInteraction extends MovingInteractionBehaviour {
 
 	@Override
-	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
-		AbstractContraptionEntity contraptionEntity) {
+	public boolean handlePlayerInteraction(Player player, InteractionHand hand, BlockPos localPos,
+										   AbstractContraptionEntity contraptionEntity) {
 		Contraption contraption = contraptionEntity.getContraption();
 		StructureBlockInfo info = contraption.getBlocks()
 			.get(localPos);
