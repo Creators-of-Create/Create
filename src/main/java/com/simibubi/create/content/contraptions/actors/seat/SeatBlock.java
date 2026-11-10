@@ -13,6 +13,7 @@ import com.simibubi.create.AllTags.AllEntityTags;
 import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -49,8 +50,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import net.neoforged.neoforge.common.util.FakePlayer;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -136,77 +135,83 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 
 	@Override
 	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-		if (player instanceof FakePlayer)
-			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		Optional<Entity> rider = Optional.empty();
+		Entity passenger = null;
+		boolean canMount = true;
+		var seats = level.getEntitiesOfClass(SeatEntity.class, new AABB(pos));
+		if (!seats.isEmpty()) {
+			var seat = seats.getFirst();
+			List<Entity> entities = seat.getPassengers();
+			if (!entities.isEmpty()) {
+				canMount = !(AdventureUtil.isAdventure(player) || (passenger = entities.getFirst()) instanceof Player);
+			}
+		}
 
+		Optional<Entity> toMount = Optional.empty();
 		if (!player.isShiftKeyDown()) {
+
 			DyeColor color = DyeColor.getColor(stack);
 			if (color != null && color != this.color) {
 				if (level.isClientSide)
-					return ItemInteractionResult.SUCCESS;
+					return ItemInteractionResult.CONSUME;
 				BlockState newState = BlockHelper.copyProperties(state, AllBlocks.SEATS.get(color)
 					.getDefaultState());
 				level.setBlockAndUpdate(pos, newState);
 				return ItemInteractionResult.SUCCESS;
 			}
 
-			if (level instanceof ServerLevel sl) {
+			if (canMount) {
 				if (stack.getItem() instanceof SpawnEggItem sei) {
-					EntityType<?> entitytype = sei.getType(stack);
-					Entity entity = entitytype.spawn(sl, stack, player, pos, MobSpawnType.SPAWN_EGG, false, false);
-					if (entity != null) {
-						rider = Optional.of(entity);
-						if (!player.isCreative())
-							stack.shrink(1);
+					if (level instanceof ServerLevel sl) {
+						EntityType<?> entitytype = sei.getType(stack);
+						Entity entity = entitytype.spawn(sl, stack, player, pos, MobSpawnType.SPAWN_EGG, false, false);
+						if (entity != null) {
+							toMount = Optional.of(entity);
+							if (!player.isCreative())
+								stack.shrink(1);
+						}
+					} else {
+						return ItemInteractionResult.CONSUME;
 					}
 				}
 
 				if (stack.getItem() instanceof PackageItem) {
+					if (level.isClientSide)
+						return ItemInteractionResult.CONSUME;
 					PackageEntity packageEntity = new PackageEntity(level, pos.getX(), pos.getY(), pos.getZ());
 					packageEntity.setBox(stack.copy());
 					if (level.addFreshEntity(packageEntity)) {
-						rider = Optional.of(packageEntity);
+						toMount = Optional.of(packageEntity);
 						if (!player.isCreative())
 							stack.shrink(1);
 					}
 				}
 			}
 
-			rider = rider.or(() -> getLeashed(level, player))
-						 .or(() -> Optional.of(player).filter((p) -> !p.isPassenger()));
+			if (canMount)
+				toMount = toMount.or(() -> getLeashed(level, player))
+							 .or(() -> Optional.of(player).filter(
+								 p -> !p.isPassenger() && !p.isFakePlayer()));
 
-			if (rider.isEmpty())
+			if (toMount.isEmpty())
 				return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		}
 
-		List<SeatEntity> seats = level.getEntitiesOfClass(SeatEntity.class, new AABB(pos));
-		if (!seats.isEmpty()) {
-			SeatEntity seatEntity = seats.getFirst();
-			List<Entity> passengers = seatEntity.getPassengers();
-
-			if (!passengers.isEmpty()) {
-				Entity passenger = passengers.getFirst();
-				if (passenger instanceof Player)
-					return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-
-				if (!level.isClientSide) {
-					passenger.stopRiding();
-					if (passenger instanceof LivingEntity le)
-						le.knockback(0.3F, Mth.sin(player.getYRot() * Mth.DEG_TO_RAD), -Mth.cos(player.getYRot() * Mth.DEG_TO_RAD));
-
-					rider.ifPresent(entity -> entity.startRiding(seatEntity));
-					return ItemInteractionResult.SUCCESS;
-				}
+		boolean swing = false;
+		if (passenger != null && canMount) {
+			swing = true;
+			if (!level.isClientSide) {
+				passenger.stopRiding();
+				if (passenger instanceof LivingEntity living && player.isShiftKeyDown() && stack.isEmpty())
+					living.knockback(0.3F, Mth.sin(player.getYRot() * Mth.DEG_TO_RAD), -Mth.cos(player.getYRot() * Mth.DEG_TO_RAD));
 			}
 		}
 
-		if (level.isClientSide)
-			return ItemInteractionResult.SUCCESS;
+		if (toMount.isEmpty())
+			return swing ? ItemInteractionResult.sidedSuccess(!level.isClientSide) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-		rider.ifPresent((e) -> sitDown(level, pos, e));
-		return ItemInteractionResult.SUCCESS;
+		sitDown(level, pos, toMount.get());
+		return ItemInteractionResult.sidedSuccess(!level.isClientSide);
 	}
 
 	public static boolean isOccupiedBySeat(Level world, BlockPos pos) {
@@ -239,7 +244,7 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 		if (level.isClientSide)
 			return;
 		SeatEntity seat = new SeatEntity(level);
-		// The + .5D should be added along with the SeatEntity size change if allowed.
+		// The + .5 for Y should be added along with the SeatEntity size change if allowed.
 		seat.setPos(pos.getX() + .5, pos.getY() /*+ .5*/, pos.getZ() + .5);
 		level.addFreshEntity(seat);
 		entity.startRiding(seat, true);
