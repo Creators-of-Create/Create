@@ -4,16 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.jetbrains.annotations.Nullable;
-
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.render.ActorVisual;
@@ -23,7 +20,6 @@ import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.schematics.SchematicInstances;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
-import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.track.ITrackBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -34,16 +30,15 @@ import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import net.createmod.catnip.levelWrappers.SchematicLevel;
-import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -99,18 +94,9 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		facingVec = context.rotation.apply(facingVec);
 		Vec3 vec = context.position.subtract(facingVec.scale(2));
 
-		float xRot = AbstractContraptionEntity.pitchFromVector(facingVec) - 90;
-		if (Math.abs(xRot) > 89) {
-			Vec3 initial = new Vec3(0, 0, 1);
-			if (context.contraption.entity instanceof OrientedContraptionEntity oce)
-				initial = VecHelper.rotate(initial, oce.getInitialYaw(), Axis.Y);
-			if (context.contraption.entity instanceof CarriageContraptionEntity cce)
-				initial = VecHelper.rotate(initial, 90, Axis.Y);
-			facingVec = context.rotation.apply(initial);
-		}
-
-		player.setYRot(AbstractContraptionEntity.yawFromVector(facingVec));
-		player.setXRot(xRot);
+		// Ref: Entity.lookAt
+		player.setXRot(Mth.wrapDegrees((float) (-(Mth.atan2(facingVec.y, Math.sqrt(facingVec.x * facingVec.x + facingVec.z * facingVec.z)) * 180.0F / (float) Math.PI))));
+		player.setYRot(Mth.wrapDegrees((float) (Mth.atan2(facingVec.z, facingVec.x) * 180.0F / (float) Math.PI) - 90.0F));
 
 		DeployerHandler.activate(player, vec, pos, facingVec, mode);
 	}
