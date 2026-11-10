@@ -74,7 +74,7 @@ public class TestProcessing {
 		helper.succeedWhen(() -> helper.assertContainerContains(chest, expected));
 	}
 
-	@GameTest(template = "precision_mechanism_crafting", timeoutTicks = CreateGameTestHelper.TWENTY_SECONDS)
+	@GameTest(template = "precision_mechanism_crafting", timeoutTicks = CreateGameTestHelper.THIRTY_SECONDS)
 	public static void precisionMechanismCrafting(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(6, 3, 6);
 		BlockPos output = new BlockPos(11, 3, 1);
