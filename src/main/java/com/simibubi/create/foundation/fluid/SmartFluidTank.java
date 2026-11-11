@@ -25,4 +25,7 @@ public class SmartFluidTank extends FluidTank {
 		updateCallback.accept(stack);
 	}
 
+	public void setUpdateCallback(Consumer<FluidStack> updateCallback) {
+		this.updateCallback = updateCallback;
+	}
 }
