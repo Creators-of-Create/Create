@@ -1,6 +1,7 @@
 package com.simibubi.create.content.equipment.clipboard;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -9,6 +10,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides.ClipboardType;
+import com.simibubi.create.content.equipment.clipboard.ui.ClipboardLayout;
 import com.simibubi.create.content.trains.track.TrackBlockOutline;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -185,39 +187,19 @@ public class ClipboardValueSettingsHandler {
 			if (!world.isClientSide()) {
 				List<List<ClipboardEntry>> listTo = ClipboardEntry.readAll(clipboardContent);
 				List<List<ClipboardEntry>> listFrom = ClipboardEntry.readAll(cbe.components());
-				List<ClipboardEntry> toAdd = new ArrayList<>();
+				List<ClipboardEntry> toAdd = collectNewEntries(listFrom, listTo);
+				if (!toAdd.isEmpty()) {
+					clipboardContent = clipboardContent
+						.setType(ClipboardType.EDITING);
+					itemStack.set(AllDataComponents.CLIPBOARD_CONTENT, clipboardContent);
 
-				for (List<ClipboardEntry> page : listFrom) {
-					Copy: for (ClipboardEntry entry : page) {
-						String entryToAdd = entry.text.getString();
-						for (List<ClipboardEntry> pageTo : listTo)
-							for (ClipboardEntry existing : pageTo)
-								if (entryToAdd.equals(existing.text.getString()))
-									continue Copy;
-						toAdd.add(new ClipboardEntry(entry.checked, entry.text));
-					}
-				}
-
-				for (ClipboardEntry entry : toAdd) {
-					List<ClipboardEntry> page = null;
-					for (List<ClipboardEntry> freePage : listTo) {
-						if (freePage.size() > 11)
-							continue;
-						page = freePage;
-						break;
-					}
-					if (page == null) {
-						page = new ArrayList<>();
-						listTo.add(page);
-					}
-					page.add(entry);
-
-					clipboardContent = clipboardContent.setType(ClipboardType.WRITTEN);
+					copyEntries(toAdd, listTo);
+					
+					clipboardContent = clipboardContent
+						.setType(ClipboardType.WRITTEN)
+						.setPages(listTo);
 					itemStack.set(AllDataComponents.CLIPBOARD_CONTENT, clipboardContent);
 				}
-
-				clipboardContent = clipboardContent.setPages(listTo);
-				itemStack.set(AllDataComponents.CLIPBOARD_CONTENT, clipboardContent);
 			}
 
 			player.displayClientMessage(CreateLang.translate("clipboard.copied_from_clipboard", world.getBlockState(pos)
@@ -293,6 +275,65 @@ public class ClipboardValueSettingsHandler {
 			clipboardContent = clipboardContent.setType(ClipboardType.WRITTEN);
 			clipboardContent = clipboardContent.setCopiedValues(tag);
 			itemStack.set(AllDataComponents.CLIPBOARD_CONTENT, clipboardContent);
+		}
+	}
+
+	private static List<ClipboardEntry> collectNewEntries(List<List<ClipboardEntry>> listFrom, List<List<ClipboardEntry>> listTo) {
+		var toAdd = new ArrayList<ClipboardEntry>();
+		var existingEntries = new HashSet<String>();
+
+		for (List<ClipboardEntry> pageTo : listTo)
+			for (ClipboardEntry existing : pageTo)
+				existingEntries.add(existing.text.getString());
+
+		for (List<ClipboardEntry> page : listFrom) {
+			for (ClipboardEntry entry : page) {
+				String entryToAdd = entry.text.getString();
+				if (existingEntries.contains(entryToAdd))
+					continue;
+				
+				toAdd.add(entry.deepCopy());
+			}
+		}
+
+		return toAdd;
+	}
+
+	private static void copyEntries(List<ClipboardEntry> toAdd, List<List<ClipboardEntry>> listTo) {
+		if (toAdd == null || toAdd.isEmpty())
+			return;
+
+		if (listTo.isEmpty())
+			listTo.add(new ArrayList<>());
+
+		int currentPage = 0;
+		int currentHeight = 0;
+			
+		for (ClipboardEntry existing : listTo.get(currentPage))
+			currentHeight += existing.getHeight(false);
+		
+		for (ClipboardEntry entry : toAdd) {
+			int entryHeight = Math.min(entry.getHeight(false), ClipboardLayout.PAGE_TEXT_HEIGHT);
+
+			if (currentHeight + entryHeight >= ClipboardLayout.PAGE_TEXT_HEIGHT) {
+				for (currentPage++; currentPage < listTo.size(); currentPage++) {
+					currentHeight = 0;
+					for (ClipboardEntry existing : listTo.get(currentPage))
+						currentHeight += existing.getHeight(false);
+					if (currentHeight + entryHeight < ClipboardLayout.PAGE_TEXT_HEIGHT)
+						break;
+				}
+				if (currentPage > ClipboardLayout.PAGE_LIMIT) {
+					break;
+				}
+				if (currentPage == listTo.size()) {
+					listTo.add(new ArrayList<>());
+					currentHeight = 0;
+				}
+			}
+			
+			listTo.get(currentPage).add(entry);
+			currentHeight += entryHeight;
 		}
 	}
 
