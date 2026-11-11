@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
@@ -215,11 +217,15 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 				return;
 
 		// Disconnect links
+		Map<BlockPos, FactoryPanelConnection> displayLinks = new HashMap<>();
 		for (BlockPos pos : targetedByLinks.keySet()) {
 			FactoryPanelSupportBehaviour at = linkAt(level, new FactoryPanelPosition(pos, slot));
-			if (at != null)
+			if (at != null) {
 				at.disconnect(this);
+				if(at.blockEntity instanceof DisplayLinkBlockEntity) displayLinks.put(pos, targetedByLinks.get(pos));
+			}
 		}
+		displayLinks.keySet().forEach(key -> targetedByLinks.remove(key));
 
 		SmartBlockEntity oldBE = blockEntity;
 		FactoryPanelPosition oldPos = getPanelPosition();
@@ -264,6 +270,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		}
 
 		// Reconnect links
+		targetedByLinks.putAll(displayLinks);
 		for (BlockPos pos : targetedByLinks.keySet()) {
 			FactoryPanelSupportBehaviour at = linkAt(level, new FactoryPanelPosition(pos, slot));
 			if (at != null)
