@@ -113,6 +113,17 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 		newPosition = true;
 	}
 
+	public void ensureIsInNetwork() {
+		//Quite frequently, without any call to removeFromNetwork, a LinkBehaviour disappears from its network, we ensure it's corrected as fast as possible
+		for( IRedstoneLinkable linkable : getHandler().getNetworkOf(getWorld(), this))
+		{
+			if(linkable == this)
+				return;
+		}
+
+		getHandler().addToNetwork(getWorld(), this);
+	}
+
 	@Override
 	public Couple<Frequency> getNetworkKey() {
 		return Couple.create(frequencyFirst, frequencyLast);
