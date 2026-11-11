@@ -257,10 +257,10 @@ public class AirCurrent {
 	}
 
 	private static final double[][] DEPTH_TEST_COORDINATES = {
-		{0.25, 0.25},
-		{0.25, 0.75},
+		{0.2499, 0.2499},
+		{0.2499, 0.75},
 		{0.5, 0.5},
-		{0.75, 0.25},
+		{0.75, 0.2499},
 		{0.75, 0.75}
 	};
 
