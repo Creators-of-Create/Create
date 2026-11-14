@@ -1,8 +1,14 @@
 package com.simibubi.create.foundation.blockEntity.behaviour.filtering;
 
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
+import com.simibubi.create.content.schematics.requirement.ItemRequirement.PartialStrictNbtStackRequirement;
+
+import net.minecraft.core.component.DataComponentType;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -193,8 +199,10 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 
 	@Override
 	public ItemRequirement getRequiredItems() {
-		if (filter.isFilterItem())
-			return new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, getFilter());
+		if (filter.isFilterItem()) {
+			List<DataComponentType<?>> components = ((FilterItem) getFilter().getItem()).getComponentTypes();
+			return new ItemRequirement(new PartialStrictNbtStackRequirement(getFilter(), ItemUseType.CONSUME, components));
+		}
 
 		return ItemRequirement.NONE;
 	}

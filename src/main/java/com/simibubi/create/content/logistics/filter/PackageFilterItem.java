@@ -40,6 +40,11 @@ public class PackageFilterItem extends FilterItem {
 	}
 
 	@Override
+	public List<DataComponentType<?>> getComponentTypes() {
+		return List.of(AllDataComponents.PACKAGE_ADDRESS);
+	}
+
+	@Override
 	public DataComponentType<?> getComponentType() {
 		return AllDataComponents.PACKAGE_ADDRESS;
 	}

@@ -63,6 +63,11 @@ public class ListFilterItem extends FilterItem {
 	}
 
 	@Override
+	public List<DataComponentType<?>> getComponentTypes() {
+		return List.of(AllDataComponents.FILTER_ITEMS, AllDataComponents.FILTER_ITEMS_BLACKLIST, AllDataComponents.FILTER_ITEMS_RESPECT_NBT);
+	}
+
+	@Override
 	public DataComponentType<?> getComponentType() {
 		return AllDataComponents.FILTER_ITEMS;
 	}

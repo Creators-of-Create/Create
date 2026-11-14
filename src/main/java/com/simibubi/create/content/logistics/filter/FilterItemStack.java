@@ -25,7 +25,6 @@ public class FilterItemStack {
 
 	public static FilterItemStack of(ItemStack filter) {
 		if (!filter.isComponentsPatchEmpty() && filter.getItem() instanceof FilterItem item) {
-			trimFilterComponents(filter);
 			return item.makeStackWrapper(filter);
 		}
 
@@ -38,11 +37,6 @@ public class FilterItemStack {
 
 	public static FilterItemStack empty() {
 		return of(ItemStack.EMPTY);
-	}
-
-	private static void trimFilterComponents(ItemStack filter) {
-		filter.remove(DataComponents.ENCHANTMENTS);
-		filter.remove(DataComponents.ATTRIBUTE_MODIFIERS);
 	}
 
 	public boolean isEmpty() {
