@@ -5,6 +5,10 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ObserverBlock;
+import net.minecraft.world.level.block.RepeaterBlock;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -339,33 +343,17 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 	}
 
 	public static void updateDisplayedRedstoneValue(NixieTubeBlockEntity be, BlockState state, boolean force) {
-		if (be.getLevel() == null || be.getLevel().isClientSide)
+		Level level = be.getLevel();
+		if (level == null || level.isClientSide)
 			return;
 		if (be.reactsToRedstone() || force)
-			be.updateRedstoneStrength(getPower(be.getLevel(), state, be.getBlockPos()));
+			be.updateRedstoneStrength(level.getBestNeighborSignal(be.getBlockPos()));
 	}
 
 	private void updateDisplayedRedstoneValue(BlockState state, Level level, BlockPos pos) {
 		if (level.isClientSide)
 			return;
 		withBlockEntityDo(level, pos, be -> NixieTubeBlock.updateDisplayedRedstoneValue(be, state, false));
-	}
-
-	static boolean isValidBlock(BlockGetter world, BlockPos pos, boolean above) {
-		BlockState state = world.getBlockState(pos.above(above ? 1 : -1));
-		return !state.getShape(world, pos)
-			.isEmpty();
-	}
-
-	private static int getPower(Level level, BlockState state, BlockPos pos) {
-		int power = 0;
-		for (Direction direction : Iterate.directions)
-			power = Math.max(level.getSignal(pos.relative(direction), direction), power);
-		for (Direction direction : Iterate.directions) {
-			if (state.getValue(FACING).getOpposite() != direction)
-				power = Math.max(level.getSignal(pos.relative(direction), Direction.UP), power);
-		}
-		return power;
 	}
 
 	@Override
