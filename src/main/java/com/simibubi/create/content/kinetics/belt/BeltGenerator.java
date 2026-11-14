@@ -18,7 +18,7 @@ public class BeltGenerator extends SpecialBlockStateGen {
 		Direction direction = state.getValue(BeltBlock.HORIZONTAL_FACING);
 		BeltSlope slope = state.getValue(BeltBlock.SLOPE);
 		return slope == BeltSlope.VERTICAL ? 90
-			: slope == BeltSlope.SIDEWAYS && direction.getAxisDirection() == AxisDirection.NEGATIVE ? 180 : 0;
+			: slope.isSideways() && direction.getAxisDirection() == AxisDirection.NEGATIVE ? 180 : 0;
 	}
 
 	@Override
@@ -44,11 +44,14 @@ public class BeltGenerator extends SpecialBlockStateGen {
 		BeltPart part = state.getValue(BeltBlock.PART);
 		Direction direction = state.getValue(BeltBlock.HORIZONTAL_FACING);
 		BeltSlope slope = state.getValue(BeltBlock.SLOPE);
+		if (casing && slope == BeltSlope.DIAGONAL_SIDEWAYS)
+			return prov.models()
+				.getExistingFile(prov.modLoc("block/belt/particle"));
 		boolean downward = slope == BeltSlope.DOWNWARD;
-		boolean diagonal = slope == BeltSlope.UPWARD || downward;
+		boolean diagonal = slope.isDiagonal();
 		boolean vertical = slope == BeltSlope.VERTICAL;
 		boolean pulley = part == BeltPart.PULLEY;
-		boolean sideways = slope == BeltSlope.SIDEWAYS;
+		boolean sideways = slope.isSideways();
 		boolean negative = direction.getAxisDirection() == AxisDirection.NEGATIVE;
 
 		if (!casing && pulley)

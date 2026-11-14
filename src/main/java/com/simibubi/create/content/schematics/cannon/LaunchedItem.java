@@ -170,7 +170,7 @@ public abstract class LaunchedItem {
 			boolean isStart = state.getValue(BeltBlock.PART) == BeltPart.START;
 			BlockPos offset = BeltBlock.nextSegmentPosition(state, BlockPos.ZERO, isStart);
 			int i = length - 1;
-			Axis axis = state.getValue(BeltBlock.SLOPE) == BeltSlope.SIDEWAYS ? Axis.Y
+			Axis axis = state.getValue(BeltBlock.SLOPE).isSideways() ? Axis.Y
 				: state.getValue(BeltBlock.HORIZONTAL_FACING)
 					.getClockWise()
 					.getAxis();

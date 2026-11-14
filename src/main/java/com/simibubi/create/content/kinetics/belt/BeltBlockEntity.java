@@ -420,6 +420,8 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 	}
 
 	public void setCasingType(CasingType type) {
+		if (type != CasingType.NONE && getBlockState().getValue(BeltBlock.SLOPE) == BeltSlope.DIAGONAL_SIDEWAYS)
+			return;
 		if (casing == type)
 			return;
 
@@ -450,7 +452,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 		if (getSpeed() == 0)
 			return false;
 		BlockState state = getBlockState();
-		if (state.hasProperty(BeltBlock.SLOPE) && (state.getValue(BeltBlock.SLOPE) == BeltSlope.SIDEWAYS
+		if (state.hasProperty(BeltBlock.SLOPE) && (state.getValue(BeltBlock.SLOPE).isSideways()
 			|| state.getValue(BeltBlock.SLOPE) == BeltSlope.VERTICAL))
 			return false;
 		return getMovementFacing() != side.getOpposite();
@@ -551,8 +553,8 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 
 	@Override
 	protected boolean canPropagateDiagonally(IRotate block, BlockState state) {
-		return state.hasProperty(BeltBlock.SLOPE) && (state.getValue(BeltBlock.SLOPE) == BeltSlope.UPWARD
-			|| state.getValue(BeltBlock.SLOPE) == BeltSlope.DOWNWARD);
+		return state.hasProperty(BeltBlock.SLOPE) && state.getValue(BeltBlock.SLOPE)
+			.isDiagonal();
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
+import com.simibubi.create.content.kinetics.belt.BeltHelper;
 import com.simibubi.create.content.kinetics.belt.BeltPart;
 import com.simibubi.create.content.kinetics.belt.BeltSlope;
 import com.simibubi.create.content.kinetics.simpleRelays.AbstractSimpleShaftBlock;
@@ -22,6 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.Vec3i;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -108,11 +110,13 @@ public class BeltConnectorItem extends BlockItem {
 		world.playSound(null, BlockPos.containing(VecHelper.getCenterOf(start.offset(end))
 			.scale(.5f)), SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 0.5F, 1F);
 
-		BeltSlope slope = getSlopeBetween(start, end);
-		Direction facing = getFacingFromTo(start, end);
+		Axis shaftAxis = world.getBlockState(start)
+			.getValue(BlockStateProperties.AXIS);
+		BeltSlope slope = getSlopeBetween(start, end, shaftAxis);
+		Direction facing = getFacingFromTo(start, end, slope);
 
 		BlockPos diff = end.subtract(start);
-		if (diff.getX() == diff.getZ())
+		if (slope != BeltSlope.DIAGONAL_SIDEWAYS && diff.getX() == diff.getZ())
 			facing = Direction.get(facing.getAxisDirection(), world.getBlockState(start)
 				.getValue(BlockStateProperties.AXIS) == Axis.X ? Axis.Z : Axis.X);
 
@@ -132,7 +136,8 @@ public class BeltConnectorItem extends BlockItem {
 			boolean pulley = ShaftBlock.isShaft(shaftState);
 			if (part == BeltPart.MIDDLE && pulley)
 				part = BeltPart.PULLEY;
-			if (pulley && shaftState.getValue(AbstractSimpleShaftBlock.AXIS) == Axis.Y)
+			if (slope == BeltSlope.HORIZONTAL && pulley
+				&& shaftState.getValue(AbstractSimpleShaftBlock.AXIS) == Axis.Y)
 				slope = BeltSlope.SIDEWAYS;
 
 			if (!existingBlock.canBeReplaced())
@@ -152,9 +157,12 @@ public class BeltConnectorItem extends BlockItem {
 				world.destroyBlock(pos, false);
 	}
 
-	private static Direction getFacingFromTo(BlockPos start, BlockPos end) {
-		Axis beltAxis = start.getX() == end.getX() ? Axis.Z : Axis.X;
+	private static Direction getFacingFromTo(BlockPos start, BlockPos end, BeltSlope slope) {
 		BlockPos diff = end.subtract(start);
+		if (slope == BeltSlope.DIAGONAL_SIDEWAYS)
+			return BeltHelper.getDiagonalFacing(diff.getX(), diff.getZ());
+
+		Axis beltAxis = start.getX() == end.getX() ? Axis.Z : Axis.X;
 		AxisDirection axisDirection = AxisDirection.POSITIVE;
 
 		if (diff.getX() == 0 && diff.getZ() == 0)
@@ -166,8 +174,10 @@ public class BeltConnectorItem extends BlockItem {
 		return Direction.get(axisDirection, beltAxis);
 	}
 
-	private static BeltSlope getSlopeBetween(BlockPos start, BlockPos end) {
+	private static BeltSlope getSlopeBetween(BlockPos start, BlockPos end, Axis shaftAxis) {
 		BlockPos diff = end.subtract(start);
+		if (shaftAxis == Axis.Y && diff.getX() != 0 && diff.getZ() != 0)
+			return BeltSlope.DIAGONAL_SIDEWAYS;
 
 		if (diff.getY() != 0) {
 			if (diff.getZ() != 0 || diff.getX() != 0)
@@ -191,9 +201,10 @@ public class BeltConnectorItem extends BlockItem {
 				continue;
 			}
 
-			current = current.relative(direction);
+			Vec3i step = BeltHelper.getBeltVector(direction, slope);
+			current = current.offset(step);
 			if (slope != BeltSlope.HORIZONTAL)
-				current = current.above(slope == BeltSlope.UPWARD ? 1 : -1);
+				current = current.above(slope == BeltSlope.UPWARD ? 1 : slope == BeltSlope.DOWNWARD ? -1 : 0);
 
 		} while (!current.equals(end) && limit-- > 0);
 
@@ -224,9 +235,6 @@ public class BeltConnectorItem extends BlockItem {
 		if (shaftAxis != world.getBlockState(second)
 			.getValue(BlockStateProperties.AXIS))
 			return false;
-		if (shaftAxis == Axis.Y && x != 0 && z != 0)
-			return false;
-
 		BlockEntity blockEntity = world.getBlockEntity(first);
 		BlockEntity blockEntity2 = world.getBlockEntity(second);
 
