@@ -71,7 +71,10 @@ public class BeltFunnelInteractionHandler {
 					continue;
 
 			if (beltInventory.belt.invVersionTracker.stillWaiting(inserting))
-				continue;
+				if (blocking)
+					return true;
+				else
+					continue;
 
 			int amountToExtract = funnelBE.getAmountToExtract();
 			ExtractionCountMode modeToExtract = funnelBE.getModeToExtract();
