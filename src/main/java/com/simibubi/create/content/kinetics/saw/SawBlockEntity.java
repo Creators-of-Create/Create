@@ -507,30 +507,21 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements C
 		return super.canBreak(stateToBreak, blockHardness) && sawable;
 	}
 
-	public static boolean isSawable(BlockState stateToBreak) {
-		if (stateToBreak.is(BlockTags.SAPLINGS))
-			return false;
-		if (TreeCutter.isLog(stateToBreak) || (stateToBreak.is(BlockTags.LEAVES)))
-			return true;
-		if (TreeCutter.isRoot(stateToBreak))
-			return true;
-		Block block = stateToBreak.getBlock();
-		if (block instanceof BambooStalkBlock)
-			return true;
-		if (AllBlockTags.SOLID_CROPS.matches(block))
-			return true;
-		if (block instanceof CactusBlock)
-			return true;
-		if (block instanceof SugarCaneBlock)
-			return true;
-		if (block instanceof KelpPlantBlock)
-			return true;
-		if (block instanceof KelpBlock)
-			return true;
-		if (block instanceof ChorusPlantBlock)
-			return true;
-		if (TreeCutter.canDynamicTreeCutFrom(block))
-			return true;
+public static boolean isSawable(BlockState stateToBreak) {
+	if (stateToBreak.is(BlockTags.SAPLINGS))
 		return false;
-	}
+
+	Block block = stateToBreak.getBlock();
+	return TreeCutter.isLog(stateToBreak)
+		|| stateToBreak.is(BlockTags.LEAVES)
+		|| TreeCutter.isRoot(stateToBreak)
+		|| block instanceof BambooStalkBlock
+		|| AllBlockTags.SOLID_CROPS.matches(block)
+		|| block instanceof CactusBlock
+		|| block instanceof SugarCaneBlock
+		|| block instanceof KelpPlantBlock
+		|| block instanceof KelpBlock
+		|| block instanceof ChorusPlantBlock
+		|| TreeCutter.canDynamicTreeCutFrom(block);
+}
 }
