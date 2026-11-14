@@ -231,7 +231,8 @@ public class ContinuousOBBCollider {
 			if (!discreteCollision && signum(projectedMotion) == signum(TL))
 				return true;
 
-			double sTL = signum(TL);
+			// This returns 1 when TL = 0, compared to signum which just returns 0
+			double sTL = Math.copySign(1D, TL);
 			double separation = sTL * abs(diff);
 
 			if (!discreteCollision) {
@@ -247,7 +248,7 @@ public class ContinuousOBBCollider {
 				earliestCollisionExitTime = Math.min(exitTime, earliestCollisionExitTime);
 			}
 
-			if (axisOfObjA && distance != 0 && -(diff) <= abs(normalSeparation)) {
+			if (axisOfObjA && -(diff) <= abs(normalSeparation)) {
 				normalAxis = axis;
 				normalSeparation = separation;
 			}
@@ -274,10 +275,10 @@ public class ContinuousOBBCollider {
 				}
 			}
 
-			if (distance != 0 && -(diff) <= abs(this.separation)) {
+			if (-(diff) <= abs(this.separation)) {
 				this.axis = axis;
 				this.separation = separation;
-				double scale = signum(TL) * (axisOfObjA ? -rA : -rB) - signum(separation) * 0.125;
+				double scale = sTL * (axisOfObjA ? -rA : -rB) - signum(separation) * 0.125;
 
 				collisionX = axis.x * scale;
 				collisionY = axis.y * scale;
