@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
-// TODO: 1.21.1+ - Move into api package
 /**
  * Implement this interface on the {@link BlockEntity} that wants to add info to the goggle overlay
  */
