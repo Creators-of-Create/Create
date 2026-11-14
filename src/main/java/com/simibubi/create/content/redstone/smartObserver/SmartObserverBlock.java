@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.TankManipulationBehaviour;
 
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
@@ -124,6 +125,9 @@ public class SmartObserverBlock extends DirectedDirectionalBlock implements IBE<
 		InvManipulationBehaviour behaviour = BlockEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
 		if (behaviour != null)
 			behaviour.onNeighborChanged(fromPos);
+		TankManipulationBehaviour tankBehaviour = BlockEntityBehaviour.get(worldIn, pos, TankManipulationBehaviour.OBSERVE);
+		if (tankBehaviour != null)
+			tankBehaviour.onNeighborChanged(fromPos);
 	}
 
 	public void onFunnelTransfer(Level world, BlockPos funnelPos, ItemStack transferred) {
