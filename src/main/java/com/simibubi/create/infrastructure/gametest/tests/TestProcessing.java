@@ -144,4 +144,18 @@ public class TestProcessing {
 		ItemStack expected = new ItemStack(AllItems.WHEAT_FLOUR.get(), 3);
 		helper.succeedWhen(() -> helper.assertContainerContains(output, expected));
 	}
+
+	@GameTest(template = "mixer_crafting_remainders", timeoutTicks = CreateGameTestHelper.TWENTY_SECONDS)
+	public static void mixerCraftingRemainders(CreateGameTestHelper helper) {
+		BlockPos output = new BlockPos(1, 3, 1);
+		BlockPos lever = new BlockPos(5, 4, 1);
+		helper.pullLever(lever);
+
+		ItemStack expectedDough = new ItemStack(AllItems.DOUGH.get(), 3);
+		ItemStack expectedBuckets = new ItemStack(Items.BUCKET, 3);
+		helper.succeedWhen(() -> {
+			helper.assertContainerContains(output, expectedDough);
+			helper.assertContainerContains(output, expectedBuckets);
+		});
+	}
 }

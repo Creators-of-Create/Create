@@ -14,11 +14,11 @@ import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
-import com.simibubi.create.foundation.recipe.DummyCraftingContainer;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -144,8 +144,7 @@ public class BasinRecipe extends StandardProcessingRecipe<RecipeInput> {
 			}
 
 			if (simulate) {
-				CraftingInput remainderInput = new DummyCraftingContainer(availableItems, extractedItemsFromSlot)
-					.asCraftInput();
+				CraftingInput remainderInput = getCraftingInput(availableItems, extractedItemsFromSlot);
 
 				if (recipe instanceof BasinRecipe basinRecipe) {
 					recipeOutputItems.addAll(basinRecipe.rollResults(basin.getLevel().random));
@@ -174,6 +173,26 @@ public class BasinRecipe extends StandardProcessingRecipe<RecipeInput> {
 		}
 
 		return true;
+	}
+
+	private static CraftingInput getCraftingInput(IItemHandler itemHandler, int[] extractedItemsFromSlot) {
+		NonNullList<ItemStack> inv = NonNullList.create();
+
+		for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
+			ItemStack stack = itemHandler.getStackInSlot(slot);
+
+			if (stack.isEmpty())
+				continue;
+
+			for (int i = 0; i < extractedItemsFromSlot[slot]; i++) {
+				ItemStack stackCopy = stack.copy();
+				stackCopy.setCount(1);
+
+				inv.add(stackCopy);
+			}
+		}
+
+		return new CraftingInput(0, 0, inv);
 	}
 
 	public static RecipeHolder<BasinRecipe> convertShapeless(RecipeHolder<?> recipe) {
