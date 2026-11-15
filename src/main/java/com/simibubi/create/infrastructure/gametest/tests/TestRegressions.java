@@ -32,9 +32,9 @@ public class TestRegressions {
 	public static void issue9334_beltFunnelInteractions(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(6, 3, 1);
 
-		BlockPos[] startBarrels = rowAlongAxis(Axis.X, new BlockPos(1, 3, 1), 6, 2);
-		BlockPos[] startBelts = rowAlongAxis(Axis.X, new BlockPos(1, 2, 2), 6, 2);
-		BlockPos[] endStorages = rowAlongAxis(Axis.X, new BlockPos(3, 3, 5), 4, 2);
+		BlockPos[] startBarrels = CreateGameTestHelper.rowAlongAxis(Axis.X, new BlockPos(1, 3, 1), 6, 2);
+		BlockPos[] startBelts = CreateGameTestHelper.rowAlongAxis(Axis.X, new BlockPos(1, 2, 2), 6, 2);
+		BlockPos[] endStorages = CreateGameTestHelper.rowAlongAxis(Axis.X, new BlockPos(3, 3, 5), 4, 2);
 
 		helper.unpowerLever(lever);
 		helper.succeedWhen(() -> {
@@ -57,12 +57,5 @@ public class TestRegressions {
 				helper.assertContainerContains(belt, Items.DIAMOND);
 			}
 		});
-	}
-
-	private static BlockPos[] rowAlongAxis(Direction.Axis axis, BlockPos origin, int count, int spacing) {
-		BlockPos[] positions = new BlockPos[count];
-		for (int i = 0; i < count; i++)
-			positions[i] = origin.relative(axis, i * spacing);
-		return positions;
 	}
 }

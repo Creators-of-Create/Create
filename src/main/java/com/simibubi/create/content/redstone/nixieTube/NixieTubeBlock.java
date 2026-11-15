@@ -5,10 +5,6 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ObserverBlock;
-import net.minecraft.world.level.block.RepeaterBlock;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +19,6 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.IBE;
 
-import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;

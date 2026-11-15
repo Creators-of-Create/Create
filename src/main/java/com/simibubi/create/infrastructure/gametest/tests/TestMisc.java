@@ -1,6 +1,7 @@
 package com.simibubi.create.infrastructure.gametest.tests;
 
 import static com.simibubi.create.infrastructure.gametest.CreateGameTestHelper.FIFTEEN_SECONDS;
+import static com.simibubi.create.infrastructure.gametest.CreateGameTestHelper.TEN_SECONDS;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllDataComponents;
@@ -114,5 +115,49 @@ public class TestMisc {
 			helper.assertSecondsPassed(9);
 			helper.assertEntityPresent(EntityType.ZOMBIE, lava);
 		});
+	}
+
+	@GameTest(template = "nixie_tube_power", timeoutTicks = TEN_SECONDS)
+	public static void nixieTubePower(CreateGameTestHelper helper) {
+		BlockPos nixieTube1 = new BlockPos(1, 2, 2);
+		BlockPos nixieTube2 = new BlockPos(2, 3, 2);
+		BlockPos nixieTube3 = new BlockPos(3, 3, 2);
+
+		BlockPos lever1 = new BlockPos(1, 2, 1);
+		BlockPos lever2 = new BlockPos(2, 4, 1);
+		BlockPos lever3 = new BlockPos(3, 2, 1);
+
+		helper.startSequence()
+
+			// Make sure signal strength is correct
+			.thenExecute(() -> helper.powerLever(lever3))
+			.thenExecuteAfter(10, () -> helper.assertNixiePower(nixieTube1, 12))
+
+			// Make sure it displays the best signal strength
+			.thenExecute(() -> helper.powerLever(lever1))
+			.thenExecuteAfter(10, () -> helper.assertNixiePower(nixieTube1, 15))
+
+			// Make sure other nixie tubes don't get powered by redstone that isn't directly targeting them
+			// Regression test for: https://github.com/Creators-of-Create/Create/issues/8734
+			.thenExecute(() -> {
+				helper.assertNixiePower(nixieTube2, 0);
+				helper.assertNixiePower(nixieTube3, 0);
+			})
+
+			// Reset the other levers
+			.thenExecute(() -> {
+				helper.unpowerLever(lever1);
+				helper.unpowerLever(lever3);
+			})
+
+			// Make sure nixie tubes don't send power between themselves
+			.thenExecute(() -> helper.powerLever(lever2))
+			.thenExecuteAfter(10, () -> {
+				helper.assertNixiePower(nixieTube2, 15);
+				helper.assertNixiePower(nixieTube3, 0);
+			})
+
+			// :)
+			.thenSucceed();
 	}
 }

@@ -482,4 +482,11 @@ public class CreateGameTestHelper extends GameTestHelper {
 	public void fail(@NotNull String exceptionMessage) {
 		super.fail(exceptionMessage);
 	}
+
+	public static BlockPos[] rowAlongAxis(Direction.Axis axis, BlockPos origin, int count, int spacing) {
+		BlockPos[] positions = new BlockPos[count];
+		for (int i = 0; i < count; i++)
+			positions[i] = origin.relative(axis, i * spacing);
+		return positions;
+	}
 }
