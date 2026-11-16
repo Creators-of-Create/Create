@@ -90,11 +90,11 @@ public class DeployerBlockEntity extends KineticBlockEntity implements Clearable
 
 	public BeltProcessingBehaviour processingBehaviour;
 
-	enum State {
+	public enum State {
 		WAITING, EXPANDING, RETRACTING, DUMPING;
 	}
 
-	enum Mode {
+	public enum Mode {
 		PUNCH, USE
 	}
 
