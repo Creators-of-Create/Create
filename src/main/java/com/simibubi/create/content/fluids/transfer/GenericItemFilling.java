@@ -1,10 +1,13 @@
 package com.simibubi.create.content.fluids.transfer;
 
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.Create;
+import com.simibubi.create.api.data.datamaps.Fillable;
+import com.simibubi.create.api.registry.CreateDataMaps;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,6 +23,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper;
+
+import java.util.Objects;
 
 public class GenericItemFilling {
 
@@ -56,6 +61,9 @@ public class GenericItemFilling {
 		if (stack.getItem() == Items.MILK_BUCKET)
 			return false;
 
+		if (stack.getItemHolder().getData(CreateDataMaps.FILLABLE) != null)
+			return true;
+
 		IFluidHandlerItem capability = stack.getCapability(Capabilities.FluidHandler.ITEM);
 		if (capability == null)
 			return false;
@@ -74,6 +82,13 @@ public class GenericItemFilling {
 			return PotionFluidHandler.getRequiredAmountForFilledBottle(stack, availableFluid);
 		if (stack.getItem() == Items.BUCKET && canFillBucketInternally(availableFluid))
 			return 1000;
+
+		Fillable fillingData = stack.getItemHolder().getData(CreateDataMaps.FILLABLE);
+		if (fillingData != null) {
+			Fillable.Entry entry = fillingData.fillWith().get(availableFluid.getFluidHolder().getKey());
+			if (entry != null)
+				return entry.amount();
+		}
 
 		IFluidHandlerItem capability = stack.getCapability(Capabilities.FluidHandler.ITEM);
 		if (capability == null)
@@ -99,8 +114,6 @@ public class GenericItemFilling {
 			return true;
 		if (fluid.isSame(AllFluids.POTION.get()))
 			return true;
-		if (fluid.isSame(AllFluids.TEA.get()))
-			return true;
 		return false;
 	}
 
@@ -118,12 +131,19 @@ public class GenericItemFilling {
 			Fluid fluid = toFill.getFluid();
 			if (FluidHelper.isWater(fluid))
 				fillBottle = PotionContents.createItemStack(Items.POTION, Potions.WATER);
-			else if (fluid.isSame(AllFluids.TEA.get()))
-				fillBottle = AllItems.BUILDERS_TEA.asStack();
 			else
 				fillBottle = PotionFluidHandler.fillBottle(stack, toFill);
 			stack.shrink(1);
 			return fillBottle;
+		}
+
+		Fillable fillingData = stack.getItemHolder().getData(CreateDataMaps.FILLABLE);
+		if (fillingData != null) {
+			Fillable.Entry entry = fillingData.fillWith().get(toFill.getFluidHolder().getKey());
+			if (entry != null) {
+				stack.shrink(1);
+				return Objects.requireNonNull(BuiltInRegistries.ITEM.get(entry.result())).getDefaultInstance();
+			}
 		}
 
 		ItemStack split = stack.copy();

@@ -12,5 +12,6 @@ public class CreateDataMapsImpl {
 	public static void registerDataMaps(RegisterDataMapTypesEvent event) {
 		event.register(CreateDataMaps.REGULAR_BLAZE_BURNER_FUELS);
 		event.register(CreateDataMaps.SUPERHEATED_BLAZE_BURNER_FUELS);
+		event.register(CreateDataMaps.FILLABLE);
 	}
 }
