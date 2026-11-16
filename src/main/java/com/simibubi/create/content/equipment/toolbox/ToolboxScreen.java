@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
@@ -28,8 +29,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 
-	protected static final AllGuiTextures BG = AllGuiTextures.TOOLBOX;
-	protected static final AllGuiTextures PLAYER = AllGuiTextures.PLAYER_INVENTORY;
+	protected static final GuiRenderableTexture BG = AllGuiTextures.TOOLBOX;
+	protected static final GuiRenderableTexture PLAYER = AllGuiTextures.PLAYER_INVENTORY;
 
 	protected Slot hoveredToolboxSlot;
 	private IconButton confirmButton;

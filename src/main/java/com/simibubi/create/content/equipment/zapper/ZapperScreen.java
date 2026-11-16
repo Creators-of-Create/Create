@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -26,7 +27,7 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 
 	protected final Component patternSection = CreateLang.translateDirect("gui.terrainzapper.patternSection");
 
-	protected AllGuiTextures background;
+	protected GuiRenderableTexture background;
 	protected ItemStack zapper;
 	protected InteractionHand hand;
 
@@ -40,7 +41,7 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 
 	protected PlacementPatterns currentPattern;
 
-	public ZapperScreen(AllGuiTextures background, ItemStack zapper, InteractionHand hand) {
+	public ZapperScreen(GuiRenderableTexture background, ItemStack zapper, InteractionHand hand) {
 		this.background = background;
 		this.zapper = zapper;
 		this.hand = hand;

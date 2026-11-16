@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.schematics.client.tools.ToolType;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.client.Minecraft;
@@ -71,11 +72,11 @@ public class ToolSelectionScreen extends Screen {
 		matrixStack.pushPose();
 		matrixStack.translate(0, -yOffset, focused ? 100 : 0);
 
-		AllGuiTextures gray = AllGuiTextures.HUD_BACKGROUND;
+		GuiRenderableTexture gray = AllGuiTextures.HUD_BACKGROUND;
 		RenderSystem.enableBlend();
 		RenderSystem.setShaderColor(1, 1, 1, focused ? 7 / 8f : 1 / 2f);
 
-		graphics.blit(gray.location, x - 15, y, gray.getStartX(), gray.getStartY(), w, h, gray.getWidth(), gray.getHeight());
+		graphics.blit(gray.getLocation(), x - 15, y, gray.getStartX(), gray.getStartY(), w, h, gray.getWidth(), gray.getHeight());
 
 		float toolTipAlpha = yOffset / 10;
 		List<Component> toolTip = tools.get(selection)
@@ -84,7 +85,7 @@ public class ToolSelectionScreen extends Screen {
 
 		if (toolTipAlpha > 0.25f) {
 			RenderSystem.setShaderColor(.7f, .7f, .8f, toolTipAlpha);
-			graphics.blit(gray.location, x - 15, y + 33, gray.getStartX(), gray.getStartY(), w, h + 22, gray.getWidth(), gray.getHeight());
+			graphics.blit(gray.getLocation(), x - 15, y + 33, gray.getStartX(), gray.getStartY(), w, h + 22, gray.getWidth(), gray.getHeight());
 			RenderSystem.setShaderColor(1, 1, 1, 1);
 
 			if (toolTip.size() > 0)

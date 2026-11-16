@@ -13,6 +13,7 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -83,7 +84,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 54, 51);
 	}
 
-	protected AllGuiTextures getBlockShadow() {
+	protected GuiRenderableTexture getBlockShadow() {
 		return AllGuiTextures.JEI_SHADOW;
 	}
 

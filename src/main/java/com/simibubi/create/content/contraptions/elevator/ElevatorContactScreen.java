@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.decoration.slidingDoor.DoorControl;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
@@ -27,7 +28,7 @@ import net.minecraft.util.FormattedCharSequence;
 
 public class ElevatorContactScreen extends AbstractSimiScreen {
 
-	private AllGuiTextures background;
+	private GuiRenderableTexture background;
 
 	private EditBox shortNameInput;
 	private EditBox longNameInput;

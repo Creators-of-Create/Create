@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateBuildInfo;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
@@ -227,10 +228,10 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	}
 
 	protected static class PlatformIconButton extends Button {
-		protected final AllGuiTextures icon;
+		protected final GuiRenderableTexture icon;
 		protected final float scale;
 
-		public PlatformIconButton(int pX, int pY, int pWidth, int pHeight, AllGuiTextures icon, float scale, OnPress pOnPress, Tooltip tooltip) {
+		public PlatformIconButton(int pX, int pY, int pWidth, int pHeight, GuiRenderableTexture icon, float scale, OnPress pOnPress, Tooltip tooltip) {
 			super(pX, pY, pWidth, pHeight, CommonComponents.EMPTY, pOnPress, DEFAULT_NARRATION);
 			this.icon = icon;
 			this.scale = scale;

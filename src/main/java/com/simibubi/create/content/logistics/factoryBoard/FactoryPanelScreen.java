@@ -22,6 +22,7 @@ import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.box.PackageStyles;
 import com.simibubi.create.content.trains.station.NoShadowFontWrapper;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
@@ -251,7 +252,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 		int y = guiTop;
 
 		// BG
-		AllGuiTextures bg = restocker ? FACTORY_GAUGE_RESTOCK : FACTORY_GAUGE_RECIPE;
+		GuiRenderableTexture bg = restocker ? FACTORY_GAUGE_RESTOCK : FACTORY_GAUGE_RECIPE;
 		if (restocker)
 			FACTORY_GAUGE_RECIPE.render(graphics, x, y - 16);
 		bg.render(graphics, x, y);

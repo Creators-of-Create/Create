@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
@@ -24,7 +25,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedControllerMenu> {
 
-	protected AllGuiTextures background;
+	protected GuiRenderableTexture background;
 	private List<Rect2i> extraAreas = Collections.emptyList();
 
 	private IconButton resetButton;

@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFW;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -18,7 +19,7 @@ import net.minecraft.network.chat.Component;
 
 public class SchematicPromptScreen extends AbstractSimiScreen {
 
-	private AllGuiTextures background;
+	private GuiRenderableTexture background;
 
 	private final Component convertLabel = CreateLang.translateDirect("schematicAndQuill.convert");
 	private final Component abortLabel = CreateLang.translateDirect("action.discard");

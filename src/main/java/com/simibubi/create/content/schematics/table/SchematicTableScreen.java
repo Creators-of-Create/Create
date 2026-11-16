@@ -11,6 +11,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.schematics.client.ClientSchematicLoader;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
@@ -39,7 +40,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 	private final Component noSchematics = CreateLang.translateDirect("gui.schematicTable.noSchematics");
 	private final Component availableSchematicsTitle = CreateLang.translateDirect("gui.schematicTable.availableSchematics");
 
-	protected AllGuiTextures background;
+	protected GuiRenderableTexture background;
 
 	private ScrollInput schematicsArea;
 	private IconButton confirmButton;
@@ -164,7 +165,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		int width = (int) (SCHEMATIC_TABLE_PROGRESS.getWidth()
 			* Mth.lerp(partialTicks, lastChasingProgress, chasingProgress));
 		int height = SCHEMATIC_TABLE_PROGRESS.getHeight();
-		graphics.blit(SCHEMATIC_TABLE_PROGRESS.location, x + 70, y + 59, SCHEMATIC_TABLE_PROGRESS.getStartX(),
+		graphics.blit(SCHEMATIC_TABLE_PROGRESS.getLocation(), x + 70, y + 59, SCHEMATIC_TABLE_PROGRESS.getStartX(),
 			SCHEMATIC_TABLE_PROGRESS.getStartY(), width, height);
 	}
 

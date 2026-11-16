@@ -9,7 +9,7 @@ import com.simibubi.create.compat.computercraft.ComputerScreen;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.entity.TrainIconType;
-import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.GuiRenderableTexture;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 
@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public abstract class AbstractStationScreen extends AbstractSimiScreen {
 
-	protected AllGuiTextures background;
+	protected GuiRenderableTexture background;
 	protected StationBlockEntity blockEntity;
 	protected GlobalStation station;
 
@@ -98,7 +98,7 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 		renderAdditional(graphics, mouseX, mouseY, partialTicks, x, y, background);
 	}
 
-	private void renderAdditional(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background) {
+	private void renderAdditional(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, GuiRenderableTexture background) {
 		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		var msr = TransformStack.of(ms);
