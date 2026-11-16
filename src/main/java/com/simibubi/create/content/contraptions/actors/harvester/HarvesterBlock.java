@@ -14,8 +14,8 @@ public class HarvesterBlock extends AttachedActorBlock implements IBE<HarvesterB
 
 	public static final MapCodec<HarvesterBlock> CODEC = simpleCodec(HarvesterBlock::new);
 
-	public HarvesterBlock(Properties p_i48377_1_) {
-		super(p_i48377_1_);
+	public HarvesterBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override
