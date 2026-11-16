@@ -3,6 +3,8 @@ package com.simibubi.create.content.kinetics.chainConveyor;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.minecraft.client.Camera;
+
 import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -37,10 +39,20 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
+import org.joml.Vector3f;
+
 public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConveyorBlockEntity> {
 
 	public static final ResourceLocation CHAIN_LOCATION = ResourceLocation.withDefaultNamespace("textures/block/chain.png");
 	public static final int MIP_DISTANCE = 48;
+	private static final float LOD_EPSILON = 1e-6f;
+
+	private record ChainRenderContext(ChainConveyorBlockEntity conveyor, PoseStack poseStack,
+		MultiBufferSource buffer, float animation, int light, int overlay, boolean useLod) {
+	}
+
+	private record LodCut(float nearLength, float farLength, boolean startFarther) {
+	}
 
 	public ChainConveyorRenderer(Context context) {
 		super(context);
@@ -131,74 +143,175 @@ public class ChainConveyorRenderer extends KineticBlockEntityRenderer<ChainConve
 		}
 	}
 
+	/**
+	 * Cut the line segment based on depth.
+	 * The pose matrix maps positions relative to the block entity into camera-relative render space,
+	 * including any transforms applied by a parent renderer. In that space,
+	 * dot(point, cameraForward) = MIP_DISTANCE is the plane separating near and far geometry.
+	 * The output contains the lengths inside and outside LOD
+	 * and whether the start point lies on the far side of the plane.
+	 */
+	private static LodCut calculateLodCut(PoseStack ms, BlockPos origin, ConnectionStats stats) {
+		Vec3 blockOrigin = Vec3.atLowerCornerOf(origin);
+		Vector3f renderedStart = stats.start().subtract(blockOrigin).toVector3f();
+		Vector3f renderedEnd = stats.end().subtract(blockOrigin).toVector3f();
+		Matrix4f transform = ms.last().pose();
+		transform.transformPosition(renderedStart);
+		transform.transformPosition(renderedEnd);
+
+		Camera camera = Minecraft.getInstance().getBlockEntityRenderDispatcher().camera;
+		Vector3f forward = camera.getLookVector();
+		float distStart = renderedStart.dot(forward) - MIP_DISTANCE;
+		float distEnd = renderedEnd.dot(forward) - MIP_DISTANCE;
+		float totalLength = stats.chainLength();
+
+		if (distStart <= 0 && distEnd <= 0) // Both points are inside LOD
+			return new LodCut(totalLength, 0, false);
+
+		if (distStart >= 0 && distEnd >= 0) // Both points are outside LOD
+			return new LodCut(0, totalLength, true);
+
+		float denom = distStart - distEnd;
+		float firstLength = totalLength * Mth.clamp(distStart / denom, 0, 1);
+		if (distStart > 0)
+			return new LodCut(totalLength - firstLength, firstLength, true);
+		return new LodCut(firstLength, totalLength - firstLength, false);
+	}
+
 	private void renderChains(ChainConveyorBlockEntity be, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
+		if (be.connectionStats == null)
+			return;
+
 		float time = AnimationTickHolder.getRenderTime(be.getLevel()) / (360f / Math.abs(be.getSpeed()));
 		time %= 1;
 		if (time < 0)
 			time += 1;
 
-		float animation = time - 0.5f;
+		Level level = be.getLevel();
+		Minecraft minecraft = Minecraft.getInstance();
+		Camera camera = minecraft.getBlockEntityRenderDispatcher().camera;
+		boolean useLod = minecraft.level == level;
+		boolean renderRemote = useLod && shouldRender(be, camera.getPosition());
+		ChainRenderContext context =
+			new ChainRenderContext(be, ms, buffer, time - 0.5f, light, overlay, useLod);
+		BlockPos tilePos = be.getBlockPos();
+		int light1 = getLight(level, tilePos);
 
 		for (BlockPos blockPos : be.connections) {
 			ConnectionStats stats = be.connectionStats.get(blockPos);
 			if (stats == null)
 				continue;
 
-			Vec3 diff = stats.end()
-				.subtract(stats.start());
-			double yaw = (float) Mth.RAD_TO_DEG * Mth.atan2(diff.x, diff.z);
-			double pitch = (float) Mth.RAD_TO_DEG * Mth.atan2(diff.y, diff.multiply(1, 0, 1)
-				.length());
+			BlockPos targetPos = tilePos.offset(blockPos);
+			BlockPos reverseConnection = blockPos.multiply(-1);
+			ChainConveyorBlockEntity targetConveyor = null;
+			if (level.getBlockEntity(targetPos) instanceof ChainConveyorBlockEntity target)
+				targetConveyor = target;
+			int light2 = targetConveyor != null ? getLight(level, targetPos) : light1;
 
-			Level level = be.getLevel();
-			BlockPos tilePos = be.getBlockPos();
-			Vec3 startOffset = stats.start()
-				.subtract(Vec3.atCenterOf(tilePos));
+			renderGuard(context, stats);
+			renderConnection(context, stats, light1, light2);
 
-			if (!VisualizationManager.supportsVisualization(be.getLevel())) {
-				SuperByteBuffer guard =
-					CachedBuffers.partial(AllPartialModels.CHAIN_CONVEYOR_GUARD, be.getBlockState());
-				guard.center();
-				guard.rotateYDegrees((float) yaw);
+			// Render the "virtual" chain on the other side if the target is not rendered
+			// So that we could see a pair of chains
+			// Do not render this if we are in a virtual world
+			if (!renderRemote)
+				continue;
+			boolean targetWillRender = targetConveyor != null && targetConveyor.connectionStats != null
+				&& targetConveyor.connectionStats.containsKey(reverseConnection);
+			if (targetWillRender
+				&& camera.getPosition().closerThan(targetPos.getCenter(), minecraft.gameRenderer.getRenderDistance()))
+				continue;
 
-				guard.uncenter();
-				guard.light(light)
-					.overlay(overlay)
-					.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
-			}
+			ConnectionStats virtualStats = ChainConveyorBlockEntity.calculateConnectionStats(
+				reverseConnection, targetPos, be.getSpeed() < 0
+			);
+			renderConnection(context, virtualStats, light1, light1);
+		}
+	}
 
-			ms.pushPose();
-			var chain = TransformStack.of(ms);
-			chain.center();
-			chain.translate(startOffset);
-			chain.rotateYDegrees((float) yaw);
-			chain.rotateXDegrees(90 - (float) pitch);
-			chain.rotateYDegrees(45);
-			chain.translate(0, 8 / 16f, 0);
-			chain.uncenter();
+	private static int getLight(Level level, BlockPos pos) {
+		return LightTexture.pack(level.getBrightness(LightLayer.BLOCK, pos),
+			level.getBrightness(LightLayer.SKY, pos));
+	}
 
-			int light1 = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, tilePos),
-				level.getBrightness(LightLayer.SKY, tilePos));
-			int light2 = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, tilePos.offset(blockPos)),
-				level.getBrightness(LightLayer.SKY, tilePos.offset(blockPos)));
+	private static void renderGuard(ChainRenderContext context, ConnectionStats stats) {
+		ChainConveyorBlockEntity be = context.conveyor();
+		if (VisualizationManager.supportsVisualization(be.getLevel()))
+			return;
 
-			boolean far = Minecraft.getInstance().level == be.getLevel() && !Minecraft.getInstance()
-				.getBlockEntityRenderDispatcher().camera.getPosition()
-					.closerThan(Vec3.atCenterOf(tilePos)
-						.add(blockPos.getX() / 2f, blockPos.getY() / 2f, blockPos.getZ() / 2f), MIP_DISTANCE);
+		Vec3 diff = stats.end().subtract(stats.start());
+		float yaw = Mth.RAD_TO_DEG * (float) Mth.atan2(diff.x, diff.z);
+		SuperByteBuffer guard = CachedBuffers.partial(AllPartialModels.CHAIN_CONVEYOR_GUARD, be.getBlockState());
+		guard.center();
+		guard.rotateYDegrees(yaw);
+		guard.uncenter();
+		guard.light(context.light())
+			.overlay(context.overlay())
+			.renderInto(context.poseStack(), context.buffer().getBuffer(RenderType.cutoutMipped()));
+	}
 
-			renderChain(ms, buffer, animation, stats.chainLength(), light1, light2, far);
+	private static void renderConnection(ChainRenderContext context, ConnectionStats stats, int light1, int light2) {
+		Vec3 start = stats.start();
+		Vec3 end = stats.end();
+		Vec3 diff = end.subtract(start);
+		float yaw = Mth.RAD_TO_DEG * (float) Mth.atan2(diff.x, diff.z);
+		float pitch = Mth.RAD_TO_DEG * (float) Mth.atan2(diff.y, diff.multiply(1, 0, 1).length());
+		BlockPos conveyorPos = context.conveyor().getBlockPos();
+		Vec3 startOffset = start.subtract(Vec3.atCenterOf(conveyorPos));
 
-			ms.popPose();
+		PoseStack ms = context.poseStack();
+		LodCut cut = context.useLod() ? calculateLodCut(ms, conveyorPos, stats) : null;
+		ms.pushPose();
+		var chain = TransformStack.of(ms);
+		chain.center();
+		chain.translate(startOffset);
+		chain.rotateYDegrees(yaw);
+		chain.rotateXDegrees(90 - pitch);
+		chain.rotateYDegrees(45);
+		chain.translate(0, 8 / 16f, 0);
+		chain.uncenter();
+
+		if (cut != null)
+			renderChainWithLod(ms, context.buffer(), context.animation(), light1, light2, cut, chain);
+		else
+			renderChainSegment(ms, context.buffer(), context.animation(), 0, stats.chainLength(), light1, light2, false);
+		ms.popPose();
+	}
+
+	private static void renderChainWithLod(PoseStack ms, MultiBufferSource buffer, float animation, int light1,
+		int light2, LodCut cut, TransformStack chain) {
+		float firstLength = cut.startFarther() ? cut.farLength() : cut.nearLength();
+		float secondLength = cut.startFarther() ? cut.nearLength() : cut.farLength();
+
+		if (firstLength > LOD_EPSILON)
+			renderChainSegment(ms, buffer, animation, 0, firstLength, light1, light2, cut.startFarther());
+
+		if (secondLength > LOD_EPSILON) {
+			chain.translate(0, firstLength, 0);
+			renderChainSegment(ms, buffer, animation, firstLength, secondLength, light1, light2,
+				!cut.startFarther());
 		}
 	}
 
 	public static void renderChain(PoseStack ms, MultiBufferSource buffer, float animation, float length, int light1,
 		int light2, boolean far) {
-		float radius = far ? 1f / 16f : 1.5f / 16f;
 		float minV = far ? 0 : animation;
 		float maxV = far ? 1 / 16f : length + minV;
+		renderChainGeometry(ms, buffer, length, light1, light2, far, minV, maxV);
+	}
+
+	private static void renderChainSegment(PoseStack ms, MultiBufferSource buffer, float animation, float start,
+		float length, int light1, int light2, boolean far) {
+		float maxV = far ? 0 : animation - start;
+		float minV = far ? 1 / 16f : maxV - length;
+		renderChainGeometry(ms, buffer, length, light1, light2, far, minV, maxV);
+	}
+
+	private static void renderChainGeometry(PoseStack ms, MultiBufferSource buffer, float length, int light1,
+		int light2, boolean far, float minV, float maxV) {
+		float radius = far ? 1f / 16f : 1.5f / 16f;
 		float minU = far ? 3 / 16f : 0;
 		float maxU = far ? 4 / 16f : 3 / 16f;
 
