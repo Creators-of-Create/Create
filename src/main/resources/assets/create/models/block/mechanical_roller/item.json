@@ -6,7 +6,8 @@
 	"textures": {
 		"wheel": "create:block/roller_wheel",
 		"metal": "create:block/roller_metal",
-		"casing": "create:block/roller_casing"
+		"casing": "create:block/roller_casing",
+		"particle": "create:block/roller_casing"
 	},
 	"display": {
 		"thirdperson_righthand": {
