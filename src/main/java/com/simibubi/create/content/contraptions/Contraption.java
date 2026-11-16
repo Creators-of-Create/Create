@@ -19,6 +19,8 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Contract;
@@ -132,6 +134,14 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.registries.GameData;
 
 public abstract class Contraption {
+
+	protected static final CollisionContext DUMMY_EMPTY_CONTEXT = new EntityCollisionContext(
+		false, -Double.MAX_VALUE, ItemStack.EMPTY, fluidState -> false, null) {
+		@Override
+		public boolean isAbove(VoxelShape shape, BlockPos pos, boolean canAscend) {
+			return canAscend;
+		}
+	};
 
 	public final CollisionList simplifiedEntityColliders = new CollisionList();
 	public AbstractContraptionEntity entity;
@@ -1441,7 +1451,7 @@ public abstract class Contraption {
 		for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
 			StructureBlockInfo info = entry.getValue();
 			BlockPos localPos = entry.getKey();
-			VoxelShape collisionShape = info.state().getCollisionShape(collisionLevel, localPos, CollisionContext.empty());
+			VoxelShape collisionShape = info.state().getCollisionShape(collisionLevel, localPos, DUMMY_EMPTY_CONTEXT);
 			if (collisionShape.isEmpty())
 				continue;
 
