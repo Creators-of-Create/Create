@@ -7,18 +7,20 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 
 public record RadialWrenchMenuSubmitPacket(BlockPos blockPos, BlockState newState) implements ServerboundPacketPayload {
 	public static final StreamCodec<ByteBuf, RadialWrenchMenuSubmitPacket> STREAM_CODEC = StreamCodec.composite(
-	    BlockPos.STREAM_CODEC, RadialWrenchMenuSubmitPacket::blockPos,
+		BlockPos.STREAM_CODEC, RadialWrenchMenuSubmitPacket::blockPos,
 		CatnipStreamCodecs.BLOCK_STATE, RadialWrenchMenuSubmitPacket::newState,
-	    RadialWrenchMenuSubmitPacket::new
+		RadialWrenchMenuSubmitPacket::new
 	);
 
 	@Override
@@ -29,9 +31,18 @@ public record RadialWrenchMenuSubmitPacket(BlockPos blockPos, BlockState newStat
 	@Override
 	public void handle(ServerPlayer player) {
 		Level level = player.level();
-		
-		if (!level.getBlockState(blockPos).is(newState.getBlock()))
+
+		final BlockState oldState = level.getBlockState(blockPos);
+
+		if (!oldState.is(newState.getBlock()))
 			return;
+
+		if (RadialWrenchRegistry.BLOCK_BLACKLIST.contains(RegisteredObjectsHelper.getKeyOrThrow(newState.getBlock())))
+			return;
+
+		for (Property<?> p : oldState.getProperties())
+			if (oldState.getValue(p) != newState.getValue(p) && !RadialWrenchRegistry.VALID_PROPERTIES.containsKey(p))
+				return;
 
 		BlockState updatedState = Block.updateFromNeighbourShapes(newState, level, blockPos);
 		KineticBlockEntity.switchToBlockState(level, blockPos, updatedState);

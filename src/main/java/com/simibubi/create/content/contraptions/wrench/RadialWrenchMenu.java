@@ -1,12 +1,9 @@
 package com.simibubi.create.content.contraptions.wrench;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -19,15 +16,8 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
-import com.simibubi.create.content.kinetics.base.HorizontalAxisKineticBlock;
-import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
-import com.simibubi.create.content.kinetics.base.RotatedPillarKineticBlock;
-import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGearshiftBlock;
-import com.simibubi.create.content.redstone.DirectedDirectionalBlock;
 import com.simibubi.create.foundation.gui.AllIcons;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
@@ -46,49 +36,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.HopperBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 
 public class RadialWrenchMenu extends AbstractSimiScreen {
-
-	public static final Map<Property<?>, String> VALID_PROPERTIES = new HashMap<>();
-
-	static {
-		registerRotationProperty(RotatedPillarKineticBlock.AXIS, "Axis");
-		registerRotationProperty(DirectionalKineticBlock.FACING, "Facing");
-		registerRotationProperty(HorizontalAxisKineticBlock.HORIZONTAL_AXIS, "Axis");
-		registerRotationProperty(HorizontalKineticBlock.HORIZONTAL_FACING, "Facing");
-		registerRotationProperty(HopperBlock.FACING, "Facing");
-		registerRotationProperty(DirectedDirectionalBlock.TARGET, "Target");
-
-		registerRotationProperty(SequencedGearshiftBlock.VERTICAL, "Vertical");
-	}
-
-	public static final Set<ResourceLocation> BLOCK_BLACKLIST = new HashSet<>();
-
-	static {
-		registerBlacklistedBlock(AllBlocks.LARGE_WATER_WHEEL.getId());
-		registerBlacklistedBlock(AllBlocks.WATER_WHEEL_STRUCTURAL.getId());
-	}
-
-	public static void registerRotationProperty(Property<?> property, String label) {
-		if (VALID_PROPERTIES.containsKey(property))
-			return;
-
-		VALID_PROPERTIES.put(property, label);
-	}
-
-	public static void registerBlacklistedBlock(ResourceLocation location) {
-		if (BLOCK_BLACKLIST.contains(location))
-			return;
-
-		BLOCK_BLACKLIST.add(location);
-	}
 
 	private final BlockState state;
 	private final BlockPos pos;
@@ -111,10 +65,10 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 	private final RenderElement iconDown = RenderElement.of(AllIcons.I_PRIORITY_LOW);
 
 	public static Optional<RadialWrenchMenu> tryCreateFor(BlockState state, BlockPos pos, Level level) {
-		if (BLOCK_BLACKLIST.contains(RegisteredObjectsHelper.getKeyOrThrow(state.getBlock())))
+		if (RadialWrenchRegistry.BLOCK_BLACKLIST.contains(RegisteredObjectsHelper.getKeyOrThrow(state.getBlock())))
 			return Optional.empty();
 
-		var propertiesForState = VALID_PROPERTIES.entrySet().stream().filter(entry -> state.hasProperty(entry.getKey())).toList();
+		var propertiesForState = RadialWrenchRegistry.VALID_PROPERTIES.entrySet().stream().filter(entry -> state.hasProperty(entry.getKey())).toList();
 
 		if (propertiesForState.isEmpty())
 			return Optional.empty();
