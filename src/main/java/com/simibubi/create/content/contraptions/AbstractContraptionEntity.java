@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,11 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.actors.psi.PortableStorageInterfaceMovement;
-import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsStopControllingPacket;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -41,7 +38,6 @@ import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
@@ -70,6 +66,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.api.distmarker.Dist;
@@ -284,47 +281,12 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		setControllingPlayer(null);
 	}
 
-	public boolean handlePlayerInteraction(Player player, BlockPos localPos, Direction side,
-										   InteractionHand interactionHand) {
-		int indexOfSeat = contraption.getSeats()
-			.indexOf(localPos);
-		if (indexOfSeat == -1 || AllItems.WRENCH.isIn(player.getItemInHand(interactionHand))) {
-			if (contraption.interactors.containsKey(localPos))
-				return contraption.interactors.get(localPos)
-					.handlePlayerInteraction(player, interactionHand, localPos, this);
-			return contraption.storage.handlePlayerStorageInteraction(contraption, player, localPos);
-		}
-		if (player.isPassenger())
-			return false;
-
-		// Eject potential existing passenger
-		Entity toDismount = null;
-		for (Entry<UUID, Integer> entry : contraption.getSeatMapping()
-			.entrySet()) {
-			if (entry.getValue() != indexOfSeat)
-				continue;
-			for (Entity entity : getPassengers()) {
-				if (!entry.getKey()
-					.equals(entity.getUUID()))
-					continue;
-				if (entity instanceof Player)
-					return false;
-				toDismount = entity;
-			}
-		}
-
-		if (toDismount != null && !level().isClientSide) {
-			Vec3 transformedVector = getPassengerPosition(toDismount, 1);
-			toDismount.stopRiding();
-			if (transformedVector != null)
-				toDismount.teleportTo(transformedVector.x, transformedVector.y, transformedVector.z);
-		}
-
-		if (level().isClientSide)
-			return true;
-		addSittingPassenger(SeatBlock.getLeashed(level(), player)
-			.or(player), indexOfSeat);
-		return true;
+	public boolean handlePlayerInteraction(Player player, InteractionHand hand,
+										   BlockPos localPos, BlockHitResult hitResult) {
+		if (contraption.interactors.containsKey(localPos))
+			return contraption.interactors.get(localPos)
+				.handlePlayerInteraction(player, hand, localPos, hitResult, this);
+		return contraption.storage.handlePlayerStorageInteraction(contraption, player, localPos);
 	}
 
 	public boolean canInteractWithBlock(Player player, BlockPos localPos, double distance) {

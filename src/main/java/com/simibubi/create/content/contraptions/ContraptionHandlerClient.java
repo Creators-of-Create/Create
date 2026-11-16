@@ -118,20 +118,23 @@ public class ContraptionHandlerClient {
 			return;
 
 		InteractionHand hand = event.getHand();
-		Direction face = bestResult.getDirection();
 		BlockPos pos = bestResult.getBlockPos();
 
-		if (bestEntity.handlePlayerInteraction(player, pos, face, hand)) {
-			CatnipServices.NETWORK.sendToServer(new ContraptionInteractionPacket(bestEntity, hand, pos, face));
-		} else
-			handleSpecialInteractions(bestEntity, player, pos, face, hand);
+		boolean success = true;
+		if (bestEntity.handlePlayerInteraction(player, hand, pos, bestResult)) {
+			CatnipServices.NETWORK.sendToServer(new ContraptionInteractionPacket(bestEntity, hand, pos, bestResult));
+		} else if (!handleSpecialInteractions(bestEntity, player, pos, hand)) {
+			success = false;
+		}
 
-		event.setCanceled(true);
-		event.setSwingHand(false);
+		if (success) {
+			event.setCanceled(true);
+			event.setSwingHand(false);
+		}
 	}
 
 	private static boolean handleSpecialInteractions(AbstractContraptionEntity contraptionEntity, Player player,
-													 BlockPos localPos, Direction side, InteractionHand interactionHand) {
+													 BlockPos localPos, InteractionHand interactionHand) {
 		if (AllItems.WRENCH.isIn(player.getItemInHand(interactionHand))
 			&& contraptionEntity instanceof CarriageContraptionEntity car)
 			return TrainRelocator.carriageWrenched(car.toGlobalVector(VecHelper.getCenterOf(localPos), 1), car);

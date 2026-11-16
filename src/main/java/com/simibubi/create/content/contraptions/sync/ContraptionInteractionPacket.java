@@ -2,13 +2,12 @@ package com.simibubi.create.content.contraptions.sync;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
-import net.createmod.catnip.net.base.ServerboundPacketPayload;
 
+import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecs;
-import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,18 +15,19 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 
-public record ContraptionInteractionPacket(InteractionHand hand, int target, BlockPos localPos, Direction face) implements ServerboundPacketPayload {
+public record ContraptionInteractionPacket(InteractionHand hand, int target, BlockPos localPos, BlockHitResult hitResult) implements ServerboundPacketPayload {
 	public static final StreamCodec<ByteBuf, ContraptionInteractionPacket> STREAM_CODEC = StreamCodec.composite(
 			CatnipStreamCodecBuilders.nullable(CatnipStreamCodecs.HAND), ContraptionInteractionPacket::hand,
 			ByteBufCodecs.INT, ContraptionInteractionPacket::target,
 			BlockPos.STREAM_CODEC, ContraptionInteractionPacket::localPos,
-			Direction.STREAM_CODEC, ContraptionInteractionPacket::face,
+			CatnipStreamCodecs.BLOCK_HIT_RESULT, ContraptionInteractionPacket::hitResult,
 			ContraptionInteractionPacket::new
 	);
 
-	public ContraptionInteractionPacket(AbstractContraptionEntity target, InteractionHand hand, BlockPos localPos, Direction side) {
-		this(hand, target.getId(), localPos, side);
+	public ContraptionInteractionPacket(AbstractContraptionEntity target, InteractionHand hand, BlockPos localPos, BlockHitResult hitResult) {
+		this(hand, target.getId(), localPos, hitResult);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public record ContraptionInteractionPacket(InteractionHand hand, int target, Blo
 		d *= d;
 		if (sender.distanceToSqr(entityByID) > d)
 			return;
-		if (contraptionEntity.handlePlayerInteraction(sender, localPos, face, hand))
+		if (contraptionEntity.handlePlayerInteraction(sender, hand, localPos, hitResult))
 			sender.swing(hand, true);
 	}
 }

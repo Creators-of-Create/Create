@@ -13,6 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraft.world.phys.BlockHitResult;
 
 /**
  * MovingInteractionBehaviors define behavior of blocks on contraptions
@@ -44,8 +45,15 @@ public abstract class MovingInteractionBehaviour {
 		contraptionEntity.setBlock(pos, info);
 	}
 
-	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
-		AbstractContraptionEntity contraptionEntity) {
+	public boolean handlePlayerInteraction(Player player, InteractionHand hand,
+										   BlockPos localPos, BlockHitResult hitResult,
+										   AbstractContraptionEntity contraptionEntity) {
+		return handlePlayerInteraction(player, hand, localPos, contraptionEntity);
+	}
+
+	// Should possibly be marked as deprecated, only left to not break existing addons, up to the team.
+	public boolean handlePlayerInteraction(Player player, InteractionHand hand, BlockPos localPos,
+										   AbstractContraptionEntity contraptionEntity) {
 		return true;
 	}
 

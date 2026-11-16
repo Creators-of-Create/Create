@@ -16,10 +16,10 @@ import net.minecraft.world.phys.Vec3;
 public class MountedDepotInteractionBehaviour extends MovingInteractionBehaviour {
 
 	@Override
-	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
-		AbstractContraptionEntity contraptionEntity) {
-		ItemStack itemInHand = player.getItemInHand(activeHand);
-		if (activeHand == InteractionHand.OFF_HAND)
+	public boolean handlePlayerInteraction(Player player, InteractionHand hand, BlockPos localPos,
+                                           AbstractContraptionEntity contraptionEntity) {
+		ItemStack itemInHand = player.getItemInHand(hand);
+		if (hand == InteractionHand.OFF_HAND)
 			return false;
 		if (player.level().isClientSide)
 			return true;
@@ -35,7 +35,7 @@ public class MountedDepotInteractionBehaviour extends MovingInteractionBehaviour
 			return true;
 
 		depot.setItem(itemInHand.copy());
-		player.setItemInHand(activeHand, itemOnDepot.copy());
+		player.setItemInHand(hand, itemOnDepot.copy());
 		AllSoundEvents.DEPOT_PLOP.playOnServer(player.level(),
 			BlockPos.containing(contraptionEntity.toGlobalVector(Vec3.atCenterOf(localPos), 0)));
 

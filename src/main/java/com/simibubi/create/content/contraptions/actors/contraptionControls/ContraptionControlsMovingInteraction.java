@@ -30,8 +30,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class ContraptionControlsMovingInteraction extends MovingInteractionBehaviour {
 	@Override
-	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
-		AbstractContraptionEntity contraptionEntity) {
+	public boolean handlePlayerInteraction(Player player, InteractionHand hand, BlockPos localPos,
+										   AbstractContraptionEntity contraptionEntity) {
 		Contraption contraption = contraptionEntity.getContraption();
 
 		MutablePair<StructureBlockInfo, MovementContext> actor = contraption.getActorAt(localPos);

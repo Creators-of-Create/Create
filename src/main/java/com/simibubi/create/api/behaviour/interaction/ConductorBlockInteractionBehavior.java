@@ -44,13 +44,13 @@ public abstract class ConductorBlockInteractionBehavior extends MovingInteractio
 	}
 
 	@Override
-	public final boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
-		AbstractContraptionEntity contraptionEntity) {
-		ItemStack itemInHand = player.getItemInHand(activeHand);
+	public final boolean handlePlayerInteraction(Player player, InteractionHand hand, BlockPos localPos,
+                                                 AbstractContraptionEntity contraptionEntity) {
+		ItemStack itemInHand = player.getItemInHand(hand);
 
 		if (!(contraptionEntity instanceof CarriageContraptionEntity carriageEntity))
 			return false;
-		if (activeHand == InteractionHand.OFF_HAND)
+		if (hand == InteractionHand.OFF_HAND)
 			return false;
 		Contraption contraption = carriageEntity.getContraption();
 		if (!(contraption instanceof CarriageContraption carriageContraption))
@@ -90,7 +90,7 @@ public abstract class ConductorBlockInteractionBehavior extends MovingInteractio
 				player.displayClientMessage(CreateLang.translateDirect(
 					train.runtime.isAutoSchedule ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"),
 					true);
-				player.setItemInHand(activeHand, train.runtime.returnSchedule(player.registryAccess()));
+				player.setItemInHand(hand, train.runtime.returnSchedule(player.registryAccess()));
 				this.onScheduleUpdate(false, info.state(), newBlockState -> setBlockState(localPos, contraptionEntity, newBlockState));
 				return true;
 			}
@@ -114,7 +114,7 @@ public abstract class ConductorBlockInteractionBehavior extends MovingInteractio
 			player.displayClientMessage(CreateLang.translateDirect("schedule.applied_to_train")
 				.withStyle(ChatFormatting.GREEN), true);
 			itemInHand.shrink(1);
-			player.setItemInHand(activeHand, itemInHand.isEmpty() ? ItemStack.EMPTY : itemInHand);
+			player.setItemInHand(hand, itemInHand.isEmpty() ? ItemStack.EMPTY : itemInHand);
 			return true;
 		}
 

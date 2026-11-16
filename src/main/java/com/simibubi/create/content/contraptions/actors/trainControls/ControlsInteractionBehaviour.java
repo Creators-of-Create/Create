@@ -11,14 +11,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 
-import net.neoforged.api.distmarker.Dist;
-
 public class ControlsInteractionBehaviour extends MovingInteractionBehaviour {
 
 	@Override
-	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
-		AbstractContraptionEntity contraptionEntity) {
-		if (AllItems.WRENCH.isIn(player.getItemInHand(activeHand)))
+	public boolean handlePlayerInteraction(Player player, InteractionHand hand, BlockPos localPos,
+                                           AbstractContraptionEntity contraptionEntity) {
+		if (AllItems.WRENCH.isIn(player.getItemInHand(hand)))
 			return false;
 
 		UUID currentlyControlling = contraptionEntity.getControllingPlayer()
