@@ -21,6 +21,8 @@ public class CFluids extends ConfigBase {
 	public ConfigBool fluidFillPlaceFluidSourceBlocks = b(true, "fluidFillPlaceFluidSourceBlocks", Comments.fluidFillPlaceFluidSourceBlocks);
 	public ConfigBool pipesPlaceFluidSourceBlocks = b(true, "pipesPlaceFluidSourceBlocks", Comments.pipesPlaceFluidSourceBlocks);
 
+	public final ConfigInt steamEngineWaterPerLevel = i(10, 1, "steamEngineWaterEfficiency", Comments.millibuckets, Comments.steamEngineWaterEfficiency);
+
 	@Override
 	public String getName() {
 		return "fluids";
@@ -29,6 +31,7 @@ public class CFluids extends ConfigBase {
 	private static class Comments {
 		static String blocks = "[in Blocks]";
 		static String buckets = "[in Buckets]";
+		static String millibuckets = "[in Millibuckets]";
 		static String toDisable = "[-1 to disable this behaviour]";
 
 		static String fluidTankCapacity = "The amount of liquid a tank can hold per block.";
@@ -44,6 +47,8 @@ public class CFluids extends ConfigBase {
 
 		static String fluidFillPlaceFluidSourceBlocks = "Whether hose pulleys should be allowed to place fluid sources.";
 		static String pipesPlaceFluidSourceBlocks = "Whether open-ended pipes should be allowed to place fluid sources.";
+
+		static String steamEngineWaterEfficiency = "How many millibuckets of water per tick a steam engine requires per level.";
 	}
 
 }
