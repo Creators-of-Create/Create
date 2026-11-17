@@ -44,7 +44,7 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements Transf
 	private FilteringBehaviour filtering;
 
 	public AbstractComputerBehaviour computerBehaviour;
-	public @org.jetbrains.annotations.Nullable UUID passingTrainUUID;
+	public @Nullable UUID passingTrainUUID;
 
 	public TrackObserverBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);

@@ -2,10 +2,10 @@ package com.simibubi.create.content.trains.schedule.destination;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
@@ -16,8 +16,8 @@ import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.GlobCache;
 
-import net.createmod.catnip.data.Glob;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
@@ -25,6 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -54,8 +55,8 @@ public class DestinationInstruction extends TextScheduleInstruction {
 		return getLabelText();
 	}
 
-	public String getFilterForRegex() {
-		return Glob.toRegexPattern(getFilter(), "");
+	public Predicate<String> getFilterForRegex() {
+		return GlobCache.getPredicate(getFilter());
 	}
 
 	@Override
@@ -78,7 +79,7 @@ public class DestinationInstruction extends TextScheduleInstruction {
 	@Override
 	@Nullable
 	public DiscoveredPath start(ScheduleRuntime runtime, Level level) {
-		String regex = getFilterForRegex();
+		Predicate<String> regex = getFilterForRegex();
 		boolean anyMatch = false;
 		ArrayList<GlobalStation> validStations = new ArrayList<>();
 		Train train = runtime.train;
@@ -91,7 +92,7 @@ public class DestinationInstruction extends TextScheduleInstruction {
 
 
 		for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
-			if (!globalStation.name.matches(regex))
+			if (!regex.test(globalStation.name))
 				continue;
 			anyMatch = true;
 			validStations.add(globalStation);

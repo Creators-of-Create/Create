@@ -5,11 +5,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.Train;
-
-import net.createmod.catnip.data.Glob;
+import com.simibubi.create.foundation.utility.GlobCache;
 
 import net.minecraft.network.chat.MutableComponent;
 
@@ -32,13 +32,11 @@ public class GlobalTrainDisplayData {
 	}
 
 	public static List<TrainDeparturePrediction> prepare(String filter, int maxLines) {
-		String regex = Glob.toRegexPattern(filter, "");
+		Predicate<String> regex = GlobCache.getPredicate(filter);
 		return statusByDestination.entrySet()
 			.stream()
-			.filter(e -> e.getKey()
-				.matches(regex))
-			.flatMap(e -> e.getValue()
-				.stream())
+			.filter(e -> regex.test(e.getKey()))
+			.flatMap(e -> e.getValue().stream())
 			.sorted()
 			.limit(maxLines)
 			.toList();

@@ -2,6 +2,7 @@ package com.simibubi.create.compat.computercraft.implementation.peripherals;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.regex.PatternSyntaxException;
 
 import org.jetbrains.annotations.NotNull;
@@ -17,15 +18,15 @@ import com.simibubi.create.content.trains.schedule.Schedule;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.content.trains.station.TrainEditPacket;
-import net.createmod.catnip.platform.CatnipServices;
+import com.simibubi.create.foundation.utility.GlobCache;
 import com.simibubi.create.foundation.utility.StringHelper;
 
 import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.lua.MethodResult;
-import net.createmod.catnip.data.Glob;
 import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CollectionTag;
 import net.minecraft.nbt.CompoundTag;
@@ -174,14 +175,14 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 	/**
 	 * @return Path (if available) and boolean indicating if destination exists at all.
 	 */
-	private Pair<@org.jetbrains.annotations.Nullable DiscoveredPath, @NotNull Boolean> findPath(String destinationFilter) throws LuaException {
+	private Pair<@Nullable DiscoveredPath, @NotNull Boolean> findPath(String destinationFilter) throws LuaException {
 		Train train = getTrainOrThrow();
-		String regex = Glob.toRegexPattern(destinationFilter, "");
+		Predicate<String> regex = GlobCache.getPredicate(destinationFilter);
 		boolean anyMatch = false;
 		ArrayList<GlobalStation> validStations = new ArrayList<>();
 		try {
 			for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
-				if (!globalStation.name.matches(regex))
+				if (!regex.test(globalStation.name))
 					continue;
 				anyMatch = true;
 				validStations.add(globalStation);
@@ -196,7 +197,7 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 
 	@LuaFunction
 	public MethodResult canTrainReach(String destinationFilter) throws LuaException {
-		Pair<@org.jetbrains.annotations.Nullable DiscoveredPath, @NotNull Boolean> path = findPath(destinationFilter);
+		Pair<@Nullable DiscoveredPath, @NotNull Boolean> path = findPath(destinationFilter);
 		if (path.getFirst() != null)
 			return MethodResult.of(true, null);
 		return MethodResult.of(false, path.getSecond() ? "cannot-reach" : "no-target");
@@ -204,7 +205,7 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 
 	@LuaFunction
 	public MethodResult distanceTo(String destinationFilter) throws LuaException {
-		Pair<@org.jetbrains.annotations.Nullable DiscoveredPath, @NotNull Boolean> path = findPath(destinationFilter);
+		Pair<@Nullable DiscoveredPath, @NotNull Boolean> path = findPath(destinationFilter);
 		if (path.getFirst() != null)
 			return MethodResult.of(path.getFirst().distance, null);
 		return MethodResult.of(null, path.getSecond() ? "cannot-reach" : "no-target");

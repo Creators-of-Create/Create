@@ -11,10 +11,10 @@ import java.util.Objects;
 import com.simibubi.create.compat.computercraft.implementation.luaObjects.LuaComparable;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
+import com.simibubi.create.foundation.utility.GlobCache;
 
 import dan200.computercraft.api.detail.VanillaDetailRegistries;
 import dan200.computercraft.api.lua.LuaException;
-import net.createmod.catnip.data.Glob;
 
 import net.neoforged.neoforge.items.IItemHandler;
 
@@ -116,7 +116,7 @@ public class ComputerUtil {
 			// String matching
 			if (iVal instanceof String inStr && fValue instanceof String fStr) {
 				return switch (op) {
-					case "glob" -> inStr.matches(Glob.toRegexPattern(fStr, ""));
+					case "glob" -> GlobCache.getPredicate(fStr).test(inStr);
 					case "regex" -> inStr.matches(fStr);
 					default -> throw new LuaException("Unknown operator: " + op);
 				};

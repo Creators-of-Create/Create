@@ -3,6 +3,7 @@ package com.simibubi.create.content.trains.schedule.destination;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 import java.util.regex.PatternSyntaxException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,8 +21,8 @@ import com.simibubi.create.content.trains.schedule.ScheduleRuntime.State;
 import com.simibubi.create.content.trains.station.GlobalPackagePort;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.GlobCache;
 
-import net.createmod.catnip.data.Glob;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
@@ -64,10 +65,10 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 		return getLabelText();
 	}
 
-	public String getFilterForRegex() {
+	public Predicate<String> getFilterForRegex() {
 		if (getFilter().isBlank())
-			return Glob.toRegexPattern("*", "");
-		return Glob.toRegexPattern(getFilter(), "");
+			return GlobCache.getPredicate("*");
+		return GlobCache.getPredicate(getFilter());
 	}
 
 	@Override
@@ -102,8 +103,8 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 		MinecraftServer server = level.getServer();
 		if (server == null)
 			return null;
-		
-		String regex = getFilterForRegex();
+
+		Predicate<String> regex = getFilterForRegex();
 		boolean anyMatch = false;
 		ArrayList<GlobalStation> validStations = new ArrayList<>();
 		Train train = runtime.train;
@@ -118,7 +119,7 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 			ServerLevel dimLevel = server.getLevel(globalStation.blockEntityDimension);
 			if (dimLevel == null)
 				continue;
-			
+
 			for (Entry<BlockPos, GlobalPackagePort> entry : globalStation.connectedPorts.entrySet()) {
 				GlobalPackagePort port = entry.getValue();
 				BlockPos pos = entry.getKey();
@@ -134,8 +135,7 @@ public class FetchPackagesInstruction extends TextScheduleInstruction {
 					if (PackageItem.matchAddress(stack, port.address))
 						continue;
 					try {
-						if (!PackageItem.getAddress(stack)
-							.matches(regex))
+						if (!regex.test(PackageItem.getAddress(stack)))
 							continue;
 						anyMatch = true;
 						validStations.add(globalStation);

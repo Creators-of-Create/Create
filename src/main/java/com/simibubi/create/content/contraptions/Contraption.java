@@ -1581,7 +1581,7 @@ public abstract class Contraption {
 		}
 	}
 
-	@org.jetbrains.annotations.Nullable
+	@Nullable
 	public BlockEntity getBlockEntityClientSide(BlockPos localPos) {
 		var maybeNullClientContraption = this.clientContraption.getAcquire();
 

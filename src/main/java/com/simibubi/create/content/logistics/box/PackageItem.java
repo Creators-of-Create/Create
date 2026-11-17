@@ -15,9 +15,9 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.box.PackageStyles.PackageStyle;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.utility.GlobCache;
 
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
-import net.createmod.catnip.data.Glob;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -188,8 +188,7 @@ public class PackageItem extends Item {
 			return true;
 		if (address.equals(boxAddress))
 			return true;
-		return address.matches(Glob.toRegexPattern(boxAddress, "")) ||
-			boxAddress.matches(Glob.toRegexPattern(address, ""));
+		return GlobCache.getPredicate(boxAddress).test(address) || GlobCache.getPredicate(address).test(boxAddress);
 	}
 
 	public static String getAddress(ItemStack box) {
