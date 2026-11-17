@@ -18,6 +18,7 @@ import com.simibubi.create.content.fluids.FluidFX;
 import com.simibubi.create.content.fluids.particle.FluidParticleData;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.kinetics.mixer.MechanicalMixerBlockEntity;
+import com.simibubi.create.content.logistics.filter.FilterItem;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -52,6 +53,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -786,9 +788,49 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			isEmpty = false;
 		}
 
-		if (isEmpty)
+		boolean hasFilter = addFilterTooltip(tooltip);
+
+		if (isEmpty && !hasFilter)
 			tooltip.remove(0);
 
+		return true;
+	}
+
+	private boolean addFilterTooltip(List<Component> tooltip) {
+		// Get filter blocks and items
+		ItemStack filterStack = filtering == null ? ItemStack.EMPTY : filtering.getFilter();
+		// Verify if the basin has a filter
+		if (filterStack.isEmpty())
+			return false;
+
+		tooltip.add(CommonComponents.EMPTY);
+		List<Component> filterSummary;
+		// If the filter is an item filter, use its summary, otherwise just show the item
+		if (filterStack.getItem() instanceof FilterItem filterItem) {
+			filterSummary = filterItem.makeSummary(filterStack);
+		} else {
+			CreateLang.translate("gui.filter.allow_item")
+				.style(ChatFormatting.GOLD)
+				.forGoggles(tooltip);
+			filterSummary = List.of(Component.literal("- ").append(filterStack.getHoverName())
+				.withStyle(ChatFormatting.GRAY));
+		}
+		// If the filter summary is not empty, add it to the tooltip
+		if (!filterSummary.isEmpty()) {
+			// Add the filter type (allow or deny) in the goggles tooltip format
+			CreateLang.builder()
+				.add(filterSummary.get(0))
+				.forGoggles(tooltip);
+			// Add the filter blocks and items in the goggles tooltip format
+			for (int i = 1; i < filterSummary.size(); i++)
+				CreateLang.builder()
+					.add(filterSummary.get(i))
+					.forGoggles(tooltip, 1);
+		} else {
+			CreateLang.translate("gui.filter.empty")
+				.style(ChatFormatting.DARK_GRAY)
+				.forGoggles(tooltip);
+		}
 		return true;
 	}
 

@@ -91,6 +91,15 @@ public abstract class BrassDiodeBlockEntity extends SmartBlockEntity implements 
 		return (value / 20 / 60) + "m";
 	}
 
+	// User for showing state with the same unit as the max value in the goggles tooltip
+	protected String formatGoggleTooltip(int value, int max) {
+		if (max < 60)
+			return value + "t";
+		if (max < 20 * 60)
+			return value / 20 + "s";
+		return (value / 20 / 60) + "m";
+	}
+
 	@Override
 	public String getClipboardKey() {
 		return "Block";
