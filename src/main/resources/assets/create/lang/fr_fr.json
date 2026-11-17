@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Afficher les paramètres d'impression",
   "create.gui.schematicannon.slot.gunpowder": "Ajouter de la poudre à canon pour alimenter le canon",
   "create.gui.schematicannon.slot.listPrinter": "Placez un presse-papier ou un livre ici pour imprimer une liste des matériaux pour votre schéma",
-  "create.gui.schematicannon.slot.schematic": "Ajoutez votre schéma ici. Assurez-vous qu'il est déployé à un emplacement spécifique.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Ajoutez votre schéma ici. Assurez-vous qu'il est déployé à un emplacement spécifique.",
   "create.gui.schematicannon.title": "Schémacanon",
   "create.gui.scrollInput.defaultTitle": "Choisissez une option :",
   "create.gui.scrollInput.scrollToAdjustAmount": "Faites défiler pour ajuster le montant",

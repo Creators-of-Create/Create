@@ -1160,7 +1160,7 @@
   "create.gui.schematicannon.shotsRemainingWithBackup": "Con respaldo: %1$s",
   "create.gui.schematicannon.showOptions": "Mostrar Configuraciones de la Impresora",
   "create.gui.schematicannon.slot.gunpowder": "Añade pólvora para alimentar el cañon",
-  "create.gui.schematicannon.slot.schematic": "Pon tu Esquema aquí. Asegurate de haberlo desplegado en la ubicación deseada.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Pon tu Esquema aquí. Asegurate de haberlo desplegado en la ubicación deseada.",
   "create.gui.schematicannon.title": "Esquemacañón",
   "create.gui.scrollInput.defaultTitle": "Elije una opción:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Rueda para ajustar la cantidad",

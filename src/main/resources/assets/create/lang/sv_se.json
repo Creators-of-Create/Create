@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Visa skrivarinställningar",
   "create.gui.schematicannon.slot.gunpowder": "Tillsätt krut för att driva kanonen",
   "create.gui.schematicannon.slot.listPrinter": "Placera en bok eller skrivplatta här för att skriva ut en checklista för din ritning",
-  "create.gui.schematicannon.slot.schematic": "Lägg ritningen här. Se till att den placeras på en specifik plats.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Lägg ritningen här. Se till att den placeras på en specifik plats.",
   "create.gui.schematicannon.title": "Ritningskanon",
   "create.gui.scrollInput.defaultTitle": "Välj ett alternativ:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Skrolla för att justera belopp",

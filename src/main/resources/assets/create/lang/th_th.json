@@ -1250,7 +1250,7 @@
   "create.gui.schematicannon.showOptions": "แสดงการตั้งค่าของเครื่องพิมพ์",
   "create.gui.schematicannon.slot.gunpowder": "ใส่ดินปืนเพื่อเป็นเชื้อเพลิงให้ปืนใหญ่",
   "create.gui.schematicannon.slot.listPrinter": "วางคลิปบอร์ดหรือหนังสือที่นี่เพื่อปรินต์รายการเช็กลิสต์สำหรับแผนผังของคุณ",
-  "create.gui.schematicannon.slot.schematic": "วางแผนผังที่นี่ เช็คให้แน่ใจว่ากำหนดใช้งานถูกตำแหน่ง",
+  "create.gui.schematicannon.slot.schematicEnabled": "วางแผนผังที่นี่ เช็คให้แน่ใจว่ากำหนดใช้งานถูกตำแหน่ง",
   "create.gui.schematicannon.title": "ปืนใหญ่แผนผัง",
   "create.gui.sequenced_gearshift.instruction": "คำสั่ง",
   "create.gui.sequenced_gearshift.instruction.await": "รอ",

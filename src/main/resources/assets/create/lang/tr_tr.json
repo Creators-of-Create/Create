@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Yazıcı Ayarlarını Göster",
   "create.gui.schematicannon.slot.gunpowder": "Top yakıtı olarak barut ekleyin",
   "create.gui.schematicannon.slot.listPrinter": "Buraya Pano veya Kitap yerleştirerek Tasarın için bir Kontrol Listesi yazdır",
-  "create.gui.schematicannon.slot.schematic": "Tasarınızı buraya ekleyin. Konumunu belirlediğinizden emin olun.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Tasarınızı buraya ekleyin. Konumunu belirlediğinizden emin olun.",
   "create.gui.schematicannon.title": "Tasarı Topu",
   "create.gui.scrollInput.defaultTitle": "Bir Seçim Yapın:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Miktar Ayarlamak için Kaydır",

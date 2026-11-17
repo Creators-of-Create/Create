@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Показать настройки строительства",
   "create.gui.schematicannon.slot.gunpowder": "Добавьте порохъ, чтобы заправить пушку",
   "create.gui.schematicannon.slot.listPrinter": "Положите листодержатель или книгу, чтобы создать списокъ матеріаловъ для даннаго чертежа",
-  "create.gui.schematicannon.slot.schematic": "Помѣстите чертёжъ здѣсь. Убѣдитесь, что он размѣщён въ правильномъ мѣстѣ",
+  "create.gui.schematicannon.slot.schematicEnabled": "Помѣстите чертёжъ здѣсь. Убѣдитесь, что он размѣщён въ правильномъ мѣстѣ",
   "create.gui.schematicannon.title": "Строительная пушка",
   "create.gui.scrollInput.defaultTitle": "Выберите вариантъ:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Прокрутите для регулировки кол-ва",

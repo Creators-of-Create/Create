@@ -1260,7 +1260,7 @@
   "create.gui.schematicannon.showOptions": "Mostar definições da impressora",
   "create.gui.schematicannon.slot.gunpowder": "Adicionar pólvora para alimentar o canhão",
   "create.gui.schematicannon.slot.listPrinter": "Coloca uma área de transferência ou livro aqui para imprimir uma lista para o teu esquema",
-  "create.gui.schematicannon.slot.schematic": "Adiciona o teu esquema aqui. Certifica-te que é implantado num local específico.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Adiciona o teu esquema aqui. Certifica-te que é implantado num local específico.",
   "create.gui.schematicannon.title": "Canhão de esquemas",
   "create.gui.scrollInput.defaultTitle": "Escolhe uma opção:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Rola o rato para ajustar quantidade",

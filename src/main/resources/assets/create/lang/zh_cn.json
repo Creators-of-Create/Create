@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "显示蓝图加农炮设置",
   "create.gui.schematicannon.slot.gunpowder": "向蓝图加农炮添加火药以提供动力",
   "create.gui.schematicannon.slot.listPrinter": "放入剪贴板或书以打印所需物品清单",
-  "create.gui.schematicannon.slot.schematic": "在此处添加你的蓝图，务必确保其已经被部署在特定位置",
+  "create.gui.schematicannon.slot.schematicEnabled": "在此处添加你的蓝图，务必确保其已经被部署在特定位置",
   "create.gui.schematicannon.title": "蓝图加农炮",
   "create.gui.scrollInput.defaultTitle": "选择一个选项：",
   "create.gui.scrollInput.scrollToAdjustAmount": "滚动修改数量",

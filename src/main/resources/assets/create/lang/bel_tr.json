@@ -1319,7 +1319,7 @@
   "create.gui.schematicannon.showOptions": "Паказаць налады будаўніцтва",
   "create.gui.schematicannon.slot.gunpowder": "Дадайце порах каб набіць гармату",
   "create.gui.schematicannon.slot.listPrinter": "Памясьціце сюды пляншэт ці кнігу, каб надрукаваць сьпіс матар'ялаў для схэматыкі",
-  "create.gui.schematicannon.slot.schematic": "Дадайце сюды схэматыку. Пераканайцеся, што яна разьмешчана ў патрэбным месцы.",
+  "create.gui.schematicannon.slot.schematicEnabled": "Дадайце сюды схэматыку. Пераканайцеся, што яна разьмешчана ў патрэбным месцы.",
   "create.gui.schematicannon.title": "Схэматыгармата",
   "create.gui.scrollInput.defaultTitle": "Абярыце варыянт:",
   "create.gui.scrollInput.scrollToAdjustAmount": "Пракруціце каб наладзіць колькасьць",
