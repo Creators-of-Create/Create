@@ -150,46 +150,61 @@ public class StockTickerInteractionHandler {
 			return;
 		}
 
-		// Transfer payment to stock ticker
-		for (boolean simulate : Iterate.trueAndFalse) {
-			InventorySummary tally = paymentEntries.copy();
-			List<ItemStack> toTransfer = new ArrayList<>();
+		// Check if payment is sufficient
+		InventorySummary tally = paymentEntries.copy();
 
-			for (int i = 0; i < player.getInventory().items.size(); i++) {
-				ItemStack item = player.getInventory()
-					.getItem(i);
-				if (item.isEmpty())
-					continue;
-				int countOf = tally.getCountOf(item);
-				if (countOf == 0)
-					continue;
-				int toRemove = Math.min(item.getCount(), countOf);
-				tally.add(item, -toRemove);
-
-				if (simulate)
-					continue;
-
-				int newStackSize = item.getCount() - toRemove;
-				player.getInventory()
-					.setItem(i, newStackSize == 0 ? ItemStack.EMPTY : item.copyWithCount(newStackSize));
-				toTransfer.add(item.copyWithCount(toRemove));
-			}
-
-			if (simulate && tally.getTotalCount() != 0) {
-				AllSoundEvents.DENY.playOnServer(level, player.blockPosition());
-				CreateLang.translate("stock_keeper.too_broke")
-					.style(ChatFormatting.RED)
-					.sendStatus(player);
-				return;
-			}
-
-			if (simulate)
+		for (int i = 0; i < player.getInventory().items.size(); i++) {
+			ItemStack item = player.getInventory()
+				.getItem(i);
+			if (item.isEmpty())
 				continue;
-
-			toTransfer.forEach(s -> ItemHandlerHelper.insertItemStacked(tickerBE.receivedPayments, s, false));
+			int countOf = tally.getCountOf(item);
+			if (countOf == 0)
+				continue;
+			int toRemove = Math.min(item.getCount(), countOf);
+			tally.add(item, -toRemove);
 		}
 
-		tickerBE.broadcastPackageRequest(RequestType.PLAYER, order, null, ShoppingListItem.getAddress(mainHandItem));
+		if (tally.getTotalCount() != 0) {
+			AllSoundEvents.DENY.playOnServer(level, player.blockPosition());
+			CreateLang.translate("stock_keeper.too_broke")
+				.style(ChatFormatting.RED)
+				.sendStatus(player);
+			return;
+		}
+
+		// Try to send the package
+		if (!tickerBE.broadcastPackageRequest(RequestType.PLAYER, order, null, ShoppingListItem.getAddress(mainHandItem))) {
+			AllSoundEvents.DENY.playOnServer(level, player.blockPosition());
+			CreateLang.translate("stock_keeper.stock_level_too_low")
+				.style(ChatFormatting.RED)
+				.sendStatus(player);
+			return;
+		}
+
+		// Transfer payment to stock ticker
+		tally = paymentEntries.copy();
+		List<ItemStack> toTransfer = new ArrayList<>();
+
+		for (int i = 0; i < player.getInventory().items.size(); i++) {
+			ItemStack item = player.getInventory()
+				.getItem(i);
+			if (item.isEmpty())
+				continue;
+			int countOf = tally.getCountOf(item);
+			if (countOf == 0)
+				continue;
+			int toRemove = Math.min(item.getCount(), countOf);
+			tally.add(item, -toRemove);
+
+			int newStackSize = item.getCount() - toRemove;
+			player.getInventory()
+				.setItem(i, newStackSize == 0 ? ItemStack.EMPTY : item.copyWithCount(newStackSize));
+			toTransfer.add(item.copyWithCount(toRemove));
+		}
+
+		toTransfer.forEach(s -> ItemHandlerHelper.insertItemStacked(tickerBE.receivedPayments, s, false));
+
 		player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 		if (!order.isEmpty())
 			AllSoundEvents.STOCK_TICKER_TRADE.playOnServer(level, tickerBE.getBlockPos());
