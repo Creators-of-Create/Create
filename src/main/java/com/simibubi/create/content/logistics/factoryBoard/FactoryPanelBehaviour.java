@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import com.simibubi.create.content.logistics.packagerLink.LogisticsManager.CrossNetworkData;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
@@ -480,11 +482,12 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 				.toList());
 
 		// Collect request distributions
+		CrossNetworkData crossNetworkData = new CrossNetworkData();
 		for (Entry<UUID, Collection<BigItemStack>> entry : asMap.entrySet()) {
 			PackageOrderWithCrafts order =
 				new PackageOrderWithCrafts(new PackageOrder(new ArrayList<>(entry.getValue())), craftingContext.orderedCrafts());
-			Multimap<PackagerBlockEntity, PackagingRequest> request =
-				LogisticsManager.findPackagersForRequest(entry.getKey(), order, null, recipeAddress);
+			Multimap<PackagerBlockEntity, PackagingRequest> request = LogisticsManager.findPackagersForRequest(
+				entry.getKey(), order, null, recipeAddress, crossNetworkData);
 			requests.add(request);
 		}
 
