@@ -1,6 +1,10 @@
 package com.simibubi.create.impl.unpacking;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import com.simibubi.create.content.logistics.BigItemStack;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -37,8 +41,36 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 			 * Faulty interactions may lead to voiding of items, but the simulate pass should
 			 * already have correctly identified there to be enough space for everything.
 			 */
-			for (ItemStack itemStack : items)
-				ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), false);
+			if(orderContext != null && !orderContext.orderedStacks().isEmpty()) {
+				/*
+				* We check items from copy, but use order from orderContext.
+				* This way we ensure invalid data doesn't create any fake item
+				* */
+				List<ItemStack> copy = new ArrayList<>(items);
+				for (BigItemStack elem : orderContext.orderedStacks().stacks()) {
+					int remaining = elem.count;
+
+					for (Iterator<ItemStack> it = copy.iterator(); it.hasNext() && remaining > 0; ) {
+						ItemStack inCopy = it.next();
+
+						if (!ItemStack.isSameItemSameComponents(inCopy, elem.stack)) continue;
+
+						int taken = Math.min(inCopy.getCount(), remaining);
+						inCopy.shrink(taken);
+						remaining -= taken;
+
+						if (inCopy.isEmpty()) it.remove();
+					}
+
+					if (remaining < elem.count) {
+						ItemStack toInsert = elem.stack.copyWithCount(elem.count - remaining);
+						ItemHandlerHelper.insertItemStacked(targetInv, toInsert, false);
+					}
+				}
+			} else {
+				for (ItemStack itemStack : items)
+					ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), false);
+			}
 			return true;
 		}
 

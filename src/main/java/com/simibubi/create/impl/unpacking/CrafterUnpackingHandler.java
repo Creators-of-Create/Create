@@ -24,7 +24,7 @@ public enum CrafterUnpackingHandler implements UnpackingHandler {
 	@Override
 	public boolean unpack(Level level, BlockPos pos, BlockState state, Direction side, List<ItemStack> items, @Nullable PackageOrderWithCrafts orderContext, boolean simulate) {
 		if (!PackageOrderWithCrafts.hasCraftingInformation(orderContext))
-			return DEFAULT.unpack(level, pos, state, side, items, null, simulate);
+			return DEFAULT.unpack(level, pos, state, side, items, orderContext, simulate);
 
 		// Get item placement
 		List<BigItemStack> craftingContext = orderContext.getCraftingInformation();
