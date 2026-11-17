@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 import com.simibubi.create.AllBlockEntityTypes;
@@ -33,7 +34,10 @@ import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -42,6 +46,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -53,7 +58,11 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelData.Builder;
 import net.neoforged.neoforge.items.IItemHandler;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 	public Map<Entity, TransportedEntityInfo> passengers;
@@ -61,7 +70,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 	public int beltLength;
 	public int index;
 	public Direction lastInsert;
-	public CasingType casing;
+	public @Nullable BeltCasingType casing;
 	public boolean covered;
 
 	protected BlockPos controller;
@@ -71,15 +80,11 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 
 	public CompoundTag trackerUpdateTag;
 
-	public static enum CasingType {
-		NONE, ANDESITE, BRASS;
-	}
-
 	public BeltBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		controller = BlockPos.ZERO;
 		itemHandler = null;
-		casing = CasingType.NONE;
+		casing = null;
 		color = Optional.empty();
 	}
 
@@ -210,7 +215,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 		compound.putBoolean("IsController", isController());
 		compound.putInt("Length", beltLength);
 		compound.putInt("Index", index);
-		NBTHelper.writeEnum(compound, "Casing", casing);
+		BeltCasingType.write(compound, "Casing", casing);
 		compound.putBoolean("Covered", covered);
 
 		color.ifPresent(dyeColor -> NBTHelper.writeEnum(compound, "Dye", dyeColor));
@@ -218,6 +223,12 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 		if (isController())
 			compound.put("Inventory", getInventory().write(registries));
 		super.write(compound, registries, clientPacket);
+	}
+
+	@Override
+	public void writeSafe(CompoundTag tag, Provider registries) {
+		super.writeSafe(tag, registries);
+		BeltCasingType.write(tag, "Casing", casing);
 	}
 
 	@Override
@@ -241,9 +252,9 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 		if (isController())
 			getInventory().read(compound.getCompound("Inventory"), registries);
 
-		CasingType casingBefore = casing;
+		BeltCasingType casingBefore = casing;
 		boolean coverBefore = covered;
-		casing = NBTHelper.readEnum(compound, "Casing", CasingType.class);
+		casing = BeltCasingType.read(compound, "Casing");
 		covered = compound.getBoolean("Covered");
 
 		if (!clientPacket)
@@ -419,12 +430,12 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 		return BeltHelper.getVectorForOffset(controllerBE, transported.beltPosition);
 	}
 
-	public void setCasingType(CasingType type) {
+	public void setCasingType(BeltCasingType type) {
 		if (casing == type)
 			return;
 
 		BlockState blockState = getBlockState();
-		boolean shouldBlockHaveCasing = type != CasingType.NONE;
+		boolean shouldBlockHaveCasing = type != null;
 
 		if (level.isClientSide) {
 			casing = type;
@@ -434,10 +445,9 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 			return;
 		}
 
-		if (casing != CasingType.NONE)
+		if (casing != null)
 			level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, worldPosition,
-				Block.getId(casing == CasingType.ANDESITE ? AllBlocks.ANDESITE_CASING.getDefaultState()
-					: AllBlocks.BRASS_CASING.getDefaultState()));
+				Block.getId(casing.getCasingBlockItem().getBlock().defaultBlockState()));
 		if (blockState.getValue(BeltBlock.CASING) != shouldBlockHaveCasing)
 			KineticBlockEntity.switchToBlockState(level, worldPosition,
 				blockState.setValue(BeltBlock.CASING, shouldBlockHaveCasing));
@@ -542,9 +552,11 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 	}
 
 	@Override
-	public ModelData getModelData() {
-		return ModelData.builder()
-			.with(BeltModel.CASING_PROPERTY, casing)
+	public @NotNull ModelData getModelData() {
+		Builder builder = ModelData.builder();
+		if (casing != null)
+			builder.with(BeltModel.CASING_PROPERTY, casing.getModelInfo());
+		return builder
 			.with(BeltModel.COVER_PROPERTY, covered)
 			.build();
 	}

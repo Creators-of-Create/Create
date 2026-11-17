@@ -6,6 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.simibubi.create.api.registry.CreateBuiltInRegistries;
+
+import net.minecraft.core.Holder;
+
+import net.minecraft.core.Holder.Reference;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlockEntityTypes;
@@ -18,7 +24,6 @@ import com.simibubi.create.content.equipment.armor.DivingBootsItem;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
-import com.simibubi.create.content.kinetics.belt.BeltBlockEntity.CasingType;
 import com.simibubi.create.content.kinetics.belt.BeltSlicer.Feedback;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.content.kinetics.belt.transport.BeltMovementHandler.TransportedEntityInfo;
@@ -311,23 +316,17 @@ public class BeltBlock extends HorizontalKineticBlock
 			return ItemInteractionResult.SUCCESS;
 		}
 
-		if (AllBlocks.BRASS_CASING.isIn(stack)) {
-			withBlockEntityDo(level, pos, be -> be.setCasingType(CasingType.BRASS));
+		BeltCasingType casing = CreateBuiltInRegistries.BELT_CASING_TYPE.holders()
+			.filter(type -> type.value().getCasingBlockItem().equals(stack.getItem()))
+			.findFirst()
+			.map(Reference::value)
+			.orElse(null);
+
+		if (casing != null) {
+			withBlockEntityDo(level, pos, be -> be.setCasingType(casing));
 			updateCoverProperty(level, pos, level.getBlockState(pos));
 
-			SoundType soundType = AllBlocks.BRASS_CASING.getDefaultState()
-				.getSoundType(level, pos, player);
-			level.playSound(null, pos, soundType.getPlaceSound(), SoundSource.BLOCKS,
-				(soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
-
-			return ItemInteractionResult.SUCCESS;
-		}
-
-		if (AllBlocks.ANDESITE_CASING.isIn(stack)) {
-			withBlockEntityDo(level, pos, be -> be.setCasingType(CasingType.ANDESITE));
-			updateCoverProperty(level, pos, level.getBlockState(pos));
-
-			SoundType soundType = AllBlocks.ANDESITE_CASING.getDefaultState()
+			SoundType soundType = casing.getCasingBlockItem().getBlock().defaultBlockState()
 				.getSoundType(level, pos, player);
 			level.playSound(null, pos, soundType.getPlaceSound(), SoundSource.BLOCKS,
 				(soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
@@ -347,7 +346,7 @@ public class BeltBlock extends HorizontalKineticBlock
 		if (state.getValue(CASING)) {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
-			withBlockEntityDo(world, pos, be -> be.setCasingType(CasingType.NONE));
+			withBlockEntityDo(world, pos, be -> be.setCasingType(null));
 			return InteractionResult.SUCCESS;
 		}
 

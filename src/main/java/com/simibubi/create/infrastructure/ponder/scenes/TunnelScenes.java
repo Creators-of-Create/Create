@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.kinetics.belt.AllBeltCasingTypes.LegacyCasingType;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity;
@@ -57,7 +58,7 @@ public class TunnelScenes {
 		for (int i = 0; i < 3; i++) {
 			scene.world().cycleBlockProperty(util.grid().at(1 + i, 1, 2), BeltBlock.CASING);
 			scene.world().modifyBlockEntityNBT(util.select().position(1 + i, 1, 2), BeltBlockEntity.class,
-				nbt -> NBTHelper.writeEnum(nbt, "Casing", BeltBlockEntity.CasingType.ANDESITE), true);
+				nbt -> NBTHelper.writeEnum(nbt, "Casing", LegacyCasingType.ANDESITE), true); // Schematic uses legacy nbt
 			scene.idle(4);
 		}
 
@@ -130,7 +131,7 @@ public class TunnelScenes {
 		for (int i = 0; i < 3; i++) {
 			scene.world().cycleBlockProperty(util.grid().at(2 + i, 1, 2), BeltBlock.CASING);
 			scene.world().modifyBlockEntityNBT(util.select().position(2 + i, 1, 2), BeltBlockEntity.class,
-				nbt -> NBTHelper.writeEnum(nbt, "Casing", BeltBlockEntity.CasingType.BRASS), true);
+				nbt -> NBTHelper.writeEnum(nbt, "Casing", LegacyCasingType.BRASS), true); // Schematic uses legacy nbt
 			scene.idle(4);
 		}
 

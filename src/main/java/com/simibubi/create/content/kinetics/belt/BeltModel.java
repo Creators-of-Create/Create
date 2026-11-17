@@ -2,10 +2,9 @@ package com.simibubi.create.content.kinetics.belt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSpriteShifts;
-import com.simibubi.create.content.kinetics.belt.BeltBlockEntity.CasingType;
 import com.simibubi.create.foundation.model.BakedQuadHelper;
 
 import net.createmod.catnip.render.SpriteShiftEntry;
@@ -21,25 +20,29 @@ import net.neoforged.neoforge.client.model.BakedModelWrapper;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class BeltModel extends BakedModelWrapper<BakedModel> {
 
-	public static final ModelProperty<CasingType> CASING_PROPERTY = new ModelProperty<>();
+	public static final ModelProperty<BeltCasingRenderInfo> CASING_PROPERTY = new ModelProperty<>();
 	public static final ModelProperty<Boolean> COVER_PROPERTY = new ModelProperty<>();
-
-	private static final SpriteShiftEntry SPRITE_SHIFT = AllSpriteShifts.ANDESIDE_BELT_CASING;
 
 	public BeltModel(BakedModel template) {
 		super(template);
 	}
 
 	@Override
-	public TextureAtlasSprite getParticleIcon(ModelData data) {
+	public @NotNull TextureAtlasSprite getParticleIcon(ModelData data) {
 		if (!data.has(CASING_PROPERTY))
 			return super.getParticleIcon(data);
-		CasingType type = data.get(CASING_PROPERTY);
-		if (type == CasingType.NONE || type == CasingType.BRASS)
+
+		BeltCasingRenderInfo modelInfo = data.get(CASING_PROPERTY);
+		if (modelInfo == null)
 			return super.getParticleIcon(data);
-		return AllSpriteShifts.ANDESITE_CASING.getOriginal();
+
+		return modelInfo.spriteShift() == null ? super.getParticleIcon(data) :
+			modelInfo.spriteShift().getTarget();
 	}
 
 	@Override
@@ -49,10 +52,14 @@ public class BeltModel extends BakedModelWrapper<BakedModel> {
 			return quads;
 
 		boolean cover = extraData.get(COVER_PROPERTY);
-		CasingType type = extraData.get(CASING_PROPERTY);
-		boolean brassCasing = type == CasingType.BRASS;
+		@Nullable BeltCasingRenderInfo modelInfo = extraData.get(CASING_PROPERTY);
 
-		if (type == CasingType.NONE || brassCasing && !cover)
+		if (modelInfo == null)
+			return quads;
+
+		boolean noSpriteShift = modelInfo.spriteShift() == null;
+
+		if (noSpriteShift && !cover)
 			return quads;
 
 		quads = new ArrayList<>(quads);
@@ -60,19 +67,19 @@ public class BeltModel extends BakedModelWrapper<BakedModel> {
 		if (cover) {
 			boolean alongX = state.getValue(BeltBlock.HORIZONTAL_FACING)
 				.getAxis() == Axis.X;
-			BakedModel coverModel =
-				(brassCasing ? alongX ? AllPartialModels.BRASS_BELT_COVER_X : AllPartialModels.BRASS_BELT_COVER_Z
-					: alongX ? AllPartialModels.ANDESITE_BELT_COVER_X : AllPartialModels.ANDESITE_BELT_COVER_Z).get();
+			BakedModel coverModel = (alongX ? modelInfo.coverModelX() : modelInfo.coverModelZ()).get();
 			quads.addAll(coverModel.getQuads(state, side, rand, extraData, renderType));
 		}
 
-		if (brassCasing)
+		if (noSpriteShift)
 			return quads;
+
+		final SpriteShiftEntry spriteShift = modelInfo.spriteShift();
 
 		for (int i = 0; i < quads.size(); i++) {
 			BakedQuad quad = quads.get(i);
 			TextureAtlasSprite original = quad.getSprite();
-			if (original != SPRITE_SHIFT.getOriginal())
+			if (original != spriteShift.getOriginal())
 				continue;
 
 			BakedQuad newQuad = BakedQuadHelper.clone(quad);
@@ -81,8 +88,8 @@ public class BeltModel extends BakedModelWrapper<BakedModel> {
 			for (int vertex = 0; vertex < 4; vertex++) {
 				float u = BakedQuadHelper.getU(vertexData, vertex);
 				float v = BakedQuadHelper.getV(vertexData, vertex);
-				BakedQuadHelper.setU(vertexData, vertex, SPRITE_SHIFT.getTargetU(u));
-				BakedQuadHelper.setV(vertexData, vertex, SPRITE_SHIFT.getTargetV(v));
+				BakedQuadHelper.setU(vertexData, vertex, spriteShift.getTargetU(u));
+				BakedQuadHelper.setV(vertexData, vertex, spriteShift.getTargetV(v));
 			}
 
 			quads.set(i, newQuad);
