@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.content.equipment.clipboard.ui.ClipboardLayout;
 
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -62,6 +63,13 @@ public class ClipboardEntry {
 		return this;
 	}
 
+	public ClipboardEntry deepCopy() {
+		ClipboardEntry copy = new ClipboardEntry(this.checked, this.text.copy());
+		if (!this.icon.isEmpty())
+			copy.displayItem(this.icon.copy(), this.itemAmount);
+		return copy;
+	}
+
 	public static List<List<ClipboardEntry>> readAll(ItemStack clipboardItem) {
 		return readAll(clipboardItem.getComponents());
 	}
@@ -92,6 +100,10 @@ public class ClipboardEntry {
 		int previouslyOpenedPage = heldItem.getOrDefault(AllDataComponents.CLIPBOARD_CONTENT, ClipboardContent.EMPTY).previouslyOpenedPage();
 		int page = Math.min(previouslyOpenedPage, pages.size() - 1);
 		return pages.get(page);
+	}
+
+	public int getHeight(boolean clientSide) {
+		return ClipboardLayout.getHeight(this, clientSide);
 	}
 
 	@Override
