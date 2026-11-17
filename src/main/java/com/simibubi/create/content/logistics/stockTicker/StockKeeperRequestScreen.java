@@ -1460,6 +1460,11 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 				while (craftedCount < targetCount) {
 					// Carefully split the ordered recipes based on what exactly will be used to craft them
 					PackageOrder pattern = new PackageOrder(FactoryPanelScreen.convertRecipeToPackageOrderContext(cr, mutableOrder, true));
+					ItemStack result = ItemStack.EMPTY;
+					try {
+						result = cr.getResultItem(blockEntity.getLevel().registryAccess());
+					} catch (Throwable ignored) {
+					}
 					int maxCrafts = targetCount - craftedCount;
 					int availableCrafts = 0;
 
@@ -1490,7 +1495,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 					if (availableCrafts == 0)
 						break;
 
-					craftList.add(new CraftingEntry(pattern, availableCrafts));
+					craftList.add(new CraftingEntry(pattern, availableCrafts, result));
 					craftedCount += availableCrafts;
 				}
 
