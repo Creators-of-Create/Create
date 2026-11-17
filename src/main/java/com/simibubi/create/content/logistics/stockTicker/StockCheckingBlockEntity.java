@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.api.event.StockRequestEvent;
 import com.simibubi.create.content.logistics.packager.IdentifiedInventory;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour;
@@ -15,6 +16,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.NeoForge;
 
 public abstract class StockCheckingBlockEntity extends SmartBlockEntity {
 
@@ -43,6 +45,10 @@ public abstract class StockCheckingBlockEntity extends SmartBlockEntity {
 	}
 
 	public boolean broadcastPackageRequest(RequestType type, PackageOrderWithCrafts order, @Nullable IdentifiedInventory ignoredHandler, String address) {
+		StockRequestEvent event = new StockRequestEvent(this, behaviour.freqId, type, order, address);
+		NeoForge.EVENT_BUS.post(event);
+		if (event.isCanceled())
+			return false;
 		return LogisticsManager.broadcastPackageRequest(behaviour.freqId, type, order, ignoredHandler, address);
 	}
 
