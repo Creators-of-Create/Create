@@ -81,6 +81,11 @@ public class OpenEndedPipe extends FlowSource {
 	}
 
 	@Override
+	public boolean isValid(Level world) {
+		return world.getGameTime() % 40 != 0 || FluidPropagator.isOpenEnd(world, location.getPos(), location.getFace());
+	}
+
+	@Override
 	@Nullable
 	public ICapabilityProvider<IFluidHandler> provideHandler() {
 		return fluidHandlerProvider;

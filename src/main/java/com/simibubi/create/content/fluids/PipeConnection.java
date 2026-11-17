@@ -87,6 +87,8 @@ public class PipeConnection {
 			return;
 		FlowSource flowSource = source.get();
 		flowSource.manageSource(world, blockEntity);
+		if (!flowSource.isValid(world))
+			source = Optional.empty();
 	}
 
 	public boolean manageFlows(Level world, BlockPos pos, FluidStack internalFluid,
@@ -145,7 +147,8 @@ public class PipeConnection {
 		// Layer III
 		network = retainedNetwork;
 		if (!hasNetwork())
-			network = Optional.of(new FluidNetwork(world, new BlockFace(pos, side), flowSource::provideHandler));
+			network = Optional.of(new FluidNetwork(world, new BlockFace(pos, side),
+				() -> source.map(FlowSource::provideHandler).orElse(null)));
 		network.get()
 			.tick();
 
