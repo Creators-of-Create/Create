@@ -51,7 +51,7 @@ public class ChainConveyorRidingHandler {
 			return;
 		}
 		BlockEntity blockEntity = mc.level.getBlockEntity(ridingChainConveyor);
-		if (mc.player.isShiftKeyDown() || !(blockEntity instanceof ChainConveyorBlockEntity clbe)) {
+		if (mc.player.isSpectator() || mc.player.isShiftKeyDown() || !(blockEntity instanceof ChainConveyorBlockEntity clbe)) {
 			stopRiding();
 			return;
 		}
