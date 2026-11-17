@@ -56,8 +56,13 @@ class SoundScape {
 	}
 
 	public void tick() {
-		if (AnimationTickHolder.getTicks() % SoundScapes.UPDATE_INTERVAL == 0)
+		if (AnimationTickHolder.getTicks() % SoundScapes.UPDATE_INTERVAL == 0) {
 			meanPos = null;
+			for (ContinuousSound continuousSound : continuous) {
+				if (!Minecraft.getInstance().getSoundManager().isActive(continuousSound))
+					Minecraft.getInstance().getSoundManager().play(continuousSound);
+			}
+		}
 		repeating.forEach(RepeatingSound::tick);
 	}
 
