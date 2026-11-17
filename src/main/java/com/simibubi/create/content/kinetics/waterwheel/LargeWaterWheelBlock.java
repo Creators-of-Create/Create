@@ -120,7 +120,7 @@ public class LargeWaterWheelBlock extends RotatedPillarKineticBlock implements I
 				if (occupiedState == requiredStructure)
 					continue;
 				if (!occupiedState.canBeReplaced()) {
-					pLevel.destroyBlock(pPos, false);
+					pLevel.destroyBlock(pPos, true);
 					return;
 				}
 				pLevel.setBlockAndUpdate(structurePos, requiredStructure);
