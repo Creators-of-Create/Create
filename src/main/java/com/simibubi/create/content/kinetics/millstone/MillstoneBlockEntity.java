@@ -18,6 +18,7 @@ import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -89,10 +90,13 @@ public class MillstoneBlockEntity extends KineticBlockEntity implements Clearabl
 
 		if (getSpeed() == 0)
 			return;
-		for (int i = 0; i < outputInv.getSlots(); i++)
-			if (outputInv.getStackInSlot(i)
-				.getCount() == outputInv.getSlotLimit(i))
+		for (int i = 0; i < outputInv.getSlots(); i++) {
+			ItemStack stackIn = outputInv.getStackInSlot(i);
+			if (!stackIn.isEmpty() && stackIn.getCount() >= Math.min(outputInv.getSlotLimit(i),
+				stackIn.getOrDefault(DataComponents.MAX_STACK_SIZE, 64))) {
 				return;
+			}
+		}
 
 		if (timer > 0) {
 			timer -= getProcessingSpeed();
