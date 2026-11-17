@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import net.minecraft.world.level.Level;
+
 import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
@@ -32,6 +34,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.Vec3;
+
+import static com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour.keepAlive;
 
 public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 
@@ -158,4 +162,22 @@ public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 		});
 	}
 
+	@Override
+	public void tick() {
+		Level level = this.getLevel();
+		if (level == null) {
+			super.tick();
+			return;
+		}
+		// Block has been out of ticking range, without chunk unloading.
+		// If lastTick == 0, we can assume the block entity has just been loaded.
+		// When the block entity loads we have the same behaviour in initialize.
+		if (lastTick != 0 && !isTicking()) {
+			// Revive the behaviour
+			keepAlive(behaviour);
+		}
+		// Super ticks behaviours and updates lastTick.
+		// isTicking should be true again after this.
+		super.tick();
+	}
 }

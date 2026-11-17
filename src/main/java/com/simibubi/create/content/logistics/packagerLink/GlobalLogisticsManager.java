@@ -88,6 +88,17 @@ public class GlobalLogisticsManager {
 		return logisticsNetwork.totalLinks.size() - logisticsNetwork.loadedLinks.size();
 	}
 
+	public int getNotTickingLinks(UUID networkId, Level level) {
+		LogisticsNetwork logisticsNetwork = logisticsNetworks.get(networkId);
+		if (logisticsNetwork == null || level == null)
+			return 0;
+		return Math.toIntExact(logisticsNetwork.loadedLinks.stream()
+			.filter(pos -> pos.dimension() == level.dimension()
+				&& level.getBlockEntity(pos.pos()) instanceof PackagerLinkBlockEntity plbe
+				&& !plbe.isTicking())
+			.count());
+	}
+
 	@Nullable
 	public RequestPromiseQueue getQueuedPromises(UUID networkId) {
 		return !logisticsNetworks.containsKey(networkId) ? null : logisticsNetworks.get(networkId).panelPromises;

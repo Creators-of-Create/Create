@@ -116,6 +116,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	private boolean promisePrimedForMarkDirty;
 
 	private int lastReportedUnloadedLinks;
+	private int lastReportedNotTickingLinks;
 	private int lastReportedLevelInStorage;
 	private int lastReportedPromises;
 	private int timer;
@@ -356,8 +357,10 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 	private void tickStorageMonitor() {
 		ItemStack filter = getFilter();
 		int unloadedLinkCount = getUnloadedLinks();
+		int notTickingLinkCount = getNotTickingLinks();
 		FactoryPanelBlockEntity panelBE = panelBE();
-		if (!panelBE.restocker && unloadedLinkCount == 0 && lastReportedUnloadedLinks != 0) {
+		if (!panelBE.restocker && ((unloadedLinkCount == 0 && lastReportedUnloadedLinks != 0)
+			|| (notTickingLinkCount == 0 && lastReportedNotTickingLinks != 0))) {
 			// All links have been loaded, invalidate cache so we can get an accurate summary!
 			// Otherwise, we will have to wait for 20 ticks and unnecessary packages will be sent!
 			LogisticsManager.SUMMARIES.invalidate(network);
@@ -367,11 +370,12 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		int demand = getAmount() * (upTo ? 1 : filter.getMaxStackSize());
 		boolean shouldSatisfy = filter.isEmpty() || inStorage >= demand;
 		boolean shouldPromiseSatisfy = filter.isEmpty() || inStorage + promised >= demand;
-		boolean shouldWait = unloadedLinkCount > 0;
+		boolean shouldWait = unloadedLinkCount > 0 || notTickingLinkCount > 0;
 
 		if (lastReportedLevelInStorage == inStorage && lastReportedPromises == promised
-			&& lastReportedUnloadedLinks == unloadedLinkCount && satisfied == shouldSatisfy
-			&& promisedSatisfied == shouldPromiseSatisfy && waitingForNetwork == shouldWait)
+			&& lastReportedUnloadedLinks == unloadedLinkCount && lastReportedNotTickingLinks == notTickingLinkCount
+			&& satisfied == shouldSatisfy && promisedSatisfied == shouldPromiseSatisfy
+			&& waitingForNetwork == shouldWait)
 			return;
 
 		if (!satisfied && shouldSatisfy && demand > 0) {
@@ -385,6 +389,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		lastReportedPromises = promised;
 		promisedSatisfied = shouldPromiseSatisfy;
 		lastReportedUnloadedLinks = unloadedLinkCount;
+		lastReportedNotTickingLinks = notTickingLinkCount;
 		waitingForNetwork = shouldWait;
 		if (!getWorld().isClientSide)
 			blockEntity.sendData();
@@ -731,6 +736,16 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		return Create.LOGISTICS.getUnloadedLinkCount(network);
 	}
 
+	public int getNotTickingLinks() {
+		if (getWorld().isClientSide())
+			return lastReportedNotTickingLinks;
+		if (panelBE().restocker) {
+			PackagerBlockEntity pbe = panelBE().getRestockedPackager();
+			return pbe == null || !pbe.isTicking() ? 1 : 0;
+		}
+		return Create.LOGISTICS.getNotTickingLinks(network, getWorld());
+	}
+
 	public int getLevelInStorage() {
 		if (blockEntity.isVirtual())
 			return 1;
@@ -835,6 +850,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		panelTag.putInt("LastLevel", lastReportedLevelInStorage);
 		panelTag.putInt("LastPromised", lastReportedPromises);
 		panelTag.putInt("LastUnloadedLinks", lastReportedUnloadedLinks);
+		panelTag.putInt("LastNotTickingLinks", lastReportedNotTickingLinks);
 		panelTag.putBoolean("Satisfied", satisfied);
 		panelTag.putBoolean("PromisedSatisfied", promisedSatisfied);
 		panelTag.putBoolean("Waiting", waitingForNetwork);
@@ -870,6 +886,7 @@ public class FactoryPanelBehaviour extends FilteringBehaviour implements MenuPro
 		lastReportedLevelInStorage = panelTag.getInt("LastLevel");
 		lastReportedPromises = panelTag.getInt("LastPromised");
 		lastReportedUnloadedLinks = panelTag.getInt("LastUnloadedLinks");
+		lastReportedNotTickingLinks = panelTag.getInt("LastNotTickingLinks");
 		satisfied = panelTag.getBoolean("Satisfied");
 		promisedSatisfied = panelTag.getBoolean("PromisedSatisfied");
 		waitingForNetwork = panelTag.getBoolean("Waiting");
