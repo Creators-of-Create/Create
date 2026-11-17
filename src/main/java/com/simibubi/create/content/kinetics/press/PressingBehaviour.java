@@ -93,6 +93,8 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 		super.write(compound, registries, clientPacket);
 
 		if (clientPacket) {
+			// Drop empty stacks so no empty item particle is ever sent.
+			particleItems.removeIf(ItemStack::isEmpty);
 			compound.put("ParticleItems", NBTHelper.writeCompoundList(particleItems, s -> (CompoundTag) s.saveOptional(registries)));
 			particleItems.clear();
 		}
@@ -246,6 +248,8 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 	}
 
 	protected void spawnParticles() {
+		// Keep empty stacks out of ItemParticleOption, which rejects them.
+		particleItems.removeIf(ItemStack::isEmpty);
 		if (particleItems.isEmpty())
 			return;
 
