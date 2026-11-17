@@ -1,4 +1,5 @@
 {
+	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "create:block/whistle",
@@ -29,7 +30,7 @@
 				"east": {"uv": [2, 2, 6, 6.5], "texture": "#1"},
 				"south": {"uv": [2, 2, 6, 6.5], "texture": "#1"},
 				"west": {"uv": [2, 2, 6, 6.5], "texture": "#1"},
-				"up": {"uv": [7, 0.5, 11, 4.5], "texture": "#1"}
+				"up": {"uv": [10, 2, 14, 6], "texture": "#1"}
 			}
 		},
 		{
