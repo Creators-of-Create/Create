@@ -86,7 +86,7 @@ public class CombinedTankWrapper implements IFluidHandler {
 
 				if (resource.isEmpty())
 					break Outer;
-				if (fittingHandlerFound && (enforceVariety || filledIntoCurrent != 0))
+				if (filledIntoCurrent != 0 || (enforceVariety && fittingHandlerFound))
 					break Outer;
 			}
 		}
