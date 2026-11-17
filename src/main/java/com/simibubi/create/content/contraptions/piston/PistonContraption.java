@@ -63,7 +63,7 @@ public class PistonContraption extends TranslatingContraption {
 
 	@Override
 	public boolean assemble(Level world, BlockPos pos) throws AssemblyException {
-		if (!collectExtensions(world, pos, orientation))
+		if (!collectExtensions(world, pos))
 			return false;
 		int count = blocks.size();
 		if (!searchMovedStructure(world, anchor, retract ? orientation.getOpposite() : orientation))
@@ -75,6 +75,10 @@ public class PistonContraption extends TranslatingContraption {
 		}
 		startMoving(world);
 		return true;
+	}
+
+	public boolean collectExtensions(Level world, BlockPos pos) throws AssemblyException {
+		return this.collectExtensions(world, pos, orientation);
 	}
 
 	private boolean collectExtensions(Level world, BlockPos pos, Direction direction) throws AssemblyException {
