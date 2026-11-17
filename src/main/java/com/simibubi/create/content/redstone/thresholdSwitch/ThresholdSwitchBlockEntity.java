@@ -28,6 +28,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Clearable;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -171,7 +172,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity implements Clea
 							.filter(compat -> compat.isFromThisMod(targetBlockEntity))
 							.map(compat -> compat.getSpaceInSlot(inv, finalSlot))
 							.findFirst()
-							.orElseGet(() -> (long) Math.min(stackInSlot.getOrDefault(DataComponents.MAX_STACK_SIZE, 64), inv.getSlotLimit(finalSlot)));
+							.orElseGet(() -> (long) Math.min(stackInSlot.getOrDefault(DataComponents.MAX_STACK_SIZE, Item.DEFAULT_MAX_STACK_SIZE), inv.getSlotLimit(finalSlot)));
 
 						int count = stackInSlot.getCount();
 						if (space == 0)

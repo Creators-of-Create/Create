@@ -5,9 +5,10 @@ import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class ItemDrainItemHandler implements IItemHandler {
 
@@ -70,7 +71,7 @@ public class ItemDrainItemHandler implements IItemHandler {
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return 64;
+		return Item.ABSOLUTE_MAX_STACK_SIZE;
 	}
 
 	@Override

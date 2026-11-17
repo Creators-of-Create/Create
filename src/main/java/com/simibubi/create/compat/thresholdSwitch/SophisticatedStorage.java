@@ -4,6 +4,7 @@ import com.simibubi.create.compat.Mods;
 
 import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import net.neoforged.neoforge.items.IItemHandler;
@@ -25,7 +26,7 @@ public class SophisticatedStorage implements ThresholdSwitchCompat {
 
 	@Override
 	public long getSpaceInSlot(IItemHandler inv, int slot) {
-		return ((long) inv.getSlotLimit(slot) * inv.getStackInSlot(slot).getOrDefault(DataComponents.MAX_STACK_SIZE, 64)) / 64;
+		return ((long) inv.getSlotLimit(slot) * inv.getStackInSlot(slot).getOrDefault(DataComponents.MAX_STACK_SIZE, Item.DEFAULT_MAX_STACK_SIZE)) / Item.DEFAULT_MAX_STACK_SIZE;
 	}
 
 }

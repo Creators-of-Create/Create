@@ -3,14 +3,13 @@ package com.simibubi.create.content.kinetics.deployer;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 public class DeployerItemHandler implements IItemHandlerModifiable {
-
 	private DeployerBlockEntity be;
 	private DeployerFakePlayer player;
 
@@ -113,7 +112,7 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return getStackInSlot(slot).getOrDefault(DataComponents.MAX_STACK_SIZE, 64);
+		return Item.ABSOLUTE_MAX_STACK_SIZE;
 	}
 
 	@Override
@@ -130,5 +129,4 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 		}
 		set(stack);
 	}
-
 }

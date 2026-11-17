@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.packagePort;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.item.ItemHandlerWrapper;
 
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
@@ -17,7 +18,7 @@ public class PackagePortAutomationInventoryWrapper extends ItemHandlerWrapper {
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		ItemStack preview = super.extractItem(slot, 64, true);
+		ItemStack preview = super.extractItem(slot, Item.ABSOLUTE_MAX_STACK_SIZE, true);
 
 		if (!PackageItem.isPackage(preview))
 			return ItemStack.EMPTY;

@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.depot;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.box.PackageEntity;
@@ -16,17 +15,18 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class SharedDepotBlockMethods {
@@ -62,7 +62,7 @@ public class SharedDepotBlockMethods {
 		ItemStackHandler outputs = behaviour.processingOutputBuffer;
 		for (int i = 0; i < outputs.getSlots(); i++)
 			player.getInventory()
-				.placeItemBackInInventory(outputs.extractItem(i, 64, false));
+				.placeItemBackInInventory(outputs.extractItem(i, Item.ABSOLUTE_MAX_STACK_SIZE, false));
 
 		if (!wasEmptyHanded && !shouldntPlaceItem) {
 			TransportedItemStack transported = new TransportedItemStack(stack);
@@ -106,8 +106,12 @@ public class SharedDepotBlockMethods {
 		if (depotBehaviour == null)
 			return 0;
 		float f = depotBehaviour.getPresentStackSize();
-		Integer max = depotBehaviour.maxStackSize.get();
-		f = f / (max == 0 ? 64 : max);
+		int max = depotBehaviour.maxStackSize.get();
+		int limit = max == 0 ? Item.ABSOLUTE_MAX_STACK_SIZE : max;
+		ItemStack held = depotBehaviour.getHeldItemStack();
+		if (!held.isEmpty())
+			limit = Math.min(limit, held.getMaxStackSize());
+		f = f / limit;
 		return Mth.clamp(Mth.floor(f * 14.0F) + (f > 0 ? 1 : 0), 0, 15);
 	}
 

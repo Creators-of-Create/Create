@@ -235,8 +235,9 @@ public class MaterialChecklist {
 	}
 
 	private MutableComponent entry(ItemStack item, int amount, boolean unfinished, boolean forBook) {
-		int stacks = amount / 64;
-		int remainder = amount % 64;
+		int stackSize = item.getMaxStackSize();
+		int stacks = amount / stackSize;
+		int remainder = amount % stackSize;
         MutableComponent tc = Component.empty();
 		tc.append(Component.translatable(item.getDescriptionId())
 			.setStyle(Style.EMPTY

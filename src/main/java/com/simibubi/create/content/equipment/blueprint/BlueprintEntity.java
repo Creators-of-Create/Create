@@ -46,6 +46,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -400,7 +401,7 @@ public class BlueprintEntity extends HangingEntity
 
 					if (result.isEmpty()) {
 						success = false;
-					} else if (result.getCount() + amountCrafted > 64) {
+					} else if (result.getCount() + amountCrafted > Math.min(Item.ABSOLUTE_MAX_STACK_SIZE, result.getMaxStackSize())) {
 						success = false;
 					} else {
 						amountCrafted += result.getCount();

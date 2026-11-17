@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.blockEntity.behaviour.scrollValue;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
@@ -11,11 +12,13 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBoard;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatter;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -157,7 +160,13 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueS
 	@Override
 	public ValueSettingsBoard createBoard(Player player, BlockHitResult hitResult) {
 		return new ValueSettingsBoard(label, max, 10, ImmutableList.of(Component.literal("Value")),
-			new ValueSettingsFormatter(ValueSettings::format));
+			new ValueSettingsFormatter(this::formatValue));
+	}
+
+	public MutableComponent formatValue(ValueSettings value) {
+		if (value.value() == 0)
+			return CreateLang.translateDirect("logistics.filter.any_amount_short");
+		return value.format();
 	}
 
 	@Override

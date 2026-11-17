@@ -56,6 +56,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Clearable;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -76,7 +77,6 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
 
 public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation, Clearable {
-
 	private boolean areFluidsMoving;
 	LerpedFloat ingredientRotationSpeed;
 	LerpedFloat ingredientRotation;
@@ -111,7 +111,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		inputInventory = new BasinInventory(9, this);
 		inputInventory.whenContentsChanged($ -> contentsChanged = true);
 		outputInventory = new BasinInventory(9, this).forbidInsertion()
-			.withMaxStackSize(64);
+			.withMaxStackSize(Item.ABSOLUTE_MAX_STACK_SIZE);
 		areFluidsMoving = false;
 		itemCapability = new CombinedInvWrapper(inputInventory, outputInventory);
 		contentsChanged = true;
@@ -316,11 +316,11 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			return;
 
 		for (int slot = 0; slot < outputInventory.getSlots(); slot++) {
-			ItemStack extractItem = outputInventory.extractItem(slot, 64, true);
+			ItemStack extractItem = outputInventory.extractItem(slot, Item.ABSOLUTE_MAX_STACK_SIZE, true);
 			if (extractItem.isEmpty())
 				continue;
 			if (acceptOutputs(ImmutableList.of(extractItem), Collections.emptyList(), true))
-				acceptOutputs(ImmutableList.of(outputInventory.extractItem(slot, 64, false)), Collections.emptyList(),
+				acceptOutputs(ImmutableList.of(outputInventory.extractItem(slot, Item.ABSOLUTE_MAX_STACK_SIZE, false)), Collections.emptyList(),
 					false);
 		}
 

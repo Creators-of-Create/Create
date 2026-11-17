@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import com.simibubi.create.foundation.blockEntity.ItemHandlerContainer;
 
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
@@ -26,7 +27,7 @@ public class StorageInteractionWrapper extends ItemHandlerContainer {
 
 	@Override
 	public int getMaxStackSize() {
-		return 64;
+		return Item.ABSOLUTE_MAX_STACK_SIZE;
 	}
 
 	@Override

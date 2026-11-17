@@ -2,13 +2,12 @@ package com.simibubi.create.content.logistics.chute;
 
 import com.simibubi.create.foundation.item.ItemHelper;
 
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.neoforge.items.IItemHandler;
 
 public class ChuteItemHandler implements IItemHandler {
-
 	private ChuteBlockEntity blockEntity;
 
 	public ChuteItemHandler(ChuteBlockEntity be) {
@@ -46,12 +45,11 @@ public class ChuteItemHandler implements IItemHandler {
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return getStackInSlot(slot).getOrDefault(DataComponents.MAX_STACK_SIZE, 64);
+		return Item.ABSOLUTE_MAX_STACK_SIZE;
 	}
 
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
 		return true;
 	}
-
 }

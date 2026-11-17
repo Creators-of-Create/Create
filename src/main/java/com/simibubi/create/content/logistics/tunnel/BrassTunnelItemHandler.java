@@ -3,12 +3,12 @@ package com.simibubi.create.content.logistics.tunnel;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.world.Clearable;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.neoforge.items.IItemHandler;
 
 public class BrassTunnelItemHandler implements IItemHandler, Clearable {
-
 	private BrassTunnelBlockEntity blockEntity;
 
 	public BrassTunnelItemHandler(BrassTunnelBlockEntity be) {
@@ -58,12 +58,18 @@ public class BrassTunnelItemHandler implements IItemHandler, Clearable {
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return blockEntity.stackToDistribute.isEmpty() ? 64 : blockEntity.stackToDistribute.getMaxStackSize();
+		if (!blockEntity.hasDistributionBehaviour()) {
+			IItemHandler beltCapability = blockEntity.getBeltCapability();
+			if (beltCapability == null)
+				return 0;
+			return beltCapability.getSlotLimit(slot);
+		}
+
+		return Item.ABSOLUTE_MAX_STACK_SIZE;
 	}
 
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
 		return true;
 	}
-
 }

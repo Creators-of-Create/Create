@@ -2,17 +2,16 @@ package com.simibubi.create.content.processing.basin;
 
 import com.simibubi.create.foundation.item.SmartInventory;
 
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class BasinInventory extends SmartInventory {
-
 	private BasinBlockEntity blockEntity;
-	
+
 	public boolean packagerMode;
 
 	public BasinInventory(int slots, BasinBlockEntity be) {
-		super(slots, be, 64, true);
+		super(slots, be, Item.ABSOLUTE_MAX_STACK_SIZE, true);
 		this.blockEntity = be;
 	}
 
@@ -20,7 +19,7 @@ public class BasinInventory extends SmartInventory {
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		if (packagerMode) // Unique stack insertion only matters for belt setups
 			return inv.insertItem(slot, stack, simulate);
-		
+
 		int firstFreeSlot = -1;
 
 		for (int i = 0; i < getSlots(); i++) {
@@ -48,5 +47,4 @@ public class BasinInventory extends SmartInventory {
 			blockEntity.notifyChangeOfContents();
 		return extractItem;
 	}
-
 }

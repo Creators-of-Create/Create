@@ -2,7 +2,9 @@ package com.simibubi.create.content.logistics.depot;
 
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+
 import net.neoforged.neoforge.items.IItemHandler;
 
 public class DepotItemHandler implements IItemHandler {
@@ -61,7 +63,11 @@ public class DepotItemHandler implements IItemHandler {
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return slot == MAIN_SLOT ? behaviour.maxStackSize.get() : 64;
+		if (slot != MAIN_SLOT)
+			return behaviour.processingOutputBuffer.getSlotLimit(slot - 1);
+
+		int max = behaviour.maxStackSize.get();
+		return max == 0 ? Item.ABSOLUTE_MAX_STACK_SIZE : max;
 	}
 
 	@Override

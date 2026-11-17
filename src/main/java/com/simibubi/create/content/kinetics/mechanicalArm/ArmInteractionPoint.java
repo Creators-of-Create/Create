@@ -13,6 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -127,7 +128,7 @@ public class ArmInteractionPoint {
 	}
 
 	public ItemStack extract(ArmBlockEntity armBlockEntity, int slot, boolean simulate) {
-		return extract(armBlockEntity, slot, 64, simulate);
+		return extract(armBlockEntity, slot, Item.ABSOLUTE_MAX_STACK_SIZE, simulate);
 	}
 
 	public int getSlotCount(ArmBlockEntity armBlockEntity) {

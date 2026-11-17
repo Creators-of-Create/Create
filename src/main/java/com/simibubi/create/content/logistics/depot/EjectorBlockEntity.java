@@ -22,15 +22,15 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.catnip.data.IntAttached;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.math.VecHelper;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.data.IntAttached;
+import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.data.Pair;
 import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -48,6 +48,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ElytraItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
@@ -63,6 +64,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -117,7 +119,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 
 		maxStackSize =
 			new ScrollValueBehaviour(CreateLang.translateDirect("weighted_ejector.stack_size"), this, new EjectorSlot())
-				.between(0, 64)
+				.between(0, Item.ABSOLUTE_MAX_STACK_SIZE)
 				.withFormatter(i -> i == 0 ? "*" : String.valueOf(i));
 		behaviours.add(maxStackSize);
 
@@ -270,7 +272,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 
 		ItemStackHandler outputs = depotBehaviour.processingOutputBuffer;
 		for (int i = 0; i < outputs.getSlots(); i++) {
-			ItemStack extractItem = outputs.extractItem(i, 64, false);
+			ItemStack extractItem = outputs.extractItem(i, Item.ABSOLUTE_MAX_STACK_SIZE, false);
 			if (!extractItem.isEmpty())
 				addToLaunchedItems(extractItem);
 		}

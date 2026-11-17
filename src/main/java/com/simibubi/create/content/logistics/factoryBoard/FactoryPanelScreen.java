@@ -46,7 +46,6 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
-
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
 public class FactoryPanelScreen extends AbstractSimiScreen {
@@ -612,7 +611,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 				if (itemStack.stack.isEmpty())
 					return true;
 				itemStack.count =
-					Mth.clamp((int) (itemStack.count + Math.signum(scrollY) * (hasShiftDown() ? 10 : 1)), 1, 64);
+					Mth.clamp((int) (itemStack.count + Math.signum(scrollY) * (hasShiftDown() ? 10 : 1)), 1, itemStack.stack.getMaxStackSize());
 				return true;
 			}
 		}
@@ -623,7 +622,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 			if (mouseX >= outputX && mouseX < outputX + 16 && mouseY >= outputY && mouseY < outputY + 16) {
 				BigItemStack itemStack = outputConfig;
 				itemStack.count =
-					Mth.clamp((int) (itemStack.count + Math.signum(scrollY) * (hasShiftDown() ? 10 : 1)), 1, 64);
+					Mth.clamp((int) (itemStack.count + Math.signum(scrollY) * (hasShiftDown() ? 10 : 1)), 1, itemStack.stack.getMaxStackSize());
 				return true;
 			}
 		}

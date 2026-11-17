@@ -33,6 +33,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.Containers;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -59,7 +60,7 @@ public class DepotBehaviour extends BlockEntityBehaviour implements Clearable {
 
 	public DepotBehaviour(SmartBlockEntity be) {
 		super(be);
-		maxStackSize = () -> heldItem != null ? heldItem.stack.getMaxStackSize() : 64;
+		maxStackSize = () -> getHeldItemStack().isEmpty() ? Item.ABSOLUTE_MAX_STACK_SIZE : getHeldItemStack().getMaxStackSize();
 		canAcceptItems = () -> true;
 		canFunnelsPullFrom = $ -> true;
 		acceptedItems = $ -> true;
@@ -264,18 +265,18 @@ public class DepotBehaviour extends BlockEntityBehaviour implements Clearable {
 		int cumulativeStackSize = 0;
 		cumulativeStackSize += getHeldItemStack().getCount();
 		for (int slot = 0; slot < processingOutputBuffer.getSlots(); slot++)
-			cumulativeStackSize += processingOutputBuffer.getStackInSlot(slot)
-				.getCount();
+			cumulativeStackSize += processingOutputBuffer.getStackInSlot(slot).getCount();
 		return cumulativeStackSize;
 	}
 
-	public int getRemainingSpace() {
+	public int getRemainingSpace(ItemStack toInsert) {
 		int cumulativeStackSize = getPresentStackSize();
 		for (TransportedItemStack transportedItemStack : incoming)
 			cumulativeStackSize += transportedItemStack.stack.getCount();
-		int fromGetter =
-			Math.min(maxStackSize.get() == 0 ? 64 : maxStackSize.get(), getHeldItemStack().getMaxStackSize());
-		return (fromGetter) - cumulativeStackSize;
+
+		int depotSlotMaxStackSize = maxStackSize.get() == 0 ? Item.ABSOLUTE_MAX_STACK_SIZE : maxStackSize.get();
+		int itemMaxStackSize = toInsert.getMaxStackSize();
+		return Math.min(depotSlotMaxStackSize, itemMaxStackSize) - cumulativeStackSize;
 	}
 
 	public ItemStack insert(TransportedItemStack heldItem, boolean simulate) {
@@ -285,7 +286,7 @@ public class DepotBehaviour extends BlockEntityBehaviour implements Clearable {
 			return heldItem.stack;
 
 		if (canMergeItems()) {
-			int remainingSpace = getRemainingSpace();
+			int remainingSpace = getRemainingSpace(heldItem.stack);
 			ItemStack inserted = heldItem.stack;
 			if (remainingSpace <= 0)
 				return inserted;

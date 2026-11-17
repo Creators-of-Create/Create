@@ -24,6 +24,7 @@ import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTest;
@@ -405,18 +406,58 @@ public class TestItems {
 		});
 	}
 
-	@GameTest(template = "depot_comparator_output")
+	@GameTest(template = "depot_comparator_output", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void depotComparatorOutput(CreateGameTestHelper helper) {
-		BlockPos swordNixie = new BlockPos(7, 2, 1);
-		BlockPos diamondNixie = new BlockPos(5, 2, 1);
-		BlockPos fullPearlNixie = new BlockPos(3, 2, 1);
 		BlockPos halfPearlNixie = new BlockPos(1, 2, 1);
+		BlockPos halfPearlInput = new BlockPos(1, 4, 3);
+		helper.assertNixiePower(halfPearlNixie, 0);
+		helper.whenSecondsPassed(1, () -> helper.spawnItems(halfPearlInput, Items.ENDER_PEARL, 8));
+
+		BlockPos fullPearlNixie = new BlockPos(3, 2, 1);
+		BlockPos fullPearlInput = new BlockPos(3, 4, 3);
+		helper.assertNixiePower(fullPearlNixie, 0);
+		helper.whenSecondsPassed(2, () -> helper.spawnItems(fullPearlInput, Items.ENDER_PEARL, 16));
+
+		BlockPos diamondNixie = new BlockPos(5, 2, 1);
+		BlockPos diamondInput = new BlockPos(5, 4, 3);
+		helper.assertNixiePower(diamondNixie, 0);
+		helper.whenSecondsPassed(3, () -> helper.spawnItems(diamondInput, Items.DIAMOND, 64));
+
+		BlockPos swordNixie = new BlockPos(7, 2, 1);
+		BlockPos swordInput = new BlockPos(7, 4, 3);
+		helper.assertNixiePower(swordNixie, 0);
+		helper.whenSecondsPassed(4, () -> helper.spawnItems(swordInput, Items.DIAMOND_SWORD, 1));
+
+		// Test larger stack sizes
+		BlockPos halfRedstoneDustNixie = new BlockPos(9, 2, 1);
+		BlockPos halfRedstoneDustInput = new BlockPos(9, 4, 3);
+		helper.assertNixiePower(halfRedstoneDustNixie, 0);
+		helper.whenSecondsPassed(5, () -> {
+			ItemStack stack = Items.REDSTONE.getDefaultInstance();
+			stack.set(DataComponents.MAX_STACK_SIZE, 99);
+			stack.setCount(45);
+
+			helper.spawnItem(halfRedstoneDustInput, stack);
+		});
+
+		BlockPos fullRedstoneDustNixie = new BlockPos(11, 2, 1);
+		BlockPos fullRedstoneDustInput = new BlockPos(11, 4, 3);
+		helper.assertNixiePower(fullRedstoneDustNixie, 0);
+		helper.whenSecondsPassed(6, () -> {
+			ItemStack stack = Items.REDSTONE.getDefaultInstance();
+			stack.set(DataComponents.MAX_STACK_SIZE, 99);
+			stack.setCount(99);
+
+			helper.spawnItem(fullRedstoneDustInput, stack);
+		});
 
 		helper.succeedWhen(() -> {
-			helper.assertNixiePower(swordNixie, 15);
-			helper.assertNixiePower(diamondNixie, 15);
-			helper.assertNixiePower(fullPearlNixie, 15);
 			helper.assertNixiePower(halfPearlNixie, 8);
+			helper.assertNixiePower(fullPearlNixie, 15);
+			helper.assertNixiePower(diamondNixie, 15);
+			helper.assertNixiePower(swordNixie, 15);
+			helper.assertNixiePower(halfRedstoneDustNixie, 7);
+			helper.assertNixiePower(fullRedstoneDustNixie, 15);
 		});
 	}
 

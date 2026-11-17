@@ -5,9 +5,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import org.jetbrains.annotations.Nullable;
-
 import org.apache.commons.lang3.mutable.MutableInt;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.foundation.block.IBE;
@@ -20,6 +19,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -91,30 +91,32 @@ public class ItemHelper {
 	}
 
 	public static int calcRedstoneFromInventory(@Nullable IItemHandler inv) {
-		if (inv == null)
+		if (inv == null) {
 			return 0;
-		int i = 0;
-		float f = 0.0F;
-		int totalSlots = inv.getSlots();
+		} else {
+			float f = 0.0F;
+			int totalSlots = inv.getSlots();
 
-		for (int j = 0; j < inv.getSlots(); ++j) {
-			int slotLimit = inv.getSlotLimit(j);
-			if (slotLimit == 0) {
-				totalSlots--;
-				continue;
+			for (int i = 0; i < inv.getSlots(); i++) {
+				int slotLimit = inv.getSlotLimit(i);
+				if (slotLimit == 0) {
+					totalSlots--;
+					continue;
+				}
+
+				ItemStack stack = inv.getStackInSlot(i);
+				if (!stack.isEmpty()) {
+					int maxStackSize = Math.min(slotLimit, stack.getMaxStackSize());
+					f += Math.min(1f, (float) stack.getCount() / (float) maxStackSize);
+				}
 			}
-			ItemStack itemstack = inv.getStackInSlot(j);
-			if (!itemstack.isEmpty()) {
-				f += (float) itemstack.getCount() / (float) Math.min(slotLimit, itemstack.getMaxStackSize());
-				++i;
-			}
+
+			if (totalSlots == 0)
+				return 0;
+
+			f /= (float) totalSlots;
+			return Mth.lerpDiscrete(f, 0, 15);
 		}
-
-		if (totalSlots == 0)
-			return 0;
-
-		f = f / totalSlots;
-		return Mth.floor(f * 14.0F) + (i > 0 ? 1 : 0);
 	}
 
 	public static List<Pair<Ingredient, MutableInt>> condenseIngredients(NonNullList<Ingredient> recipeIngredients) {
@@ -173,7 +175,7 @@ public class ItemHelper {
 	}
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, boolean simulate) {
-		return extract(inv, test, ExtractionCountMode.UPTO, 64, simulate);
+		return extract(inv, test, ExtractionCountMode.UPTO, Item.ABSOLUTE_MAX_STACK_SIZE, simulate);
 	}
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, int exactAmount, boolean simulate) {
@@ -251,7 +253,7 @@ public class ItemHelper {
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test,
 									Function<ItemStack, Integer> amountFunction, boolean simulate) {
 		ItemStack extracting = ItemStack.EMPTY;
-		int maxExtractionCount = 64;
+		int maxExtractionCount = Item.ABSOLUTE_MAX_STACK_SIZE;
 
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
 			if (extracting.isEmpty()) {
