@@ -134,6 +134,7 @@ import net.neoforged.neoforge.registries.GameData;
 public abstract class Contraption {
 
 	public final CollisionList simplifiedEntityColliders = new CollisionList();
+	private boolean simplifiedEntityCollidersDirty;
 	public AbstractContraptionEntity entity;
 
 	public AABB bounds;
@@ -1433,6 +1434,7 @@ public abstract class Contraption {
 	}
 
 	public void invalidateColliders() {
+		simplifiedEntityCollidersDirty = false;
 		getContraptionWorld();
 		simplifiedEntityColliders.size = 0;
 
@@ -1450,6 +1452,23 @@ public abstract class Contraption {
 			populate.offsetZ = localPos.getZ();
 			collisionShape.forAllBoxes(populate);
 		}
+	}
+
+	/**
+	 * Mark the cached collision data for a deferred rebuild. Several moving block updates can arrive
+	 * during one entity tick (for example both halves of every train door); deferring them lets the
+	 * entity coalesce those updates into one full contraption scan.
+	 */
+	public void markCollidersDirty() {
+		simplifiedEntityCollidersDirty = true;
+	}
+
+	/**
+	 * Rebuild collision data after the current batch of contraption block updates.
+	 */
+	public void refreshCollidersIfDirty() {
+		if (simplifiedEntityCollidersDirty)
+			invalidateColliders();
 	}
 
 	public static double getRadius(Iterable<? extends Vec3i> blocks, Axis axis) {
@@ -1496,6 +1515,7 @@ public abstract class Contraption {
 
 	@Nullable
 	public CollisionList getSimplifiedEntityColliders() {
+		refreshCollidersIfDirty();
 		return simplifiedEntityColliders;
 	}
 

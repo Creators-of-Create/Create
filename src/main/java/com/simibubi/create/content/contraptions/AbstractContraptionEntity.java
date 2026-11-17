@@ -385,6 +385,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 		contraption.tickStorage(this);
 		tickContraption();
+		contraption.refreshCollidersIfDirty();
 		super.tick();
 
 		if (!(level() instanceof ServerLevelAccessor sl))
@@ -426,6 +427,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	public void setBlock(BlockPos localPos, StructureBlockInfo newInfo) {
 		contraption.blocks.put(localPos, newInfo);
+		contraption.markCollidersDirty();
 		CatnipServices.NETWORK.sendToClientsTrackingEntity(this, new ContraptionBlockChangedPacket(getId(), localPos, newInfo.state()));
 	}
 
@@ -766,7 +768,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		contraption.blocks.put(localPos, new StructureBlockInfo(info.pos(), newState, info.nbt()));
 		if (info.state() != newState && !(newState.getBlock() instanceof SlidingDoorBlock))
 			contraption.resetClientContraption();
-		contraption.invalidateColliders();
+		contraption.markCollidersDirty();
 	}
 
 	@Override
