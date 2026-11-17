@@ -50,12 +50,12 @@ public class PackageLuaObject implements LuaComparable {
 	}
 
 	@LuaFunction(mainThread = true)
-	public Map<Integer, Map<String, ?>> list() {
+	public final Map<Integer, Map<String, ?>> list() {
 		return ComputerUtil.list(PackageItem.getContents(box));
 	}
 
 	@LuaFunction(mainThread = true)
-	public Map<String, ?> getItemDetail(int slot) throws LuaException {
+	public final Map<String, ?> getItemDetail(int slot) throws LuaException {
 		return ComputerUtil.getItemDetail(PackageItem.getContents(box), slot);
 	}
 
