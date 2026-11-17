@@ -16,7 +16,7 @@ public interface CreateStreamCodecs {
 	 */
 	@Deprecated(forRemoval = true)
 	static <B extends ByteBuf, V> StreamCodec.CodecOperation<B, V, Vector<V>> vector() {
-		return codec -> ByteBufCodecs.collection(Vector::new, codec);
+		return codec -> ByteBufCodecs.collection(Vector::new, codec, 256);
 	}
 
 	/**
