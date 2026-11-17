@@ -21,6 +21,7 @@ import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.data.Pair;
+import net.createmod.catnip.data.Glob;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -31,11 +32,22 @@ import net.minecraft.world.level.Level;
 
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
-public class DeliverPackagesInstruction extends ScheduleInstruction {
+public class DeliverPackagesInstruction extends TextScheduleInstruction {
 
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
 		return Pair.of(getSecondLineIcon(), CreateLang.translateDirect("schedule.instruction.package_delivery"));
+	}
+
+	@Override
+	public List<Component> getTitleAs(String type) {
+		return ImmutableList.of(CreateLang.translate("schedule.instruction.package_delivery.summary")
+			.style(ChatFormatting.GOLD)
+			.component(), CreateLang.translateDirect("generic.in_quotes", Component.literal(getLabelText())),
+			CreateLang.translateDirect("schedule.instruction.package_delivery.summary_1")
+				.withStyle(ChatFormatting.GRAY),
+			CreateLang.translateDirect("schedule.instruction.package_delivery.summary_2")
+				.withStyle(ChatFormatting.GRAY));
 	}
 
 	@Override
@@ -44,15 +56,23 @@ public class DeliverPackagesInstruction extends ScheduleInstruction {
 			.asStack();
 	}
 
+	public String getFilter() {
+		return getLabelText();
+	}
+
+	public String getFilterForRegex() {
+		if (getFilter().isBlank())
+			return Glob.toRegexPattern("*", "");
+		return Glob.toRegexPattern(getFilter(), "");
+	}
+
 	@Override
-	public List<Component> getTitleAs(String type) {
-		return ImmutableList.of(CreateLang.translate("schedule.instruction.package_delivery.summary")
-			.style(ChatFormatting.GOLD)
-			.component(),
-			CreateLang.translateDirect("schedule.instruction.package_delivery.summary_1")
+	public List<Component> getSecondLineTooltip(int slot) {
+		return ImmutableList.of(CreateLang.translateDirect("schedule.instruction.delivery_address_filter_edit_box"),
+			CreateLang.translateDirect("schedule.instruction.delivery_address_filter_edit_box_1")
 				.withStyle(ChatFormatting.GRAY),
-			CreateLang.translateDirect("schedule.instruction.package_delivery.summary_2")
-				.withStyle(ChatFormatting.GRAY));
+			CreateLang.translateDirect("schedule.instruction.delivery_address_filter_edit_box_2")
+				.withStyle(ChatFormatting.DARK_GRAY));
 	}
 
 	@Override
@@ -68,6 +88,7 @@ public class DeliverPackagesInstruction extends ScheduleInstruction {
 	@Override
 	@Nullable
 	public DiscoveredPath start(ScheduleRuntime runtime, Level level) {
+		String regex = getFilterForRegex();
 		boolean anyMatch = false;
 		String firstPackage = null;
 		ArrayList<GlobalStation> validStations = new ArrayList<>();
@@ -88,6 +109,8 @@ public class DeliverPackagesInstruction extends ScheduleInstruction {
 			for (int slot = 0; slot < carriageInventory.getSlots(); slot++) {
 				ItemStack stack = carriageInventory.getStackInSlot(slot);
 				if (!PackageItem.isPackage(stack))
+					continue;
+				if (!PackageItem.getAddress(stack).matches(regex))
 					continue;
 				if (firstPackage == null)
 					firstPackage = PackageItem.getAddress(stack);
