@@ -1,6 +1,11 @@
 package com.simibubi.create.impl.unpacking;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.phys.Vec3;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -32,61 +37,76 @@ public enum DefaultUnpackingHandler implements UnpackingHandler {
 			return false;
 
 		if (!simulate) {
+			List<ItemStack> remainderList = new ArrayList<>();
+
+			for (ItemStack stack : items) {
+				ItemStack remainder = ItemHandlerHelper.insertItemStacked(targetInv, stack.copy(), false);
+				if (!remainder.isEmpty()) {
+					remainderList.add(remainder);
+				}
+			}
+
 			/*
-			 * Some mods do not support slot-by-slot precision during simulate = false.
-			 * Faulty interactions may lead to voiding of items, but the simulate pass should
-			 * already have correctly identified there to be enough space for everything.
+			 * Some mods may have inconsistency between simulate pass and actually pushing items
+			 * and possibly yield some leftover items
 			 */
-			for (ItemStack itemStack : items)
-				ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), false);
+			if (!remainderList.isEmpty()) {
+				var itemPos = Vec3.atCenterOf(pos);
+				for (var itemStack : remainderList) {
+					var itemEntity = new ItemEntity(level, itemPos.x, itemPos.y, itemPos.z, itemStack);
+					level.addFreshEntity(itemEntity);
+				}
+			}
+
 			return true;
 		}
 
-		for (int slot = 0; slot < targetInv.getSlots(); slot++) {
-			ItemStack itemInSlot = targetInv.getStackInSlot(slot);
-			int itemsAddedToSlot = 0;
+		List<ItemStack> compressedItems = new ArrayList<>();
 
-			for (int boxSlot = 0; boxSlot < items.size(); boxSlot++) {
-				ItemStack toInsert = items.get(boxSlot);
-				if (toInsert.isEmpty())
+		for (int boxSlot = 0; boxSlot < items.size(); boxSlot++) {
+			ItemStack boxItemStack = items.get(boxSlot);
+			if (boxItemStack.isEmpty())
+				continue;
+
+			int amountToInsert = 0;
+			// iterate over contents of the package and count similar items
+			for (int otherBoxSlot = boxSlot; otherBoxSlot < items.size(); otherBoxSlot++) {
+				ItemStack otherBoxItemStack = items.get(otherBoxSlot);
+				if (!ItemStack.isSameItemSameComponents(boxItemStack, otherBoxItemStack))
 					continue;
 
-				if (targetInv.insertItem(slot, toInsert, true)
-					.getCount() == toInsert.getCount())
+				int stackSize = otherBoxItemStack.getCount();
+				amountToInsert += stackSize;
+				items.set(otherBoxSlot, otherBoxItemStack.copyWithCount(0));
+			}
+
+			// compress similar items into one stack, so that it's easier to work with
+			compressedItems.add(boxItemStack.copyWithCount(amountToInsert));
+		}
+
+		for (int invSlot = 0; invSlot < targetInv.getSlots(); invSlot++) {
+			ItemStack itemInSlot = targetInv.getStackInSlot(invSlot);
+
+			for (int itemIndex = 0; itemIndex < compressedItems.size(); itemIndex++) {
+				ItemStack itemToInsert = compressedItems.get(itemIndex);
+				if (itemToInsert.isEmpty())
 					continue;
 
-				if (itemInSlot.isEmpty()) {
-					int maxStackSize = targetInv.getSlotLimit(slot);
-					if (maxStackSize < toInsert.getCount()) {
-						toInsert.shrink(maxStackSize);
-						toInsert = toInsert.copyWithCount(maxStackSize);
-					} else
-						items.set(boxSlot, ItemStack.EMPTY);
+				ItemStack remainder = targetInv.insertItem(invSlot, itemToInsert.copy(), true);
 
-					itemInSlot = toInsert;
-					targetInv.insertItem(slot, toInsert, simulate);
-					continue;
+				compressedItems.set(itemIndex, remainder);
+
+				// if there's remainder or new item amount is equal to slot limit,
+				// then this slot is full, no need to check other items in the package
+				if (!remainder.isEmpty() ||
+					itemToInsert.getCount() + itemInSlot.getCount() == targetInv.getSlotLimit(invSlot)) {
+					break;
 				}
-
-				if (!ItemStack.isSameItemSameComponents(toInsert, itemInSlot))
-					continue;
-
-				int insertedAmount = toInsert.getCount() - targetInv.insertItem(slot, toInsert, simulate)
-					.getCount();
-				int slotLimit = Math.min(itemInSlot.getMaxStackSize(), targetInv.getSlotLimit(slot));
-				int insertableAmountWithPreviousItems =
-					Math.min(toInsert.getCount(), slotLimit - itemInSlot.getCount() - itemsAddedToSlot);
-
-				int added = Math.min(insertedAmount, Math.max(0, insertableAmountWithPreviousItems));
-				itemsAddedToSlot += added;
-
-				items.set(boxSlot, toInsert.copyWithCount(toInsert.getCount() - added));
 			}
 		}
 
-		for (ItemStack stack : items) {
+		for (ItemStack stack : compressedItems) {
 			if (!stack.isEmpty()) {
-				// something failed to be inserted
 				return false;
 			}
 		}
