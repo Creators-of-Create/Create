@@ -73,6 +73,7 @@ import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -85,6 +86,8 @@ import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SwordItem;
+
+import net.minecraft.world.item.component.Unbreakable;
 
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.Tags.Items;
@@ -183,6 +186,7 @@ public class AllItems {
 		REGISTRATE.item("cardboard_sword", CardboardSwordItem::new)
 			.burnTime(1000)
 			.properties(p -> p.stacksTo(1))
+			.properties(p -> p.component(DataComponents.UNBREAKABLE, new Unbreakable(false)))
 			.properties(p -> p.attributes(SwordItem.createAttributes(AllToolMaterials.CARDBOARD, 3, 1)))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
