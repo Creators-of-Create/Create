@@ -16,6 +16,7 @@ import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.signal.SingleBlockEntityEdgePoint;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
@@ -171,6 +172,9 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 		Level level = server.getLevel(getBlockEntityDimension());
 
+		int maxPackagesPerTransfer = AllConfigs.server().logistics.postboxTransferRate.get();
+		int packagesTransferred = 0;
+
 		for (Carriage carriage : train.carriages) {
 			IItemHandlerModifiable carriageInventory = carriage.storage.getAllItems();
 			if (carriageInventory == null)
@@ -190,6 +194,8 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 				}
 
 				for (int slot = 0; slot < postboxInventory.getSlots(); slot++) {
+					if (packagesTransferred >= maxPackagesPerTransfer)
+						return;
 					ItemStack stack = postboxInventory.getStackInSlot(slot);
 					if (!PackageItem.isPackage(stack))
 						continue;
@@ -203,6 +209,7 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 						continue;
 
 					postboxInventory.setStackInSlot(slot, ItemStack.EMPTY);
+					packagesTransferred++;
 
 					if (box == null) {
 						port.primed = true;
@@ -221,6 +228,8 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 					continue;
 
 				for (Entry<BlockPos, GlobalPackagePort> entry : connectedPorts.entrySet()) {
+					if (packagesTransferred >= maxPackagesPerTransfer)
+						return;
 					GlobalPackagePort port = entry.getValue();
 					BlockPos pos = entry.getKey();
 					PostboxBlockEntity box = null;
@@ -242,6 +251,7 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 						continue;
 
 					carriageInventory.setStackInSlot(slot, ItemStack.EMPTY);
+					packagesTransferred++;
 
 					if (box == null) {
 						port.primed = true;
