@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -39,13 +40,13 @@ import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
+import net.createmod.catnip.animation.LerpedFloat;
+import net.createmod.catnip.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.data.IntAttached;
+import net.createmod.catnip.data.Pair;
 import net.createmod.catnip.gui.UIRenderHelper;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.catnip.data.IntAttached;
-import net.createmod.catnip.data.Pair;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.animation.LerpedFloat.Chaser;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -324,14 +325,14 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 				continue;
 			if (destination == field)
 				continue;
-			String filter = destination.getFilterForRegex();
-			if (filter.isBlank())
+			if (destination.getRegexString().isBlank())
 				continue;
+			Predicate<String> regex = destination.getFilterForRegex();
 			Graphs:
 			for (Iterator<TrackGraph> iterator = viableGraphs.iterator(); iterator.hasNext(); ) {
 				TrackGraph trackGraph = iterator.next();
 				for (GlobalStation station : trackGraph.getPoints(EdgePointType.STATION)) {
-					if (station.name.matches(filter))
+					if (regex.test(station.name))
 						continue Graphs;
 				}
 				iterator.remove();

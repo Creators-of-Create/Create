@@ -18,7 +18,6 @@ import net.neoforged.neoforge.client.settings.KeyModifier;
 
 @EventBusSubscriber(Dist.CLIENT)
 public enum AllKeys {
-
 	TOOL_MENU("toolmenu", GLFW.GLFW_KEY_LEFT_ALT, "Focus Schematic Overlay"),
 	ACTIVATE_TOOL(GLFW.GLFW_KEY_LEFT_CONTROL),
 	TOOLBELT("toolbelt", GLFW.GLFW_KEY_LEFT_ALT, "Access Nearby Toolboxes"),
@@ -104,6 +103,9 @@ public enum AllKeys {
 	}
 
 	public static boolean isKeyDown(int key) {
+		if (key == InputConstants.UNKNOWN.getValue())
+			return false;
+
 		return InputConstants.isKeyDown(Minecraft.getInstance()
 			.getWindow()
 			.getWindow(), key);
@@ -116,15 +118,14 @@ public enum AllKeys {
 	}
 
 	public static boolean ctrlDown() {
-		return isKeyDown(CTRL_MODIFIER.keybind.getKey().getValue());
+		return CTRL_MODIFIER.keybind.isDown();
 	}
 
 	public static boolean shiftDown() {
-		return isKeyDown(SHIFT_MODIFIER.keybind.getKey().getValue());
+		return SHIFT_MODIFIER.keybind.isDown();
 	}
 
 	public static boolean altDown() {
-		return isKeyDown(ALT_MODIFIER.keybind.getKey().getValue());
+		return ALT_MODIFIER.keybind.isDown();
 	}
-
 }

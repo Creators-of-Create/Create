@@ -55,6 +55,10 @@ public class DestinationInstruction extends TextScheduleInstruction {
 		return getLabelText();
 	}
 
+	public String getRegexString() {
+		return GlobCache.get(getFilter()).toString();
+	}
+
 	public Predicate<String> getFilterForRegex() {
 		return GlobCache.getPredicate(getFilter());
 	}
