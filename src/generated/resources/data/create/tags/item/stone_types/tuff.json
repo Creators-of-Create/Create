@@ -14,6 +14,16 @@
     "create:small_tuff_brick_wall",
     "create:layered_tuff",
     "create:tuff_pillar",
-    "minecraft:tuff"
+    "minecraft:tuff",
+    "minecraft:tuff_stairs",
+    "minecraft:tuff_wall",
+    "minecraft:chiseled_tuff",
+    "minecraft:polished_tuff",
+    "minecraft:polished_tuff_stairs",
+    "minecraft:polished_tuff_wall",
+    "minecraft:tuff_bricks",
+    "minecraft:tuff_brick_stairs",
+    "minecraft:tuff_brick_wall",
+    "minecraft:chiseled_tuff_bricks"
   ]
 }
