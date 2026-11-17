@@ -108,7 +108,7 @@ public class DestinationInstruction extends TextScheduleInstruction {
 				train.status.failedNavigation();
 			else
 				train.status.failedNavigationNoTarget(getFilter());
-			runtime.startCooldown();
+			runtime.startNavigationFailureCooldown();
 			return null;
 		}
 
