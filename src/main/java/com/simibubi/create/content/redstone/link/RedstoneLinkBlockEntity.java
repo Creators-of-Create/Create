@@ -118,6 +118,8 @@ public class RedstoneLinkBlockEntity extends SmartBlockEntity {
 		if (receivedSignalChanged) {
 			updateSelfAndAttached(blockState);
 		}
+
+		link.ensureIsInNetwork();
 	}
 
 	@Override
