@@ -69,11 +69,10 @@ public class RedstoneRequesterScreen extends AbstractSimiContainerScreen<Redston
 		int x = getGuiLeft();
 		int y = getGuiTop();
 
-		if (addressBox == null) {
-			addressBox = new AddressEditBox(this, new NoShadowFontWrapper(font), x + 55, y + 68, 110, 10, false);
-			addressBox.setValue(menu.contentHolder.encodedTargetAdress);
-			addressBox.setTextColor(0x555555);
-		}
+		String previouslyUsedAddress = addressBox == null ? menu.contentHolder.encodedTargetAdress : addressBox.getValue();
+		addressBox = new AddressEditBox(this, new NoShadowFontWrapper(font), x + 55, y + 68, 110, 10, false);
+		addressBox.setTextColor(0x555555);
+		addressBox.setValue(previouslyUsedAddress);
 		addRenderableWidget(addressBox);
 
 		confirmButton = new IconButton(x + bgWidth - 30, y + bgHeight - 25, AllIcons.I_CONFIRM);
