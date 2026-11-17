@@ -1619,6 +1619,7 @@
   "create.ponder.brass_tunnel.text_1": "Az sárgarézalagutakkal elfedheted a szalagjaidat",
   "create.ponder.brass_tunnel.text_6": "Párhuzamos szalagokra helyezett sárgarézalagutak egy csoportot alkotnak",
   "create.ponder.brass_tunnel_modes.header": "A Sárgaréz alagút elosztási módjairól",
+  "create.ponder.brass_tunnel_modes.text_3": "Ha egy kimenet nem tud több tárgyat fogadni, akkor azt kihagyja",
   "create.ponder.cart_assembler.header": "Szerkezetek mozgatásáról Illesztőállomásokkal",
   "create.ponder.cart_assembler.text_1": "Bekapcsolt Illesztőállomások az áthaladó csillékbe behelyezik a hozzájuk illesztett építményeket.",
   "create.ponder.cart_assembler.text_2": "Vöröskőjel hiányában az áthaladó szerkezeteket visszabontja blokkokká.",

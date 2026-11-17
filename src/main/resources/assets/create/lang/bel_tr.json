@@ -1209,7 +1209,7 @@
   "create.gui.factory_panel.connect_input": "Дадаць новае злучэньне",
   "create.gui.factory_panel.crafting_input": "Спакаваныя інгрэдыенты",
   "create.gui.factory_panel.crafting_input_tip": "Распакоўваць у падлучаныя",
-  "create.gui.factory_panel.crafting_input_tip_1": "мэханічныя варштаты (3х3)",
+  "create.gui.factory_panel.crafting_input_tip_1": "механічныя варштаты (3х3)",
   "create.gui.factory_panel.empty_panel": "Пусты тэрмінал",
   "create.gui.factory_panel.expected_output": "Чакае %1$s",
   "create.gui.factory_panel.expected_output_tip": "Колькасьць прадукцыі, якую вяртаюць",
