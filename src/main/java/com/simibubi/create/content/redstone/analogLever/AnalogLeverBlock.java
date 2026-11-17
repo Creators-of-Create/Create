@@ -5,6 +5,12 @@ import com.mojang.serialization.MapCodec;
 
 import com.simibubi.create.foundation.mixin.accessor.BlockBehaviourAccessor;
 
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Explosion;
+
+import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.phys.Vec3;
+
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
@@ -36,6 +42,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import java.util.function.BiConsumer;
+
 public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock implements IBE<AnalogLeverBlockEntity> {
 
 	public static final MapCodec<AnalogLeverBlock> CODEC = simpleCodec(AnalogLeverBlock::new);
@@ -51,9 +59,45 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 			return InteractionResult.SUCCESS;
 		}
 
+		boolean sneak = player.isShiftKeyDown();
+		return pull(worldIn, pos, sneak);
+	}
+
+	@Override
+	public void onExplosionHit(BlockState state, Level level, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
+		if (explosion.canTriggerBlocks()) {
+			Vec3 direction = Vec3.atCenterOf(pos)
+				.subtract(explosion.center())
+				.normalize();
+			boolean faceIsFloor = state.getValue(FACE) == AttachFace.FLOOR;
+
+			boolean xIsWest = Direction.getNearest(direction.x, 0, 0) == Direction.EAST;
+			boolean yIsUp = Direction.getNearest(0, direction.y, 0) == Direction.UP;
+			boolean zIsNorth = Direction.getNearest(0, 0, direction.z) == Direction.NORTH;
+
+			if (state.getValue(FACE) == AttachFace.WALL) {
+				pull(level, pos, yIsUp);
+
+			} else if (state.getValue(FACING) == Direction.NORTH) {
+				pull(level, pos, faceIsFloor != zIsNorth);
+
+			} else if (state.getValue(FACING) == Direction.SOUTH) {
+				pull(level, pos, faceIsFloor == zIsNorth);
+
+			} else if (state.getValue(FACING) == Direction.WEST) {
+				pull(level, pos, faceIsFloor == xIsWest);
+
+			} else if (state.getValue(FACING) == Direction.EAST) {
+				pull(level, pos, faceIsFloor ^ xIsWest);
+			}
+		}
+
+		super.onExplosionHit(state, level, pos, explosion, dropConsumer);
+	}
+
+	public InteractionResult pull(Level worldIn, BlockPos pos, boolean back) {
 		return onBlockEntityUse(worldIn, pos, be -> {
-			boolean sneak = player.isShiftKeyDown();
-			be.changeState(sneak);
+			be.changeState(back);
 			float f = .25f + ((be.state + 5) / 15f) * .5f;
 			worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.2F, f);
 			return InteractionResult.SUCCESS;
