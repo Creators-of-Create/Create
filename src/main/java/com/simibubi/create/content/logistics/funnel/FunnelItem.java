@@ -41,10 +41,12 @@ public class FunnelItem extends BlockItem {
 
 		Direction direction = state.getValue(FunnelBlock.FACING);
 		FunnelBlock block = (FunnelBlock) getBlock();
-		Block beltFunnelBlock = block.getEquivalentBeltFunnel(world, pos, state)
-			.getBlock();
+		Block beltFunnelBlock = block.getEquivalentBeltFunnel(world, pos, state).getBlock();
+		boolean sneaking = ctx.getPlayer() != null && ctx.getPlayer().isShiftKeyDown();
+		BeltFunnelBlock.Shape shape = BeltFunnelBlock.getShapeForPosition(world, pos, direction, !sneaking);
 		BlockState equivalentBeltFunnel = beltFunnelBlock.getStateForPlacement(ctx)
-			.setValue(BeltFunnelBlock.HORIZONTAL_FACING, direction);
+			.setValue(BeltFunnelBlock.HORIZONTAL_FACING, direction)
+			.setValue(BeltFunnelBlock.SHAPE, shape);
 		if (BeltFunnelBlock.isOnValidBelt(equivalentBeltFunnel, world, pos))
 			return equivalentBeltFunnel;
 
