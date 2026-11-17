@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
-
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
@@ -43,11 +41,11 @@ import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -55,8 +53,9 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, SpecialEntityItemRequirement {
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 
+public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, SpecialEntityItemRequirement {
 	public static AABB span(BlockPos startPos, BlockPos endPos) {
 		return new AABB(Vec3.atLowerCornerOf(startPos), Vec3.atLowerCornerOf(endPos)).expandTowards(1, 1, 1);
 	}
@@ -93,12 +92,12 @@ public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, 
 		return glue;
 	}
 
-	public SuperGlueEntity(EntityType<?> type, Level world) {
-		super(type, world);
+	public SuperGlueEntity(EntityType<?> type, Level level) {
+		super(type, level);
 	}
 
-	public SuperGlueEntity(Level world, AABB boundingBox) {
-		this(AllEntityTypes.SUPER_GLUE.get(), world);
+	public SuperGlueEntity(Level level, AABB boundingBox) {
+		this(AllEntityTypes.SUPER_GLUE.get(), level);
 		setBoundingBox(boundingBox);
 		resetPositionToBB();
 	}
@@ -111,19 +110,19 @@ public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, 
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {}
 
-	public static boolean isValidFace(Level world, BlockPos pos, Direction direction) {
-		BlockState state = world.getBlockState(pos);
-		if (BlockMovementChecks.isBlockAttachedTowards(state, world, pos, direction))
+	public static boolean isValidFace(Level level, BlockPos pos, Direction direction) {
+		BlockState state = level.getBlockState(pos);
+		if (BlockMovementChecks.isBlockAttachedTowards(state, level, pos, direction))
 			return true;
-		if (!BlockMovementChecks.isMovementNecessary(state, world, pos))
+		if (!BlockMovementChecks.isMovementNecessary(state, level, pos))
 			return false;
 		if (BlockMovementChecks.isNotSupportive(state, direction))
 			return false;
 		return true;
 	}
 
-	public static boolean isSideSticky(Level world, BlockPos pos, Direction direction) {
-		BlockState state = world.getBlockState(pos);
+	public static boolean isSideSticky(Level level, BlockPos pos, Direction direction) {
+		BlockState state = level.getBlockState(pos);
 		if (AllBlocks.STICKY_MECHANICAL_PISTON.has(state))
 			return state.getValue(DirectionalKineticBlock.FACING) == direction;
 
@@ -158,6 +157,11 @@ public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, 
 	@Override
 	public boolean hurt(DamageSource source, float amount) {
 		return false;
+	}
+
+	@Override
+	public boolean ignoreExplosion(Explosion explosion) {
+		return true; // Fix lag created by useless explosion checks, as glue entities cannot be hurt
 	}
 
 	@Override
@@ -204,11 +208,6 @@ public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, 
 	}
 
 	@Override
-	public void push(Entity entityIn) {
-		super.push(entityIn);
-	}
-
-	@Override
 	public InteractionResult interact(Player player, InteractionHand hand) {
 		return InteractionResult.PASS;
 	}
@@ -250,12 +249,7 @@ public class SuperGlueEntity extends Entity implements IEntityWithComplexSpawn, 
 	}
 
 	@Override
-	public float mirror(Mirror transformMirror) {
-		return super.mirror(transformMirror);
-	}
-
-	@Override
-	public void thunderHit(ServerLevel world, LightningBolt lightningBolt) {}
+	public void thunderHit(ServerLevel level, LightningBolt lightningBolt) {}
 
 	@Override
 	public void refreshDimensions() {}
