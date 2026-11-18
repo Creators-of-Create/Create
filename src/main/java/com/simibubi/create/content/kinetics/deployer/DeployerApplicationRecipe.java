@@ -62,7 +62,7 @@ public class DeployerApplicationRecipe extends ItemApplicationRecipe implements 
             return Component.literal("Invalid");
         }
 		return CreateLang.translateDirect("recipe.assembly.deploying_item",
-			Component.translatable(matchingStacks[0].getDescriptionId()).getString());
+                matchingStacks[0].getDisplayName());
 	}
 
 	@Override
