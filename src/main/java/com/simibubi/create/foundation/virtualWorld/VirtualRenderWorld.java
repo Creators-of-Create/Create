@@ -359,6 +359,10 @@ public class VirtualRenderWorld extends Level implements VisualizationLevel {
 	}
 
 	@Override
+	public void blockEntityChanged(BlockPos pos) {
+	}
+
+	@Override
 	public boolean isLoaded(BlockPos pos) {
 		return true;
 	}
