@@ -19,8 +19,12 @@ public class TrackObserverPeripheral extends SyncedPeripheral<TrackObserverBlock
 	}
 
 	@LuaFunction
-	public boolean isTrainPassing() {
-		return Create.RAILWAYS.trains.containsKey(blockEntity.passingTrainUUID);
+	public Object[] isTrainPassing() {
+		Train train = Create.RAILWAYS.trains.get(blockEntity.passingTrainUUID);
+		if (train == null) {
+			return new Object[]{false};
+		}
+		return new Object[]{true, train.id};
 	}
 
 	@LuaFunction
@@ -32,7 +36,7 @@ public class TrackObserverPeripheral extends SyncedPeripheral<TrackObserverBlock
 	@Override
 	public void prepareComputerEvent(@NotNull ComputerEvent event) {
 		if (event instanceof TrainPassEvent tpe) {
-			queueEvent(tpe.passing ? "train_passing" : "train_passed", tpe.train.name.getString());
+			queueEvent(tpe.passing ? "train_passing" : "train_passed", tpe.train.name.getString(), tpe.train.id);
 		}
 	}
 

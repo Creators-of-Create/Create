@@ -2,16 +2,20 @@ package com.simibubi.create.compat.computercraft.implementation.peripherals;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.regex.PatternSyntaxException;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.compat.computercraft.events.ComputerEvent;
 import com.simibubi.create.compat.computercraft.events.StationTrainPresenceEvent;
 import com.simibubi.create.compat.computercraft.implementation.CreateLuaTable;
 import com.simibubi.create.content.trains.entity.Train;
+import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.DiscoveredPath;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.schedule.Schedule;
@@ -101,35 +105,47 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 	}
 
 	@LuaFunction
-	public final boolean isTrainPresent() throws LuaException {
+	public final Object[] isTrainPresent() throws LuaException {
 		GlobalStation station = blockEntity.getStation();
 		if (station == null)
 			throw new LuaException("station is not connected to a track");
 
-		return station.getPresentTrain() != null;
+		Train train = station.getPresentTrain();
+		if (train == null)
+			return new Object[]{false};
+
+		return new Object[]{true, train.id};
 	}
 
 	@LuaFunction
-	public final boolean isTrainImminent() throws LuaException {
+	public final Object[] isTrainImminent() throws LuaException {
 		GlobalStation station = blockEntity.getStation();
 		if (station == null)
 			throw new LuaException("station is not connected to a track");
 
-		return station.getImminentTrain() != null;
+		Train train = station.getImminentTrain();
+		if (train == null)
+			return new Object[]{false};
+
+		return new Object[]{true, train.id};
 	}
 
 	@LuaFunction
-	public final boolean isTrainEnroute() throws LuaException {
+	public final Object[] isTrainEnroute() throws LuaException {
 		GlobalStation station = blockEntity.getStation();
 		if (station == null)
 			throw new LuaException("station is not connected to a track");
 
-		return station.getNearestTrain() != null;
+		Train train = station.getNearestTrain();
+		if (train == null)
+			return new Object[]{false};
+
+		return new Object[]{true, train.id};
 	}
 
 	@LuaFunction
-	public final String getTrainName() throws LuaException {
-		Train train = getTrainOrThrow();
+	public final String getTrainName(Optional<String> trainId) throws LuaException {
+		Train train = getOptionalTrain(trainId);
 		return train.name.getString();
 	}
 
@@ -141,20 +157,32 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 	}
 
 	@LuaFunction
-	public final boolean hasSchedule() throws LuaException {
-		Train train = getTrainOrThrow();
+	public final boolean hasSchedule(Optional<String> trainId) throws LuaException {
+		Train train = getOptionalTrain(trainId);
 		return train.runtime.getSchedule() != null;
 	}
 
 	@LuaFunction
-	public final CreateLuaTable getSchedule() throws LuaException {
-		Train train = getTrainOrThrow();
+	public final CreateLuaTable getSchedule(Optional<String> trainId) throws LuaException {
+		Train train = getOptionalTrain(trainId);
 
 		Schedule schedule = train.runtime.getSchedule();
 		if (schedule == null)
 			throw new LuaException("train doesn't have a schedule");
 
 		return fromCompoundTag(schedule.write(blockEntity.getLevel().registryAccess()));
+	}
+
+	@LuaFunction
+	public final Object[] getTrain(String trainId) throws LuaException {
+		Train train = getOptionalTrain(Optional.of(trainId));
+
+		if (train == null)
+			return new Object[]{false};
+
+		DimensionPalette dimensions = new DimensionPalette();
+		CompoundTag tag = train.write(dimensions, blockEntity.getLevel().registryAccess());
+		return new Object[]{true, fromCompoundTag(tag)};
 	}
 
 	@LuaFunction(mainThread = true)
@@ -219,6 +247,25 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 		Train train = station.getPresentTrain();
 		if (train == null)
 			throw new LuaException("there is no train present");
+
+		return train;
+	}
+
+	private @NotNull Train getOptionalTrain(Optional<String> trainId) throws LuaException {
+		if (trainId.isEmpty())
+			return getTrainOrThrow();
+
+		UUID uuid;
+		try {
+			uuid = UUID.fromString(trainId.get());
+		} catch (IllegalArgumentException e) {
+			throw new LuaException("invalid train id");
+		}
+
+		Train train = Create.RAILWAYS.trains.get(uuid);
+
+		if (train == null)
+			throw new LuaException("train not found");
 
 		return train;
 	}
@@ -318,7 +365,7 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 	@Override
 	public void prepareComputerEvent(@NotNull ComputerEvent event) {
 		if (event instanceof StationTrainPresenceEvent stpe) {
-			queueEvent(stpe.type.name, stpe.train.name.getString());
+			queueEvent(stpe.type.name, stpe.train.name.getString(), stpe.train.id);
 		}
 	}
 
