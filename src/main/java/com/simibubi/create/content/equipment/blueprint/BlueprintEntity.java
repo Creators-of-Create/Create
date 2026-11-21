@@ -373,7 +373,8 @@ public class BlueprintEntity extends HangingEntity
 					}
 
 					for (int slot = 0; slot < playerInv.getSlots(); slot++) {
-						if (!requestedItem.test(level(), playerInv.getStackInSlot(slot)))
+						ItemStack stackInSlot = playerInv.getStackInSlot(slot);
+						if (stackInSlot.isEmpty() || !requestedItem.test(level(), stackInSlot))
 							continue;
 						ItemStack currentItem = playerInv.extractItem(slot, 1, false);
 						if (stacksTaken.containsKey(slot))
