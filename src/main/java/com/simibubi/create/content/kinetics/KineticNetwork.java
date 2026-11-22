@@ -18,6 +18,9 @@ public class KineticNetwork {
 	private float unloadedCapacity;
 	private float unloadedStress;
 	private int unloadedMembers;
+	// Set when members join or leave. Every affected member marks itself dirty and calls updateNetwork() on its
+	// next tick, but recalculating the totals once is enough (otherwise a reconnected line is O(n^2) per tick)
+	private boolean dirty;
 
 	public KineticNetwork() {
 		sources = new HashMap<>();
@@ -63,6 +66,7 @@ public class KineticNetwork {
 		members.put(be, be.calculateStressApplied());
 		updateFromNetwork(be);
 		be.networkDirty = true;
+		dirty = true;
 	}
 
 	public void updateCapacityFor(KineticBlockEntity be, float capacity) {
@@ -89,6 +93,7 @@ public class KineticNetwork {
 			return;
 		}
 
+		dirty = true;
 		members.keySet()
 			.stream()
 			.findFirst()
@@ -121,6 +126,10 @@ public class KineticNetwork {
 	}
 
 	public void updateNetwork() {
+		if (!dirty)
+			return;
+		dirty = false;
+
 		float newStress = calculateStress();
 		float newMaxStress = calculateCapacity();
 		if (currentStress != newStress || currentCapacity != newMaxStress) {

@@ -185,6 +185,11 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.mockito:mockito-core:5.14.2")
+    testImplementation("org.objenesis:objenesis:3.3")
+
+    // Benchmarks
+    testImplementation("org.openjdk.jmh:jmh-core:1.37")
+    testAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess:1.37")
 }
 
 neoForge.addModdingDependenciesTo(sourceSets.test)
@@ -264,6 +269,20 @@ tasks.register("coverage") {
     group = "verification"
     description = "Runs the unit tests and prints the JaCoCo code coverage."
     dependsOn(jacocoTestReport)
+}
+
+// ./gradlew jmh --offline  runs the JMH benchmarks from src/test/java
+// Options: -Pjmh.include=KineticNetworkBenchmark  -Pjmh.args="-p members=5000 -prof jfr"
+tasks.register("jmh", JavaExec) {
+    group = "verification"
+    description = "Runs the JMH benchmarks."
+    dependsOn(testClasses)
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = "org.openjdk.jmh.Main"
+    args(project.findProperty("jmh.include") ?: ".*Benchmark.*")
+    args((project.findProperty("jmh.args") ?: "").toString().tokenize())
+    args("-rf", "json", "-rff", layout.buildDirectory.file("reports/jmh/results.json").get().asFile.absolutePath)
+    doFirst { layout.buildDirectory.dir("reports/jmh").get().asFile.mkdirs() }
 }
 
 sourceSets.main {
