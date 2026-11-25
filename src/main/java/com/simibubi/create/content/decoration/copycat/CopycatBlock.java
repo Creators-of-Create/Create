@@ -16,6 +16,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -127,6 +128,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 			if (player.isCreative())
 				return ItemInteractionResult.SUCCESS;
 
+			player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
 			stack.shrink(1);
 			if (stack.isEmpty())
 				player.setItemInHand(hand, ItemStack.EMPTY);
@@ -153,6 +155,10 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 
 			if (pPlacer instanceof Player player && player.isCreative())
 				return;
+
+			if (pPlacer instanceof Player player && !pLevel.isClientSide())
+				player.awardStat(Stats.ITEM_USED.get(offhandItem.getItem()));
+
 			offhandItem.shrink(1);
 			if (offhandItem.isEmpty())
 				pPlacer.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
