@@ -1559,10 +1559,13 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			countModifier = stack -> 0;
 		}
 
-		Pair<Integer, List<List<BigItemStack>>> craftingResult =
-			maxCraftable(cbis, availableItems, countModifier, takeOrdersAway ? -1 : 9 - itemsToOrder.size());
 		int outputCount = cbis.getOutputCount(blockEntity.getLevel());
 		int adjustToRecipeAmount = Mth.ceil(Math.abs(requestedDifference) / (float) outputCount) * outputCount;
+
+		Pair<Integer, List<List<BigItemStack>>> craftingResult =
+			maxCraftable(cbis, availableItems, countModifier,
+				takeOrdersAway ? -1 : 9 - itemsToOrder.size(),
+				adjustToRecipeAmount / outputCount);
 		int maxCraftable = Math.min(adjustToRecipeAmount, craftingResult.getFirst());
 
 		if (maxCraftable == 0)
@@ -1607,11 +1610,12 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			availableItems.add(ordered.stack, ordered.count);
 
 		for (CraftableBigItemStack cbis : recipesToOrder) {
+			int outputCount = cbis.getOutputCount(blockEntity.getLevel());
 			Pair<Integer, List<List<BigItemStack>>> craftingResult =
-				maxCraftable(cbis, availableItems, stack -> -usedItems.getCountOf(stack), -1);
+				maxCraftable(cbis, availableItems, stack -> -usedItems.getCountOf(stack),
+					-1, cbis.count / outputCount);
 			int maxCraftable = craftingResult.getFirst();
 			List<List<BigItemStack>> validEntriesByIngredient = craftingResult.getSecond();
-			int outputCount = cbis.getOutputCount(blockEntity.getLevel());
 
 			// Only tweak amounts downward
 			cbis.count = Math.min(cbis.count, maxCraftable);
@@ -1636,7 +1640,7 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 	}
 
 	private Pair<Integer, List<List<BigItemStack>>> maxCraftable(CraftableBigItemStack cbis, InventorySummary summary,
-																 Function<ItemStack, Integer> countModifier, int newTypeLimit) {
+														Function<ItemStack, Integer> countModifier, int newTypeLimit, int maxCrafts) {
 		List<Ingredient> ingredients = cbis.getIngredients();
 		List<List<BigItemStack>> validEntriesByIngredient = new ArrayList<>();
 		List<BigItemStack> alreadyCreated = new ArrayList<>();
@@ -1685,10 +1689,10 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		}
 
 		// Ingredients with shared items must divide counts
-		validEntriesByIngredient = resolveIngredientAmounts(validEntriesByIngredient);
+		validEntriesByIngredient = resolveIngredientAmounts(validEntriesByIngredient, maxCrafts);
 
 		// Determine the bottlenecking ingredient
-		int minCount = Integer.MAX_VALUE;
+		int minCount = maxCrafts;
 		for (List<BigItemStack> list : validEntriesByIngredient) {
 			int sum = 0;
 			for (BigItemStack entry : list)
@@ -1732,13 +1736,13 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 			list.remove(chosen);
 	}
 
-	private List<List<BigItemStack>> resolveIngredientAmounts(List<List<BigItemStack>> validIngredients) {
+	private List<List<BigItemStack>> resolveIngredientAmounts(List<List<BigItemStack>> validIngredients, int maxCrafts) {
 		List<List<BigItemStack>> resolvedIngredients = new ArrayList<>();
 		for (int i = 0; i < validIngredients.size(); i++)
 			resolvedIngredients.add(new ArrayList<>());
 
 		boolean everythingTaken = false;
-		while (!everythingTaken) {
+		for (int round = 0; round < maxCrafts && !everythingTaken; round++) {
 			everythingTaken = true;
 			Ingredients:
 			for (int i = 0; i < validIngredients.size(); i++) {
